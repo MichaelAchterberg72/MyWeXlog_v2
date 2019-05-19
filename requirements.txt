@@ -9,10 +9,12 @@ django-allauth==0.39.1
 django-appconf==1.0.3
 django-crispy-forms==1.7.2
 django-extensions==2.1.6
+django-messages==0.5.3
 django-paypal==1.0.0
 django-select2==7.0.3
 django-treebeard==4.3
 idna==2.8
+M2CryptoWin64==0.21.1.post3
 oauthlib==3.0.1
 Pillow==6.0.0
 psycopg2==2.8.2

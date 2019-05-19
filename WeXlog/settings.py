@@ -38,10 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     #3rd Party Applications
-    #'django_countries',
+    'django_countries',
     'crispy_forms',
     'django.contrib.postgres',
     'django_extensions',
+    #'django_messages', Is not updated for django 2.2.1
     #allauth
     'django.contrib.sites',
     'allauth',
@@ -49,6 +50,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     #internal Applications
     'users.apps.UsersConfig',
+    'Profile.apps.ProfileConfig',
 ]
 
 
