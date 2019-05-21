@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from .models import (
-    Email, SiteName, OnlineRegistrations, Profile, PhysicalAddress
+    Email, SiteName, OnlineRegistrations, Profile, PhysicalAddress, PostalAddress, FileUpload, PhoneNumber
     )
 
 @admin.register(Email)
@@ -22,4 +22,17 @@ class PhysicalAddressAdmin(admin.ModelAdmin):
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(PostalAddress)
+class PostalAddressAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(FileUpload)
+class FileUploadAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(PhoneNumber)
+class PhoneNumberAdmin(admin.ModelAdmin):
     pass

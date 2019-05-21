@@ -51,6 +51,9 @@ INSTALLED_APPS = [
     #internal Applications
     'users.apps.UsersConfig',
     'Profile.apps.ProfileConfig',
+    'db_flatten.apps.DbFlattenConfig',
+    'locations.apps.LocationsConfig',
+    'enterprises.apps.EnterprisesConfig',
 ]
 
 

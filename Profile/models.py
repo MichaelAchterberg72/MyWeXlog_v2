@@ -4,7 +4,11 @@ from django.conf import settings
 
 
 from django_countries.fields import CountryField
-#from Location.models import Region, City, Suburb
+from phonenumber_field.modelfields import PhoneNumberField
+
+
+from locations.models import Region, City, Suburb
+from db_flatten.models import PhoneNumberType
 #from enterprise.models import enterprise
 
 
@@ -17,6 +21,7 @@ class SiteName(models.Model):
         return self.site
 
 class OnlineRegistrations(models.Model):
+    talent = models.ForeignKey('Profile', on_delete=models.CASCADE)
     profileurl = models.URLField()
     sitename = models.ForeignKey(SiteName, on_delete=models.PROTECT, related_name='Site_Name')
 
@@ -31,7 +36,6 @@ class Profile(models.Model):
     birth_date = models.DateField('Date of Birth')
     background = models.TextField()
     mentor = models.BooleanField(default=False)#Opt in to be a mentor to other people
-    onlineprofiles = models.ForeignKey(OnlineRegistrations, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.talent
@@ -47,14 +51,57 @@ class Email(models.Model):
 
 class PhysicalAddress(models.Model):
     talent = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    date_from = models.DateField(auto_now_add=True)
+    date_to = models.DateField(auto_now=True)
+    current = models.BooleanField('Current Address', default = True)
     line1 = models.CharField('Address Line 1', max_length=100)
     line2 = models.CharField('Address Line 2', max_length=100, blank=True, null=True)
     line3 = models.CharField('Address Line 3', max_length=100, blank=True, null=True)
     country = CountryField()
-    #region = models.ForeignKey(Region, on_delete=models.PROTECT)
-    #city = models.ForeignKey(City, on_delete=models.PROTECT)
-    #suburb = models.ForeignKey(Suburb, on_delete=models.PROTECT)
+    region = models.ForeignKey(Region, on_delete=models.PROTECT)
+    city = models.ForeignKey(City, on_delete=models.PROTECT)
+    suburb = models.ForeignKey(Suburb, on_delete=models.PROTECT)
     code = models.CharField('Postal Code', max_length=12, blank=True, null=True)
 
     def __str__(self):
-        return '{}, {}, {},{}'.format(self.line1, self.line2, self.line3, self.country)
+        return '{}: {}, {}, {},{}'.format(self.talent, self.line1, self.line2, self.line3, self.country)
+
+class PostalAddress(models.Model):
+    talent = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    date_from = models.DateField(auto_now_add=True)
+    date_to = models.DateField(auto_now=True)
+    current = models.BooleanField('Current Address', default = True)
+    line1 = models.CharField('Address Line 1', max_length=100)
+    line2 = models.CharField('Address Line 2', max_length=100, blank=True, null=True)
+    line3 = models.CharField('Address Line 3', max_length=100, blank=True, null=True)
+    country = CountryField()
+    region = models.ForeignKey(Region, on_delete=models.PROTECT)
+    city = models.ForeignKey(City, on_delete=models.PROTECT)
+    suburb = models.ForeignKey(Suburb, on_delete=models.PROTECT)
+    code = models.CharField('Postal Code', max_length=12, blank=True, null=True)
+
+    def __str__(self):
+        return '{}: {}, {}, {},{}'.format(self.talent, self.line1, self.line2, self.line3, self.country)
+
+#Function to randomise filename for Profile Upload
+def ExtFilename(instance, filename):
+	ext = filename.split('.')[-1]
+	return "profile\%s_%s.%s" % (str(time()).replace('.','_'), random(), ext)
+
+class FileUpload(models.Model):
+    talent = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    title = models.CharField(max_length=150)
+    file = models.FileField(upload_to=ExtFilename)
+
+    def __str__(self):
+        return '{}: {}'.format(self.talent, self.title)
+
+
+class PhoneNumber(models.Model):
+    talent = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    number = PhoneNumberField()
+    type = models.ForeignKey(PhoneNumberType, on_delete=models.SET_NULL, null=True)
+    current = models.BooleanField()
+
+    def __str__(self):
+        return '{}: {}({})'.format(self.talent, self.number, self.type)
