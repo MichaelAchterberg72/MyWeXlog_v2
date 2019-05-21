@@ -26,6 +26,9 @@ urlpatterns = [
     path('flatten/', include('db_flatten.urls', namespace='Flatten')),
     path('location/', include('locations.urls', namespace='Location')),
     path('enterprise/', include('enterprises.urls', namespace='Enterprise')),
+    path('project/', include('project.urls', namespace='Project')),
+    path('experience/booklist/', include('booklist.urls', namespace='BookList')),
+    path('experience/', include('talenttrack.urls', namespace='Talent')),
 
-    
+
     ]

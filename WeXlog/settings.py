@@ -54,6 +54,9 @@ INSTALLED_APPS = [
     'db_flatten.apps.DbFlattenConfig',
     'locations.apps.LocationsConfig',
     'enterprises.apps.EnterprisesConfig',
+    'project.apps.ProjectConfig',
+    'booklist.apps.BooklistConfig',
+    'talenttrack.apps.TalenttrackConfig',
 ]
 
 

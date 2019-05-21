@@ -17,7 +17,6 @@ class Industry(models.Model):
 class Enterprise(models.Model):
     name = models.CharField('Enterprise name', max_length=250, unique=True)
     description = models.TextField('Enterprise description')
-    industry = models.ForeignKey(Industry, on_delete=models.PROTECT)
     website = models.URLField()
 
     def __str__(self):
@@ -31,7 +30,7 @@ class BranchType(models.Model):
 
 class Branch(models.Model):
     enterprise = models.ForeignKey(Enterprise, on_delete=models.PROTECT)
-    name = models.CharField('Branch name', max_length=100)
+    name = models.CharField('Branch or Division Name', max_length=100)
     type = models.ForeignKey(BranchType, on_delete=models.PROTECT)
     phy_address_line1 = models.CharField('Physical address line 1', max_length=150, blank=True, null=True)
     phy_address_line2 = models.CharField('Physical address line 2', max_length=150, blank=True, null=True)
@@ -40,6 +39,7 @@ class Branch(models.Model):
     city = models.ForeignKey(City, on_delete=models.PROTECT)
     suburb = models.ForeignKey(Suburb, on_delete=models.PROTECT)
     code = models.CharField('Post Code', max_length=12)
+    industry = models.ManyToManyField(Industry)
 
     class Meta:
         unique_together = (('enterprise','name', 'city'),)

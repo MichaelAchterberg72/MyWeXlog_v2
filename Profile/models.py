@@ -9,9 +9,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 from locations.models import Region, City, Suburb
 from db_flatten.models import PhoneNumberType
-#from enterprise.models import enterprise
-
-
+from enterprises.models import Enterprise
 
 
 class SiteName(models.Model):
@@ -44,7 +42,7 @@ class Email(models.Model):
     talent = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, blank=True)
     email = models.EmailField(unique=True)
     active = models.BooleanField(default=False)
-    #company = models.ForeignKey(Enterprise, on_delete=models.SET_NULL, null=True)
+    company = models.ForeignKey(Enterprise, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return self.email
