@@ -49,6 +49,10 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     #internal Applications
     'users.apps.UsersConfig',
+
+	'django_messages',
+    'utils',
+#    'postman',
 ]
 
 
@@ -61,6 +65,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+#    'django_referrer_policy.middleware.ReferrerPolicyMiddleware',
+#    'csp.middleware.CSPMiddleware',
 ]
 
 ROOT_URLCONF = 'WeXlog.urls'
@@ -112,7 +118,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'Wexlog_1',
         'USER': 'postgres',
-        'PASSWORD': 'dJpfss41678',
+		'PASSWORD': 'rdf8tm1234'
+#        'PASSWORD': 'dJpfss41678',
     }
 }
 
@@ -158,3 +165,38 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+"""
+# Content Security Policy Settings
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_HSTS_SECONDS = 0  # 30 seconds for testing and 31536000 seconds for a full year on production
+
+# pip install django-referrer-policy
+X_FRAME_OPTIONS = 'DENY'
+REFERRER_POLICY = 'same-origin'
+
+# pip install django-csp
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = ("'none'",)
+CSP_IMG_SRC = ("'none'",)
+CSP_OBJECT_SRC = ("'none'",)
+CSP_MEDIA_SRC = ("'none'",)
+CSP_FRAME_SRC = ("'none'",)
+CSP_FONT_SRC = ("'none'",)
+CSP_CONNECT_SRC = ("'none'",)
+CSP_STYLE_SRC = ("'none'",)
+CSP_BASE_URI = ("'self'",)
+CSP_CHILD_SRC = ("'none'",)
+CSP_FRAME_ANCESTORS = ("'none'",)
+CSP_FORM_ACTION = ("'none'",)
+CSP_SANDBOX = ("'none'",)
+CSP_REPORT_URI = ("'none'",)
+CSP_MANIFEST_SRC = ("'none'",)
+CSP_WORKER_SRC = ("'none'",)
+CSP_PLUGIN_TYPES = ("'self'")
+CSP_REQUIRE_SRI_FOR = ("'self'")
+CSP_UPGRADE_INSECURE_REQUESTS = ("'false'")
+CSP_BLOCK_ALL_MIXED_CONTENT = ("'false'")
+CSP_INCLUDE_NONCE_IN = ("'none'",)
+"""
