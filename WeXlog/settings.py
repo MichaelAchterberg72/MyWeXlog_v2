@@ -50,13 +50,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     #internal Applications
     'users.apps.UsersConfig',
-    'Profile.apps.ProfileConfig',
-    'db_flatten.apps.DbFlattenConfig',
-    'locations.apps.LocationsConfig',
-    'enterprises.apps.EnterprisesConfig',
-    'project.apps.ProjectConfig',
-    'booklist.apps.BooklistConfig',
-    'talenttrack.apps.TalenttrackConfig',
+	'django_messages',
+    'utils',
 ]
 
 
@@ -69,9 +64,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-        #3rd party MIDDLEWARE
-    'django_referrer_policy.middleware.ReferrerPolicyMiddleware',
-    'csp.middleware.CSPMiddleware',
 ]
 
 ROOT_URLCONF = 'WeXlog.urls'
@@ -174,7 +166,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'Wexlog_1',
         'USER': 'postgres',
-        'PASSWORD': 'dJpfss41678',
+		'PASSWORD': 'rdf8tm1234' #MA
+#        'PASSWORD': 'dJpfss41678', #JK
     }
 }
 
