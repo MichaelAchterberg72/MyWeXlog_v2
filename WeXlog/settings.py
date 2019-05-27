@@ -49,10 +49,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     #internal Applications
     'users.apps.UsersConfig',
-
 	'django_messages',
     'utils',
-
 ]
 
 
@@ -164,4 +162,3 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
-
