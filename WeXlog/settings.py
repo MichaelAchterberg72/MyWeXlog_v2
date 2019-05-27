@@ -69,6 +69,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+        #3rd party MIDDLEWARE
+    'django_referrer_policy.middleware.ReferrerPolicyMiddleware',
+    'csp.middleware.CSPMiddleware',
 ]
 
 ROOT_URLCONF = 'WeXlog.urls'
@@ -90,6 +93,7 @@ TEMPLATES = [
     },
 ]
 
+#all-Auth Settings
 AUTHENTICATION_BACKENDS = (
     # Needed to login by username in Django admin, regardless of `allauth`
     'django.contrib.auth.backends.ModelBackend',
@@ -98,6 +102,13 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
+SITE_ID = 1
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+
+
+
+
 PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.Argon2PasswordHasher',
     'django.contrib.auth.hashers.PBKDF2PasswordHasher',
@@ -105,12 +116,55 @@ PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
 ]
 
-SITE_ID = 1
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_USERNAME_REQUIRED = False
+
 
 WSGI_APPLICATION = 'WeXlog.wsgi.application'
 
+## Web Security Headers
+    ##To test use www.securityheaders.com
+    ##X-XSS-Protection
+SECURE_BROWSER_XSS_FILTER = True
+    ##Strict Transport Security (Site must be HTTPS, HTTP rejected)
+#SECURE_HSTS_SECONDS = 1800
+#SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+#SECURE_HSTS_PRELOAD = True
+    ##X-Content-Type-Options
+SECURE_CONTENT_TYPE_NOSNIFF = True
+    ## X-Frame-Options (DENY, WHITELIST)
+X_FRAME_OPTIONS = 'DENY'
+    ##django-referrer-policy (3rd party app)
+REFERRER_POLICY='same-origin'
+    ## Content-Security-policy (3rd party app)
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = None
+CSP_IMG_SRC = None
+CSP_OBJECT_SRC = None
+CSP_MEDIA_SRC = None
+CSP_FRAME_SRC = None
+CSP_FONT_SRC = None
+CSP_CONNECT_SRC = None
+CSP_STYLE_SRC = None
+CSP_BASE_URI = None
+CSP_CHILD_SRC = None
+CSP_FRAME_ANCESTORS = None
+CSP_FORM_ACTION = None
+CSP_SANDBOX = None
+CSP_REPORT_URI = None
+CSP_MANIFEST_SRC = None
+CSP_WORKER_SRC = None
+CSP_PLUGIN_TYPES = None
+CSP_REQUIRE_SRI_FOR = None
+CSP_UPGRADE_INSECURE_REQUESTS = False
+CSP_BLOCK_ALL_MIXED_CONTENT = False
+CSP_INCLUDE_NONCE_IN = None
+CSP_REPORT_ONLY = False
+CSP_EXCLUDE_URL_PREFIXES = ()
+    ##cookie flags
+CSRF_COOKIE_SECURE = True
+CSRF_USE_SESSIONS = True
+CSRF_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SAMESITE = 'Strict'
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
@@ -143,6 +197,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+#Authorisation settings
 AUTH_USER_MODEL = 'users.CustomUser'
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
@@ -165,4 +220,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+#Crispy Forms
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
