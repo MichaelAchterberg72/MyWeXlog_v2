@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'django.contrib.postgres',
     'django_extensions',
+    'django_messages',
+    'utils',
     #'django_messages', Is not updated for django 2.2.1
     #allauth
     'django.contrib.sites',
@@ -50,8 +52,13 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     #internal Applications
     'users.apps.UsersConfig',
-	'django_messages',
-    'utils',
+    'Profile.apps.ProfileConfig',
+    'db_flatten.apps.DbFlattenConfig',
+    'locations.apps.LocationsConfig',
+    'enterprises.apps.EnterprisesConfig',
+    'project.apps.ProjectConfig',
+    'booklist.apps.BooklistConfig',
+    'talenttrack.apps.TalenttrackConfig',
 ]
 
 
@@ -129,6 +136,7 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
     ##django-referrer-policy (3rd party app)
 REFERRER_POLICY='same-origin'
+'''
     ## Content-Security-policy (3rd party app)
 CSP_DEFAULT_SRC = ("'self'",)
 CSP_SCRIPT_SRC = None
@@ -155,12 +163,12 @@ CSP_INCLUDE_NONCE_IN = None
 CSP_REPORT_ONLY = False
 CSP_EXCLUDE_URL_PREFIXES = ()
     ##cookie flags
-CSRF_COOKIE_SECURE = True
-CSRF_USE_SESSIONS = True
-CSRF_COOKIE_HTTPONLY = True
-SESSION_COOKIE_SECURE = True
-SESSION_COOKIE_SAMESITE = 'Strict'
-
+#CSRF_COOKIE_SECURE = False
+#CSRF_USE_SESSIONS = False
+#CSRF_COOKIE_HTTPONLY = False
+#SESSION_COOKIE_SECURE = False
+#SESSION_COOKIE_SAMESITE = 'Strict'
+'''
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
@@ -169,8 +177,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'Wexlog_1',
         'USER': 'postgres',
-		'PASSWORD': 'rdf8tm1234' #MA
-#        'PASSWORD': 'dJpfss41678', #JK
+#		'PASSWORD': 'rdf8tm1234' #MA
+        'PASSWORD': 'dJpfss41678', #JK
     }
 }
 
