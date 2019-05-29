@@ -126,7 +126,7 @@ class WorkExperience(models.Model):
     enterprise = models.ForeignKey(Enterprise, on_delete=models.PROTECT)
     estimated = models.BooleanField(default=False)
     project = models.ForeignKey(
-        ProjectData, on_delete=models.PROTECT, verbose_name='On Project'
+        ProjectData, on_delete=models.PROTECT, verbose_name='On Project', blank=True, null=True
     )
     industry = models.ForeignKey(Industry, on_delete=models.PROTECT)
     hours_worked = models.DecimalField(max_digits=5, decimal_places=2)
@@ -226,4 +226,48 @@ class WorkClient(models.Model):
     def __str__(self):
         return "WorkCollaborator for {} on {}".format(
             self.experience.talent, self.experience
+        )
+
+class PreLoggedExperience(models.Model):
+    talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    date_from = models.DateField()
+    date_to = models.DateField(default=timezone.now)
+    enterprise = models.ForeignKey(Branch, on_delete=models.PROTECT)
+    project = models.ForeignKey(
+        ProjectData, on_delete=models.PROTECT, verbose_name='On Project', blank=True, null=True
+    )
+    industry = models.ForeignKey(Industry, on_delete=models.PROTECT)
+    hours_worked = models.DecimalField(max_digits=5, decimal_places=2)
+    comment = models.TextField(blank=True, null=True)
+    designation = models.ForeignKey(Designation, on_delete=models.PROTECT)
+    upload = models.FileField(upload_to=ExpFilename)
+    skills = models.ManyToManyField(SkillTag)
+
+    class Meta:
+        unique_together = (('talent','hours_worked','date_from','project', 'date_to'),)
+
+    def __str__(self):
+        return '{} between {} & {} as {}'.format(
+                    self.talent, self.date_from, self.date_to, self.designation
+                    )
+
+
+class PreColleague(models.Model):
+        #Captured by talent
+    pre_experience = models.ForeignKey(PreLoggedExperience, on_delete=models.PROTECT)
+    colleague_name = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    designation = models.ForeignKey(Designation, on_delete=models.PROTECT)
+        #AutoCaptured
+    date_captured = models.DateField(auto_now_add=True)
+    date_confirmed = models.DateField(auto_now=True)
+        #Captured by colleague
+    confirm = models.CharField(max_length=1, choices=CONFIRM, default='S')
+    comments = models.TextField(blank=True, null=True)
+
+    class Meta:
+        unique_together = (('pre_experience','colleague_name','date_captured'),)
+
+    def __str__(self):
+        return "WorkColleague for {} on {}".format(
+            self.pre_experience.talent, self.pre_experience
         )

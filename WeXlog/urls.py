@@ -29,4 +29,6 @@ urlpatterns = [
     path('project/', include('project.urls', namespace='Project')),
     path('experience/booklist/', include('booklist.urls', namespace='BookList')),
     path('experience/', include('talenttrack.urls', namespace='Talent')),
+    path('trust/', include('trustpassport.urls', namespace='Trust')),
+    path('marketplace/', include('marketplace.urls', namespace='MarketPlace')),
     ]

@@ -1,8 +1,12 @@
 from django.contrib import admin
 
 from .models import (
-    City, Suburb, Region
+    City, Suburb, Region, Currency
     )
+
+@admin.register(Currency)
+class CurrencyAdmin(admin.ModelAdmin):
+    pass
 
 @admin.register(Region)
 class RegionAdmin(admin.ModelAdmin):

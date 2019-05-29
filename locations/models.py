@@ -31,3 +31,8 @@ class Suburb(models.Model):
 
     def __str__(self):
         return '{}-{}'.format(self.city, self.suburb)
+
+class Currency(models.Model):
+    country = CountryField()
+    currency_name = models.CharField(max_length=150, unique=True)
+    currency_abv = models.CharField(max_length=3, unique=True)

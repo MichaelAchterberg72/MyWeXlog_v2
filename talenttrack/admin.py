@@ -1,8 +1,16 @@
 from django.contrib import admin
 
 from .models import (
-    Topic, Result, CourseType, Course, Education, Lecturer, ClassMates, WorkClient, WorkExperience, WorkColleague, Superior, WorkCollaborator
+    Topic, Result, CourseType, Course, Education, Lecturer, ClassMates, WorkClient, WorkExperience, WorkColleague, Superior, WorkCollaborator, PreLoggedExperience, PreColleague
     )
+
+@admin.register(PreColleague)
+class PreColleagueAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(PreLoggedExperience)
+class PreLoggedExperienceAdmin(admin.ModelAdmin):
+    pass
 
 @admin.register(WorkCollaborator)
 class WorkCollaboratorAdmin(admin.ModelAdmin):
