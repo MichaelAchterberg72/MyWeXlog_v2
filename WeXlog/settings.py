@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'utils',
     'phonenumber_field',
     'leaflet',
+    'notifications',
     #allauth-applications
     'django.contrib.sites',
     'allauth',
