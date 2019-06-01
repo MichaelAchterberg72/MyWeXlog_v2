@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+# from distutils.sysconfig import get_python_lib
+# os.environ["PATH"] += os.pathsep + get_python_lib() + '\\osgeo'
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -44,8 +46,9 @@ INSTALLED_APPS = [
     'django_extensions',
     'django_messages',
     'utils',
-    #'django_messages', Is not updated for django 2.2.1
-    #allauth
+    'phonenumber_field',
+    'leaflet',
+    #allauth-applications
     'django.contrib.sites',
     'allauth',
     'allauth.account',
@@ -60,8 +63,7 @@ INSTALLED_APPS = [
     'booklist.apps.BooklistConfig',
     'talenttrack.apps.TalenttrackConfig',
     'trustpassport.apps.TrustpassportConfig',
-    'marketplace.apps.MarketplaceConfig',
-]
+    'marketplace.apps.MarketplaceConfig',]
 
 
 
@@ -137,10 +139,14 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
     ## X-Frame-Options (DENY, WHITELIST)
 X_FRAME_OPTIONS = 'DENY'
     ##django-referrer-policy (3rd party app)
+<<<<<<< HEAD
 REFERRER_POLICY='same-origin'
 '''
+=======
+REFERRER_POLICY = 'same-origin'
+>>>>>>> origin/2019-06-01-Mike
     ## Content-Security-policy (3rd party app)
-CSP_DEFAULT_SRC = ("'self'",)
+CSP_DEFAULT_SRC = ("'self'",) # check bootstrap.com
 CSP_SCRIPT_SRC = None
 CSP_IMG_SRC = None
 CSP_OBJECT_SRC = None
@@ -165,12 +171,21 @@ CSP_INCLUDE_NONCE_IN = None
 CSP_REPORT_ONLY = False
 CSP_EXCLUDE_URL_PREFIXES = ()
     ##cookie flags
+<<<<<<< HEAD
 #CSRF_COOKIE_SECURE = False
 #CSRF_USE_SESSIONS = False
 #CSRF_COOKIE_HTTPONLY = False
 #SESSION_COOKIE_SECURE = False
 #SESSION_COOKIE_SAMESITE = 'Strict'
 '''
+=======
+CSRF_COOKIE_SECURE = True
+CSRF_USE_SESSIONS = True
+CSRF_COOKIE_HTTPONLY = True
+# SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SAMESITE = 'Strict'
+
+>>>>>>> origin/2019-06-01-Mike
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
@@ -229,3 +244,7 @@ STATIC_URL = '/static/'
 
 #Crispy Forms
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+# GDAL_LIBRARY_PATH = r'C:/OSGeo4W64/bin/gdal203'
+
+#  os.environ["PATH"] += os.pathsep + BASE_DIR + '\\venv\\Lib\\site-packages\\osgeo'

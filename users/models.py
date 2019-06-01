@@ -15,7 +15,7 @@ class CustomUser(AbstractUser):
         (1,'Individual'),
     )
     subscription = models.IntegerField(choices=PKG, default=0)
-    middle_name = models.CharField(max_length=60)
+    middle_name = models.CharField(max_length=60, null=True)
     permission = models.IntegerField(choices=COMPANY, default=1)
 
     objects = CustomUserManager()

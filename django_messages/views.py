@@ -20,6 +20,7 @@ if "notification" in settings.INSTALLED_APPS and getattr(settings, 'DJANGO_MESSA
 else:
     notification = None
 
+
 @login_required
 def inbox(request):
     """
@@ -34,6 +35,7 @@ def inbox(request):
     }
     return render(request, template, context)
 
+
 @login_required
 def outbox(request):
     """
@@ -47,6 +49,7 @@ def outbox(request):
     'message_list': message_list,
     }
     return render(request, template, context)
+
 
 @login_required
 def trash(request):
@@ -63,6 +66,7 @@ def trash(request):
     'message_list': message_list,
     }
     return render(request, template, context)
+
 
 @login_required
 def compose(request, recipient=None, form_class=ComposeForm,
@@ -101,6 +105,7 @@ def compose(request, recipient=None, form_class=ComposeForm,
             }
     return render(request, template_name, context)
 
+
 @login_required
 def reply(request, message_id, quote_helper=format_quote, form_class=ComposeForm,
         subject_template=_(u"Re: %(subject)s"), success_url=None, recipient_filter=None):
@@ -138,6 +143,7 @@ def reply(request, message_id, quote_helper=format_quote, form_class=ComposeForm
             }
     return render(request, template_name, context)
 
+
 @login_required
 def delete(request, message_id, success_url=None):
     """
@@ -173,6 +179,7 @@ def delete(request, message_id, success_url=None):
         return HttpResponseRedirect(success_url)
     raise Http404
 
+
 @login_required
 def undelete(request, message_id, success_url=None):
     """
@@ -199,6 +206,7 @@ def undelete(request, message_id, success_url=None):
             notification.send([user], "messages_recovered", {'message': message,})
         return HttpResponseRedirect(success_url)
     raise Http404
+
 
 @login_required
 def view(request, message_id, form_class=ComposeForm, quote_helper=format_quote,
