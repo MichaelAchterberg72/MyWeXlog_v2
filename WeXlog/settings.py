@@ -33,6 +33,23 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    #allauth-applications
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    #internal Applications
+    'users.apps.UsersConfig',
+    'Profile.apps.ProfileConfig',
+    'db_flatten.apps.DbFlattenConfig',
+    'locations.apps.LocationsConfig',
+    'enterprises.apps.EnterprisesConfig',
+    'project.apps.ProjectConfig',
+    'booklist.apps.BooklistConfig',
+    'talenttrack.apps.TalenttrackConfig',
+    'trustpassport.apps.TrustpassportConfig',
+    'marketplace.apps.MarketplaceConfig',
+    ##Django internal applications
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -49,22 +66,7 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'leaflet',
     'notifications',
-    #allauth-applications
-    'django.contrib.sites',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    #internal Applications
-    'users.apps.UsersConfig',
-    'Profile.apps.ProfileConfig',
-    'db_flatten.apps.DbFlattenConfig',
-    'locations.apps.LocationsConfig',
-    'enterprises.apps.EnterprisesConfig',
-    'project.apps.ProjectConfig',
-    'booklist.apps.BooklistConfig',
-    'talenttrack.apps.TalenttrackConfig',
-    'trustpassport.apps.TrustpassportConfig',
-    'marketplace.apps.MarketplaceConfig',]
+    ]
 
 
 
@@ -86,7 +88,7 @@ ROOT_URLCONF = 'WeXlog.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'),],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -138,14 +140,12 @@ SECURE_BROWSER_XSS_FILTER = True
     ##X-Content-Type-Options
 SECURE_CONTENT_TYPE_NOSNIFF = True
     ## X-Frame-Options (DENY, WHITELIST)
-X_FRAME_OPTIONS = 'DENY'
-    ##django-referrer-policy (3rd party app)
-X_FRAME_OPTIONS = 'DENY'
+#X_FRAME_OPTIONS = 'DENY'
     ##django-referrer-policy (3rd party app)
 REFERRER_POLICY='same-origin'
-'''
     ## Content-Security-policy (3rd party app)
-CSP_DEFAULT_SRC = ("'self'",)
+CSP_DEFAULT_SRC = ("'self'",'maxcdn.bootstrapcdn.com', 'code.jquery.com',
+'cdnjs.cloudflare.com')
 CSP_SCRIPT_SRC = None
 CSP_IMG_SRC = None
 CSP_OBJECT_SRC = None
@@ -168,14 +168,14 @@ CSP_UPGRADE_INSECURE_REQUESTS = False
 CSP_BLOCK_ALL_MIXED_CONTENT = False
 CSP_INCLUDE_NONCE_IN = None
 CSP_REPORT_ONLY = False
-CSP_EXCLUDE_URL_PREFIXES = ()
+#CSP_EXCLUDE_URL_PREFIXES = ()
     ##cookie flags
 #CSRF_COOKIE_SECURE = True
-#CSRF_USE_SESSIONS = True
-#CSRF_COOKIE_HTTPONLY = True
-#SESSION_COOKIE_SECURE = True
-#SESSION_COOKIE_SAMESITE = 'Strict'
-'''
+CSRF_USE_SESSIONS = True
+CSRF_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SAMESITE = 'Strict'
+
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
@@ -210,7 +210,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 #Authorisation settings
 AUTH_USER_MODEL = 'users.CustomUser'
-LOGIN_REDIRECT_URL = 'home'
+LOGIN_URL = 'account/login/'
+LOGIN_REDIRECT_URL = 'Profile:ProfileHome'
 LOGOUT_REDIRECT_URL = 'home'
 
 # Internationalization
@@ -231,6 +232,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
 
 #Crispy Forms
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

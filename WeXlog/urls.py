@@ -19,7 +19,6 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path ('messages/', include('django_messages.urls')),
     path('Profile/', include('Profile.urls', namespace='Profile')),
@@ -31,4 +30,5 @@ urlpatterns = [
     path('experience/', include('talenttrack.urls', namespace='Talent')),
     path('trust/', include('trustpassport.urls', namespace='Trust')),
     path('marketplace/', include('marketplace.urls', namespace='MarketPlace')),
+    path('admin/', admin.site.urls),
     ]
