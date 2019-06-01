@@ -21,7 +21,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
-    path ('message/', include('django_messages.urls')),
+    path ('messages/', include('django_messages.urls')),
     path('Profile/', include('Profile.urls', namespace='Profile')),
     path('flatten/', include('db_flatten.urls', namespace='Flatten')),
     path('location/', include('locations.urls', namespace='Location')),

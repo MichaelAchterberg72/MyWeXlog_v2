@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+# from distutils.sysconfig import get_python_lib
+# os.environ["PATH"] += os.pathsep + get_python_lib() + '\\osgeo'
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -42,16 +44,28 @@ INSTALLED_APPS = [
     'crispy_forms',
     'django.contrib.postgres',
     'django_extensions',
-    #'django_messages', Is not updated for django 2.2.1
     #allauth
     'django.contrib.sites',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'phonenumber_field',
+    'leaflet',
     #internal Applications
     'users.apps.UsersConfig',
 	'django_messages',
     'utils',
+#    'cities',
+    'booklist',
+    'core',
+    'db_flatten',
+    'enterprises',
+    'locations',
+    'Profile',
+    'project',
+    'talenttrack',
+#    'users',
+
 ]
 
 
@@ -128,9 +142,9 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
     ## X-Frame-Options (DENY, WHITELIST)
 X_FRAME_OPTIONS = 'DENY'
     ##django-referrer-policy (3rd party app)
-REFERRER_POLICY='same-origin'
+REFERRER_POLICY = 'same-origin'
     ## Content-Security-policy (3rd party app)
-CSP_DEFAULT_SRC = ("'self'",)
+CSP_DEFAULT_SRC = ("'self'",) # check bootstrap.com
 CSP_SCRIPT_SRC = None
 CSP_IMG_SRC = None
 CSP_OBJECT_SRC = None
@@ -158,7 +172,7 @@ CSP_EXCLUDE_URL_PREFIXES = ()
 CSRF_COOKIE_SECURE = True
 CSRF_USE_SESSIONS = True
 CSRF_COOKIE_HTTPONLY = True
-SESSION_COOKIE_SECURE = True
+# SESSION_COOKIE_SECURE = True
 SESSION_COOKIE_SAMESITE = 'Strict'
 
 # Database
@@ -219,3 +233,7 @@ STATIC_URL = '/static/'
 
 #Crispy Forms
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+# GDAL_LIBRARY_PATH = r'C:/OSGeo4W64/bin/gdal203'
+
+#  os.environ["PATH"] += os.pathsep + BASE_DIR + '\\venv\\Lib\\site-packages\\osgeo'
