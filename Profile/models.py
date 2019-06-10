@@ -19,7 +19,7 @@ class SiteName(models.Model):
         return self.site
 
 class OnlineRegistrations(models.Model):
-    talent = models.ForeignKey('Profile', on_delete=models.CASCADE)
+    talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     profileurl = models.URLField()
     sitename = models.ForeignKey(SiteName, on_delete=models.PROTECT, related_name='Site_Name')
 
@@ -30,19 +30,27 @@ class OnlineRegistrations(models.Model):
         return self.sitename
 
 class Profile(models.Model):
+    MENTOR = (
+        ('Y','Yes'),
+        ('N','No'),
+        )
     talent = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    synonym = models.CharField(max_length=15)
     birth_date = models.DateField('Date of Birth')
     background = models.TextField()
-    mentor = models.BooleanField(default=False)#Opt in to be a mentor to other people
+    mentor = models.CharField('Do you wish to be a mentor?', max_length=1, choices=MENTOR, default='N')#Opt in to be a mentor to other people
 
     def __str__(self):
-        return self.talent
+        return str(self.talent)
 
 class Email(models.Model):
-    talent = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, blank=True)
+    talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True, related_name='Customuser_email')
     email = models.EmailField(unique=True)
     active = models.BooleanField(default=False)
     company = models.ForeignKey(Enterprise, on_delete=models.SET_NULL, null=True)
+
+    class Meta:
+        unique_together = (('talent','email'),)
 
     def __str__(self):
         return self.email

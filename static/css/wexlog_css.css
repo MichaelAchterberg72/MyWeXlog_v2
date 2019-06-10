@@ -9,3 +9,7 @@
   overflow-x: hidden;
   padding-top: 20px;
 }
+
+.avatar {
+  height: 40px;
+}

@@ -140,7 +140,7 @@ SECURE_BROWSER_XSS_FILTER = True
     ##X-Content-Type-Options
 SECURE_CONTENT_TYPE_NOSNIFF = True
     ## X-Frame-Options (DENY, WHITELIST)
-#X_FRAME_OPTIONS = 'DENY'
+X_FRAME_OPTIONS = 'DENY'
     ##django-referrer-policy (3rd party app)
 REFERRER_POLICY='same-origin'
     ## Content-Security-policy (3rd party app)
@@ -171,10 +171,10 @@ CSP_REPORT_ONLY = False
 #CSP_EXCLUDE_URL_PREFIXES = ()
     ##cookie flags
 #CSRF_COOKIE_SECURE = True
-CSRF_USE_SESSIONS = True
-CSRF_COOKIE_HTTPONLY = True
-SESSION_COOKIE_SECURE = True
-SESSION_COOKIE_SAMESITE = 'Strict'
+#CSRF_USE_SESSIONS = True
+#CSRF_COOKIE_HTTPONLY = True
+#SESSION_COOKIE_SECURE = True
+#SESSION_COOKIE_SAMESITE = 'Strict'
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases

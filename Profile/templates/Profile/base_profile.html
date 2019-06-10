@@ -4,63 +4,60 @@
 
   {% block content %}
     <div class="row">
+      <div class="col-sm-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">My Network</h5>
+            <p class="card-text">
+              {% block network %}
+              {% endblock network %}
+            </p>
+            <a href="#" class="badge badge-pill badge-primary">See Detail</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Workflow</h5>
+            <p class="card-text">
+              {% block workflow %}
+              {% endblock workflow %}
+            </p>
+            <a href="#" class="badge badge-pill badge-primary">Goto Workflow</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
       <div class="col-sm-6 pt-3">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">Special title treatment</h5>
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
+            <h5 class="card-title">My Score</h5>
+            <p class="card-text">
+              {% block score%}
+              {% endblock score %}
+            </p>
+            <a href="#" class="badge badge-pill badge-primary">See Detail</a>
           </div>
         </div>
       </div>
       <div class="col-sm-6 pt-3">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">Special title treatment</h5>
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
+            <h5 class="card-title">TBA</h5>
+            <p class="card-text">
+              {% block TBA %}
+              {% endblock TBA %}
+            </p>
+            <a href="#" class="badge badge-pill badge-primary">Goto Workflow</a>
           </div>
         </div>
       </div>
     </div>
     <div class="card border-secondary mb-3 m-2" style="max-width: 18rem;">
-      <div class="card-header">Header</div>
-      <div class="card-body text-secondary">
-        <h5 class="card-title">Secondary card title</h5>
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-      </div>
-
-    <div class="row">
-      <div class="col-md-3 border border-rounded">
-        <br>
-        {% block TL %}
-        {% endblock TL %}
-      </div>
-      <div class="col-md-3 ml-auto border">
-        <br>
-        {% block TR %}
-        {% endblock TR %}
-      </div>
+        {% block Center_Content %}
+        {% endblock Center_Content %}
     </div>
-      <div class="row">
-        <div class="col-md-3 border">
-          <br>
-          {% block BL %}
-          {% endblock BL %}
-        </div>
-        <div class="col-md-3 ml-auto border">
-          <br>
-          {% block BR %}
-          {% endblock BR %}
-        </div>
-      </div>
-    </div>
-      <div class="row border">
-        <div class="mx-auto" style="width: 200px;">
-          {% block Center_Content %}
-          {% endblock Center_Content %}
-          <br><br><br><br><br><br>
-        </div>
-      </div>
 
   {% endblock content %}

@@ -13,3 +13,6 @@ class SkillTag(models.Model):
         indexes = [
             models.Index(fields=['skill',]),
         ]
+
+    def __str__(self):
+        return self.skill
