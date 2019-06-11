@@ -47,7 +47,7 @@ class Email(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True, related_name='Customuser_email')
     email = models.EmailField(unique=True)
     active = models.BooleanField(default=False)
-    company = models.ForeignKey(Enterprise, on_delete=models.SET_NULL, null=True)
+    company = models.ForeignKey(Enterprise, on_delete=models.SET_NULL, null=True, blank=True)
 
     class Meta:
         unique_together = (('talent','email'),)

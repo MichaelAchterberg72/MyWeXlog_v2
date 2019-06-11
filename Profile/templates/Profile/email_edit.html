@@ -1,0 +1,47 @@
+{% extends 'profile/base_profile.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}My {{block.super}} Profile{% endblock title %}
+
+
+{% block network %}
+
+{% endblock network %}
+
+{% block workflow %}
+
+{% endblock workflow %}
+
+{% block score %}
+
+{% endblock score %}
+
+{% block TBA %}
+
+{% endblock TBA %}
+
+{% block Center_Content %}
+<div class="container">
+<h3>Your Emails</h3>
+<p>Throughout your working career, you would have had a number of email aliases while working at different companies. By capturing them, people you worked with will be able to find you for references through your old email address.</p>
+<form method="post">
+  <input type="hidden" name="next" value="{{ request.GET.next }}">
+  {% csrf_token %}
+  <div class="form-row">
+    <div class="form-group col-md-6 mb-0">
+      {{ form.email|as_crispy_field }}
+      {{ form.active|as_crispy_field }}
+      <p>Is the above email address currently active?</p>
+
+    </div>
+    <div class="form-group col-md-6 mb-0">
+      {{ form.company|as_crispy_field }}
+      <p>The company you were working at while using this alias</p>
+    </div>
+  </div>
+  <div class="">
+    <p><button type="submit" name="Done" class="btn btn-primary">Save</button> <button type="submit" name="Another" class="btn btn-secondary">Add Another</button></p>
+  </div>
+</form>
+</div>
+{% endblock Center_Content %}

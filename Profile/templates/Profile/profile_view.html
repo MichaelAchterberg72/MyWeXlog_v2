@@ -25,31 +25,32 @@
 <div class="card-group">
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title">Basic Information</h5>
-      {% for d in details %}
+      {% for d in info %}
+      <h5 class="card-title">Basic Information <a href="{% url 'Profile:ProfileEdit' d.id %}?next={{ request.path|urlencode }}" class="badge badge-primary">Edit</a></h5>
+
       <p class="card-text">Name: {{ request.user.first_name }} {{ request.user.last_name }}</p>
       <p class="card-text">Display name: {{ d.synonym }}</p>
       <p class="card-text">Date of Birth: {{ d.birth_date }}</p>
-      <p class="card-text">Date of Birth: {{ request.user.email }}</p>
+      <p class="card-text">Profile email: {{ request.user.email }}</p>
       <div class="card-footer bg-transparent border-success">Do you wish to be a mentor to others? {{ d.get_mentor_display }}</div>
     </div>
   </div>
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title">Email addresses</h5>
+      <h5 class="card-title">Email addresses <a href="{% url 'Profile:EmailEdit' d.id %}?next={{ request.path|urlencode }}" class="badge badge-primary">Add</a></h5>
       <h6>Past (No longer active)</h6>
       {% for e in email %}
       {% if e.active is False %}
-      <ul>
-        <li class="card-text">{{ e.email }}</li>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item d-flex justify-content-between align-items-center">{{ e.email }}<span class="badge badge-primary badge-pill">14</span></li>
       </ul>
       {% endif %}
       {% endfor %}
       <h6>Current (Monitored)</h6>
       {% for e in email %}
       {% if e.active is True %}
-      <ul>
-        <li class="card-text">{{ e.email }}</li>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item d-flex justify-content-between align-items-center">{{ e.email }}<span class="badge badge-primary badge-pill">14</span></li>
       </ul>
       {% endif %}
       {% endfor %}
@@ -66,7 +67,7 @@
   <div class="card">
     <div class="card-body">
       <h5 class="card-title">Background</h5>
-      <p class="card-text">
+      <p class="card-text text-justify">
         {{ d.background }}</p>
     </div>
   </div>
