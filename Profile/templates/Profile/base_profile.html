@@ -1,7 +1,11 @@
 {% extends 'base_home.html' %}
 
   {% block title %}{{ block.super }}{% endblock title %}
+  {% block Style %}
 
+  {% block subStyle %}{% endblock subStyle %}
+
+  {% endblock Style %}
   {% block content %}
     <div class="row">
       <div class="col-sm-6">
@@ -55,9 +59,12 @@
         </div>
       </div>
     </div>
-    <div class="card border-secondary mb-3 m-2" style="max-width: 18rem;">
+    <div class="card border-secondary mb-3 m-2" >
         {% block Center_Content %}
         {% endblock Center_Content %}
     </div>
 
   {% endblock content %}
+  {% block Script %}
+  {% block subScript %}{% endblock subScript %}
+  {% endblock Script %}

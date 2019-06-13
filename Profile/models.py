@@ -56,27 +56,21 @@ class Email(models.Model):
         return self.email
 
 class PhysicalAddress(models.Model):
-    talent = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    date_from = models.DateField(auto_now_add=True)
-    date_to = models.DateField(auto_now=True)
-    current = models.BooleanField('Current Address', default = True)
-    line1 = models.CharField('Address Line 1', max_length=100)
+    talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
+    line1 = models.CharField('Address Line 1', max_length=100, null=True)
     line2 = models.CharField('Address Line 2', max_length=100, blank=True, null=True)
     line3 = models.CharField('Address Line 3', max_length=100, blank=True, null=True)
-    country = CountryField()
-    region = models.ForeignKey(Region, on_delete=models.PROTECT)
-    city = models.ForeignKey(City, on_delete=models.PROTECT)
-    suburb = models.ForeignKey(Suburb, on_delete=models.PROTECT)
+    country = CountryField(null=True)
+    region = models.ForeignKey(Region, on_delete=models.PROTECT, null=True)
+    city = models.ForeignKey(City, on_delete=models.PROTECT, null=True)
+    suburb = models.ForeignKey(Suburb, on_delete=models.PROTECT, null=True)
     code = models.CharField('Postal Code', max_length=12, blank=True, null=True)
 
     def __str__(self):
         return '{}: {}, {}, {},{}'.format(self.talent, self.line1, self.line2, self.line3, self.country)
 
 class PostalAddress(models.Model):
-    talent = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    date_from = models.DateField(auto_now_add=True)
-    date_to = models.DateField(auto_now=True)
-    current = models.BooleanField('Current Address', default = True)
+    talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
     line1 = models.CharField('Address Line 1', max_length=100)
     line2 = models.CharField('Address Line 2', max_length=100, blank=True, null=True)
     line3 = models.CharField('Address Line 3', max_length=100, blank=True, null=True)
@@ -95,7 +89,7 @@ def ExtFilename(instance, filename):
 	return "profile\%s_%s.%s" % (str(time()).replace('.','_'), random(), ext)
 
 class FileUpload(models.Model):
-    talent = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
     title = models.CharField(max_length=150)
     file = models.FileField(upload_to=ExtFilename)
 
@@ -104,7 +98,7 @@ class FileUpload(models.Model):
 
 
 class PhoneNumber(models.Model):
-    talent = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
     number = PhoneNumberField()
     type = models.ForeignKey(PhoneNumberType, on_delete=models.SET_NULL, null=True)
     current = models.BooleanField()

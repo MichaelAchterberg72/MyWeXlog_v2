@@ -32,6 +32,7 @@ urlpatterns = [
     path('trust/', include('trustpassport.urls', namespace='Trust')),
     path('marketplace/', include('marketplace.urls', namespace='MarketPlace')),
     path('admin/', admin.site.urls),
+    path('select2/', include('django_select2.urls')),
     ]
 
 urlpatterns += staticfiles_urlpatterns()

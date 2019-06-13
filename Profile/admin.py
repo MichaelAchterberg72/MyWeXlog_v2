@@ -16,12 +16,13 @@ class SiteNameAdmin(admin.ModelAdmin):
 class OnlineRegistrationsAdmin(admin.ModelAdmin):
     pass
 
-@admin.register(PhysicalAddress)
-class PhysicalAddressAdmin(admin.ModelAdmin):
-    pass
-
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(PhysicalAddress)
+class PhysicalAddressAdmin(admin.ModelAdmin):
     pass
 
 @admin.register(PostalAddress)
@@ -31,7 +32,6 @@ class PostalAddressAdmin(admin.ModelAdmin):
 @admin.register(FileUpload)
 class FileUploadAdmin(admin.ModelAdmin):
     pass
-
 
 @admin.register(PhoneNumber)
 class PhoneNumberAdmin(admin.ModelAdmin):

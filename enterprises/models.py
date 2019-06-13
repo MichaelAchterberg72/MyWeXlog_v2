@@ -17,7 +17,7 @@ class Industry(models.Model):
 class Enterprise(models.Model):
     name = models.CharField('Enterprise name', max_length=250, unique=True)
     description = models.TextField('Enterprise description')
-    website = models.URLField()
+    website = models.URLField(blank=True, null=True)
 
     def __str__(self):
         return self.name

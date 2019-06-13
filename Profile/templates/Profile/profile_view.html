@@ -32,7 +32,9 @@
       <p class="card-text">Display name: {{ d.synonym }}</p>
       <p class="card-text">Date of Birth: {{ d.birth_date }}</p>
       <p class="card-text">Profile email: {{ request.user.email }}</p>
-      <div class="card-footer bg-transparent border-success">Do you wish to be a mentor to others? {{ d.get_mentor_display }}</div>
+      <p class="card-text">Do you wish to be a mentor to others? {{ d.get_mentor_display }}</p>
+
+      <div class="card-footer bg-transparent border-success"></div>
     </div>
   </div>
   <div class="card">
@@ -42,7 +44,7 @@
       {% for e in email %}
       {% if e.active is False %}
       <ul class="list-group list-group-flush">
-        <li class="list-group-item d-flex justify-content-between align-items-center">{{ e.email }}<span class="badge badge-primary badge-pill">14</span></li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">{{ e.email }}<span ><a href="{% url 'Profile:EmailStatus' profile_id=request.user.id email_id=e.id %}" class="badge badge-primary badge-pill">Change Status</a></span></span></li>
       </ul>
       {% endif %}
       {% endfor %}
@@ -50,7 +52,7 @@
       {% for e in email %}
       {% if e.active is True %}
       <ul class="list-group list-group-flush">
-        <li class="list-group-item d-flex justify-content-between align-items-center">{{ e.email }}<span class="badge badge-primary badge-pill">14</span></li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">{{ e.email }}<span><a href="{% url 'Profile:EmailStatus' profile_id=request.user.id email_id=e.id %}" class="badge badge-primary badge-pill">Change Status</a></span></li>
       </ul>
       {% endif %}
       {% endfor %}
@@ -60,9 +62,6 @@
   </div>
 </div>
 
-<div class="container">
-
-</div>
 <div class="card-group">
   <div class="card">
     <div class="card-body">
@@ -82,5 +81,62 @@
     </div>
   </div>
 </div>
+</div>
+<div class="card-header">Contact Information</div>
+
+<div class="card-group">
+  <div class="card">
+    <div class="card-body">
+
+      <h5 class="card-title">Physical Address</h5>
+      <table class="table-small">
+        <thead>
+        </thead>
+        <tbody>
+          <tr>
+            <th>Line 1</th>
+            <td>{{ physical.line1 }}</td>
+          </tr>
+          <tr>
+            <th>Line 2</th>
+            <td>{{ physical.line2 }}</td>
+          </tr>
+          <tr>
+            <th>Line 3</th>
+            <td>{{ physical.line3 }}</td>
+          </tr>
+          <tr>
+            <th>Country</th>
+            <td>{{ physical.get_country_display }}</td>
+          </tr>
+          <tr>
+            <th>Region</th>
+            <td>{{ physical.region.region }}</td>
+          </tr>
+          <tr>
+            <th>City</th>
+            <td>{{ physical.city.city }}</td>
+          </tr>
+          <tr>
+            <th>Suburb</th>
+            <td>{{ physical.suburb.suburb }}</td>
+          </tr>
+          <tr>
+            <th>Postal Code</th>
+            <td>{{ physical.code }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Postal Address</h5>
+
+
+    </div>
+
+  </div>
 </div>
 {% endblock Center_Content %}

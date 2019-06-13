@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'leaflet',
     'notifications',
+    'django_select2',
     ]
 
 

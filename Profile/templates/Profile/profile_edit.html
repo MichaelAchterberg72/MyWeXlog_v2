@@ -22,19 +22,23 @@
 
 {% block Center_Content %}
 <div class="container">
-<h3>Your Profile Details</h3>
+<h3>Physical Address</h3>
 
 <form method="post">
   <input type="hidden" name="next" value="{{ request.GET.next }}">
   {% csrf_token %}
   <div class="form-row">
     <div class="form-group col-md-6 mb-0">
-      {{ form.synonym|as_crispy_field }}
-      {{ form.birth_date|as_crispy_field }}
-      {{ form.mentor|as_crispy_field }}
+      {{ form.line1|as_crispy_field }}
+      {{ form.line2|as_crispy_field }}
+      {{ form.line3|as_crispy_field }}
+      {{ form.country|as_crispy_field }}
     </div>
     <div class="form-group col-md-6 mb-0">
-      {{ form.background|as_crispy_field }}
+      {{ form.region|as_crispy_field }}
+      {{ form.city|as_crispy_field }}
+      {{ form.suburb|as_crispy_field }}
+      {{ form.code|as_crispy_field }}
     </div>
   </div>
   <div class="">
