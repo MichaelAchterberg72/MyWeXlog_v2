@@ -12,11 +12,12 @@ import json
 from csp.decorators import csp_exempt
 
 
-from .models import Profile, Email, PhysicalAddress
+from .models import Profile, Email, PhysicalAddress, PostalAddress
+from locations.models import Region
 
 
 from .forms import (
-    ProfileForm, EmailForm, EmailStatusForm, PhysicalAddressForm
+    ProfileForm, EmailForm, EmailStatusForm, PhysicalAddressForm, PostalAddressForm,
 )
 
 
@@ -31,9 +32,10 @@ def ProfileView(request, profile_id):
         info = Profile.objects.filter(talent=profile_id)
         email = Email.objects.filter(talent=profile_id)
         physical = PhysicalAddress.objects.get(talent=profile_id)
+        postal = PhysicalAddress.objects.get(talent=profile_id)
 
         template='Profile/profile_view.html'
-        context= {'info':info, 'email':email, 'physical':physical}
+        context= {'info':info, 'email':email, 'physical':physical, 'postal': postal}
         return render(request, template, context)
     else:
         raise PermissionDenied
@@ -89,7 +91,6 @@ def EmailEditView(request, profile_id):
         raise PermissionDenied
 
 @login_required()
-@csp_exempt
 def EmailStatusView(request, profile_id, email_id):
     detail = Profile.objects.get(talent=profile_id)
     detail2 = get_object_or_404(Email, pk=email_id)
@@ -114,11 +115,11 @@ def EmailStatusView(request, profile_id, email_id):
 @login_required()
 @csp_exempt
 def PhysicalAddressView(request, profile_id):
-    detail = get_object_or_404(Profile, pk=profile_id)
+    detail = Profile.objects.get(talent=profile_id)
     if detail.talent == request.user:
-        form = PhysicalAddressForm(request.POST or None)
+        info = get_object_or_404(PhysicalAddress, pk=profile_id)
+        form = PhysicalAddressForm(request.POST or None, instance=info)
         if request.method =='POST':
-            next_url=request.POST.get('next','/')
             if form.is_valid():
                 new=form.save(commit=False)
                 new.talent = request.user
@@ -126,6 +127,38 @@ def PhysicalAddressView(request, profile_id):
                 return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':profile_id}))
         else:
             template = 'Profile/physical_address_add.html'
+            context = {'form': form}
+            return render(request, template, context)
+    else:
+        raise PermissionDenied
+
+'''
+#>>>Filtered Dropdowns
+def LoadRegions(request):
+    country_id = request.GET.get('country')
+    regions = Region.objects.filter(country=country_id).order_by('region')
+    template = 'Profile/region_dropdown.html'
+    context = {'regions': regions}
+    return render(request, template, context)
+#End Filtered Dropdowns<<<
+'''
+
+
+@login_required()
+@csp_exempt
+def PostalAddressView(request, profile_id):
+    detail = Profile.objects.get(talent=profile_id)
+    if detail.talent == request.user:
+        info = get_object_or_404(PostalAddress, pk=profile_id)
+        form = PostalAddressForm(request.POST or None, instance=info)
+        if request.method =='POST':
+            if form.is_valid():
+                new=form.save(commit=False)
+                new.talent = request.user
+                new.save()
+                return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':profile_id}))
+        else:
+            template = 'Profile/postal_address_add.html'
             context = {'form': form}
             return render(request, template, context)
     else:

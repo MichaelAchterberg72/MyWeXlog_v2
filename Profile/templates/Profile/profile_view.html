@@ -88,7 +88,7 @@
   <div class="card">
     <div class="card-body">
 
-      <h5 class="card-title">Physical Address</h5>
+      <h5 class="card-title">Physical Address <a href="{% url 'Profile:PhysicalAddress' physical.talent.id %}" class="badge badge-primary">Edit</a></h5>
       <table class="table-small">
         <thead>
         </thead>
@@ -132,11 +132,89 @@
   </div>
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title">Postal Address</h5>
-
-
+      <h5 class="card-title">Postal Address <a href="{% url 'Profile:PostalAddress' postal.talent.id %}" class="badge badge-primary">Edit</a></h5>
+      <table class="table-small">
+        <thead>
+        </thead>
+        <tbody>
+          <tr>
+            <th>Line 1</th>
+            <td>{{ postal.line1 }}</td>
+          </tr>
+          <tr>
+            <th>Line 2</th>
+            <td>{{ postal.line2 }}</td>
+          </tr>
+          <tr>
+            <th>Line 3</th>
+            <td>{{ postal.line3 }}</td>
+          </tr>
+          <tr>
+            <th>Country</th>
+            <td>{{ postal.get_country_display }}</td>
+          </tr>
+          <tr>
+            <th>Region</th>
+            <td>{{ postal.region.region }}</td>
+          </tr>
+          <tr>
+            <th>City</th>
+            <td>{{ postal.city.city }}</td>
+          </tr>
+          <tr>
+            <th>Suburb</th>
+            <td>{{ postal.suburb.suburb }}</td>
+          </tr>
+          <tr>
+            <th>Postal Code</th>
+            <td>{{ postal.code }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Phone Numbers <a href="{% url 'Profile:PostalAddress' postal.talent.id %}" class="badge badge-primary">Edit</a></h5>
+      <table class="table-small">
+        <thead>
+        </thead>
+        <tbody>
+          <tr>
+            <th>Line 1</th>
+            <td>{{ postal.line1 }}</td>
+          </tr>
+          <tr>
+            <th>Line 2</th>
+            <td>{{ postal.line2 }}</td>
+          </tr>
+          <tr>
+            <th>Line 3</th>
+            <td>{{ postal.line3 }}</td>
+          </tr>
+          <tr>
+            <th>Country</th>
+            <td>{{ postal.get_country_display }}</td>
+          </tr>
+          <tr>
+            <th>Region</th>
+            <td>{{ postal.region.region }}</td>
+          </tr>
+          <tr>
+            <th>City</th>
+            <td>{{ postal.city.city }}</td>
+          </tr>
+          <tr>
+            <th>Suburb</th>
+            <td>{{ postal.suburb.suburb }}</td>
+          </tr>
+          <tr>
+            <th>Postal Code</th>
+            <td>{{ postal.code }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 {% endblock Center_Content %}

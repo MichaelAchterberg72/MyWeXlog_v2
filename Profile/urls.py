@@ -11,4 +11,7 @@ urlpatterns = [
         path('email/<int:profile_id>/', views.EmailEditView, name='EmailEdit'),
         path('email/<int:profile_id>/<int:email_id>/', views.EmailStatusView, name='EmailStatus'),
         path('address/physical/<int:profile_id>/', views.PhysicalAddressView, name='PhysicalAddress'),
+        #filtered dropdown views
+        #path('ajax/load-regions/', views.LoadRegions, name='AJAX_LoadRegions'),
+        path('address/postal/<int:profile_id>/', views.PostalAddressView, name='PostalAddress'),
 ]

@@ -1,40 +1,22 @@
-{% extends 'profile/base_profile.html' %}
+{% extends 'base_homelite.html' %}
 {% load crispy_forms_tags %}
 
 {% block title %}My {{block.super}} Profile{% endblock title %}
 
 
-{% block network %}
-
-{% endblock network %}
-
-{% block workflow %}
-
-{% endblock workflow %}
-
-{% block score %}
-
-{% endblock score %}
-
-{% block TBA %}
-
-{% endblock TBA %}
-
-{% block Center_Content %}
+{% block content %}
 <div class="container">
-<h3>Physical Address</h3>
+<h3>Add a Suburb</h3>
 
 <form method="post">
   <input type="hidden" name="next" value="{{ request.GET.next }}">
   {% csrf_token %}
   <div class="form-row">
     <div class="form-group col-md-6 mb-0">
-      {{ form.synonym|as_crispy_field }}
-      {{ form.birth_date|as_crispy_field }}
-      {{ form.mentor|as_crispy_field }}
+      {{ form.city|as_crispy_field }}
     </div>
     <div class="form-group col-md-6 mb-0">
-      {{ form.background|as_crispy_field }}
+      {{ form.suburb|as_crispy_field }}
     </div>
   </div>
   <div class="">
@@ -42,4 +24,4 @@
   </div>
 </form>
 </div>
-{% endblock Center_Content %}
+{% endblock content %}

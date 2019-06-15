@@ -17,6 +17,7 @@ from .models import (
             Profile, Email, PhysicalAddress, PostalAddress
           )
 from enterprises.models import Enterprise
+from locations.models import Region, City, Suburb
 
 class ProfileForm(forms.ModelForm):
     class Meta:
@@ -29,12 +30,44 @@ class CompanySearchFieldMixin:
         'name__icontains', 'pk__startswith'
     ]
 
+class CitySearchFieldMixin:
+    search_fields = [
+        'city__icontains', 'pk__startswith'
+    ]
+
+class SuburbSearchFieldMixin:
+    search_fields = [
+        'suburb__icontains', 'pk__startswith'
+    ]
+
+class RegionSearchFieldMixin:
+    search_fields = [
+        'region__icontains', 'pk__startswith'
+    ]
 
 class CompanySelect2Widget(CompanySearchFieldMixin, ModelSelect2Widget):
     model = Enterprise
 
     def create_value(self, value):
         self.get_queryset().create(name=value)
+
+class CitySelect2Widget(CitySearchFieldMixin, ModelSelect2Widget):
+    model = City
+
+    def create_value(self, value):
+        self.get_queryset().create(city=value)
+
+class SuburbSelect2Widget(SuburbSearchFieldMixin, ModelSelect2Widget):
+    model = Suburb
+
+    def create_value(self, value):
+        self.get_queryset().create(suburb=value)
+
+class RegionSelect2Widget(RegionSearchFieldMixin, ModelSelect2Widget):
+    model = Region
+
+    def create_value(self, value):
+        self.get_queryset().create(region=value)
 #<<< Select2 Company Field
 
 class EmailForm(forms.ModelForm):
@@ -54,3 +87,33 @@ class PhysicalAddressForm(forms.ModelForm):
     class Meta:
         model = PhysicalAddress
         exclude = ['talent']
+        widgets={
+            'region': RegionSelect2Widget(),
+            'city': CitySelect2Widget(),
+            'suburb': SuburbSelect2Widget(),
+        }
+'''
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['region'].queryset = Region.objects.none()
+
+        if 'country' in self.data:
+            try:
+                country_id = int(self.data.get('country'))
+                self.fields['region'].queryset = Region.objects.filter(country=country_id)
+            except (ValueError, TypeError):
+                pass  # invalid input from the client; ignore and fallback to empty Region queryset
+        elif self.instance.pk:
+            pass
+'''
+
+
+class PostalAddressForm(forms.ModelForm):
+    class Meta:
+        model = PostalAddress
+        exclude = ['talent']
+        widgets={
+            'region': RegionSelect2Widget(),
+            'city': CitySelect2Widget(),
+            'suburb': SuburbSelect2Widget(),
+        }

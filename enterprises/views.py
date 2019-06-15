@@ -37,7 +37,7 @@ def EnterpriseAddPopup(request):
         template = 'enterprises/enterprise_popup.html'
         return render(request, template, context)
 
-@csp_exempt
+
 @csrf_exempt
 def get_enterprise_id(request):
     if request.is_ajax():
