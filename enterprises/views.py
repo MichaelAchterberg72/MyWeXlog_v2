@@ -18,7 +18,7 @@ from .models import (
 
 
 from .forms import (
-    EnterprisePopupForm,
+    EnterprisePopupForm, BranchForm, PhoneNumberForm, IndustryPopUpForm, BranchTypePopUpForm
 )
 
 

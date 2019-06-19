@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
-
+from time import time
+from random import random
 
 from django_countries.fields import CountryField
 from phonenumber_field.modelfields import PhoneNumberField
@@ -27,7 +28,7 @@ class OnlineRegistrations(models.Model):
         unique_together = (('profileurl', 'sitename'),)
 
     def __str__(self):
-        return self.sitename
+        return '{}'.format(self.sitename)
 
 class Profile(models.Model):
     MENTOR = (

@@ -12,18 +12,38 @@ import json
 from csp.decorators import csp_exempt
 
 
-from .models import Profile, Email, PhysicalAddress, PostalAddress
+from .models import (
+        Profile, Email, PhysicalAddress, PostalAddress, PhoneNumber, SiteName, OnlineRegistrations, FileUpload
+        )
+
 from locations.models import Region
 
 
 from .forms import (
-    ProfileForm, EmailForm, EmailStatusForm, PhysicalAddressForm, PostalAddressForm,
+    ProfileForm, EmailForm, EmailStatusForm, PhysicalAddressForm, PostalAddressForm, PhoneNumberForm, OnlineProfileForm, ProfileTypeForm, FileUploadForm
 )
 
 
 class ProfileHome(TemplateView):
     template_name = 'Profile/profile_home.html'
 
+@login_required()
+def FileUploadView(request, profile_id):
+    detail = Profile.objects.get(talent=profile_id)
+    if detail.talent == request.user:
+        form = FileUploadForm(request.POST, request.FILES)
+        if request.method =='POST':
+            if form.is_valid():
+                new = form.save(commit=False)
+                new.talent = request.user
+                new.save()
+                return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':profile_id}))
+        else:
+            template = 'Profile/file_upload.html'
+            context = {'form': form}
+            return render(request, template, context)
+    else:
+        raise PermissionDenied
 
 @login_required()
 def ProfileView(request, profile_id):
@@ -32,10 +52,13 @@ def ProfileView(request, profile_id):
         info = Profile.objects.filter(talent=profile_id)
         email = Email.objects.filter(talent=profile_id)
         physical = PhysicalAddress.objects.get(talent=profile_id)
-        postal = PhysicalAddress.objects.get(talent=profile_id)
+        postal = PostalAddress.objects.get(talent=profile_id)
+        pnumbers = PhoneNumber.objects.filter(talent=profile_id)
+        online = OnlineRegistrations.objects.filter(talent=profile_id)
+        upload = FileUpload.objects.filter(talent=profile_id)
 
         template='Profile/profile_view.html'
-        context= {'info':info, 'email':email, 'physical':physical, 'postal': postal}
+        context= {'info':info, 'email':email, 'physical':physical, 'postal': postal, 'pnumbers': pnumbers, 'online': online, 'upload': upload}
         return render(request, template, context)
     else:
         raise PermissionDenied
@@ -163,3 +186,70 @@ def PostalAddressView(request, profile_id):
             return render(request, template, context)
     else:
         raise PermissionDenied
+
+
+@login_required()
+@csp_exempt
+def PhoneNumberAdd(request, profile_id):
+    detail = Profile.objects.get(talent=profile_id)
+    if detail.talent == request.user:
+        form =PhoneNumberForm(request.POST or None)
+        if request.method =='POST':
+            if form.is_valid():
+                new=form.save(commit=False)
+                new.talent = request.user
+                new.save()
+                return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':profile_id}))
+        else:
+            template = 'Profile/phone_number_add.html'
+            context = {'form': form}
+            return render(request, template, context)
+    else:
+        raise PermissionDenied
+
+
+@login_required()
+@csp_exempt
+def OnlineProfileAdd(request, profile_id):
+    detail = Profile.objects.get(talent=profile_id)
+    if detail.talent == request.user:
+        form =OnlineProfileForm(request.POST or None)
+        if request.method =='POST':
+            if form.is_valid():
+                new=form.save(commit=False)
+                new.talent = request.user
+                new.save()
+                return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':profile_id}))
+        else:
+            template = 'Profile/online_profile_add.html'
+            context = {'form': form}
+            return render(request, template, context)
+    else:
+        raise PermissionDenied
+
+
+#>>>Company Popup
+@login_required()
+@csp_exempt
+def ProfileTypePopup(request):
+    form = ProfileTypeForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            instance=form.save(commit=False)
+            instance.save()
+            return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_sitename");</script>' % (instance.pk, instance))
+    else:
+        context = {'form':form,}
+        template = 'Profile/site_type_popup.html'
+        return render(request, template, context)
+
+
+@csrf_exempt
+def get_SiteType_id(request):
+    if request.is_ajax():
+        type = request.Get['site']
+        site_id = SiteName.objects.get(site = site).id
+        data = {'site_id':site_id,}
+        return HttpResponse(json.dumps(data), content_type='application/json')
+    return HttpResponse("/")
+#<<< Company Popup

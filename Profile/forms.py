@@ -14,10 +14,16 @@ from django_select2.forms import (
 
 
 from .models import (
-            Profile, Email, PhysicalAddress, PostalAddress
+            Profile, Email, PhysicalAddress, PostalAddress, PhoneNumber, OnlineRegistrations, SiteName, FileUpload
           )
 from enterprises.models import Enterprise
 from locations.models import Region, City, Suburb
+
+
+class FileUploadForm(forms.ModelForm):
+    class Meta:
+        model = FileUpload
+        fields = ('title', 'file')
 
 class ProfileForm(forms.ModelForm):
     class Meta:
@@ -117,3 +123,21 @@ class PostalAddressForm(forms.ModelForm):
             'city': CitySelect2Widget(),
             'suburb': SuburbSelect2Widget(),
         }
+
+
+class PhoneNumberForm(forms.ModelForm):
+    class Meta:
+        model = PhoneNumber
+        fields = ('number', 'type', 'current')
+
+
+class OnlineProfileForm(forms.ModelForm):
+    class Meta:
+        model = OnlineRegistrations
+        fields = ('profileurl', 'sitename', )
+
+
+class ProfileTypeForm(forms.ModelForm):
+    class Meta:
+        model = SiteName
+        fields = ('site', )

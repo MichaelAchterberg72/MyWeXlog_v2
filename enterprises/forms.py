@@ -17,6 +17,31 @@ from .models import (
             Industry, Enterprise, BranchType, Branch, PhoneNumber,
             )
 
+
+class PhoneNumberForm(forms.ModelForm):
+    class Meta:
+        model = PhoneNumber
+        fields = ('branch', 'phone', 'type', 'existing')
+
+
+class BranchForm(forms.ModelForm):
+    class Meta:
+        model = Branch
+        fields = ('enterprise', 'name', 'type', 'phy_address_line1', 'phy_address_line2', 'country', 'region', 'city', 'suburb', 'code', 'industry')
+
+
+class IndustryPopUpForm(forms.ModelForm):
+    class Meta:
+        model = Industry
+        fields = ('industry',)
+
+
+class BranchTypePopUpForm(forms.ModelForm):
+    class Meta:
+        model = BranchType
+        fields = ('type',)
+
+
 class EnterprisePopupForm(forms.ModelForm):
     class Meta:
         model = Enterprise
