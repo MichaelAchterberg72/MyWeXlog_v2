@@ -1,0 +1,47 @@
+{% extends "base_home.html" %}
+
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% block title %}{{block.super}}-New Book{% endblock title %}
+
+{% block content %}
+
+<div class="card">
+  <h5 class="card-header">
+Add a New Book</h5>
+
+<script type="text/javascript">
+
+function showAddPopup(triggeringLink) {
+    var name = triggeringLink.id.replace(/^add_/, '');
+    href = triggeringLink.href;
+    var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes');
+    win.focus();
+    return false;
+}
+function closePopup(win, newID, newRepr, id) {
+    $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
+    win.close();
+}
+
+</script>
+
+<div class="card-body">
+<form class="" action="" method="POST">
+
+  {% csrf_token %}
+  {{ form.title|as_crispy_field }}
+  {{ form.publisher|as_crispy_field }}
+    <a href="{% url 'BookList:PublisherCreatePopup' %}" class="btn btn-primary" id='add_publisher' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a new Publisher</a>
+  {{ form.author|as_crispy_field }}
+    <a href="{% url 'BookList:AuthorCreatePopup' %}" class="btn btn-primary" id='add_author' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a new Author</a>
+
+  {{ form.link|as_crispy_field }}
+  {{ form.tag|as_crispy_field }}
+
+  <button type="submit" name="button">Add</button>
+
+</form>
+
+</div></div>
+{% endblock content %}

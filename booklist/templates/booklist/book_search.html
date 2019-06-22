@@ -1,0 +1,37 @@
+{% extends "base_home.html" %}
+
+{% block content %}
+
+<div class="card">
+  <div class="card-header">
+<div class="container">
+  {% if query %}
+    <h4>Books for search "{{ query }}"</h4>
+</div>
+</div>
+<div class="card-body">
+    <h5 class="card-title">
+      {% with results.count as total_results %}
+        Found {{ total_results }} result{{ total_results|pluralize }}
+      {% endwith %}
+    </h5>
+    {% for BookList in results %}
+      <h5 class="card-title">><a href="{{ BookList.link }}">{{BookList.title }}</a></h5>
+      <p class="card-text">
+      {{ BookList.author }} - {{ BookList.publisher }} - {{ BookList.tag }}
+    {% empty %}
+      <p>There are no results for your query.</p>
+    {% endfor %}
+    <p> </p>
+    <p><a href="{% url "BookList:book-search" %}" class="btn btn-primary">Search Again</a></p>
+  {% else %}
+    <h1>Search for Books</h1>
+    <form action="." method="get">
+        {{ form.as_p }}
+        <input type="submit" value="Search">
+      </form>
+    {% endif %}
+    </div>
+    </div>
+</div>
+{% endblock content %}
