@@ -24,14 +24,14 @@ from .forms import (
 
 #>>> Region Popup
 @login_required()
+@csp_exempt
 def RegionAddPopup(request):
     form = RegionForm(request.POST or None)
     if request.method =='POST':
         if form.is_valid():
-            new = form.save(commit=False)
-            new.save()
-            messages.success(request, 'Region added!', extra_tags='None')
-            return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_region");</script>' % (new.pk, new))
+            instance=form.save(commit=False)
+            instance.save()
+            return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_region");</script>' % (instance.pk, instance))
 
     else:
         context = {'form': form}
@@ -41,8 +41,8 @@ def RegionAddPopup(request):
 @csrf_exempt
 def get_region_id(request):
     if request.is_ajax():
-        region = request.Get['region']
-        region_id = Region.objects.get(name = region).id
+        new_region = request.Get['region']
+        region_id = Region.objects.get(region = new_region).id
         data = {'region_id':region_id,}
         return HttpResponse(json.dumps(data), content_type='application/json')
     return HttpResponse("/")
@@ -51,13 +51,13 @@ def get_region_id(request):
 
 #>>> City Popup
 @login_required()
+@csp_exempt
 def CityAddPopup(request):
     form = CityForm(request.POST or None)
     if request.method =='POST':
         if form.is_valid():
             new = form.save(commit=False)
             new.save()
-            messages.success(request, 'City added!', extra_tags='None')
             return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_city");</script>' % (new.pk, new))
 
     else:
@@ -69,7 +69,7 @@ def CityAddPopup(request):
 def get_city_id(request):
     if request.is_ajax():
         city = request.Get['city']
-        city_id = City.objects.get(name = city).id
+        city_id = City.objects.get(city = city).id
         data1 = {'city_id':city_id,}
         return HttpResponse(json.dumps(data1), content_type='application/json')
     return HttpResponse("/")
@@ -78,6 +78,7 @@ def get_city_id(request):
 
 #>>> City Popup
 @login_required()
+@csp_exempt
 def SuburbAddPopup(request):
     form = SuburbForm(request.POST or None)
     if request.method =='POST':
@@ -95,7 +96,7 @@ def SuburbAddPopup(request):
 def get_suburb_id(request):
     if request.is_ajax():
         suburb = request.Get['city']
-        suburb_id = Suburb.objects.get(name = suburb).id
+        suburb_id = Suburb.objects.get(suburb = suburb).id
         data1 = {'suburb_id':suburb_id,}
         return HttpResponse(json.dumps(data1), content_type='application/json')
     return HttpResponse("/")

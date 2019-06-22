@@ -1,0 +1,34 @@
+{% extends "base_home.html" %}
+
+{% block title %}{{block.super}}-Enterprise{% endblock title %}
+
+{% block content %}
+
+<div class="card">
+  <h5 class="card-header">Welcome to the Enterprises home page!</h5>
+  <div class="card-body">
+    <p>There are currently {{ ecount.sum_e }} Enterprises and {{ bcount.sum_b }} Branches listed in WexLog!</p>
+    <table>
+      <col width="40%">
+      <col width="50%">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Website</th>
+          <th></th>
+        </tr>
+      </thead>
+      {% for c in company %}
+      <tbody>
+        <tr>
+          <td>{{ c.name }}</td>
+          <td>{{ c.website }}</td>
+          <td><a href="{% url 'Enterprise:AddBranch' c.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Add Branch</a> </td>
+        </tr>
+      </tbody>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+
+{% endblock content %}

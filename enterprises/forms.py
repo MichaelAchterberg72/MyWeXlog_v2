@@ -27,7 +27,7 @@ class PhoneNumberForm(forms.ModelForm):
 class BranchForm(forms.ModelForm):
     class Meta:
         model = Branch
-        fields = ('enterprise', 'name', 'type', 'phy_address_line1', 'phy_address_line2', 'country', 'region', 'city', 'suburb', 'code', 'industry')
+        fields = ('company', 'name', 'type', 'phy_address_line1', 'phy_address_line2', 'country', 'region', 'city', 'suburb', 'code', 'industry')
 
 
 class IndustryPopUpForm(forms.ModelForm):

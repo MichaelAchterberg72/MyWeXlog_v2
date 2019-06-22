@@ -29,7 +29,7 @@ class BranchType(models.Model):
         return self.type
 
 class Branch(models.Model):
-    enterprise = models.ForeignKey(Enterprise, on_delete=models.PROTECT)
+    company = models.ForeignKey(Enterprise, on_delete=models.PROTECT)
     name = models.CharField('Branch or Division Name', max_length=100)
     type = models.ForeignKey(BranchType, on_delete=models.PROTECT)
     phy_address_line1 = models.CharField('Physical address line 1', max_length=150, blank=True, null=True)
@@ -42,10 +42,10 @@ class Branch(models.Model):
     industry = models.ManyToManyField(Industry)
 
     class Meta:
-        unique_together = (('enterprise','name', 'city'),)
+        unique_together = (('company','name', 'city'),)
 
     def __str__(self):
-        return '{}, {}, {}'.format(self.enterprise, self.name, self.city)
+        return '{}, {}, {}'.format(self.company, self.name, self.city)
 
 class PhoneNumber(models.Model):
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE)

@@ -7,6 +7,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 import json
+from django.db.models import Count
 
 
 from csp.decorators import csp_exempt
@@ -18,13 +19,41 @@ from .models import (
 
 
 from .forms import (
-    EnterprisePopupForm, BranchForm, PhoneNumberForm, IndustryPopUpForm, BranchTypePopUpForm
+    EnterprisePopupForm, BranchForm, PhoneNumberForm, IndustryPopUpForm, BranchTypePopUpForm,
 )
+
+def EnterpriseHome(request):
+    ecount = Enterprise.objects.all().aggregate(sum_e=Count('name'))
+    bcount = Branch.objects.all().aggregate(sum_e=Count('name'))
+    company = Enterprise.objects.all()
+
+    template = 'enterprises/enterprise_home.html'
+    context = {'ecount': ecount, 'bcount': bcount, 'company': company,}
+    return render(request, template, context)
+
+
+@login_required()
+@csp_exempt
+def BranchAddView(request, e_id):
+    form = BranchForm(request.POST or None)
+    if request.method == 'POST':
+        info = get_object_or_404(Enterprise, pk=pk)
+        next_url=request.POST.get('next','/')
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.enterprise = info
+            new.save()
+            if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
+                next_url = redirect(reverse('Profile:ProfileView', kwargs={'profile_id':profile_id}))
+            return HttpResponseRedirect(next_url)
+    else:
+        context = {'form': form}
+        template = 'enterprises/branch_add.html'
+        return render(request, template, context)
 
 
 #>>>Company Popup
 @login_required()
-@csp_exempt
 def EnterpriseAddPopup(request):
     form = EnterprisePopupForm(request.POST or None)
     if request.method == 'POST':
@@ -47,3 +76,57 @@ def get_enterprise_id(request):
         return HttpResponse(json.dumps(data), content_type='application/json')
     return HttpResponse("/")
 #<<< Company Popup
+
+
+#>>>Industry Popup
+@login_required()
+@csp_exempt
+def IndustryAddPopup(request):
+    form = IndustryPopUpForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            instance=form.save(commit=False)
+            instance.save()
+            return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_industry");</script>' % (instance.pk, instance))
+    else:
+        context = {'form':form,}
+        template = 'enterprises/industry_popup.html'
+        return render(request, template, context)
+
+
+@csrf_exempt
+def get_industry_id(request):
+    if request.is_ajax():
+        industry = request.Get['industry']
+        industry_id = Industry.objects.get(industry = industry).id
+        data = {'industry_id':industry_id,}
+        return HttpResponse(json.dumps(data), content_type='application/json')
+    return HttpResponse("/")
+#<<< Industry Popup
+
+
+#>>>BranchType Popup
+@login_required()
+@csp_exempt
+def BranchTypeAddPopup(request):
+    form = BranchTypePopUpForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            instance=form.save(commit=False)
+            instance.save()
+            return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_type");</script>' % (instance.pk, instance))
+    else:
+        context = {'form':form,}
+        template = 'enterprises/branchtype_popup.html'
+        return render(request, template, context)
+
+
+@csrf_exempt
+def get_branchtype_id(request):
+    if request.is_ajax():
+        branchtype = request.Get['branchtype']
+        branchtype_id = BranchType.objects.get(type = branchtype).id
+        data = {'branchtype_id':branchtype_id,}
+        return HttpResponse(json.dumps(data), content_type='application/json')
+    return HttpResponse("/")
+#<<< BranchType Popup
