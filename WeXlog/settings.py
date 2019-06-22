@@ -49,22 +49,25 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'leaflet',
     'notifications',
+    'django.forms',
     #allauth-applications
     'django.contrib.sites',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     #internal Applications
-    'users.apps.UsersConfig',
-    'Profile.apps.ProfileConfig',
-    'db_flatten.apps.DbFlattenConfig',
-    'locations.apps.LocationsConfig',
-    'enterprises.apps.EnterprisesConfig',
-    'project.apps.ProjectConfig',
-    'booklist.apps.BooklistConfig',
-    'talenttrack.apps.TalenttrackConfig',
-    'trustpassport.apps.TrustpassportConfig',
-    'marketplace.apps.MarketplaceConfig',]
+    'booklist',
+    'core',
+    'db_flatten',
+    'enterprises',
+    'locations',
+    'marketplace',
+    'Profile',
+    'project',
+    'talenttrack',
+    'trustpassport',
+    'users',
+]
 
 
 
@@ -86,7 +89,7 @@ ROOT_URLCONF = 'WeXlog.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'),],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -96,6 +99,12 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.request',
             ],
+#            'loaders': [
+#            ('django.template.loaders.cached.Loader', [
+#                'django.template.loaders.filesystem.Loader',
+#                'django.template.loaders.app_directories.Loader',
+#            ]),
+#        ],
         },
     },
 ]
@@ -127,6 +136,7 @@ PASSWORD_HASHERS = [
 
 WSGI_APPLICATION = 'WeXlog.wsgi.application'
 
+
 ## Web Security Headers
     ##To test use www.securityheaders.com
     ##X-XSS-Protection
@@ -143,9 +153,9 @@ X_FRAME_OPTIONS = 'DENY'
 X_FRAME_OPTIONS = 'DENY'
     ##django-referrer-policy (3rd party app)
 REFERRER_POLICY='same-origin'
-'''
-    ## Content-Security-policy (3rd party app)
-CSP_DEFAULT_SRC = ("'self'",)
+
+    # Content-Security-policy (3rd party app)
+CSP_DEFAULT_SRC = ("'self'", 'maxcdn.bootstrapcdn.com', 'code.jquery.com', 'cdnjs.cloudflare.com')
 CSP_SCRIPT_SRC = None
 CSP_IMG_SRC = None
 CSP_OBJECT_SRC = None
@@ -175,7 +185,8 @@ CSP_EXCLUDE_URL_PREFIXES = ()
 #CSRF_COOKIE_HTTPONLY = True
 #SESSION_COOKIE_SECURE = True
 #SESSION_COOKIE_SAMESITE = 'Strict'
-'''
+
+
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
@@ -184,8 +195,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'Wexlog_1',
         'USER': 'postgres',
-#		'PASSWORD': 'rdf8tm1234' #MA
-        'PASSWORD': 'dJpfss41678', #JK
+		'PASSWORD': 'rdf8tm1234' #MA
+#        'PASSWORD': 'dJpfss41678', #JK
     }
 }
 
@@ -238,3 +249,8 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # GDAL_LIBRARY_PATH = r'C:/OSGeo4W64/bin/gdal203'
 
 #  os.environ["PATH"] += os.pathsep + BASE_DIR + '\\venv\\Lib\\site-packages\\osgeo'
+
+POPUP_TEMPLATE_NAME_CREATE = 'popup/create.html'
+POPUP_TEMPLATE_NAME_UPDATE = 'popup/update.html'
+
+FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'

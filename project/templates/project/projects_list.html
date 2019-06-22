@@ -1,0 +1,21 @@
+{% extends "base_home.html" %}
+
+{% block content %}
+  <div class="content-section">
+  <div class="card">
+  <h5 class="card-header">Projects List</h5>
+
+  <div class="card-body">
+      <ul>
+        {% for item in list %}
+            <li>{{ item.name }} - {{ item.owner }} - {{ item.industry }} - {{ item.country }}
+
+            </li>
+        {% empty %}
+            <li>No projects yet.</li>
+        {% endfor %}
+      </ul>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

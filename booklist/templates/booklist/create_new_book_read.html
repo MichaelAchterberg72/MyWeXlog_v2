@@ -1,0 +1,51 @@
+{% extends "base_home.html" %}
+
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters static %}
+{% block title %}{{block.super}}-New Book Read{% endblock title %}
+
+{% block extra_head %}
+  <!-- DatePicker -->
+  <link rel="stylesheet" href="{% static 'vendor/datepicker-1.0.3/datepicker.min.css' %}">
+  <script src="{% static 'vendor/datepicker-1.0.3/datepicker.min.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+
+<div class="card">
+  <h5 class="card-header">
+
+Add a New Book Read</h5>
+
+<script type="text/javascript">
+
+function showAddPopup(triggeringLink) {
+    var name = triggeringLink.id.replace(/^add_/, '');
+    href = triggeringLink.href;
+    var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes');
+    win.focus();
+    return false;
+}
+function closePopup(win, newID, newRepr, id) {
+    $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
+    win.close();
+}
+</script>
+
+<div class="card-body">
+<form class="" action="" method="POST" autocomplete="off" novalidate>
+
+  {% csrf_token %}
+  {{ form.book|as_crispy_field }}
+    <a href="{% url 'BookList:books-new' %}" class="btn btn-primary" id='add_book'><img src = "{% static '/images/icon-addlink.svg' %}">Add a new book</a>
+  {{ form.type|as_crispy_field }}
+    <a href="{% url 'BookList:FormatCreatePopup' %}" class="btn btn-primary" id='add_format' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a new book type</a>
+
+  {{ form.date|as_crispy_field }}
+
+  <button type="submit" name="button">Add</button>
+
+</form>
+</div></div>
+{% endblock content %}

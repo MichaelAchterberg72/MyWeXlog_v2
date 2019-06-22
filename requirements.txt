@@ -60,3 +60,4 @@ traceback2==1.4.0
 unicodecsv==0.14.1
 unittest2==1.1.0
 urllib3==1.24.3
+django-popup-field 0.1.6

@@ -1,0 +1,39 @@
+{% extends "base_home.html" %}
+
+{% block content %}
+
+<div class="card">
+  <div class="card-header">
+<div class="container">
+  {% if query %}
+    <h4>Enterprise branch search "{{ query }}"</h4>
+</div>
+</div>
+<div class="card-body">
+    <h5 class="card-title">
+      {% with results.count as total_results %}
+        Found {{ total_results }} result{{ total_results|pluralize }}
+      {% endwith %}
+    </h5>
+    {% for Branch in results %}
+      <h5 class="card-title">><a href="{{ Branch.enterprise }}">{{Branch.enterprise }} - {{Branch.name }}</a></h5>
+      <p class="card-text">
+      {{ Branch.type }} - {{ Branch.city }}
+      <p class="card-text">
+      {{ Branch.industry }}
+    {% empty %}
+      <p>There are no results for your query.</p>
+    {% endfor %}
+    <p> </p>
+    <p><a href="{% url "Enterprise:branch-search" %}" class="btn btn-primary">Search Again</a></p>
+  {% else %}
+    <h5 class="card-title">Search for Enterprise Branch</h5>
+    <form action="." method="get">
+        {{ form.as_p }}
+        <input type="submit" value="Search">
+      </form>
+    {% endif %}
+    </div>
+    </div>
+</div>
+{% endblock content %}

@@ -2,10 +2,14 @@
 {% load i18n %}
 
 {% block content %}
-<h1>{% trans "Inbox" %}</h1>
+
+<div class="card">
+  <h1 class="card-header">{% trans "Inbox" %}</h1>
 {% if message_list %}
+<div class="container">
 <table class="messages">
     <thead>
+      <div class="card-body">
         <tr><th>{% trans "Sender" %}</th><th>{% trans "Subject" %}</th><th>{% trans "Received" %}</th><th>{% trans "Action" %}</th></tr>
     </thead>
     <tbody>
@@ -19,12 +23,16 @@
             {% if message.replied %}</em>{% endif %}
             {% if message.new %}</strong>{% endif %}</td>
         <td>{{ message.sent_at|date:_("DATETIME_FORMAT") }}</td>
-        <td><a href="{% url 'messages_delete' message.id %}">{% trans "delete" %}</a></td>
+        <td><a href="{% url 'messages_delete' message.id %}" class="btn btn-primary">{% trans "delete" %}</a></td>
     </tr>
 {% endfor %}
     </tbody>
 </table>
+</div>
+</div>
 {% else %}
 <p>{% trans "No messages." %}</p>
 {% endif %}
+</div>
+
 {% endblock %}
