@@ -15,4 +15,7 @@ urlpatterns = [
     path('popup/branchtype/add/', views.BranchTypeAddPopup, name="BranchTypeAddPop"),
     path('popup/ajax/get_branchtype_id/', views.get_branchtype_id, name="AJAX_GetBranchTypeID"),
     path('add/branch/<int:e_id>/', views.BranchAddView, name="AddBranch"),
+    path('edit/branch/<int:e_id>/', views.BranchEditView, name="EditBranch"),
+    path('branches/<int:c_id>/', views.BranchListView, name='BranchList'),
+    path('branches/detail/<int:branch_id>/', views.BranchDetailView, name='BranchDetail'),
 ]

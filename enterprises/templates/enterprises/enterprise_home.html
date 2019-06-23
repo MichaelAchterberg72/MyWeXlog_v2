@@ -8,13 +8,18 @@
   <h5 class="card-header">Welcome to the Enterprises home page!</h5>
   <div class="card-body">
     <p>There are currently {{ ecount.sum_e }} Enterprises and {{ bcount.sum_b }} Branches listed in WexLog!</p>
-    <table>
-      <col width="40%">
-      <col width="50%">
+    <table class="table-sm">
+      <col width="30%">
+      <col width="30%">
+      <col width="15%">
+      <col width="15%">
+      <col width="10%">
       <thead>
         <tr>
           <th>Name</th>
           <th>Website</th>
+          <th>Current Employees on WeXLog</th>
+          <th>Past Employees on WeXLog</th>
           <th></th>
         </tr>
       </thead>
@@ -23,7 +28,14 @@
         <tr>
           <td>{{ c.name }}</td>
           <td>{{ c.website }}</td>
-          <td><a href="{% url 'Enterprise:AddBranch' c.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Add Branch</a> </td>
+          {% if request.user.subscription >= 2 %}
+            <td>Current</td>
+            <td>Past</td>
+          {% else %}
+            <td class="badge badge-info text-wrap" style="width: 6rem;">Active Subscription required</td>
+            <td class="badge badge-info text-wrap" style="width: 6rem;">Active Subscription required</td>
+          {% endif %}
+          <td><a href="{% url 'Enterprise:BranchList' c.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">List Branches</a> </td>
         </tr>
       </tbody>
       {% endfor %}

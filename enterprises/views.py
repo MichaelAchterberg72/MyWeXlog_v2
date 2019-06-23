@@ -9,7 +9,7 @@ from django.core.exceptions import PermissionDenied
 import json
 from django.db.models import Count
 
-
+from core.decorators import app_role, subscription
 from csp.decorators import csp_exempt
 
 
@@ -24,11 +24,29 @@ from .forms import (
 
 def EnterpriseHome(request):
     ecount = Enterprise.objects.all().aggregate(sum_e=Count('name'))
-    bcount = Branch.objects.all().aggregate(sum_e=Count('name'))
+    bcount = Branch.objects.all().aggregate(sum_b=Count('name'))
     company = Enterprise.objects.all()
 
     template = 'enterprises/enterprise_home.html'
     context = {'ecount': ecount, 'bcount': bcount, 'company': company,}
+    return render(request, template, context)
+
+
+def BranchListView(request, c_id):
+    list = Branch.objects.filter(company=c_id).order_by('name')
+    detail = get_object_or_404(Enterprise, pk=c_id)
+    template = 'enterprises/branch_list.html'
+    context = {'list': list, 'detail': detail}
+    return render(request, template, context)
+
+
+@login_required()
+def BranchDetailView(request, branch_id):
+    info = get_object_or_404(Branch, pk=branch_id)
+    detail = Branch.objects.filter(pk=branch_id)
+
+    template = 'enterprises/branch_detail.html'
+    context = {'detail': detail, 'info': info}
     return render(request, template, context)
 
 
@@ -37,14 +55,34 @@ def EnterpriseHome(request):
 def BranchAddView(request, e_id):
     form = BranchForm(request.POST or None)
     if request.method == 'POST':
-        info = get_object_or_404(Enterprise, pk=pk)
+        info = get_object_or_404(Enterprise, pk=e_id)
         next_url=request.POST.get('next','/')
         if form.is_valid():
             new = form.save(commit=False)
-            new.enterprise = info
+            new.company = info
             new.save()
             if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
-                next_url = redirect(reverse('Profile:ProfileView', kwargs={'profile_id':profile_id}))
+                next_url = redirect(reverse('Profile:ProfileView', kwargs={'e_id':e_id}))
+            return HttpResponseRedirect(next_url)
+    else:
+        context = {'form': form}
+        template = 'enterprises/branch_add.html'
+        return render(request, template, context)
+
+
+@login_required()
+@csp_exempt
+def BranchEditView(request, e_id):
+    info2 = Branch.objects.get(pk=e_id)
+    form = BranchForm(request.POST or None, instance=info2)
+    if request.method == 'POST':
+        next_url=request.POST.get('next','/')
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.save()
+            form.save_m2m()
+            if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
+                next_url = redirect(reverse('Profile:ProfileView', kwargs={'e_id':e_id}))
             return HttpResponseRedirect(next_url)
     else:
         context = {'form': form}

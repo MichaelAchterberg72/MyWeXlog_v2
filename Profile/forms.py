@@ -14,10 +14,40 @@ from django_select2.forms import (
 
 
 from .models import (
-            Profile, Email, PhysicalAddress, PostalAddress, PhoneNumber, OnlineRegistrations, SiteName, FileUpload
+            Profile, Email, PhysicalAddress, PostalAddress, PhoneNumber, OnlineRegistrations, SiteName, FileUpload, IdentificationDetail, IdType, PassportDetail, LanguageList, LanguageTrack
           )
 from enterprises.models import Enterprise
 from locations.models import Region, City, Suburb
+
+
+class LanguageTrackForm(forms.ModelForm):
+    class Meta:
+        model = LanguageTrack
+        fields = ('language', 'level')
+
+
+class LanguageListForm(forms.ModelForm):
+    class Meta:
+        model = LanguageList
+        fields = ('language',)
+
+
+class PassportDetailForm(forms.ModelForm):
+    class Meta:
+        model = PassportDetail
+        fields = ('passport_number', 'expiry_date')
+
+
+class IdentificationDetailForm(forms.ModelForm):
+    class Meta:
+        model = IdentificationDetail
+        fields = ('identification', 'id_type')
+
+
+class IdTypeForm(forms.ModelForm):
+    class Meta:
+        model = IdType
+        fields = ('type',)
 
 
 class FileUploadForm(forms.ModelForm):

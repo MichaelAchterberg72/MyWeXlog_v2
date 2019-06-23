@@ -17,17 +17,60 @@ from .models import (
             Industry, Enterprise, BranchType, Branch, PhoneNumber,
             )
 
+from locations.models import (
+            Region, City, Suburb
+)
+
 
 class PhoneNumberForm(forms.ModelForm):
     class Meta:
         model = PhoneNumber
         fields = ('branch', 'phone', 'type', 'existing')
 
+#>>> Select 2
+class RegionSearchFieldMixin:
+    search_fields = [
+        'region__icontains', 'pk__startswith'
+    ]
+
+class RegionSelect2Widget(RegionSearchFieldMixin, ModelSelect2Widget):
+    model = Region
+
+    def create_value(self, value):
+        self.get_queryset().create(region=value)
+
+
+class SuburbSearchFieldMixin:
+    search_fields = [
+        'suburb__icontains', 'pk__startswith'
+    ]
+class SuburbSelect2Widget(SuburbSearchFieldMixin, ModelSelect2Widget):
+    model = Suburb
+
+    def create_value(self, value):
+        self.get_queryset().create(suburb=value)
+
+
+class CitySearchFieldMixin:
+    search_fields = [
+        'city__icontains', 'pk__startswith'
+    ]
+class CitySelect2Widget(CitySearchFieldMixin, ModelSelect2Widget):
+    model = City
+
+    def create_value(self, value):
+        self.get_queryset().create(city=value)
+#Select2<<<
 
 class BranchForm(forms.ModelForm):
     class Meta:
         model = Branch
-        fields = ('company', 'name', 'type', 'phy_address_line1', 'phy_address_line2', 'country', 'region', 'city', 'suburb', 'code', 'industry')
+        fields = ('name', 'type', 'phy_address_line1', 'phy_address_line2', 'country', 'region', 'city', 'suburb', 'code', 'industry')
+        widgets={
+            'region': RegionSelect2Widget(),
+            'city': CitySelect2Widget(),
+            'suburb': SuburbSelect2Widget(),
+        }
 
 
 class IndustryPopUpForm(forms.ModelForm):

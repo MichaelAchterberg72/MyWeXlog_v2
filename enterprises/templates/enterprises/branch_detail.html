@@ -1,0 +1,85 @@
+{% extends "base_home.html" %}
+
+{% block title %}{{block.super}}-Branches{% endblock title %}
+
+{% block content %}
+
+<div class="card">
+  <h5 class="card-header">Detail for {{ info.company.name }}'s {{ info.name }} branch</h5>
+  <div class="card-body">
+    {% if request.user.is_authenticated %}
+    <p><a href="{% url 'Enterprise:EditBranch' info.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Edit Branch</a>
+    {% endif %}
+    <a href="{% url 'Enterprise:BranchList' info.company.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back to Branch List</a></p>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">General</h5>
+            <table>
+              <thead>
+              </thead>
+              <tbody>
+                {% for d in detail %}
+                <tr>
+                  <th>Branch Name</th>
+                  <td>{{ d.name }}</td>
+                </tr>
+                <tr>
+                  <th>Branch Type</th>
+                  <td>{{ d.type }}</td>
+                </tr>
+                  <tr>
+                    <th>Industry</th>
+                    {% for m in d.industry.all %}
+                      <td>{{ m }}</td>
+                    {% endfor %}
+                  </tr>
+                  {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Location</h5>
+              <table>
+                <thead>
+                </thead>
+                <tbody>
+                  {% for d in detail %}
+                  <tr>
+                    <th>Address</th>
+                    <td>{{ d.phy_address_line1 }}</td>
+                  </tr>
+                  {% if d.phy_address_line2 %}
+                  <tr>
+                    <th>Address</th>
+                    <td>{{ d.phy_address_line2 }}</td>
+                  </tr>
+                  {% endif %}
+                  <tr>
+                    <th>Country</th>
+                    <td>{{ d.get_country_display }} ({{ d.country }})</td>
+                  </tr>
+                  <tr>
+                    <th>Region</th>
+                    <td>{{ d.region }}</td>
+                  </tr>
+                  <tr>
+                    <th>City, Suburb</th>
+                    <td>{{ d.suburb }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

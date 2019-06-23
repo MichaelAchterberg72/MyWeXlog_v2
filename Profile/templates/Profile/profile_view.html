@@ -21,39 +21,38 @@
 
 {% block Center_Content %}
 <div class="card-header">Your Profile</div>
-
-<div class="card-group">
-  <div class="card">
-    <div class="card-body">
-      {% for d in info %}
-        <h5 class="card-title">Basic Information <a href="{% url 'Profile:ProfileEdit' d.id %}?next={{ request.path|urlencode }}" class="badge badge-primary">Edit</a></h5>
-        <p class="card-text">Name: {{ request.user.first_name }} {{ request.user.last_name }}</p>
-        <p class="card-text">Display name: {{ d.synonym }}</p>
-        <p class="card-text">Date of Birth: {{ d.birth_date }}</p>
-        <p class="card-text">Profile email: {{ request.user.email }}</p>
-        <p class="card-text">Do you wish to be a mentor to others? {{ d.get_mentor_display }}</p>
-      <div class="card-footer bg-transparent border-success"></div>
-        <h5 class="card-title">Online Profiles <a href="{% url 'Profile:OnlineProfileAdd' request.user.id %}" class="badge badge-primary">Add</a></h5>
-        <table>
-          <thead>
-            <tr>
-              <th width="30%">Site</th>
-              <th>Address</th>
-            </tr>
-          </thead>
-          {% for s in online %}
-          <tbody>
-            <tr>
-              <td>{{ s.sitename }}</td>
-              <td><a href="{{ s.profileurl }}">{{ s.profileurl }}</a></td>
-            </tr>
-          </tbody>
-        </table>
-        {% empty %}
-        <p>No Profiles listed.</p>
-        {% endfor %}
+  <div class="card-group">
+    <div class="card">
+      <div class="card-body">
+        {% for d in info %}
+          <h5 class="card-title">Basic Information <a href="{% url 'Profile:ProfileEdit' d.id %}?next={{ request.path|urlencode }}" class="badge badge-primary">Edit</a></h5>
+          <p class="card-text">Name: {{ request.user.first_name }} {{ request.user.last_name }}</p>
+          <p class="card-text">Display name: {{ d.synonym }}</p>
+          <p class="card-text">Date of Birth: {{ d.birth_date }}</p>
+          <p class="card-text">Profile email: {{ request.user.email }}</p>
+          <p class="card-text">Do you wish to be a mentor to others? {{ d.get_mentor_display }}</p>
+        <div class="card-footer bg-transparent border-success"></div>
+          <h5 class="card-title">Online Profiles <a href="{% url 'Profile:OnlineProfileAdd' request.user.id %}" class="badge badge-primary">Add</a></h5>
+          <table>
+            <thead>
+              <tr>
+                <th width="30%">Site</th>
+                <th>Address</th>
+              </tr>
+            </thead>
+            {% for s in online %}
+            <tbody>
+              <tr>
+                <td>{{ s.sitename }}</td>
+                <td><a href="{{ s.profileurl }}">{{ s.profileurl }}</a></td>
+              </tr>
+            </tbody>
+          </table>
+          {% empty %}
+          <p>No Profiles listed.</p>
+          {% endfor %}
+      </div>
     </div>
-  </div>
   <div class="card">
     <div class="card-body">
       <h5 class="card-title">Email addresses <a href="{% url 'Profile:EmailEdit' d.id %}?next={{ request.path|urlencode }}" class="badge badge-primary">Add</a></h5>
@@ -73,12 +72,9 @@
       </ul>
       {% endif %}
       {% endfor %}
-
     </div>
-
   </div>
 </div>
-
 <div class="card-group">
   <div class="card">
     <div class="card-body">
@@ -101,7 +97,21 @@
     </div>
   </div>
 </div>
-</div>
+<div class="card-header">Identification</div>
+<div class="card-group">
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Identification Document</h5>
+      <p class="card-text">Name: </p>
+    </div>
+  </div>
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Passport Information</h5>
+      </div>
+    </div>
+  </div>
+
 <div class="card-header">Contact Information</div>
 
 <div class="card-group">
