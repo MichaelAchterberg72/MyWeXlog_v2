@@ -17,4 +17,5 @@ urlpatterns = [
         path('popup/add/', views.ProfileTypePopup, name="ProfileTypeAddPop"),
         path('popup/ajax/get_site_id/', views.get_SiteType_id, name="AJAX_GetSiteTypeID"),
         path('file/<int:profile_id>/', views.FileUploadView, name='FileUploadView'),
+        path('id/<int:profile_id>/', views.IdentificationView, name='IdView'),
 ]

@@ -101,8 +101,8 @@
 <div class="card-group">
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title">Identification Document</h5>
-      <p class="card-text">Name: </p>
+      <h5 class="card-title">Identification Document <a href="{% url 'Profile:IdView' request.user.id %}" class="badge badge-primary">Edit</a></h5>
+      <p class="card-text"></p>
     </div>
   </div>
     <div class="card">

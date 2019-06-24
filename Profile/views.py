@@ -27,6 +27,27 @@ from .forms import (
 class ProfileHome(TemplateView):
     template_name = 'Profile/profile_home.html'
 
+
+@login_required()
+def IdentificationView(request, profile_id):
+    detail = Profile.objects.get(talent=profile_id)
+    info = IdentificationDetail.objects.get(talent=profile_id)
+    if detail.talent == request.user:
+        form = IdentificationDetailForm(request.POST or None, instance=info)
+        if request.method =='POST':
+            if form.is_valid():
+                new = form.save(commit=False)
+                new.talent = request.user
+                new.save()
+                return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':profile_id}))
+        else:
+            template = 'Profile/id_edit.html'
+            context = {'form': form}
+            return render(request, template, context)
+    else:
+        raise PermissionDenied
+
+
 @login_required()
 def FileUploadView(request, profile_id):
     detail = Profile.objects.get(talent=profile_id)
