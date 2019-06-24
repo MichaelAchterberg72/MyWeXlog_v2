@@ -35,7 +35,7 @@ class LanguageListForm(forms.ModelForm):
 class PassportDetailForm(forms.ModelForm):
     class Meta:
         model = PassportDetail
-        fields = ('passport_number', 'expiry_date')
+        fields = ('passport_number', 'expiry_date', 'issue')
 
 
 class IdentificationDetailForm(forms.ModelForm):
