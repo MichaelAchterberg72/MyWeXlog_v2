@@ -38,17 +38,6 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    #internal Applications
-    'users.apps.UsersConfig',
-    'Profile.apps.ProfileConfig',
-    'db_flatten.apps.DbFlattenConfig',
-    'locations.apps.LocationsConfig',
-    'enterprises.apps.EnterprisesConfig',
-    'project.apps.ProjectConfig',
-    'booklist.apps.BooklistConfig',
-    'talenttrack.apps.TalenttrackConfig',
-    'trustpassport.apps.TrustpassportConfig',
-    'marketplace.apps.MarketplaceConfig',
     ##Django internal applications
     'django.contrib.admin',
     'django.contrib.auth',
@@ -66,16 +55,8 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'leaflet',
     'notifications',
-<<<<<<< HEAD
     'django_select2',
-    ]
-=======
     'django.forms',
-    #allauth-applications
-    'django.contrib.sites',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
     #internal Applications
     'booklist',
     'core',
@@ -89,7 +70,7 @@ INSTALLED_APPS = [
     'trustpassport',
     'users',
 ]
->>>>>>> origin/2019-06-22-Mike
+#>>>>>>> origin/2019-06-22-Mike
 
 
 
@@ -173,15 +154,11 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
     ##django-referrer-policy (3rd party app)
 REFERRER_POLICY='same-origin'
-<<<<<<< HEAD
     ## Content-Security-policy (3rd party app)
-CSP_DEFAULT_SRC = ("'self'",'maxcdn.bootstrapcdn.com', 'code.jquery.com',
-'cdnjs.cloudflare.com')
-=======
+CSP_DEFAULT_SRC = ("'self'",'maxcdn.bootstrapcdn.com', 'code.jquery.com', 'cdnjs.cloudflare.com')
 
     # Content-Security-policy (3rd party app)
 CSP_DEFAULT_SRC = ("'self'", 'maxcdn.bootstrapcdn.com', 'code.jquery.com', 'cdnjs.cloudflare.com')
->>>>>>> origin/2019-06-22-Mike
 CSP_SCRIPT_SRC = None
 CSP_IMG_SRC = None
 CSP_OBJECT_SRC = None
@@ -212,10 +189,6 @@ CSP_REPORT_ONLY = False
 #SESSION_COOKIE_SECURE = True
 #SESSION_COOKIE_SAMESITE = 'Strict'
 
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/2019-06-22-Mike
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 

@@ -67,6 +67,10 @@ class TalentPassport(models.Model):
     q12_score = models.IntegerField('Score', choices=SCORE, default=3)
     q13_text = models.TextField('Comment', blank=True, null=True)
     q13_score = models.IntegerField('Score', choices=SCORE, default=3)
+    q14_text = models.TextField('Comment', blank=True, null=True)
+    q14_score = models.IntegerField('Score', choices=SCORE, default=3)
+    q15_text = models.TextField('Comment', blank=True, null=True)
+    q15_score = models.IntegerField('Score', choices=SCORE, default=3)
 
     class Meta:
         unique_together = (('score_by','talent','date_score'),)

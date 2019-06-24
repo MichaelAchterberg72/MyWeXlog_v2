@@ -1,14 +1,14 @@
-{% extends "base_home.html" %}
+{% extends "base_popup.html" %}
 
 {% load crispy_forms_tags %}
 
-{% block title %}{{block.super}}-Author{% endblock title %}
+{% block title %}{{block.super}}-Skill Tag{% endblock title %}
 
 {% block content %}
 
 <div class="card">
   <h5 class="card-header">
-<div class="container">Add a New Author</h5>
+<div class="container">Add a New Skill Tag</h5>
 
 <div class="card-body">
 <form method="post">
@@ -16,7 +16,7 @@
   {% csrf_token %}
   <div class="form-row">
     <div class="form-group col-md-6 mb-0">
-      {{ form.name|as_crispy_field }}
+      {{ form.skill|as_crispy_field }}
     </div>
   </div>
   <div class="">
@@ -24,4 +24,5 @@
   </div>
 </form>
 </div></div>
+
 {% endblock content %}

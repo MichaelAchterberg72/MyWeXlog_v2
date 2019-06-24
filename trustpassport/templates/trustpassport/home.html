@@ -1,0 +1,26 @@
+{% extends "base_home.html" %}
+
+{% block title %}{{block.super}}-Trust Passport{% endblock title %}
+
+{% block content %}
+
+<div class="card">
+  <h5 class="card-header">
+Welcome to the Trust Passport home page!</h5>
+
+<div class="card-body">
+<p>
+  <ul>
+    <li>Add a new enterprise passport: <a href="{% url 'Trust:EnterpriseTrustAdd' %}">Open Enterprise Trust Passport</a></li>
+    <li>View all the profile passport: <a href="{% url 'Trust:TalentTrustAdd' %}">Open Talent Trust Passport</a></li>
+  </ul>
+</p>
+
+</div>
+<div class="container">
+<ul>
+  <li>Search all passports: <a href="">Search</a></li>
+</ul>
+</div>
+
+{% endblock content %}
