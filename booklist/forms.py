@@ -7,6 +7,7 @@ from crispy_forms.layout import Layout, Submit, Row, Column
 
 
 from .models import BookList, Author, ReadBy, Format, Publisher
+from db_flatten.models import SkillTag
 from .widgets import XDSoftDateTimePickerInput, BootstrapDateTimePickerInput, FengyuanChenDatePickerInput
 
 
@@ -69,6 +70,12 @@ class FormatAddForm(forms.ModelForm):
     class Meta:
         model=Format
         fields=('format',)
+
+
+class TagAddForm(forms.ModelForm):
+    class Meta:
+        model = SkillTag
+        fields = ["skill",]
 
 
 class AddBookReadForm(forms.ModelForm):

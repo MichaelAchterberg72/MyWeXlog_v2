@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 {% load staticfiles %}
 
-{% block title %}My {{block.super}} Project{% endblock title %}
+{% block title %}My {{block.super}} Enterprise Trust Passport{% endblock title %}
 
 {% block content %}
 {{ form.media.css }}
@@ -11,30 +11,34 @@
     width: 100px;
   }
   </style>
+  <div class="card">
 <div class="container">
-<h3>Your Project Details</h3>
-<form method="post" id="ProjectForm">
+<h3>Enterprise Trust Passport Details</h3>
+<form method="post" id="EnterpriseTrustForm" autocomplete="on">
 <!--   <input type="hidden" name="next" value="{{ request.GET.next }}"> -->
   {% csrf_token %}
+
   <div class="form-row">
     <div class="form-group col-md-6 mb-0">
-      {{ form.name|as_crispy_field }}
-      {{ form.owner|as_crispy_field }}
-      {{ form.industry|as_crispy_field }}
-      <a href="{% url 'Location:IndustryAddPop' %}" id='add_industry' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}"> Add a Industry</a>
-      {{ form.country|as_crispy_field }}
-    </div>
-    <div class="form-group col-md-6 mb-0">
-      {{ form.region|as_crispy_field }}
-      <p><a href="{% url 'Location:RegionAddPop' %}" id='add_region' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}"> Add a Region</a></p>
-      {{ form.city|as_crispy_field }}
-      <p><a href="{% url 'Location:CityAddPop' %}" id='add_city' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}"> Add a City</a></p>
-    </div>
-  </div>
-  <div class="">
+      {{ form.score_by|as_crispy_field }}
+      {{ form.enterprise|as_crispy_field }}
+      {{ form.payment_text|as_crispy_field }}
+      {{ form.payment_score|as_crispy_field }}
+      {{ form.cooperation_text|as_crispy_field }}
+      {{ form.cooperation_score|as_crispy_field }}
+      {{ form.treatment_text|as_crispy_field }}
+      {{ form.treatment_score|as_crispy_field }}
+      {{ form.information_text|as_crispy_field }}
+      {{ form.information_score|as_crispy_field }}
+      {{ form.engagement_text|as_crispy_field }}
+      {{ form.engagement_score|as_crispy_field }}
+      {{ form.accuracy_text|as_crispy_field }}
+      {{ form.accuracy_score|as_crispy_field }}
+
     <p><button type="submit" name="Done" class="btn btn-primary">Save</button> </p>
   </div>
 </form>
+</div>
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 {{ form.media.js }}

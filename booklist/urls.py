@@ -14,6 +14,7 @@ urlpatterns = [
     path('add/author/', views.AuthorAddView, name='AuthorCreate'),
     path('popup/publisher/', views.PublisherCreatePopupView, name='PublisherCreatePopup'),
     path('add/publisher/', views.PublisherAddView, name='PublisherCreate'),
+    path('popup/skilltag/', views.TagCreatePopupView, name='TagCreatePopup'),
 #    path('books/author/<int:author_id>/edit', views.AuthorEditPopup, name = 'AuthorEdit'),
     path('popup/ajax/get_author_id', views.get_author_id, name='get_author_id'),
     path('popup/ajax/get_publisher_id', views.get_publisher_id, name='get_publisher_id'),

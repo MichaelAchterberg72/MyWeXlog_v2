@@ -38,17 +38,6 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    #internal Applications
-    'users.apps.UsersConfig',
-    'Profile.apps.ProfileConfig',
-    'db_flatten.apps.DbFlattenConfig',
-    'locations.apps.LocationsConfig',
-    'enterprises.apps.EnterprisesConfig',
-    'project.apps.ProjectConfig',
-    'booklist.apps.BooklistConfig',
-    'talenttrack.apps.TalenttrackConfig',
-    'trustpassport.apps.TrustpassportConfig',
-    'marketplace.apps.MarketplaceConfig',
     ##Django internal applications
     'django.contrib.admin',
     'django.contrib.auth',

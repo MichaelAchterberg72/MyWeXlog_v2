@@ -103,7 +103,7 @@ def BookAddView(request):
 #            if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
 #                    next_url = reverse('BookListView:books_list')
 #            return HttpResponseRedirect(next_url)
-            return redirect(reverse('BookList:books_read_new'))
+            return redirect(reverse('BookList:books-read-new'))
     else:
         form = BookAddForm()
 
@@ -156,6 +156,21 @@ def FormatCreatePopupView(request):
     else:
         context = {'form':form,}
         template_name = 'booklist/create_new_format_popup.html'
+        return render(request, template_name, context)
+
+
+@login_required
+@csp_exempt
+def TagCreatePopupView(request):
+    form = TagAddForm(request.POST or None)
+    if request.method =='POST':
+        if form.is_valid():
+            instance=form.save(commit=False)
+            instance=form.save()
+            return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_tag");</script>' % (instance.pk, instance))
+    else:
+        context = {'form':form,}
+        template_name = 'booklist/create_new_tag_popup.html'
         return render(request, template_name, context)
 
 
@@ -248,7 +263,7 @@ def FormatAddView(request):
 @csp_exempt
 def AddBookReadView(request):
     if request.method == 'POST':
-        form = BookAddForm(request.POST)
+        form = AddBookReadForm(request.POST)
         if form.is_valid():
             new = form.save(commit=False)
             new.save()
