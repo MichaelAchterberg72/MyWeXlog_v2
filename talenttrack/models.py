@@ -1,6 +1,9 @@
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
+from time import time
+from random import random
+from django.db.models.signals import post_save
 
 
 from enterprises.models import Enterprise, Industry, Branch
@@ -78,7 +81,7 @@ class Lecturer(models.Model):
     date_captured = models.DateField(auto_now_add=True)
     date_confirmed = models.DateField(auto_now=True)
         #Captured by lecturer
-    confirm = models.CharField(max_length=1, choices=CONFIRM, default='S')
+    confirm = models.CharField(max_length=1, choices=CONFIRM, default='S', null=True)
     comments = models.TextField(blank=True, null=True)
 
     class Meta:

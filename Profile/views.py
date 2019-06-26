@@ -385,7 +385,7 @@ def OnlineProfileAdd(request, profile_id):
         raise PermissionDenied
 
 
-#>>>Company Popup
+#>>>Site Type Popup
 @login_required()
 @csp_exempt
 def ProfileTypePopup(request):
@@ -409,4 +409,4 @@ def get_SiteType_id(request):
         data = {'site_id':site_id,}
         return HttpResponse(json.dumps(data), content_type='application/json')
     return HttpResponse("/")
-#<<< Company Popup
+#<<< SiteType Popup

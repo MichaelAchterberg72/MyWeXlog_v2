@@ -19,7 +19,7 @@ from .models import (
 
 
 from .forms import (
-    EnterprisePopupForm, BranchForm, PhoneNumberForm, IndustryPopUpForm, BranchTypePopUpForm,
+    EnterprisePopupForm, BranchForm, PhoneNumberForm, IndustryPopUpForm, BranchTypePopUpForm, FullBranchForm
 )
 
 def EnterpriseHome(request):
@@ -90,8 +90,27 @@ def BranchEditView(request, e_id):
         return render(request, template, context)
 
 
+@login_required()
+@csp_exempt
+def FullBranchAddView(request):
+    form = FullBranchForm(request.POST or None)
+    if request.method == 'POST':
+        next_url=request.POST.get('next','/')
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.save()
+            if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
+                next_url = redirect(reverse('Profile:ProfileView', kwargs={'e_id':e_id}))
+            return HttpResponseRedirect(next_url)
+    else:
+        context = {'form': form}
+        template = 'enterprises/full_branch_add.html'
+        return render(request, template, context)
+
+
 #>>>Company Popup
 @login_required()
+@csp_exempt
 def EnterpriseAddPopup(request):
     form = EnterprisePopupForm(request.POST or None)
     if request.method == 'POST':

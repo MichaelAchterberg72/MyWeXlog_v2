@@ -8,6 +8,9 @@
   <h5 class="card-header">Welcome to the Enterprises home page!</h5>
   <div class="card-body">
     <p>There are currently {{ ecount.sum_e }} Enterprises and {{ bcount.sum_b }} Branches listed in WexLog!</p>
+    {% if user.is_authenticated %}
+    <a href="{% url 'Enterprise:FullBranchAdd' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Add New Company</a>
+    {% endif %}
     <table class="table-sm">
       <col width="30%">
       <col width="30%">
