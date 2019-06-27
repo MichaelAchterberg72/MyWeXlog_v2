@@ -14,6 +14,7 @@ CONFIRM = (
     ('S','Select'),
     ('C','Confirm'),
     ('R','Reject'),
+    ('Y','Wrong Person'),
 )
 
 class Topic(models.Model):
@@ -83,6 +84,8 @@ class Lecturer(models.Model):
         #Captured by lecturer
     confirm = models.CharField(max_length=1, choices=CONFIRM, default='S', null=True)
     comments = models.TextField(blank=True, null=True)
+        #Captured by talent
+    response = models.TextField(blank=True, null=True)
 
     class Meta:
         unique_together = (('education','lecturer','date_captured'),)
@@ -101,6 +104,8 @@ class ClassMates(models.Model):
         #Captured by colleague
     confirm = models.CharField(max_length=1, choices=CONFIRM, default='S')
     comments = models.TextField(blank=True, null=True)
+        #Captured by talent
+    response = models.TextField(blank=True, null=True)
 
     class Meta:
         unique_together = (('education','colleague','date_captured'),)
@@ -126,7 +131,7 @@ class WorkExperience(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     date_from = models.DateField()
     date_to = models.DateField(default=timezone.now)
-    enterprise = models.ForeignKey(Enterprise, on_delete=models.PROTECT)
+    enterprise = models.ForeignKey(Enterprise, on_delete=models.PROTECT, verbose_name='Company')
     estimated = models.BooleanField(default=False)
     project = models.ForeignKey(
         ProjectData, on_delete=models.PROTECT, verbose_name='On Project', blank=True, null=True
@@ -158,6 +163,8 @@ class WorkColleague(models.Model):
         #Captured by colleague
     confirm = models.CharField(max_length=1, choices=CONFIRM, default='S')
     comments = models.TextField(blank=True, null=True)
+        #Captured by talent
+    response = models.TextField(blank=True, null=True)
 
     class Meta:
         unique_together = (('experience','colleague_name','date_captured'),)
@@ -179,6 +186,8 @@ class Superior(models.Model):
         #Captured by superior
     confirm = models.CharField(max_length=1, choices=CONFIRM, default='S')
     comments = models.TextField(blank=True, null=True)
+        #Captured by talent
+    response = models.TextField(blank=True, null=True)
 
     class Meta:
         unique_together = (('experience','superior_name','date_captured'),)
@@ -201,6 +210,8 @@ class WorkCollaborator(models.Model):
         #Captured by collaborator
     confirm = models.CharField(max_length=1, choices=CONFIRM, default='S')
     comments = models.TextField(blank=True, null=True)
+        #Captured by talent
+    response = models.TextField(blank=True, null=True)
 
     class Meta:
         unique_together = (('experience','collaborator_name','date_captured'),)
@@ -222,6 +233,8 @@ class WorkClient(models.Model):
         #Captured by collaborator
     confirm = models.CharField(max_length=1, choices=CONFIRM, default='S')
     comments = models.TextField(blank=True, null=True)
+        #Captured by talent
+    response = models.TextField(blank=True, null=True)
 
     class Meta:
         unique_together = (('experience','client_name','date_captured'),)
@@ -266,6 +279,8 @@ class PreColleague(models.Model):
         #Captured by colleague
     confirm = models.CharField(max_length=1, choices=CONFIRM, default='S')
     comments = models.TextField(blank=True, null=True)
+        #Captured by talent
+    response = models.TextField(blank=True, null=True)
 
     class Meta:
         unique_together = (('pre_experience','colleague_name','date_captured'),)
