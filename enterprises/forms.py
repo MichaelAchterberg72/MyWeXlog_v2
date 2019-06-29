@@ -60,6 +60,17 @@ class CitySelect2Widget(CitySearchFieldMixin, ModelSelect2Widget):
 
     def create_value(self, value):
         self.get_queryset().create(city=value)
+
+
+class CompanySearchFieldMixin:
+    search_fields = [
+        'name__icontains', 'pk__startswith'
+    ]
+class CompanySelect2Widget(CompanySearchFieldMixin, ModelSelect2Widget):
+    model = Enterprise
+
+    def create_value(self, value):
+        self.get_queryset().create(name=value)
 #Select2<<<
 
 class BranchForm(forms.ModelForm):
@@ -72,6 +83,17 @@ class BranchForm(forms.ModelForm):
             'suburb': SuburbSelect2Widget(),
         }
 
+
+class FullBranchForm(forms.ModelForm):
+    class Meta:
+        model = Branch
+        fields = ('company', 'name', 'type', 'phy_address_line1', 'phy_address_line2', 'country', 'region', 'city', 'suburb', 'code', 'industry')
+        widgets={
+            'region': RegionSelect2Widget(),
+            'city': CitySelect2Widget(),
+            'suburb': SuburbSelect2Widget(),
+            'company': CompanySelect2Widget(),
+        }
 
 class IndustryPopUpForm(forms.ModelForm):
     class Meta:

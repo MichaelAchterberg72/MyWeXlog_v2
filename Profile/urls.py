@@ -18,4 +18,12 @@ urlpatterns = [
         path('popup/ajax/get_site_id/', views.get_SiteType_id, name="AJAX_GetSiteTypeID"),
         path('file/<int:profile_id>/', views.FileUploadView, name='FileUploadView'),
         path('id/<int:profile_id>/', views.IdentificationView, name='IdView'),
+        path('popup/add/idtype/', views.IdTypePopup, name="IdTypeAddPop"),
+        path('popup/ajax/get_IdType_id/', views.get_IdType_id, name="AJAX_GetIdTypeID"),
+        path('passport/<int:profile_id>/', views.PassportAddView, name='PassportAddView'),
+        path('passport/<int:p_id>/<int:profile_id>/edit/', views.PassportEditView, name='PassportEditView'),
+        path('language/<int:profile_id>/', views.LanguageAddView, name='LanguageAdd'),
+        path('popup/add/language/', views.LanguagePopup, name="LanguagePop"),
+        path('popup/ajax/get_language_id/', views.get_language_id, name="AJAX_GetLanguageID"),
+        path('language/<int:profile_id>/<int:lang_id>/', views.LanguageEditView, name='LanguageEdit'),
 ]

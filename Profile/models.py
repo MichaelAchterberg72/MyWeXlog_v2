@@ -39,7 +39,7 @@ class Profile(models.Model):
         )
     talent = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     synonym = models.CharField(max_length=15)
-    birth_date = models.DateField('Date of Birth')
+    birth_date = models.DateField('Date of Birth', null=True)
     background = models.TextField()
     mentor = models.CharField('Do you wish to be a mentor?', max_length=1, choices=MENTOR, default='N')#Opt in to be a mentor to other people
 
@@ -61,8 +61,8 @@ class IdType(models.Model):
 
 class IdentificationDetail(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
-    identification = models.CharField('Identification number', max_length=20, unique=True)
-    id_type = models.ForeignKey(IdType, on_delete=models.PROTECT, verbose_name='Identification_type')
+    identification = models.CharField('Identification number', max_length=20, unique=True, null=True)
+    id_type = models.ForeignKey(IdType, on_delete=models.PROTECT, verbose_name='Identification_type', null=True)
 
     class Meta:
         unique_together = (('talent','identification'),)
@@ -79,8 +79,8 @@ class IdentificationDetail(models.Model):
 class PassportDetail(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
     passport_number = models.CharField(max_length = 20, unique=True, blank=True, null=True)
-    issue = CountryField('Country issued in')
-    expiry_date = models.DateField()
+    issue = CountryField('Country issued in', null=True)
+    expiry_date = models.DateField(null=True)
 
     class Meta:
         unique_together = (('talent','passport_number'),)
@@ -156,9 +156,9 @@ class PostalAddress(models.Model):
     line2 = models.CharField('Address Line 2', max_length=100, blank=True, null=True)
     line3 = models.CharField('Address Line 3', max_length=100, blank=True, null=True)
     country = CountryField()
-    region = models.ForeignKey(Region, on_delete=models.PROTECT)
-    city = models.ForeignKey(City, on_delete=models.PROTECT)
-    suburb = models.ForeignKey(Suburb, on_delete=models.PROTECT)
+    region = models.ForeignKey(Region, on_delete=models.PROTECT, null=True)
+    city = models.ForeignKey(City, on_delete=models.PROTECT, null=True)
+    suburb = models.ForeignKey(Suburb, on_delete=models.PROTECT, null=True)
     code = models.CharField('Postal Code', max_length=12, blank=True, null=True)
 
     def __str__(self):

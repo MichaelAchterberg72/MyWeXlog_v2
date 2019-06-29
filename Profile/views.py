@@ -29,6 +29,112 @@ class ProfileHome(TemplateView):
 
 
 @login_required()
+def PassportAddView(request, profile_id):
+    detail = Profile.objects.get(talent=profile_id)
+    info = PassportDetail.objects.get(talent=profile_id)
+    if detail.talent == request.user:
+        form = PassportDetailForm(request.POST or None)
+        if request.method =='POST':
+            if form.is_valid():
+                new = form.save(commit=False)
+                new.talent = request.user
+                new.save()
+                return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':profile_id}))
+        else:
+            template = 'Profile/passport_add.html'
+            context = {'form': form}
+            return render(request, template, context)
+    else:
+        raise PermissionDenied
+
+
+@login_required()
+def PassportEditView(request, p_id, profile_id):
+    #detail = Profile.objects.get(talent=profile_id)
+    info = PassportDetail.objects.get(pk=p_id)
+    if info.talent == request.user:
+        form = PassportDetailForm(request.POST or None, instance=info)
+        if request.method =='POST':
+            if form.is_valid():
+                new = form.save(commit=False)
+                new.talent = request.user
+                new.save()
+                return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':profile_id}))
+        else:
+            template = 'Profile/passport_add.html'
+            context = {'form': form}
+            return render(request, template, context)
+    else:
+        raise PermissionDenied
+
+
+#>>>Language Views
+@csp_exempt
+@login_required()
+def LanguageAddView(request, profile_id):
+    detail = Profile.objects.get(talent=profile_id)
+    if detail.talent == request.user:
+        form = LanguageTrackForm(request.POST or None)
+        if request.method =='POST':
+            if form.is_valid():
+                new = form.save(commit=False)
+                new.talent = request.user
+                new.save()
+                return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':profile_id}))
+        else:
+            template = 'Profile/language_add.html'
+            context = {'form': form}
+            return render(request, template, context)
+    else:
+        raise PermissionDenied
+
+
+@login_required()
+def LanguageEditView(request, profile_id, lang_id):
+    detail = Profile.objects.get(talent=profile_id)
+    info = LanguageTrack.objects.get(pk=lang_id)
+    if detail.talent == request.user:
+        form = LanguageTrackForm(request.POST or None, instance=info)
+        if request.method =='POST':
+            if form.is_valid():
+                new = form.save(commit=False)
+                new.talent = request.user
+                new.save()
+                return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':profile_id}))
+        else:
+            template = 'Profile/language_add.html'
+            context = {'form': form}
+            return render(request, template, context)
+    else:
+        raise PermissionDenied
+
+@login_required()
+@csp_exempt
+def LanguagePopup(request):
+    form = LanguageListForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            instance=form.save(commit=False)
+            instance.save()
+            return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_language");</script>' % (instance.pk, instance))
+    else:
+        context = {'form':form,}
+        template = 'Profile/language_popup.html'
+        return render(request, template, context)
+
+
+@csrf_exempt
+def get_language_id(request):
+    if request.is_ajax():
+        language = request.Get['language']
+        language_id = SiteName.objects.get(language = language).id
+        data = {'language_id':language_id,}
+        return HttpResponse(json.dumps(data), content_type='application/json')
+    return HttpResponse("/")
+#<<< Language Views
+
+@csp_exempt
+@login_required()
 def IdentificationView(request, profile_id):
     detail = Profile.objects.get(talent=profile_id)
     info = IdentificationDetail.objects.get(talent=profile_id)
@@ -46,6 +152,33 @@ def IdentificationView(request, profile_id):
             return render(request, template, context)
     else:
         raise PermissionDenied
+
+
+#>>>Id Popup
+@login_required()
+@csp_exempt
+def IdTypePopup(request):
+    form = IdTypeForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            instance=form.save(commit=False)
+            instance.save()
+            return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_id_type");</script>' % (instance.pk, instance))
+    else:
+        context = {'form':form,}
+        template = 'Profile/id_type_popup.html'
+        return render(request, template, context)
+
+
+@csrf_exempt
+def get_IdType_id(request):
+    if request.is_ajax():
+        type = request.Get['type']
+        type_id = SiteName.objects.get(type = type).id
+        data = {'type_id':type_id,}
+        return HttpResponse(json.dumps(data), content_type='application/json')
+    return HttpResponse("/")
+#<<< Id Popup
 
 
 @login_required()
@@ -77,9 +210,12 @@ def ProfileView(request, profile_id):
         pnumbers = PhoneNumber.objects.filter(talent=profile_id)
         online = OnlineRegistrations.objects.filter(talent=profile_id)
         upload = FileUpload.objects.filter(talent=profile_id)
+        id = IdentificationDetail.objects.filter(talent=profile_id)
+        passport = PassportDetail.objects.filter(talent=profile_id)
+        speak = LanguageTrack.objects.filter(talent=profile_id)
 
         template='Profile/profile_view.html'
-        context= {'info':info, 'email':email, 'physical':physical, 'postal': postal, 'pnumbers': pnumbers, 'online': online, 'upload': upload}
+        context= {'info':info, 'email':email, 'physical':physical, 'postal': postal, 'pnumbers': pnumbers, 'online': online, 'upload': upload, 'id': id, 'passport': passport, 'speak': speak}
         return render(request, template, context)
     else:
         raise PermissionDenied
@@ -249,7 +385,7 @@ def OnlineProfileAdd(request, profile_id):
         raise PermissionDenied
 
 
-#>>>Company Popup
+#>>>Site Type Popup
 @login_required()
 @csp_exempt
 def ProfileTypePopup(request):
@@ -273,4 +409,4 @@ def get_SiteType_id(request):
         data = {'site_id':site_id,}
         return HttpResponse(json.dumps(data), content_type='application/json')
     return HttpResponse("/")
-#<<< Company Popup
+#<<< SiteType Popup

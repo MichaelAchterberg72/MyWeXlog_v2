@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 {% load staticfiles %}
 
-{% block title %}My {{block.super}} Profile{% endblock title %}
+{% block title %}My {{block.super}} Languages{% endblock title %}
 {% block subStyle %}
 
 {% endblock subStyle %}
@@ -31,15 +31,16 @@
   }
   </style>
 <div class="container">
-<h3>Identification Details</h3>
+<h3>Spoken Languages</h3>
 <form method="post">
   <input type="hidden" name="next" value="{{ request.GET.next }}">
   {% csrf_token %}
   <div class="form-row">
     <div class="form-group col-md-6 mb-0">
-      {{ form.identification|as_crispy_field }}
-      {{ form.id_type|as_crispy_field }}
-      <p><a href="{% url 'Profile:IdTypeAddPop' %}" id='add_id' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a ID Type</a></p>
+      {{ form.language|as_crispy_field }}
+      <p><a href="{% url 'Profile:LanguagePop' %}" id='add_language' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a Language</a></p>
+      {{ form.level|as_crispy_field }}
+
     </div>
   </div>
   <div class="">

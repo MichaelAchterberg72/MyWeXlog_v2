@@ -33,7 +33,7 @@
           <p class="card-text">Do you wish to be a mentor to others? {{ d.get_mentor_display }}</p>
         <div class="card-footer bg-transparent border-success"></div>
           <h5 class="card-title">Online Profiles <a href="{% url 'Profile:OnlineProfileAdd' request.user.id %}" class="badge badge-primary">Add</a></h5>
-          <table>
+          <table class="table-sm">
             <thead>
               <tr>
                 <th width="30%">Site</th>
@@ -46,11 +46,38 @@
                 <td>{{ s.sitename }}</td>
                 <td><a href="{{ s.profileurl }}">{{ s.profileurl }}</a></td>
               </tr>
+              {% empty %}
+                <p>No Profiles listed.</p>
+              {% endfor %}
             </tbody>
           </table>
-          {% empty %}
-          <p>No Profiles listed.</p>
-          {% endfor %}
+
+          <div class="card-footer bg-transparent border-success"></div>
+          <h5 class="card-title">Languages <a href="{% url 'Profile:LanguageAdd' request.user.id %}" class="badge badge-primary">Add</a></h5>
+          <table class="table-sm">
+            <col width="25%">
+            <col width="20%">
+            <col width="40%">
+            <thead>
+              <tr>
+                <th>Language</th>
+                <th>Level</th>
+                <th></th>
+              </tr>
+            </thead>
+            {% for l in speak %}
+            <tbody>
+              <tr>
+                <td>{{ l.language }}</td>
+                <td>{{ l.get_level_display }}</td>
+                <td><a href="{% url 'Profile:LanguageEdit' profile_id=request.user.id lang_id=l.id %}" class="badge badge-primary badge-pill">Edit</a></td>
+              </tr>
+              {% empty %}
+                <p>No Languages listed.</p>
+              {% endfor %}
+            </tbody>
+          </table>
+
       </div>
     </div>
   <div class="card">
@@ -102,12 +129,47 @@
   <div class="card">
     <div class="card-body">
       <h5 class="card-title">Identification Document <a href="{% url 'Profile:IdView' request.user.id %}" class="badge badge-primary">Edit</a></h5>
-      <p class="card-text"></p>
+      <table class="table-sm">
+        <thead>
+          <tr>
+            <th>ID Number</th>
+            <th>ID Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for i in id %}
+          <tr>
+            <td>{{ i.identification }}</td>
+            <td>{{ i.id_type }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
   </div>
     <div class="card">
       <div class="card-body">
-        <h5 class="card-title">Passport Information</h5>
+        <h5 class="card-title">Passport Information <a href="{% url 'Profile:PassportAddView' request.user.id %}" class="badge badge-primary">Add</a></h5>
+        <table class="table-sm">
+        <thead>
+          <tr>
+            <th>Passport Number</th>
+            <th>Issuing Country</th>
+            <th>Expiry Date</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in passport  %}
+          <tr>
+            <td>{{ p.passport_number }}</td>
+            <td>{{ p.get_issue_display }}</td>
+            <td>{{ p.expiry_date }}</td>
+            <td><a href="{% url 'Profile:PassportEditView' p_id=p.id profile_id=request.user.id %}" class="badge badge-primary badge-pill">Edit</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
       </div>
     </div>
   </div>

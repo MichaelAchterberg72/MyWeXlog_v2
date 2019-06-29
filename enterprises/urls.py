@@ -18,4 +18,5 @@ urlpatterns = [
     path('edit/branch/<int:e_id>/', views.BranchEditView, name="EditBranch"),
     path('branches/<int:c_id>/', views.BranchListView, name='BranchList'),
     path('branches/detail/<int:branch_id>/', views.BranchDetailView, name='BranchDetail'),
+    path('branch/add/', views.FullBranchAddView, name="FullBranchAdd"),
 ]
