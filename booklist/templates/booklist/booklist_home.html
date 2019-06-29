@@ -1,0 +1,41 @@
+{% extends "base_home.html" %}
+
+{% block title %}{{block.super}}-Booklist{% endblock title %}
+
+{% block content %}
+
+<div class="card">
+  <h5 class="card-header">Welcome to the Booklist home page!</h5>
+  <div class="card-body">
+      {% if request.user.is_authenticated %}
+      <p><a href="{% url 'BookList:books-read-new' %}" class="badge badge-pill badge-primary">Add Book</a><a href="{% url 'Enterprise:EnterpriseHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
+      {% endif %}
+    <p>You currently have {{ ecount.sum_e }} books that you have read listed in WexLog!</p>
+    <table class="table-sm">
+      <col width="55%">
+      <col width="20%">
+      <col width="15%">
+      <col width="10%">
+      <thead>
+        <tr>
+          <th>Book Name</th>
+          <th>Book Type</th>
+          <th>Date Read</th>
+          <th> </th>
+        </tr>
+      </thead>
+      {% for b in books %}
+      <tbody>
+        <tr>
+          <td>{{ b.book }}</td>
+          <td>{{ b.type }}</td>
+          <td>{{ b.date }}</td>
+          <td><a href="{% url 'BookList:BookDetail' b.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Book Detail</a> </td>
+        </tr>
+      </tbody>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+
+{% endblock content %}

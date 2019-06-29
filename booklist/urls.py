@@ -6,9 +6,11 @@ from . import views
 app_name = 'BookList'
 
 urlpatterns = [
-    path('home/', views.BookListHomeView.as_view(), name='BookListHome'),
+    path('home/', views.BookListHome, name='BookListHome'),
     path('books/', views.BookListView, name='books-list'),
     path('books/search/', views.BookSearch, name='book-search'),
+    path('books/detail/<int:book_id>/', views.BookDetailView, name='BookDetail'),
+#    path('edit/book/<int:e_id>/', views.BookEditView, name="EditBook"),
     path('books/read/', views.BookReadListView, name='books-read-list'),
     path('popup/author/', views.AuthorCreatePopupView, name='AuthorCreatePopup'),
     path('add/author/', views.AuthorAddView, name='AuthorCreate'),

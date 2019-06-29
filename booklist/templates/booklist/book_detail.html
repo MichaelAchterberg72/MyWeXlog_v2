@@ -1,0 +1,59 @@
+{% extends "base_home.html" %}
+
+{% block title %}{{block.super}}-Book Detail{% endblock title %}
+
+{% block content %}
+
+<div class="card">
+  <h5 class="card-header">Detail for {{ info.title }} book</h5>
+  <div class="card-body">
+    {% if request.user.is_authenticated %}
+    <p><a href="{% url 'BookList:EditBook' info.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Edit Book</a>
+    {% endif %}
+    <a href="{% url 'BookList:BookListHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Book Details</h5>
+            <table>
+              <thead>
+              </thead>
+              <tbody>
+                {% for d in detail %}
+                <tr>
+                  <th>Book Title</th>
+                  <td>{{ d.title }}</td>
+                </tr>
+                <tr>
+                  <th>Book Publisher</th>
+                  <td>{{ d.publisher }}</td>
+                </tr>
+                  <tr>
+                    <th>Author</th>
+                    {% for m in d.author.all %}
+                      <td>{{ m }}</td>
+                    {% endfor %}
+                  </tr>
+                  {% endfor %}
+                  <tr>
+                    <th>Book Link</th>
+                    <td>{{ d.link }}</td>
+                  </tr>
+                  <tr>
+                    <th>Skill Type</th>
+                    {% for m in d.tag.all %}
+                      <td>{{ m }}</td>
+                    {% endfor %}
+                  </tr>
+              
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

@@ -7,6 +7,7 @@ from django.views.generic import FormView, TemplateView
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from csp.decorators import csp_exempt
+from django.db.models import Count
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 import operator
 from django.db.models import Q
@@ -30,6 +31,25 @@ from .forms import *
 
 class BookListHomeView(TemplateView):
     template_name = 'booklist/home.html'
+
+@login_required
+def BookListHome(request):
+    ecount = ReadBy.objects.all().aggregate(sum_e=Count('book'))
+    books = ReadBy.objects.all().order_by('date')
+
+    template_name = 'booklist/booklist_home.html'
+    context = {'ecount': ecount, 'books': books,}
+    return render(request, template_name, context)
+
+
+@login_required()
+def BookDetailView(request, book_id):
+    info = get_object_or_404(BookList, pk=book_id)
+    detail = BookList.objects.filter(pk=book_id)
+
+    template_name = 'booklist/book_detail.html'
+    context = {'detail': detail, 'info': info}
+    return render(request, template_name, context)
 
 
 @login_required

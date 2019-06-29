@@ -1,0 +1,58 @@
+{% extends "base_home.html" %}
+
+{% block title %}{{block.super}}-Project Detail{% endblock title %}
+
+{% block content %}
+
+<div class="card">
+  <h5 class="card-header">Detail for project {{ info.name }} </h5>
+  <div class="card-body">
+    {% if request.user.is_authenticated %}
+    <p><a href="{% url 'Project:EditProject' info.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Edit Project</a>
+    {% endif %}
+    <a href="{% url 'Project:ProjectHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Project Details</h5>
+            <table>
+              <thead>
+              </thead>
+              <tbody>
+                {% for d in detail %}
+                <tr>
+                  <th>Name</th>
+                  <td>{{ d.name }}</td>
+                </tr>
+                <tr>
+                  <th>Owner</th>
+                  <td>{{ d.owner }}</td>
+                </tr>
+                  <tr>
+                    <th>Industry</th>
+                    <td>{{ d.industry }}</td>
+                  </tr>
+                  <tr>
+                    <th>City</th>
+                    <td>{{ d.city }}</td>
+                  </tr>
+                  <tr>
+                    <th>Region</th>
+                    <td>{{ d.region }}</td>
+                  </tr>
+                  <tr>
+                    <th>Country</th>
+                    <td>{{ d.country }}</td>
+                  </tr>
+                  {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

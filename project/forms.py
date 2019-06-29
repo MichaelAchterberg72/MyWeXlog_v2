@@ -54,3 +54,12 @@ class RegionSelect2Widget(RegionSearchFieldMixin, ModelSelect2Widget):
 
 class ProjectSearchForm(forms.Form):
     query = forms.CharField()
+
+class ProjectForm(forms.ModelForm):
+    class Meta:
+        model = ProjectData
+        fields = ('name', 'owner', 'industry', 'country', 'region', 'city')
+        widgets={
+            'region': RegionSelect2Widget(),
+            'city': CitySelect2Widget(),
+        }

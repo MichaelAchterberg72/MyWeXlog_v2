@@ -23,7 +23,7 @@ Add a New Book Read</h5>
 function showAddPopup(triggeringLink) {
     var name = triggeringLink.id.replace(/^add_/, '');
     href = triggeringLink.href;
-    var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes');
+    var win = window.open(href, name, 'height=350,width=600,resizable=yes,scrollbars=yes');
     win.focus();
     return false;
 }
@@ -34,6 +34,9 @@ function closePopup(win, newID, newRepr, id) {
 </script>
 
 <div class="card-body">
+  {% if request.user.is_authenticated %}
+  <p><a href="{% url 'BookList:BookListHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
+  {% endif %}
 <form class="" action="" method="POST" autocomplete="on" novalidate>
 
   {% csrf_token %}

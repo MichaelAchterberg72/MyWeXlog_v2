@@ -193,8 +193,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'Wexlog_1',
         'USER': 'postgres',
-		#'PASSWORD': 'rdf8tm1234' #MA
-        'PASSWORD': 'dJpfss41678', #JK
+		'PASSWORD': 'rdf8tm1234' #MA
+        #'PASSWORD': 'dJpfss41678', #JK
     }
 }
 
