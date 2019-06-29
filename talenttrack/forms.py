@@ -13,7 +13,7 @@ from django_select2.forms import (
 )
 
 from .models import (
-    Topic, Result, CourseType, Course, Education, Lecturer, ClassMates, WorkClient, WorkExperience, WorkColleague, Superior, WorkCollaborator, PreLoggedExperience, PreColleague
+    Topic, Result, CourseType, Course, Education, Lecturer, ClassMates, WorkClient, WorkExperience, WorkColleague, Superior, WorkCollaborator, PreLoggedExperience, PreColleague, Designation
     )
 
 from enterprises.models import Enterprise
@@ -44,7 +44,7 @@ class CourseTypeSelect2Widget(CourseTypeSearchFieldMixin, ModelSelect2Widget):
 class TopicSearchFieldMixin:
     search_fields = [
         'topic__icontains', 'pk__startswith'
-
+        ]
 class TopicSelect2Widget(TopicSearchFieldMixin, ModelSelect2Widget):
     model = Topic
 
@@ -92,7 +92,7 @@ class PreColleagueResponseForm(forms.ModelForm):
 class PreColleagueConfirmForm(forms.ModelForm):
     class Meta:
         model = PreColleague
-        fields = ('confirm', 'comment')
+        fields = ('confirm', 'comments')
 
 
 class PreColleagueSelectForm(forms.ModelForm):
