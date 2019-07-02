@@ -30,7 +30,7 @@
       <tbody>
         <tr>
           <td>{{ p.name }}</td>
-          <td>{{ p.owner }}</td>
+          <td>{{ p.company }}</td>
           <td>{{ p.industry }}</td>
           <td>{{ p.country }}</td>
           <td><a href="{% url 'Project:ProjectDetail' p.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Project Detail</a> </td>

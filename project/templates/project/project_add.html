@@ -36,7 +36,7 @@ function closePopup(win, newID, newRepr, id) {
   <div class="form-row">
     <div class="form-group col-md-6 mb-0">
   {{ form.name|as_crispy_field }}
-  {{ form.owner|as_crispy_field }}
+  {{ form.company|as_crispy_field }}
     <a href="{% url 'Enterprise:EnterpriseAddPop' %}" id='add_enterprise' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}"> Add a new Enterprise</a>
   {{ form.industry|as_crispy_field }}
     <a href="{% url 'Enterprise:IndustryAddPop' %}" id='add_industry' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}"> Add a new Industry</a>

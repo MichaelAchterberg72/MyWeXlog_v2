@@ -123,7 +123,7 @@ def ProjectSearch(request):
         if form.is_valid():
             query = form.cleaned_data['query']
             results = ProjectData.objects.annotate(
-                search=SearchVector('name', 'owner', 'industry', 'country', 'region', 'city'),
+                search=SearchVector('name', 'company', 'industry', 'country', 'region', 'city'),
             ).filter(search=query)
 
     template_name= 'project/project_search.html'

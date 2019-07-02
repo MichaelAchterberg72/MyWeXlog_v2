@@ -17,12 +17,6 @@ CONFIRM = (
     ('Y','Wrong Person'),
 )
 
-class Topic(models.Model):
-    topic = models.CharField(max_length=60, unique=True)
-
-    def __str__(self):
-        return self.topic
-
 
 class Result(models.Model):#What you receive when completing the course
     type = models.CharField(max_length=100, unique=True)
@@ -40,16 +34,25 @@ class CourseType(models.Model):
 
 class Course(models.Model):
     name = models.CharField('Course name', max_length=150, unique=True)
-    institution = models.ForeignKey(Branch, on_delete=models.PROTECT)
+    company = models.ForeignKey(Enterprise, on_delete=models.PROTECT, verbose_name="Institution")
     course_type = models.ForeignKey(CourseType, on_delete=models.PROTECT)
     website = models.URLField(blank=True, null=True)
     skills = models.ManyToManyField(SkillTag)
+    certification = models.ForeignKey(Result, on_delete=models.PROTECT)
 
     class Meta:
-        unique_together = (('name','institution'),)
+        unique_together = (('name','company'),)
 
     def __str__(self):
-        return '{}, {} ({})'.format(self.name, self.institution, self.course_type)
+        return '{}, {} ({})'.format(self.name, self.company, self.course_type)
+
+
+class Topic(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True)
+    topic = models.CharField(max_length=60, unique=True)
+
+    def __str__(self):
+        return '{} - {}'.format (self.course, self.topic)
 
 
 #Function to randomise filename for Profile Upload
@@ -61,17 +64,18 @@ def EduFilename(instance, filename):
 class Education(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.PROTECT)
+    date_captured = models.DateField(auto_now_add=True)
     date_from = models.DateField()
     date_to = models.DateField()
-    subject = models.ForeignKey(Topic, on_delete=models.PROTECT, blank=True, null=True)
-    certification = models.ForeignKey(Result, on_delete=models.PROTECT)
-    file = models.FileField(upload_to=EduFilename)
+    hours_worked = models.DecimalField(max_digits=5, decimal_places=2)
+    topic = models.ForeignKey(Topic, on_delete=models.PROTECT, blank=True, null=True, verbose_name="subject")
+    file = models.FileField(upload_to=EduFilename, blank=True, null=True)
 
     class Meta:
-        unique_together = (('talent','course','subject'),)
+        unique_together = (('talent','course','topic'),)
 
     def __str__(self):
-        return '{}: {} ({})'.format(self.talent, self.course, self.subject)
+        return '{}: {} ({})'.format(self.talent, self.course, self.topic)
 
 
 class Lecturer(models.Model):
@@ -85,7 +89,7 @@ class Lecturer(models.Model):
     confirm = models.CharField(max_length=1, choices=CONFIRM, default='S', null=True)
     comments = models.TextField(blank=True, null=True)
         #Captured by talent
-    response = models.TextField(blank=True, null=True)
+    response = models.TextField('My Response', blank=True, null=True)
 
     class Meta:
         unique_together = (('education','lecturer','date_captured'),)

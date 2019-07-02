@@ -1,0 +1,70 @@
+{% extends "base_home.html" %}
+
+{% block title %}{{block.super}}-Experience{% endblock title %}
+
+{% block content %}
+<div class="card">
+  <h5 class="card-header">Experience - Education & Training</h5>
+  <div class="card-body">
+  <h6 class="card-subtitle mb-2">{{ check.course }}</h6>
+    <p class="card-text float-right"><strong>Qualification: </strong>{{ check.course.certification }}</p>
+    <p class="card-text">Attended from {{ check.date_from }} to {{ check.date_to }}</p>
+    <p class="card-text float-right"><strong>Hours: </strong>{{ check.hours_worked }}</p>
+    <p class="card-text"><strong>Topic: </strong>{{ check.topic.topic }}</p>
+  </div>
+  <div class="row">
+    <div class="col-sm-6">
+     <div class="card">
+       <div class="card-body">
+         <h5 class="card-title">Lecturers</h5>
+         <table class="table-sm">
+           <thead>
+             <tr>
+               <th>Lecturer</th>
+               <th>Confirmation</th>
+             </tr>
+           </thead>
+           {% for c in confirmed_l %}
+           <tbody>
+             <tr>
+               <td>{{ c.lecturer.first_name}} {{ c.lecturer.last_name }}</td>
+               <td>{{c.get_confirm_display}}</td>
+               <td><a href="{% url 'Talent:LecturerResponse' c.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Detail</a></td>
+             </tr>
+          {% endfor %}
+           </tbody>
+
+         </table>
+       </div>
+     </div>
+    </div>
+    <div class="col-sm-6">
+     <div class="card">
+       <div class="card-body">
+         <h5 class="card-title">Class Mates</h5>
+
+         <table class="table-sm">
+           <thead>
+             <tr>
+               <th>Name</th>
+               <th>Confirmation</th>
+             </tr>
+           </thead>
+           {% for cm in confirmed_cm %}
+           <tbody>
+             <tr>
+               <td>{{ cm.colleague.first_name}} {{ cm.colleague.last_name }}</td>
+               <td>{{cm.get_confirm_display}}</td>
+               <td><a href="{% url 'Talent:ClassMatesResponse' cm.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Detail</a></td>
+             </tr>
+          {% endfor %}
+           </tbody>
+         </table>
+
+       </div>
+     </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

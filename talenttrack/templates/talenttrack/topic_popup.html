@@ -1,0 +1,46 @@
+{% extends 'base_homelite.html' %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+{% block title %}{{block.super}} Course{% endblock title %}
+
+
+{% block content %}
+<div class="container">
+<h3>Add a Subject</h3>
+
+<form method="post">
+  <input type="hidden" name="next" value="{{ request.GET.next }}">
+  {% csrf_token %}
+  <div class="form-row">
+    <div class="form-group col-md-6 mb-0">
+      {{ form.topic|as_crispy_field }}
+    </div>
+  </div>
+  <div class="">
+    <p><button type="submit" name="Done" class="btn btn-primary">Save</button>
+  </div>
+</form>
+</div>
+{% endblock content %}
+{% block Script %}
+<!-- code for popups -->
+<script type="text/javascript">
+function showAddPopup(triggeringLink) {
+    var name = triggeringLink.id.replace(/^add_/, '');
+    href = triggeringLink.href;
+    var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes');
+    win.focus();
+    return false;
+}
+
+function closePopup(win, newID, newRepr, id) {
+    $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
+    win.close();
+}
+
+window.onerror = function (msg) {
+  $("body").attr("JSError", msg);
+}
+</script>
+{% endblock Script %}

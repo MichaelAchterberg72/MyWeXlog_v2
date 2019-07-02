@@ -33,11 +33,34 @@ def PhoneNumberTypeAddPopup(request):
         return render(request, template, context)
 
 @csrf_exempt
-@csp_exempt
 def get_numbertype_id(request):
     if request.is_ajax():
         type = request.Get['type']
         type_id = PhoneNumberType.objects.get(type = type).id
         data = {'type_id':type_id,}
+        return HttpResponse(json.dumps(data), content_type='application/json')
+    return HttpResponse("/")
+
+
+@login_required()
+@csp_exempt
+def SkillAddPopup(request):
+    form = SkillForm(request.POST or None)
+    if request.method == "POST":
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.save()
+            return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_skills");</script>' % (new.pk, new))
+    else:
+        context = {'form':form,}
+        template = 'db_flatten/skill_popup.html'
+        return render(request, template, context)
+
+@csrf_exempt
+def get_skill_id(request):
+    if request.is_ajax():
+        skill = request.Get['skill']
+        skill_id = Skill.objects.get(skill = skill).id
+        data = {'skill_id':skill_id,}
         return HttpResponse(json.dumps(data), content_type='application/json')
     return HttpResponse("/")

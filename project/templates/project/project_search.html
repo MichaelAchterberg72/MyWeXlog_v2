@@ -18,7 +18,7 @@
     {% for ProjectList in results %}
       <h5 class="card-title">><a href="{{ ProjectData.name }}">{{ProjectData.name }}</a></h5>
       <p class="card-text">
-      {{ ProjectData.owner }} - {{ ProjectData.industry }} - {{ ProjectData.country }}
+      {{ ProjectData.company }} - {{ ProjectData.industry }} - {{ ProjectData.country }}
     {% empty %}
       <p>There are no results for your query.</p>
     {% endfor %}

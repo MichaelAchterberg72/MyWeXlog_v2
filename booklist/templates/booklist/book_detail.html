@@ -7,9 +7,9 @@
 <div class="card">
   <h5 class="card-header">Detail for {{ info.title }} book</h5>
   <div class="card-body">
-    {% if request.user.is_authenticated %}
+    <!--{% if request.user.is_authenticated %}
     <p><a href="{% url 'BookList:EditBook' info.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Edit Book</a>
-    {% endif %}
+    {% endif %}-->
     <a href="{% url 'BookList:BookListHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
     <div class="row">
       <div class="col-sm-6">
@@ -46,7 +46,7 @@
                       <td>{{ m }}</td>
                     {% endfor %}
                   </tr>
-              
+
               </tbody>
             </table>
           </div>
