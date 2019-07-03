@@ -21,4 +21,7 @@ urlpatterns = [
     path('lecturer/detail/<int:pk>/', views.LecturerResponse, name='LecturerResponse'),
     path('classmate/select/', views.ClassMateSelectView, name='ClassMatesSelect'),
     path('classmate/detail/<int:pk>/', views.ClassMatesResponse, name='ClassMatesResponse'),
+    path('experience/capture/', views.WorkExperienceCaptureView, name="ExperienceCapture"),
+    path('popup/designation/add/', views.DesignationAddPopup, name="DesignationAddPop"),
+    path('popup/ajax/get_designation_id/', views.get_designation_id, name="AJAX_GetDesignationID"),
 ]

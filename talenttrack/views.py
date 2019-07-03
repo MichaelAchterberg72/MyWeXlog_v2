@@ -7,7 +7,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 import json
-from django.db.models import Count
+from django.db.models import Count, Sum
 
 
 from csp.decorators import csp_exempt
@@ -20,6 +20,34 @@ from .forms import (
 from .models import (
         Education, Lecturer, Course, ClassMates
 )
+
+
+@login_required()
+def ExperienceHome(request):
+        train = Education.objects.filter(talent=request.user).order_by('-date_from')
+        train_sum = Education.objects.filter(talent=request.user).aggregate(Edu_sum=Sum('hours_worked'))
+        template = 'talenttrack/track_home.html'
+        context = {'train': train, 'train_sum': train_sum}
+        return render(request, template, context)
+
+
+@login_required()
+@csp_exempt
+def WorkExperienceCaptureView(request):
+    form = WorkExperienceForm(request.POST or None)
+    if request.method == 'POST':
+        next_url=request.POST.get('next', '/')
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.talent = request.user
+            form.save_m2m()
+            if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
+                next_url = reverse('Talent:Home')
+            return HttpResponseRedirect(next_url)
+    else:
+        template = 'talenttrack/work_experience_capture.html'
+        context = {'form': form}
+        return render(request, template, context)
 
 
 @login_required()
@@ -77,12 +105,7 @@ def ClassMatesResponse(request, pk):
         raise PermissionDenied
 
 
-@login_required()
-def ExperienceHome(request):
-        train = Education.objects.filter(talent=request.user).order_by('-date_from')
-        template = 'talenttrack/track_home.html'
-        context = {'train': train}
-        return render(request, template, context)
+
 
 
 @login_required()
@@ -134,6 +157,7 @@ def EducationCaptureView(request):
             new=form.save(commit=False)
             new.talent = request.user
             new.save()
+            form.save_m2m()
             return redirect(reverse('Talent:LecturerSelect'))
     else:
         template = 'talenttrack/talent_education.html'
@@ -244,3 +268,30 @@ def get_topic_id(request):
         return HttpResponse(json.dumps(data), content_type='application/json')
     return HttpResponse("/")
 #<<< Topic Popup
+
+
+#>>>Designation Popup
+@login_required()
+@csp_exempt
+def DesignationAddPopup(request):
+    form = DesignationForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            instance=form.save(commit=False)
+            instance.save()
+            return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_designation");</script>' % (instance.pk, instance))
+    else:
+        context = {'form':form,}
+        template = 'talenttrack/designation_popup.html'
+        return render(request, template, context)
+
+
+@csrf_exempt
+def get_designation_id(request):
+    if request.is_ajax():
+        designation = request.Get['designation']
+        designation_id = Designation.objects.get(name = designation).id
+        data = {'designation_id':designation_id,}
+        return HttpResponse(json.dumps(data), content_type='application/json')
+    return HttpResponse("/")
+#<<< Designation Popup

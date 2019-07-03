@@ -135,7 +135,7 @@ class WorkExperience(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     date_from = models.DateField()
     date_to = models.DateField(default=timezone.now)
-    enterprise = models.ForeignKey(Enterprise, on_delete=models.PROTECT, verbose_name='Company')
+    company = models.ForeignKey(Enterprise, on_delete=models.PROTECT, verbose_name='Company')
     estimated = models.BooleanField(default=False)
     project = models.ForeignKey(
         ProjectData, on_delete=models.PROTECT, verbose_name='On Project', blank=True, null=True

@@ -13,4 +13,6 @@ urlpatterns = [
     path('edit/project/<int:e_id>/', views.ProjectEditView, name="EditProject"),
     path('list/', views.ProjectListView, name='ProjectList'),
     path('search/', views.ProjectSearch, name='Project-Search'),
+    path('popup/project/add/', views.ProjectAddPopup, name="ProjectAddPop"),
+    path('popup/ajax/get_project_id/', views.get_project_id, name="AJAX_GetProjectID"),
 ]

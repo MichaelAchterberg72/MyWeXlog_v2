@@ -133,3 +133,30 @@ def ProjectSearch(request):
             'results': results
     }
     return render(request, template_name, context)
+
+
+#>>>Project Popup
+@login_required()
+@csp_exempt
+def ProjectAddPopup(request):
+    form = ProjectAddForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            instance=form.save(commit=False)
+            instance.save()
+            return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_project");</script>' % (instance.pk, instance))
+    else:
+        context = {'form':form,}
+        template = 'project/project_add_popup.html'
+        return render(request, template, context)
+
+
+@csrf_exempt
+def get_project_id(request):
+    if request.is_ajax():
+        project = request.Get['project']
+        project_id = ProjectData.objects.get(name = project).id
+        data = {'project_id':project_id,}
+        return HttpResponse(json.dumps(data), content_type='application/json')
+    return HttpResponse("/")
+#<<< Project Popup
