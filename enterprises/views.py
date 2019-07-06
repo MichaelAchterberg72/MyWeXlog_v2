@@ -122,7 +122,21 @@ def EnterpriseAddPopup(request):
         context = {'form':form,}
         template = 'enterprises/enterprise_popup.html'
         return render(request, template, context)
-
+'''
+@csp_exempt
+@csp_exempt
+def EnterpriseAddPopup(request):
+    form = EnterprisePopupForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            instance=form.save(commit=False)
+            instance.save()
+            return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_company");</script>' % (instance.pk, instance))
+    else:
+        context = {'form':form,}
+        template = 'enterprises/enterprise_popup.html'
+        return render(request, template, context)
+'''
 
 @csrf_exempt
 def get_enterprise_id(request):

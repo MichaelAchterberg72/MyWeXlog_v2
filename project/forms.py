@@ -17,7 +17,7 @@ from locations.models import Region, City, Suburb
 class ProjectAddForm(forms.ModelForm):
     class Meta:
         model = ProjectData
-        fields = ('name','owner','country','region','city', 'industry')
+        fields = ('name','company','country','region','city', 'industry')
 
 class CompanySearchFieldMixin:
     search_fields = [
@@ -58,7 +58,7 @@ class ProjectSearchForm(forms.Form):
 class ProjectForm(forms.ModelForm):
     class Meta:
         model = ProjectData
-        fields = ('name', 'owner', 'industry', 'country', 'region', 'city')
+        fields = ('name', 'company', 'industry', 'country', 'region', 'city')
         widgets={
             'region': RegionSelect2Widget(),
             'city': CitySelect2Widget(),

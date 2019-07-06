@@ -124,12 +124,7 @@ def ProjectSearch(request):
         if form.is_valid():
             query = form.cleaned_data['query']
             results = ProjectData.objects.annotate(
-                search=SearchVector('name',
-                                    'owner__name',
-                                    'industry__industry',
-                                    'country',
-                                    'region__region',
-                                    'city__city'),
+                search=SearchVector('name', 'company', 'industry', 'country', 'region', 'city'),
             ).filter(search=query)
 
     template_name= 'project/project_search.html'
@@ -146,7 +141,7 @@ def EmployeesOnProject(request, project_id):
 #    pcount = WorkExperience.objects.filter('owner').aggregate(sum_p=Count('talent'))
 #    employees = ProjectData.objects.filter('name').order_by('talent')
     projctdata = ProjectData.objects.all()
-    
+
     template_name = 'project/employees_on_project.html'
     context = {
 #            'pcount': pcount,
@@ -171,3 +166,30 @@ def HoursWorkedOnProject(request, project_id):
 
 def on_backbutton_clicked(self, widget):
     self.webview.go_back()
+
+
+#>>>Project Popup
+@login_required()
+@csp_exempt
+def ProjectAddPopup(request):
+    form = ProjectAddForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            instance=form.save(commit=False)
+            instance.save()
+            return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_project");</script>' % (instance.pk, instance))
+    else:
+        context = {'form':form,}
+        template = 'project/project_add_popup.html'
+        return render(request, template, context)
+
+
+@csrf_exempt
+def get_project_id(request):
+    if request.is_ajax():
+        project = request.Get['project']
+        project_id = ProjectData.objects.get(name = project).id
+        data = {'project_id':project_id,}
+        return HttpResponse(json.dumps(data), content_type='application/json')
+    return HttpResponse("/")
+#<<< Project Popup

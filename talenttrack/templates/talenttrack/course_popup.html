@@ -1,0 +1,67 @@
+{% extends 'base_homelite.html' %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+{% block title %}{{block.super}} Course{% endblock title %}
+
+
+{% block content %}
+{{ form.media.css }}
+<style type="text/css">
+  select {
+    width: 100px;
+  }
+  </style>
+<div class="container">
+<h3>Add a Course</h3>
+
+<form method="post">
+  <input type="hidden" name="next" value="{{ request.GET.next }}">
+  {% csrf_token %}
+  <div class="form-row">
+    <div class="form-group col-md-6 mb-0">
+      {{ form.name|as_crispy_field }}
+      {{ form.company|as_crispy_field }}
+      <p><a href="{% url 'Enterprise:EnterpriseAddPop' %}" id='add_company' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add an Institution</a></p>
+      {{ form.course_type|as_crispy_field }}
+      <p><a href="{% url 'Talent:CourseTypeAddPop' %}" id='add_type' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add an Course Type</a></p>
+    </div>
+    <div class="form-group col-md-6 mb-0">
+      {{ form.website|as_crispy_field }}
+      {{ form.certification|as_crispy_field }}
+      <p><a href="{% url 'Talent:ResultAddPop' %}" id='add_result' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a Certification</a></p>
+    </div>
+  </div>
+  <div class="form-row">
+    {{ form.skills|as_crispy_field }}
+    <p><a href="{% url 'Flatten:SkillAddPop' %}" id='add_skill' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a Skill</a></p>
+  </div>
+  <div class="">
+    <p><button type="submit" name="Done" class="btn btn-primary">Save</button>
+  </div>
+</form>
+</div>
+{% endblock content %}
+{% block Script %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{{ form.media.js }}
+<!-- code for popups -->
+<script type="text/javascript">
+function showAddPopup(triggeringLink) {
+    var name = triggeringLink.id.replace(/^add_/, '');
+    href = triggeringLink.href;
+    var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes');
+    win.focus();
+    return false;
+}
+
+function closePopup(win, newID, newRepr, id) {
+    $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
+    win.close();
+}
+
+window.onerror = function (msg) {
+  $("body").attr("JSError", msg);
+}
+</script>
+{% endblock Script %}

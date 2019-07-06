@@ -197,13 +197,13 @@ class WorkExperienceForm(forms.ModelForm):
     class Meta:
         model = WorkExperience
         fields = (
-            'date_from', 'date_to', 'enterprise', 'estimated', 'project', 'industry', 'hours_worked', 'comment', 'designation', 'upload', 'skills'
+            'date_from', 'date_to', 'company', 'estimated', 'project', 'industry', 'hours_worked', 'comment', 'designation', 'upload', 'skills'
             )
         widgets={
-            'enterprise': CompanySelect2Widget(),
+            'company': CompanySelect2Widget(),
             'designation': DesignationSelect2Widget(),
             'project': ProjectSelect2Widget(),
-            #'skills': SkillsXXXWidget(),
+
 }
 
 class DesignationForm(forms.ModelForm):
@@ -236,6 +236,12 @@ class LecturerResponseForm(forms.ModelForm):
         fields = ('response',)
 
 
+class ClassMatesRespondForm(forms.ModelForm):
+    class Meta:
+        model = ClassMates
+        fields = ('response',)
+
+
 class LecturerSelectForm(forms.ModelForm):
     class Meta:
         model = Lecturer
@@ -248,28 +254,32 @@ class LecturerConfirmForm(forms.ModelForm):
         fields = ('confirm', 'comments')
 
 
+class LecturerRespondForm(forms.ModelForm):
+    class Meta:
+        model = Lecturer
+        fields = ('response',)
+
 class EducationForm(forms.ModelForm):
     class Meta:
         model = Education
-        fields = ('course', 'date_from', 'date_to', 'subject', 'certification', 'file')
+        fields = ('course', 'date_from', 'date_to', 'topic', 'file', 'hours_worked')
         widgets={
             'course': CourseSelect2Widget(),
-            'subject': CourseTypeSelect2Widget(),
-            #'skills': SkillsXXXWidget(),
+            'topic': TopicSelect2Widget(),
         }
 
 
 class CourseForm(forms.ModelForm):
     class Meta:
         model = Course
-        fields = ('name', 'institution', 'course_type', 'website', 'skills')
+        fields = ('name', 'company', 'course_type', 'website', 'skills', 'certification')
         widgets={
-            'institution': CompanySelect2Widget(),
+            'company': CompanySelect2Widget(),
             'course_type': CourseTypeSelect2Widget(),
             #'skills': SkillsXXXWidget(),
         }
 
-class ResultTypeForm(forms.ModelForm):
+class CourseTypeForm(forms.ModelForm):
     class Meta:
         model = CourseType
         fields = ('type',)
@@ -282,6 +292,12 @@ class ResultForm(forms.ModelForm):
 
 
 class TopicForm(forms.ModelForm):
+    class Meta:
+        model = Topic
+        fields = ('topic', 'course')
+
+
+class TopicPopForm(forms.ModelForm):
     class Meta:
         model = Topic
         fields = ('topic',)
