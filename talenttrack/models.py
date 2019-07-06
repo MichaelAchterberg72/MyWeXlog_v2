@@ -144,7 +144,7 @@ class WorkExperience(models.Model):
     hours_worked = models.DecimalField(max_digits=5, decimal_places=2)
     comment = models.TextField(blank=True, null=True)
     designation = models.ForeignKey(Designation, on_delete=models.PROTECT)
-    upload = models.FileField(upload_to=ExpFilename)
+    upload = models.FileField(upload_to=ExpFilename, blank=True, null=True)
     skills = models.ManyToManyField(SkillTag)
 
     class Meta:
