@@ -8,9 +8,10 @@ app_name = 'Project'
 
 urlpatterns = [
     path('home/', views.ProjectListHome, name='ProjectHome'),
-    path('books/detail/<int:project_id>/', views.ProjectDetailView, name='ProjectDetail'),
+    path('detail/<int:project_id>/', views.ProjectDetailView, name='ProjectDetail'),
     path('add/', views.ProjectAddView, name='ProjectAdd'),
     path('edit/project/<int:e_id>/', views.ProjectEditView, name="EditProject"),
+    path('hours/<int:project_id>/', views.HoursWorkedOnProject, name='HoursOnProject'),
     path('list/', views.ProjectListView, name='ProjectList'),
     path('search/', views.ProjectSearch, name='Project-Search'),
 ]

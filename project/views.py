@@ -17,6 +17,7 @@ from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from locations.models import Region
 from .models import *
 from Profile.models import Profile
+from talenttrack.models import WorkExperience
 
 from .forms import ProjectAddForm, ProjectSearchForm, ProjectForm
 
@@ -123,7 +124,12 @@ def ProjectSearch(request):
         if form.is_valid():
             query = form.cleaned_data['query']
             results = ProjectData.objects.annotate(
-                search=SearchVector('name', 'owner', 'industry', 'country', 'region', 'city'),
+                search=SearchVector('name',
+                                    'owner__name',
+                                    'industry__industry',
+                                    'country',
+                                    'region__region',
+                                    'city__city'),
             ).filter(search=query)
 
     template_name= 'project/project_search.html'
@@ -133,3 +139,35 @@ def ProjectSearch(request):
             'results': results
     }
     return render(request, template_name, context)
+
+
+@login_required
+def EmployeesOnProject(request, project_id):
+#    pcount = WorkExperience.objects.filter('owner').aggregate(sum_p=Count('talent'))
+#    employees = ProjectData.objects.filter('name').order_by('talent')
+    projctdata = ProjectData.objects.all()
+    
+    template_name = 'project/employees_on_project.html'
+    context = {
+#            'pcount': pcount,
+#            'employees': employees,
+            'people': people
+    }
+    return render(request, template_name, context)
+
+
+@login_required
+def HoursWorkedOnProject(request, project_id):
+    projectdata = ProjectData.objects.all()
+    hr = WorkExperience.objects.filter(project=project_id).aggregate(sumt=Sum('hours_worked'))
+
+    template_name = 'project/hours_worked_on_project.html'
+    context = {
+            'projectdata': projectdata,
+            'hr': hr
+    }
+    return render(request, template_name, context)
+
+
+def on_backbutton_clicked(self, widget):
+    self.webview.go_back()

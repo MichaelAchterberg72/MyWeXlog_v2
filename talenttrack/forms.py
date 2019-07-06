@@ -35,6 +35,7 @@ class CourseTypeSearchFieldMixin:
     search_fields = [
         'type__icontains', 'pk__startswith'
     ]
+
 class CourseTypeSelect2Widget(CourseTypeSearchFieldMixin, ModelSelect2Widget):
     model = CourseType
 
@@ -45,6 +46,7 @@ class TopicSearchFieldMixin:
     search_fields = [
         'topic__icontains', 'pk__startswith'
         ]
+        
 class TopicSelect2Widget(TopicSearchFieldMixin, ModelSelect2Widget):
     model = Topic
 

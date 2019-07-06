@@ -8,9 +8,9 @@
   <h5 class="card-header">Welcome to the Project home page!</h5>
   <div class="card-body">
       {% if request.user.is_authenticated %}
-      <p><a href="{% url 'Project:ProjectAdd' %}" class="badge badge-pill badge-primary">Add Project</a><a href="{% url 'Enterprise:EnterpriseHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
+      <p><a href="{% url 'Project:ProjectAdd' %}" class="badge badge-pill badge-primary">Add Project</a><a href="{% url 'Project:Project-Search' %}" class="badge badge-pill badge-primary">Search Projects</a><a href="{% url 'Enterprise:EnterpriseHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
       {% endif %}
-    <p>You currently have {{ pcount.sum_p }} projects listed in WexLog!</p>
+    <p>There are currently {{ pcount.sum_p }} projects listed in WexLog!</p>
     <table class="table-sm">
       <col width="30%">
       <col width="20%">

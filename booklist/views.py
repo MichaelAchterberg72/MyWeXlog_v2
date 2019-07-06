@@ -23,7 +23,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views import generic
 import json
 
-
+from Profile.models import Profile
 from .models import BookList, Author, ReadBy, Format, Publisher
 from .forms import *
 
@@ -33,9 +33,10 @@ class BookListHomeView(TemplateView):
     template_name = 'booklist/home.html'
 
 @login_required
-def BookListHome(request):
-    ecount = ReadBy.objects.all().aggregate(sum_e=Count('book'))
-    books = ReadBy.objects.all().order_by('date')
+def BookListHome(request, profile_id=None):
+    profile_id = request.user
+    ecount = ReadBy.objects.filter(talent=profile_id).aggregate(sum_e=Count('book'))
+    books = ReadBy.objects.filter(talent=profile_id).order_by('date')
 
     template_name = 'booklist/booklist_home.html'
     context = {'ecount': ecount, 'books': books,}

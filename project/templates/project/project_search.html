@@ -9,19 +9,55 @@
     <h4>Projects for search "{{ query }}"</h4>
 </div>
 </div>
+<div class="container">
+{% if request.user.is_authenticated %}
+<p><a href="{% url 'Project:ProjectAdd' %}" class="badge badge-pill badge-primary">Add Project</a><a href="{% url 'Project:Project-Search' %}" class="badge badge-pill badge-primary">Search Projects</a>
+  <a href="{% url 'Project:ProjectHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
+{% endif %}
+</div>
 <div class="card-body">
     <h5 class="card-title">
       {% with results.count as total_results %}
         Found {{ total_results }} result{{ total_results|pluralize }}
       {% endwith %}
     </h5>
-    {% for ProjectList in results %}
-      <h5 class="card-title">><a href="{{ ProjectData.name }}">{{ProjectData.name }}</a></h5>
+
+
+
+    {% for ProjectData in results %}
+    <table class="table-sm">
+      <col width="30%">
+      <col width="20%">
+      <col width="20%">
+      <col width="15%">
+      <col width="15%">
+      <thead>
+        <tr height="1px">
+          <th height="1px">Project Name</th>
+          <th height="1px">Project Owner</th>
+          <th height="1px">Project Industry</th>
+          <th height="1px">Project Country</th>
+          <th height="1px"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ ProjectData.name }}</td>
+          <td>{{ ProjectData.owner }}</td>
+          <td>{{ ProjectData.industry }}</td>
+          <td>{{ ProjectData.country }}</td>
+          <td><a href="{% url 'Project:ProjectDetail' ProjectData.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Project Detail</a> </td>
+        </tr>
+
+<!--      <h5 class="card-title">><a href="{{ ProjectData.name }}">{{ProjectData.name }}</a></h5>
       <p class="card-text">
       {{ ProjectData.owner }} - {{ ProjectData.industry }} - {{ ProjectData.country }}
+      -->
     {% empty %}
       <p>There are no results for your query.</p>
     {% endfor %}
+  </tbody>
+</table>
     <p> </p>
     <p><a href="{% url "Project:Project-Search" %}" class="btn btn-primary">Search Again</a></p>
   {% else %}
