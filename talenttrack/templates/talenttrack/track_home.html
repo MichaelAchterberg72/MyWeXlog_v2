@@ -62,6 +62,30 @@
         <div class="float-right">
           <p><a href="{% url 'Talent:ExperienceCapture' %}" class="badge badge-pill badge-primary float-right">Add Experience</a></p>
         </div>
+          <p><strong>Total hours of Experience: </strong>{{ exp_sum.we_sum }}</p>
+        <table class="table-sm">
+          <thead>
+            <tr>
+              <th>Employer</th>
+              <th>Date from</th>
+              <th>Date to</th>
+              <th>Hours</th>
+              <th>Project</th>
+            </tr>
+          </thead>
+          {% for e in experience %}
+          <tbody>
+            <tr>
+              <td>{{ e.company }}</td>
+              <td>{{ e.date_from }}</td>
+              <td>{{ e.date_to }}</td>
+              <td>{{ e.hours_worked }}</td>
+              <td>{{ e.project }}</td>
+              <td><a href="{% url 'Talent:ExperienceDetail' e.id %}">Detail</a></td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
       </div>
     </div>
   </div>

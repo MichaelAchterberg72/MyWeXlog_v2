@@ -60,7 +60,6 @@ def EduFilename(instance, filename):
 	ext = filename.split('.')[-1]
 	return "education\%s_%s.%s" % (str(time()).replace('.','_'), random(), ext)
 
-
 class Education(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.PROTECT)
@@ -135,6 +134,7 @@ class WorkExperience(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     date_from = models.DateField()
     date_to = models.DateField(default=timezone.now)
+    date_captured = models.DateField(auto_now_add=True)
     company = models.ForeignKey(Enterprise, on_delete=models.PROTECT, verbose_name='Company')
     estimated = models.BooleanField(default=False)
     project = models.ForeignKey(
@@ -158,8 +158,8 @@ class WorkExperience(models.Model):
 
 class WorkColleague(models.Model):
         #Captured by talent
-    experience = models.ForeignKey(WorkExperience, on_delete=models.PROTECT)
-    colleague_name = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    experience = models.ForeignKey(WorkExperience, on_delete=models.CASCADE)
+    colleague_name = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     designation = models.ForeignKey(Designation, on_delete=models.PROTECT)
         #AutoCaptured
     date_captured = models.DateField(auto_now_add=True)

@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
-from django.db.models import Count
+from django.db.models import Count, Sum
 from django.utils.http import is_safe_url
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
@@ -153,12 +153,12 @@ def EmployeesOnProject(request, project_id):
 
 @login_required
 def HoursWorkedOnProject(request, project_id):
-    projectdata = ProjectData.objects.all()
+    data = ProjectData.objects.get(pk=project_id)
     hr = WorkExperience.objects.filter(project=project_id).aggregate(sumt=Sum('hours_worked'))
 
-    template_name = 'project/hours_worked_on_project.html'
+    template_name = 'project/hours_worked_on_project0.html'
     context = {
-            'projectdata': projectdata,
+            'data': data,
             'hr': hr
     }
     return render(request, template_name, context)

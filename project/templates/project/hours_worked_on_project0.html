@@ -5,7 +5,7 @@
 {% block content %}
 
 <div class="card">
-  <h5 class="card-header">List of hours worked on {{ project }}!</h5>
+  <h5 class="card-header">List of hours worked on {{ data.name }}!</h5>
   <div class="card-body">
       {% if request.user.is_authenticated %}
       <p><a href="{% url 'Project:ProjectAdd' %}" class="badge badge-pill badge-primary">Add Project</a><a href="{% url 'Enterprise:EnterpriseHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>

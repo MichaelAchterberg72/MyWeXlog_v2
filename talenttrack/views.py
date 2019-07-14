@@ -14,11 +14,11 @@ from csp.decorators import csp_exempt
 
 
 from .forms import (
-        TopicForm, ResultForm, CourseTypeForm, CourseForm, DesignationForm, ClassMatesSelectForm, ClassMatesConfirmForm, LecturerSelectForm, LecturerConfirmForm, EducationForm, WorkExperienceForm, WorkColleagueSelectForm, WorkColleagueConfirmForm, WorkColleagueResponseForm, ClassMatesResponseForm, LecturerResponseForm, SuperiorSelectForm, WorkCollaboratorResponseForm, WorkCollaboratorConfirmForm, WorkCollaboratorSelectForm, WorkClientResponseForm, WorkClientConfirmForm, WorkClientSelectForm, PreColleagueResponseForm, PreColleagueConfirmForm, PreColleagueSelectForm, PreLoggedExperienceForm, TopicPopForm, LecturerRespondForm, ClassMatesRespondForm
+        TopicForm, ResultForm, CourseTypeForm, CourseForm, DesignationForm, ClassMatesSelectForm, ClassMatesConfirmForm, LecturerSelectForm, LecturerConfirmForm, EducationForm, WorkExperienceForm, WorkColleagueSelectForm, WorkColleagueConfirmForm, WorkColleagueResponseForm, ClassMatesResponseForm, LecturerResponseForm, SuperiorSelectForm, WorkCollaboratorResponseForm, WorkCollaboratorConfirmForm, WorkCollaboratorSelectForm, WorkClientResponseForm, WorkClientConfirmForm, WorkClientSelectForm, PreColleagueResponseForm, PreColleagueConfirmForm, PreColleagueSelectForm, PreLoggedExperienceForm, TopicPopForm, LecturerRespondForm, ClassMatesRespondForm, WorkColleagueSelectForm, SuperiorSelectForm, WorkCollaboratorSelectForm
 )
 
 from .models import (
-        Education, Lecturer, Course, ClassMates
+        Education, Lecturer, Course, ClassMates, WorkExperience, Superior, WorkCollaborator, WorkClient, WorkColleague,
 )
 
 
@@ -26,9 +26,187 @@ from .models import (
 def ExperienceHome(request):
         train = Education.objects.filter(talent=request.user).order_by('-date_from')
         train_sum = Education.objects.filter(talent=request.user).aggregate(Edu_sum=Sum('hours_worked'))
+        experience = WorkExperience.objects.filter(talent=request.user).order_by('-date_from')
         template = 'talenttrack/track_home.html'
-        context = {'train': train, 'train_sum': train_sum}
+        exp_sum = WorkExperience.objects.filter(talent=request.user).aggregate(we_sum=Sum('hours_worked'))
+        context = {'train': train, 'train_sum': train_sum, 'experience': experience, 'exp_sum': exp_sum}
         return render(request, template, context)
+
+
+@login_required()
+def ClientSelectView(request, pk):
+    instance = WorkExperience.objects.get(pk=pk)
+    form = WorkClientSelectForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.experience = instance
+            new.save()
+            if 'another' in request.POST:
+                return redirect('Talent:ClientSelect', kwargs={'pk':pk})
+            elif 'done' in request.POST:
+                return redirect('Talent:Home')
+    else:
+        template = 'talenttrack/experience_client_select.html'
+        context = {'instance': instance, 'form': form}
+        return render(request, template, context)
+
+
+@login_required()
+def ClientResponseView(request, pk):
+    check = Superior.objects.get(pk=pk)
+    if check.experience.talent == request.user:
+        form = WorkClientResponseForm(request.POST or None, instance=check)
+        if request.method =='POST':
+            next_url=request.POST.get('next', '/')
+            if form.is_valid():
+                new=form.save(commit=False)
+                new.save()
+                if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
+                    next_url = reverse('Talent:Home')
+                return HttpResponseRedirect(next_url)
+        else:
+            template = 'talenttrack/experience_client_respond.html'
+            context = {'check': check, 'form': form}
+            return render(request, template, context)
+    else:
+        raise PermissionDenied
+
+
+@login_required()
+def CollaboratorSelectView(request, pk):
+    instance = WorkExperience.objects.get(pk=pk)
+    form = WorkCollaboratorSelectForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.experience = instance
+            new.save()
+            if 'another' in request.POST:
+                return redirect('Talent:CollaboratorSelect', kwargs={'pk':pk})
+            elif 'done' in request.POST:
+                return redirect(reverse('Talent:ClientSelect', kwargs={'pk':pk}))
+    else:
+        template = 'talenttrack/experience_collaborator_select.html'
+        context = {'instance': instance, 'form': form}
+        return render(request, template, context)
+
+
+@login_required()
+def CollaboratorResponseView(request, pk):
+    check = Superior.objects.get(pk=pk)
+    if check.experience.talent == request.user:
+        form = WorkCollaboratorResponseForm(request.POST or None, instance=check)
+        if request.method =='POST':
+            next_url=request.POST.get('next', '/')
+            if form.is_valid():
+                new=form.save(commit=False)
+                new.save()
+                if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
+                    next_url = reverse('Talent:Home')
+                return HttpResponseRedirect(next_url)
+        else:
+            template = 'talenttrack/experience_collaborator_respond.html'
+            context = {'check': check, 'form': form}
+            return render(request, template, context)
+    else:
+        raise PermissionDenied
+
+
+@login_required()
+def SuperiorSelectView(request, pk):
+    instance = WorkExperience.objects.get(pk=pk)
+    form = SuperiorSelectForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.experience = instance
+            new.save()
+            if 'another' in request.POST:
+                return redirect('Talent:SuperiorSelect', kwargs={'pk':pk})
+            elif 'done' in request.POST:
+                return redirect(reverse('Talent:CollaboratorSelect', kwargs={'pk':pk}))
+    else:
+        template = 'talenttrack/experience_superior_select.html'
+        context = {'instance': instance, 'form': form}
+        return render(request, template, context)
+
+
+@login_required()
+def SuperiorResponseView(request, pk):
+    check = Superior.objects.get(pk=pk)
+    if check.experience.talent == request.user:
+        form = WorkColleagueResponseForm(request.POST or None, instance=check)
+        if request.method =='POST':
+            next_url=request.POST.get('next', '/')
+            if form.is_valid():
+                new=form.save(commit=False)
+                new.save()
+                if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
+                    next_url = reverse('Talent:Home')
+                return HttpResponseRedirect(next_url)
+        else:
+            template = 'talenttrack/experience_superior_respond.html'
+            context = {'check': check, 'form': form}
+            return render(request, template, context)
+    else:
+        raise PermissionDenied
+
+
+@login_required()
+def ColleagueSelectView(request):
+    instance = WorkExperience.objects.filter(talent=request.user).latest('date_captured')
+    form = WorkColleagueSelectForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.experience = instance
+            new.save()
+            if 'another' in request.POST:
+                return redirect('Talent:ColleagueSelect')
+            elif 'done' in request.POST:
+                return redirect(reverse('Talent:SuperiorSelect', kwargs={'pk':instance.id}))
+    else:
+        template = 'talenttrack/experience_colleague_select.html'
+        context = {'instance': instance, 'form': form}
+        return render(request, template, context)
+
+
+@login_required()
+def ColleagueResponseView(request, pk):
+    check = WorkColleague.objects.get(pk=pk)
+    if check.experience.talent == request.user:
+        form = WorkColleagueResponseForm(request.POST or None, instance=check)
+        if request.method =='POST':
+            next_url=request.POST.get('next', '/')
+            if form.is_valid():
+                new=form.save(commit=False)
+                new.save()
+                if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
+                    next_url = reverse('Talent:Home')
+                return HttpResponseRedirect(next_url)
+        else:
+            template = 'talenttrack/experience_colleague_respond.html'
+            context = {'check': check, 'form': form}
+            return render(request, template, context)
+    else:
+        raise PermissionDenied
+
+
+@login_required()
+def ExperienceDetailView(request, exp_id):
+    check = WorkExperience.objects.get(pk=exp_id)
+    if check.talent == request.user:
+        list = WorkExperience.objects.filter(pk=exp_id)
+        confirmed_clg = WorkColleague.objects.filter(experience=exp_id)
+        confirmed_sup = Superior.objects.filter(experience=exp_id)
+        confirmed_clr = WorkCollaborator.objects.filter(experience=exp_id)
+        confirmed_cnt = WorkClient.objects.filter(experience=exp_id)
+        template = 'talenttrack/experience_detail.html'
+        context = {'check': check, 'confirmed_clg': confirmed_clg, 'confirmed_sup': confirmed_sup, 'confirmed_clr': confirmed_clr, 'confirmed_cnt': confirmed_cnt, 'list': list}
+        return render(request, template, context)
+    else:
+        raise PermissionDenied
 
 
 @login_required()
@@ -36,14 +214,12 @@ def ExperienceHome(request):
 def WorkExperienceCaptureView(request):
     form = WorkExperienceForm(request.POST or None)
     if request.method == 'POST':
-        next_url=request.POST.get('next', '/')
         if form.is_valid():
             new = form.save(commit=False)
             new.talent = request.user
+            new.save()
             form.save_m2m()
-            if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
-                next_url = reverse('Talent:Home')
-            return HttpResponseRedirect(next_url)
+            return redirect('Talent:ColleagueSelect')
     else:
         template = 'talenttrack/work_experience_capture.html'
         context = {'form': form}
@@ -103,9 +279,6 @@ def ClassMatesResponse(request, pk):
             return render(request, template, context)
     else:
         raise PermissionDenied
-
-
-
 
 
 @login_required()

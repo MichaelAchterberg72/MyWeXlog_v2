@@ -26,4 +26,9 @@ urlpatterns = [
         path('popup/add/language/', views.LanguagePopup, name="LanguagePop"),
         path('popup/ajax/get_language_id/', views.get_language_id, name="AJAX_GetLanguageID"),
         path('language/<int:profile_id>/<int:lang_id>/', views.LanguageEditView, name='LanguageEdit'),
+        path('online/delete/<int:pk>/', views.OnlineDelete, name='OnlineDelete'),
+        path('passport/delete/<int:pk>/', views.PassportDeleteView, name='PassportDelete'),
+        path('phonenumber/delete/<int:pk>/', views.PhoneNumberDelete, name='PhoneDelete'),
+        path('file/delete/<int:pk>/', views.FileDelete, name='FileDelete'),
+        path('email/delete/<int:pk>/', views.EmailDelete, name='EmailDelete'),
 ]

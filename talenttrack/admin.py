@@ -30,7 +30,7 @@ class WorkColleagueAdmin(admin.ModelAdmin):
 
 @admin.register(WorkExperience)
 class WorkExperienceAdmin(admin.ModelAdmin):
-    pass
+    filter_horizontal = ('skills',)
 
 @admin.register(WorkClient)
 class WorkClientAdmin(admin.ModelAdmin):

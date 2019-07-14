@@ -6,20 +6,20 @@
 
 {% block content %}
 <div class="card">
-  <h5 class="card-header">Class Mates Comments</h5>
+  <h5 class="card-header">Colleague Responses</h5>
   <div class="card-body">
   <h6 class="card-subtitle mb-2">{{ check.education.course }}</h6>
     <table class="table table-sm">
       <thead>
         <tr>
-          <th>Class Mate</th>
+          <th>Colleague</th>
           <th>Status</th>
           <th>Comment</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td width="15%">{{ check.colleague.first_name }} {{ check.colleague.last_name }}</td>
+          <td width="15%">{{ check.colleague_name.first_name }} {{ check.colleague_name.last_name }}</td>
           <td width="15%">{{ check.get_confirm_display }}</td>
           <td width="60%">{{ check.comments }}</td>
         </tr>

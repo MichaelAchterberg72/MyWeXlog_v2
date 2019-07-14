@@ -27,11 +27,17 @@ from .forms import (
 class ProfileHome(TemplateView):
     template_name = 'Profile/profile_home.html'
 
+@login_required()
+def OnlineDelete(request, pk):
+    if request.method == 'POST':
+        site = OnlineRegistrations.objects.get(pk=pk)
+        site.delete()
+    return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':site.talent.id})+'#online')
+
 
 @login_required()
 def PassportAddView(request, profile_id):
     detail = Profile.objects.get(talent=profile_id)
-    info = PassportDetail.objects.get(talent=profile_id)
     if detail.talent == request.user:
         form = PassportDetailForm(request.POST or None)
         if request.method =='POST':
@@ -39,11 +45,22 @@ def PassportAddView(request, profile_id):
                 new = form.save(commit=False)
                 new.talent = request.user
                 new.save()
-                return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':profile_id}))
+                return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':profile_id})+'#passport')
         else:
             template = 'Profile/passport_add.html'
             context = {'form': form}
             return render(request, template, context)
+    else:
+        raise PermissionDenied
+
+
+@login_required()
+def PassportDeleteView(request, pk):
+    info = PassportDetail.objects.get(pk=pk)
+    if info.talent == request.user:
+        if request.method =='POST':
+            info.delete()
+            return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':info.talent.id})+'#passport')
     else:
         raise PermissionDenied
 
@@ -59,7 +76,7 @@ def PassportEditView(request, p_id, profile_id):
                 new = form.save(commit=False)
                 new.talent = request.user
                 new.save()
-                return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':profile_id}))
+                return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':profile_id})+'#passport')
         else:
             template = 'Profile/passport_add.html'
             context = {'form': form}
@@ -199,6 +216,29 @@ def FileUploadView(request, profile_id):
     else:
         raise PermissionDenied
 
+
+login_required()
+def FileDelete(request, pk):
+    detail = FileUpload.objects.get(pk=pk)
+    if detail.talent == request.user:
+        if request.method =='POST':
+            detail.delete()
+            return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':detail.talent.id})+'#online')
+    else:
+        raise PermissionDenied
+
+login_required()
+def EmailDelete(request, pk):
+    detail = Email.objects.get(pk=pk)
+    if detail.talent == request.user:
+        if request.method =='POST':
+            detail.delete()
+            return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':detail.talent.id})+'#email')
+    else:
+        raise PermissionDenied
+
+
+
 @login_required()
 def ProfileView(request, profile_id):
     detail = Profile.objects.get(talent=profile_id)
@@ -312,17 +352,6 @@ def PhysicalAddressView(request, profile_id):
     else:
         raise PermissionDenied
 
-'''
-#>>>Filtered Dropdowns
-def LoadRegions(request):
-    country_id = request.GET.get('country')
-    regions = Region.objects.filter(country=country_id).order_by('region')
-    template = 'Profile/region_dropdown.html'
-    context = {'regions': regions}
-    return render(request, template, context)
-#End Filtered Dropdowns<<<
-'''
-
 
 @login_required()
 @csp_exempt
@@ -356,11 +385,22 @@ def PhoneNumberAdd(request, profile_id):
                 new=form.save(commit=False)
                 new.talent = request.user
                 new.save()
-                return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':profile_id}))
+                return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':profile_id})+'#phone')
         else:
             template = 'Profile/phone_number_add.html'
             context = {'form': form}
             return render(request, template, context)
+    else:
+        raise PermissionDenied
+
+
+@login_required()
+def PhoneNumberDelete(request, pk):
+    detail = PhoneNumber.objects.get(pk=pk)
+    if detail.talent == request.user:
+        if request.method =='POST':
+            detail.delete()
+            return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':detail.talent.id})+'#phone')
     else:
         raise PermissionDenied
 
@@ -376,7 +416,7 @@ def OnlineProfileAdd(request, profile_id):
                 new=form.save(commit=False)
                 new.talent = request.user
                 new.save()
-                return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':profile_id}))
+                return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':profile_id})+'#online')
         else:
             template = 'Profile/online_profile_add.html'
             context = {'form': form}

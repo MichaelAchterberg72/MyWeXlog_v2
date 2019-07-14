@@ -16,7 +16,7 @@
 {% endblock score %}
 
 {% block TBA %}
-{{ details }}
+
 {% endblock TBA %}
 
 {% block Center_Content %}
@@ -33,7 +33,7 @@
           <p class="card-text">Do you wish to be a mentor to others? {{ d.get_mentor_display }}</p>
         <div class="card-footer bg-transparent border-success"></div>
           <h5 class="card-title">Online Profiles <a href="{% url 'Profile:OnlineProfileAdd' request.user.id %}" class="badge badge-primary">Add</a></h5>
-          <table class="table-sm">
+          <table class="table-sm" id="online">
             <thead>
               <tr>
                 <th width="30%">Site</th>
@@ -45,6 +45,12 @@
               <tr>
                 <td>{{ s.sitename }}</td>
                 <td><a href="{{ s.profileurl }}">{{ s.profileurl }}</a></td>
+                <td>
+                  <form  action="{% url 'Profile:OnlineDelete' s.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="badge badge-danger badge-pill">Remove</button>
+                  </form>
+                </td>
               </tr>
               {% empty %}
                 <p>No Profiles listed.</p>
@@ -82,12 +88,21 @@
     </div>
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title">Email addresses <a href="{% url 'Profile:EmailEdit' d.id %}?next={{ request.path|urlencode }}" class="badge badge-primary">Add</a></h5>
+      <h5 class="card-title" id="email">Email addresses <a href="{% url 'Profile:EmailEdit' d.id %}?next={{ request.path|urlencode }}" class="badge badge-primary">Add</a></h5>
       <h6>Past (No longer active)</h6>
       {% for e in email %}
       {% if e.active is False %}
       <ul class="list-group list-group-flush">
-        <li class="list-group-item d-flex justify-content-between align-items-center">{{ e.email }}<span ><a href="{% url 'Profile:EmailStatus' profile_id=request.user.id email_id=e.id %}" class="badge badge-primary badge-pill">Change Status</a></span></span></li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          {{ e.email }}
+          <span>
+            <a href="{% url 'Profile:EmailStatus' profile_id=request.user.id email_id=e.id %}" class="badge badge-primary badge-pill">Change Status</a>
+            <form  action="{% url 'Profile:EmailDelete' e.id %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="badge badge-danger badge-pill">Remove</button>
+            </form>
+          </span>
+        </li>
       </ul>
       {% endif %}
       {% endfor %}
@@ -95,7 +110,16 @@
       {% for e in email %}
       {% if e.active is True %}
       <ul class="list-group list-group-flush">
-        <li class="list-group-item d-flex justify-content-between align-items-center">{{ e.email }}<span><a href="{% url 'Profile:EmailStatus' profile_id=request.user.id email_id=e.id %}" class="badge badge-primary badge-pill">Change Status</a></span></li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          {{ e.email }}
+          <span>
+            <a href="{% url 'Profile:EmailStatus' profile_id=request.user.id email_id=e.id %}" class="badge badge-primary badge-pill">Change Status</a>
+            <form  action="{% url 'Profile:EmailDelete' e.id %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="badge badge-danger badge-pill">Remove</button>
+            </form>
+          </span>
+        </li>
       </ul>
       {% endif %}
       {% endfor %}
@@ -116,11 +140,23 @@
   <div class="card">
     <div class="card-body">
       <h5 class="card-title">Uploaded Files <a href="{% url 'Profile:FileUploadView' request.user.id %}" class="badge badge-primary">Add File</a></h5>
-      {% for f in upload %}
-      <ul>
-        <li><a href="{{ f.file.url }}" target="_blank">{{ f.title }}</a></li>
-      </ul>
-      {% endfor %}
+      <table class="table-sm">
+        <thead>
+        </thead>
+        {% for f in upload %}
+        <tbody>
+          <tr>
+            <td><a href="{{ f.file.url }}" target="_blank">{{ f.title }}</a></td>
+            <td>
+              <form  action="{% url 'Profile:FileDelete' f.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="badge badge-danger badge-pill">Delete</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
@@ -150,7 +186,7 @@
     <div class="card">
       <div class="card-body">
         <h5 class="card-title">Passport Information <a href="{% url 'Profile:PassportAddView' request.user.id %}" class="badge badge-primary">Add</a></h5>
-        <table class="table-sm">
+        <table class="table-sm" id="passport">
         <thead>
           <tr>
             <th>Passport Number</th>
@@ -166,6 +202,12 @@
             <td>{{ p.get_issue_display }}</td>
             <td>{{ p.expiry_date }}</td>
             <td><a href="{% url 'Profile:PassportEditView' p_id=p.id profile_id=request.user.id %}" class="badge badge-primary badge-pill">Edit</a></td>
+            <td>
+              <form  action="{% url 'Profile:PassportDelete' p.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="badge badge-danger badge-pill">Remove</button>
+              </form>
+            </td>
           </tr>
           {% endfor %}
         </tbody>
@@ -268,28 +310,36 @@
   <div class="card">
     <div class="card-body">
       <h5 class="card-title">Phone Numbers <a href="{% url 'Profile:PhoneNumberAdd' postal.talent.id %}" class="badge badge-primary">Add</a></h5>
-      <div class="">
+      <div id="phone">
         <table class="table-small">
+          <col width="20%">
+          <col width="40%">
+          <col width="20%">
           <thead>
             <tr>
-              <th width="25%">Type</th>
-              <th width="55%">Number</th>
-              <th width="20%">In Use</th>
+              <th>Type</th>
+              <th>Number</th>
             </tr>
           </thead>
+          {% for phone in pnumbers %}
           <tbody>
-            {% for phone in pnumbers %}
             <tr>
               <td>{{ phone.type }}</td>
               <td>{{ phone.number }}</td>
-              <td>{{ phone.current }}</td>
+              <td>
+                <form  action="{% url 'Profile:PhoneDelete' phone.id %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="badge badge-danger badge-pill">Remove</button>
+                </form>
+              </td>
             </tr>
+            {% empty %}
+            <p>No Phone numbers entered.</p>
+            {% endfor %}
           </tbody>
         </table>
       </div>
-      {% empty %}
-      <p>No Phone numbers entered.</p>
-      {% endfor %}
+
     </div>
   </div>
 </div>

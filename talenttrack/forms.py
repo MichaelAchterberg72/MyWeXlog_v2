@@ -46,7 +46,7 @@ class TopicSearchFieldMixin:
     search_fields = [
         'topic__icontains', 'pk__startswith'
         ]
-        
+
 class TopicSelect2Widget(TopicSearchFieldMixin, ModelSelect2Widget):
     model = Topic
 
@@ -113,25 +113,25 @@ class PreLoggedExperienceForm(forms.ModelForm):
             'enterprise': CompanySelect2Widget(),
             'designation': DesignationSelect2Widget(),
             'project': ProjectSelect2Widget(),
-            #'skills': SkillsXXXWidget(),
+
             }
 
 
 class WorkClientResponseForm(forms.ModelForm):
     class Meta:
-        form = WorkClient
+        model = WorkClient
         fields = ('response', )
 
 
 class WorkClientConfirmForm(forms.ModelForm):
     class Meta:
-        form = WorkClient
+        model = WorkClient
         fields = ('confirm', 'comments', )
 
 
 class WorkClientSelectForm(forms.ModelForm):
     class Meta:
-        form = WorkClient
+        model = WorkClient
         fields = ('client_name', 'designation', 'company' )
         widgets={
             'enterprise': CompanySelect2Widget(),
@@ -139,19 +139,19 @@ class WorkClientSelectForm(forms.ModelForm):
 
 class WorkCollaboratorResponseForm(forms.ModelForm):
     class Meta:
-        form = WorkCollaborator
+        model = WorkCollaborator
         fields = ('response', )
 
 
 class WorkCollaboratorConfirmForm(forms.ModelForm):
     class Meta:
-        form = WorkCollaborator
+        model = WorkCollaborator
         fields = ('confirm', 'comments', )
 
 
 class WorkCollaboratorSelectForm(forms.ModelForm):
     class Meta:
-        form = WorkCollaborator
+        model = WorkCollaborator
         fields = ('collaborator_name', 'designation', 'company' )
         widgets={
             'enterprise': CompanySelect2Widget(),
@@ -159,19 +159,19 @@ class WorkCollaboratorSelectForm(forms.ModelForm):
 
 class SuperiorResponseForm(forms.ModelForm):
     class Meta:
-        form = Superior
+        model = Superior
         fields = ('response', )
 
 
 class SuperiorConfirmForm(forms.ModelForm):
     class Meta:
-        form = Superior
+        model = Superior
         fields = ('confirm', 'comments', )
 
 
 class SuperiorSelectForm(forms.ModelForm):
     class Meta:
-        form = Superior
+        model = Superior
         fields = ('superior_name', 'designation', )
 
 

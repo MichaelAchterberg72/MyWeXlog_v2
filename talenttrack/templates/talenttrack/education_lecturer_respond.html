@@ -9,16 +9,18 @@
   <h5 class="card-header">Lecturer Comments</h5>
   <div class="card-body">
   <h6 class="card-subtitle mb-2">{{ check.education.course }}</h6>
-    <table class="table-sm">
+    <table class="table table-sm">
       <thead>
         <tr>
           <th>Lecturer</th>
+          <th>Status</th>
           <th>Comment</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td width="15%">{{ check.lecturer.first_name }} {{ check.lecturer.last_name }}</td>
+          <td width="15%">{{ check.get_confirm_display }}</td>
           <td width="60%">{{ check.comments }}</td>
         </tr>
       </tbody>

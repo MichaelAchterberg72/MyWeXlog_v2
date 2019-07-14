@@ -182,6 +182,10 @@ class FileUpload(models.Model):
     def __str__(self):
         return '{}: {}'.format(self.talent, self.title)
 
+    def delete(self, *args, **kwargs):
+        self.file.delete()
+        super().delete(*args, **kwargs)
+
 
 class PhoneNumber(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
