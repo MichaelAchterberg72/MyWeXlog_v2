@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'talenttrack.apps.TalenttrackConfig',
     'trustpassport.apps.TrustpassportConfig',
     'marketplace.apps.MarketplaceConfig',
+    'django.contrib.humanize',
     ##Django internal applications
     'django.contrib.admin',
     'django.contrib.auth',
@@ -258,5 +259,5 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 #FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
 
-#Django Messages 
+#Django Messages
 DJANGO_MESSAGES_NOTIFY = False

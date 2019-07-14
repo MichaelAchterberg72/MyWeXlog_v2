@@ -18,7 +18,7 @@ from .forms import (
 )
 
 from .models import (
-        Education, Lecturer, Course, ClassMates, WorkExperience, Superior, WorkCollaborator, WorkClient, WorkColleague,
+        Education, Lecturer, Course, ClassMates, WorkExperience, Superior, WorkCollaborator, WorkClient, WorkColleague, PreLoggedExperience
 )
 
 
@@ -30,6 +30,39 @@ def ExperienceHome(request):
         template = 'talenttrack/track_home.html'
         exp_sum = WorkExperience.objects.filter(talent=request.user).aggregate(we_sum=Sum('hours_worked'))
         context = {'train': train, 'train_sum': train_sum, 'experience': experience, 'exp_sum': exp_sum}
+        return render(request, template, context)
+
+
+@login_required()
+@csp_exempt
+def PreLoggedExperienceCaptureView(request):
+    form = PreLoggedExperienceForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.talent = request.user
+            new.save()
+            form.save_m2m()
+            return redirect('Talent:PreColleagueSelect')
+    else:
+        template = 'talenttrack/prelogged_capture.html'
+        context = {'form': form}
+        return render(request, template, context)
+
+
+@login_required()
+def PreColleagueSelectView(request):
+    instance = PreLoggedExperience.objects.filter(talent=request.user).latest('date_captured')
+    form = PreColleagueSelectForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.pre_experience = instance
+            new.save()
+            return redirect(reverse('Talent:Home'))
+    else:
+        template = 'talenttrack/prelogged_colleague_select.html'
+        context = {'instance': instance, 'form': form}
         return render(request, template, context)
 
 
@@ -53,8 +86,27 @@ def ClientSelectView(request, pk):
 
 
 @login_required()
+def ClientAddView(request, pk):
+    instance = get_object_or_404(WorkExperience, pk=pk)
+    form = WorkClientSelectForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.experience = instance
+            new.save()
+            if 'another' in request.POST:
+                return redirect(reverse('Talent:ClientAdd', kwargs={'pk':pk}))
+            elif 'done' in request.POST:
+                return redirect(reverse('Talent:ExperienceDetail', kwargs={'exp_id': instance.id}))
+    else:
+        template = 'talenttrack/experience_client_add.html'
+        context = {'instance': instance, 'form': form}
+        return render(request, template, context)
+
+
+@login_required()
 def ClientResponseView(request, pk):
-    check = Superior.objects.get(pk=pk)
+    check = WorkClient.objects.get(pk=pk)
     if check.experience.talent == request.user:
         form = WorkClientResponseForm(request.POST or None, instance=check)
         if request.method =='POST':
@@ -93,8 +145,27 @@ def CollaboratorSelectView(request, pk):
 
 
 @login_required()
+def CollaboratorAddView(request, pk):
+    instance = get_object_or_404(WorkExperience, pk=pk)
+    form = WorkCollaboratorSelectForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.experience = instance
+            new.save()
+            if 'another' in request.POST:
+                return redirect(reverse('Talent:CollaboratorAdd', kwargs={'pk':pk}))
+            elif 'done' in request.POST:
+                return redirect(reverse('Talent:ExperienceDetail', kwargs={'exp_id': instance.id}))
+    else:
+        template = 'talenttrack/experience_collaborator_add.html'
+        context = {'instance': instance, 'form': form}
+        return render(request, template, context)
+
+
+@login_required()
 def CollaboratorResponseView(request, pk):
-    check = Superior.objects.get(pk=pk)
+    check = WorkCollaborator.objects.get(pk=pk)
     if check.experience.talent == request.user:
         form = WorkCollaboratorResponseForm(request.POST or None, instance=check)
         if request.method =='POST':
@@ -128,6 +199,25 @@ def SuperiorSelectView(request, pk):
                 return redirect(reverse('Talent:CollaboratorSelect', kwargs={'pk':pk}))
     else:
         template = 'talenttrack/experience_superior_select.html'
+        context = {'instance': instance, 'form': form}
+        return render(request, template, context)
+
+
+@login_required()
+def SuperiorAddView(request, pk):
+    instance = get_object_or_404(WorkExperience, pk=pk)
+    form = SuperiorSelectForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.experience = instance
+            new.save()
+            if 'another' in request.POST:
+                return redirect('Talent:SuperiorAdd', kwargs={'pk':pk})
+            elif 'done' in request.POST:
+                return redirect(reverse('Talent:ExperienceDetail', kwargs={'exp_id': instance.id}))
+    else:
+        template = 'talenttrack/experience_superior_add.html'
         context = {'instance': instance, 'form': form}
         return render(request, template, context)
 
@@ -172,6 +262,24 @@ def ColleagueSelectView(request):
         return render(request, template, context)
 
 
+def ColleagueAddView(request, pk):
+    instance = get_object_or_404(WorkExperience, pk=pk)
+    form = WorkColleagueSelectForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.experience = instance
+            new.save()
+            if 'another' in request.POST:
+                return redirect(reverse('Talent:ColleagueAdd', kwargs={'pk':pk}))
+            elif 'done' in request.POST:
+                return redirect(reverse('Talent:ExperienceDetail', kwargs={'exp_id':instance.id}))
+    else:
+        template = 'talenttrack/experience_colleague_add.html'
+        context = {'instance': instance, 'form': form}
+        return render(request, template, context)
+
+
 @login_required()
 def ColleagueResponseView(request, pk):
     check = WorkColleague.objects.get(pk=pk)
@@ -197,13 +305,16 @@ def ColleagueResponseView(request, pk):
 def ExperienceDetailView(request, exp_id):
     check = WorkExperience.objects.get(pk=exp_id)
     if check.talent == request.user:
+        sum = WorkExperience.objects.filter(talent=request.user)
+        sum_company = sum.filter(company=check.company).aggregate(co_sum=Sum('hours_worked'))
+        sum_project = sum.filter(project=check.project).aggregate(p_sum=Sum('hours_worked'))
         list = WorkExperience.objects.filter(pk=exp_id)
         confirmed_clg = WorkColleague.objects.filter(experience=exp_id)
         confirmed_sup = Superior.objects.filter(experience=exp_id)
         confirmed_clr = WorkCollaborator.objects.filter(experience=exp_id)
         confirmed_cnt = WorkClient.objects.filter(experience=exp_id)
         template = 'talenttrack/experience_detail.html'
-        context = {'check': check, 'confirmed_clg': confirmed_clg, 'confirmed_sup': confirmed_sup, 'confirmed_clr': confirmed_clr, 'confirmed_cnt': confirmed_cnt, 'list': list}
+        context = {'check': check, 'confirmed_clg': confirmed_clg, 'confirmed_sup': confirmed_sup, 'confirmed_clr': confirmed_clr, 'confirmed_cnt': confirmed_cnt, 'list': list, 'sum_company': sum_company, 'sum_project': sum_project}
         return render(request, template, context)
     else:
         raise PermissionDenied
@@ -303,6 +414,26 @@ def LecturerSelectView(request):
 
 @login_required()
 @csp_exempt
+def LecturerAddView(request, pk):
+    instance = get_object_or_404(Education, pk=pk)
+    form = LecturerSelectForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.education = instance
+            new.save()
+            if 'another' in request.POST:
+                return redirect('Talent:LecturerAdd', kwargs={'pk': pk})
+            elif 'done' in request.POST:
+                return redirect(reverse('Talent:EducationDetail', kwargs={'edu_id': instance.id}))
+    else:
+        template = 'talenttrack/lecturer_select.html'
+        context = {'instance': instance, 'form': form}
+        return render(request, template, context)
+
+
+@login_required()
+@csp_exempt
 def ClassMateSelectView(request):
     instance = Education.objects.filter(talent=request.user).latest('date_captured')
     form = ClassMatesSelectForm(request.POST or None)
@@ -315,6 +446,26 @@ def ClassMateSelectView(request):
                 return redirect('Talent:ClassMatesSelect')
             elif 'done' in request.POST:
                 return redirect(reverse('Talent:Home'))
+    else:
+        template = 'talenttrack/classmate_select.html'
+        context = {'instance': instance, 'form': form}
+        return render(request, template, context)
+
+
+@login_required()
+@csp_exempt
+def ClassMateAddView(request, pk):
+    instance = get_object_or_404(Education, pk=pk)
+    form = ClassMatesSelectForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.education = instance
+            new.save()
+            if 'another' in request.POST:
+                return redirect(reverse('Talent:ClassMatesAdd', kwargs={'pk': pk}))
+            elif 'done' in request.POST:
+                return redirect(reverse('Talent:EducationDetail', kwargs={'edu_id': instance.id}))
     else:
         template = 'talenttrack/classmate_select.html'
         context = {'instance': instance, 'form': form}
