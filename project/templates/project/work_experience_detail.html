@@ -1,0 +1,86 @@
+{% extends "base_home.html" %}
+
+{% block title %}{{block.super}}-Project Detail{% endblock title %}
+
+{% block content %}
+
+<div class="card">
+  <h5 class="card-header">Work Experience Detail for Company {{ info.company }} </h5>
+  <div class="card-body">
+    {% if request.user.is_authenticated %}
+    <p>
+    {% endif %}
+    <a href="{% url 'Project:ProjectHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Work Experience Details</h5>
+            <table>
+              <thead>
+              </thead>
+              <tbody>
+                  {% for d in detail %}
+                  <tr>
+                    <th>Company</th>
+                    <td>{{ d.company }}</td>
+                  </tr>
+                  <tr>
+                    <th>Project</th>
+                    <td>{{ d.project }}</td>
+                  </tr>
+                  <tr>
+                    <th>Industry</th>
+                    <td>{{ d.industry }}</td>
+                  </tr>
+                  <tr>
+                    <th>Date</th>
+                  </tr>
+                  <tr>
+                    <th>From</th>
+                    <td>{{ d.date_from }}</td>
+                    <th>To</th>
+                    <td>{{ d.date_to }}</td>
+                  </tr>
+                  <tr>
+                    <th>Estimated</th>
+                    <td>{{ d.estimated }}</td>
+                  </tr>
+                  <tr>
+                    <th>Actual Hours</th>
+                    <td>{{ d.hours_worked }}</td>
+                  </tr>
+                  <tr>
+                    <th>Comment</th>
+                    <td>{{ d.comment }}</td>
+                  </tr>
+                  <tr>
+                    <th>Skills Used</th>
+                    <td>{{ d.skills }}</td>
+                  </tr>
+                  <tr>
+                    <th>Upload</th>
+                    <td>{{ d.upload }}</td>
+                  </tr>
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Send User a Message</h5>
+              <p><a href="{% url 'Project:DetailMessage' d.talent.id %}?next={{ request.path|urlencode }}" class="btn btn-primary">Send Message</a></p>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+{% endblock content %}

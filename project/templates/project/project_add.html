@@ -7,23 +7,7 @@
 {% block content %}
 
 <div class="card">
-  <h5 class="card-header">
-    Your Project Details</h5>
-
-  <script type="text/javascript">
-    function showAddPopup(triggeringLink) {
-      var name = triggeringLink.id.replace(/^add_/, '');
-      href = triggeringLink.href;
-      var win = window.open(href, name, 'height=400,width=600,resizable=yes,scrollbars=yes');
-      win.focus();
-      return false;
-    }
-
-    function closePopup(win, newID, newRepr, id) {
-      $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
-      win.close();
-    }
-  </script>
+  <h5 class="card-header">Your Project Details</h5>
 
   <div class="card-body">
     {% if request.user.is_authenticated %}
@@ -53,4 +37,20 @@
   </div>
 </div>
 </div>
+
+<script type="text/javascript">
+  function showAddPopup(triggeringLink) {
+    var name = triggeringLink.id.replace(/^add_/, '');
+    href = triggeringLink.href;
+    var win = window.open(href, name, 'height=400,width=600,resizable=yes,scrollbars=yes');
+    win.focus();
+    return false;
+  }
+
+  function closePopup(win, newID, newRepr, id) {
+    $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
+    win.close();
+  }
+</script>
+
 {% endblock content %}

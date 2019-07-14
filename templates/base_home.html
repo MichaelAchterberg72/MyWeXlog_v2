@@ -34,10 +34,16 @@
           <a class="nav-link" href="#">Log Training</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link disabled" href="#">Books</a>
+          <a class="nav-link " href="{% url 'BookList:BookListHome' %}">Books</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{% url 'Enterprise:EnterpriseHome' %}">Enterprises</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'Project:ProjectHome' %}">Projects</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'messages_inbox' %}">Messages</a>
         </li>
       </ul>
     </div>

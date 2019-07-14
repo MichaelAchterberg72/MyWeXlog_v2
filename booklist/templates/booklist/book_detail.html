@@ -7,10 +7,7 @@
 <div class="card">
   <h5 class="card-header">Detail for {{ info.title }} book</h5>
   <div class="card-body">
-    <!--{% if request.user.is_authenticated %}
-    <p><a href="{% url 'BookList:EditBook' info.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Edit Book</a>
-    {% endif %}-->
-    <a href="{% url 'BookList:BookListHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
+    <p><a href="{% url 'BookList:BookListHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
     <div class="row">
       <div class="col-sm-6">
         <div class="card">
@@ -37,14 +34,14 @@
                   </tr>
                   {% endfor %}
                   <tr>
-                    <th>Book Link</th>
-                    <td>{{ d.link }}</td>
-                  </tr>
-                  <tr>
                     <th>Skill Type</th>
                     {% for m in d.tag.all %}
                       <td>{{ m }}</td>
                     {% endfor %}
+                  </tr>
+                  <tr>
+                    <th>Book Link</th>
+                    <td>{{ d.link }}</td>
                   </tr>
 
               </tbody>

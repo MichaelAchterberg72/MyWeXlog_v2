@@ -65,8 +65,8 @@ INSTALLED_APPS = [
     'utils',
     'phonenumber_field',
     'leaflet',
-    'notifications',
     'django_select2',
+    'pinax.notifications',
     ]
 
 
@@ -257,3 +257,6 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 #POPUP_TEMPLATE_NAME_UPDATE = 'popup/update.html'
 
 #FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
+
+#Django Messages 
+DJANGO_MESSAGES_NOTIFY = False

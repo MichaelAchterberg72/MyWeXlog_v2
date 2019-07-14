@@ -90,7 +90,10 @@ def BookSearch(request):
         if form.is_valid():
             query = form.cleaned_data['query']
             results = BookList.objects.annotate(
-                search=SearchVector('title', 'tag', 'author', 'publisher'),
+                search=SearchVector('title',
+                                    'tag__skill',
+                                    'author__name',
+                                    'publisher__publisher'),
             ).filter(search=query)
 
     template_name= 'booklist/book_search.html'
@@ -105,7 +108,7 @@ def BookSearch(request):
 def BookReadListView(request):
     list = ReadBy.objects.all().order_by('date')
     template_name = 'booklist/books_read_list.html'
-    paginate_by = 10  # if pagination is desired'
+#    paginate_by = 10  # if pagination is desired'
     context = {
             'list': list,
     }

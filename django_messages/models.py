@@ -52,7 +52,7 @@ class Message(models.Model):
     """
     subject = models.CharField(_("Subject"), max_length=140)
     body = models.TextField(_("Body"))
-    sender = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='sent_messages', verbose_name=_("Sender"))
+    sender = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='sent_messages', verbose_name=_("Sender"))
     recipient = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='received_messages', null=True, blank=True, verbose_name=_("Recipient"))
     parent_msg = models.ForeignKey('self', on_delete=models.CASCADE, related_name='next_messages', null=True, blank=True, verbose_name=_("Parent message"))
     sent_at = models.DateTimeField(_("sent at"), null=True, blank=True)
@@ -107,6 +107,6 @@ def inbox_count_for(user):
     return Message.objects.filter(recipient=user, read_at__isnull=True, recipient_deleted_at__isnull=True).count()
 
 # fallback for email notification if django-notification could not be found
-if "notification" not in settings.INSTALLED_APPS and getattr(settings, 'DJANGO_MESSAGES_NOTIFY', True):
+if "pinax.notification" not in settings.INSTALLED_APPS and getattr(settings, 'DJANGO_MESSAGES_NOTIFY', True):
     from django_messages.utils import new_message_email
     signals.post_save.connect(new_message_email, sender=Message)

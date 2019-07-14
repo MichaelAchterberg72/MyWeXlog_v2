@@ -4,9 +4,12 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django.forms import widgets
 
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Submit, Row, Column
 
-if "notification" in settings.INSTALLED_APPS and getattr(settings, 'DJANGO_MESSAGES_NOTIFY', True):
-    from notification import models as notification
+
+if "pinax.notifications" in settings.INSTALLED_APPS and getattr(settings, 'DJANGO_MESSAGES_NOTIFY', True):
+    from pinax.notifications import models as notification
 else:
     notification = None
 
@@ -20,7 +23,7 @@ class ComposeForm(forms.Form):
     recipient = CommaSeparatedUserField(label=_(u"Recipient"))
     subject = forms.CharField(label=_(u"Subject"), max_length=140)
     body = forms.CharField(label=_(u"Body"),
-        widget=forms.TextInput(attrs={'rows': '12', 'cols':'55'}))
+        widget=forms.Textarea(attrs={'rows': '12', 'cols':'55'}))
 
 
     def __init__(self, *args, **kwargs):
