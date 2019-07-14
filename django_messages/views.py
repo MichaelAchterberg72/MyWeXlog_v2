@@ -8,6 +8,7 @@ from django.utils import timezone
 from django.urls import reverse
 from django.conf import settings
 from django.shortcuts import render_to_response
+import datetime
 
 from django_messages.models import Message
 from django_messages.forms import ComposeForm
@@ -15,8 +16,8 @@ from django_messages.utils import format_quote, get_user_model, get_username_fie
 
 User = get_user_model()
 
-if "notification" in settings.INSTALLED_APPS and getattr(settings, 'DJANGO_MESSAGES_NOTIFY', True):
-    from notification import models as notification
+if "pinax.notifications" in settings.INSTALLED_APPS and getattr(settings, 'DJANGO_MESSAGES_NOTIFY', True):
+    from pinax.notifications import models as notification
 else:
     notification = None
 
@@ -29,6 +30,7 @@ def inbox(request):
         ``template_name``: name of the template to use.
     """
     message_list = Message.objects.inbox_for(request.user)
+    paginate_by = 20  # if pagination is desired'
     template='django_messages/inbox.html'
     context={
         'message_list': message_list,
@@ -44,6 +46,7 @@ def outbox(request):
         ``template_name``: name of the template to use.
     """
     message_list = Message.objects.outbox_for(request.user)
+    paginate_by = 20  # if pagination is desired'
     template='django_messages/outbox.html'
     context={
     'message_list': message_list,
@@ -61,6 +64,7 @@ def trash(request):
     by sender and recipient.
     """
     message_list = Message.objects.trash_for(request.user)
+    paginate_by = 20  # if pagination is desired'
     template='django_messages/trash.html'
     context={
     'message_list': message_list,
@@ -242,3 +246,46 @@ def view(request, message_id, form_class=ComposeForm, quote_helper=format_quote,
 #    return render_to_response(template_name, context,
 #        context_instance=RequestContext(request))
     return render(request, template_name, context)
+
+
+def permanently_delete_message(user, message_id):
+    """
+    Function called to permanently delete a message
+    """
+    permanently_deleted_date = timezone.now() - datetime.timedelta(days=settings.MESSAGES_DELETED_MAX_AGE)
+    message = get_object_or_404(Message, id=message_id)
+    deleted = False
+
+    if message.sender == user:
+        message.sender_deleted_at = permanently_deleted_date
+        deleted = True
+    if message.recipient == user:
+        message.recipient_deleted_at = permanently_deleted_date
+        deleted = True
+    if deleted:
+        message.save()
+        if message.sender_deleted_at and message.recipient_deleted_at:
+            if message.sender_deleted_at <= permanently_deleted_date and message.recipient_deleted_at <= permanently_deleted_date:
+                message.delete()
+    return deleted
+
+
+@login_required
+def permanently_delete(request, message_id, success_url=None):
+    """
+    Marks a message as permanently deleted by sender or recipient.
+    This is done by marking deleted_at to more than MESSAGES_DELETED_MAX_AGE
+    days ago.
+    The message is permanently deleted if both users permanently deleted it or
+    if it was deleted more than MESSAGES_DELETED_MAX_AGE days ago.
+    """
+    if success_url is None:
+        success_url = reverse('messages_inbox')
+    if 'next' in request.GET:
+        success_url = request.GET['next']
+    if permanently_delete_message(request.user, message_id):
+        messages.info(request, _(u"Message permanently deleted."))
+        if notification:
+            notification.send([user], "messages_permanently_deleted")
+        return HttpResponseRedirect(success_url)
+    raise Http404

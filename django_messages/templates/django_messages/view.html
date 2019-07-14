@@ -1,8 +1,10 @@
-{% extends "django_messages/base.html" %}
+{% extends "base_home.html" %}
 {% load i18n %}
 
 {% block content %}
-<h1>{% trans "View Message" %}</h1>
+<div class="card">
+  <h5 class="card-header">{% trans "View Message" %}</h5>
+  <div class="container">
 <dl class="message-headers">
     <dt>{% trans "Subject" %}</dt>
     <dd><strong>{{ message.subject }}</strong></dd>
@@ -13,12 +15,12 @@
     <dt>{% trans "Recipient" %}</dt>
     <dd>{{ message.recipient }}</dd>
 </dl>
-{{ message.body|linebreaksbr }}<br /><br />
+{{ message.body|linebreaks }}<br /><br />
 
 {% ifequal message.recipient.pk user.pk %}
-<a href="{% url 'messages_reply' message.id %}">{% trans "Reply" %}</a>
+<a href="{% url 'messages_reply' message.id %}" class="btn btn-primary">{% trans "Reply" %}</a>
 {% endifequal %}
-<a href="{% url 'messages_delete' message.id %}">{% trans "Delete" %}</a>
+<a href="{% url 'messages_delete' message.id %}" class="btn btn-primary">{% trans "Delete" %}</a>
 
 {% comment %}Example reply_form integration
 {% if reply_form %}
@@ -30,6 +32,7 @@
 </table>
 <input type="submit" value="{% trans "Send" %} &raquo;"/>
 </form>
+</div>
 {% endif %}
 {% endcomment %}
 {% endblock %}

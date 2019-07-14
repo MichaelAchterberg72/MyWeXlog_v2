@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
-from django.db.models import Count
+from django.db.models import Count, Sum
 from django.utils.http import is_safe_url
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
@@ -13,23 +13,33 @@ from django.views.generic import (
 
 from csp.decorators import csp_exempt
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
+from django.conf import settings
 
 from locations.models import Region
 from .models import *
 from Profile.models import Profile
 from talenttrack.models import WorkExperience
+from django_messages.models import Message
 
 from .forms import ProjectAddForm, ProjectSearchForm, ProjectForm
+from django_messages.forms import ComposeForm
 
 # Create your views here.
-class ProjectHomeView(TemplateView):
-    template_name = 'project/home.html'
-
-
 @login_required
 def ProjectListHome(request):
     pcount = ProjectData.objects.all().aggregate(sum_p=Count('name'))
     projects = ProjectData.objects.all().order_by('name')
+
+    template_name = 'project/project_home.html'
+    context = {'pcount': pcount, 'projects': projects,}
+    return render(request, template_name, context)
+
+
+@login_required
+def ProjectList(request, profile_id=None):
+    profile_id = request.user
+    pcount = WorkExperience.objects.filter(talent=profile_id).aggregate(sum_p=Count('company'))
+    projects = WorkExperience.objects.filter(talent=profile_id).order_by('date_to')
 
     template_name = 'project/project_home.html'
     context = {'pcount': pcount, 'projects': projects,}
@@ -65,27 +75,6 @@ def ProjectEditView(request, e_id):
         template_name = 'project/project_add.html'
         return render(request, template_name, context)
 
-
-"""
-@login_required()
-@csp_exempt
-def ProjectAdd(request, profile_id):
-    detail = Project.objects.get(talent=profile_id)
-    if detail.talent == request.user:
-        form = ProjectAddForm(request.POST or None)
-        if request.method =='POST':
-            if form.is_valid():
-                new=form.save(commit=False)
-                new.talent = request.user
-                new.save()
-                return redirect(reverse('Project:ProjectHome', kwargs={'profile_id':profile_id}))
-        else:
-            template_name = 'Project/project_add.html'
-            context = {'form': form}
-            return render(request, template_name, context)
-    else:
-        raise PermissionDenied
-"""
 
 @login_required()
 @csp_exempt
@@ -124,7 +113,12 @@ def ProjectSearch(request):
         if form.is_valid():
             query = form.cleaned_data['query']
             results = ProjectData.objects.annotate(
-                search=SearchVector('name', 'company', 'industry', 'country', 'region', 'city'),
+                search=SearchVector('name',
+                                    'company__name',
+                                    'industry__industry',
+                                    'country',
+                                    'region__region',
+                                    'city__city'),
             ).filter(search=query)
 
     template_name= 'project/project_search.html'
@@ -137,29 +131,29 @@ def ProjectSearch(request):
 
 
 @login_required
-def EmployeesOnProject(request, project_id):
-#    pcount = WorkExperience.objects.filter('owner').aggregate(sum_p=Count('talent'))
-#    employees = ProjectData.objects.filter('name').order_by('talent')
-    projctdata = ProjectData.objects.all()
+def HoursWorkedOnProject(request, project_id):
+    projectdata = get_object_or_404(ProjectData, pk=project_id)
+    info = WorkExperience.objects.filter(project=project_id).annotate(sum_hours=Sum('hours_worked')).order_by('date_to')
+    hr = WorkExperience.objects.filter(project=project_id).aggregate(sum_t=Sum('hours_worked'))
 
-    template_name = 'project/employees_on_project.html'
+    template_name = 'project/hours_worked_on_project.html'
     context = {
-#            'pcount': pcount,
-#            'employees': employees,
-            'people': people
+            'projectdata': projectdata,
+            'info': info,
+            'hr': hr
     }
     return render(request, template_name, context)
 
 
 @login_required
-def HoursWorkedOnProject(request, project_id):
-    projectdata = ProjectData.objects.all()
-    hr = WorkExperience.objects.filter(project=project_id).aggregate(sumt=Sum('hours_worked'))
+def WorkExperienceDetail(request, workexperience_id):
+    info = get_object_or_404(WorkExperience, pk=workexperience_id)
+    detail = WorkExperience.objects.filter(pk=workexperience_id)
 
-    template_name = 'project/hours_worked_on_project.html'
+    template_name = 'project/work_experience_detail.html'
     context = {
-            'projectdata': projectdata,
-            'hr': hr
+            'detail': detail,
+            'info': info,
     }
     return render(request, template_name, context)
 
@@ -193,3 +187,19 @@ def get_project_id(request):
         return HttpResponse(json.dumps(data), content_type='application/json')
     return HttpResponse("/")
 #<<< Project Popup
+
+
+def AutofillMessage(request, pk):
+    info = get_object_or_404(settings.AUTH_USER_MODEL, pk=pk)
+    form = ComposeForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.recipient = info
+            new.sender = request.user
+            new.save()
+            return redirect('Project:DetailExperienceOnProject')
+    else:
+        context = {'info':info, 'form':form,}
+        template = 'django_messages/compose.html'
+        return render(request, template, context)

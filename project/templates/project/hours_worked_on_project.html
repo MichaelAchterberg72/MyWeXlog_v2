@@ -1,33 +1,36 @@
 {% extends "base_home.html" %}
 
-{% block title %}{{block.super}}-Employees On Project{% endblock title %}
+{% block title %}{{block.super}}-Hours Spent Working On Project{% endblock title %}
 
 {% block content %}
 
 <div class="card">
-  <h5 class="card-header">List of Employees working on {{ project }}!</h5>
+  <h5 class="card-header">List of hours worked on {{ projectdata.name }}!</h5>
   <div class="card-body">
       {% if request.user.is_authenticated %}
       <p><a href="{% url 'Project:ProjectAdd' %}" class="badge badge-pill badge-primary">Add Project</a><a href="{% url 'Project:ProjectHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
       {% endif %}
-    <p>There are currently {{ pcount.sum_p }} people working in project {{ project }}.</p>
+    <p>There are currently {{ hr.sum_t }} hours spent working on project {{ projectdata.name }}.</p>
     <table class="table-sm">
       <col width="30%">
       <col width="20%">
       <col width="15%">
+      <col width="15%">
       <thead>
         <tr>
           <th>Company Name</th>
-          <th>Employee Name</th>
+          <th>Date Complete</th>
+          <th>Hours Spent</th>
           <th></th>
         </tr>
       </thead>
-      {% for p in people %}
+      {% for p in info %}
       <tbody>
         <tr>
-          <td>{{ p.enterprise }}</td>
-          <td>{{ p.first_name }} {{ p.last_name }}</td>
-          <td><a href="{% url 'Project:ProjectDetail' p.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">View Profile</a> </td>
+          <td>{{ p.company }}</td>
+          <td>{{ p.date_to }}</td>
+          <td>{{ p.hours_worked }}</td>
+          <td><a href="{% url 'Project:DetailExperienceOnProject' p.id %}" class="badge badge-pill badge-primary">View Details</a> </td>
         </tr>
       </tbody>
       {% endfor %}

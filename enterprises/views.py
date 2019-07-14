@@ -124,7 +124,6 @@ def EnterpriseAddPopup(request):
         return render(request, template, context)
 '''
 @csp_exempt
-@csp_exempt
 def EnterpriseAddPopup(request):
     form = EnterprisePopupForm(request.POST or None)
     if request.method == 'POST':

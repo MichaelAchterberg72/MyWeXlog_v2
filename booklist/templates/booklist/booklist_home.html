@@ -8,7 +8,9 @@
   <h5 class="card-header">Welcome to the Booklist home page!</h5>
   <div class="card-body">
       {% if request.user.is_authenticated %}
-      <p><a href="{% url 'BookList:books-read-new' %}" class="badge badge-pill badge-primary">Add Book</a><a href="{% url 'Enterprise:EnterpriseHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
+      <p><a href="{% url 'BookList:books-read-new' %}" class="badge badge-pill badge-primary">Add Book</a>
+        <a href="{% url 'BookList:book-search' %}" class="badge badge-pill badge-primary">Search All Books</a>
+        <a href="{% url 'Enterprise:EnterpriseHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
       {% endif %}
     <p>You currently have {{ ecount.sum_e }} books that you have read listed in WexLog!</p>
     <table class="table-sm">

@@ -12,48 +12,52 @@
     {% endif %}
     <a href="{% url 'Project:ProjectHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
     <div class="row">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Project Details</h5>
-          <table>
-            <thead>
-            </thead>
-            <tbody>
-                {% for d in detail %}
-                <tr>
-                  <th>Name</th>
-                  <td>{{ d.name }}</td>
-                </tr>
-                <tr>
-                  <th>Owner</th>
-                  <td>{{ d.company }}</td>
-                </tr>
+      <div class="col-sm-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Project Details</h5>
+            <table>
+              <thead>
+              </thead>
+              <tbody>
+                  {% for d in detail %}
                   <tr>
-                    <th>Industry</th>
-                    <td>{{ d.industry }}</td>
+                    <th>Name</th>
+                    <td>{{ d.name }}</td>
                   </tr>
                   <tr>
-                    <th>City</th>
-                    <td>{{ d.city }}</td>
+                    <th>Owner</th>
+                    <td>{{ d.company }}</td>
                   </tr>
-                  <tr>
-                    <th>Region</th>
-                    <td>{{ d.region }}</td>
-                  </tr>
-                  <tr>
-                    <th>Country</th>
-                    <td>{{ d.country }}</td>
-                  </tr>
-                  {% endfor %}
-              </tbody>
-            </table>
+                    <tr>
+                      <th>Industry</th>
+                      <td>{{ d.industry }}</td>
+                    </tr>
+                    <tr>
+                      <th>City</th>
+                      <td>{{ d.city }}</td>
+                    </tr>
+                    <tr>
+                      <th>Region</th>
+                      <td>{{ d.region }}</td>
+                    </tr>
+                    <tr>
+                      <th>Country</th>
+                      <td>{{ d.country }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
-          <div class="card">
-            <div class="card-body">
-              <p class="card-text">text to take up the space</p>
-              <p><a href="{% url 'Project:HoursOnProject' p.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">View Wexlog Hours Worked on Project</a></p>
-              <p><a href="#" class="btn btn-primary">View Skills used on project</a></p>
+          <div class="col-sm-6">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Link Details</h5>
+                <p class="card-text">View Wexlog Hours Worked on Project</p>
+                <p><a href="{% url 'Project:HoursOnProject' info.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary"> WexLog Hours </a></p>
+              </div>
             </div>
           </div>
         </div>

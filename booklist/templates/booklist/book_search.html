@@ -9,6 +9,12 @@
     <h4>Books for search "{{ query }}"</h4>
 </div>
 </div>
+<div class="container">
+{% if request.user.is_authenticated %}
+<p><a href="{% url 'BookList:books-new' %}" class="badge badge-pill badge-primary">Add Book</a><a href="{% url 'BookList:book-search' %}" class="badge badge-pill badge-primary">Search All Books</a>
+  <a href="{% url 'BookList:BookListHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
+{% endif %}
+</div>
 <div class="card-body">
     <h5 class="card-title">
       {% with results.count as total_results %}
@@ -16,19 +22,51 @@
       {% endwith %}
     </h5>
     {% for BookList in results %}
-      <h5 class="card-title">><a href="{{ BookList.link }}">{{BookList.title }}</a></h5>
+
+    <table class="table-sm">
+      <col width="30%">
+      <col width="15%">
+      <col width="20%">
+      <col width="15%">
+      <col width="20%">
+      <thead>
+        <tr height="1px">
+          <th height="1px">Title</th>
+          <th height="1px">Publisher</th>
+          <th height="1px">Author</th>
+          <th height="1px">Skill</th>
+          <th height="1px"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ BookList.title }}</td>
+          <td>{{ BookList.publisher }}</td>
+          <td>{{ BookList.author }}</td>
+          <td>{{ BookList.tag }}</td>
+          <td><a href="{% url 'BookList:BookDetail' BookList.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Book Detail</a> </td>
+        </tr>
+
+
+<!--      <h5 class="card-title">><a href="{{ BookList.link }}">{{BookList.title }}</a></h5>
       <p class="card-text">
-      {{ BookList.author }} - {{ BookList.publisher }} - {{ BookList.tag }}
+      {{ BookList.author }} - {{ BookList.publisher }} - {{ BookList.tag }} -->
     {% empty %}
       <p>There are no results for your query.</p>
     {% endfor %}
+  </tbody>
+</table>
     <p> </p>
     <p><a href="{% url "BookList:book-search" %}" class="btn btn-primary">Search Again</a></p>
   {% else %}
+
     <h4>Search for Books</h4>
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">
     <form action="." method="get">
         {{ form.as_p }}
-        <input type="submit" value="Search">
+        <input type="submit" class="btn btn-primary" value="Search">
       </form>
     {% endif %}
     </div>

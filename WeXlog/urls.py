@@ -21,7 +21,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
     path('accounts/', include('allauth.urls')),
-    path ('messages/', include('django_messages.urls')),
+    path('messages/', include('django_messages.urls')),
     path('Profile/', include('Profile.urls', namespace='Profile')),
     path('flatten/', include('db_flatten.urls', namespace='Flatten')),
     path('location/', include('locations.urls', namespace='Location')),
@@ -33,6 +33,7 @@ urlpatterns = [
     path('marketplace/', include('marketplace.urls', namespace='MarketPlace')),
     path('admin/', admin.site.urls),
     path('select2/', include('django_select2.urls')),
+    path('notifications/', include('pinax.notifications.urls', namespace='pinax_notifications')),
     ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS)
 '''
 if settings.DEBUG:

@@ -1,11 +1,23 @@
-{% extends "django_messages/base.html" %}
+{% extends "base_home.html" %}
 {% load i18n %}
 
 {% block content %}
-<h1>{% trans "Sent Messages" %}</h1>
+<div class="card">
+  <h5 class="card-header">{% trans "Sent Messages" %}</h5>
 {% if message_list %}
+<div class="container">
+  {% if request.user.is_authenticated %}
+  <p><a href="{% url 'messages_inbox' %}" class="badge badge-pill badge-primary">Inbox</a>
+  <a href="{% url 'messages_outbox' %}" class="badge badge-pill badge-primary">Outbox</a>
+  <a href="{% url 'messages_trash' %}" class="badge badge-pill badge-primary">Deleted</a></p>
+  <p><a href="{% url 'messages_compose' %}" class="badge badge-pill badge-primary">New Message</a><a href="{% url 'messages_inbox' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
+  {% endif %}
 <table class="messages">
     <thead>
+      <col width="20%">
+      <col width="30%">
+      <col width="15%">
+      <col width="15%">
         <tr><th>{% trans "Recipient" %}</th><th>{% trans "Subject" %}</th><th>{% trans "Sent" %}</th><th>{% trans "Action" %}</th></tr>
     </thead>
     <tbody>
@@ -16,12 +28,18 @@
         <a href="{{ message.get_absolute_url }}">{{ message.subject }}</a>
         </td>
         <td>{{ message.sent_at|date:_("DATETIME_FORMAT") }}</td>
-        <td><a href="{% url 'messages_delete' message.id %}?next={% url 'messages_outbox' %}">{% trans "delete" %}</a></td>
+        <td><a href="{% url 'messages_delete' message.id %}?next={% url 'messages_outbox' %}" class="badge badge-pill badge-primary">{% trans "delete" %}</a></td>
     </tr>
 {% endfor %}
     </tbody>
 </table>
 {% else %}
+{% if request.user.is_authenticated %}
+<p><a href="{% url 'messages_inbox' %}" class="badge badge-pill badge-primary">Inbox</a>
+<a href="{% url 'messages_outbox' %}" class="badge badge-pill badge-primary">Outbox</a>
+<a href="{% url 'messages_trash' %}" class="badge badge-pill badge-primary">Deleted</a></p>
+<p><a href="{% url 'messages_compose' %}" class="badge badge-pill badge-primary">New Message</a><a href="{% url 'messages_inbox' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
+{% endif %}
 <p>{% trans "No messages." %}</p>
 {% endif %}
 {% endblock %}
