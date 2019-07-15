@@ -18,25 +18,30 @@ from .forms import (
 )
 
 from .models import (
-        Education, Lecturer, Course, ClassMates, WorkExperience, Superior, WorkCollaborator, WorkClient, WorkColleague, PreLoggedExperience
+        Education, Lecturer, Course, ClassMates, WorkExperience, Superior, WorkCollaborator, WorkClient, WorkColleague, PreLoggedExperience, PreColleague
 )
 
 
 @login_required()
 def ExperienceHome(request):
         train = Education.objects.filter(talent=request.user).order_by('-date_from')
-        train_sum = Education.objects.filter(talent=request.user).aggregate(Edu_sum=Sum('hours_worked'))
+        train_sum = train.aggregate(Edu_sum=Sum('hours_worked'))
+
         experience = WorkExperience.objects.filter(talent=request.user).order_by('-date_from')
+        exp_sum = experience.aggregate(we_sum=Sum('hours_worked'))
+
+        prelog = PreLoggedExperience.objects.filter(talent=request.user).order_by('-date_from')
+        pre_sum = prelog.aggregate(p_sum=Sum('hours_worked'))
+
         template = 'talenttrack/track_home.html'
-        exp_sum = WorkExperience.objects.filter(talent=request.user).aggregate(we_sum=Sum('hours_worked'))
-        context = {'train': train, 'train_sum': train_sum, 'experience': experience, 'exp_sum': exp_sum}
+        context = {'train': train, 'train_sum': train_sum, 'experience': experience, 'exp_sum': exp_sum, 'prelog': prelog, 'pre_sum': pre_sum}
         return render(request, template, context)
 
 
 @login_required()
 @csp_exempt
 def PreLoggedExperienceCaptureView(request):
-    form = PreLoggedExperienceForm(request.POST or None)
+    form = PreLoggedExperienceForm(request.POST or None, request.FILES)
     if request.method == 'POST':
         if form.is_valid():
             new = form.save(commit=False)
@@ -64,6 +69,18 @@ def PreColleagueSelectView(request):
         template = 'talenttrack/prelogged_colleague_select.html'
         context = {'instance': instance, 'form': form}
         return render(request, template, context)
+
+
+@login_required()
+def PreLogDetailView(request, pre_id):
+    check = PreLoggedExperience.objects.get(pk=pre_id)
+    if check.talent == request.user:
+        confirmed_l = PreColleague.objects.filter(pre_experience=pre_id)
+        template = 'talenttrack/prelogged_detail.html'
+        context = {'check': check, 'confirmed_l': confirmed_l}
+        return render(request, template, context)
+    else:
+        raise PermissionDenied
 
 
 @login_required()
@@ -323,7 +340,7 @@ def ExperienceDetailView(request, exp_id):
 @login_required()
 @csp_exempt
 def WorkExperienceCaptureView(request):
-    form = WorkExperienceForm(request.POST or None)
+    form = WorkExperienceForm(request.POST or None, request.FILES)
     if request.method == 'POST':
         if form.is_valid():
             new = form.save(commit=False)
@@ -475,7 +492,7 @@ def ClassMateAddView(request, pk):
 @login_required()
 @csp_exempt
 def EducationCaptureView(request):
-    form = EducationForm(request.POST or None)
+    form = EducationForm(request.POST or None, request.FILES)
     if request.method == 'POST':
         if form.is_valid():
             new=form.save(commit=False)

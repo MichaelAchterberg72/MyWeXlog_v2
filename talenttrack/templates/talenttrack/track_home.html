@@ -62,7 +62,7 @@
         <div class="float-right">
           <p><a href="{% url 'Talent:ExperienceCapture' %}" class="badge badge-pill badge-primary float-right">Add Experience</a></p>
         </div>
-          <p><strong>Total hours of Experience: </strong>{{ exp_sum.we_sum }}</p>
+          <p><strong>Total hours of Experience: </strong>{{ exp_sum.we_sum|intcomma }}</p>
         <table class="table table-sm">
           <thead>
             <tr>
@@ -79,7 +79,7 @@
               <td>{{ e.company }}</td>
               <td>{{ e.date_from }}</td>
               <td>{{ e.date_to }}</td>
-              <td>{{ e.hours_worked }}</td>
+              <td>{{ e.hours_worked|intcomma }}</td>
               <td>{{ e.project }}</td>
               <td><a href="{% url 'Talent:ExperienceDetail' e.id %}" class="badge badge-pill badge-secondary">Detail</a></td>
             </tr>
@@ -102,7 +102,30 @@
         <div class="float-right">
           <p><a href="{% url 'Talent:PreloggedCapture' %}" class="badge badge-pill badge-primary float-right">Add Logged Experience</a></p>
         </div>
-        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+        <p><strong>Total hours of Previously Logged Experience: </strong>{{ pre_sum.p_sum|intcomma }}</p>
+      <table class="table table-sm">
+        <thead>
+          <tr>
+            <th>Employer</th>
+            <th>Date from</th>
+            <th>Date to</th>
+            <th>Hours</th>
+            <th>Project</th>
+          </tr>
+        </thead>
+        {% for p in prelog %}
+        <tbody>
+          <tr>
+            <td>{{ p.company }}</td>
+            <td>{{ p.date_from }}</td>
+            <td>{{ p.date_to }}</td>
+            <td>{{ p.hours_worked|intcomma }}</td>
+            <td>{{ p.project }}</td>
+            <td><a href="{% url 'Talent:PreLogDetail' p.id %}" class="badge badge-pill badge-secondary">Detail</a></td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
       </div>
     </div>
   </div>
