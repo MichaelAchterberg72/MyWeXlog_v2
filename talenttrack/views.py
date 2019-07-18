@@ -568,6 +568,7 @@ def ResultAddPopup(request):
             instance=form.save(commit=False)
             instance.save()
             return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_certification");</script>' % (instance.pk, instance))
+            
     else:
         context = {'form':form,}
         template = 'talenttrack/result_popup.html'
@@ -584,7 +585,7 @@ def get_result_id(request):
     return HttpResponse("/")
 #<<< Result Popup
 
-#>>>Result Popup
+#>>>Topic Popup
 @login_required()
 @csp_exempt
 def TopicAddPopup(request):

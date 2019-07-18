@@ -45,7 +45,7 @@ class TalentRequired(models.Model):
     )
     date_entered = models.DateField(auto_now_add=True)
     title = models.CharField(max_length=250)
-    enterprise = models.ForeignKey(Branch, on_delete=models.CASCADE)
+    enterprise = models.ForeignKey(Branch, on_delete=models.CASCADE, verbose_name="Company Branch")
     requested_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     date_deadline = models.DateField('Work to be completed by')
     hours_required = models.IntegerField()
@@ -54,14 +54,14 @@ class TalentRequired(models.Model):
     rate_offered = models.DecimalField(max_digits=6, decimal_places=2)
     currency = models.ForeignKey(Currency, on_delete=models.PROTECT)
     rate_unit = models.CharField(max_length=1, choices=RATE_UNIT, default='H')
-    bid_open = models.DateTimeField(default=timezone.now)
-    bid_closes = models.DateTimeField()
+    bid_open = models.DateTimeField(default=timezone.now, null=True)
+    bid_closes = models.DateTimeField(null=True)
     offer_status = models.CharField(max_length=1, choices=STATUS, default='O')
-    certifications = models.ManyToManyField(Result, verbose_name='Certifications Required')
+    certification = models.ManyToManyField(Result, verbose_name='Certifications Required', blank=True)
     scope = models.TextField()
     expectations = models.TextField()
-    terms = models.FileField(upload_to=BidTerms)
-    city = models.ForeignKey(City, on_delete=models.PROTECT)
+    terms = models.FileField(upload_to=BidTerms, blank=True, null=True)
+    city = models.ForeignKey(City, on_delete=models.PROTECT, verbose_name='City, Town or Place')
 
     class Meta:
         unique_together = (('date_entered','enterprise','title', 'requested_by'),)
@@ -91,7 +91,7 @@ class SkillLevel(models.Model):
         ('L','Lead'),
     )
 
-    level = models.CharField(max_length=1, choices=LEVEL)
+    level = models.CharField(max_length=1, choices=LEVEL, unique=True)
     description = models.TextField()
 
     def __str__(self):

@@ -1,8 +1,8 @@
-{% extends 'base_home.html' %}
+{% extends 'base_homelite.html' %}
 {% load crispy_forms_tags %}
 {% load staticfiles %}
 
-{% block title %}My {{block.super}} Enterprise Branch{% endblock title %}
+{% block title %}My {{block.super}} Company Branch{% endblock title %}
 
 {% block content %}
 {{ form.media.css }}
@@ -12,18 +12,20 @@
   }
   </style>
 <div class="container">
-<h3>Your Enterprise Branch Details</h3>
+<h3>Company Branch Details</h3>
 <form method="post" id="BranchForm">
-<!--   <input type="hidden" name="next" value="{{ request.GET.next }}"> -->
+<input type="hidden" name="next" value="{{ request.GET.next }}">
   {% csrf_token %}
   <div class="form-row">
     <div class="form-group col-md-6 mb-0">
-      {{ form.enterprise|as_crispy_field }}
+      {{ form.company|as_crispy_field }}
       {{ form.name|as_crispy_field }}
       {{ form.type|as_crispy_field }}
+      <p><a href="{% url 'Enterprise:BranchTypeAddPop' %}" id='add_branch_type' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a new Branch Type</a></p>
       {{ form.phy_address_line1|as_crispy_field }}
       {{ form.phy_address_line2|as_crispy_field }}
       {{ form.industry|as_crispy_field }}
+      <p><a href="{% url 'Enterprise:IndustryAddPop' %}" id='add_branch_industry' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a new Industry Type</a></p>
       {{ form.country|as_crispy_field }}
     </div>
     <div class="form-group col-md-6 mb-0">
@@ -31,7 +33,7 @@
       <p><a href="{% url 'Location:RegionAddPop' %}" id='add_region' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a Region</a></p>
       {{ form.city|as_crispy_field }}
       <p><a href="{% url 'Location:CityAddPop' %}" id='add_city' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a City</a></p>
-      {{ form.city|as_crispy_field }}
+      {{ form.suburb|as_crispy_field }}
       <p><a href="{% url 'Location:SuburbAddPop' %}" id='add_suburb' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a Suburb</a></p>
       {{ form.code|as_crispy_field }}
     </div>
@@ -41,10 +43,11 @@
   </div>
 </form>
 </div>
+
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 {{ form.media.js }}
 {% endblock content %}
-{% block subScript %}
+{% block Script %}
 <!-- code for popups -->
 <script type="text/javascript">
 function showAddPopup(triggeringLink) {
@@ -64,4 +67,4 @@ window.onerror = function (msg) {
   $("body").attr("JSError", msg);
 }
 </script>
-{% endblock subScript %}
+{% endblock Script %}

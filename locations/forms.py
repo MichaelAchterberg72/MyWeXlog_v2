@@ -72,3 +72,9 @@ class SuburbForm(forms.ModelForm):
         widgets={
             'city': CitySelect2Widget(),
         }
+
+
+class CurrencyForm(forms.ModelForm):
+    class Meta:
+        model = Currency
+        fields = ('country', 'currency_name', 'currency_abv')

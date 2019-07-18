@@ -11,4 +11,6 @@ urlpatterns = [
     path('popup/ajax/get_city_id/', views.get_city_id, name="AJAX_GetCityID"),
     path('popup/suburb/add/', views.SuburbAddPopup, name="SuburbAddPop"),
     path('popup/ajax/get_suburb_id/', views.get_suburb_id, name="AJAX_GetSuburbID"),
+    path('popup/currency/add/', views.CurrencyAddPopup, name="CurrencyAddPop"),
+    path('popup/ajax/get_currency_id/', views.get_currency_id, name="AJAX_GetCurrencyID"),
 ]
