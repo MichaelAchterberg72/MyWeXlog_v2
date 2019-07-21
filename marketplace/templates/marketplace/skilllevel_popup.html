@@ -1,0 +1,39 @@
+{% extends 'base_homelite.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}My {{block.super}} Skill Level{% endblock title %}
+
+{% block Style %}
+{{ form.media.css }}
+<style type="text/css">
+  select {
+    width: 100px;
+  }
+  </style>
+{% endblock Style %}
+{% block content %}
+<div class="container">
+<h3>Add a Skill Level</h3>
+
+<form method="post">
+  <input type="hidden" name="next" value="{{ request.GET.next }}">
+  {% csrf_token %}
+  <div class="form-row">
+    <div class="form-group col-md-3 mb-0">
+      {{ form.level|as_crispy_field }}
+    </div>
+    <div class="form-group col-md-9 mb-0">
+      {{ form.min_hours|as_crispy_field }}
+    </div>
+  </div>
+  {{ form.description|as_crispy_field }}
+  <div class="">
+    <p><button type="submit" name="Done" class="btn btn-primary">Save</button>
+  </div>
+</form>
+</div>
+{% endblock content %}
+{% block Script %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{{ form.media.js }}
+{% endblock Script %}

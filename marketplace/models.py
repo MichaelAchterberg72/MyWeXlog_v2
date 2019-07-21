@@ -67,7 +67,7 @@ class TalentRequired(models.Model):
         unique_together = (('date_entered','enterprise','title', 'requested_by'),)
 
     def __str__(self):
-        return '{}, {}, {}'.format(self.title, self.enterprise, self.date)
+        return '{}, {}, {}'.format(self.title, self.enterprise, self.date_entered)
 
 
 class Deliverables(models.Model):
@@ -91,11 +91,12 @@ class SkillLevel(models.Model):
         ('L','Lead'),
     )
 
-    level = models.CharField(max_length=1, choices=LEVEL, unique=True)
+    level = models.CharField(max_length=1, choices=LEVEL)
+    min_hours = models.SmallIntegerField()
     description = models.TextField()
 
     def __str__(self):
-        return self.level
+        return '{} (<={} hrs)'.format(self.level, self.min_hours)
 
 
 class SkillRequired(models.Model):

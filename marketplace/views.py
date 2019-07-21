@@ -29,8 +29,45 @@ def MarketHome(request):
 
 
 @login_required()
+def VacancySkillsAddView(request, pk):
+    instance = get_object_or_404(TalentRequired, pk=pk)
+    form = SkillRequiredForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.scope = instance
+            new.save()
+            if 'another' in request.POST:
+                return redirect(reverse('MarketPlace:Skills', kwargs={'pk': pk}))
+            elif 'done' in request.POST:
+                return redirect(reverse('MarketPlace:Entrance'))
+    else:
+        template = 'marketplace/vacancy_skills.html'
+        context = {'form': form, 'instance': instance}
+        return render(request, template, context)
+
+@login_required()
+def DeliverablesAddView(request, pk):
+    instance = get_object_or_404(TalentRequired, pk=pk)
+    form = DeliverablesForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.scope = instance
+            new.save()
+            if 'another' in request.POST:
+                return redirect(reverse('MarketPlace:Deliverables', kwargs={'pk': pk}))
+            elif 'done' in request.POST:
+                return redirect(reverse('MarketPlace:Skills', kwargs={'pk': pk}))
+    else:
+        template = 'marketplace/vacancy_deliverables.html'
+        context = {'form': form, 'instance': instance}
+        return render(request, template, context)
+
+
+@login_required()
 @csp_exempt
-def TalentRequiredView(request):
+def VacancyView(request):
     form = TalentRequiredForm(request.POST or None, request.FILES)
     if request.method == 'POST':
         if form.is_valid():
@@ -38,11 +75,11 @@ def TalentRequiredView(request):
             new.requested_by = request.user
             new.save()
             form.save_m2m()
-            return redirect('MarketPlace:Entrance')
+            return redirect(reverse('MarketPlace:Deliverables', kwargs={'pk':new.id}))
     else:
-        template = 'marketplace/talent_required.html'
+        template = 'marketplace/vacancy.html'
         context = {'form': form}
-    return render(request, template, context)
+        return render(request, template, context)
 
 
 #>>> WorkLocation Popup
@@ -70,3 +107,30 @@ def get_worklocation_id(request):
         return HttpResponse(json.dumps(data), content_type='application/json')
     return HttpResponse("/")
 #WorkLocation Popup <<<
+
+
+#>>>SkillLevel Popup
+@login_required()
+@csp_exempt
+def SkillLevelAddPopup(request):
+    form = SkillLevelForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            instance=form.save(commit=False)
+            instance.save()
+            return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_experience_level");</script>' % (instance.pk, instance))
+    else:
+        context = {'form':form,}
+        template = 'marketplace/skilllevel_popup.html'
+        return render(request, template, context)
+
+
+@csrf_exempt
+def get_skilllevel_id(request):
+    if request.is_ajax():
+        skilllevel = request.Get['skilllevel']
+        skilllevel_id = SkillLevel.objects.get(name = skilllevel).id
+        data = {'skilllevel_id':skilllevel_id,}
+        return HttpResponse(json.dumps(data), content_type='application/json')
+    return HttpResponse("/")
+#<<< SkillLevel Popup

@@ -65,19 +65,22 @@ class TalentAvailabillityForm(forms.ModelForm):
 class SkillRequiredForm(forms.ModelForm):
     class Meta:
         model = SkillRequired
-        fields = ('scope', 'skill', 'experience_level')
+        fields = ('skill', 'experience_level')
 
 
 class SkillLevelForm(forms.ModelForm):
     class Meta:
         model = SkillLevel
-        fields = ('level', 'description')
+        fields = ('level', 'description', 'min_hours')
 
 
 class DeliverablesForm(forms.ModelForm):
     class Meta:
         model = Deliverables
-        fields = ('scope', 'deliverable')
+        fields = ('deliverable',)
+        widgets = {
+            'deliverable': forms.Textarea(),
+        }
 
 
 class TalentRequiredForm(forms.ModelForm):
