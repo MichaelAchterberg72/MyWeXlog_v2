@@ -1,4 +1,5 @@
 {% extends "base_home.html" %}
+{% load humanize %}
 
 {% block content %}
   <div class="content-section">
@@ -6,15 +7,46 @@
   <h5 class="card-header">Books List</h5>
 
   <div class="card-body">
-      <ul>
-        {% for item in list %}
-            <li>{{ item.title }} - {{ item.author }} - {{ item.link }}
-
-            </li>
+    {% if request.user.is_authenticated %}
+    <p><a href="{% url 'BookList:books-new' %}" class="badge badge-pill badge-primary">Add Book</a>
+      <a href="{% url 'BookList:BookListHome' %}" class="badge badge-pill badge-primary">View Books Read</a>
+      <a href="{% url 'BookList:book-search' %}" class="badge badge-pill badge-primary">Search All Books</a>
+      <a href="{% url 'BookList:BookListHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
+    {% endif %}
+    <p>There are currently {{ bcount.sum_b|intcomma }} books listed in WexLog!</p>
+        <table class="table-sm">
+          <col width="30%">
+          <col width="15%">
+          <col width="20%">
+          <col width="25%">
+          <col width="10%">
+          <thead>
+            <tr height="1px">
+              <th height="1px">Title</th>
+              <th height="1px">Publisher</th>
+              <th height="1px"></th>
+              <th height="1px"></th>
+              <th height="1px"></th>
+            </tr>
+          </thead>
+            {% for item in list %}
+          <tbody>
+            <tr>
+              <td>{{ item.title }}</td>
+              <td>{{ item.publisher }}</td>
+              <td></td>
+    <!--             <td>{% for t in item.author.all %}
+              {{ item.author|join:", " }}
+              {% endfor %}</td>
+           <td>{% for s in list %}
+              {{ s.tag.all|join:", " }}
+              {% endfor %}</td>         -->
+              <td><a href="{% url 'BookList:BookDetail' item.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Book Detail</a> </td>
+            </tr>
         {% empty %}
-            <li>No books yet.</li>
+            <td>No books yet.</td>
         {% endfor %}
-      </ul>
+</table>
       </div>
     </div>
   </div>

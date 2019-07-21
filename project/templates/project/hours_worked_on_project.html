@@ -1,4 +1,5 @@
 {% extends "base_home.html" %}
+{% load humanize %}
 
 {% block title %}{{block.super}}-Hours Spent Working On Project{% endblock title %}
 
@@ -10,7 +11,7 @@
       {% if request.user.is_authenticated %}
       <p><a href="{% url 'Project:ProjectAdd' %}" class="badge badge-pill badge-primary">Add Project</a><a href="{% url 'Project:ProjectHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
       {% endif %}
-    <p>There are currently {{ hr.sum_t }} hours spent working on project {{ projectdata.name }}.</p>
+    <p>There are currently {{ hr.sum_t|intcomma }} hours spent working on project {{ projectdata.name }}.</p>
     <table class="table-sm">
       <col width="30%">
       <col width="20%">
@@ -29,7 +30,7 @@
         <tr>
           <td>{{ p.company }}</td>
           <td>{{ p.date_to }}</td>
-          <td>{{ p.hours_worked }}</td>
+          <td>{{ p.hours_worked|intcomma }}</td>
           <td><a href="{% url 'Project:DetailExperienceOnProject' p.id %}" class="badge badge-pill badge-primary">View Details</a> </td>
         </tr>
       </tbody>

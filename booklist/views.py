@@ -36,7 +36,7 @@ class BookListHomeView(TemplateView):
 def BookListHome(request, profile_id=None):
     profile_id = request.user
     ecount = ReadBy.objects.filter(talent=profile_id).aggregate(sum_e=Count('book'))
-    books = ReadBy.objects.filter(talent=profile_id).order_by('date')
+    books = ReadBy.objects.filter(talent=profile_id).order_by('-date')
 
     template_name = 'booklist/booklist_home.html'
     context = {'ecount': ecount, 'books': books,}
@@ -56,10 +56,13 @@ def BookDetailView(request, book_id):
 @login_required
 def BookListView(request):
     list = BookList.objects.all().order_by('title')
+    bcount = list.aggregate(sum_b=Count('title'))
+
     template_name = 'booklist/books_list.html'
     paginate_by = 10  # if pagination is desired'
     context = {
             'list': list,
+            'bcount': bcount,
     }
     return render(request, template_name, context)
 

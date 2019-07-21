@@ -1,4 +1,5 @@
 {% extends "base_home.html" %}
+{% load humanize %}
 
 {% block title %}{{block.super}}-Project Detail{% endblock title %}
 
@@ -43,9 +44,13 @@
                     </tr>
                     <tr>
                       <th>Country</th>
-                      <td>{{ d.country }}</td>
+                      <td>{{ d.get_country_display }}</td>
                     </tr>
                     {% endfor %}
+                    <tr>
+                      <th>Total Hours  </th>
+                        <td>{{ hr.sum_t|intcomma }}</td>
+                    </tr>
                 </tbody>
               </table>
             </div>

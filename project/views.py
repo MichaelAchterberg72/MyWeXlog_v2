@@ -6,6 +6,7 @@ from django.db.models import Count, Sum
 from django.utils.http import is_safe_url
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 from django.views.generic import (
         TemplateView
@@ -28,10 +29,10 @@ from django_messages.forms import ComposeForm
 @login_required
 def ProjectListHome(request):
     pcount = ProjectData.objects.all().aggregate(sum_p=Count('name'))
-    projects = ProjectData.objects.all().order_by('name')
+    projects = ProjectData.objects.all().order_by('-company')
 
     template_name = 'project/project_home.html'
-    context = {'pcount': pcount, 'projects': projects,}
+    context = {'pcount': pcount, 'projects': projects}
     return render(request, template_name, context)
 
 
@@ -50,9 +51,10 @@ def ProjectList(request, profile_id=None):
 def ProjectDetailView(request, project_id):
     info = get_object_or_404(ProjectData, pk=project_id)
     detail = ProjectData.objects.filter(pk=project_id)
+    hr = WorkExperience.objects.filter(project=project_id).aggregate(sum_t=Sum('hours_worked'))
 
     template_name = 'project/project_detail.html'
-    context = {'detail': detail, 'info': info}
+    context = {'detail': detail, 'info': info, 'hr': hr,}
     return render(request, template_name, context)
 
 

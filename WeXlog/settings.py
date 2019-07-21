@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     #3rd Party Applications
     'django_countries',
     'crispy_forms',
@@ -258,5 +259,5 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 #FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
 
-#Django Messages 
+#Django Messages
 DJANGO_MESSAGES_NOTIFY = False

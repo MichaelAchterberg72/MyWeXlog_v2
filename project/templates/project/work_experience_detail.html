@@ -1,4 +1,5 @@
 {% extends "base_home.html" %}
+{% load humanize %}
 
 {% block title %}{{block.super}}-Project Detail{% endblock title %}
 
@@ -22,6 +23,8 @@
               <tbody>
                   {% for d in detail %}
                   <tr>
+                    <col width="30%">
+                    <col width="70%">
                     <th>Company</th>
                     <td>{{ d.company }}</td>
                   </tr>
@@ -34,12 +37,15 @@
                     <td>{{ d.industry }}</td>
                   </tr>
                   <tr>
-                    <th>Date</th>
+                    <th> </th>
+                    <td> </td>
                   </tr>
                   <tr>
-                    <th>From</th>
+                    <th>Date From</th>
                     <td>{{ d.date_from }}</td>
-                    <th>To</th>
+                  </tr>
+                  <tr>
+                    <th>Date To</th>
                     <td>{{ d.date_to }}</td>
                   </tr>
                   <tr>
@@ -56,7 +62,9 @@
                   </tr>
                   <tr>
                     <th>Skills Used</th>
-                    <td>{{ d.skills }}</td>
+                    {% for s in detail %}
+                    <td>{{ s.skills.all|join:", " }}</td>
+                    {% endfor %}
                   </tr>
                   <tr>
                     <th>Upload</th>

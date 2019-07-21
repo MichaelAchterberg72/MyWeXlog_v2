@@ -28,22 +28,26 @@
                 </tr>
                   <tr>
                     <th>Author</th>
-                    {% for m in d.author.all %}
-                      <td>{{ m }}</td>
-                    {% endfor %}
+
+                    <td>{% for a in detail %}
+                    {{ a.author.all|join:", " }}
+                    {% endfor %}</td>
+
                   </tr>
-                  {% endfor %}
+
                   <tr>
                     <th>Skill Type</th>
-                    {% for m in d.tag.all %}
-                      <td>{{ m }}</td>
-                    {% endfor %}
+
+                    <td>{% for s in detail %}
+                    {{ s.tag.all|join:", " }}
+                    {% endfor %}</td>
+
                   </tr>
                   <tr>
                     <th>Book Link</th>
                     <td>{{ d.link }}</td>
                   </tr>
-
+                  {% endfor %}
               </tbody>
             </table>
           </div>

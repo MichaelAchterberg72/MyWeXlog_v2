@@ -1,4 +1,5 @@
 {% extends "base_home.html" %}
+{% load humanize %}
 
 {% block content %}
 
@@ -11,14 +12,16 @@
 </div>
 <div class="container">
 {% if request.user.is_authenticated %}
-<p><a href="{% url 'BookList:books-new' %}" class="badge badge-pill badge-primary">Add Book</a><a href="{% url 'BookList:book-search' %}" class="badge badge-pill badge-primary">Search All Books</a>
+<p><a href="{% url 'BookList:books-new' %}" class="badge badge-pill badge-primary">Add Book</a>
+  <a href="{% url 'BookList:books-list' %}" class="badge badge-pill badge-primary">View All Book</a>
+  <a href="{% url 'BookList:book-search' %}" class="badge badge-pill badge-primary">Search All Books</a>
   <a href="{% url 'BookList:BookListHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
 {% endif %}
 </div>
 <div class="card-body">
     <h5 class="card-title">
       {% with results.count as total_results %}
-        Found {{ total_results }} result{{ total_results|pluralize }}
+        Found {{ total_results|intcomma }} result{{ total_results|pluralize }}
       {% endwith %}
     </h5>
     {% for BookList in results %}
@@ -42,11 +45,13 @@
         <tr>
           <td>{{ BookList.title }}</td>
           <td>{{ BookList.publisher }}</td>
-          <td>{{ BookList.author }}</td>
+          <td>{% for a in results %}
+          {{ a.author.all|join:", " }}
+          {% endfor %}</td>
           <td>{{ BookList.tag }}</td>
           <td><a href="{% url 'BookList:BookDetail' BookList.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Book Detail</a> </td>
         </tr>
-
+      </tbody>
 
 <!--      <h5 class="card-title">><a href="{{ BookList.link }}">{{BookList.title }}</a></h5>
       <p class="card-text">
@@ -54,7 +59,7 @@
     {% empty %}
       <p>There are no results for your query.</p>
     {% endfor %}
-  </tbody>
+
 </table>
     <p> </p>
     <p><a href="{% url "BookList:book-search" %}" class="btn btn-primary">Search Again</a></p>

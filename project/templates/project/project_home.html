@@ -1,4 +1,5 @@
 {% extends "base_home.html" %}
+{% load humanize %}
 
 {% block title %}{{block.super}}-Project{% endblock title %}
 
@@ -10,17 +11,16 @@
       {% if request.user.is_authenticated %}
       <p><a href="{% url 'Project:ProjectAdd' %}" class="badge badge-pill badge-primary">Add Project</a><a href="{% url 'Project:Project-Search' %}" class="badge badge-pill badge-primary">Search Projects</a><a href="{% url 'Enterprise:EnterpriseHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
       {% endif %}
-    <p>There are currently {{ pcount.sum_p }} projects listed in WexLog!</p>
+    <p>There are currently {{ pcount.sum_p|intcomma }} projects listed in WexLog!</p>
     <table class="table-sm">
-      <col width="30%">
-      <col width="20%">
+      <col width="40%">
+      <col width="15%">
       <col width="20%">
       <col width="15%">
-      <col width="15%">
+      <col width="10%">
       <thead>
         <tr>
           <th>Project Name</th>
-          <th>Project Owner</th>
           <th>Project Industry</th>
           <th>Project Country</th>
           <th></th>
@@ -29,10 +29,9 @@
       {% for p in projects %}
       <tbody>
         <tr>
-          <td>{{ p.name }}</td>
-          <td>{{ p.company }}</td>
+          <td>{{ p.company }} ({{ p.name }})</td>
           <td>{{ p.industry }}</td>
-          <td>{{ p.country }}</td>
+          <td>{{ p.city }}</td>
           <td><a href="{% url 'Project:ProjectDetail' p.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Project Detail</a> </td>
         </tr>
       </tbody>

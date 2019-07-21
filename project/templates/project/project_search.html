@@ -45,7 +45,7 @@
           <td>{{ ProjectData.name }}</td>
           <td>{{ ProjectData.company }}</td>
           <td>{{ ProjectData.industry }}</td>
-          <td>{{ ProjectData.country }}</td>
+          <td>{{ ProjectData.get_country_display }}</td>
           <td><a href="{% url 'Project:ProjectDetail' ProjectData.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Project Detail</a> </td>
         </tr>
 

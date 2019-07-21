@@ -91,7 +91,7 @@ def compose(request, recipient=None, form_class=ComposeForm,
         form = form_class(request.POST, recipient_filter=recipient_filter)
         if form.is_valid():
             form.save(sender=request.user)
-            messages.info(request, _(u"Message successfully sent."))
+#            messages.info(request, _(u"Message successfully sent."))
             if success_url is None:
                 success_url = reverse('messages_inbox')
             if 'next' in request.GET:
@@ -130,7 +130,7 @@ def reply(request, message_id, quote_helper=format_quote, form_class=ComposeForm
         form = form_class(request.POST, recipient_filter=recipient_filter)
         if form.is_valid():
             form.save(sender=request.user, parent_msg=parent)
-            messages.info(request, _(u"Message successfully sent."))
+#            messages.info(request, _(u"Message successfully sent."))
             if success_url is None:
                 success_url = reverse('messages_inbox')
             return HttpResponseRedirect(success_url)
@@ -177,7 +177,7 @@ def delete(request, message_id, success_url=None):
         deleted = True
     if deleted:
         message.save()
-        messages.info(request, _(u"Message successfully deleted."))
+#        messages.info(request, _(u"Message successfully deleted."))
         if notification:
             notification.send([user], "messages_deleted", {'message': message,})
         return HttpResponseRedirect(success_url)
@@ -205,7 +205,7 @@ def undelete(request, message_id, success_url=None):
         undeleted = True
     if undeleted:
         message.save()
-        messages.info(request, _(u"Message successfully recovered."))
+#        messages.info(request, _(u"Message successfully recovered."))
         if notification:
             notification.send([user], "messages_recovered", {'message': message,})
         return HttpResponseRedirect(success_url)
@@ -284,7 +284,7 @@ def permanently_delete(request, message_id, success_url=None):
     if 'next' in request.GET:
         success_url = request.GET['next']
     if permanently_delete_message(request.user, message_id):
-        messages.info(request, _(u"Message permanently deleted."))
+#        messages.info(request, _(u"Message permanently deleted."))
         if notification:
             notification.send([user], "messages_permanently_deleted")
         return HttpResponseRedirect(success_url)
