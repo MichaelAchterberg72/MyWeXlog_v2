@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'talenttrack.apps.TalenttrackConfig',
     'trustpassport.apps.TrustpassportConfig',
     'marketplace.apps.MarketplaceConfig',
+    'django.contrib.humanize',
     ##Django internal applications
     'django.contrib.admin',
     'django.contrib.auth',

@@ -252,7 +252,8 @@ class PreLoggedExperience(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     date_from = models.DateField()
     date_to = models.DateField(default=timezone.now)
-    enterprise = models.ForeignKey(Branch, on_delete=models.PROTECT)
+    date_captured = models.DateField(auto_now_add=True)
+    company = models.ForeignKey(Enterprise, on_delete=models.PROTECT)
     project = models.ForeignKey(
         ProjectData, on_delete=models.PROTECT, verbose_name='On Project', blank=True, null=True
     )
@@ -281,7 +282,7 @@ class PreColleague(models.Model):
     date_captured = models.DateField(auto_now_add=True)
     date_confirmed = models.DateField(auto_now=True)
         #Captured by colleague
-    confirm = models.CharField(max_length=1, choices=CONFIRM, default='S')
+    confirm = models.CharField(max_length=1, choices=CONFIRM, default='S', null=True)
     comments = models.TextField(blank=True, null=True)
         #Captured by talent
     response = models.TextField(blank=True, null=True)

@@ -14,7 +14,7 @@ class Region(models.Model):
 
 class City(models.Model):
     region = models.ForeignKey(Region, on_delete=models.PROTECT)
-    city = models.CharField(max_length=80)
+    city = models.CharField('City, Town, or Place', max_length=80)
 
     class Meta:
         unique_together = (('region','city'),)
@@ -34,5 +34,11 @@ class Suburb(models.Model):
 
 class Currency(models.Model):
     country = CountryField()
-    currency_name = models.CharField(max_length=150, unique=True)
-    currency_abv = models.CharField(max_length=3, unique=True)
+    currency_name = models.CharField('Currency', max_length=150)
+    currency_abv = models.CharField('Abbreviation', max_length=3, unique=True)
+
+    def __str__(self):
+        return '{} {}'.format(self.country, self.currency_name)
+
+    class Meta:
+        unique_together = (('country','currency_name'),)

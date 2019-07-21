@@ -19,7 +19,7 @@ from . models import (
 
 
 from .forms import (
-    RegionForm, CityForm, SuburbForm,
+    RegionForm, CityForm, SuburbForm, CurrencyForm
 )
 
 #>>> Region Popup
@@ -76,7 +76,7 @@ def get_city_id(request):
 #City Popup <<<
 
 
-#>>> City Popup
+#>>> Suburb Popup
 @login_required()
 @csp_exempt
 def SuburbAddPopup(request):
@@ -101,3 +101,30 @@ def get_suburb_id(request):
         return HttpResponse(json.dumps(data1), content_type='application/json')
     return HttpResponse("/")
 #Suburb Popup <<<
+
+
+#>>> Currency Popup
+@login_required()
+@csp_exempt
+def CurrencyAddPopup(request):
+    form = CurrencyForm(request.POST or None)
+    if request.method =='POST':
+        if form.is_valid():
+            instance=form.save(commit=False)
+            instance.save()
+            return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_currency");</script>' % (instance.pk, instance))
+
+    else:
+        context = {'form': form}
+        template = 'locations/currency_popup.html'
+        return render(request, template, context)
+
+@csrf_exempt
+def get_currency_id(request):
+    if request.is_ajax():
+        new_currency = request.Get['currency']
+        currency_id = Currency.objects.get(currency = new_currency).id
+        data = {'currency_id':currency_id,}
+        return HttpResponse(json.dumps(data), content_type='application/json')
+    return HttpResponse("/")
+#Currency Popup <<<

@@ -4,7 +4,8 @@
 
 {% block content %}
 <div class="card">
-  <h5 class="card-header">Experience - Education & Training</h5>
+  <h5 class="card-header">Experience - Education & Training <span><p class="float-right"><a href="{% url 'Talent:Home' %}"  class="badge badge-pill badge-primary">Back</a></p></span></h5>
+
   <div class="card-body">
   <h6 class="card-subtitle mb-2">{{ check.course }}</h6>
     <p class="card-text float-right"><strong>Qualification: </strong>{{ check.course.certification }}</p>
@@ -16,8 +17,9 @@
     <div class="col-sm-6">
      <div class="card">
        <div class="card-body">
+         <p class="float-right"><a href="{% url 'Talent:LecturerAdd' check.id %}"  class="badge badge-pill badge-primary">Add Lecturer</a></p>
          <h5 class="card-title">Lecturers</h5>
-         <table class="table-sm">
+         <table class="table table-sm">
            <thead>
              <tr>
                <th>Lecturer</th>
@@ -41,9 +43,9 @@
     <div class="col-sm-6">
      <div class="card">
        <div class="card-body">
+         <p class="float-right"><a href="{% url 'Talent:ClassMatesAdd' check.id %}"  class="badge badge-pill badge-primary">Add Class Mate</a></p>
          <h5 class="card-title">Class Mates</h5>
-
-         <table class="table-sm">
+         <table class=" table table-sm">
            <thead>
              <tr>
                <th>Name</th>

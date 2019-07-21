@@ -12,7 +12,7 @@
   }
   </style>
 <div class="container">
-<h3>Capture Education / Training</h3>
+<h3>Capture Logged Experience</h3>
 <form method="post" id="BranchForm" enctype="multipart/form-data">
   {% csrf_token %}
   <div class="form-row">
@@ -35,9 +35,6 @@
         <div class="form-group col-md-3 mb-0">
           {{ form.hours_worked|as_crispy_field }}
         </div>
-        <div class="form-group col-md-3 mb-0">
-          {{ form.estimated|as_crispy_field }}
-        </div>
       </div>
       <div class="form-row">
         <div class="form-group col-md-5 mb-0">
@@ -46,6 +43,7 @@
         </div>
         <div class="form-group col-md-3 mb-0">
           {{ form.upload|as_crispy_field }}
+          <p>Upload a copy of your signed off log.</p>
         </div>
       </div>
   </div>

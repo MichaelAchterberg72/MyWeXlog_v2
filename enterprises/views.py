@@ -69,6 +69,30 @@ def BranchAddView(request, e_id):
         template = 'enterprises/branch_add.html'
         return render(request, template, context)
 
+#>>> Branch Popup
+@login_required()
+@csp_exempt
+def BranchAddPopView(request):
+    form = FullBranchForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            instance=form.save(commit=False)
+            instance.save()
+            return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_enterprise");</script>' % (instance.pk, instance))
+    else:
+        context = {'form': form}
+        template = 'enterprises/branch_popup.html'
+        return render(request, template, context)
+
+@csrf_exempt
+def get_branch_id(request):
+    if request.is_ajax():
+        new_branch = request.Get['branch']
+        branch_id = Branch.objects.get(branch = new_branch).id
+        data = {'branch_id':branch_id,}
+        return HttpResponse(json.dumps(data), content_type='application/json')
+    return HttpResponse("/")
+#Branch Popup <<<
 
 @login_required()
 @csp_exempt

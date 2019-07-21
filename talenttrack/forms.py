@@ -108,9 +108,9 @@ class PreColleagueSelectForm(forms.ModelForm):
 class PreLoggedExperienceForm(forms.ModelForm):
     class Meta:
         model = PreLoggedExperience
-        fields = ('date_from', 'date_to', 'enterprise', 'project', 'industry', 'hours_worked', 'comment', 'designation', 'upload', 'skills',)
+        fields = ('date_from', 'date_to', 'company', 'project', 'industry', 'hours_worked', 'comment', 'designation', 'upload', 'skills',)
         widgets={
-            'enterprise': CompanySelect2Widget(),
+            'company': CompanySelect2Widget(),
             'designation': DesignationSelect2Widget(),
             'project': ProjectSelect2Widget(),
 
