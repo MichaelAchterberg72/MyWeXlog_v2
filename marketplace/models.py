@@ -32,7 +32,7 @@ RATE_UNIT = (
 UNIT = (
     ('O','Once Off'),
     ('M','per Month'),
-    ('D','perDay'),
+    ('D','per Day'),
     ('W','per Week'),
     ('S','Short Term Contract'),
     ('A','As and When Contract'),
