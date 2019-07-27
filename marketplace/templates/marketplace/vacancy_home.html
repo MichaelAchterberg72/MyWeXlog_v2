@@ -1,0 +1,72 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+{% block title %}{{block.super}}-Market{% endblock title %}
+
+{% block content %}
+<div class="card" style="width: 18rem;">
+  <div class="card-body">
+    <h5 class="card-title">Card title</h5>
+    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+    <a href="{% url 'MarketPlace:Vacancy' %}">Advertise a Vacancy</a>
+    <a href="#" class="card-link">Card link</a>
+    <a href="#" class="card-link">Another link</a>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-6">
+    <div class="card">
+      <div class="card-body">
+        <a href="{% url 'MarketPlace:Vacancy' %}" class="badge badge-primary float-right">Post Vacancy</a>
+        <h5 class="card-title">Vacancies I have Posted</h5>
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th>Date Posted</th>
+              <th>Title</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for i in ipost %}
+            <tr>
+              <td>{{ i.date_entered }}</td>
+              <td>{{ i.title }}</td>
+              <td>{{ i.get_offer_status_display }}</td>
+              <td><a href="{% url 'MarketPlace:VacancyEdit' i.id %}" class="badge badge-secondary">Edit</a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <div class="card">
+      <div class="card-body" id='Availabillity'>
+        <a href="{% url 'MarketPlace:Availabillity' %}" class="badge badge-primary float-right">Add</a>
+        <h5 class="card-title">My Availabillity</h5>
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th>Date From</th>
+              <th>Date to</th>
+              <th>Time Available</th>
+            </tr>
+          </thead>
+          {% for a in capacity %}
+          <tbody>
+            <tr>
+              <td>{{ a.date_from }}</td>
+              <td>{{ a.date_to }}</td>
+              <td>{{ a.hours_available }} hours {{ a.get_unit_display }}</td>
+            </tr>
+          </tbody>
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

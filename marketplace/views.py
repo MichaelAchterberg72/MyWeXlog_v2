@@ -7,6 +7,7 @@ from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 import json
 from django.db.models import Count, Sum
+from django.utils import timezone
 
 
 from csp.decorators import csp_exempt
@@ -17,15 +18,52 @@ from .forms import (
 )
 
 from .models import(
-    TalentRequired
+    TalentRequired, SkillRequired, Deliverables, TalentAvailabillity
 )
 
 
 @login_required()
 def MarketHome(request):
-    template = 'marketplace/market_home.html'
-    context ={}
+    ipost = TalentRequired.objects.filter(requested_by=request.user, offer_status__iexact='O').order_by('-date_entered')[:5]
+    capacity = TalentAvailabillity.objects.filter(talent=request.user, date_to__gte=timezone.now()).order_by('-date_to')[:5]
+
+    template = 'marketplace/vacancy_home.html'
+    context ={'ipost': ipost, 'capacity': capacity}
     return render(request, template, context)
+
+
+
+@login_required()
+def TalentAvailabillityView(request):
+    form = TalentAvailabillityForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.talent = request.user
+            new.save()
+            return redirect(reverse('MarketPlace:Entrance')+'#Availabillity')
+    else:
+        template = 'marketplace/talent_availabillity.html'
+        context = {'form':form}
+        return render(request, template, context)
+
+@login_required()
+def VacancyEditView(request, pk):
+    instance = get_object_or_404(TalentRequired, pk=pk)
+    skille = SkillRequired.objects.filter(scope=pk)
+    delivere = Deliverables.objects.filter(scope=pk)
+
+    form = TalentRequiredForm(request.POST or None, instance=instance)
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.save()
+            return redirect(reverse('MarketPlace:VacancyEdit', kwargs={'pk': pk}))
+    else:
+        template = 'marketplace/vacancy_edit.html'
+        context = {'form': form, 'instance': instance, 'skille': skille, 'delivere': delivere}
+        return render(request, template, context)
+
 
 
 @login_required()
@@ -45,6 +83,70 @@ def VacancySkillsAddView(request, pk):
         template = 'marketplace/vacancy_skills.html'
         context = {'form': form, 'instance': instance}
         return render(request, template, context)
+
+
+@login_required()
+def VacancySkillsAdd2View(request, pk):
+    instance = get_object_or_404(TalentRequired, pk=pk)
+    form = SkillRequiredForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.scope = instance
+            new.save()
+            return redirect(reverse('MarketPlace:VacancyEdit', kwargs={'pk': pk})+'#deliverables')
+    else:
+        template = 'marketplace/vacancy_skills2.html'
+        context = {'form': form, 'instance': instance}
+        return render(request, template, context)
+
+
+@login_required()
+def SkillDeleteView(request, pk):
+    if request.method == 'POST':
+        skilld = SkillRequired.objects.get(pk=pk)
+        skilld.delete()
+        return redirect(reverse('MarketPlace:VacancyEdit', kwargs={'pk':skilld.scope.id})+'#skills')
+
+
+@login_required()
+def DeliverablesEditView(request, pk):
+    instance = get_object_or_404(Deliverables, pk=pk)
+    form = DeliverablesForm(request.POST or None, instance=instance)
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.save()
+            return redirect(reverse('MarketPlace:VacancyEdit', kwargs={'pk': instance.scope.id})+'#deliverables')
+    else:
+        template = 'marketplace/vacancy_deliverables_edit.html'
+        context = {'form': form, 'instance': instance}
+        return render(request, template, context)
+
+
+@login_required()
+def DeliverablesAdd2View(request, pk):
+    instance = get_object_or_404(TalentRequired, pk=pk)
+    form = DeliverablesForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.scope = instance
+            new.save()
+            return redirect(reverse('MarketPlace:VacancyEdit', kwargs={'pk': pk})+'#deliverables')
+    else:
+        template = 'marketplace/vacancy_deliverables_edit.html'
+        context = {'form': form, 'instance': instance}
+        return render(request, template, context)
+
+
+@login_required()
+def DeliverableDeleteView(request, pk):
+    if request.method == 'POST':
+        deld = Deliverables.objects.get(pk=pk)
+        deld.delete()
+    return redirect(reverse('MarketPlace:VacancyEdit', kwargs={'pk':deld.scope.id})+'#deliverables')
+
 
 @login_required()
 def DeliverablesAddView(request, pk):

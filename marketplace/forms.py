@@ -56,10 +56,18 @@ class CitySelect2Widget(CitySearchFieldMixin, ModelSelect2Widget):
 #Select2<<<
 
 
+class DateInput(forms.DateInput):
+    input_type = 'date'
+
+
 class TalentAvailabillityForm(forms.ModelForm):
     class Meta:
         model = TalentAvailabillity
         fields = ('date_from', 'date_to', 'hours_available', 'unit')
+        widgets = {
+            "date_from": DateInput(),
+            "date_to": DateInput(),
+        }
 
 
 class SkillRequiredForm(forms.ModelForm):
@@ -91,6 +99,7 @@ class TalentRequiredForm(forms.ModelForm):
             'city': CitySelect2Widget(),
             'currency': CurrencySelect2Widget(),
             'enterprise': BranchSelect2Widget(),
+            'date_deadline': DateInput(),
 
         }
 

@@ -1,0 +1,44 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}{{block.super}}-Availabillity{% endblock title %}
+
+{% block content %}
+<div class="container">
+<h3>My Availabillity</h3>
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <div class="form-row">
+    <div class="form-group col-md-6 mb-0">
+    <div class="form-row">
+      <div class="form-group col-md-6 mb-0">
+        {{ form.date_from|as_crispy_field }}
+      </div>
+      <div class="form-group col-md-6 mb-0">
+        {{ form.date_to|as_crispy_field }}
+      </div>
+    </div>
+    </div>
+    <div class="form-group col-md-6 mb-0">
+    <div class="form-row">
+      <div class="form-group col-md-6 mb-0">
+        {{ form.hours_available|as_crispy_field }}
+      </div>
+      <div class="form-group col-md-6 mb-0">
+        {{ form.unit|as_crispy_field }}
+      </div>
+    </div>
+    </div>
+  </div>
+  <div class="">
+    <p><button type="submit" name="another" class="btn btn-primary">Save</button></p>
+  </div>
+</form>
+</div>
+
+{% endblock content %}
+{% block Script %}
+
+{% endblock Script %}

@@ -1,0 +1,23 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}{{block.super}}-Deliverables{% endblock title %}
+
+{% block content %}
+<div class="container">
+<h3>Deliverables for {{ detail.title }}</h3>
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{ form.deliverable|as_crispy_field }}
+  <div class="">
+    <p><button type="submit" name="another" class="btn btn-primary">Save</button></p>
+  </div>
+</form>
+</div>
+
+{% endblock content %}
+{% block Script %}
+
+{% endblock Script %}
