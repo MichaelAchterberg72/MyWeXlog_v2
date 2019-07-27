@@ -53,5 +53,16 @@ function closePopup(win, newID, newRepr, id) {
   <button type="submit" class="btn btn-primary" name="button">Add</button>
 
 </form>
-</div></div>
+</div>
+</div>
+
+{{ form.media.css }}
+<style type="text/css">
+  select {
+    width: 100px;
+  }
+  </style>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{{ form.media.js }}
+
 {% endblock content %}

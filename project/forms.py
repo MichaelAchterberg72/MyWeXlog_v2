@@ -11,18 +11,29 @@ from django_select2.forms import (
 )
 
 from .models import ProjectData
-from enterprises.models import Enterprise
+from enterprises.models import Enterprise, Industry
 from locations.models import Region, City, Suburb
 
-class ProjectAddForm(forms.ModelForm):
-    class Meta:
-        model = ProjectData
-        fields = ('name','company','country','region','city', 'industry')
 
 class CompanySearchFieldMixin:
     search_fields = [
         'name__icontains', 'pk__startswith'
     ]
+class CompanySelect2Widget(CompanySearchFieldMixin, ModelSelect2Widget):
+    model = Enterprise
+
+    def create_value(self, value):
+        self.get_queryset().create(name=value)
+
+class IndustrySearchFieldMixin:
+    search_fields = [
+        'industry__icontains', 'pk__startswith'
+    ]
+class IndustrySelect2Widget(IndustrySearchFieldMixin, ModelSelect2Widget):
+    model = Industry
+
+    def create_value(self, value):
+        self.get_queryset().create(industry=value)
 
 class CitySearchFieldMixin:
     search_fields = [
@@ -33,12 +44,6 @@ class RegionSearchFieldMixin:
     search_fields = [
         'region__icontains', 'pk__startswith'
     ]
-
-class CompanySelect2Widget(CompanySearchFieldMixin, ModelSelect2Widget):
-    model = Enterprise
-
-    def create_value(self, value):
-        self.get_queryset().create(name=value)
 
 class CitySelect2Widget(CitySearchFieldMixin, ModelSelect2Widget):
     model = City
@@ -51,6 +56,20 @@ class RegionSelect2Widget(RegionSearchFieldMixin, ModelSelect2Widget):
 
     def create_value(self, value):
         self.get_queryset().create(region=value)
+        
+
+class ProjectAddForm(forms.ModelForm):
+    class Meta:
+        model = ProjectData
+        fields = ('name','company','country','region','city', 'industry')
+        widgets = {
+            'company': CompanySelect2Widget(),
+            'industry': IndustrySelect2Widget(),
+            'region': RegionSelect2Widget(),
+            'city': CitySelect2Widget(),
+        }
+
+
 
 class ProjectSearchForm(forms.Form):
     query = forms.CharField()

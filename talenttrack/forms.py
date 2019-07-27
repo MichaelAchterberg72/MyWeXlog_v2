@@ -105,6 +105,9 @@ class PreColleagueSelectForm(forms.ModelForm):
         'designation': DesignationSelect2Widget(),
         }
 
+class DateInput(forms.DateInput):
+    input_type = 'date'
+
 class PreLoggedExperienceForm(forms.ModelForm):
     class Meta:
         model = PreLoggedExperience
@@ -113,6 +116,8 @@ class PreLoggedExperienceForm(forms.ModelForm):
             'company': CompanySelect2Widget(),
             'designation': DesignationSelect2Widget(),
             'project': ProjectSelect2Widget(),
+            'date_from': DateInput(),
+            'date_to': DateInput()
 
             }
 
@@ -203,7 +208,8 @@ class WorkExperienceForm(forms.ModelForm):
             'company': CompanySelect2Widget(),
             'designation': DesignationSelect2Widget(),
             'project': ProjectSelect2Widget(),
-
+            'date_from': DateInput(),
+            'date_to': DateInput()
 }
 
 class DesignationForm(forms.ModelForm):
@@ -266,6 +272,8 @@ class EducationForm(forms.ModelForm):
         widgets={
             'course': CourseSelect2Widget(),
             'topic': TopicSelect2Widget(),
+            'date_from': DateInput(),
+            'date_to': DateInput(),
         }
 
 

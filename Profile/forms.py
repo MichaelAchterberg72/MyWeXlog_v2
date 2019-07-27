@@ -32,10 +32,17 @@ class LanguageListForm(forms.ModelForm):
         fields = ('language',)
 
 
+class DateInput(forms.DateInput):
+    input_type = 'date'
+
+
 class PassportDetailForm(forms.ModelForm):
     class Meta:
         model = PassportDetail
         fields = ('passport_number', 'expiry_date', 'issue')
+        widgets = {
+            'expiry_date': DateInput(),
+        }
 
 
 class IdentificationDetailForm(forms.ModelForm):

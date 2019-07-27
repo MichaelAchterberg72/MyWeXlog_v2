@@ -110,8 +110,8 @@ def BookSearch(request):
 @login_required
 def BookReadListView(request):
     list = ReadBy.objects.all().order_by('date')
+
     template_name = 'booklist/books_read_list.html'
-#    paginate_by = 10  # if pagination is desired'
     context = {
             'list': list,
     }
@@ -293,12 +293,10 @@ def AddBookReadView(request):
         form = AddBookReadForm(request.POST)
         if form.is_valid():
             new = form.save(commit=False)
+            new.talent = request.user
             new.save()
             form.save_m2m()
-#            if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
-#                    next_url = reverse('BookListView:books_list')
-#            return HttpResponseRedirect(next_url)
-            return redirect(reverse('BookList:books-read-list'))
+            return redirect(reverse('BookList:BookListHome'))
     else:
         form = AddBookReadForm()
 

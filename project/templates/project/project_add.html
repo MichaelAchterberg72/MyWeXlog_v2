@@ -38,6 +38,15 @@
 </div>
 </div>
 
+{{ form.media.css }}
+<style type="text/css">
+  select {
+    width: 100px;
+  }
+  </style>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{{ form.media.js }}
+
 <script type="text/javascript">
   function showAddPopup(triggeringLink) {
     var name = triggeringLink.id.replace(/^add_/, '');

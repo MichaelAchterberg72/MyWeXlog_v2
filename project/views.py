@@ -12,6 +12,9 @@ from django.views.generic import (
         TemplateView
 )
 
+from itertools import chain
+from operator import attrgetter
+
 from csp.decorators import csp_exempt
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.conf import settings
@@ -19,7 +22,7 @@ from django.conf import settings
 from locations.models import Region
 from .models import *
 from Profile.models import Profile
-from talenttrack.models import WorkExperience
+from talenttrack.models import WorkExperience, PreLoggedExperience
 from django_messages.models import Message
 
 from .forms import ProjectAddForm, ProjectSearchForm, ProjectForm
@@ -142,7 +145,46 @@ def HoursWorkedOnProject(request, project_id):
     context = {
             'projectdata': projectdata,
             'info': info,
-            'hr': hr
+            'hr': hr,
+    }
+    return render(request, template_name, context)
+
+"""
+@login_required
+def HoursWorkedOnProject(request, project_id):
+    projectdata = get_object_or_404(ProjectData, pk=project_id)
+    info = WorkExperience.objects.filter(project=project_id).annotate(sum_hours=Sum('hours_worked')).order_by('date_to')
+    info2 = PreLoggedExperience.objects.filter(project=project_id).annotate(sum_hours=Sum('hours_worked')).order_by('date_to')
+    hr = WorkExperience.objects.filter(project=project_id).aggregate(sum_t=Sum('hours_worked'))
+    hr2 = PreLoggedExperience.objects.filter(project=project_id).aggregate(sum_t2=Sum('hours_worked'))
+    infocombined = sorted(list(chain(info, info2)),)
+    combined = sorted(list(chain(hr, hr2)))
+#    total_sum = hr + hr2
+
+    template_name = 'project/hours_worked_on_project.html'
+    context = {
+            'projectdata': projectdata,
+            'info': info,
+            'info2': info2,
+            'hr': hr,
+            'hr2': hr2,
+            'combined': combined,
+            'infocombined': infocombined
+    }
+    return render(request, template_name, context)
+"""
+
+@login_required
+def EmployeesOnProject(request, workexperience_id):
+    projectdata = get_object_or_404(ProjectData, pk=project_id)
+    info = WorkExperience.objects.filter(project=project_id).annotate('talent').order_by('talent')
+    employee = WorkExperience.objects.filter(project=project_id)
+
+    template_name = 'project/employees_worked_on_project.html'
+    context = {
+            'projectdata': projectdata,
+            'info': info,
+            'employee': employee
     }
     return render(request, template_name, context)
 

@@ -59,9 +59,16 @@
           <div class="col-sm-6">
             <div class="card">
               <div class="card-body">
-                <h5 class="card-title">Link Details</h5>
+                <h5 class="card-title">WexLog Hours</h5>
                 <p class="card-text">View Wexlog Hours Worked on Project</p>
                 <p><a href="{% url 'Project:HoursOnProject' info.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary"> WexLog Hours </a></p>
+                <h5 class="card-title">WexLog Employees</h5>
+                <p class="card-text">View Wexlog Employees Worked on Project</p>
+                {% if request.user.subscription >= 2 %}
+                  <p><a href="{% url 'Project:HoursOnProject' info.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary"> WexLog Employees </a></p>
+                {% else %}
+                  <p><a href="#" class="badge badge-info text-wrap" style="width: 6rem;">Active Subscription required</a></p>
+                {% endif %}
               </div>
             </div>
           </div>
