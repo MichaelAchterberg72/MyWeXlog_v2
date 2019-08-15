@@ -23,6 +23,8 @@ class CustomUser(AbstractUser):
     middle_name = models.CharField(max_length=60, null=True, blank=True)
     permission = models.IntegerField(choices=COMPANY, default=1)
     role = models.IntegerField(choices=ROLE, default=0)
+    paid = models.BooleanField(default=False, blank=True)
+    paid_date = models.DateTimeField(null=True, blank=True)
 
     objects = CustomUserManager()
 

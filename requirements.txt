@@ -16,12 +16,10 @@ django-crispy-forms==1.7.2
 django-csp==3.5
 django-extensions==2.1.6
 django-leaflet==0.24.0
-django-messages==0.5.3
 django-model-utils==3.1.2
 django-mustache==1.1.1
 django-notifications==0.1.dev0
 django-notifications-hq==1.5.0
-django-paypal==1.0.0
 django-phonenumber-field==2.4.0
 django-postman==3.6.2
 django-referrer-policy==1.0
@@ -62,3 +60,5 @@ unittest2==1.1.0
 urllib3==1.24.3
 django-popup-field 0.1.6
 pinax-notifications-5.0.3
+M2Crypto-0.35.2
+tox

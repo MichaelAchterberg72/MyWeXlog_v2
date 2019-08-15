@@ -14,6 +14,8 @@ urlpatterns = [
     path('location/', include('locations.urls', namespace='Location')),
     path('enterprise/', include('enterprises.urls', namespace='Enterprise')),
     path('project/', include('project.urls', namespace='Project')),
+    path('paypal/', include('paypal.standard.ipn.urls')),
+    path('payments/', include('payments.urls', namespace='Payments')),
     path('experience/booklist/', include('booklist.urls', namespace='BookList')),
     path('experience/', include('talenttrack.urls', namespace='Talent')),
     path('trust/', include('trustpassport.urls', namespace='Trust')),

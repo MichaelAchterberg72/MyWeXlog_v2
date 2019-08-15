@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'talenttrack.apps.TalenttrackConfig',
     'trustpassport.apps.TrustpassportConfig',
     'marketplace.apps.MarketplaceConfig',
+    'payments.apps.PaymentsConfig',
     ##Django internal applications
     'django.contrib.admin',
     'django.contrib.auth',
@@ -68,6 +69,7 @@ INSTALLED_APPS = [
     'leaflet',
     'django_select2',
     'pinax.notifications',
+    'paypal.standard.ipn',
     ]
 
 
@@ -259,5 +261,28 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 #FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
 
-#Django Messages
+#Django Messages settings
 DJANGO_MESSAGES_NOTIFY = False
+
+# PayPal settings
+PAYPAL_RECEIVER_EMAIL = "yourpaypalemail@example.com"
+PAYPAL_TEST = True              # set to False for production
+
+PAYPAL_SUBSCRIPTION_BUTTON_IMAGE = "images/subscribe.jpg"       # The URL of the image to be used for ‘subscription’ buttons.
+
+PAYPAL_PRIVATE_CERT = '/path/to/paypal_private.pem'
+PAYPAL_PUBLIC_CERT = '/path/to/paypal_public.pem'
+PAYPAL_CERT = '/path/to/paypal_cert.pem'
+PAYPAL_CERT_ID = 'get-from-paypal-website'
+
+# path to keypair in PEM format
+MY_KEYPAIR='keys/keypair.pem'
+
+# path to merchant certificate
+MY_CERT='keys/merchant.crt'
+
+# code which Paypal assign to the certificate when you upload it
+MY_CERT_ID='ASDF12345'
+
+# path to Paypal's own certificate
+PAYPAL_CERT='keys/paypal.crt'
