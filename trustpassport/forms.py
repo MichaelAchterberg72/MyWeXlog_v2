@@ -51,13 +51,13 @@ class TalentTrustAddForm(forms.ModelForm):
             }
 """
         help_texts = {
-            'q1_text': ('A trustworthy person will use roughly the same behavior and language in
-                        any situation. THey have the self-control to maintain character and
-                        follow through on what they say they will do, even when they are tempted
-                        to walk it back. They won\'t wear different masks or pretend they\'re
-                        someone they\re not just to impress. Switching gears comes from having
-                        learned reliable new information, not from self-serving whims. What\'s
-                        more, what they say matches what you hear from others.'),
+            'q1_text': ('A trustworthy person will use roughly the same behavior and language in '
+                        'any situation. THey have the self-control to maintain character and '
+                        'follow through on what they say they will do, even when they are tempted '
+                        'to walk it back. They won\'t wear different masks or pretend they\'re '
+                        'someone they\re not just to impress. Switching gears comes from having '
+                        'learned reliable new information, not from self-serving whims. What\'s '
+                        'more, what they say matches what you hear from others.'),
             'q2_text': ('Both these traits demonstrate that the person can think of others
                         well and doesn\'t consider themselves as more important than anyone else.
                         Because they are more outwardly focused, they\'re less likely to step

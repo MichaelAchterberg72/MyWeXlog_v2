@@ -1,10 +1,12 @@
 """WeXlog URL Configuration
 """
+from __future__ import absolute_import, unicode_literals
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.conf.urls import handler404, handler500, include, url  # noqa
 
 urlpatterns = [
     path('accounts/', include('allauth.urls')),
@@ -21,6 +23,8 @@ urlpatterns = [
     path('trust/', include('trustpassport.urls', namespace='Trust')),
     path('marketplace/', include('marketplace.urls', namespace='MarketPlace')),
     path('admin/', admin.site.urls),
+    # Uncomment the admin/doc line below to enable admin documentation:
+    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     path('select2/', include('django_select2.urls')),
     path('notifications/', include('pinax.notifications.urls', namespace='pinax_notifications')),
     ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS)

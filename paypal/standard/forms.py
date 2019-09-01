@@ -122,7 +122,7 @@ class PayPalPaymentsForm(forms.Form):
     no_shipping = forms.ChoiceField(widget=forms.HiddenInput(), choices=SHIPPING_CHOICES,
                                     initial=SHIPPING_CHOICES[0][0])
 
-    def __init__(self, button_type="buy", *args, **kwargs):
+    def __init__(self, button_type="subscribe", *args, **kwargs):
         super(PayPalPaymentsForm, self).__init__(*args, **kwargs)
         self.button_type = button_type
         if 'initial' in kwargs:
@@ -151,9 +151,9 @@ class PayPalPaymentsForm(forms.Form):
             return POSTBACK_ENDPOINT
 
     def render(self):
-        return format_html(u"""<form action="{0}" method="post">
+        return format_html(u"""<form action="{0}" method="POST">
     {1}
-    <input type="image" src="{2}" border="0" name="submit" alt="Buy it Now" />
+    <input type="submit" value="Subscribe Now" src="{2}" border="0" name="submit" alt="Subscribe Now" class="btn btn-primary" align="center"/>
 </form>""", self.get_endpoint(), self.as_p(), self.get_image())
 
     def get_image(self):

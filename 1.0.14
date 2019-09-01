@@ -1,0 +1,6 @@
+Collecting sqlalchemy
+  Downloading https://files.pythonhosted.org/packages/c2/75/6217c626fa22ad56ae5ccb1a36e7c4f17f5ca31543887e00179468d10464/SQLAlchemy-1.3.7.tar.gz (5.9MB)
+Installing collected packages: sqlalchemy
+  Running setup.py install for sqlalchemy: started
+    Running setup.py install for sqlalchemy: finished with status 'done'
+Successfully installed sqlalchemy-1.3.7

@@ -1,9 +1,10 @@
 {% extends "base_home.html" %}
+{% load humanize %}
 
 {% block content %}
 
 <div class="card">
-  <h5 class="card-header">Australia Subscription Form</h5>
+  <h5 class="card-header" align="center">Australian Subscription Form</h5>
     <div class="container">
       <div class="card-body">
 
@@ -28,7 +29,7 @@
               <li class="list-group-item">360 Degree Evaluation</li>
               <li class="list-group-item">Find members based on current and past email addresses</li>
               <li class="list-group-item">Extract contact details of people that are looking for or supplying a skill (Heatmaps) - within 50km</li>
-              <li class="list-group-item">Vestibulum at eros</li>
+
             </ul>
           </div>
         </div>
@@ -40,9 +41,13 @@
             <b>Passive Subscription</b>
           </div>
           <div class="card-body">
-            <p align="center">USD 3.00 + VAT per Month</p>
+            <p align="center">USD 3.00 +10% GST per Month</p>
             <p align="center">
-            <a href="#" class="btn btn-primary" align="center">Subscribe Now</a>
+              <center>
+                {{ passive_choice_form.as_p }}
+
+                {{ passive_form.render }}
+              </center>
             </p>
             <p align="center">&nbsp</p>
             <h5 class="card-title">Captue and Investigate:</h5>
@@ -72,9 +77,11 @@
             <b>Active Subscription</b>
           </div>
           <div class="card-body">
-            <p align="center">USD 4.00 + VAT per Month</p>
+            <p align="center">USD 4.00 + 10% GST per Month</p>
             <p align="center">
-            <a href="#" class="btn btn-primary" align="center">Subscribe Now</a>
+              <center>
+            {{ active_form.render }}
+              </center>
             </p>
             <p align="center">&nbsp</p>
             <h5 class="card-title">Full Search Capability:</h5>
@@ -84,7 +91,7 @@
               <li class="list-group-item">Verify Experience</li>
               <li class="list-group-item">360 Degree Evaluation</li>
               <li class="list-group-item">Find members based on current and past email addresses</li>
-              <li class="list-group-item">See contact information of people requiring work to be done - Internationally/li>
+              <li class="list-group-item">See contact information of people requiring work to be done - Internationally</li>
               <li class="list-group-item">View Company Profiles</li>
               <li class="list-group-item">Extract contact details of people that are looking for or supplying a skill (Heatmaps) - Internationally</li>
               <li class="list-group-item">Experience available for enterprises to view and contact person</li>
