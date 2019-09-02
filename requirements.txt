@@ -15,6 +15,7 @@ django-countries==5.3.3
 django-crispy-forms==1.7.2
 django-csp==3.5
 django-extensions==2.1.6
+django-feature-policy==2.3.0
 django-leaflet==0.24.0
 django-messages==0.5.3
 django-model-utils==3.1.2
@@ -33,11 +34,13 @@ html-json-forms==1.1.0
 idna==2.8
 jsonfield==2.0.2
 linecache2==1.0.0
+M2CryptoWin64==0.21.1.post3
 Markdown==3.1.1
 natural-keys==1.5.0.post2
 oauthlib==3.0.1
 phonenumbers==8.10.12
 Pillow==6.0.0
+pinax-notifications==5.0.3
 postgis==1.0.4
 psycopg2==2.8.2
 psycopg2-binary==2.8.2
@@ -60,5 +63,4 @@ traceback2==1.4.0
 unicodecsv==0.14.1
 unittest2==1.1.0
 urllib3==1.24.3
-django-popup-field 0.1.6
-pinax-notifications-5.0.3
+xlrd==1.2.0

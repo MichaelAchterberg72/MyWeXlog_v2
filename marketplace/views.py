@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 import json
-from django.db.models import Count, Sum
+from django.db.models import Count, Sum, F, Q
 from django.utils import timezone
 
 
@@ -21,15 +21,54 @@ from .models import(
     TalentRequired, SkillRequired, Deliverables, TalentAvailabillity
 )
 
+from talenttrack.models import(
+    WorkExperience, PreLoggedExperience
+)
 
 @login_required()
 def MarketHome(request):
     ipost = TalentRequired.objects.filter(requested_by=request.user, offer_status__iexact='O').order_by('-date_entered')[:5]
     capacity = TalentAvailabillity.objects.filter(talent=request.user, date_to__gte=timezone.now()).order_by('-date_to')[:5]
+    #Code for stacked lookup for talent's skills
+    my_logged = WorkExperience.objects.filter(talent=request.user).aggregate(myl=Sum('hours_worked'))
+    my_prelogged = PreLoggedExperience.objects.filter(talent=request.user).aggregate(mypl=Sum('hours_worked'))
+
+    myli = my_logged.get('myl')
+    mypli = my_prelogged.get('mypl')
+
+    mye = myli+mypli
+
+    req_experience = TalentRequired.objects.filter(Q(offer_status__iexact='O') & Q(experience_level__min_hours__lte=mye)).values_list('id', flat=True)
+
+    skill_have = WorkExperience.objects.filter(talent=request.user).values_list('skills', flat=True)
+    match = []
+
+    for key in req_experience:
+        skill_list = SkillRequired.objects.filter(id=key).values_list('skill', flat=True).distinct()
+
+        for sk in skill_list:
+            if sk in skill_have:
+                match.append(sk)
+
+    print(match)
+
+
+
+
+
 
     template = 'marketplace/vacancy_home.html'
     context ={'ipost': ipost, 'capacity': capacity}
     return render(request, template, context)
+'''
+    my_logged = WorkExperience.objects.filter(talent=request.user).aggregate(myl=Sum('hours_worked'))
+    my_prelogged = PreLoggedExperience.objects.filter(talent=request.user).aggregate(mypl=Sum('hours_worked'))
+    maybe = int(my_logged[0]) + int(my_prelogged[0])
+    print(my_logged, my_prelogged, maybe)
+'''
+
+
+
 
 
 

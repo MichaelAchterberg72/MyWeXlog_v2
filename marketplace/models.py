@@ -38,6 +38,25 @@ UNIT = (
     ('A','As and When Contract'),
 )
 
+
+class SkillLevel(models.Model):
+    LEVEL = (
+        ('S','Student'),
+        ('G','Graduate'),
+        ('J','Junior'),
+        ('I','Intermediate'),
+        ('S','Senior'),
+        ('L','Lead'),
+    )
+
+    level = models.CharField(max_length=1, choices=LEVEL)
+    min_hours = models.SmallIntegerField()
+    description = models.TextField()
+
+    def __str__(self):
+        return f'{self.get_level_display()} (>={self.min_hours})'
+
+
 class TalentRequired(models.Model):
     STATUS = (
         ('O','Open'),
@@ -50,6 +69,7 @@ class TalentRequired(models.Model):
     date_deadline = models.DateField('Work to be completed by')
     hours_required = models.IntegerField()
     unit = models.CharField(max_length=1, choices=UNIT)
+    experience_level = models.ForeignKey(SkillLevel, on_delete=models.PROTECT)
     worklocation = models.ForeignKey(WorkLocation, on_delete=models.PROTECT)
     rate_offered = models.DecimalField(max_digits=6, decimal_places=2)
     currency = models.ForeignKey(Currency, on_delete=models.PROTECT)
@@ -81,34 +101,15 @@ class Deliverables(models.Model):
         return '{}: {}'.format(self.scope, self.deliverable)
 
 
-class SkillLevel(models.Model):
-    LEVEL = (
-        ('S','Student'),
-        ('G','Graduate'),
-        ('J','Junior'),
-        ('I','Intermediate'),
-        ('S','Senior'),
-        ('L','Lead'),
-    )
-
-    level = models.CharField(max_length=1, choices=LEVEL)
-    min_hours = models.SmallIntegerField()
-    description = models.TextField()
-
-    def __str__(self):
-        return '{} (<={} hrs)'.format(self.level, self.min_hours)
-
-
 class SkillRequired(models.Model):
     scope = models.ForeignKey(TalentRequired, on_delete=models.CASCADE)
     skill = models.ForeignKey(SkillTag, on_delete=models.PROTECT)
-    experience_level = models.ForeignKey(SkillLevel, on_delete=models.PROTECT)
 
-    class Meta:
-        unique_together = (('skill','experience_level'),)
+    #class Meta:
+    #    unique_together = (('skill','scope'),)
 
     def __str__(self):
-        return self.scope
+        return f'{self.scope}'
 
 
 class WorkBid(models.Model):
