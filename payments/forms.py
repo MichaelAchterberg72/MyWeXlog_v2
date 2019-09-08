@@ -37,7 +37,7 @@ passive_subscription_options = [
 ]
 
 class PassiveSubscriptionChoiceForm(forms.Form):
-    passive_plans = forms.ChoiceField(choices=passive_subscription_options)
+    passive_plans = forms.ChoiceField(label='passive', choices=passive_subscription_options)
 
 
 active_subscription_options = [

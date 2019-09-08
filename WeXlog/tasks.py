@@ -42,4 +42,5 @@ twelve_monthly = timedelta(days=365, seconds=0, microseconds=0, milliseconds=0, 
             SubscriptionExpiredTask.delay(user)
         else:
             pass
-    return
+    else:
+        pass

@@ -21,15 +21,17 @@ from django.conf import settings
 def show_me_the_money(sender, **kwargs):
     ipn_obj = sender
     ipn_username = User.objects.get(username=str(ipn_obj.custom))
+
+     # check for payment received IPN
     if ipn_obj.txn_type == 'web_accept':
         if ipn_obj.payment_status == ST_PP_COMPLETED:
             # WARNING !
             # Check that the receiver email is the same we previously
             # set on the `business` field. (The user could tamper with
             # that fields on the payment form before it goes to PayPal)
-            if ipn_obj.receiver_email != "receiver_email@example.com":
+            if ipn_obj.receiver_email != settings.PAYPAL_RECEIVER_EMAIL:
                 # Not a valid payment
-                return
+                pass
 
             # ALSO: for the same reason, you need to check the amount
             # received, `custom` etc. are all what you expect or what
@@ -38,7 +40,7 @@ def show_me_the_money(sender, **kwargs):
             # Undertake some action depending upon `ipn_obj`.
             elif ipn_obj.custom == ipn_username:
                 Users.objects.filter(ipn_username).update(paid=True)
-                Users.objects.filter(ipn_username).update(paid_date=datetime.now)
+                Users.objects.filter(ipn_username).update(paid_date=datetime.now())
                 # set passive subscription
                 if ipn_obj.item_name == "Passive Subscription":
                     Users.objects.filter(ipn_username).update(subscription="1")
@@ -64,86 +66,40 @@ def show_me_the_money(sender, **kwargs):
 
             elif ipn_obj.mc_currency != 'USD':
                 Users.objects.filter(ipn_username).update(paid=False)
-                Users.objects.filter(ipn_username).update(paid_date=datetime.now)
+                Users.objects.filter(ipn_username).update(paid_date=datetime.now())
+                Users.objects.filter(ipn_username).update(subscription="0")
                 SubscriptionAmountDifferentTask(ipn_username)
-                # set passive subscription
-                if ipn_obj.item_name == "Passive Subscription":
-                    Users.objects.filter(ipn_username).update(subscription="0")
-                elif ipn_obj.item_name == "6 Month Passive Subscription":
-                    Users.objects.filter(ipn_username).update(subscription="0")
-                elif ipn_obj.item_name == "12 Month Passive Subscription":
-                    Users.objects.filter(ipn_username).update(subscription="0")
-                # set active subscription
-                elif ipn_obj.item_name == "Active Subscription":
-                    Users.objects.filter(ipn_username).update(subscription="0")
-                elif ipn_obj.item_name == "6 Month Active Subscription":
-                    Users.objects.filter(ipn_username).update(subscription="0")
-                elif ipn_obj.item_name == "12 Month Active Subscription":
-                    Users.objects.filter(ipn_username).update(subscription="0")
-                else:
-                    pass
             else:
                 pass
 
         elif ipn_obj.payment_status == ST_PP_EXPIRED:
-            if ipn_obj.receiver_email != "receiver_email@example.com":
+            if ipn_obj.receiver_email != settings.PAYPAL_RECEIVER_EMAIL:
                 # Not a valid payment
-                return
+                pass
             if ipn_obj.custom == ipn_username:
                 Users.objects.filter(ipn_username).update(paid=False)
-                Users.objects.filter(ipn_username).update(paid_date=datetime.now)
+                Users.objects.filter(ipn_username).update(paid_date=datetime.now())
+                Users.objects.filter(ipn_username).update(subscription="0")
                 SubscriptionExpiredTask(ipn_username)
-                # set passive subscription
-                if ipn_obj.item_name == "Passive Subscription":
-                    Users.objects.filter(ipn_username).update(subscription="0")
-                if ipn_obj.item_name == "6 Month Passive Subscription":
-                    Users.objects.filter(ipn_username).update(subscription="0")
-                if ipn_obj.item_name == "12 Month Passive Subscription":
-                    Users.objects.filter(ipn_username).update(subscription="0")
-                # set active subscription
-                if ipn_obj.item_name == "Active Subscription":
-                    Users.objects.filter(ipn_username).update(subscription="0")
-                if ipn_obj.item_name == "6 Month Active Subscription":
-                    Users.objects.filter(ipn_username).update(subscription="0")
-                if ipn_obj.item_name == "12 Month Active Subscription":
-                    Users.objects.filter(ipn_username).update(subscription="0")
-                else:
-                    pass
             else:
                 pass
-
-
         elif ipn_obj.payment_status == ST_PP_PENDING:
-            if ipn_obj.receiver_email != "receiver_email@example.com":
+            if ipn_obj.receiver_email != settings.PAYPAL_RECEIVER_EMAIL:
                 # Not a valid payment
-                return
+                pass
 
             elif ipn_obj.custom == ipn_username:
                 Users.objects.filter(ipn_username).update(paid=False)
-                Users.objects.filter(ipn_username).update(paid_date=datetime.now)
-                # set passive subscription
-                if ipn_obj.item_name == "Passive Subscription":
-                    Users.objects.filter(ipn_username).update(subscription="0")
-                elif ipn_obj.item_name == "6 Month Passive Subscription":
-                    Users.objects.filter(ipn_username).update(subscription="0")
-                elif ipn_obj.item_name == "12 Month Passive Subscription":
-                    Users.objects.filter(ipn_username).update(subscription="0")
-                # set active subscription
-                elif ipn_obj.item_name == "Active Subscription":
-                    Users.objects.filter(ipn_username).update(subscription="0")
-                elif ipn_obj.item_name == "6 Month Active Subscription":
-                    Users.objects.filter(ipn_username).update(subscription="0")
-                elif ipn_obj.item_name == "12 Month Active Subscription":
-                    Users.objects.filter(ipn_username).update(subscription="0")
-                else:
-                    pass
+                Users.objects.filter(ipn_username).update(paid_date=datetime.now())
+                Users.objects.filter(ipn_username).update(subscription="0")
+
             else:
                 pass
         else:
             #...
             pass
 
-    # check for subscription signup IPN
+     # check for subscriber sign-up IPN
     elif ipn_obj.txn_type == "subscr_signup":
 
         if ipn_obj.custom == ipn_username:
@@ -151,17 +107,17 @@ def show_me_the_money(sender, **kwargs):
         else:
             pass
 
-     # check for subscription payment IPN
-    elif ipn_obj.txn_type == "subscr_payment":
+     # check for recurring payment IPN
+    elif ipn_obj.txn_type == "recurring_payment":
         if ipn_obj.payment_status == ST_PP_COMPLETED:
 
-            if ipn_obj.receiver_email != "receiver_email@example.com":
+            if ipn_obj.receiver_email != settings.PAYPAL_RECEIVER_EMAIL:
                 # Not a valid payment
-                return
+                pass
 
             elif ipn_obj.custom == ipn_username:
                 Users.objects.filter(ipn_username).update(paid=True)
-                Users.objects.filter(ipn_username).update(paid_date=datetime.now)
+                Users.objects.filter(ipn_username).update(paid_date=datetime.now())
                 # set passive subscription
                 if ipn_obj.item_name == "Passive Subscription":
                     Users.objects.filter(ipn_username).update(subscription="1")
@@ -187,116 +143,131 @@ def show_me_the_money(sender, **kwargs):
 
             elif ipn_obj.mc_currency != 'USD':
                 Users.objects.filter(ipn_username).update(paid=False)
-                Users.objects.filter(ipn_username).update(paid_date=datetime.now)
+                Users.objects.filter(ipn_username).update(paid_date=datetime.now())
+                Users.objects.filter(ipn_username).update(subscription="0")
                 SubscriptionAmountDifferentTask(ipn_username)
-                # set passive subscription
-                if ipn_obj.item_name == "Passive Subscription":
-                    Users.objects.filter(ipn_username).update(subscription="0")
-                elif ipn_obj.item_name == "6 Month Passive Subscription":
-                    Users.objects.filter(ipn_username).update(subscription="0")
-                elif ipn_obj.item_name == "12 Month Passive Subscription":
-                    Users.objects.filter(ipn_username).update(subscription="0")
-                # set active subscription
-                elif ipn_obj.item_name == "Active Subscription":
-                    Users.objects.filter(ipn_username).update(subscription="0")
-                elif ipn_obj.item_name == "6 Month Active Subscription":
-                    Users.objects.filter(ipn_username).update(subscription="0")
-                elif ipn_obj.item_name == "12 Month Active Subscription":
-                    Users.objects.filter(ipn_username).update(subscription="0")
-                else:
-                    pass
+
             else:
                 pass
 
         elif ipn_obj.payment_status == ST_PP_EXPIRED:
-            if ipn_obj.receiver_email != "receiver_email@example.com":
+            if ipn_obj.receiver_email != settings.PAYPAL_RECEIVER_EMAIL:
                 # Not a valid payment
-                return
+                pass
 
             elif ipn_obj.custom == ipn_username:
                 Users.objects.filter(ipn_username).update(paid=False)
-                Users.objects.filter(ipn_username).update(paid_date=datetime.now)
+                Users.objects.filter(ipn_username).update(paid_date=datetime.now())
+                Users.objects.filter(ipn_username).update(subscription="0")
                 SubscriptionExpiredTask(ipn_username)
-                # set passive subscription
-                if ipn_obj.item_name == "Passive Subscription":
-                    Users.objects.filter(ipn_username).update(subscription="0")
-                elif ipn_obj.item_name == "6 Month Passive Subscription":
-                    Users.objects.filter(ipn_username).update(subscription="0")
-                elif ipn_obj.item_name == "12 Month Passive Subscription":
-                    Users.objects.filter(ipn_username).update(subscription="0")
-                # set active subscription
-                elif ipn_obj.item_name == "Active Subscription":
-                    Users.objects.filter(ipn_username).update(subscription="0")
-                elif ipn_obj.item_name == "6 Month Active Subscription":
-                    Users.objects.filter(ipn_username).update(subscription="0")
-                elif ipn_obj.item_name == "12 Month Active Subscription":
-                    Users.objects.filter(ipn_username).update(subscription="0")
-                else:
-                    pass
+
             else:
                 pass
 
 
         elif ipn_obj.payment_status == ST_PP_PENDING:
-            if ipn_obj.receiver_email != "receiver_email@example.com":
+            if ipn_obj.receiver_email != settings.PAYPAL_RECEIVER_EMAIL:
                 # Not a valid payment
-                return
+                pass
 
             elif ipn_obj.custom == ipn_username:
                 Users.objects.filter(ipn_username).update(paid=False)
-                Users.objects.filter(ipn_username).update(paid_date=datetime.now)
-                # set passive subscription
-                if ipn_obj.item_name == "Passive Subscription":
-                    Users.objects.filter(ipn_username).update(subscription="0")
-                elif ipn_obj.item_name == "6 Month Passive Subscription":
-                    Users.objects.filter(ipn_username).update(subscription="0")
-                elif ipn_obj.item_name == "12 Month Passive Subscription":
-                    Users.objects.filter(ipn_username).update(subscription="0")
-                # set active subscription
-                elif ipn_obj.item_name == "Active Subscription":
-                    Users.objects.filter(ipn_username).update(subscription="0")
-                elif ipn_obj.item_name == "6 Month Active Subscription":
-                    Users.objects.filter(ipn_username).update(subscription="0")
-                elif ipn_obj.item_name == "12 Month Active Subscription":
-                    Users.objects.filter(ipn_username).update(subscription="0")
-                else:
-                    pass
+                Users.objects.filter(ipn_username).update(paid_date=datetime.now())
+                Users.objects.filter(ipn_username).update(subscription="0")
+
             else:
                 pass
         else:
             #...
             pass
 
-    # check for failed subscription payment IPN
+     # check for subscription payment IPN
+    elif ipn_obj.txn_type == "subscr_payment":
+        if ipn_obj.payment_status == ST_PP_COMPLETED:
+
+            if ipn_obj.receiver_email != settings.PAYPAL_RECEIVER_EMAIL:
+                # Not a valid payment
+                pass
+
+
+            elif ipn_obj.custom == ipn_username:
+                Users.objects.filter(ipn_username).update(paid=True)
+                Users.objects.filter(ipn_username).update(paid_date=datetime.now())
+                # set passive subscription
+                if ipn_obj.item_name == "Passive Subscription":
+                    Users.objects.filter(ipn_username).update(subscription="1")
+                    Users.objects.filter(ipn_username).update(paid_type="1")
+                elif ipn_obj.item_name == "6 Month Passive Subscription":
+                    Users.objects.filter(ipn_username).update(subscription="1")
+                    Users.objects.filter(ipn_username).update(paid_type="2")
+                elif ipn_obj.item_name == "12 Month Passive Subscription":
+                    Users.objects.filter(ipn_username).update(subscription="1")
+                    Users.objects.filter(ipn_username).update(paid_type="3")
+                # set active subscription
+                elif ipn_obj.item_name == "Active Subscription":
+                    Users.objects.filter(ipn_username).update(subscription="2")
+                    Users.objects.filter(ipn_username).update(paid_type="1")
+                elif ipn_obj.item_name == "6 Month Active Subscription":
+                    Users.objects.filter(ipn_username).update(subscription="2")
+                    Users.objects.filter(ipn_username).update(paid_type="2")
+                elif ipn_obj.item_name == "12 Month Active Subscription":
+                    Users.objects.filter(ipn_username).update(subscription="2")
+                    Users.objects.filter(ipn_username).update(paid_type="3")
+                else:
+                    pass
+
+            elif ipn_obj.mc_currency != 'USD':
+                Users.objects.filter(ipn_username).update(paid=False)
+                Users.objects.filter(ipn_username).update(paid_date=datetime.now())
+                Users.objects.filter(ipn_username).update(subscription="0")
+                SubscriptionAmountDifferentTask(ipn_username)
+
+            else:
+                pass
+
+        elif ipn_obj.payment_status == ST_PP_EXPIRED:
+            if ipn_obj.receiver_email != settings.PAYPAL_RECEIVER_EMAIL:
+                # Not a valid payment
+                pass
+
+            elif ipn_obj.custom == ipn_username:
+                Users.objects.filter(ipn_username).update(paid=False)
+                Users.objects.filter(ipn_username).update(paid_date=datetime.now())
+                Users.objects.filter(ipn_username).update(subscription="0")
+                SubscriptionExpiredTask(ipn_username)
+
+            else:
+                pass
+
+
+        elif ipn_obj.payment_status == ST_PP_PENDING:
+            if ipn_obj.receiver_email != settings.PAYPAL_RECEIVER_EMAIL:
+                # Not a valid payment
+                pass
+
+            elif ipn_obj.custom == ipn_username:
+                Users.objects.filter(ipn_username).update(paid=False)
+                Users.objects.filter(ipn_username).update(paid_date=datetime.now())
+                Users.objects.filter(ipn_username).update(subscription="0")
+
+            else:
+                pass
+
+        else:
+            #...
+            pass
+
+     # check for failed subscription payment IPN
     elif ipn_obj.txn_type == "subscr_failed":
         pass
 
-    # check for subscription cancellation IPN
+     # check for subscription cancellation IPN
     elif ipn_obj.txn_type == "subscr_cancel":
         if ipn_obj.custom == ipn_username:
             Users.objects.filter(ipn_username).update(paid=False)
-            Users.objects.filter(ipn_username).update(paid_date=datetime.now)
+            Users.objects.filter(ipn_username).update(paid_date=datetime.now())
+            Users.objects.filter(ipn_username).update(subscription="0")
             SubscriptionCancelledTask(ipn_username)
-            # set passive subscription
-            if ipn_obj.item_name == "Passive Subscription":
-                Users.objects.filter(ipn_username).update(subscription="0")
-            elif ipn_obj.item_name == "6 Month Passive Subscription":
-                Users.objects.filter(ipn_username).update(subscription="0")
-            elif ipn_obj.item_name == "12 Month Passive Subscription":
-                Users.objects.filter(ipn_username).update(subscription="0")
-            # set active subscription
-            elif ipn_obj.item_name == "Active Subscription":
-                Users.objects.filter(ipn_username).update(subscription="0")
-            elif ipn_obj.item_name == "6 Month Active Subscription":
-                Users.objects.filter(ipn_username).update(subscription="0")
-            elif ipn_obj.item_name == "12 Month Active Subscription":
-                Users.objects.filter(ipn_username).update(subscription="0")
-            else:
-                pass
-        else:
-            pass
-    else:
-        pass
 
 valid_ipn_received.connect(show_me_the_money)
 
