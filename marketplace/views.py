@@ -11,7 +11,7 @@ from django.utils import timezone
 
 
 from csp.decorators import csp_exempt
-
+from core.decorators import subscription
 
 from .forms import (
         TalentAvailabillityForm, SkillRequiredForm, SkillLevelForm, DeliverablesForm, TalentRequiredForm, WorkLocationForm
@@ -25,10 +25,23 @@ from talenttrack.models import(
     WorkExperience, PreLoggedExperience
 )
 
+
+@login_required()
+@subscription(2)
+def VacancyDetailView(request, pk):
+    vacancy = TalentRequired.objects.filter(pk=pk)
+    skills = SkillRequired.objects.filter(scope=pk)
+    deliver = Deliverables.objects.filter(scope=pk)
+
+    template = 'marketplace/vacancy_detail.html'
+    context = {'vacancy': vacancy, 'skills': skills, 'deliver': deliver}
+    return render(request, template, context)
+
 @login_required()
 def MarketHome(request):
     ipost = TalentRequired.objects.filter(requested_by=request.user, offer_status__iexact='O').order_by('-date_entered')[:5]
     capacity = TalentAvailabillity.objects.filter(talent=request.user, date_to__gte=timezone.now()).order_by('-date_to')[:5]
+
     #Code for stacked lookup for talent's skills
     my_logged = WorkExperience.objects.filter(talent=request.user).aggregate(myl=Sum('hours_worked'))
     my_prelogged = PreLoggedExperience.objects.filter(talent=request.user).aggregate(mypl=Sum('hours_worked'))
@@ -41,6 +54,7 @@ def MarketHome(request):
     req_experience = TalentRequired.objects.filter(Q(offer_status__iexact='O') & Q(experience_level__min_hours__lte=mye)).values_list('id', flat=True)
 
     skill_have = WorkExperience.objects.filter(talent=request.user).values_list('skills', flat=True)
+
     match = []
 
     for key in req_experience:
@@ -50,26 +64,16 @@ def MarketHome(request):
             if sk in skill_have:
                 match.append(sk)
 
-    print(match)
-
-
-
-
-
+    for item in match:
+        display = SkillRequired.objects.filter(
+                Q(skill__in=[item])
+                & Q(scope__bid_closes__gte=timezone.now())
+                & Q(scope__offer_status__iexact='O')
+                ).distinct().prefetch_related('scope')
 
     template = 'marketplace/vacancy_home.html'
-    context ={'ipost': ipost, 'capacity': capacity}
+    context ={'ipost': ipost, 'capacity': capacity, 'display' :display}
     return render(request, template, context)
-'''
-    my_logged = WorkExperience.objects.filter(talent=request.user).aggregate(myl=Sum('hours_worked'))
-    my_prelogged = PreLoggedExperience.objects.filter(talent=request.user).aggregate(mypl=Sum('hours_worked'))
-    maybe = int(my_logged[0]) + int(my_prelogged[0])
-    print(my_logged, my_prelogged, maybe)
-'''
-
-
-
-
 
 
 @login_required()

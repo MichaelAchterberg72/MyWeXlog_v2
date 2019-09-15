@@ -1,17 +1,40 @@
 {% extends "base_home.html" %}
 {% load humanize %}
-{% block title %}{{block.super}}-Market{% endblock title %}
+{% block title %}{{block.super}}-Vacancy{% endblock title %}
 
 {% block content %}
 
 <div class="card" style="width: 18rem;">
   <div class="card-body">
-    <h5 class="card-title">Card title</h5>
-    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-    <a href="{% url 'MarketPlace:Vacancy' %}">Advertise a Vacancy</a>
-    <a href="#" class="card-link">Card link</a>
-    <a href="#" class="card-link">Another link</a>
+    <h5 class="card-title">Vacancies suited for Me </h5>
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th>Vacancy Title</th>
+          <th>Hours Required</th>
+          <th>Work Format</th>
+          <th>Vacancy Scope</th>
+          <th>Full Detail</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for i in vacancy %}
+      <tr>
+        <td>{{ i.scope.title }}</td>
+        <td>
+          {{ i.scope.hours_required|intcomma }} ({{ i.scope.get_unit_display }})
+        </td>
+        <td>{{ i.scope.worklocation }}</td>
+        <td>{{ i.scope.scope }}</td>
+          {% if request.user.subscription == 2 %}
+            <td><a href="{% url 'MarketPlace:VacancyDetail' i.scope.id %}" class="card-link">See Detail</a></td>
+          {% elif request.user.subscription < 2 %}
+            <td><a href="#" class="card-link">See Detail</a></td>
+          {% endif %}
+        </tr>
+      </tbody>
+      {% endfor %}
+    </table>
   </div>
 </div>
 <div class="row">

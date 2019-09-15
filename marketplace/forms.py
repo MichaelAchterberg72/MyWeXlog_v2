@@ -94,12 +94,13 @@ class DeliverablesForm(forms.ModelForm):
 class TalentRequiredForm(forms.ModelForm):
     class Meta:
         model = TalentRequired
-        fields = ('title', 'enterprise', 'date_deadline', 'hours_required', 'unit', 'worklocation', 'rate_offered', 'rate_unit', 'currency', 'rate_unit', 'offer_status', 'certification', 'scope', 'expectations', 'terms', 'city', 'experience_level')
+        fields = ('title', 'enterprise', 'date_deadline', 'hours_required', 'unit', 'worklocation', 'rate_offered', 'rate_unit', 'currency', 'rate_unit', 'offer_status', 'certification', 'scope', 'expectations', 'terms', 'city', 'experience_level', 'bid_closes')
         widgets={
             'city': CitySelect2Widget(),
             'currency': CurrencySelect2Widget(),
             'enterprise': BranchSelect2Widget(),
             'date_deadline': DateInput(),
+            'bid_closes': DateInput(),
             #'certification': FilteredSelectMultiple(is_stacked=True, verbose_name = 'Required Certification', attrs={'rows':'5'}),
         }
 

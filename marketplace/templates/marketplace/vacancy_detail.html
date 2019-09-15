@@ -1,0 +1,116 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+{% block title %}{{block.super}}-Vacancy{% endblock title %}
+
+{% block content %}
+{% for v in vacancy %}
+<h5 class="card-title">Vacancy: {{ v.title }}</h5>
+{% endfor %}
+<table class="table table-sm">
+  <thead>
+    <tr>
+      <th>Hours Required</th>
+      <th>Work Format</th>
+      <th>Office Location</th>
+      <th>Experience Level</th>
+      <th>Company</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for v in vacancy %}
+    <tr>
+      <td>
+        {{ v.hours_required|intcomma }} ({{ v.get_unit_display }})
+      </td>
+      <td>{{ v.worklocation }}</td>
+      <td>{{ v.city.city }}</td>
+      <td>{{ v.experience_level }}</td>
+      <td>{{ v.enterprise.company }}</td>
+    </tr>
+  </tbody>
+  {% endfor %}
+</table>
+<div class="row">
+  <div class="col-sm-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Scope</h5>
+        {% for s in vacancy %}
+        <p>{{ s.scope }}</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Expectations</h5>
+        {% for e in vacancy %}
+        <p>{{ e.expectations }}</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+<table class="table table-sm">
+  <thead>
+    <tr>
+      <th>Proposed Rate</th>
+      <th>Bid Closing Date</th>
+      <th>Work Completion Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for v in vacancy %}
+    <tr>
+      <td>{{ v.currency }}{{ v.rate_offered }} ({{ v.get_rate_unit_display }})</td>
+      <td>{{ v.bid_closes }}</td>
+      <td>{{ v.date_deadline }}</td>
+    </tr>
+  </tbody>
+  {% endfor %}
+</table>
+<div class="row">
+  <div class="col-sm-3">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Skills Required</h5>
+        {% for s in skills %}
+        <ul>
+          <li>{{ s.skill }}</li>
+        </ul>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-5">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Deliverables</h5>
+        {% for d in deliver %}
+        <ul>
+          <li>{{ d.deliverable }}</li>
+        </ul>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-4">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Certifications Required</h5>
+        {% for d in vacancy %}
+        {% if d.certification %}
+          <ul>
+              <li>{{ d.certification }}</li>
+          </ul>
+        {% else %}
+          <p>No Certification requirements</p>
+        {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
