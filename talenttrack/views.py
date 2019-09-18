@@ -21,6 +21,7 @@ from .models import (
         Education, Lecturer, Course, ClassMates, WorkExperience, Superior, WorkCollaborator, WorkClient, WorkColleague, PreLoggedExperience, PreColleague
 )
 
+from db_flatten.models import SkillTag
 
 @login_required()
 def ExperienceHome(request):
@@ -33,8 +34,38 @@ def ExperienceHome(request):
         prelog = PreLoggedExperience.objects.filter(talent=request.user).order_by('-date_from')
         pre_sum = prelog.aggregate(p_sum=Sum('hours_worked'))
 
+        t_sum = train_sum.get('Edu_sum')
+        e_sum = exp_sum.get('we_sum')
+        p_sum= pre_sum.get('p_sum')
+        tot_sum = t_sum + e_sum + p_sum
+
+        #e_skill =  Education.objects.only("course__skills").filter(talent=request.user).values_list('skills', flat=True)
+        l_skill = WorkExperience.objects.only("skills").filter(talent=request.user).distinct()
+        p_skill = PreLoggedExperience.objects.only("skills").filter(talent=request.user).distinct()
+
+        comb = l_skill.values_list("skills").union(p_skill.values_list("skills"))
+
+        print(comb)
+
+        #et = []
+        ls = []
+        ps = []
+
+        #for ets in e_skill:
+        #    et.append(ets)
+
+        for lss in l_skill:
+            ls.append(lss)
+
+        for pss in p_skill:
+            ps.append(pss)
+
+        ts = ls+ps
+        skill_set = set(ts)
+
+
         template = 'talenttrack/track_home.html'
-        context = {'train': train, 'train_sum': train_sum, 'experience': experience, 'exp_sum': exp_sum, 'prelog': prelog, 'pre_sum': pre_sum}
+        context = {'train': train, 'train_sum': train_sum, 'experience': experience, 'exp_sum': exp_sum, 'prelog': prelog, 'pre_sum': pre_sum, 'tot_sum': tot_sum, 'comb': comb, 'l_skill': l_skill}
         return render(request, template, context)
 
 
@@ -568,7 +599,7 @@ def ResultAddPopup(request):
             instance=form.save(commit=False)
             instance.save()
             return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_certification");</script>' % (instance.pk, instance))
-            
+
     else:
         context = {'form':form,}
         template = 'talenttrack/result_popup.html'

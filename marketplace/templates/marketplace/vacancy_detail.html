@@ -4,6 +4,8 @@
 
 {% block content %}
 {% for v in vacancy %}
+<p class="float-right"><a href="{% url 'MarketPlace:Entrance' %}" class="btn btn-secondary">Back</a>
+  <a href="#" class="btn btn-success">Apply for this role</a></p>
 <h5 class="card-title">Vacancy: {{ v.title }}</h5>
 {% endfor %}
 <table class="table table-sm">
@@ -102,9 +104,9 @@
         <h5 class="card-title">Certifications Required</h5>
         {% for d in vacancy %}
         {% if d.certification %}
-          <ul>
-              <li>{{ d.certification }}</li>
-          </ul>
+
+          <p>{{ d.certification.all|join:", " }}</p>
+
         {% else %}
           <p>No Certification requirements</p>
         {% endif %}

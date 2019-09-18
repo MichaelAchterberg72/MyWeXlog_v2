@@ -14,11 +14,12 @@
           <th>Hours Required</th>
           <th>Work Format</th>
           <th>Vacancy Scope</th>
+          <th>Country</th>
           <th>Full Detail</th>
         </tr>
       </thead>
+      {% for i in display %}
       <tbody>
-      {% for i in vacancy %}
       <tr>
         <td>{{ i.scope.title }}</td>
         <td>
@@ -26,6 +27,7 @@
         </td>
         <td>{{ i.scope.worklocation }}</td>
         <td>{{ i.scope.scope }}</td>
+        <td>{{ i.scope.city }}</td>
           {% if request.user.subscription == 2 %}
             <td><a href="{% url 'MarketPlace:VacancyDetail' i.scope.id %}" class="card-link">See Detail</a></td>
           {% elif request.user.subscription < 2 %}

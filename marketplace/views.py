@@ -91,18 +91,23 @@ def TalentAvailabillityView(request):
         return render(request, template, context)
 
 @login_required()
+@subscription(2)
 def VacancyEditView(request, pk):
     instance = get_object_or_404(TalentRequired, pk=pk)
     skille = SkillRequired.objects.filter(scope=pk)
     delivere = Deliverables.objects.filter(scope=pk)
 
     form = TalentRequiredForm(request.POST or None, instance=instance)
+
     if request.method == 'POST':
         if form.is_valid():
             new = form.save(commit=False)
             new.save()
-            return redirect(reverse('MarketPlace:VacancyEdit', kwargs={'pk': pk}))
+            form.save_m2m()
+            return redirect(reverse('MarketPlace:Entrance'))
     else:
+        form = TalentRequiredForm(instance=instance)
+
         template = 'marketplace/vacancy_edit.html'
         context = {'form': form, 'instance': instance, 'skille': skille, 'delivere': delivere}
         return render(request, template, context)

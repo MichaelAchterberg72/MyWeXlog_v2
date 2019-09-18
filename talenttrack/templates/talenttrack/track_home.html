@@ -7,6 +7,43 @@
 <div class="card">
   <h5 class="card-header">Experience</h5>
   <div id="accordion">
+    <div class="card">
+      <div class="card-header" id="headingFour">
+        <h5 class="mb-0">
+          <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+            Summary
+          </button>
+        </h5>
+      </div>
+      <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
+        <div class="card-body">
+          <div class="float-right">
+            <p><a href="{% url 'Talent:ExperienceCapture' %}" class="badge badge-pill badge-primary float-right">Add Experience</a>  <a href="{% url 'Talent:Capture' %}" class="badge badge-pill badge-primary float-right">Add Education</a>  <a href="{% url 'Talent:PreloggedCapture' %}" class="badge badge-pill badge-primary float-right">Add Logged Experience</a></p>
+          </div>
+            <table class="table table_sm">
+              <thead>
+                <tr align= "center">
+                  <th width="20%">Total Experience<br>(Hours)</th>
+                  <th width="20%">Training<br>(Hours)</th>
+                  <th width="20%">Logged<br>(Hours)</th>
+                  <th width="20%">Pre-logged<br>(Hours)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr align= "center">
+                  <td>{{ tot_sum|intcomma }}</td>
+                  <td>{{ train_sum.Edu_sum|intcomma }}</td>
+                  <td>{{ exp_sum.we_sum|intcomma }}</td>
+                  <td>{{ pre_sum.p_sum|intcomma }}</td>
+                </tr>
+              </tbody>
+            </table>
+            {% for s in l_skill %}
+            {{ s.skills.all|join:", " }}
+            {% endfor %}
+        </div>
+      </div>
+    </div>
   <div class="card">
     <div class="card-header" id="headingOne">
       <h5 class="mb-0">
