@@ -1,0 +1,27 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+{% block content %}
+
+<div class="">
+  <h1 class="display-4">Site Suggestions!</h1>
+  <p class="lead">We would love to hear from you and your suggestions for our
+    site, please feel free to complete the below form and send it through to us.</p>
+
+  <hr class="my-4">
+  
+  <form class="" action="" method="POST" id="ContactUsForm">
+
+    <div class="form-row">
+      <div class="form-group col-md-6 mb-0">
+    {% csrf_token %}
+    {{ form|crispy }}
+
+  <p><button type="submit" class="btn btn-primary" name="button">Send</button></p>
+
+      </div>
+    </div>
+
+{% endblock content %}

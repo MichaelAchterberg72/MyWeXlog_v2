@@ -18,6 +18,7 @@ urlpatterns = [
     path('project/', include('project.urls', namespace='Project')),
     path('paypal/', include('paypal.standard.ipn.urls')),
     path('payments/', include('payments.urls', namespace='Payments')),
+    path('public/', include('public.urls', namespace='Public')),
     path('experience/booklist/', include('booklist.urls', namespace='BookList')),
     path('experience/', include('talenttrack.urls', namespace='Talent')),
     path('trust/', include('trustpassport.urls', namespace='Trust')),

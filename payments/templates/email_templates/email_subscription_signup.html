@@ -1,8 +1,9 @@
-<!DOCTYPE html>
-<html>
-  <head>
-  </head>
-  <body>
+{% extends "base_email.html" %}
+{% load humanize %}
+{% load staticfiles %}
+
+{% block content %}
+
     <p>Hi {{ user }}!,</p>
     <p>We would like to welcome to <a href="www.wexlog.io">WeLog</a> and to thank you for subscribing.
       Please make use of and to enjoy the full bennefits that WexLog can offer.</p>
@@ -10,5 +11,5 @@
     <p>Thanks, we look forward to hearing from you soon.</p>
     <p>&nbsp</p>
     <p>- WexLog Team</p>
-  </body>
-</html>
+
+{% endblock content %}

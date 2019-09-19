@@ -42,7 +42,7 @@ def AustraliaSubscriptionView(request):
             "cmd": "_xclick-subscriptions",
             "business": settings.PAYPAL_RECEIVER_EMAIL,
             "currency_code": "USD",
-            "a3": "3.30",                      # monthly price
+            "a3": "3.63",                      # monthly price
             "tax_rate": "0.10",                # tax rate (confirm works with subscribe button)
             "p3": "1",                         # duration of each unit (depends on unit)
             "t3": "M",                         # duration unit ("M for Month")
@@ -62,7 +62,7 @@ def AustraliaSubscriptionView(request):
             "cmd": "_xclick-subscriptions",
             "business": settings.PAYPAL_RECEIVER_EMAIL,
             "currency_code": "USD",
-            "a3": "18.15",                      # monthly price
+            "a3": "20.11",                      # monthly price
             "tax_rate": "0.10",                # tax rate (confirm works with subscribe button)
             "p3": "6",                         # duration of each unit (depends on unit)
             "t3": "M",                         # duration unit ("M for Month")
@@ -82,7 +82,7 @@ def AustraliaSubscriptionView(request):
             "cmd": "_xclick-subscriptions",
             "business": settings.PAYPAL_RECEIVER_EMAIL,
             "currency_code": "USD",
-            "a3": "35.86",                      # monthly price
+            "a3": "39.77",                      # monthly price
             "tax_rate": "0.10",                # tax rate (confirm works with subscribe button)
             "p3": "1",                         # duration of each unit (depends on unit)
             "t3": "Y",                         # duration unit ("M for Month")
@@ -102,7 +102,7 @@ def AustraliaSubscriptionView(request):
             "cmd": "_xclick-subscriptions",
             "business": settings.PAYPAL_RECEIVER_EMAIL,
             "currency_code": "USD",
-            "a3": "4.40",                      # monthly price
+            "a3": "4.73",                      # monthly price
             "tax_rate": "0.10",                # tax rate (confirm works with subscribe button)
             "p3": "1",                         # duration of each unit (depends on unit)
             "t3": "M",                         # duration unit ("M for Month")
@@ -122,7 +122,7 @@ def AustraliaSubscriptionView(request):
             "cmd": "_xclick-subscriptions",
             "business": settings.PAYPAL_RECEIVER_EMAIL,
             "currency_code": "USD",
-            "a3": "24.75",                      # monthly price
+            "a3": "26.68",                      # monthly price
             "tax_rate": "0.10",                # tax rate (confirm works with subscribe button)
             "p3": "6",                         # duration of each unit (depends on unit)
             "t3": "M",                         # duration unit ("M for Month")
@@ -142,7 +142,7 @@ def AustraliaSubscriptionView(request):
             "cmd": "_xclick-subscriptions",
             "business": settings.PAYPAL_RECEIVER_EMAIL,
             "currency_code": "USD",
-            "a3": "49.06",                      # monthly price
+            "a3": "54.11",                      # monthly price
             "tax_rate": "0.10",                # tax rate (confirm works with subscribe button)
             "p3": "1",                         # duration of each unit (depends on unit)
             "t3": "Y",                         # duration unit ("M for Month")
@@ -182,7 +182,7 @@ def CanadaQuebecSubscriptionView(request):
             "cmd": "_xclick-subscriptions",
             "business": settings.PAYPAL_RECEIVER_EMAIL,
             "currency_code": "USD",
-            "a3": "3.30",                      # monthly price
+            "a3": "3.63",                      # monthly price
             "tax_rate": "0.9975",                # tax rate (confirm works with subscribe button)
             "p3": "1",                         # duration of each unit (depends on unit)
             "t3": "M",                         # duration unit ("M for Month")
@@ -202,7 +202,7 @@ def CanadaQuebecSubscriptionView(request):
             "cmd": "_xclick-subscriptions",
             "business": settings.PAYPAL_RECEIVER_EMAIL,
             "currency_code": "USD",
-            "a3": "18.15",                      # monthly price
+            "a3": "20.10",                      # monthly price
             "tax_rate": "0.9975",                # tax rate (confirm works with subscribe button)
             "p3": "6",                         # duration of each unit (depends on unit)
             "t3": "M",                         # duration unit ("M for Month")
@@ -222,7 +222,7 @@ def CanadaQuebecSubscriptionView(request):
             "cmd": "_xclick-subscriptions",
             "business": settings.PAYPAL_RECEIVER_EMAIL,
             "currency_code": "USD",
-            "a3": "35.85",                      # monthly price
+            "a3": "39.76",                      # monthly price
             "tax_rate": "0.9975",                # tax rate (confirm works with subscribe button)
             "p3": "1",                         # duration of each unit (depends on unit)
             "t3": "Y",                         # duration unit ("M for Month")
@@ -242,7 +242,7 @@ def CanadaQuebecSubscriptionView(request):
             "cmd": "_xclick-subscriptions",
             "business": settings.PAYPAL_RECEIVER_EMAIL,
             "currency_code": "USD",
-            "a3": "4.40",                      # monthly price
+            "a3": "4.73",                      # monthly price
             "tax_rate": "0.9975",                # tax rate (confirm works with subscribe button)
             "p3": "1",                         # duration of each unit (depends on unit)
             "t3": "M",                         # duration unit ("M for Month")
@@ -262,7 +262,7 @@ def CanadaQuebecSubscriptionView(request):
             "cmd": "_xclick-subscriptions",
             "business": settings.PAYPAL_RECEIVER_EMAIL,
             "currency_code": "USD",
-            "a3": "24.74",                      # monthly price
+            "a3": "26.67",                      # monthly price
             "tax_rate": "0.9975",                # tax rate (confirm works with subscribe button)
             "p3": "6",                         # duration of each unit (depends on unit)
             "t3": "M",                         # duration unit ("M for Month")
@@ -282,7 +282,7 @@ def CanadaQuebecSubscriptionView(request):
             "cmd": "_xclick-subscriptions",
             "business": settings.PAYPAL_RECEIVER_EMAIL,
             "currency_code": "USD",
-            "a3": "49.05",                      # monthly price
+            "a3": "53.00",                      # monthly price
             "tax_rate": "0.9975",                # tax rate (confirm works with subscribe button)
             "p3": "1",                         # duration of each unit (depends on unit)
             "t3": "Y",                         # duration unit ("M for Month")
@@ -326,7 +326,7 @@ def NewZealandSubscriptionView(request):
             "cmd": "_xclick-subscriptions",
             "business": settings.PAYPAL_RECEIVER_EMAIL,
             "currency_code": "USD",
-            "a3": "3.45",                      # monthly price
+            "a3": "3.80",                      # monthly price
             "tax_rate": "0.15",                # tax rate (confirm works with subscribe button)
             "p3": "1",                         # duration of each unit (depends on unit)
             "t3": "M",                         # duration unit ("M for Month")
@@ -346,7 +346,7 @@ def NewZealandSubscriptionView(request):
             "cmd": "_xclick-subscriptions",
             "business": settings.PAYPAL_RECEIVER_EMAIL,
             "currency_code": "USD",
-            "a3": "18.98",                      # monthly price
+            "a3": "21.02",                      # monthly price
             "tax_rate": "0.15",                # tax rate (confirm works with subscribe button)
             "p3": "6",                         # duration of each unit (depends on unit)
             "t3": "M",                         # duration unit ("M for Month")
@@ -366,7 +366,7 @@ def NewZealandSubscriptionView(request):
             "cmd": "_xclick-subscriptions",
             "business": settings.PAYPAL_RECEIVER_EMAIL,
             "currency_code": "USD",
-            "a3": "37.49",                      # monthly price
+            "a3": "41.57",                      # monthly price
             "tax_rate": "0.15",                # tax rate (confirm works with subscribe button)
             "p3": "1",                         # duration of each unit (depends on unit)
             "t3": "Y",                         # duration unit ("M for Month")
@@ -386,7 +386,7 @@ def NewZealandSubscriptionView(request):
             "cmd": "_xclick-subscriptions",
             "business": settings.PAYPAL_RECEIVER_EMAIL,
             "currency_code": "USD",
-            "a3": "4.60",                      # monthly price
+            "a3": "4.95",                      # monthly price
             "tax_rate": "0.15",                # tax rate (confirm works with subscribe button)
             "p3": "1",                         # duration of each unit (depends on unit)
             "t3": "M",                         # duration unit ("M for Month")
@@ -406,7 +406,7 @@ def NewZealandSubscriptionView(request):
             "cmd": "_xclick-subscriptions",
             "business": settings.PAYPAL_RECEIVER_EMAIL,
             "currency_code": "USD",
-            "a3": "25.88",                      # monthly price
+            "a3": "27.89",                      # monthly price
             "tax_rate": "0.15",                # tax rate (confirm works with subscribe button)
             "p3": "6",                         # duration of each unit (depends on unit)
             "t3": "M",                         # duration unit ("M for Month")
@@ -426,7 +426,7 @@ def NewZealandSubscriptionView(request):
             "cmd": "_xclick-subscriptions",
             "business": settings.PAYPAL_RECEIVER_EMAIL,
             "currency_code": "USD",
-            "a3": "51.29",                      # monthly price
+            "a3": "55.42",                      # monthly price
             "tax_rate": "0.15",                # tax rate (confirm works with subscribe button)
             "p3": "1",                         # duration of each unit (depends on unit)
             "t3": "Y",                         # duration unit ("M for Month")

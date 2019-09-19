@@ -1,8 +1,9 @@
-<!DOCTYPE html>
-<html>
-  <head>
-  </head>
-  <body>
+{% extends "base_email.html" %}
+{% load humanize %}
+{% load staticfiles %}
+
+{% block content %}
+
     <p>Hi {{ user }}!,</p>
     <p>A friendly reminder that your subscription to <a href="www.wexlog.io">WeLog</a> has
       expired and will need to be renewed for you to enjoy the full bennefits that WexLog
@@ -11,5 +12,5 @@
     <p>Thanks, we look forward to hearing from you soon.</p>
     <p>&nbsp</p>
     <p>- WexLog Team</p>
-  </body>
-</html>
+
+{% endblock contnt %}

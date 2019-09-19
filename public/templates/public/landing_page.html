@@ -1,0 +1,731 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+{% load staticfiles %}
+
+{% block content %}
+
+<section id="header" class="">
+  <div class="card bg-dark text-white">
+      <img src="{% static 'images/landing_page/dreamstime_xxl_90490646a.jpg' %}" class="img-fluid" alt="header image">
+
+      <div class="card-img-overlay">
+        <h1 class="display-3">WeXlog.io</h1>
+        <p class="lead">Experience tracking and marketing made easy.</p>
+        <p class="card-text">Last updated 3 mins ago</p>
+      </div>
+  </div>
+</section>
+
+<section id="features" class="">
+  <div class="jumbotron jumbotron-fluid">
+    <div class="container">
+      <center>
+      <h1 class="display-4">Capture and Verify Experience</h1>
+      <p class="lead">Capture your education & training as well as work experience and get it validated by
+        your colleagues, superiors, lecturers, class mates, collaborators and clients to develop a qualified listing
+        of time spent as well as the amount of time spent working for a company, hours spent on project and
+        hours spent developing skills.</p>
+      <p>&nbsp</p>
+      <hr class="my-4">
+      <h1 class="display-4">Advertise your Personal Skills and Experience</h1>
+      <p class="lead">Advertise the skills and experience that you have with qualified references
+        making it easy for your potential customers to find when they do a search for the skills
+        require.</p>
+      <p>&nbsp</p>
+      <hr class="my-4">
+      <p>&nbsp</p>
+      <h1 class="display-4">View and Apply for Vacancies</h1>
+      <p class="lead">View and apply for temporary or permanent positions
+        that are posted and available according to your skills and experience.<br>
+        Search by Job type, location, skill type and skills or certification.</p>
+      <p>&nbsp</p>
+      <hr class="my-4">
+      <p>&nbsp</p>
+      <h1 class="display-4">View Skill Heatmaps</h1>
+      <p class="lead">Our heatmaps allow you to search for a skill type or vacancies on an easy to interpret map.</p>
+      <p>&nbsp</p>
+      <hr class="my-4">
+      <p>&nbsp</p>
+      <h1 class="display-4">Find a Skill you are Looking for</h1>
+      <p class="lead">Find specialised experts and agencies for any type of project or position with a collection
+        of verification and quality references for work performed in the past.</p>
+      </center>
+    </div>
+  </div>
+</section>
+
+<section id="references" class="">
+    <div class="title">
+      <center>
+      <h1 class="display-4">References</h1>
+      <p>&nbsp</p>
+      </center>
+      <div class="row">
+
+        <div class="col-sm-3">
+          <div class="card" style="width: 18rem;">
+              <img class="card-img-top" src="{% static 'images/landing_page/face2.jpg' %}" alt="Card image cap">
+              <div class="card-body">
+                <h5 class="card-title">Engineers</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalEngineer">
+                  View Reference
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModalEngineer" tabindex="0" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalEngineerLongTitle">Engineer Reference</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        "Place the quote or Youtube video here"
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+
+        <div class="col-sm-3">
+          <div class="card" style="width: 18rem;">
+              <img class="card-img-top" src="{% static 'images/landing_page/face2.jpg' %}" alt="Card image cap">
+              <div class="card-body">
+                <h5 class="card-title">Freelancers</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalFreelancers">
+                  View Reference
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModalFreelancers" tabindex="-1" role="dialog" aria-labelledby="exampleModalFreelancresTitle" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Freelancers Reference</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        "Place the quote or Youtube video here"
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        <div class="col-sm-3">
+          <div class="card" style="width: 18rem;">
+              <img class="card-img-top" src="{% static 'images/landing_page/face2.jpg' %}" alt="Card image cap">
+              <div class="card-body">
+                <h5 class="card-title">Pilots</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalPilot">
+                  View Reference
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModalPilot" tabindex="-1" role="dialog" aria-labelledby="exampleModalPilotTitle" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Pilot Reference</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        "Place the pilots reference or youtube video here"
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-3">
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src="{% static 'images/landing_page/face2.jpg' %}" alt="Card image cap">
+                <div class="card-body">
+                  <h5 class="card-title">Nurses</h5>
+                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                  <!-- Button trigger modal -->
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalNurse">
+                    View Reference
+                  </button>
+
+                  <!-- Modal -->
+                  <div class="modal fade" id="exampleModalNurse" tabindex="-1" role="dialog" aria-labelledby="exampleModalNurseTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLongTitle">Nurse Reference</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          "Place the nurse's reference or youtube video here"
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        <p>&nbsp</p>
+
+
+
+        <p>&nbsp</p>
+      </div>
+
+      <div class="row">
+
+        <div class="col-sm-3">
+          <div class="card" style="width: 18rem;">
+              <img class="card-img-top" src="{% static 'images/landing_page/face2.jpg' %}" alt="Card image cap">
+              <div class="card-body">
+                <h5 class="card-title">Mechanic</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalMechanic">
+                  View Reference
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModalMechanic" tabindex="0" role="dialog" aria-labelledby="exampleModalMechanicTitle" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalMechanicLongTitle">Mechanic Reference</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        "Place the quote or Youtube video here"
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+
+        <div class="col-sm-3">
+          <div class="card" style="width: 18rem;">
+              <img class="card-img-top" src="{% static 'images/landing_page/face2.jpg' %}" alt="Card image cap">
+              <div class="card-body">
+                <h5 class="card-title">Interior Decorator</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalInterior">
+                  View Reference
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModalInterior" tabindex="-1" role="dialog" aria-labelledby="exampleModalInteriorTitle" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Interior Decorator Reference</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        "Place the quote or Youtube video here"
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        <div class="col-sm-3">
+          <div class="card" style="width: 18rem;">
+              <img class="card-img-top" src="{% static 'images/landing_page/face2.jpg' %}" alt="Card image cap">
+              <div class="card-body">
+                <h5 class="card-title">Programmer</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalProgrammer">
+                  View Reference
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModalProgrammer" tabindex="-1" role="dialog" aria-labelledby="exampleModalProgrammerTitle" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Programmer Reference</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        "Place the programmers reference or youtube video here"
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-3">
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src="{% static 'images/landing_page/face2.jpg' %}" alt="Card image cap">
+                <div class="card-body">
+                  <h5 class="card-title">Accountant</h5>
+                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                  <!-- Button trigger modal -->
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalAccountant">
+                    View Reference
+                  </button>
+
+                  <!-- Modal -->
+                  <div class="modal fade" id="exampleModalAccountant" tabindex="-1" role="dialog" aria-labelledby="exampleModalAccountantTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLongTitle">Accountant Reference</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          "Place the accountant's reference or youtube video here"
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+      </div>
+      <p>&nbsp</p>
+    </div>
+</section>
+
+<section id="benefits" class="">
+  <div class="jumbotron jumbotron-fluid">
+    <div class="title">
+      <center>
+      <h3 class="display-4">Benefits</h3>
+      <p>&nbsp</p>
+      </center>
+
+      <center>
+      <div class="container">
+        <div class="container">
+        <div class="container">
+      <div class="container">
+        <div class="container">
+        <div class="container">
+          <details>
+            <summary class="blockquote">Find Resources</summary>
+            <p class="lead">Find the resources your are looking for.</p>
+          </details>
+          <details>
+            <summary class="blockquote">International Portfolio of skills</summary>
+            <p class="lead">Gain an internationally recognised portfolio of your
+              qualified skills.</p>
+          </details>
+          <details>
+            <summary class="blockquote">Confirmed Experience</summary>
+            <p class="lead">Be able to see how much experience someone has, confirmed
+              by third parties.</p>
+          </details>
+          <details>
+            <summary class="blockquote">Trust Passport</summary>
+            <p class="lead">Create your trust passport of qualified references.</p>
+          </details>
+          <details>
+            <summary class="blockquote">Advertise Experience</summary>
+            <p class="lead">Enable freelancers and consultants to advertise their experience.</p>
+          </details>
+          <details>
+            <summary class="blockquote">Productise Experience</summary>
+            <p class="lead">Enable you to productise your skills and advertise to market.</p>
+          </details>
+          <details>
+            <summary class="blockquote">View Skills Internationally</summary>
+            <p class="lead">View skills available and required internationally.</p>
+          </details>
+          <details>
+            <summary class="blockquote">Search & Apply</summary>
+            <p class="lead">Search for and apply for positions based on your skills base.</p>
+          </details>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+    </div>
+    </center>
+
+      <center>
+      <p>&nbsp</p>
+      <p><a class="btn btn-primary btn-lg" href="{% url 'Payments:SubscriptionCountrySelect' %}" role="button">Subscribe Now</a></p>
+      </center>
+
+
+    </div>
+  </div>
+</section>
+
+<section id="quote" class="">
+  <div class="">
+    <div class="title">
+      <center>
+      <h3 class="display-4">Quote</h3>
+      <p>&nbsp</p>
+      <blockquote class="blockquote">
+        <p class="lead">"As a result of the choices and options available, people will
+          default to what they have always defaulted to – doing business with and connecting
+          with people they trust. Trust is the new currency. Within the next few years,
+          ‘trust passports’ will be common on the internet. Like Amazon.com or eBay’s current
+          systems for evaluating people within an online e-commerce community, we will all have
+          trust ratings that will help us interact with each other with more confidence"</p>
+        <footer class="blockquote-footer"> (Bush & Codrington, 2008) <cite title="Source Title">Future-Proof Your Child</cite></footer>
+      </blockquote>
+      <p>&nbsp</p>
+      <blockquote class="blockquote">
+        <p class="lead">“Handy championed the notion of a “portfolio life”. In this Handy
+          was prescient. He foresaw the emergence of workers who would pursue “a multi-faceted,
+          multi-client freelance career in which individuals take responsibility for their own
+          earning potential, personal development and general well-being”. Workers are thereby
+          independent to an extent never yet approached in organisations, moving about among a
+          portfolio of jobs, employers and types of work.”</p>
+        <footer class="blockquote-footer"> (Crainer, 2013) <cite title="Source Title">Source Title</cite></footer>
+      </blockquote>
+      <p>&nbsp</p>
+      </center>
+    </div>
+  </div>
+</section>
+
+<section id="more about us" class="">
+  <div class="jumbotron jumbotron-fluid">
+    <div class="title">
+      <center>
+      <h3 class="display-4">More About Us</h3>
+      <p class="lead">Let James explain a little bit about how the WeXlog site works.</p>
+      <img class="card-img" src="{% static 'images/landing_page/dreamstime_xxl_100229731a.jpg' %}" alt="About us video">
+      <p>&nbsp</p>
+      </center>
+
+</section>
+
+<section id="search" class="">
+  <center>
+  <h1 class="display-4">Search for Skill Vacanies</h1>
+  <p>&nbsp</p>
+
+  <div class="form-group mx-sm-3 mb-2">
+    <p><input class="form-control form-control-lg" type="text" placeholder="Search for vacancies"></p>
+    <p><button type="submit" class="btn btn-primary btn-lg">Search</button></p>
+    </div>
+
+    <p>&nbsp</p>
+    <hr class="my-4">
+    <p>&nbsp</p>
+    <h1 class="display-4">Search for Skills Available</h1>
+    <p>&nbsp</p>
+
+    <p><input class="form-control form-control-lg" type="text" placeholder="Search talent available"></p>
+    <p>&nbsp</p>
+    <p><button type="submit" class="btn btn-primary btn-lg">Search</button></p>
+
+    <p>&nbsp</p>
+  </center>
+</section>
+
+<section id="subscription" class="">
+  <div class="jumbotron jumbotron-fluid">
+    <div class="title">
+      <center>
+      <h3 class="display-4">Choose Your Subscription</h3>
+      <p class="lead">We have a selection of subscriptions ranging from Free to Enterprise level.</p>
+      <p class="lead">The functionality of each is detailed below.</p>
+      <p>&nbsp</p>
+      <p>&nbsp</p>
+      </center>
+
+      <table class="table table-sm">
+        <col width="40%">
+        <col width="8%">
+        <col width="8%">
+        <col width="8%">
+        <thead>
+          <tr>
+            <th scope="col" align="center">#</th>
+            <th scope="col" align="center">Free</th>
+            <th scope="col" align="center">Passive</th>
+            <th scope="col" align="center">Active</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td align="right">Can capture experience and have it verified</td>
+            <td align="center">X</td>
+            <td align="center">X</td>
+            <td align="center">X</td>
+          </tr>
+          <tr>
+            <td align="right">Confirm other users captured experience</td>
+            <td align="center">X</td>
+            <td align="center">X</td>
+            <td align="center">X</td>
+          </tr>
+          <tr>
+            <td align="right">360 Degree evaluation</td>
+            <td colspan="1" align="center">X</td>
+            <td align="center">X</td>
+            <td align="center">X</td>
+          </tr>
+          <tr>
+            <td align="right">Find members based on current and past email addresses</td>
+            <td align="center">X</td>
+            <td align="center">X</td>
+            <td align="center">X</td>
+          </tr>
+          <tr>
+            <td align="right"">Can receive commission from paying people in your downline (5 levels only)</td>
+            <td align="center"></td>
+            <td align="center">X</td>
+            <td align="center">X</td>
+          </tr>
+          <tr>
+            <td align="right">Can view vacancies (only title, hours, type (freelance, office, etc) and scope)</td>
+            <td align="center">X</td>
+            <td align="center">X</td>
+            <td align="center">X</td>
+          </tr>
+          <tr>
+            <td align="right">Can view full vacancy details</td>
+            <td align="center"></td>
+            <td align="center"></td>
+            <td align="center">X</td>
+          </tr>
+          <tr>
+            <td align="right">Experience and skills available for people to search</td>
+            <td align="center"></td>
+            <td align="center">X</td>
+            <td align="center">X</td>
+          </tr>
+          <tr>
+            <td align="right">Can view vacancies on heatmap (No enterprise details)</td>
+            <td align="center">50km</td>
+            <td align="center">100km</td>
+            <td align="center">Internationally</td>
+          </tr>
+          <tr>
+            <td align="right">Other users can extract contact details of people that are
+            looking for or supplying a skill (Heatmaps)</td>
+            <td align="center"></td>
+            <td align="center"></td>
+            <td align="center">X</td>
+          </tr>
+          <tr>
+            <td align="right">Extract contact details of people that are looking for or
+              supplying a skill (Heatmaps)</td>
+            <td align="center"></td>
+            <td align="center"></td>
+            <td align="center">Internationally</td>
+          </tr>
+          <tr>
+            <td align="right">Can view vacancies on heatmap with full enterprise details</td>
+            <td align="center"></td>
+            <td align="center"></td>
+            <td align="center">X</td>
+          </tr>
+          <tr>
+            <td align="right">Can respond to vacancies</td>
+            <td align="center"></td>
+            <td align="center"></td>
+            <td align="center">X</td>
+          </tr>
+          <tr>
+            <td align="right">Apply for full time positions advertised</td>
+            <td align="center"></td>
+            <td align="center"></td>
+            <td align="center">X</td>
+          </tr>
+          <tr>
+            <td align="right">Can post vacancies</td>
+            <td align="center"></td>
+            <td align="center"></td>
+            <td align="center">X</td>
+          </tr>
+          <tr>
+            <td align="right">Can view other talent with similar skills</td>
+            <td align="center"></td>
+            <td align="center">X</td>
+            <td align="center">X</td>
+          </tr>
+          <tr>
+            <td align="right">Add Enterprise Details and new Enterprises</td>
+            <td align="center">X</td>
+            <td align="center">X</td>
+            <td align="center">X</td>
+          </tr>
+          <tr>
+            <td align="right">View Enterprise Profiles</td>
+            <td align="center">X</td>
+            <td align="center">X</td>
+            <td align="center">X</td>
+          </tr>
+          <tr>
+            <td align="right">Advertise availability</td>
+            <td align="center"></td>
+            <td align="center">X</td>
+            <td align="center">X</td>
+          </tr>
+          <tr>
+            <td align="right">Bid on work required by enterprises</td>
+            <td align="center"></td>
+            <td align="center"></td>
+            <td align="center">X</td>
+          </tr>
+          <tr>
+            <td align="right">Can summarise skills held by the enterprise through people currently employed</td>
+            <td align="center"></td>
+            <td align="center"></td>
+            <td align="center">X</td>
+          </tr>
+          <tr>
+            <td align="right">Access to the internal messaging system</td>
+            <td align="center">X</td>
+            <td align="center">X</td>
+            <td align="center">X</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <center>
+      <p>&nbsp</p>
+      <p><a class="btn btn-primary btn-lg" href="{% url 'Payments:SubscriptionCountrySelect' %}" role="button">Subscribe Now</a></p>
+      </center>
+
+    </div>
+  </div>
+</section>
+
+<section id="bottom menu" class="">
+  <div class="container">
+  <div class="row">
+    <p>
+      <table class="table table-sm">
+        <col width="25%">
+        <col width="25%">
+        <col width="25%">
+        <col width="25%">
+
+        <tbody>
+          <tr>
+            <th scope="col" align="center"></th>
+            <th scope="col" align="center">About</th>
+            <th scope="col" align="center">Terms</th>
+            <th scope="col" align="center">Support</th>
+          </tr>
+          <tr>
+            <td align="left">
+              <ul class="list-unstyled">
+                <li>DevOpTec (Pty.) Ltd T/A WeXlog</li>
+                <li>32 Viewland Crescent</li>
+                <li>Thornlands, Queensland</li>
+                <li>Australia, 4164</li>
+                <li>&nbsp</li>
+                <li>ABN: 4164</li>
+                <li>Telephone: +61 000 0000</li>
+                <li>Email: info@wexlog.io</li>
+              </ul>
+            </td>
+            <td align="left">
+              <ul class="list-unstyled">
+                <li><a href="{% url 'Public:AboutUs' %}">About us</a></li>
+                <li><a href="#">Products and services</a></li>
+                <li><a href="{% url 'Public:AboutUs' %}">Data Privacy Officer</a></li>
+              </ul>
+            </td>
+            <td align="left">
+              <ul class="list-unstyled">
+                <li><a href="{% url 'Public:Privacy' %}">Privacy Policy</a></li>
+                <li><a href="{% url 'Public:UserAgreement' %}">User Agreement</a></li>
+                <li><a href="{% url 'Public:Cookies' %}">Cookie Policy</a></li>
+                <li><a href="{% url 'Public:RightToSayNo' %}">Right to Say No to Sale of Personal Information</a></li>
+              </ul>
+            </td>
+            <td align="left">
+              <ul class="list-unstyled">
+                <li><a href="{% url 'Public:ContactUs' %}">Contact us</a></li>
+                <li><a href="{% url 'Public:Suggestions' %}">Site Suggestions</a></li>
+                <li><a href="{% url 'Public:HelpSupport' %}">Help & Support</a></li>
+              </ul>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </p
+    </div>
+
+  </div>
+</section>
+
+<section id="copyright" class="">
+  <div>
+    <p><small>Copyright © 2019 DevOpTec Pty Limited (ACN 142 189 759)</small></p>
+    </div>
+</section>
+
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}

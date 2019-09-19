@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'trustpassport.apps.TrustpassportConfig',
     'marketplace.apps.MarketplaceConfig',
     'payments.apps.PaymentsConfig',
+    'public.apps.PublicConfig',
     ##Django internal applications
     'django.contrib.admin',
     'django.contrib.auth',
@@ -196,6 +197,7 @@ CSP_REPORT_ONLY = False
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
+        #'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'Wexlog_1',
         'USER': 'postgres',
 		'PASSWORD': 'rdf8tm1234' #MA
@@ -254,7 +256,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'filelibrary')
 #Crispy Forms
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-# GDAL_LIBRARY_PATH = r'C:/OSGeo4W64/bin/gdal203'
+# GDAL_LIBRARY_PATH = r'C:/OSGeo4W/bin/gdal111'
 
 #  os.environ["PATH"] += os.pathsep + BASE_DIR + '\\venv\\Lib\\site-packages\\osgeo'
 

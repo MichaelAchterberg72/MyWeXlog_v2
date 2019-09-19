@@ -106,9 +106,9 @@
 
   <nav class="navbar sticky-bottom navbar-light bg-light">
     <div class="container">
-      <a class="navbar-brand" href="#">Terms & Conditions</a>
-      <a class="navbar-brand" href="#">Privacy Policy</a>
-      <a class="navbar-brand" href="#">Contact Us</a>
+      <a class="navbar-brand" href="{% url 'Public:UserAgreement' %}">User Agreement</a>
+      <a class="navbar-brand" href="{% url 'Public:Privacy' %}">Privacy Policy</a>
+      <a class="navbar-brand" href="{% url 'Public:ContactUs' %}">Contact Us</a>
     </div>
   </nav>
 

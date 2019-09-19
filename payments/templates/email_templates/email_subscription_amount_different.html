@@ -1,8 +1,9 @@
-<!DOCTYPE html>
-<html>
-  <head>
-  </head>
-  <body>
+{% extends "base_email.html" %}
+{% load humanize %}
+{% load staticfiles %}
+
+{% block content %}
+
     <p>Hi {{ user }}!,</p>
     <p>The amount that you paid with PayPal differs to the subscription with <a href="www.wexlog.io">WeLog</a>
       .  Please recheck your PayPal payments details and redo the transaction.</p>
@@ -10,5 +11,6 @@
     <p>Thanks, we look forward to hearing from you soon.</p>
     <p>&nbsp</p>
     <p>- WexLog Team</p>
-  </body>
-</html>
+    <p>&nbsp</p>
+
+{% enblock content %}

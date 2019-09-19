@@ -5,7 +5,6 @@ from django.urls import reverse
 from django.db.models import Count, Sum
 from django.utils.http import is_safe_url
 from django.http import HttpResponseRedirect, HttpResponse
-from django.urls import reverse
 from django.contrib.auth.models import User
 
 from django.views.generic import (
@@ -178,7 +177,7 @@ def HoursWorkedOnProject(request, project_id):
 def EmployeesOnProject(request, workexperience_id):
     projectdata = get_object_or_404(ProjectData, pk=project_id)
     info = WorkExperience.objects.filter(project=project_id).annotate('talent').order_by('talent')
-    employee = WorkExperience.objects.filter(project=project_id)
+    employee = Users.objects.filter(project=project_id)
 
     template_name = 'project/employees_worked_on_project.html'
     context = {
