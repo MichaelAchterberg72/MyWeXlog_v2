@@ -40,32 +40,32 @@ def ExperienceHome(request):
         tot_sum = t_sum + e_sum + p_sum
 
         #e_skill =  Education.objects.only("course__skills").filter(talent=request.user).values_list('skills', flat=True)
-        l_skill = WorkExperience.objects.only("skills").filter(talent=request.user).distinct()
-        p_skill = PreLoggedExperience.objects.only("skills").filter(talent=request.user).distinct()
+        l_skill = WorkExperience.objects.filter(talent=request.user).only('pk').values_list('pk', flat=True)
+        p_skill = PreLoggedExperience.objects.only("pk").filter(talent=request.user).values_list('pk', flat=True)
 
-        comb = l_skill.values_list("skills").union(p_skill.values_list("skills"))
+        skill_set = SkillTag.objects.none()
 
-        print(comb)
+        for ls in l_skill:
+            a = WorkExperience.objects.get(pk=ls)
+            b = a.skills.all().values_list('skill', flat=True)
 
-        #et = []
-        ls = []
-        ps = []
+            skill_set = skill_set | b
 
-        #for ets in e_skill:
-        #    et.append(ets)
+        for ps in p_skill:
+            c = WorkExperience.objects.get(pk=ps)
+            d = a.skills.all().values_list('skill', flat=True)
 
-        for lss in l_skill:
-            ls.append(lss)
+            skill_set = skill_set | d
 
-        for pss in p_skill:
-            ps.append(pss)
+        skill_set = skill_set.distinct().order_by('skill')
+        skill_count = skill_set.count()
 
-        ts = ls+ps
-        skill_set = set(ts)
-
+        print(skill_set)
 
         template = 'talenttrack/track_home.html'
-        context = {'train': train, 'train_sum': train_sum, 'experience': experience, 'exp_sum': exp_sum, 'prelog': prelog, 'pre_sum': pre_sum, 'tot_sum': tot_sum, 'comb': comb, 'l_skill': l_skill}
+        context = {
+            'train': train, 'train_sum': train_sum, 'experience': experience, 'exp_sum': exp_sum, 'prelog': prelog, 'pre_sum': pre_sum, 'tot_sum': tot_sum, 'skill_set': skill_set, 'skill_count': skill_count
+            }
         return render(request, template, context)
 
 

@@ -38,9 +38,11 @@
                 </tr>
               </tbody>
             </table>
-            {% for s in l_skill %}
-            {{ s.skills.all|join:", " }}
-            {% endfor %}
+
+            {{ skill_count }}
+            {{ skill_set|join:", " }}
+
+
         </div>
       </div>
     </div>
