@@ -41,7 +41,6 @@ importlib-metadata==0.19
 jsonfield==2.0.2
 kombu==4.6.4
 linecache2==1.0.0
-M2Crypto==0.35.2
 Markdown==3.1.1
 natural-keys==1.5.0.post2
 oauthlib==3.0.1
