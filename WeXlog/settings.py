@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    #'django.contrib.gis',
     #3rd Party Applications
     'django_countries',
     'crispy_forms',
@@ -200,8 +201,10 @@ DATABASES = {
         #'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'Wexlog_1',
         'USER': 'postgres',
-		'PASSWORD': 'rdf8tm1234' #MA
+		'PASSWORD': 'rdf8tm1234', #MA
         #'PASSWORD': 'dJpfss41678', #JK
+        #'HOST': 'localhost',
+        #'PORT': '5432'
     }
 }
 
@@ -256,7 +259,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'filelibrary')
 #Crispy Forms
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-# GDAL_LIBRARY_PATH = r'C:/OSGeo4W/bin/gdal111'
+# GDAL_LIBRARY_PATH = r'C:/OSGeo4W64/bin/gdal111'
 
 #  os.environ["PATH"] += os.pathsep + BASE_DIR + '\\venv\\Lib\\site-packages\\osgeo'
 

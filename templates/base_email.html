@@ -1,3 +1,5 @@
+{% load staticfiles %}
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -24,38 +26,50 @@
         <thead>
           <tr>
             <th scope="col"></th>
-            <th scope="col">Contact Details</th>
+            <th scope="col"><center>Contact Details</center></th>
             <th scope="col"></th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td></td>
-            <td align="center"><a href="{% url 'Public:AboutUs' %}"><img src="{% static 'images/social-media/twitter.png' %}" alt="Twitter"></a> &nbsp
-              <a href="{% url 'Public:AboutUs' %}"><img src="{% static 'images/social-media/facebook.png' %}" alt="Facebook"></a></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td></td>
-            <td align="center"><small><a href="{% url 'Public:AboutUs' %}">Manage your account</a> |
-              <a href="{% url 'Public:Privacy' %}">Privacy Policy</a> |
-              <a href="{% url 'Public:UserAgreement' %}">User Agreement</a><br>
-              @copyright 2019 DevOpTec (Pty.) Ltd. All rights revered</small></td>
+            <td align="center"><a href="{% url 'Public:AboutUs' %}"><img src="{% static 'images/social-media/twittera.png' %}" alt="Twitter"></a> &nbsp
+              <a href="{% url 'Public:AboutUs' %}"><img src="{% static 'images/social-media/facebooka.png' %}" alt="Facebook"></a> &nbsp
+              <a href="{% url 'Public:AboutUs' %}"><img src="{% static 'images/social-media/linkedinb.png' %}" alt="LinkedIn"></a> &nbsp
+              <a href="{% url 'Public:AboutUs' %}"><img src="{% static 'images/social-media/youtube.png' %}" alt="Youtube"></a></td>
             <td></td>
           </tr>
           <tr>
             <td></td>
             <td align="center"><small><strong>DevOpTec (Pty.) Ltd T/A WeXlog</strong><br>
+              <div class="c">
               32 Viewland Crescent, Thornlands, Queensland, 4164, Australia<br>
               Telephone: +61 000 0000<br>
-              Email: info@wexlog.io</small></td>
+              Email: info@wexlog.io<br>
+              Web: www.wexlog.io</div></small></td>
             <td></td>
           </tr>
           <tr>
             <td></td>
-            <td align="center"><small>* Please do not reply to this email. You may log into
+            <td align="center">
+              <small>
+
+                <a href="{% url 'Public:AboutUs' %}">Manage your account</a> |
+              <a href="{% url 'Public:Privacy' %}">Privacy Policy</a> |
+              <a href="{% url 'Public:UserAgreement' %}">User Agreement</a><br>
+              @copyright 2019 DevOpTec (Pty.) Ltd. All rights revered</small></td>
+            <td></td>
+          </tr>
+
+          <tr>
+            <td></td>
+            <td align="center"><small><div class="c"><p>
+              This email was sent to {{ user.email }}.<br>
+              You are receiving this email as you are registered to receive updates,
+              news and/or promotional updates.</p>
+              <p>* Please do not reply to this email. You may log into
               your account and contact Customer Care for any queries.<br>
-              *To change your preference or unsubscrie please <a href="{% url 'Public:AboutUs' %}">click here</a>.</small></td>
+              *To change your preference or unsubscrie please <a href="{% url 'Public:AboutUs' %}">click here</a>.</div></small></p></td>
             <td></td>
           </tr>
         </tbody>
