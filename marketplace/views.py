@@ -14,16 +14,36 @@ from csp.decorators import csp_exempt
 from core.decorators import subscription
 
 from .forms import (
-        TalentAvailabillityForm, SkillRequiredForm, SkillLevelForm, DeliverablesForm, TalentRequiredForm, WorkLocationForm
+        TalentAvailabillityForm, SkillRequiredForm, SkillLevelForm, DeliverablesForm, TalentRequiredForm, WorkLocationForm, WorkBidForm
 )
 
 from .models import(
-    TalentRequired, SkillRequired, Deliverables, TalentAvailabillity
+    TalentRequired, SkillRequired, Deliverables, TalentAvailabillity, WorkBid
 )
 
 from talenttrack.models import(
     WorkExperience, PreLoggedExperience
 )
+
+
+@login_required()
+@subscription(2)
+def WorkBidView(request, pk):
+    detail = TalentRequired.objects.get(pk=pk)
+
+    form = WorkBidForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.talent = request.user
+            new.work = detail
+            new.save()
+            return redirect(reverse('MarketPlace:Entrance'))
+    else:
+
+        template = 'marketplace/vacancy_apply.html'
+        context={'form': form, 'detail': detail}
+        return render(request, template, context)
 
 
 @login_required()
@@ -39,12 +59,15 @@ def VacancyDetailView(request, pk):
 
 @login_required()
 def MarketHome(request):
-    ipost = TalentRequired.objects.filter(requested_by=request.user, offer_status__iexact='O').order_by('-date_entered')[:5]
-    capacity = TalentAvailabillity.objects.filter(talent=request.user, date_to__gte=timezone.now()).order_by('-date_to')[:5]
-
+    talent=request.user
+    ipost = TalentRequired.objects.filter(requested_by=talent, offer_status__iexact='O').order_by('-bid_open')[:5]
+    ipost_bid = WorkBid.objects.filter(Q(work__requested_by=talent) & Q(work__offer_status__iexact='O') & Q(bidreview__exact='P'))
+    ipost_bid_flat = ipost_bid.values_list('work', flat=True).distinct()
+    capacity = TalentAvailabillity.objects.filter(talent=talent, date_to__gte=timezone.now()).order_by('-date_to')[:5]
+    print(ipost_bid_flat)
     #Code for stacked lookup for talent's skills
-    my_logged = WorkExperience.objects.filter(talent=request.user).aggregate(myl=Sum('hours_worked'))
-    my_prelogged = PreLoggedExperience.objects.filter(talent=request.user).aggregate(mypl=Sum('hours_worked'))
+    my_logged = WorkExperience.objects.filter(talent=talent).aggregate(myl=Sum('hours_worked'))
+    my_prelogged = PreLoggedExperience.objects.filter(talent=talent).aggregate(mypl=Sum('hours_worked'))
 
     myli = my_logged.get('myl')
     mypli = my_prelogged.get('mypl')
@@ -53,7 +76,7 @@ def MarketHome(request):
 
     req_experience = TalentRequired.objects.filter(Q(offer_status__iexact='O') & Q(experience_level__min_hours__lte=mye)).values_list('id', flat=True)
 
-    skill_have = WorkExperience.objects.filter(talent=request.user).values_list('skills', flat=True)
+    skill_have = WorkExperience.objects.filter(talent=talent).values_list('skills', flat=True)
 
     match = []
 
@@ -71,10 +94,25 @@ def MarketHome(request):
                 & Q(scope__offer_status__iexact='O')
                 ).distinct().prefetch_related('scope')
 
+
     template = 'marketplace/vacancy_home.html'
-    context ={'ipost': ipost, 'capacity': capacity, 'display' :display}
+    context ={
+        'capacity': capacity, 'display': display, 'ipost': ipost, 'ipost_bid_flat': ipost_bid_flat}
     return render(request, template, context)
 
+
+@login_required()
+@subscription(2)
+def ApplicationHistoryView(request):
+    role = WorkBid.objects.filter(talent=request.user, bidreview__exact='P').order_by('-date_applied')
+    applied = role.filter(bidreview__exact='P')
+    rejected = role.filter(bidreview__exact='R')
+    accepted = role.filter(bidreview__exact='A')
+
+    template = 'marketplace/vacancy_application_history.html'
+    context ={
+        'applied': applied, 'accepted': accepted, 'rejected': rejected}
+    return render(request, template, context)
 
 @login_required()
 def TalentAvailabillityView(request):
@@ -92,25 +130,15 @@ def TalentAvailabillityView(request):
 
 @login_required()
 @subscription(2)
-def VacancyEditView(request, pk):
+def VacancyPostView(request, pk):
     instance = get_object_or_404(TalentRequired, pk=pk)
     skille = SkillRequired.objects.filter(scope=pk)
     delivere = Deliverables.objects.filter(scope=pk)
+    applicants = WorkBid.objects.filter(work=pk)
 
-    form = TalentRequiredForm(request.POST or None, instance=instance)
-
-    if request.method == 'POST':
-        if form.is_valid():
-            new = form.save(commit=False)
-            new.save()
-            form.save_m2m()
-            return redirect(reverse('MarketPlace:Entrance'))
-    else:
-        form = TalentRequiredForm(instance=instance)
-
-        template = 'marketplace/vacancy_edit.html'
-        context = {'form': form, 'instance': instance, 'skille': skille, 'delivere': delivere}
-        return render(request, template, context)
+    template = 'marketplace/vacancy_post_view.html'
+    context = {'instance': instance, 'skille': skille, 'delivere': delivere, 'applicants': applicants}
+    return render(request, template, context)
 
 
 
@@ -228,6 +256,23 @@ def VacancyView(request):
             return redirect(reverse('MarketPlace:Deliverables', kwargs={'pk':new.id}))
     else:
         template = 'marketplace/vacancy.html'
+        context = {'form': form}
+        return render(request, template, context)
+
+
+@login_required()
+@csp_exempt
+def VacancyEditView(request):
+    form = TalentRequiredForm(request.POST or None, request.FILES, instance=instance)
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.requested_by = request.user
+            new.save()
+            form.save_m2m()
+            return redirect(reverse('MarketPlace:Deliverables', kwargs={'pk':new.id}))
+    else:
+        template = 'marketplace/vacancy_edit.html'
         context = {'form': form}
         return render(request, template, context)
 

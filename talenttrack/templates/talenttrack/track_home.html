@@ -17,20 +17,17 @@
       </div>
       <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
         <div class="card-body">
-          <div class="float-right">
-            <p><a href="{% url 'Talent:ExperienceCapture' %}" class="badge badge-pill badge-primary float-right">Add Experience</a>  <a href="{% url 'Talent:Capture' %}" class="badge badge-pill badge-primary float-right">Add Education</a>  <a href="{% url 'Talent:PreloggedCapture' %}" class="badge badge-pill badge-primary float-right">Add Logged Experience</a></p>
-          </div>
-            <table class="table table_sm">
+            <table class="table table-sm">
               <thead>
-                <tr align= "center">
+                <tr align= "middle">
                   <th width="20%">Total Experience<br>(Hours)</th>
-                  <th width="20%">Training<br>(Hours)</th>
-                  <th width="20%">Logged<br>(Hours)</th>
-                  <th width="20%">Pre-logged<br>(Hours)</th>
+                  <th width="20%">Training<br>(Hours)<br><a href="{% url 'Talent:Capture' %}" class="badge badge-pill badge-primary">Add</a></th>
+                  <th width="20%">Logged<br>(Hours)<br><a href="{% url 'Talent:ExperienceCapture' %}" class="badge badge-pill badge-primary">Add</a></th>
+                  <th width="20%">Pre-logged<br>(Hours)<br><a href="{% url 'Talent:PreloggedCapture' %}" class="badge badge-pill badge-primary">Add</a></th>
                 </tr>
               </thead>
               <tbody>
-                <tr align= "center">
+                <tr align= "middle">
                   <td>{{ tot_sum|intcomma }}</td>
                   <td>{{ train_sum.Edu_sum|intcomma }}</td>
                   <td>{{ exp_sum.we_sum|intcomma }}</td>
@@ -38,11 +35,20 @@
                 </tr>
               </tbody>
             </table>
-
-            {{ skill_count }}
-            {{ skill_set|join:", " }}
-
-
+            <table class="table table-sm">
+              <thead>
+                <tr align="middle">
+                  <th>Total Skills</th>
+                  <th>Skills List</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr align="center">
+                  <td>{{ skill_count }}</td>
+                  <td>{{ skill_set|join:",  " }}</td>
+                </tr>
+              </tbody>
+            </table>
         </div>
       </div>
     </div>

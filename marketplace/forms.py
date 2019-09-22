@@ -14,7 +14,7 @@ from django_select2.forms import (
 
 
 from .models import (
-            WorkLocation, TalentRequired, Deliverables, SkillLevel, SkillRequired, TalentAvailabillity
+            WorkLocation, TalentRequired, Deliverables, SkillLevel, SkillRequired, TalentAvailabillity, WorkBid
 )
 
 
@@ -58,6 +58,12 @@ class CitySelect2Widget(CitySearchFieldMixin, ModelSelect2Widget):
 
 class DateInput(forms.DateInput):
     input_type = 'date'
+
+
+class WorkBidForm(forms.ModelForm):
+    class Meta:
+        model = WorkBid
+        fields = ('rate_bid', 'currency', 'rate_unit', 'motivation')
 
 
 class TalentAvailabillityForm(forms.ModelForm):

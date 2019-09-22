@@ -4,8 +4,12 @@
 
 {% block content %}
 {% for v in vacancy %}
-<p class="float-right"><a href="{% url 'MarketPlace:Entrance' %}" class="btn btn-secondary">Back</a>
-  <a href="#" class="btn btn-success">Apply for this role</a></p>
+<p class="float-right">
+  <a href="{% url 'MarketPlace:Entrance' %}" class="btn btn-secondary">Back</a>
+  {% for i in vacancy %}
+    <a href="{% url 'MarketPlace:WorkBid' i.id %}" class="btn btn-success">Apply for this role</a>
+  {% endfor %}
+</p>
 <h5 class="card-title">Vacancy: {{ v.title }}</h5>
 {% endfor %}
 <table class="table table-sm">

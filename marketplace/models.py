@@ -115,6 +115,7 @@ class SkillRequired(models.Model):
 class WorkBid(models.Model):
     BID = (
         ('A','Accepted'),
+        ('P', 'Pending'),
         ('R','Rejected'),
     )
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
@@ -123,8 +124,11 @@ class WorkBid(models.Model):
     rate_bid = models.DecimalField(max_digits=10, decimal_places=2)
     currency = models.ForeignKey(Currency, on_delete=models.PROTECT)
     rate_unit = models.CharField(max_length=1, choices=RATE_UNIT, default='H')
+    motivation = models.TextField(blank=True, null=True)
     #Completed by CLient
-    bidreview = models.CharField(max_length=1, choices=BID)
+    bidreview = models.CharField(max_length=1, choices=BID, null=True, default='P')
+    date_applied = models.DateTimeField(auto_now_add=True)
+    date_revised = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return'{}: {}'.format(self.work, self.talent)

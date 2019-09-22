@@ -1,0 +1,179 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}{{block.super}}-Vacancy Edit{% endblock title %}
+
+{% block content %}
+{{ form.media.css }}
+<style type="text/css">
+  select {
+    width: 100px;
+  }
+  </style>
+<div class="container">
+<p><a href="{% url 'MarketPlace:Entrance' %}" class="btn btn-primary float-right">Back</a></p>
+<h3>Vacancy Review</h3>
+<h5 class="card-title">Vacancy: {{ instance.title }}</h5>
+<table class="table table-sm">
+  <thead>
+    <tr>
+      <th>Hours Required</th>
+      <th>Work Format</th>
+      <th>Office Location</th>
+      <th>Experience Level</th>
+      <th>Company</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        {{ instance.hours_required|intcomma }} ({{ instance.get_unit_display }})
+      </td>
+      <td>{{ instance.worklocation }}</td>
+      <td>{{ instance.city.city }}</td>
+      <td>{{ instance.experience_level }}</td>
+      <td>{{ instance.enterprise.company }}</td>
+    </tr>
+  </tbody>
+</table>
+<div class="row">
+  <div class="col-sm-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Scope</h5>
+        <p>{{ instance.scope }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Expectations</h5>
+        <p>{{ instance.expectations }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+<table class="table table-sm">
+  <thead>
+    <tr>
+      <th>Proposed Rate</th>
+      <th>Bid Closing Date</th>
+      <th>Work Completion Date</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>{{ instance.currency }} {{ instance.rate_offered }} ({{ instance.get_rate_unit_display }})</td>
+      <td>{{ instance.bid_closes|date:'j M Y' }}</td>
+      <td>{{ instance.date_deadline|date:'j M Y' }}</td>
+      <td>{{ instance.get_offer_status_display }}</td>
+    </tr>
+  </tbody>
+</table>
+<hr>
+<div class="row">
+  <div class="col-sm-6">
+    <a href="{% url 'MarketPlace:Deliverables2' instance.id %}" class="badge badge-primary float-right">Add</a>
+    <h5 class="card-title" id="deliverables">Deliverables</h5>
+      <table class="table table-sm">
+        <thead>
+          <tr>
+            <th>Deliverable</th>
+            <th>Options</th>
+          </tr>
+        </thead>
+        {% for d in delivere %}
+        <tbody>
+          <tr>
+            <td>{{ d.deliverable }}</td>
+            <td>
+              <a href="{% url 'MarketPlace:DeliverablesEdit' d.id %}" class="badge badge-secondary badge-pill">Edit</a>
+              <form  action="{% url 'MarketPlace:DeliverablesDelete' d.id %}" method="post">
+                {% csrf_token %}
+              <button type="submit" class="badge badge-danger badge-pill">Remove</button>
+              </form>
+            </td>
+          </tr>
+        </tbody>
+        {% endfor %}
+        </table>
+  </div>
+  <div class="col-sm-6">
+    <a href="{% url 'MarketPlace:Skillsa' instance.id %}" class="badge badge-primary float-right">Add</a>
+    <h5 class="card-title" id="skills">Skills</h5>
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th>Skill</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in skille %}
+        <tr>
+          <td>{{ s.skill }}</td>
+          <td>{{ s.experience_level.get_level_display}}</td>
+          <td><form  action="{% url 'MarketPlace:SkillDelete' s.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="badge badge-danger badge-pill float-right">Remove</button>
+          </form></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+
+    </table>
+  </div>
+</div>
+<div class="row">
+  <h3>Applicants</h3>
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Total Experience</th>
+        <th>Proposed Rate</th>
+        <th>Motivation</th>
+      </tr>
+    </thead>
+    {% for a in applicants %}
+    <tbody>
+      <tr>
+        <td>{{ a.talent.first_name }}</td>
+        <td></td>
+        <td>{{ a.currency }} {{ a.rate_bid }}  {{ a.get_rate_unit_display }}</td>
+        <td>{{ a.motivation }}</td>
+      </tr>
+    </tbody>
+    {% endfor %}
+  </table>
+</div>
+<p><a href="{% url 'MarketPlace:Entrance' %}" class="btn btn-primary">Done</a></p>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{{ form.media.js }}
+{% endblock content %}
+{% block Script %}
+<!-- code for popups -->
+<script type="text/javascript">
+function showAddPopup(triggeringLink) {
+    var name = triggeringLink.id.replace(/^add_/, '');
+    href = triggeringLink.href;
+    var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes');
+    win.focus();
+    return false;
+}
+
+function closePopup(win, newID, newRepr, id) {
+    $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
+    win.close();
+}
+
+window.onerror = function (msg) {
+  $("body").attr("JSError", msg);
+}
+</script>
+{% endblock Script %}
