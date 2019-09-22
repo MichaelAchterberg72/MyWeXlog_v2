@@ -262,7 +262,7 @@ class PreLoggedExperience(models.Model):
     comment = models.TextField(blank=True, null=True)
     designation = models.ForeignKey(Designation, on_delete=models.PROTECT)
     upload = models.FileField(upload_to=ExpFilename, blank=True, null=True)
-    skills = models.ManyToManyField(SkillTag)
+    skills = models.ManyToManyField(SkillTag, related_name='logskill')
 
     class Meta:
         unique_together = (('talent','hours_worked','date_from','project', 'date_to'),)

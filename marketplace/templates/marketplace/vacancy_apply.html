@@ -3,24 +3,31 @@
 {% load crispy_forms_tags %}
 {% load static %}
 
-{% block title %}{{block.super}}-Skills{% endblock title %}
+{% block title %}{{block.super}}-Apply{% endblock title %}
 
 {% block content %}
 <div class="container">
-<h3>Skills for {{ detail.title }}</h3>
+<h3>Apply for  {{ detail.title }}</h3>
 <form method="post" enctype="multipart/form-data">
   {% csrf_token %}
   <div class="form-row">
-    <div class="form-group col-md-6 mb-0">
-      {{ form.skill|as_crispy_field }}
+    <div class="form-group col-md-3 mb-0">
+      {{ form.rate_bid|as_crispy_field }}
     </div>
-    <div class="form-group col-md-6 mb-0">
-      {{ form.experience_level|as_crispy_field }}
-      <p><a href="{% url 'MarketPlace:SkillLevelAddPop' %}" id='add_skill' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add an Experience Level</a></p>
+    <div class="form-group col-md-3 mb-0">
+      {{ form.currency|as_crispy_field }}
+    </div>
+    <div class="form-group col-md-3 mb-0">
+      {{ form.rate_unit|as_crispy_field }}
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-12 mb-0">
+      {{ form.motivation|as_crispy_field }}
     </div>
   </div>
   <div class="">
-    <p><button type="submit" name="done" class="btn btn-primary">Add</button></p>
+    <p><button type="submit" name="another" class="btn btn-primary">Apply</button></p>
   </div>
 </form>
 </div>

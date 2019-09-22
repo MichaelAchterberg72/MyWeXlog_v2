@@ -14,7 +14,7 @@ from django_select2.forms import (
 
 
 from .models import (
-            WorkLocation, TalentRequired, Deliverables, SkillLevel, SkillRequired, TalentAvailabillity
+            WorkLocation, TalentRequired, Deliverables, SkillLevel, SkillRequired, TalentAvailabillity, WorkBid
 )
 
 
@@ -60,6 +60,12 @@ class DateInput(forms.DateInput):
     input_type = 'date'
 
 
+class WorkBidForm(forms.ModelForm):
+    class Meta:
+        model = WorkBid
+        fields = ('rate_bid', 'currency', 'rate_unit', 'motivation')
+
+
 class TalentAvailabillityForm(forms.ModelForm):
     class Meta:
         model = TalentAvailabillity
@@ -73,7 +79,7 @@ class TalentAvailabillityForm(forms.ModelForm):
 class SkillRequiredForm(forms.ModelForm):
     class Meta:
         model = SkillRequired
-        fields = ('skill', 'experience_level')
+        fields = ('skill', )
 
 
 class SkillLevelForm(forms.ModelForm):
@@ -94,13 +100,14 @@ class DeliverablesForm(forms.ModelForm):
 class TalentRequiredForm(forms.ModelForm):
     class Meta:
         model = TalentRequired
-        fields = ('title', 'enterprise', 'date_deadline', 'hours_required', 'unit', 'worklocation', 'rate_offered', 'rate_unit', 'currency', 'rate_unit', 'offer_status', 'certification', 'scope', 'expectations', 'terms', 'city')
+        fields = ('title', 'enterprise', 'date_deadline', 'hours_required', 'unit', 'worklocation', 'rate_offered', 'rate_unit', 'currency', 'rate_unit', 'offer_status', 'certification', 'scope', 'expectations', 'terms', 'city', 'experience_level', 'bid_closes')
         widgets={
             'city': CitySelect2Widget(),
             'currency': CurrencySelect2Widget(),
             'enterprise': BranchSelect2Widget(),
             'date_deadline': DateInput(),
-
+            'bid_closes': DateInput(),
+            #'certification': FilteredSelectMultiple(is_stacked=True, verbose_name = 'Required Certification', attrs={'rows':'5'}),
         }
 
 

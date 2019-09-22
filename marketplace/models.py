@@ -38,6 +38,25 @@ UNIT = (
     ('A','As and When Contract'),
 )
 
+
+class SkillLevel(models.Model):
+    LEVEL = (
+        ('S','Student'),
+        ('G','Graduate'),
+        ('J','Junior'),
+        ('I','Intermediate'),
+        ('S','Senior'),
+        ('L','Lead'),
+    )
+
+    level = models.CharField(max_length=1, choices=LEVEL)
+    min_hours = models.SmallIntegerField()
+    description = models.TextField()
+
+    def __str__(self):
+        return f'{self.get_level_display()} (>={self.min_hours})'
+
+
 class TalentRequired(models.Model):
     STATUS = (
         ('O','Open'),
@@ -47,15 +66,16 @@ class TalentRequired(models.Model):
     title = models.CharField(max_length=250)
     enterprise = models.ForeignKey(Branch, on_delete=models.CASCADE, verbose_name="Company Branch")
     requested_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
-    date_deadline = models.DateField('Work to be completed by')
+    date_deadline = models.DateField('Work completed by')
     hours_required = models.IntegerField()
     unit = models.CharField(max_length=1, choices=UNIT)
+    experience_level = models.ForeignKey(SkillLevel, on_delete=models.PROTECT)
     worklocation = models.ForeignKey(WorkLocation, on_delete=models.PROTECT)
     rate_offered = models.DecimalField(max_digits=6, decimal_places=2)
     currency = models.ForeignKey(Currency, on_delete=models.PROTECT)
     rate_unit = models.CharField(max_length=1, choices=RATE_UNIT, default='H')
     bid_open = models.DateTimeField(default=timezone.now, null=True)
-    bid_closes = models.DateTimeField(null=True)
+    bid_closes = models.DateTimeField('Vacancy Closes', null=True)
     offer_status = models.CharField(max_length=1, choices=STATUS, default='O')
     certification = models.ManyToManyField(Result, verbose_name='Certifications Required', blank=True)
     scope = models.TextField()
@@ -81,39 +101,21 @@ class Deliverables(models.Model):
         return '{}: {}'.format(self.scope, self.deliverable)
 
 
-class SkillLevel(models.Model):
-    LEVEL = (
-        ('S','Student'),
-        ('G','Graduate'),
-        ('J','Junior'),
-        ('I','Intermediate'),
-        ('S','Senior'),
-        ('L','Lead'),
-    )
-
-    level = models.CharField(max_length=1, choices=LEVEL)
-    min_hours = models.SmallIntegerField()
-    description = models.TextField()
-
-    def __str__(self):
-        return '{} (<={} hrs)'.format(self.level, self.min_hours)
-
-
 class SkillRequired(models.Model):
     scope = models.ForeignKey(TalentRequired, on_delete=models.CASCADE)
     skill = models.ForeignKey(SkillTag, on_delete=models.PROTECT)
-    experience_level = models.ForeignKey(SkillLevel, on_delete=models.PROTECT)
 
-    class Meta:
-        unique_together = (('skill','experience_level'),)
+    #class Meta:
+    #    unique_together = (('skill','scope'),)
 
     def __str__(self):
-        return self.scope
+        return f'{self.scope}'
 
 
 class WorkBid(models.Model):
     BID = (
         ('A','Accepted'),
+        ('P', 'Pending'),
         ('R','Rejected'),
     )
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
@@ -122,8 +124,11 @@ class WorkBid(models.Model):
     rate_bid = models.DecimalField(max_digits=10, decimal_places=2)
     currency = models.ForeignKey(Currency, on_delete=models.PROTECT)
     rate_unit = models.CharField(max_length=1, choices=RATE_UNIT, default='H')
+    motivation = models.TextField(blank=True, null=True)
     #Completed by CLient
-    bidreview = models.CharField(max_length=1, choices=BID)
+    bidreview = models.CharField(max_length=1, choices=BID, null=True, default='P')
+    date_applied = models.DateTimeField(auto_now_add=True)
+    date_revised = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return'{}: {}'.format(self.work, self.talent)

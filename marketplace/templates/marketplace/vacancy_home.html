@@ -1,47 +1,86 @@
 {% extends "base_home.html" %}
 {% load humanize %}
-{% block title %}{{block.super}}-Market{% endblock title %}
+{% block title %}{{block.super}}-Vacancy{% endblock title %}
 
 {% block content %}
+
 <div class="card" style="width: 18rem;">
   <div class="card-body">
-    <h5 class="card-title">Card title</h5>
-    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-    <a href="{% url 'MarketPlace:Vacancy' %}">Advertise a Vacancy</a>
-    <a href="#" class="card-link">Card link</a>
-    <a href="#" class="card-link">Another link</a>
+    <div class="float-right">
+      <a href="{% url 'MarketPlace:History' %}" class="badge badge-primary">View History</a>
+    </div>
+    <h5 class="card-title">Vacancies suited for Me </h5>
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th>Vacancy Title</th>
+          <th>Hours Required</th>
+          <th>Work Format</th>
+          <th>Vacancy Scope</th>
+          <th>Country</th>
+          <th>Full Detail</th>
+        </tr>
+      </thead>
+      {% for i in display %}
+      <tbody>
+      <tr>
+        <td>{{ i.scope.title }}</td>
+        <td>
+          {{ i.scope.hours_required|intcomma }} ({{ i.scope.get_unit_display }})
+        </td>
+        <td>{{ i.scope.worklocation }}</td>
+        <td>{{ i.scope.scope }}</td>
+        <td>{{ i.scope.city }}</td>
+          {% if request.user.subscription == 2 %}
+            <td><a href="{% url 'MarketPlace:VacancyDetail' i.scope.id %}" class="card-link">See Detail</a></td>
+          {% elif request.user.subscription < 2 %}
+            <td><a href="#" class="card-link">See Detail</a></td>
+          {% endif %}
+        </tr>
+      </tbody>
+      {% endfor %}
+    </table>
   </div>
 </div>
+<br>
+{% if request.user.subscription >= 2 %}
 <div class="row">
   <div class="col-sm-6">
     <div class="card">
       <div class="card-body">
         <a href="{% url 'MarketPlace:Vacancy' %}" class="badge badge-primary float-right">Post Vacancy</a>
-        <h5 class="card-title">Vacancies I have Posted</h5>
-        <table class="table table-sm">
-          <thead>
+      </ul>
+      <h5 class="card-title">Vacancies Advertised</h5>
+      <table class="table table-sm">
+        <thead>
+          <tr>
+            <th>Date Posted</th>
+            <th>Vacancy Title</th>
+            <th>Status</th>
+            <th>Closing Date</th>
+            <th>Responses</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in ipost %}
             <tr>
-              <th>Date Posted</th>
-              <th>Title</th>
-              <th>Status</th>
+              <td>{{ p.bid_open|date:'j M Y' }}</td>
+              <td>{{ p.title }}</td>
+              <td>{{ p.get_offer_status_display }}</td>
+              <td>{{ p.bid_closes|date:'j M Y' }}</td>
+              {% if p.id in ipost_bid_flat %}
+                <td><strong>Yes</strong></td>
+              {% else %}
+                <td>None</td>
+              {% endif %}
             </tr>
-          </thead>
-          <tbody>
-            {% for i in ipost %}
-            <tr>
-              <td>{{ i.date_entered }}</td>
-              <td>{{ i.title }}</td>
-              <td>{{ i.get_offer_status_display }}</td>
-              <td><a href="{% url 'MarketPlace:VacancyEdit' i.id %}" class="badge badge-secondary">Edit</a></td>
-            </tr>
-            {% endfor %}
-          </tbody>
-
-        </table>
+          {% endfor %}
+        </tbody>
+      </table>
       </div>
     </div>
   </div>
+  {% if request.user.subscription >= 1 %}
   <div class="col-sm-6">
     <div class="card">
       <div class="card-body" id='Availabillity'>
@@ -58,8 +97,8 @@
           {% for a in capacity %}
           <tbody>
             <tr>
-              <td>{{ a.date_from }}</td>
-              <td>{{ a.date_to }}</td>
+              <td>{{ a.date_from|date:'d M Y' }}</td>
+              <td>{{ a.date_to|date:'d M Y' }}</td>
               <td>{{ a.hours_available }} hours {{ a.get_unit_display }}</td>
             </tr>
           </tbody>
@@ -69,4 +108,6 @@
     </div>
   </div>
 </div>
+{% endif %}
+{% endif %}
 {% endblock content %}

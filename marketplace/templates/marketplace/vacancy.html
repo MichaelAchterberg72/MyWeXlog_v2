@@ -5,6 +5,10 @@
 
 {% block title %}{{block.super}}-Vacancy{% endblock title %}
 
+{% block Style %}
+  <link href="{% static 'css/hor_filter_css.css' %}" rel="stylesheet">
+{% endblock Style %}
+
 {% block content %}
 {{ form.media.css }}
 <style type="text/css">
@@ -22,21 +26,28 @@
       {{ form.enterprise|as_crispy_field }}
       <p><a href="{% url 'Enterprise:BranchAddPop' %}" id='add_branch' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a Company Branch</a></p>
       <div class="form-row">
-        <div class="form-group col-md-6 mb-0">
+        <div class="form-group col-md-4 mb-0">
           {{ form.date_deadline|as_crispy_field }}
         </div>
-        <div class="form-group col-md-6 mb-0">
+        <div class="form-group col-md-4 mb-0">
           {{ form.offer_status|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-4 mb-0">
+          {{ form.bid_closes|as_crispy_field }}
         </div>
       </div>
     </div>
     <div class="form-group col-md-6 mb-0">
       <div class="form-row">
-        <div class="form-group col-md-6 mb-0">
+        <div class="form-group col-md-4 mb-0">
           {{ form.hours_required|as_crispy_field }}
         </div>
-        <div class="form-group col-md-6 mb-0">
+        <div class="form-group col-md-4 mb-0">
           {{ form.unit|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-4 mb-0">
+          {{ form.experience_level|as_crispy_field }}
+          <p><a href="{% url 'MarketPlace:SkillLevelAddPop' %}" id='add_skill' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a Level</a></p>
         </div>
       </div>
       <div class="form-row">
@@ -64,11 +75,11 @@
     </div>
   </div>
   <div class="form-row">
-    <div class="form-group col-md-3 mb-0">
+    <div class="form-group col-md-9 mb-0">
       {{ form.certification|as_crispy_field }}
       <p><a href="{% url 'Talent:ResultAddPop' %}" id='add_course' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a Certification</a></p>
     </div>
-    <div class="form-group col-md-6 mb-0">
+    <div class="form-group col-md-3 mb-0">
       {{ form.terms|as_crispy_field }}
     </div>
   </div>
@@ -87,8 +98,10 @@
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 {{ form.media.js }}
+
 {% endblock content %}
 {% block Script %}
+<script src="{% static 'js/hor_filter.js' %}"></script>
 <!-- code for popups -->
 <script type="text/javascript">
 function showAddPopup(triggeringLink) {
