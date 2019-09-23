@@ -14,10 +14,6 @@
     <div class="form-group col-md-6 mb-0">
       {{ form.skill|as_crispy_field }}
     </div>
-    <div class="form-group col-md-6 mb-0">
-      {{ form.experience_level|as_crispy_field }}
-      <p><a href="{% url 'MarketPlace:SkillLevelAddPop' %}" id='add_skill' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add an Experience Level</a></p>
-    </div>
   </div>
   <div class="">
     <p><button type="submit" name="done" class="btn btn-primary">Add</button></p>

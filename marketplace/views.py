@@ -170,7 +170,7 @@ def VacancySkillsAdd2View(request, pk):
             new = form.save(commit=False)
             new.scope = instance
             new.save()
-            return redirect(reverse('MarketPlace:VacancyEdit', kwargs={'pk': pk})+'#deliverables')
+            return redirect(reverse('MarketPlace:VacancyPost', kwargs={'pk': pk})+'#skills')
     else:
         template = 'marketplace/vacancy_skills2.html'
         context = {'form': form, 'instance': instance}
@@ -182,7 +182,7 @@ def SkillDeleteView(request, pk):
     if request.method == 'POST':
         skilld = SkillRequired.objects.get(pk=pk)
         skilld.delete()
-        return redirect(reverse('MarketPlace:VacancyEdit', kwargs={'pk':skilld.scope.id})+'#skills')
+        return redirect(reverse('MarketPlace:VacancyPost', kwargs={'pk':skilld.scope.id})+'#skills')
 
 
 @login_required()
@@ -193,7 +193,7 @@ def DeliverablesEditView(request, pk):
         if form.is_valid():
             new = form.save(commit=False)
             new.save()
-            return redirect(reverse('MarketPlace:VacancyEdit', kwargs={'pk': instance.scope.id})+'#deliverables')
+            return redirect(reverse('MarketPlace:VacancyPost', kwargs={'pk': instance.scope.id})+'#deliverables')
     else:
         template = 'marketplace/vacancy_deliverables_edit.html'
         context = {'form': form, 'instance': instance}
@@ -209,7 +209,7 @@ def DeliverablesAdd2View(request, pk):
             new = form.save(commit=False)
             new.scope = instance
             new.save()
-            return redirect(reverse('MarketPlace:VacancyEdit', kwargs={'pk': pk})+'#deliverables')
+            return redirect(reverse('MarketPlace:VacancyPost', kwargs={'pk': pk})+'#deliverables')
     else:
         template = 'marketplace/vacancy_deliverables_edit.html'
         context = {'form': form, 'instance': instance}
@@ -221,7 +221,7 @@ def DeliverableDeleteView(request, pk):
     if request.method == 'POST':
         deld = Deliverables.objects.get(pk=pk)
         deld.delete()
-    return redirect(reverse('MarketPlace:VacancyEdit', kwargs={'pk':deld.scope.id})+'#deliverables')
+    return redirect(reverse('MarketPlace:VacancyPost', kwargs={'pk':deld.scope.id})+'#deliverables')
 
 
 @login_required()
@@ -262,18 +262,22 @@ def VacancyView(request):
 
 @login_required()
 @csp_exempt
-def VacancyEditView(request):
-    form = TalentRequiredForm(request.POST or None, request.FILES, instance=instance)
+def VacancyEditView(request, pk):
+    instance=get_object_or_404(TalentRequired, pk=pk)
+
     if request.method == 'POST':
+        form = TalentRequiredForm(request.POST, request.FILES, instance=instance)
         if form.is_valid():
             new = form.save(commit=False)
-            new.requested_by = request.user
+            new.requested_by=request.user
             new.save()
             form.save_m2m()
-            return redirect(reverse('MarketPlace:Deliverables', kwargs={'pk':new.id}))
+            return redirect(reverse('MarketPlace:VacancyPost', kwargs={'pk':pk}))
     else:
+        form = TalentRequiredForm(instance=instance)
+
         template = 'marketplace/vacancy_edit.html'
-        context = {'form': form}
+        context = {'form': form, 'instance': instance}
         return render(request, template, context)
 
 
