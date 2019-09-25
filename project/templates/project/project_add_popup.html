@@ -9,7 +9,7 @@
 <div class="container">
   <h3>Add a Project</h3>
 
-  <form method="post">
+  <form class="" action="" method="POST" id="ProjectForm">
     <input type="hidden" name="next" value="{{ request.GET.next }}">
     {% csrf_token %}
     <div class="form-row">

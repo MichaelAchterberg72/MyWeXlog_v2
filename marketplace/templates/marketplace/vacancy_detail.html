@@ -42,7 +42,7 @@
       <div class="card-body">
         <h5 class="card-title">Scope</h5>
         {% for s in vacancy %}
-        <p>{{ s.scope }}</p>
+        <p>{{ s.scope|linebreaks }}</p>
         {% endfor %}
       </div>
     </div>
@@ -52,7 +52,7 @@
       <div class="card-body">
         <h5 class="card-title">Expectations</h5>
         {% for e in vacancy %}
-        <p>{{ e.expectations }}</p>
+        <p>{{ e.expectations|linebreaks }}</p>
         {% endfor %}
       </div>
     </div>
@@ -96,7 +96,7 @@
         <h5 class="card-title">Deliverables</h5>
         {% for d in deliver %}
         <ul>
-          <li>{{ d.deliverable }}</li>
+          <li>{{ d.deliverable|linebreaks }}</li>
         </ul>
         {% endfor %}
       </div>

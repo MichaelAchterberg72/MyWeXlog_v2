@@ -17,4 +17,5 @@ urlpatterns = [
     path('contact/thank-you/', views.ThankContactView.as_view(), name='ThankContactUs'),
     path('suggestions/', views.SuggestionsView, name='Suggestions'),
     path('help-support/', views.HelpSupportView.as_view(), name='HelpSupport'),
+    path('data-protection-officer/', views.DataProtectionView, name='DataProtection'),
 ]
