@@ -26,7 +26,7 @@ from db_flatten.models import SkillTag
 @login_required()
 def ExperienceHome(request):
         train = Education.objects.filter(talent=request.user).order_by('-date_from')
-        train_sum = train.aggregate(Edu_sum=Sum('hours_worked'))
+        train_sum = train.aggregate(Edu_sum=Sum('topic__hours'))
 
         experience = WorkExperience.objects.filter(talent=request.user).order_by('-date_from')
         exp_sum = experience.aggregate(we_sum=Sum('hours_worked'))
@@ -59,8 +59,6 @@ def ExperienceHome(request):
 
         skill_set = skill_set.distinct().order_by('skill')
         skill_count = skill_set.count()
-
-        print(skill_set)
 
         template = 'talenttrack/track_home.html'
         context = {

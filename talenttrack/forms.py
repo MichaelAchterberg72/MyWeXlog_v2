@@ -268,7 +268,7 @@ class LecturerRespondForm(forms.ModelForm):
 class EducationForm(forms.ModelForm):
     class Meta:
         model = Education
-        fields = ('course', 'date_from', 'date_to', 'topic', 'file', 'hours_worked')
+        fields = ('course', 'date_from', 'date_to', 'topic', 'file')
         widgets={
             'course': CourseSelect2Widget(),
             'topic': TopicSelect2Widget(),
@@ -280,11 +280,10 @@ class EducationForm(forms.ModelForm):
 class CourseForm(forms.ModelForm):
     class Meta:
         model = Course
-        fields = ('name', 'company', 'course_type', 'website', 'skills', 'certification')
+        fields = ('name', 'company', 'course_type', 'website', 'certification')
         widgets={
             'company': CompanySelect2Widget(),
             'course_type': CourseTypeSelect2Widget(),
-            #'skills': SkillsXXXWidget(),
         }
 
 class CourseTypeForm(forms.ModelForm):
@@ -302,7 +301,7 @@ class ResultForm(forms.ModelForm):
 class TopicForm(forms.ModelForm):
     class Meta:
         model = Topic
-        fields = ('topic', 'course')
+        fields = ('topic', 'course', 'hours', 'skills')
 
 
 class TopicPopForm(forms.ModelForm):

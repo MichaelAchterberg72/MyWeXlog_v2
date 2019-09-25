@@ -21,7 +21,8 @@
           <th>Full Detail</th>
         </tr>
       </thead>
-      {% for i in display %}
+      {% for i in dsd %}
+      {% if i.scope.id not in already_applied %}
       <tbody>
       <tr>
         <td>{{ i.scope.title }}</td>
@@ -38,6 +39,11 @@
           {% endif %}
         </tr>
       </tbody>
+      {% endif %}
+      {% empty %}
+      <tr>
+        <td colspan="6">No vacancies matching your skills at the moment</td>
+      </tr>
       {% endfor %}
     </table>
   </div>
@@ -50,7 +56,7 @@
       <div class="card-body">
         <a href="{% url 'MarketPlace:Vacancy' %}" class="badge badge-primary float-right">Post Vacancy</a>
       </ul>
-      <h5 class="card-title">Vacancies Advertised</h5>
+      <h5 class="card-title">My Vacancies Advertised (Open)</h5>
       <table class="table table-sm">
         <thead>
           <tr>

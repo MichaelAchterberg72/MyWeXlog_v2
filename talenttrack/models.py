@@ -37,7 +37,6 @@ class Course(models.Model):
     company = models.ForeignKey(Enterprise, on_delete=models.PROTECT, verbose_name="Institution")
     course_type = models.ForeignKey(CourseType, on_delete=models.PROTECT)
     website = models.URLField(blank=True, null=True)
-    skills = models.ManyToManyField(SkillTag)
     certification = models.ForeignKey(Result, on_delete=models.PROTECT)
 
     class Meta:
@@ -50,6 +49,8 @@ class Course(models.Model):
 class Topic(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True)
     topic = models.CharField(max_length=60, unique=True)
+    skills = models.ManyToManyField(SkillTag)
+    hours = models.DecimalField(max_digits=5, decimal_places=2)
 
     def __str__(self):
         return '{} - {}'.format (self.course, self.topic)
@@ -66,7 +67,6 @@ class Education(models.Model):
     date_captured = models.DateField(auto_now_add=True)
     date_from = models.DateField()
     date_to = models.DateField()
-    hours_worked = models.DecimalField(max_digits=5, decimal_places=2)
     topic = models.ForeignKey(Topic, on_delete=models.PROTECT, blank=True, null=True, verbose_name="subject")
     file = models.FileField(upload_to=EduFilename, blank=True, null=True)
 
