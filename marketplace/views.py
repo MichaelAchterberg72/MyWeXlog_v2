@@ -86,7 +86,7 @@ def MarketHome(request):
     my_logged = we.filter(talent=talent).aggregate(myl=Sum('hours_worked'))
     my_prelogged = pl.filter(talent=talent).aggregate(mypl=Sum('hours_worked'))
     my_training = me.filter(talent=talent).prefetch_related('course')
-    training_time = my_training.aggregate(mytr=Sum('hours_worked'))
+    training_time = my_training.aggregate(mytr=Sum('topic__hours'))
 
     myli = my_logged.get('myl')
     mypli = my_prelogged.get('mypl')
@@ -202,10 +202,32 @@ def TalentAvailabillityView(request):
 @login_required()
 @subscription(2)
 def VacancyPostView(request, pk):
+    #>>>Queryset Cache
     instance = get_object_or_404(TalentRequired, pk=pk)
     skille = SkillRequired.objects.filter(scope=pk)
     delivere = Deliverables.objects.filter(scope=pk)
     applicants = WorkBid.objects.filter(work=pk)
+    we = WorkExperience.objects.filter(talent__subscription__gte=1)
+    pl = PreLoggedExperience.objects.filter(talent__subscription__gte=1)
+    me = Education.objects.filter(talent__subscription__gte=1)
+    #Queryset Cache<<<
+
+    #>>> List all skills required
+    skill_r = skille.values_list('skill', flat=True).distinct()
+    #List all skills required<<<
+
+    #>>> Find all talent with required skill
+    wes = list(we.filter(skills__in=skill_r).distinct('id').values_list('id', flat=True))
+
+    pls = list(pl.filter(skills__in=skill_r).distinct('id').values_list('id', flat=True))
+
+    mes = list(me.filter(topic__skills__in=skill_r).distinct('id').values_list('id', flat=True))
+
+    skill_a = set(wes+pls+mes)
+    #Find all talent with required skill<<<
+    #1. Calculate experience levels of skill_a talenttrack
+    #2. Display result
+
 
     template = 'marketplace/vacancy_post_view.html'
     context = {'instance': instance, 'skille': skille, 'delivere': delivere, 'applicants': applicants}

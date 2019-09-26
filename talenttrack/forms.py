@@ -307,4 +307,4 @@ class TopicForm(forms.ModelForm):
 class TopicPopForm(forms.ModelForm):
     class Meta:
         model = Topic
-        fields = ('topic',)
+        fields = ('topic', 'hours', 'skills')
