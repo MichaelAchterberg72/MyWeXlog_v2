@@ -118,25 +118,25 @@ def MarketHome(request):
     #Create a set of all skills<<<
 
     #>>>Experience Level check & list skills required in vacancies
-    std = list(sl.filter(level__exact='E').values_list('min_hours', flat=True))
-    grd = list(sl.filter(level__exact='G').values_list('min_hours', flat=True))
-    jnr = list(sl.filter(level__exact='J').values_list('min_hours', flat=True))
-    int = list(sl.filter(level__exact='I').values_list('min_hours', flat=True))
-    snr = list(sl.filter(level__exact='S').values_list('min_hours', flat=True))
-    lead = list(sl.filter(level__exact='L').values_list('min_hours', flat=True))
+    std = list(sl.filter(level__exact=0).values_list('min_hours', flat=True))
+    grd = list(sl.filter(level__exact=1).values_list('min_hours', flat=True))
+    jnr = list(sl.filter(level__exact=2).values_list('min_hours', flat=True))
+    int = list(sl.filter(level__exact=3).values_list('min_hours', flat=True))
+    snr = list(sl.filter(level__exact=4).values_list('min_hours', flat=True))
+    lead = list(sl.filter(level__exact=5).values_list('min_hours', flat=True))
 
     if myed <= grd:
-        iama = 'E'
+        iama = 0
     elif myed >= grd and myed <= jnr:
-        iama = 'G'
+        iama = 1
     elif myed >= jnr and myed <= int:
-        iama = 'J'
+        iama = 2
     elif myed >= int and myed <= snr:
-        iama = 'I'
+        iama = 3
     elif myed >= snr and myed <= lead:
-        iama = 'S'
+        iama = 4
     elif myed >= lead:
-        iama = 'L'
+        iama = 5
 
     req_experience = tr.filter(experience_level__level__exact=iama).values_list('id', flat=True)
 
@@ -217,20 +217,37 @@ def VacancyPostView(request, pk):
     #List all skills required<<<
 
     #>>> Find all talent with required skill
-    wes = list(we.filter(skills__in=skill_r).distinct('id').values_list('id', flat=True))
+    wes = list(we.filter(skills__in=skill_r).distinct('talent').values_list('talent', flat=True))
 
-    pls = list(pl.filter(skills__in=skill_r).distinct('id').values_list('id', flat=True))
+    pls = list(pl.filter(skills__in=skill_r).distinct('talent').values_list('talent', flat=True))
 
-    mes = list(me.filter(topic__skills__in=skill_r).distinct('id').values_list('id', flat=True))
+    mes = list(me.filter(topic__skills__in=skill_r).distinct('talent').values_list('talent', flat=True))
 
     skill_a = set(wes+pls+mes)
     #Find all talent with required skill<<<
-    #1. Calculate experience levels of skill_a talenttrack
+
+    weff = we.none()
+    plff = pl.none()
+    meff = me.none()
+    e_dict = {}
+    for person in skill_a:
+        wef = we.filter(talent=person).aggregate(s_wef=Sum('hours_worked'))
+        plf = pl.filter(talent=person).aggregate(s_plf=Sum('hours_worked'))
+        mef = me.filter(talent=person).aggregate(s_mef=Sum('topic__hours'))
+
+        e_dict[person] = [wef.get('s_wef', 0), plf.get('s_plf', 0), mef.get('s_mef', 0)]
+
+    print(e_dict)
+
+
+
+    #weffs = weff.annotate(wsum=Sum('hours_worked'))
+
     #2. Display result
 
 
     template = 'marketplace/vacancy_post_view.html'
-    context = {'instance': instance, 'skille': skille, 'delivere': delivere, 'applicants': applicants}
+    context = {'instance': instance, 'skille': skille, 'delivere': delivere, 'applicants': applicants, 'e_dict': e_dict}
     return render(request, template, context)
 
 
@@ -355,6 +372,7 @@ def VacancyView(request):
 
 @login_required()
 @csp_exempt
+@subscription(2)
 def VacancyEditView(request, pk):
     instance=get_object_or_404(TalentRequired, pk=pk)
 

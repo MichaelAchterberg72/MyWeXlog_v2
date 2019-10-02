@@ -16,6 +16,13 @@
 <p><a href="{% url 'MarketPlace:VacancyEdit' instance.id %}" class="btn btn-info float-right">Edit Vacancy</a></p>
 <h3>Vacancy Review</h3>
 <h5 class="card-title">Vacancy: {{ instance.title }}</h5>
+
+{% for i in e_dict %}
+<ul>
+  <li>{{ i.talent }}-{{ i.hours_worked }}</li>
+  <li>{{ i.7 }}</li>
+</ul>
+{% endfor %}
 <table class="table table-sm">
   <thead>
     <tr>

@@ -41,15 +41,15 @@ UNIT = (
 
 class SkillLevel(models.Model):
     LEVEL = (
-        ('E','Student'),
-        ('G','Graduate'),
-        ('J','Junior'),
-        ('I','Intermediate'),
-        ('S','Senior'),
-        ('L','Lead'),
+        (0,'Student'),
+        (1,'Graduate'),
+        (2,'Junior'),
+        (3,'Intermediate'),
+        (4,'Senior'),
+        (5,'Lead'),
     )
 
-    level = models.CharField(max_length=1, choices=LEVEL)
+    level = models.IntegerField(choices=LEVEL, unique=True)
     min_hours = models.IntegerField()
     description = models.TextField()
 
