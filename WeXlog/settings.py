@@ -203,8 +203,8 @@ DATABASES = {
         'USER': 'postgres',
 		'PASSWORD': 'rdf8tm1234', #MA
         #'PASSWORD': 'dJpfss41678', #JK
-        #'HOST': 'localhost',
-        #'PORT': '5432'
+        'HOST': 'localhost',
+        'PORT': '5432'
     }
 }
 

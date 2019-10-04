@@ -5,7 +5,7 @@ from django.views.generic import (
 )
 from django.urls import reverse
 
-from .forms import ContactUsForm, SuggestionsForm
+from .forms import ContactUsForm, SuggestionsForm, DataPrivacyForm
 
 # Create your views here.
 class LandingPageView(TemplateView):
@@ -57,6 +57,18 @@ def SuggestionsView(request):
         template = 'public/suggestions.html'
         return render(request, template, context)
 
+
+def DataPrivacyView(request):
+    form = DataPrivacyForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            instance=form.save(commit=False)
+            instance.save()
+            return redirect(reverse('Public:ThankContactUs'))
+    else:
+        context = {'form':form}
+        template = 'public/data_privacy.html'
+        return render(request, template, context)
 
 class ThankContactView(TemplateView):
     template_name = 'public/thank_contact.html'

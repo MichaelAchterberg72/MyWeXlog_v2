@@ -17,3 +17,9 @@ class SuggestionsForm(forms.ModelForm):
     class Meta:
         model = Suggestions
         fields = ('name','email','comments')
+
+
+class DataPrivacyForm(forms.ModelForm):
+    class Meta:
+        model = Suggestions
+        fields = ('name','email','comments')

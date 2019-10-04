@@ -16,5 +16,6 @@ urlpatterns = [
     path('contact/', views.ContactUsView, name='ContactUs'),
     path('contact/thank-you/', views.ThankContactView.as_view(), name='ThankContactUs'),
     path('suggestions/', views.SuggestionsView, name='Suggestions'),
+    path('data-privacy/', views.DataPrivacyView, name='DataPrivacy'),
     path('help-support/', views.HelpSupportView.as_view(), name='HelpSupport'),
 ]
