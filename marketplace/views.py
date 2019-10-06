@@ -214,6 +214,8 @@ def VacancyPostView(request, pk):
 
     #>>> List all skills required
     skill_r = skille.values_list('skill', flat=True).distinct()
+    skill_rl = list(skill_r)
+    print('skill_rl',skill_rl)
     #List all skills required<<<
 
     #>>> Find all talent with required skill
@@ -224,18 +226,82 @@ def VacancyPostView(request, pk):
     mes = list(me.filter(topic__skills__in=skill_r).distinct('talent').values_list('talent', flat=True))
 
     skill_a = set(wes+pls+mes)
+    talent_qs = we.none()
+
+    for t in skill_a:
+        extract = we.filter(id=t)
+
+        talent_qs = talent_qs | extract
+
     #Find all talent with required skill<<<
+    skill_sum = {}
+    talent_skill = {}
+    for person in skill_a:
+        wes = we.filter(talent=person)
+        pls = pl.filter(talent=person)
+        mes = me.filter(talent=person)
+        for skr in skill_rl:
+            wess= wes.filter(skills__in=[skr,]).aggregate(s_sk=Sum('hours_worked'))
+            plss = pls.filter(skills__in=[skr,]).aggregate(p_sk=Sum('hours_worked'))
+            mess = mes.filter(topic__skills__in=[skr,]).aggregate(m_sk=Sum('topic__hours'))
+
+            wesse = wess.get('s_sk')
+            plsse = plss.get('p_sk')
+            messe = mess.get('m_sk')
+
+            if wesse:
+                wesse = wesse
+            else:
+                wesse=0
+
+            if plsse:
+                plsse = plsse
+            else:
+                plsse = 0
+            if messe:
+                messe = messe
+            else:
+                messe = 0
+
+            skt = wesse + plsse + messe
+
+            skill_sum[skr] = [skt]
+
+        talent_skill[person] = [skill_sum]
+
+    print('talent', talent_skill)
 
     weff = we.none()
     plff = pl.none()
     meff = me.none()
     e_dict = {}
     for person in skill_a:
+        nme = we.filter(talent=person).values('talent__first_name')
         wef = we.filter(talent=person).aggregate(s_wef=Sum('hours_worked'))
         plf = pl.filter(talent=person).aggregate(s_plf=Sum('hours_worked'))
         mef = me.filter(talent=person).aggregate(s_mef=Sum('topic__hours'))
 
-        e_dict[person] = [wef.get('s_wef', 0), plf.get('s_plf', 0), mef.get('s_mef', 0)]
+        wefg = wef.get('s_wef')
+        plfg = plf.get('s_plf')
+        mefg = mef.get('s_mef')
+
+        if wefg:
+            wefg = wefg
+        else:
+            wefg=0
+
+        if plfg:
+            plfg = plfg
+        else:
+            plfg = 0
+        if mefg:
+            mefg = mefg
+        else:
+            mefg = 0
+
+        skfg = wefg + plfg + mefg
+        nmed = nme.distinct('talent')
+        e_dict[nmed] = [skfg]
 
     print(e_dict)
 
@@ -247,7 +313,7 @@ def VacancyPostView(request, pk):
 
 
     template = 'marketplace/vacancy_post_view.html'
-    context = {'instance': instance, 'skille': skille, 'delivere': delivere, 'applicants': applicants, 'e_dict': e_dict}
+    context = {'instance': instance, 'skille': skille, 'delivere': delivere, 'applicants': applicants, 'talent_qs': talent_qs}
     return render(request, template, context)
 
 

@@ -17,12 +17,6 @@
 <h3>Vacancy Review</h3>
 <h5 class="card-title">Vacancy: {{ instance.title }}</h5>
 
-{% for i in e_dict %}
-<ul>
-  <li>{{ i.talent }}-{{ i.hours_worked }}</li>
-  <li>{{ i.7 }}</li>
-</ul>
-{% endfor %}
 <table class="table table-sm">
   <thead>
     <tr>
@@ -130,10 +124,34 @@
         </tr>
         {% endfor %}
       </tbody>
-
     </table>
   </div>
 </div>
+<div class="">
+  <h3>Talent suited to the Vacancy</h3>
+  <hr>
+  <div class="">
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th>Alias</th>
+          <th>Current Location</th>
+          <th>Contact</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for t in talent_qs %}
+        <tr>
+          <td>{{ t.talent }}</td>
+          <td>empty</td>
+          <td></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<hr>
 <div class="row">
   <h3>Applicants</h3>
   <table class="table table-sm">

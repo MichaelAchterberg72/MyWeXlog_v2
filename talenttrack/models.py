@@ -69,6 +69,7 @@ class Education(models.Model):
     date_to = models.DateField()
     topic = models.ForeignKey(Topic, on_delete=models.PROTECT, blank=True, null=True, verbose_name="subject")
     file = models.FileField(upload_to=EduFilename, blank=True, null=True)
+    score = models.SmallIntegerField(default=0)
 
     class Meta:
         unique_together = (('talent','course','topic'),)
@@ -146,6 +147,7 @@ class WorkExperience(models.Model):
     designation = models.ForeignKey(Designation, on_delete=models.PROTECT)
     upload = models.FileField(upload_to=ExpFilename, blank=True, null=True)
     skills = models.ManyToManyField(SkillTag)
+    score = models.SmallIntegerField(default=0)
 
     class Meta:
         unique_together = (('talent','hours_worked','date_from','project', 'date_to'),)
@@ -263,7 +265,8 @@ class PreLoggedExperience(models.Model):
     designation = models.ForeignKey(Designation, on_delete=models.PROTECT)
     upload = models.FileField(upload_to=ExpFilename, blank=True, null=True)
     skills = models.ManyToManyField(SkillTag, related_name='logskill')
-
+    score = models.SmallIntegerField(default=0)
+    
     class Meta:
         unique_together = (('talent','hours_worked','date_from','project', 'date_to'),)
 
