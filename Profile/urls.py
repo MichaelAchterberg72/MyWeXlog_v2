@@ -5,7 +5,7 @@ from .import views
 app_name = 'Profile'
 
 urlpatterns = [
-        path('', views.ProfileHome.as_view(), name="ProfileHome"),
+        path('<int:pk>/', views.ProfileHome, name="ProfileHome"),
         path('view/<int:profile_id>/', views.ProfileView, name="ProfileView"),
         path('edit/<int:profile_id>/', views.ProfileEditView, name="ProfileEdit"),
         path('email/<int:profile_id>/', views.EmailEditView, name='EmailEdit'),
@@ -31,4 +31,5 @@ urlpatterns = [
         path('phonenumber/delete/<int:pk>/', views.PhoneNumberDelete, name='PhoneDelete'),
         path('file/delete/<int:pk>/', views.FileDelete, name='FileDelete'),
         path('email/delete/<int:pk>/', views.EmailDelete, name='EmailDelete'),
+        path ('experience-review/', views.ConfirmView, name='Confirm'),
 ]

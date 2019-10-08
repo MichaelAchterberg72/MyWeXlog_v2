@@ -4,6 +4,7 @@ from django.utils import timezone
 from time import time
 from random import random
 from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 from enterprises.models import Enterprise, Industry, Branch
@@ -78,6 +79,8 @@ class Education(models.Model):
         return '{}: {} ({})'.format(self.talent, self.course, self.topic)
 
 
+
+
 class Lecturer(models.Model):
         #Captured by talent
     education = models.ForeignKey(Education, on_delete=models.CASCADE)
@@ -96,7 +99,6 @@ class Lecturer(models.Model):
 
     def __str__(self):
         return "Lecturer for {}".format(self.education)
-
 
 class ClassMates(models.Model):
         #Captured by talent
@@ -266,7 +268,7 @@ class PreLoggedExperience(models.Model):
     upload = models.FileField(upload_to=ExpFilename, blank=True, null=True)
     skills = models.ManyToManyField(SkillTag, related_name='logskill')
     score = models.SmallIntegerField(default=0)
-    
+
     class Meta:
         unique_together = (('talent','hours_worked','date_from','project', 'date_to'),)
 

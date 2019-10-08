@@ -65,7 +65,7 @@ class FileUploadForm(forms.ModelForm):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ('synonym', 'birth_date', 'background', 'mentor',)
+        fields = ('birth_date', 'background', 'mentor',)
 
 #>>> Select2 Company Field in email
 class CompanySearchFieldMixin:
