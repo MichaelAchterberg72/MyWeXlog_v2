@@ -16,7 +16,7 @@ from .models import (
         Profile, Email, PhysicalAddress, PostalAddress, PhoneNumber, SiteName, OnlineRegistrations, FileUpload, IdentificationDetail, IdType, PassportDetail, LanguageList, LanguageTrack
         )
 from talenttrack.models import (
-        Lecturer, ClassMates, WorkColleague, Superior, WorkCollaborator,  WorkClient, PreColleague
+        Lecturer, ClassMates, WorkColleague, Superior, WorkCollaborator,  WorkClient, PreColleague, Education
 )
 from locations.models import Region
 
@@ -26,7 +26,7 @@ from .forms import (
 )
 
 
-def ProfileHome(request,pk):
+def ProfileHome(request):
     #WorkFlow Card
     wf1 = Lecturer.objects.filter(confirm__exact='S').count()
     cm1 = ClassMates.objects.filter(confirm__exact='S').count()
@@ -59,6 +59,48 @@ def ConfirmView(request):
             'wf1': wf1, 'cm1': cm1, 'wk1': wk1, 'spr1': spr1, 'wclr1': wclr1, 'wc1': wc1, 'pc1': pc1
     }
     return render(request, template, context)
+
+
+@login_required()
+def LecturerConfirmView(request, pk):
+    if request.method == 'POST':
+        info = Lecturer.objects.get(pk=pk)
+        info.confirm = 'C'
+        info.save()
+        edu = Education.objects.get(pk=info.education.id)
+        edu.score += 2
+        edu.save()
+    return redirect(reverse('Profile:Confirm')+'#Lecturer')
+
+
+@login_required()
+def LecturerRejectView(request, pk):
+    if request.method == 'POST':
+        info = Lecturer.objects.get(pk=pk)
+        info.confirm = 'R'
+        info.save()
+    return redirect(reverse('Profile:Confirm')+'#Lecturer')
+
+
+@login_required()
+def ClassMatesConfirmView(request, pk):
+    if request.method == 'POST':
+        info = ClassMates.objects.get(pk=pk)
+        info.confirm = 'C'
+        info.save()
+        edu = Education.objects.get(pk=info.education.id)
+        edu.score += 1
+        edu.save()
+    return redirect(reverse('Profile:Confirm')+'#ClassMates')
+
+
+@login_required()
+def ClassMatesRejectView(request, pk):
+    if request.method == 'POST':
+        info = ClassMates.objects.get(pk=pk)
+        info.confirm = 'R'
+        info.save()
+    return redirect(reverse('Profile:Confirm')+'#ClassMates')
 
 
 @login_required()
