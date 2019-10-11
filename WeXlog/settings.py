@@ -202,9 +202,9 @@ DATABASES = {
         'NAME': 'Wexlog_1',
         'USER': 'postgres',
 		'PASSWORD': 'rdf8tm1234', #MA
-        #'PASSWORD': 'dJpfss41678', #JK
-        #'HOST': 'localhost',
-        #'PORT': '5432'
+        #'PASSWORD': 'JK#hike_4682', #JK
+        'HOST': 'localhost',
+        'PORT': '5432'
     }
 }
 
