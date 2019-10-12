@@ -13,7 +13,7 @@
   }
   </style>
 <div class="container">
-<p><a href="{% url 'MarketPlace:Entrance' %}" class="btn btn-primary float-right">Back</a></p>
+<p><a href="{% url 'MarketPlace:VacancyPost' instance.id %}" class="btn btn-primary float-right">Back</a></p>
 <h3>Edit Vacancy</h3>
 <form method="post" id="BranchForm" enctype="multipart/form-data">
   {% csrf_token %}
@@ -23,21 +23,27 @@
       {{ form.enterprise|as_crispy_field }}
       <p><a href="{% url 'Enterprise:BranchAddPop' %}" id='add_branch' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a Company Branch</a></p>
       <div class="form-row">
-        <div class="form-group col-md-6 mb-0">
+        <div class="form-group col-md-4 mb-0">
           {{ form.date_deadline|as_crispy_field }}
         </div>
-        <div class="form-group col-md-6 mb-0">
+        <div class="form-group col-md-4 mb-0">
           {{ form.offer_status|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-4 mb-0">
+          {{ form.bid_closes|as_crispy_field }}
         </div>
       </div>
     </div>
     <div class="form-group col-md-6 mb-0">
       <div class="form-row">
-        <div class="form-group col-md-6 mb-0">
+        <div class="form-group col-md-4 mb-0">
           {{ form.hours_required|as_crispy_field }}
         </div>
-        <div class="form-group col-md-6 mb-0">
+        <div class="form-group col-md-4 mb-0">
           {{ form.unit|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-4 mb-0">
+          {{ form.experience_level|as_crispy_field }}
         </div>
       </div>
       <div class="form-row">
@@ -86,60 +92,6 @@
   </div>
 </form>
 <hr>
-<div class="row">
-  <div class="col-sm-6">
-    <a href="{% url 'MarketPlace:Deliverables2' instance.id %}" class="badge badge-primary float-right">Add</a>
-    <h5 class="card-title" id="deliverables">Deliverables</h5>
-      <table class="table table-sm">
-        <thead>
-          <tr>
-            <th>Deliverable</th>
-            <th>Options</th>
-          </tr>
-        </thead>
-        {% for d in delivere %}
-        <tbody>
-          <tr>
-            <td>{{ d.deliverable }}</td>
-            <td>
-              <a href="{% url 'MarketPlace:DeliverablesEdit' d.id %}" class="badge badge-secondary badge-pill">Edit</a>
-              <form  action="{% url 'MarketPlace:DeliverablesDelete' d.id %}" method="post">
-                {% csrf_token %}
-              <button type="submit" class="badge badge-danger badge-pill">Remove</button>
-              </form>
-            </td>
-          </tr>
-        </tbody>
-        {% endfor %}
-        </table>
-  </div>
-  <div class="col-sm-6">
-    <a href="{% url 'MarketPlace:Skillsa' instance.id %}" class="badge badge-primary float-right">Add</a>
-    <h5 class="card-title" id="skills">Skills</h5>
-    <table class="table table-sm">
-      <thead>
-        <tr>
-          <th>Skill</th>
-          <th>Experience Level</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for s in skille %}
-        <tr>
-          <td>{{ s.skill }}</td>
-          <td>{{ s.experience_level.get_level_display}}</td>
-          <td><form  action="{% url 'MarketPlace:SkillDelete' s.id %}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="badge badge-danger badge-pill float-right">Remove</button>
-          </form></td>
-        </tr>
-        {% endfor %}
-      </tbody>
-
-    </table>
-  </div>
-</div>
-<p><a href="{% url 'MarketPlace:Entrance' %}" class="btn btn-primary">Done</a></p>
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 {{ form.media.js }}

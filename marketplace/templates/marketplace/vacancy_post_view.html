@@ -13,9 +13,10 @@
   }
   </style>
 <div class="container">
-<p><a href="{% url 'MarketPlace:Entrance' %}" class="btn btn-primary float-right">Back</a></p>
+<p><a href="{% url 'MarketPlace:VacancyEdit' instance.id %}" class="btn btn-info float-right">Edit Vacancy</a></p>
 <h3>Vacancy Review</h3>
 <h5 class="card-title">Vacancy: {{ instance.title }}</h5>
+
 <table class="table table-sm">
   <thead>
     <tr>
@@ -95,7 +96,7 @@
               <a href="{% url 'MarketPlace:DeliverablesEdit' d.id %}" class="badge badge-secondary badge-pill">Edit</a>
               <form  action="{% url 'MarketPlace:DeliverablesDelete' d.id %}" method="post">
                 {% csrf_token %}
-              <button type="submit" class="badge badge-danger badge-pill">Remove</button>
+              <button type="submit" class="badge badge-danger badge-pill float-right">Remove</button>
               </form>
             </td>
           </tr>
@@ -116,7 +117,6 @@
         {% for s in skille %}
         <tr>
           <td>{{ s.skill }}</td>
-          <td>{{ s.experience_level.get_level_display}}</td>
           <td><form  action="{% url 'MarketPlace:SkillDelete' s.id %}" method="post">
             {% csrf_token %}
             <button type="submit" class="badge badge-danger badge-pill float-right">Remove</button>
@@ -124,10 +124,34 @@
         </tr>
         {% endfor %}
       </tbody>
-
     </table>
   </div>
 </div>
+<div class="">
+  <h3>Talent suited to the Vacancy</h3>
+  <hr>
+  <div class="">
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th>Alias</th>
+          <th>Current Location</th>
+          <th>Contact</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for t in talent_qs %}
+        <tr>
+          <td>{{ t.talent }}</td>
+          <td>empty</td>
+          <td></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<hr>
 <div class="row">
   <h3>Applicants</h3>
   <table class="table table-sm">
@@ -151,7 +175,7 @@
     {% endfor %}
   </table>
 </div>
-<p><a href="{% url 'MarketPlace:Entrance' %}" class="btn btn-primary">Done</a></p>
+<p><a href="{% url 'MarketPlace:Entrance' %}" class="btn btn-primary">Back</a></p>
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 {{ form.media.js }}

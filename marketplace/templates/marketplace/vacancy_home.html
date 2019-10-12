@@ -21,7 +21,8 @@
           <th>Full Detail</th>
         </tr>
       </thead>
-      {% for i in display %}
+      {% for i in dsd %}
+      {% if i.scope.id not in already_applied %}
       <tbody>
       <tr>
         <td>{{ i.scope.title }}</td>
@@ -29,7 +30,7 @@
           {{ i.scope.hours_required|intcomma }} ({{ i.scope.get_unit_display }})
         </td>
         <td>{{ i.scope.worklocation }}</td>
-        <td>{{ i.scope.scope }}</td>
+        <td>{{ i.scope.scope|linebreaks }}</td>
         <td>{{ i.scope.city }}</td>
           {% if request.user.subscription == 2 %}
             <td><a href="{% url 'MarketPlace:VacancyDetail' i.scope.id %}" class="card-link">See Detail</a></td>
@@ -38,6 +39,11 @@
           {% endif %}
         </tr>
       </tbody>
+      {% endif %}
+      {% empty %}
+      <tr>
+        <td colspan="6">No vacancies matching your skills at the moment</td>
+      </tr>
       {% endfor %}
     </table>
   </div>
@@ -45,12 +51,12 @@
 <br>
 {% if request.user.subscription >= 2 %}
 <div class="row">
-  <div class="col-sm-6">
+  <div class="col-sm-7">
     <div class="card">
       <div class="card-body">
         <a href="{% url 'MarketPlace:Vacancy' %}" class="badge badge-primary float-right">Post Vacancy</a>
       </ul>
-      <h5 class="card-title">Vacancies Advertised</h5>
+      <h5 class="card-title">My Vacancies Advertised (Open)</h5>
       <table class="table table-sm">
         <thead>
           <tr>
@@ -58,7 +64,7 @@
             <th>Vacancy Title</th>
             <th>Status</th>
             <th>Closing Date</th>
-            <th>Responses</th>
+            <th>Response</th>
           </tr>
         </thead>
         <tbody>
@@ -68,11 +74,14 @@
               <td>{{ p.title }}</td>
               <td>{{ p.get_offer_status_display }}</td>
               <td>{{ p.bid_closes|date:'j M Y' }}</td>
+              <td>
               {% if p.id in ipost_bid_flat %}
-                <td><strong>Yes</strong></td>
+                <strong>Yes</strong>
               {% else %}
-                <td>None</td>
+                None
               {% endif %}
+              <a href="{% url 'MarketPlace:VacancyPost' p.id %}" class="badge badge-secondary float-right">Detail</a>
+              </td>
             </tr>
           {% endfor %}
         </tbody>
@@ -81,7 +90,7 @@
     </div>
   </div>
   {% if request.user.subscription >= 1 %}
-  <div class="col-sm-6">
+  <div class="col-sm-5">
     <div class="card">
       <div class="card-body" id='Availabillity'>
         <a href="{% url 'MarketPlace:Availabillity' %}" class="badge badge-primary float-right">Add</a>

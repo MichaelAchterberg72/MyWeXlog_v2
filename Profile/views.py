@@ -15,7 +15,9 @@ from csp.decorators import csp_exempt
 from .models import (
         Profile, Email, PhysicalAddress, PostalAddress, PhoneNumber, SiteName, OnlineRegistrations, FileUpload, IdentificationDetail, IdType, PassportDetail, LanguageList, LanguageTrack
         )
-
+from talenttrack.models import (
+        Lecturer, ClassMates, WorkColleague, Superior, WorkCollaborator,  WorkClient, PreColleague, Education
+)
 from locations.models import Region
 
 
@@ -24,8 +26,82 @@ from .forms import (
 )
 
 
-class ProfileHome(TemplateView):
-    template_name = 'Profile/profile_home.html'
+def ProfileHome(request):
+    #WorkFlow Card
+    wf1 = Lecturer.objects.filter(confirm__exact='S').count()
+    cm1 = ClassMates.objects.filter(confirm__exact='S').count()
+    wk1 = WorkColleague.objects.filter(confirm__exact='S').count()
+    spr1 = Superior.objects.filter(confirm__exact='S').count()
+    wclr1 = WorkCollaborator.objects.filter(confirm__exact='S').count()
+    wc1 = WorkClient.objects.filter(confirm__exact='S').count()
+    pc1 = PreColleague.objects.filter(confirm__exact='S').count()
+
+    total = wf1 + cm1 + wk1 + spr1 + wclr1 + wc1 + pc1
+
+    template = 'Profile/profile_home.html'
+    context = {
+        'wf1': wf1, 'total': total
+    }
+    return render(request, template, context)
+
+@login_required()
+def ConfirmView(request):
+    wf1 = Lecturer.objects.filter(confirm__exact='S')
+    cm1 = ClassMates.objects.filter(confirm__exact='S')
+    wk1 = WorkColleague.objects.filter(confirm__exact='S')
+    spr1 = Superior.objects.filter(confirm__exact='S')
+    wclr1 = WorkCollaborator.objects.filter(confirm__exact='S')
+    wc1 = WorkClient.objects.filter(confirm__exact='S')
+    pc1 = PreColleague.objects.filter(confirm__exact='S')
+
+    template = 'Profile/experience_confirm.html'
+    context = {
+            'wf1': wf1, 'cm1': cm1, 'wk1': wk1, 'spr1': spr1, 'wclr1': wclr1, 'wc1': wc1, 'pc1': pc1
+    }
+    return render(request, template, context)
+
+
+@login_required()
+def LecturerConfirmView(request, pk):
+    if request.method == 'POST':
+        info = Lecturer.objects.get(pk=pk)
+        info.confirm = 'C'
+        info.save()
+        edu = Education.objects.get(pk=info.education.id)
+        edu.score += 2
+        edu.save()
+    return redirect(reverse('Profile:Confirm')+'#Lecturer')
+
+
+@login_required()
+def LecturerRejectView(request, pk):
+    if request.method == 'POST':
+        info = Lecturer.objects.get(pk=pk)
+        info.confirm = 'R'
+        info.save()
+    return redirect(reverse('Profile:Confirm')+'#Lecturer')
+
+
+@login_required()
+def ClassMatesConfirmView(request, pk):
+    if request.method == 'POST':
+        info = ClassMates.objects.get(pk=pk)
+        info.confirm = 'C'
+        info.save()
+        edu = Education.objects.get(pk=info.education.id)
+        edu.score += 1
+        edu.save()
+    return redirect(reverse('Profile:Confirm')+'#ClassMates')
+
+
+@login_required()
+def ClassMatesRejectView(request, pk):
+    if request.method == 'POST':
+        info = ClassMates.objects.get(pk=pk)
+        info.confirm = 'R'
+        info.save()
+    return redirect(reverse('Profile:Confirm')+'#ClassMates')
+
 
 @login_required()
 def OnlineDelete(request, pk):

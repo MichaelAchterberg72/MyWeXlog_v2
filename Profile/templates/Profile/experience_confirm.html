@@ -1,0 +1,267 @@
+{% extends 'profile/base_profile.html' %}
+
+{% block title %}My {{block.super}} Profile{% endblock title %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-body">
+          <p class="card-text">
+            {% if wf1 %}
+              <h5 class="card-title" id="Lecturer">Confirm as Lecturer</h5>
+              <table class="table table-sm">
+                <col width="15%">
+                <col width="40%">
+                <col width="20%">
+                <col width="15%">
+                <col width="10%">
+                <thead>
+                  <tr align="Center">
+                    <th>Name</th>
+                    <th>Course</th>
+                    <th>Topic</th>
+                    <th>Dates</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for l in wf1 %}
+                  <tr>
+                    <td class="align-middle">{{ l.education.talent.first_name }} {{ l.education.talent.last_name }}</td>
+                    <td class="align-middle">{{ l.education.course }}</td>
+                    <td class="align-middle">{{ l.education.topic }}</td>
+                    <td align="Center">{{ l.education.date_from|date:"j M Y" }} <br>to<br>{{ l.education.date_to|date:"j M Y" }}</td>
+                    <td class="align-middle">
+                      <form  action="{% url 'Profile:LecturerConfirm' l.id %}" method="post">
+                      {% csrf_token %}
+                      <button type="submit" class="badge badge-primary badge-pill">Confirm</button>
+
+                      <form  action="{% url 'Profile:LecturerReject' l.id %}" method="post">
+                      {% csrf_token %}
+                      <button type="submit" class="badge badge-danger badge-pill">Reject</button>
+                    </form>
+                    <br>
+                    <a href="#" class="badge badge-pill badge-success">Review with Comment</a>
+                  </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            {% endif %}
+          {% if cm1 %}
+            <h5 class="card-title" id='ClassMates'>Confirm a ClassMate's Entry</h5>
+            <table class="table table-sm">
+              <col width="15%">
+              <col width="40%">
+              <col width="20%">
+              <col width="15%">
+              <col width="10%">
+              <thead>
+                <tr align="Center">
+                  <th>Name</th>
+                  <th>Course</th>
+                  <th>Topic</th>
+                  <th>Dates</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for l in cm1 %}
+                <tr>
+                  <td class="align-middle">{{ l.education.talent.first_name }} {{ l.education.talent.last_name }}</td>
+                  <td class="align-middle">{{ l.education.course }}</td>
+                  <td class="align-middle">{{ l.education.topic }}</td>
+                  <td align="Center" class="align-middle">{{ l.education.date_from|date:"j M Y" }}<br>to<br> {{ l.education.date_to|date:"j M Y" }}</td>
+                  <td class="align-middle">
+                    <form  action="{% url 'Profile:ClassMatesConfirm' l.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="badge badge-primary badge-pill">Confirm</button>
+                    <form  action="{% url 'Profile:ClassMatesReject' l.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="badge badge-danger badge-pill">Reject</button>
+                  </form><br><a href="#" class="badge badge-pill badge-success">Review with Comment</a>
+                </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          {% endif %}
+          {% if wk1 %}
+            <h5 class="card-title">Confirm a Colleagues's Experience</h5>
+            <table class="table table-sm">
+              <thead>
+                <col width="15%">
+                <col width="20%">
+                <col width="20%">
+                <col width="20%">
+                <col width="15%">
+                <col width="10%">
+                <col width="15%">
+                <tr align="center">
+                  <th>Name</th>
+                  <th>Company</th>
+                  <th>Project</th>
+                  <th>Designation</th>
+                  <th>Dates</th>
+                  <th>Hours</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for l in wk1 %}
+                <tr>
+                  <td rowspan="2"  class="align-middle">{{ l.experience.talent.first_name }} {{ l.experience.talent.last_name }}</td>
+                  <td class="align-middle">{{ l.experience.company }}</td>
+                  <td class="align-middle">{{ l.experience.project }}</td>
+                  <td class="align-middle">{{ l.experience.designation }}</td>
+                  <td align="Center">{{ l.experience.date_from|date:"j M Y" }}<br>to<br> {{ l.experience.date_to|date:"j M Y" }}</td>
+                  <td class="align-middle">{{ l.experience.hours_worked }}</td>
+                  <td class="align-middle"><a href="#" class="badge badge-pill badge-primary">Confirm</a><br><a href="#" class="badge badge-pill badge-secondary">Confirm with Comment</a></td>
+                </tr>
+                <tr>
+                  <th class="text-right">Skills: </th>
+                  <td colspan="5">{{ l.experience.skills.all|join:" & " }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          {% endif %}
+          {% if spr1 %}
+            <h5 class="card-title">Confirm a Subordinate's Experience</h5>
+            <table class="table table-sm">
+              <thead>
+                <tr align="center">
+                  <th>Name</th>
+                  <th>Company</th>
+                  <th>Project</th>
+                  <th>Designation</th>
+                  <th>Dates</th>
+                  <th>Hours</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for l in spr1 %}
+                <tr>
+                  <td rowspan="2"  class="align-middle">{{ l.experience.talent.first_name }} {{ l.experience.talent.last_name }}</td>
+                  <td class="align-middle">{{ l.experience.company }}</td>
+                  <td class="align-middle">{{ l.experience.project }}</td>
+                  <td class="align-middle">{{ l.experience.designation }}</td>
+                  <td align="Center">{{ l.experience.date_from|date:"j M Y" }}<br>to<br> {{ l.experience.date_to|date:"j M Y" }}</td>
+                  <td class="align-middle">{{ l.experience.hours_worked }}</td>
+                  <td class="align-middle"><a href="#" class="badge badge-pill badge-primary">Confirm</a><br><a href="#" class="badge badge-pill badge-secondary">Confirm with Comment</a></td>
+                </tr>
+                <tr>
+                  <th class="text-right">Skills: </th>
+                  <td colspan="5">{{ l.experience.skills.all|join:" & " }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          {% endif %}
+          {% if wclr1 %}
+            <h5 class="card-title">Confirm the experience of someone you have worked with</h5>
+            <table class="table table-sm">
+              <thead>
+                <tr align="center">
+                  <th>Name</th>
+                  <th>Company</th>
+                  <th>Project</th>
+                  <th>Designation</th>
+                  <th>Dates</th>
+                  <th>Hours</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for l in wclr1 %}
+                <tr>
+                  <td rowspan="2"  class="align-middle">{{ l.experience.talent.first_name }} {{ l.experience.talent.last_name }}</td>
+                  <td class="align-middle">{{ l.experience.company }}</td>
+                  <td class="align-middle">{{ l.experience.project }}</td>
+                  <td class="align-middle">{{ l.experience.designation }}</td>
+                  <td align="Center">{{ l.experience.date_from|date:"j M Y" }}<br>to<br> {{ l.experience.date_to|date:"j M Y" }}</td>
+                  <td class="align-middle">{{ l.experience.hours_worked }}</td>
+                  <td class="align-middle"><a href="#" class="badge badge-pill badge-primary">Confirm</a><br><a href="#" class="badge badge-pill badge-secondary">Confirm with Comment</a></td>
+                </tr>
+                <tr>
+                  <th class="text-right">Skills: </th>
+                  <td colspan="5">{{ l.experience.skills.all|join:" & " }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          {% endif %}
+          <hr>
+          {% if wc1 %}
+            <h5 class="card-title">Confirm the experience of someone working for your company</h5>
+            <table class="table table-sm">
+              <thead>
+                <tr align="center">
+                  <th>Name</th>
+                  <th>Company</th>
+                  <th>Project</th>
+                  <th>Designation</th>
+                  <th>Dates</th>
+                  <th>Hours</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for l in wc1 %}
+                <tr>
+                  <td rowspan="2"  class="align-middle">{{ l.experience.talent.first_name }} {{ l.experience.talent.last_name }}</td>
+                  <td class="align-middle">{{ l.experience.company }}</td>
+                  <td class="align-middle">{{ l.experience.project }}</td>
+                  <td class="align-middle">{{ l.experience.designation }}</td>
+                  <td align="Center">{{ l.experience.date_from|date:"j M Y" }}<br>to<br> {{ l.experience.date_to|date:"j M Y" }}</td>
+                  <td class="align-middle">{{ l.experience.hours_worked }}</td>
+                  <td class="align-middle"><a href="#" class="badge badge-pill badge-primary">Confirm</a><br><a href="#" class="badge badge-pill badge-secondary">Confirm with Comment</a></td>
+                </tr>
+                <tr>
+                  <th class="text-right">Skills: </th>
+                  <td colspan="5">{{ l.experience.skills.all|join:" & " }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          {% endif %}
+          <hr>
+          {% if pc1 %}
+            <h5 class="card-title">Confirm the already logged (on paper) experience of a colleague</h5>
+            <table class="table table-sm">
+              <thead>
+                <tr align="center">
+                  <th>Name</th>
+                  <th>Company</th>
+                  <th>Project</th>
+                  <th>Designation</th>
+                  <th>Dates</th>
+                  <th>Hours</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for l in pc1 %}
+                <tr>
+                  <td rowspan="2"  class="align-middle">{{ l.pre_experience.talent.first_name }} {{ l.pre_experience.talent.last_name }}</td>
+                  <td class="align-middle">{{ l.pre_experience.company }}</td>
+                  <td class="align-middle">{{ l.pre_experience.project }}</td>
+                  <td class="align-middle">{{ l.pre_experience.designation }}</td>
+                  <td align="Center">{{ l.pre_experience.date_from|date:"j M Y" }}<br>to<br> {{ l.pre_experience.date_to|date:"j M Y" }}</td>
+                  <td class="align-middle">{{ l.pre_experience.hours_worked }}</td>
+                  <td class="align-middle"><a href="#" class="badge badge-pill badge-primary">Confirm</a><br><a href="#" class="badge badge-pill badge-secondary">Confirm with Comment</a></td>
+                </tr>
+                <tr>
+                  <th class="text-right">Skills: </th>
+                  <td colspan="5">{{ l.pre_experience.skills.all|join:" & " }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          {% endif %}
+{% endblock content %}
+{% block Script %}
+{% block subScript %}{% endblock subScript %}
+{% endblock Script %}

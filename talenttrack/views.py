@@ -60,8 +60,6 @@ def ExperienceHome(request):
         skill_set = skill_set.distinct().order_by('skill')
         skill_count = skill_set.count()
 
-        print(skill_set)
-
         template = 'talenttrack/track_home.html'
         context = {
             'train': train, 'train_sum': train_sum, 'experience': experience, 'exp_sum': exp_sum, 'prelog': prelog, 'pre_sum': pre_sum, 'tot_sum': tot_sum, 'skill_set': skill_set, 'skill_count': skill_count

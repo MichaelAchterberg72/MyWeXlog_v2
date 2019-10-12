@@ -8,7 +8,9 @@ Summary information relating to the user's network. Number of people on each lev
 {% endblock network %}
 
 {% block workflow %}
-Activities in the user's workflow.
+<p>Experience confirmations: <a href="{% url 'Profile:Confirm' %}">{{ total }}</a></p>
+
+
 {% endblock workflow %}
 
 {% block score %}

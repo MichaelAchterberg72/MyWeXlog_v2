@@ -4,6 +4,7 @@ from django.utils import timezone
 from time import time
 from random import random
 from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 from enterprises.models import Enterprise, Industry, Branch
@@ -37,7 +38,6 @@ class Course(models.Model):
     company = models.ForeignKey(Enterprise, on_delete=models.PROTECT, verbose_name="Institution")
     course_type = models.ForeignKey(CourseType, on_delete=models.PROTECT)
     website = models.URLField(blank=True, null=True)
-    skills = models.ManyToManyField(SkillTag)
     certification = models.ForeignKey(Result, on_delete=models.PROTECT)
 
     class Meta:
@@ -68,15 +68,17 @@ class Education(models.Model):
     date_captured = models.DateField(auto_now_add=True)
     date_from = models.DateField()
     date_to = models.DateField()
-    hours_worked = models.DecimalField(max_digits=5, decimal_places=2)
     topic = models.ForeignKey(Topic, on_delete=models.PROTECT, blank=True, null=True, verbose_name="subject")
     file = models.FileField(upload_to=EduFilename, blank=True, null=True)
+    score = models.SmallIntegerField(default=0)
 
     class Meta:
         unique_together = (('talent','course','topic'),)
 
     def __str__(self):
         return '{}: {} ({})'.format(self.talent, self.course, self.topic)
+
+
 
 
 class Lecturer(models.Model):
@@ -97,7 +99,6 @@ class Lecturer(models.Model):
 
     def __str__(self):
         return "Lecturer for {}".format(self.education)
-
 
 class ClassMates(models.Model):
         #Captured by talent
@@ -148,6 +149,7 @@ class WorkExperience(models.Model):
     designation = models.ForeignKey(Designation, on_delete=models.PROTECT)
     upload = models.FileField(upload_to=ExpFilename, blank=True, null=True)
     skills = models.ManyToManyField(SkillTag)
+    score = models.SmallIntegerField(default=0)
 
     class Meta:
         unique_together = (('talent','hours_worked','date_from','project', 'date_to'),)
@@ -265,6 +267,7 @@ class PreLoggedExperience(models.Model):
     designation = models.ForeignKey(Designation, on_delete=models.PROTECT)
     upload = models.FileField(upload_to=ExpFilename, blank=True, null=True)
     skills = models.ManyToManyField(SkillTag, related_name='logskill')
+    score = models.SmallIntegerField(default=0)
 
     class Meta:
         unique_together = (('talent','hours_worked','date_from','project', 'date_to'),)
