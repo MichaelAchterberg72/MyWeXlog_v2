@@ -50,6 +50,8 @@ class Course(models.Model):
 class Topic(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True)
     topic = models.CharField(max_length=60, unique=True)
+    skills = models.ManyToManyField(SkillTag)
+    hours = models.DecimalField(max_digits=5, decimal_places=2)
 
     def __str__(self):
         return '{} - {}'.format (self.course, self.topic)
