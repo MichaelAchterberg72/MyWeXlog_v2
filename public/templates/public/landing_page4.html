@@ -1,0 +1,714 @@
+{% extends "base_public.html" %}
+{% load humanize %}
+{% load staticfiles %}
+
+{% block content %}
+
+<section id="header" class="">
+  <div class="card bg-dark text-white">
+      <img src="{% static 'images/landing_page/dreamstime_xxl_90490646a.jpg' %}" class="img-fluid" alt="header image">
+
+      <div class="card-img-overlay">
+        <p>&nbsp</p>
+        <p>&nbsp</p>
+        <p>&nbsp</p>
+        <p>&nbsp</p>
+        <p>&nbsp</p>
+        <p>&nbsp</p>
+        <p>&nbsp</p>
+        <h1 class="display-3">WexLog.io</h1>
+        <p class="lead"><strong>Experience tracking and skills marketing made easy.</strong></p>
+        <p class="card-text">Match the skills you need for any position within minutes <br>
+          from our listing of talented professionals</p>
+
+        <p>&nbsp</p>
+        <p><a class="btn btn-light btn-lg" href="#" role="button">Search for Skills Available</a>
+        &nbsp
+        <a class="btn btn-light btn-lg" href="#" role="button">&nbsp&nbsp&nbspSearch for Vacancies&nbsp&nbsp&nbsp</a></p>
+
+        <center>
+        <p>&nbsp</p>
+        <p><a class="btn btn-primary btn-lg" href="{% url 'Payments:SubscriptionCountrySelect' %}" role="button">Subscribe Now</a></p>
+        </center>
+
+      </div>
+  </div>
+</section>
+
+<section id="features" class="">
+  <div class="jumbotron jumbotron-fluid">
+    <div class="container">
+
+    <div class="row">
+    <div class="col-sm-4">
+      <div class="card bg-light mb-3" style="width: 18rem;">
+        <img class="card-img-top" src="{% static 'images/landing_page/Capture4.jpg' %}" alt="Card image cap">
+        <div class="card-body">
+          <h5 class="card-title">Capture and Verify Experience</h5>
+          <p class="card-text">Capture your education & training as well as work experience and get it validated by
+            your colleagues, superiors, lecturers, class mates, collaborators and clients to develop a qualified listing
+            of time spent as well as the amount of time spent working for a company, hours spent on project and
+            hours spent developing skills.&nbsp<a href="{% url 'Payments:SubscriptionCountrySelect' %}"><strong>More..</strong></a></p>
+          <p class="card-text"><a href="{% url 'Payments:SubscriptionCountrySelect' %}"><strong>Get Started Now</strong></a></p>
+
+        </div>
+      </div>
+      </div>
+      <div class="col-sm-4">
+      <div class="card" style="width: 18rem;">
+        <img class="card-img-top" src="{% static 'images/landing_page/Trust4.jpg' %}" alt="Card image cap">
+        <div class="card-body">
+          <h5 class="card-title">Create an Online Trust Passport</h5>
+          <p class="card-text">By requesting validation from clients you can create an online
+            repository of not only the client referral comments, but colleagues, associates
+            and superiors from the day when the project was finished allowing you to
+            have a trustworthy online source for references, skills and education.
+          &nbsp<a href="{% url 'Payments:SubscriptionCountrySelect' %}"><strong>More..</strong></a><br>&nbsp</p>
+          <p class="card-text"><a href="{% url 'Payments:SubscriptionCountrySelect' %}"><strong>Get Started Now</strong></a></p>
+        </div>
+      </div>
+      </div>
+      <div class="col-sm-4">
+      <div class="card" style="width: 18rem;">
+        <img class="card-img-top" src="{% static 'images/landing_page/Advertise4.jpg' %}" alt="Card image cap">
+        <div class="card-body">
+          <h5 class="card-title">Advertise Vacancies, Personal Skills and Experience</h5>
+          <p class="card-text">Advertise vacancies and the skills and experience that you have with qualified references
+            with our availability function making it easy for your potential customers to find you
+            when they do a search for the skills required.<br>
+          <a href="{% url 'Payments:SubscriptionCountrySelect' %}"><strong>More..</strong></a><br>&nbsp</p>
+          <p class="card-text"><a href="{% url 'Payments:SubscriptionCountrySelect' %}"><strong>Get Started Now</strong></a></p>
+        </div>
+      </div>
+      </div>
+      </div>
+
+
+    </div>
+  </div>
+</section>
+
+<section id="references" class="">
+    <div class="title">
+      <center>
+        <p>&nbsp</p>
+      <h1 class="display-4">References</h1>
+      <p>&nbsp</p>
+      </center
+
+      <blockquote class="blockquote">
+
+      </blockquote>
+
+      <div class="row">
+
+        <div class="col-sm-3">
+          <div class="card" style="width: 18rem;">
+              <img class="card-img-top" src="{% static 'images/landing_page/face5.jpg' %}" alt="Card image cap">
+              <div class="card-body">
+                <h5 class="card-title">Engineers</h5>
+                <p class="card-text">James used WexLog for a month and found the perfect job<br>&nbsp</p>
+                <!-- Button trigger modal -->
+                <center>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalEngineer">
+                  View Reference
+                </button>
+                </center>
+
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModalEngineer" tabindex="0" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalEngineerLongTitle">Engineer Reference</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        "WexLog.io has been the single most helpful tool
+                          in recording my skill base and securing freelance work that I
+                          have used, it is easy to capture and available positions that
+                          match my qualifications are automatically listed for me to
+                          select.  No more hard work!"
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+
+        <div class="col-sm-3">
+          <div class="card" style="width: 18rem;">
+              <img class="card-img-top" src="{% static 'images/landing_page/face5.jpg' %}" alt="Card image cap">
+              <div class="card-body">
+                <h5 class="card-title">Freelancers</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <!-- Button trigger modal -->
+                <center>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalFreelancers">
+                  View Reference
+                </button>
+                </center>
+
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModalFreelancers" tabindex="-1" role="dialog" aria-labelledby="exampleModalFreelancresTitle" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Freelancers Reference</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        "WexLog.io has been the single most helpful tool
+                          in recording my skill base and securing freelance work that I
+                          have used, it is easy to capture and available positions that
+                          match my qualifications are automatically listed for me to
+                          select.  No more hard work!"
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        <div class="col-sm-3">
+          <div class="card" style="width: 18rem;">
+              <img class="card-img-top" src="{% static 'images/landing_page/face5.jpg' %}" alt="Card image cap">
+              <div class="card-body">
+                <h5 class="card-title">Pilots</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <!-- Button trigger modal -->
+                <center>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalPilot">
+                  View Reference
+                </button>
+                </center>
+
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModalPilot" tabindex="-1" role="dialog" aria-labelledby="exampleModalPilotTitle" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Pilot Reference</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+
+                        <figure class="figure">
+                          <img class="figure-img img-fluid rounded" src="{% static 'images/landing_page/dreamstime_xxl_100229731b.jpg' %}" alt="About us video" style="width:500px;height:600px;">
+                          <figcaption class="figure-caption">Let James explain a little bit about how the WexLog site works.</figcaption>
+                        </figure>
+
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-3">
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src="{% static 'images/landing_page/face5.jpg' %}" alt="Card image cap">
+                <div class="card-body">
+                  <h5 class="card-title">Nurses</h5>
+                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                  <!-- Button trigger modal -->
+                  <center>
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalNurse">
+                    View Reference
+                  </button>
+                  </center>
+
+                  <!-- Modal -->
+                  <div class="modal fade" id="exampleModalNurse" tabindex="-1" role="dialog" aria-labelledby="exampleModalNurseTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLongTitle">Nurse Reference</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          "Place the nurse's reference or youtube video here"
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        <p>&nbsp</p>
+
+  </div>
+</section>
+
+<section id="benefits" class="">
+  <div class="jumbotron jumbotron-fluid">
+    <div class="title">
+      <center>
+      <h3 class="display-4">Benefits</h3>
+      <p>&nbsp</p>
+      </center>
+
+      <center>
+      <h3>Company Benefits</h3>
+          <details>
+            <summary class="blockquote">Find Resources</summary>
+            <p class="lead">Find the skills, companies and resources that fit your
+              requirements.<br>
+              The needs of companies change rapidly in the modern world and the ability
+              to find people with those skills is often difficult. In addition, one never
+              knows if the skills claimed are indeed correct.<br>
+              WexLog solves these problems by offering a single source to find those
+              people, each with a verified work history.</p>
+          </details>
+          <details>
+            <summary class="blockquote">International Portfolio of skills</summary>
+            <p class="lead">The listing of members and their skills is internationally
+              recognised across a wide portfolio of skills and industries. This is
+              reinforced by the recording of the work or contract history and the
+              real-time evaluation of performance by the responsible persons, making
+              WexLog a simple, reliable and important resource for marketing and
+              searching for skilled people.</p>
+          </details>
+          <details>
+            <summary class="blockquote">Productised Resources</summary>
+            <p class="lead">A company often doesn’t need a full time resource, but
+              nonetheless needs the skill. With WexLog, the company can advertise
+              for the amount of time they need the skill and pay for that time only.
+              In this way a company has access to a much broader field of skills
+              which they can pay for as needed.</p>
+          </details>
+          <details>
+            <summary class="blockquote">Confirmed Experience</summary>
+            <p class="lead">Be able to see how much experience someone has, confirmed
+              by third parties.<br>
+              Often, one of the most difficult and time-consuming parts of the recruitment
+              process is the need to verify the claims of performance and satisfaction made
+              by candidates. This is exacerbated by the fact that the institutional memory
+              of the performance of a particular person, whether good, bad or simply
+              indifferent, fades rapidly over even a short time. WexLog avoids this problem
+              by permitting job requirements and performance to be recorded contemporaneously.
+              This ensures that the actual activity of the candidate is recorded at the time
+              it takes place, with the person responsible for managing that activity
+              certifying the requirements and their performance while the activity is still
+              fresh in their minds.</p>
+          </details>
+          <details>
+            <summary class="blockquote">Trust Passport</summary>
+            <p class="lead">Create your trust passport of qualified references.<br>
+              WexLog enables employers and contractees to record the details of the
+              requirements and their performance in it at the time it takes place. It
+              solves the problem of needing to track down the responsible manager in
+              respect of work that was performed months or even years before, a problem
+              that has become more significant in recent years, with an increase in the
+              rate of change of management at all levels of organizations, which often
+              makes it impossible to obtain a subsequent certification of more than the
+              simple fact of that employment. WexLog ensures that the recording of the job
+              and performance in it is made at the time it happens!</p>
+          </details>
+          <p>&nbsp</p>
+          <h3>Personal Benefits</h3>
+          <details>
+            <summary class="blockquote">Advertise Experience</summary>
+            <p class="lead">WexLog offers members the opportunity to place their work
+              activities, skills and qualifications, on a searchable database all in a place
+              trusted by recruiters and those looking for difficult to find skills and
+              attributes. Best of all, the fact that the claims made by members are audited
+              and certified by a third party, giving the searchers the assurance that what
+              they find is what they will get, without the tedious process of checking, of
+              verifying claims of performance made years ago.<br>
+              How often have you been forced to explain to an enquirer that the work was done
+              by a manager who is now retired, or has moved to another company or another
+              country? WexLog makes that a thing of the past! How often have you seen an
+              ideal job advertised, with the closing date for application ten days ago? That
+              is no longer a problem with a WexLog membership!</p>
+          </details>
+          <details>
+            <summary class="blockquote">Enable freelancers and consultants to advertise their experience</summary>
+            <p class="lead">Freelancers and consultants know that the hardest, most
+              time-consuming part of their work is finding a job in the first place.
+              WexLog makes it possible to have a permanent advertisement of your skills,
+              education, qualifications and experience in a single place, trusted by
+              potential employers for its accurate, up to date and certified records.</p>
+            <p class="lead">WexLog allows people to productise their skills to several
+              different companies and in that way be able to freelance or work on retainer,
+              giving them a lot of flexibility.</p>
+          </details>
+          <details>
+            <summary class="blockquote">Productise Experience</summary>
+            <p class="lead">Enable you to productise your skills and advertise to
+              market.<br>
+              How do you bring to the attention of possible employers the unique and
+              hard to find skills and experience you have? WexLog gives you the
+              opportunity to show the world that you have those skills and experience,
+              and to set out for possible users what they may mean to them in terms
+              of innovation, efficiency and enhanced competitiveness, all in an on-line
+              searchable database.</p>
+          </details>
+          <details>
+            <summary class="blockquote">View Skills Internationally</summary>
+            <p class="lead">View skills available and required internationally. Skills
+              and experience are increasingly becoming internationally relevant, but
+              the process of finding them has not become easier. Now, WexLog offers
+              members the opportunity to set out their skills and experience to the
+              world, while allowing those looking for those skills and experience to
+              search for them internationally, simply by the click of a mouse.</p>
+          </details>
+          <details>
+            <summary class="blockquote">Search & Apply</summary>
+            <p class="lead">Search for and apply for positions based on your skills
+              base. WexLog offers an opportunity to people and employers to advertise
+              their needs for skills and experience in a record available to all
+              members. There is no longer a need to search dozens of employment agencies
+              and classified ads. Simply use WexLog to search positions and contracts
+              available, using the keywords that describe what you can offer, and refer
+              the advertiser to your datafile by a click of the mouse, with the possibility
+              to enhance and personalize your communication.</p>
+          </details>
+
+    </center>
+
+      <center>
+      <p>&nbsp</p>
+      <p><a class="btn btn-primary btn-lg" href="{% url 'Payments:SubscriptionCountrySelect' %}" role="button">Subscribe Now</a></p>
+      </center>
+
+
+    </div>
+  </div>
+</section>
+
+<section id="quote" class="">
+  <div class="">
+    <div class="title">
+      <center>
+            <p>&nbsp</p>
+            <p>&nbsp</p>
+            <p>&nbsp</p>
+      <blockquote class="blockquote">
+        <p class="lead">"As a result of the choices and options available, people will
+          default to what they have always defaulted to – doing business with and connecting
+          with people they trust. Trust is the new currency. Within the next few years,
+          ‘trust passports’ will be common on the internet. Like Amazon.com or eBay’s current
+          systems for evaluating people within an online e-commerce community, we will all have
+          trust ratings that will help us interact with each other with more confidence"</p>
+        <footer class="blockquote-footer"> (Bush & Codrington, 2008) <cite title="Source Title">Future-Proof Your Child</cite></footer>
+      </blockquote>
+      <p>&nbsp</p>
+      <p>&nbsp</p>
+      <p>&nbsp</p>
+      </center>
+    </div>
+  </div>
+</section>
+
+<section id="more about us" class="">
+  <div class="jumbotron jumbotron-fluid">
+    <div class="title">
+      <center>
+      <h3 class="display-4">More About Us</h3>
+      <p>&nbsp</p>
+      <figure class="figure">
+        <img class="figure-img img-fluid rounded" src="{% static 'images/landing_page/dreamstime_xxl_100229731b.jpg' %}" alt="About us video" style="width:500px;height:600px;">
+        <figcaption class="figure-caption">Let James explain a little bit about how the WexLog site works.</figcaption>
+      </figure>
+
+      <p>&nbsp</p>
+      </center>
+
+      <center>
+      <p><a class="btn btn-primary btn-lg" href="{% url 'Payments:SubscriptionCountrySelect' %}" role="button">Subscribe Now</a></p>
+      </center>
+
+</section>
+
+<section id="search" class="">
+  <center
+  <p>&nbsp</p>
+  <h1 class="display-4">Search Our Skills</h1>
+  <p>&nbsp</p>
+
+  <div class="form-group mx-sm-3 mb-2">
+    <p>&nbsp</p>
+    <p>&nbsp</p>
+    <p><a class="btn btn-primary btn-lg" href="#" role="button">Search for Skills Available</a>
+    &nbsp
+    <a class="btn btn-primary btn-lg" href="#" role="button">&nbsp&nbsp&nbspSearch for Vacancies&nbsp&nbsp&nbsp</a></p>
+
+    </div>
+    <p>&nbsp</p>
+    <p>&nbsp</p>
+    <p>&nbsp</p>
+    <p>&nbsp</p>
+
+  </center>
+</section>
+
+<section id="subscription" class="">
+  <div class="jumbotron jumbotron-fluid">
+    <div class="title">
+      <center>
+      <h3 class="display-4">Choose Your Subscription</h3>
+      <p class="lead">We have a selection of subscriptions ranging from Free to Enterprise level.</p>
+      <p class="lead">The functionality of each is detailed below.</p>
+      <p>&nbsp</p>
+      <p>&nbsp</p>
+      </center>
+
+      <table class="table table-sm">
+        <col width="40%">
+        <col width="8%">
+        <col width="8%">
+        <col width="8%">
+        <thead>
+          <tr>
+            <th scope="col" align="center">#</th>
+            <th scope="col" align="center">Free</th>
+            <th scope="col" align="center">Passive</th>
+            <th scope="col" align="center">Active</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td align="right">Can capture experience and have it verified</td>
+            <td align="center">X</td>
+            <td align="center">X</td>
+            <td align="center">X</td>
+          </tr>
+          <tr>
+            <td align="right">Confirm other users captured experience</td>
+            <td align="center">X</td>
+            <td align="center">X</td>
+            <td align="center">X</td>
+          </tr>
+          <tr>
+            <td align="right">360 Degree evaluation</td>
+            <td colspan="1" align="center">X</td>
+            <td align="center">X</td>
+            <td align="center">X</td>
+          </tr>
+          <tr>
+            <td align="right">Find members based on current and past email addresses</td>
+            <td align="center">X</td>
+            <td align="center">X</td>
+            <td align="center">X</td>
+          </tr>
+          <tr>
+            <td align="right"">Can receive commission from paying people in your downline (5 levels only)</td>
+            <td align="center"></td>
+            <td align="center">X</td>
+            <td align="center">X</td>
+          </tr>
+          <tr>
+            <td align="right">Can view vacancies (only title, hours, type (freelance, office, etc) and scope)</td>
+            <td align="center">X</td>
+            <td align="center">X</td>
+            <td align="center">X</td>
+          </tr>
+          <tr>
+            <td align="right">Can view full vacancy details</td>
+            <td align="center"></td>
+            <td align="center"></td>
+            <td align="center">X</td>
+          </tr>
+          <tr>
+            <td align="right">Experience and skills available for people to search</td>
+            <td align="center"></td>
+            <td align="center">X</td>
+            <td align="center">X</td>
+          </tr>
+          <tr>
+            <td align="right">Can view vacancies on heatmap (No enterprise details)</td>
+            <td align="center">50km</td>
+            <td align="center">100km</td>
+            <td align="center">Internationally</td>
+          </tr>
+          <tr>
+            <td align="right">Other users can extract contact details of people that are
+            looking for or supplying a skill (Heatmaps)</td>
+            <td align="center"></td>
+            <td align="center"></td>
+            <td align="center">X</td>
+          </tr>
+          <tr>
+            <td align="right">Extract contact details of people that are looking for or
+              supplying a skill (Heatmaps)</td>
+            <td align="center"></td>
+            <td align="center"></td>
+            <td align="center">Internationally</td>
+          </tr>
+          <tr>
+            <td align="right">Can view vacancies on heatmap with full enterprise details</td>
+            <td align="center"></td>
+            <td align="center"></td>
+            <td align="center">X</td>
+          </tr>
+          <tr>
+            <td align="right">Can respond to vacancies</td>
+            <td align="center"></td>
+            <td align="center"></td>
+            <td align="center">X</td>
+          </tr>
+          <tr>
+            <td align="right">Apply for full time positions advertised</td>
+            <td align="center"></td>
+            <td align="center"></td>
+            <td align="center">X</td>
+          </tr>
+          <tr>
+            <td align="right">Can post vacancies</td>
+            <td align="center"></td>
+            <td align="center"></td>
+            <td align="center">X</td>
+          </tr>
+          <tr>
+            <td align="right">Can view other talent with similar skills</td>
+            <td align="center"></td>
+            <td align="center">X</td>
+            <td align="center">X</td>
+          </tr>
+          <tr>
+            <td align="right">Add Enterprise Details and new Enterprises</td>
+            <td align="center">X</td>
+            <td align="center">X</td>
+            <td align="center">X</td>
+          </tr>
+          <tr>
+            <td align="right">View Enterprise Profiles</td>
+            <td align="center">X</td>
+            <td align="center">X</td>
+            <td align="center">X</td>
+          </tr>
+          <tr>
+            <td align="right">Advertise availability</td>
+            <td align="center"></td>
+            <td align="center">X</td>
+            <td align="center">X</td>
+          </tr>
+          <tr>
+            <td align="right">Bid on work required by enterprises</td>
+            <td align="center"></td>
+            <td align="center"></td>
+            <td align="center">X</td>
+          </tr>
+          <tr>
+            <td align="right">Can summarise skills held by the enterprise through people currently employed</td>
+            <td align="center"></td>
+            <td align="center"></td>
+            <td align="center">X</td>
+          </tr>
+          <tr>
+            <td align="right">Access to the internal messaging system</td>
+            <td align="center">X</td>
+            <td align="center">X</td>
+            <td align="center">X</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <center>
+      <p>&nbsp</p>
+      <p><a class="btn btn-primary btn-lg" href="{% url 'Payments:SubscriptionCountrySelect' %}" role="button">Subscribe Now</a></p>
+      </center>
+
+    </div>
+  </div>
+</section>
+
+<section id="bottom menu" class="">
+  <div class="container">
+  <div class="row">
+    <p>
+      <table class="table table-sm">
+        <col width="25%">
+        <col width="25%">
+        <col width="25%">
+        <col width="25%">
+
+        <tbody>
+          <tr>
+            <th scope="col" align="center"></th>
+            <th scope="col" align="center">About</th>
+            <th scope="col" align="center">Terms</th>
+            <th scope="col" align="center">Support</th>
+          </tr>
+          <tr>
+            <td align="left">
+              <ul class="list-unstyled">
+                <li>DevOpTec (Pty.) Ltd T/A WeXlog</li>
+                <li>32 Viewland Crescent</li>
+                <li>Thornlands, Queensland</li>
+                <li>Australia, 4164</li>
+                <li>&nbsp</li>
+                <li>ABN: 4164</li>
+                <li>Telephone: +61 000 0000</li>
+                <li>Email: info@wexlog.io</li>
+              </ul>
+            </td>
+            <td align="left">
+              <ul class="list-unstyled">
+                <li><a href="{% url 'Public:AboutUs' %}">About us</a></li>
+                <li><a href="#">Products and services</a></li>
+                <li><a href="{% url 'Public:DataPrivacy' %}">Data Privacy Officer</a></li>
+              </ul>
+            </td>
+            <td align="left">
+              <ul class="list-unstyled">
+                <li><a href="{% url 'Public:Privacy' %}">Privacy Policy</a></li>
+                <li><a href="{% url 'Public:UserAgreement' %}">User Agreement</a></li>
+                <li><a href="{% url 'Public:Cookies' %}">Cookie Policy</a></li>
+                <li><a href="{% url 'Public:RightToSayNo' %}">Right to Say No to Sale of Personal Information</a></li>
+              </ul>
+            </td>
+            <td align="left">
+              <ul class="list-unstyled">
+                <li><a href="{% url 'Public:ContactUs' %}">Contact us</a></li>
+                <li><a href="{% url 'Public:Suggestions' %}">Site Suggestions</a></li>
+                <li><a href="{% url 'Public:HelpSupport' %}">Help & Support</a></li>
+              </ul>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </p
+    </div>
+
+  </div>
+</section>
+
+<section id="copyright" class="">
+  <div>
+    <p><small>Copyright © 2019 DevOpTec Pty Limited (ACN 142 189 759)</small></p>
+    </div>
+</section>
+
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}

@@ -9,7 +9,23 @@ from .forms import ContactUsForm, SuggestionsForm, DataPrivacyForm
 
 # Create your views here.
 class LandingPageView(TemplateView):
-    template_name = 'public/landing_page.html'
+    template_name = 'public/landing_page2.html'
+
+
+class LandingPage3View(TemplateView):
+    template_name = 'public/landing_page3.html'
+
+
+class LandingPage4View(TemplateView):
+    template_name = 'public/landing_page4.html'
+
+
+class LandingPage5View(TemplateView):
+    template_name = 'public/landing_page5.html'
+
+
+class LandingPage6View(TemplateView):
+    template_name = 'public/landing_page6.html'
 
 
 class AboutUsView(TemplateView):

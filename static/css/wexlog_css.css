@@ -17,3 +17,11 @@
 div.c {
   line-height: 80%;
 }
+
+div.d {
+  background-color: transparent;
+}
+
+div.right {
+  text-align: right;
+}

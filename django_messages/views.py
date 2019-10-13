@@ -107,6 +107,7 @@ def compose(request, recipient=None, form_class=ComposeForm,
     context={
                 'form': form,
             }
+                
     return render(request, template_name, context)
 
 

@@ -160,13 +160,13 @@ X_FRAME_OPTIONS = 'DENY'
 REFERRER_POLICY='same-origin'
     ## Content-Security-policy (3rd party app)
 CSP_DEFAULT_SRC = ("'self'",'maxcdn.bootstrapcdn.com', 'code.jquery.com',
-'cdnjs.cloudflare.com')
+'cdnjs.cloudflare.com', 'youtube.com')
 
 CSP_SCRIPT_SRC = None
 CSP_IMG_SRC = None
 CSP_OBJECT_SRC = None
-CSP_MEDIA_SRC = None
-CSP_FRAME_SRC = None
+CSP_MEDIA_SRC = ('self')
+CSP_FRAME_SRC = ('youtube.com')
 CSP_FONT_SRC = None
 CSP_CONNECT_SRC = None
 CSP_STYLE_SRC = None

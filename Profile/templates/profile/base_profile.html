@@ -1,0 +1,69 @@
+{% extends 'base_home.html' %}
+
+  {% block title %}{{ block.super }}{% endblock title %}
+  {% block Style %}
+
+  {% block subStyle %}{% endblock subStyle %}
+
+  {% endblock Style %}
+  {% block content %}
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">My Network</h5>
+            <p class="card-text">
+              {% block network %}
+              {% endblock network %}
+            </p>
+            <a href="#" class="badge badge-pill badge-primary">See Detail</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Workflow</h5>
+            <p class="card-text">
+              {% block workflow %}
+              {% endblock workflow %}
+            </p>
+            <a href="#" class="badge badge-pill badge-primary">Goto Workflow</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6 pt-3">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">My Score</h5>
+            <p class="card-text">
+              {% block score%}
+              {% endblock score %}
+            </p>
+            <a href="#" class="badge badge-pill badge-primary">See Detail</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 pt-3">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">TBA</h5>
+            <p class="card-text">
+              {% block TBA %}
+              {% endblock TBA %}
+            </p>
+            <a href="#" class="badge badge-pill badge-primary">Goto Workflow</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card border-secondary mb-3 m-2" >
+        {% block Center_Content %}
+        {% endblock Center_Content %}
+    </div>
+  {% endblock content %}
+  {% block Script %}
+  {% block subScript %}{% endblock subScript %}
+  {% endblock Script %}
