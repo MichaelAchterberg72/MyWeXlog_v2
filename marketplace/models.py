@@ -41,16 +41,16 @@ UNIT = (
 
 class SkillLevel(models.Model):
     LEVEL = (
-        ('S','Student'),
-        ('G','Graduate'),
-        ('J','Junior'),
-        ('I','Intermediate'),
-        ('S','Senior'),
-        ('L','Lead'),
+        (0,'Student'),
+        (1,'Graduate'),
+        (2,'Junior'),
+        (3,'Intermediate'),
+        (4,'Senior'),
+        (5,'Lead'),
     )
 
-    level = models.CharField(max_length=1, choices=LEVEL)
-    min_hours = models.SmallIntegerField()
+    level = models.IntegerField(choices=LEVEL, unique=True)
+    min_hours = models.IntegerField()
     description = models.TextField()
 
     def __str__(self):
@@ -74,7 +74,7 @@ class TalentRequired(models.Model):
     rate_offered = models.DecimalField(max_digits=6, decimal_places=2)
     currency = models.ForeignKey(Currency, on_delete=models.PROTECT)
     rate_unit = models.CharField(max_length=1, choices=RATE_UNIT, default='H')
-    bid_open = models.DateTimeField(default=timezone.now, null=True)
+    bid_open = models.DateTimeField(auto_now_add=True, null=True)
     bid_closes = models.DateTimeField('Vacancy Closes', null=True)
     offer_status = models.CharField(max_length=1, choices=STATUS, default='O')
     certification = models.ManyToManyField(Result, verbose_name='Certifications Required', blank=True)
@@ -84,7 +84,7 @@ class TalentRequired(models.Model):
     city = models.ForeignKey(City, on_delete=models.PROTECT, verbose_name='City, Town or Place')
 
     class Meta:
-        unique_together = (('date_entered','enterprise','title', 'requested_by'),)
+        unique_together = (('enterprise','title', 'requested_by'),)
 
     def __str__(self):
         return '{}, {}, {}'.format(self.title, self.enterprise, self.date_entered)

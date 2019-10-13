@@ -81,10 +81,10 @@
           {% for t in train %}
           <tbody>
             <tr>
-              <td>{{ t.date_from }}</td>
-              <td>{{ t.date_to }}</td>
+              <td>{{ t.date_from|date:"j M Y" }}</td>
+              <td>{{ t.date_to|date:"j M Y" }}</td>
               <td>{{ t.course }}</td>
-              <td>{{ t.hours_worked|intcomma }}</td>
+              <td>{{ t.topic.hours|intcomma }}</td>
               <td><a href="{% url 'Talent:EducationDetail' t.id %}" class="badge badge-pill badge-secondary">Detail</a></td>
             </tr>
           </tbody>
@@ -122,8 +122,8 @@
           <tbody>
             <tr>
               <td>{{ e.company }}</td>
-              <td>{{ e.date_from }}</td>
-              <td>{{ e.date_to }}</td>
+              <td>{{ e.date_from|date:"j M Y" }}</td>
+              <td>{{ e.date_to|date:"j M Y" }}</td>
               <td>{{ e.hours_worked|intcomma }}</td>
               <td>{{ e.project }}</td>
               <td><a href="{% url 'Talent:ExperienceDetail' e.id %}" class="badge badge-pill badge-secondary">Detail</a></td>
@@ -162,8 +162,8 @@
         <tbody>
           <tr>
             <td>{{ p.company }}</td>
-            <td>{{ p.date_from }}</td>
-            <td>{{ p.date_to }}</td>
+            <td>{{ p.date_from|date:"j M Y" }}</td>
+            <td>{{ p.date_to|date:"j M Y" }}</td>
             <td>{{ p.hours_worked|intcomma }}</td>
             <td>{{ p.project }}</td>
             <td><a href="{% url 'Talent:PreLogDetail' p.id %}" class="badge badge-pill badge-secondary">Detail</a></td>

@@ -13,8 +13,17 @@
   <input type="hidden" name="next" value="{{ request.GET.next }}">
   {% csrf_token %}
   <div class="form-row">
-    <div class="form-group col-md-6 mb-0">
+    <div class="form-group col-md-4 mb-0">
       {{ form.topic|as_crispy_field }}
+    </div>
+  </div>
+  <div class="form-row">
+    {{ form.skills|as_crispy_field }}
+    <p><a href="{% url 'Flatten:SkillAddPop' %}" id='add_skill' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a Skill</a></p>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-4 mb-0">
+      {{ form.hours|as_crispy_field }}
     </div>
   </div>
   <div class="">

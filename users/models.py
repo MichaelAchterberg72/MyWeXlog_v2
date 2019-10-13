@@ -27,6 +27,7 @@ class CustomUser(AbstractUser):
     )
     subscription = models.IntegerField(choices=PKG, default=0)
     middle_name = models.CharField(max_length=60, null=True, blank=True)
+    synonym = models.CharField(max_length=15, null=True)
     permission = models.IntegerField(choices=COMPANY, default=1)
     role = models.IntegerField(choices=ROLE, default=0)
     paid = models.BooleanField(default=False, blank=True)
