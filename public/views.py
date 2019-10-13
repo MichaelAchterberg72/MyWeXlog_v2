@@ -9,7 +9,7 @@ from .forms import ContactUsForm, SuggestionsForm, DataProtectionForm
 
 # Create your views here.
 class LandingPageView(TemplateView):
-    template_name = 'public/landing_page.html'
+    template_name = 'public/landing_page2.html'
 
 
 class AboutUsView(TemplateView):
