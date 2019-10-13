@@ -204,6 +204,7 @@ DATABASES = {
 		'PASSWORD': 'rdf8tm1234', #MA
         #'PASSWORD': 'dJpfss41678', #JK
         'HOST': 'localhost',
+        #'HOST': 'dbhost',
         'PORT': '5432'
     }
 }
