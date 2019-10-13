@@ -23,3 +23,9 @@ class DataProtectionForm(forms.ModelForm):
     class Meta:
         model = DataProtection
         fields = ('name','email','comments')
+
+
+class DataPrivacyForm(forms.ModelForm):
+    class Meta:
+        model = Suggestions
+        fields = ('name','email','comments')
