@@ -102,3 +102,15 @@ class HelpSupportView(TemplateView):
 
 class DataPrivacyView(TemplateView):
     template_name = 'public/data_privacy.html'
+
+
+class CaptureView(TemplateView):
+    template_name = 'public/capture.html'
+
+
+class TrustPassportView(TemplateView):
+    template_name = 'public/trust_passport.html'
+
+
+class AdvertiseView(TemplateView):
+    template_name = 'public/advertise.html'
