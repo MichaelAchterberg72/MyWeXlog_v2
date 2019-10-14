@@ -16,7 +16,8 @@
         <p>&nbsp</p>
         <p>&nbsp</p>
         <h2>Verify the hours spent developing your skills<br>
-          and automatically match to positions suited to your skillset</h2>
+          and automatically match to positions <br>
+          suited to your skillset</h2>
         <p class="lead">Experience tracking and skills marketing made easy.</p>
         <p class="card-text">Match the skills you need for any position within minutes <br>
           from our listing of talented professionals</p>
@@ -37,7 +38,8 @@
     <div class="row">
     <div class="col-sm-4">
       <div class="card bg-light mb-3" style="width: 18rem;">
-        <img class="card-img-top" src="{% static 'images/landing_page/Icon_capture.png' %}" alt="Card image cap">
+        <a href="{% url 'Public:Capture' %}">
+        <img class="card-img-top" src="{% static 'images/landing_page/Icon_capture.png' %}" alt="Capture"></a>
         <div class="card-body">
           <center>
           <h5 class="card-title">CAPTURE AND VERIFY EXPERIENCE</h5>
@@ -45,7 +47,7 @@
           <p class="card-text">Capture your education & training as well as work experience and get it validated by
             your colleagues, superiors, lecturers, class mates, collaborators and clients to develop a qualified listing
             of time spent working for a company, hours spent on project and
-            hours spent developing skills.&nbsp<a href="{% url 'Payments:SubscriptionCountrySelect' %}"> More..</a><br>&nbsp</p>
+            hours spent developing skills.&nbsp<a href="{% url 'Public:Capture' %}"> More..</a><br>&nbsp</p>
           <p class="card-text"><a href="{% url 'Payments:SubscriptionCountrySelect' %}"><strong>Get Started Now</strong></a></p>
 
         </div>
@@ -53,7 +55,8 @@
       </div>
       <div class="col-sm-4">
       <div class="card" style="width: 18rem;">
-        <img class="card-img-top" src="{% static 'images/landing_page/Icon_trust.png' %}" alt="Card image cap">
+        <a href="{% url 'Public:TrustPassport' %}">
+        <img class="card-img-top" src="{% static 'images/landing_page/Icon_trust.png' %}" alt="Trust Passport"></a>
         <div class="card-body">
           <center>
           <h5 class="card-title">CREATE AN ONLINE TRUST PASSPORT</h5>
@@ -62,22 +65,23 @@
             repository of not only the client referral comments, but colleagues, associates
             and superiors from the day when the project was finished allowing you to
             have a trustworthy online source for references, skills and education.
-          &nbsp<a href="{% url 'Payments:SubscriptionCountrySelect' %}"> More..</a></p>
+          &nbsp<a href="{% url 'Public:TrustPassport' %}"> More..</a></p>
           <p class="card-text"><a href="{% url 'Payments:SubscriptionCountrySelect' %}"><strong>Get Started Now</strong></a></p>
         </div>
       </div>
       </div>
       <div class="col-sm-4">
       <div class="card" style="width: 18rem;">
-        <img class="card-img-top" src="{% static 'images/landing_page/Icon_advertise.png' %}" alt="Card image cap">
+        <a href="{% url 'Public:Advertise' %}">
+        <img class="card-img-top" src="{% static 'images/landing_page/Icon_advertise.png' %}" alt="Skils & Experience"></a>
         <div class="card-body">
           <center>
-          <h5 class="card-title">ADVERTISE VACANCIES, PERSONAL SKILLS AND EXPERIENCE</h5>
+          <h5 class="card-title">ADVERTISE PERSONAL SKILLS, EXPERIENCE AND VACANCIES</h5>
           </center>
           <p class="card-text">Advertise vacancies as well as the skills and experience that you have with qualified references
             with our availability function making it easy for your potential customers to find you
             when they do a search for the workplace skills required.
-          <a href="{% url 'Payments:SubscriptionCountrySelect' %}">More..<br>&nbsp</a></p>
+          <a href="{% url 'Public:Advertise' %}">More..</a><br>&nbsp<br>&nbsp</p>
           <p class="card-text"><a href="{% url 'Payments:SubscriptionCountrySelect' %}"><strong>Get Started Now</strong></a></p>
         </div>
       </div>
@@ -140,6 +144,20 @@
     </div>
   </div>
 </section>
+
+<div class="card bg-dark text-white">
+  <img class="" src="{% static 'images/landing_page/bar.jpg' %}" height="280px" alt="colour bar">
+  <div class="card-img-overlay">
+    <center>
+    <p>&nbsp</p>
+    <h2>Suitable for independent contractors, consultants, <br>freeancers and permanent staff</h2>
+    <p class="card-text">Match the skills you need for any position within minutes <br>
+      from our listing of talented professionals</p>
+    <p><a class="btn btn-success btn-lg" href="{% url 'Payments:SubscriptionCountrySelect' %}" role="button">Subscribe Now</a></p>
+
+    </center>
+  </div>
+</div>
 
 <section id="references" class="">
   <div class="container pt-3">
@@ -323,11 +341,27 @@
     </div>
 </section>
 
+<div class="card bg-dark text-white">
+  <img class="" src="{% static 'images/landing_page/bar.jpg' %}" height="240px" alt="colour bar">
+  <div class="card-img-overlay">
+    <center>
+    <p>&nbsp</p>
+    <h2>Benefits for both companies and individuals</h2>
+    <p class="card-text">Build a qualified database of the skills that you
+      have at your disposal and and the makeup <br>
+      of your company from the skills that you or your employees list in WexLog</p>
+    <p><a class="btn btn-success btn-lg" href="{% url 'Payments:SubscriptionCountrySelect' %}" role="button">Get Started Now</a></p>
+
+    <center>
+  </div>
+</div>
+
 <section id="benefits" class="">
-  <div class="jumbotron jumbotron-fluid">
+  <div class="jumbotron-fluid">
     <div class="container pt-3">
     <div class="title">
       <center>
+        <p>&nbsp</p>
       <h3 class="display-4">Benefits</h3>
       <p>&nbsp</p>
       </center>
@@ -448,24 +482,31 @@
               the advertiser to your datafile by a click of the mouse, with the possibility
               to enhance and personalize your communication.</p>
           </details>
-
+          <p>&nbsp</p>
     </center>
 
-      <center>
-      <p>&nbsp</p>
-      <p><a class="btn btn-primary btn-lg" href="{% url 'Payments:SubscriptionCountrySelect' %}" role="button">Subscribe Now</a></p>
-      </center>
-
-
-    </div>
+      </div>
     </div>
   </div>
 </section>
+
+<div class="card bg-dark text-white">
+  <img class="" src="{% static 'images/landing_page/bar.jpg' %}" height="240px" alt="colour bar">
+  <div class="card-img-overlay">
+    <center>
+    <p>&nbsp</p>
+    <h2>Get started today!
+      <br>&nbsp</h2>
+      <p><a class="btn btn-success btn-lg" href="{% url 'Payments:SubscriptionCountrySelect' %}" role="button">Subscribe Now</a></p>
+    </center>
+  </div>
+</div>
 
 <section id="quote" class="">
   <div class="container pt-3">
     <div class="title">
       <center>
+        <p>&nbsp</p>
       <h3 class="display-4">Quote</h3>
       <p>&nbsp</p>
 
@@ -475,34 +516,74 @@
           workers. They will simply put out a request for X number of Y type of workers,
           along with plenty of data about what an ideal candidate would look like”</p>
         <footer class="blockquote-footer"> (Miessler, 2018) <cite title="Source Title">
-          <a href="https://danielmiessler.com/blog/the-future-of-work-is-everyone-running-the-work-app/">
+          <a href="https://danielmiessler.com/blog/the-future-of-work-is-everyone-running-the-work-app/" target="_blank">
             The Future of Work is Everyone Running the “Work” App</a></cite></footer>
       </blockquote>
+      <p>&nbsp</p>
       <p>&nbsp</p>
       </center>
     </div>
   </div>
 </section>
 
+<div class="card bg-dark text-white">
+  <img class="" src="{% static 'images/landing_page/bar.jpg' %}" height="240px" alt="colour bar">
+  <div class="card-img-overlay">
+    <center>
+    <p>&nbsp</p>
+    <h2>Trusted Since 2019</h2>
+
+      <table class="">
+        <tbody>
+          <col width="20%">
+          <col width="20%">
+          <col width="20%">
+          <col width="20%">
+          <tr>
+            <td class="display-4" align="center">2,099</td>
+            <td class="display-4" align="center">5,649</td>
+            <td class="display-4" align="center">1,024</td>
+            <td class="display-4" align="center">1,086</td>
+          </tr>
+          <tr>
+            <td align="center">SKILLS</td>
+            <td align="center">MEMBERS</td>
+            <td align="center">ENTERPRISES</td>
+            <td align="center">VACANCIES</td>
+          </tr>
+        </tbody>
+      </table>
+    <center>
+  </div>
+</div>
+
 <section id="more about us" class="">
-  <div class="jumbotron jumbotron-fluid">
+  <div class="jumbotron-fluid">
     <div class="title">
       <center>
+        <p>&nbsp</p>
       <h3 class="display-4">More About Us</h3>
       <p class="lead">Let James explain a little bit about how the WexLog site works.</p>
 
       <div class="embed-responsive embed-responsive-16by9">
           <iframe class="embed-responsive-item" src="{% static 'images/landing_page/Architect.mp4' %}" allowfullscreen></iframe>
         </div>
-        <p>&nbsp</p>
-        </center>
 
-        <center>
-        <p><a class="btn btn-primary btn-lg" href="{% url 'Payments:SubscriptionCountrySelect' %}" role="button">Subscribe Now</a></p>
         </center>
-
 
 </section>
+
+<div class="card bg-dark text-white">
+  <img class="" src="{% static 'images/landing_page/bar.jpg' %}" height="240px" alt="colour bar">
+  <div class="card-img-overlay">
+    <center>
+    <p>&nbsp</p>
+    <h2>Subscribe Now!
+      <br>&nbsp</h2>
+      <p><a class="btn btn-success btn-lg" href="{% url 'Payments:SubscriptionCountrySelect' %}" role="button">&nbsp&nbsp&nbsp&nbsp Subscribe &nbsp&nbsp&nbsp&nbsp</a></p>
+    </center>
+  </div>
+</div>
 
 <section id="search" class="">
   <center
@@ -521,16 +602,31 @@
     <p>&nbsp</p>
     <p>&nbsp</p>
     <p>&nbsp</p>
-    <p>&nbsp</p>
 
   </center>
 </section>
 
+<div class="card bg-dark text-white">
+  <img class="" src="{% static 'images/landing_page/bar.jpg' %}" height="240px" alt="colour bar">
+  <div class="card-img-overlay">
+    <center>
+    <p>&nbsp</p>
+    <h2>Benefits for both companies as well as individuals</h2>
+    <p class="card-text">Build a qualified database of the skills that you
+      have at your disposal and and the makeup <br>
+      of your company from the skills that you or your employees list in WexLog</p>
+    <center>
+  </div>
+</div>
+
 <section id="subscription" class="">
-  <div class="jumbotron jumbotron-fluid">
+  <div class="container pt-3">
+    <div class="container pt-3">
+  <div class="jumbotron-fluid">
 
     <div class="title">
       <center>
+        <p>&nbsp</p>
       <h3 class="display-4">Choose Your Subscription</h3>
       <p class="lead">We have a selection of subscriptions ranging from Free to Enterprise level.</p>
       <p class="lead">The functionality of each is detailed below.</p>
@@ -690,14 +786,27 @@
       </table>
 
       <center>
-      <p>&nbsp</p>
-      <p><a class="btn btn-primary btn-lg" href="{% url 'Payments:SubscriptionCountrySelect' %}" role="button">Subscribe Now</a></p>
+        <p>&nbsp</p>
       </center>
 
     </div>
 
   </div>
+  </div>
+  </div>
 </section>
+
+<div class="card bg-dark text-white">
+  <img class="" src="{% static 'images/landing_page/bar.jpg' %}" height="240px" alt="colour bar">
+  <div class="card-img-overlay">
+    <center>
+    <p>&nbsp</p>
+    <h2>Get Started Now!
+      <br>&nbsp</h2>
+      <p><a class="btn btn-success btn-lg" href="{% url 'Payments:SubscriptionCountrySelect' %}" role="button">&nbsp&nbsp&nbsp&nbsp Subscribe &nbsp&nbsp&nbsp&nbsp</a></p>
+    </center>
+  </div>
+</div>
 
 <section id="bottom menu" class="">
   <div class="container">
@@ -751,7 +860,7 @@
                 <li><a href="{% url 'Public:HelpSupport' %}">Help & Support</a></li>
                 <li>&nbsp</li>
                 <li>&nbsp</li>
-                <li><a href="{% url 'Public:AboutUs' %}"><img src="{% static 'images/social-media/twittera.png' %}" height="30" width="30" alt="Twitter"></a> &nbspS
+                <li><a href="{% url 'Public:AboutUs' %}"><img src="{% static 'images/social-media/twittera.png' %}" height="30" width="30" alt="Twitter"></a> &nbsp
                   <a href="{% url 'Public:AboutUs' %}"><img src="{% static 'images/social-media/facebooka.png' %}" height="30" width="30" alt="Facebook"></a> &nbsp
                   <a href="{% url 'Public:AboutUs' %}"><img src="{% static 'images/social-media/linkedinb.png' %}" height="30" width="30" alt="LinkedIn"></a> &nbsp
                   <a href="{% url 'Public:AboutUs' %}"><img src="{% static 'images/social-media/youtube.png' %}" height="30" width="30" alt="Youtube"></a></li>

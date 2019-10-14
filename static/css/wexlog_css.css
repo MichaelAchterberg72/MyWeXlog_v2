@@ -25,3 +25,9 @@ div.d {
 div.right {
   text-align: right;
 }
+
+.backgroundimg {
+  margin: 0;
+  padding: 0;
+  image-size: cover;
+}

@@ -21,4 +21,7 @@ urlpatterns = [
     path('help-support/', views.HelpSupportView.as_view(), name='HelpSupport'),
     path('data-protection-officer/', views.DataProtectionView, name='DataProtection'),
     path('dpo-contact/', views.DataPrivacyView, name='DataPrivacy'),
+    path('capture/', views.CaptureView.as_view(), name='Capture'),
+    path('trust-passport/', views.TrustPassportView.as_view(), name='TrustPassport'),
+    path('advertise/', views.AdvertiseView.as_view(), name='Advertise'),
 ]
