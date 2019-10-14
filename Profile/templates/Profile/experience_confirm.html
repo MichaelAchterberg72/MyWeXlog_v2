@@ -42,7 +42,11 @@
                       <button type="submit" class="badge badge-danger badge-pill">Reject</button>
                     </form>
                     <br>
-                    <a href="#" class="badge badge-pill badge-success">Review with Comment</a>
+                    <a href="{% url 'Profile:LecturerComment' l.id %}" class="badge badge-pill badge-success">Review with Comment</a>
+                    <br>
+                    <form  action="{% url 'Profile:LecturerWrongPerson' l.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="badge badge-info badge-pill">Wrong Person</button>
                   </td>
                   </tr>
                   {% endfor %}
@@ -80,7 +84,11 @@
                     <form  action="{% url 'Profile:ClassMatesReject' l.id %}" method="post">
                     {% csrf_token %}
                     <button type="submit" class="badge badge-danger badge-pill">Reject</button>
-                  </form><br><a href="#" class="badge badge-pill badge-success">Review with Comment</a>
+                  </form><br><a href="{% url 'Profile:ClassMatesComment' l.id %}" class="badge badge-pill badge-success">Review with Comment</a>
+                  <br>
+                  <form  action="{% url 'Profile:ClassMatesWrongPerson' l.id %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="badge badge-info badge-pill">Wrong Person</button>
                 </td>
                 </tr>
                 {% endfor %}

@@ -218,6 +218,12 @@ class DesignationForm(forms.ModelForm):
         fields = ('name', )
 
 
+class ClassMatesCommentForm(forms.ModelForm):
+    class Meta:
+        model = ClassMates
+        fields = ('comments', 'confirm',)
+
+
 class ClassMatesResponseForm(forms.ModelForm):
     class Meta:
         model = ClassMates
@@ -234,6 +240,12 @@ class ClassMatesConfirmForm(forms.ModelForm):
     class Meta:
         model = ClassMates
         fields = ('confirm', 'comments')
+
+
+class LecturerCommentForm(forms.ModelForm):
+    class Meta:
+        model = Lecturer
+        fields = ('comments', 'confirm',)
 
 
 class LecturerResponseForm(forms.ModelForm):

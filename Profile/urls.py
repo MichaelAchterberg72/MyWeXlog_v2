@@ -34,6 +34,11 @@ urlpatterns = [
         path('experience-review/', views.ConfirmView, name='Confirm'),
         path('lecturer-confirm/<int:pk>/', views.LecturerConfirmView, name='LecturerConfirm'),
         path('lecturer-reject/<int:pk>/', views.LecturerRejectView, name='LecturerReject'),
+        path('lecturer-comment/<int:pk>/', views.LecturerCommentView, name='LecturerComment'),
+        path('lecturer-wrongperson/<int:pk>/', views.LecturerWrongPersonView, name='LecturerWrongPerson'),
         path('classmates-confirm/<int:pk>/', views.ClassMatesConfirmView, name='ClassMatesConfirm'),
         path('classmates-reject/<int:pk>/', views.ClassMatesRejectView, name='ClassMatesReject'),
+        path('classmates-comment/<int:pk>/', views.ClassMatesCommentView, name='ClassMatesComment'),
+        path('classmates-wrongperson/<int:pk>/', views.ClassMatesWrongPersonView, name='ClassMatesWrongPerson'),
+
 ]

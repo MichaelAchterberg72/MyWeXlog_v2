@@ -15,8 +15,13 @@ from csp.decorators import csp_exempt
 from .models import (
         Profile, Email, PhysicalAddress, PostalAddress, PhoneNumber, SiteName, OnlineRegistrations, FileUpload, IdentificationDetail, IdType, PassportDetail, LanguageList, LanguageTrack
         )
+
 from talenttrack.models import (
         Lecturer, ClassMates, WorkColleague, Superior, WorkCollaborator,  WorkClient, PreColleague, Education
+)
+
+from talenttrack.forms import (
+        LecturerCommentForm, ClassMatesCommentForm
 )
 from locations.models import Region
 
@@ -83,6 +88,40 @@ def LecturerRejectView(request, pk):
 
 
 @login_required()
+def LecturerWrongPersonView(request, pk):
+    if request.method == 'POST':
+        info = Lecturer.objects.get(pk=pk)
+        info.confirm = 'Y'
+        info.save()
+    return redirect(reverse('Profile:Confirm')+'#Lecturer')
+
+
+@login_required()
+def LecturerCommentView(request, pk):
+    info = get_object_or_404(Lecturer, pk=pk)
+    form = LecturerCommentForm(request.POST or None, instance=info)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.save()
+            if new.confirm == 'C':
+                edu = Education.objects.get(pk=info.education.id)
+                edu.score += 2
+                edu.save()
+            else:
+                pass
+
+            return redirect(reverse('Profile:Confirm')+'#Lecturer')
+
+    else:
+        template ='talenttrack/confirm_comments.html'
+        context = {'form': form, 'info': info}
+        return render(request, template, context)
+
+
+
+@login_required()
 def ClassMatesConfirmView(request, pk):
     if request.method == 'POST':
         info = ClassMates.objects.get(pk=pk)
@@ -99,6 +138,39 @@ def ClassMatesRejectView(request, pk):
     if request.method == 'POST':
         info = ClassMates.objects.get(pk=pk)
         info.confirm = 'R'
+        info.save()
+    return redirect(reverse('Profile:Confirm')+'#ClassMates')
+
+
+@login_required()
+def ClassMatesCommentView(request, pk):
+    info = get_object_or_404(ClassMates, pk=pk)
+    form = ClassMatesCommentForm(request.POST or None, instance=info)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.save()
+            if new.confirm == 'C':
+                edu = Education.objects.get(pk=info.education.id)
+                edu.score += 1
+                edu.save()
+            else:
+                pass
+
+            return redirect(reverse('Profile:Confirm')+'#ClassMates')
+
+    else:
+        template ='talenttrack/confirm_comments.html'
+        context = {'form': form, 'info': info}
+        return render(request, template, context)
+
+
+@login_required()
+def ClassMatesWrongPersonView(request, pk):
+    if request.method == 'POST':
+        info = ClassMates.objects.get(pk=pk)
+        info.confirm = 'Y'
         info.save()
     return redirect(reverse('Profile:Confirm')+'#ClassMates')
 
