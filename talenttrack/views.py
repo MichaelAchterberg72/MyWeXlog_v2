@@ -37,6 +37,22 @@ def ExperienceHome(request):
         t_sum = train_sum.get('Edu_sum')
         e_sum = exp_sum.get('we_sum')
         p_sum= pre_sum.get('p_sum')
+
+        if t_sum:
+            t_sum = t_sum
+        else:
+            t_sum=0
+
+        if e_sum:
+            e_sum = e_sum
+        else:
+            e_sum = 0
+
+        if p_sum:
+            p_sum = p_sum
+        else:
+            p_sum = 0
+
         tot_sum = t_sum + e_sum + p_sum
 
         #e_skill =  Education.objects.only("course__skills").filter(talent=request.user).values_list('skills', flat=True)

@@ -92,6 +92,21 @@ def MarketHome(request):
     mypli = my_prelogged.get('mypl')
     mytri = training_time.get('mytr')
 
+    if myli:
+        myli = myli
+    else:
+        myli = 0
+
+    if mypli:
+        mypli = mypli
+    else:
+        mypli = 0
+
+    if mytri:
+        mytri = mytri
+    else:
+        mytri = 0
+
     mye = myli+mypli+mytri
     myed = [Decimal(mye)]
     #Summing all hours<<<
@@ -258,6 +273,7 @@ def VacancyPostView(request, pk):
                 plsse = plsse
             else:
                 plsse = 0
+
             if messe:
                 messe = messe
             else:
