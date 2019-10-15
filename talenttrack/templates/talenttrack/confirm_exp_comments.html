@@ -1,0 +1,48 @@
+{% extends "base_home.html" %}
+{% load crispy_forms_tags %}
+
+
+{% block title %}{{block.super}}-Experience{% endblock title %}
+
+{% block content %}
+<div class="card">
+  <h5 class="card-header">Confirm Experience with Comment</h5>
+  <div class="card-body">
+    <h6 class="card-title">{{ info.experience.talent.first_name }} {{ info.experience.talent.last_name }}</h5>
+    <table class="table table-sm">
+      <col width="25%">
+      <col width="25%">
+      <col width="20%">
+      <col width="10%">
+      <thead>
+        <tr align="Center">
+          <th>Company</th>
+          <th>Project</th>
+          <th>Designation</th>
+          <th>Dates</th>
+          <th>Hours</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="align-middle" align="Center">{{ info.experience.company }}</td>
+          <td class="align-middle" align="Center">{{ info.experience.project }}</td>
+          <td class="align-middle" align="Center">{{ info.experience.designation }}</td>
+          <td align="Center">{{ info.experience.date_from|date:"j M Y" }} <br>to<br>{{ info.experience.date_to|date:"j M Y" }}</td>
+          <td class="align-middle" align="Center">{{ info.experience.hours_worked }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <hr>
+    <form method="post">
+      {% csrf_token %}
+        {{ form.confirm|as_crispy_field }}
+        {{ form.comments|as_crispy_field }}
+      <div class="">
+        <p><button type="submit" name="Done" class="btn btn-primary">Save</button></p>
+      </div>
+    </form>
+</div>
+
+
+{% endblock content %}

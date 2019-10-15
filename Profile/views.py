@@ -17,7 +17,7 @@ from .models import (
         )
 
 from talenttrack.models import (
-        Lecturer, ClassMates, WorkColleague, Superior, WorkCollaborator,  WorkClient, PreColleague, Education
+        Lecturer, ClassMates, WorkColleague, Superior, WorkCollaborator,  WorkClient, PreColleague, Education, WorkExperience, PreLoggedExperience
 )
 
 from talenttrack.forms import (
@@ -65,7 +65,7 @@ def ConfirmView(request):
     }
     return render(request, template, context)
 
-
+#>>>Education-Lecturer
 @login_required()
 def LecturerConfirmView(request, pk):
     if request.method == 'POST':
@@ -118,9 +118,9 @@ def LecturerCommentView(request, pk):
         template ='talenttrack/confirm_comments.html'
         context = {'form': form, 'info': info}
         return render(request, template, context)
+#>>>Education-Lecturer
 
-
-
+#>>>Education-ClassMate
 @login_required()
 def ClassMatesConfirmView(request, pk):
     if request.method == 'POST':
@@ -157,7 +157,6 @@ def ClassMatesCommentView(request, pk):
                 edu.save()
             else:
                 pass
-
             return redirect(reverse('Profile:Confirm')+'#ClassMates')
 
     else:
@@ -173,6 +172,287 @@ def ClassMatesWrongPersonView(request, pk):
         info.confirm = 'Y'
         info.save()
     return redirect(reverse('Profile:Confirm')+'#ClassMates')
+#<<<Education-ClassMate
+
+#>>>Experience: Colleague
+@login_required()
+def ColleagueConfirmView(request, pk):
+    if request.method == 'POST':
+        info = WorkColleague.objects.get(pk=pk)
+        info.confirm = 'C'
+        info.save()
+        exp = WorkExperience.objects.get(pk=info.experience.id)
+        exp.score += 1
+        exp.save()
+
+    return redirect(reverse('Profile:Confirm')+'#Colleague')
+
+
+@login_required()
+def ColleagueRejectView(request, pk):
+    if request.method == 'POST':
+        info = WorkColleague.objects.get(pk=pk)
+        info.confirm = 'R'
+        info.save()
+    return redirect(reverse('Profile:Confirm')+'#Colleague')
+
+
+@login_required()
+def ColleagueWrongPersonView(request, pk):
+    if request.method == 'POST':
+        info = WorkColleague.objects.get(pk=pk)
+        info.confirm = 'Y'
+        info.save()
+    return redirect(reverse('Profile:Confirm')+'#Colleague')
+
+
+@login_required()
+def ColleagueCommentView(request, pk):
+    info = get_object_or_404(WorkColleague, pk=pk)
+    form = LecturerCommentForm(request.POST or None, instance=info)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.save()
+            if new.confirm == 'C':
+                exp = WorkExperience.objects.get(pk=info.experience.id)
+                exp.score += 2
+                exp.save()
+            else:
+                pass
+
+            return redirect(reverse('Profile:Confirm')+'#Colleague')
+
+    else:
+        template ='talenttrack/confirm_exp_comments.html'
+        context = {'form': form, 'info': info}
+        return render(request, template, context)
+#>>>Experience: Colleague
+
+#>>>Experience: Superior
+@login_required()
+def SuperiorConfirmView(request, pk):
+    if request.method == 'POST':
+        info = Superior.objects.get(pk=pk)
+        info.confirm = 'C'
+        info.save()
+        exp = WorkExperience.objects.get(pk=info.experience.id)
+        exp.score += 1
+        exp.save()
+
+    return redirect(reverse('Profile:Confirm')+'#Superior')
+
+
+@login_required()
+def SuperiorRejectView(request, pk):
+    if request.method == 'POST':
+        info = Superior.objects.get(pk=pk)
+        info.confirm = 'R'
+        info.save()
+    return redirect(reverse('Profile:Confirm')+'#Superior')
+
+
+@login_required()
+def SuperiorCommentView(request, pk):
+    info = get_object_or_404(Superior, pk=pk)
+    form = ClassMatesCommentForm(request.POST or None, instance=info)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.save()
+            if new.confirm == 'C':
+                exp = WorkExperience.objects.get(pk=info.experience.id)
+                exp.score += 1
+                exp.save()
+            else:
+                pass
+
+            return redirect(reverse('Profile:Confirm')+'#Superior')
+
+    else:
+        template ='talenttrack/confirm_exp_comments.html'
+        context = {'form': form, 'info': info}
+        return render(request, template, context)
+
+
+@login_required()
+def SuperiorWrongPersonView(request, pk):
+    if request.method == 'POST':
+        info = Superior.objects.get(pk=pk)
+        info.confirm = 'Y'
+        info.save()
+    return redirect(reverse('Profile:Confirm')+'#Superior')
+#<<<Experience:Superior
+
+#>>>Experience:Collaborator
+@login_required()
+def CollaboratorConfirmView(request, pk):
+    if request.method == 'POST':
+        info = WorkCollaborator.objects.get(pk=pk)
+        info.confirm = 'C'
+        info.save()
+        exp = WorkExperience.objects.get(pk=info.experience.id)
+        exp.score += 1
+        exp.save()
+
+    return redirect(reverse('Profile:Confirm')+'#Collaborator')
+
+
+@login_required()
+def CollaboratorRejectView(request, pk):
+    if request.method == 'POST':
+        info = WorkCollaborator.objects.get(pk=pk)
+        info.confirm = 'R'
+        info.save()
+    return redirect(reverse('Profile:Confirm')+'#Collaborator')
+
+
+@login_required()
+def CollaboratorCommentView(request, pk):
+    info = get_object_or_404(WorkCollaborator, pk=pk)
+    form = ClassMatesCommentForm(request.POST or None, instance=info)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.save()
+            if new.confirm == 'C':
+                exp = WorkExperience.objects.get(pk=info.experience.id)
+                exp.score += 1
+                exp.save()
+            else:
+                pass
+
+            return redirect(reverse('Profile:Confirm')+'#Collaborator')
+
+    else:
+        template ='talenttrack/confirm_exp_comments.html'
+        context = {'form': form, 'info': info}
+        return render(request, template, context)
+
+
+@login_required()
+def CollaboratorWrongPersonView(request, pk):
+    if request.method == 'POST':
+        info = WorkCollaborator.objects.get(pk=pk)
+        info.confirm = 'Y'
+        info.save()
+    return redirect(reverse('Profile:Confirm')+'#Collaborator')
+#<<<Experience: Collaborator
+
+#>>> Experience: Client
+@login_required()
+def ClientConfirmView(request, pk):
+    if request.method == 'POST':
+        info = WorkClient.objects.get(pk=pk)
+        info.confirm = 'C'
+        info.save()
+        exp = WorkExperience.objects.get(pk=info.experience.id)
+        exp.score += 1
+        exp.save()
+
+    return redirect(reverse('Profile:Confirm')+'#Client')
+
+
+@login_required()
+def ClientRejectView(request, pk):
+    if request.method == 'POST':
+        info = WorkClient.objects.get(pk=pk)
+        info.confirm = 'R'
+        info.save()
+    return redirect(reverse('Profile:Confirm')+'#Client')
+
+
+@login_required()
+def ClientCommentView(request, pk):
+    info = get_object_or_404(WorkClient, pk=pk)
+    form = ClassMatesCommentForm(request.POST or None, instance=info)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.save()
+            if new.confirm == 'C':
+                exp = WorkExperience.objects.get(pk=info.experience.id)
+                exp.score += 1
+                exp.save()
+            else:
+                pass
+
+            return redirect(reverse('Profile:Confirm')+'#Client')
+
+    else:
+        template ='talenttrack/confirm_exp_comments.html'
+        context = {'form': form, 'info': info}
+        return render(request, template, context)
+
+
+@login_required()
+def ClientWrongPersonView(request, pk):
+    if request.method == 'POST':
+        info = WorkClient.objects.get(pk=pk)
+        info.confirm = 'Y'
+        info.save()
+    return redirect(reverse('Profile:Confirm')+'#Client')
+#<<< Experience: Client
+
+#>>> Pre-Experience: Confirm
+@login_required()
+def PreColleagueConfirmView(request, pk):
+    if request.method == 'POST':
+        info = WorkClient.objects.get(pk=pk)
+        info.confirm = 'C'
+        info.save()
+        exp = PreLoggedExperience.objects.get(pk=info.pre_experience.id)
+        exp.score += 3
+        exp.save()
+
+    return redirect(reverse('Profile:Confirm')+'#PreColleague')
+
+
+@login_required()
+def PreColleagueRejectView(request, pk):
+    if request.method == 'POST':
+        info = PreColleague.objects.get(pk=pk)
+        info.confirm = 'R'
+        info.save()
+    return redirect(reverse('Profile:Confirm')+'#PreColleague')
+
+
+@login_required()
+def PreColleagueCommentView(request, pk):
+    info = get_object_or_404(PreColleague, pk=pk)
+    form = ClassMatesCommentForm(request.POST or None, instance=info)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.save()
+            if new.confirm == 'C':
+                exp = PreLoggedExperience.objects.get(pk=info.pre_experience.id)
+                exp.score += 3
+                exp.save()
+            else:
+                pass
+
+            return redirect(reverse('Profile:Confirm')+'#PreColleague')
+
+    else:
+        template ='talenttrack/confirm_exp_comments.html'
+        context = {'form': form, 'info': info}
+        return render(request, template, context)
+
+
+@login_required()
+def PreColleagueWrongPersonView(request, pk):
+    if request.method == 'POST':
+        info = PreColleague.objects.get(pk=pk)
+        info.confirm = 'Y'
+        info.save()
+    return redirect(reverse('Profile:Confirm')+'#PreColleague')
+#<<< Pre-Experience: Confirm
 
 
 @login_required()
