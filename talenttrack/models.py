@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.utils import timezone
 from time import time
+from datetime import datetime
 from random import random
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -158,8 +159,49 @@ class WorkExperience(models.Model):
         return '{} between {} & {} as {}'.format(
                     self.talent, self.date_from, self.date_to, self.designation
                     )
+    def save(self, *args, **kwargs):
+        if self.estimated == True:
+            print("True - Pass")
+            super(WorkExperience, self).save(*args, **kwargs)
 
+        else:
+            a = timezone.now()
+            ad = datetime.date(a)
+            b = self.date_from
 
+            dur = ad - b
+            dur_d = dur.days
+            print(dur_d)
+
+            if dur_d > 14:
+                self.estimated=True
+                super(WorkExperience, self).save(*args, **kwargs)
+            else:
+                super(WorkExperience, self).save(*args, **kwargs)
+    """
+    #Check if experience is estimated
+    def CheckEstimate(sender, **kwargs):
+        if kwargs['created']:
+            if instance.estimate != True:
+                print('True, Pass')
+                pass
+            else:
+                a = timezone.now()
+                ad = datetime.date(a)
+                b = instance.date_from
+                bd = datetime.date(b)
+
+                dur = ad - db
+                dur_d = dur.days
+                print(dur_d)
+                if dur_d > 14:
+                    set_est = instance.objects.update(estimate=True)
+
+                else:
+                    pass
+
+        post_save.connect(set_est, sender=WorkExperience)
+"""
 class WorkColleague(models.Model):
         #Captured by talent
     experience = models.ForeignKey(WorkExperience, on_delete=models.CASCADE)
