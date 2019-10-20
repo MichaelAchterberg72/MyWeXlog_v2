@@ -1,15 +1,17 @@
-{% extends "base_home.html" %}
+{% extends "base_public.html" %}
 {% load humanize %}
 {% load crispy_forms_tags %}
 {% load staticfiles %}
 
 {% block content %}
 
-<div class="">
+<div class="container">
+  <p>&nbsp</p>
+  <p>&nbsp</p>
   <h1 class="display-4">Help & Support!</h1>
-  <p class="lead">We would love to hear from you, please feel free to comtact
-    us by social media on one of the links or complete the below form and send
-    it through to us.</p>
+  <p class="lead">We have regularly asked questions with answers below,
+    should you not find the answer you are looking for please make use of
+    our contact page <a href="{% url 'Public:ContactUs' %}">here</a>.</p>
 
     <hr class="my-4">
   <p>At WeXlog we strive to stay in contact with our members requirements at all
@@ -65,18 +67,38 @@
     <p>&nbsp</p>
       <h1 class="display-5">New User FAQ's</h1>
       <div id="accordion">
+        <div class="card">
+          <div class="card-header" id="synonym">
+            <h5 class="mb-0">
+              <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseSynonym" aria-expanded="true" aria-controls="collapseSynonym">
+                Creating a Synonym?
+              </button>
+            </h5>
+          </div>
+
+          <div id="collapseSynonym" class="collapse show" aria-labelledby="synonym" data-parent="#accordion">
+            <div class="card-body">
+              When creating a synonym we have created the system to be gender
+              non-specific so we suggest that you capture a non specific name
+              to represent yourself. Should you wish you can choose a name that
+              you are comfortable with or alternativly your own name.<p>
+              The choice is yours.
+            </div>
+          </div>
+        </div>
       <div class="card">
         <div class="card-header" id="headingOne">
           <h5 class="mb-0">
             <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-              Collapsible Group Item #1
+              How do I capture a new vacancy?
             </button>
           </h5>
         </div>
 
-        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
           <div class="card-body">
-            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+            In order to capture a new vacancy you need to have captured some
+            basic information into your profile page. This being your .
           </div>
         </div>
       </div>

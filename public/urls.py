@@ -24,4 +24,8 @@ urlpatterns = [
     path('capture/', views.CaptureView.as_view(), name='Capture'),
     path('trust-passport/', views.TrustPassportView.as_view(), name='TrustPassport'),
     path('advertise/', views.AdvertiseView.as_view(), name='Advertise'),
+    path('post-vacancy/', views.PostVacancyView.as_view(), name='PostVacancy'),
+    path('search-candidates/', views.SearchCandidatesView.as_view(), name='SearchCandidates'),
+    path('short-term/', views.ShortTermView.as_view(), name='ShortTerm'),
+    path('permanent/', views.PermanentView.as_view(), name='Permanent'),
 ]

@@ -66,6 +66,9 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ('birth_date', 'background', 'mentor',)
+        widgets = {
+            'birth_date': DateInput(),
+            }
 
 #>>> Select2 Company Field in email
 class CompanySearchFieldMixin:

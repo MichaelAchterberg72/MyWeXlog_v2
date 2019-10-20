@@ -26,6 +26,11 @@ from paypal.standard.ipn.signals import valid_ipn_received, invalid_ipn_received
 class SubscriptionCountrySelectView(TemplateView):
     template_name = 'subscription_payments/subscription_country_select.html'
 
+
+class SubscriptionSelectView(TemplateView):
+    template_name = 'subscription_payments/subscription_select.html'
+
+
 @method_decorator(csrf_exempt, name='dispatch')
 class PayPalSubscriptionReturnView(TemplateView):
     template_name = 'subscription_payments/subscription_successful_return.html'
@@ -34,6 +39,162 @@ class PayPalSubscriptionReturnView(TemplateView):
 @method_decorator(csrf_exempt, name='dispatch')
 class PayPalSubscriptionCancelReturnView(TemplateView):
     template_name = 'subscription_payments/subscription_cancel_return.html'
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class PayPalPassiveSubscriptionCancelReturnView(TemplateView):
+    template_name = 'subscription_payments/passive_subscription_cancel_return.html'
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class PayPalActiveSubscriptionCancelReturnView(TemplateView):
+    template_name = 'subscription_payments/active_subscription_cancel_return.html'
+
+
+@login_required
+def GeneralPassiveSubscriptionView(request):
+
+    passive_paypal_dict = {
+            "cmd": "_xclick-subscriptions",
+            "business": settings.PAYPAL_RECEIVER_EMAIL,
+            "currency_code": "USD",
+            "a3": "4.00",                      # monthly price
+            "p3": "1",                         # duration of each unit (depends on unit)
+            "t3": "M",                         # duration unit ("M for Month")
+            "src": "1",                        # make payments recur
+            "sra": "1",                        # reattempt payment on payment error
+            "no_note": "1",                    # remove extra notes (optional)
+            "custom": request.user,            # system member pk or braintree pk
+            "on0": datetime.now(),             # optional field value (date of subscription)
+            "item_name": "Passive Subscription",
+            "invoice": "12345678",             # invoice number
+            "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
+            "return_url": request.build_absolute_uri(reverse('Payments:paypal-return-view')),
+            "cancel_return": request.build_absolute_uri(reverse('Payments:passive-paypal-cancel-view')),
+    }
+
+    six_passive_paypal_dict = {
+            "cmd": "_xclick-subscriptions",
+            "business": settings.PAYPAL_RECEIVER_EMAIL,
+            "currency_code": "USD",
+            "a3": "22.00",                      # monthly price
+            "p3": "6",                         # duration of each unit (depends on unit)
+            "t3": "M",                         # duration unit ("M for Month")
+            "src": "1",                        # make payments recur
+            "sra": "1",                        # reattempt payment on payment error
+            "no_note": "1",                    # remove extra notes (optional)
+            "custom": request.user,            # system member pk or braintree pk
+            "on0": datetime.now(),             # optional field value (date of subscription)
+            "item_name": "6 Month Passive Subscription",
+            "invoice": "12345678",             # invoice number
+            "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
+            "return_url": request.build_absolute_uri(reverse('Payments:paypal-return-view')),
+            "cancel_return": request.build_absolute_uri(reverse('Payments:passive-paypal-cancel-view')),
+    }
+
+    twelve_passive_paypal_dict = {
+            "cmd": "_xclick-subscriptions",
+            "business": settings.PAYPAL_RECEIVER_EMAIL,
+            "currency_code": "USD",
+            "a3": "43.56",                      # monthly price
+            "p3": "1",                         # duration of each unit (depends on unit)
+            "t3": "Y",                         # duration unit ("M for Month")
+            "src": "1",                        # make payments recur
+            "sra": "1",                        # reattempt payment on payment error
+            "no_note": "1",                    # remove extra notes (optional)
+            "custom": request.user,            # system member pk or braintree pk
+            "on0": datetime.now(),             # optional field value (date of subscription)
+            "item_name": "12 Month Passive Subscription",
+            "invoice": "12345678",             # invoice number
+            "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
+            "return_url": request.build_absolute_uri(reverse('Payments:paypal-return-view')),
+            "cancel_return": request.build_absolute_uri(reverse('Payments:passive-paypal-cancel-view')),
+    }
+
+    # Create the instance.
+    passive_form = PayPalPaymentsForm(initial=passive_paypal_dict, button_type="subscribe")
+    six_passive_form = PayPalPaymentsForm(initial=six_passive_paypal_dict, button_type="subscribe")
+    twelve_passive_form = PayPalPaymentsForm(initial=twelve_passive_paypal_dict, button_type="subscribe")
+    context = {
+            "passive_form": passive_form,
+            "six_passive_form": six_passive_form,
+            "twelve_passive_form": twelve_passive_form,
+    }
+    template = 'subscription_payments/passive_subscription.html'
+    return render(request, template, context)
+
+
+@login_required
+def GeneralActiveSubscriptionView(request):
+
+    active_paypal_dict = {
+            "cmd": "_xclick-subscriptions",
+            "business": settings.PAYPAL_RECEIVER_EMAIL,
+            "currency_code": "USD",
+            "a3": "5.20",                      # monthly price
+            "p3": "1",                         # duration of each unit (depends on unit)
+            "t3": "M",                         # duration unit ("M for Month")
+            "src": "1",                        # make payments recur
+            "sra": "1",                        # reattempt payment on payment error
+            "no_note": "1",                    # remove extra notes (optional)
+            "custom": request.user,            # system member pk or braintree pk
+            "on0": datetime.now(),             # optional field value (date of subscription)
+            "item_name": "Active Subscription",
+            "invoice": "12345678",             # invoice number
+            "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
+            "return_url": request.build_absolute_uri(reverse('Payments:paypal-return-view')),
+            "cancel_return": request.build_absolute_uri(reverse('Payments:active-paypal-cancel-view')),
+    }
+
+    six_active_paypal_dict = {
+            "cmd": "_xclick-subscriptions",
+            "business": settings.PAYPAL_RECEIVER_EMAIL,
+            "currency_code": "USD",
+            "a3": "29.20",                      # monthly price
+            "p3": "6",                         # duration of each unit (depends on unit)
+            "t3": "M",                         # duration unit ("M for Month")
+            "src": "1",                        # make payments recur
+            "sra": "1",                        # reattempt payment on payment error
+            "no_note": "1",                    # remove extra notes (optional)
+            "custom": request.user,            # system member pk or braintree pk
+            "on0": datetime.now(),             # optional field value (date of subscription)
+            "item_name": "6 Month Active Subscription",
+            "invoice": "12345678",             # invoice number
+            "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
+            "return_url": request.build_absolute_uri(reverse('Payments:paypal-return-view')),
+            "cancel_return": request.build_absolute_uri(reverse('Payments:active-paypal-cancel-view')),
+    }
+
+    twelve_active_paypal_dict = {
+            "cmd": "_xclick-subscriptions",
+            "business": settings.PAYPAL_RECEIVER_EMAIL,
+            "currency_code": "USD",
+            "a3": "57.96",                      # monthly price
+            "tax_rate": "0.10",                # tax rate (confirm works with subscribe button)
+            "p3": "1",                         # duration of each unit (depends on unit)
+            "t3": "Y",                         # duration unit ("M for Month")
+            "src": "1",                        # make payments recur
+            "sra": "1",                        # reattempt payment on payment error
+            "no_note": "1",                    # remove extra notes (optional)
+            "custom": request.user,            # system member pk or braintree pk
+            "on0": datetime.now(),             # optional field value (date of subscription)
+            "item_name": "12 Month Active Subscription",
+            "invoice": "12345678",             # invoice number
+            "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
+            "return_url": request.build_absolute_uri(reverse('Payments:paypal-return-view')),
+            "cancel_return": request.build_absolute_uri(reverse('Payments:active-paypal-cancel-view')),
+    }
+    # Create the instance.
+    active_form = PayPalPaymentsForm(initial=active_paypal_dict, button_type="subscribe")
+    six_active_form = PayPalPaymentsForm(initial=six_active_paypal_dict, button_type="subscribe")
+    twelve_active_form = PayPalPaymentsForm(initial=twelve_active_paypal_dict, button_type="subscribe")
+    context = {
+            "active_form": active_form,
+            "six_active_form": six_active_form,
+            "twelve_active_form": twelve_active_form,
+    }
+    template = 'subscription_payments/active_subscription.html'
+    return render(request, template, context)
 
 
 @login_required

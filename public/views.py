@@ -114,3 +114,19 @@ class TrustPassportView(TemplateView):
 
 class AdvertiseView(TemplateView):
     template_name = 'public/advertise.html'
+
+
+class PostVacancyView(TemplateView):
+    template_name = 'public/post_vacancy.html'
+
+
+class SearchCandidatesView(TemplateView):
+    template_name = 'public/search_candidates.html'
+
+
+class ShortTermView(TemplateView):
+    template_name = 'public/short_term.html'
+
+
+class PermanentView(TemplateView):
+    template_name = 'public/permanent.html'

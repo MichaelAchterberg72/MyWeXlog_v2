@@ -1,11 +1,13 @@
-{% extends "base_home.html" %}
+{% extends "base_public.html" %}
 {% load humanize %}
 {% load crispy_forms_tags %}
 {% load staticfiles %}
 
 {% block content %}
 
-<div class="">
+<div class="container">
+  <p>&nbsp</p>
+  <p>&nbsp</p>
   <h1 class="display-4">GDPR Data Privacy!</h1>
   <p class="lead">In compliance with the GDPR, WexLog has appointed a DPO. To learn more
     about our DPO please see our <a href="{% url 'Public:Privacy' %}">Privacy Policy</a>.
