@@ -3,6 +3,8 @@
 
 {% block content %}
 
+<p>&nbsp</p>
+<p>&nbsp</p>
 <div class="card">
   <h5 class="card-header">Subscription Country Selection</h5>
     <div class="container">
@@ -10,6 +12,12 @@
           <h5 class="card-title"></h5>
       </div>
       <div class="container">
+
+        <p>In order to subscribe to WexLog we require that you are registered
+          and logged in before you can select your country of residence. The
+        WexLog system is location oriented.</p>
+
+
         {% if request.user.is_authenticated %}
 
 
@@ -31,7 +39,7 @@
           </div>
           <p>&nbsp</p>
           {% else %}
-          <p>To subscribe to WexLog you need to lon-in and register your account before you can subscribe.</p>
+          <p>To subscribe to WexLog you need to register and log-in with your account before you can subscribe.</p>
             <div class="dropdown">
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Log-in to Select Your Country of Residence
@@ -43,7 +51,7 @@
             <p>&nbsp</p>
             </div>
           {% endif %}
-          
+
       </div>
     </div>
   </div>

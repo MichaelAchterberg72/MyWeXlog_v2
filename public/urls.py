@@ -7,7 +7,8 @@ from .views import *
 app_name = 'Public'
 
 urlpatterns = [
-    path('home/', views.LandingPageView.as_view(), name='LandingPage'),
+    path('home/', views.HomePageView, name='LandingPage'),
+    path('test/', views.HtmlTestView.as_view(), name='Test'),
     path('home3/', views.LandingPage3View.as_view(), name='LandingPage3'),
     path('home4/', views.LandingPage4View.as_view(), name='LandingPage4'),
     path('about/', views.AboutUsView.as_view(), name='AboutUs'),
@@ -24,4 +25,8 @@ urlpatterns = [
     path('capture/', views.CaptureView.as_view(), name='Capture'),
     path('trust-passport/', views.TrustPassportView.as_view(), name='TrustPassport'),
     path('advertise/', views.AdvertiseView.as_view(), name='Advertise'),
+    path('post-vacancy/', views.PostVacancyView.as_view(), name='PostVacancy'),
+    path('search-candidates/', views.SearchCandidatesView.as_view(), name='SearchCandidates'),
+    path('short-term/', views.ShortTermView.as_view(), name='ShortTerm'),
+    path('permanent/', views.PermanentView.as_view(), name='Permanent'),
 ]

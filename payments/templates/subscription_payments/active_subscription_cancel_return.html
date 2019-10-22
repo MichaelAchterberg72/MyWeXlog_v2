@@ -1,0 +1,20 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+
+{% block content %}
+<p>&nbsp</p>
+<p>&nbsp</p>
+
+      <div class="container">
+        <h3 class="display-4">Something went wrong!</h3>
+
+        <p>&nbsp</p>
+          <p>You were directed here due to your having not accessed PayPal for payment or
+            alternativly you cancelled your subscription payment to WexLog.io.</p>
+          <p>You can retry by clicking <a href="{% url 'Payments:ActiveSubscription' %}">here</a>.</p>
+          <p>Please note that if you elect to not subscribe you will still be able to enjoy
+            the bennefits of a free subscription plan by logging on <a href="#">here</a>.</p>
+      </div>
+    </div>
+
+{% endblock content %}
