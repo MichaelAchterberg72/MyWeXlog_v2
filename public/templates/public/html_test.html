@@ -1,0 +1,45 @@
+{% extends "base_public.html" %}
+{% load humanize %}
+{% load staticfiles %}
+
+{% block content %}
+
+<p>&nbsp</p>
+<p>&nbsp</p>
+
+    <div class="container">
+
+
+      <div id="accordion" class="myaccordion">
+        <div class="card">
+          <div class="card-header" id="headingOne">
+            <h2 class="mb-0">
+              <button class="card-title d-flex align-items-center justify-content-between btn btn-link collapsed" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                List your company assets
+                <span class="fa-chevron fa-sm">
+                  <i class="fas fa-chevron-down"></i>
+                  <i class="fas fa-chevron-up"></i>
+                </span>
+              </button>
+            </h2>
+          </div>
+          <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+            <div class="card-body">
+              <p class="lead">WexLog allows you to set out your company for the world to
+                see. If they don’t know who you are, what you can do and what you offer,
+                they may not know about you. WexLog is the right place to set out the
+                information potential customers and star employees need to fit you into
+                their plans:</p>
+            </div>
+          </div>
+
+        </div>
+        <div class="card">...</div>
+        <div class="card">...</div>
+      </div>
+
+
+    </div>
+
+
+{% endblock content %}

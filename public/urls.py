@@ -7,7 +7,8 @@ from .views import *
 app_name = 'Public'
 
 urlpatterns = [
-    path('home/', views.LandingPageView.as_view(), name='LandingPage'),
+    path('home/', views.HomePageView, name='LandingPage'),
+    path('test/', views.HtmlTestView.as_view(), name='Test'),
     path('home3/', views.LandingPage3View.as_view(), name='LandingPage3'),
     path('home4/', views.LandingPage4View.as_view(), name='LandingPage4'),
     path('about/', views.AboutUsView.as_view(), name='AboutUs'),
