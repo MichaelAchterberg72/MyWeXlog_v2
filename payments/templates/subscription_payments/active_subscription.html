@@ -1,4 +1,4 @@
-{% extends "base_home.html" %}
+{% extends "wexlog_home/base_wexlog_home.html" %}
 {% load humanize %}
 
 {% block content %}
@@ -6,69 +6,72 @@
 <p>&nbsp</p>
 <p>&nbsp</p>
 
-    <div class="container">
-
-        <center>
-        <h3 class="display-4">Choose Active Subscription</h3>
-        <p class="lead">Get a discount by paying 6-monthly or yearly.</p>
-        <p>&nbsp</p>
-
-        <div class="row">
-        <div class="col-sm-4">
-          <div class="card bg-light mb-3" style="width: 18rem;">
-            <div class="card-body">
-              <center>
-              <p>&nbsp</p>
-              <h1 class="display-4"><strong>$5,20</strong></h1>
-              <h5 class="card-title">per month</h5>
-              <p>&nbsp</p>
-              <h5 class="card-title">MONTHLY MEMBERSHIP</h5>
-              </center>
-              <p>&nbsp</p>
-              {{ active_form.render }}
-              </div>
-          </div>
-          </div>
-          <div class="col-sm-4">
-          <div class="card" style="width: 18rem;">
-            <p>&nbsp</p>
-            <div class="card-body">
-              <center>
-              <h1 class="display-4"><strong>$29,20</strong></h1>
-              <h5 class="card-title">every 6-months</h5>
-              <p>&nbsp</p>
-              <h5 class="card-title">SIX MONTHLY MEMBERSHIP</h5>
-              </center>
-              <p>&nbsp</p>
-              {{ six_active_form.render }}
-             </div>
-          </div>
-          </div>
-          <div class="col-sm-4">
-          <div class="card" style="width: 18rem;">
-            <p>&nbsp</p>
-            <div class="card-body">
-              <center>
-              <h1 class="display-4"><strong>$57,96</strong></h1>
-              <h5 class="card-title">per year</h5>
-              <p>&nbsp</p>
-              <h5 class="card-title">YEARLY MEMBERSHIP</h5>
-              </center>
-              <p>&nbsp</p>
-              {{ twelve_active_form.render }}
-            </div>
-          </div>
-          </div>
-
-          </div>
-          <p><small>We use PayPal as our billing partner<br>
-            Prices displayed are in USD.</small></p>
-        <p>&nbsp</p>
-        </center>
-
-
-          <h5 class="card-title"></h5>
-
+<div class="container">
+  <div class="row no-gutters slider-text align-items-end justify-content-start">
+    <div class="col-md-8 ftco-animate text-center text-md-left mb-5">
+      <p class="breadcrumbs mb-0"><span class="mr-3"><a href="{% url 'Public:WexlogHomeIndex' %}">Home <i class="ion-ios-arrow-forward"></i></a></span> <span>Pricing</span></p>
+      <h1 class="mb-3 bread">WeXlog Pricing</h1>
     </div>
+  </div>
+</div>
+
+<section class="ftco-section bg-light">
+  <div class="container">
+    <div class="row justify-content-center mb-5 pb-3">
+      <div class="col-md-7 text-center heading-section ftco-animate">
+        <h2 class="mb-4">Choose your Active Subscription</h2>
+        <p>Get a discount by paying 6-monthly or yearly.</p>
+        <p>&nbsp</p>
+      </div>
+    </div>
+    <div class="row d-flex">
+
+      <div class="col-lg-4 col-md-6 ftco-animate">
+        <div class="block-7">
+          <div class="text-center">
+            <h2 class="heading">Monthly Membership</h2>
+            <span class="price"><sup>$</sup> <span class="number">5,20<small class="per">/mo</small></span>
+            <span class="excerpt d-block">Billed Monthly</span>
+            <h3 class="heading-2 mb-3">Enjoy Selected Features</h3>
+
+            {{ active_form.render }}
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6 ftco-animate">
+        <div class="block-7">
+          <div class="text-center">
+            <h2 class="heading">Six Monthly Membership</h2>
+            <span class="price"><sup>$</sup> <span class="number">29,20<small class="per">/6-mo</small></span></span>
+            <span class="excerpt d-block">Billed 6-Monthly</span>
+            <h3 class="heading-2 mb-3">Enjoy Selected Features</h3>
+
+            {{ six_active_form.render }}
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6 ftco-animate">
+        <div class="block-7">
+          <div class="text-center">
+            <h2 class="heading">Yearly Membership</h2>
+            <span class="price"><sup>$</sup> <span class="number">57,96<small class="per">/year</small></span></span>
+            <span class="excerpt d-block">Billed Yearly</span>
+            <h3 class="heading-2 mb-3">Enjoy Selected Features</h3>
+
+            {{ twelve_active_form.render }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="text-center ftco-animate">
+    <p><small>We use PayPal as our billing partner<br>
+      Prices displayed are in USD.</small></p>
+     </div>
+    <div class="row d-flex">
+      <p>&nbsp</p>
+    </div>
+  </div>
+</section>
 
 {% endblock content %}

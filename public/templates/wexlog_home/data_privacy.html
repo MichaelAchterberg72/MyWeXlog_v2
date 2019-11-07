@@ -1,0 +1,50 @@
+{% extends "wexlog_home/base_wexlog_home.html" %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+{% block content %}
+
+<p>&nbsp</p>
+<p>&nbsp</p>
+
+      <div class="container">
+        <div class="row no-gutters slider-text align-items-end justify-content-start">
+          <div class="col-md-8 ftco-animate text-center text-md-left mb-5">
+          	<p class="breadcrumbs mb-0"><span class="mr-3"><a href="index.html">Home <i class="ion-ios-arrow-forward"></i></a></span> <span>Europe</span></p>
+            <h1 class="mb-3 bread">Data Protection Officer</h1>
+          </div>
+        </div>
+      </div>
+
+    <section class="ftco-section contact-section ftco-degree-bg">
+      <div class="container">
+        <div class="row d-flex mb-5 contact-info">
+          <div class="col-md-12 mb-4">
+            <h2 class="h4">Contact Information</h2>
+          </div>
+          <div class="w-100"></div>
+          <div class="col-md-8">
+            <p>Should you require to contact the Data Protection Officer plase complete the form below:</p>
+          </div>
+        </div>
+        <p>&nbsp</p>
+
+        <div class="row block-9">
+          <div class="col-md-6 pr-md-5">
+            <form class="" action="" method="POST" id="ContactUsForm">
+
+              {% csrf_token %}
+              {{ form|crispy }}
+
+            <p><button type="submit" class="btn btn-primary py-3 px-5" name="button">Send Message</button></p>
+
+              </form>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+{% endblock content %}

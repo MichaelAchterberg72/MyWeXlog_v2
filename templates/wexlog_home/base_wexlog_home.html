@@ -1,0 +1,174 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <!-- Bootstrap CSS -->
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+      <!-- Custom CSS -->
+      <link rel="stylesheet" href="{% static 'css/wexlog_css.css' %}" type="text/css">
+      <script src="https://kit.fontawesome.com/ce85b44bff.js" crossorigin="anonymous"></script>
+      <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+      <link href="https://fonts.googleapis.com/css?family=Work+Sans:300,400,,500,600,700" rel="stylesheet">
+
+      <link rel="stylesheet" href="{% static 'wexlog_home/css/open-iconic-bootstrap.min.css' %}">
+      <link rel="stylesheet" href="{% static 'wexlog_home/css/animate.css' %}">
+
+      <link rel="stylesheet" href="{% static 'wexlog_home/css/owl.carousel.min.css' %}">
+      <link rel="stylesheet" href="{% static 'wexlog_home/css/owl.theme.default.min.css' %}">
+      <link rel="stylesheet" href="{% static 'wexlog_home/css/magnific-popup.css' %}">
+
+      <link rel="stylesheet" href="{% static 'wexlog_home/css/aos.css' %}">
+
+      <link rel="stylesheet" href="{% static 'wexlog_home/css/ionicons.min.css' %}">
+
+      <link rel="stylesheet" href="{% static 'wexlog_home/css/bootstrap-datepicker.css' %}">
+      <link rel="stylesheet" href="{% static 'wexlog_home/css/jquery.timepicker.css' %}">
+
+
+      <link rel="stylesheet" href="{% static 'wexlog_home/css/flaticon.css' %}">
+      <link rel="stylesheet" href="{% static 'wexlog_home/css/icomoon.css' %}">
+      <link rel="stylesheet" href="{% static 'wexlog_home/css/wexlog_home_style.css' %}">
+    <title>{% block title %}WeXlog{% endblock title %}</title>
+  {% block Style %}
+  {% endblock Style %}
+  </head>
+  <body>
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+	    <div class="container">
+	      <a class="navbar-brand" href="{% url 'Public:WexlogHomeIndex' %}">WeXlog</a>
+	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+	        <span class="oi oi-menu"></span> Menu
+	      </button>
+
+	      <div class="collapse navbar-collapse" id="ftco-nav">
+	        <ul class="navbar-nav ml-auto">
+	          <li class="nav-item active"><a href="{% url 'Public:WexlogHomeIndex' %}" class="nav-link">Home</a></li>
+	          <li class="nav-item">
+              <a href="{% url 'Public:WexlogHomeAbout' %}" class="nav-link">About</a></li>
+              <li class="nav-item">
+                <a href="{% url 'Public:WexlogHomeBenefits' %}" class="nav-link">Benefits</a></li>
+              <li class="nav-item">
+                <a href="{% url 'Public:WexlogHomePricing' %}" class="nav-link">Pricing</a></li>
+	           <li class="nav-item">
+              <a href="{% url 'Public:WexlogHomeBlog' %}" class="nav-link">Blog</a></li>
+	          <li class="nav-item">
+              <a href="{% url 'Public:WexlogHomeContact' %}" class="nav-link">Contact</a></li>
+	          <li class="nav-item cta">
+              <a href="{% url 'Public:WexlogHomePricing' %}" class="nav-link"><span>Get started</span></a></li>
+            <li class="nav-item">
+              <a href="#" class="nav-link"></a></li>
+            <li class="nav-item cta">
+              <a href="{% url 'account_login' %}" class="nav-link"><span>Log-In</span></a></li>
+	        </ul>
+	      </div>
+	    </div>
+	  </nav>
+
+    {% block content %}
+    {% endblock content %}
+
+
+
+    <footer class="ftco-footer ftco-bg-dark ftco-section">
+       <div class="container">
+       	  <div class="row mb-5">
+           <div class="col-md">
+             <div class="ftco-footer-widget mb-4 bg-primary p-4">
+               <h2 class="ftco-heading-2">WeXlog</h2>
+               <p>Match your education and work experience to the skills you need for any position within minutes from our listing of talented professionals.</p>
+               <ul class="ftco-footer-social list-unstyled mb-0">
+                 <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
+                 <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
+                 <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
+               </ul>
+             </div>
+           </div>
+           <div class="col-md">
+             <div class="ftco-footer-widget mb-4 ml-md-5">
+               <h2 class="ftco-heading-2">Legal</h2>
+               <ul class="list-unstyled">
+                 <li><a href="{% url 'Public:WexlogHomePrivacy' %}" class="py-2 d-block">Privacy Policy</a></li>
+                 <li><a href="{% url 'Public:WexlogHomeUserAgreement' %}" class="py-2 d-block">User Agreement</a></li>
+                 <li><a href="{% url 'Public:WexlogHomeCookiePolicy' %}" class="py-2 d-block">Cookie Policy</a></li>
+                 <li><a href="{% url 'Public:WexlogHomeRightToSayNo' %}" class="py-2 d-block">Right to Say No to Sale of Personal Information</a></li>
+                 <li><a href="{% url 'Public:WexlogHomeDataPrivacy' %}" class="py-2 d-block">Data Protection Oficer</a></li>
+                </ul>
+             </div>
+           </div>
+           <div class="col-md">
+              <div class="ftco-footer-widget mb-4">
+               <h2 class="ftco-heading-2">Navigational</h2>
+               <ul class="list-unstyled">
+                 <li><a href="{% url 'Public:WexlogHomeIndex' %}" class="py-2 d-block">Home</a></li>
+                 <li><a href="{% url 'Public:WexlogHomeAbout' %}" class="py-2 d-block">About Us</a></li>
+                 <li><a href="{% url 'Public:WexlogHomePricing' %}" class="py-2 d-block">Pricing</a></li>
+                 <li><a href="{% url 'Public:WexlogHomeSuggestions' %}" class="py-2 d-block">Site Suggestions</a></li>
+                 <li><a href="{% url 'Public:WexlogHomeHelpSupport' %}" class="py-2 d-block">Help & Support</a></li>
+                 <li><a href="{% url 'Public:WexlogHomeContact' %}" class="py-2 d-block">Contact Us</a></li>
+               </ul>
+             </div>
+           </div>
+           <div class="col-md">
+             <div class="ftco-footer-widget mb-4">
+             	<h2 class="ftco-heading-2">Office</h2>
+             	<div class="block-23 mb-3">
+ 	              <ul>
+ 	                <li><span class="icon icon-map-marker"></span><span class="text">DevOpTec (Pty) Ltd,<br>32 Viewland Crescent, Thornlands, Queensland, Australia</span></li>
+                  <li><span class="icon icon-map-marker"></span><span class="text">6147 3929 210</span></li>
+ 	                <li><a href="#"><span class="icon icon-phone"></span><span class="text">+2 392 3929 210</span></a></li>
+ 	                <li><a href="#"><span class="icon icon-envelope"></span><span class="text">info@wexlog.io</span></a></li>
+ 	              </ul>
+ 	            </div>
+             </div>
+           </div>
+         </div>
+         <div class="row">
+           <div class="col-md-12 text-center">
+
+             <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+   Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+   <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
+           </div>
+         </div>
+       </div>
+     </footer>
+
+
+     <!-- loader -->
+    <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
+
+
+    <script src="{% static 'wexlog_home/js/jquery.min.js' %}"></script>
+    <script src="{% static 'wexlog_home/js/jquery-migrate-3.0.1.min.js' %}"></script>
+    <script src="{% static 'wexlog_home/js/popper.min.js' %}"></script>
+    <script src="{% static 'wexlog_home/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'wexlog_home/js/jquery.easing.1.3.js' %}"></script>
+    <script src="{% static 'wexlog_home/js/jquery.waypoints.min.js' %}"></script>
+    <script src="{% static 'wexlog_home/js/jquery.stellar.min.js' %}"></script>
+    <script src="{% static 'wexlog_home/js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'wexlog_home/js/jquery.magnific-popup.min.js' %}"></script>
+    <script src="{% static 'wexlog_home/js/aos.js' %}"></script>
+    <script src="{% static 'wexlog_home/js/jquery.animateNumber.min.js' %}"></script>
+    <script src="{% static 'wexlog_home/js/bootstrap-datepicker.js' %}"></script>
+    <script src="{% static 'wexlog_home/js/jquery.timepicker.min.js' %}"></script>
+    <script src="{% static 'wexlog_home/js/scrollax.min.js' %}"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+    <script src="{% static 'wexlog_home/js/google-map.js' %}"></script>
+    <script src="{% static 'wexlog_home/js/main.js' %}"></script
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    {% block Script %}
+    {% endblock Script %}
+  </body>
+</html>

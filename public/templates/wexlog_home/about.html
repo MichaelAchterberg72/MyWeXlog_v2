@@ -1,0 +1,481 @@
+{% extends "wexlog_home/base_wexlog_home.html" %}
+{% load humanize %}
+{% load staticfiles %}
+
+{% block content %}
+
+<p>&nbsp</p>
+<p>&nbsp</p>
+
+  <div class="container">
+        <div class="row no-gutters slider-text align-items-end justify-content-start">
+          <div class="col-md-8 ftco-animate text-center text-md-left mb-5">
+          	<p class="breadcrumbs mb-0"><span class="mr-3"><a href="{% url 'Public:WexlogHomeIndex' %}">Home <i class="ion-ios-arrow-forward"></i></a></span> <span>About</span></p>
+            <h1 class="mb-3 bread">About</h1>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="row d-md-flex">
+	    		<div class="col-md-12 ftco-animate p-md-5">
+
+            <h2 class="mb-4">Who We Are</h2
+              <p>WeXlog.io is a division of DevOpTec (Pty.) Ltd (ABN: 0000) a tech company formed in
+                the territory of Queensland, Australia. WeXlog began in the early months of 2019 and
+                was officially launched in October of 2019.</p>
+              <p>James Keir is the CEO of the company and the management includes experienced executives
+                with experience in programming, database administration, data security and business
+                development.</p>
+              <p>WeXlog is a supplemental portal to other portals aimed at professional people who
+                capture their experience via static means: CV’s, etc.. We directly capture a person’s
+                experience, provide a trust passport and provide access to international work prospects.</p>
+              <p>We directly quantify the experience of individuals, companies as well as for the
+                people that work within them.</p>
+          </div>
+        </div>
+      </div>
+
+    <section class="ftco-section ftco-no-pt">
+    	<div class="container">
+    		<div class="row d-md-flex">
+	    		<div class="col-md-12 ftco-animate p-md-5">
+		    		<div class="row py-md-5">
+		          <div class="col-md-12 nav-link-wrap mb-5">
+		            <div class="nav ftco-animate nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+		              <a class="nav-link active" id="v-pills-whatwedo-tab" data-toggle="pill" href="#v-pills-whatwedo" role="tab" aria-controls="v-pills-whatwedo" aria-selected="true">Our Mission</a>
+
+		              <a class="nav-link" id="v-pills-mission-tab" data-toggle="pill" href="#v-pills-mission" role="tab" aria-controls="v-pills-mission" aria-selected="false">The Problem</a>
+
+		              <a class="nav-link" id="v-pills-goal-tab" data-toggle="pill" href="#v-pills-goal" role="tab" aria-controls="v-pills-goal" aria-selected="false">The Solution</a>
+		            </div>
+		          </div>
+		          <div class="col-md-12 d-flex align-items-center">
+
+		            <div class="tab-content ftco-animate" id="v-pills-tabContent">
+
+		              <div class="tab-pane fade show active" id="v-pills-whatwedo" role="tabpanel" aria-labelledby="v-pills-whatwedo-tab">
+		              	<div>
+			                <h2 class="mb-4">Affordable Experience Tracking with Quality Vacancies</h2>
+                      <p>WeXlog's mission is to create a portal that is aimed at allowing people to capture
+                        their experience and have it ratified or signed off by their clients / superiors /
+                        peers whilst providing a portal for vacancies.</p>
+                      <p>WeXlog is designed to allow people who have been working for several years and have
+                        a large amount of experience that may not be able to be authorised as they no longer
+                        work with those clients or at the company any longer. The portal allows people to
+                        capture this time, however this is displayed as such.</p>
+                      <p>The captured time will then be saved against their profile, available for people
+                        to search for that experience.</p>
+                      <p>Once captured, clients requiring skills or services should perform a search and
+                        find people with the needed experience. The results would be displayed in terms of
+                        distance from the prospective client, experience and ratings.</p>
+                      <p><a href="{% url 'Public:WexlogHomePricing' %}" class="btn btn-primary p-3">Get started</a></p>
+				            </div>
+		              </div>
+
+		              <div class="tab-pane fade" id="v-pills-mission" role="tabpanel" aria-labelledby="v-pills-mission-tab">
+		                <div>
+			                <h2 class="mb-4">The Problem</h2>
+                      <p>The working world is moving toward a gig economy at an increasing rate. In this
+                        economy, people offer their skills on a freelance basis, marketing their abilities
+                        through their networks. There are methods through which people can market their
+                        abilities available, however these methods are static and do not give an indication
+                        as to the level of experience a person has apart from the length of their working
+                        career.</p>
+                      <p>These methods are also inconsistent in that a person that has over 10 years
+                        overall experience, in construction for example, but has only been involved in
+                        airport construction for 1 year does not easily get noticed.</p>
+                      <p>Similarly, in the service industry, people do not know what experience
+                        technicians/mechanics etc. have when it comes to their particular needs. If you
+                        had an Audi diesel, you would want to identify the mechanic that has the most
+                        experience with that car as well as whether they offer a quality service.</p>
+                      <p>In the service industry it is possible to rate a person’s service using platforms
+                        currently available, however, that rating may be made by a person that does not
+                        know your car. Indeed, the mechanic in question may be an expert on another model
+                        but know very little of yours.</p>
+                      <p>In the professional services industry one can source skills from a global market,
+                        but the question remains: How do you find people with ratified experience in the
+                        field you require.</p>
+                      <p>The concept of a timesheet is familiar with many people in the legal, engineering,
+                        accounting, and many other fields. But this system is designed to measure the
+                        amount of work performed for billing purposes.</p>
+                      <p>By extending this system, one can add the knowledge and skill used in performing
+                        that work and build up a knowledge base which is approved by a client or superior,
+                        not simply added in an uncontrolled fashion.</p>
+                    	<p><a href="{% url 'Public:WexlogHomePricing' %}" class="btn btn-primary p-3">Get started</a></p>
+				            </div>
+		              </div>
+
+		              <div class="tab-pane fade" id="v-pills-goal" role="tabpanel" aria-labelledby="v-pills-goal-tab">
+		                <div>
+			                <h2 class="mb-4">Dynamic Experience Capturing</h2>
+                      <p>WeXlog is designed to be a system that creates a trust passport of verified
+                        experience on a dynamic level capturing the training and education as well as
+                        the work experience skills.</p>
+                      <p>No matter what industry you work in, you need to be able to quantify the
+                        skills that you developed over the lifespan of your career and provide a
+                        marketable portfolio that you will be able to send to your prospective clients,
+                        employers or colleagues to qualify who you are and what experience you have in
+                        the performance of your work.</p>
+                      <p>The WeXlog solution allows you to do that is a concise, dynamic method by
+                        capturing your experience in continual daily, weekly or bi-weekly updates.
+                        This ensures that you have a full portfolio available at the click of a button
+                        to apply for a vacancy or bid that is available.</p>
+                      <p><a href="{% url 'Public:WexlogHomePricing' %}" class="btn btn-primary p-3">Get started</a></p>
+				            </div>
+		              </div>
+		            </div>
+		          </div>
+		        </div>
+		      </div>
+		    </div>
+    	</div>
+    </section>
+
+    <section class="ftco-section ftco-counter img" id="section-counter">
+      <div class="container">
+        <div class="row justify-content-center mb-5">
+          <div class="col-md-7 text-center heading-section heading-section-white ftco-animate">
+            <span class="subheading">Join our listing of members and enterprises</span>
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-md-10">
+            <div class="row">
+              <div class="col-md-3 d-flex justify-content-center counter-wrap ftco-animate">
+                <div class="block-18 text-center">
+                  <div class="text">
+                    <strong class="number" data-number="{{ scount }}">0</strong>
+                    <span>Skills</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3 d-flex justify-content-center counter-wrap ftco-animate">
+                <div class="block-18 text-center">
+                  <div class="text">
+                    <strong class="number" data-number="{{ mcount }}">0</strong>
+                    <span>Members</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3 d-flex justify-content-center counter-wrap ftco-animate">
+                <div class="block-18 text-center">
+                  <div class="text">
+                    <strong class="number" data-number="{{ ecount }}">0</strong>
+                    <span>Enterprises</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3 d-flex justify-content-center counter-wrap ftco-animate">
+                <div class="block-18 text-center">
+                  <div class="text">
+                    <strong class="number" data-number="{{ vcount }}">0</strong>
+                    <span>Vacancies</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+    	<div class="container">
+    		<div class="row">
+    			<div class="col-md-6 py-5">
+    				<img src="{% static 'wexlog_home/images/undraw_podcast_q6p7.svg' %}" class="img-fluid" alt="">
+    				<div class="heading-section ftco-animate mt-5">
+	            <h2 class="mb-4">Our Main Services</h2>
+              <p>The main service behind WeXlog is to create a portal through which
+                talents that provide a skill would be able to quantify and validate
+                those skills and then have a trusted source to market those skills to
+                potential customers, clients and employers.</p>
+           </div>
+    			</div>
+    			<div class="col-md-6 py-5">
+    				<div class="row">
+    					<div class="col-md-6 ftco-animate">
+    						<div class="media block-6 services border text-center">
+		            	<div class="icon d-flex align-items-center justify-content-center">
+		            		<span class="flaticon-cloud-computing"></span>
+		            	</div>
+		              <div class="mt-3 media-body media-body-2">
+                    <h3 class="heading">Capture Experience</h3>
+                    <p>Capture your education, training and certification, your work and
+                      projects experience.</p>
+                  </div>
+		            </div>
+    					</div>
+    					<div class="col-md-6 ftco-animate">
+    						<div class="media block-6 services border text-center">
+		            	<div class="icon d-flex align-items-center justify-content-center">
+		            		<span class="flaticon-cloud"></span>
+		            	</div>
+		              <div class="mt-3 media-body media-body-2">
+                    <h3 class="heading">Create a Trust Passport</h3>
+                    <p>Verified and validated by your colleagues, classmates,
+                      superiors, lecturers, collaborators, employers and clients</p>
+                  </div>
+		            </div>
+    					</div>
+    					<div class="col-md-6 ftco-animate">
+    						<div class="media block-6 services border text-center">
+		            	<div class="icon d-flex align-items-center justify-content-center">
+		            		<span class="flaticon-server"></span>
+		            	</div>
+		              <div class="mt-3 media-body media-body-2">
+                    <h3 class="heading">Advertise Availability</h3>
+                    <p>Post the number of hours you are available for freelance work,
+                    projects or permanent positions.</p>
+                  </div>
+		            </div>
+    					</div>
+    					<div class="col-md-6 ftco-animate">
+    						<div class="media block-6 services border text-center">
+		            	<div class="icon d-flex align-items-center justify-content-center">
+		            		<span class="flaticon-database"></span>
+		            	</div>
+		              <div class="mt-3 media-body media-body-2">
+                    <h3 class="heading">Post Vacancies or Search</h3>
+                    <p>You are able to post vacancies or alternativly search for you
+                    desired candidates based on qualified skills.</p>
+                  </div>
+		            </div>
+    					</div>
+    				</div>
+          </div>
+    		</div>
+    	</div>
+    </section>
+
+
+    <section class="ftco-section testimony-section">
+      <div class="container">
+        <div class="row justify-content-center mb-5 pb-3">
+          <div class="col-md-7 text-center heading-section ftco-animate">
+            <span class="subheading">Customer Says</span>
+            <h2 class="mb-4">Our satisfied customer says</h2>
+            <p>Our satisfied customers come from a listing of members that have found the resource they needed</p>
+          </div>
+        </div>
+        <div class="row ftco-animate">
+          <div class="col-md-12">
+            <div class="carousel-testimony owl-carousel ftco-owl">
+              <div class="item">
+                <div class="testimony-wrap p-4 text-center">
+                  <div class="user-img mb-4" style="background-image: url({% static 'wexlog_home/images/person_1.jpg' %})">
+                    <span class="quote d-flex align-items-center justify-content-center">
+                      <i class="icon-quote-left"></i>
+                    </span>
+                  </div>
+                  <div class="text">
+                    <p class="mb-4">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
+                    <p class="name">Mark Web</p>
+                    <span class="position">Marketing Manager</span>
+                  </div>
+                </div>
+              </div>
+              <div class="item">
+                <div class="testimony-wrap p-4 text-center">
+                  <div class="user-img mb-4" style="background-image: url({% static 'wexlog_home/images/person_2.jpg' %})">
+                    <span class="quote d-flex align-items-center justify-content-center">
+                      <i class="icon-quote-left"></i>
+                    </span>
+                  </div>
+                  <div class="text">
+                    <p class="mb-4">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
+                    <p class="name">Mark Web</p>
+                    <span class="position">Interface Designer</span>
+                  </div>
+                </div>
+              </div>
+              <div class="item">
+                <div class="testimony-wrap p-4 text-center">
+                  <div class="user-img mb-4" style="background-image: url({% static 'wexlog_home/images/person_3.jpg' %})">
+                    <span class="quote d-flex align-items-center justify-content-center">
+                      <i class="icon-quote-left"></i>
+                    </span>
+                  </div>
+                  <div class="text">
+                    <p class="mb-4">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
+                    <p class="name">Mark Web</p>
+                    <span class="position">UI Designer</span>
+                  </div>
+                </div>
+              </div>
+              <div class="item">
+                <div class="testimony-wrap p-4 text-center">
+                  <div class="user-img mb-4" style="background-image: url({% static 'wexlog_home/images/person_1.jpg' %})">
+                    <span class="quote d-flex align-items-center justify-content-center">
+                      <i class="icon-quote-left"></i>
+                    </span>
+                  </div>
+                  <div class="text">
+                    <p class="mb-4">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
+                    <p class="name">Mark Web</p>
+                    <span class="position">Web Developer</span>
+                  </div>
+                </div>
+              </div>
+              <div class="item">
+                <div class="testimony-wrap p-4 text-center">
+                  <div class="user-img mb-4" style="background-image: url({% static 'wexlog_home/images/person_1.jpg' %})">
+                    <span class="quote d-flex align-items-center justify-content-center">
+                      <i class="icon-quote-left"></i>
+                    </span>
+                  </div>
+                  <div class="text">
+                    <p class="mb-4">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
+                    <p class="name">Mark Web</p>
+                    <span class="position">System Analyst</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ftco-section bg-light">
+    	<div class="container">
+    		<div class="row justify-content-center mb-5 pb-5">
+    			<div class="col-md-7 text-center heading-section ftco-animate">
+            <span class="subheading">Services</span>
+            <h2 class="mb-4">How it works</h2>
+          </div>
+    		</div>
+    		<div class="row">
+          <div class="col-md-12 nav-link-wrap mb-5 pb-md-5 pb-sm-1 ftco-animate">
+            <div class="nav ftco-animate nav-pills justify-content-center text-center" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+              <a class="nav-link active" id="v-pills-nextgen-tab" data-toggle="pill" href="#v-pills-nextgen" role="tab" aria-controls="v-pills-nextgen" aria-selected="true">Capture Experience</a>
+
+              <a class="nav-link" id="v-pills-performance-tab" data-toggle="pill" href="#v-pills-performance" role="tab" aria-controls="v-pills-performance" aria-selected="false">Post Availability</a>
+
+              <a class="nav-link" id="v-pills-effect-tab" data-toggle="pill" href="#v-pills-effect" role="tab" aria-controls="v-pills-effect" aria-selected="false">Post Vacancy or Search</a>
+            </div>
+          </div>
+          <div class="col-md-12 align-items-center ftco-animate">
+
+            <div class="tab-content ftco-animate" id="v-pills-tabContent">
+
+              <div class="tab-pane fade show active" id="v-pills-nextgen" role="tabpanel" aria-labelledby="v-pills-nextgen-tab">
+              	<div class="d-md-flex">
+	              	<div class="one-forth align-self-center">
+	              		<img src="{% static 'wexlog_home/images/undraw_laravel_and_vue_59tp.svg' %}" class="img-fluid" alt="">
+	              	</div>
+	              	<div class="one-half ml-md-5 align-self-center">
+		                <h2 class="mb-4">Capture Education & Experience</h2>
+                    <p>Your actual work experience, the ability to apply your skills and
+                      experience, as well as your value to clients, customers, employers and
+                      team members are of vital value to such persons in the future, but are
+                      difficult to accumulate and record.</p>
+                    <p>WeXlog gives you that ability in an easily-verifiable and trustworthy
+                      way. Each project, job and work position can be recorded and verified
+                      in real-time, and be retained for the future in a structure that is
+                      easily searchable by clients, customers and employers who need a precise
+                      set of skills, experience, training and education, using a sophisticated
+                      and easy to use search function. Even the most unusual and esoteric
+                      skills and knowledge are catered for. If what you offer is not listed,
+                      you can add a descriptor, which creates a prompt for future searchers
+                      to enable them to find you.</p>
+                    <p>Your entries can be verified by the client, customer or employer in
+                      real-time, providing a living CV, which you can make available to searchers.</p>
+                    <p><a href="{% url 'Public:WexlogHomePricing' %}" class="btn btn-primary py-3">Get in touch</a></p>
+		              </div>
+	              </div>
+              </div>
+
+              <div class="tab-pane fade" id="v-pills-performance" role="tabpanel" aria-labelledby="v-pills-performance-tab">
+                <div class="d-md-flex">
+	              	<div class="one-forth order-last align-self-center">
+	              		<img src="{% static 'wexlog_home/images/undraw_visual_data_b1wx.svg' %}" class="img-fluid" alt="">
+	              	</div>
+	              	<div class="one-half order-first mr-md-5 align-self-center">
+		                <h2 class="mb-4">Post Your Availability</h2>
+                    <p>The core objective of WeXlog is to facilitate the recording of skills and
+                      achievements that you generate in the course of your daily activities and make
+                      them available on a platform that markets those skills to suitable bids and
+                      positions. By utilising WexLog these skills and achievements with referrals
+                      and recomendations from your collegues, supervisors and clients enable you
+                      to market yourself and your living CV for vacancies on which you are able
+                      to bid on as well as for positions that become available.</p>
+                    <p>You are providing a platform to bring your capabilities to the attention of
+                      customers, clients and employers. WeXlog allows you to engage and demonstrate
+                      continuous learning, ongoing beneficial activities and internal communication
+                      of those skills whilst in your day to day actions at work.</p>
+                    <p>Business activities that you practice daily and apply to the development
+                      of your career through the use of technology allow you to work faster and
+                      smater in every field, using the facility WeXlog provides allows you to
+                      market and develop those skills in the development of your career.</p>
+                    <p>In order to market your skills and living CV you need to capture, on a
+                      weekly or fortnightly basis, your activities into the WeXlog portal
+                      through the use of the 'Add Experience' or 'Add Education' forms and then
+                      post your availability.</p>
+                    <p>This will automatically generate a listing of 'Vacancies' or positions
+                      that you will be able to 'Bid' on.</p>
+                    <p><a href="{% url 'Public:WexlogHomePricing' %}" class="btn btn-primary py-3">Get in touch</a></p>
+		              </div>
+	              </div>
+              </div>
+
+              <div class="tab-pane fade" id="v-pills-effect" role="tabpanel" aria-labelledby="v-pills-effect-tab">
+                <div class="d-md-flex">
+	              	<div class="one-forth align-self-center">
+	              		<img src="{% static 'wexlog_home/images/undraw_business_plan_5i9d.svg' %}" class="img-fluid" alt="">
+	              	</div>
+	              	<div class="one-half ml-md-5 align-self-center">
+		                <h2 class="mb-4">Post a Vacancy or Search</h2>
+                    <p>Finding the right consultant, contractor or
+                      freelancer can be a nightmare, requiring extensive investigation
+                      and checking. When the job is completed, you sit back and relax,
+                      to prepare for the next round, often needing to undergo the whole
+                      process again, because the best of those available are committed
+                      on other projects, or you have lost track of them and have to start
+                      the process from the beginning again after a year or three. WeXlog
+                      avoids that nightmare.</p>
+                    <p>With WeXlog you can post your short term positions for
+                      consultants, contractors and freelancers as well as for permanent staff
+                      positions and have the members that are available place their bids on the
+                      vacancies posted. All you need to do is companre the bids received and
+                      evaluate which one suits your budget, your skill set requirements and
+                      cultural fit with the motivation that is provided on every bid.</p>
+                    <p>WexLog sets out for you a good selection of
+                      the people with the education, skills and experience you need, each
+                      one with a verified CV and a present and future availability, all up
+                      to the minute, so that you can make a good, informed choice of
+                      candidates to shortlist or even simply approach.</p>
+                    <p><a href="{% url 'Public:WexlogHomePricing' %}" class="btn btn-primary py-3">Get in touch</a></p>
+		              </div>
+	              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    	</div>
+    </section>
+
+    <section class="ftco-section ftco-partner">
+    	<div class="container">
+    		<div class="row">
+    			<div class="col-sm ftco-animate">
+    				<a href="#" class="partner"><img src="{% static 'wexlog_home/images/partner-1.png' %}" class="img-fluid" alt="Colorlib Template"></a>
+    			</div>
+    			<div class="col-sm ftco-animate">
+    				<a href="#" class="partner"><img src="{% static 'wexlog_home/images/partner-2.png' %}" class="img-fluid" alt="Colorlib Template"></a>
+    			</div>
+    			<div class="col-sm ftco-animate">
+    				<a href="#" class="partner"><img src="{% static 'wexlog_home/images/partner-3.png' %}" class="img-fluid" alt="Colorlib Template"></a>
+    			</div>
+    			<div class="col-sm ftco-animate">
+    				<a href="#" class="partner"><img src="{% static 'wexlog_home/images/partner-4.png' %}" class="img-fluid" alt="Colorlib Template"></a>
+    			</div>
+    			<div class="col-sm ftco-animate">
+    				<a href="#" class="partner"><img src="{% static 'wexlog_home/images/partner-5.png' %}" class="img-fluid" alt="Colorlib Template"></a>
+    			</div>
+    		</div>
+    	</div>
+    </section>
+
+{% endblock content %}

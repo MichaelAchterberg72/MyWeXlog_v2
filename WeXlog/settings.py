@@ -159,15 +159,16 @@ X_FRAME_OPTIONS = 'DENY'
     ##django-referrer-policy (3rd party app)
 REFERRER_POLICY='same-origin'
     ## Content-Security-policy (3rd party app)
-CSP_DEFAULT_SRC = ("'self'",'maxcdn.bootstrapcdn.com', 'code.jquery.com',
-'cdnjs.cloudflare.com', 'youtube.com', '127.0.0.1')
+CSP_DEFAULT_SRC = ("'self'", 'maxcdn.bootstrapcdn.com', 'code.jquery.com',
+'cdnjs.cloudflare.com', 'youtube.com', 'fonts.googleapis.com', 'maps.googleapis.com',
+'w3.org', '127.0.0.1')
 
 CSP_SCRIPT_SRC = None
-CSP_IMG_SRC = None
+CSP_IMG_SRC = ("'self'", '127.0.0.1')
 CSP_OBJECT_SRC = None
 CSP_MEDIA_SRC = None
 CSP_FRAME_SRC = None
-CSP_FONT_SRC = None
+CSP_FONT_SRC = ("'self'", 'fonts.googleapis.com', '*', 'w3.org', '127.0.0.1')
 CSP_CONNECT_SRC = None
 CSP_STYLE_SRC = None
 CSP_BASE_URI = None

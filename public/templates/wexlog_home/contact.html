@@ -1,0 +1,83 @@
+{% extends "wexlog_home/base_wexlog_home.html" %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+{% block content %}
+
+<p>&nbsp</p>
+<p>&nbsp</p>
+
+      <div class="container">
+        <div class="row no-gutters slider-text align-items-end justify-content-start">
+          <div class="col-md-8 ftco-animate text-center text-md-left mb-5">
+          	<p class="breadcrumbs mb-0"><span class="mr-3"><a href="index.html">Home <i class="ion-ios-arrow-forward"></i></a></span> <span>Contact</span></p>
+            <h1 class="mb-3 bread">Contact Us</h1>
+          </div>
+        </div>
+      </div>
+
+    <section class="ftco-section contact-section ftco-degree-bg">
+      <div class="container">
+        <div class="row d-flex mb-5 contact-info">
+          <div class="col-md-12 mb-4">
+            <h2 class="h4">Contact Information</h2>
+          </div>
+          <div class="w-100">
+            <p><a href="{% url 'Public:AboutUs' %}"><img src="{% static 'images/social-media/twittera.png' %}" alt="Twitter"></a> &nbsp
+              <a href="{% url 'Public:AboutUs' %}"><img src="{% static 'images/social-media/facebooka.png' %}" alt="Facebook"></a> &nbsp
+                <a href="{% url 'Public:AboutUs' %}"><img src="{% static 'images/social-media/linkedinb.png' %}" alt="LinkedIn"></a> &nbsp
+                  <a href="{% url 'Public:AboutUs' %}"><img src="{% static 'images/social-media/youtube.png' %}" alt="Youtube"></a></p>
+
+          </div>
+
+          <div class="col-md-3">
+            <p><span>Address:</span> DevOpTec (Pty) Ltd,<br>32 Viewland Crescent, Thornlands, Queensland, Australia</p>
+          </div>
+          <div class="col-md-3">
+            <p><span>Phone:</span> <a href="tel://1234567920">+ 1235 2355 98</a></p>
+          </div>
+          <div class="col-md-3">
+            <p><span>Email:</span> <a href="mailto:info@wexlog.io">info@wexlog.io</a></p>
+          </div>
+          <div class="col-md-3">
+            <p><span>Website</span> <a href="#">wexlog.io</a></p>
+          </div>
+        </div>
+
+        <div class="row block-9">
+          <div class="col-md-6 pr-md-5">
+            <form class="" action="" method="POST" id="ContactUsForm">
+
+              {% csrf_token %}
+              {{ form|crispy }}
+
+            <p><button type="submit" class="btn btn-primary py-3 px-5" name="button">Send Message</button></p>
+
+              </form>
+            <form action="#">
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="Your Name">
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="Your Email">
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="Subject">
+              </div>
+              <div class="form-group">
+                <textarea name="" id="" cols="30" rows="7" class="form-control" placeholder="Message"></textarea>
+              </div>
+              <div class="form-group">
+                <input type="submit" value="Send Message" class="btn btn-primary py-3 px-5">
+              </div>
+            </form>
+
+          </div>
+
+          <div class="col-md-6" id="map"></div>
+        </div>
+      </div>
+    </section>
+
+{% endblock content %}
