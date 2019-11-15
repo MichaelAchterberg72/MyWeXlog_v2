@@ -8,13 +8,14 @@
 <div class="card">
   <h5 class="card-header">Welcome to the Booklist home page!</h5>
   <div class="card-body">
+
       {% if request.user.is_authenticated %}
+      <p>You currently have {{ ecount.sum_e|intcomma }} books that you have read listed in WeXlog!</p>
       <p><a href="{% url 'BookList:books-read-new' %}" class="badge badge-pill badge-primary">Add Book</a>
         <a href="{% url 'BookList:books-list' %}" class="badge badge-pill badge-primary">View All Book</a>
         <a href="{% url 'BookList:book-search' %}" class="badge badge-pill badge-primary">Search All Books</a>
-        
+
       {% endif %}
-    <p>You currently have {{ ecount.sum_e|intcomma }} books that you have read listed in WexLog!</p>
     <table class="table-sm">
       <col width="55%">
       <col width="20%">

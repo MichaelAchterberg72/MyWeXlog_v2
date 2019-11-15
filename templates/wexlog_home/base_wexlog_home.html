@@ -9,7 +9,6 @@
 
       <!-- Custom CSS -->
       <link rel="stylesheet" href="{% static 'css/wexlog_css.css' %}" type="text/css">
-      <script src="https://kit.fontawesome.com/ce85b44bff.js" crossorigin="anonymous"></script>
       <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
@@ -62,7 +61,7 @@
 	          <li class="nav-item cta">
               <a href="{% url 'Public:WexlogHomePricing' %}" class="nav-link"><span>Get started</span></a></li>
             <li class="nav-item">
-              <a href="#" class="nav-link"></a></li>
+              &nbsp&nbsp</li>
             <li class="nav-item cta">
               <a href="{% url 'account_login' %}" class="nav-link"><span>Log-In</span></a></li>
 	        </ul>
@@ -85,7 +84,7 @@
                <ul class="ftco-footer-social list-unstyled mb-0">
                  <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
                  <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
-                 <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
+                 <li class="ftco-animate"><a href="#"><span class="icon-linkedin"></span></a></li>
                </ul>
              </div>
            </div>
@@ -120,9 +119,9 @@
              	<div class="block-23 mb-3">
  	              <ul>
  	                <li><span class="icon icon-map-marker"></span><span class="text">DevOpTec (Pty) Ltd,<br>32 Viewland Crescent, Thornlands, Queensland, Australia</span></li>
-                  <li><span class="icon icon-map-marker"></span><span class="text">6147 3929 210</span></li>
- 	                <li><a href="#"><span class="icon icon-phone"></span><span class="text">+2 392 3929 210</span></a></li>
- 	                <li><a href="#"><span class="icon icon-envelope"></span><span class="text">info@wexlog.io</span></a></li>
+                  <li><span class="icon icon-registered"></span><span class="text">6147 3929 210</span></li>
+ 	                <li><a href="tel://1234567920"><span class="icon icon-phone"></span><span class="text">+61 392 3929 210</span></a></li>
+ 	                <li><a href="mailto:info@wexlog.io"><span class="icon icon-envelope"></span><span class="text">info@wexlog.io</span></a></li>
  	              </ul>
  	            </div>
              </div>
@@ -132,7 +131,7 @@
            <div class="col-md-12 text-center">
 
              <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-   Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+   Copyright &copy; <span id="current-year">2018</span> All rights reserved | This template is made with <i class="icon-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
            </div>
          </div>
@@ -160,7 +159,8 @@
     <script src="{% static 'wexlog_home/js/scrollax.min.js' %}"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
     <script src="{% static 'wexlog_home/js/google-map.js' %}"></script>
-    <script src="{% static 'wexlog_home/js/main.js' %}"></script
+    <script src="{% static 'wexlog_home/js/main.js' %}"></script>
+    <script src="{% static 'wexlog_home/js/current-year.js' %}"></script>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

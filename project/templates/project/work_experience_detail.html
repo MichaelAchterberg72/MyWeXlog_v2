@@ -12,80 +12,77 @@
     <p>
     {% endif %}
     <a href="{% url 'Project:ProjectHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
-    <div class="row">
-      <div class="col-sm-6">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Work Experience Details</h5>
-            <table>
-              <thead>
-              </thead>
-              <tbody>
+    <p>&nbsp</p>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Work Experience on Project Details</h5>
+              <table class="table table-bordered">
+                <thead>
                   {% for d in detail %}
                   <tr>
+                    <col width="20%">
                     <col width="30%">
-                    <col width="70%">
+                    <col width="20%">
+                    <col width="10%">
+                    <col width="10%">
+                    <col width="10%">
+
                     <th>Company</th>
-                    <td>{{ d.company }}</td>
-                  </tr>
-                  <tr>
                     <th>Project</th>
-                    <td>{{ d.project }}</td>
-                  </tr>
-                  <tr>
                     <th>Industry</th>
+                    <th class="text-center">Date From</th>
+                    <th class="text-center">Date To</th>
+                    <th class="text-center">Estimated</th>
+                  </tr>
+                  <tr>
+                    <td>{{ d.company }}</td>
+                    <td>{{ d.project }}</td>
                     <td>{{ d.industry }}</td>
+                    <td class="text-center">{{ d.date_from }}</td>
+                    <td class="text-center">{{ d.date_to }}</td>
+                    <td class="text-center">{{ d.estimated }}</td>
                   </tr>
                   <tr>
-                    <th> </th>
-                    <td> </td>
-                  </tr>
-                  <tr>
-                    <th>Date From</th>
-                    <td>{{ d.date_from }}</td>
-                  </tr>
-                  <tr>
-                    <th>Date To</th>
-                    <td>{{ d.date_to }}</td>
-                  </tr>
-                  <tr>
-                    <th>Estimated</th>
-                    <td>{{ d.estimated }}</td>
-                  </tr>
-                  <tr>
+                    <th>Comment</th>
+                    <td colspan="3">{{ d.comment|linebreaks }}</td>
                     <th>Actual Hours</th>
                     <td>{{ d.hours_worked }}</td>
                   </tr>
                   <tr>
-                    <th>Comment</th>
-                    <td>{{ d.comment }}</td>
-                  </tr>
-                  <tr>
                     <th>Skills Used</th>
-                    {% for s in detail %}
-                    <td>{{ s.skills.all|join:", " }}</td>
-                    {% endfor %}
+                      {% for s in detail %}
+                      <td colspan="6">{{ s.skills.all|join:", " }}</td>
+                      {% endfor %}
                   </tr>
                   <tr>
                     <th>Upload</th>
-                    <td>{{ d.upload }}</td>
+                      {% for s in detail %}
+                      <td colspan="36">{{ d.upload }}</td>
+                      {% endfor %}
                   </tr>
-
-                </tbody>
               </table>
             </div>
           </div>
         </div>
+      </div>
+      <p>&nbsp</p>
+      <div class="row">
+        <div class="col-sm-6">
+
+        </div>
         <div class="col-sm-6">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Send User a Message</h5>
-              <p><a href="{% url 'Project:DetailMessage' d.talent.id %}?next={{ request.path|urlencode }}" class="btn btn-primary">Send Message</a></p>
+              <h5 class="card-title text-right">Send Talent a Message</h5>
+              <p class="text-right"><a href="{% url 'Project:DetailMessage' d.talent.id %}?next={{ request.path|urlencode }}" class="btn btn-primary">Send Message</a></p>
             </div>
             {% endfor %}
           </div>
         </div>
       </div>
+
     </div>
   </div>
 

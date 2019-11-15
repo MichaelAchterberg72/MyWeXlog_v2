@@ -19,7 +19,7 @@ from django.urls import reverse
 from .forms import ContactUsForm, SuggestionsForm, DataProtectionForm, DataPrivacyForm
 
 # Create your views here.
-@csp_exempt
+
 def HomePageView(request):
     mcount = User.objects.all().count()
     scount = SkillTag.objects.all().count()
@@ -79,6 +79,14 @@ class WexlogHomeShortTermView(TemplateView):
 
 class WexlogHomePermanentView(TemplateView):
     template_name = 'wexlog_home/permanent.html'
+
+
+class WexlogHomeMarketSkillsView(TemplateView):
+    template_name = 'wexlog_home/market_skills.html'
+
+
+class WexlogHomeFindClientView(TemplateView):
+    template_name = 'wexlog_home/find_client.html'
 
 
 class WexlogHomeBenefitsView(TemplateView):
