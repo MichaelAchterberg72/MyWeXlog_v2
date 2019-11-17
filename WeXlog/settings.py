@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'marketplace.apps.MarketplaceConfig',
     'payments.apps.PaymentsConfig',
     'public.apps.PublicConfig',
+    'nestedsettree.apps.NestedsettreeConfig',
     ##Django internal applications
     'django.contrib.admin',
     'django.contrib.auth',
@@ -71,7 +72,9 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'leaflet',
     'django_select2',
+    'pinax.referrals',
     'pinax.notifications',
+    'treebeard',
 #    'M2Crypto',
     'paypal.standard.ipn',
 ]
