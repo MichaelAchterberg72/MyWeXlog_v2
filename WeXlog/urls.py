@@ -28,6 +28,7 @@ urlpatterns = [
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     path('select2/', include('django_select2.urls')),
     path('referrals/', include("pinax.referrals.urls", namespace='pinax_referrals')),
+    path('invitations/', include('invitations.urls', namespace='Invitation')),
     path('notifications/', include("pinax.notifications.urls", namespace='pinax_notifications')),
     path('treeMP/', include('nestedsettree.urls', namespace='Structure')),
     ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS)

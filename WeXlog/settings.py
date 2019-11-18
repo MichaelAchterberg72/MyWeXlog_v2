@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'marketplace.apps.MarketplaceConfig',
     'payments.apps.PaymentsConfig',
     'public.apps.PublicConfig',
+    'invitations.apps.InvitationsConfig',
     'nestedsettree.apps.NestedsettreeConfig',
     ##Django internal applications
     'django.contrib.admin',
