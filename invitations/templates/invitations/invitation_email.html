@@ -1,0 +1,25 @@
+{% load pinax_referrals_tags %}
+{% url 'Talent:Home' as myurl %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+
+      <p>Hi {{ form.instance.name }},</p>
+      <p>{{ form.instance.invited_by }} has indicated that you worked together while you were working at <strong>{{ form.instance.worked_for }}</strong>. {{ form.instance.invited_by }} kindly asks if you could confirm the work experience they have captured. </p>
+      <p> Please click on this link:{% create_referral myurl %} with Referral code: {{referral}} to confirm their experience.</p>
+      <p><a href="{{ temp.referral.url }}">Link</a> {{ temp.referral.url }} </p>
+
+      <p>WeXlog is a live experience log on which you can capture your experience and associate skills with that experience. Then, depending on your subscription, you can eather search for companies looking for your skills or find people that have skills you require.</p>
+      <p>All skills are confirmed by other people, as {{ form.instance.invited_by }} is asking you to do for them right now.</p>
+
+      <p>Kind Regards</p>
+      <p>The WexLog Team</p>
+      <p>(for and on behalf of {{ form.instance.invited_by }})</p>
+
+  </body>
+</html>

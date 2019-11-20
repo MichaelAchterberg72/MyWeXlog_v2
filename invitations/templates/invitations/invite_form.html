@@ -1,0 +1,15 @@
+{% extends 'base_home.html' %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+{% block title %}{{block.super}}-Invite{% endblock title %}
+
+{% block content %}
+
+<h3>Invite Talent</h3>
+<form class="" action="" method="POST">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit" name="Invite">Invite</button>
+</form>
+{% endblock content %}
