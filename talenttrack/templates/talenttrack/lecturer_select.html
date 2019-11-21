@@ -22,7 +22,7 @@
     </div>
   </div>
   <div class="">
-    <p><button type="submit" name="another" class="btn btn-secondary">Add Another</button>  <button type="submit" name="done" class="btn btn-primary">Save</button>  <a href="{% url 'Invitation:Invite2' %}" class="btn btn-info">Invite</a></p>
+    <p><button type="submit" name="another" class="btn btn-secondary">Add Another</button>  <button type="submit" name="done" class="btn btn-primary">Save</button>  <a href="{% url 'Invitation:Invite2' %}?next={{ request.path|urlencode }}" class="btn btn-info">Invite</a></p>
   </div>
 </form>
 </div>

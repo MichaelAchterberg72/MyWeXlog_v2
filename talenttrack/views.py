@@ -1,4 +1,6 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import(
+    render, get_object_or_404, redirect, render_to_response
+    )
 from django.views.generic import TemplateView
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
@@ -93,8 +95,10 @@ def PreLoggedExperienceCaptureView(request):
             new.talent = request.user
             new.save()
             form.save_m2m()
+            response.delete_cookie("confirm")
             return redirect('Talent:PreColleagueSelect')
     else:
+        response.set_cookie("confirm","PC")
         template = 'talenttrack/prelogged_capture.html'
         context = {'form': form}
         return render(request, template, context)
@@ -109,8 +113,10 @@ def PreColleagueSelectView(request):
             new = form.save(commit=False)
             new.pre_experience = instance
             new.save()
+            response.delete_cookie("confirm")
             return redirect(reverse('Talent:Home'))
     else:
+        response.set_cookie("confirm","PC")
         template = 'talenttrack/prelogged_colleague_select.html'
         context = {'instance': instance, 'form': form}
         return render(request, template, context)
@@ -138,10 +144,13 @@ def ClientSelectView(request, pk):
             new.experience = instance
             new.save()
             if 'another' in request.POST:
+                response.delete_cookie("confirm")
                 return redirect('Talent:ClientSelect', kwargs={'pk':pk})
             elif 'done' in request.POST:
+                response.delete_cookie("confirm")
                 return redirect('Talent:Home')
     else:
+        response.set_cookie("confirm","WT")
         template = 'talenttrack/experience_client_select.html'
         context = {'instance': instance, 'form': form}
         return render(request, template, context)
@@ -157,10 +166,13 @@ def ClientAddView(request, pk):
             new.experience = instance
             new.save()
             if 'another' in request.POST:
+                response.delete_cookie("confirm")
                 return redirect(reverse('Talent:ClientAdd', kwargs={'pk':pk}))
             elif 'done' in request.POST:
+                response.delete_cookie("confirm")
                 return redirect(reverse('Talent:ExperienceDetail', kwargs={'exp_id': instance.id}))
     else:
+        response.set_cookie("confirm","WT")
         template = 'talenttrack/experience_client_add.html'
         context = {'instance': instance, 'form': form}
         return render(request, template, context)
@@ -197,10 +209,13 @@ def CollaboratorSelectView(request, pk):
             new.experience = instance
             new.save()
             if 'another' in request.POST:
+                response.delete_cookie("confirm")
                 return redirect('Talent:CollaboratorSelect', kwargs={'pk':pk})
             elif 'done' in request.POST:
+                response.delete_cookie("confirm")
                 return redirect(reverse('Talent:ClientSelect', kwargs={'pk':pk}))
     else:
+        response.set_cookie("confirm","WL")
         template = 'talenttrack/experience_collaborator_select.html'
         context = {'instance': instance, 'form': form}
         return render(request, template, context)
@@ -216,10 +231,13 @@ def CollaboratorAddView(request, pk):
             new.experience = instance
             new.save()
             if 'another' in request.POST:
+                response.delete_cookie("confirm")
                 return redirect(reverse('Talent:CollaboratorAdd', kwargs={'pk':pk}))
             elif 'done' in request.POST:
+                response.delete_cookie("confirm")
                 return redirect(reverse('Talent:ExperienceDetail', kwargs={'exp_id': instance.id}))
     else:
+        response.set_cookie("confirm","WL")
         template = 'talenttrack/experience_collaborator_add.html'
         context = {'instance': instance, 'form': form}
         return render(request, template, context)
@@ -256,10 +274,13 @@ def SuperiorSelectView(request, pk):
             new.experience = instance
             new.save()
             if 'another' in request.POST:
+                response.delete_cookie("confirm")
                 return redirect('Talent:SuperiorSelect', kwargs={'pk':pk})
             elif 'done' in request.POST:
+                response.delete_cookie("confirm")
                 return redirect(reverse('Talent:CollaboratorSelect', kwargs={'pk':pk}))
     else:
+        response.set_cookie("confirm","WS")
         template = 'talenttrack/experience_superior_select.html'
         context = {'instance': instance, 'form': form}
         return render(request, template, context)
@@ -275,10 +296,13 @@ def SuperiorAddView(request, pk):
             new.experience = instance
             new.save()
             if 'another' in request.POST:
+                response.delete_cookie("confirm")
                 return redirect('Talent:SuperiorAdd', kwargs={'pk':pk})
             elif 'done' in request.POST:
+                response.delete_cookie("confirm")
                 return redirect(reverse('Talent:ExperienceDetail', kwargs={'exp_id': instance.id}))
     else:
+        response.set_cookie("confirm","WS")
         template = 'talenttrack/experience_superior_add.html'
         context = {'instance': instance, 'form': form}
         return render(request, template, context)
@@ -315,10 +339,13 @@ def ColleagueSelectView(request):
             new.experience = instance
             new.save()
             if 'another' in request.POST:
+                response.delete_cookie("confirm")
                 return redirect('Talent:ColleagueSelect')
             elif 'done' in request.POST:
+                response.delete_cookie("confirm")
                 return redirect(reverse('Talent:SuperiorSelect', kwargs={'pk':instance.id}))
     else:
+        response.set_cookie("confirm","WC")
         template = 'talenttrack/experience_colleague_select.html'
         context = {'instance': instance, 'form': form}
         return render(request, template, context)
@@ -333,10 +360,13 @@ def ColleagueAddView(request, pk):
             new.experience = instance
             new.save()
             if 'another' in request.POST:
+                response.delete_cookie("confirm")
                 return redirect(reverse('Talent:ColleagueAdd', kwargs={'pk':pk}))
             elif 'done' in request.POST:
+                response.delete_cookie("confirm")
                 return redirect(reverse('Talent:ExperienceDetail', kwargs={'exp_id':instance.id}))
     else:
+        response.set_cookie("confirm","WC")
         template = 'talenttrack/experience_colleague_add.html'
         context = {'instance': instance, 'form': form}
         return render(request, template, context)
@@ -465,13 +495,19 @@ def LecturerSelectView(request):
             new.education = instance
             new.save()
             if 'another' in request.POST:
-                return redirect('Talent:LecturerSelect')
+                response = redirect('Talent:LecturerSelect')
+                response.delete_cookie("confirm")
+                return response
             elif 'done' in request.POST:
-                return redirect('Talent:ClassMatesSelect')
+                response = redirect('Talent:ClassMatesSelect')
+                response.delete_cookie("confirm")
+                return response
     else:
         template = 'talenttrack/lecturer_select.html'
         context = {'instance': instance, 'form': form}
-        return render(request, template, context)
+        response = render(request, template, context)
+        response.set_cookie("confirm","LR")
+        return response
 
 
 @login_required()
@@ -485,10 +521,13 @@ def LecturerAddView(request, pk):
             new.education = instance
             new.save()
             if 'another' in request.POST:
+                response.delete_cookie("confirm")
                 return redirect('Talent:LecturerAdd', kwargs={'pk': pk})
             elif 'done' in request.POST:
+                response.delete_cookie("confirm")
                 return redirect(reverse('Talent:EducationDetail', kwargs={'edu_id': instance.id}))
     else:
+        response.set_cookie("confirm","LR")
         template = 'talenttrack/lecturer_select.html'
         context = {'instance': instance, 'form': form}
         return render(request, template, context)
@@ -505,10 +544,13 @@ def ClassMateSelectView(request):
             new.education = instance
             new.save()
             if 'another' in request.POST:
+                response.delete_cookie("confirm")
                 return redirect('Talent:ClassMatesSelect')
             elif 'done' in request.POST:
+                response.delete_cookie("confirm")
                 return redirect(reverse('Talent:Home'))
     else:
+        response.set_cookie("confirm","CM")
         template = 'talenttrack/classmate_select.html'
         context = {'instance': instance, 'form': form}
         return render(request, template, context)
@@ -525,10 +567,13 @@ def ClassMateAddView(request, pk):
             new.education = instance
             new.save()
             if 'another' in request.POST:
+                response.delete_cookie("confirm")
                 return redirect(reverse('Talent:ClassMatesAdd', kwargs={'pk': pk}))
             elif 'done' in request.POST:
+                response.delete_cookie("confirm")
                 return redirect(reverse('Talent:EducationDetail', kwargs={'edu_id': instance.id}))
     else:
+        response.set_cookie("confirm","CM")
         template = 'talenttrack/classmate_select.html'
         context = {'instance': instance, 'form': form}
         return render(request, template, context)

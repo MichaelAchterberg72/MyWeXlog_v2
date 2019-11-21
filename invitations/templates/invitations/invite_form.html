@@ -8,6 +8,7 @@
 
 <h3>Invite Talent</h3>
 <form class="" action="" method="POST">
+  <input type="hidden" name="next" value="{{ request.GET.next }}">
   {% csrf_token %}
   {{ form.as_p }}
   <button type="submit" name="Invite">Invite</button>

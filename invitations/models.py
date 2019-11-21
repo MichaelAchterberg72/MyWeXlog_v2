@@ -10,6 +10,7 @@ class Invitation(models.Model):
         ('LR','Lecturer'),
         ('CM','Class Mate'),
         ('WC','Colleague'),
+        ('WS','Superior'),
         ('WL','Collaborator'),
         ('WT','Client'),
         ('PC','Colleague'),
