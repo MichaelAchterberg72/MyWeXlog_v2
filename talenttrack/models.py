@@ -104,7 +104,7 @@ class Lecturer(models.Model):
 class ClassMates(models.Model):
         #Captured by talent
     education = models.ForeignKey(Education, on_delete=models.CASCADE)
-    colleague = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    colleague = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, verbose_name='ClassMate')
         #AutoCaptured
     date_captured = models.DateField(auto_now_add=True)
     date_confirmed = models.DateField(auto_now=True)

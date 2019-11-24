@@ -23,7 +23,7 @@
     </div>
   </div>
   <div class="">
-    <p><button type="submit" name="done" class="btn btn-primary">Save</button></p>
+    <p><button type="submit" name="done" class="btn btn-primary">Save & Next</button>  <a href="{% url 'Invitation:Invite2' %}?next={{ request.path|urlencode }}" class="btn btn-info" target="_blank">Invite</a></p>
   </div>
 </form>
 <p>

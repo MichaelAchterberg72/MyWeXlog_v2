@@ -11,6 +11,14 @@
   <input type="hidden" name="next" value="{{ request.GET.next }}">
   {% csrf_token %}
   {{ form.as_p }}
-  <button type="submit" name="Invite">Invite</button>
+  <button type="submit" class="btn btn-primary" name="Invite" value="Close this window" onclick="windowClose();">Invite</button>
 </form>
 {% endblock content %}
+{% block Script %}
+<script language="javascript" type="text/javascript">
+  function windowClose() {
+  window.open('','_parent','');
+  window.close();
+  }
+</script>
+{% endblock Script %}

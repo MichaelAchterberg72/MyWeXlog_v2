@@ -12,7 +12,7 @@
   }
   </style>
 <div class="container">
-<h3>Capture Education / Training</h3>
+<h3>Capture Work Experience</h3>
 <form method="post" id="BranchForm" enctype="multipart/form-data">
   {% csrf_token %}
   <div class="form-row">
@@ -26,28 +26,31 @@
     </div>
     <div class="form-group col-md-6 mb-0">
       <div class="form-row">
-        <div class="form-group col-md-3 mb-0">
+        <div class="form-group col-md-4 mb-0">
           {{ form.date_from|as_crispy_field }}
         </div>
-        <div class="form-group col-md-3 mb-0">
+        <div class="form-group col-md-4 mb-0">
           {{ form.date_to|as_crispy_field }}
         </div>
-        <div class="form-group col-md-3 mb-0">
+        <div class="form-group col-md-4 mb-0">
           {{ form.hours_worked|as_crispy_field }}
         </div>
-        <div class="form-group col-md-3 mb-0">
+      </div>
+      <div class="form-row">
+          <div class="form-group col-md-3 mb-0">
           {{ form.estimated|as_crispy_field }}
         </div>
       </div>
       <div class="form-row">
-        <div class="form-group col-md-5 mb-0">
+        <div class="form-group col-md-10 mb-0">
           {{ form.designation|as_crispy_field }}
           <p><a href="{% url 'Talent:DesignationAddPop' %}" id='add_designation' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a Designation</a></p>
         </div>
-        <div class="form-group col-md-3 mb-0">
+      </div>
+      <div class="form-row">
           {{ form.upload|as_crispy_field }}
         </div>
-      </div>
+</div>
   </div>
   </div>
     {{ form.skills|as_crispy_field }}
