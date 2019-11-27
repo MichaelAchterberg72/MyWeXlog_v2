@@ -133,8 +133,17 @@ SITE_ID = 1
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 
+ACCOUNT_FORMS = {
+    'signup': 'users.forms.CustomSignupForm',
+}
 
-
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_EMAIL_CONFIRMATION_HMAC = True
+ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
+ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 360
+ACCOUNT_LOGOUT_REDIRECT_URL = "Public:LandingPage"
+#ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True
+ACCOUNT_USER_MODEL_USERNAME_FIELD = 'synonym'
 
 PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.Argon2PasswordHasher',
@@ -237,7 +246,7 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTH_USER_MODEL = 'users.CustomUser'
 LOGIN_URL = 'account/login/'
 LOGIN_REDIRECT_URL = 'Profile:ProfileHome'
-LOGOUT_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'public/home/'
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
