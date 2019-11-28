@@ -23,6 +23,7 @@ urlpatterns = [
     path('experience/', include('talenttrack.urls', namespace='Talent')),
     path('trust/', include('trustpassport.urls', namespace='Trust')),
     path('marketplace/', include('marketplace.urls', namespace='MarketPlace')),
+    path('user/', include('users.urls', namespace='Users')),
     path('admin/', admin.site.urls),
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

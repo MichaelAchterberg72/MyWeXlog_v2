@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from .models import CustomUser
+from .models import CustomUser, CustomUserSettings
 
 class CustomUserCreationForm(UserCreationForm):
 
@@ -13,3 +13,14 @@ class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = CustomUser
         fields = UserChangeForm.Meta.fields
+
+
+class CustomUserSettingsForm(forms.ModelForm):
+    class Meta:
+        model = CustomUserSettings
+        fields = ('right_to_say_no',
+                    'unsubscribe',
+                    'receive_newsletter',
+                    'validation_requests',
+                    'takeout',
+                    'right_to_be_forgotten')

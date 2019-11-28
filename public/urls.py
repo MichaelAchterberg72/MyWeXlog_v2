@@ -8,6 +8,7 @@ app_name = 'Public'
 
 urlpatterns = [
     path('index/', views.HomePageView, name='WexlogHomeIndex'),
+    path('site-stats/', views.SiteStatsView, name='WexlogHomeSiteStats'),
     path('about/', views.WexlogHomeAboutView, name='WexlogHomeAbout'),
     path('contact/', views.WexlogHomeContactView, name='WexlogHomeContact'),
     path('post-vacancy/', views.WexlogHomePostVacancyView.as_view(), name='WexlogHomePostVacancy'),

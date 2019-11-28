@@ -4,6 +4,11 @@ from django.views.generic import (
         TemplateView
     )
 
+import json
+
+from django.http import HttpResponse
+from django.http import JsonResponse
+
 from csp.decorators import csp_exempt
 
 from django.contrib.auth import get_user_model
@@ -34,6 +39,23 @@ def HomePageView(request):
             'vcount': vcount
     }
     return render(request, template_name, context)
+
+
+def SiteStatsView(request):
+
+    mcount= User.objects.all().count()
+    scount = SkillTag.objects.all().count()
+    ecount= Enterprise.objects.all().count()
+    vcount = TalentRequired.objects.all().count()
+
+    response = f'members={mcount}&skills={scount}&enterprises={ecount}&vacancies={vcount}'
+    sitestats = [
+            {"members": mcount,
+            "skills": scount,
+            "enterprises": ecount,
+            "vacancies": vcount}
+    ]
+    return JsonResponse(sitestats, safe=False)
 
 
 def WexlogHomeAboutView(request):

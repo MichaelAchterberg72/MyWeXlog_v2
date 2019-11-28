@@ -17,7 +17,7 @@
     <div class="">
     <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
     <div class="container">
-    <a class="navbar-brand" href="{% url 'Public:WexlogHomeIndex' %}">WeXlog</a>
+    <a class="navbar-brand" href="https://www.wexlog.io/public/index/">WeXlog</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -56,6 +56,7 @@
         <button class="dropdown-item" type="button">Invite Someone</button>
         <div class="dropdown-divider"></div>
         <a class="dropdown-item"  href="{% url 'account_change_password' %}">Change Password</a>
+        <a class="dropdown-item"  href="{% url 'Users:CustomUserSettings' %}">Settings</a>
         <div class="dropdown-divider"></div>
         <a class="dropdown-item"  href="{% url 'account_logout' %}">Logout</a>
       </div>
@@ -100,9 +101,9 @@
 
   <nav class="navbar sticky-bottom navbar-light bg-light">
     <div class="container">
-      <a class="navbar-brand" href="{% url 'Public:WexlogHomeUserAgreement' %}">User Agreement</a>
-      <a class="navbar-brand" href="{% url 'Public:WexlogHomePrivacy' %}">Privacy Policy</a>
-      <a class="navbar-brand" href="{% url 'Public:WexlogHomeContact' %}">Contact Us</a>
+      <a class="navbar-brand" href="https://www.wexlog.io/public/user-agreement/">User Agreement</a>
+      <a class="navbar-brand" href="https://www.wexlog.io/public/privacy/">Privacy Policy</a>
+      <a class="navbar-brand" href="https://www.wexlog.io/public/contact/">Contact Us</a>
     </div>
   </nav>
 
