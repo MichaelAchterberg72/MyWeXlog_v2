@@ -6,7 +6,7 @@ from django.db import models
 
 class NtWk(MP_Node):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    referral_code = models.CharField(max_length=30, null=True, blank=True)
+    referral_code = models.CharField(max_length=42, null=True, blank=True)
     date_added = models.DateField(auto_now_add=True)
 
     node_order_by = ['talent']

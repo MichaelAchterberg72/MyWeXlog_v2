@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.conf import settings
 from time import time
 from random import random
+from django.urls import reverse
 from django.db.models.signals import post_save
 
 
@@ -13,7 +14,7 @@ from users.models import CustomUser
 from locations.models import Region, City, Suburb
 from db_flatten.models import PhoneNumberType
 from enterprises.models import Enterprise
-
+from pinax.referrals.models import Referral
 
 class SiteName(models.Model):
     site = models.CharField(max_length=40, unique=True)
@@ -41,6 +42,9 @@ class Profile(models.Model):
     birth_date = models.DateField('Date of Birth', null=True)
     background = models.TextField()
     mentor = models.CharField('Do you wish to be a mentor?', max_length=1, choices=MENTOR, default='N')#Opt in to be a mentor to other people
+    middle_name = models.CharField(max_length=60, null=True, blank=True)
+    synonym = models.CharField(max_length=15, null=True)
+    referral_code = models.OneToOneField(Referral, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return str(self.talent)
@@ -48,6 +52,7 @@ class Profile(models.Model):
     def create_profile(sender, **kwargs):
         if kwargs['created']:
             create_profile = Profile.objects.create(talent=kwargs['instance'])
+
     post_save.connect(create_profile, sender=CustomUser)
 
 
@@ -72,6 +77,17 @@ class IdentificationDetail(models.Model):
     def create_id(sender, **kwargs):
         if kwargs['created']:
             create_profile = IdentificationDetail.objects.create(talent=kwargs['instance'])
+
+            #Create personal referral code
+            '''
+            referral = Referral.create(
+                user = kwargs['instance'],
+                redirect_to = '/accounts/signup/'
+            )
+            CustomUser.objects.filter(username=kwargs['instance']).update(referral_code=referral)'''
+
+            #send email to new used with link
+
     post_save.connect(create_id, sender=CustomUser)
 
 
