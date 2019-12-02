@@ -47,6 +47,12 @@ class CustomUser(AbstractUser):
 
 @receiver(user_signed_up)
 def after_signup(request, user, **kwargs):
+
+    referral = Referral.create(
+            user=user,
+            redirect_to = '/accounts/signup/'
+    )
+
     if 'pinax-referral' in request.COOKIES:
         ref_biscuit = request.COOKIES['pinax-referral']
         ref_code, ref_session = ref_biscuit.split(":")
@@ -57,8 +63,7 @@ def after_signup(request, user, **kwargs):
         rt_n = CustomUser.objects.get(pk=pp.user.pk)
         root = NtWk.objects.get(talent=rt_n)
         node = get(root.pk).add_child(talent=user, referral_code=ref_code)
-        print("Child Created!!!!!!!!!!")
+        
     else:
         get = lambda node_id: NtWk.objects.get(pk=node_id)
         root = NtWk.add_root(talent=user)
-        print("Root Created!!!!!!!!!")
