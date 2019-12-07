@@ -14,7 +14,6 @@ from django_select2.forms import (
 
 from .models import BookList, Author, ReadBy, Format, Publisher
 from db_flatten.models import SkillTag
-from .widgets import XDSoftDateTimePickerInput, BootstrapDateTimePickerInput, FengyuanChenDatePickerInput
 
 
 #class AddressForm(forms.Form):

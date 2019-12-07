@@ -22,5 +22,7 @@ class CustomUserSettingsForm(forms.ModelForm):
                     'unsubscribe',
                     'receive_newsletter',
                     'validation_requests',
+                    'subscription_notifications',
+                    'payment_notifications',
                     'takeout',
                     'right_to_be_forgotten')

@@ -3,6 +3,8 @@ from django.conf import settings
 from datetime import datetime
 from django.utils import timezone
 from django.contrib.auth.models import AbstractUser, UserManager
+from django.db.models.signals import post_save
+
 
 class CustomUserManager(UserManager):
     pass
@@ -43,10 +45,21 @@ class CustomUser(AbstractUser):
         return self.email
 
 class CustomUserSettings(models.Model):
-    talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    talent = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     right_to_say_no = models.BooleanField('The right to say no to the sale of personal information', default=False)
     unsubscribe = models.BooleanField('Unsubscribe from all newsletters', default=False)
     receive_newsletter = models.BooleanField('Receive the newslatter', default=True)
     validation_requests = models.BooleanField('Receive validation requests', default=True)
     takeout = models.BooleanField('Export data to a csv file', default=False)
-    right_to_be_forgotten = models.BooleanField('RIght to be forgotten', default=False)
+    right_to_be_forgotten = models.BooleanField('Right to be forgotten', default=False)
+    payment_notifications = models.BooleanField('Receive subscription payment notifications', default=True)
+    subscription_notifications = models.BooleanField('Receive subscription status notifications', default=True)
+
+    def __str__(self):
+        return f"Settings for {self.talent}"
+
+    def create_settings(sender, **kwargs):
+        if kwargs['created']:
+            create_settings = CustomUserSettings.objects.create(talent=kwargs['instance'])
+
+    post_save.connect(create_settings, sender=CustomUser)
