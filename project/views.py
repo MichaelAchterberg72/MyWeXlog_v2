@@ -27,8 +27,8 @@ from django_messages.models import Message
 from .forms import ProjectAddForm, ProjectSearchForm, ProjectForm
 from django_messages.forms import ComposeForm
 
-# Create your views here.
-@login_required
+
+@login_required()
 def ProjectListHome(request):
     pcount = ProjectData.objects.all().aggregate(sum_p=Count('name'))
     projects = ProjectData.objects.all().order_by('-company')
@@ -38,7 +38,7 @@ def ProjectListHome(request):
     return render(request, template_name, context)
 
 
-@login_required
+@login_required()
 def ProjectList(request, profile_id=None):
     profile_id = request.user
     pcount = WorkExperience.objects.filter(talent=profile_id).aggregate(sum_p=Count('company'))
@@ -97,7 +97,7 @@ def ProjectAddView(request):
     return render(request, template_name, context)
 
 
-@login_required
+@login_required()
 def ProjectListView(request):
     list = ProjectData.objects.all().order_by('name')
     template_name = 'project/projects_list.html'
@@ -134,7 +134,7 @@ def ProjectSearch(request):
     return render(request, template_name, context)
 
 
-@login_required
+@login_required()
 def HoursWorkedOnProject(request, project_id):
     projectdata = get_object_or_404(ProjectData, pk=project_id)
     info = WorkExperience.objects.filter(project=project_id).annotate(sum_hours=Sum('hours_worked')).order_by('date_to')
@@ -148,32 +148,8 @@ def HoursWorkedOnProject(request, project_id):
     }
     return render(request, template_name, context)
 
-"""
-@login_required
-def HoursWorkedOnProject(request, project_id):
-    projectdata = get_object_or_404(ProjectData, pk=project_id)
-    info = WorkExperience.objects.filter(project=project_id).annotate(sum_hours=Sum('hours_worked')).order_by('date_to')
-    info2 = PreLoggedExperience.objects.filter(project=project_id).annotate(sum_hours=Sum('hours_worked')).order_by('date_to')
-    hr = WorkExperience.objects.filter(project=project_id).aggregate(sum_t=Sum('hours_worked'))
-    hr2 = PreLoggedExperience.objects.filter(project=project_id).aggregate(sum_t2=Sum('hours_worked'))
-    infocombined = sorted(list(chain(info, info2)),)
-    combined = sorted(list(chain(hr, hr2)))
-#    total_sum = hr + hr2
 
-    template_name = 'project/hours_worked_on_project.html'
-    context = {
-            'projectdata': projectdata,
-            'info': info,
-            'info2': info2,
-            'hr': hr,
-            'hr2': hr2,
-            'combined': combined,
-            'infocombined': infocombined
-    }
-    return render(request, template_name, context)
-"""
-
-@login_required
+@login_required()
 def EmployeesOnProject(request, workexperience_id):
     projectdata = get_object_or_404(ProjectData, pk=project_id)
     info = WorkExperience.objects.filter(project=project_id).annotate('talent').order_by('talent')
@@ -188,7 +164,7 @@ def EmployeesOnProject(request, workexperience_id):
     return render(request, template_name, context)
 
 
-@login_required
+@login_required()
 def WorkExperienceDetail(request, workexperience_id):
     info = get_object_or_404(WorkExperience, pk=workexperience_id)
     detail = WorkExperience.objects.filter(pk=workexperience_id)

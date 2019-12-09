@@ -10,7 +10,7 @@ class Region(models.Model):
         unique_together = (('country','region'),)
 
     def __str__(self):
-        return '{}-{}'.format(self.country, self.region)
+        return f'{self.region}'
 
 class City(models.Model):
     region = models.ForeignKey(Region, on_delete=models.PROTECT)
@@ -20,7 +20,7 @@ class City(models.Model):
         unique_together = (('region','city'),)
 
     def __str__(self):
-        return '{}-{}'.format(self.region, self.city)
+        return f'{self.city}'
 
 class Suburb(models.Model):
     city = models.ForeignKey(City, on_delete=models.PROTECT)
@@ -30,7 +30,7 @@ class Suburb(models.Model):
         unique_together = (('suburb','city'),)
 
     def __str__(self):
-        return '{}-{}'.format(self.city, self.suburb)
+        return f'{self.suburb}'
 
 class Currency(models.Model):
     country = CountryField()

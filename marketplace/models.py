@@ -105,8 +105,9 @@ class SkillRequired(models.Model):
     scope = models.ForeignKey(TalentRequired, on_delete=models.CASCADE)
     skill = models.ForeignKey(SkillTag, on_delete=models.PROTECT)
 
-    #class Meta:
-    #    unique_together = (('skill','scope'),)
+    class Meta:
+        #unique_together = (('skill','scope'),)
+        pass
 
     def __str__(self):
         return f'{self.scope}'

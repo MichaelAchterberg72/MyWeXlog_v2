@@ -49,13 +49,12 @@ class Course(models.Model):
 
 
 class Topic(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True)
     topic = models.CharField(max_length=60, unique=True)
     skills = models.ManyToManyField(SkillTag)
     hours = models.DecimalField(max_digits=5, decimal_places=2)
 
     def __str__(self):
-        return '{} - {}'.format (self.course, self.topic)
+        return '{}'.format(self.topic)
 
 
 #Function to randomise filename for Profile Upload
@@ -69,7 +68,7 @@ class Education(models.Model):
     date_captured = models.DateField(auto_now_add=True)
     date_from = models.DateField()
     date_to = models.DateField()
-    topic = models.ForeignKey(Topic, on_delete=models.PROTECT, blank=True, null=True, verbose_name="subject")
+    topic = models.ForeignKey(Topic, on_delete=models.PROTECT, blank=True, null=True, verbose_name="Subject")
     file = models.FileField(upload_to=EduFilename, blank=True, null=True)
     score = models.SmallIntegerField(default=0)
 

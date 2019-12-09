@@ -13,8 +13,24 @@ from phonenumber_field.modelfields import PhoneNumberField
 from users.models import CustomUser
 from locations.models import Region, City, Suburb
 from db_flatten.models import PhoneNumberType
-from enterprises.models import Enterprise
+from enterprises.models import Enterprise, Branch
 from pinax.referrals.models import Referral
+from marketplace.models import WorkLocation
+
+
+class BriefCareerHistory(models.Model):
+    talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    work_configeration = models.ForeignKey(WorkLocation, on_delete=models.PROTECT)
+    companybranch = models.ForeignKey(Branch, on_delete=models.PROTECT, verbose_name="Home_Base")
+    date_from = models.DateField()
+    date_to = models.DateField(blank=True, null=True)
+
+    def __str__(self):
+        if self.date_to:
+            return f'{self.talent}, {self.work_configeration}: {self.companybranch}, from: {self.date_from}, to: {self.date_to}'
+
+        return f'{self.talent}, {self.work_configeration}: {self.companybranch}, from: {self.date_from} (Currently Employed Here)'
+
 
 class SiteName(models.Model):
     site = models.CharField(max_length=40, unique=True)

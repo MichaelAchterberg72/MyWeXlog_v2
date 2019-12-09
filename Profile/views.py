@@ -13,7 +13,7 @@ from csp.decorators import csp_exempt
 
 
 from .models import (
-        Profile, Email, PhysicalAddress, PostalAddress, PhoneNumber, SiteName, OnlineRegistrations, FileUpload, IdentificationDetail, IdType, PassportDetail, LanguageList, LanguageTrack
+        Profile, Email, PhysicalAddress, PostalAddress, PhoneNumber, SiteName, OnlineRegistrations, FileUpload, IdentificationDetail, IdType, PassportDetail, LanguageList, LanguageTrack, BriefCareerHistory,
         )
 
 from talenttrack.models import (
@@ -23,14 +23,15 @@ from talenttrack.models import (
 from talenttrack.forms import (
         LecturerCommentForm, ClassMatesCommentForm
 )
+
 from locations.models import Region
 
 
 from .forms import (
-    ProfileForm, EmailForm, EmailStatusForm, PhysicalAddressForm, PostalAddressForm, PhoneNumberForm, OnlineProfileForm, ProfileTypeForm, FileUploadForm, IdTypeForm, LanguageTrackForm, LanguageListForm, PassportDetailForm, IdentificationDetailForm
+    ProfileForm, EmailForm, EmailStatusForm, PhysicalAddressForm, PostalAddressForm, PhoneNumberForm, OnlineProfileForm, ProfileTypeForm, FileUploadForm, IdTypeForm, LanguageTrackForm, LanguageListForm, PassportDetailForm, IdentificationDetailForm, BriefCareerHistoryForm
 )
 
-
+@login_required()
 def ProfileHome(request):
     #WorkFlow Card
     wf1 = Lecturer.objects.filter(confirm__exact='S').count()
@@ -48,6 +49,32 @@ def ProfileHome(request):
         'wf1': wf1, 'total': total
     }
     return render(request, template, context)
+
+
+@login_required()
+@csp_exempt
+def BriefCareerHistoryView(request):
+    talent=request.user
+    form = BriefCareerHistoryForm(request.POST or None)
+    history = BriefCareerHistory.objects.filter(talent=talent)
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.talent = request.user
+            new.save()
+            if 'another' in request.POST:
+                response = redirect('Profile:History')
+                return response
+            elif 'done' in request.POST:
+                response = redirect(reverse('Profile:ProfileView', kwargs={'profile_id': talent.id}))
+                return response
+
+    else:
+        template = 'Profile/brief_career_history.html'
+        context = {'form': form, 'history': history}
+        response = render(request, template, context)
+        return response
+
 
 @login_required()
 def ConfirmView(request):
@@ -681,9 +708,10 @@ def ProfileView(request, profile_id):
         id = IdentificationDetail.objects.filter(talent=profile_id)
         passport = PassportDetail.objects.filter(talent=profile_id)
         speak = LanguageTrack.objects.filter(talent=profile_id)
+        history = BriefCareerHistory.objects.filter(talent=profile_id).order_by('-date_from')
 
         template='Profile/profile_view.html'
-        context= {'info':info, 'email':email, 'physical':physical, 'postal': postal, 'pnumbers': pnumbers, 'online': online, 'upload': upload, 'id': id, 'passport': passport, 'speak': speak}
+        context= {'info':info, 'email':email, 'physical':physical, 'postal': postal, 'pnumbers': pnumbers, 'online': online, 'upload': upload, 'id': id, 'passport': passport, 'speak': speak, 'history': history}
         return render(request, template, context)
     else:
         raise PermissionDenied

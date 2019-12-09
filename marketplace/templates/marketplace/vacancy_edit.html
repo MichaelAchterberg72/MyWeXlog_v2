@@ -4,12 +4,15 @@
 {% load static %}
 
 {% block title %}{{block.super}}-Vacancy Edit{% endblock title %}
+{% block style %}
+
+{% endblock style %}
 
 {% block content %}
 {{ form.media.css }}
 <style type="text/css">
   select {
-    width: 100px;
+    width: 200px;
   }
   </style>
 <div class="container">
@@ -32,6 +35,9 @@
         <div class="form-group col-md-4 mb-0">
           {{ form.bid_closes|as_crispy_field }}
         </div>
+      </div>
+      <div class="form-row">
+        {{ form.terms|as_crispy_field }}
       </div>
     </div>
     <div class="form-group col-md-6 mb-0">
@@ -71,13 +77,9 @@
     </div>
   </div>
   <div class="form-row">
-    <div class="form-group col-md-3 mb-0">
-      {{ form.certification|as_crispy_field }}
-      <p><a href="{% url 'Talent:ResultAddPop' %}" id='add_course' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a Certification</a></p>
-    </div>
-    <div class="form-group col-md-6 mb-0">
-      {{ form.terms|as_crispy_field }}
-    </div>
+    {{ form.certification|as_crispy_field }}
+    <p><a href="{% url 'Talent:ResultAddPop' %}" id='add_course' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add</a></p>
+
   </div>
   <div class="form-row">
     <div class="form-group col-md-6 mb-0">

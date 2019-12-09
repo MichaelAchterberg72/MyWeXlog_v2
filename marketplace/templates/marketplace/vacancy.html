@@ -5,15 +5,15 @@
 
 {% block title %}{{block.super}}-Vacancy{% endblock title %}
 
-{% block Style %}
-  <link href="{% static 'css/hor_filter_css.css' %}" rel="stylesheet">
-{% endblock Style %}
+{% block style %}
+
+{% endblock style %}
 
 {% block content %}
 {{ form.media.css }}
 <style type="text/css">
   select {
-    width: 100px;
+    width: 200px;
   }
   </style>
 <div class="container">
@@ -101,7 +101,7 @@
 
 {% endblock content %}
 {% block Script %}
-<script src="{% static 'js/hor_filter.js' %}"></script>
+
 <!-- code for popups -->
 <script type="text/javascript">
 function showAddPopup(triggeringLink) {

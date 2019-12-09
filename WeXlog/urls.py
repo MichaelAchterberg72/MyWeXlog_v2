@@ -11,6 +11,7 @@ from django.conf.urls import handler404, handler500, include, url  # noqa
 urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('messages/', include('django_messages.urls')),
+    path('select2/', include('django_select2.urls')),
     path('Profile/', include('Profile.urls', namespace='Profile')),
     path('flatten/', include('db_flatten.urls', namespace='Flatten')),
     path('location/', include('locations.urls', namespace='Location')),
@@ -26,7 +27,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-    path('select2/', include('django_select2.urls')),
     path('referrals/', include("pinax.referrals.urls", namespace='pinax_referrals')),
     path('invitations/', include('invitations.urls', namespace='Invitation')),
     path('notifications/', include("pinax.notifications.urls", namespace='pinax_notifications')),

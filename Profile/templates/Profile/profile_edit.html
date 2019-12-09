@@ -1,26 +1,10 @@
-{% extends 'profile/base_profile.html' %}
+{% extends 'base_home.html' %}
 {% load crispy_forms_tags %}
 
-{% block title %}My {{block.super}} Profile{% endblock title %}
+{% block title %}My {{block.super}} Profile Edit{% endblock title %}
 
 
-{% block network %}
-
-{% endblock network %}
-
-{% block workflow %}
-
-{% endblock workflow %}
-
-{% block score %}
-
-{% endblock score %}
-
-{% block TBA %}
-
-{% endblock TBA %}
-
-{% block Center_Content %}
+{% block content %}
 <div class="container">
 <h3>Edit Your Profile</h3>
 
@@ -29,7 +13,7 @@
   {% csrf_token %}
   <div class="form-row">
     <div class="form-group col-md-6 mb-0">
-      
+
       {{ form.birth_date|as_crispy_field }}
       {{ form.mentor|as_crispy_field }}
     </div>
@@ -42,4 +26,4 @@
   </div>
 </form>
 </div>
-{% endblock Center_Content %}
+{% endblock content %}

@@ -19,6 +19,7 @@ class RegionSearchFieldMixin:
     search_fields = [
         'region__icontains', 'pk__startswith'
     ]
+    dependent_fields={'country': 'country'}
 
 class RegionSelect2Widget(RegionSearchFieldMixin, ModelSelect2Widget):
     model = Region
@@ -31,6 +32,8 @@ class SuburbSearchFieldMixin:
     search_fields = [
         'suburb__icontains', 'pk__startswith'
     ]
+    dependent_fields={'city': 'city'}
+
 class SuburbSelect2Widget(SuburbSearchFieldMixin, ModelSelect2Widget):
     model = Suburb
 
@@ -42,6 +45,8 @@ class CitySearchFieldMixin:
     search_fields = [
         'city__icontains', 'pk__startswith'
     ]
+    dependent_fields={'region': 'region'}
+
 class CitySelect2Widget(CitySearchFieldMixin, ModelSelect2Widget):
     model = City
 

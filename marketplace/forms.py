@@ -9,7 +9,7 @@ from crispy_forms.layout import Layout, Submit, Row, Column
 
 from django_select2.forms import (
     ModelSelect2TagWidget, ModelSelect2Widget, Select2MultipleWidget,
-    Select2Widget
+    Select2Widget, ModelSelect2MultipleWidget
 )
 
 
@@ -20,6 +20,8 @@ from .models import (
 
 from locations.models import Currency, City
 from enterprises.models import Branch
+from talenttrack.models import Result
+from db_flatten.models import SkillTag
 
 #>>> Select 2
 class BranchSearchFieldMixin:
@@ -32,6 +34,17 @@ class BranchSelect2Widget(BranchSearchFieldMixin, ModelSelect2Widget):
 
     def create_value(self, value):
         self.get_queryset().create(name=value)
+
+class VacancySkillSearchFieldMixin:
+    search_fields = [
+        'skill__icontains', 'pk__startswith'
+    ]
+
+class VacancySkillSelect2Widget(VacancySkillSearchFieldMixin, ModelSelect2Widget):
+    model = SkillTag
+
+    def create_value(self, value):
+        self.get_queryset().create(skill=value)
 
 class CurrencySearchFieldMixin:
     search_fields = [
@@ -48,11 +61,36 @@ class CitySearchFieldMixin:
     search_fields = [
         'city__icontains', 'pk__startswith'
     ]
+
 class CitySelect2Widget(CitySearchFieldMixin, ModelSelect2Widget):
     model = City
 
     def create_value(self, value):
         self.get_queryset().create(city=value)
+
+
+class CertSearchFieldMixin:
+    search_fields = [
+        'type__icontains', 'pk__startswith'
+    ]
+
+class CertModelSelect2MultipleWidget(CertSearchFieldMixin, ModelSelect2MultipleWidget):
+    model = Result
+
+    def create_value(self, value):
+        self.get_queryset().create(type=value)
+
+
+class SkillSearchFieldMixin:
+    search_fields = [
+        'skill__icontains', 'pk__startswith'
+    ]
+
+class SkillModelSelect2MultipleWidget(SkillSearchFieldMixin, ModelSelect2MultipleWidget):
+    model = SkillTag
+
+    def create_value(self, value):
+        self.get_queryset().create(skill=value)
 #Select2<<<
 
 
@@ -80,6 +118,9 @@ class SkillRequiredForm(forms.ModelForm):
     class Meta:
         model = SkillRequired
         fields = ('skill', )
+        widgets = {
+            'skill': VacancySkillSelect2Widget(),
+        }
 
 
 class SkillLevelForm(forms.ModelForm):
@@ -107,7 +148,7 @@ class TalentRequiredForm(forms.ModelForm):
             'enterprise': BranchSelect2Widget(),
             'date_deadline': DateInput(),
             'bid_closes': DateInput(),
-            #'certification': FilteredSelectMultiple(is_stacked=True, verbose_name = 'Required Certification', attrs={'rows':'5'}),
+            'certification': CertModelSelect2MultipleWidget(),
         }
 
 

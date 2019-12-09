@@ -65,5 +65,6 @@ urlpatterns = [
         path('precolleague-reject/<int:pk>/', views.PreColleagueRejectView, name='PreColleagueReject'),
         path('precolleague-wrongperson/<int:pk>/', views.PreColleagueWrongPersonView, name='PreColleagueWrongPerson'),
         path('precolleague-comment/<int:pk>/', views.PreColleagueCommentView, name='PreColleagueComment'),
+        path('careerhistory/', views.BriefCareerHistoryView, name='History'),
 
 ]

@@ -6,6 +6,12 @@
 {% block title %}{{block.super}}-Skills{% endblock title %}
 
 {% block content %}
+{{ form.media.css }}
+<style type="text/css">
+  select {
+    width: 200px;
+  }
+  </style>
 <div class="container">
 <h3>Skills for {{ detail.title }}</h3>
 <form method="post" enctype="multipart/form-data">
@@ -19,8 +25,16 @@
     <p><button type="submit" name="done" class="btn btn-primary">Add</button></p>
   </div>
 </form>
+{% if skill_list %}
+  {% for s in skill_list %}
+  <ul>
+    <li>{{ s.skill }}</li>
+  </ul>
+  {% endfor %}
+{% endif %}
 </div>
-
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{{ form.media.js }}
 {% endblock content %}
 {% block Script %}
 <!-- code for popups -->

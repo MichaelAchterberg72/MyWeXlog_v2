@@ -14,11 +14,40 @@ from django_select2.forms import (
 
 
 from .models import (
-            Profile, Email, PhysicalAddress, PostalAddress, PhoneNumber, OnlineRegistrations, SiteName, FileUpload, IdentificationDetail, IdType, PassportDetail, LanguageList, LanguageTrack
+            Profile, Email, PhysicalAddress, PostalAddress, PhoneNumber, OnlineRegistrations, SiteName, FileUpload, IdentificationDetail, IdType, PassportDetail, LanguageList, LanguageTrack, BriefCareerHistory
           )
-from enterprises.models import Enterprise
+from enterprises.models import Enterprise, Branch
 from locations.models import Region, City, Suburb
 
+
+#>>> Select 2
+class BranchSearchFieldMixin:
+    search_fields = [
+        'name__icontains', 'pk__startswith'
+    ]
+class BranchSelect2Widget(BranchSearchFieldMixin, ModelSelect2Widget):
+    model = Branch
+
+    def create_value(self, value):
+        self.get_queryset().create(name=value)
+
+#Select 2 <<<
+
+
+class DateInput(forms.DateInput):
+    input_type = 'date'
+
+
+class BriefCareerHistoryForm(forms.ModelForm):
+    class Meta:
+        model = BriefCareerHistory
+        fields = ('work_configeration', 'companybranch', 'date_from', 'date_to')
+        widgets = {
+            'companybranch': BranchSelect2Widget(),
+            'date_from': DateInput(),
+            'date_to': DateInput(),
+        }
+        
 
 class LanguageTrackForm(forms.ModelForm):
     class Meta:
@@ -30,10 +59,6 @@ class LanguageListForm(forms.ModelForm):
     class Meta:
         model = LanguageList
         fields = ('language',)
-
-
-class DateInput(forms.DateInput):
-    input_type = 'date'
 
 
 class PassportDetailForm(forms.ModelForm):
@@ -80,16 +105,19 @@ class CitySearchFieldMixin:
     search_fields = [
         'city__icontains', 'pk__startswith'
     ]
+    dependent_fields={'region': 'region'}
 
 class SuburbSearchFieldMixin:
     search_fields = [
         'suburb__icontains', 'pk__startswith'
     ]
+    dependent_fields={'city': 'city'}
 
 class RegionSearchFieldMixin:
     search_fields = [
         'region__icontains', 'pk__startswith'
     ]
+    dependent_fields={'country': 'country'}
 
 class CompanySelect2Widget(CompanySearchFieldMixin, ModelSelect2Widget):
     model = Enterprise

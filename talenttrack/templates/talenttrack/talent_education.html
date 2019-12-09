@@ -25,7 +25,6 @@
     <div class="form-group col-md-6 mb-0">
       {{ form.topic|as_crispy_field }}
       <p><a href="{% url 'Talent:TopicAddPop' %}" id='add_topic' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a Topic</a></p>
-      {{ form.topic|as_crispy_field }}
       {{ form.file|as_crispy_field }}
     </div>
   </div>

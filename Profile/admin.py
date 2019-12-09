@@ -1,8 +1,14 @@
 from django.contrib import admin
 
 from .models import (
-    Email, SiteName, OnlineRegistrations, Profile, PhysicalAddress, PostalAddress, FileUpload, PhoneNumber, IdentificationDetail, IdType, PassportDetail, LanguageList, LanguageTrack
+    Email, SiteName, OnlineRegistrations, Profile, PhysicalAddress, PostalAddress, FileUpload, PhoneNumber, IdentificationDetail, IdType, PassportDetail, LanguageList, LanguageTrack, BriefCareerHistory
     )
+
+
+@admin.register(BriefCareerHistory)
+class  BriefCareerHistoryAdmin(admin.ModelAdmin):
+    pass
+
 
 @admin.register(LanguageTrack)
 class LanguageTrackAdmin(admin.ModelAdmin):

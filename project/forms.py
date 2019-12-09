@@ -39,11 +39,13 @@ class CitySearchFieldMixin:
     search_fields = [
         'city__icontains', 'pk__startswith'
     ]
+    dependent_fields={'region': 'region'}
 
 class RegionSearchFieldMixin:
     search_fields = [
         'region__icontains', 'pk__startswith'
     ]
+    dependent_fields={'country': 'country'}
 
 class CitySelect2Widget(CitySearchFieldMixin, ModelSelect2Widget):
     model = City
@@ -56,7 +58,7 @@ class RegionSelect2Widget(RegionSearchFieldMixin, ModelSelect2Widget):
 
     def create_value(self, value):
         self.get_queryset().create(region=value)
-        
+
 
 class ProjectAddForm(forms.ModelForm):
     class Meta:

@@ -333,10 +333,11 @@ def VacancyPostView(request, pk):
     return render(request, template, context)
 
 
-
+@csp_exempt
 @login_required()
 def VacancySkillsAddView(request, pk):
     instance = get_object_or_404(TalentRequired, pk=pk)
+    skill_list = SkillRequired.objects.filter(scope=pk)
     form = SkillRequiredForm(request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
@@ -349,13 +350,14 @@ def VacancySkillsAddView(request, pk):
                 return redirect(reverse('MarketPlace:Entrance'))
     else:
         template = 'marketplace/vacancy_skills.html'
-        context = {'form': form, 'instance': instance}
+        context = {'form': form, 'instance': instance, 'skill_list': skill_list}
         return render(request, template, context)
 
 
 @login_required()
 def VacancySkillsAdd2View(request, pk):
     instance = get_object_or_404(TalentRequired, pk=pk)
+    skill_list = SkillRequired.objects.filter(scope=pk)
     form = SkillRequiredForm(request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
@@ -365,7 +367,7 @@ def VacancySkillsAdd2View(request, pk):
             return redirect(reverse('MarketPlace:VacancyPost', kwargs={'pk': pk})+'#skills')
     else:
         template = 'marketplace/vacancy_skills2.html'
-        context = {'form': form, 'instance': instance}
+        context = {'form': form, 'instance': instance, 'skill_list': skill_list}
         return render(request, template, context)
 
 
@@ -419,6 +421,7 @@ def DeliverableDeleteView(request, pk):
 @login_required()
 def DeliverablesAddView(request, pk):
     instance = get_object_or_404(TalentRequired, pk=pk)
+    deliverable = Deliverables.objects.filter(scope=pk)
     form = DeliverablesForm(request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
@@ -431,7 +434,7 @@ def DeliverablesAddView(request, pk):
                 return redirect(reverse('MarketPlace:Skills', kwargs={'pk': pk}))
     else:
         template = 'marketplace/vacancy_deliverables.html'
-        context = {'form': form, 'instance': instance}
+        context = {'form': form, 'instance': instance, 'deliverable': deliverable}
         return render(request, template, context)
 
 

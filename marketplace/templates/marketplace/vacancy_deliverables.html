@@ -7,7 +7,7 @@
 
 {% block content %}
 <div class="container">
-<h3>Deliverables for {{ detail.title }}</h3>
+<h3>Deliverables for {{ instance.title }}</h3>
 <form method="post" enctype="multipart/form-data">
   {% csrf_token %}
   {{ form.deliverable|as_crispy_field }}
@@ -15,6 +15,15 @@
     <p><button type="submit" name="another" class="btn btn-primary">Add Another</button> <button type="submit" name="done" class="btn btn-primary">Add Skills Required</button></p>
   </div>
 </form>
+{% if deliverable %}
+<h4>Existing Deliverables</h4>
+    <ul class="list-group">
+      {% for d in deliverable %}
+        <li class="list-group-item">{{ d.deliverable }}</li>
+      {% endfor %}
+    </ul>
+
+{% endif %}
 </div>
 
 {% endblock content %}

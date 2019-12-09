@@ -2,13 +2,13 @@ from django import forms
 from django.contrib.auth.models import User
 from django.utils.encoding import force_text
 
-from django.contrib.admin.widgets import FilteredSelectMultiple
+
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Row, Column
 
 
 from django_select2.forms import (
-    ModelSelect2TagWidget, ModelSelect2Widget, Select2MultipleWidget,
+    ModelSelect2TagWidget, ModelSelect2Widget, ModelSelect2MultipleWidget,
     Select2Widget
 )
 
@@ -18,7 +18,7 @@ from .models import (
 
 from enterprises.models import Enterprise
 from project.models import ProjectData
-
+from db_flatten.models import SkillTag
 
 #>>> Select 2
 class CompanySearchFieldMixin:
@@ -57,6 +57,7 @@ class CourseSearchFieldMixin:
     search_fields = [
         'name__icontains', 'pk__startswith'
     ]
+
 class CourseSelect2Widget(CourseSearchFieldMixin, ModelSelect2Widget):
     model = Course
 
@@ -82,6 +83,20 @@ class ProjectSelect2Widget(ProjectSearchFieldMixin, ModelSelect2Widget):
 
     def create_value(self, value):
         self.get_queryset().create(name=value)
+
+class SkillSearchFieldMixin:
+    search_fields = [
+        'skill__icontains', 'pk__startswith'
+    ]
+
+class SkillModelSelect2MultipleWidget(SkillSearchFieldMixin, ModelSelect2MultipleWidget):
+    model = SkillTag
+
+    def create_value(self, value):
+        self.get_queryset().create(skill=value)
+
+
+
 #Select2<<<
 
 
@@ -117,8 +132,8 @@ class PreLoggedExperienceForm(forms.ModelForm):
             'designation': DesignationSelect2Widget(),
             'project': ProjectSelect2Widget(),
             'date_from': DateInput(),
-            'date_to': DateInput()
-
+            'date_to': DateInput(),
+            'skills': SkillModelSelect2MultipleWidget(),
             }
 
 
@@ -209,7 +224,8 @@ class WorkExperienceForm(forms.ModelForm):
             'designation': DesignationSelect2Widget(),
             'project': ProjectSelect2Widget(),
             'date_from': DateInput(),
-            'date_to': DateInput()
+            'date_to': DateInput(),
+            'skills': SkillModelSelect2MultipleWidget(),
 }
 
 class DesignationForm(forms.ModelForm):
@@ -287,6 +303,10 @@ class EducationForm(forms.ModelForm):
             'date_from': DateInput(),
             'date_to': DateInput(),
         }
+        labels = {
+            'course': 'Course Name',
+            'topic' : 'Course Subject',
+        }
 
 
 class CourseForm(forms.ModelForm):
@@ -313,10 +333,16 @@ class ResultForm(forms.ModelForm):
 class TopicForm(forms.ModelForm):
     class Meta:
         model = Topic
-        fields = ('topic', 'course', 'hours', 'skills')
+        fields = ('topic', 'hours', 'skills')
+        widgets={
+            'skills': SkillModelSelect2MultipleWidget(),
+            }
 
 
 class TopicPopForm(forms.ModelForm):
     class Meta:
         model = Topic
         fields = ('topic', 'hours', 'skills')
+        widgets={
+            'skills': SkillModelSelect2MultipleWidget(),
+            }

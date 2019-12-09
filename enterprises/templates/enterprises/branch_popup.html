@@ -19,6 +19,7 @@
   <div class="form-row">
     <div class="form-group col-md-6 mb-0">
       {{ form.company|as_crispy_field }}
+      <p><a href="{% url 'Enterprise:EnterpriseAddPop' %}" id='add_company' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add an Company</a></p>
       {{ form.name|as_crispy_field }}
       {{ form.type|as_crispy_field }}
       <p><a href="{% url 'Enterprise:BranchTypeAddPop' %}" id='add_branch_type' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a new Branch Type</a></p>

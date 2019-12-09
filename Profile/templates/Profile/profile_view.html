@@ -1,26 +1,10 @@
-{% extends 'profile/base_profile.html' %}
+{% extends 'base_home.html' %}
 
-{% block title %}My {{block.super}} Profile{% endblock title %}
+{% block title %}My {{block.super}} Profile View{% endblock title %}
 
 
-{% block network %}
-
-{% endblock network %}
-
-{% block workflow %}
-
-{% endblock workflow %}
-
-{% block score %}
-
-{% endblock score %}
-
-{% block TBA %}
-
-{% endblock TBA %}
-
-{% block Center_Content %}
-<div class="card-header">Your Profile</div>
+{% block content %}
+<div class="card-header">Edit Your Profile</div>
   <div class="card-group">
     <div class="card">
       <div class="card-body">
@@ -136,6 +120,40 @@
   </div>
 </div>
 {% endfor %}
+<div class="card-group">
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Career History <a href="{% url 'Profile:History' %}" class="badge badge-primary">Add</a></h5>
+      <p class="card-text">
+        {% if history %}
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th>From</th>
+              <th>To</th>
+              <th>Employer</th>
+              <th>Work Configeration</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for h in history %}
+            <tr>
+              <td>{{ h.date_from }}</td>
+              {% if h.date_to %}
+                <td>{{ h.date_to }}</td>
+              {% else %}
+                <td>Currently Works Here</td>
+              {% endif %}
+              <td>{{ h.companybranch }}</td>
+              <td>{{ h.work_configeration }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% endif %}
+    </div>
+  </div>
+</div>
 <div class="card-group">
   <div class="card">
     <div class="card-body">
@@ -343,4 +361,4 @@
     </div>
   </div>
 </div>
-{% endblock Center_Content %}
+{% endblock content %}
