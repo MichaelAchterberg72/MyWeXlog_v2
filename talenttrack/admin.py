@@ -1,20 +1,13 @@
 from django.contrib import admin
 
 from .models import (
-    Topic, Result, CourseType, Course, Education, Lecturer, ClassMates, WorkClient, WorkExperience, WorkColleague, Superior, WorkCollaborator, PreLoggedExperience, PreColleague, Designation
+    Topic, Result, CourseType, Course, Lecturer, ClassMates, WorkClient, WorkExperience, WorkColleague, Superior, WorkCollaborator, Designation
     )
 
 @admin.register(Designation)
 class DesignationAdmin(admin.ModelAdmin):
     pass
 
-@admin.register(PreColleague)
-class PreColleagueAdmin(admin.ModelAdmin):
-    pass
-
-@admin.register(PreLoggedExperience)
-class PreLoggedExperienceAdmin(admin.ModelAdmin):
-    pass
 
 @admin.register(WorkCollaborator)
 class WorkCollaboratorAdmin(admin.ModelAdmin):
@@ -58,8 +51,4 @@ class CourseTypeAdmin(admin.ModelAdmin):
 
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
-    pass
-
-@admin.register(Education)
-class EducationAdmin(admin.ModelAdmin):
     pass

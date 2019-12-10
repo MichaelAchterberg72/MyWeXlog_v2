@@ -17,7 +17,7 @@ from .models import (
         )
 
 from talenttrack.models import (
-        Lecturer, ClassMates, WorkColleague, Superior, WorkCollaborator,  WorkClient, PreColleague, Education, WorkExperience, PreLoggedExperience
+        Lecturer, ClassMates, WorkColleague, Superior, WorkCollaborator,  WorkClient, WorkExperience
 )
 
 from talenttrack.forms import (
@@ -40,9 +40,9 @@ def ProfileHome(request):
     spr1 = Superior.objects.filter(confirm__exact='S').count()
     wclr1 = WorkCollaborator.objects.filter(confirm__exact='S').count()
     wc1 = WorkClient.objects.filter(confirm__exact='S').count()
-    pc1 = PreColleague.objects.filter(confirm__exact='S').count()
 
-    total = wf1 + cm1 + wk1 + spr1 + wclr1 + wc1 + pc1
+
+    total = wf1 + cm1 + wk1 + spr1 + wclr1 + wc1
 
     template = 'Profile/profile_home.html'
     context = {
@@ -99,7 +99,7 @@ def LecturerConfirmView(request, pk):
         info = Lecturer.objects.get(pk=pk)
         info.confirm = 'C'
         info.save()
-        edu = Education.objects.get(pk=info.education.id)
+        edu = WorkExperience.objects.get(pk=info.education.id)
         edu.score += 2
         edu.save()
     return redirect(reverse('Profile:Confirm')+'#Lecturer')
@@ -133,7 +133,7 @@ def LecturerCommentView(request, pk):
             new = form.save(commit=False)
             new.save()
             if new.confirm == 'C':
-                edu = Education.objects.get(pk=info.education.id)
+                edu = WorkExperience.objects.get(pk=info.education.id)
                 edu.score += 2
                 edu.save()
             else:
@@ -154,7 +154,7 @@ def ClassMatesConfirmView(request, pk):
         info = ClassMates.objects.get(pk=pk)
         info.confirm = 'C'
         info.save()
-        edu = Education.objects.get(pk=info.education.id)
+        edu = WorkExperience.objects.get(pk=info.education.id)
         edu.score += 1
         edu.save()
     return redirect(reverse('Profile:Confirm')+'#ClassMates')
@@ -179,7 +179,7 @@ def ClassMatesCommentView(request, pk):
             new = form.save(commit=False)
             new.save()
             if new.confirm == 'C':
-                edu = Education.objects.get(pk=info.education.id)
+                edu = WorkExperience.objects.get(pk=info.education.id)
                 edu.score += 1
                 edu.save()
             else:

@@ -56,34 +56,32 @@ class Topic(models.Model):
     def __str__(self):
         return '{}'.format(self.topic)
 
-
+'''
 #Function to randomise filename for Profile Upload
 def EduFilename(instance, filename):
 	ext = filename.split('.')[-1]
 	return "education\%s_%s.%s" % (str(time()).replace('.','_'), random(), ext)
 
 class Education(models.Model):
-    talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    course = models.ForeignKey(Course, on_delete=models.PROTECT)
-    date_captured = models.DateField(auto_now_add=True)
-    date_from = models.DateField()
-    date_to = models.DateField()
-    topic = models.ForeignKey(Topic, on_delete=models.PROTECT, blank=True, null=True, verbose_name="Subject")
-    file = models.FileField(upload_to=EduFilename, blank=True, null=True)
-    score = models.SmallIntegerField(default=0)
+    #talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    #course = models.ForeignKey(Course, on_delete=models.PROTECT)
+    #date_captured = models.DateField(auto_now_add=True)
+    #date_from = models.DateField()
+    #date_to = models.DateField()
+    #topic = models.ForeignKey(Topic, on_delete=models.PROTECT, blank=True, null=True, verbose_name="Subject")
+    #file = models.FileField(upload_to=EduFilename, blank=True, null=True)
+    #score = models.SmallIntegerField(default=0)
 
     class Meta:
         unique_together = (('talent','course','topic'),)
 
     def __str__(self):
         return '{}: {} ({})'.format(self.talent, self.course, self.topic)
-
-
-
+'''
 
 class Lecturer(models.Model):
         #Captured by talent
-    education = models.ForeignKey(Education, on_delete=models.CASCADE)
+    education = models.ForeignKey('WorkExperience', on_delete=models.CASCADE)
     lecturer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
         #AutoCaptured
     date_captured = models.DateField(auto_now_add=True)
@@ -98,11 +96,11 @@ class Lecturer(models.Model):
         unique_together = (('education','lecturer','date_captured'),)
 
     def __str__(self):
-        return "Lecturer for {}".format(self.education)
+        return f"Lecturer for {self.education}"
 
 class ClassMates(models.Model):
         #Captured by talent
-    education = models.ForeignKey(Education, on_delete=models.CASCADE)
+    education = models.ForeignKey('WorkExperience', on_delete=models.CASCADE)
     colleague = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, verbose_name='ClassMate')
         #AutoCaptured
     date_captured = models.DateField(auto_now_add=True)
@@ -117,7 +115,7 @@ class ClassMates(models.Model):
         unique_together = (('education','colleague','date_captured'),)
 
     def __str__(self):
-        return "ClassMate for {}".format(self.education)
+        return f"ClassMate for {self.education}"
 
 
 class Designation(models.Model):
@@ -134,33 +132,40 @@ def ExpFilename(instance, filename):
 
 
 class WorkExperience(models.Model):
+    #Common Fields
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     date_from = models.DateField()
     date_to = models.DateField(default=timezone.now)
     date_captured = models.DateField(auto_now_add=True)
-    company = models.ForeignKey(Enterprise, on_delete=models.PROTECT, verbose_name='Company')
+    upload = models.FileField(upload_to=ExpFilename, blank=True, null=True)
+    score = models.SmallIntegerField(default=0)
+    comment = models.TextField(blank=True, null=True)
+    #Work Experience Fields (Captured & Pre-Experience)
+    company = models.ForeignKey(Enterprise, on_delete=models.PROTECT, verbose_name='Company', null=True)
     estimated = models.BooleanField(default=False)
+    prelog = models.BooleanField(default=False)
+    wexp = models.BooleanField(default=False)
     project = models.ForeignKey(
         ProjectData, on_delete=models.PROTECT, verbose_name='On Project', blank=True, null=True
     )
-    industry = models.ForeignKey(Industry, on_delete=models.PROTECT)
-    hours_worked = models.DecimalField(max_digits=5, decimal_places=2)
-    comment = models.TextField(blank=True, null=True)
-    designation = models.ForeignKey(Designation, on_delete=models.PROTECT)
-    upload = models.FileField(upload_to=ExpFilename, blank=True, null=True)
-    skills = models.ManyToManyField(SkillTag)
-    score = models.SmallIntegerField(default=0)
+    industry = models.ForeignKey(Industry, on_delete=models.PROTECT, null=True)
+    hours_worked = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+    designation = models.ForeignKey(Designation, on_delete=models.PROTECT, null=True)
+    skills = models.ManyToManyField(SkillTag, null=True)
+    #Fields for Education & Training
+    edt = models.BooleanField(default=False)
+    course = models.ForeignKey(Course, on_delete=models.PROTECT, null=True)
+    topic = models.ForeignKey(Topic, on_delete=models.PROTECT, null=True, verbose_name="Subject")
 
     class Meta:
-        unique_together = (('talent','hours_worked','date_from','project', 'date_to'),)
+        unique_together = (('talent','hours_worked','date_from', 'date_to'),)
 
     def __str__(self):
-        return '{} between {} & {} as {}'.format(
-                    self.talent, self.date_from, self.date_to, self.designation
-                    )
+        return f'{self.talent} between {self.date_from} & {self.date_to}'
+
+    #script to check wheter experience is estimated or not
     def save(self, *args, **kwargs):
         if self.estimated == True:
-            print("True - Pass")
             super(WorkExperience, self).save(*args, **kwargs)
 
         else:
@@ -177,30 +182,8 @@ class WorkExperience(models.Model):
                 super(WorkExperience, self).save(*args, **kwargs)
             else:
                 super(WorkExperience, self).save(*args, **kwargs)
-    """
-    #Check if experience is estimated
-    def CheckEstimate(sender, **kwargs):
-        if kwargs['created']:
-            if instance.estimate != True:
-                print('True, Pass')
-                pass
-            else:
-                a = timezone.now()
-                ad = datetime.date(a)
-                b = instance.date_from
-                bd = datetime.date(b)
 
-                dur = ad - db
-                dur_d = dur.days
-                print(dur_d)
-                if dur_d > 14:
-                    set_est = instance.objects.update(estimate=True)
 
-                else:
-                    pass
-
-        post_save.connect(set_est, sender=WorkExperience)
-"""
 class WorkColleague(models.Model):
         #Captured by talent
     experience = models.ForeignKey(WorkExperience, on_delete=models.CASCADE)
@@ -292,23 +275,23 @@ class WorkClient(models.Model):
         return "WorkCollaborator for {} on {}".format(
             self.experience.talent, self.experience
         )
-
+'''
 class PreLoggedExperience(models.Model):
-    talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
-    date_from = models.DateField()
-    date_to = models.DateField(default=timezone.now)
-    date_captured = models.DateField(auto_now_add=True)
-    company = models.ForeignKey(Enterprise, on_delete=models.PROTECT)
-    project = models.ForeignKey(
+    #talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    #date_from = models.DateField()
+    #date_to = models.DateField(default=timezone.now)
+    #date_captured = models.DateField(auto_now_add=True)
+    #company = models.ForeignKey(Enterprise, on_delete=models.PROTECT)
+    #project = models.ForeignKey(
         ProjectData, on_delete=models.PROTECT, verbose_name='On Project', blank=True, null=True
     )
-    industry = models.ForeignKey(Industry, on_delete=models.PROTECT)
-    hours_worked = models.DecimalField(max_digits=5, decimal_places=2)
-    comment = models.TextField(blank=True, null=True)
-    designation = models.ForeignKey(Designation, on_delete=models.PROTECT)
-    upload = models.FileField(upload_to=ExpFilename, blank=True, null=True)
-    skills = models.ManyToManyField(SkillTag, related_name='logskill')
-    score = models.SmallIntegerField(default=0)
+    #industry = models.ForeignKey(Industry, on_delete=models.PROTECT)
+    #hours_worked = models.DecimalField(max_digits=5, decimal_places=2)
+    #comment = models.TextField(blank=True, null=True)
+    #designation = models.ForeignKey(Designation, on_delete=models.PROTECT)
+    #upload = models.FileField(upload_to=ExpFilename, blank=True, null=True)
+    #skills = models.ManyToManyField(SkillTag, related_name='logskill')
+    #score = models.SmallIntegerField(default=0)
 
     class Meta:
         unique_together = (('talent','hours_worked','date_from','project', 'date_to'),)
@@ -340,3 +323,4 @@ class PreColleague(models.Model):
         return "WorkColleague for {} on {}".format(
             self.pre_experience.talent, self.pre_experience
         )
+'''

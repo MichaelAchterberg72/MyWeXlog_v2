@@ -13,7 +13,7 @@ from django_select2.forms import (
 )
 
 from .models import (
-    Topic, Result, CourseType, Course, Education, Lecturer, ClassMates, WorkClient, WorkExperience, WorkColleague, Superior, WorkCollaborator, PreLoggedExperience, PreColleague, Designation
+    Topic, Result, CourseType, Course, Lecturer, ClassMates, WorkClient, WorkExperience, WorkColleague, Superior, WorkCollaborator, Designation
     )
 
 from enterprises.models import Enterprise
@@ -94,12 +94,10 @@ class SkillModelSelect2MultipleWidget(SkillSearchFieldMixin, ModelSelect2Multipl
 
     def create_value(self, value):
         self.get_queryset().create(skill=value)
-
-
-
 #Select2<<<
 
-
+'''
+#Removed when consolidting all data into WorkExperience table (20191210)
 class PreColleagueResponseForm(forms.ModelForm):
     class Meta:
         model = PreColleague
@@ -119,13 +117,15 @@ class PreColleagueSelectForm(forms.ModelForm):
         widgets={
         'designation': DesignationSelect2Widget(),
         }
+'''
+
 
 class DateInput(forms.DateInput):
     input_type = 'date'
 
 class PreLoggedExperienceForm(forms.ModelForm):
     class Meta:
-        model = PreLoggedExperience
+        model = WorkExperience
         fields = ('date_from', 'date_to', 'company', 'project', 'industry', 'hours_worked', 'comment', 'designation', 'upload', 'skills',)
         widgets={
             'company': CompanySelect2Widget(),
@@ -293,10 +293,12 @@ class LecturerRespondForm(forms.ModelForm):
         model = Lecturer
         fields = ('response',)
 
+
+#Combined into WorkExperience table (20191210)
 class EducationForm(forms.ModelForm):
     class Meta:
-        model = Education
-        fields = ('course', 'date_from', 'date_to', 'topic', 'file')
+        model = WorkExperience
+        fields = ('course', 'date_from', 'date_to', 'topic', 'upload', 'comment',)
         widgets={
             'course': CourseSelect2Widget(),
             'topic': TopicSelect2Widget(),
@@ -317,6 +319,7 @@ class CourseForm(forms.ModelForm):
             'company': CompanySelect2Widget(),
             'course_type': CourseTypeSelect2Widget(),
         }
+
 
 class CourseTypeForm(forms.ModelForm):
     class Meta:

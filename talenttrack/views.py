@@ -16,24 +16,27 @@ from csp.decorators import csp_exempt
 
 
 from .forms import (
-        TopicForm, ResultForm, CourseTypeForm, CourseForm, DesignationForm, ClassMatesSelectForm, ClassMatesConfirmForm, LecturerSelectForm, LecturerConfirmForm, EducationForm, WorkExperienceForm, WorkColleagueSelectForm, WorkColleagueConfirmForm, WorkColleagueResponseForm, ClassMatesResponseForm, LecturerResponseForm, SuperiorSelectForm, WorkCollaboratorResponseForm, WorkCollaboratorConfirmForm, WorkCollaboratorSelectForm, WorkClientResponseForm, WorkClientConfirmForm, WorkClientSelectForm, PreColleagueResponseForm, PreColleagueConfirmForm, PreColleagueSelectForm, PreLoggedExperienceForm, TopicPopForm, LecturerRespondForm, ClassMatesRespondForm, WorkColleagueSelectForm, SuperiorSelectForm, WorkCollaboratorSelectForm
+        TopicForm, ResultForm, CourseTypeForm, CourseForm, DesignationForm, ClassMatesSelectForm, ClassMatesConfirmForm, LecturerSelectForm, LecturerConfirmForm, EducationForm, WorkExperienceForm, WorkColleagueSelectForm, WorkColleagueConfirmForm, WorkColleagueResponseForm, ClassMatesResponseForm, LecturerResponseForm, SuperiorSelectForm, WorkCollaboratorResponseForm, WorkCollaboratorConfirmForm, WorkCollaboratorSelectForm, WorkClientResponseForm, WorkClientConfirmForm, WorkClientSelectForm, PreLoggedExperienceForm, TopicPopForm, LecturerRespondForm, ClassMatesRespondForm, WorkColleagueSelectForm, SuperiorSelectForm, WorkCollaboratorSelectForm
 )
 
 from .models import (
-        Education, Lecturer, Course, ClassMates, WorkExperience, Superior, WorkCollaborator, WorkClient, WorkColleague, PreLoggedExperience, PreColleague
+        Lecturer, Course, ClassMates, WorkExperience, Superior, WorkCollaborator, WorkClient, WorkColleague
 )
 
 from db_flatten.models import SkillTag
 
+
 @login_required()
 def ExperienceHome(request):
-        train = Education.objects.filter(talent=request.user).order_by('-date_from')
+        basequery = WorkExperience.objects.select_realted('topic').filter(talent=request.user)
+
+        train = basequery.filter(edt=True).order_by('-date_from')
         train_sum = train.aggregate(Edu_sum=Sum('topic__hours'))
 
-        experience = WorkExperience.objects.filter(talent=request.user).order_by('-date_from')
+        experience = basequery.filter(wexp=True).order_by('-date_from')
         exp_sum = experience.aggregate(we_sum=Sum('hours_worked'))
 
-        prelog = PreLoggedExperience.objects.filter(talent=request.user).order_by('-date_from')
+        prelog = basequery.objects.filter(prelog=True).order_by('-date_from')
         pre_sum = prelog.aggregate(p_sum=Sum('hours_worked'))
 
         t_sum = train_sum.get('Edu_sum')
@@ -57,12 +60,15 @@ def ExperienceHome(request):
 
         tot_sum = t_sum + e_sum + p_sum
 
-        #e_skill =  Education.objects.only("course__skills").filter(talent=request.user).values_list('skills', flat=True)
-        l_skill = WorkExperience.objects.filter(talent=request.user).only('pk').values_list('pk', flat=True)
-        p_skill = PreLoggedExperience.objects.only("pk").filter(talent=request.user).values_list('pk', flat=True)
+        #e_skill =  basequery.values_list('topic__skills', flat=True)
 
-        skill_set = SkillTag.objects.none()
+        l_skill = basequery.only('pk').values_list('pk', flat=True)
+        #p_skill = PreLoggedExperience.objects.only("pk").filter(talent=request.user).values_list('pk', flat=True)
 
+        #skill_set = SkillTag.objects.none()
+
+        skill_set = l_skill
+        '''
         for ls in l_skill:
             a = WorkExperience.objects.get(pk=ls)
             b = a.skills.all().values_list('skill', flat=True)
@@ -74,6 +80,7 @@ def ExperienceHome(request):
             d = a.skills.all().values_list('skill', flat=True)
 
             skill_set = skill_set | d
+            '''
 
         skill_set = skill_set.distinct().order_by('skill')
         skill_count = skill_set.count()
@@ -93,8 +100,10 @@ def PreLoggedExperienceCaptureView(request):
         if form.is_valid():
             new = form.save(commit=False)
             new.talent = request.user
+            new.prelog = True
             new.save()
             form.save_m2m()
+            #FIX change to WorkExperience workflow
             response = redirect('Talent:PreColleagueSelect')
             response.delete_cookie("confirm")
             return response
@@ -106,7 +115,7 @@ def PreLoggedExperienceCaptureView(request):
         response.set_cookie("confirm","PC")
         return response
 
-
+''' No longer required: Consolodated into WorkExperience Table
 @login_required()
 def PreColleagueSelectView(request):
     instance = PreLoggedExperience.objects.filter(talent=request.user).latest('date_captured')
@@ -126,13 +135,14 @@ def PreColleagueSelectView(request):
         response = render(request, template, context)
         response.set_cookie("confirm","PC")
         return response
-
+'''
 
 @login_required()
 def PreLogDetailView(request, pre_id):
-    check = PreLoggedExperience.objects.get(pk=pre_id)
+    check = WorkExperience.objects.get(pk=pre_id, prelog=True)
     if check.talent == request.user:
-        confirmed_l = PreColleague.objects.filter(pre_experience=pre_id)
+        #FIX add all other fields as per WorkExperience table
+        confirmed_l = WorkExperience.objects.filter(pre_experience=pre_id)
         template = 'talenttrack/prelogged_detail.html'
         context = {'check': check, 'confirmed_l': confirmed_l}
         return render(request, template, context)
@@ -432,9 +442,9 @@ def ColleagueResponseView(request, pk):
 
 @login_required()
 def ExperienceDetailView(request, exp_id):
-    check = WorkExperience.objects.get(pk=exp_id)
+    check = WorkExperience.objects.get(pk=exp_id, wexp=True)
     if check.talent == request.user:
-        sum = WorkExperience.objects.filter(talent=request.user)
+        sum = WorkExperience.objects.filter(talent=request.user, wexp=True)
         sum_company = sum.filter(company=check.company).aggregate(co_sum=Sum('hours_worked'))
         sum_project = sum.filter(project=check.project).aggregate(p_sum=Sum('hours_worked'))
         list = WorkExperience.objects.filter(pk=exp_id)
@@ -457,6 +467,7 @@ def WorkExperienceCaptureView(request):
         if form.is_valid():
             new = form.save(commit=False)
             new.talent = request.user
+            new.wexp = True
             new.save()
             form.save_m2m()
             return redirect('Talent:ColleagueSelect')
@@ -468,7 +479,7 @@ def WorkExperienceCaptureView(request):
 
 @login_required()
 def EducationDetail(request, edu_id):
-    check = Education.objects.get(pk=edu_id)
+    check = WorkExperience.objects.get(pk=edu_id, edt=True)
     if check.talent == request.user:
         confirmed_l = Lecturer.objects.filter(education=edu_id)
         confirmed_cm = ClassMates.objects.filter(education=edu_id)
@@ -628,11 +639,12 @@ def ClassMateAddView(request, pk):
 @login_required()
 @csp_exempt
 def EducationCaptureView(request):
-    form = EducationForm(request.POST or None, request.FILES)
+    form = WorkExperience(request.POST or None, request.FILES)
     if request.method == 'POST':
         if form.is_valid():
             new=form.save(commit=False)
             new.talent = request.user
+            new.edt = True
             new.save()
             form.save_m2m()
             return redirect(reverse('Talent:LecturerSelect'))
