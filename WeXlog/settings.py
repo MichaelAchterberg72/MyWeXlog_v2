@@ -178,7 +178,7 @@ X_FRAME_OPTIONS = 'DENY'
 REFERRER_POLICY='same-origin'
     ## Content-Security-policy (3rd party app)
 CSP_DEFAULT_SRC = ("'self'",'maxcdn.bootstrapcdn.com', 'code.jquery.com',
-'cdnjs.cloudflare.com', 'youtube.com', '127.0.0.1')
+'cdnjs.cloudflare.com', 'youtube.com', '127.0.0.1', 'SameSite')
 
 CSP_SCRIPT_SRC = None
 CSP_IMG_SRC = None
@@ -217,7 +217,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         #'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'Wexlog_1',
+        'NAME': 'Wexlog_3',
         'USER': 'postgres',
 		'PASSWORD': 'rdf8tm1234', #MA
         #'PASSWORD': 'dJpfss41678', #JK

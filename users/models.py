@@ -38,7 +38,7 @@ class CustomUser(AbstractUser):
     paid = models.BooleanField(default=False, blank=True)
     paid_date = models.DateTimeField(null=True, blank=True)
     paid_type = models.IntegerField(choices=PAID_TYPE, default=0)
-    invite_code = models.CharField(max_length=42, null=True)
+    invite_code = models.CharField(max_length=42, null=True, blank=True)
 
     objects = CustomUserManager()
 
@@ -63,7 +63,7 @@ def after_signup(request, user, **kwargs):
         rt_n = CustomUser.objects.get(pk=pp.user.pk)
         root = NtWk.objects.get(talent=rt_n)
         node = get(root.pk).add_child(talent=user, referral_code=ref_code)
-        
+
     else:
         get = lambda node_id: NtWk.objects.get(pk=node_id)
         root = NtWk.add_root(talent=user)

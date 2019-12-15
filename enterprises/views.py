@@ -51,38 +51,50 @@ def BranchDetailView(request, branch_id):
 
 
 @login_required()
-@csp_exempt
+#@csp_exempt
 def BranchAddView(request, e_id):
     form = BranchForm(request.POST or None)
     if request.method == 'POST':
+
         info = get_object_or_404(Enterprise, pk=e_id)
-        next_url=request.POST.get('next','/')
+        #next_url=request.POST.get('next','/')
         if form.is_valid():
+            response = redirect(reverse('Enterprise:BranchList', kwargs={'e_id':e_id}))
             new = form.save(commit=False)
             new.company = info
             new.save()
-            if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
-                next_url = redirect(reverse('Profile:ProfileView', kwargs={'e_id':e_id}))
-            return HttpResponseRedirect(next_url)
+            #if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
+            #    next_url = reverse('Enterprise:BranchList', kwargs={'e_id':e_id})
+            #response = HttpResponseRedirect(next_url)
+            response._csp_exempt = True
+            #return redirect(reverse('Enterprise:BranchList', kwargs={'e_id':e_id}),)
+            return response
     else:
         context = {'form': form}
         template = 'enterprises/branch_add.html'
-        return render(request, template, context)
+        response =  render(request, template, context)
+
+        return response
 
 #>>> Branch Popup
 @login_required()
-@csp_exempt
+#@csp_exempt
 def BranchAddPopView(request):
     form = FullBranchForm(request.POST or None)
+
     if request.method == 'POST':
         if form.is_valid():
             instance=form.save(commit=False)
             instance.save()
-            return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_companybranch");</script>' % (instance.pk, instance))
+            response = HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_companybranch");</script>' % (instance.pk, instance))
+            response._csp_exempt = True
+            return response
     else:
         context = {'form': form}
         template = 'enterprises/branch_popup.html'
-        return render(request, template, context)
+        response = render(request, template, context)
+        response._csp_exempt = True
+        return response
 
 @csrf_exempt
 def get_branch_id(request):
@@ -124,7 +136,7 @@ def FullBranchAddView(request):
             new = form.save(commit=False)
             new.save()
             if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
-                next_url = redirect(reverse('Profile:ProfileView', kwargs={'e_id':e_id}))
+                next_url = redirect(reverse('Enterprise:BranchList'))
             return HttpResponseRedirect(next_url)
     else:
         context = {'form': form}

@@ -135,16 +135,18 @@
       <thead>
         <tr>
           <th>Alias</th>
-          <th>Current Location</th>
-          <th>Contact</th>
+          <th>Experience</th>
+          <th>Training</th>
+          <th>Number of Captured Skills</th>
         </tr>
       </thead>
       <tbody>
-        {% for t in talent_qs %}
+        {% for key in suitable.items %}
         <tr>
-          <td>{{ t.talent }}</td>
-          <td>empty</td>
-          <td></td>
+          <td>{{ key.0 }}</td>
+          <td>{{ key.1.we }}</td>
+          <td>{{ key.1.te }}</td>
+          <td>{{ key.1.s_no }}</td>
         </tr>
         {% endfor %}
       </tbody>
@@ -157,19 +159,23 @@
   <table class="table table-sm">
     <thead>
       <tr>
-        <th>Name</th>
-        <th>Total Experience</th>
-        <th>Proposed Rate</th>
+        <th>Alias</th>
+        <th>Experience</th>
+        <th>Training</th>
+        <th>Captured Skills</th>
+        <th>Bid Rate</th>
         <th>Motivation</th>
       </tr>
     </thead>
-    {% for a in applicants %}
+    {% for key in applied.items %}
     <tbody>
       <tr>
-        <td>{{ a.talent.first_name }}</td>
-        <td></td>
-        <td>{{ a.currency }} {{ a.rate_bid }}  {{ a.get_rate_unit_display }}</td>
-        <td>{{ a.motivation }}</td>
+        <td>{{ key.0 }}</td>
+        <td>{{ key.1.we }}</td>
+        <td>{{ key.1.te }}</td>
+        <td>{{ key.1.s_no }}</td>
+        <td>{{ key.1.ro.0.0 }}</td>
+        <td>{{ key.1.ro.0.1 }}</td>
       </tr>
     </tbody>
     {% endfor %}

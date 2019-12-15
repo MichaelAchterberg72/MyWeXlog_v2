@@ -40,6 +40,6 @@ urlpatterns = [
     path('collaborator/detail/<int:pk>/', views.CollaboratorResponseView, name='CollaboratorResponse'),
     path('client/detail/<int:pk>/', views.ClientResponseView, name='ClientResponse'),
     path('prelogged/capture/', views.PreLoggedExperienceCaptureView, name="PreloggedCapture"),
-    path('prelogged/select/', views.PreColleagueSelectView, name='PreColleagueSelect'),
+    #path('prelogged/select/', views.PreColleagueSelectView, name='PreColleagueSelect'),
     path('prelogged/<int:pre_id>/detail/', views.PreLogDetailView, name='PreLogDetail'),
 ]

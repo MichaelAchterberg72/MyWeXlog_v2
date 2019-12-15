@@ -6,6 +6,7 @@ from datetime import datetime
 from random import random
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.db.models import Count, Sum, F, Q
 
 
 from enterprises.models import Enterprise, Industry, Branch
@@ -151,11 +152,11 @@ class WorkExperience(models.Model):
     industry = models.ForeignKey(Industry, on_delete=models.PROTECT, null=True)
     hours_worked = models.DecimalField(max_digits=5, decimal_places=2, null=True)
     designation = models.ForeignKey(Designation, on_delete=models.PROTECT, null=True)
-    skills = models.ManyToManyField(SkillTag, null=True)
+    skills = models.ManyToManyField(SkillTag)
     #Fields for Education & Training
     edt = models.BooleanField(default=False)
-    course = models.ForeignKey(Course, on_delete=models.PROTECT, null=True)
-    topic = models.ForeignKey(Topic, on_delete=models.PROTECT, null=True, verbose_name="Subject")
+    course = models.ForeignKey(Course, on_delete=models.PROTECT, blank=True, null=True)
+    topic = models.ForeignKey(Topic, on_delete=models.PROTECT, blank=True, null=True, verbose_name="Subject")
 
     class Meta:
         unique_together = (('talent','hours_worked','date_from', 'date_to'),)

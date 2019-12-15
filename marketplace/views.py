@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.http import is_safe_url
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
+from django.conf import settings
 from django.core.exceptions import PermissionDenied
 import json
 from django.db.models import Count, Sum, F, Q
@@ -22,7 +23,7 @@ from .models import(
 )
 
 from talenttrack.models import(
-    WorkExperience, PreLoggedExperience, Education
+    WorkExperience,
 )
 
 from db_flatten.models import(
@@ -65,17 +66,15 @@ def VacancyDetailView(request, pk):
 def MarketHome(request):
     #>>>Queryset caching
     talent=request.user
-    tr = TalentRequired.objects.filter(offer_status__iexact='O')
+    tr = TalentRequired.objects.filter(requested_by=talent, offer_status__iexact='O')
     wb = WorkBid.objects.filter(work__requested_by=talent, work__offer_status__iexact='O')
     ta = TalentAvailabillity.objects.filter(talent=talent)
-    we = WorkExperience.objects.all()
-    pl = PreLoggedExperience.objects.all()
-    me = Education.objects.all()
+    we = WorkExperience.objects.filter(talent=talent).prefetch_related('topic')
     sr = SkillRequired.objects.filter(scope__offer_status__exact='O')
     sl = SkillLevel.objects.all()
     #Queryset caching<<<
 
-    ipost = tr.filter(requested_by=talent).order_by('-bid_open')[:5]
+    ipost = tr.order_by('-bid_open')[:5]
     ipost_bid = wb.filter(Q(bidreview__exact='R') | Q(bidreview__exact='P') | Q(bidreview__exact='A'))
     ipost_bid_flat = ipost_bid.values_list('work', flat=True).distinct()
     capacity = ta.filter(date_to__gte=timezone.now()).order_by('-date_to')[:5]
@@ -83,13 +82,11 @@ def MarketHome(request):
     #Code for stacked lookup for talent's skills
 
     #>>>summing all hours
-    my_logged = we.filter(talent=talent).aggregate(myl=Sum('hours_worked'))
-    my_prelogged = pl.filter(talent=talent).aggregate(mypl=Sum('hours_worked'))
-    my_training = me.filter(talent=talent).prefetch_related('course')
+    my_logged = we.aggregate(myl=Sum('hours_worked'))
+    my_training = we.filter(edt=True).select_related('topic')
     training_time = my_training.aggregate(mytr=Sum('topic__hours'))
 
     myli = my_logged.get('myl')
-    mypli = my_prelogged.get('mypl')
     mytri = training_time.get('mytr')
 
     if myli:
@@ -97,23 +94,18 @@ def MarketHome(request):
     else:
         myli = 0
 
-    if mypli:
-        mypli = mypli
-    else:
-        mypli = 0
-
     if mytri:
         mytri = mytri
     else:
         mytri = 0
 
-    mye = myli+mypli+mytri
+    mye = myli+mytri
     myed = [Decimal(mye)]
     #Summing all hours<<<
 
     #>>>Create a set of all skills
-    l_skill = we.only('pk').values_list('pk', flat=True)
-    p_skill = pl.only("pk").values_list('pk', flat=True)
+    e_skill = we.filter(edt=True).only('pk').values_list('pk', flat=True)
+    l_skill = we.filter(edt=False).only('pk').values_list('pk', flat=True)
 
     skill_set = SkillTag.objects.none()
 
@@ -123,11 +115,12 @@ def MarketHome(request):
 
         skill_set = skill_set | b
 
-    for ps in p_skill:
-        c = pl.get(pk=ps)
-        d = a.skills.all().values_list('skill', flat=True)
+    for es in e_skill:
+        c = we.get(pk=es)
+        d = c.topic.skills.all().values_list('skill', flat=True)
 
         skill_set = skill_set | d
+
 
     skill_set = skill_set.distinct().order_by('skill')
     #Create a set of all skills<<<
@@ -140,17 +133,17 @@ def MarketHome(request):
     snr = list(sl.filter(level__exact=4).values_list('min_hours', flat=True))
     lead = list(sl.filter(level__exact=5).values_list('min_hours', flat=True))
 
-    if myed <= grd:
+    if myed <= std:
         iama = 0
-    elif myed >= grd and myed <= jnr:
+    elif myed >= std and myed < grd:
         iama = 1
-    elif myed >= jnr and myed <= int:
+    elif myed >= grd and myed < jnr:
         iama = 2
-    elif myed >= int and myed <= snr:
+    elif myed >= jnr and myed < int:
         iama = 3
-    elif myed >= snr and myed <= lead:
+    elif myed >= int and myed < snr:
         iama = 4
-    elif myed >= lead:
+    elif myed >= snr:
         iama = 5
 
     req_experience = tr.filter(experience_level__level__exact=iama).values_list('id', flat=True)
@@ -223,115 +216,62 @@ def VacancyPostView(request, pk):
     delivere = Deliverables.objects.filter(scope=pk)
     applicants = WorkBid.objects.filter(work=pk)
     we = WorkExperience.objects.filter(talent__subscription__gte=1)
-    pl = PreLoggedExperience.objects.filter(talent__subscription__gte=1)
-    me = Education.objects.filter(talent__subscription__gte=1)
     #Queryset Cache<<<
 
     #>>> List all skills required
     skill_r = skille.values_list('skill', flat=True).distinct()
     skill_rl = list(skill_r)
-    print('skill_rl',skill_rl)
     #List all skills required<<<
 
     #>>> Find all talent with required skill
-    wes = list(we.filter(skills__in=skill_r).distinct('talent').values_list('talent', flat=True))
 
-    pls = list(pl.filter(skills__in=skill_r).distinct('talent').values_list('talent', flat=True))
+    wes = we.filter(Q(skills__in=skill_r) | Q(topic__skills__in=skill_r)).distinct('talent')
 
-    mes = list(me.filter(topic__skills__in=skill_r).distinct('talent').values_list('talent', flat=True))
+    #ensure apllicats don't appear in the suitable skills window
+    app_list = applicants.values_list('talent')
+    suit_list = wes.values_list('talent')
 
-    skill_a = set(wes+pls+mes)
-    talent_qs = we.none()
+    diff_list = suit_list.difference(app_list)
 
-    for t in skill_a:
-        extract = we.filter(id=t)
-
-        talent_qs = talent_qs | extract
-
-    #Find all talent with required skill<<<
-    skill_sum = {}
-    talent_skill = {}
-    for person in skill_a:
-        wes = we.filter(talent=person)
-        pls = pl.filter(talent=person)
-        mes = me.filter(talent=person)
-        for skr in skill_rl:
-            wess= wes.filter(skills__in=[skr,]).aggregate(s_sk=Sum('hours_worked'))
-            plss = pls.filter(skills__in=[skr,]).aggregate(p_sk=Sum('hours_worked'))
-            mess = mes.filter(topic__skills__in=[skr,]).aggregate(m_sk=Sum('topic__hours'))
-
-            wesse = wess.get('s_sk')
-            plsse = plss.get('p_sk')
-            messe = mess.get('m_sk')
-
-            if wesse:
-                wesse = wesse
-            else:
-                wesse=0
-
-            if plsse:
-                plsse = plsse
-            else:
-                plsse = 0
-
-            if messe:
-                messe = messe
-            else:
-                messe = 0
-
-            skt = wesse + plsse + messe
-
-            skill_sum[skr] = [skt]
-
-        talent_skill[person] = [skill_sum]
-
-    print('talent', talent_skill)
-
-    weff = we.none()
-    plff = pl.none()
-    meff = me.none()
-    e_dict = {}
-    for person in skill_a:
-        nme = we.filter(talent=person).values('talent__first_name')
-        wef = we.filter(talent=person).aggregate(s_wef=Sum('hours_worked'))
-        plf = pl.filter(talent=person).aggregate(s_plf=Sum('hours_worked'))
-        mef = me.filter(talent=person).aggregate(s_mef=Sum('topic__hours'))
-
-        wefg = wef.get('s_wef')
-        plfg = plf.get('s_plf')
-        mefg = mef.get('s_mef')
-
-        if wefg:
-            wefg = wefg
-        else:
-            wefg=0
-
-        if plfg:
-            plfg = plfg
-        else:
-            plfg = 0
-        if mefg:
-            mefg = mefg
-        else:
-            mefg = 0
-
-        skfg = wefg + plfg + mefg
-        nmed = nme.distinct('talent')
-        e_dict[nmed] = [skfg]
-
-    print(e_dict)
+    we_list = list(diff_list.values_list('talent', flat=True))
 
 
+    suitable={}
+    for item in we_list:
+        w_exp = we.filter(talent=item, edt=False).aggregate(wet=Sum('hours_worked'))
+        wetv = w_exp.get('wet')
+        t_exp = we.filter(talent=item, edt=True).aggregate(tet=Sum('topic__hours'))
+        tetv = t_exp.get('tet')
+        talent_skill = list(we.filter(talent=item, edt=False).values_list('skills', flat=True))
+        talent_skillt = list(we.filter(talent=item, edt=True).values_list('topic__skills', flat=True))
 
-    #weffs = weff.annotate(wsum=Sum('hours_worked'))
+        slist = talent_skill + talent_skillt
+        skillset = set(slist)
+        skill_count = len(skillset)
 
-    #2. Display result
+        suitable[item]={'we':wetv, 'te':tetv,'s_no':skill_count}
 
+    #Extracting information for the applicats
+    applied ={}
+    app_list = list(app_list.values_list('talent', flat=True))
+    for app in app_list:
+            aw_exp = we.filter(talent=app, edt=False).aggregate(awet=Sum('hours_worked'))
+            awetv = aw_exp.get('awet')
+            at_exp = we.filter(talent=app, edt=True).aggregate(tet=Sum('topic__hours'))
+            atetv = at_exp.get('tet')
+            atalent_skill = list(we.filter(talent=app, edt=False).values_list('skills', flat=True))
+            atalent_skillt = list(we.filter(talent=app, edt=True).values_list('topic__skills', flat=True))
+            rate = applicants.filter(talent=app).values_list('rate_bid', 'motivation')
+
+            aslist = atalent_skill + atalent_skillt
+            askillset = set(aslist)
+            askill_count = len(askillset)
+
+            applied[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'ro':rate}
 
     template = 'marketplace/vacancy_post_view.html'
-    context = {'instance': instance, 'skille': skille, 'delivere': delivere, 'applicants': applicants, 'talent_qs': talent_qs}
+    context = {'instance': instance, 'skille': skille, 'delivere': delivere, 'applicants': applicants, 'suitable': suitable, 'applied': applied}
     return render(request, template, context)
-
 
 @csp_exempt
 @login_required()

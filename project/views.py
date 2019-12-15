@@ -21,7 +21,7 @@ from django.conf import settings
 from locations.models import Region
 from .models import *
 from Profile.models import Profile
-from talenttrack.models import WorkExperience, PreLoggedExperience
+from talenttrack.models import WorkExperience
 from django_messages.models import Message
 
 from .forms import ProjectAddForm, ProjectSearchForm, ProjectForm

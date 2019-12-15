@@ -28,20 +28,24 @@ from db_flatten.models import SkillTag
 
 @login_required()
 def ExperienceHome(request):
-        basequery = WorkExperience.objects.select_realted('topic').filter(talent=request.user)
+        #>>>Step 1
+        basequery = WorkExperience.objects.select_related('topic').filter(talent=request.user)
+        #<<<Step 1
 
+        #>>>Step 2
         train = basequery.filter(edt=True).order_by('-date_from')
         train_sum = train.aggregate(Edu_sum=Sum('topic__hours'))
 
         experience = basequery.filter(wexp=True).order_by('-date_from')
         exp_sum = experience.aggregate(we_sum=Sum('hours_worked'))
 
-        prelog = basequery.objects.filter(prelog=True).order_by('-date_from')
+        prelog = basequery.filter(prelog=True).order_by('-date_from')
         pre_sum = prelog.aggregate(p_sum=Sum('hours_worked'))
 
         t_sum = train_sum.get('Edu_sum')
         e_sum = exp_sum.get('we_sum')
         p_sum= pre_sum.get('p_sum')
+
 
         if t_sum:
             t_sum = t_sum
@@ -59,31 +63,30 @@ def ExperienceHome(request):
             p_sum = 0
 
         tot_sum = t_sum + e_sum + p_sum
+        #<<<Step 2
 
-        #e_skill =  basequery.values_list('topic__skills', flat=True)
+        #>>>Step 3
+        e_skill = basequery.filter(edt=True).only('pk').values_list('pk', flat=True)
+        l_skill = basequery.filter(edt=False).only('pk').values_list('pk', flat=True)
 
-        l_skill = basequery.only('pk').values_list('pk', flat=True)
-        #p_skill = PreLoggedExperience.objects.only("pk").filter(talent=request.user).values_list('pk', flat=True)
+        skill_set = SkillTag.objects.none()
 
-        #skill_set = SkillTag.objects.none()
-
-        skill_set = l_skill
-        '''
         for ls in l_skill:
-            a = WorkExperience.objects.get(pk=ls)
+            a = basequery.get(pk=ls)
             b = a.skills.all().values_list('skill', flat=True)
 
             skill_set = skill_set | b
 
-        for ps in p_skill:
-            c = WorkExperience.objects.get(pk=ps)
-            d = a.skills.all().values_list('skill', flat=True)
+        for es in e_skill:
+            c = basequery.get(pk=es)
+            d = c.topic.skills.all().values_list('skill', flat=True)
 
             skill_set = skill_set | d
-            '''
+
 
         skill_set = skill_set.distinct().order_by('skill')
         skill_count = skill_set.count()
+        #<<< Step 3
 
         template = 'talenttrack/track_home.html'
         context = {
@@ -103,8 +106,7 @@ def PreLoggedExperienceCaptureView(request):
             new.prelog = True
             new.save()
             form.save_m2m()
-            #FIX change to WorkExperience workflow
-            response = redirect('Talent:PreColleagueSelect')
+            response = redirect('Talent:ColleagueSelect')
             response.delete_cookie("confirm")
             return response
     else:
@@ -535,7 +537,7 @@ def ClassMatesResponse(request, pk):
 @login_required()
 @csp_exempt
 def LecturerSelectView(request):
-    instance = Education.objects.filter(talent=request.user).latest('date_captured')
+    instance = WorkExperience.objects.filter(talent=request.user, edt=True).latest('date_captured')
     form = LecturerSelectForm(request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
@@ -561,7 +563,7 @@ def LecturerSelectView(request):
 @login_required()
 @csp_exempt
 def LecturerAddView(request, pk):
-    instance = get_object_or_404(Education, pk=pk)
+    instance = get_object_or_404(WorkExperience, pk=pk)
     form = LecturerSelectForm(request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
@@ -587,7 +589,7 @@ def LecturerAddView(request, pk):
 @login_required()
 @csp_exempt
 def ClassMateSelectView(request):
-    instance = Education.objects.filter(talent=request.user).latest('date_captured')
+    instance = WorkExperience.objects.filter(talent=request.user,edt=True).latest('date_captured')
     form = ClassMatesSelectForm(request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
@@ -613,7 +615,7 @@ def ClassMateSelectView(request):
 @login_required()
 @csp_exempt
 def ClassMateAddView(request, pk):
-    instance = get_object_or_404(Education, pk=pk)
+    instance = get_object_or_404(WorkExperience, pk=pk)
     form = ClassMatesSelectForm(request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
@@ -639,17 +641,17 @@ def ClassMateAddView(request, pk):
 @login_required()
 @csp_exempt
 def EducationCaptureView(request):
-    form = WorkExperience(request.POST or None, request.FILES)
+    form = EducationForm(request.POST or None, request.FILES)
     if request.method == 'POST':
         if form.is_valid():
-            new=form.save(commit=False)
+            new = form.save(commit=False)
             new.talent = request.user
             new.edt = True
             new.save()
             form.save_m2m()
             return redirect(reverse('Talent:LecturerSelect'))
     else:
-        template = 'talenttrack/talent_education.html'
+        template = 'talenttrack/education_capture.html'
         context = {'form': form}
         return render(request, template, context)
 
