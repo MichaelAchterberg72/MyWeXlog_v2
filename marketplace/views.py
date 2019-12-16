@@ -19,16 +19,14 @@ from .forms import (
 )
 
 from .models import(
-    TalentRequired, SkillRequired, Deliverables, TalentAvailabillity, WorkBid, SkillLevel
+    TalentRequired, SkillRequired, Deliverables, TalentAvailabillity, WorkBid, SkillLevel, BidShortList, BidShortList, WorkIssuedTo,
 )
 
-from talenttrack.models import(
-    WorkExperience,
-)
-
-from db_flatten.models import(
-    SkillTag,
-)
+from talenttrack.models import WorkExperience
+from db_flatten.models import SkillTag
+from users.models import CustomUser
+from Profile.models import Profile
+from booklist.models import ReadBy
 
 
 @login_required()
@@ -61,6 +59,7 @@ def VacancyDetailView(request, pk):
     template = 'marketplace/vacancy_detail.html'
     context = {'vacancy': vacancy, 'skills': skills, 'deliver': deliver}
     return render(request, template, context)
+
 
 @login_required()
 def MarketHome(request):
@@ -172,8 +171,6 @@ def MarketHome(request):
     already_applied = wb.values_list('work__id', flat=True).distinct()
     #Experience Level check & list skills required in vacancies<<<
 
-
-
     template = 'marketplace/vacancy_home.html'
     context ={
         'capacity': capacity, 'ipost': ipost, 'ipost_bid_flat': ipost_bid_flat, 'dsd': dsd, 'already_applied': already_applied}
@@ -183,15 +180,20 @@ def MarketHome(request):
 @login_required()
 @subscription(2)
 def ApplicationHistoryView(request):
-    role = WorkBid.objects.filter(talent=request.user).order_by('-date_applied')
+    talent = request.user
+    role = WorkBid.objects.filter(talent=talent).order_by('-date_applied')
     applied = role.filter(bidreview__exact='P')
     rejected = role.filter(bidreview__exact='R')
     accepted = role.filter(bidreview__exact='A')
+    s_list = BidShortList.objects.filter(talent=talent).order_by('-date_listed')
+    p_rejected = s_list.filter(status='R')
+    p_accepted = s_list.filter(status='A')
 
     template = 'marketplace/vacancy_application_history.html'
     context ={
-        'applied': applied, 'accepted': accepted, 'rejected': rejected}
+        'applied': applied, 'accepted': accepted, 'rejected': rejected, 'p_rejected': p_rejected, 'p_accepted': p_accepted, 's_list': s_list}
     return render(request, template, context)
+
 
 @login_required()
 def TalentAvailabillityView(request):
@@ -207,6 +209,7 @@ def TalentAvailabillityView(request):
         context = {'form':form}
         return render(request, template, context)
 
+
 @login_required()
 @subscription(2)
 def VacancyPostView(request, pk):
@@ -216,6 +219,8 @@ def VacancyPostView(request, pk):
     delivere = Deliverables.objects.filter(scope=pk)
     applicants = WorkBid.objects.filter(work=pk)
     we = WorkExperience.objects.filter(talent__subscription__gte=1)
+    s_list = BidShortList.objects.filter(scope=pk)
+    book = ReadBy.objects.all()
     #Queryset Cache<<<
 
     #>>> List all skills required
@@ -230,11 +235,15 @@ def VacancyPostView(request, pk):
     #ensure apllicats don't appear in the suitable skills window
     app_list = applicants.values_list('talent')
     suit_list = wes.values_list('talent')
+    short_list = s_list.values_list('talent')
+    short_list_a = s_list.filter(talent__subscription__gte=2).values_list('talent')
 
-    diff_list = suit_list.difference(app_list)
+    diff_list0 = suit_list.difference(app_list)#removes talent that has applied
+    #removes shortlists talent
+    diff_list = diff_list0.difference(short_list)
+    app_list = app_list.difference(short_list_a)
 
     we_list = list(diff_list.values_list('talent', flat=True))
-
 
     suitable={}
     for item in we_list:
@@ -243,13 +252,15 @@ def VacancyPostView(request, pk):
         t_exp = we.filter(talent=item, edt=True).aggregate(tet=Sum('topic__hours'))
         tetv = t_exp.get('tet')
         talent_skill = list(we.filter(talent=item, edt=False).values_list('skills', flat=True))
+        rb = book.filter(talent=item).count()
         talent_skillt = list(we.filter(talent=item, edt=True).values_list('topic__skills', flat=True))
+        rate = Profile.objects.filter(talent=item).values_list('std_rate', 'currency__currency_abv', 'rate_unit', 'motivation')
 
         slist = talent_skill + talent_skillt
         skillset = set(slist)
         skill_count = len(skillset)
 
-        suitable[item]={'we':wetv, 'te':tetv,'s_no':skill_count}
+        suitable[item]={'we':wetv, 'te':tetv,'s_no':skill_count, 'rb':rb, 'ro':rate}
 
     #Extracting information for the applicats
     applied ={}
@@ -261,17 +272,19 @@ def VacancyPostView(request, pk):
             atetv = at_exp.get('tet')
             atalent_skill = list(we.filter(talent=app, edt=False).values_list('skills', flat=True))
             atalent_skillt = list(we.filter(talent=app, edt=True).values_list('topic__skills', flat=True))
-            rate = applicants.filter(talent=app).values_list('rate_bid', 'motivation')
+            rb = book.filter(talent=app).count()
+            rate = applicants.filter(talent=app).values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation')
 
             aslist = atalent_skill + atalent_skillt
             askillset = set(aslist)
             askill_count = len(askillset)
 
-            applied[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'ro':rate}
+            applied[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate}
 
     template = 'marketplace/vacancy_post_view.html'
-    context = {'instance': instance, 'skille': skille, 'delivere': delivere, 'applicants': applicants, 'suitable': suitable, 'applied': applied}
+    context = {'instance': instance, 'skille': skille, 'delivere': delivere, 'applicants': applicants, 'suitable': suitable, 'applied': applied, 's_list': s_list}
     return render(request, template, context)
+
 
 @csp_exempt
 @login_required()
@@ -317,6 +330,96 @@ def SkillDeleteView(request, pk):
         skilld = SkillRequired.objects.get(pk=pk)
         skilld.delete()
         return redirect(reverse('MarketPlace:VacancyPost', kwargs={'pk':skilld.scope.id})+'#skills')
+
+
+@login_required()
+@subscription(2)
+def AddToShortListView(request, s_list, tlt):
+    job = get_object_or_404(TalentRequired, pk=s_list)
+    talent = get_object_or_404(CustomUser, pk=tlt)
+    if request.method == 'POST':
+        b = BidShortList.objects.create(talent=talent, scope=job)
+
+        if 'active' in request.POST:
+            upd = WorkBid.objects.get(Q(talent=talent) & Q(work=job))
+            upd.bidreview = 'S'
+            upd.save()
+
+        return redirect(reverse('MarketPlace:VacancyPost', kwargs={'pk':s_list})+'#suited')
+
+
+@login_required()
+@subscription(2)
+def TalentAssign(request, tlt, vac):
+    job = get_object_or_404(TalentRequired, pk=vac)
+    talent = get_object_or_404(CustomUser, pk=tlt)
+    bids = WorkBid.objects.filter(work=vac)
+    s_list = BidShortList.objects.filter(scope=vac)
+
+    if request.method == 'POST':
+        WorkIssuedTo.objects.create(talent=talent, work=job)
+        s_list.filter(talent=talent).update(status='A')
+
+        subs = list(Profile.objects.filter(talent=talent).values_list('talent__subscription', flat=True))
+        subsi = subs[0]
+
+        if subsi == 2:
+            s = bids.get(talent=talent)
+            s.bidreview ='A'
+            s.save()
+
+            bids.filter(~Q(bidreview='A')).update(bidreview='R')
+            s_list.filter(status='S').update(status='R')
+
+        else:
+            bids.update(bidreview='R')
+            s_list.filter(status='S').update(status='R')
+
+        t = TalentRequired.objects.get(pk=vac)
+        t.offer_status = 'C'
+        t.save()
+
+    return redirect(reverse('MarketPlace:Entrance'))
+
+
+@login_required()
+@subscription(2)
+def ShortListView(request, slv):
+    vacancy = get_object_or_404(TalentRequired, pk=slv)
+    s_list = BidShortList.objects.filter(scope=slv)
+    we = WorkExperience.objects.filter(talent__subscription__gte=1)
+    applicants = WorkBid.objects.filter(work=slv)
+    book = ReadBy.objects.all()
+
+    app_list = list(s_list.values_list('talent', flat=True))
+
+    short ={}
+    for app in app_list:
+
+        aw_exp = we.filter(talent=app, edt=False).aggregate(awet=Sum('hours_worked'))
+        awetv = aw_exp.get('awet')
+        at_exp = we.filter(talent=app, edt=True).aggregate(tet=Sum('topic__hours'))
+        atetv = at_exp.get('tet')
+        atalent_skill = list(we.filter(talent=app, edt=False).values_list('skills', flat=True))
+        rb = book.filter(talent=app).count()
+        atalent_skillt = list(we.filter(talent=app, edt=True).values_list('topic__skills', flat=True))
+        subs = list(s_list.filter(talent=app).values_list('talent__subscription', flat=True))
+        subsi = subs[0]
+
+        if subsi == 2:
+            rate = applicants.filter(talent=app).values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation')
+        else:
+            rate = Profile.objects.filter(talent=app).values_list('std_rate', 'currency__currency_abv', 'rate_unit', 'motivation')
+
+        aslist = atalent_skill + atalent_skillt
+        askillset = set(aslist)
+        askill_count = len(askillset)
+
+        short[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate}
+
+    template = 'marketplace/shortlist_view.html'
+    context = {'s_list': s_list, 'short': short, 'vacancy': vacancy}
+    return render(request, template, context)
 
 
 @login_required()

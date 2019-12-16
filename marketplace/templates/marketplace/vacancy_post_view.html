@@ -127,8 +127,9 @@
     </table>
   </div>
 </div>
+<p><a href="{% url 'MarketPlace:ShortListView' slv=instance.id %}" class="btn btn-warning" target="_blank">View Short-list</a></p>
 <div class="">
-  <h3>Talent suited to the Vacancy</h3>
+  <h3 id='suited'>Talent suited to the Vacancy</h3>
   <hr>
   <div class="">
     <table class="table table-sm">
@@ -137,7 +138,10 @@
           <th>Alias</th>
           <th>Experience</th>
           <th>Training</th>
-          <th>Number of Captured Skills</th>
+          <th>Captured Skills</th>
+          <th>Books Read</th>
+          <th>Rate</th>
+          <th>Motivation</th>
         </tr>
       </thead>
       <tbody>
@@ -147,6 +151,19 @@
           <td>{{ key.1.we }}</td>
           <td>{{ key.1.te }}</td>
           <td>{{ key.1.s_no }}</td>
+          <td>{{ key.1.rb }}</td>
+          <td>{{ key.1.ro.0.1 }} <strong>{{ key.1.ro.0.0 }}</strong> {{ key.1.ro.0.2 }}</td>
+          <td>{{ key.1.ro.0.3 }}</td>
+          <td><form  action="{% url 'MarketPlace:ShortList' tlt=key.0  s_list=instance.pk %}" name='passive' method="post">
+            {% csrf_token %}
+            <button type="submit" class="badge badge-info badge-pill float-right">Short-list</button>
+          </form></td>
+          {% empty %}
+            {% if s_list %}
+              <p>All suitable talent has been short-listed.</p>
+            {% else %}
+              <p>No talent suited to this vacancy.</p>
+            {% endif %}
         </tr>
         {% endfor %}
       </tbody>
@@ -154,8 +171,10 @@
   </div>
 </div>
 <hr>
-<div class="row">
+<div class="">
   <h3>Applicants</h3>
+  <hr>
+  <div class="">
   <table class="table table-sm">
     <thead>
       <tr>
@@ -163,24 +182,40 @@
         <th>Experience</th>
         <th>Training</th>
         <th>Captured Skills</th>
+        <th>Books Read</th>
         <th>Bid Rate</th>
         <th>Motivation</th>
       </tr>
     </thead>
-    {% for key in applied.items %}
     <tbody>
+      {% for key in applied.items %}
       <tr>
         <td>{{ key.0 }}</td>
         <td>{{ key.1.we }}</td>
         <td>{{ key.1.te }}</td>
         <td>{{ key.1.s_no }}</td>
-        <td>{{ key.1.ro.0.0 }}</td>
-        <td>{{ key.1.ro.0.1 }}</td>
+        <td>{{ key.1.rb }}</td>
+        <td>{{ key.1.ro.0.1 }} <strong>{{ key.1.ro.0.0 }}</strong> {{ key.1.ro.0.2 }}</td>
+        <td>{{ key.1.ro.0.3 }}</td>
+        <td><form  action="{% url 'MarketPlace:ShortList' tlt=key.0  s_list=instance.pk %}" method="post" name="active">
+          {% csrf_token %}
+          <button type="submit"  class="badge badge-info badge-pill float-right">Short-list</button>
+        </form></td>
+      </tr>
+      <tr>
+      <td colspan=6>
+        {% empty %}
+          {% if s_list %}
+            <p>All applicants have been short-listed.</p>
+          {% else %}
+            <p>No applications for this vacancy.</p>
+          {% endif %}
+      </td>
       </tr>
     </tbody>
     {% endfor %}
   </table>
-</div>
+  </div>
 <p><a href="{% url 'MarketPlace:Entrance' %}" class="btn btn-primary">Back</a></p>
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>

@@ -101,7 +101,7 @@ class DateInput(forms.DateInput):
 class WorkBidForm(forms.ModelForm):
     class Meta:
         model = WorkBid
-        fields = ('rate_bid', 'currency', 'rate_unit', 'motivation')
+        fields = ('rate_bid', 'motivation', 'currency', 'rate_unit')
 
 
 class TalentAvailabillityForm(forms.ModelForm):

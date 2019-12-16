@@ -113,12 +113,29 @@ class SkillRequired(models.Model):
         return f'{self.scope}'
 
 
-class WorkBid(models.Model):
-    BID = (
+BID = (
         ('A','Accepted'),
-        ('P', 'Pending'),
-        ('R','Rejected'),
+        ('P','Pending'),
+        ('R','Unsuccessful'),
+        ('S','Short-listed'),
     )
+
+
+class BidShortList(models.Model):
+    talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    scope = models.ForeignKey(TalentRequired, on_delete=models.CASCADE)
+    preferance_rating = models.SmallIntegerField(null=True, default=0)
+    date_listed = models.DateTimeField(auto_now_add=True)
+    status =  models.CharField(max_length=1, choices=BID, null=True, default='S')
+
+    class Meta:
+        unique_together = (('talent', 'scope'),)
+
+    def __str__(self):
+        return f'{self.scope} shortlist {self.talent}'
+
+
+class WorkBid(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     #Completed by Talent
     work = models.ForeignKey(TalentRequired, on_delete=models.PROTECT)
@@ -134,6 +151,7 @@ class WorkBid(models.Model):
     def __str__(self):
         return'{}: {}'.format(self.work, self.talent)
 
+
 class TalentAvailabillity(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     date_from = models.DateField()
@@ -144,23 +162,24 @@ class TalentAvailabillity(models.Model):
     def __str__(self):
         return '{} - {} {} ({})'.format(self.talent, self.hours_available, self.get_unit_display, self.date_to)
 
+
 class WorkIssuedTo(models.Model):
     #completed by client
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='Successful_talent')
     work = models.OneToOneField(TalentRequired, on_delete=models.PROTECT)
-    rate_accepted = models.DecimalField(max_digits=10, decimal_places=2)
-    currency = models.ForeignKey(Currency, on_delete=models.PROTECT)
-    rate_unit = models.CharField(max_length=1, choices=RATE_UNIT, default='H')
-    date_completion = models.DateField()
-    date_begin = models.DateField()
+    #rate_accepted = models.DecimalField(max_digits=10, decimal_places=2)
+    #currency = models.ForeignKey(Currency, on_delete=models.PROTECT)
+    #rate_unit = models.CharField(max_length=1, choices=RATE_UNIT, default='H')
+    #date_completion = models.DateField()
+    #date_begin = models.DateField()
     #autocompleted
     date_create = models.DateField(auto_now_add=True)
     date_complete = models.DateField(auto_now=True)
     #completed by talent
-    start_confirm = models.BooleanField()
-    rate_confirm = models.BooleanField()
-    deadline_confirm = models.BooleanField()
-    terms_accept = models.BooleanField()
+    #start_confirm = models.BooleanField()
+    #rate_confirm = models.BooleanField()
+    #deadline_confirm = models.BooleanField()
+    #terms_accept = models.BooleanField()
 
     def __str__(self):
-        return '{} assigned {}({})'.format(self.talent, self.work, self.terms_accept)
+        return f'{self.talent} assigned to {self.work}'

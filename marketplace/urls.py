@@ -21,10 +21,13 @@ urlpatterns = [
     path('vacancy-edit-deliverables/<int:pk>/', views.DeliverablesEditView, name='DeliverablesEdit'),
     path('vacancy-delete-deliverables/<int:pk>/', views.DeliverableDeleteView, name='DeliverablesDelete'),
     path('vacancy-delete-skill/<int:pk>/', views.SkillDeleteView, name='SkillDelete'),
+    path('shortlist/<int:s_list>/<int:tlt>/', views.AddToShortListView, name='ShortList'),
     path('availabillity/', views.TalentAvailabillityView, name='Availabillity'),
     path('v-detail/<int:pk>/', views.VacancyDetailView, name='VacancyDetail'),
     path('apply/<int:pk>/', views.WorkBidView, name='WorkBid'),
     path('history/', views.ApplicationHistoryView, name='History'),
     path('postview/<int:pk>/', views.VacancyPostView, name='VacancyPost'),
+    path('shortlist-review/<int:slv>/', views.ShortListView, name='ShortListView'),
+    path('vac-assign/<int:vac>/<int:tlt>/', views.TalentAssign, name='VacAssign'),
 
 ]

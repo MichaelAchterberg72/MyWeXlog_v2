@@ -1,8 +1,13 @@
 from django.contrib import admin
 
 from .models import (
-    WorkLocation, TalentRequired, Deliverables, SkillLevel, SkillRequired, WorkBid, TalentAvailabillity, WorkIssuedTo
+    WorkLocation, TalentRequired, Deliverables, SkillLevel, SkillRequired, WorkBid, TalentAvailabillity, WorkIssuedTo, BidShortList,
     )
+
+
+@admin.register(BidShortList)
+class BidShortListAdmin(admin.ModelAdmin):
+    pass
 
 @admin.register(WorkIssuedTo)
 class WorkIssuedToAdmin(admin.ModelAdmin):

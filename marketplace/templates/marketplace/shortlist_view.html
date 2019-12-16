@@ -1,0 +1,71 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+{% load static %}
+
+{% block title %}{{block.super}}-Vacancy Edit{% endblock title %}
+
+{% block content %}
+{{ form.media.css }}
+<style type="text/css">
+  select {
+    width: 100px;
+  }
+  </style>
+<div class="container">
+
+    <h3 class="card-title">Short list for {{ vacancy.title }}</h3>
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th>Alias</th>
+        <th>Experience</th>
+        <th>Training</th>
+        <th>Skills Logged</th>
+        <th>Books Read</th>
+        <th>Rate</th>
+        <th>Motivation</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for sl in short.items %}
+      <tr>
+        <td>{{ sl.0 }}</td>
+        <td>{{ sl.1.we }}</td>
+        <td>{{ sl.1.te }}</td>
+        <td>{{ sl.1.s_no }}</td>
+        <td>{{ sl.1.rb }}</td>
+        <td>{{ sl.1.ro.0.1 }} <strong>{{ sl.1.ro.0.0 }}</strong> {{ sl.1.ro.0.2 }}</td>
+        <td>{{ sl.1.ro.0.3 }}</td>
+        <td><form  action="{% url 'MarketPlace:VacAssign' tlt=sl.0  vac=vacancy.pk %}" method="post">
+          {% csrf_token %}
+          <button type="submit" class="badge badge-success badge-pill float-right">Assign</button>
+        </form></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{{ form.media.js }}
+{% endblock content %}
+{% block Script %}
+<!-- code for popups -->
+<script type="text/javascript">
+function showAddPopup(triggeringLink) {
+    var name = triggeringLink.id.replace(/^add_/, '');
+    href = triggeringLink.href;
+    var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes');
+    win.focus();
+    return false;
+}
+
+function closePopup(win, newID, newRepr, id) {
+    $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
+    win.close();
+}
+
+window.onerror = function (msg) {
+  $("body").attr("JSError", msg);
+}
+</script>
+{% endblock Script %}

@@ -14,6 +14,8 @@
           <p class="card-text">Display name: {{ d.synonym }}</p>
           <p class="card-text">Date of Birth: {{ d.birth_date }}</p>
           <p class="card-text">Profile email: {{ request.user.email }}</p>
+          <p class="card-text">Standard Rate (per hour): {{ d.std_rate }}</p>
+          <p class="card-text">Currency: {{ d.currency }}</p>
           <p class="card-text">Do you wish to be a mentor to others? {{ d.get_mentor_display }}</p>
         <div class="card-footer bg-transparent border-success"></div>
           <h5 class="card-title">Online Profiles <a href="{% url 'Profile:OnlineProfileAdd' request.user.id %}" class="badge badge-primary">Add</a></h5>

@@ -11,7 +11,7 @@ from django_countries.fields import CountryField
 from phonenumber_field.modelfields import PhoneNumberField
 
 from users.models import CustomUser
-from locations.models import Region, City, Suburb
+from locations.models import Region, City, Suburb, Currency
 from db_flatten.models import PhoneNumberType
 from enterprises.models import Enterprise, Branch
 from pinax.referrals.models import Referral
@@ -54,6 +54,12 @@ class Profile(models.Model):
         ('Y','Yes'),
         ('N','No'),
         )
+    RATE_UNIT = (
+        ('H','per Hour'),
+        ('D','per Day'),
+        ('M','per Month'),
+        ('L','Lump Sum'),
+    )
     talent = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     birth_date = models.DateField('Date of Birth', null=True)
     background = models.TextField()
@@ -61,6 +67,10 @@ class Profile(models.Model):
     middle_name = models.CharField(max_length=60, null=True, blank=True)
     synonym = models.CharField(max_length=15, null=True)
     referral_code = models.OneToOneField(Referral, on_delete=models.SET_NULL, null=True)
+    std_rate = models.DecimalField(max_digits=10, decimal_places=2)
+    currency = models.ForeignKey(Currency, on_delete=models.PROTECT)
+    rate_unit = models.CharField(max_length=1, choices=RATE_UNIT, default='H')
+    motivation = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return str(self.talent)

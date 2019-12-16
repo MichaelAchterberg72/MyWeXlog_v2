@@ -117,27 +117,6 @@ def PreLoggedExperienceCaptureView(request):
         response.set_cookie("confirm","PC")
         return response
 
-''' No longer required: Consolodated into WorkExperience Table
-@login_required()
-def PreColleagueSelectView(request):
-    instance = PreLoggedExperience.objects.filter(talent=request.user).latest('date_captured')
-    form = PreColleagueSelectForm(request.POST or None)
-    if request.method == 'POST':
-        if form.is_valid():
-            new = form.save(commit=False)
-            new.pre_experience = instance
-            new.save()
-            response = redirect('Talent:Home')
-            response.delete_cookie("confirm")
-            return response
-    else:
-
-        template = 'talenttrack/prelogged_colleague_select.html'
-        context = {'instance': instance, 'form': form}
-        response = render(request, template, context)
-        response.set_cookie("confirm","PC")
-        return response
-'''
 
 @login_required()
 def PreLogDetailView(request, pre_id):

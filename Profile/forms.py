@@ -47,7 +47,7 @@ class BriefCareerHistoryForm(forms.ModelForm):
             'date_from': DateInput(),
             'date_to': DateInput(),
         }
-        
+
 
 class LanguageTrackForm(forms.ModelForm):
     class Meta:
@@ -90,7 +90,7 @@ class FileUploadForm(forms.ModelForm):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ('birth_date', 'background', 'mentor',)
+        fields = ('birth_date', 'background', 'mentor', 'std_rate', 'currency')
         widgets = {
             'birth_date': DateInput(),
             }
