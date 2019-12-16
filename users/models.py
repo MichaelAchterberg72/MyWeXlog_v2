@@ -51,7 +51,8 @@ class CustomUserSettings(models.Model):
     receive_newsletter = models.BooleanField('Receive the newslatter', default=True)
     validation_requests = models.BooleanField('Receive validation requests', default=True)
     takeout = models.BooleanField('Export data to a csv file', default=False)
-    right_to_be_forgotten = models.BooleanField('Right to be forgotten', default=False)
+    dnt = models.BooleanField('Do Not Track', default=False)
+    right_to_be_forgotten = models.BooleanField('Right to be forgotten / Permanently delete my account', default=False)
     payment_notifications = models.BooleanField('Receive subscription payment notifications', default=True)
     subscription_notifications = models.BooleanField('Receive subscription status notifications', default=True)
 

@@ -25,4 +25,11 @@ class CustomUserSettingsForm(forms.ModelForm):
                     'subscription_notifications',
                     'payment_notifications',
                     'takeout',
+                    'dnt',
                     'right_to_be_forgotten')
+
+
+class RightToSayNoForm(forms.ModelForm):
+    class Meta:
+        model = CustomUserSettings
+        fields = ('right_to_say_no',)

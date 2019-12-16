@@ -234,7 +234,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 #Authorisation settings
 AUTH_USER_MODEL = 'users.CustomUser'
-LOGIN_URL = 'account/login/'
+LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = 'Profile:ProfileHome'
 LOGOUT_REDIRECT_URL = 'home'
 

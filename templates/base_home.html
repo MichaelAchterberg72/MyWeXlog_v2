@@ -1,5 +1,4 @@
 {% load static %}
-{% load django_simple_cookie_consent_tags %}
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
@@ -9,9 +8,7 @@
     <!-- Bootstrap CSS -->
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-      {% display_cookie_consent %}
-
-    <title>{% block title %}WeXlog{% endblock title %}</title>
+      <title>{% block title %}WeXlog{% endblock title %}</title>
   {% block Style %}
   {% endblock Style %}
   </head>
