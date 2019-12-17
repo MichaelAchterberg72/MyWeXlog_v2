@@ -12,67 +12,73 @@
     <p><a href="{% url 'Project:EditProject' info.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Edit Project</a>
     {% endif %}
     <a href="{% url 'Project:ProjectHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
-    <div class="row">
-      <div class="col-sm-6">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Project Details</h5>
-            <table>
-              <thead>
-              </thead>
-              <tbody>
-                  {% for d in detail %}
-                  <tr>
-                    <th>Name</th>
-                    <td>{{ d.name }}</td>
-                  </tr>
-                  <tr>
-                    <th>Owner</th>
-                    <td>{{ d.company }}</td>
-                  </tr>
-                    <tr>
-                      <th>Industry</th>
-                      <td>{{ d.industry }}</td>
-                    </tr>
-                    <tr>
-                      <th>City</th>
-                      <td>{{ d.city }}</td>
-                    </tr>
-                    <tr>
-                      <th>Region</th>
-                      <td>{{ d.region }}</td>
-                    </tr>
-                    <tr>
-                      <th>Country</th>
-                      <td>{{ d.get_country_display }}</td>
-                    </tr>
-                    {% endfor %}
-                    <tr>
-                      <th>Total Hours  </th>
-                        <td>{{ hr.sum_t|intcomma }}</td>
-                    </tr>
-                </tbody>
-              </table>
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Project Details</h5>
+                <table class="table table-bordered">
+                  <thead>
+                  </thead>
+                  <tbody>
+                      {% for d in detail %}
+                      <tr>
+                        <col width="20%">
+                        <col width="30%">
+                        <col width="20%">
+                        <col width="10%">
+                        <col width="10%">
+                        <col width="10%">
+
+                        <th>Project Owner</th>
+                        <th>Project Name</th>
+                        <th>Industry</th>
+                        <th class="text-center">Total Hours</th>
+                      </tr>
+                        <td>{{ d.company }}</td>
+                        <td>{{ d.name }}</td>
+                        <td>{{ d.industry }}</td>
+                        <td class="text-center">{{ hr.sum_t|intcomma }}</td>
+                      <tr>
+                        <th>Country</th>
+                        <th>City</th>
+                        <th>Region</th>
+                      </tr>
+                      <tr>
+                        <td>{{ d.get_country_display }}</td>
+                        <td>{{ d.city }}</td>
+                        <td>{{ d.region }}</td>
+                      </tr>
+                      {% endfor %}
+                      <tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
+        <p>&nbsp</p>
+        <div class="row">
+          <div class="col-sm-6">
+          </div>
           <div class="col-sm-6">
             <div class="card">
               <div class="card-body">
-                <h5 class="card-title">WexLog Hours</h5>
-                <p class="card-text">View Wexlog Hours Worked on Project</p>
-                <p><a href="{% url 'Project:HoursOnProject' info.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary"> WexLog Hours </a></p>
-                <h5 class="card-title">WexLog Employees</h5>
-                <p class="card-text">View Wexlog Employees Worked on Project</p>
+                <p class="text-right"><a href="{% url 'Project:HoursOnProject' info.id %}?next={{ request.path|urlencode }}" class="btn btn-primary"> WexLog Hours </a>
+                  &nbsp
+
                 {% if request.user.subscription >= 2 %}
-                  <p><a href="{% url 'Project:HoursOnProject' info.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary"> WexLog Employees </a></p>
+                  <a href="{% url 'Project:HoursOnProject' info.id %}?next={{ request.path|urlencode }}" class="btn btn-primary"> WexLog Employees </a>
+                    &nbsp
                 {% else %}
-                  <p><a href="#" class="badge badge-info text-wrap" style="width: 6rem;">Active Subscription required</a></p>
+                  <a href="#" class="btn btn-primary" style="width: 6rem;">Active Subscription required</a></p>
                 {% endif %}
               </div>
             </div>
           </div>
         </div>
+
+
       </div>
     </div>
 

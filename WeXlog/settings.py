@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 # from __future__ import absolute_import, unicode_literals
 
 import os
+
 # from distutils.sysconfig import get_python_lib
 # os.environ["PATH"] += os.pathsep + get_python_lib() + '\\osgeo'
 
@@ -177,17 +178,19 @@ X_FRAME_OPTIONS = 'DENY'
     ##django-referrer-policy (3rd party app)
 REFERRER_POLICY='same-origin'
     ## Content-Security-policy (3rd party app)
-CSP_DEFAULT_SRC = ("'self'",'maxcdn.bootstrapcdn.com', 'code.jquery.com',
-'cdnjs.cloudflare.com', 'youtube.com', '127.0.0.1', 'SameSite')
+CSP_DEFAULT_SRC = ("'self'", 'SameSite', 'maxcdn.bootstrapcdn.com', 'code.jquery.com',
+'cdnjs.cloudflare.com', 'youtube.com', 'fonts.googleapis.com', 'maps.googleapis.com',
+'w3.org', '127.0.0.1', 'lit.fontawesome.com')
 
 CSP_SCRIPT_SRC = None
-CSP_IMG_SRC = None
+CSP_IMG_SRC = ("'self'", '127.0.0.1')
 CSP_OBJECT_SRC = None
 CSP_MEDIA_SRC = None
 CSP_FRAME_SRC = None
-CSP_FONT_SRC = None
+CSP_FONT_SRC = ("'self'", 'fonts.googleapis.com', '*', 'w3.org', '127.0.0.1')
 CSP_CONNECT_SRC = None
-CSP_STYLE_SRC = None
+CSP_STYLE_SRC = ("'self'", 'maxcdn.bootstrapcdn.com', 'code.jquery.com',
+'cdnjs.cloudflare.com', 'w3.org', '127.0.0.1', 'fonts.googleapis.com', "'unsafe-inline'")
 CSP_BASE_URI = None
 CSP_CHILD_SRC = None
 CSP_FRAME_ANCESTORS = None
@@ -245,6 +248,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
 
 #Authorisation settings
 AUTH_USER_MODEL = 'users.CustomUser'
@@ -331,3 +335,11 @@ CELERY_TIMEZONE = 'Australia/Sydney'
 CELERY_IMPORTS = ('payments.tasks',)
 
 CELERY_TASK_ANNOTATIONS = {'tasks.add': {'rate_limit': '10/s'}}
+
+# Email settings for Celery
+EMAIL_HOST = ''
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'do_not_reply@wexlog.io'
+EMAIL_HOST_PASSWORD = ''
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True

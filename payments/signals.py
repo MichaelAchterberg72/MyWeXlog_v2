@@ -68,7 +68,15 @@ def show_me_the_money(sender, **kwargs):
                 Users.objects.filter(ipn_username).update(paid=False)
                 Users.objects.filter(ipn_username).update(paid_date=datetime.now())
                 Users.objects.filter(ipn_username).update(subscription="0")
-                SubscriptionAmountDifferentTask(ipn_username)
+                if CustomUserSettings.talent == request.user:
+                    if CustomUserSettings.unsubscribe == True:
+                        pass
+
+                    if CustomUserSettings.subscription_notifications == False:
+                        pass
+
+                    else:
+                        SubscriptionAmountDifferentTask(ipn_username)
             else:
                 pass
 
@@ -80,7 +88,15 @@ def show_me_the_money(sender, **kwargs):
                 Users.objects.filter(ipn_username).update(paid=False)
                 Users.objects.filter(ipn_username).update(paid_date=datetime.now())
                 Users.objects.filter(ipn_username).update(subscription="0")
-                SubscriptionExpiredTask(ipn_username)
+                if CustomUserSettings.talent == request.user:
+                    if CustomUserSettings.unsubscribe == True:
+                        pass
+
+                    if CustomUserSettings.subscription_notifications == False:
+                        pass
+
+                    else:
+                        SubscriptionExpiredTask(ipn_username)
             else:
                 pass
         elif ipn_obj.payment_status == ST_PP_PENDING:
@@ -145,7 +161,15 @@ def show_me_the_money(sender, **kwargs):
                 Users.objects.filter(ipn_username).update(paid=False)
                 Users.objects.filter(ipn_username).update(paid_date=datetime.now())
                 Users.objects.filter(ipn_username).update(subscription="0")
-                SubscriptionAmountDifferentTask(ipn_username)
+                if CustomUserSettings.talent == request.user:
+                    if CustomUserSettings.unsubscribe == True:
+                        pass
+
+                    if CustomUserSettings.subscription_notifications == False:
+                        pass
+
+                    else:
+                        SubscriptionAmountDifferentTask(ipn_username)
 
             else:
                 pass
@@ -159,7 +183,15 @@ def show_me_the_money(sender, **kwargs):
                 Users.objects.filter(ipn_username).update(paid=False)
                 Users.objects.filter(ipn_username).update(paid_date=datetime.now())
                 Users.objects.filter(ipn_username).update(subscription="0")
-                SubscriptionExpiredTask(ipn_username)
+                if CustomUserSettings.talent == request.user:
+                    if CustomUserSettings.unsubscribe == True:
+                        pass
+
+                    if CustomUserSettings.subscription_notifications == False:
+                        pass
+
+                    else:
+                        SubscriptionExpiredTask(ipn_username)
 
             else:
                 pass
@@ -220,7 +252,15 @@ def show_me_the_money(sender, **kwargs):
                 Users.objects.filter(ipn_username).update(paid=False)
                 Users.objects.filter(ipn_username).update(paid_date=datetime.now())
                 Users.objects.filter(ipn_username).update(subscription="0")
-                SubscriptionAmountDifferentTask(ipn_username)
+                if CustomUserSettings.talent == request.user:
+                    if CustomUserSettings.unsubscribe == True:
+                        pass
+
+                    if CustomUserSettings.subscription_notifications == False:
+                        pass
+
+                    else:
+                        SubscriptionAmountDifferentTask(ipn_username)
 
             else:
                 pass
@@ -234,7 +274,15 @@ def show_me_the_money(sender, **kwargs):
                 Users.objects.filter(ipn_username).update(paid=False)
                 Users.objects.filter(ipn_username).update(paid_date=datetime.now())
                 Users.objects.filter(ipn_username).update(subscription="0")
-                SubscriptionExpiredTask(ipn_username)
+                if CustomUserSettings.talent == request.user:
+                    if CustomUserSettings.unsubscribe == True:
+                        pass
+
+                    if CustomUserSettings.subscription_notifications == False:
+                        pass
+
+                    else:
+                        SubscriptionExpiredTask(ipn_username)
 
             else:
                 pass
@@ -267,7 +315,15 @@ def show_me_the_money(sender, **kwargs):
             Users.objects.filter(ipn_username).update(paid=False)
             Users.objects.filter(ipn_username).update(paid_date=datetime.now())
             Users.objects.filter(ipn_username).update(subscription="0")
-            SubscriptionCancelledTask(ipn_username)
+            if CustomUserSettings.talent == request.user:
+                if CustomUserSettings.unsubscribe == True:
+                    pass
+
+                if CustomUserSettings.subscription_notifications == False:
+                    pass
+
+                else:
+                    SubscriptionCancelledTask(ipn_username)
 
 valid_ipn_received.connect(show_me_the_money)
 

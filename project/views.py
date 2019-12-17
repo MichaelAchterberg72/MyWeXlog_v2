@@ -92,9 +92,9 @@ def ProjectAddView(request):
     else:
         form = ProjectAddForm()
 
-    template_name = 'Project/project_add.html'
+    template = 'project/project_add.html'
     context = {'form': form}
-    return render(request, template_name, context)
+    return render(request, template, context)
 
 
 @login_required()
@@ -209,13 +209,20 @@ def get_project_id(request):
 
 
 def AutofillMessage(request, pk):
-    info = get_object_or_404(settings.AUTH_USER_MODEL, pk=pk)
+    from django.contrib.auth import get_user_model
+    from users.models import CustomUser
+    AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
+    #user = get_user_model()
+    User = CustomUser
+
+    info = get_object_or_404(User, pk=pk)
+#    info2 = get_object_or_404(AUTH_USER_MODEL, pk=pk)
     form = ComposeForm(request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
             new = form.save(commit=False)
             new.recipient = info
-            new.sender = request.user
+            new.sender = request.User
             new.save()
             return redirect('Project:DetailExperienceOnProject')
     else:

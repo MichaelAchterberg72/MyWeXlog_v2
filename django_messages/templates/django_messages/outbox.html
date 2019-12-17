@@ -42,5 +42,7 @@
 <p><a href="{% url 'messages_compose' %}" class="badge badge-pill badge-primary">New Message</a><a href="{% url 'messages_inbox' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
 {% endif %}
 <p>{% trans "No messages." %}</p>
+</div>
+</div>
 {% endif %}
 {% endblock %}

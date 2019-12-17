@@ -4,6 +4,11 @@ from django.views.generic import (
         TemplateView
     )
 
+import json
+
+from django.http import HttpResponse
+from django.http import JsonResponse
+
 from csp.decorators import csp_exempt
 
 from django.contrib.auth import get_user_model
@@ -26,12 +31,153 @@ def HomePageView(request):
     ecount = Enterprise.objects.all().count()
     vcount = TalentRequired.objects.all().count()
 
-    template_name = 'public/landing_page.html'
+    template_name = 'wexlog_home/index.html'
     context = {
             'mcount': mcount,
             'scount': scount,
             'ecount': ecount,
             'vcount': vcount
+    }
+    return render(request, template_name, context)
+
+
+def SiteStatsView(request):
+
+    mcount= User.objects.all().count()
+    scount = SkillTag.objects.all().count()
+    ecount= Enterprise.objects.all().count()
+    vcount = TalentRequired.objects.all().count()
+
+    response = f'members={mcount}&skills={scount}&enterprises={ecount}&vacancies={vcount}'
+    sitestats = [
+            {"members": mcount,
+            "skills": scount,
+            "enterprises": ecount,
+            "vacancies": vcount}
+    ]
+    return JsonResponse(sitestats, safe=False)
+
+
+def WexlogHomeAboutView(request):
+    mcount = User.objects.all().count()
+    scount = SkillTag.objects.all().count()
+    ecount = Enterprise.objects.all().count()
+    vcount = TalentRequired.objects.all().count()
+
+    template_name = 'wexlog_home/about.html'
+    context = {
+            'mcount': mcount,
+            'scount': scount,
+            'ecount': ecount,
+            'vcount': vcount
+    }
+    return render(request, template_name, context)
+
+
+def WexlogHomeContactView(request):
+    form = ContactUsForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            instance=form.save(commit=False)
+            instance.save()
+            return redirect(reverse('Public:WexlogHomeThankContact'))
+    else:
+        context = {'form':form}
+        template = 'wexlog_home/contact.html'
+        return render(request, template, context)
+
+
+class WexlogHomePostVacancyView(TemplateView):
+    template_name = 'wexlog_home/post_vacancy.html'
+
+
+class WexlogHomeSearchCandidatesView(TemplateView):
+    template_name = 'wexlog_home/search_candidates.html'
+
+
+class WexlogHomeShortTermView(TemplateView):
+    template_name = 'wexlog_home/short_term.html'
+
+
+class WexlogHomePermanentView(TemplateView):
+    template_name = 'wexlog_home/permanent.html'
+
+
+class WexlogHomeMarketSkillsView(TemplateView):
+    template_name = 'wexlog_home/market_skills.html'
+
+
+class WexlogHomeFindClientView(TemplateView):
+    template_name = 'wexlog_home/find_client.html'
+
+
+class WexlogHomeBenefitsView(TemplateView):
+    template_name = 'wexlog_home/benefits.html'
+
+
+class WexlogHomePricingView(TemplateView):
+    template_name = 'wexlog_home/pricing.html'
+
+
+class WexlogHomeBlogView(TemplateView):
+    template_name = 'wexlog_home/blog.html'
+
+
+class WexlogHomePrivacyView(TemplateView):
+    template_name = 'wexlog_home/privacy_statement.html'
+
+
+class WexlogHomeUserAgreementView(TemplateView):
+    template_name = 'wexlog_home/user_agreement.html'
+
+
+class WexlogHomeCookiePolicyView(TemplateView):
+    template_name = 'wexlog_home/cookie_policy.html'
+
+
+class WexlogHomeRightToSayNoView(TemplateView):
+    template_name = 'wexlog_home/right_to_say_no.html'
+
+
+class WexlogHomeHelpSupportView(TemplateView):
+    template_name = 'wexlog_home/help_support.html'
+
+
+def WexlogHomeSuggestionsView(request):
+    form = SuggestionsForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            instance=form.save(commit=False)
+            instance.save()
+            return redirect(reverse('Public:WexlogHomeThankContact'))
+    else:
+        context = {'form':form}
+        template = 'wexlog_home/suggestions.html'
+        return render(request, template, context)
+
+
+def WexlogHomeDataPrivacyView(request):
+    form = DataProtectionForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            instance=form.save(commit=False)
+            instance.save()
+            return redirect(reverse('Public:WexlogHomeThankContact'))
+    else:
+        context = {'form':form}
+        template = 'wexlog_home/data_privacy.html'
+        return render(request, template, context)
+
+
+class WexlogHomeThankContactView(TemplateView):
+    template_name = 'wexlog_home/thank_contact.html'
+
+
+def LandingPageHomePageView(request):
+
+    template_name = 'public/landing_page.html'
+    context = {
+
     }
     return render(request, template_name, context)
 

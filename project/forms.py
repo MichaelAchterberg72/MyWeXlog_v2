@@ -63,7 +63,7 @@ class RegionSelect2Widget(RegionSearchFieldMixin, ModelSelect2Widget):
 class ProjectAddForm(forms.ModelForm):
     class Meta:
         model = ProjectData
-        fields = ('name','company','country','region','city', 'industry')
+        fields = ('name', 'company', 'country', 'region', 'city', 'industry')
         widgets = {
             'company': CompanySelect2Widget(),
             'industry': IndustrySelect2Widget(),
@@ -80,7 +80,9 @@ class ProjectForm(forms.ModelForm):
     class Meta:
         model = ProjectData
         fields = ('name', 'company', 'industry', 'country', 'region', 'city')
-        widgets={
+        widgets = {
+            'company': CompanySelect2Widget(),
+            'industry': IndustrySelect2Widget(),
             'region': RegionSelect2Widget(),
             'city': CitySelect2Widget(),
         }

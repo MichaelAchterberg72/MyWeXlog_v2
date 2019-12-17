@@ -10,6 +10,8 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.core.mail import EmailMultiAlternatives
 
+from users.models import CustomUserSettings
+
 from datetime import datetime
 
 app = Celery('tasks', broker=settings.CELERY_BROKER_URL)
@@ -65,7 +67,7 @@ class SubscriptionCancelledTask(Task):
 @app.task
 @shared_task
 class SubscriptionSignupTask(Task):
-
+    
     def run(self, user):
 
         subject, from_email, to = 'WexLog Sign-up Confirmation', settings.CELERY_SYSTEM_EMAIL, user.Email

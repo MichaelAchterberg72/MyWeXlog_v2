@@ -8,7 +8,7 @@
     <!-- Bootstrap CSS -->
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-    <title>{% block title %}WeXlog{% endblock title %}</title>
+      <title>{% block title %}WeXlog{% endblock title %}</title>
   {% block Style %}
   {% endblock Style %}
   </head>
@@ -17,7 +17,7 @@
     <div class="">
     <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
     <div class="container">
-    <a class="navbar-brand" href="{% url 'Public:LandingPage' %}">WeXlog</a>
+    <a class="navbar-brand" href="http://127.0.0.1:8000/public/index/">WeXlog</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -57,6 +57,7 @@
         <div class="dropdown-divider"></div>
         <a class="dropdown-item"  href="{% url 'account_email' %}">Manage email</a>
         <a class="dropdown-item"  href="{% url 'account_change_password' %}">Change Password</a>
+        <a class="dropdown-item"  href="{% url 'Users:CustomUserSettings' %}">Settings</a>
         <div class="dropdown-divider"></div>
         <a class="dropdown-item"  href="{% url 'account_logout' %}">Logout</a>
       </div>
@@ -101,9 +102,9 @@
 
   <nav class="navbar sticky-bottom navbar-light bg-light">
     <div class="container">
-      <a class="navbar-brand" href="{% url 'Public:UserAgreement' %}">User Agreement</a>
-      <a class="navbar-brand" href="{% url 'Public:Privacy' %}">Privacy Policy</a>
-      <a class="navbar-brand" href="{% url 'Public:ContactUs' %}">Contact Us</a>
+      <a class="navbar-brand" href="http://127.0.0.1:8000/public/user-agreement/">User Agreement</a>
+      <a class="navbar-brand" href="http://127.0.0.1:8000/public/privacy/">Privacy Policy</a>
+      <a class="navbar-brand" href="http://127.0.0.1:8000/public/contact/">Contact Us</a>
     </div>
   </nav>
 

@@ -3,499 +3,1354 @@
 {% load staticfiles %}
 
 {% block content %}
-
+<div class="wexlog3">
 <p>&nbsp</p>
 <p>&nbsp</p>
-<section id="header" class="">
-  <div class="">
-    <div class="container">
-    <img align="right" src="{% static 'images/landing_page/Header2.jpg' %}"
-      alt="Card image cap" width="400" height="580">
-        <p>&nbsp</p>
-        <p>&nbsp</p>
-        <p>&nbsp</p>
-        <p>&nbsp</p>
-        <p>&nbsp</p>
-        <h2>Verify the hours spent developing your skills<br>
-          and automatically match to positions available</h2>
 
-        <p class="lead"><strong>Experience tracking and skills marketing made easy.</strong></p>
-        <p class="card-text">Match the skills you need for any position within minutes <br>
-          from our listing of talented professionals</p>
-
-          <p>&nbsp</p>
-          <p><a class="btn btn-success btn-lg" href="#" role="button">Search for Skills Available</a>
-          &nbsp
-          <a class="btn btn-success btn-lg" href="#" role="button">&nbsp&nbsp&nbspSearch for Vacancies&nbsp&nbsp&nbsp</a></p>
-          <p>&nbsp</p>
-          <p>&nbsp</p>
-
-          <p>&nbsp</p>
-
+<section id="carousel-header">
+    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+    <ol class="carousel-indicators">
+      <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+    </ol>
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img class="d-block w-100" width="400" height="576" src="{% static 'images/landing_page/office1.jpg' %}" alt="First slide">
       </div>
+      <div class="carousel-item">
+        <img class="d-block w-100" width="400" height="576" src="{% static 'images/landing_page/write1.jpg' %}">
+      </div>
+      <div class="carousel-item">
+        <img class="d-block w-100" width="400" height="576" src="{% static 'images/landing_page/laptop1.jpg' %}" alt="Third slide">
+      </div>
+    </div>
+
+    <div class="card-img-overlay overlay-font">
+      <center><strong>
+      <p>&nbsp</p>
+      <p>&nbsp</p>
+      <p>&nbsp</p>
+      <p>&nbsp</p>
+      <h1>Verify the hours spent developing your skills<br>
+        and automatically match to positions <br>
+        suited to your skillset</h1></strong>
+      <p class="lead">Experience tracking and skills marketing made easy.</p>
+      <p class="card-text">Match the skills you need for any position within minutes <br>
+        from our listing of talented professionals
+      <br>&nbsp</p>
+      <p><a class="btn btn-outline-light btn-lg" href="#" role="button">Search for Skills Available</a>
+      &nbsp
+      <a class="btn btn-outline-light btn-lg" href="#" role="button">&nbsp&nbsp&nbspSearch for Vacancies&nbsp&nbsp&nbsp</a></p>
+      </center>
+    </div>
+
+    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="sr-only">Next</span>
+    </a>
   </div>
-</section>
+
+<section>
 
 <!--
-<section id="">
-  <div class="">
-    <div class="container">
-        <p>&nbsp</p>
-        <p>&nbsp</p>
-        <p>&nbsp</p>
-        <p>&nbsp</p>
-        <p>&nbsp</p>
+<section id="companies" class="">
+  <div class="jumbotron jumbotron-fluid">
+    <div class="title">
+      <center>
 
-        <div class="right">
-          <right>
-        <h2>Capture and Verify Experience</h2>
-        </right>
-        <p class="lead" style="text-align:right"><strong>Capture your education & training as well as work experience and get it validated by
-          your colleagues, superiors, lecturers, class mates, collaborators and clients to develop a qualified listing
-          of time spent as well as the amount of time spent working for a company, hours spent on project and
-          hours spent developing skills.</strong></p>
-        <p class="card-text">Match the skills you need for any position within minutes <br>
-          from our listing of talented professionals</p>
-        </div>
-          <p>&nbsp</p>
-          <p><a class="btn btn-success btn-lg" href="#" role="button">Search for Skills Available</a>
-          &nbsp
-          <a class="btn btn-success btn-lg" href="#" role="button">&nbsp&nbsp&nbspSearch for Vacancies&nbsp&nbsp&nbsp</a></p>
-          <p>&nbsp</p>
-          <p>&nbsp</p>
-          <hr class="my-4">
-          <p>&nbsp</p>
-
-      </div>
+      </center>
+    </div>
   </div>
-
 </section>
 -->
 
-<section id="features" class="">
+<section id="landing3-features" class="">
   <div class=" jumbotron-fluid">
     <div class="container">
       <p>&nbsp</p>
       <p>&nbsp</p>
     <div class="row">
-    <div class="col-sm-4">
-      <div class="card bg-light mb-3" style="width: 18rem;">
-        <img class="card-img-top" src="{% static 'images/landing_page/Icon_capture.png' %}" alt="Card image cap">
+    <div class="col-sm-3">
+      <a class="link-style" href="{% url 'Public:Capture' %}">
+      <div class="card border-0" style="width: 18rem;">
+        <img class="card-img-top" src="{% static 'images/landing_page/Icon_capture1.png' %}" alt="Card image cap">
         <div class="card-body">
           <center>
           <h5 class="card-title">CAPTURE AND VERIFY EXPERIENCE</h5>
           </center>
-          <p class="card-text">Capture your education & training as well as work experience and get it validated by
-            your colleagues, superiors, lecturers, class mates, collaborators and clients to develop a qualified listing
-            of time spent working for a company, hours spent on project and
-            hours spent developing skills.&nbsp<a href="{% url 'Payments:SubscriptionCountrySelect' %}"> More..</a></p>
-          <p class="card-text"><a href="{% url 'Payments:SubscriptionCountrySelect' %}"><strong>Get Started Now</strong></a></p>
 
         </div>
+      </div></a>
       </div>
-      </div>
-      <div class="col-sm-4">
-      <div class="card" style="width: 18rem;">
-        <img class="card-img-top" src="{% static 'images/landing_page/Icon_trust.png' %}" alt="Card image cap">
+      <div class="col-sm-3">
+        <a class="link-style" href="{% url 'Public:TrustPassport' %}">
+      <div class="card border-0" style="width: 18rem;">
+        <img class="card-img-top" src="{% static 'images/landing_page/Icon_trust1.png' %}" alt="Card image cap">
         <div class="card-body">
           <center>
           <h5 class="card-title">CREATE AN ONLINE TRUST PASSPORT</h5>
           </center>
-          <p class="card-text">By requesting validation from clients you can create an online
-            repository of not only the client referral comments, but colleagues, associates
-            and superiors from the day when the project was finished allowing you to
-            have a trustworthy online source for references, skills and education.
-          &nbsp<a href="{% url 'Payments:SubscriptionCountrySelect' %}"> More..</a></p>
-          <p class="card-text"><a href="{% url 'Payments:SubscriptionCountrySelect' %}"><strong>Get Started Now</strong></a></p>
-        </div>
+          </div>
+      </div></a>
       </div>
-      </div>
-      <div class="col-sm-4">
-      <div class="card" style="width: 18rem;">
-        <img class="card-img-top" src="{% static 'images/landing_page/Icon_advertise.png' %}" alt="Card image cap">
+      <div class="col-sm-3">
+        <a class="link-style" href="{% url 'Public:Advertise' %}">
+      <div class="card border-0" style="width: 18rem;">
+        <img class="card-img-top" src="{% static 'images/landing_page/Icon_advertise1.png' %}" alt="Card image cap">
         <div class="card-body">
           <center>
-          <h5 class="card-title">ADVERTISE VACANCIES, PERSONAL SKILLS AND EXPERIENCE</h5>
+          <h5 class="card-title">ADVERTISE SKILLS AND EXPERIENCE</h5>
           </center>
-          <p class="card-text">Advertise vacancies as well as the skills and experience that you have with qualified references
-            with our availability function making it easy for your potential customers to find you
-            when they do a search for the workplace skills required.<br>
-          <a href="{% url 'Payments:SubscriptionCountrySelect' %}">More..</a></p>
-          <p class="card-text"><a href="{% url 'Payments:SubscriptionCountrySelect' %}"><strong>Get Started Now</strong></a></p>
         </div>
+      </div></a>
       </div>
+      <div class="col-sm-3">
+        <a class="link-style" href="{% url 'Public:SearchCandidates' %}">
+      <div class="card border-0" style="width: 18rem;">
+        <img class="card-img-top" src="{% static 'images/landing_page/Icon_search1.png' %}" alt="Card image cap">
+        <div class="card-body">
+          <center>
+          <h5 class="card-title">POST VACANCIES OR SEARCH</h5>
+          </center>
+        </div>
+      </div></a>
       </div>
+
       </div>
 
 
     </div>
   </div>
 </section>
+
+<p>&nbsp</p>
+<p>&nbsp</p>
+
+<section id="find-the-right-person" class="">
+  <div class="jumbotron-fluid">
+    <div class="container">
+      <div class="title title1">
+        <h2>Find the right person to do your work</h2>
+      </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="card border-0 bg-transparent" style="width: 100%;">
+
+                <div class="card border-0 bg-transparent">
+                  <div class="card-clear">
+                    <div class="card-body">
+
+                    <p class="card-text">In order to find the right skill for the
+                      work you have in mind, be it that you are looking for consultants,
+                      independant contractors or freelancers for the short term position
+                      or a project that requires a specific result or for a longer term
+                      project ranging in years employment to a full time permanent position,
+                      WexLog has the means and the ability to help you source the perfect
+                      candidate from the listing of hourly updated skills and up to date
+                      references on the work performed as it happened.</p>
+                  </div>
+                  </div>
+                </div>
+            </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="card border-0 bg-transparent" style="width: 100%;">
+                  <div class="card border-0 bg-transparent" style="width: 100%;">
+                    <div class="row">
+                      <div class="col-sm-2">
+                        <div class="card border-0 bg-transparent" style="width: 100%;">
+                          <div class="card-clear">
+                            <div class="card-body">
+                              <div class="title3">
+                                <img src="{% static 'images/landing_page/box.png' %}" alt="Card image cap">
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-10">
+                        <div class="card border-0 bg-transparent">
+                          <div class="card-clear">
+                            <div class="card-body">
+                              <div class="title3">
+
+                                <h5>POST A VACANCY</h5>
+                                </div>
+                            <p class="card-text">Compare bids received, reviews, and work
+                              experience history. Interview your favourites and hire the best
+                              fit, and do all of this with an understanding of the performance
+                              of the person or company under consideration in the past.</p>
+                          </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                      <div class="row">
+                        <div class="col-sm-12">
+                          <div class="card border-0 bg-transparent">
+                                <a href="{% url 'Public:PostVacancy' %}" class="btn btn-outline-primary btn-block">Read More ..</a>
+                                <a href="{% url 'Payments:SubscriptionSelect' %}" class="btn btn-outline-success btn-block">Subscribe Now</a>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+
+              <div class="col-sm-6">
+                <div class="card border-0 bg-transparent">
+                    <div class="card border-0 bg-transparent">
+                      <div class="row">
+                        <div class="col-sm-2">
+                          <div class="card border-0 bg-transparent">
+                            <div class="card-clear">
+                              <div class="card-body">
+                                <div class="title3">
+                                  <img src="{% static 'images/landing_page/search.png' %}" alt="Card image cap">
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-sm-10">
+                          <div class="card border-0 bg-transparent">
+                            <div class="card-clear">
+                              <div class="card-body">
+                                <div class="title3">
+
+                                  <h5>SEARCH FOR YOUR CANDIDATES</h5>
+                                  </div>
+                                  <p class="card-text">Compare the range of skills and qualified
+                                    validations that are completed to shortlist a selected few
+                                    potential candidates that you can contact directly for a more
+                                    in depth research with the internal messaging system.</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                        <div class="row">
+                          <div class="col-sm-12">
+                            <div class="card border-0 bg-transparent">
+                                  <a href="{% url 'Public:SearchCandidates' %}" class="btn btn-outline-primary btn-block">Read More ..</a>
+                                  <a href="{% url 'Payments:SubscriptionSelect' %}" class="btn btn-outline-success btn-block">Subscribe Now</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+      </div>
+    </div>
+</section>
+
+<p>&nbsp</p>
+<p>&nbsp</p>
+
+<section id="find-the-right-person" class="">
+  <div class="jumbotron-fluid">
+    <div class="container">
+      <div class="title title1 title-reversed">
+        <h2>Freelancers and permanent staff</h2>
+      </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="card border-0 bg-transparent" style="width: 18rem;">
+
+                <div class="card border-0 bg-transparent">
+                  <div class="card-clear">
+                    <div class="card-body">
+
+                    <p class="card-text">In order to find the right skill for the
+                      work you have in mind, be it that you are looking for consultants,
+                      independant contractors or freelancers for the short term position
+                      or a project that requires a specific result or for a longer term
+                      project ranging in years worth of employment to a full time permanent position,
+                      WexLog has the means and the ability to help you source the perfect
+                      candidate from the listing of hourly updated skills and up to date
+                      references on the work performed as it happened.</p>
+                  </div>
+                  </div>
+                </div>
+            </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="card border-0 bg-transparent">
+                  <div class="card border-0 bg-transparent">
+                    <div class="row">
+                      <div class="col-sm-2">
+                        <div class="card border-0 bg-transparent">
+                          <div class="card-clear">
+                            <div class="card-body">
+                              <div class="title3">
+                                <img src="{% static 'images/landing_page/temp.png' %}" alt="Card image cap">
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-10">
+                        <div class="card border-0 bg-transparent">
+                          <div class="card-clear">
+                            <div class="card-body">
+                              <div class="title3">
+
+                                <h5>CONSULTANTS & FREELANCERS</h5>
+                                </div>
+                                <p class="card-text">WexLog takes the work and cost out of finding new projects
+                                  and assignments by automatically sorting the vacancies available that
+                                  match your skill set.</p>
+                          </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                      <div class="row">
+                        <div class="col-sm-12">
+                          <div class="card border-0 bg-transparent">
+                                <a href="{% url 'Public:ShortTerm' %}" class="btn btn-outline-primary btn-block">Read More ..</a>
+                                <a href="{% url 'Payments:SubscriptionSelect' %}" class="btn btn-outline-success btn-block">Subscribe Now</a>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+
+              <div class="col-sm-6">
+                <div class="card border-0 bg-transparent">
+                    <div class="card border-0 bg-transparent">
+                      <div class="row">
+                        <div class="col-sm-2">
+                          <div class="card border-0 bg-transparent">
+                            <div class="card-clear">
+                              <div class="card-body">
+                                <div class="title3">
+                                  <img src="{% static 'images/landing_page/perm.png' %}" alt="Card image cap">
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-sm-10">
+                          <div class="card border-0 bg-transparent">
+                            <div class="card-clear">
+                              <div class="card-body">
+                                <div class="title3">
+
+                                  <h5>PERMANENT POSITIONS</h5>
+                                  </div>
+                                  <p class="card-text">Thinking of looking for a new permanent
+                                    position?<br>&nbsp<br>
+                                  Thinking of taking the next step in your career?</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                        <div class="row">
+                          <div class="col-sm-12">
+                            <div class="card border-0 bg-transparent">
+                                  <a href="{% url 'Public:Permanent' %}" class="btn btn-outline-primary btn-block">Read More ..</a>
+                                  <a href="{% url 'Payments:SubscriptionSelect' %}" class="btn btn-outline-success btn-block">Subscribe Now</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+      </div>
+    </div>
+</section>
+
+<p>&nbsp</p>
+<p>&nbsp</p>
+
+
+<section id="find-the-right-person" class="">
+  <div class="jumbotron-fluid">
+    <div class="container">
+      <div class="title title1">
+        <h2>Find the right person to do your work</h2>
+      </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="card border-0 bg-transparent">
+                <div class="card border-0 bg-transparent">
+                  <p>&nbsp</p>
+                  <img class="card-img-top" src="{% static 'images/landing_page/photography.jpg' %}" alt="Capture">
+
+                </div>
+                <div class="card border-0 bg-transparent">
+                  <div class="card-clear">
+                    <div class="card-body">
+                    <div class="title3">
+
+                        <h5>Looking for that perfect fit</h5>
+                        </div>
+                    <p class="card-text">In order to find the right skill for the
+                      work you have in mind, be it that you are looking for consultants,
+                      independant contractors or freelancers for the short term position
+                      or a project that requires a specific result or for a longer term
+                      project ranging in years employment to a full time permanent position,
+                      WexLog has the means and the ability to help you source the perfect
+                      candidate from the listing of hourly updated skills and up to date
+                      references on the work performed as it happened.</p>
+                  </div>
+                  </div>
+                </div>
+            </div>
+            </div>
+
+            <div class="col-sm-6">
+              <div class="card border-0 bg-transparent">
+                  <div class="card border-0 bg-transparent">
+                    <div class="row">
+                      <div class="col-sm-2">
+                        <div class="card border-0 bg-transparent">
+                          <div class="card-clear">
+                            <div class="card-body">
+                              <div class="title3">
+                                <img src="{% static 'images/landing_page/box.png' %}" alt="Card image cap">
+
+                                </div>
+
+                          </div>
+                        </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-10">
+                        <div class="card border-0 bg-transparent">
+                          <div class="card-clear">
+                            <div class="card-body">
+                            <div class="title3">
+
+                                <h5>POST A VACANCY</h5>
+                                </div>
+                            <p class="card-text">Compare bids received, reviews, and work
+                              experience history. Interview your favourites and hire the best
+                              fit, and do all of this with an understanding of the performance
+                              of the person or company under consideration in the past.</p>
+                          </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <div class="card border-0 bg-transparent">
+
+                              <a href="{% url 'Public:PostVacancy' %}" class="btn btn-outline-primary btn-block">Read More ..</a>
+                              <a href="{% url 'Payments:SubscriptionSelect' %}" class="btn btn-outline-success btn-block">Subscribe Now</a>
+
+                        </div>
+                      </div>
+
+                  </div>
+
+              </div>
+            </div>
+
+
+            <div class="row">
+              <div class="col-sm-2">
+                <div class="card border-0 bg-transparent">
+                  <div class="card-clear">
+                    <div class="card-body">
+                      <div class="title3">
+                        <img src="{% static 'images/landing_page/search.png' %}" alt="Card image cap">
+
+                        </div>
+
+                  </div>
+                </div>
+                </div>
+              </div>
+              <div class="col-sm-10">
+                <div class="card border-0 bg-transparent">
+                  <div class="card-clear">
+                    <div class="card-body">
+                      <div class="title3">
+
+                          <h5>SEARCH FOR YOUR DESIRED CANDIDATES</h5>
+                          </div>
+                      <p class="card-text">Compare the range of skills and qualified
+                        validations that are completed to shortlist a selected few
+                        potential candidates that you can contact directly for a more
+                        in depth research with the internal messaging system</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+
+            <div class="card border-0 bg-transparent">
+                <div class="card border-0 bg-transparent">
+
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <div class="card border-0 bg-transparent">
+
+                            <a href="{% url 'Public:SearchCandidates' %}" class="btn btn-outline-primary btn-block">Read More ..</a>
+                            <a href="{% url 'Payments:SubscriptionSelect' %}" class="btn btn-outline-success btn-block">Subscribe Now</a>
+
+                      </div>
+                    </div>
+
+                </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+</section>
+
+<p>&nbsp</p>
+<p>&nbsp</p>
+
+<section id="freelancers and permanent" class="">
+  <div class="jumbotron-fluid">
+    <div class="container">
+      <div class="title title1 title-reversed">
+        <h2>Freelancers and permanent staff</h2>
+      </div>
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="card border-0 bg-transparent">
+              <div class="card border-0 bg-transparent">
+                <div class="row">
+                  <div class="col-sm-2">
+                    <div class="card border-0 bg-transparent">
+                      <div class="card-clear">
+                        <div class="card-body">
+                          <div class="title3">
+                            <img src="{% static 'images/landing_page/temp.png' %}" alt="Card image cap">
+
+                            </div>
+
+                      </div>
+                    </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-10">
+                    <div class="card border-0 bg-transparent">
+                      <div class="card-clear">
+                        <div class="card-body">
+                        <div class="title3">
+
+                            <h5>CONSULTANTS, CONTRACTORS & FREELANCERS</h5>
+                            </div>
+                        <p class="card-text">WexLog takes the work and cost out of finding new projects
+                          and assignments by automatically sorting the vacancies available that
+                          match your skill set.</p>
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="card border-0 bg-transparent">
+
+                          <a href="{% url 'Public:ShortTerm' %}" class="btn btn-outline-primary btn-block">Read More ..</a>
+                          <a href="{% url 'Payments:SubscriptionSelect' %}" class="btn btn-outline-success btn-block">Subscribe Now</a>
+
+                    </div>
+                  </div>
+
+              </div>
+
+          </div>
+        </div>
+
+
+        <div class="row">
+          <div class="col-sm-2">
+            <div class="card border-0 bg-transparent">
+              <div class="card-clear">
+                <div class="card-body">
+                  <div class="title3">
+                    <img src="{% static 'images/landing_page/perm.png' %}" alt="Card image cap">
+
+                    </div>
+
+              </div>
+            </div>
+            </div>
+          </div>
+          <div class="col-sm-10">
+            <div class="card border-0 bg-transparent">
+              <div class="card-clear">
+                <div class="card-body">
+                  <div class="title3">
+
+                      <h5>PERMANENT POSITIONS</h5>
+                      </div>
+                  <p class="card-text">Thinking of looking for a new permanent
+                    position?<br>
+                    Thinking of taking the next step in your career?</p>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card border-0 bg-transparent">
+            <div class="card border-0 bg-transparent">
+
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="card border-0 bg-transparent">
+
+                        <a href="{% url 'Public:Permanent' %}" class="btn btn-outline-primary btn-block">Read More ..</a>
+                        <a href="{% url 'Payments:SubscriptionSelect' %}" class="btn btn-outline-success btn-block">Subscribe Now</a>
+
+                  </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6">
+      <div class="card border-0 bg-transparent">
+          <div class="card border-0 bg-transparent">
+            <p>&nbsp</p>
+            <img class="card-img-top" src="{% static 'images/landing_page/business-suit.jpg' %}" alt="Capture">
+
+          </div>
+          <div class="card border-0 bg-transparent">
+            <div class="card-clear">
+              <div class="card-body">
+              <div class="title3">
+
+                  <h5>Looking for that perfect fit</h5>
+                  </div>
+              <p class="card-text">WexLog makes it easy to find the right position,
+                be it a part-time position or a permanent position. Once you have
+                captured your education, skills, certificates and hours worked with
+                validations, Wexlog automatically catagorises the vacancies available
+                according to the information you have captured and then lists those
+                vacancies for you to peruse at your leasure selecting the ones you
+                desire and allowing you to bid on the positions, with motivations
+                and bidding rates as you feel the vacancy requires.</p>
+            </div>
+            </div>
+          </div>
+      </div>
+      </div>
+
+
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<p>&nbsp</p>
+<p>&nbsp</p>
 
 <section id="references" class="">
-  <div class="container pt-3">
-    <div class="title">
-      <center>
-      <h1 class="display-4">References</h1>
-      <p>&nbsp</p>
-      </center
+  <div class="jumbotron-fluid">
+    <div class="container">
+      <div class="title title1">
+        <h2>Satisfied members</h2>
 
-      <blockquote class="blockquote">
+          <div class="container pt-3">
+            <div class="title">
 
-      </blockquote>
+              <blockquote class="blockquote">
+              </blockquote>
+              <div class="row">
 
-      <div class="row">
-
-        <div class="col-sm-3">
-          <div class="card" style="width: 18rem;">
-              <img class="card-img-top" src="{% static 'images/landing_page/face5.jpg' %}" alt="Card image cap">
-              <div class="card-body">
-                <h5 class="card-title">Engineers</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <!-- Button trigger modal -->
-                <center>
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalEngineer">
-                  View Reference
-                </button>
-                </center>
-
-                <!-- Modal -->
-                <div class="modal fade" id="exampleModalEngineer" tabindex="0" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                  <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalEngineerLongTitle">Engineer Reference</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
+                <div class="col-sm-3">
+                  <div class="card border-0" style="width: 18rem;">
+                      <img class="card-img-top" src="{% static 'images/landing_page/face5.jpg' %}" alt="Card image cap">
+                      <div class="card-body">
+                        <h5 class="card-title"><center>Engineers</center></h5>
+                        <p class="card-text">James used WexLog for a month and found the perfect job.<br>&nbsp</p>
+                        <!-- Button trigger modal -->
+                        <center>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalEngineer">
+                          View Reference
                         </button>
-                      </div>
-                      <div class="modal-body">
-                        "WexLog.io has been the single most helpful tool
-                          in recording my skilld base and securing freelance work that I
-                          have used, it is easy to capture and available positions that
-                          match my qualifications are automatically listed for me to
-                          select.  No more hard work!"
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </center>
 
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModalEngineer" tabindex="0" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalEngineerLongTitle">Engineer Reference</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                "WexLog.io has been the single most helpful tool
+                                  in recording my skill base and securing freelance work that I
+                                  have used, it is easy to capture and available positions that
+                                  match my qualifications are automatically listed for me to
+                                  select.  No more hard work!"
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                  <div class="card border-0" style="width: 18rem;">
+                      <img class="card-img-top" src="{% static 'images/landing_page/face5.jpg' %}" alt="Card image cap">
+                      <div class="card-body">
+                        <h5 class="card-title"><center>Freelancers</center></h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <!-- Button trigger modal -->
+                        <center>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalFreelancers">
+                          View Reference
+                        </button>
+                        </center>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModalFreelancers" tabindex="-1" role="dialog" aria-labelledby="exampleModalFreelancresTitle" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Freelancers Reference</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                "WexLog.io has been the single most helpful tool
+                                  in recording my skills base and securing freelance work that I
+                                  have used, it is easy to capture and available positions that
+                                  match my qualifications are automatically listed for me to
+                                  select.  No more hard work!"
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
-            </div>
-        </div>
 
-        <div class="col-sm-3">
-          <div class="card" style="width: 18rem;">
-              <img class="card-img-top" src="{% static 'images/landing_page/face5.jpg' %}" alt="Card image cap">
-              <div class="card-body">
-                <h5 class="card-title">Freelancers</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <!-- Button trigger modal -->
-                <center>
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalFreelancers">
-                  View Reference
-                </button>
-                </center>
-
-                <!-- Modal -->
-                <div class="modal fade" id="exampleModalFreelancers" tabindex="-1" role="dialog" aria-labelledby="exampleModalFreelancresTitle" aria-hidden="true">
-                  <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Freelancers Reference</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
+                <div class="col-sm-3">
+                  <div class="card border-0" style="width: 18rem;">
+                      <img class="card-img-top" src="{% static 'images/landing_page/face5.jpg' %}" alt="Card image cap">
+                      <div class="card-body">
+                        <h5 class="card-title"><center>Pilots</center></h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <!-- Button trigger modal -->
+                        <center>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalPilot">
+                          View Reference
                         </button>
-                      </div>
-                      <div class="modal-body">
-                        "WexLog.io has been the single most helpful tool
-                          in recording my skilld base and securing freelance work that I
-                          have used, it is easy to capture and available positions that
-                          match my qualifications are automatically listed for me to
-                          select.  No more hard work!"
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </center>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModalPilot" tabindex="-1" role="dialog" aria-labelledby="exampleModalPilotTitle" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Pilot Reference</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <div class="embed-responsive embed-responsive-16by9">
+                                    <iframe class="embed-responsive-item" src="{% static 'images/landing_page/Architect.mp4' %}" allowfullscreen></iframe>
+                                  </div>
+                                "Place the pilots reference or youtube video here"
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
-            </div>
-          </div>
 
-        <div class="col-sm-3">
-          <div class="card" style="width: 18rem;">
-              <img class="card-img-top" src="{% static 'images/landing_page/face5.jpg' %}" alt="Card image cap">
-              <div class="card-body">
-                <h5 class="card-title">Pilots</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <!-- Button trigger modal -->
-                <center>
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalPilot">
-                  View Reference
-                </button>
-                </center>
-
-                <!-- Modal -->
-                <div class="modal fade" id="exampleModalPilot" tabindex="-1" role="dialog" aria-labelledby="exampleModalPilotTitle" aria-hidden="true">
-                  <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Pilot Reference</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                      </div>
-                      <div class="modal-body">
-                        "Place the pilots reference or youtube video here"
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-sm-3">
-            <div class="card" style="width: 18rem;">
-                <img class="card-img-top" src="{% static 'images/landing_page/face5.jpg' %}" alt="Card image cap">
-                <div class="card-body">
-                  <h5 class="card-title">Nurses</h5>
-                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                  <!-- Button trigger modal -->
-                  <center>
-                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalNurse">
-                    View Reference
-                  </button>
-                  </center>
-
-                  <!-- Modal -->
-                  <div class="modal fade" id="exampleModalNurse" tabindex="-1" role="dialog" aria-labelledby="exampleModalNurseTitle" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title" id="exampleModalLongTitle">Nurse Reference</h5>
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
+                  <div class="col-sm-3">
+                    <div class="card border-0" style="width: 18rem;">
+                        <img class="card-img-top" src="{% static 'images/landing_page/face5.jpg' %}" alt="Card image cap">
+                        <div class="card-body">
+                          <h5 class="card-title"><center>Nurses</center></h5>
+                          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                          <!-- Button trigger modal -->
+                          <center>
+                          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalNurse">
+                            View Reference
                           </button>
-                        </div>
-                        <div class="modal-body">
-                          "Place the nurse's reference or youtube video here"
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                          </center>
 
+                          <!-- Modal -->
+                          <div class="modal fade" id="exampleModalNurse" tabindex="-1" role="dialog" aria-labelledby="exampleModalNurseTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="exampleModalLongTitle">Nurse Reference</h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                                <div class="modal-body">
+                                  "Place the nurse's reference or youtube video here"
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </div>
+
+              </div>
               </div>
             </div>
-        <p>&nbsp</p>
 
 
 
-        <p>&nbsp</p>
       </div>
-      </div>
-      <p>&nbsp</p>
     </div>
+
+  </div>
 </section>
 
-<section id="benefits" class="">
-  <div class="jumbotron jumbotron-fluid">
-    <div class="title">
-      <center>
-      <h3 class="display-4">Benefits</h3>
-      <p>&nbsp</p>
-      </center>
+<p>&nbsp</p>
+<p>&nbsp</p>
 
-      <center>
-      <h3>Company Benefits</h3>
-          <details>
-            <summary class="blockquote">Find Resources</summary>
-            <p class="lead">Find the skills, companies and resources that fit your
-              requirements.<br>
-              The needs of companies change rapidly in the modern world and the ability
-              to find people with those skills is often difficult. In addition, one never
-              knows if the skills claimed are indeed correct.<br>
-              WexLog solves these problems by offering a single source to find those
-              people, each with a verified work history.</p>
-          </details>
-          <details>
-            <summary class="blockquote">International Portfolio of skills</summary>
-            <p class="lead">The listing of members and their skills is internationally
-              recognised across a wide portfolio of skills and industries. This is
-              reinforced by the recording of the work or contract history and the
-              real-time evaluation of performance by the responsible persons, making
-              WexLog a simple, reliable and important resource for marketing and
-              searching for skilled people.</p>
-          </details>
-          <details>
-            <summary class="blockquote">Productised Resources</summary>
-            <p class="lead">A company often doesn’t need a full time resource, but
-              nonetheless needs the skill. With WexLog, the company can advertise
-              for the amount of time they need the skill and pay for that time only.
-              In this way a company has access to a much broader field of skills
-              which they can pay for as needed.</p>
-          </details>
-          <details>
-            <summary class="blockquote">Confirmed Experience</summary>
-            <p class="lead">Be able to see how much experience someone has, confirmed
-              by third parties.<br>
-              Often, one of the most difficult and time-consuming parts of the recruitment
-              process is the need to verify the claims of performance and satisfaction made
-              by candidates. This is exacerbated by the fact that the institutional memory
-              of the performance of a particular person, whether good, bad or simply
-              indifferent, fades rapidly over even a short time. WexLog avoids this problem
-              by permitting job requirements and performance to be recorded contemporaneously.
-              This ensures that the actual activity of the candidate is recorded at the time
-              it takes place, with the person responsible for managing that activity
-              certifying the requirements and their performance while the activity is still
-              fresh in their minds.</p>
-          </details>
-          <details>
-            <summary class="blockquote">Trust Passport</summary>
-            <p class="lead">Create your trust passport of qualified references.<br>
-              WexLog enables employers and contractees to record the details of the
-              requirements and their performance in it at the time it takes place. It
-              solves the problem of needing to track down the responsible manager in
-              respect of work that was performed months or even years before, a problem
-              that has become more significant in recent years, with an increase in the
-              rate of change of management at all levels of organizations, which often
-              makes it impossible to obtain a subsequent certification of more than the
-              simple fact of that employment. WexLog ensures that the recording of the job
-              and performance in it is made at the time it happens!</p>
-          </details>
-          <p>&nbsp</p>
-          <h3>Personal Benefits</h3>
-          <details>
-            <summary class="blockquote">Advertise Experience</summary>
-            <p class="lead">WexLog offers members the opportunity to place their work
-              activities, skills and qualifications, on a searchable database all in a place
-              trusted by recruiters and those looking for difficult to find skills and
-              attributes. Best of all, the fact that the claims made by members are audited
-              and certified by a third party, giving the searchers the assurance that what
-              they find is what they will get, without the tedious process of checking, of
-              verifying claims of performance made years ago.<br>
-              How often have you been forced to explain to an enquirer that the work was done
-              by a manager who is now retired, or has moved to another company or another
-              country? WexLog makes that a thing of the past! How often have you seen an
-              ideal job advertised, with the closing date for application ten days ago? That
-              is no longer a problem with a WexLog membership!</p>
-          </details>
-          <details>
-            <summary class="blockquote">Enable freelancers and consultants to advertise their experience</summary>
-            <p class="lead">Freelancers and consultants know that the hardest, most
-              time-consuming part of their work is finding a job in the first place.
-              WexLog makes it possible to have a permanent advertisement of your skills,
-              education, qualifications and experience in a single place, trusted by
-              potential employers for its accurate, up to date and certified records.</p>
-            <p class="lead">WexLog allows people to productise their skills to several
-              different companies and in that way be able to freelance or work on retainer,
-              giving them a lot of flexibility.</p>
-          </details>
-          <details>
-            <summary class="blockquote">Productise Experience</summary>
-            <p class="lead">Enable you to productise your skills and advertise to
-              market.<br>
-              How do you bring to the attention of possible employers the unique and
-              hard to find skills and experience you have? WexLog gives you the
-              opportunity to show the world that you have those skills and experience,
-              and to set out for possible users what they may mean to them in terms
-              of innovation, efficiency and enhanced competitiveness, all in an on-line
-              searchable database.</p>
-          </details>
-          <details>
-            <summary class="blockquote">View Skills Internationally</summary>
-            <p class="lead">View skills available and required internationally. Skills
-              and experience are increasingly becoming internationally relevant, but
-              the process of finding them has not become easier. Now, WexLog offers
-              members the opportunity to set out their skills and experience to the
-              world, while allowing those looking for those skills and experience to
-              search for them internationally, simply by the click of a mouse.</p>
-          </details>
-          <details>
-            <summary class="blockquote">Search & Apply</summary>
-            <p class="lead">Search for and apply for positions based on your skills
-              base. WexLog offers an opportunity to people and employers to advertise
-              their needs for skills and experience in a record available to all
-              members. There is no longer a need to search dozens of employment agencies
-              and classified ads. Simply use WexLog to search positions and contracts
-              available, using the keywords that describe what you can offer, and refer
-              the advertiser to your datafile by a click of the mouse, with the possibility
-              to enhance and personalize your communication.</p>
-          </details>
+<section id="about-us-header-reversed" class="">
+  <div class="jumbotron-fluid">
+    <div class="container">
+      <div class="title title1 title-reversed">
+        <h2>About us</h2>
+          </div>
+        <div class="row">
+        <div class="col-sm-6">
+          <div class="card border-0">
+            <div class="video-sizer">
+          <div class="embed-responsive embed-responsive-4by3">
+            <iframe src="{% static 'images/landing_page/Architect.mp4' %}" allowfullscreen></iframe>
+          </div>
+          </div>
+          </div>
+          </div>
 
-    </center>
+          <div class="col-sm-6">
+            <div class="card border-0 bg-transparent">
+                <div class="card border-0 bg-transparent">
+                  <img class="card-img-top" src="{% static 'images/landing_page/serv2.jpg' %}" alt="Capture">
 
-      <center>
-      <p>&nbsp</p>
-      <p><a class="btn btn-primary btn-lg" href="{% url 'Payments:SubscriptionCountrySelect' %}" role="button">Subscribe Now</a></p>
-      </center>
+                </div>
+                <div class="col-sm-12">
+                <div class="card border-0 bg-transparent">
+                  <div class="card-body">
 
+                    <p class="card-text">WexLog was created to fill a gap in the market
+                      in which it was proven difficult to find the right resource with
+                      trusted references and validated time spent learing and sharpening
+                      skills.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
 
+            <div class="card border-0 bg-transparent">
+                <div class="card border-0 bg-transparent">
+
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <div class="card border-0 bg-transparent">
+
+                            <a href="{% url 'Public:AboutUs' %}" class="btn btn-outline-primary btn-block">Read More ..</a>
+                            <a href="{% url 'Payments:SubscriptionSelect' %}" class="btn btn-outline-success btn-block">Subscribe Now</a>
+
+                      </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+
+            </div>
+
+          </div>
+
+    </div>
+    <p>&nbsp</p>
+  </div>
+</section>
+
+<p>&nbsp</p>
+<p>&nbsp</p>
+
+<section id="company benefits" class="">
+  <div class="jumbotron-fluid">
+    <div class="container">
+      <div class="title title1">
+        <h2>Company Benefits</h2>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <div id="accordion" class="myaccordion">
+            <div class="card bg-transparent">
+              <div class="card-header fa-stack" id="headingAssets">
+                <h5 class="mb-0">
+                  <button class="btn btn-link fa-stack" data-toggle="collapse" data-target="#collapseAssets" aria-expanded="true" aria-controls="collapseAssets">
+                    1. List your company assets
+                      <span>
+                        <img class="btn-image" align="right" src="{% static 'images/landing_page/arrow2.png' %}" height="28px" width="28px" alt="arrow">
+                      </span>
+                  </button>
+                </h5>
+              </div>
+
+              <div id="collapseAssets" class="collapse" aria-labelledby="headingAssets" data-parent="#accordion">
+                <div class="card-body">
+                  <p class="card-text">WexLog allows you to set out your company for the world to
+                    see. If they don’t know who you are, what you can do and what you offer,
+                    they may not know about you. WexLog is the right place to set out the
+                    information potential customers and star employees need to fit you into
+                    their plans:</p>
+                  <p class="card-text"><ul>
+                    <li class="card-text">Your plant, machinery and work capabilities</li>
+                    <li class="card-text">Your skills</li>
+                    <li class="card-text">Your experience</li>
+                    </ul>
+                  <p class="card-text">Best of all, your entry is always there when customers look
+                    for those assets, and they can search for you with the click of a mouse,
+                    without a need to search through their files for the brochures they picked
+                    up at a Trade Show, if they remember who to look for! WexLog allows your
+                    company to be always front of mind when a customer has a need, or when a
+                    good potential employee is considering his next career move. Can you
+                    afford to settle for obscurity?</p>
+                </div>
+              </div>
+            </div>
+            <div class="card bg-transparent">
+              <div class="card-header" id="headingResources">
+                <h5 class="mb-0">
+                  <button class="btn btn-link collapsed fa-stack" data-toggle="collapse" data-target="#collapseResources" aria-expanded="false" aria-controls="collapseResources">
+                    2. Find the companies and resources that fit your requirements.
+                    <span>
+                      <img class="btn-image" align="right" src="{% static 'images/landing_page/arrow2.png' %}" height="28px" width="28px" alt="arrow">
+                    </span>
+                  </button>
+                </h5>
+              </div>
+              <div id="collapseResources" class="collapse" aria-labelledby="headingResources" data-parent="#accordion">
+                <div class="card-body">
+                  <p class="lead">Whether you are a large corporation or a small business
+                    you need to hire the right person to do the job. The needs of companies
+                    change rapidly in the modern world.
+                    They become more specialized and more complex. The search to
+                    find people to meet those needs is often difficult, and it is
+                    made more complex by the need to determine whether the claims
+                    made by those people are justified.</p>
+                  <p class="lead">WexLog solves those problems by offering a single source to
+                    find those people, each with a trust passport verified work history. If you
+                    don’t immediately find the particular skills-set you are
+                    seeking, WexLog makes it easy to post your requirement in a
+                    place where qualified candidates will find it, and then
+                    respond to you.</p>
+                </div>
+              </div>
+            </div>
+            <div class="card bg-transparent">
+              <div class="card-header" id="headingPortfolio">
+                <h5 class="mb-0">
+                  <button class="btn btn-link collapsed fa-stack" data-toggle="collapse" data-target="#collapsePortfolio" aria-expanded="false" aria-controls="collapsePortfolio">
+                    3. International Portfolio of skills
+                    <span>
+                      <img class="btn-image" align="right" src="{% static 'images/landing_page/arrow2.png' %}" height="28px" width="28px" alt="arrow">
+                    </span>
+                  </button>
+                </h5>
+              </div>
+              <div id="collapsePortfolio" class="collapse" aria-labelledby="headingPortfolio" data-parent="#accordion">
+                <div class="card-body">
+                  <p class="lead">WexLog’s international listing of skills is
+                    widely recognized and trusted. It embraces an extensive
+                    portfolio of skills and industries. This is ensured by a
+                    contemporaneous recording of work performance and project
+                    history, and the real-time evaluation of performance by a
+                    responsible third-party supervisor or a qualified colleague
+                    makes WexLog a simple to use, reliable and trustworthy
+                    resource for marketing your skills or seeking qualified
+                    employees, contractors or skills suppliers</p>
+                </div>
+              </div>
+            </div>
+            <div class="card bg-transparent">
+              <div class="card-header" id="headingProductised">
+                <h5 class="mb-0">
+                  <button class="btn btn-link collapsed fa-stack" data-toggle="collapse" data-target="#collapseProductised" aria-expanded="false" aria-controls="collapseProductised">
+                    4. Productised Resources
+                    <span>
+                      <img class="btn-image" align="right" src="{% static 'images/landing_page/arrow2.png' %}" height="28px" width="28px" alt="arrow">
+                    </span>
+                  </button>
+                </h5>
+              </div>
+              <div id="collapseProductised" class="collapse" aria-labelledby="headingProductised" data-parent="#accordion">
+                <div class="card-body">
+                  <p class="lead">A company often does not need a full-time resource,
+                    but nonetheless needs the skill for a period or regular periods.
+                    This is an increasing feature of the modern world, but, unfortunately,
+                    it is often disproportionately difficult and expensive to find the
+                    one person who will satisfy your needs. No longer! Wexlog allows
+                    you to search an extensive list of qualified and verified candidates,
+                    and to choose your ideal one. You can choose the skill, the education,
+                    the experience and the level of advancement you want.</p>
+                </div>
+              </div>
+            </div>
+            <div class="card bg-transparent">
+              <div class="card-header" id="headingExperience">
+                <h5 class="mb-0">
+                  <button class="btn btn-link collapsed fa-stack" data-toggle="collapse" data-target="#collapseExperience" aria-expanded="false" aria-controls="collapseExperience">
+                    5. Confirmed Experience
+                    <span>
+                      <img class="btn-image" align="right" src="{% static 'images/landing_page/arrow2.png' %}" height="28px" width="28px" alt="arrow">
+                    </span>
+                  </button>
+                </h5>
+              </div>
+              <div id="collapseExperience" class="collapse" aria-labelledby="headingExperience" data-parent="#accordion">
+                <div class="card-body">
+                  <p class="lead">Have you had the experience of finding a
+                    candidate who appears, on the surface, to offer the
+                    experience you need, only to find that the experience claimed
+                    is largely in his or her mind?</p>
+                  <p class="lead">The problem is exacerbated by the fact that the institutional
+                    memory of a particular employee or contractor is generally limited
+                    or even non-existent, and some companies even have a policy of not
+                    giving testimonials to departing employees or contractors that set
+                    out more than simply the fact and dates of their employment.</p>
+                  <p class="lead">WexLog prevents that, by giving members the ability to log their
+                    experience, together with evaluations by named and responsible
+                    supervisors or colleagues while they are still fresh in their minds,
+                    and to make that available to you at the click of your mouse. You
+                    avoid the delay and expense of confirming the claimed experience,
+                    and you are able to track the development and performance over
+                    years!</p>
+                </div>
+              </div>
+            </div>
+            <div class="card bg-transparent">
+              <div class="card-header" id="headingTrust">
+                <h5 class="mb-0">
+                  <button class="btn btn-link collapsed fa-stack" data-toggle="collapse" data-target="#collapseTrust" aria-expanded="false" aria-controls="collapseTrust">
+                    6. Trust Passport
+                    <span>
+                      <img class="btn-image" align="right" src="{% static 'images/landing_page/arrow2.png' %}" height="28px" width="28px" alt="arrow">
+                    </span>
+                  </button>
+                </h5>
+              </div>
+              <div id="collapseTrust" class="collapse" aria-labelledby="headingTrust" data-parent="#accordion">
+                <div class="card-body">
+                  <p class="lead">Create your trust passport of qualified references.<br>
+                    WexLog enables employers and contractees to record the details of the
+                    requirements and their performance in it at the time it takes place. It
+                    solves the problem of needing to track down the responsible manager in
+                    respect of work that was performed months or even years before, a problem
+                    that has become more significant in recent years, with an increase in the
+                    rate of change of management at all levels of organizations, which often
+                    makes it impossible to obtain a subsequent certification of more than the
+                    simple fact of that employment. WexLog ensures that the recording of the job
+                    and performance in it is made at the time it happens!</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
+
+<p>&nbsp</p>
+<p>&nbsp</p>
+
+<section id="personal benefits" class="">
+  <div class="jumbotron-fluid">
+    <div class="container">
+      <div class="title title1 title-reversed">
+        <h2>Personal Benefits</h2>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <div id="accordion" class="myaccordion">
+            <div class="card bg-transparent">
+              <div class="card-header" id="headingAdvetise">
+                <h5 class="mb-0">
+                  <button class="btn btn-link collapsed fa-stack" data-toggle="collapse" data-target="#collapseAdvertise" aria-expanded="false" aria-controls="collapseAdvertise">
+                    1. Advertise Experience
+                    <span>
+                      <img class="btn-image" align="right" src="{% static 'images/landing_page/arrow2.png' %}" height="28px" width="28px" alt="arrow">
+                    </span>
+                  </button>
+                </h5>
+              </div>
+              <div id="collapseAdvertise" class="collapse" aria-labelledby="headingAdvertise" data-parent="#accordion">
+                <div class="card-body">
+                  <p class="lead">WexLog offers members the opportunity to place their work
+                    activities, skills and qualifications, on a searchable database all in a place
+                    trusted by recruiters and those looking for difficult to find skills and
+                    attributes. Best of all, the fact that the claims made by members are audited
+                    and certified by a third party, giving the searchers the assurance that what
+                    they find is what they will get, without the tedious process of checking, or
+                    verifying claims of performance made years ago.<br>
+                    How often have you been forced to explain to an enquirer that the work was done
+                    by a manager who is now retired, or has moved to another company or another
+                    country? WexLog makes that a thing of the past! How often have you seen an
+                    ideal job advertised, with the closing date for application ten days ago? That
+                    is no longer a problem with a WexLog membership!</p>
+                </div>
+              </div>
+            </div>
+            <div class="card bg-transparent">
+              <div class="card-header" id="headingFreelance">
+                <h5 class="mb-0">
+                  <button class="btn btn-link collapsed fa-stack" data-toggle="collapse" data-target="#collapseFreelance" aria-expanded="false" aria-controls="collapseFreelance">
+                    2. Enable freelancers and consultants
+                      to advertise their <br>experience and their offering
+                    <span>
+                      <img class="btn-image" align="right" src="{% static 'images/landing_page/arrow2.png' %}" height="28px" width="28px" alt="arrow">
+                    </span>
+                  </button>
+                </h5>
+              </div>
+              <div id="collapseFreelance" class="collapse" aria-labelledby="headingFreelance" data-parent="#accordion">
+                <div class="card-body">
+                  <p class="lead">Often, the hardest, most expensive and most
+                    time-consuming part of the Freelancer and Consultant’s lives is
+                    the process of finding the work! WexLog allows you to place a
+                    standing advertisement of what you can offer, making it available
+                    to a targeted search by a qualified employer, and the fact that
+                    WexLog allows you to accumulate the work you have done and the
+                    confirmation of its quality ensures that the potential employers
+                    who find you already know that your work is of the required
+                    quality. Best of all, when you have done work for a company in
+                    the past, WexLog ensures that you remain front-of-mind, even
+                    after a period of years.</p>
+                </div>
+              </div>
+            </div>
+            <div class="card bg-transparent">
+              <div class="card-header" id="headingPersonalExperience">
+                <h5 class="mb-0">
+                  <button class="btn btn-link collapsed fa-stack" data-toggle="collapse" data-target="#collapsePersonalExperience" aria-expanded="false" aria-controls="collapsePersonalExperience">
+                    3. Productise Experience
+                    <span>
+                      <img class="btn-image" align="right" src="{% static 'images/landing_page/arrow2.png' %}" height="28px" width="28px" alt="arrow">
+                    </span>
+                  </button>
+                </h5>
+              </div>
+              <div id="collapsePersonalExperience" class="collapse" aria-labelledby="headingPersonalExperience" data-parent="#accordion">
+                <div class="card-body">
+                  <p class="lead">How do you bring to potential users the skills
+                    and experience you have? How do you display your innovative
+                    capabilities, your attention to detail, your high level of
+                    productivity to potential clients and employers? How do you
+                    put yourself in the world market?</p>
+                  <p class="lead">WexLog enables you to put on record your unique set of
+                    skills, education, experience and capabilities, the qualities
+                    that make you stand out in a crowd, to offer them to the
+                    world, whether across the city or across the world. It gives
+                    you freedom of choice!</p>
+                </div>
+              </div>
+            </div>
+            <div class="card bg-transparent">
+              <div class="card-header" id="headingViewSkills">
+                <h5 class="mb-0">
+                  <button class="btn btn-link collapsed fa-stack" data-toggle="collapse" data-target="#collapseViewSkills" aria-expanded="false" aria-controls="collapseViewSkills">
+                    4. View Skills Internationally
+                    <span>
+                      <img class="btn-image" align="right" src="{% static 'images/landing_page/arrow2.png' %}" height="28px" width="28px" alt="arrow">
+                    </span>
+                  </button>
+                </h5>
+              </div>
+              <div id="collapseViewSkills" class="collapse" aria-labelledby="headingViewSkills" data-parent="#accordion">
+                <div class="card-body">
+                  <p class="lead">View skills available and required internationally. Skills
+                    and experience are increasingly becoming internationally relevant, but
+                    the process of finding them has not become easier. Now, WexLog offers
+                    members the opportunity to set out their skills and experience to the
+                    world, while allowing those looking for those skills and experience to
+                    search for them internationally, simply by the click of a mouse.</p>
+                </div>
+              </div>
+            </div>
+            <div class="card bg-transparent">
+              <div class="card-header" id="headingSearchApply">
+                <h5 class="mb-0">
+                  <button class="btn btn-link collapsed fa-stack" data-toggle="collapse" data-target="#collapseSearchApply" aria-expanded="false" aria-controls="collapseSearchApply">
+                    5. Search & Apply
+                    <span>
+                      <img class="btn-image" align="right" src="{% static 'images/landing_page/arrow2.png' %}" height="28px" width="28px" alt="arrow">
+                    </span>
+                  </button>
+                </h5>
+              </div>
+              <div id="collapseSearchApply" class="collapse" aria-labelledby="headingSearchApply" data-parent="#accordion">
+                <div class="card-body">
+                  <p class="lead">WexLog members are able to conduct a simple
+                    search for positions or contracts that match what they are
+                    seeking and are able to offer. When the choice has been
+                    made, the application process is almost as simple as
+                    clicking your mouse.</p>
+                </div>
+              </div>
+            </div>
+            <div class="card bg-transparent">
+              <div class="card-header" id="headingWysiwyg">
+                <h5 class="mb-0">
+                  <button class="btn btn-link collapsed fa-stack" data-toggle="collapse" data-target="#collapseWysiwyg" aria-expanded="false" aria-controls="collapseWysiwyg">
+                    6. WYSIWYG
+                    <span>
+                      <img class="btn-image" align="right" src="{% static 'images/landing_page/arrow2.png' %}" height="28px" width="28px" alt="arrow">
+                    </span>
+                  </button>
+                </h5>
+              </div>
+              <div id="collapseWysiwyg" class="collapse" aria-labelledby="headingWysiwyg" data-parent="#accordion">
+                <div class="card-body">
+                  <p class="lead">The process of entering experience, education
+                    and skills into WexLog as they are gained, ensures that the
+                    recruiter knows precisely what he or she is getting. There
+                    is no need to undergo the tedious process of checking the
+                    detail of references and claims provided by the other side.
+                    What you see is what you get! That is why WexLog is known as
+                    a trusted source for recruitment of staff, contractors and
+                    consultants, each one with a documented and verified history.</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<p>&nbsp</p>
+<p>&nbsp</p>
 
 <section id="quote" class="">
-  <div class="">
+  <div class="container pt-3">
     <div class="title">
-      <center>
+
       <h3 class="display-4">Quote</h3>
       <p>&nbsp</p>
+      <center>
       <blockquote class="blockquote">
-        <p class="lead">"As a result of the choices and options available, people will
-          default to what they have always defaulted to – doing business with and connecting
-          with people they trust. Trust is the new currency. Within the next few years,
-          ‘trust passports’ will be common on the internet. Like Amazon.com or eBay’s current
-          systems for evaluating people within an online e-commerce community, we will all have
-          trust ratings that will help us interact with each other with more confidence"</p>
-        <footer class="blockquote-footer"> (Bush & Codrington, 2008) <cite title="Source Title">Future-Proof Your Child</cite></footer>
+        <p class="lead">“Rather than use traditional contracting agencies, many companies
+          will switch to using a dynamic, technology-based solution to find the right
+          workers. They will simply put out a request for X number of Y type of workers,
+          along with plenty of data about what an ideal candidate would look like”</p>
+        <footer class="blockquote-footer"> (Miessler, 2018) <cite title="Source Title">
+          <a href="https://danielmiessler.com/blog/the-future-of-work-is-everyone-running-the-work-app/" target="_blank">
+            The Future of Work is Everyone Running the “Work” App</a></cite></footer>
       </blockquote>
       <p>&nbsp</p>
-
       <p>&nbsp</p>
       </center>
     </div>
   </div>
 </section>
 
-<section id="more about us" class="">
+<section id="about-us-header" class="">
   <div class="jumbotron jumbotron-fluid">
-    <div class="title">
-      <center>
-      <h3 class="display-4">More About Us</h3>
-      <p class="lead">Let James explain a little bit about how the WexLog site works.</p>
+      <div class="title title-b">
+        <center>
+        <p>&nbsp</p>
+        <h2>Trusted Since 2019</h2>
 
-    <div class="embed-responsive embed-responsive-16by9">
-        <iframe class="embed-responsive-item" src="{% static 'images/landing_page/Architect.mp4' %}" allowfullscreen></iframe>
+          <table class="">
+            <tbody>
+              <col width="20%">
+              <col width="20%">
+              <col width="20%">
+              <col width="20%">
+              <tr>
+                <td class="display-4" align="center">{{ scount }}</td>
+                <td class="display-4" align="center">{{ mcount }}</td>
+                <td class="display-4" align="center">{{ ecount }}</td>
+                <td class="display-4" align="center">{{ vcount }}</td>
+              </tr>
+              <tr>
+                <td align="center">SKILLS</td>
+                <td align="center">MEMBERS</td>
+                <td align="center">ENTERPRISES</td>
+                <td align="center">VACANCIES</td>
+              </tr>
+            </tbody>
+          </table>
+        <center>
       </div>
-      <p>&nbsp</p>
-      </center>
-
-      <center>
-      <p><a class="btn btn-primary btn-lg" href="{% url 'Payments:SubscriptionCountrySelect' %}" role="button">Subscribe Now</a></p>
-      </center>
-
+    </div>
 </section>
 
-<section id="search" class="">
-  <center
-  <p>&nbsp</p>
-  <h1 class="display-4">Search Our Skills</h1>
-  <p>&nbsp</p>
+<p>&nbsp</p>
+<p>&nbsp</p>
 
+<section id="search" class="">
+  <div class="container pt-3">
+    <div class="title">
+
+      <h3 class="display-4">Search Our Skills</h3>
+  <p>&nbsp</p>
+  <p>&nbsp</p>
+  <center>
   <div class="form-group mx-sm-3 mb-2">
     <p>&nbsp</p>
     <p>&nbsp</p>
@@ -508,178 +1363,31 @@
     <p>&nbsp</p>
     <p>&nbsp</p>
     <p>&nbsp</p>
+    </center>
+      </div>
+    </div>
 
-  </center>
 </section>
 
+<p>&nbsp</p>
+<p>&nbsp</p>
+
 <section id="subscription" class="">
-  <div class="jumbotron jumbotron-fluid">
+  <div class="container pt-3">
+    <div class="container pt-3">
+  <div class="jumbotron-fluid">
+
     <div class="title">
-      <center>
-      <h3 class="display-4">Choose Your Subscription</h3>
-      <p class="lead">We have a selection of subscriptions ranging from Free to Enterprise level.</p>
-      <p class="lead">The functionality of each is detailed below.</p>
-      <p>&nbsp</p>
-      <p>&nbsp</p>
-      </center>
-
-      <table class="table table-sm">
-        <col width="40%">
-        <col width="8%">
-        <col width="8%">
-        <col width="8%">
-        <thead>
-          <tr>
-            <th scope="col" align="center">#</th>
-            <th scope="col" align="center">Free</th>
-            <th scope="col" align="center">Passive</th>
-            <th scope="col" align="center">Active</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td align="right">Can capture experience and have it verified</td>
-            <td align="center"><img src="{% static 'images/landing_page/check.png' %}" height="20px" width="20px" alt="Yes"></td>
-            <td align="center"><img src="{% static 'images/landing_page/check.png' %}" height="20px" width="20px" alt="Yes"></td>
-            <td align="center"><img src="{% static 'images/landing_page/check.png' %}" height="20px" width="20px" alt="Yes"></td>
-          </tr>
-          <tr>
-            <td align="right">Confirm other users captured experience</td>
-            <td align="center"><img src="{% static 'images/landing_page/check.png' %}" height="20px" width="20px" alt="Yes"></td>
-            <td align="center"><img src="{% static 'images/landing_page/check.png' %}" height="20px" width="20px" alt="Yes"></td>
-            <td align="center"><img src="{% static 'images/landing_page/check.png' %}" height="20px" width="20px" alt="Yes"></td>
-          </tr>
-          <tr>
-            <td align="right">360 Degree evaluation</td>
-            <td colspan="1" align="center"><img src="{% static 'images/landing_page/check.png' %}" height="20px" width="20px" alt="Yes"></td>
-            <td align="center"><img src="{% static 'images/landing_page/check.png' %}" height="20px" width="20px" alt="Yes"></td>
-            <td align="center"><img src="{% static 'images/landing_page/check.png' %}" height="20px" width="20px" alt="Yes"></td>
-          </tr>
-          <tr>
-            <td align="right">Find members based on current and past email addresses</td>
-            <td align="center"><img src="{% static 'images/landing_page/check.png' %}" height="20px" width="20px" alt="Yes"></td>
-            <td align="center"><img src="{% static 'images/landing_page/check.png' %}" height="20px" width="20px" alt="Yes"></td>
-            <td align="center"><img src="{% static 'images/landing_page/check.png' %}" height="20px" width="20px" alt="Yes"></td>
-          </tr>
-          <tr>
-            <td align="right"">Can receive commission from paying people in your downline (5 levels only)</td>
-            <td align="center"></td>
-            <td align="center"><img src="{% static 'images/landing_page/check.png' %}" height="20px" width="20px" alt="Yes"></td>
-            <td align="center"><img src="{% static 'images/landing_page/check.png' %}" height="20px" width="20px" alt="Yes"></td>
-          </tr>
-          <tr>
-            <td align="right">Can view vacancies (only title, hours, type (freelance, office, etc) and scope)</td>
-            <td align="center"><img src="{% static 'images/landing_page/check.png' %}" height="20px" width="20px" alt="Yes"></td>
-            <td align="center"><img src="{% static 'images/landing_page/check.png' %}" height="20px" width="20px" alt="Yes"></td>
-            <td align="center"><img src="{% static 'images/landing_page/check.png' %}" height="20px" width="20px" alt="Yes"></td>
-          </tr>
-          <tr>
-            <td align="right">Can view full vacancy details</td>
-            <td align="center"></td>
-            <td align="center"></td>
-            <td align="center"><img src="{% static 'images/landing_page/check.png' %}" height="20px" width="20px" alt="Yes"></td>
-          </tr>
-          <tr>
-            <td align="right">Experience and skills available for people to search</td>
-            <td align="center"></td>
-            <td align="center"><img src="{% static 'images/landing_page/check.png' %}" height="20px" width="20px" alt="Yes"></td>
-            <td align="center"><img src="{% static 'images/landing_page/check.png' %}" height="20px" width="20px" alt="Yes"></td>
-          </tr>
-          <tr>
-            <td align="right">Can view vacancies on heatmap (No enterprise details)</td>
-            <td align="center">50km</td>
-            <td align="center">100km</td>
-            <td align="center">Internationally</td>
-          </tr>
-          <tr>
-            <td align="right">Other users can extract contact details of people that are
-            looking for or supplying a skill (Heatmaps)</td>
-            <td align="center"></td>
-            <td align="center"></td>
-            <td align="center"><img src="{% static 'images/landing_page/check.png' %}" height="20px" width="20px" alt="Yes"></td>
-          </tr>
-          <tr>
-            <td align="right">Extract contact details of people that are looking for or
-              supplying a skill (Heatmaps)</td>
-            <td align="center"></td>
-            <td align="center"></td>
-            <td align="center">Internationally</td>
-          </tr>
-          <tr>
-            <td align="right">Can view vacancies on heatmap with full enterprise details</td>
-            <td align="center"></td>
-            <td align="center"></td>
-            <td align="center"><img src="{% static 'images/landing_page/check.png' %}" height="20px" width="20px" alt="Yes"></td>
-          </tr>
-          <tr>
-            <td align="right">Can respond to vacancies</td>
-            <td align="center"></td>
-            <td align="center"></td>
-            <td align="center"><img src="{% static 'images/landing_page/check.png' %}" height="20px" width="20px" alt="Yes"></td>
-          </tr>
-          <tr>
-            <td align="right">Apply for full time positions advertised</td>
-            <td align="center"></td>
-            <td align="center"></td>
-            <td align="center"><img src="{% static 'images/landing_page/check.png' %}" height="20px" width="20px" alt="Yes"></td>
-          </tr>
-          <tr>
-            <td align="right">Can post vacancies</td>
-            <td align="center"></td>
-            <td align="center"></td>
-            <td align="center"><img src="{% static 'images/landing_page/check.png' %}" height="20px" width="20px" alt="Yes"></td>
-          </tr>
-          <tr>
-            <td align="right">Can view other talent with similar skills</td>
-            <td align="center"></td>
-            <td align="center"><img src="{% static 'images/landing_page/check.png' %}" height="20px" width="20px" alt="Yes"></td>
-            <td align="center"><img src="{% static 'images/landing_page/check.png' %}" height="20px" width="20px" alt="Yes"></td>
-          </tr>
-          <tr>
-            <td align="right">Add Enterprise Details and new Enterprises</td>
-            <td align="center"><img src="{% static 'images/landing_page/check.png' %}" height="20px" width="20px" alt="Yes"></td>
-            <td align="center"><img src="{% static 'images/landing_page/check.png' %}" height="20px" width="20px" alt="Yes"></td>
-            <td align="center"><img src="{% static 'images/landing_page/check.png' %}" height="20px" width="20px" alt="Yes"></td>
-          </tr>
-          <tr>
-            <td align="right">View Enterprise Profiles</td>
-            <td align="center"><img src="{% static 'images/landing_page/check.png' %}" height="20px" width="20px" alt="Yes"></td>
-            <td align="center"><img src="{% static 'images/landing_page/check.png' %}" height="20px" width="20px" alt="Yes"></td>
-            <td align="center"><img src="{% static 'images/landing_page/check.png' %}" height="20px" width="20px" alt="Yes"></td>
-          </tr>
-          <tr>
-            <td align="right">Advertise availability</td>
-            <td align="center"></td>
-            <td align="center"><img src="{% static 'images/landing_page/check.png' %}" height="20px" width="20px" alt="Yes"></td>
-            <td align="center"><img src="{% static 'images/landing_page/check.png' %}" height="20px" width="20px" alt="Yes"></td>
-          </tr>
-          <tr>
-            <td align="right">Bid on work required by enterprises</td>
-            <td align="center"></td>
-            <td align="center"></td>
-            <td align="center"><img src="{% static 'images/landing_page/check.png' %}" height="20px" width="20px" alt="Yes"></td>
-          </tr>
-          <tr>
-            <td align="right">Can summarise skills held by the enterprise through people currently employed</td>
-            <td align="center"></td>
-            <td align="center"></td>
-            <td align="center"><img src="{% static 'images/landing_page/check.png' %}" height="20px" width="20px" alt="Yes"></td>
-          </tr>
-          <tr>
-            <td align="right">Access to the internal messaging system</td>
-            <td align="center"><img src="{% static 'images/landing_page/check.png' %}" height="20px" width="20px" alt="Yes"></td>
-            <td align="center"><img src="{% static 'images/landing_page/check.png' %}" height="20px" width="20px" alt="Yes"></td>
-            <td align="center"><img src="{% static 'images/landing_page/check.png' %}" height="20px" width="20px" alt="Yes"></td>
-          </tr>
-        </tbody>
-      </table>
+      {% include "subscription_payments/subscription.html" %}
 
       <center>
-      <p>&nbsp</p>
-      <p><a class="btn btn-primary btn-lg" href="{% url 'Payments:SubscriptionCountrySelect' %}" role="button">Subscribe Now</a></p>
+        <p>&nbsp</p>
       </center>
 
     </div>
+
+  </div>
+  </div>
   </div>
 </section>
 
@@ -753,5 +1461,21 @@
       </div>
     </div>
   </div>
+<script>
+  $(document).ready(function(){
+    $('.col-sm-3').hover(
+      function(){
+        $(this).animate({
+          marginTop: "-=1%",
+        },200);
+      },
+      function(){
+        $(this).animate({
+          marginTop: "0%",
+        },200);
+      }
+    );
+  });
+</script>
 
 {% endblock content %}
