@@ -84,11 +84,10 @@ def ConfirmView(request):
     spr1 = Superior.objects.filter(confirm__exact='S')
     wclr1 = WorkCollaborator.objects.filter(confirm__exact='S')
     wc1 = WorkClient.objects.filter(confirm__exact='S')
-    pc1 = PreColleague.objects.filter(confirm__exact='S')
 
     template = 'Profile/experience_confirm.html'
     context = {
-            'wf1': wf1, 'cm1': cm1, 'wk1': wk1, 'spr1': spr1, 'wclr1': wclr1, 'wc1': wc1, 'pc1': pc1
+            'wf1': wf1, 'cm1': cm1, 'wk1': wk1, 'spr1': spr1, 'wclr1': wclr1, 'wc1': wc1
     }
     return render(request, template, context)
 

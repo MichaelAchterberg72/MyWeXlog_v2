@@ -72,3 +72,25 @@ def after_signup(request, user, **kwargs):
     else:
         get = lambda node_id: NtWk.objects.get(pk=node_id)
         root = NtWk.add_root(talent=user)
+
+
+class CustomUserSettings(models.Model):
+    talent = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    right_to_say_no = models.BooleanField('The right to say no to the sale of personal information', default=False)
+    unsubscribe = models.BooleanField('Unsubscribe from all newsletters', default=False)
+    receive_newsletter = models.BooleanField('Receive the newslatter', default=True)
+    validation_requests = models.BooleanField('Receive validation requests', default=True)
+    takeout = models.BooleanField('Export data to a csv file', default=False)
+    dnt = models.BooleanField('Do Not Track', default=False)
+    right_to_be_forgotten = models.BooleanField('Right to be forgotten / Permanently delete my account', default=False)
+    payment_notifications = models.BooleanField('Receive subscription payment notifications', default=True)
+    subscription_notifications = models.BooleanField('Receive subscription status notifications', default=True)
+
+    def __str__(self):
+        return f"Settings for {self.talent}"
+
+    def create_settings(sender, **kwargs):
+        if kwargs['created']:
+            create_settings = CustomUserSettings.objects.create(talent=kwargs['instance'])
+
+    post_save.connect(create_settings, sender=CustomUser)

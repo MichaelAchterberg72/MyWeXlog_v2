@@ -29,3 +29,23 @@ class CustomSignupForm(SignupForm):
         CustomUser.last_name=self.cleaned_data['last_name']
 
         return CustomUser
+
+
+class CustomUserSettingsForm(forms.ModelForm):
+    class Meta:
+        model = CustomUserSettings
+        fields = ('right_to_say_no',
+                    'unsubscribe',
+                    'receive_newsletter',
+                    'validation_requests',
+                    'subscription_notifications',
+                    'payment_notifications',
+                    'takeout',
+                    'dnt',
+                    'right_to_be_forgotten')
+
+
+class RightToSayNoForm(forms.ModelForm):
+    class Meta:
+        model = CustomUserSettings
+        fields = ('right_to_say_no',)
