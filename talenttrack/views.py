@@ -117,7 +117,7 @@ def PreLoggedExperienceCaptureView(request):
         response.set_cookie("confirm","PC")
         return response
 
-
+'''
 @login_required()
 def PreLogDetailView(request, pre_id):
     check = WorkExperience.objects.get(pk=pre_id, prelog=True)
@@ -126,6 +126,29 @@ def PreLogDetailView(request, pre_id):
         confirmed_l = WorkExperience.objects.filter(pre_experience=pre_id)
         template = 'talenttrack/prelogged_detail.html'
         context = {'check': check, 'confirmed_l': confirmed_l}
+        return render(request, template, context)
+    else:
+        raise PermissionDenied
+'''
+
+@login_required()
+def PreLogDetailView(request, pre_id):
+    check = WorkExperience.objects.get(pk=pre_id, prelog=True)
+    if check.talent == request.user:
+        sum = WorkExperience.objects.filter(talent=request.user, prelog=True)
+        sum_company = sum.filter(company=check.company).aggregate(co_sum=Sum('hours_worked'))
+        sum_project = sum.filter(project=check.project).aggregate(p_sum=Sum('hours_worked'))
+        list = WorkExperience.objects.filter(pk=pre_id)
+        confirmed_clg = WorkColleague.objects.filter(experience=pre_id)
+        confirmed_sup = Superior.objects.filter(experience=pre_id)
+        confirmed_clr = WorkCollaborator.objects.filter(experience=pre_id)
+        confirmed_cnt = WorkClient.objects.filter(experience=pre_id)
+
+        template = 'talenttrack/experience_detail.html'
+        context = {
+            'check': check, 'confirmed_clg': confirmed_clg, 'confirmed_sup': confirmed_sup, 'confirmed_clr': confirmed_clr, 'confirmed_cnt': confirmed_cnt, 'list': list, 'sum_company': sum_company, 'sum_project': sum_project
+            }
+
         return render(request, template, context)
     else:
         raise PermissionDenied

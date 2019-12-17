@@ -57,28 +57,6 @@ class Topic(models.Model):
     def __str__(self):
         return '{}'.format(self.topic)
 
-'''
-#Function to randomise filename for Profile Upload
-def EduFilename(instance, filename):
-	ext = filename.split('.')[-1]
-	return "education\%s_%s.%s" % (str(time()).replace('.','_'), random(), ext)
-
-class Education(models.Model):
-    #talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    #course = models.ForeignKey(Course, on_delete=models.PROTECT)
-    #date_captured = models.DateField(auto_now_add=True)
-    #date_from = models.DateField()
-    #date_to = models.DateField()
-    #topic = models.ForeignKey(Topic, on_delete=models.PROTECT, blank=True, null=True, verbose_name="Subject")
-    #file = models.FileField(upload_to=EduFilename, blank=True, null=True)
-    #score = models.SmallIntegerField(default=0)
-
-    class Meta:
-        unique_together = (('talent','course','topic'),)
-
-    def __str__(self):
-        return '{}: {} ({})'.format(self.talent, self.course, self.topic)
-'''
 
 class Lecturer(models.Model):
         #Captured by talent
