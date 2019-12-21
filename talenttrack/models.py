@@ -24,12 +24,18 @@ CONFIRM = (
 class Result(models.Model):#What you receive when completing the course
     type = models.CharField(max_length=100, unique=True)
 
+    def clean(self):
+        self.type = self.type.capitalize()
+
     def __str__(self):
         return self.type
 
 
 class CourseType(models.Model):
     type = models.CharField(max_length=60, unique=True)
+
+    def clean(self):
+        self.type = self.type.capitalize()
 
     def __str__(self):
         return self.type
@@ -42,6 +48,9 @@ class Course(models.Model):
     website = models.URLField(blank=True, null=True)
     certification = models.ForeignKey(Result, on_delete=models.PROTECT)
 
+    def clean(self):
+        self.name = self.name.capitalize()
+
     class Meta:
         unique_together = (('name','company'),)
 
@@ -53,6 +62,9 @@ class Topic(models.Model):
     topic = models.CharField(max_length=60, unique=True)
     skills = models.ManyToManyField(SkillTag)
     hours = models.DecimalField(max_digits=5, decimal_places=2)
+
+    def clean(self):
+        self.topic = self.topic.capitalize()
 
     def __str__(self):
         return '{}'.format(self.topic)
@@ -99,6 +111,9 @@ class ClassMates(models.Model):
 
 class Designation(models.Model):
     name = models.CharField('Designation', max_length=60, unique=True)
+
+    def clean(self):
+        self.name = self.name.capitalize()
 
     def __str__(self):
         return self.name
@@ -254,52 +269,3 @@ class WorkClient(models.Model):
         return "WorkCollaborator for {} on {}".format(
             self.experience.talent, self.experience
         )
-'''
-class PreLoggedExperience(models.Model):
-    #talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
-    #date_from = models.DateField()
-    #date_to = models.DateField(default=timezone.now)
-    #date_captured = models.DateField(auto_now_add=True)
-    #company = models.ForeignKey(Enterprise, on_delete=models.PROTECT)
-    #project = models.ForeignKey(
-        ProjectData, on_delete=models.PROTECT, verbose_name='On Project', blank=True, null=True
-    )
-    #industry = models.ForeignKey(Industry, on_delete=models.PROTECT)
-    #hours_worked = models.DecimalField(max_digits=5, decimal_places=2)
-    #comment = models.TextField(blank=True, null=True)
-    #designation = models.ForeignKey(Designation, on_delete=models.PROTECT)
-    #upload = models.FileField(upload_to=ExpFilename, blank=True, null=True)
-    #skills = models.ManyToManyField(SkillTag, related_name='logskill')
-    #score = models.SmallIntegerField(default=0)
-
-    class Meta:
-        unique_together = (('talent','hours_worked','date_from','project', 'date_to'),)
-
-    def __str__(self):
-        return '{} between {} & {} as {}'.format(
-                    self.talent, self.date_from, self.date_to, self.designation
-                    )
-
-
-class PreColleague(models.Model):
-        #Captured by talent
-    pre_experience = models.ForeignKey(PreLoggedExperience, on_delete=models.PROTECT)
-    colleague_name = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
-    designation = models.ForeignKey(Designation, on_delete=models.PROTECT)
-        #AutoCaptured
-    date_captured = models.DateField(auto_now_add=True)
-    date_confirmed = models.DateField(auto_now=True)
-        #Captured by colleague
-    confirm = models.CharField(max_length=1, choices=CONFIRM, default='S', null=True)
-    comments = models.TextField(blank=True, null=True)
-        #Captured by talent
-    response = models.TextField(blank=True, null=True)
-
-    class Meta:
-        unique_together = (('pre_experience','colleague_name','date_captured'),)
-
-    def __str__(self):
-        return "WorkColleague for {} on {}".format(
-            self.pre_experience.talent, self.pre_experience
-        )
-'''

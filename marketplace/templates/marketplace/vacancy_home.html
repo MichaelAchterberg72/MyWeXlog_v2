@@ -16,7 +16,6 @@
           <th>Vacancy Title</th>
           <th>Hours Required</th>
           <th>Work Format</th>
-          <th>Vacancy Scope</th>
           <th>Country</th>
           <th>Full Detail</th>
         </tr>
@@ -30,7 +29,6 @@
           {{ i.scope.hours_required|intcomma }} ({{ i.scope.get_unit_display }})
         </td>
         <td>{{ i.scope.worklocation }}</td>
-        <td>{{ i.scope.scope|linebreaks }}</td>
         <td>{{ i.scope.city }}</td>
           {% if request.user.subscription == 2 %}
             <td><a href="{% url 'MarketPlace:VacancyDetail' i.scope.id %}" class="card-link">See Detail</a></td>

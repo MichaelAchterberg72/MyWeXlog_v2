@@ -117,19 +117,6 @@ def PreLoggedExperienceCaptureView(request):
         response.set_cookie("confirm","PC")
         return response
 
-'''
-@login_required()
-def PreLogDetailView(request, pre_id):
-    check = WorkExperience.objects.get(pk=pre_id, prelog=True)
-    if check.talent == request.user:
-        #FIX add all other fields as per WorkExperience table
-        confirmed_l = WorkExperience.objects.filter(pre_experience=pre_id)
-        template = 'talenttrack/prelogged_detail.html'
-        context = {'check': check, 'confirmed_l': confirmed_l}
-        return render(request, template, context)
-    else:
-        raise PermissionDenied
-'''
 
 @login_required()
 def PreLogDetailView(request, pre_id):
@@ -668,6 +655,11 @@ def CourseAddPopup(request):
             instance=form.save(commit=False)
             instance.save()
             return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_course");</script>' % (instance.pk, instance))
+        else:
+            context = {'form':form,}
+            template = 'talenttrack/course_popup.html'
+            return render(request, template, context)
+
     else:
         context = {'form':form,}
         template = 'talenttrack/course_popup.html'
@@ -694,6 +686,11 @@ def CourseTypeAddPopup(request):
             instance=form.save(commit=False)
             instance.save()
             return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_course_type");</script>' % (instance.pk, instance))
+        else:
+            context = {'form':form,}
+            template = 'talenttrack/course_type_popup.html'
+            return render(request, template, context)
+
     else:
         context = {'form':form,}
         template = 'talenttrack/course_type_popup.html'
@@ -720,6 +717,10 @@ def ResultAddPopup(request):
             instance=form.save(commit=False)
             instance.save()
             return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_certification");</script>' % (instance.pk, instance))
+        else:
+            context = {'form':form,}
+            template = 'talenttrack/result_popup.html'
+            return render(request, template, context)
 
     else:
         context = {'form':form,}
@@ -747,6 +748,11 @@ def TopicAddPopup(request):
             instance=form.save(commit=False)
             instance.save()
             return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_topic");</script>' % (instance.pk, instance))
+        else:
+            context = {'form':form,}
+            template = 'talenttrack/topic_popup.html'
+            return render(request, template, context)
+
     else:
         context = {'form':form,}
         template = 'talenttrack/topic_popup.html'
@@ -774,6 +780,11 @@ def DesignationAddPopup(request):
             instance=form.save(commit=False)
             instance.save()
             return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_designation");</script>' % (instance.pk, instance))
+        else:
+            context = {'form':form,}
+            template = 'talenttrack/designation_popup.html'
+            return render(request, template, context)
+
     else:
         context = {'form':form,}
         template = 'talenttrack/designation_popup.html'

@@ -77,8 +77,10 @@
     </div>
   </div>
   <div class="form-row">
+    <div class="form-group col-md-10 mb-0">
     {{ form.certification|as_crispy_field }}
     <p><a href="{% url 'Talent:ResultAddPop' %}" id='add_course' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add</a></p>
+    </div>
 
   </div>
   <div class="form-row">

@@ -53,6 +53,9 @@ class SkillLevel(models.Model):
     min_hours = models.IntegerField()
     description = models.TextField()
 
+    def clean(self):
+        self.level = self.level.capitalize()
+
     def __str__(self):
         return f'{self.get_level_display()} (>={self.min_hours})'
 
@@ -92,7 +95,7 @@ class TalentRequired(models.Model):
 
 class Deliverables(models.Model):
     scope = models.ForeignKey(TalentRequired, on_delete=models.CASCADE)
-    deliverable = models.CharField(max_length=255)
+    deliverable = models.TextField()
 
     class Meta:
         unique_together = (('scope','deliverable'),)
@@ -103,7 +106,7 @@ class Deliverables(models.Model):
 
 class SkillRequired(models.Model):
     scope = models.ForeignKey(TalentRequired, on_delete=models.CASCADE)
-    skill = models.ForeignKey(SkillTag, on_delete=models.PROTECT)
+    skills = models.ForeignKey(SkillTag, on_delete=models.PROTECT)
 
     class Meta:
         #unique_together = (('skill','scope'),)

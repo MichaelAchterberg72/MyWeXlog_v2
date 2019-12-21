@@ -124,7 +124,7 @@
 {% endfor %}
 <div class="card-group">
   <div class="card">
-    <div class="card-body">
+    <div class="card-body" id="History">
       <h5 class="card-title">Career History <a href="{% url 'Profile:History' %}" class="badge badge-primary">Add</a></h5>
       <p class="card-text">
         {% if history %}
@@ -148,6 +148,7 @@
               {% endif %}
               <td>{{ h.companybranch }}</td>
               <td>{{ h.work_configeration }}</td>
+              <td><a href="{% url 'Profile:Resigned' h.id %}" class="badge badge-primary">I Resigned</a></td>
             </tr>
             {% endfor %}
           </tbody>

@@ -27,6 +27,11 @@ def PhoneNumberTypeAddPopup(request):
             new = form.save(commit=False)
             new.save()
             return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_type");</script>' % (new.pk, new))
+        else:
+            context = {'form':form,}
+            template = 'db_flatten/phone_number_type_popup.html'
+            return render(request, template, context)
+
     else:
         context = {'form':form,}
         template = 'db_flatten/phone_number_type_popup.html'
@@ -51,6 +56,11 @@ def SkillAddPopup(request):
             new = form.save(commit=False)
             new.save()
             return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_skills");</script>' % (new.pk, new))
+        else:
+            context = {'form':form,}
+            template = 'db_flatten/skill_popup.html'
+            return render(request, template, context)
+
     else:
         context = {'form':form,}
         template = 'db_flatten/skill_popup.html'

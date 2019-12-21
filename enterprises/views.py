@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 import json
 from django.db.models import Count
+from django.contrib import messages
 
 from core.decorators import app_role, subscription
 from csp.decorators import csp_exempt
@@ -51,22 +52,24 @@ def BranchDetailView(request, branch_id):
 
 
 @login_required()
-#@csp_exempt
+@csp_exempt
+#this view autopopulated the ebterprise field with the id in e_id
 def BranchAddView(request, e_id):
     form = BranchForm(request.POST or None)
     if request.method == 'POST':
 
         info = get_object_or_404(Enterprise, pk=e_id)
-        #next_url=request.POST.get('next','/')
+        next_url=request.POST.get('next','/')
         if form.is_valid():
-            response = redirect(reverse('Enterprise:BranchList', kwargs={'e_id':e_id}))
+            #response = redirect(reverse('Enterprise:BranchList', kwargs={'e_id':e_id}))
+            #response = redirect('Enterprise:EnterpriseHome')
             new = form.save(commit=False)
             new.company = info
             new.save()
-            #if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
-            #    next_url = reverse('Enterprise:BranchList', kwargs={'e_id':e_id})
-            #response = HttpResponseRedirect(next_url)
-            response._csp_exempt = True
+            if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
+                next_url = reverse('Enterprise:BranchList', kwargs={'e_id':e_id})
+            response = HttpResponseRedirect(next_url)
+            #response._csp_exempt = True
             #return redirect(reverse('Enterprise:BranchList', kwargs={'e_id':e_id}),)
             return response
     else:
@@ -78,7 +81,7 @@ def BranchAddView(request, e_id):
 
 #>>> Branch Popup
 @login_required()
-#@csp_exempt
+@csp_exempt
 def BranchAddPopView(request):
     form = FullBranchForm(request.POST or None)
 
@@ -144,6 +147,21 @@ def FullBranchAddView(request):
         return render(request, template, context)
 
 
+@login_required()
+@csp_exempt
+def EnterpriseAddView(request):
+    form = EnterprisePopupForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            instance=form.save(commit=False)
+            instance.save()
+            return redirect('Enterprise:EnterpriseHome')
+    else:
+        context = {'form':form,}
+        template = 'enterprises/enterprise_add.html'
+        return render(request, template, context)
+
+
 #>>>Company Popup
 @login_required()
 @csp_exempt
@@ -154,6 +172,11 @@ def EnterpriseAddPopup(request):
             instance=form.save(commit=False)
             instance.save()
             return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_company");</script>' % (instance.pk, instance))
+        else:
+            context = {'form':form,}
+            template = 'enterprises/enterprise_popup.html'
+            return render(request, template, context)
+
     else:
         context = {'form':form,}
         template = 'enterprises/enterprise_popup.html'
@@ -181,6 +204,10 @@ def IndustryAddPopup(request):
             instance=form.save(commit=False)
             instance.save()
             return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_industry");</script>' % (instance.pk, instance))
+        else:
+            context = {'form':form,}
+            template = 'enterprises/industry_popup.html'
+            return render(request, template, context)
     else:
         context = {'form':form,}
         template = 'enterprises/industry_popup.html'
@@ -197,7 +224,7 @@ def get_industry_id(request):
     return HttpResponse("/")
 #<<< Industry Popup
 
-
+#why is this not picking up the change
 #>>>BranchType Popup
 @login_required()
 @csp_exempt
@@ -208,6 +235,11 @@ def BranchTypeAddPopup(request):
             instance=form.save(commit=False)
             instance.save()
             return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_type");</script>' % (instance.pk, instance))
+        else:
+                context = {'form':form,}
+                template = 'enterprises/branchtype_popup.html'
+                return render(request, template, context)
+
     else:
         context = {'form':form,}
         template = 'enterprises/branchtype_popup.html'

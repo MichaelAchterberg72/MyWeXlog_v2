@@ -117,7 +117,7 @@ class TalentAvailabillityForm(forms.ModelForm):
 class SkillRequiredForm(forms.ModelForm):
     class Meta:
         model = SkillRequired
-        fields = ('skill', )
+        fields = ('skills', )
         widgets = {
             'skill': VacancySkillSelect2Widget(),
         }
@@ -149,6 +149,11 @@ class TalentRequiredForm(forms.ModelForm):
             'date_deadline': DateInput(),
             'bid_closes': DateInput(),
             'certification': CertModelSelect2MultipleWidget(),
+        }
+        labels = {
+            'bid_closes':'Vacancy Closes',
+            'offer_status': 'Vacancy Status',
+            'worklocation': 'Work Type Configeration',
         }
 
 

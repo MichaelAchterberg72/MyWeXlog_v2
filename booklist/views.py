@@ -27,10 +27,10 @@ from Profile.models import Profile
 from .models import BookList, Author, ReadBy, Format, Publisher
 from .forms import *
 
-# Create your views here.
 
 class BookListHomeView(TemplateView):
     template_name = 'booklist/home.html'
+
 
 @login_required
 def BookListHome(request, profile_id=None):
@@ -53,7 +53,7 @@ def BookDetailView(request, book_id):
     return render(request, template_name, context)
 
 
-@login_required
+@login_required()
 def BookListView(request):
     list = BookList.objects.all().order_by('title')
     bcount = list.aggregate(sum_b=Count('title'))
@@ -66,23 +66,6 @@ def BookListView(request):
     }
     return render(request, template_name, context)
 
-"""
-class BookSearchListView(ListView):
-    model = BookList
-    paginate_by = 10
-
-    def get_queryset(self):
-        qs = BookList.objects.all()
-
-        keywords = self.request.GET.get('q')
-        if keywords:
-            query = SearchQuery(keywords)
-            vector = SearchVector('title', 'tag', 'author', 'publisher')
-            qs = qs.annotate(search=vector).filter(search=query)
-            qs = qs.annotate(rank=SearchRank(vector, query)).order_by('-rank')
-
-        return qs
-"""
 
 def BookSearch(request):
     form = BookSearchForm()
@@ -107,7 +90,8 @@ def BookSearch(request):
     }
     return render(request, template_name, context)
 
-@login_required
+
+@login_required()
 def BookReadListView(request):
     list = ReadBy.objects.all().order_by('date')
 
@@ -119,7 +103,7 @@ def BookReadListView(request):
 
 
 @csp_exempt
-@login_required
+@login_required()
 def BookAddView(request):
     if request.method == 'POST':
         form = BookAddForm(request.POST)
@@ -127,9 +111,6 @@ def BookAddView(request):
             new = form.save(commit=False)
             new.save()
             form.save_m2m()
-#            if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
-#                    next_url = reverse('BookListView:books_list')
-#            return HttpResponseRedirect(next_url)
             return redirect(reverse('BookList:books-read-new'))
     else:
         form = BookAddForm()
@@ -139,7 +120,7 @@ def BookAddView(request):
     return render(request, template_name, context)
 
 
-@login_required
+@login_required()
 @csp_exempt
 def AuthorCreatePopupView(request):
     form = AuthorAddForm(request.POST or None)
@@ -154,7 +135,7 @@ def AuthorCreatePopupView(request):
         return render(request, template_name, context)
 
 
-@login_required
+@login_required()
 @csp_exempt
 def PublisherCreatePopupView(request):
     form = PublisherAddForm(request.POST or None)
@@ -170,7 +151,7 @@ def PublisherCreatePopupView(request):
         return render(request, template_name, context)
 
 
-@login_required
+@login_required()
 @csp_exempt
 def FormatCreatePopupView(request):
     form = FormatAddForm(request.POST or None)
@@ -186,7 +167,7 @@ def FormatCreatePopupView(request):
         return render(request, template_name, context)
 
 
-@login_required
+@login_required()
 @csp_exempt
 def TagCreatePopupView(request):
     form = TagAddForm(request.POST or None)
@@ -201,7 +182,7 @@ def TagCreatePopupView(request):
         return render(request, template_name, context)
 
 
-@login_required
+@login_required()
 @csrf_exempt
 def get_author_id(request):
 	if request.is_ajax():
@@ -212,7 +193,7 @@ def get_author_id(request):
 	return HttpResponse("/")
 
 
-@login_required
+@login_required()
 @csrf_exempt
 def get_publisher_id(request):
 	if request.is_ajax():
@@ -223,7 +204,7 @@ def get_publisher_id(request):
 	return HttpResponse("/")
 
 
-@login_required
+@login_required()
 @csrf_exempt
 def get_format_id(request):
 	if request.is_ajax():
@@ -234,7 +215,7 @@ def get_format_id(request):
 	return HttpResponse("/")
 
 
-@login_required
+@login_required()
 def AuthorAddView(request):
     if request.method == 'POST':
         form = AuthorAddForm(request.POST)
@@ -251,7 +232,7 @@ def AuthorAddView(request):
     return render(request, template_name, context)
 
 
-@login_required
+@login_required()
 def PublisherAddView(request):
     if request.method == 'POST':
         form = PublisherAddForm(request.POST)
@@ -269,7 +250,7 @@ def PublisherAddView(request):
     return render(request, template_name, context)
 
 
-@login_required
+@login_required()
 def FormatAddView(request):
     if request.method == 'POST':
         form = FormatAddForm(request.POST)
@@ -286,7 +267,7 @@ def FormatAddView(request):
     return render(request, template_name, context)
 
 
-@login_required
+@login_required()
 @csp_exempt
 def AddBookReadView(request):
     if request.method == 'POST':

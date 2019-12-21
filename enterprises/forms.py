@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.utils.encoding import force_text
+from django.forms.widgets import TextInput
 
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from crispy_forms.helper import FormHelper
@@ -130,6 +131,7 @@ class BranchTypePopUpForm(forms.ModelForm):
 
 
 class EnterprisePopupForm(forms.ModelForm):
+
     class Meta:
         model = Enterprise
         fields = ('name', 'description', 'website')

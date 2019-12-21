@@ -14,5 +14,8 @@ class SkillTag(models.Model):
             models.Index(fields=['skill',]),
         ]
 
+    def clean(self):
+        self.skill = self.skill.capitalize()
+
     def __str__(self):
         return self.skill

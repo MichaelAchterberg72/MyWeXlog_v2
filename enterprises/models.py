@@ -1,5 +1,6 @@
 from django.db import models
 
+
 from django_countries.fields import CountryField
 from phonenumber_field.modelfields import PhoneNumberField
 
@@ -17,13 +18,19 @@ class Industry(models.Model):
 class Enterprise(models.Model):
     name = models.CharField('Enterprise name', max_length=250, unique=True)
     description = models.TextField('Enterprise description')
-    website = models.URLField(blank=True, null=True)
+    website = models.URLField('Website (begin with "http://")', blank=True, null=True)
+
+    def clean(self):
+        self.name = self.name.capitalize()
 
     def __str__(self):
         return self.name
 
 class BranchType(models.Model):
     type = models.CharField(max_length=60, unique=True)
+
+    def clean(self):
+        self.type = self.type.capitalize()
 
     def __str__(self):
         return self.type
@@ -43,6 +50,9 @@ class Branch(models.Model):
 
     class Meta:
         unique_together = (('company','name', 'city'),)
+
+    def clean(self):
+        self.name = self.name.capitalize()
 
     def __str__(self):
         return '{}, {}, {}'.format(self.company, self.name, self.city)

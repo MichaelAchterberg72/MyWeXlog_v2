@@ -26,9 +26,8 @@ from talenttrack.forms import (
 
 from locations.models import Region
 
-
 from .forms import (
-    ProfileForm, EmailForm, EmailStatusForm, PhysicalAddressForm, PostalAddressForm, PhoneNumberForm, OnlineProfileForm, ProfileTypeForm, FileUploadForm, IdTypeForm, LanguageTrackForm, LanguageListForm, PassportDetailForm, IdentificationDetailForm, BriefCareerHistoryForm
+    ProfileForm, EmailForm, EmailStatusForm, PhysicalAddressForm, PostalAddressForm, PhoneNumberForm, OnlineProfileForm, ProfileTypeForm, FileUploadForm, IdTypeForm, LanguageTrackForm, LanguageListForm, PassportDetailForm, IdentificationDetailForm, BriefCareerHistoryForm, ResignedForm,
 )
 
 @login_required()
@@ -74,6 +73,21 @@ def BriefCareerHistoryView(request):
         context = {'form': form, 'history': history}
         response = render(request, template, context)
         return response
+
+
+@login_required()
+def ResignedView(request, p_job):
+    r_from = get_object_or_404(BriefCareerHistory, pk=p_job)
+    form = ResignedForm(request.POST or None, instance=r_from)
+    if request.method == 'POST':
+        new = form.save(commit=False)
+        new.save()
+        return redirect(reverse('Profile:ProfileView', kwargs={'profile_id': request.user.id})+'#History')
+
+    else:
+        template = 'Profile/brief_career_resigned.html'
+        context = {'form': form}
+        return render (request, template, context)
 
 
 @login_required()

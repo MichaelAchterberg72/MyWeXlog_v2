@@ -9,7 +9,7 @@
   <div class="card-body">
     <p>There are currently {{ ecount.sum_e }} Enterprises and {{ bcount.sum_b }} Branches listed in WexLog!</p>
     {% if user.is_authenticated %}
-    <a href="{% url 'Enterprise:FullBranchAdd' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Add New Company</a>
+    <p><a href="{% url 'Enterprise:EnterpriseAdd' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Add New Enterprise</a>  <a href="{% url 'Enterprise:FullBranchAdd' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Add New Branch</a></p>
     {% endif %}
     <table class="table-sm">
       <col width="30%">
@@ -30,7 +30,7 @@
       <tbody>
         <tr>
           <td>{{ c.name }}</td>
-          <td>{{ c.website }}</td>
+          <td><a href="{{ c.website }}" target="_blank">{{ c.website }}</a></td>
           {% if request.user.subscription >= 2 %}
             <td>Current</td>
             <td>Past</td>

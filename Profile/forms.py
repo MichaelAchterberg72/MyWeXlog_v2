@@ -25,6 +25,7 @@ class BranchSearchFieldMixin:
     search_fields = [
         'name__icontains', 'pk__startswith'
     ]
+
 class BranchSelect2Widget(BranchSearchFieldMixin, ModelSelect2Widget):
     model = Branch
 
@@ -32,8 +33,6 @@ class BranchSelect2Widget(BranchSearchFieldMixin, ModelSelect2Widget):
         self.get_queryset().create(name=value)
 
 #Select 2 <<<
-
-
 class DateInput(forms.DateInput):
     input_type = 'date'
 
@@ -47,6 +46,15 @@ class BriefCareerHistoryForm(forms.ModelForm):
             'date_from': DateInput(),
             'date_to': DateInput(),
         }
+
+
+class ResignedForm(forms.ModelForm):
+    class Meta:
+        model = BriefCareerHistory
+        fields = ('date_to',)
+        widgets = {
+        'date_to': DateInput(),
+            }
 
 
 class LanguageTrackForm(forms.ModelForm):

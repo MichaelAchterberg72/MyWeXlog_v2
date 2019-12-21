@@ -22,14 +22,25 @@ class BriefCareerHistory(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     work_configeration = models.ForeignKey(WorkLocation, on_delete=models.PROTECT)
     companybranch = models.ForeignKey(Branch, on_delete=models.PROTECT, verbose_name="Home_Base")
+    current = models.BooleanField(default=False)
     date_from = models.DateField()
     date_to = models.DateField(blank=True, null=True)
 
     def __str__(self):
         if self.date_to:
             return f'{self.talent}, {self.work_configeration}: {self.companybranch}, from: {self.date_from}, to: {self.date_to}'
+        else:
+            return f'{self.talent}, {self.work_configeration}: {self.companybranch}, from: {self.date_from} (Currently Employed Here)'
 
-        return f'{self.talent}, {self.work_configeration}: {self.companybranch}, from: {self.date_from} (Currently Employed Here)'
+            #This should now save
+
+    def save(self, *args, **kwargs):
+        if self.date_to:
+            self.current = False
+            super(BriefCareerHistory, self).save(*args, **kwargs)
+        else:
+            self.current = True
+            super(BriefCareerHistory, self).save(*args, **kwargs)
 
 
 class SiteName(models.Model):
@@ -37,6 +48,7 @@ class SiteName(models.Model):
 
     def __str__(self):
         return self.site
+
 
 class OnlineRegistrations(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -48,6 +60,7 @@ class OnlineRegistrations(models.Model):
 
     def __str__(self):
         return '{}'.format(self.sitename)
+
 
 class Profile(models.Model):
     MENTOR = (
@@ -65,10 +78,10 @@ class Profile(models.Model):
     background = models.TextField()
     mentor = models.CharField('Do you wish to be a mentor?', max_length=1, choices=MENTOR, default='N')#Opt in to be a mentor to other people
     middle_name = models.CharField(max_length=60, null=True, blank=True)
-    synonym = models.CharField(max_length=15, null=True)
+    alias = models.CharField(max_length=15, null=True)
     referral_code = models.OneToOneField(Referral, on_delete=models.SET_NULL, null=True)
-    std_rate = models.DecimalField(max_digits=10, decimal_places=2)
-    currency = models.ForeignKey(Currency, on_delete=models.PROTECT)
+    std_rate = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    currency = models.ForeignKey(Currency, on_delete=models.PROTECT, null=True)
     rate_unit = models.CharField(max_length=1, choices=RATE_UNIT, default='H')
     motivation = models.TextField(blank=True, null=True)
 
@@ -84,6 +97,9 @@ class Profile(models.Model):
 
 class IdType(models.Model):
     type = models.CharField(max_length=50, unique=True)
+
+    def clean(self):
+        self.type = self.type.capitalize()
 
     def __str__(self):
         return self.type
@@ -103,16 +119,6 @@ class IdentificationDetail(models.Model):
     def create_id(sender, **kwargs):
         if kwargs['created']:
             create_profile = IdentificationDetail.objects.create(talent=kwargs['instance'])
-
-            #Create personal referral code
-            '''
-            referral = Referral.create(
-                user = kwargs['instance'],
-                redirect_to = '/accounts/signup/'
-            )
-            CustomUser.objects.filter(username=kwargs['instance']).update(referral_code=referral)'''
-
-            #send email to new used with link
 
     post_save.connect(create_id, sender=CustomUser)
 
@@ -137,6 +143,9 @@ class PassportDetail(models.Model):
 
 class LanguageList(models.Model):
     language = models.CharField(max_length=30, unique=True)
+
+    def clean(self):
+        self.language = slef.language.capitalize()
 
     def __str__(self):
         return self.language
@@ -169,8 +178,12 @@ class Email(models.Model):
     class Meta:
         unique_together = (('talent','email'),)
 
+    def clean(self):
+        self.email = self.email.lower()
+
     def __str__(self):
         return self.email
+
 
 class PhysicalAddress(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
@@ -189,7 +202,9 @@ class PhysicalAddress(models.Model):
     def create_physical_add(sender, **kwargs):
         if kwargs['created']:
             create_physical_add = PhysicalAddress.objects.create(talent=kwargs['instance'])
+
     post_save.connect(create_physical_add, sender=CustomUser)
+
 
 class PostalAddress(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
@@ -214,6 +229,7 @@ class PostalAddress(models.Model):
 def ExtFilename(instance, filename):
 	ext = filename.split('.')[-1]
 	return "profile\%s_%s.%s" % (str(time()).replace('.','_'), random(), ext)
+
 
 class FileUpload(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
