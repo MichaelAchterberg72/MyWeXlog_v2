@@ -45,7 +45,7 @@
               <tbody>
                 <tr align="center">
                   <td>{{ skill_count }}</td>
-                  <td>{{ skill_set|join:",  " }}</td>
+                  <td>{{ skill_name|join:" - " }}</td>
                 </tr>
               </tbody>
             </table>
@@ -67,8 +67,8 @@
           <p><a href="{% url 'Talent:Capture' %}" class="badge badge-pill badge-primary float-right">Add Education</a></p>
         </div>
           <p><strong>Total hours in training: </strong>{{ train_sum.Edu_sum|intcomma }}</p>
-        <div class="float-left">
-        <table class=" table table-sm">
+        <div>
+        <table class="table table-sm">
           <thead>
             <tr>
               <th>Start Date</th>

@@ -33,7 +33,7 @@
                         <th>Project Owner</th>
                         <th>Project Name</th>
                         <th>Industry</th>
-                        <th class="text-center">Total Hours</th>
+                        <th class="text-center">Total Project Hours</th>
                       </tr>
                         <td>{{ d.company }}</td>
                         <td>{{ d.name }}</td>
@@ -43,11 +43,13 @@
                         <th>Country</th>
                         <th>City</th>
                         <th>Region</th>
+                        <th>Total People</th>
                       </tr>
                       <tr>
                         <td>{{ d.get_country_display }}</td>
                         <td>{{ d.city }}</td>
                         <td>{{ d.region }}</td>
+                        <td class="text-center">{{ ppl|intcomma }}</td>
                       </tr>
                       {% endfor %}
                       <tr>

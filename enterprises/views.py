@@ -23,6 +23,8 @@ from .forms import (
     EnterprisePopupForm, BranchForm, PhoneNumberForm, IndustryPopUpForm, BranchTypePopUpForm, FullBranchForm
 )
 
+
+@login_required()
 def EnterpriseHome(request):
     ecount = Enterprise.objects.all().aggregate(sum_e=Count('name'))
     bcount = Branch.objects.all().aggregate(sum_b=Count('name'))
@@ -33,6 +35,7 @@ def EnterpriseHome(request):
     return render(request, template, context)
 
 
+@login_required()
 def BranchListView(request, c_id):
     list = Branch.objects.filter(company=c_id).order_by('name')
     detail = get_object_or_404(Enterprise, pk=c_id)
@@ -72,6 +75,12 @@ def BranchAddView(request, e_id):
             #response._csp_exempt = True
             #return redirect(reverse('Enterprise:BranchList', kwargs={'e_id':e_id}),)
             return response
+        else:
+            context = {'form': form}
+            template = 'enterprises/branch_add.html'
+            response =  render(request, template, context)
+            return response
+
     else:
         context = {'form': form}
         template = 'enterprises/branch_add.html'
@@ -90,13 +99,20 @@ def BranchAddPopView(request):
             instance=form.save(commit=False)
             instance.save()
             response = HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_companybranch");</script>' % (instance.pk, instance))
-            response._csp_exempt = True
+            #response._csp_exempt = True
             return response
+        else:
+            context = {'form': form}
+            template = 'enterprises/branch_popup.html'
+            response = render(request, template, context)
+            #response._csp_exempt = True
+            return response
+
     else:
         context = {'form': form}
         template = 'enterprises/branch_popup.html'
         response = render(request, template, context)
-        response._csp_exempt = True
+        #response._csp_exempt = True
         return response
 
 @csrf_exempt
@@ -123,6 +139,11 @@ def BranchEditView(request, e_id):
             if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
                 next_url = redirect(reverse('Profile:ProfileView', kwargs={'e_id':e_id}))
             return HttpResponseRedirect(next_url)
+        else:
+            context = {'form': form}
+            template = 'enterprises/branch_add.html'
+            return render(request, template, context)
+
     else:
         context = {'form': form}
         template = 'enterprises/branch_add.html'
@@ -141,6 +162,11 @@ def FullBranchAddView(request):
             if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
                 next_url = redirect(reverse('Enterprise:BranchList'))
             return HttpResponseRedirect(next_url)
+        else:
+            context = {'form': form}
+            template = 'enterprises/full_branch_add.html'
+            return render(request, template, context)
+            
     else:
         context = {'form': form}
         template = 'enterprises/full_branch_add.html'

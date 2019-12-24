@@ -12,6 +12,9 @@ from db_flatten.models import PhoneNumberType
 class Industry(models.Model):
     industry = models.CharField(max_length=60, unique=True)
 
+    def clean(self):
+        self.industry = self.industry.capitalize()
+
     def __str__(self):
         return self.industry
 

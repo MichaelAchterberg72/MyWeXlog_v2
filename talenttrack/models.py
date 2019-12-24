@@ -31,7 +31,7 @@ class Result(models.Model):#What you receive when completing the course
         return self.type
 
 
-class CourseType(models.Model):
+class CourseType(models.Model):#What type of course (online, Attend lectures, etc.)
     type = models.CharField(max_length=60, unique=True)
 
     def clean(self):
@@ -74,6 +74,7 @@ class Lecturer(models.Model):
         #Captured by talent
     education = models.ForeignKey('WorkExperience', on_delete=models.CASCADE)
     lecturer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    topic = models.ForeignKey(Topic, on_delete=models.PROTECT, blank=True, null=True, verbose_name="Subject")
         #AutoCaptured
     date_captured = models.DateField(auto_now_add=True)
     date_confirmed = models.DateField(auto_now=True)
@@ -89,10 +90,12 @@ class Lecturer(models.Model):
     def __str__(self):
         return f"Lecturer for {self.education}"
 
+
 class ClassMates(models.Model):
         #Captured by talent
     education = models.ForeignKey('WorkExperience', on_delete=models.CASCADE)
     colleague = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, verbose_name='ClassMate')
+    topic = models.ForeignKey(Topic, on_delete=models.PROTECT, blank=True, null=True, verbose_name="Subject")
         #AutoCaptured
     date_captured = models.DateField(auto_now_add=True)
     date_confirmed = models.DateField(auto_now=True)
@@ -228,7 +231,8 @@ class WorkCollaborator(models.Model):
         #Captured by talent
     experience = models.ForeignKey(WorkExperience, on_delete=models.PROTECT)
     collaborator_name = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
-    company = models.ForeignKey(Branch, on_delete=models.PROTECT)
+    company = models.ForeignKey(Enterprise, on_delete=models.PROTECT)
+    branch = models.ForeignKey(Branch, on_delete=models.PROTECT)
     designation = models.ForeignKey(Designation, on_delete=models.PROTECT)
         #AutoCaptured
     date_captured = models.DateField(auto_now_add=True)
@@ -252,7 +256,8 @@ class WorkClient(models.Model):
     experience = models.ForeignKey(WorkExperience, on_delete=models.PROTECT)
     client_name = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     designation = models.ForeignKey(Designation, on_delete=models.PROTECT)
-    company = models.ForeignKey(Branch, on_delete=models.PROTECT)
+    company = models.ForeignKey(Enterprise, on_delete=models.PROTECT)
+    branch = models.ForeignKey(Branch, on_delete=models.PROTECT)
         #AutoCaptured
     date_captured = models.DateField(auto_now_add=True)
     date_confirmed = models.DateField(auto_now=True)

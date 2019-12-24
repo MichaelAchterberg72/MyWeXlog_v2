@@ -29,7 +29,7 @@ class BookList(models.Model):
     publisher = models.ForeignKey(Publisher, on_delete=models.PROTECT)
     link = models.URLField('Book URL', blank=True, null=True)
     author = models.ManyToManyField(Author)
-    tag = models.ManyToManyField(SkillTag)
+    tag = models.ManyToManyField(SkillTag, verbose_name='Tag / Associated Skill')
 
     class Meta:
         unique_together = (('title', 'publisher'),)
@@ -38,8 +38,12 @@ class BookList(models.Model):
         return '{}, {}'.format(self.title, self.publisher)
 
 
+#The format of the book (softback, hardcover, ebook etc.)
 class Format(models.Model):
     format = models.CharField(max_length=60, unique=True)
+
+    def clean(self):
+        self.format = self.format.capitalize()
 
     def __str__(self):
         return self.format
@@ -53,6 +57,6 @@ class ReadBy(models.Model):
 
     class Meta:
         unique_together = (('talent','book'),)
-        
+
     def __str__(self):
         return '{} read {}'.format(self.talent, self.book)

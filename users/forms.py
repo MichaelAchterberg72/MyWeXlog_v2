@@ -3,17 +3,20 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import CustomUser, CustomUserSettings
 from allauth.account.forms import SignupForm
 
+
 class CustomUserCreationForm(UserCreationForm):
 
     class Meta(UserCreationForm):
         model = CustomUser
         fields = ('username', 'email')
 
+
 class CustomUserChangeForm(UserChangeForm):
 
     class Meta:
         model = CustomUser
         fields = UserChangeForm.Meta.fields
+
 
 class CustomSignupForm(SignupForm):
     first_name = forms.CharField(max_length=30, label='First Name')

@@ -1,0 +1,44 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+{% block title %}{{block.super}}-All Posts{% endblock title %}
+
+{% block content %}
+
+<div class="card" style="width: 100%;">
+  <div class="card-body">
+{% if request.user.subscription >= 2 %}
+<div class="row">
+  <div class="col-sm-7">
+    <div class="card">
+      <div class="card-body">
+
+      <h5 class="card-title">My Vacancies Advertised</h5>
+      <table class="table table-sm">
+        <thead>
+          <tr>
+            <th>Date Posted</th>
+            <th>Vacancy Title</th>
+            <th>Status</th>
+            <th>Closing Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for c in ipost %}
+            <tr>
+              <td>{{ c.bid_open|date:'j M Y' }}</td>
+              <td>{{ c.title }}</td>
+              <td>{{ c.get_offer_status_display }}</td>
+              <td>{{ c.bid_closes|date:'j M Y' }}</td>
+              <td>
+                <a href="{% url 'MarketPlace:VacancyPost' c.id %}" class="badge badge-secondary float-right">Detail</a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endblock content %}

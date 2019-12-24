@@ -10,19 +10,24 @@ from django.db.models.signals import post_save
 from django_countries.fields import CountryField
 from phonenumber_field.modelfields import PhoneNumberField
 
+from .utils import create_code7
+
 from users.models import CustomUser
 from locations.models import Region, City, Suburb, Currency
 from db_flatten.models import PhoneNumberType
 from enterprises.models import Enterprise, Branch
 from pinax.referrals.models import Referral
 from marketplace.models import WorkLocation
+from talenttrack.models import Designation
 
 
 class BriefCareerHistory(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     work_configeration = models.ForeignKey(WorkLocation, on_delete=models.PROTECT)
+    designation = models.ForeignKey(Designation, on_delete=models.PROTECT, null=True)
     companybranch = models.ForeignKey(Branch, on_delete=models.PROTECT, verbose_name="Home_Base")
     current = models.BooleanField(default=False)
+    date_captured = models.DateField(auto_now_add=True)
     date_from = models.DateField()
     date_to = models.DateField(blank=True, null=True)
 
@@ -32,14 +37,14 @@ class BriefCareerHistory(models.Model):
         else:
             return f'{self.talent}, {self.work_configeration}: {self.companybranch}, from: {self.date_from} (Currently Employed Here)'
 
-            #This should now save
-
     def save(self, *args, **kwargs):
         if self.date_to:
             self.current = False
             super(BriefCareerHistory, self).save(*args, **kwargs)
         else:
             self.current = True
+            inject = f'{self.companybranch} ({self.designation})'
+            CustomUser.objects.filter(pk=self.talent.id).update(display_text=inject)
             super(BriefCareerHistory, self).save(*args, **kwargs)
 
 
@@ -74,11 +79,12 @@ class Profile(models.Model):
         ('L','Lump Sum'),
     )
     talent = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    f_name = models.CharField(max_length=30, null=True)
+    l_name = models.CharField(max_length=30, null=True)
+    alias = models.CharField(max_length=30, null=True)
     birth_date = models.DateField('Date of Birth', null=True)
     background = models.TextField()
     mentor = models.CharField('Do you wish to be a mentor?', max_length=1, choices=MENTOR, default='N')#Opt in to be a mentor to other people
-    middle_name = models.CharField(max_length=60, null=True, blank=True)
-    alias = models.CharField(max_length=15, null=True)
     referral_code = models.OneToOneField(Referral, on_delete=models.SET_NULL, null=True)
     std_rate = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     currency = models.ForeignKey(Currency, on_delete=models.PROTECT, null=True)
@@ -87,6 +93,20 @@ class Profile(models.Model):
 
     def __str__(self):
         return str(self.talent)
+
+    def save(self, *args, **kwargs):
+        if self.alias is None or self.alias == "":
+            self.alias = create_code7(self)
+
+        inject_fn = f'{self.f_name}'
+        inject_ln = f'{self.l_name}'
+        inject_al = f'{self.alias}'
+        target = CustomUser.objects.filter(pk=self.talent.id)
+        if self.f_name is None or self.f_name =="":
+            target.update(alias=inject_al)
+        else:
+            target.update(alias=inject_al, first_name=inject_fn, last_name=inject_ln)
+        super(Profile, self).save(*args, **kwargs)
 
     def create_profile(sender, **kwargs):
         if kwargs['created']:

@@ -25,10 +25,13 @@ from talenttrack.forms import (
 )
 
 from locations.models import Region
+from users.models import CustomUser
+from django.contrib.auth.models import User
 
 from .forms import (
-    ProfileForm, EmailForm, EmailStatusForm, PhysicalAddressForm, PostalAddressForm, PhoneNumberForm, OnlineProfileForm, ProfileTypeForm, FileUploadForm, IdTypeForm, LanguageTrackForm, LanguageListForm, PassportDetailForm, IdentificationDetailForm, BriefCareerHistoryForm, ResignedForm,
+    ProfileForm, EmailForm, EmailStatusForm, PhysicalAddressForm, PostalAddressForm, PhoneNumberForm, OnlineProfileForm, ProfileTypeForm, FileUploadForm, IdTypeForm, LanguageTrackForm, LanguageListForm, PassportDetailForm, IdentificationDetailForm, BriefCareerHistoryForm, ResignedForm, UserUpdateForm, CustomUserUpdateForm
 )
+
 
 @login_required()
 def ProfileHome(request):
@@ -213,6 +216,7 @@ def ClassMatesWrongPersonView(request, pk):
         info.save()
     return redirect(reverse('Profile:Confirm')+'#ClassMates')
 #<<<Education-ClassMate
+
 
 #>>>Experience: Colleague
 @login_required()
@@ -593,6 +597,7 @@ def LanguageEditView(request, profile_id, lang_id):
     else:
         raise PermissionDenied
 
+
 @login_required()
 @csp_exempt
 def LanguagePopup(request):
@@ -617,6 +622,7 @@ def get_language_id(request):
         return HttpResponse(json.dumps(data), content_type='application/json')
     return HttpResponse("/")
 #<<< Language Views
+
 
 @csp_exempt
 @login_required()
@@ -695,6 +701,7 @@ def FileDelete(request, pk):
     else:
         raise PermissionDenied
 
+
 login_required()
 def EmailDelete(request, pk):
     detail = Email.objects.get(pk=pk)
@@ -704,7 +711,6 @@ def EmailDelete(request, pk):
             return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':detail.talent.id})+'#email')
     else:
         raise PermissionDenied
-
 
 
 @login_required()
@@ -722,9 +728,10 @@ def ProfileView(request, profile_id):
         passport = PassportDetail.objects.filter(talent=profile_id)
         speak = LanguageTrack.objects.filter(talent=profile_id)
         history = BriefCareerHistory.objects.filter(talent=profile_id).order_by('-date_from')
+        user_info = CustomUser.objects.get(pk=request.user.id)
 
         template='Profile/profile_view.html'
-        context= {'info':info, 'email':email, 'physical':physical, 'postal': postal, 'pnumbers': pnumbers, 'online': online, 'upload': upload, 'id': id, 'passport': passport, 'speak': speak, 'history': history}
+        context= {'info':info, 'email':email, 'physical':physical, 'postal': postal, 'pnumbers': pnumbers, 'online': online, 'upload': upload, 'id': id, 'passport': passport, 'speak': speak, 'history': history, 'user_info': user_info}
         return render(request, template, context)
     else:
         raise PermissionDenied
@@ -732,22 +739,33 @@ def ProfileView(request, profile_id):
 
 @login_required()
 def ProfileEditView(request, profile_id):
+    talent = request.user.id
     detail = get_object_or_404(Profile, pk=profile_id)
+    #work-around to get first and last names into fields. THere must be a better way for people smarter than me to fix! (JK)
+    usr = list(CustomUser.objects.filter(pk=talent).values_list('first_name', 'last_name'))
+
+    fn = usr[0][0]
+    ln = usr[0][1]
+
+    Profile.objects.filter(pk=profile_id).update(f_name=fn, l_name=ln)
+
     if detail.talent == request.user:
         form = ProfileForm(request.POST or None, instance=detail)
+
         if request.method =='POST':
             next_url=request.POST.get('next','/')
 
             if form.is_valid():
-                new=form.save(commit=False)
+                new = form.save(commit=False)
                 new.talent = request.user
                 new.save()
+
                 if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
                     next_url = reverse('Profile:ProfileHome')
                 return HttpResponseRedirect(next_url)
         else:
             template = 'Profile/profile_edit.html'
-            context = {'form': form}
+            context = {'form': form,}
             return render(request, template, context)
     else:
         raise PermissionDenied
@@ -779,6 +797,7 @@ def EmailEditView(request, profile_id):
     else:
         raise PermissionDenied
 
+
 @login_required()
 def EmailStatusView(request, profile_id, email_id):
     detail = Profile.objects.get(talent=profile_id)
@@ -793,7 +812,6 @@ def EmailStatusView(request, profile_id, email_id):
                 return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':profile_id}))
 
         else:
-
             template = 'Profile/email_status.html'
             context = {'form': form}
             return render(request, template, context)

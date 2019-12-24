@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.utils.encoding import force_text
-
+from django.db.models import Q
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Row, Column
@@ -9,24 +9,51 @@ from crispy_forms.layout import Layout, Submit, Row, Column
 
 from django_select2.forms import (
     ModelSelect2TagWidget, ModelSelect2Widget, ModelSelect2MultipleWidget,
-    Select2Widget
+    Select2Widget, Select2MultipleWidget
 )
 
 from .models import (
     Topic, Result, CourseType, Course, Lecturer, ClassMates, WorkClient, WorkExperience, WorkColleague, Superior, WorkCollaborator, Designation
     )
 
-from enterprises.models import Enterprise
+from enterprises.models import Enterprise, Branch
 from project.models import ProjectData
 from db_flatten.models import SkillTag
+from enterprises.models import Industry
+from users.models import CustomUser
 
 #>>> Select 2
+class UserSearchFieldMixin:
+    search_fields = [
+        'last_name__icontains', 'pk__startswith', 'first_name__icontains',
+    ]
+class UserSelect2Widget(UserSearchFieldMixin, ModelSelect2Widget):
+    model = CustomUser
+
+    def create_value(self, value):
+        self.get_queryset().create(Q(last_name=value) | Q(first_name=value))
+
+
 class CompanySearchFieldMixin:
     search_fields = [
         'name__icontains', 'pk__startswith'
-    ]
+        ]
+
 class CompanySelect2Widget(CompanySearchFieldMixin, ModelSelect2Widget):
     model = Enterprise
+
+    def create_value(self, value):
+        self.get_queryset().create(name=value)
+
+
+class BranchSearchFieldMixin:
+    search_fields = [
+        'name__icontains', 'pk__startswith'
+        ]
+    dependent_fields = {'company': 'company'}
+
+class BranchSelect2Widget(BranchSearchFieldMixin, ModelSelect2Widget):
+    model = Branch
 
     def create_value(self, value):
         self.get_queryset().create(name=value)
@@ -94,34 +121,24 @@ class SkillModelSelect2MultipleWidget(SkillSearchFieldMixin, ModelSelect2Multipl
 
     def create_value(self, value):
         self.get_queryset().create(skill=value)
+
+
+class IndSearchFieldMixin:
+    search_fields = [
+        'industry__icontains', 'pk__startswith'
+    ]
+
+class IndSelect2Widget(IndSearchFieldMixin, ModelSelect2Widget):
+    model = Industry
+
+    def create_value(self, value):
+        self.get_queryset().create(industry=value)
 #Select2<<<
-
-'''
-#Removed when consolidting all data into WorkExperience table (20191210)
-class PreColleagueResponseForm(forms.ModelForm):
-    class Meta:
-        model = PreColleague
-        fields = ('response',)
-
-
-class PreColleagueConfirmForm(forms.ModelForm):
-    class Meta:
-        model = PreColleague
-        fields = ('confirm', 'comments')
-
-
-class PreColleagueSelectForm(forms.ModelForm):
-    class Meta:
-        model = PreColleague
-        fields = ('colleague_name', 'designation')
-        widgets={
-        'designation': DesignationSelect2Widget(),
-        }
-'''
 
 
 class DateInput(forms.DateInput):
     input_type = 'date'
+
 
 class PreLoggedExperienceForm(forms.ModelForm):
     class Meta:
@@ -152,10 +169,14 @@ class WorkClientConfirmForm(forms.ModelForm):
 class WorkClientSelectForm(forms.ModelForm):
     class Meta:
         model = WorkClient
-        fields = ('client_name', 'designation', 'company' )
+        fields = ('client_name', 'designation', 'company', 'branch', )
         widgets={
             'enterprise': CompanySelect2Widget(),
+            'client_name': UserSelect2Widget(),
+            'designation': DesignationSelect2Widget(),
+            'branch': BranchSelect2Widget(),
             }
+
 
 class WorkCollaboratorResponseForm(forms.ModelForm):
     class Meta:
@@ -172,10 +193,14 @@ class WorkCollaboratorConfirmForm(forms.ModelForm):
 class WorkCollaboratorSelectForm(forms.ModelForm):
     class Meta:
         model = WorkCollaborator
-        fields = ('collaborator_name', 'designation', 'company' )
+        fields = ('collaborator_name', 'designation', 'company', 'branch', )
         widgets={
             'enterprise': CompanySelect2Widget(),
+            'superior_name': UserSelect2Widget(),
+            'designation': DesignationSelect2Widget(),
+            'branch': BranchSelect2Widget(),
             }
+
 
 class SuperiorResponseForm(forms.ModelForm):
     class Meta:
@@ -193,7 +218,10 @@ class SuperiorSelectForm(forms.ModelForm):
     class Meta:
         model = Superior
         fields = ('superior_name', 'designation', )
-
+        widgets={
+            'superior_name': UserSelect2Widget(),
+            'designation': DesignationSelect2Widget(),
+            }
 
 class WorkColleagueResponseForm(forms.ModelForm):
     class Meta:
@@ -211,7 +239,10 @@ class WorkColleagueSelectForm(forms.ModelForm):
     class Meta:
         model = WorkColleague
         fields = ('colleague_name', 'designation')
-
+        widgets={
+            'colleague_name': UserSelect2Widget(),
+            'designation': DesignationSelect2Widget(),
+            }
 
 class WorkExperienceForm(forms.ModelForm):
     class Meta:
@@ -226,7 +257,9 @@ class WorkExperienceForm(forms.ModelForm):
             'date_from': DateInput(),
             'date_to': DateInput(),
             'skills': SkillModelSelect2MultipleWidget(),
+            'industry': IndSelect2Widget(),
 }
+
 
 class DesignationForm(forms.ModelForm):
     class Meta:
@@ -249,8 +282,11 @@ class ClassMatesResponseForm(forms.ModelForm):
 class ClassMatesSelectForm(forms.ModelForm):
     class Meta:
         model = ClassMates
-        fields = ('colleague',)
-
+        fields = ('colleague', 'topic',)
+        widgets={
+            'topic': TopicSelect2Widget(),
+            'colleague': UserSelect2Widget(),
+            }
 
 class ClassMatesConfirmForm(forms.ModelForm):
     class Meta:
@@ -279,8 +315,11 @@ class ClassMatesRespondForm(forms.ModelForm):
 class LecturerSelectForm(forms.ModelForm):
     class Meta:
         model = Lecturer
-        fields = ('lecturer',)
-
+        fields = ('lecturer', 'topic',)
+        widgets={
+            'topic': TopicSelect2Widget(),
+            'lecturer': UserSelect2Widget(),
+            }
 
 class LecturerConfirmForm(forms.ModelForm):
     class Meta:

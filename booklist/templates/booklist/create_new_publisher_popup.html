@@ -19,7 +19,7 @@ function closePopup(win, newID, newRepr, id) {
 <div class="container">Add a New Publisher</h5>
 
 <div class="card-body">
-<form method="post">
+<form method="post" novalidate>
   <input type="hidden" name="next" value="{{ request.GET.next }}">
   {% csrf_token %}
   <div class="form-row">

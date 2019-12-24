@@ -62,10 +62,25 @@ def VacancyDetailView(request, pk):
 
 
 @login_required()
+@subscription(2)
+def AllPostedVacanciesView(request):
+    #>>>Queryset caching
+    tr = TalentRequired.objects.filter(requested_by=request.user)
+    #Queryset caching<<<
+    ipost = tr.order_by('-bid_open')
+
+    template = 'marketplace/vacancy_posts_all.html'
+    context ={
+        'ipost': ipost,
+        }
+    return render(request, template, context)
+
+
+@login_required()
 def MarketHome(request):
     #>>>Queryset caching
     talent=request.user
-    tr = TalentRequired.objects.filter(requested_by=talent, offer_status__iexact='O')
+    tr = TalentRequired.objects.filter(requested_by=talent)
     wb = WorkBid.objects.filter(work__requested_by=talent, work__offer_status__iexact='O')
     ta = TalentAvailabillity.objects.filter(talent=talent)
     we = WorkExperience.objects.filter(talent=talent).prefetch_related('topic')
@@ -73,7 +88,8 @@ def MarketHome(request):
     sl = SkillLevel.objects.all()
     #Queryset caching<<<
 
-    ipost = tr.order_by('-bid_open')[:5]
+    ipost = tr.filter(offer_status__iexact='O').order_by('-bid_open')[:5]
+    ipost_closed = tr.filter(offer_status__iexact='C').order_by('-bid_open')[:5]
     ipost_bid = wb.filter(Q(bidreview__exact='R') | Q(bidreview__exact='P') | Q(bidreview__exact='A'))
     ipost_bid_flat = ipost_bid.values_list('work', flat=True).distinct()
     capacity = ta.filter(date_to__gte=timezone.now()).order_by('-date_to')[:5]
@@ -132,7 +148,7 @@ def MarketHome(request):
     snr = list(sl.filter(level__exact=4).values_list('min_hours', flat=True))
     lead = list(sl.filter(level__exact=5).values_list('min_hours', flat=True))
 
-    if myed <= std:
+    if myed < std:
         iama = 0
     elif myed >= std and myed < grd:
         iama = 1
@@ -150,7 +166,7 @@ def MarketHome(request):
     match = []
 
     for key in req_experience:
-        skill_required = sr.filter(scope=key).values_list('skill', flat=True).distinct()
+        skill_required = sr.filter(scope=key).values_list('skills', flat=True).distinct()
 
         for sk in skill_required:
             match.append(sk)
@@ -160,7 +176,7 @@ def MarketHome(request):
 
     for item in matchd:
         display = sr.filter(
-                Q(skill__in=match)
+                Q(skills__in=match)
                 & Q(scope__bid_closes__gte=timezone.now()
                 ))
 
@@ -173,7 +189,7 @@ def MarketHome(request):
 
     template = 'marketplace/vacancy_home.html'
     context ={
-        'capacity': capacity, 'ipost': ipost, 'ipost_bid_flat': ipost_bid_flat, 'dsd': dsd, 'already_applied': already_applied}
+        'capacity': capacity, 'ipost': ipost, 'ipost_bid_flat': ipost_bid_flat, 'dsd': dsd, 'already_applied': already_applied, 'ipost_closed': ipost_closed}
     return render(request, template, context)
 
 
@@ -211,6 +227,14 @@ def TalentAvailabillityView(request):
 
 
 @login_required()
+def AvailabillityRemoveView(request, avl_id):
+    if request.method == 'POST':
+        item = TalentAvailabillity.objects.get(pk=avl_id)
+        item.delete()
+    return redirect(reverse('MarketPlace:Entrance')+'#Availabillity')
+
+
+@login_required()
 @subscription(2)
 def VacancyPostView(request, pk):
     #>>>Queryset Cache
@@ -224,7 +248,7 @@ def VacancyPostView(request, pk):
     #Queryset Cache<<<
 
     #>>> List all skills required
-    skill_r = skille.values_list('skill', flat=True).distinct()
+    skill_r = skille.values_list('skills', flat=True).distinct()
     skill_rl = list(skill_r)
     #List all skills required<<<
 
@@ -254,7 +278,7 @@ def VacancyPostView(request, pk):
         talent_skill = list(we.filter(talent=item, edt=False).values_list('skills', flat=True))
         rb = book.filter(talent=item).count()
         talent_skillt = list(we.filter(talent=item, edt=True).values_list('topic__skills', flat=True))
-        rate = Profile.objects.filter(talent=item).values_list('std_rate', 'currency__currency_abv', 'rate_unit', 'motivation')
+        rate = Profile.objects.filter(talent=item).values_list('std_rate', 'currency__currency_abv', 'rate_unit', 'motivation', 'alias',)
 
         slist = talent_skill + talent_skillt
         skillset = set(slist)
@@ -273,7 +297,7 @@ def VacancyPostView(request, pk):
             atalent_skill = list(we.filter(talent=app, edt=False).values_list('skills', flat=True))
             atalent_skillt = list(we.filter(talent=app, edt=True).values_list('topic__skills', flat=True))
             rb = book.filter(talent=app).count()
-            rate = applicants.filter(talent=app).values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation')
+            rate = applicants.filter(talent=app).values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation', 'alias')
 
             aslist = atalent_skill + atalent_skillt
             askillset = set(aslist)
@@ -409,7 +433,7 @@ def ShortListView(request, slv):
         if subsi == 2:
             rate = applicants.filter(talent=app).values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation')
         else:
-            rate = Profile.objects.filter(talent=app).values_list('std_rate', 'currency__currency_abv', 'rate_unit', 'motivation')
+            rate = Profile.objects.filter(talent=app).values_list('std_rate', 'currency__currency_abv', 'rate_unit', 'motivation', 'alias')
 
         aslist = atalent_skill + atalent_skillt
         askillset = set(aslist)
@@ -475,6 +499,11 @@ def DeliverablesAddView(request, pk):
                 return redirect(reverse('MarketPlace:Deliverables', kwargs={'pk': pk}))
             elif 'done' in request.POST:
                 return redirect(reverse('MarketPlace:Skills', kwargs={'pk': pk}))
+        else:
+            template = 'marketplace/vacancy_deliverables.html'
+            context = {'form': form, 'instance': instance, 'deliverable': deliverable}
+            return render(request, template, context)
+
     else:
         template = 'marketplace/vacancy_deliverables.html'
         context = {'form': form, 'instance': instance, 'deliverable': deliverable}

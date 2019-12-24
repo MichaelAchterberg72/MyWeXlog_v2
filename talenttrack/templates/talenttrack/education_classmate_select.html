@@ -17,8 +17,9 @@
 <!--   <input type="hidden" name="next" value="{{ request.GET.next }}"> -->
   {% csrf_token %}
   <div class="form-row">
-    <div class="form-group col-md-6 mb-0">
+    <div class="form-group col-md-10 mb-0">
       {{ form.colleague|as_crispy_field }}
+      {{ form.topic|as_crispy_field }}
     </div>
   </div>
   <div class="">

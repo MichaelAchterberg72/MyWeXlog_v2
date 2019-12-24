@@ -32,7 +32,7 @@ class BookListHomeView(TemplateView):
     template_name = 'booklist/home.html'
 
 
-@login_required
+@login_required()
 def BookListHome(request, profile_id=None):
     profile_id = request.user
     ecount = ReadBy.objects.filter(talent=profile_id).aggregate(sum_e=Count('book'))
@@ -176,6 +176,11 @@ def TagCreatePopupView(request):
             instance=form.save(commit=False)
             instance=form.save()
             return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_tag");</script>' % (instance.pk, instance))
+        else:
+            context = {'form':form,}
+            template_name = 'booklist/create_new_tag_popup.html'
+            return render(request, template_name, context)
+
     else:
         context = {'form':form,}
         template_name = 'booklist/create_new_tag_popup.html'

@@ -119,7 +119,7 @@ class SkillRequiredForm(forms.ModelForm):
         model = SkillRequired
         fields = ('skills', )
         widgets = {
-            'skill': VacancySkillSelect2Widget(),
+            'skills': VacancySkillSelect2Widget(),
         }
 
 
@@ -151,9 +151,10 @@ class TalentRequiredForm(forms.ModelForm):
             'certification': CertModelSelect2MultipleWidget(),
         }
         labels = {
-            'bid_closes':'Vacancy Closes',
+            'bid_closes': 'Vacancy Closes',
             'offer_status': 'Vacancy Status',
             'worklocation': 'Work Type Configeration',
+            'date_deadline': 'To be Completed By',
         }
 
 

@@ -30,6 +30,7 @@ from db_flatten.models import SkillTag
 def ExperienceHome(request):
         #>>>Step 1
         basequery = WorkExperience.objects.select_related('topic').filter(talent=request.user)
+        skills = SkillTag.objects.all()
         #<<<Step 1
 
         #>>>Step 2
@@ -64,33 +65,37 @@ def ExperienceHome(request):
 
         tot_sum = t_sum + e_sum + p_sum
         #<<<Step 2
+        '''
+        atalent_skill = list(we.filter(talent=app, edt=False).values_list('skills', flat=True))
 
+        atalent_skillt = list(we.filter(talent=app, edt=True).values_list('topic__skills', flat=True))
+        aslist = atalent_skill + atalent_skillt
+        askillset = set(aslist)
+        askill_count = len(askillset)
+        '''
         #>>>Step 3
-        e_skill = basequery.filter(edt=True).only('pk').values_list('pk', flat=True)
-        l_skill = basequery.filter(edt=False).only('pk').values_list('pk', flat=True)
+        e_skill = basequery.filter(edt=True).values_list('topic__skills', flat=True)
+        l_skill = basequery.filter(edt=False).values_list('skills', flat=True)
 
-        skill_set = SkillTag.objects.none()
+        e_skill_l = list(e_skill)
+        l_skill_l = list(l_skill)
 
-        for ls in l_skill:
-            a = basequery.get(pk=ls)
-            b = a.skills.all().values_list('skill', flat=True)
-
-            skill_set = skill_set | b
-
-        for es in e_skill:
-            c = basequery.get(pk=es)
-            d = c.topic.skills.all().values_list('skill', flat=True)
-
-            skill_set = skill_set | d
+        skill_list = e_skill_l + l_skill_l
+        skill_set = set(skill_list)
+        skill_count = len(skill_set)
 
 
-        skill_set = skill_set.distinct().order_by('skill')
-        skill_count = skill_set.count()
+        skill_name = skills.none()
+
+        for ls in skill_set:
+            b = skills.filter(pk=ls).values_list('skill', flat=True)
+
+            skill_name = skill_name | b
         #<<< Step 3
 
         template = 'talenttrack/track_home.html'
         context = {
-            'train': train, 'train_sum': train_sum, 'experience': experience, 'exp_sum': exp_sum, 'prelog': prelog, 'pre_sum': pre_sum, 'tot_sum': tot_sum, 'skill_set': skill_set, 'skill_count': skill_count
+            'train': train, 'train_sum': train_sum, 'experience': experience, 'exp_sum': exp_sum, 'prelog': prelog, 'pre_sum': pre_sum, 'tot_sum': tot_sum, 'skill_name': skill_name, 'skill_count': skill_count
             }
         return render(request, template, context)
 
@@ -142,6 +147,7 @@ def PreLogDetailView(request, pre_id):
 
 
 @login_required()
+@csp_exempt
 def ClientSelectView(request, pk):
     instance = WorkExperience.objects.get(pk=pk)
     form = WorkClientSelectForm(request.POST or None)
@@ -168,6 +174,7 @@ def ClientSelectView(request, pk):
 
 
 @login_required()
+@csp_exempt
 def ClientAddView(request, pk):
     instance = get_object_or_404(WorkExperience, pk=pk)
     form = WorkClientSelectForm(request.POST or None)
@@ -215,6 +222,7 @@ def ClientResponseView(request, pk):
 
 
 @login_required()
+@csp_exempt
 def CollaboratorSelectView(request, pk):
     instance = WorkExperience.objects.get(pk=pk)
     form = WorkCollaboratorSelectForm(request.POST or None)
@@ -239,7 +247,9 @@ def CollaboratorSelectView(request, pk):
         response.set_cookie("confirm","WL")
         return response
 
+
 @login_required()
+@csp_exempt
 def CollaboratorAddView(request, pk):
     instance = get_object_or_404(WorkExperience, pk=pk)
     form = WorkCollaboratorSelectForm(request.POST or None)
@@ -287,6 +297,7 @@ def CollaboratorResponseView(request, pk):
 
 
 @login_required()
+@csp_exempt
 def SuperiorSelectView(request, pk):
     instance = WorkExperience.objects.get(pk=pk)
     form = SuperiorSelectForm(request.POST or None)
@@ -312,6 +323,7 @@ def SuperiorSelectView(request, pk):
 
 
 @login_required()
+@csp_exempt
 def SuperiorAddView(request, pk):
     instance = get_object_or_404(WorkExperience, pk=pk)
     form = SuperiorSelectForm(request.POST or None)
@@ -358,6 +370,7 @@ def SuperiorResponseView(request, pk):
 
 
 @login_required()
+@csp_exempt
 def ColleagueSelectView(request):
     instance = WorkExperience.objects.filter(talent=request.user).latest('date_captured')
     form = WorkColleagueSelectForm(request.POST or None)
@@ -382,6 +395,8 @@ def ColleagueSelectView(request):
         return response
 
 
+@login_required()
+@csp_exempt
 def ColleagueAddView(request, pk):
     instance = get_object_or_404(WorkExperience, pk=pk)
     form = WorkColleagueSelectForm(request.POST or None)
@@ -462,6 +477,10 @@ def WorkExperienceCaptureView(request):
             new.save()
             form.save_m2m()
             return redirect('Talent:ColleagueSelect')
+        else:
+            template = 'talenttrack/work_experience_capture.html'
+            context = {'form': form}
+            return render(request, template, context)
     else:
         template = 'talenttrack/work_experience_capture.html'
         context = {'form': form}
@@ -542,7 +561,7 @@ def LecturerSelectView(request):
                 response.delete_cookie("confirm")
                 return response
     else:
-        template = 'talenttrack/lecturer_select.html'
+        template = 'talenttrack/education_lecturer_select.html'
         context = {'instance': instance, 'form': form}
         response = render(request, template, context)
         response.set_cookie("confirm","LR")
@@ -568,7 +587,7 @@ def LecturerAddView(request, pk):
                 response.delete_cookie("confirm")
                 return response
     else:
-        template = 'talenttrack/lecturer_select.html'
+        template = 'talenttrack/education_lecturer_select.html'
         context = {'instance': instance, 'form': form}
         response = render(request, template, context)
         response.set_cookie("confirm","LR")
@@ -594,7 +613,7 @@ def ClassMateSelectView(request):
                 response.delete_cookie("confirm")
                 return response
     else:
-        template = 'talenttrack/classmate_select.html'
+        template = 'talenttrack/education_classmate_select.html'
         context = {'instance': instance, 'form': form}
         response = render(request, template, context)
         response.set_cookie("confirm","CM")
@@ -620,7 +639,7 @@ def ClassMateAddView(request, pk):
                 response.delete_cookie("confirm")
                 return response
     else:
-        template = 'talenttrack/classmate_select.html'
+        template = 'talenttrack/education_classmate_select.html'
         context = {'instance': instance, 'form': form}
         response = render(request, template, context)
         response.set_cookie("confirm","CM")

@@ -18,9 +18,22 @@ from .models import (
           )
 from enterprises.models import Enterprise, Branch
 from locations.models import Region, City, Suburb
+from talenttrack.models import Designation
+from users.models import CustomUser
 
 
 #>>> Select 2
+class DesignationSearchFieldMixin:
+    search_fields = [
+        'name__icontains', 'pk__startswith'
+    ]
+class DesignationSelect2Widget(DesignationSearchFieldMixin, ModelSelect2Widget):
+    model = Designation
+
+    def create_value(self, value):
+        self.get_queryset().create(name=value)
+
+
 class BranchSearchFieldMixin:
     search_fields = [
         'name__icontains', 'pk__startswith'
@@ -40,11 +53,12 @@ class DateInput(forms.DateInput):
 class BriefCareerHistoryForm(forms.ModelForm):
     class Meta:
         model = BriefCareerHistory
-        fields = ('work_configeration', 'companybranch', 'date_from', 'date_to')
+        fields = ('work_configeration', 'companybranch', 'date_from', 'date_to', 'designation',)
         widgets = {
             'companybranch': BranchSelect2Widget(),
             'date_from': DateInput(),
             'date_to': DateInput(),
+            'designation': DesignationSelect2Widget(),
         }
 
 
@@ -95,13 +109,30 @@ class FileUploadForm(forms.ModelForm):
         model = FileUpload
         fields = ('title', 'file')
 
+
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ('birth_date', 'background', 'mentor', 'std_rate', 'currency')
+        fields = ('birth_date', 'background', 'mentor', 'std_rate', 'currency', 'alias', 'motivation', 'f_name', 'l_name')
         widgets = {
             'birth_date': DateInput(),
             }
+        labels = {
+            'f_name': 'First Name',
+            'l_name': 'Last Name / Surname',
+        }
+
+class UserUpdateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name')
+
+
+class CustomUserUpdateForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ('alias', )
+
 
 #>>> Select2 Company Field in email
 class CompanySearchFieldMixin:
@@ -174,20 +205,6 @@ class PhysicalAddressForm(forms.ModelForm):
             'city': CitySelect2Widget(),
             'suburb': SuburbSelect2Widget(),
         }
-'''
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['region'].queryset = Region.objects.none()
-
-        if 'country' in self.data:
-            try:
-                country_id = int(self.data.get('country'))
-                self.fields['region'].queryset = Region.objects.filter(country=country_id)
-            except (ValueError, TypeError):
-                pass  # invalid input from the client; ignore and fallback to empty Region queryset
-        elif self.instance.pk:
-            pass
-'''
 
 
 class PostalAddressForm(forms.ModelForm):

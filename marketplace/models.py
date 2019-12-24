@@ -8,10 +8,13 @@ from locations.models import Currency, City
 from db_flatten.models import SkillTag
 from talenttrack.models import Result
 
-
+#This is the table that specifies the work configeration (Freelance, Remote Freelent, Consultant, Contractor, Employee)
 class WorkLocation(models.Model):
     type = models.CharField(max_length=255, unique=True)
     description = models.TextField()
+
+    class Meta:
+        ordering = ['type']
 
     def __str__(self):
         return self.type
@@ -52,6 +55,9 @@ class SkillLevel(models.Model):
     level = models.IntegerField(choices=LEVEL, unique=True)
     min_hours = models.IntegerField()
     description = models.TextField()
+
+    class Meta:
+        ordering = ['level']
 
     def clean(self):
         self.level = self.level.capitalize()

@@ -56,14 +56,11 @@ class AuthorModelSelect2MultipleWidget(AuthorSearchFieldMixin, ModelSelect2Multi
 class BookAddForm(forms.ModelForm):
     class Meta:
         model = BookList
-        fields = ('title','publisher','author','tag','link', 'type')
+        fields = ('title','publisher','author','tag', 'link', 'type')
         widgets = {
             'publisher': PublisherSelect2Widget(),
             'tag': TagModelSelect2MultipleWidget(),
             'author': AuthorModelSelect2MultipleWidget(),
-        }
-        lables ={
-            'tag':'Tag / Associated Skill'
         }
 
 

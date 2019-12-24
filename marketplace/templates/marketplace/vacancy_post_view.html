@@ -3,7 +3,7 @@
 {% load crispy_forms_tags %}
 {% load static %}
 
-{% block title %}{{block.super}}-Vacancy Edit{% endblock title %}
+{% block title %}{{block.super}}-Vacancy Review{% endblock title %}
 
 {% block content %}
 {{ form.media.css }}
@@ -116,7 +116,7 @@
       <tbody>
         {% for s in skille %}
         <tr>
-          <td>{{ s.skill }}</td>
+          <td>{{ s.skills }}</td>
           <td><form  action="{% url 'MarketPlace:SkillDelete' s.id %}" method="post">
             {% csrf_token %}
             <button type="submit" class="badge badge-danger badge-pill float-right">Remove</button>
@@ -147,7 +147,7 @@
       <tbody>
         {% for key in suitable.items %}
         <tr>
-          <td>{{ key.0 }}</td>
+          <td>{{ key.1.ro.0.4 }}</td>
           <td>{{ key.1.we }}</td>
           <td>{{ key.1.te }}</td>
           <td>{{ key.1.s_no }}</td>
@@ -190,7 +190,7 @@
     <tbody>
       {% for key in applied.items %}
       <tr>
-        <td>{{ key.0 }}</td>
+        <td>{{ key.1.ro.0.4 }}</td>
         <td>{{ key.1.we }}</td>
         <td>{{ key.1.te }}</td>
         <td>{{ key.1.s_no }}</td>

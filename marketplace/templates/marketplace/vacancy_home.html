@@ -53,7 +53,6 @@
     <div class="card">
       <div class="card-body">
         <a href="{% url 'MarketPlace:Vacancy' %}" class="badge badge-primary float-right">Post Vacancy</a>
-      </ul>
       <h5 class="card-title">My Vacancies Advertised (Open)</h5>
       <table class="table table-sm">
         <thead>
@@ -95,18 +94,28 @@
         <h5 class="card-title">My Availabillity</h5>
         <table class="table table-sm">
           <thead>
+            <col width="20%">
+            <col width="20%">
+            <col width="20%">
+            <col width="20%">
             <tr>
-              <th>Date From</th>
-              <th>Date to</th>
-              <th>Time Available</th>
+              <th class="align-middle">Date From</th>
+              <th class="align-middle">Date to</th>
+              <th class="align-middle">Time Available</th>
             </tr>
           </thead>
           {% for a in capacity %}
           <tbody>
             <tr>
-              <td>{{ a.date_from|date:'d M Y' }}</td>
-              <td>{{ a.date_to|date:'d M Y' }}</td>
-              <td>{{ a.hours_available }} hours {{ a.get_unit_display }}</td>
+              <td class="align-middle">{{ a.date_from|date:'d M Y' }}</td>
+              <td class="align-middle">{{ a.date_to|date:'d M Y' }}</td>
+              <td class="align-middle">{{ a.hours_available }} hrs<br>{{ a.get_unit_display }}</td>
+              <td class="align-middle ">
+                <form  action="{% url 'MarketPlace:NotAvailable' a.id %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="badge badge-danger badge-pill">Remove</button>
+                </form>
+              </td>
             </tr>
           </tbody>
           {% endfor %}
@@ -115,6 +124,47 @@
     </div>
   </div>
 </div>
+{% if request.user.subscription >= 2 %}
+<div class="row">
+  <div class="col-sm-7">
+    <div class="card">
+      <div class="card-body">
+        <a href="{% url 'MarketPlace:AllPostedVac' %}" class="badge badge-primary float-right">All Posted Vacancies</a>
+      <h5 class="card-title">My Vacancies Advertised (Closed)</h5>
+      <table class="table table-sm">
+        <thead>
+          <tr>
+            <th>Date Posted</th>
+            <th>Vacancy Title</th>
+            <th>Status</th>
+            <th>Closing Date</th>
+            <th>Response</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for c in ipost_closed %}
+            <tr>
+              <td>{{ c.bid_open|date:'j M Y' }}</td>
+              <td>{{ c.title }}</td>
+              <td>{{ c.get_offer_status_display }}</td>
+              <td>{{ c.bid_closes|date:'j M Y' }}</td>
+              <td>
+              {% if c.id in ipost_bid_flat %}
+                <strong>Yes</strong>
+              {% else %}
+                None
+              {% endif %}
+              <a href="{% url 'MarketPlace:VacancyPost' c.id %}" class="badge badge-secondary float-right">Detail</a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
 {% endif %}
 {% endif %}
 {% endblock content %}

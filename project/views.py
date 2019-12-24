@@ -53,10 +53,12 @@ def ProjectList(request, profile_id=None):
 def ProjectDetailView(request, project_id):
     info = get_object_or_404(ProjectData, pk=project_id)
     detail = ProjectData.objects.filter(pk=project_id)
-    hr = WorkExperience.objects.filter(project=project_id).aggregate(sum_t=Sum('hours_worked'))
+    cache = WorkExperience.objects.filter(project=project_id)
+    hr = cache.aggregate(sum_t=Sum('hours_worked'))
+    ppl = cache.distinct('talent').count()
 
     template_name = 'project/project_detail.html'
-    context = {'detail': detail, 'info': info, 'hr': hr,}
+    context = {'detail': detail, 'info': info, 'hr': hr, 'ppl': ppl}
     return render(request, template_name, context)
 
 

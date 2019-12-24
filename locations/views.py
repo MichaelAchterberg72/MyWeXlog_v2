@@ -32,6 +32,10 @@ def RegionAddPopup(request):
             instance=form.save(commit=False)
             instance.save()
             return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_region");</script>' % (instance.pk, instance))
+        else:
+            context = {'form': form}
+            template = 'locations/region_popup.html'
+            return render(request, template, context)
 
     else:
         context = {'form': form}
@@ -59,6 +63,10 @@ def CityAddPopup(request):
             new = form.save(commit=False)
             new.save()
             return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_city");</script>' % (new.pk, new))
+        else:
+            context = {'form': form}
+            template = 'locations/city_popup.html'
+            return render(request, template, context)
 
     else:
         context = {'form': form}
@@ -86,6 +94,10 @@ def SuburbAddPopup(request):
             new = form.save(commit=False)
             new.save()
             return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_suburb");</script>' % (new.pk, new))
+        else:
+            context = {'form': form}
+            template = 'locations/suburb_popup.html'
+            return render(request, template, context)
 
     else:
         context = {'form': form}
@@ -113,6 +125,10 @@ def CurrencyAddPopup(request):
             instance=form.save(commit=False)
             instance.save()
             return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_currency");</script>' % (instance.pk, instance))
+        else:
+            context = {'form': form}
+            template = 'locations/currency_popup.html'
+            return render(request, template, context)
 
     else:
         context = {'form': form}
