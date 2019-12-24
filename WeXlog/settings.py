@@ -299,22 +299,12 @@ DJANGO_MESSAGES_NOTIFY = False
 PAYPAL_RECEIVER_EMAIL = "yourpaypalemail@example.com"
 PAYPAL_TEST = True              # set to False for production
 
-PAYPAL_PRIVATE_CERT = '/path/to/paypal_private.pem'
-PAYPAL_PUBLIC_CERT = '/path/to/paypal_public.pem'
-PAYPAL_CERT = '/path/to/paypal_cert.pem'
+# Follow instructions to create new certs for server from https://re.readthedocs.io/es/stable/standard/encrypted_buttons.html to create certs
+PAYPAL_PRIVATE_CERT = 'paypal/cert/paypal_private.pem'  #'/path/to/paypal_private.pem'  $ openssl genrsa -out paypal_private.pem 1024
+PAYPAL_PUBLIC_CERT = 'paypal/cert/paypal_public.pem'  # '/path/to/paypal_public.pem'  $ openssl req -new -key paypal_private.pem -x509 -days 365 -out paypal_public.pem
+PAYPAL_CERT = '/path/to/paypal_cert.pem'  # https://www.paypal.com/us/cgi-bin/webscr?cmd=_profile-website-cert or https://www.sandbox.paypal.com/us/cgi-bin/webscr?cmd=_profile-website-cert
 PAYPAL_CERT_ID = 'get-from-paypal-website'
 
-# path to keypair in PEM format
-MY_KEYPAIR='keys/keypair.pem'
-
-# path to merchant certificate
-MY_CERT='keys/merchant.crt'
-
-# code which Paypal assign to the certificate when you upload it
-MY_CERT_ID='ASDF12345'
-
-# path to Paypal's own certificate
-PAYPAL_CERT='keys/paypal.crt'
 
 # Celery Settings
 CELERY_SYSTEM_EMAIL = 'do_not_reply@wexlog.io'

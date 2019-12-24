@@ -11,7 +11,8 @@ from django.views.generic import (
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 
-from paypal.standard.forms import PayPalPaymentsForm
+from paypal.standard.forms import PayPalPaymentsForm, PayPalEncryptedPaymentsForm
+
 from payments.forms import (
         ExtPayPalPaymentsForm,
         ExtPayPalEncryptedPaymentsForm,
@@ -112,9 +113,9 @@ def GeneralPassiveSubscriptionView(request):
     }
 
     # Create the instance.
-    passive_form = PayPalPaymentsForm(initial=passive_paypal_dict, button_type="subscribe")
-    six_passive_form = PayPalPaymentsForm(initial=six_passive_paypal_dict, button_type="subscribe")
-    twelve_passive_form = PayPalPaymentsForm(initial=twelve_passive_paypal_dict, button_type="subscribe")
+    passive_form = PayPalEncryptedPaymentsForm(initial=passive_paypal_dict, button_type="subscribe")
+    six_passive_form = PayPalEncryptedPaymentsForm(initial=six_passive_paypal_dict, button_type="subscribe")
+    twelve_passive_form = PayPalEncryptedPaymentsForm(initial=twelve_passive_paypal_dict, button_type="subscribe")
     context = {
             "passive_form": passive_form,
             "six_passive_form": six_passive_form,
@@ -185,9 +186,9 @@ def GeneralActiveSubscriptionView(request):
             "cancel_return": request.build_absolute_uri(reverse('Payments:active-paypal-cancel-view')),
     }
     # Create the instance.
-    active_form = PayPalPaymentsForm(initial=active_paypal_dict, button_type="subscribe")
-    six_active_form = PayPalPaymentsForm(initial=six_active_paypal_dict, button_type="subscribe")
-    twelve_active_form = PayPalPaymentsForm(initial=twelve_active_paypal_dict, button_type="subscribe")
+    active_form = PayPalEncryptedPaymentsForm(initial=active_paypal_dict, button_type="subscribe")
+    six_active_form = PayPalEncryptedPaymentsForm(initial=six_active_paypal_dict, button_type="subscribe")
+    twelve_active_form = PayPalEncryptedPaymentsForm(initial=twelve_active_paypal_dict, button_type="subscribe")
     context = {
             "active_form": active_form,
             "six_active_form": six_active_form,

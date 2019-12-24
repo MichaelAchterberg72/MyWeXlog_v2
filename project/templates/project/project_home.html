@@ -12,7 +12,7 @@
       <p>There are currently {{ pcount.sum_p|intcomma }} projects listed in WeXlog!</p>
       <p><a href="{% url 'Project:ProjectAdd' %}" class="badge badge-pill badge-primary">Add Project</a><a href="{% url 'Project:Project-Search' %}" class="badge badge-pill badge-primary">Search Projects</a><a href="{% url 'Enterprise:EnterpriseHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
       {% endif %}
-      <table class="table-sm">
+      <table class="table table-sm">
       <col width="40%">
       <col width="15%">
       <col width="20%">

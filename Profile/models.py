@@ -67,8 +67,8 @@ class Profile(models.Model):
     middle_name = models.CharField(max_length=60, null=True, blank=True)
     synonym = models.CharField(max_length=15, null=True)
     referral_code = models.OneToOneField(Referral, on_delete=models.SET_NULL, null=True)
-    std_rate = models.DecimalField(max_digits=10, decimal_places=2)
-    currency = models.ForeignKey(Currency, on_delete=models.PROTECT)
+    std_rate = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    currency = models.ForeignKey(Currency, on_delete=models.PROTECT, null=True)
     rate_unit = models.CharField(max_length=1, choices=RATE_UNIT, default='H')
     motivation = models.TextField(blank=True, null=True)
 

@@ -7,7 +7,7 @@ from crispy_forms.layout import Layout, Submit, Row, Column
 
 
 from django_select2.forms import (
-    ModelSelect2TagWidget, ModelSelect2Widget, Select2MultipleWidget,
+    ModelSelect2TagWidget, ModelSelect2Widget, ModelSelect2MultipleWidget,
     Select2Widget
 )
 
@@ -29,12 +29,25 @@ class PublisherSelect2Widget(PublisherSearchFieldMixin, ModelSelect2Widget):
         self.get_queryset().create(publisher=value)
 
 
+class SkillSearchFieldMixin:
+    search_fields = [
+        'tag__icontains', 'pk__startswith'
+    ]
+
+class SkillModelSelect2MultipleWidget(SkillSearchFieldMixin, ModelSelect2MultipleWidget):
+    model = SkillTag
+
+    def create_value(self, value):
+        self.get_queryset().create(skill=value)
+
+
 class BookAddForm(forms.ModelForm):
     class Meta:
         model = BookList
         fields = ('title','publisher','author','tag','link', 'type')
         widgets = {
             'publisher': PublisherSelect2Widget(),
+            'tag': SkillModelSelect2MultipleWidget(),
         }
 
 
