@@ -7,13 +7,8 @@ from crispy_forms.layout import Layout, Submit, Row, Column
 
 
 from django_select2.forms import (
-<<<<<<< HEAD
     ModelSelect2TagWidget, ModelSelect2Widget, Select2MultipleWidget,
     Select2Widget, ModelSelect2MultipleWidget
-=======
-    ModelSelect2TagWidget, ModelSelect2Widget, ModelSelect2MultipleWidget,
-    Select2Widget
->>>>>>> origin/2019-12-24-Mike
 )
 
 
@@ -33,28 +28,18 @@ class PublisherSelect2Widget(PublisherSearchFieldMixin, ModelSelect2Widget):
         self.get_queryset().create(publisher=value)
 
 
-<<<<<<< HEAD
 class TagSearchFieldMixin:
     search_fields = [
         'skill__icontains', 'pk__startswith'
     ]
 
 class TagModelSelect2MultipleWidget(TagSearchFieldMixin, ModelSelect2MultipleWidget):
-=======
-class SkillSearchFieldMixin:
-    search_fields = [
-        'tag__icontains', 'pk__startswith'
-    ]
-
-class SkillModelSelect2MultipleWidget(SkillSearchFieldMixin, ModelSelect2MultipleWidget):
->>>>>>> origin/2019-12-24-Mike
     model = SkillTag
 
     def create_value(self, value):
         self.get_queryset().create(skill=value)
 
 
-<<<<<<< HEAD
 class AuthorSearchFieldMixin:
     search_fields = [
         'name__icontains', 'pk__startswith'
@@ -68,20 +53,14 @@ class AuthorModelSelect2MultipleWidget(AuthorSearchFieldMixin, ModelSelect2Multi
 #Select 2 Widget <<<
 
 
-=======
->>>>>>> origin/2019-12-24-Mike
 class BookAddForm(forms.ModelForm):
     class Meta:
         model = BookList
         fields = ('title','publisher','author','tag', 'link', 'type')
         widgets = {
             'publisher': PublisherSelect2Widget(),
-<<<<<<< HEAD
             'tag': TagModelSelect2MultipleWidget(),
             'author': AuthorModelSelect2MultipleWidget(),
-=======
-            'tag': SkillModelSelect2MultipleWidget(),
->>>>>>> origin/2019-12-24-Mike
         }
 
 
