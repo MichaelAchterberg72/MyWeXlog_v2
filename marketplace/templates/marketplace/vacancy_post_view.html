@@ -44,7 +44,7 @@
     <div class="card">
       <div class="card-body">
         <h5 class="card-title">Scope</h5>
-        <p>{{ instance.scope }}</p>
+        <p>{{ instance.scope|linebreaks }}</p>
       </div>
     </div>
   </div>
@@ -52,7 +52,7 @@
     <div class="card">
       <div class="card-body">
         <h5 class="card-title">Expectations</h5>
-        <p>{{ instance.expectations }}</p>
+        <p>{{ instance.expectations|linebreaks }}</p>
       </div>
     </div>
   </div>
@@ -91,7 +91,7 @@
         {% for d in delivere %}
         <tbody>
           <tr>
-            <td>{{ d.deliverable }}</td>
+            <td>{{ d.deliverable|linebreaks }}</td>
             <td>
               <a href="{% url 'MarketPlace:DeliverablesEdit' d.id %}" class="badge badge-secondary badge-pill">Edit</a>
               <form  action="{% url 'MarketPlace:DeliverablesDelete' d.id %}" method="post">

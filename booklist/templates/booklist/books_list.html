@@ -14,7 +14,7 @@
       <a href="{% url 'BookList:book-search' %}" class="badge badge-pill badge-primary">Search All Books</a>
       <a href="{% url 'BookList:BookListHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
     {% endif %}
-          <table class="table-sm">
+          <table class="table table-sm">
           <col width="30%">
           <col width="15%">
           <col width="20%">

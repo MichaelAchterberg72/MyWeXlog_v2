@@ -12,7 +12,7 @@
       <p><a href="{% url 'Project:ProjectAdd' %}" class="badge badge-pill badge-primary">Add Project</a><a href="{% url 'Project:ProjectHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
       {% endif %}
     <p>There are currently {{ hr.sum_t|intcomma }} hours spent working on project {{ projectdata.name }}.</p>
-    <table class="table-sm">
+    <table class="table table-sm">
       <col width="30%">
       <col width="20%">
       <col width="15%">
