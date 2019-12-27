@@ -15,7 +15,7 @@
 <div class="container">
 <p><a href="{% url 'MarketPlace:VacancyEdit' instance.id %}" class="btn btn-info float-right">Edit Vacancy</a></p>
 <h3>Vacancy Review</h3>
-<h5 class="card-title">Vacancy: {{ instance.title }}</h5>
+<h5 class="card-title">Vacancy: {{ instance.title }} ({{ instance.ref_no }})</h5>
 
 <table class="table table-sm">
   <thead>

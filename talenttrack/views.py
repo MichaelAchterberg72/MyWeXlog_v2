@@ -24,6 +24,7 @@ from .models import (
 )
 
 from db_flatten.models import SkillTag
+from marketplace.models import SkillLevel
 
 
 @login_required()
@@ -31,6 +32,7 @@ def ExperienceHome(request):
         #>>>Step 1
         basequery = WorkExperience.objects.select_related('topic').filter(talent=request.user)
         skills = SkillTag.objects.all()
+        sl = SkillLevel.objects.all()
         #<<<Step 1
 
         #>>>Step 2
@@ -64,6 +66,30 @@ def ExperienceHome(request):
             p_sum = 0
 
         tot_sum = t_sum + e_sum + p_sum
+        exp_lvl = float(e_sum+p_sum)
+
+        std = sl.filter(level__exact=0).values_list('min_hours', flat=True)
+        grd = sl.filter(level__exact=1).values_list('min_hours', flat=True)
+        jnr = sl.filter(level__exact=2).values_list('min_hours', flat=True)
+        int = sl.filter(level__exact=3).values_list('min_hours', flat=True)
+        snr = sl.filter(level__exact=4).values_list('min_hours', flat=True)
+        lead = sl.filter(level__exact=5).values_list('min_hours', flat=True)
+
+        if exp_lvl < std[0]:
+            iama = 0
+        elif exp_lvl >= std[0] and exp_lvl < grd[0]:
+            iama = 1
+        elif exp_lvl >= grd[0] and exp_lvl < jnr[0]:
+            iama = 2
+        elif exp_lvl >= jnr[0] and exp_lvl < int[0]:
+            iama = 3
+        elif exp_lvl >= int[0] and exp_lvl < snr[0]:
+            iama = 4
+        elif exp_lvl >= snr[0]:
+            iama = 5
+
+        level = sl.get(level=iama)
+
         #<<<Step 2
         '''
         atalent_skill = list(we.filter(talent=app, edt=False).values_list('skills', flat=True))
@@ -95,9 +121,35 @@ def ExperienceHome(request):
 
         template = 'talenttrack/track_home.html'
         context = {
-            'train': train, 'train_sum': train_sum, 'experience': experience, 'exp_sum': exp_sum, 'prelog': prelog, 'pre_sum': pre_sum, 'tot_sum': tot_sum, 'skill_name': skill_name, 'skill_count': skill_count
+            'train': train, 'train_sum': train_sum, 'experience': experience, 'exp_sum': exp_sum, 'prelog': prelog, 'pre_sum': pre_sum, 'tot_sum': tot_sum, 'skill_name': skill_name, 'skill_count': skill_count, 'level': level,
             }
         return render(request, template, context)
+
+
+def SumAllSkills(request):
+    skill_set = SkillTag.objects.all()
+    exp = WorkExperience.objects
+            .filter(talent=request.user.id)
+            .select_related('topic')
+
+    exp_s = exp.values_list('skills', flat=true)
+                .distinct('skills')
+    exp_t = exp.values_list('topic__skills', flat=true)
+                .distinct('topic__skills')
+
+    exp_set = {}
+    for s in exp_s:
+        b = skill_set.get(pk=s)
+        c = b.workexperience_set.all()
+        cnt = c.count()
+        sum = c.aggregate(sum_s=Sum('hours_worked'))
+        sum_1 = int(sum.get('sum_s'))
+        info_set = {}
+        info_set['count']=cnt
+        info_set['sum']=sum_1
+        skill = skill_set.filter(pk=s).values_list('skill', flat=True)
+        exp_set[skill] = info_set
+
 
 
 @login_required()

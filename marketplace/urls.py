@@ -21,6 +21,7 @@ urlpatterns = [
     path('vacancy-edit-deliverables/<int:pk>/', views.DeliverablesEditView, name='DeliverablesEdit'),
     path('vacancy-delete-deliverables/<int:pk>/', views.DeliverableDeleteView, name='DeliverablesDelete'),
     path('vacancy-delete-skill/<int:pk>/', views.SkillDeleteView, name='SkillDelete'),
+    path('interviewlist/<int:vac>/<int:tlt>/', views.AddToInterviewListView, name='InterviewList'),
     path('shortlist/<int:s_list>/<int:tlt>/', views.AddToShortListView, name='ShortList'),
     path('availabillity/', views.TalentAvailabillityView, name='Availabillity'),
     path('v-detail/<int:pk>/', views.VacancyDetailView, name='VacancyDetail'),
@@ -29,6 +30,7 @@ urlpatterns = [
     path('postview/<int:pk>/', views.VacancyPostView, name='VacancyPost'),
     path('shortlist-review/<int:slv>/', views.ShortListView, name='ShortListView'),
     path('vac-assign/<int:vac>/<int:tlt>/', views.TalentAssign, name='VacAssign'),
+    path('vac-decline/<int:vac>/<int:tlt>/', views.TalentDecline, name='VacDecline'),
     path('all-vac/', views.AllPostedVacanciesView, name='AllPostedVac'),
     path('availabillity-remove/<int:avl_id>/', views.AvailabillityRemoveView, name='NotAvailable'),
 

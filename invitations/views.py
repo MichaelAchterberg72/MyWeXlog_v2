@@ -28,14 +28,6 @@ def InvitationView(request):
                 new.relationship = rel
             new.save()
             cd = form.cleaned_data
-            """
-            referral = Referral.create(
-                user=request.user,
-                redirect_to=reverse('Sel2:Home'),
-                label = 'referral',
-            )
-            """
-            #ste = Referral.objects.get(user=request.user, label__iexact='Referral_Invitation')'ste': ste,
 
             temp = Referral.objects.get(user=request.user)
 

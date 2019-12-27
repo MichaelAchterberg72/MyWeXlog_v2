@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'project.apps.ProjectConfig',
     'booklist.apps.BooklistConfig',
     'talenttrack.apps.TalenttrackConfig',
+    'intmessages.apps.IntmessagesConfig',
     'trustpassport.apps.TrustpassportConfig',
     'marketplace.apps.MarketplaceConfig',
     'payments.apps.PaymentsConfig',

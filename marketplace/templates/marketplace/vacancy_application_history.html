@@ -15,6 +15,7 @@
         <tr>
           <th>Date Applied</th>
           <th>Vacancy Title</th>
+          <th>Ref. No.</th>
           <th>Hours Required</th>
           <th>Work Configeration</th>
           <th>Vacancy Scope</th>
@@ -30,6 +31,7 @@
           <tr>
             <td>{{ i.date_applied|date:"d N Y" }}</td>
             <td>{{ i.work.title }}</td>
+            <td>{{ i.work.ref_no }}</td>
             <td>
               {{ i.work.hours_required|intcomma }} ({{ i.work.get_unit_display }})
             </td>
@@ -46,6 +48,7 @@
           <tr>
             <td>{{ i.date_listed|date:"d N Y" }}</td>
             <td>{{ i.scope.title }}</td>
+            <td>{{ i.scope.ref_no }}</td>
             <td>
               {{ i.scope.hours_required|intcomma }} ({{ i.scope.get_unit_display }})
             </td>
@@ -62,6 +65,7 @@
           <tr>
             <td>{{ r.date_applied|date:"d N Y" }}</td>
             <td>{{ r.work.title }}</td>
+            <td>{{ r.work.ref_no }}</td>
             <td>
               {{ r.work.hours_required|intcomma }} ({{ r.work.get_unit_display }})
             </td>
@@ -75,6 +79,7 @@
         <tr>
           <td>{{ r.date_listed|date:"d N Y" }}</td>
           <td>{{ r.scope.title }}</td>
+          <td>{{ r.scope.ref_no }}</td>
           <td>
             {{ r.scope.hours_required|intcomma }} ({{ r.scope.get_unit_display }})
           </td>
@@ -91,6 +96,7 @@
         <tr>
           <td>{{ s.date_applied|date:"d N Y" }}</td>
           <td>{{ s.work.title }}</td>
+          <td>{{ s.work.ref_no }}</td>
           <td>
             {{ s.work.hours_required|intcomma }} ({{ s.work.get_unit_display }})
           </td>
@@ -104,6 +110,7 @@
         <tr>
           <td>{{ s.date_listed|date:"d N Y" }}</td>
           <td>{{ s.scope.title }}</td>
+          <td>{{ s.scope.ref_no }}</td>
           <td>
             {{ s.scope.hours_required|intcomma }} ({{ s.scope.get_unit_display }})
           </td>

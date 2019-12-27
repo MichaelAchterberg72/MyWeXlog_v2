@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.utils import timezone
 
+from Profile.utils import create_code7
 
 from enterprises.models import Branch
 from locations.models import Currency, City
@@ -53,17 +54,17 @@ class SkillLevel(models.Model):
     )
 
     level = models.IntegerField(choices=LEVEL, unique=True)
-    min_hours = models.IntegerField()
+    min_hours = models.IntegerField()#should be ma
     description = models.TextField()
 
     class Meta:
         ordering = ['level']
 
-    def clean(self):
-        self.level = self.level.capitalize()
-
     def __str__(self):
-        return f'{self.get_level_display()} (>={self.min_hours})'
+        if self.level <=4:
+            return f'{self.get_level_display()} (<={self.min_hours}) hours'
+        else:
+            return f'{self.get_level_display()} (>{self.min_hours}) hours'
 
 
 class TalentRequired(models.Model):
@@ -73,6 +74,7 @@ class TalentRequired(models.Model):
     )
     date_entered = models.DateField(auto_now_add=True)
     title = models.CharField(max_length=250)
+    ref_no = models.CharField(max_length=7, null=True)
     enterprise = models.ForeignKey(Branch, on_delete=models.CASCADE, verbose_name="Company Branch")
     requested_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     date_deadline = models.DateField('Work completed by')
@@ -94,6 +96,9 @@ class TalentRequired(models.Model):
 
     class Meta:
         unique_together = (('enterprise','title', 'requested_by'),)
+
+    def save(self, *args, **kwargs):
+            self.ref_no = create_code7(self)
 
     def __str__(self):
         return '{}, {}, {}'.format(self.title, self.enterprise, self.date_entered)
@@ -131,7 +136,7 @@ BID = (
 
 
 class BidShortList(models.Model):
-    talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='Shortlisted')
     scope = models.ForeignKey(TalentRequired, on_delete=models.CASCADE)
     preferance_rating = models.SmallIntegerField(null=True, default=0)
     date_listed = models.DateTimeField(auto_now_add=True)
@@ -142,6 +147,21 @@ class BidShortList(models.Model):
 
     def __str__(self):
         return f'{self.scope} shortlist {self.talent}'
+
+
+class BidInterviewList(models.Model):
+    OC = (
+        ('P','Pending'),
+        ('S','Suitable'),
+        ('N','Not Suitable'),
+    )
+    talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='Interviewed')
+    scope = models.ForeignKey(TalentRequired, on_delete=models.CASCADE)
+    date_listed = models.DateTimeField(auto_now_add=True)
+    outcome = models.CharField(max_length=1, choices=OC, default='P')
+
+    def __str__(self):
+        return f'{self.scope.ref_no}, {self.talent}, {self.get_outcome_display}'
 
 
 class WorkBid(models.Model):

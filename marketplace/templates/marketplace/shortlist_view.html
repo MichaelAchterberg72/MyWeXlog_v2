@@ -2,7 +2,7 @@
 {% load humanize %}
 {% load static %}
 
-{% block title %}{{block.super}}-Vacancy Edit{% endblock title %}
+{% block title %}{{block.super}}-Shortlist{% endblock title %}
 
 {% block content %}
 {{ form.media.css }}
@@ -13,7 +13,7 @@
   </style>
 <div class="container">
 
-    <h3 class="card-title">Short list for {{ vacancy.title }}</h3>
+    <h3 class="card-title">Short list for {{ vacancy.title }} ({{ vacancy.ref_no }})</h3>
   <table class="table table-sm">
     <thead>
       <tr>
@@ -36,10 +36,22 @@
         <td>{{ sl.1.rb }}</td>
         <td>{{ sl.1.ro.0.1 }} <strong>{{ sl.1.ro.0.0 }}</strong> {{ sl.1.ro.0.2 }}</td>
         <td>{{ sl.1.ro.0.3 }}</td>
-        <td><form  action="{% url 'MarketPlace:VacAssign' tlt=sl.0  vac=vacancy.pk %}" method="post">
-          {% csrf_token %}
-          <button type="submit" class="badge badge-success badge-pill float-right">Assign</button>
-        </form></td>
+        <td>
+          <p>
+            <form  action="{% url 'MarketPlace:InterviewList' tlt=sl.0  vac=vacancy.pk %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="badge badge-info badge-pill float-right">Interview</button>
+            </form>
+            <form  action="{% url 'MarketPlace:VacAssign' tlt=sl.0  vac=vacancy.pk %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="badge badge-success badge-pill float-right">Assign</button>
+            </form>
+            <form  action="{% url 'MarketPlace:VacDecline' tlt=sl.0  vac=vacancy.pk %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="badge badge-danger badge-pill float-right">Decline</button>
+            </form>
+          </p>
+        </td>
       </tr>
       {% endfor %}
     </tbody>

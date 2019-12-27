@@ -201,7 +201,7 @@ def ApplicationHistoryView(request):
     applied = role.filter(bidreview__exact='P')
     rejected = role.filter(bidreview__exact='R')
     accepted = role.filter(bidreview__exact='A')
-    s_list = BidShortList.objects.filter(talent=talent).order_by('-date_listed')
+    s_list = BidShortList.objects.filter(Q(talent=talent) & ~Q(status='A')).order_by('-date_listed')
     p_rejected = s_list.filter(status='R')
     p_accepted = s_list.filter(status='A')
 
@@ -297,7 +297,7 @@ def VacancyPostView(request, pk):
             atalent_skill = list(we.filter(talent=app, edt=False).values_list('skills', flat=True))
             atalent_skillt = list(we.filter(talent=app, edt=True).values_list('topic__skills', flat=True))
             rb = book.filter(talent=app).count()
-            rate = applicants.filter(talent=app).values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation', 'alias')
+            rate = applicants.filter(talent=app).values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation')
 
             aslist = atalent_skill + atalent_skillt
             askillset = set(aslist)
@@ -374,6 +374,17 @@ def AddToShortListView(request, s_list, tlt):
 
 @login_required()
 @subscription(2)
+def AddToInterviewListView(request, s_list, tlt):
+    job = get_object_or_404(TalentRequired, pk=s_list)
+    talent = get_object_or_404(CustomUser, pk=tlt)
+    if request.method == 'POST':
+        BidInterviewList.objects.create(talent=talent, scope=job)
+
+        return redirect(reverse('MarketPlace:ShortListView', kwargs={'slv':s_list}))
+
+
+@login_required()
+@subscription(2)
 def TalentAssign(request, tlt, vac):
     job = get_object_or_404(TalentRequired, pk=vac)
     talent = get_object_or_404(CustomUser, pk=tlt)
@@ -404,6 +415,37 @@ def TalentAssign(request, tlt, vac):
         t.save()
 
     return redirect(reverse('MarketPlace:Entrance'))
+
+
+@login_required()
+@subscription(2)
+def TalentDecline(request, tlt, vac):
+    job = get_object_or_404(TalentRequired, pk=vac)
+    talent = get_object_or_404(CustomUser, pk=tlt)
+    bids = WorkBid.objects.filter(work=vac)
+    s_list = BidShortList.objects.filter(scope=vac)
+
+    if request.method == 'POST':
+        WorkIssuedTo.objects.create(talent=talent, work=job)
+        s_list.filter(talent=talent).update(status='A')
+
+        #sets all status fields to "rejected"
+        subs = list(Profile.objects.filter(talent=talent).values_list('talent__subscription', flat=True))
+        subsi = subs[0]
+
+        if subsi == 2:
+            s = bids.get(talent=talent)
+            s.bidreview ='R'
+            s.save()
+
+            bids.filter(~Q(bidreview='A')).update(bidreview='R')
+            s_list.filter(status='S').update(status='R')
+
+        else:
+            bids.update(bidreview='R')
+            s_list.filter(status='S').update(status='R')
+
+    return redirect(reverse('MarketPlace:ShortListView',kwargs={'slv':'vac'}))
 
 
 @login_required()
