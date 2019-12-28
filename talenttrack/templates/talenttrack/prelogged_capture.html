@@ -19,10 +19,10 @@
     <div class="form-group col-md-6 mb-0">
       {{ form.company|as_crispy_field }}
         <p><a href="{% url 'Enterprise:EnterpriseAddPop' %}" id='add_company' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a Company</a></p>
+      {{ form.branch|as_crispy_field }}
+      <p><a href="{% url 'Enterprise:BranchAddPop' %}" id='add_branch' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a Branch</a></p>
       {{ form.project|as_crispy_field }}
         <p><a href="{% url 'Project:ProjectAddPop' %}" id='add_project' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a Project</a></p>
-      {{ form.industry|as_crispy_field }}
-        <p><a href="{% url 'Enterprise:IndustryAddPop' %}" id='add_industry' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add an Industry</a></p>
     </div>
     <div class="form-group col-md-6 mb-0">
       <div class="form-row">
@@ -37,13 +37,17 @@
         </div>
       </div>
       <div class="form-row">
-        <div class="form-group col-md-10 mb-0">
+        <div class="form-group col-md-6 mb-0">
+          {{ form.industry|as_crispy_field }}
+          <p><a href="{% url 'Enterprise:IndustryAddPop' %}" id='add_industry' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add an Industry</a></p>
+        </div>
+        <div class="form-group col-md-6 mb-0">
           {{ form.designation|as_crispy_field }}
           <p><a href="{% url 'Talent:DesignationAddPop' %}" id='add_designation' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a Designation</a></p>
         </div>
       </div>
       <div class="form-row">
-          <div class="form-group col-md-3 mb-0">
+          <div class="form-group col-md-8 mb-0">
           {{ form.upload|as_crispy_field }}
           <p>Upload a copy of your signed off log.</p>
         </div>

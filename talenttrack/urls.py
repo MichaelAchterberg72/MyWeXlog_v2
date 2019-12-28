@@ -42,4 +42,6 @@ urlpatterns = [
     path('prelogged/capture/', views.PreLoggedExperienceCaptureView, name="PreloggedCapture"),
     #path('prelogged/select/', views.PreColleagueSelectView, name='PreColleagueSelect'),
     path('prelogged/<int:pre_id>/detail/', views.PreLogDetailView, name='PreLogDetail'),
+    path('experience-detail/', views.SumAllExperienceView, name='ExperienceSum'),
+    path('dpc-detail/', views.DPC_SummaryView, name='DPCSum'),
 ]

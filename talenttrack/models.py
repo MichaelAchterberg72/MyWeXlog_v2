@@ -60,7 +60,7 @@ class Course(models.Model):
 
 class Topic(models.Model):
     topic = models.CharField(max_length=60, unique=True)
-    skills = models.ManyToManyField(SkillTag, related_name='TopicSkills')
+    skills = models.ManyToManyField(SkillTag)
     hours = models.DecimalField(max_digits=5, decimal_places=2)
 
     def clean(self):
@@ -139,6 +139,7 @@ class WorkExperience(models.Model):
     comment = models.TextField(blank=True, null=True)
     #Work Experience Fields (Captured & Pre-Experience)
     company = models.ForeignKey(Enterprise, on_delete=models.PROTECT, verbose_name='Company', null=True)
+    branch = models.ForeignKey(Branch, on_delete=models.PROTECT, verbose_name='Company Branch', null=True)
     estimated = models.BooleanField(default=False)
     prelog = models.BooleanField(default=False)
     wexp = models.BooleanField(default=False)

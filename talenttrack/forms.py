@@ -58,6 +58,7 @@ class BranchSelect2Widget(BranchSearchFieldMixin, ModelSelect2Widget):
     def create_value(self, value):
         self.get_queryset().create(name=value)
 
+
 class CourseTypeSearchFieldMixin:
     search_fields = [
         'type__icontains', 'pk__startswith'
@@ -143,9 +144,10 @@ class DateInput(forms.DateInput):
 class PreLoggedExperienceForm(forms.ModelForm):
     class Meta:
         model = WorkExperience
-        fields = ('date_from', 'date_to', 'company', 'project', 'industry', 'hours_worked', 'comment', 'designation', 'upload', 'skills',)
+        fields = ('date_from', 'date_to', 'company', 'branch', 'project', 'industry', 'hours_worked', 'comment', 'designation', 'upload', 'skills',)
         widgets={
             'company': CompanySelect2Widget(),
+            'branch': BranchSelect2Widget(),
             'designation': DesignationSelect2Widget(),
             'project': ProjectSelect2Widget(),
             'date_from': DateInput(),
@@ -171,7 +173,7 @@ class WorkClientSelectForm(forms.ModelForm):
         model = WorkClient
         fields = ('client_name', 'designation', 'company', 'branch', )
         widgets={
-            'enterprise': CompanySelect2Widget(),
+            'company': CompanySelect2Widget(),
             'client_name': UserSelect2Widget(),
             'designation': DesignationSelect2Widget(),
             'branch': BranchSelect2Widget(),
@@ -195,7 +197,7 @@ class WorkCollaboratorSelectForm(forms.ModelForm):
         model = WorkCollaborator
         fields = ('collaborator_name', 'designation', 'company', 'branch', )
         widgets={
-            'enterprise': CompanySelect2Widget(),
+            'company': CompanySelect2Widget(),
             'superior_name': UserSelect2Widget(),
             'designation': DesignationSelect2Widget(),
             'branch': BranchSelect2Widget(),
@@ -248,7 +250,7 @@ class WorkExperienceForm(forms.ModelForm):
     class Meta:
         model = WorkExperience
         fields = (
-            'date_from', 'date_to', 'company', 'estimated', 'project', 'industry', 'hours_worked', 'comment', 'designation', 'upload', 'skills'
+            'date_from', 'date_to', 'company', 'branch', 'estimated', 'project', 'industry', 'hours_worked', 'comment', 'designation', 'upload', 'skills'
             )
         widgets={
             'company': CompanySelect2Widget(),
@@ -258,6 +260,7 @@ class WorkExperienceForm(forms.ModelForm):
             'date_to': DateInput(),
             'skills': SkillModelSelect2MultipleWidget(),
             'industry': IndSelect2Widget(),
+            'branch': BranchSelect2Widget(),
 }
 
 

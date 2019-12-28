@@ -11,8 +11,22 @@ from django_select2.forms import (
 )
 
 from .models import ProjectData
-from enterprises.models import Enterprise, Industry
+from enterprises.models import Enterprise, Industry, Branch
 from locations.models import Region, City, Suburb
+
+
+
+class BranchSearchFieldMixin:
+    search_fields = [
+        'name__icontains', 'pk__startswith'
+        ]
+    dependent_fields = {'company': 'company'}
+
+class BranchSelect2Widget(BranchSearchFieldMixin, ModelSelect2Widget):
+    model = Branch
+
+    def create_value(self, value):
+        self.get_queryset().create(name=value)
 
 
 class CompanySearchFieldMixin:
@@ -63,12 +77,13 @@ class RegionSelect2Widget(RegionSearchFieldMixin, ModelSelect2Widget):
 class ProjectAddForm(forms.ModelForm):
     class Meta:
         model = ProjectData
-        fields = ('name', 'company', 'country', 'region', 'city', 'industry')
+        fields = ('name', 'company', 'country', 'branch', 'region', 'city', 'industry')
         widgets = {
             'company': CompanySelect2Widget(),
             'industry': IndustrySelect2Widget(),
             'region': RegionSelect2Widget(),
             'city': CitySelect2Widget(),
+            'branch': BranchSelect2Widget(),
         }
 
 
@@ -79,10 +94,11 @@ class ProjectSearchForm(forms.Form):
 class ProjectForm(forms.ModelForm):
     class Meta:
         model = ProjectData
-        fields = ('name', 'company', 'industry', 'country', 'region', 'city')
+        fields = ('name', 'company', 'branch', 'industry', 'country', 'region', 'city')
         widgets = {
             'company': CompanySelect2Widget(),
             'industry': IndustrySelect2Widget(),
             'region': RegionSelect2Widget(),
             'city': CitySelect2Widget(),
+            'branch': BranchSelect2Widget(),
         }
