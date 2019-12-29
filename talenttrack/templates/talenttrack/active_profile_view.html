@@ -1,0 +1,167 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+{% block title %}{{block.super}}- {{ als.alias }} Profile{% endblock title %}
+
+{% block content %}
+<h3>Profile for {{ als.alias }}</h3>
+<div class="row">
+  <div class="col-sm-12">
+  <div class="card">
+    <div class="">
+      <a href="{% url 'Talent:Home' %}" class="btn btn-secondary float-right">Temportary</a>
+    </div>
+  </div>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <a href="{% url 'Talent:SPDView' als.id %}" class="btn btn-primary float-right" target="_blank">View All Skills</a>
+    <h5>Vacancy Skills Match</h5>
+  </div>
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="card">
+        <div class="card-body">
+        <h5 class="card-title">Experience skills</h5>
+        <p>Experience for skills listed in the Vacancy.</p>
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th>Skill</th>
+              <th>Hours</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for key in vacse_set.items %}
+              <tr>
+                <td>{{ key.0 }}</td>
+                <td>{{ key.1|intcomma }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Training Skills</h5>
+          <p>Training time for the skills listed on the vacancy.</p>
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th>Skill</th>
+                <th>Hours</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for key in vacst_set.items %}
+                <tr>
+                  <td>{{ key.0 }}</td>
+                  <td>{{ key.1|intcomma }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <h5>Basic Information</h5>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="card">
+          <div class="card-body">
+          <h5 class="card-title">General Information</h5>
+            <p><strong>Alias:</strong> {{ als.alias }}</p>
+            <hr>
+            <p><strong>Background</strong><br>
+               {{ als.background|linebreaks }}</p>
+            <hr>
+            <p><strong>Current location:</strong> {{ padd.get_country_display }}, {{ padd.region }}, {{ padd.city }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Career in Summary</h5>
+            <table class="table table-sm">
+              <col width="20%">
+              <col width="20%">
+              <col width="60%">
+              <thead>
+                <tr>
+                  <th>Date from</th>
+                  <th>Date to</th>
+                  <th>Company</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for h in bch %}
+                  <tr>
+                    <td>{{ h.date_from|date:"j M Y" }}</td>
+                    {% if h.date_to %}
+                      <td>{{ h.date_to|date:"j M Y" }}</td>
+                    {% else %}
+                      <td>Present</td>
+                    {% endif %}
+                    <td>{{ h.companybranch }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <h5>Education & Training</h5>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Courses</h5>
+            <table class="table table-sm">
+              <col width="10%">
+              <col width="10%">
+              <col width="20%">
+              <col width="30%">
+              <col width="20%">
+              <col width="10%">
+              <thead>
+                <tr>
+                  <th>Date from</th>
+                  <th>Date to</th>
+                  <th>Institution</th>
+                  <th>Course</th>
+                  <th>Topic</th>
+                  <th>Certification</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for e in edtexp %}
+                  <tr>
+                    <td>{{ e.date_from|date:"j M Y" }}</td>
+                    <td>{{ e.date_to|date:"j M Y" }}</td>
+                    <td>{{ e.course.company }}</td>
+                    <td>{{ e.course }}</td>
+                    <td>{{ e.topic }}</td>
+                    <td>{{ e.course.certification }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

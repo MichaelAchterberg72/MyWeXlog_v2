@@ -47,7 +47,7 @@ class BriefCareerHistory(models.Model):
             CustomUser.objects.filter(pk=self.talent.id).update(display_text=inject)
             super(BriefCareerHistory, self).save(*args, **kwargs)
 
-
+#website for online registrations
 class SiteName(models.Model):
     site = models.CharField(max_length=40, unique=True)
 

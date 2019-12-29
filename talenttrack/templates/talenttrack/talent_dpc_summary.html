@@ -1,6 +1,11 @@
 {% extends "base_home.html" %}
 {% load humanize %}
-{% block title %}{{block.super}}-Experience Overview{% endblock title %}
+
+{% if request.user.id == pfl.id %}
+  {% block title %}{{block.super}}-Experience Overview{% endblock title %}
+{% else %}
+  {% block title %}{{block.super}}-{{pfl.alias Skill Summary}}{% endblock title %}
+{% endif %}
 
 {% block content %}
 <div class="card">

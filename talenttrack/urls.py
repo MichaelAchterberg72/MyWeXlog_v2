@@ -43,5 +43,8 @@ urlpatterns = [
     #path('prelogged/select/', views.PreColleagueSelectView, name='PreColleagueSelect'),
     path('prelogged/<int:pre_id>/detail/', views.PreLogDetailView, name='PreLogDetail'),
     path('experience-detail/', views.SumAllExperienceView, name='ExperienceSum'),
+    path('skill-profile-detail/<int:tlt_id>/', views.SkillProfileDetailView, name='SPDView'),
     path('dpc-detail/', views.DPC_SummaryView, name='DPCSum'),
+    path('apv/<int:tlt_id>/<int:vac_id>/', views.ActiveProfileView, name='APV'),
+
 ]

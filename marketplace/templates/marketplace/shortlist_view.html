@@ -38,6 +38,7 @@
         <td>{{ sl.1.ro.0.3 }}</td>
         <td>
           <p>
+            <a href="{% url 'Talent:APV' tlt_id=sl.0 vac_id=vacancy.id %}" class="badge badge-success badge-pill float-right">View Profile</a>
             <form  action="{% url 'MarketPlace:InterviewList' tlt=sl.0  vac=vacancy.pk %}" method="post">
               {% csrf_token %}
               <button type="submit" class="badge badge-info badge-pill float-right">Interview</button>

@@ -1,10 +1,18 @@
 {% extends "base_home.html" %}
 {% load humanize %}
-{% block title %}{{block.super}}-Experience Overview{% endblock title %}
+
+{% block title %}
+  {% if request.user.id == pfl.id %}
+    {{block.super}}-Experience Overview
+  {% else %}
+    {{block.super}}-{{pfl.alias}} Skill Summary
+  {% endif %}
+{% endblock title %}
 
 {% block content %}
 <div class="card">
   <h5 class="card-header">Skills Summary</h5>
+  {% if request.user.id == pfl.id %}
   <div class="row">
     <div class="col-sm-12">
     <div class="card">
@@ -12,12 +20,12 @@
         <a href="{% url 'Talent:Home' %}" class="btn btn-secondary float-right">Experience Home</a>
         <a href="{% url 'Talent:DPCSum' %}" class="btn btn-primary">Designation, Project & Company Summary</a>
       </div>
-
-
     </div>
     </div>
-
   </div>
+  {% else %}
+
+  {% endif %}
   <div class="row">
     <div class="col-sm-6">
       <div class="card">
