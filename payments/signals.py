@@ -21,6 +21,23 @@ from django.conf import settings
 def show_me_the_money(sender, **kwargs):
     ipn_obj = sender
     ipn_username = User.objects.get(username=str(ipn_obj.custom))
+    if ipn_obj.item_name == "Passive Subscription":
+        price = "4.00"
+
+    elif ipn_obj.item_name == "6 Month Passive Subscription":
+        price = "22.00"
+
+    elif ipn_obj.item_name == "12 Month Passive Subscription":
+        price = "43.56"
+
+    elif ipn_obj.item_name == "Active Subscription":
+        price = "5.20"
+
+    elif ipn_obj.item_name == "6 Month Active Subscription":
+        price = "29.20"
+
+    elif ipn_obj.item_name == "12 Month Active Subscription":
+        price = "57.96"
 
      # check for payment received IPN
     if ipn_obj.txn_type == 'web_accept':
@@ -64,21 +81,17 @@ def show_me_the_money(sender, **kwargs):
                 else:
                     pass
 
-            elif ipn_obj.mc_currency != 'USD':
+            elif ipn_obj.mc_gross != price and ipn_obj.mc_currency != 'USD':
                 Users.objects.filter(ipn_username).update(paid=False)
                 Users.objects.filter(ipn_username).update(paid_date=datetime.now())
                 Users.objects.filter(ipn_username).update(subscription="0")
-                if CustomUserSettings.talent == request.user:
-                    if CustomUserSettings.unsubscribe == True:
-                        pass
+                if CustomUserSettings.talent.filter(ipn_username) and CustomUserSettings.unsubscribe == True:
+                    pass
+                elif CustomUserSettings.talent.filter(ipn_username) and CustomUserSettings.subscription_notifications == False:
+                    pass
+                else:
+                    SubscriptionAmountDifferentTask(ipn_username)
 
-                    if CustomUserSettings.subscription_notifications == False:
-                        pass
-
-                    else:
-                        SubscriptionAmountDifferentTask(ipn_username)
-            else:
-                pass
 
         elif ipn_obj.payment_status == ST_PP_EXPIRED:
             if ipn_obj.receiver_email != settings.PAYPAL_RECEIVER_EMAIL:
@@ -88,17 +101,14 @@ def show_me_the_money(sender, **kwargs):
                 Users.objects.filter(ipn_username).update(paid=False)
                 Users.objects.filter(ipn_username).update(paid_date=datetime.now())
                 Users.objects.filter(ipn_username).update(subscription="0")
-                if CustomUserSettings.talent == request.user:
-                    if CustomUserSettings.unsubscribe == True:
-                        pass
+                if CustomUserSettings.talent.filter(ipn_username) and CustomUserSettings.unsubscribe == True:
+                    pass
+                elif CustomUserSettings.talent.filter(ipn_username) and CustomUserSettings.subscription_notifications == False:
+                    pass
+                else:
+                    SubscriptionExpiredTask(ipn_username)
 
-                    if CustomUserSettings.subscription_notifications == False:
-                        pass
-
-                    else:
-                        SubscriptionExpiredTask(ipn_username)
-            else:
-                pass
+        
         elif ipn_obj.payment_status == ST_PP_PENDING:
             if ipn_obj.receiver_email != settings.PAYPAL_RECEIVER_EMAIL:
                 # Not a valid payment
@@ -109,11 +119,6 @@ def show_me_the_money(sender, **kwargs):
                 Users.objects.filter(ipn_username).update(paid_date=datetime.now())
                 Users.objects.filter(ipn_username).update(subscription="0")
 
-            else:
-                pass
-        else:
-            #...
-            pass
 
      # check for subscriber sign-up IPN
     elif ipn_obj.txn_type == "subscr_signup":
@@ -154,25 +159,19 @@ def show_me_the_money(sender, **kwargs):
                 elif ipn_obj.item_name == "12 Month Active Subscription":
                     Users.objects.filter(ipn_username).update(subscription="2")
                     Users.objects.filter(ipn_username).update(paid_type="3")
-                else:
-                    pass
 
-            elif ipn_obj.mc_currency != 'USD':
+
+            elif ipn_obj.mc_gross != price and ipn_obj.mc_currency != 'USD':
                 Users.objects.filter(ipn_username).update(paid=False)
                 Users.objects.filter(ipn_username).update(paid_date=datetime.now())
                 Users.objects.filter(ipn_username).update(subscription="0")
-                if CustomUserSettings.talent == request.user:
-                    if CustomUserSettings.unsubscribe == True:
-                        pass
+                if CustomUserSettings.talent.filter(ipn_username) and CustomUserSettings.unsubscribe == True:
+                    pass
+                elif CustomUserSettings.talent.filter(ipn_username) and CustomUserSettings.subscription_notifications == False:
+                    pass
+                else:
+                    SubscriptionAmountDifferentTask(ipn_username)
 
-                    if CustomUserSettings.subscription_notifications == False:
-                        pass
-
-                    else:
-                        SubscriptionAmountDifferentTask(ipn_username)
-
-            else:
-                pass
 
         elif ipn_obj.payment_status == ST_PP_EXPIRED:
             if ipn_obj.receiver_email != settings.PAYPAL_RECEIVER_EMAIL:
@@ -183,18 +182,12 @@ def show_me_the_money(sender, **kwargs):
                 Users.objects.filter(ipn_username).update(paid=False)
                 Users.objects.filter(ipn_username).update(paid_date=datetime.now())
                 Users.objects.filter(ipn_username).update(subscription="0")
-                if CustomUserSettings.talent == request.user:
-                    if CustomUserSettings.unsubscribe == True:
-                        pass
-
-                    if CustomUserSettings.subscription_notifications == False:
-                        pass
-
-                    else:
-                        SubscriptionExpiredTask(ipn_username)
-
-            else:
-                pass
+                if CustomUserSettings.talent.filter(ipn_username) and CustomUserSettings.unsubscribe == True:
+                    pass
+                elif CustomUserSettings.talent.filter(ipn_username) and CustomUserSettings.subscription_notifications == False:
+                    pass
+                else:
+                    SubscriptionExpiredTask(ipn_username)
 
 
         elif ipn_obj.payment_status == ST_PP_PENDING:
@@ -207,11 +200,6 @@ def show_me_the_money(sender, **kwargs):
                 Users.objects.filter(ipn_username).update(paid_date=datetime.now())
                 Users.objects.filter(ipn_username).update(subscription="0")
 
-            else:
-                pass
-        else:
-            #...
-            pass
 
      # check for subscription payment IPN
     elif ipn_obj.txn_type == "subscr_payment":
@@ -245,25 +233,19 @@ def show_me_the_money(sender, **kwargs):
                 elif ipn_obj.item_name == "12 Month Active Subscription":
                     Users.objects.filter(ipn_username).update(subscription="2")
                     Users.objects.filter(ipn_username).update(paid_type="3")
-                else:
-                    pass
 
-            elif ipn_obj.mc_currency != 'USD':
+
+            elif ipn_obj.mc_gross != price and ipn_obj.mc_currency != 'USD':
                 Users.objects.filter(ipn_username).update(paid=False)
                 Users.objects.filter(ipn_username).update(paid_date=datetime.now())
                 Users.objects.filter(ipn_username).update(subscription="0")
-                if CustomUserSettings.talent == request.user:
-                    if CustomUserSettings.unsubscribe == True:
-                        pass
+                if CustomUserSettings.talent.filter(ipn_username) and CustomUserSettings.unsubscribe == True:
+                    pass
+                elif CustomUserSettings.talent.filter(ipn_username) and CustomUserSettings.subscription_notifications == False:
+                    pass
+                else:
+                    SubscriptionAmountDifferentTask(ipn_username)
 
-                    if CustomUserSettings.subscription_notifications == False:
-                        pass
-
-                    else:
-                        SubscriptionAmountDifferentTask(ipn_username)
-
-            else:
-                pass
 
         elif ipn_obj.payment_status == ST_PP_EXPIRED:
             if ipn_obj.receiver_email != settings.PAYPAL_RECEIVER_EMAIL:
@@ -274,18 +256,12 @@ def show_me_the_money(sender, **kwargs):
                 Users.objects.filter(ipn_username).update(paid=False)
                 Users.objects.filter(ipn_username).update(paid_date=datetime.now())
                 Users.objects.filter(ipn_username).update(subscription="0")
-                if CustomUserSettings.talent == request.user:
-                    if CustomUserSettings.unsubscribe == True:
-                        pass
-
-                    if CustomUserSettings.subscription_notifications == False:
-                        pass
-
-                    else:
-                        SubscriptionExpiredTask(ipn_username)
-
-            else:
-                pass
+                if CustomUserSettings.talent.filter(ipn_username) and CustomUserSettings.unsubscribe == True:
+                    pass
+                elif CustomUserSettings.talent.filter(ipn_username) and CustomUserSettings.subscription_notifications == False:
+                    pass
+                else:
+                    SubscriptionExpiredTask(ipn_username)
 
 
         elif ipn_obj.payment_status == ST_PP_PENDING:
@@ -298,12 +274,6 @@ def show_me_the_money(sender, **kwargs):
                 Users.objects.filter(ipn_username).update(paid_date=datetime.now())
                 Users.objects.filter(ipn_username).update(subscription="0")
 
-            else:
-                pass
-
-        else:
-            #...
-            pass
 
      # check for failed subscription payment IPN
     elif ipn_obj.txn_type == "subscr_failed":
@@ -315,15 +285,12 @@ def show_me_the_money(sender, **kwargs):
             Users.objects.filter(ipn_username).update(paid=False)
             Users.objects.filter(ipn_username).update(paid_date=datetime.now())
             Users.objects.filter(ipn_username).update(subscription="0")
-            if CustomUserSettings.talent == request.user:
-                if CustomUserSettings.unsubscribe == True:
-                    pass
-
-                if CustomUserSettings.subscription_notifications == False:
-                    pass
-
-                else:
-                    SubscriptionCancelledTask(ipn_username)
+            if CustomUserSettings.talent.filter(ipn_username) and CustomUserSettings.unsubscribe == True:
+                pass
+            elif CustomUserSettings.talent.filter(ipn_username) and CustomUserSettings.subscription_notifications == False:
+                pass
+            else:
+                SubscriptionCancelledTask(ipn_username)
 
 valid_ipn_received.connect(show_me_the_money)
 
