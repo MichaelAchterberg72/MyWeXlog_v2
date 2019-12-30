@@ -473,7 +473,7 @@ def ShortListView(request, slv):
         subsi = subs[0]
 
         if subsi == 2:
-            rate = applicants.filter(talent=app).values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation')
+            rate = applicants.filter(talent=app).values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation','talent__alias')
         else:
             rate = Profile.objects.filter(talent=app).values_list('std_rate', 'currency__currency_abv', 'rate_unit', 'motivation', 'alias')
 

@@ -150,7 +150,11 @@
               <td>{{ h.companybranch }}</td>
               <td>{{ h.designation }}</td>
               <td>{{ h.work_configeration }}</td>
-              <td><a href="{% url 'Profile:Resigned' h.id %}" class="badge badge-primary">I Resigned</a></td>
+              {% if h.date_to %}
+              
+              {% else %}
+                <td><a href="{% url 'Profile:Resigned' h.id %}" class="badge badge-primary">I Resigned</a></td>
+              {% endif %}
             </tr>
             {% endfor %}
           </tbody>

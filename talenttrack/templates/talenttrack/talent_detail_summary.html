@@ -12,7 +12,7 @@
 {% block content %}
 <div class="card">
   <h5 class="card-header">Skills Summary</h5>
-  {% if request.user.id == pfl.id %}
+  {% if request.user.d == pfl.id %}
   <div class="row">
     <div class="col-sm-12">
     <div class="card">
@@ -44,8 +44,10 @@
             {% for key in exp_set.items %}
               <tr>
                 <td>{{ key.0 }}</td>
-                <td>{{ key.1.sum }}</td>
+                <td>{{ key.1.sum|intcomma }}</td>
                 <td>{{ key.1.count }}</td>
+            {% empty %}
+                <td colspan="3">Nothing captured</td>
               </tr>
             {% endfor %}
           </tbody>
@@ -70,7 +72,9 @@
               {% for key in edt_set.items %}
                 <tr>
                   <td>{{ key.0 }}</td>
-                  <td>{{ key.1 }}</td>
+                  <td>{{ key.1|intcomma }}</td>
+              {% empty %}
+                  <td colspan="3">Nothing captured</td>
                 </tr>
               {% endfor %}
             </tbody>

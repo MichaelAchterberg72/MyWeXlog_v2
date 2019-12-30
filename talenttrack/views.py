@@ -10,6 +10,7 @@ from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 import json
 from django.db.models import Count, Sum
+from decimal import Decimal
 
 
 from csp.decorators import csp_exempt
@@ -72,26 +73,26 @@ def ExperienceHome(request):
             p_sum = 0
 
         tot_sum = t_sum + e_sum + p_sum
-        exp_lvl = float(e_sum+p_sum)
+        exp_lvl = [Decimal(e_sum+p_sum)]
 
-        std = sl.filter(level__exact=0).values_list('min_hours', flat=True)
-        grd = sl.filter(level__exact=1).values_list('min_hours', flat=True)
-        jnr = sl.filter(level__exact=2).values_list('min_hours', flat=True)
-        int = sl.filter(level__exact=3).values_list('min_hours', flat=True)
-        snr = sl.filter(level__exact=4).values_list('min_hours', flat=True)
-        lead = sl.filter(level__exact=5).values_list('min_hours', flat=True)
+        std = list(sl.filter(level__exact=0).values_list('min_hours', flat=True))
+        grd = list(sl.filter(level__exact=1).values_list('min_hours', flat=True))
+        jnr = list(sl.filter(level__exact=2).values_list('min_hours', flat=True))
+        int = list(sl.filter(level__exact=3).values_list('min_hours', flat=True))
+        snr = list(sl.filter(level__exact=4).values_list('min_hours', flat=True))
+        lead = list(sl.filter(level__exact=5).values_list('min_hours', flat=True))
 
-        if exp_lvl < std[0]:
+        if exp_lvl < std:
             iama = 0
-        elif exp_lvl >= std[0] and exp_lvl < grd[0]:
+        elif exp_lvl >= std and exp_lvl < grd:
             iama = 1
-        elif exp_lvl >= grd[0] and exp_lvl < jnr[0]:
+        elif exp_lvl >= grd and exp_lvl < jnr:
             iama = 2
-        elif exp_lvl >= jnr[0] and exp_lvl < int[0]:
+        elif exp_lvl >= jnr and exp_lvl < int:
             iama = 3
-        elif exp_lvl >= int[0] and exp_lvl < snr[0]:
+        elif exp_lvl >= int and exp_lvl < snr:
             iama = 4
-        elif exp_lvl >= snr[0]:
+        elif exp_lvl >= snr:
             iama = 5
 
         level = sl.get(level=iama)
@@ -261,6 +262,7 @@ def SkillProfileDetailView(request, tlt_id):
 
 @login_required()
 def SumAllExperienceView(request):
+    pfl = Profile.objects.get(pk=request.user.id)
     skill_qs = SkillTag.objects.all()
     exp = WorkExperience.objects.filter(
         talent = request.user.id).select_related('topic')
