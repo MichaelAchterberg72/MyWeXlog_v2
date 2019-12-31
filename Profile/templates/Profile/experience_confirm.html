@@ -35,18 +35,18 @@
                     <td class="align-middle">
                       <form  action="{% url 'Profile:LecturerConfirm' l.id %}" method="post">
                         {% csrf_token %}
-                        <button type="submit" class="badge badge-primary badge-pill">Confirm</button>
+                        <button type="submit" class="badge badge-primary badge-pill" style="width: 10rem">Confirm</button>
                       </form>
                       <form  action="{% url 'Profile:LecturerReject' l.id %}" method="post">
                         {% csrf_token %}
-                        <button type="submit" class="badge badge-danger badge-pill">Reject</button>
+                        <button type="submit" class="badge badge-danger badge-pill" style="width: 10rem">Reject</button>
                       </form>
                         <br>
-                      <a href="{% url 'Profile:LecturerComment' l.id %}" class="badge badge-pill badge-success">Review with Comment</a>
+                      <a href="{% url 'Profile:LecturerComment' l.id %}" class="badge badge-pill badge-success" style="width: 10rem">Review with Comment</a>
                         <br>
                       <form  action="{% url 'Profile:LecturerWrongPerson' l.id %}" method="post">
                         {% csrf_token %}
-                        <button type="submit" class="badge badge-info badge-pill">Wrong Person</button>
+                        <button type="submit" class="badge badge-info badge-pill" style="width: 10rem">Wrong Person</button>
                       </form>
                   </td>
                   </tr>
@@ -81,18 +81,18 @@
                   <td class="align-middle">
                     <form  action="{% url 'Profile:ClassMatesConfirm' l.id %}" method="post">
                       {% csrf_token %}
-                      <button type="submit" class="badge badge-primary badge-pill">Confirm</button>
+                      <button type="submit" class="badge badge-primary badge-pill" style="width: 10rem">Confirm</button>
                     </form>
                     <form  action="{% url 'Profile:ClassMatesReject' l.id %}" method="post">
                       {% csrf_token %}
-                      <button type="submit" class="badge badge-danger badge-pill">Reject</button>
+                      <button type="submit" class="badge badge-danger badge-pill" style="width: 10rem">Reject</button>
                     </form>
                       <br>
-                    <a href="{% url 'Profile:ClassMatesComment' l.id %}" class="badge badge-pill badge-success">Review with Comment</a>
+                    <a href="{% url 'Profile:ClassMatesComment' l.id %}" class="badge badge-pill badge-success" style="width: 10rem">Review with Comment</a>
                       <br>
                     <form  action="{% url 'Profile:ClassMatesWrongPerson' l.id %}" method="post">
                     {% csrf_token %}
-                    <button type="submit" class="badge badge-info badge-pill">Wrong Person</button>
+                    <button type="submit" class="badge badge-info badge-pill" style="width: 10rem">Wrong Person</button>
                     </form>
                   </td>
                 </tr>
@@ -133,16 +133,16 @@
                   <td class="align-middle">
                     <form  action="{% url 'Profile:ColleagueConfirm' l.id %}" method="post">
                       {% csrf_token %}
-                      <button type="submit" class="badge badge-primary badge-pill">Confirm</button>
+                      <button type="submit" class="badge badge-primary badge-pill" style="width: 10rem">Confirm</button>
                     </form>
                     <form  action="{% url 'Profile:ColleagueReject' l.id %}" method="post">
                       {% csrf_token %}
-                      <button type="submit" class="badge badge-danger badge-pill">Reject</button>
+                      <button type="submit" class="badge badge-danger badge-pill" style="width: 10rem">Reject</button>
                     </form><br>
-                    <a href="{% url 'Profile:ColleagueComment' l.id %}" class="badge badge-pill badge-secondary">Confirm with Comment</a>
+                    <a href="{% url 'Profile:ColleagueComment' l.id %}" class="badge badge-pill badge-secondary" style="width: 10rem">Confirm with Comment</a>
                     <form  action="{% url 'Profile:ColleagueWrongPerson' l.id %}" method="post">
                       {% csrf_token %}
-                      <button type="submit" class="badge badge-info badge-pill">Wrong Person</button>
+                      <button type="submit" class="badge badge-info badge-pill" style="width: 10rem">Wrong Person</button>
                     </form>
                   </td>
                 </tr>

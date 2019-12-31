@@ -38,18 +38,18 @@
         <td>{{ sl.1.ro.0.3 }}</td>
         <td>
           <p>
-            <a href="{% url 'Talent:APV' tlt_id=sl.0 vac_id=vacancy.id %}" class="badge badge-success badge-pill float-right">View Profile</a>
+            <a href="{% url 'Talent:APV' tlt_id=sl.0 vac_id=vacancy.id %}" class="badge badge-success badge-pill float-right" style="width: 5rem">View Profile</a>
             <form  action="{% url 'MarketPlace:InterviewList' tlt=sl.0  vac=vacancy.pk %}" method="post">
               {% csrf_token %}
-              <button type="submit" class="badge badge-info badge-pill float-right">Interview</button>
+              <button type="submit" class="badge badge-info badge-pill float-right" style="width: 5rem">Interview</button>
             </form>
             <form  action="{% url 'MarketPlace:VacAssign' tlt=sl.0  vac=vacancy.pk %}" method="post">
               {% csrf_token %}
-              <button type="submit" class="badge badge-success badge-pill float-right">Assign</button>
+              <button type="submit" class="badge badge-success badge-pill float-right" style="width: 5rem">Assign</button>
             </form>
             <form  action="{% url 'MarketPlace:VacDecline' tlt=sl.0  vac=vacancy.pk %}" method="post">
               {% csrf_token %}
-              <button type="submit" class="badge badge-danger badge-pill float-right">Decline</button>
+              <button type="submit" class="badge badge-danger badge-pill float-right" style="width: 5rem">Decline</button>
             </form>
           </p>
         </td>

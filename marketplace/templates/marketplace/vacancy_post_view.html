@@ -79,7 +79,7 @@
 <hr>
 <div class="row">
   <div class="col-sm-6">
-    <a href="{% url 'MarketPlace:Deliverables2' instance.id %}" class="badge badge-primary float-right">Add</a>
+    <a href="{% url 'MarketPlace:Deliverables2' instance.id %}" class="badge badge-primary float-right" style="width: 5rem;">Add</a>
     <h5 class="card-title" id="deliverables">Deliverables</h5>
       <table class="table table-sm">
         <thead>
@@ -93,10 +93,10 @@
           <tr>
             <td>{{ d.deliverable|linebreaks }}</td>
             <td>
-              <a href="{% url 'MarketPlace:DeliverablesEdit' d.id %}" class="badge badge-secondary badge-pill">Edit</a>
+              <a href="{% url 'MarketPlace:DeliverablesEdit' d.id %}" class="badge badge-secondary badge-pill" style="width: 5rem;">Edit</a>
               <form  action="{% url 'MarketPlace:DeliverablesDelete' d.id %}" method="post">
                 {% csrf_token %}
-              <button type="submit" class="badge badge-danger badge-pill float-right">Remove</button>
+              <button type="submit" class="badge badge-danger badge-pill float-right" style="width: 5rem;">Remove</button>
               </form>
             </td>
           </tr>
@@ -105,7 +105,7 @@
         </table>
   </div>
   <div class="col-sm-6">
-    <a href="{% url 'MarketPlace:Skillsa' instance.id %}" class="badge badge-primary float-right">Add</a>
+    <a href="{% url 'MarketPlace:Skillsa' instance.id %}" class="badge badge-primary float-right" style="width: 5rem;">Add</a>
     <h5 class="card-title" id="skills">Skills</h5>
     <table class="table table-sm">
       <thead>
@@ -119,7 +119,7 @@
           <td>{{ s.skills }}</td>
           <td><form  action="{% url 'MarketPlace:SkillDelete' s.id %}" method="post">
             {% csrf_token %}
-            <button type="submit" class="badge badge-danger badge-pill float-right">Remove</button>
+            <button type="submit" class="badge badge-danger badge-pill float-right" style="width: 5rem;">Remove</button>
           </form></td>
         </tr>
         {% endfor %}
@@ -157,9 +157,9 @@
           <td><p>
           <form  action="{% url 'MarketPlace:ShortList' tlt=key.0  s_list=instance.pk %}" name='passive' method="post">
             {% csrf_token %}
-            <button type="submit" class="badge badge-info badge-pill float-right">Short-list</button>
+            <button type="submit" class="badge badge-info badge-pill float-right" style="width: 5rem;">Short-list</button>
           </form><br>
-          <a href="{% url 'Talent:APV' tlt_id=key.0 vac_id=instance.id %}" class="badge badge-success badge-pill float-right">View Profile</a></p>
+          <a href="{% url 'Talent:APV' tlt_id=key.0 vac_id=instance.id %}" class="badge badge-success badge-pill float-right" style="width: 5rem;">View Profile</a></p>
           </td>
           {% empty %}
             {% if s_list %}
@@ -204,9 +204,9 @@
           <p>
             <form  action="{% url 'MarketPlace:ShortList' tlt=key.0  s_list=instance.pk %}" method="post" name="active">
             {% csrf_token %}
-            <button type="submit"  class="badge badge-info badge-pill float-right">Short-list</button>
+            <button type="submit"  class="badge badge-info badge-pill float-right" style="width: 5rem;">Short-list</button>
           </form><br>
-          <a href="{% url 'Talent:APV' tlt_id=key.0 vac_id=instance.id %}" class="badge badge-success badge-pill float-right">View Profile</a>
+          <a href="{% url 'Talent:APV' tlt_id=key.0 vac_id=instance.id %}" class="badge badge-success badge-pill float-right" style="width: 5rem;">View Profile</a>
         </p>
       </td>
       </tr>

@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.utils import timezone
 
-from Profile.utils import create_code7
+from Profile.utils import create_ref7
 
 from enterprises.models import Branch
 from locations.models import Currency, City
@@ -98,7 +98,10 @@ class TalentRequired(models.Model):
         unique_together = (('enterprise','title', 'requested_by'),)
 
     def save(self, *args, **kwargs):
-            self.ref_no = create_code7(self)
+        if self.ref_no:
+            pass
+        else:
+            self.ref_no = create_ref7(self)
 
     def __str__(self):
         return '{}, {}, {}'.format(self.title, self.enterprise, self.date_entered)

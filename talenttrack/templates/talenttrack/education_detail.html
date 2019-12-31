@@ -17,7 +17,7 @@
     <div class="col-sm-6">
      <div class="card">
        <div class="card-body">
-         <p class="float-right"><a href="{% url 'Talent:LecturerAdd' check.id %}"  class="badge badge-pill badge-primary">Add Lecturer</a></p>
+         <p class="float-right"><a href="{% url 'Talent:LecturerAdd' check.id %}"  class="badge badge-pill badge-primary" style="width: 8rem">Add Lecturer</a></p>
          <h5 class="card-title">Lecturers</h5>
          <table class="table table-sm">
            <thead>
@@ -31,7 +31,7 @@
              <tr>
                <td>{{ c.lecturer.first_name}} {{ c.lecturer.last_name }}</td>
                <td>{{c.get_confirm_display}}</td>
-               <td><a href="{% url 'Talent:LecturerResponse' c.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Detail</a></td>
+               <td><a href="{% url 'Talent:LecturerResponse' c.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 5rem">Detail</a></td>
              </tr>
           {% endfor %}
            </tbody>
@@ -43,7 +43,7 @@
     <div class="col-sm-6">
      <div class="card">
        <div class="card-body">
-         <p class="float-right"><a href="{% url 'Talent:ClassMatesAdd' check.id %}"  class="badge badge-pill badge-primary">Add Class Mate</a></p>
+         <p class="float-right"><a href="{% url 'Talent:ClassMatesAdd' check.id %}"  class="badge badge-pill badge-primary" style="width: 8rem">Add Class Mate</a></p>
          <h5 class="card-title">Class Mates</h5>
          <table class=" table table-sm">
            <thead>
@@ -57,7 +57,7 @@
              <tr>
                <td>{{ cm.colleague.first_name}} {{ cm.colleague.last_name }}</td>
                <td>{{cm.get_confirm_display}}</td>
-               <td><a href="{% url 'Talent:ClassMatesResponse' cm.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Detail</a></td>
+               <td><a href="{% url 'Talent:ClassMatesResponse' cm.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 5rem">Detail</a></td>
              </tr>
           {% endfor %}
            </tbody>
