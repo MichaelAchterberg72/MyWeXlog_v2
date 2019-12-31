@@ -9,7 +9,7 @@ from crispy_forms.layout import Layout, Submit, Row, Column
 
 from django_select2.forms import (
     ModelSelect2TagWidget, ModelSelect2Widget, Select2MultipleWidget,
-    Select2Widget, ModelSelect2MultipleWidget
+    Select2Widget, ModelSelect2MultipleWidget, Select2MultipleWidget
 )
 
 
@@ -141,7 +141,7 @@ class DeliverablesForm(forms.ModelForm):
 class TalentRequiredForm(forms.ModelForm):
     class Meta:
         model = TalentRequired
-        fields = ('title', 'enterprise', 'date_deadline', 'hours_required', 'unit', 'worklocation', 'rate_offered', 'rate_unit', 'currency', 'rate_unit', 'offer_status', 'certification', 'scope', 'expectations', 'terms', 'city', 'experience_level', 'bid_closes')
+        fields = ('title', 'enterprise', 'date_deadline', 'hours_required', 'unit', 'worklocation', 'rate_offered', 'rate_unit', 'currency', 'rate_unit', 'offer_status', 'certification', 'scope', 'expectations', 'terms', 'city', 'experience_level', 'bid_closes', 'ref_no',)
         widgets={
             'city': CitySelect2Widget(),
             'currency': CurrencySelect2Widget(),
@@ -151,12 +151,17 @@ class TalentRequiredForm(forms.ModelForm):
             'certification': CertModelSelect2MultipleWidget(),
         }
         labels = {
+            'title': 'Vacancy Title',
             'bid_closes': 'Vacancy Closes',
             'offer_status': 'Vacancy Status',
             'worklocation': 'Work Type Configeration',
             'date_deadline': 'To be Completed By',
+            'hours_required': 'Hours',
+            'ref_no': 'Vacancy Reference Number'
         }
-
+        help_texts = {
+            'ref_no': 'Maximum length: 7 Aplha-numeric characters'
+        }
 
 class WorkLocationForm(forms.ModelForm):
     class Meta:

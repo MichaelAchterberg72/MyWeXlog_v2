@@ -38,7 +38,7 @@ class BookList(models.Model):
         return '{}, {}'.format(self.title, self.publisher)
 
 
-#The format of the book (softback, hardcover, ebook etc.)
+#The format of the book (softback, hardcover, E-book, Abridged/Summary, audiobook,  etc.)
 class Format(models.Model):
     format = models.CharField(max_length=60, unique=True)
 

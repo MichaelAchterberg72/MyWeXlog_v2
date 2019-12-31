@@ -108,6 +108,7 @@ def ConfirmView(request):
     }
     return render(request, template, context)
 
+
 #>>>Education-Lecturer
 @login_required()
 def LecturerConfirmView(request, pk):
@@ -162,6 +163,7 @@ def LecturerCommentView(request, pk):
         context = {'form': form, 'info': info}
         return render(request, template, context)
 #>>>Education-Lecturer
+
 
 #>>>Education-ClassMate
 @login_required()
@@ -274,6 +276,7 @@ def ColleagueCommentView(request, pk):
         return render(request, template, context)
 #>>>Experience: Colleague
 
+
 #>>>Experience: Superior
 @login_required()
 def SuperiorConfirmView(request, pk):
@@ -329,6 +332,7 @@ def SuperiorWrongPersonView(request, pk):
         info.save()
     return redirect(reverse('Profile:Confirm')+'#Superior')
 #<<<Experience:Superior
+
 
 #>>>Experience:Collaborator
 @login_required()
@@ -386,6 +390,7 @@ def CollaboratorWrongPersonView(request, pk):
     return redirect(reverse('Profile:Confirm')+'#Collaborator')
 #<<<Experience: Collaborator
 
+
 #>>> Experience: Client
 @login_required()
 def ClientConfirmView(request, pk):
@@ -441,6 +446,7 @@ def ClientWrongPersonView(request, pk):
         info.save()
     return redirect(reverse('Profile:Confirm')+'#Client')
 #<<< Experience: Client
+
 
 #>>> Pre-Experience: Confirm
 @login_required()

@@ -5,6 +5,9 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.views.generic import FormView, TemplateView
 from django.http import HttpResponse, HttpResponseRedirect
+from django.utils.http import is_safe_url
+
+
 from django.views.decorators.csrf import csrf_exempt
 from csp.decorators import csp_exempt
 from django.db.models import Count
@@ -20,6 +23,8 @@ from django.views.generic import (
         TemplateView
 )
 from django.views.decorators.csrf import csrf_exempt
+from core.decorators import subscription
+
 from django.views import generic
 import json
 
@@ -41,6 +46,31 @@ def BookListHome(request, profile_id=None):
     template_name = 'booklist/booklist_home.html'
     context = {'ecount': ecount, 'books': books,}
     return render(request, template_name, context)
+
+
+@login_required()
+@subscription(2)
+@csp_exempt
+#This view is for the profile to display the complete list of books read.
+def ProfileBookList(request, tlt_id):
+    info = get_object_or_404(Profile, talent=tlt_id)
+    bkl = ReadBy.objects.filter(talent=tlt_id).order_by('-date')
+    bkl_count = bkl.count()
+
+    template_name = 'booklist/vac_profile_list.html'
+    context = {'bkl': bkl, 'info': info, 'bkl_count': bkl_count,}
+    return render(request, template_name, context)
+
+
+@login_required()
+def ProfileBackView(request):
+    if request.method =='POST':
+        next_url=request.POST.get('next', '/')
+
+        if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
+           next_url = reverse('MarketPlace:Entrance')
+
+        return HttpResponseRedirect(next_url)
 
 
 @login_required()

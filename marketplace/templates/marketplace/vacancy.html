@@ -23,13 +23,14 @@
   <div class="form-row">
     <div class="form-group col-md-6 mb-0">
       {{ form.title|as_crispy_field }}
+      {{ form.ref_no|as_crispy_field }}
       {{ form.enterprise|as_crispy_field }}
       <p><a href="{% url 'Enterprise:BranchAddPop' %}" id='add_branch' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a Company Branch</a></p>
       <div class="form-row">
         <div class="form-group col-md-4 mb-0">
           {{ form.date_deadline|as_crispy_field }}
         </div>
-        <div class="form-group col-md-4 mb-0">
+        <div class="form-group col-md-3 mb-0">
           {{ form.offer_status|as_crispy_field }}
         </div>
         <div class="form-group col-md-4 mb-0">
@@ -39,13 +40,13 @@
     </div>
     <div class="form-group col-md-6 mb-0">
       <div class="form-row">
-        <div class="form-group col-md-4 mb-0">
+        <div class="form-group col-md-2 mb-0">
           {{ form.hours_required|as_crispy_field }}
         </div>
-        <div class="form-group col-md-4 mb-0">
+        <div class="form-group col-md-5 mb-0">
           {{ form.unit|as_crispy_field }}
         </div>
-        <div class="form-group col-md-4 mb-0">
+        <div class="form-group col-md-5 mb-0">
           {{ form.experience_level|as_crispy_field }}
           <p><a href="{% url 'MarketPlace:SkillLevelAddPop' %}" id='add_skill' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a Level</a></p>
         </div>

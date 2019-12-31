@@ -139,7 +139,9 @@ def ActiveProfileView(request, tlt_id, vac_id):
     skill_qs = SkillTag.objects.all()
     exp = WorkExperience.objects.filter(talent=tlt_id).select_related('topic', 'course')
     edtexp = exp.order_by('-date_from')
-    bkl = ReadBy.objects.filter(talent=tlt_id).select_related('book', 'type')
+    bkl = ReadBy.objects.filter(talent=tlt_id).select_related('book', 'type')[:6]
+
+    bkl_count = bkl.count()
 
     #experience hours on skills required
     vacse_set = {}
@@ -189,7 +191,7 @@ def ActiveProfileView(request, tlt_id, vac_id):
 
     template = 'talenttrack/active_profile_view.html'
     context = {
-        'bch': bch,'pfl': pfl, 'lng': lng, 'padd': padd,'vacse_set': vacse_set, 'vacst_set': vacst_set, 'als': als, 'exp': exp, 'bkl': bkl, 'edtexp': edtexp
+        'bch': bch,'pfl': pfl, 'lng': lng, 'padd': padd,'vacse_set': vacse_set, 'vacst_set': vacst_set, 'als': als, 'exp': exp, 'bkl': bkl, 'edtexp': edtexp, 'bkl_count': bkl_count,
         }
     return render(request, template, context)
 
@@ -255,7 +257,7 @@ def SkillProfileDetailView(request, tlt_id):
 
     template = 'talenttrack/talent_detail_summary.html'
     context = {
-        'edt_set': edt_set, 'exp_set': exp_set, 'pfl': pfl
+        'edt_set': edt_set, 'exp_set': exp_set, 'pfl': pfl,
     }
     return render(request, template, context)
 

@@ -1,8 +1,19 @@
 from django.contrib import admin
 
 from .models import (
-    Topic, Result, CourseType, Course, Lecturer, ClassMates, WorkClient, WorkExperience, WorkColleague, Superior, WorkCollaborator, Designation
+    Topic, Result, CourseType, Course, Lecturer, ClassMates, WorkClient, WorkExperience, WorkColleague, Superior, WorkCollaborator, Designation, Achievements, LicenseCertification
     )
+
+
+@admin.register(LicenseCertification)
+class LicenseCertificationAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(Achievements)
+class AchievementsAdmin(admin.ModelAdmin):
+    pass
+
 
 @admin.register(Designation)
 class DesignationAdmin(admin.ModelAdmin):

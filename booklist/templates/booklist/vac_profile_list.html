@@ -1,0 +1,64 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+
+{% block title %}
+  {% if request.user.id == info.id %}
+    {{block.super}}-Book List
+  {% else %}
+    {{block.super}}-{{info.alias}} Book List
+  {% endif %}
+{% endblock title %}
+
+{% block content %}
+<div class="card">
+  <h5 class="card-header">Books Read</h5>
+  {% if request.user.d == pfl.id %}
+  <div class="row">
+    <div class="col-sm-12">
+    <div class="card">
+      <div class="">
+        <a href="{% url 'Talent:Home' %}" class="btn btn-secondary float-right">Experience Home</a>
+        <a href="{% url 'Talent:DPCSum' %}" class="btn btn-primary">Designation, Project & Company Summary</a>
+        <a href="{% url 'Talent:ExperienceSum' %}" class="btn btn-primary">Skills Summary</a>
+      </div>
+    </div>
+    </div>
+  </div>
+  {% else %}
+  <form  action="{% url 'BookList:BLB' %}" method="post">
+    <input type="hidden" name="next" value="{{ request.GET.next }}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-secondary">Back to {{info.alias}}'s Profile</button>
+  </form>
+  {% endif %}
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-body">
+        <h5 class="card-title">Completed Books</h5>
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th>Title, Publisher</th>
+              <th>Author(s)</th>
+              <th>Format</th>
+              <th>Date Completed</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for b in bkl %}
+              <tr>
+                <td>{{ b.book }}</td>
+                  <td>{{ b.book.author.all|join:", " }}</td>
+                <td>{{ b.type }}</td>
+                <td>{{ b.date|date:"j M Y" }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

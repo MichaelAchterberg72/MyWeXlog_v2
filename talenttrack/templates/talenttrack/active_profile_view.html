@@ -122,13 +122,49 @@
   </div>
   <div class="card">
     <div class="card-header">
+      <a href="{% url 'BookList:VPBL' als.id %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right" target="_blank">View All Books</a>
+      <h5>Books Read</h5>
+    </div>
+      <div class="col-sm-12">
+        <p>Total Books Read: <strong>{{ bkl_count }}</strong> </p>
+        <div class="card">
+          <div class="card-body">
+            <table class="table table-sm">
+              <col width="45%">
+              <col width="20%">
+              <col width="15%">
+              <col width="20%">
+              <thead>
+                <tr>
+                  <th>Title, Publisher</th>
+                  <th>Author(s)</th>
+                  <th>Format</th>
+                  <th>Date Completed</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for b in bkl %}
+                  <tr>
+                    <td>{{ b.book }}</td>
+                      <td>{{ b.book.author.all|join:", " }}</td>
+                    <td>{{ b.type }}</td>
+                    <td>{{ b.date|date:"j M Y" }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
       <h5>Education & Training</h5>
     </div>
     <div class="row">
       <div class="col-sm-12">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">Courses</h5>
             <table class="table table-sm">
               <col width="10%">
               <col width="10%">

@@ -1,8 +1,12 @@
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
+from django.db.models.signals import pre_save, post_save
+from django.dispatch import receiver
 
-from Profile.utils import create_code7
+
+from Profile.utils import create_ref7
+
 
 from enterprises.models import Branch
 from locations.models import Currency, City
@@ -74,7 +78,7 @@ class TalentRequired(models.Model):
     )
     date_entered = models.DateField(auto_now_add=True)
     title = models.CharField(max_length=250)
-    ref_no = models.CharField(max_length=7, null=True)
+    ref_no = models.CharField(max_length=7, unique=True)
     enterprise = models.ForeignKey(Branch, on_delete=models.CASCADE, verbose_name="Company Branch")
     requested_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     date_deadline = models.DateField('Work completed by')
@@ -96,9 +100,6 @@ class TalentRequired(models.Model):
 
     class Meta:
         unique_together = (('enterprise','title', 'requested_by'),)
-
-    def save(self, *args, **kwargs):
-            self.ref_no = create_code7(self)
 
     def __str__(self):
         return '{}, {}, {}'.format(self.title, self.enterprise, self.date_entered)

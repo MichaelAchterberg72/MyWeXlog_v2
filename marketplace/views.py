@@ -80,7 +80,8 @@ def AllPostedVacanciesView(request):
 def MarketHome(request):
     #>>>Queryset caching
     talent=request.user
-    tr = TalentRequired.objects.filter(requested_by=talent)
+    tr = TalentRequired.objects.all()
+    trt = tr.filter(requested_by=talent)
     wb = WorkBid.objects.filter(work__requested_by=talent, work__offer_status__iexact='O')
     ta = TalentAvailabillity.objects.filter(talent=talent)
     we = WorkExperience.objects.filter(talent=talent).prefetch_related('topic')
@@ -88,8 +89,8 @@ def MarketHome(request):
     sl = SkillLevel.objects.all()
     #Queryset caching<<<
 
-    ipost = tr.filter(offer_status__iexact='O').order_by('-bid_open')[:5]
-    ipost_closed = tr.filter(offer_status__iexact='C').order_by('-bid_open')[:5]
+    ipost = trt.filter(offer_status__iexact='O').order_by('-bid_open')[:5]
+    ipost_closed = trt.filter(offer_status__iexact='C').order_by('-bid_open')[:5]
     ipost_bid = wb.filter(Q(bidreview__exact='R') | Q(bidreview__exact='P') | Q(bidreview__exact='A'))
     ipost_bid_flat = ipost_bid.values_list('work', flat=True).distinct()
     capacity = ta.filter(date_to__gte=timezone.now()).order_by('-date_to')[:5]
@@ -98,24 +99,15 @@ def MarketHome(request):
 
     #>>>summing all hours
     my_logged = we.aggregate(myl=Sum('hours_worked'))
-    my_training = we.filter(edt=True).select_related('topic')
-    training_time = my_training.aggregate(mytr=Sum('topic__hours'))
 
     myli = my_logged.get('myl')
-    mytri = training_time.get('mytr')
 
     if myli:
         myli = myli
     else:
         myli = 0
 
-    if mytri:
-        mytri = mytri
-    else:
-        mytri = 0
-
-    mye = myli+mytri
-    myed = [Decimal(mye)]
+    myed = [Decimal(myli)]
     #Summing all hours<<<
 
     #>>>Create a set of all skills
@@ -161,7 +153,11 @@ def MarketHome(request):
     elif myed >= snr:
         iama = 5
 
+    print(iama, myed)
+
     req_experience = tr.filter(experience_level__level__exact=iama).values_list('id', flat=True)
+
+    print(req_experience)
 
     match = []
 
@@ -554,6 +550,7 @@ def DeliverablesAddView(request, pk):
 
 @login_required()
 @csp_exempt
+@subscription(2)
 def VacancyView(request):
     form = TalentRequiredForm(request.POST or None, request.FILES)
     if request.method == 'POST':
@@ -563,6 +560,11 @@ def VacancyView(request):
             new.save()
             form.save_m2m()
             return redirect(reverse('MarketPlace:Deliverables', kwargs={'pk':new.id}))
+        else:
+            template = 'marketplace/vacancy.html'
+            context = {'form': form}
+            return render(request, template, context)
+
     else:
         template = 'marketplace/vacancy.html'
         context = {'form': form}

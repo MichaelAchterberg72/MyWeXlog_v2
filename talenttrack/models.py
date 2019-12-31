@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.utils import timezone
 from time import time
-from datetime import datetime
+from datetime import datetime, timezone
 from random import random
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -19,6 +19,20 @@ CONFIRM = (
     ('R','Reject'),
     ('Y','Wrong Person'),
 )
+
+
+class Achievements(models.Model):
+    talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    achievement = models.CharField(max_length=500)
+    date_achieved = models.DateField()
+    description = models.TextField('Describe the Achievement')
+
+    class Meta:
+        ordering = ['-date_achieved']
+        unique_together = (('talent', 'achievement', 'date_achieved'),)
+
+    def __str__(self):
+        return f'{self.talent.name}: {self.achievement} ({self.date_achieved})'
 
 
 class Result(models.Model):#What you receive when completing the course
@@ -41,12 +55,37 @@ class CourseType(models.Model):#What type of course (online, Attend lectures, et
         return self.type
 
 
+class LicenseCertification(models.Model):
+    talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    name = models.ForeignKey(Result, on_delete=models.PROTECT, verbose_name='Proffessional Memberships / Certification name')
+    cm_no = models.CharField('Membership / Credential Number', max_length=40)
+    organisation = models.ForeignKey(Enterprise, on_delete=models.PROTECT, verbose_name='Issued By')
+    issue_date = models.DateField()
+    expiry_date = models.DateField()
+    current = models.BooleanField('Is this current?', default = True)
+
+    class Meta:
+        ordering = ['-issue_date']
+        unique_together = (('talent', 'cm_no'),)
+
+    def __str__(self):
+        return f'{self.talent}, {self.name}: {self.current}'
+
+    def save(self, *args, **kwargs):
+        if self.expiry_date >= timezone.now:
+            self.current=True
+        else:
+            self.current=False
+
+        super(LicenseCertification, self).save(*args, **kwargs)
+
+
 class Course(models.Model):
     name = models.CharField('Course name', max_length=150, unique=True)
     company = models.ForeignKey(Enterprise, on_delete=models.PROTECT, verbose_name="Institution")
     course_type = models.ForeignKey(CourseType, on_delete=models.PROTECT)
     website = models.URLField(blank=True, null=True)
-    certification = models.ForeignKey(Result, on_delete=models.PROTECT)
+    certification = models.ForeignKey(Result, on_delete=models.PROTECT, verbose_name = 'Result')
 
     def clean(self):
         self.name = self.name.capitalize()
@@ -132,7 +171,7 @@ class WorkExperience(models.Model):
     #Common Fields
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     date_from = models.DateField()
-    date_to = models.DateField(default=timezone.now)
+    date_to = models.DateField()
     date_captured = models.DateField(auto_now_add=True)
     upload = models.FileField(upload_to=ExpFilename, blank=True, null=True)
     score = models.SmallIntegerField(default=0)
