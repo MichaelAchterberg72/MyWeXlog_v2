@@ -9,7 +9,7 @@
     <div class="card">
       <div class="card-body">
         {% for d in info %}
-          <h5 class="card-title">Basic Information <a href="{% url 'Profile:ProfileEdit' d.id %}?next={{ request.path|urlencode }}" class="badge badge-primary">Edit</a></h5>
+          <h5 class="card-title">Basic Information <a href="{% url 'Profile:ProfileEdit' d.id %}?next={{ request.path|urlencode }}" class="badge badge-primary float-right">Edit</a></h5>
           <p class="card-text">Name: {{ user_info.first_name }} {{ user_info.last_name }}</p>
           <p class="card-text">Display name: {{ user_info.alias }}</p>
           <p class="card-text">Date of Birth: {{ d.birth_date }}</p>
@@ -18,7 +18,7 @@
           <p class="card-text">Motivation:<br>{{ d.motivation|linebreaks }}</p>
           <p class="card-text">Do you wish to be a mentor to others? {{ d.get_mentor_display }}</p>
         <div class="card-footer bg-transparent border-success"></div>
-          <h5 class="card-title">Online Profiles <a href="{% url 'Profile:OnlineProfileAdd' request.user.id %}" class="badge badge-primary">Add</a></h5>
+          <h5 class="card-title">Online Profiles <a href="{% url 'Profile:OnlineProfileAdd' request.user.id %}" class="badge badge-primary float-right">Add</a></h5>
           <table class="table table-sm" id="online">
             <thead>
               <tr>
@@ -45,11 +45,11 @@
           </table>
 
           <div class="card-footer bg-transparent border-success"></div>
-          <h5 class="card-title">Languages <a href="{% url 'Profile:LanguageAdd' request.user.id %}" class="badge badge-primary">Add</a></h5>
+          <h5 class="card-title">Languages <a href="{% url 'Profile:LanguageAdd' request.user.id %}" class="badge badge-primary float-right">Add</a></h5>
           <table class="table table-sm">
-            <col width="25%">
-            <col width="20%">
-            <col width="40%">
+            <col width="35%">
+            <col width="30%">
+            <col width="35%">
             <thead>
               <tr>
                 <th>Language</th>
@@ -74,7 +74,7 @@
     </div>
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title" id="email">Email addresses <a href="{% url 'Profile:EmailEdit' d.id %}?next={{ request.path|urlencode }}" class="badge badge-primary">Add</a></h5>
+      <h5 class="card-title" id="email">Email addresses <a href="{% url 'Profile:EmailEdit' d.id %}?next={{ request.path|urlencode }}" class="badge badge-primary float-right">Add</a></h5>
       <h6>Past (No longer active)</h6>
       {% for e in email %}
       {% if e.active is False %}
@@ -125,7 +125,7 @@
 <div class="card-group">
   <div class="card">
     <div class="card-body" id="History">
-      <h5 class="card-title">Career History <a href="{% url 'Profile:History' %}" class="badge badge-primary">Add</a></h5>
+      <h5 class="card-title">Career History <a href="{% url 'Profile:History' %}" class="badge badge-primary float-right">Add</a></h5>
       <p class="card-text">
         {% if history %}
         <table class="table table-sm">
@@ -166,7 +166,7 @@
 <div class="card-group">
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title">Uploaded Files <a href="{% url 'Profile:FileUploadView' request.user.id %}" class="badge badge-primary">Add File</a></h5>
+      <h5 class="card-title">Uploaded Files <a href="{% url 'Profile:FileUploadView' request.user.id %}" class="badge badge-primary float-right">Add File</a></h5>
       <table class="table table-sm">
         <thead>
         </thead>
@@ -191,7 +191,7 @@
 <div class="card-group">
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title">Identification Document <a href="{% url 'Profile:IdView' request.user.id %}" class="badge badge-primary">Edit</a></h5>
+      <h5 class="card-title">Identification Document <a href="{% url 'Profile:IdView' request.user.id %}" class="badge badge-primary float-right">Edit</a></h5>
       <table class="table table-sm">
         <thead>
           <tr>
@@ -212,7 +212,7 @@
   </div>
     <div class="card">
       <div class="card-body">
-        <h5 class="card-title">Passport Information <a href="{% url 'Profile:PassportAddView' request.user.id %}" class="badge badge-primary">Add</a></h5>
+        <h5 class="card-title">Passport Information <a href="{% url 'Profile:PassportAddView' request.user.id %}" class="badge badge-primary float-right">Add</a></h5>
         <table class="table table-sm" id="passport">
         <thead>
           <tr>
@@ -249,7 +249,7 @@
   <div class="card">
     <div class="card-body">
 
-      <h5 class="card-title">Physical Address <a href="{% url 'Profile:PhysicalAddress' physical.talent.id %}" class="badge badge-primary">Edit</a></h5>
+      <h5 class="card-title">Physical Address <a href="{% url 'Profile:PhysicalAddress' physical.talent.id %}" class="badge badge-primary float-right">Edit</a></h5>
       <table class="table table-sm">
         <thead>
         </thead>
@@ -293,7 +293,7 @@
   </div>
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title">Postal Address <a href="{% url 'Profile:PostalAddress' postal.talent.id %}" class="badge badge-primary">Edit</a></h5>
+      <h5 class="card-title">Postal Address <a href="{% url 'Profile:PostalAddress' postal.talent.id %}" class="badge badge-primary float-right">Edit</a></h5>
       <table class="table table-sm">
         <thead>
         </thead>
@@ -336,7 +336,7 @@
   </div>
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title">Phone Numbers <a href="{% url 'Profile:PhoneNumberAdd' postal.talent.id %}" class="badge badge-primary">Add</a></h5>
+      <h5 class="card-title">Phone Numbers <a href="{% url 'Profile:PhoneNumberAdd' postal.talent.id %}" class="badge badge-primary float-right">Add</a></h5>
       <div id="phone">
         <table class="table table-sm">
           <col width="20%">

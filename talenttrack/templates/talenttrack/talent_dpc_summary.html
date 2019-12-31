@@ -2,7 +2,11 @@
 {% load humanize %}
 
 {% block title %}
-    {{block.super}}-Experience Overview
+{% if request.user.id == pfl.id %}
+  {{block.super}}-Experience Overview
+{% else %}
+  {{block.super}}-{{pfl.alias}} Skill Summary
+{% endif %}
 {% endblock title %}
 
 {% block content %}

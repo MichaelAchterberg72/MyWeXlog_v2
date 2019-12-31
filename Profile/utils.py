@@ -12,11 +12,3 @@ def create_code7(instance, size=7):
     if qs_exists:
         return create_code(size=7)
     return new_code
-
-def create_ref7(instance, size=7):
-    new_code=code_generator(size=size)
-    Klass = instance.__class__
-    qs_exists = Klass.objects.filter(ref_no=new_code).exists()
-    if qs_exists:
-        return create_code(size=7)
-    return new_code

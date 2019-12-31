@@ -51,7 +51,7 @@
     <div class="col-sm-6">
      <div class="card">
        <div class="card-body">
-         <p class="float-right"><a href="{% url 'Talent:ColleagueAdd' check.id %}" class="badge badge-pill badge-primary">Add Colleague</a></p>
+         <p class="float-right"><a href="{% url 'Talent:ColleagueAdd' check.id %}" class="badge badge-pill badge-primary" style="width: 8rem">Add Colleague</a></p>
          <h5 class="card-title">Colleagues</h5>
          <table class="table table-sm">
            <thead>
@@ -65,7 +65,7 @@
              <tr>
                <td>{{ c.colleague_name.first_name}} {{ c.colleague_name.last_name }}</td>
                <td>{{c.get_confirm_display}}</td>
-               <td><a href="{% url 'Talent:ColleagueResponse' c.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Detail</a></td>
+               <td><a href="{% url 'Talent:ColleagueResponse' c.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 5rem">Detail</a></td>
              </tr>
             {% endfor %}
            </tbody>
@@ -76,7 +76,7 @@
     <div class="col-sm-6">
      <div class="card">
        <div class="card-body">
-         <p class="float-right"><a href="{% url 'Talent:SuperiorAdd' check.id %}" class="badge badge-pill badge-primary">Add Superior</a></p>
+         <p class="float-right"><a href="{% url 'Talent:SuperiorAdd' check.id %}" class="badge badge-pill badge-primary" style="width: 8rem">Add Superior</a></p>
          <h5 class="card-title">Superiors</h5>
          <table class="table table-sm">
            <thead>
@@ -90,7 +90,7 @@
              <tr>
                <td>{{ cm.superior_name.first_name}} {{ cm.superior_name.last_name }}</td>
                <td>{{cm.get_confirm_display}}</td>
-               <td><a href="{% url 'Talent:SuperiorResponse' cm.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Detail</a></td>
+               <td><a href="{% url 'Talent:SuperiorResponse' cm.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 5rem">Detail</a></td>
              </tr>
           {% endfor %}
            </tbody>
@@ -103,7 +103,7 @@
     <div class="col-sm-6">
      <div class="card">
        <div class="card-body">
-         <p class="float-right"><a href="{% url 'Talent:CollaboratorAdd' check.id %}" class="badge badge-pill badge-primary">Add Collaborator</a></p>
+         <p class="float-right"><a href="{% url 'Talent:CollaboratorAdd' check.id %}" class="badge badge-pill badge-primary" style="width: 8rem">Add Collaborator</a></p>
          <h5 class="card-title">Collaborators</h5>
          <table class="table table-sm">
            <thead>
@@ -117,7 +117,7 @@
              <tr>
                <td>{{ wc.collaborator_name.first_name}} {{ wc.collaborator_name.last_name }}</td>
                <td>{{wc.get_confirm_display}}</td>
-               <td><a href="{% url 'Talent:CollaboratorResponse' wc.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Detail</a></td>
+               <td><a href="{% url 'Talent:CollaboratorResponse' wc.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 5rem">Detail</a></td>
              </tr>
             {% endfor %}
            </tbody>
@@ -128,7 +128,7 @@
     <div class="col-sm-6">
      <div class="card">
        <div class="card-body">
-         <p class="float-right"><a href="{% url 'Talent:ClientAdd' check.id %}" class="badge badge-pill badge-primary">Add Client</a></p>
+         <p class="float-right"><a href="{% url 'Talent:ClientAdd' check.id %}" class="badge badge-pill badge-primary" style="width: 8rem">Add Client</a></p>
          <h5 class="card-title">Clients</h5>
          <table class="table table-sm">
            <thead>
@@ -142,7 +142,7 @@
              <tr>
                <td>{{ cnt.client_name.first_name}} {{ cnt.client_name.last_name }}</td>
                <td>{{cnt.get_confirm_display}}</td>
-               <td><a href="{% url 'Talent:ClientResponse' cnt.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Detail</a></td>
+               <td><a href="{% url 'Talent:ClientResponse' cnt.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 5rem">Detail</a></td>
              </tr>
           {% endfor %}
            </tbody>

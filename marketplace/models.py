@@ -5,9 +5,6 @@ from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 
 
-from Profile.utils import create_ref7
-
-
 from enterprises.models import Branch
 from locations.models import Currency, City
 from db_flatten.models import SkillTag

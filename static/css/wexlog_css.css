@@ -10,6 +10,18 @@
   padding-top: 20px;
 }
 
+.card-body .5rem {
+   width: 5rem;
+}
+
+.card-body .8rem {
+   width: 8rem;
+}
+
+.card-body .12rem {
+   width: 12rem;
+}
+
 .avatar {
   height: 40px;
 }
