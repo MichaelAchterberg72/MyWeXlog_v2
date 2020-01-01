@@ -85,6 +85,8 @@
         <col width="90%">
         <col width="10%">
         <thead>
+          <col width="85%">
+          <col width="15%">
           <tr>
             <th>Deliverable</th>
             <th>Options</th>
@@ -93,9 +95,9 @@
         {% for d in delivere %}
         <tbody>
           <tr>
-            <td>{{ d.deliverable|linebreaks }}</td>
+            <td>{{ d.deliverable|linebreaks|truncatechars:100 }}</td>
             <td>
-              <a href="{% url 'MarketPlace:DeliverablesEdit' d.id %}" class="badge badge-secondary badge-pill" style="width: 5rem;">Edit</a>
+              <a href="{% url 'MarketPlace:DeliverablesEdit' d.id %}" class="badge badge-secondary badge-pill float-right" style="width: 5rem;">Edit</a>
               <form  action="{% url 'MarketPlace:DeliverablesDelete' d.id %}" method="post">
                 {% csrf_token %}
               <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
@@ -113,6 +115,11 @@
       <col width="90%">
       <col width="10%">
       <thead>
+        <col width="85%">
+        <col width="15%">
+        <tr>
+          <th>Skill</th>
+        </tr>
       </thead>
       <tbody>
         {% for s in skille %}
@@ -148,6 +155,7 @@
       <tbody>
         {% for key in suitable.items %}
         <tr>
+<<<<<<< HEAD
           <td class="align-middle">{{ key.1.ro.0.4 }}</td>
           <td class="align-middle">{{ key.1.we }}</td>
           <td class="align-middle">{{ key.1.te }}</td>
@@ -156,6 +164,16 @@
           <td class="align-middle">{{ key.1.ro.0.1 }} <strong>{{ key.1.ro.0.0 }}</strong> {{ key.1.ro.0.2 }}</td>
           <td class="align-middle">{{ key.1.ro.0.3 }}</td>
           <td class="align-middle"><p>
+=======
+          <td>{{ key.1.ro.0.4 }}</td>
+          <td>{{ key.1.we }}</td>
+          <td>{{ key.1.te }}</td>
+          <td>{{ key.1.s_no }}</td>
+          <td>{{ key.1.rb }}</td>
+          <td>{{ key.1.ro.0.1 }} <strong>{{ key.1.ro.0.0 }}</strong> {{ key.1.ro.0.2 }}</td>
+          <td>{{ key.1.ro.0.3|truncatechars:200 }}</td>
+          <td><p>
+>>>>>>> origin/2020-01-01-Mike
           <form  action="{% url 'MarketPlace:ShortList' tlt=key.0  s_list=instance.pk %}" name='passive' method="post">
             {% csrf_token %}
             <button type="submit" class="badge badge-info badge-pill float-right" style="width: 5rem;">Short-list</button>
@@ -194,6 +212,7 @@
     <tbody>
       {% for key in applied.items %}
       <tr>
+<<<<<<< HEAD
         <td class="align-middle">{{ key.1.ro.0.4 }}</td>
         <td class="align-middle">{{ key.1.we }}</td>
         <td class="align-middle">{{ key.1.te }}</td>
@@ -202,6 +221,16 @@
         <td class="align-middle">{{ key.1.ro.0.1 }} <strong>{{ key.1.ro.0.0 }}</strong> {{ key.1.ro.0.2 }}</td>
         <td class="align-middle">{{ key.1.ro.0.3 }}</td>
         <td class="align-middle">
+=======
+        <td>{{ key.1.ro.0.4 }}</td>
+        <td>{{ key.1.we }}</td>
+        <td>{{ key.1.te }}</td>
+        <td>{{ key.1.s_no }}</td>
+        <td>{{ key.1.rb }}</td>
+        <td>{{ key.1.ro.0.1 }} <strong>{{ key.1.ro.0.0 }}</strong> {{ key.1.ro.0.2 }}</td>
+        <td>{{ key.1.ro.0.3|truncatechars:200 }}</td>
+        <td>
+>>>>>>> origin/2020-01-01-Mike
           <p>
             <form  action="{% url 'MarketPlace:ShortList' tlt=key.0  s_list=instance.pk %}" method="post" name="active">
             {% csrf_token %}

@@ -35,7 +35,7 @@
         <td>{{ sl.1.s_no }}</td>
         <td>{{ sl.1.rb }}</td>
         <td>{{ sl.1.ro.0.1 }} <strong>{{ sl.1.ro.0.0 }}</strong> {{ sl.1.ro.0.2 }}</td>
-        <td>{{ sl.1.ro.0.3 }}</td>
+        <td>{{ sl.1.ro.0.3|truncatechars:200 }}</td>
         <td>
           <p>
             <a href="{% url 'Talent:APV' tlt_id=sl.0 vac_id=vacancy.id %}" class="badge badge-success badge-pill float-right" style="width: 5rem">View Profile</a>
