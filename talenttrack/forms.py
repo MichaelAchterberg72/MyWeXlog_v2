@@ -13,7 +13,7 @@ from django_select2.forms import (
 )
 
 from .models import (
-    Topic, Result, CourseType, Course, Lecturer, ClassMates, WorkClient, WorkExperience, WorkColleague, Superior, WorkCollaborator, Designation
+    Topic, Result, CourseType, Course, Lecturer, ClassMates, WorkClient, WorkExperience, WorkColleague, Superior, WorkCollaborator, Designation, Achievements, LicenseCertification
     )
 
 from enterprises.models import Enterprise, Branch
@@ -21,6 +21,8 @@ from project.models import ProjectData
 from db_flatten.models import SkillTag
 from enterprises.models import Industry
 from users.models import CustomUser
+from locations.models import Region
+
 
 #>>> Select 2
 class UserSearchFieldMixin:
@@ -44,6 +46,18 @@ class CompanySelect2Widget(CompanySearchFieldMixin, ModelSelect2Widget):
 
     def create_value(self, value):
         self.get_queryset().create(name=value)
+
+
+class ResultSearchFieldMixin:
+    search_fields = [
+        'type__icontains', 'pk__startswith'
+        ]
+
+class ResultWidget(ResultSearchFieldMixin, ModelSelect2Widget):
+    model = Result
+
+    def create_value(self, value):
+        self.get_queryset().create(type=value)
 
 
 class BranchSearchFieldMixin:
@@ -134,12 +148,66 @@ class IndSelect2Widget(IndSearchFieldMixin, ModelSelect2Widget):
 
     def create_value(self, value):
         self.get_queryset().create(industry=value)
+
+
+class RegionSearchFieldMixin:
+    search_fields = [
+        'region__icontains', 'pk__startswith'
+    ]
+    dependent_fields = {'country': 'country'}
+
+
+class RegionWidget(RegionSearchFieldMixin, ModelSelect2Widget):
+    model = Region
+
+    def create_value(self, value):
+        self.get_queryset().create(region=value)
 #Select2<<<
 
 
 class DateInput(forms.DateInput):
     input_type = 'date'
 
+
+class AchievementsForm(forms.ModelForm):
+    class Meta:
+        model = Achievements
+        fields = ('achievement', 'date_achieved', 'description')
+        widgets = {
+            'date_achieved': DateInput(),
+            'achievement': forms.TextInput(),
+        }
+        labels = {
+            'description': 'Achievement Description',
+        }
+        help_texts = {
+            'achievement': 'Brief description or name of the achievement',
+            'description': 'Background of what the achiement is, and what led to you receiving it.',
+        }
+
+
+class LicenseCertificationForm(forms.ModelForm):
+    class Meta:
+        model = LicenseCertification
+        fields = ('certification', 'cm_no', 'companybranch', 'issue_date', 'expiry_date', 'current', 'country', 'region',)
+        widgets = {
+            'issue_date': DateInput(),
+            'expiry_date': DateInput(),
+            'companybranch': CompanySelect2Widget(),
+            'certification': ResultWidget(),
+            'region': RegionWidget(),
+        }
+        labels = {
+            'certification': 'License / Certification / Membership Type',
+            'cm_no': 'Licence / Certification / Membership Number',
+            'companybranch': 'Managing Organisation',
+        }
+        help_texts = {
+            'issue_date': 'The date the license / certification / membership was first held.',
+            'expiry_date': 'The date the license / certification / membership expires (Leave Blank if never expires).',
+            'current': 'Is the license / certification / membership currently valid?',
+            'region': 'Not all certifications are region specific, in which case, this field can be blank, however some are, in which case this field must be populated.',
+        }
 
 class PreLoggedExperienceForm(forms.ModelForm):
     class Meta:

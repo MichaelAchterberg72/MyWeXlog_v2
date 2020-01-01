@@ -82,6 +82,8 @@
     <a href="{% url 'MarketPlace:Deliverables2' instance.id %}" class="badge badge-primary float-right" style="width: 5rem;">Add</a>
     <h5 class="card-title" id="deliverables">Deliverables</h5>
       <table class="table table-sm">
+        <col width="90%">
+        <col width="10%">
         <thead>
           <tr>
             <th>Deliverable</th>
@@ -96,7 +98,7 @@
               <a href="{% url 'MarketPlace:DeliverablesEdit' d.id %}" class="badge badge-secondary badge-pill" style="width: 5rem;">Edit</a>
               <form  action="{% url 'MarketPlace:DeliverablesDelete' d.id %}" method="post">
                 {% csrf_token %}
-              <button type="submit" class="badge badge-danger badge-pill float-right" style="width: 5rem;">Remove</button>
+              <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
               </form>
             </td>
           </tr>
@@ -108,10 +110,9 @@
     <a href="{% url 'MarketPlace:Skillsa' instance.id %}" class="badge badge-primary float-right" style="width: 5rem;">Add</a>
     <h5 class="card-title" id="skills">Skills</h5>
     <table class="table table-sm">
+      <col width="90%">
+      <col width="10%">
       <thead>
-        <tr>
-          <th>Skill</th>
-        </tr>
       </thead>
       <tbody>
         {% for s in skille %}
@@ -147,14 +148,14 @@
       <tbody>
         {% for key in suitable.items %}
         <tr>
-          <td>{{ key.1.ro.0.4 }}</td>
-          <td>{{ key.1.we }}</td>
-          <td>{{ key.1.te }}</td>
-          <td>{{ key.1.s_no }}</td>
-          <td>{{ key.1.rb }}</td>
-          <td>{{ key.1.ro.0.1 }} <strong>{{ key.1.ro.0.0 }}</strong> {{ key.1.ro.0.2 }}</td>
-          <td>{{ key.1.ro.0.3 }}</td>
-          <td><p>
+          <td class="align-middle">{{ key.1.ro.0.4 }}</td>
+          <td class="align-middle">{{ key.1.we }}</td>
+          <td class="align-middle">{{ key.1.te }}</td>
+          <td class="align-middle">{{ key.1.s_no }}</td>
+          <td class="align-middle">{{ key.1.rb }}</td>
+          <td class="align-middle">{{ key.1.ro.0.1 }} <strong>{{ key.1.ro.0.0 }}</strong> {{ key.1.ro.0.2 }}</td>
+          <td class="align-middle">{{ key.1.ro.0.3 }}</td>
+          <td class="align-middle"><p>
           <form  action="{% url 'MarketPlace:ShortList' tlt=key.0  s_list=instance.pk %}" name='passive' method="post">
             {% csrf_token %}
             <button type="submit" class="badge badge-info badge-pill float-right" style="width: 5rem;">Short-list</button>
@@ -193,14 +194,14 @@
     <tbody>
       {% for key in applied.items %}
       <tr>
-        <td>{{ key.1.ro.0.4 }}</td>
-        <td>{{ key.1.we }}</td>
-        <td>{{ key.1.te }}</td>
-        <td>{{ key.1.s_no }}</td>
-        <td>{{ key.1.rb }}</td>
-        <td>{{ key.1.ro.0.1 }} <strong>{{ key.1.ro.0.0 }}</strong> {{ key.1.ro.0.2 }}</td>
-        <td>{{ key.1.ro.0.3 }}</td>
-        <td>
+        <td class="align-middle">{{ key.1.ro.0.4 }}</td>
+        <td class="align-middle">{{ key.1.we }}</td>
+        <td class="align-middle">{{ key.1.te }}</td>
+        <td class="align-middle">{{ key.1.s_no }}</td>
+        <td class="align-middle">{{ key.1.rb }}</td>
+        <td class="align-middle">{{ key.1.ro.0.1 }} <strong>{{ key.1.ro.0.0 }}</strong> {{ key.1.ro.0.2 }}</td>
+        <td class="align-middle">{{ key.1.ro.0.3 }}</td>
+        <td class="align-middle">
           <p>
             <form  action="{% url 'MarketPlace:ShortList' tlt=key.0  s_list=instance.pk %}" method="post" name="active">
             {% csrf_token %}

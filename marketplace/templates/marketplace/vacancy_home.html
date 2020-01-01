@@ -11,20 +11,26 @@
     </div>
     <h5 class="card-title">Vacancies suited for Me </h5>
     <table class="table table-sm">
+      <col width="5%">
+      <col width="15%">
+      <col width="6%">
+      <col width="10%">
+      <col width="10%">
+      <col width="10%">
       <thead>
         <tr>
-          <th>Reference Number</th>
-          <th>Vacancy Title</th>
-          <th>Hours Required</th>
-          <th>Work Format</th>
-          <th>Country</th>
-          <th>Full Detail</th>
+          <th class="align-middle text-center">Reference Number</th>
+          <th class="align-middle text-center">Vacancy Title</th>
+          <th class="align-middle text-center">Hours Required</th>
+          <th class="align-middle text-center">Work Format</th>
+          <th class="align-middle text-center">Country</th>
+          <th class="align-middle text-center">Full Detail</th>
         </tr>
       </thead>
       {% for i in dsd %}
       {% if i.scope.id not in already_applied %}
       <tbody>
-      <tr>
+      <tr  class="align-middle text-center">
         <td>{{ i.scope.ref_no }}</td>
         <td>{{ i.scope.title }}</td>
         <td>

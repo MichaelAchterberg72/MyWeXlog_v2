@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.utils import timezone
 from time import time
-from datetime import datetime, timezone
+import datetime
 from random import random
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -12,6 +12,8 @@ from django.db.models import Count, Sum, F, Q
 from enterprises.models import Enterprise, Industry, Branch
 from project.models import ProjectData
 from db_flatten.models import SkillTag
+from django_countries.fields import CountryField
+from locations.models import Region
 
 CONFIRM = (
     ('S','Select'),
@@ -57,11 +59,13 @@ class CourseType(models.Model):#What type of course (online, Attend lectures, et
 
 class LicenseCertification(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
-    name = models.ForeignKey(Result, on_delete=models.PROTECT, verbose_name='Proffessional Memberships / Certification name')
+    certification = models.ForeignKey(Result, on_delete=models.PROTECT, verbose_name='Proffessional Memberships / Certification name')
+    country = CountryField()
+    region = models.ForeignKey(Region, on_delete=models.PROTECT, blank=True, null=True)
     cm_no = models.CharField('Membership / Credential Number', max_length=40)
-    organisation = models.ForeignKey(Enterprise, on_delete=models.PROTECT, verbose_name='Issued By')
+    companybranch = models.ForeignKey(Enterprise, on_delete=models.PROTECT, verbose_name='Issued By')
     issue_date = models.DateField()
-    expiry_date = models.DateField()
+    expiry_date = models.DateField(null=True, blank=True)
     current = models.BooleanField('Is this current?', default = True)
 
     class Meta:
@@ -69,14 +73,19 @@ class LicenseCertification(models.Model):
         unique_together = (('talent', 'cm_no'),)
 
     def __str__(self):
-        return f'{self.talent}, {self.name}: {self.current}'
+        return f'{self.talent}, {self.certification}: {self.current}'
 
     def save(self, *args, **kwargs):
-        if self.expiry_date >= timezone.now:
-            self.current=True
+        if self.expiry_date:
+            ed = self.expiry_date
+            cd = datetime.date.today()
+            dt = (ed-cd).days
+            if dt >=0 :
+                self.current=True
+            else:
+                self.current=False
         else:
-            self.current=False
-
+            self.current=True
         super(LicenseCertification, self).save(*args, **kwargs)
 
 

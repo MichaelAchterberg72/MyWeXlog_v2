@@ -3,7 +3,9 @@ from django.urls import path
 
 from .import views
 
+
 app_name = 'Talent'
+
 
 urlpatterns = [
     path('home/', views.ExperienceHome, name='Home'),
@@ -40,11 +42,17 @@ urlpatterns = [
     path('collaborator/detail/<int:pk>/', views.CollaboratorResponseView, name='CollaboratorResponse'),
     path('client/detail/<int:pk>/', views.ClientResponseView, name='ClientResponse'),
     path('prelogged/capture/', views.PreLoggedExperienceCaptureView, name="PreloggedCapture"),
-    #path('prelogged/select/', views.PreColleagueSelectView, name='PreColleagueSelect'),
     path('prelogged/<int:pre_id>/detail/', views.PreLogDetailView, name='PreLogDetail'),
     path('experience-detail/', views.SumAllExperienceView, name='ExperienceSum'),
     path('skill-profile-detail/<int:tlt_id>/', views.SkillProfileDetailView, name='SPDView'),
     path('dpc-detail/', views.DPC_SummaryView, name='DPCSum'),
     path('apv/<int:tlt_id>/<int:vac_id>/', views.ActiveProfileView, name='APV'),
+    path('achievement-capture/', views.CaptureAchievementView, name='AchieveCap'),
+    path('achievement-edit/<int:ach_pk>/', views.EditAchievementView, name='AchieveEdit'),
+    path('achievement-del/<int:ach_pk>/', views.DeleteAchievementView, name='AchieveDelete'),
+    path('lcm-capture/', views.LicenseCertificationCaptureView, name='LCMCap'),
+    path('lcm-edit/<int:lcm_id>/', views.LicenseCertificationEditView, name='LCMEdit'),
+    path('lcm-del/<int:lcm_id>/', views.LicenseCertificationDeleteView, name='LCMDelete'),
+    path('lcm-fv/<int:tlt_id>/', views.LCMFullView, name='LCM_FV'),
 
 ]

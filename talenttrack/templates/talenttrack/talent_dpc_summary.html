@@ -32,16 +32,16 @@
           <thead>
             <tr>
               <th>Designation</th>
-              <th>Hours</th>
-              <th>Quantity</th>
+              <th class="align-middle text-center">Hours</th>
+              <th class="align-middle text-center">Quantity</th>
             </tr>
           </thead>
           <tbody>
             {% for key in dgn_set.items %}
               <tr>
                 <td>{{ key.0 }}</td>
-                <td>{{ key.1.sum }}</td>
-                <td>{{ key.1.count }}</td>
+                <td class="align-middle text-center">{{ key.1.sum }}</td>
+                <td class="align-middle text-center">{{ key.1.count }}</td>
               </tr>
             {% endfor %}
           </tbody>
@@ -58,16 +58,16 @@
             <thead>
               <tr>
                 <th>Company & Branch</th>
-                <th>Hours</th>
-                <th>Quantity</th>
+                <th class="align-middle text-center">Hours</th>
+                <th class="align-middle text-center">Quantity</th>
               </tr>
             </thead>
             <tbody>
               {% for key in cmp_set.items %}
                 <tr>
                   <td>{{ key.0 }}</td>
-                  <td>{{ key.1.sum }}</td>
-                  <td>{{ key.1.count }}</td>
+                  <td class="align-middle text-center">{{ key.1.sum }}</td>
+                  <td class="align-middle text-center">{{ key.1.count }}</td>
                 </tr>
               {% endfor %}
             </tbody>
@@ -84,16 +84,16 @@
             <thead>
               <tr>
                 <th>Project & Client</th>
-                <th>Hours</th>
-                <th>Quantity</th>
+                <th class="align-middle text-center">Hours</th>
+                <th class="align-middle text-center">Quantity</th>
               </tr>
             </thead>
             <tbody>
               {% for key in prj_set.items %}
                 <tr>
                   <td>{{ key.0 }}</td>
-                  <td>{{ key.1.sum }}</td>
-                  <td>{{ key.1.count }}</td>
+                  <td class="align-middle text-center">{{ key.1.sum }}</td>
+                  <td class="align-middle text-center">{{ key.1.count }}</td>
                 </tr>
               {% endfor %}
             </tbody>

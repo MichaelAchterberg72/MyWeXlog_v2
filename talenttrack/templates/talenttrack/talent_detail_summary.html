@@ -19,12 +19,21 @@
       <div class="">
         <a href="{% url 'Talent:Home' %}" class="btn btn-secondary float-right">Experience Home</a>
         <a href="{% url 'Talent:DPCSum' %}" class="btn btn-primary">Designation, Project & Company Summary</a>
+        <form  action="{% url 'BookList:BLB' %}" method="post">
+          <input type="hidden" name="next" value="{{ request.GET.next }}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-secondary">Back to {{pfl.alias}}'s Profile</button>
+        </form>
       </div>
     </div>
     </div>
   </div>
   {% else %}
-
+  <form  action="{% url 'BookList:BLB' %}" method="post">
+    <input type="hidden" name="next" value="{{ request.GET.next }}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-secondary float-right">Back to {{pfl.alias}}'s Profile</button>
+  </form>
   {% endif %}
   <div class="row">
     <div class="col-sm-6">
@@ -36,16 +45,16 @@
           <thead>
             <tr>
               <th>Skill</th>
-              <th>Hours</th>
-              <th>Quantity</th>
+              <th class="align-middle text-center">Hours</th>
+              <th class="align-middle text-center">Quantity</th>
             </tr>
           </thead>
           <tbody>
             {% for key in exp_set.items %}
               <tr>
                 <td>{{ key.0 }}</td>
-                <td>{{ key.1.sum|intcomma }}</td>
-                <td>{{ key.1.count }}</td>
+                <td class="align-middle text-center">{{ key.1.sum|intcomma }}</td>
+                <td class="align-middle text-center">{{ key.1.count }}</td>
             {% empty %}
                 <td colspan="3">Nothing captured</td>
               </tr>
@@ -65,14 +74,14 @@
             <thead>
               <tr>
                 <th>Skill</th>
-                <th>Hours</th>
+                <th class="align-middle text-center">Hours</th>
               </tr>
             </thead>
             <tbody>
               {% for key in edt_set.items %}
                 <tr>
                   <td>{{ key.0 }}</td>
-                  <td>{{ key.1|intcomma }}</td>
+                  <td class="align-middle text-center">{{ key.1|intcomma }}</td>
               {% empty %}
                   <td colspan="3">Nothing captured</td>
                 </tr>

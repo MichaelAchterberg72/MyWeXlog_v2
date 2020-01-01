@@ -17,7 +17,7 @@ from .models import (
         )
 
 from talenttrack.models import (
-        Lecturer, ClassMates, WorkColleague, Superior, WorkCollaborator,  WorkClient, WorkExperience
+        Lecturer, ClassMates, WorkColleague, Superior, WorkCollaborator,  WorkClient, WorkExperience, Achievements, LicenseCertification,
 )
 
 from talenttrack.forms import (
@@ -722,6 +722,7 @@ def EmailDelete(request, pk):
 @login_required()
 def ProfileView(request, profile_id):
     detail = Profile.objects.get(talent=profile_id)
+    tlt = request.user.id
     if detail.talent == request.user:
         info = Profile.objects.filter(talent=profile_id)
         email = Email.objects.filter(talent=profile_id)
@@ -734,10 +735,15 @@ def ProfileView(request, profile_id):
         passport = PassportDetail.objects.filter(talent=profile_id)
         speak = LanguageTrack.objects.filter(talent=profile_id)
         history = BriefCareerHistory.objects.filter(talent=profile_id).order_by('-date_from')
-        user_info = CustomUser.objects.get(pk=request.user.id)
+        user_info = CustomUser.objects.get(pk=tlt)
+        achievement = Achievements.objects.filter(talent=tlt).order_by('-date_achieved')
+        lcm_qs = LicenseCertification.objects.filter(talent=tlt).order_by('-issue_date')
 
-        template='Profile/profile_view.html'
-        context= {'info':info, 'email':email, 'physical':physical, 'postal': postal, 'pnumbers': pnumbers, 'online': online, 'upload': upload, 'id': id, 'passport': passport, 'speak': speak, 'history': history, 'user_info': user_info}
+        template = 'Profile/profile_view.html'
+        context = {
+            'info':info, 'email':email, 'physical':physical, 'postal': postal, 'pnumbers': pnumbers, 'online': online, 'upload': upload, 'id': id, 'passport': passport, 'speak': speak, 'history': history, 'user_info': user_info, 'achievement': achievement, 'lcm_qs': lcm_qs,
+            }
+
         return render(request, template, context)
     else:
         raise PermissionDenied

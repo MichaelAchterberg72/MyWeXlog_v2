@@ -9,7 +9,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 import json
-from django.db.models import Count, Sum
+from django.db.models import Count, Sum, Q, F
 from decimal import Decimal
 
 
@@ -18,21 +18,23 @@ from core.decorators import subscription
 
 
 from .forms import (
-        TopicForm, ResultForm, CourseTypeForm, CourseForm, DesignationForm, ClassMatesSelectForm, ClassMatesConfirmForm, LecturerSelectForm, LecturerConfirmForm, EducationForm, WorkExperienceForm, WorkColleagueSelectForm, WorkColleagueConfirmForm, WorkColleagueResponseForm, ClassMatesResponseForm, LecturerResponseForm, SuperiorSelectForm, WorkCollaboratorResponseForm, WorkCollaboratorConfirmForm, WorkCollaboratorSelectForm, WorkClientResponseForm, WorkClientConfirmForm, WorkClientSelectForm, PreLoggedExperienceForm, TopicPopForm, LecturerRespondForm, ClassMatesRespondForm, WorkColleagueSelectForm, SuperiorSelectForm, WorkCollaboratorSelectForm
+        TopicForm, ResultForm, CourseTypeForm, CourseForm, DesignationForm, ClassMatesSelectForm, ClassMatesConfirmForm, LecturerSelectForm, LecturerConfirmForm, EducationForm, WorkExperienceForm, WorkColleagueSelectForm, WorkColleagueConfirmForm, WorkColleagueResponseForm, ClassMatesResponseForm, LecturerResponseForm, SuperiorSelectForm, WorkCollaboratorResponseForm, WorkCollaboratorConfirmForm, WorkCollaboratorSelectForm, WorkClientResponseForm, WorkClientConfirmForm, WorkClientSelectForm, PreLoggedExperienceForm, TopicPopForm, LecturerRespondForm, ClassMatesRespondForm, WorkColleagueSelectForm, SuperiorSelectForm, WorkCollaboratorSelectForm, AchievementsForm, LicenseCertificationForm,
 )
 
 from .models import (
-        Lecturer, Course, ClassMates, WorkExperience, Superior, WorkCollaborator, WorkClient, WorkColleague, Designation
+        Lecturer, Course, ClassMates, WorkExperience, Superior, WorkCollaborator, WorkClient, WorkColleague, Designation, Achievements, LicenseCertification,
 )
 
 from db_flatten.models import SkillTag
-from marketplace.models import SkillLevel, SkillRequired
+from marketplace.models import SkillLevel, SkillRequired, WorkBid
 from enterprises.models import Branch
 from project.models import ProjectData
 from Profile.models import (
         BriefCareerHistory, Profile, LanguageTrack, PhysicalAddress
 )
 from booklist.models import ReadBy
+from users.models import CustomUser
+
 
 @login_required()
 def ExperienceHome(request):
@@ -127,21 +129,124 @@ def ExperienceHome(request):
 
 
 @login_required()
+def CaptureAchievementView(request):
+    pfl = get_object_or_404(CustomUser, pk=request.user.id)
+    form = AchievementsForm(request.POST or None)
+
+    if request.method == 'POST':
+        new = form.save(commit=False)
+        new.talent = pfl
+        new.save()
+        return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':pfl.id})+'#achievements')
+    else:
+        template = 'talenttrack/achievement_capture.html'
+        context = {'form': form,}
+        return render(request, template, context)
+
+
+@login_required()
+def EditAchievementView(request, ach_pk):
+    instance = get_object_or_404(Achievements, pk=ach_pk)
+
+    form = AchievementsForm(request.POST or None, instance=instance)
+
+    if request.method == 'POST':
+        new = form.save(commit=False)
+        new.save()
+        return redirect(reverse('Profile:ProfileView')+'#achievements')
+    else:
+        template = 'talenttrack/achievement_capture.html'
+        context = {'form': form,}
+        return render(request, template, context)
+
+
+@login_required()
+def DeleteAchievementView(request, ach_pk):
+    info = Achievements.objects.get(pk=ach_pk)
+    if info.talent == request.user:
+        if request.method =='POST':
+            info.delete()
+            return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':info.talent.id})+'#achievements')
+    else:
+        raise PermissionDenied
+
+
+@login_required()
+@csp_exempt
+def LicenseCertificationCaptureView(request):
+    tlt = get_object_or_404(CustomUser, pk=request.user.id)
+    form = LicenseCertificationForm(request.POST or None)
+
+    if form.is_valid():
+        new = form.save(commit=False)
+        new.talent = tlt
+        new.save()
+        return redirect(reverse ('Profile:ProfileView', kwargs={'profile_id':tlt.id})+'#memberships')
+    else:
+        template = 'talenttrack/membership_view.html'
+        context = {'form': form,}
+        return render(request, template, context)
+
+
+@login_required()
+@csp_exempt
+def LicenseCertificationEditView(request, lcm_id):
+    lcm = LicenseCertification.objects.get(pk=lcm_id)
+    form = LicenseCertificationForm(request.POST or None, instance=lcm)
+
+    if form.is_valid():
+        edit = form.save(commit=False)
+        edit.save()
+        return redirect(reverse ('Profile:ProfileView', kwargs={'profile_id':lcm.talent.id})+'#memberships')
+    else:
+        template = 'talenttrack/membership_view.html'
+        context = {'form': form,}
+        return render(request, template, context)
+
+
+@login_required()
+def LicenseCertificationDeleteView(request, lcm_id):
+    lcm = LicenseCertification.objects.get(pk=lcm_id)
+    if lcm.talent == request.user:
+        if request.method =='POST':
+            lcm.delete()
+            return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':lcm.talent.id})+'#memberships')
+    else:
+        raise PermissionDenied
+
+
+@login_required()
 @subscription(2)
 def ActiveProfileView(request, tlt_id, vac_id):
     #caching
     bch = BriefCareerHistory.objects.filter(talent=tlt_id).order_by('-date_from')
     pfl = Profile.objects.only('background', 'alias', 'mentor', 'motivation').filter(talent=tlt_id)
-    als = Profile.objects.only('background', 'alias', 'mentor', 'motivation').get(talent=tlt_id)
-    lng = LanguageTrack.objects.filter(talent=tlt_id)
+    als = Profile.objects.only('background', 'alias', 'mentor', 'motivation', 'std_rate', 'currency').get(talent=tlt_id)
     padd = PhysicalAddress.objects.only('country', 'region', 'city').get(talent=tlt_id)
     skr = SkillRequired.objects.filter(scope=vac_id).values_list('skills', flat=True).distinct('skills')
     skill_qs = SkillTag.objects.all()
-    exp = WorkExperience.objects.filter(talent=tlt_id).select_related('topic', 'course')
+    exp = WorkExperience.objects.filter(talent=tlt_id).select_related('topic', 'course', 'project')
     edtexp = exp.order_by('-date_from')
     bkl = ReadBy.objects.filter(talent=tlt_id).select_related('book', 'type')[:6]
-
     bkl_count = bkl.count()
+    prj_qs = ProjectData.objects.all()
+    bid_qs = WorkBid.objects.get(Q(talent=tlt_id) & Q(work=vac_id))
+    achievement_qs = Achievements.objects.filter(talent=tlt_id).order_by('-date_achieved')
+    language_qs = LanguageTrack.objects.filter(talent=tlt_id).order_by('-language')
+    membership_qs = LicenseCertification.objects.filter(talent=tlt_id).order_by('-issue_date')
+
+    #Project Summary
+    prj = exp.values_list('project', flat=True).distinct('project')
+    prj_set = {}
+    prj_count = 0
+    for p in prj:
+        if p == None:
+            pass
+        else:
+            prj_count +=1
+            project_q = prj_qs.filter(pk=p).values_list('name', 'company__name', 'branch__name', 'industry__industry')
+            info_list=[project_q[0][1], project_q[0][2], project_q[0][3]]
+            prj_set[project_q[0][0]] = info_list
 
     #experience hours on skills required
     vacse_set = {}
@@ -191,7 +296,19 @@ def ActiveProfileView(request, tlt_id, vac_id):
 
     template = 'talenttrack/active_profile_view.html'
     context = {
-        'bch': bch,'pfl': pfl, 'lng': lng, 'padd': padd,'vacse_set': vacse_set, 'vacst_set': vacst_set, 'als': als, 'exp': exp, 'bkl': bkl, 'edtexp': edtexp, 'bkl_count': bkl_count,
+        'bch': bch,'pfl': pfl, 'padd': padd,'vacse_set': vacse_set, 'vacst_set': vacst_set, 'als': als, 'exp': exp, 'bkl': bkl, 'edtexp': edtexp, 'bkl_count': bkl_count, 'prj_set': prj_set, 'prj_count': prj_count, 'bid_qs': bid_qs, 'achievement_qs': achievement_qs, 'language_qs': language_qs, 'membership_qs': membership_qs,
+        }
+    return render(request, template, context)
+
+
+@login_required()
+@subscription(1)
+def LCMFullView(request, tlt_id):
+    lcm_qs = LicenseCertification.objects.filter(talent=tlt_id).order_by('-issue_date')
+
+    template = 'talenttrack/lcm_full_view.html'
+    context = {
+        'lcm_qs': lcm_qs,
         }
     return render(request, template, context)
 

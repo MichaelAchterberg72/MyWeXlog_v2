@@ -163,6 +163,29 @@ class TalentRequiredForm(forms.ModelForm):
             'ref_no': 'Maximum length: 7 Aplha-numeric characters'
         }
 
+
+class TalentRequiredEditForm(forms.ModelForm):
+    class Meta:
+        model = TalentRequired
+        fields = ('title', 'enterprise', 'date_deadline', 'hours_required', 'unit', 'worklocation', 'rate_offered', 'rate_unit', 'currency', 'rate_unit', 'offer_status', 'certification', 'scope', 'expectations', 'terms', 'city', 'experience_level', 'bid_closes',)
+        widgets={
+            'city': CitySelect2Widget(),
+            'currency': CurrencySelect2Widget(),
+            'enterprise': BranchSelect2Widget(),
+            'date_deadline': DateInput(),
+            'bid_closes': DateInput(),
+            'certification': CertModelSelect2MultipleWidget(),
+        }
+        labels = {
+            'title': 'Vacancy Title',
+            'bid_closes': 'Vacancy Closes',
+            'offer_status': 'Vacancy Status',
+            'worklocation': 'Work Type Configeration',
+            'date_deadline': 'To be Completed By',
+            'hours_required': 'Hours',
+        }
+
+
 class WorkLocationForm(forms.ModelForm):
     class Meta:
         model = WorkLocation

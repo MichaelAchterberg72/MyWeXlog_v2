@@ -15,7 +15,7 @@ from csp.decorators import csp_exempt
 from core.decorators import subscription
 
 from .forms import (
-        TalentAvailabillityForm, SkillRequiredForm, SkillLevelForm, DeliverablesForm, TalentRequiredForm, WorkLocationForm, WorkBidForm
+        TalentAvailabillityForm, SkillRequiredForm, SkillLevelForm, DeliverablesForm, TalentRequiredForm, WorkLocationForm, WorkBidForm, TalentRequiredEditForm,
 )
 
 from .models import(
@@ -153,11 +153,7 @@ def MarketHome(request):
     elif myed >= snr:
         iama = 5
 
-    print(iama, myed)
-
     req_experience = tr.filter(experience_level__level__exact=iama).values_list('id', flat=True)
-
-    print(req_experience)
 
     match = []
 
@@ -282,7 +278,7 @@ def VacancyPostView(request, pk):
 
         suitable[item]={'we':wetv, 'te':tetv,'s_no':skill_count, 'rb':rb, 'ro':rate}
 
-    #Extracting information for the applicats
+    #Extracting information for the applicants
     applied ={}
     app_list = list(app_list.values_list('talent', flat=True))
     for app in app_list:
@@ -293,7 +289,7 @@ def VacancyPostView(request, pk):
             atalent_skill = list(we.filter(talent=app, edt=False).values_list('skills', flat=True))
             atalent_skillt = list(we.filter(talent=app, edt=True).values_list('topic__skills', flat=True))
             rb = book.filter(talent=app).count()
-            rate = applicants.filter(talent=app).values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation')
+            rate = applicants.filter(talent=app).values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation', 'talent__alias')
 
             aslist = atalent_skill + atalent_skillt
             askillset = set(aslist)
@@ -321,6 +317,10 @@ def VacancySkillsAddView(request, pk):
                 return redirect(reverse('MarketPlace:Skills', kwargs={'pk': pk}))
             elif 'done' in request.POST:
                 return redirect(reverse('MarketPlace:Entrance'))
+        else:
+            template = 'marketplace/vacancy_skills.html'
+            context = {'form': form, 'instance': instance, 'skill_list': skill_list}
+            return render(request, template, context)
     else:
         template = 'marketplace/vacancy_skills.html'
         context = {'form': form, 'instance': instance, 'skill_list': skill_list}
@@ -328,6 +328,7 @@ def VacancySkillsAddView(request, pk):
 
 
 @login_required()
+@csp_exempt
 def VacancySkillsAdd2View(request, pk):
     instance = get_object_or_404(TalentRequired, pk=pk)
     skill_list = SkillRequired.objects.filter(scope=pk)
@@ -338,6 +339,10 @@ def VacancySkillsAdd2View(request, pk):
             new.scope = instance
             new.save()
             return redirect(reverse('MarketPlace:VacancyPost', kwargs={'pk': pk})+'#skills')
+        else:
+            template = 'marketplace/vacancy_skills2.html'
+            context = {'form': form, 'instance': instance, 'skill_list': skill_list}
+            return render(request, template, context)
     else:
         template = 'marketplace/vacancy_skills2.html'
         context = {'form': form, 'instance': instance, 'skill_list': skill_list}
@@ -578,15 +583,20 @@ def VacancyEditView(request, pk):
     instance=get_object_or_404(TalentRequired, pk=pk)
 
     if request.method == 'POST':
-        form = TalentRequiredForm(request.POST, request.FILES, instance=instance)
+        form = TalentRequiredEditForm(request.POST, request.FILES, instance=instance)
         if form.is_valid():
             new = form.save(commit=False)
-            new.requested_by=request.user
             new.save()
             form.save_m2m()
             return redirect(reverse('MarketPlace:VacancyPost', kwargs={'pk':pk}))
+        else:
+            form = TalentRequiredEditForm(instance=instance)
+
+            template = 'marketplace/vacancy_edit.html'
+            context = {'form': form, 'instance': instance}
+            return render(request, template, context)
     else:
-        form = TalentRequiredForm(instance=instance)
+        form = TalentRequiredEditForm(instance=instance)
 
         template = 'marketplace/vacancy_edit.html'
         context = {'form': form, 'instance': instance}

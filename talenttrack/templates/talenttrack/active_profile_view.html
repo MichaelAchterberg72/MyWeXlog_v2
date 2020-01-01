@@ -15,7 +15,7 @@
 </div>
 <div class="card">
   <div class="card-header">
-    <a href="{% url 'Talent:SPDView' als.id %}" class="btn btn-primary float-right" target="_blank">View All Skills</a>
+    <a href="{% url 'Talent:SPDView' als.id %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right" target="_blank">View All Skills</a>
     <h5>Vacancy Skills Match</h5>
   </div>
   <div class="row">
@@ -82,7 +82,37 @@
             <p><strong>Background</strong><br>
                {{ als.background|linebreaks }}</p>
             <hr>
+            <p><strong>Languages</strong></p>
+            <table class="table table-sm">
+              <thead>
+                <tr>
+                  <th>Language</th>
+                  <th>Level</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for l in language_qs %}
+                <tr>
+                  <td>{{ l.language }}</td>
+                  <td>{{ l.get_level_display }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan=2>No languages captued.</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            <hr>
             <p><strong>Current location:</strong> {{ padd.get_country_display }}, {{ padd.region }}, {{ padd.city }}</p>
+            <hr>
+              {% if bid_qs %}
+              <p><strong>Expected Rate: </strong>{{ bid_qs.currency }} {{ bid_qs.rate_bid }} {{ bid_qs.get_rate_unit_display }}</p>
+              <p><strong>Motivation for position:<br></strong>{{ bid_qs.motivation }}</p>
+            {% else %}
+              <p><strong>Expected Rate: </strong>{{ als.currency }} {{ als.std_rate }} per hour</p>
+              <p><strong>Motivation for position:<br></strong>{{ als.motivation }}</p>
+            {% endif %}
           </div>
         </div>
       </div>
@@ -115,10 +145,110 @@
                 {% endfor %}
               </tbody>
             </table>
+            <hr>
+            <div class="class="card-title"">
+              <a href="{% url 'Talent:LCM_FV' als.id %}" class="btn btn-primary float-right" target="_blank">All Detail</a>
+              <h5>Licenses, Certifications & Memberships</h5>
+            </div>
+            <table class="table table-sm">
+              <col width="25%">
+              <col width="35%">
+              <col width="20%">
+              <col width="20%">
+              <thead>
+                <tr>
+                  <th class="align-middle text-center">Type</th>
+                  <th class="align-middle text-center">Managing Institution</th>
+                  <th class="align-middle text-center">Country</th>
+                  <th class="align-middle text-center">Region</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for lcm in membership_qs %}
+                  <tr>
+                    <td class="align-middle text-center">{{ lcm.certification }}</td>
+                    <td class="align-middle text-center">{{ lcm.companybranch }}</td>
+                    <td class="align-middle text-center">{{ lcm.country.name }}</td>
+                    <td class="align-middle text-center">{{ lcm.region }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
     </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-body">
+        <h5 class="card-title">Achievements</h5>
+        <table class="table table-sm">
+          <col width="30%">
+          <col width="10%">
+          <col width="55%">
+          <thead>
+            <tr>
+              <th class="align-middle text-center">Achievement</th>
+              <th class="align-middle text-center">Date Achieved</th>
+              <th class="align-middle text-left">Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for a in achievement_qs %}
+            <tr>
+              <td class="align-middle text-left">{{ a.achievement}}</td>
+              <td class="align-middle text-center">{{ a.date_achieved|date:"j M Y"}}</td>
+              <td class="align-middle text-left">{{ a.description|linebreaks}}</td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="3">No achievements captured.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <a href="{% url 'BookList:VPBL' als.id %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right" target="_blank">View All Projects</a>
+      <h5>Project History</h5>
+    </div>
+      <div class="col-sm-12">
+        <p>Total Projects: <strong>{{ prj_count }}</strong> </p>
+        <div class="card">
+          <div class="card-body">
+            <table class="table table-sm">
+              <col width="45%">
+              <col width="20%">
+              <col width="15%">
+              <col width="20%">
+              <thead>
+                <tr>
+                  <th>Project Name</th>
+                  <th>Project Owner</th>
+                  <th>Project Site</th>
+                  <th>Industry</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for b in prj_set.items %}
+                  <tr>
+                    <td>{{ b.0 }}</td>
+                    <td>{{ b.1.0 }}</td>
+                    <td>{{ b.1.1 }}</td>
+                    <td>{{ b.1.2 }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
   </div>
   <div class="card">
     <div class="card-header">

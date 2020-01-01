@@ -17,7 +17,7 @@
   </style>
 <div class="container">
 <p><a href="{% url 'MarketPlace:VacancyPost' instance.id %}" class="btn btn-primary float-right">Back</a></p>
-<h3>Edit Vacancy</h3>
+<h3>Edit Vacancy (Ref: {{ instance.ref_no }})</h3>
 <form method="post" id="BranchForm" enctype="multipart/form-data">
   {% csrf_token %}
   <div class="form-row">

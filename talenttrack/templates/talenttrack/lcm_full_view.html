@@ -1,0 +1,74 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}{{block.super}}-LCM:FV{% endblock title %}
+
+{% block content %}
+
+<div class="container">
+  <div class="card">
+    <div class="card-header">
+      <h5>Licences, Certifications and Memberships</h5>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="card">
+          <div class="card-body">
+            <table class="table table-sm">
+              <col width="10%">
+              <col width="10%">
+              <col width="30%">
+              <col width="20%">
+              <col width="14%">
+              <col width="10%">
+              <col width="10%">
+              <col width="10%">
+              <thead>
+                <tr>
+                  <th class="align-middle text-center">Type</th>
+                  <th class="align-middle text-center">Registered Number</th>
+                  <th class="align-middle text-center">Managing Organisation</th>
+                  <th class="align-middle text-center">Country</th>
+                  <th class="align-middle text-center">Region / State</th>
+                  <th class="align-middle text-center">Date First Issued</th>
+                  <th class="align-middle text-center">Exipry Date</th>
+                  <th class="align-middle text-center">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for lcm in lcm_qs %}
+                <tr>
+                  <td class="align-middle text-center">{{ lcm.certification }}</td>
+                  <td class="align-middle text-center">{{ lcm.cm_no }}</td>
+                  <td class="align-middle text-center">{{ lcm.companybranch }}</td>
+                  <td class="align-middle text-center">{{ lcm.country.name }}</td>
+                  <td class="align-middle text-center">{{ lcm.region }}</td>
+                  <td class="align-middle text-center">{{ lcm.issue_date|date:"j M Y" }}</td>
+                  {% if lcm.expiry_date %}
+                    <td class="align-middle text-center">{{ lcm.expiry_date|date:"j M Y" }}</td>
+                  {% else %}
+                    <td class="align-middle text-center">None</td>
+                  {% endif %}
+                  {% if lcm.current == True %}
+                    <td class="align-middle text-center">Valid</td>
+                  {% else %}
+                    <td class="align-middle text-center">Expired</td>
+                  {% endif %}
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="5">None captured.</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

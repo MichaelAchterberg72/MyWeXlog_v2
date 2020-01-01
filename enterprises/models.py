@@ -8,7 +8,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 from locations.models import Region, City, Suburb
 from db_flatten.models import PhoneNumberType
 
-
+# Industries: Mining & Metals: Process, Mining & Metals:Underground, Mining & Metals:Open Pit, PetroChem, FMCG, Food & Beverage, Agriculture, Retail, Aviation, 
 class Industry(models.Model):
     industry = models.CharField(max_length=60, unique=True)
 
