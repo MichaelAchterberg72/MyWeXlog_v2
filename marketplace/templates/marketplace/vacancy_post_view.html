@@ -83,6 +83,8 @@
     <h5 class="card-title" id="deliverables">Deliverables</h5>
       <table class="table table-sm">
         <thead>
+          <col width="85%">
+          <col width="15%">
           <tr>
             <th>Deliverable</th>
             <th>Options</th>
@@ -91,9 +93,9 @@
         {% for d in delivere %}
         <tbody>
           <tr>
-            <td>{{ d.deliverable|linebreaks }}</td>
+            <td>{{ d.deliverable|linebreaks|truncatechars:100 }}</td>
             <td>
-              <a href="{% url 'MarketPlace:DeliverablesEdit' d.id %}" class="badge badge-secondary badge-pill" style="width: 5rem;">Edit</a>
+              <a href="{% url 'MarketPlace:DeliverablesEdit' d.id %}" class="badge badge-secondary badge-pill float-right" style="width: 5rem;">Edit</a>
               <form  action="{% url 'MarketPlace:DeliverablesDelete' d.id %}" method="post">
                 {% csrf_token %}
               <button type="submit" class="badge badge-danger badge-pill float-right" style="width: 5rem;">Remove</button>
@@ -109,6 +111,8 @@
     <h5 class="card-title" id="skills">Skills</h5>
     <table class="table table-sm">
       <thead>
+        <col width="85%">
+        <col width="15%">
         <tr>
           <th>Skill</th>
         </tr>
@@ -153,7 +157,7 @@
           <td>{{ key.1.s_no }}</td>
           <td>{{ key.1.rb }}</td>
           <td>{{ key.1.ro.0.1 }} <strong>{{ key.1.ro.0.0 }}</strong> {{ key.1.ro.0.2 }}</td>
-          <td>{{ key.1.ro.0.3 }}</td>
+          <td>{{ key.1.ro.0.3|truncatechars:200 }}</td>
           <td><p>
           <form  action="{% url 'MarketPlace:ShortList' tlt=key.0  s_list=instance.pk %}" name='passive' method="post">
             {% csrf_token %}
@@ -199,7 +203,7 @@
         <td>{{ key.1.s_no }}</td>
         <td>{{ key.1.rb }}</td>
         <td>{{ key.1.ro.0.1 }} <strong>{{ key.1.ro.0.0 }}</strong> {{ key.1.ro.0.2 }}</td>
-        <td>{{ key.1.ro.0.3 }}</td>
+        <td>{{ key.1.ro.0.3|truncatechars:200 }}</td>
         <td>
           <p>
             <form  action="{% url 'MarketPlace:ShortList' tlt=key.0  s_list=instance.pk %}" method="post" name="active">
