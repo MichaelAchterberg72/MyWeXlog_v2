@@ -161,7 +161,7 @@
           <td class="align-middle">{{ key.1.s_no }}</td>
           <td class="align-middle">{{ key.1.rb }}</td>
           <td class="align-middle">{{ key.1.ro.0.1 }} <strong>{{ key.1.ro.0.0 }}</strong> {{ key.1.ro.0.2 }}</td>
-          <td class="align-middle">{{ key.1.ro.0.3 }}</td>
+          <td class="align-middle">{{ key.1.ro.0.3|truncatechars:200 }}</td>
           <td class="align-middle"><p>
           <form  action="{% url 'MarketPlace:ShortList' tlt=key.0  s_list=instance.pk %}" method="post">
             {% csrf_token %}
@@ -201,14 +201,14 @@
     <tbody>
       {% for key in applied.items %}
       <tr>
-<<<<<<< HEAD
+
         <td class="align-middle">{{ key.1.ro.0.4 }}</td>
         <td class="align-middle">{{ key.1.we }}</td>
         <td class="align-middle">{{ key.1.te }}</td>
         <td class="align-middle">{{ key.1.s_no }}</td>
         <td class="align-middle">{{ key.1.rb }}</td>
         <td class="align-middle">{{ key.1.ro.0.1 }} <strong>{{ key.1.ro.0.0 }}</strong> {{ key.1.ro.0.2 }}</td>
-        <td class="align-middle">{{ key.1.ro.0.3 }}</td>
+        <td class="align-middle">{{ key.1.ro.0.3|truncatechars:200 }}</td>
         <td class="align-middle">
           <p>
             <form  action="{% url 'MarketPlace:ShortList' tlt=key.0  s_list=instance.pk %}" method="post" name="active">
