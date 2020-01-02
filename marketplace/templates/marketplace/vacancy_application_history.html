@@ -36,7 +36,7 @@
               {{ i.work.hours_required|intcomma }} ({{ i.work.get_unit_display }})
             </td>
             <td>{{ i.work.worklocation }}</td>
-            <td>{{ i.work.scope }}</td>
+            <td>{{ i.work.scope|truncatechars:190 }}</td>
             <td>{{ i.work.city }}</td>
             <td>{{ i.get_bidreview_display }}</td>
           </tr>
@@ -53,7 +53,7 @@
               {{ i.scope.hours_required|intcomma }} ({{ i.scope.get_unit_display }})
             </td>
             <td>{{ i.scope.worklocation }}</td>
-            <td>{{ i.scope.scope }}</td>
+            <td>{{ i.scope.scope|truncatechars:190 }}</td>
             <td>{{ i.scope.city }}</td>
             <td>{{ i.get_status_display }}</td>
           </tr>
@@ -70,7 +70,7 @@
               {{ r.work.hours_required|intcomma }} ({{ r.work.get_unit_display }})
             </td>
             <td>{{ r.work.worklocation }}</td>
-            <td>{{ r.work.scope }}</td>
+            <td>{{ r.work.scope|truncatechars:190 }}</td>
             <td>{{ r.work.city }}</td>
             <td>{{ r.get_bidreview_display }}</td>
           </tr>
@@ -84,7 +84,7 @@
             {{ r.scope.hours_required|intcomma }} ({{ r.scope.get_unit_display }})
           </td>
           <td>{{ r.scope.worklocation }}</td>
-          <td>{{ r.scope.scope }}</td>
+          <td>{{ r.scope.scope|truncatechars:190 }}</td>
           <td>{{ r.scope.city }}</td>
           <td>{{ r.get_status_display }}</td>
         </tr>
@@ -101,7 +101,7 @@
             {{ s.work.hours_required|intcomma }} ({{ s.work.get_unit_display }})
           </td>
           <td>{{ s.work.worklocation }}</td>
-          <td>{{ s.work.scope }}</td>
+          <td>{{ s.work.scope|truncatechars:190 }}</td>
           <td>{{ s.work.city }}</td>
           <td>{{ s.get_bidreview_display }}</td>
         </tr>
@@ -115,7 +115,7 @@
             {{ s.scope.hours_required|intcomma }} ({{ s.scope.get_unit_display }})
           </td>
           <td>{{ s.scope.worklocation }}</td>
-          <td>{{ s.scope.scope }}</td>
+          <td>{{ s.scope.scope|truncatechars:190 }}</td>
           <td>{{ s.scope.city }}</td>
           <td>{{ s.get_status_display }}</td>
         </tr>
