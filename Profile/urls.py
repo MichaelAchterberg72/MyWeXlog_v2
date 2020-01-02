@@ -23,6 +23,7 @@ urlpatterns = [
         path('passport/<int:profile_id>/', views.PassportAddView, name='PassportAddView'),
         path('passport/<int:p_id>/<int:profile_id>/edit/', views.PassportEditView, name='PassportEditView'),
         path('language/<int:profile_id>/', views.LanguageAddView, name='LanguageAdd'),
+        path('language-del/<int:lang_id>/', views.LanguageDeleteView, name='LanguageDelete'),
         path('popup/add/language/', views.LanguagePopup, name="LanguagePop"),
         path('popup/ajax/get_language_id/', views.get_language_id, name="AJAX_GetLanguageID"),
         path('language/<int:profile_id>/<int:lang_id>/', views.LanguageEditView, name='LanguageEdit'),

@@ -605,6 +605,17 @@ def LanguageEditView(request, profile_id, lang_id):
 
 
 @login_required()
+def LanguageDeleteView(request, lang_id):
+    info = LanguageTrack.objects.get(pk=lang_id)
+    if info.talent == request.user:
+        if request.method =='POST':
+            info.delete()
+            return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':profile_id}))
+    else:
+        raise PermissionDenied
+
+
+@login_required()
 @csp_exempt
 def LanguagePopup(request):
     form = LanguageListForm(request.POST or None)

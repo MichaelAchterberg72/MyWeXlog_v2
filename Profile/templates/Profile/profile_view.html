@@ -55,17 +55,23 @@
             <col width="35%">
             <thead>
               <tr>
-                <th>Language</th>
-                <th>Level</th>
+                <th class="align-middle text-center">Language</th>
+                <th class="align-middle text-center">Level</th>
                 <th></th>
               </tr>
             </thead>
             {% for l in speak %}
             <tbody>
               <tr>
-                <td>{{ l.language }}</td>
-                <td>{{ l.get_level_display }}</td>
-                <td><a href="{% url 'Profile:LanguageEdit' profile_id=request.user.id lang_id=l.id %}" class="badge badge-secondary badge-pill">Edit</a></td>
+                <td class="align-middle text-center">{{ l.language }}</td>
+                <td class="align-middle text-center">{{ l.get_level_display }}</td>
+                <td class="align-middle text-center">
+                  <a href="{% url 'Profile:LanguageEdit' profile_id=request.user.id lang_id=l.id %}" class="badge badge-secondary badge-pill" style="width: 5rem;">Edit</a>
+                  <form  action="{% url 'Profile:LanguageDelete' l.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
+                  </form>
+                </td>
               </tr>
               {% empty %}
                 <p>No Languages listed.</p>
