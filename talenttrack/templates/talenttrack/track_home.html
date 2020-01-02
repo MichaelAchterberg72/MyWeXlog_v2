@@ -80,21 +80,27 @@
         <table class="table table-sm">
           <thead>
             <tr>
-              <th>Start Date</th>
-              <th>Completion Date</th>
-              <th>Course</th>
-              <th>Time Logged</th>
-              <th>Options</th>
+              <th class="align-middle text-center">Start Date</th>
+              <th class="align-middle text-center">Completion Date</th>
+              <th class="align-middle text-center">Course</th>
+              <th class="align-middle text-center">Time Logged</th>
+              <th class="align-middle text-center">Options</th>
             </tr>
           </thead>
           {% for t in train %}
           <tbody>
             <tr>
-              <td>{{ t.date_from|date:"j M Y" }}</td>
-              <td>{{ t.date_to|date:"j M Y" }}</td>
-              <td>{{ t.course }}</td>
-              <td>{{ t.topic.hours|intcomma }}</td>
-              <td><a href="{% url 'Talent:EducationDetail' t.id %}" class="badge badge-pill badge-secondary">Detail</a></td>
+              <td class="align-middle text-center">{{ t.date_from|date:"j M Y" }}</td>
+              <td class="align-middle text-center">{{ t.date_to|date:"j M Y" }}</td>
+              <td class="align-middle text-center">{{ t.course }}</td>
+              <td class="align-middle text-center">{{ t.topic.hours|intcomma }}</td>
+              <td class="align-middle text-center">
+                <a href="{% url 'Talent:EducationDetail' t.id %}" class="badge badge-pill badge-secondary" style="width: 5rem;">Detail</a>
+                <form  action="{% url 'Talent:EDTDelete' t.id %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
+                </form>
+              </td>
             </tr>
           </tbody>
         {% endfor %}
@@ -135,7 +141,13 @@
               <td>{{ e.date_to|date:"j M Y" }}</td>
               <td>{{ e.hours_worked|intcomma }}</td>
               <td>{{ e.project }}</td>
-              <td><a href="{% url 'Talent:ExperienceDetail' e.id %}" class="badge badge-pill badge-secondary">Detail</a></td>
+              <td>
+                <a href="{% url 'Talent:ExperienceDetail' e.id %}" class="badge badge-pill badge-secondary"  style="width: 5rem;">Detail</a>
+                <form  action="{% url 'Talent:WEDelete' e.id %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
+                </form>
+              </td>
             </tr>
           {% endfor %}
           </tbody>
@@ -175,7 +187,13 @@
             <td>{{ p.date_to|date:"j M Y" }}</td>
             <td>{{ p.hours_worked|intcomma }}</td>
             <td>{{ p.project }}</td>
-            <td><a href="{% url 'Talent:PreLogDetail' p.id %}" class="badge badge-pill badge-secondary">Detail</a></td>
+            <td>
+              <a href="{% url 'Talent:PreLogDetail' p.id %}" class="badge badge-pill badge-secondary" style="width: 5rem;">Detail</a>
+              <form  action="{% url 'Talent:PLEDelete' p.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
+              </form>
+            </td>
           </tr>
         {% endfor %}
         </tbody>

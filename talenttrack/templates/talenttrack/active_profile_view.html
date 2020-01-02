@@ -7,15 +7,41 @@
 <div class="row">
   <div class="col-sm-12">
   <div class="card">
+    {% if als.pk == request.user.id %}
+    {% else %}
     <div class="">
-      <a href="{% url 'Talent:Home' %}" class="btn btn-secondary float-right">Temporary</a>
-    </div>
+      <div class="">
+        {% if int_list %}
+          <button type="button" name="button"class="btn btn-success ">Already on Interview List</button>
+        {% else %}
+          <form  action="{% url 'MarketPlace:InterviewList' tlt=als.pk  vac=vacancy.pk %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success float-right" style="width: 5rem">Interview</button>
+          </form>
+        {% endif %}
+      </div>
+      <div class="">
+        {% if bslist_qs %}
+          <button type="button" name="button"class="btn btn-secondary ">Already Shortlisted</button>
+        {% else %}
+        <form  action="{% url 'MarketPlace:ShortList' tlt=als.pk  s_list=vacancy.pk %}" method="post">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-info float-right" style="width: 5rem;">Short-list</button>
+        </form>
+        {% endif %}
+      </div>
+        <form  action="{% url 'MarketPlace:VacDecline' tlt=als.pk  vac=vacancy.pk %}" method="post">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger float-right" style="width: 5rem">Decline</button>
+        </form>
+      </div>
+      {% endif %}
   </div>
   </div>
 </div>
 <div class="card">
   <div class="card-header">
-    <a href="{% url 'Talent:SPDView' als.id %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right" target="_blank">View All Skills</a>
+    <a href="{% url 'Talent:SPDView' als.id %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right" >View All Skills</a>
     <h5>Vacancy Skills Match</h5>
   </div>
   <div class="row">
@@ -32,12 +58,18 @@
             </tr>
           </thead>
           <tbody>
+          {% if als.pk == request.user.pk %}
+              <tr>
+                <td colspan="2">This is where skills speficially required in the vancany are shown together with the time you have logged against those skills.</td>
+              </tr>
+          {% else %}
             {% for key in vacse_set.items %}
               <tr>
                 <td>{{ key.0 }}</td>
                 <td>{{ key.1|intcomma }}</td>
               </tr>
             {% endfor %}
+            {% endif %}
           </tbody>
         </table>
         </div>
@@ -56,12 +88,18 @@
               </tr>
             </thead>
             <tbody>
+              {% if als.pk == request.user.pk %}
+                <tr>
+                  <td colspan="2">This is where skills speficially required in the vancany are shown together with the time you have spent training on those skills.</td>
+                </tr>
+              {% else %}
               {% for key in vacst_set.items %}
                 <tr>
                   <td>{{ key.0 }}</td>
                   <td>{{ key.1|intcomma }}</td>
                 </tr>
               {% endfor %}
+              {% endif %}
             </tbody>
           </table>
         </div>
@@ -141,13 +179,19 @@
                       <td>Present</td>
                     {% endif %}
                     <td>{{ h.companybranch }}</td>
+                    {% empty %}
+                      <td colspan="3">Nothing Captured.</td>
                   </tr>
                 {% endfor %}
               </tbody>
             </table>
             <hr>
             <div class="class="card-title"">
-              <a href="{% url 'Talent:LCM_FV' als.id %}" class="btn btn-primary float-right" target="_blank">All Detail</a>
+              {% if membership_qs %}
+                <a href="{% url 'Talent:LCM_FV' als.id %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">All Detail</a>
+              {% else %}
+
+              {% endif %}
               <h5>Licenses, Certifications & Memberships</h5>
             </div>
             <table class="table table-sm">
@@ -170,6 +214,8 @@
                     <td class="align-middle text-center">{{ lcm.companybranch }}</td>
                     <td class="align-middle text-center">{{ lcm.country.name }}</td>
                     <td class="align-middle text-center">{{ lcm.region }}</td>
+                    {% empty %}
+                      <td colspan="4">None Captured.</td>
                   </tr>
                 {% endfor %}
               </tbody>
@@ -215,7 +261,6 @@
   </div>
   <div class="card">
     <div class="card-header">
-      <a href="{% url 'BookList:VPBL' als.id %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right" target="_blank">View All Projects</a>
       <h5>Project History</h5>
     </div>
       <div class="col-sm-12">
@@ -242,6 +287,8 @@
                     <td>{{ b.1.0 }}</td>
                     <td>{{ b.1.1 }}</td>
                     <td>{{ b.1.2 }}</td>
+                  {% empty %}
+                    <td colspan="4">No projects listed.</td>
                   </tr>
                 {% endfor %}
               </tbody>
@@ -252,7 +299,11 @@
   </div>
   <div class="card">
     <div class="card-header">
-      <a href="{% url 'BookList:VPBL' als.id %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right" target="_blank">View All Books</a>
+      {% if bkl %}
+        <a href="{% url 'BookList:VPBL' als.id %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Books</a>
+      {% else %}
+
+      {% endif %}
       <h5>Books Read</h5>
     </div>
       <div class="col-sm-12">
@@ -276,9 +327,11 @@
                 {% for b in bkl %}
                   <tr>
                     <td>{{ b.book }}</td>
-                      <td>{{ b.book.author.all|join:", " }}</td>
+                    <td>{{ b.book.author.all|join:", " }}</td>
                     <td>{{ b.type }}</td>
                     <td>{{ b.date|date:"j M Y" }}</td>
+                  {% empty %}
+                    <td colspan="4">No books listed.</td>
                   </tr>
                 {% endfor %}
               </tbody>
@@ -321,6 +374,8 @@
                     <td>{{ e.course }}</td>
                     <td>{{ e.topic }}</td>
                     <td>{{ e.course.certification }}</td>
+                    {% empty %}
+                      <td colspan="6">Nothing Captured.</td>
                   </tr>
                 {% endfor %}
               </tbody>

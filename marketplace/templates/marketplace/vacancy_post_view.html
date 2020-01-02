@@ -135,7 +135,7 @@
     </table>
   </div>
 </div>
-<p><a href="{% url 'MarketPlace:ShortListView' slv=instance.id %}" class="btn btn-warning" target="_blank">View Short-list</a></p>
+<p><a href="{% url 'MarketPlace:ShortListView' slv=instance.id %}?next={{ request.path|urlencode }}" class="btn btn-warning">View Short-list</a></p>
 <div class="">
   <h3 id='suited'>Talent suited to the Vacancy</h3>
   <hr>
@@ -155,7 +155,6 @@
       <tbody>
         {% for key in suitable.items %}
         <tr>
-<<<<<<< HEAD
           <td class="align-middle">{{ key.1.ro.0.4 }}</td>
           <td class="align-middle">{{ key.1.we }}</td>
           <td class="align-middle">{{ key.1.te }}</td>
@@ -164,17 +163,7 @@
           <td class="align-middle">{{ key.1.ro.0.1 }} <strong>{{ key.1.ro.0.0 }}</strong> {{ key.1.ro.0.2 }}</td>
           <td class="align-middle">{{ key.1.ro.0.3 }}</td>
           <td class="align-middle"><p>
-=======
-          <td>{{ key.1.ro.0.4 }}</td>
-          <td>{{ key.1.we }}</td>
-          <td>{{ key.1.te }}</td>
-          <td>{{ key.1.s_no }}</td>
-          <td>{{ key.1.rb }}</td>
-          <td>{{ key.1.ro.0.1 }} <strong>{{ key.1.ro.0.0 }}</strong> {{ key.1.ro.0.2 }}</td>
-          <td>{{ key.1.ro.0.3|truncatechars:200 }}</td>
-          <td><p>
->>>>>>> origin/2020-01-01-Mike
-          <form  action="{% url 'MarketPlace:ShortList' tlt=key.0  s_list=instance.pk %}" name='passive' method="post">
+          <form  action="{% url 'MarketPlace:ShortList' tlt=key.0  s_list=instance.pk %}" method="post">
             {% csrf_token %}
             <button type="submit" class="badge badge-info badge-pill float-right" style="width: 5rem;">Short-list</button>
           </form><br>
@@ -221,22 +210,12 @@
         <td class="align-middle">{{ key.1.ro.0.1 }} <strong>{{ key.1.ro.0.0 }}</strong> {{ key.1.ro.0.2 }}</td>
         <td class="align-middle">{{ key.1.ro.0.3 }}</td>
         <td class="align-middle">
-=======
-        <td>{{ key.1.ro.0.4 }}</td>
-        <td>{{ key.1.we }}</td>
-        <td>{{ key.1.te }}</td>
-        <td>{{ key.1.s_no }}</td>
-        <td>{{ key.1.rb }}</td>
-        <td>{{ key.1.ro.0.1 }} <strong>{{ key.1.ro.0.0 }}</strong> {{ key.1.ro.0.2 }}</td>
-        <td>{{ key.1.ro.0.3|truncatechars:200 }}</td>
-        <td>
->>>>>>> origin/2020-01-01-Mike
           <p>
             <form  action="{% url 'MarketPlace:ShortList' tlt=key.0  s_list=instance.pk %}" method="post" name="active">
             {% csrf_token %}
             <button type="submit"  class="badge badge-info badge-pill float-right" style="width: 5rem;">Short-list</button>
           </form><br>
-          <a href="{% url 'Talent:APV' tlt_id=key.0 vac_id=instance.id %}" class="badge badge-success badge-pill float-right" style="width: 5rem;">View Profile</a>
+          <a href="{% url 'Talent:APV' tlt_id=key.0 vac_id=instance.id %}?next={{ request.path|urlencode }}" class="badge badge-success badge-pill float-right" style="width: 5rem;">View Profile</a>
         </p>
       </td>
       </tr>

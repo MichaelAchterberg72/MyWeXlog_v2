@@ -12,33 +12,37 @@
   }
   </style>
 <div class="container">
-
+  <form  action="{% url 'BookList:BLB' %}" method="post">
+    <input type="hidden" name="next" value="{{ request.GET.next }}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-secondary float-right">Back to {{vacancy.ref_no}}</button>
+  </form>
     <h3 class="card-title">Short list for {{ vacancy.title }} ({{ vacancy.ref_no }})</h3>
   <table class="table table-sm">
     <thead>
       <tr>
-        <th>Alias</th>
-        <th>Experience</th>
-        <th>Training</th>
-        <th>Skills Logged</th>
-        <th>Books Read</th>
-        <th>Rate</th>
-        <th>Motivation</th>
+        <th class="align-middle text-center">Alias</th>
+        <th class="align-middle text-center">Experience</th>
+        <th class="align-middle text-center">Training</th>
+        <th class="align-middle text-center">Skills Logged</th>
+        <th class="align-middle text-center">Books Read</th>
+        <th class="align-middle text-center">Rate</th>
+        <th class="align-middle text-center">Motivation</th>
       </tr>
     </thead>
     <tbody>
       {% for sl in short.items %}
       <tr>
-        <td>{{ sl.1.ro.0.4 }}</td>
-        <td>{{ sl.1.we }}</td>
-        <td>{{ sl.1.te }}</td>
-        <td>{{ sl.1.s_no }}</td>
-        <td>{{ sl.1.rb }}</td>
-        <td>{{ sl.1.ro.0.1 }} <strong>{{ sl.1.ro.0.0 }}</strong> {{ sl.1.ro.0.2 }}</td>
-        <td>{{ sl.1.ro.0.3|truncatechars:200 }}</td>
-        <td>
+        <td class="align-middle">{{ sl.1.ro.0.4 }}</td>
+        <td class="align-middle text-center">{{ sl.1.we }}</td>
+        <td class="align-middle text-center">{{ sl.1.te }}</td>
+        <td class="align-middle text-center">{{ sl.1.s_no }}</td>
+        <td class="align-middle text-center">{{ sl.1.rb }}</td>
+        <td class="align-middle text-center">{{ sl.1.ro.0.1 }} <strong>{{ sl.1.ro.0.0 }}</strong> {{ sl.1.ro.0.2 }}</td>
+        <td class="align-middle">{{ sl.1.ro.0.3|truncatechars:200 }}</td>
+        <td class="align-middle">
           <p>
-            <a href="{% url 'Talent:APV' tlt_id=sl.0 vac_id=vacancy.id %}" class="badge badge-success badge-pill float-right" style="width: 5rem">View Profile</a>
+            <a href="{% url 'Talent:APV' tlt_id=sl.0 vac_id=vacancy.id %}" target="_blank" class="badge badge-success badge-pill float-right" style="width: 5rem">View Profile</a>
             <form  action="{% url 'MarketPlace:InterviewList' tlt=sl.0  vac=vacancy.pk %}" method="post">
               {% csrf_token %}
               <button type="submit" class="badge badge-info badge-pill float-right" style="width: 5rem">Interview</button>

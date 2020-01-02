@@ -54,5 +54,7 @@ urlpatterns = [
     path('lcm-edit/<int:lcm_id>/', views.LicenseCertificationEditView, name='LCMEdit'),
     path('lcm-del/<int:lcm_id>/', views.LicenseCertificationDeleteView, name='LCMDelete'),
     path('lcm-fv/<int:tlt_id>/', views.LCMFullView, name='LCM_FV'),
-
+    path('ple-del/<int:ple_pk>/', views.PreLoggedExperienceDeleteView, name='PLEDelete'),
+    path('we-del/<int:we_pk>/', views.WorkExperienceDeleteView, name='WEDelete'),
+    path('edt-del/<int:edt_pk>/', views.EducationDeleteView, name='EDTDelete'),
 ]

@@ -26,7 +26,9 @@ from .models import (
 )
 
 from db_flatten.models import SkillTag
-from marketplace.models import SkillLevel, SkillRequired, WorkBid
+from marketplace.models import(
+    SkillLevel, SkillRequired, WorkBid, BidShortList, TalentRequired, BidInterviewList,
+)
 from enterprises.models import Branch
 from project.models import ProjectData
 from Profile.models import (
@@ -223,6 +225,7 @@ def ActiveProfileView(request, tlt_id, vac_id):
     pfl = Profile.objects.only('background', 'alias', 'mentor', 'motivation').filter(talent=tlt_id)
     als = Profile.objects.only('background', 'alias', 'mentor', 'motivation', 'std_rate', 'currency').get(talent=tlt_id)
     padd = PhysicalAddress.objects.only('country', 'region', 'city').get(talent=tlt_id)
+    vacancy = TalentRequired.objects.get(pk=vac_id)
     skr = SkillRequired.objects.filter(scope=vac_id).values_list('skills', flat=True).distinct('skills')
     skill_qs = SkillTag.objects.all()
     exp = WorkExperience.objects.filter(talent=tlt_id).select_related('topic', 'course', 'project')
@@ -230,10 +233,12 @@ def ActiveProfileView(request, tlt_id, vac_id):
     bkl = ReadBy.objects.filter(talent=tlt_id).select_related('book', 'type')[:6]
     bkl_count = bkl.count()
     prj_qs = ProjectData.objects.all()
-    bid_qs = WorkBid.objects.get(Q(talent=tlt_id) & Q(work=vac_id))
+    bid_qs = WorkBid.objects.filter(Q(talent=tlt_id) & Q(work=vac_id))
     achievement_qs = Achievements.objects.filter(talent=tlt_id).order_by('-date_achieved')
     language_qs = LanguageTrack.objects.filter(talent=tlt_id).order_by('-language')
     membership_qs = LicenseCertification.objects.filter(talent=tlt_id).order_by('-issue_date')
+    bslist_qs = BidShortList.objects.filter(Q(talent=tlt_id) & Q(scope=vac_id))
+    int_list = BidInterviewList.objects.filter(Q(talent=tlt_id) & Q(scope=vac_id))
 
     #Project Summary
     prj = exp.values_list('project', flat=True).distinct('project')
@@ -296,7 +301,7 @@ def ActiveProfileView(request, tlt_id, vac_id):
 
     template = 'talenttrack/active_profile_view.html'
     context = {
-        'bch': bch,'pfl': pfl, 'padd': padd,'vacse_set': vacse_set, 'vacst_set': vacst_set, 'als': als, 'exp': exp, 'bkl': bkl, 'edtexp': edtexp, 'bkl_count': bkl_count, 'prj_set': prj_set, 'prj_count': prj_count, 'bid_qs': bid_qs, 'achievement_qs': achievement_qs, 'language_qs': language_qs, 'membership_qs': membership_qs,
+        'bch': bch,'pfl': pfl, 'padd': padd,'vacse_set': vacse_set, 'vacst_set': vacst_set, 'als': als, 'exp': exp, 'bkl': bkl, 'edtexp': edtexp, 'bkl_count': bkl_count, 'prj_set': prj_set, 'prj_count': prj_count, 'bid_qs': bid_qs, 'achievement_qs': achievement_qs, 'language_qs': language_qs, 'membership_qs': membership_qs, 'bslist_qs': bslist_qs, 'vacancy': vacancy, 'int_list': int_list,
         }
     return render(request, template, context)
 
@@ -304,11 +309,12 @@ def ActiveProfileView(request, tlt_id, vac_id):
 @login_required()
 @subscription(1)
 def LCMFullView(request, tlt_id):
+    tlt = Profile.objects.get(pk=tlt_id)
     lcm_qs = LicenseCertification.objects.filter(talent=tlt_id).order_by('-issue_date')
 
     template = 'talenttrack/lcm_full_view.html'
     context = {
-        'lcm_qs': lcm_qs,
+        'lcm_qs': lcm_qs, 'tlt': tlt,
         }
     return render(request, template, context)
 
@@ -316,7 +322,7 @@ def LCMFullView(request, tlt_id):
 @login_required()
 @subscription(2)
 def SkillProfileDetailView(request, tlt_id):
-    pfl = Profile.objects.get(talent=tlt_id)
+    tlt = Profile.objects.get(talent=tlt_id)
     skill_qs = SkillTag.objects.all()
     exp = WorkExperience.objects.filter(
         talent = tlt_id).select_related('topic')
@@ -374,7 +380,7 @@ def SkillProfileDetailView(request, tlt_id):
 
     template = 'talenttrack/talent_detail_summary.html'
     context = {
-        'edt_set': edt_set, 'exp_set': exp_set, 'pfl': pfl,
+        'edt_set': edt_set, 'exp_set': exp_set, 'tlt': tlt,
     }
     return render(request, template, context)
 
@@ -540,6 +546,17 @@ def PreLoggedExperienceCaptureView(request):
         response = render(request, template, context)
         response.set_cookie("confirm","PC")
         return response
+
+
+@login_required()
+def PreLoggedExperienceDeleteView(request, ple_pk):
+    info = WorkExperience.objects.get(pk=ple_pk)
+    if info.talent == request.user:
+        if request.method =='POST':
+            info.delete()
+            return redirect(reverse('Talent:Home')+'#headingThree')
+    else:
+        raise PermissionDenied
 
 
 @login_required()
@@ -907,6 +924,17 @@ def WorkExperienceCaptureView(request):
 
 
 @login_required()
+def WorkExperienceDeleteView(request, we_pk):
+    info = WorkExperience.objects.get(pk=we_pk)
+    if info.talent == request.user:
+        if request.method =='POST':
+            info.delete()
+            return redirect(reverse('Talent:Home')+'#headingThree')
+    else:
+        raise PermissionDenied
+
+
+@login_required()
 def EducationDetail(request, edu_id):
     check = WorkExperience.objects.get(pk=edu_id, edt=True)
     if check.talent == request.user:
@@ -1081,6 +1109,17 @@ def EducationCaptureView(request):
         template = 'talenttrack/education_capture.html'
         context = {'form': form}
         return render(request, template, context)
+
+
+@login_required()
+def EducationDeleteView(request, edt_pk):
+    info = WorkExperience.objects.get(pk=edt_pk)
+    if info.talent == request.user:
+        if request.method =='POST':
+            info.delete()
+            return redirect(reverse('Talent:Home')+'#headingOne')
+    else:
+        raise PermissionDenied
 
 
 #>>>Course Popup

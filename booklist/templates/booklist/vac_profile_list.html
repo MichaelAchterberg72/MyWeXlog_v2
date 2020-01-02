@@ -18,6 +18,11 @@
     <div class="card">
       <div class="">
         <a href="{% url 'Talent:Home' %}" class="btn btn-secondary float-right">Experience Home</a>
+        <form  action="{% url 'BookList:BLB' %}" method="post">
+          <input type="hidden" name="next" value="{{ request.GET.next }}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-secondary float-right">Back to your profile</button>
+        </form>
         <a href="{% url 'Talent:DPCSum' %}" class="btn btn-primary">Designation, Project & Company Summary</a>
         <a href="{% url 'Talent:ExperienceSum' %}" class="btn btn-primary">Skills Summary</a>
       </div>

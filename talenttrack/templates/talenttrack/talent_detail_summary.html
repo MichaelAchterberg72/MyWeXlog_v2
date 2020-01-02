@@ -2,28 +2,28 @@
 {% load humanize %}
 
 {% block title %}
-  {% if request.user.id == pfl.id %}
+  {% if request.user.id == tlt.id %}
     {{block.super}}-Experience Overview
   {% else %}
-    {{block.super}}-{{pfl.alias}} Skill Summary
+    {{block.super}}-{{tlt.alias}} Skill Summary
   {% endif %}
 {% endblock title %}
 
 {% block content %}
 <div class="card">
   <h5 class="card-header">Skills Summary</h5>
-  {% if request.user.d == pfl.id %}
+  {% if request.user.id == tlt.id %}
   <div class="row">
     <div class="col-sm-12">
     <div class="card">
       <div class="">
         <a href="{% url 'Talent:Home' %}" class="btn btn-secondary float-right">Experience Home</a>
-        <a href="{% url 'Talent:DPCSum' %}" class="btn btn-primary">Designation, Project & Company Summary</a>
         <form  action="{% url 'BookList:BLB' %}" method="post">
           <input type="hidden" name="next" value="{{ request.GET.next }}">
           {% csrf_token %}
-          <button type="submit" class="btn btn-secondary">Back to {{pfl.alias}}'s Profile</button>
-        </form>
+          <button type="submit" class="btn btn-secondary float-right">Back to Your Profile</button>
+        </form>  
+        <a href="{% url 'Talent:DPCSum' %}" class="btn btn-primary">Designation, Project & Company Summary</a>
       </div>
     </div>
     </div>
@@ -32,7 +32,7 @@
   <form  action="{% url 'BookList:BLB' %}" method="post">
     <input type="hidden" name="next" value="{{ request.GET.next }}">
     {% csrf_token %}
-    <button type="submit" class="btn btn-secondary float-right">Back to {{pfl.alias}}'s Profile</button>
+    <button type="submit" class="btn btn-secondary float-right">Back to {{tlt.alias}}'s Profile</button>
   </form>
   {% endif %}
   <div class="row">
