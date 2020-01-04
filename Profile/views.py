@@ -43,7 +43,6 @@ def ProfileHome(request):
     wclr1 = WorkCollaborator.objects.filter(confirm__exact='S').count()
     wc1 = WorkClient.objects.filter(confirm__exact='S').count()
 
-
     total = wf1 + cm1 + wk1 + spr1 + wclr1 + wc1
 
     template = 'Profile/profile_home.html'

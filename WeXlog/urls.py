@@ -10,7 +10,7 @@ from django.conf.urls import handler404, handler500, include, url  # noqa
 
 urlpatterns = [
     path('accounts/', include('allauth.urls')),
-    path('messages/', include('django_messages.urls')),
+    #path('messages/', include('django_messages.urls')),
     path('select2/', include('django_select2.urls')),
     path('Profile/', include('Profile.urls', namespace='Profile')),
     path('flatten/', include('db_flatten.urls', namespace='Flatten')),
@@ -32,4 +32,5 @@ urlpatterns = [
     path('invitations/', include('invitations.urls', namespace='Invitation')),
     path('notifications/', include("pinax.notifications.urls", namespace='pinax_notifications')),
     path('treeMP/', include('nestedsettree.urls', namespace='Structure')),
+    path('chat/', include('intmessages.urls', namespace='Chat')),
     ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS)
