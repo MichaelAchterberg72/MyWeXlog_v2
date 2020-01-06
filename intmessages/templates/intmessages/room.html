@@ -147,9 +147,9 @@
       var msgListTag = document.createElement('li');
       var imgTag = document.createElement('img');
       var pTag = document.createElement('p');
-      pTag.textContent = data.content;
+      pTag.textContent = [data.content, data.timestamp];
       imgTag.src = 'http://emilcarlsson.se/assets/mikeross.png';
-      
+
       if (author === username) {
         msgListTag.className = 'sent';
       } else {

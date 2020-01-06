@@ -135,7 +135,7 @@
     </table>
   </div>
 </div>
-<p><a href="{% url 'MarketPlace:ShortListView' slv=instance.id %}?next={{ request.path|urlencode }}" class="btn btn-warning">View Short-list</a></p>
+<p><a href="{% url 'MarketPlace:ShortListView' slv=instance.id %}?next={{ request.path|urlencode }}" class="btn btn-warning">View Short-list</a>  <a href="{% url 'MarketPlace:InterviewList' instance.id %}?next={{ request.path|urlencode }}" class="btn btn-warning">View Interview List</a></p>
 <div class="">
   <h3 id='suited'>Talent suited to the Vacancy</h3>
   <hr>

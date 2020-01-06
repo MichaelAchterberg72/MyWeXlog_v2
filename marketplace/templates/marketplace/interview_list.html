@@ -1,0 +1,190 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+{% load static %}
+
+{% block title %}{{block.super}}-Interviewlist{{ scope.ref_no }}{% endblock title %}
+
+{% block content %}
+{{ form.media.css }}
+<style type="text/css">
+  select {
+    width: 100px;
+  }
+  </style>
+<div class="container">
+  <form  action="{% url 'BookList:BLB' %}" method="post">
+    <input type="hidden" name="next" value="{{ request.GET.next }}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-secondary float-right">Back to {{scope.ref_no}}</button>
+  </form>
+    <h3 class="card-title">Interview list for {{ scope.title }} ({{ scope.ref_no }})</h3>
+
+    <h4>Pending Applicants</h4>
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th class="align-middle text-center">Alias</th>
+        <th class="align-middle text-center">Experience</th>
+        <th class="align-middle text-center">Training</th>
+        <th class="align-middle text-center">Skills Logged</th>
+        <th class="align-middle text-center">Books Read</th>
+        <th class="align-middle text-center">Rate</th>
+        <th class="align-middle text-center">Motivation</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for sl in interview_p.items %}
+      <tr>
+        <td class="align-middle">{{ sl.1.ro.0.4 }}</td>
+        <td class="align-middle text-center">{{ sl.1.we }}</td>
+        <td class="align-middle text-center">{{ sl.1.te }}</td>
+        <td class="align-middle text-center">{{ sl.1.s_no }}</td>
+        <td class="align-middle text-center">{{ sl.1.rb }}</td>
+        <td class="align-middle text-center">{{ sl.1.ro.0.1 }} <strong>{{ sl.1.ro.0.0 }}</strong> {{ sl.1.ro.0.2 }}</td>
+        <td class="align-middle">{{ sl.1.ro.0.3|truncatechars:200 }}</td>
+        <td class="align-middle">
+          <p>
+            <a href="{% url 'Talent:APV' tlt_id=sl.0 vac_id=vacancy.id %}" target="_blank" class="badge badge-success badge-pill float-right" style="width: 5rem">View Profile</a>
+            <form  action="{% url 'MarketPlace:InterviewList' tlt=sl.0  vac=vacancy.pk %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="badge badge-info badge-pill float-right" style="width: 5rem">Interview</button>
+            </form>
+            <form  action="{% url 'MarketPlace:VacAssign' tlt=sl.0  vac=vacancy.pk %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="badge badge-success badge-pill float-right" style="width: 5rem">Assign</button>
+            </form>
+            <form  action="{% url 'MarketPlace:VacDecline' tlt=sl.0  vac=vacancy.pk %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="badge badge-danger badge-pill float-right" style="width: 5rem">Decline</button>
+            </form>
+          </p>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="7">There are no people pending review.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <h4>Suitable Applicants</h4>
+<table class="table table-sm">
+  <thead>
+    <tr>
+      <th class="align-middle text-center">Alias</th>
+      <th class="align-middle text-center">Experience</th>
+      <th class="align-middle text-center">Training</th>
+      <th class="align-middle text-center">Skills Logged</th>
+      <th class="align-middle text-center">Books Read</th>
+      <th class="align-middle text-center">Rate</th>
+      <th class="align-middle text-center">Motivation</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for sl in interview_s.items %}
+    <tr>
+      <td class="align-middle">{{ sl.1.ro.0.4 }}</td>
+      <td class="align-middle text-center">{{ sl.1.we }}</td>
+      <td class="align-middle text-center">{{ sl.1.te }}</td>
+      <td class="align-middle text-center">{{ sl.1.s_no }}</td>
+      <td class="align-middle text-center">{{ sl.1.rb }}</td>
+      <td class="align-middle text-center">{{ sl.1.ro.0.1 }} <strong>{{ sl.1.ro.0.0 }}</strong> {{ sl.1.ro.0.2 }}</td>
+      <td class="align-middle">{{ sl.1.ro.0.3|truncatechars:200 }}</td>
+      <td class="align-middle">
+        <p>
+          <a href="{% url 'Talent:APV' tlt_id=sl.0 vac_id=vacancy.id %}" target="_blank" class="badge badge-success badge-pill float-right" style="width: 5rem">View Profile</a>
+          <form  action="{% url 'MarketPlace:InterviewList' tlt=sl.0  vac=vacancy.pk %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="badge badge-info badge-pill float-right" style="width: 5rem">Interview</button>
+          </form>
+          <form  action="{% url 'MarketPlace:VacAssign' tlt=sl.0  vac=vacancy.pk %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="badge badge-success badge-pill float-right" style="width: 5rem">Assign</button>
+          </form>
+          <form  action="{% url 'MarketPlace:VacDecline' tlt=sl.0  vac=vacancy.pk %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="badge badge-danger badge-pill float-right" style="width: 5rem">Decline</button>
+          </form>
+        </p>
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="7">No talent identified or selected at the moment.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<h4>Unsuitable Applicants</h4>
+<table class="table table-sm">
+<thead>
+  <tr>
+    <th class="align-middle text-center">Alias</th>
+    <th class="align-middle text-center">Experience</th>
+    <th class="align-middle text-center">Training</th>
+    <th class="align-middle text-center">Skills Logged</th>
+    <th class="align-middle text-center">Books Read</th>
+    <th class="align-middle text-center">Rate</th>
+    <th class="align-middle text-center">Motivation</th>
+  </tr>
+</thead>
+<tbody>
+  {% for sl in interview_n.items %}
+  <tr>
+    <td class="align-middle">{{ sl.1.ro.0.4 }}</td>
+    <td class="align-middle text-center">{{ sl.1.we }}</td>
+    <td class="align-middle text-center">{{ sl.1.te }}</td>
+    <td class="align-middle text-center">{{ sl.1.s_no }}</td>
+    <td class="align-middle text-center">{{ sl.1.rb }}</td>
+    <td class="align-middle text-center">{{ sl.1.ro.0.1 }} <strong>{{ sl.1.ro.0.0 }}</strong> {{ sl.1.ro.0.2 }}</td>
+    <td class="align-middle">{{ sl.1.ro.0.3|truncatechars:200 }}</td>
+    <td class="align-middle">
+      <p>
+        <a href="{% url 'Talent:APV' tlt_id=sl.0 vac_id=vacancy.id %}" target="_blank" class="badge badge-success badge-pill float-right" style="width: 5rem">View Profile</a>
+        <form  action="{% url 'MarketPlace:InterviewList' tlt=sl.0  vac=vacancy.pk %}" method="post">
+          {% csrf_token %}
+          <button type="submit" class="badge badge-info badge-pill float-right" style="width: 5rem">Interview</button>
+        </form>
+        <form  action="{% url 'MarketPlace:VacAssign' tlt=sl.0  vac=vacancy.pk %}" method="post">
+          {% csrf_token %}
+          <button type="submit" class="badge badge-success badge-pill float-right" style="width: 5rem">Assign</button>
+        </form>
+        <form  action="{% url 'MarketPlace:VacDecline' tlt=sl.0  vac=vacancy.pk %}" method="post">
+          {% csrf_token %}
+          <button type="submit" class="badge badge-danger badge-pill float-right" style="width: 5rem">Decline</button>
+        </form>
+      </p>
+    </td>
+  </tr>
+  {% empty %}
+  <tr>
+    <td colspan="7">No talent identified as unsuitbale for this vacancy.</td>
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{{ form.media.js }}
+{% endblock content %}
+{% block Script %}
+<!-- code for popups -->
+<script type="text/javascript">
+function showAddPopup(triggeringLink) {
+    var name = triggeringLink.id.replace(/^add_/, '');
+    href = triggeringLink.href;
+    var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes');
+    win.focus();
+    return false;
+}
+
+function closePopup(win, newID, newRepr, id) {
+    $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
+    win.close();
+}
+
+window.onerror = function (msg) {
+  $("body").attr("JSError", msg);
+}
+</script>
+{% endblock Script %}

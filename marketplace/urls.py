@@ -29,6 +29,7 @@ urlpatterns = [
     path('history/', views.ApplicationHistoryView, name='History'),
     path('postview/<int:pk>/', views.VacancyPostView, name='VacancyPost'),
     path('shortlist-review/<int:slv>/', views.ShortListView, name='ShortListView'),
+    path('interviewlist/<int:vac_id>/', views.InterviewListView, name='InterviewList'),
     path('vac-assign/<int:vac>/<int:tlt>/', views.TalentAssign, name='VacAssign'),
     path('vac-decline/<int:vac>/<int:tlt>/', views.TalentDecline, name='VacDecline'),
     path('all-vac/', views.AllPostedVacanciesView, name='AllPostedVac'),

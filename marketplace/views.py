@@ -19,7 +19,7 @@ from .forms import (
 )
 
 from .models import(
-    TalentRequired, SkillRequired, Deliverables, TalentAvailabillity, WorkBid, SkillLevel, BidShortList, BidShortList, WorkIssuedTo,
+    TalentRequired, SkillRequired, Deliverables, TalentAvailabillity, WorkBid, SkillLevel, BidShortList, BidShortList, WorkIssuedTo, BidInterviewList,
 )
 
 from talenttrack.models import WorkExperience
@@ -27,6 +27,107 @@ from db_flatten.models import SkillTag
 from users.models import CustomUser
 from Profile.models import Profile
 from booklist.models import ReadBy
+
+
+@login_required()
+@subscription(2)
+def InterviewListView(request, vac_id):
+    scope = TalentRequired.objects.get(pk=vac_id)
+    intv_qs = BidInterviewList.objects.filter(scope=vac_id)
+    intv_pending = intv_qs.filter(outcome = 'P')
+    intv_suitable = intv_qs.filter(outcome = 'S')
+    intv_notsuitable = intv_qs.filter(outcome = 'N')
+
+    we = WorkExperience.objects.filter(talent__subscription__gte=1)
+    applicants = WorkBid.objects.filter(work=vac_id)
+    book = ReadBy.objects.all()
+
+    #Information for all suitable applicants
+    suitable_list = list(intv_suitable.values_list('talent', flat=True))
+
+    interview_s ={}
+    for app in suitable_list:
+
+        aw_exp = we.filter(talent=app, edt=False).aggregate(awet=Sum('hours_worked'))
+        awetv = aw_exp.get('awet')
+        at_exp = we.filter(talent=app, edt=True).aggregate(tet=Sum('topic__hours'))
+        atetv = at_exp.get('tet')
+        atalent_skill = list(we.filter(talent=app, edt=False).values_list('skills', flat=True))
+        rb = book.filter(talent=app).count()
+        atalent_skillt = list(we.filter(talent=app, edt=True).values_list('topic__skills', flat=True))
+        subs = list(s_list.filter(talent=app).values_list('talent__subscription', flat=True))
+        subsi = subs[0]
+
+        if subsi == 2:
+            rate = applicants.filter(talent=app).values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation','talent__alias')
+        else:
+            rate = Profile.objects.filter(talent=app).values_list('std_rate', 'currency__currency_abv', 'rate_unit', 'motivation', 'alias')
+
+        aslist = atalent_skill + atalent_skillt
+        askillset = set(aslist)
+        askill_count = len(askillset)
+
+        interview_s[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate}
+
+    #Information for all pending applicants
+    pending_list = list(intv_pending.values_list('talent', flat=True))
+
+    interview_p ={}
+    for app in pending_list:
+
+        aw_exp = we.filter(talent=app, edt=False).aggregate(awet=Sum('hours_worked'))
+        awetv = aw_exp.get('awet')
+        at_exp = we.filter(talent=app, edt=True).aggregate(tet=Sum('topic__hours'))
+        atetv = at_exp.get('tet')
+        atalent_skill = list(we.filter(talent=app, edt=False).values_list('skills', flat=True))
+        rb = book.filter(talent=app).count()
+        atalent_skillt = list(we.filter(talent=app, edt=True).values_list('topic__skills', flat=True))
+        subs = list(s_list.filter(talent=app).values_list('talent__subscription', flat=True))
+        subsi = subs[0]
+
+        if subsi == 2:
+            rate = applicants.filter(talent=app).values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation','talent__alias')
+        else:
+            rate = Profile.objects.filter(talent=app).values_list('std_rate', 'currency__currency_abv', 'rate_unit', 'motivation', 'alias')
+
+        aslist = atalent_skill + atalent_skillt
+        askillset = set(aslist)
+        askill_count = len(askillset)
+
+        interview_p[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate}
+
+    #Information for all not suitable applicants
+    nots_list = list(intv_notsuitable.values_list('talent', flat=True))
+
+    interview_n ={}
+    for app in nots_list:
+
+        aw_exp = we.filter(talent=app, edt=False).aggregate(awet=Sum('hours_worked'))
+        awetv = aw_exp.get('awet')
+        at_exp = we.filter(talent=app, edt=True).aggregate(tet=Sum('topic__hours'))
+        atetv = at_exp.get('tet')
+        atalent_skill = list(we.filter(talent=app, edt=False).values_list('skills', flat=True))
+        rb = book.filter(talent=app).count()
+        atalent_skillt = list(we.filter(talent=app, edt=True).values_list('topic__skills', flat=True))
+        subs = list(s_list.filter(talent=app).values_list('talent__subscription', flat=True))
+        subsi = subs[0]
+
+        if subsi == 2:
+            rate = applicants.filter(talent=app).values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation','talent__alias')
+        else:
+            rate = Profile.objects.filter(talent=app).values_list('std_rate', 'currency__currency_abv', 'rate_unit', 'motivation', 'alias')
+
+        aslist = atalent_skill + atalent_skillt
+        askillset = set(aslist)
+        askill_count = len(askillset)
+
+        interview_n[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate}
+
+
+
+    template = 'marketplace/interview_list.html'
+    context = {'interview_p': interview_p, 'interview_n': interview_n, 'interview_s': interview_s, 'scope': scope,}
+    return render(request, template, context)
 
 
 @login_required()
