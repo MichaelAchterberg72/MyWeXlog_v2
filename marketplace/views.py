@@ -19,7 +19,7 @@ from .forms import (
 )
 
 from .models import(
-    TalentRequired, SkillRequired, Deliverables, TalentAvailabillity, WorkBid, SkillLevel, BidShortList, BidShortList, WorkIssuedTo, BidInterviewList,
+    TalentRequired, SkillRequired, Deliverables, TalentAvailabillity, WorkBid, SkillLevel, BidShortList, WorkIssuedTo, BidInterviewList,
 )
 
 from talenttrack.models import WorkExperience
@@ -27,6 +27,40 @@ from db_flatten.models import SkillTag
 from users.models import CustomUser
 from Profile.models import Profile
 from booklist.models import ReadBy
+
+
+@login_required()
+@subscription(2)
+def InterviewSuitable(request, vac_id, tlt_id):
+    BidInterviewList.objects.filter(Q(scope = vac_id) & Q(talent = tlt_id)).update(outcome='S')
+
+    BidShortList.objects.filter(Q(scope = vac_id) & Q(talent = tlt_id)).update(status='P')
+
+    bid_qs = WorkBid.objects.filter(Q(work = vac_id) & Q(talent = tlt_id))
+
+    if bid_qs:
+        bid_qs.update(bidreview = 'P')
+    else:
+        pass
+
+    return redirect(reverse('MarketPlace:InterviewList', kwargs={ 'vac_id': vac_id}))
+
+
+@login_required()
+@subscription(2)
+def InterviewNotSuitable(request, vac_id, tlt_id):
+    BidInterviewList.objects.filter(Q(scope = vac_id) & Q(talent = tlt_id)).update(outcome='N')
+
+    BidShortList.objects.filter(Q(scope = vac_id) & Q(talent = tlt_id)).update(status='R')
+
+    bid_qs = WorkBid.objects.filter(Q(work = vac_id) & Q(talent = tlt_id))
+
+    if bid_qs:
+        bid_qs.update(bidreview = 'R')
+    else:
+        pass
+
+    return redirect(reverse('MarketPlace:InterviewList', kwargs={ 'vac_id': vac_id}))
 
 
 @login_required()
@@ -55,11 +89,12 @@ def InterviewListView(request, vac_id):
         atalent_skill = list(we.filter(talent=app, edt=False).values_list('skills', flat=True))
         rb = book.filter(talent=app).count()
         atalent_skillt = list(we.filter(talent=app, edt=True).values_list('topic__skills', flat=True))
-        subs = list(s_list.filter(talent=app).values_list('talent__subscription', flat=True))
-        subsi = subs[0]
 
-        if subsi == 2:
-            rate = applicants.filter(talent=app).values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation','talent__alias')
+        applied = applicants.filter(talent=app)
+
+        if applied:
+            rate = applied.values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation','talent__alias')
+
         else:
             rate = Profile.objects.filter(talent=app).values_list('std_rate', 'currency__currency_abv', 'rate_unit', 'motivation', 'alias')
 
@@ -82,11 +117,10 @@ def InterviewListView(request, vac_id):
         atalent_skill = list(we.filter(talent=app, edt=False).values_list('skills', flat=True))
         rb = book.filter(talent=app).count()
         atalent_skillt = list(we.filter(talent=app, edt=True).values_list('topic__skills', flat=True))
-        subs = list(s_list.filter(talent=app).values_list('talent__subscription', flat=True))
-        subsi = subs[0]
+        applied = applicants.filter(talent=app)
 
-        if subsi == 2:
-            rate = applicants.filter(talent=app).values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation','talent__alias')
+        if applied:
+            rate = applied.values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation','talent__alias')
         else:
             rate = Profile.objects.filter(talent=app).values_list('std_rate', 'currency__currency_abv', 'rate_unit', 'motivation', 'alias')
 
@@ -109,11 +143,10 @@ def InterviewListView(request, vac_id):
         atalent_skill = list(we.filter(talent=app, edt=False).values_list('skills', flat=True))
         rb = book.filter(talent=app).count()
         atalent_skillt = list(we.filter(talent=app, edt=True).values_list('topic__skills', flat=True))
-        subs = list(s_list.filter(talent=app).values_list('talent__subscription', flat=True))
-        subsi = subs[0]
+        applied = applicants.filter(talent=app)
 
-        if subsi == 2:
-            rate = applicants.filter(talent=app).values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation','talent__alias')
+        if applied:
+            rate = applied.values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation','talent__alias')
         else:
             rate = Profile.objects.filter(talent=app).values_list('std_rate', 'currency__currency_abv', 'rate_unit', 'motivation', 'alias')
 
@@ -181,6 +214,7 @@ def AllPostedVacanciesView(request):
 def MarketHome(request):
     #>>>Queryset caching
     talent=request.user
+    pfl = Profile.objects.filter(talent=talent)
     tr = TalentRequired.objects.all()
     trt = tr.filter(requested_by=talent)
     wb = WorkBid.objects.filter(work__requested_by=talent, work__offer_status__iexact='O')
@@ -197,19 +231,6 @@ def MarketHome(request):
     capacity = ta.filter(date_to__gte=timezone.now()).order_by('-date_to')[:5]
 
     #Code for stacked lookup for talent's skills
-
-    #>>>summing all hours
-    my_logged = we.aggregate(myl=Sum('hours_worked'))
-
-    myli = my_logged.get('myl')
-
-    if myli:
-        myli = myli
-    else:
-        myli = 0
-
-    myed = [Decimal(myli)]
-    #Summing all hours<<<
 
     #>>>Create a set of all skills
     e_skill = we.filter(edt=True).only('pk').values_list('pk', flat=True)
@@ -234,27 +255,10 @@ def MarketHome(request):
     #Create a set of all skills<<<
 
     #>>>Experience Level check & list skills required in vacancies
-    std = list(sl.filter(level__exact=0).values_list('min_hours', flat=True))
-    grd = list(sl.filter(level__exact=1).values_list('min_hours', flat=True))
-    jnr = list(sl.filter(level__exact=2).values_list('min_hours', flat=True))
-    int = list(sl.filter(level__exact=3).values_list('min_hours', flat=True))
-    snr = list(sl.filter(level__exact=4).values_list('min_hours', flat=True))
-    lead = list(sl.filter(level__exact=5).values_list('min_hours', flat=True))
+    tlt_lvl = pfl.values_list('exp_lvl__level', flat=True)
+    tlt_lvl = tlt_lvl[0]
 
-    if myed < std:
-        iama = 0
-    elif myed >= std and myed < grd:
-        iama = 1
-    elif myed >= grd and myed < jnr:
-        iama = 2
-    elif myed >= jnr and myed < int:
-        iama = 3
-    elif myed >= int and myed < snr:
-        iama = 4
-    elif myed >= snr:
-        iama = 5
-
-    req_experience = tr.filter(experience_level__level__exact=iama).values_list('id', flat=True)
+    req_experience = tr.filter(Q(experience_level__level=tlt_lvl) & Q(offer_status__iexact='O')).values_list('id',flat=True)
 
     match = []
 
@@ -264,14 +268,15 @@ def MarketHome(request):
         for sk in skill_required:
             match.append(sk)
 
+
     ds = sr.none()
     matchd = set(match) #remove duplicates
 
     for item in matchd:
         display = sr.filter(
                 Q(skills__in=match)
-                & Q(scope__bid_closes__gte=timezone.now()
-                ))
+                & Q(scope__bid_closes__gte=timezone.now()) & Q(scope__experience_level__level=tlt_lvl)
+                )
 
         ds = ds | display
 
@@ -476,13 +481,13 @@ def AddToShortListView(request, s_list, tlt):
 
 @login_required()
 @subscription(2)
-def AddToInterviewListView(request, s_list, tlt):
-    job = get_object_or_404(TalentRequired, pk=s_list)
+def AddToInterviewListView(request, vac, tlt):
+    job = get_object_or_404(TalentRequired, pk=vac)
     talent = get_object_or_404(CustomUser, pk=tlt)
     if request.method == 'POST':
         BidInterviewList.objects.create(talent=talent, scope=job)
 
-        return redirect(reverse('MarketPlace:ShortListView', kwargs={'slv':s_list}))
+        return redirect(reverse('MarketPlace:ShortListView', kwargs={'slv':vac}))
 
 
 @login_required()
@@ -571,11 +576,11 @@ def ShortListView(request, slv):
         atalent_skill = list(we.filter(talent=app, edt=False).values_list('skills', flat=True))
         rb = book.filter(talent=app).count()
         atalent_skillt = list(we.filter(talent=app, edt=True).values_list('topic__skills', flat=True))
-        subs = list(s_list.filter(talent=app).values_list('talent__subscription', flat=True))
-        subsi = subs[0]
 
-        if subsi == 2:
-            rate = applicants.filter(talent=app).values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation','talent__alias')
+        applied = applicants.filter(talent=app)
+
+        if applied:
+            rate = applied.values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation','talent__alias')
         else:
             rate = Profile.objects.filter(talent=app).values_list('std_rate', 'currency__currency_abv', 'rate_unit', 'motivation', 'alias')
 

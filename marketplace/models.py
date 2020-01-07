@@ -55,7 +55,7 @@ class SkillLevel(models.Model):
     )
 
     level = models.IntegerField(choices=LEVEL, unique=True)
-    min_hours = models.IntegerField()#should be ma
+    min_hours = models.IntegerField()#Read max_hours
     description = models.TextField()
 
     class Meta:
@@ -157,6 +157,7 @@ class BidInterviewList(models.Model):
     scope = models.ForeignKey(TalentRequired, on_delete=models.CASCADE)
     date_listed = models.DateTimeField(auto_now_add=True)
     outcome = models.CharField(max_length=1, choices=OC, default='P')
+    tlt_reponded = models.DateTimeField(null=True)
 
     def __str__(self):
         return f'{self.scope.ref_no}, {self.talent}, {self.get_outcome_display}'
@@ -193,7 +194,7 @@ class TalentAvailabillity(models.Model):
 class WorkIssuedTo(models.Model):
     #completed by client
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='Successful_talent')
-    work = models.OneToOneField(TalentRequired, on_delete=models.PROTECT)
+    work = models.ForeignKey(TalentRequired, on_delete=models.PROTECT)
     #rate_accepted = models.DecimalField(max_digits=10, decimal_places=2)
     #currency = models.ForeignKey(Currency, on_delete=models.PROTECT)
     #rate_unit = models.CharField(max_length=1, choices=RATE_UNIT, default='H')

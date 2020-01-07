@@ -34,5 +34,7 @@ urlpatterns = [
     path('vac-decline/<int:vac>/<int:tlt>/', views.TalentDecline, name='VacDecline'),
     path('all-vac/', views.AllPostedVacanciesView, name='AllPostedVac'),
     path('availabillity-remove/<int:avl_id>/', views.AvailabillityRemoveView, name='NotAvailable'),
-
+    path('vac-interview/<int:vac>/<int:tlt>/', views.AddToInterviewListView, name='VacInterview'),
+    path('suitable/<int:vac_id>/<int:tlt_id>/', views.InterviewSuitable, name='Suitable'),
+    path('notsuitable/<int:vac_id>/<int:tlt_id>/', views.InterviewNotSuitable, name='NotSuitable'),
 ]

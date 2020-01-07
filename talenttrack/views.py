@@ -77,7 +77,7 @@ def ExperienceHome(request):
             p_sum = 0
 
         tot_sum = t_sum + e_sum + p_sum
-        exp_lvl = [Decimal(e_sum+p_sum)]
+        exp_lvls = [Decimal(e_sum+p_sum)]
 
         std = list(sl.filter(level__exact=0).values_list('min_hours', flat=True))
         grd = list(sl.filter(level__exact=1).values_list('min_hours', flat=True))
@@ -86,20 +86,21 @@ def ExperienceHome(request):
         snr = list(sl.filter(level__exact=4).values_list('min_hours', flat=True))
         lead = list(sl.filter(level__exact=5).values_list('min_hours', flat=True))
 
-        if exp_lvl < std:
+        if exp_lvls < std:
             iama = 0
-        elif exp_lvl >= std and exp_lvl < grd:
+        elif exp_lvls >= std and exp_lvls < grd:
             iama = 1
-        elif exp_lvl >= grd and exp_lvl < jnr:
+        elif exp_lvls >= grd and exp_lvls < jnr:
             iama = 2
-        elif exp_lvl >= jnr and exp_lvl < int:
+        elif exp_lvls >= jnr and exp_lvls < int:
             iama = 3
-        elif exp_lvl >= int and exp_lvl < snr:
+        elif exp_lvls >= int and exp_lvls < snr:
             iama = 4
-        elif exp_lvl >= snr:
+        elif exp_lvls >= snr:
             iama = 5
 
         level = sl.get(level=iama)
+        Profile.objects.filter(talent=request.user.id).update(exp_lvl=level)
 
         #<<<Step 2
 

@@ -36,26 +36,22 @@
       {% for sl in interview_p.items %}
       <tr>
         <td class="align-middle">{{ sl.1.ro.0.4 }}</td>
-        <td class="align-middle text-center">{{ sl.1.we }}</td>
-        <td class="align-middle text-center">{{ sl.1.te }}</td>
+        <td class="align-middle text-center">{{ sl.1.we|intcomma }}</td>
+        <td class="align-middle text-center">{{ sl.1.te|intcomma }}</td>
         <td class="align-middle text-center">{{ sl.1.s_no }}</td>
         <td class="align-middle text-center">{{ sl.1.rb }}</td>
-        <td class="align-middle text-center">{{ sl.1.ro.0.1 }} <strong>{{ sl.1.ro.0.0 }}</strong> {{ sl.1.ro.0.2 }}</td>
+        <td class="align-middle text-center">{{ sl.1.ro.0.1 }} <strong>{{ sl.1.ro.0.0|intcomma }}</strong> {{ sl.1.ro.0.2 }}</td>
         <td class="align-middle">{{ sl.1.ro.0.3|truncatechars:200 }}</td>
         <td class="align-middle">
           <p>
-            <a href="{% url 'Talent:APV' tlt_id=sl.0 vac_id=vacancy.id %}" target="_blank" class="badge badge-success badge-pill float-right" style="width: 5rem">View Profile</a>
-            <form  action="{% url 'MarketPlace:InterviewList' tlt=sl.0  vac=vacancy.pk %}" method="post">
+            <a href="{% url 'Talent:APV' tlt_id=sl.0 vac_id=scope.id %}" target="_blank" class="badge badge-secondary badge-pill float-right" style="width: 6rem">View Profile</a>
+            <form  action="{% url 'MarketPlace:Suitable' tlt_id=sl.0  vac_id=scope.pk %}" method="post">
               {% csrf_token %}
-              <button type="submit" class="badge badge-info badge-pill float-right" style="width: 5rem">Interview</button>
+              <button type="submit" class="badge badge-success badge-pill float-right" style="width: 6rem">Suitable</button>
             </form>
-            <form  action="{% url 'MarketPlace:VacAssign' tlt=sl.0  vac=vacancy.pk %}" method="post">
+            <form  action="{% url 'MarketPlace:NotSuitable' tlt_id=sl.0  vac_id=scope.pk %}" method="post">
               {% csrf_token %}
-              <button type="submit" class="badge badge-success badge-pill float-right" style="width: 5rem">Assign</button>
-            </form>
-            <form  action="{% url 'MarketPlace:VacDecline' tlt=sl.0  vac=vacancy.pk %}" method="post">
-              {% csrf_token %}
-              <button type="submit" class="badge badge-danger badge-pill float-right" style="width: 5rem">Decline</button>
+              <button type="submit" class="badge badge-danger badge-pill float-right" style="width: 6rem">Not Suitable</button>
             </form>
           </p>
         </td>
@@ -84,26 +80,22 @@
     {% for sl in interview_s.items %}
     <tr>
       <td class="align-middle">{{ sl.1.ro.0.4 }}</td>
-      <td class="align-middle text-center">{{ sl.1.we }}</td>
-      <td class="align-middle text-center">{{ sl.1.te }}</td>
+      <td class="align-middle text-center">{{ sl.1.we|intcomma }}</td>
+      <td class="align-middle text-center">{{ sl.1.te|intcomma }}</td>
       <td class="align-middle text-center">{{ sl.1.s_no }}</td>
       <td class="align-middle text-center">{{ sl.1.rb }}</td>
-      <td class="align-middle text-center">{{ sl.1.ro.0.1 }} <strong>{{ sl.1.ro.0.0 }}</strong> {{ sl.1.ro.0.2 }}</td>
+      <td class="align-middle text-center">{{ sl.1.ro.0.1 }} <strong>{{ sl.1.ro.0.0|intcomma }}</strong> {{ sl.1.ro.0.2 }}</td>
       <td class="align-middle">{{ sl.1.ro.0.3|truncatechars:200 }}</td>
       <td class="align-middle">
         <p>
-          <a href="{% url 'Talent:APV' tlt_id=sl.0 vac_id=vacancy.id %}" target="_blank" class="badge badge-success badge-pill float-right" style="width: 5rem">View Profile</a>
-          <form  action="{% url 'MarketPlace:InterviewList' tlt=sl.0  vac=vacancy.pk %}" method="post">
+          <a href="{% url 'Talent:APV' tlt_id=sl.0 vac_id=scope.id %}" target="_blank" class="badge badge-secondary badge-pill float-right" style="width: 6rem">View Profile</a>
+          <form  action="{% url 'MarketPlace:VacAssign' tlt=sl.0  vac=scope.pk %}" method="post">
             {% csrf_token %}
-            <button type="submit" class="badge badge-info badge-pill float-right" style="width: 5rem">Interview</button>
+            <button type="submit" class="badge badge-success badge-pill float-right" style="width: 6rem">Assign</button>
           </form>
-          <form  action="{% url 'MarketPlace:VacAssign' tlt=sl.0  vac=vacancy.pk %}" method="post">
+          <form  action="{% url 'MarketPlace:NotSuitable' tlt_id=sl.0  vac_id=scope.pk %}" method="post">
             {% csrf_token %}
-            <button type="submit" class="badge badge-success badge-pill float-right" style="width: 5rem">Assign</button>
-          </form>
-          <form  action="{% url 'MarketPlace:VacDecline' tlt=sl.0  vac=vacancy.pk %}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="badge badge-danger badge-pill float-right" style="width: 5rem">Decline</button>
+            <button type="submit" class="badge badge-danger badge-pill float-right" style="width: 6rem">Not Suitable</button>
           </form>
         </p>
       </td>
@@ -117,6 +109,7 @@
 </table>
 <h4>Unsuitable Applicants</h4>
 <table class="table table-sm">
+
 <thead>
   <tr>
     <th class="align-middle text-center">Alias</th>
@@ -132,33 +125,25 @@
   {% for sl in interview_n.items %}
   <tr>
     <td class="align-middle">{{ sl.1.ro.0.4 }}</td>
-    <td class="align-middle text-center">{{ sl.1.we }}</td>
-    <td class="align-middle text-center">{{ sl.1.te }}</td>
+    <td class="align-middle text-center">{{ sl.1.we|intcomma }}</td>
+    <td class="align-middle text-center">{{ sl.1.te|intcomma }}</td>
     <td class="align-middle text-center">{{ sl.1.s_no }}</td>
     <td class="align-middle text-center">{{ sl.1.rb }}</td>
-    <td class="align-middle text-center">{{ sl.1.ro.0.1 }} <strong>{{ sl.1.ro.0.0 }}</strong> {{ sl.1.ro.0.2 }}</td>
+    <td class="align-middle text-center">{{ sl.1.ro.0.1 }} <strong>{{ sl.1.ro.0.0|intcomma }}</strong> {{ sl.1.ro.0.2 }}</td>
     <td class="align-middle">{{ sl.1.ro.0.3|truncatechars:200 }}</td>
     <td class="align-middle">
       <p>
-        <a href="{% url 'Talent:APV' tlt_id=sl.0 vac_id=vacancy.id %}" target="_blank" class="badge badge-success badge-pill float-right" style="width: 5rem">View Profile</a>
-        <form  action="{% url 'MarketPlace:InterviewList' tlt=sl.0  vac=vacancy.pk %}" method="post">
+        <a href="{% url 'Talent:APV' tlt_id=sl.0 vac_id=scope.id %}" target="_blank" class="badge badge-secondary badge-pill float-right" style="width: 5rem">View Profile</a>
+        <form  action="{% url 'MarketPlace:Suitable' tlt_id=sl.0  vac_id=scope.pk %}" method="post">
           {% csrf_token %}
-          <button type="submit" class="badge badge-info badge-pill float-right" style="width: 5rem">Interview</button>
-        </form>
-        <form  action="{% url 'MarketPlace:VacAssign' tlt=sl.0  vac=vacancy.pk %}" method="post">
-          {% csrf_token %}
-          <button type="submit" class="badge badge-success badge-pill float-right" style="width: 5rem">Assign</button>
-        </form>
-        <form  action="{% url 'MarketPlace:VacDecline' tlt=sl.0  vac=vacancy.pk %}" method="post">
-          {% csrf_token %}
-          <button type="submit" class="badge badge-danger badge-pill float-right" style="width: 5rem">Decline</button>
+          <button type="submit" class="badge badge-success badge-pill float-right" style="width: 5rem">Suitable</button>
         </form>
       </p>
     </td>
   </tr>
   {% empty %}
   <tr>
-    <td colspan="7">No talent identified as unsuitbale for this vacancy.</td>
+    <td colspan="7">No talent identified as unsuitbale for this scope.</td>
   </tr>
   {% endfor %}
 </tbody>
@@ -170,6 +155,7 @@
 {% block Script %}
 <!-- code for popups -->
 <script type="text/javascript">
+
 function showAddPopup(triggeringLink) {
     var name = triggeringLink.id.replace(/^add_/, '');
     href = triggeringLink.href;

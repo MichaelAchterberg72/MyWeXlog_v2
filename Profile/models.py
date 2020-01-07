@@ -17,7 +17,7 @@ from locations.models import Region, City, Suburb, Currency
 from db_flatten.models import PhoneNumberType
 from enterprises.models import Enterprise, Branch
 from pinax.referrals.models import Referral
-from marketplace.models import WorkLocation
+from marketplace.models import WorkLocation, SkillLevel
 from talenttrack.models import Designation
 
 
@@ -90,6 +90,7 @@ class Profile(models.Model):
     currency = models.ForeignKey(Currency, on_delete=models.PROTECT, null=True)
     rate_unit = models.CharField(max_length=1, choices=RATE_UNIT, default='H')
     motivation = models.TextField(blank=True, null=True)
+    exp_lvl = models.ForeignKey(SkillLevel, on_delete=models.PROTECT, related_name='profile_tenure', null=True)
 
     def __str__(self):
         return str(self.talent)

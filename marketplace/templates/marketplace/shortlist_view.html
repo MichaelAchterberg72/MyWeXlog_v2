@@ -12,11 +12,14 @@
   }
   </style>
 <div class="container">
-  <form  action="{% url 'BookList:BLB' %}" method="post">
-    <input type="hidden" name="next" value="{{ request.GET.next }}">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-secondary float-right">Back to {{vacancy.ref_no}}</button>
-  </form>
+
+    <form  action="{% url 'BookList:BLB' %}" method="post">
+      <input type="hidden" name="next" value="{{ request.GET.next }}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-secondary float-right">Back to {{vacancy.ref_no}}</button>
+    </form> <a href="{% url 'MarketPlace:InterviewList' vacancy.id %}?next={{ request.path|urlencode }}" class="btn btn-warning float-right">View Interview List</a>  
+
+
     <h3 class="card-title">Short list for {{ vacancy.title }} ({{ vacancy.ref_no }})</h3>
   <table class="table table-sm">
     <thead>
@@ -43,7 +46,7 @@
         <td class="align-middle">
           <p>
             <a href="{% url 'Talent:APV' tlt_id=sl.0 vac_id=vacancy.id %}" target="_blank" class="badge badge-success badge-pill float-right" style="width: 5rem">View Profile</a>
-            <form  action="{% url 'MarketPlace:InterviewList' tlt=sl.0  vac=vacancy.pk %}" method="post">
+            <form  action="{% url 'MarketPlace:VacInterview' tlt=sl.0  vac=vacancy.pk %}" method="post">
               {% csrf_token %}
               <button type="submit" class="badge badge-info badge-pill float-right" style="width: 5rem">Interview</button>
             </form>
