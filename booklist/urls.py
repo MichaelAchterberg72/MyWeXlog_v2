@@ -20,6 +20,7 @@ urlpatterns = [
     path('popup/ajax/get_publisher_id', views.get_publisher_id, name='get_publisher_id'),
     path('popup/ajax/get_format_id', views.get_format_id, name='get_format_id'),
     path('add/books/', views.BookAddView, name='books-new'),
+    path('popup/add/books/', views.BookAddPopupView, name='booksNewPopup'),
     path('add/books-read/', views.AddBookReadView, name='books-read-new'),
     path('add/book-type/', views.FormatAddView, name='FormatCreate'),
     path('popup/book-type/', views.FormatCreatePopupView, name='FormatCreatePopup'),
