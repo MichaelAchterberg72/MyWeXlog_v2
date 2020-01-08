@@ -1,4 +1,4 @@
-{% extends "base_home.html" %}
+{% extends "base_popup.html" %}
 
 {% load staticfiles %}
 {% load crispy_forms_tags %}
@@ -27,9 +27,7 @@ function closePopup(win, newID, newRepr, id) {
 </script>
 
 <div class="card-body">
-  {% if request.user.is_authenticated %}
-  <p><a href="{% url 'BookList:books-read-new' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
-  {% endif %}
+
 <form class="" action="" method="POST">
 
   {% csrf_token %}

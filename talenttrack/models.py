@@ -212,22 +212,19 @@ class WorkExperience(models.Model):
     #script to check wheter experience is estimated or not
     def save(self, *args, **kwargs):
         if self.estimated == True:
-            super(WorkExperience, self).save(*args, **kwargs)
-
+            pass
         else:
-            a = timezone.now()
-            ad = datetime.date(a)
+            a = timezone.now().date()
             b = self.date_from
 
-            dur = ad - b
-            dur_d = dur.days
-            print(dur_d)
+            dur_d = (a - b).days
 
-            if dur_d > 14:
+            if dur_d >= 14:
                 self.estimated=True
-                super(WorkExperience, self).save(*args, **kwargs)
             else:
-                super(WorkExperience, self).save(*args, **kwargs)
+                pass
+
+        super(WorkExperience, self).save(*args, **kwargs)
 
 
 class WorkColleague(models.Model):

@@ -152,6 +152,22 @@ def BookAddView(request):
 
 @login_required()
 @csp_exempt
+def BookAddPopupView(request):
+    form = BookAddForm(request.POST or None)
+    if request.method =='POST':
+        if form.is_valid():
+            instance=form.save(commit=False)
+            instance=form.save()
+            form.save_m2m()
+            return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_book");</script>' % (instance.pk, instance))
+    else:
+        context = {'form':form,}
+        template_name = 'booklist/create_new_book.html'
+        return render(request, template_name, context)
+
+
+@login_required()
+@csp_exempt
 def AuthorCreatePopupView(request):
     form = AuthorAddForm(request.POST or None)
     if request.method =='POST':
@@ -189,7 +205,7 @@ def FormatCreatePopupView(request):
         if form.is_valid():
             instance=form.save(commit=False)
             instance=form.save()
-            return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_format");</script>' % (instance.pk, instance))
+            return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_type");</script>' % (instance.pk, instance))
 
     else:
         context = {'form':form,}
