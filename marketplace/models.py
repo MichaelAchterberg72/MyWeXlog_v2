@@ -99,7 +99,7 @@ class TalentRequired(models.Model):
         unique_together = (('enterprise','title', 'requested_by'),)
 
     def __str__(self):
-        return '{}, {}, {}'.format(self.title, self.enterprise, self.date_entered)
+        return f'{self.title}, {self.enterprise}'
 
 
 class Deliverables(models.Model):
@@ -152,15 +152,27 @@ class BidInterviewList(models.Model):
         ('P','Pending'),
         ('S','Suitable'),
         ('N','Not Suitable'),
+        ('D','Candidate Declined'),
+    )
+    RSP = (
+        ('P','Interview Pending'),
+        ('A','Accept Interview'),
+        ('D','Decline Interview'),
     )
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='Interviewed')
     scope = models.ForeignKey(TalentRequired, on_delete=models.CASCADE)
     date_listed = models.DateTimeField(auto_now_add=True)
     outcome = models.CharField(max_length=1, choices=OC, default='P')
+    tlt_decline_reason = models.ForeignKey('DeclineAssignment', on_delete=models.PROTECT, null=True)
+    comments_tlt = models.TextField(null=True)
+    tlt_response = models.CharField(max_length=1, choices=RSP, default='P')
     tlt_reponded = models.DateTimeField(null=True)
+    tlt_intcomplete = models.BooleanField(default=False)
+    emp_intcomplete = models.BooleanField(default=False)
+    comments_emp = models.TextField(null=True)
 
     def __str__(self):
-        return f'{self.scope.ref_no}, {self.talent}, {self.get_outcome_display}'
+        return f'{self.scope}, {self.talent}, {self.get_outcome_display()}'
 
 
 class WorkBid(models.Model):
@@ -190,16 +202,34 @@ class TalentAvailabillity(models.Model):
     def __str__(self):
         return '{} - {} {} ({})'.format(self.talent, self.hours_available, self.get_unit_display, self.date_to)
 
+#Reasons: No Available Capacity, Not Looking for work, Not suited to vacancy, Rate too low, Company Reputation, other (comment)
+class DeclineAssignment(models.Model):
+    option = models.CharField(max_length = 200, unique=True)
+
+    def __str__(self):
+        return f'{self.option}'
+
 
 class WorkIssuedTo(models.Model):
+    RSP = (
+        ('P','Response Pending'),
+        ('A','Accept Assignment'),
+        ('D','Decline Assignment'),
+        ('C','Clarification Requested'),
+    )
     #completed by client
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='Successful_talent')
     work = models.ForeignKey(TalentRequired, on_delete=models.PROTECT)
+    tlt_response = models.CharField(max_length=1, choices = RSP, default= 'P')
+    tlt_decline_reason = models.ForeignKey(DeclineAssignment, on_delete=models.PROTECT, null=True)
+    tlt_response_date = models.DateTimeField(null=True)
+    comments = models.TextField()
     #rate_accepted = models.DecimalField(max_digits=10, decimal_places=2)
     #currency = models.ForeignKey(Currency, on_delete=models.PROTECT)
     #rate_unit = models.CharField(max_length=1, choices=RATE_UNIT, default='H')
-    #date_completion = models.DateField()
-    #date_begin = models.DateField()
+    date_completion_tlt = models.DateTimeField(null=True)
+    date_completion_emp = models.DateTimeField(null=True)
+    date_begin = models.DateTimeField(null=True)
     #autocompleted
     date_create = models.DateField(auto_now_add=True)
     date_complete = models.DateField(auto_now=True)

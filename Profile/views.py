@@ -1,15 +1,17 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import TemplateView
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
 from django.utils.http import is_safe_url
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 import json
-
+from django.contrib.auth.models import User
+from django.db.models import Count, Sum, F, Q
 
 from csp.decorators import csp_exempt
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
+from core.decorators import subscription
 
 
 from .models import (
@@ -26,7 +28,8 @@ from talenttrack.forms import (
 
 from locations.models import Region
 from users.models import CustomUser
-from django.contrib.auth.models import User
+from marketplace.models import BidInterviewList, WorkIssuedTo
+
 
 from .forms import (
     ProfileForm, EmailForm, EmailStatusForm, PhysicalAddressForm, PostalAddressForm, PhoneNumberForm, OnlineProfileForm, ProfileTypeForm, FileUploadForm, IdTypeForm, LanguageTrackForm, LanguageListForm, PassportDetailForm, IdentificationDetailForm, BriefCareerHistoryForm, ResignedForm, UserUpdateForm, CustomUserUpdateForm
@@ -36,6 +39,7 @@ from .forms import (
 @login_required()
 def ProfileHome(request):
     #WorkFlow Card
+    talent = request.user
     wf1 = Lecturer.objects.filter(confirm__exact='S').count()
     cm1 = ClassMates.objects.filter(confirm__exact='S').count()
     wk1 = WorkColleague.objects.filter(confirm__exact='S').count()
@@ -45,12 +49,30 @@ def ProfileHome(request):
 
     total = wf1 + cm1 + wk1 + spr1 + wclr1 + wc1
 
+    interview_qs = BidInterviewList.objects.all().select_related('scope')
+
+    interviews_tlt = interview_qs.filter(Q(talent=talent) & Q(tlt_intcomplete=False) & ~Q(tlt_response='R'))
+
+    interviews_tltc = interviews_tlt.count()
+
+    interviews_emp = interview_qs.filter(Q(scope__requested_by=talent) & Q(emp_intcomplete=False) & ~Q(tlt_response='R'))
+
+    interviews_empc = interviews_emp.count()
+
+    assigned = WorkIssuedTo.objects.filter(Q(talent=talent) & Q(tlt_response='P'))
+
     template = 'Profile/profile_home.html'
     context = {
-        'wf1': wf1, 'total': total
+        'wf1': wf1, 'total': total, 'interviews_tlt': interviews_tlt, 'assigned': assigned, 'interviews_emp': interviews_emp, 'interviews_empc': interviews_empc, 'interviews_tltc': interviews_tltc,
     }
     return render(request, template, context)
 
+@login_required()
+@subscription(2)
+def InterviewTltRemove(request, int_id):
+    interview = BidInterviewList.objects.filter(pk=int_id).update(emp_intcomplete=True, outcome='D')
+
+    return redirect(reverse('Profile:ProfileHome')+ '#Interview')
 
 @login_required()
 @csp_exempt

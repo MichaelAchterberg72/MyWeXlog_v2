@@ -26,5 +26,7 @@ urlpatterns = [
     path('popup/book-type/', views.FormatCreatePopupView, name='FormatCreatePopup'),
     path('booklist/<int:tlt_id>/', views.ProfileBookList, name='VPBL'),
     path('booklist-back/', views.ProfileBackView, name='BLB'),
+    path('popup/genre/', views.GenreAddPopup, name='GenreCreatePopup'),
+    path('popup/ajax/get_genre_id', views.get_genre_id, name='get_genre_id'),
 
 ]

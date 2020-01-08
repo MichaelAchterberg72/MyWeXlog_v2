@@ -33,6 +33,7 @@ from .models import BookList, Author, ReadBy, Format, Publisher
 from .forms import *
 
 
+@login_required()
 class BookListHomeView(TemplateView):
     template_name = 'booklist/home.html'
 
@@ -335,3 +336,34 @@ def AddBookReadView(request):
     context = {'form': form}
     template_name = 'booklist/create_new_book_read.html'
     return render(request, template_name, context)
+
+#>>>GenreAdd Popup
+@login_required()
+@csp_exempt
+def GenreAddPopup(request):
+    form = GenreAddForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            instance=form.save(commit=False)
+            instance.save()
+            return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_genre");</script>' % (instance.pk, instance))
+        else:
+                context = {'form':form,}
+                template = 'booklist/genre_add.html'
+                return render(request, template, context)
+
+    else:
+        context = {'form':form,}
+        template = 'booklist/genre_add.html'
+        return render(request, template, context)
+
+
+@csrf_exempt
+def get_genre_id(request):
+    if request.is_ajax():
+        name = request.Get['name']
+        name_id = Genre.objects.get(genre = name).id
+        data = {'name_id':name_id,}
+        return HttpResponse(json.dumps(data), content_type='application/json')
+    return HttpResponse("/")
+#<<< GenreAdd Popup

@@ -22,6 +22,9 @@ class Publisher(models.Model):
 class Genre(models.Model):
     name = models.CharField(max_length=100)
 
+    def clean(self):
+        self.name = self.name.capitalize()
+
     def __str__(self):
         return f'{self.name}'
 

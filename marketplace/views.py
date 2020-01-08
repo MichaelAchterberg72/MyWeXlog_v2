@@ -1,6 +1,4 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
 from django.utils.http import is_safe_url
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
@@ -13,6 +11,8 @@ from decimal import Decimal
 
 from csp.decorators import csp_exempt
 from core.decorators import subscription
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 
 from .forms import (
         TalentAvailabillityForm, SkillRequiredForm, SkillLevelForm, DeliverablesForm, TalentRequiredForm, WorkLocationForm, WorkBidForm, TalentRequiredEditForm,
@@ -49,7 +49,7 @@ def InterviewSuitable(request, vac_id, tlt_id):
 @login_required()
 @subscription(2)
 def InterviewNotSuitable(request, vac_id, tlt_id):
-    BidInterviewList.objects.filter(Q(scope = vac_id) & Q(talent = tlt_id)).update(outcome='N')
+    BidInterviewList.objects.filter(Q(scope = vac_id) & Q(talent = tlt_id)).update(outcome='N', emp_intcomplete=True)
 
     BidShortList.objects.filter(Q(scope = vac_id) & Q(talent = tlt_id)).update(status='R')
 

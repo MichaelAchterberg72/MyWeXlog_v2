@@ -14,7 +14,7 @@ from django_select2.forms import (
 
 
 from .models import (
-            WorkLocation, TalentRequired, Deliverables, SkillLevel, SkillRequired, TalentAvailabillity, WorkBid
+            WorkLocation, TalentRequired, Deliverables, SkillLevel, SkillRequired, TalentAvailabillity, WorkBid, BidInterviewList
 )
 
 
@@ -96,6 +96,12 @@ class SkillModelSelect2MultipleWidget(SkillSearchFieldMixin, ModelSelect2Multipl
 
 class DateInput(forms.DateInput):
     input_type = 'date'
+
+
+class EmployerInterViewComments(forms.ModelForm):
+    class Meta:
+        model=BidInterviewList
+        fields = ('comments_emp',)
 
 
 class WorkBidForm(forms.ModelForm):

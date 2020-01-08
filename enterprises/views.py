@@ -250,7 +250,7 @@ def get_industry_id(request):
     return HttpResponse("/")
 #<<< Industry Popup
 
-#why is this not picking up the change
+
 #>>>BranchType Popup
 @login_required()
 @csp_exempt

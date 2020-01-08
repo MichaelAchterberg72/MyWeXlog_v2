@@ -15,6 +15,7 @@ from django_select2.forms import (
 from .models import BookList, Author, ReadBy, Format, Publisher, Genre
 from db_flatten.models import SkillTag
 
+
 #>>> Select 2 Widgets
 class PublisherSearchFieldMixin:
     search_fields = [
@@ -61,13 +62,42 @@ class GenreWidget(GenreSearchFieldMixin, ModelSelect2MultipleWidget):
 
     def create_value(self, value):
         self.get_queryset().create(name=value)
+
+
+class BookSearchFieldMixin:
+    search_fields = [
+        'title__icontains', 'pk__startswith'
+    ]
+
+
+class BookSelect2Widget(BookSearchFieldMixin, ModelSelect2Widget):
+    model = BookList
+
+    def create_value(self, value):
+        self.get_queryset().create(title=value)
+
+
+class TypeSearchFieldMixin:
+    search_fields = [
+        'format__icontains', 'pk__startswith'
+
+    ]
+class TypeSelect2Widget(TypeSearchFieldMixin, ModelSelect2Widget):
+    model = Format
+
+    def create_value(self, value):
+        self.get_queryset().create(format=value)
 #Select 2 Widget <<<
+
+
+class DateInput(forms.DateInput):
+    input_type = 'date'
 
 
 class BookAddForm(forms.ModelForm):
     class Meta:
         model = BookList
-        fields = ('title','publisher','author','tag', 'link', 'type', 'genre')
+        fields = ('title','publisher','author','tag', 'link', 'type', 'genre',)
         widgets = {
             'publisher': PublisherSelect2Widget(),
             'tag': TagModelSelect2MultipleWidget(),
@@ -105,35 +135,6 @@ class TagAddForm(forms.ModelForm):
     class Meta:
         model = SkillTag
         fields = ["skill",]
-
-
-class BookSearchFieldMixin:
-    search_fields = [
-        'title__icontains', 'pk__startswith'
-    ]
-
-
-class BookSelect2Widget(BookSearchFieldMixin, ModelSelect2Widget):
-    model = BookList
-
-    def create_value(self, value):
-        self.get_queryset().create(title=value)
-
-
-class TypeSearchFieldMixin:
-    search_fields = [
-        'format__icontains', 'pk__startswith'
-
-    ]
-class TypeSelect2Widget(TypeSearchFieldMixin, ModelSelect2Widget):
-    model = Format
-
-    def create_value(self, value):
-        self.get_queryset().create(format=value)
-
-
-class DateInput(forms.DateInput):
-    input_type = 'date'
 
 
 class AddBookReadForm(forms.ModelForm):

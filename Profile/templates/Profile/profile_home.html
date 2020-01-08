@@ -9,19 +9,80 @@ Summary information relating to the user's network. Number of people on each lev
 
 {% block workflow %}
 <p>Experience confirmations: <a href="{% url 'Profile:Confirm' %}"class="btn btn-info">{{ total }}</a></p>
-
+{% if interviews_emp %}
+  <p>Interviews Pending: <span class ="btn btn info">{{ interviews_empc }} as the Employer</span></p>
+{% endif %}
+{% if interviews_tlt %}
+  <p>Interviews Pending: <span class ="btn btn info">{{ interviews_tltc }} as the Candidate</span></p>
+{% endif %}
 
 {% endblock workflow %}
 
 {% block score %}
-The user's score and how many people have scored them.
+Open Assignments TBP
 {% endblock score %}
 
 {% block TBA %}
-<a href="{% url 'Talent:APV' tlt_id=request.user.id vac_id=1 %}" target="_blank" class="btn btn-success">View Your Public Profile</a> <br>
+<a href="{% url 'Talent:APV' tlt_id=request.user.id vac_id=1 %}" target="_blank" class="btn btn-success">My Public Profile</a> <br>
 <a href="{% url 'Talent:DPCSum' %}" class="btn btn-primary">Designation, Project & Company Summary</a>
 {% endblock TBA %}
 
 {% block Center_Content %}
-<p>This is the WeXlog Profile Page!!! Are we Sure?</p>
+<h5 class="card-header" id="Interview">Pending Interviews</h5>
+<table class="table table-sm">
+  <col width="50%">
+  <col width="15%">
+  <col width="15%">
+  <col width="10%">
+  <col width="10%">
+  <thead>
+    <tr>
+      <th class="align-middle text-left">Vacancy</th>
+      <th class="align-middle text-center">Configeration</th>
+      <th class="align-middle text-center">Reference</th>
+      <th class="align-middle text-center">Invitation Date</th>
+      <th class="align-middle text-center"></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% if interviews_tlt %}
+    <tr>
+      <td colspan="3"><h6>As a Candidate</h6></td>
+    </tr>
+    {% for tlt_i in interviews_tlt %}
+    <tr>
+      <td class="align-middle text-left">{{ tlt_i.scope }}</td>
+      <td class="align-middle text-center">{{ tlt_i.scope.worklocation }}</td>
+      <td class="align-middle text-center">{{ tlt_i.scope.ref_no }}</td>
+      <td class="align-middle text-center">{{ tlt_i.date_listed|date:"j M Y" }}</td>
+    </tr>
+    {% endfor %}
+    {% endif %}
+    {% if interviews_tlt %}
+    <tr>
+      <td colspan="3"><h6>As an Employer</h6></td>
+    </tr>
+    {% for tlt_e in interviews_emp %}
+    <tr>
+      <td class="align-middle text-left">{{ tlt_e.scope }}</td>
+      <td class="align-middle text-center">{{ tlt_e.scope.worklocation }}</td>
+      <td class="align-middle text-center">{{ tlt_e.scope.ref_no }}</td>
+      <td class="align-middle text-center">{{ tlt_e.date_listed|date:"j M Y" }}</td>
+      <td class="align-middle">
+        {% if tlt_e.tlt_response == 'P' %}
+          <p class="badge badge-info badge-pill" style="width: 7rem">Response<br>Pending</p>
+        {% elif tlt_e.tlt_response == 'A' %}
+        <a href="{% url 'MarketPlace:Suitable' vac_id=tlt_e.id  tlt_id=tlt_e.talent.id %}" class="badge badge-success badge-pill" style="width: 7rem">Suitable</a>
+          <p class="badge badge-info badge-pill" style="width: 7rem">Interview<br>Accepted</p>
+          <a href="{% url 'MarketPlace:NotSuitable' vac_id=tlt_e.id  tlt_id=tlt_e.talent.id %}" class="badge badge-danger badge-pill" style="width: 7rem">Not Suitable</a>
+        {% elif tlt_e.tlt_response == 'D' %}
+          <p class="badge badge-danger badge-pill" style="width: 7rem">Interview<br>Declined</p>
+          <a href="{% url 'Profile:IntRemove' tlt_e.id %}" class="badge badge-info badge-pill" style="width: 7rem">Remove</a>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+    {% endif %}
+  </tbody>
+</table>
 {% endblock Center_Content %}

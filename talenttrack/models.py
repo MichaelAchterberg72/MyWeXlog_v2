@@ -34,7 +34,7 @@ class Achievements(models.Model):
         unique_together = (('talent', 'achievement', 'date_achieved'),)
 
     def __str__(self):
-        return f'{self.talent.name}: {self.achievement} ({self.date_achieved})'
+        return f'{self.talent}: {self.achievement} ({self.date_achieved})'
 
 
 class Result(models.Model):#What you receive when completing the course

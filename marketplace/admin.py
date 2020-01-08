@@ -1,8 +1,13 @@
 from django.contrib import admin
 
 from .models import (
-    WorkLocation, TalentRequired, Deliverables, SkillLevel, SkillRequired, WorkBid, TalentAvailabillity, WorkIssuedTo, BidShortList, BidInterviewList,
+    WorkLocation, TalentRequired, Deliverables, SkillLevel, SkillRequired, WorkBid, TalentAvailabillity, WorkIssuedTo, BidShortList, BidInterviewList, DeclineAssignment,
     )
+
+
+@admin.register(DeclineAssignment)
+class DeclineAssignmentAdmin(admin.ModelAdmin):
+    pass
 
 
 @admin.register(BidInterviewList)
