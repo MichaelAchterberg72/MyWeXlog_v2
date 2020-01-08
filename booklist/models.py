@@ -19,6 +19,13 @@ class Publisher(models.Model):
         return self.publisher
 
 
+class Genre(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f'{self.name}'
+
+
 class BookList(models.Model):
     CLASS=(
         ('F','Fiction'),
@@ -30,6 +37,7 @@ class BookList(models.Model):
     link = models.URLField('Book URL', blank=True, null=True)
     author = models.ManyToManyField(Author)
     tag = models.ManyToManyField(SkillTag, verbose_name='Tag / Associated Skill')
+    genre = models.ManyToManyField(Genre)
 
     class Meta:
         unique_together = (('title', 'publisher'),)

@@ -12,7 +12,7 @@ from django_select2.forms import (
 )
 
 
-from .models import BookList, Author, ReadBy, Format, Publisher
+from .models import BookList, Author, ReadBy, Format, Publisher, Genre
 from db_flatten.models import SkillTag
 
 #>>> Select 2 Widgets
@@ -50,18 +50,37 @@ class AuthorModelSelect2MultipleWidget(AuthorSearchFieldMixin, ModelSelect2Multi
 
     def create_value(self, value):
         self.get_queryset().create(name=value)
+
+class GenreSearchFieldMixin:
+    search_fields = [
+        'name__icontains', 'pk__startswith'
+    ]
+
+class GenreWidget(GenreSearchFieldMixin, ModelSelect2MultipleWidget):
+    model = Genre
+
+    def create_value(self, value):
+        self.get_queryset().create(name=value)
 #Select 2 Widget <<<
 
 
 class BookAddForm(forms.ModelForm):
     class Meta:
         model = BookList
-        fields = ('title','publisher','author','tag', 'link', 'type')
+        fields = ('title','publisher','author','tag', 'link', 'type', 'genre')
         widgets = {
             'publisher': PublisherSelect2Widget(),
             'tag': TagModelSelect2MultipleWidget(),
             'author': AuthorModelSelect2MultipleWidget(),
+            'genre': GenreWidget(),
         }
+
+
+class GenreAddForm(forms.ModelForm):
+    class Meta:
+        model = Genre
+        fields = ('name', )
+
 
 
 class AuthorAddForm(forms.ModelForm):
