@@ -67,12 +67,38 @@ def ProfileHome(request):
     }
     return render(request, template, context)
 
+
+@login_required()
+@subscription(1)
+def InterviewAcceptView(request, int_id):
+    BidInterviewList.objects.filter(pk=int_id).update(tlt_response='A')
+
+    return redirect(reverse('Profile:ProfileHome')+ '#Interview')
+
+
+@login_required()
+@subscription(1)
+def InterviewDeclineView(request, int_id):
+    BidInterviewList.objects.filter(pk=int_id).update(tlt_response='D', tlt_intcomplete=True)
+
+    return redirect(reverse('MarketPlace:InterviewDecline', kwargs={'int_id':int_id}))
+
+
 @login_required()
 @subscription(2)
 def InterviewTltRemove(request, int_id):
     interview = BidInterviewList.objects.filter(pk=int_id).update(emp_intcomplete=True, outcome='D')
 
     return redirect(reverse('Profile:ProfileHome')+ '#Interview')
+
+
+@login_required()
+@subscription(2)
+def InterviewTltComplete(request, int_id):
+    interview = BidInterviewList.objects.filter(pk=int_id).update(tlt_intcomplete=True)
+
+    return redirect(reverse('Profile:ProfileHome')+ '#Interview')
+
 
 @login_required()
 @csp_exempt

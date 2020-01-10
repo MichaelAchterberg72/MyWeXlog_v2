@@ -1,0 +1,26 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}{{block.super}}-Comments{% endblock title %}
+
+{% block content %}
+<div class="container">
+{% for t in bidshortlist_qs %}
+  <h3>Comments for {{ t.talent.alias }} on {{ t.scope }}</h3>
+{% endfor %}
+  <form method="post" enctype="multipart/form-data">
+    <input type="hidden" name="next" value="{{ request.GET.next }}">
+    {% csrf_token %}
+    {{ form.comments_emp|as_crispy_field }}
+    <div class="">
+      <button type="submit" name="done" class="btn btn-primary">Post Comment</button>
+    </div>
+  </form>
+  </div>
+
+{% endblock content %}
+{% block Script %}
+
+{% endblock Script %}

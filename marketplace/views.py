@@ -15,7 +15,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 
 from .forms import (
-        TalentAvailabillityForm, SkillRequiredForm, SkillLevelForm, DeliverablesForm, TalentRequiredForm, WorkLocationForm, WorkBidForm, TalentRequiredEditForm,
+        TalentAvailabillityForm, SkillRequiredForm, SkillLevelForm, DeliverablesForm, TalentRequiredForm, WorkLocationForm, WorkBidForm, TalentRequiredEditForm, TalentInterViewComments, EmployerInterViewComments,
 )
 
 from .models import(
@@ -30,9 +30,25 @@ from booklist.models import ReadBy
 
 
 @login_required()
+@subscription(1)
+def InterviewDeclineView(request, int_id):
+    instance = BidInterviewList.objects.get(pk=int_id)
+    form = TalentInterViewComments(request.POST, instance=instance)
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.save()
+            return redirect(reverse('Profile:ProfileHome'))
+    else:
+        template = 'marketplace/interview_comment_tlt.html'
+        context={'form': form, 'instance': instance,}
+        return render(request, template, context)
+
+
+@login_required()
 @subscription(2)
 def InterviewSuitable(request, vac_id, tlt_id):
-    BidInterviewList.objects.filter(Q(scope = vac_id) & Q(talent = tlt_id)).update(outcome='S')
+    BidInterviewList.objects.filter(Q(scope = vac_id) & Q(talent = tlt_id)).update(outcome='S', emp_intcomplete=True)
 
     BidShortList.objects.filter(Q(scope = vac_id) & Q(talent = tlt_id)).update(status='P')
 
@@ -49,10 +65,12 @@ def InterviewSuitable(request, vac_id, tlt_id):
 @login_required()
 @subscription(2)
 def InterviewNotSuitable(request, vac_id, tlt_id):
-    BidInterviewList.objects.filter(Q(scope = vac_id) & Q(talent = tlt_id)).update(outcome='N', emp_intcomplete=True)
+    bidinterviewlist_qs = BidInterviewList.objects.filter(Q(scope = vac_id) & Q(talent = tlt_id))
+    bidinterviewlist_qs.update(outcome='N', emp_intcomplete=True)
 
-    BidShortList.objects.filter(Q(scope = vac_id) & Q(talent = tlt_id)).update(status='R')
+    bidshortlist_qs = BidShortList.objects.filter(Q(scope = vac_id) & Q(talent = tlt_id))
 
+    bidshortlist_qs.update(status='R')
     bid_qs = WorkBid.objects.filter(Q(work = vac_id) & Q(talent = tlt_id))
 
     if bid_qs:
@@ -62,7 +80,6 @@ def InterviewNotSuitable(request, vac_id, tlt_id):
 
     return redirect(reverse('MarketPlace:InterviewList', kwargs={ 'vac_id': vac_id}))
 
-
 @login_required()
 @subscription(2)
 def InterviewListView(request, vac_id):
@@ -71,6 +88,7 @@ def InterviewListView(request, vac_id):
     intv_pending = intv_qs.filter(outcome = 'P')
     intv_suitable = intv_qs.filter(outcome = 'S')
     intv_notsuitable = intv_qs.filter(outcome = 'N')
+    intv_declined = intv_qs.filter(tlt_response = 'D')
 
     we = WorkExperience.objects.filter(talent__subscription__gte=1)
     applicants = WorkBid.objects.filter(work=vac_id)
@@ -159,7 +177,7 @@ def InterviewListView(request, vac_id):
 
 
     template = 'marketplace/interview_list.html'
-    context = {'interview_p': interview_p, 'interview_n': interview_n, 'interview_s': interview_s, 'scope': scope,}
+    context = {'interview_p': interview_p, 'interview_n': interview_n, 'interview_s': interview_s, 'scope': scope, 'intv_declined': intv_declined,}
     return render(request, template, context)
 
 
@@ -191,6 +209,18 @@ def VacancyDetailView(request, pk):
     deliver = Deliverables.objects.filter(scope=pk)
 
     template = 'marketplace/vacancy_detail.html'
+    context = {'vacancy': vacancy, 'skills': skills, 'deliver': deliver}
+    return render(request, template, context)
+
+
+@login_required()
+@subscription(1)
+def VacancyDetailView_Profile(request, pk):
+    vacancy = TalentRequired.objects.filter(pk=pk)
+    skills = SkillRequired.objects.filter(scope=pk)
+    deliver = Deliverables.objects.filter(scope=pk)
+
+    template = 'marketplace/vacancy_detail_profile.html'
     context = {'vacancy': vacancy, 'skills': skills, 'deliver': deliver}
     return render(request, template, context)
 

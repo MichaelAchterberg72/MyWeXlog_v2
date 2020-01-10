@@ -69,5 +69,8 @@ urlpatterns = [
         path('careerhistory/', views.BriefCareerHistoryView, name='History'),
         path('career-resign/<int:p_job>/', views.ResignedView, name='Resigned'),
         path('int-remove/<int:int_id>/', views.InterviewTltRemove, name='IntRemove'),
+        path('int-accept/<int:int_id>/', views.InterviewAcceptView, name='IntAccept'),
+        path('int-decline/<int:int_id>/', views.InterviewDeclineView, name='IntDecline'),
+        path('int-complete/<int:int_id>/', views.InterviewTltComplete, name='IntComplete'),
 
 ]

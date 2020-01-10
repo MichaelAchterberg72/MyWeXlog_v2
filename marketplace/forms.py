@@ -98,10 +98,22 @@ class DateInput(forms.DateInput):
     input_type = 'date'
 
 
+class TalentInterViewComments(forms.ModelForm):
+    class Meta:
+        model=BidInterviewList
+        fields = ('comments_tlt', 'tlt_decline_reason',)
+        labels = {
+
+        }
+
+
 class EmployerInterViewComments(forms.ModelForm):
     class Meta:
         model=BidInterviewList
         fields = ('comments_emp',)
+        lables = {
+            'comments_emp': 'Comments'
+        }
 
 
 class WorkBidForm(forms.ModelForm):

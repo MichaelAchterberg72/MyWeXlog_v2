@@ -25,6 +25,7 @@ urlpatterns = [
     path('shortlist/<int:s_list>/<int:tlt>/', views.AddToShortListView, name='ShortList'),
     path('availabillity/', views.TalentAvailabillityView, name='Availabillity'),
     path('v-detail/<int:pk>/', views.VacancyDetailView, name='VacancyDetail'),
+    path('vp-detail/<int:pk>/', views.VacancyDetailView_Profile, name='VacancyDetail_Profile'),
     path('apply/<int:pk>/', views.WorkBidView, name='WorkBid'),
     path('history/', views.ApplicationHistoryView, name='History'),
     path('postview/<int:pk>/', views.VacancyPostView, name='VacancyPost'),
@@ -37,4 +38,5 @@ urlpatterns = [
     path('vac-interview/<int:vac>/<int:tlt>/', views.AddToInterviewListView, name='VacInterview'),
     path('suitable/<int:vac_id>/<int:tlt_id>/', views.InterviewSuitable, name='Suitable'),
     path('notsuitable/<int:vac_id>/<int:tlt_id>/', views.InterviewNotSuitable, name='NotSuitable'),
+    path('int-decline/<int:int_id>/', views.InterviewDeclineView, name='InterviewDecline'),
 ]

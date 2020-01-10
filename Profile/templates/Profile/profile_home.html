@@ -28,6 +28,8 @@ Open Assignments TBP
 {% endblock TBA %}
 
 {% block Center_Content %}
+{% if interviews_tlt or interviews_emp %}
+
 <h5 class="card-header" id="Interview">Pending Interviews</h5>
 <table class="table table-sm">
   <col width="50%">
@@ -55,10 +57,24 @@ Open Assignments TBP
       <td class="align-middle text-center">{{ tlt_i.scope.worklocation }}</td>
       <td class="align-middle text-center">{{ tlt_i.scope.ref_no }}</td>
       <td class="align-middle text-center">{{ tlt_i.date_listed|date:"j M Y" }}</td>
+      {% if request.user.subscription >= 1 %}
+        <td><a href="{% url 'MarketPlace:VacancyDetail_Profile' tlt_i.scope.id %}?next={{ request.path|urlencode }}" class="badge badge-info badge-pill" style="width: 7rem">See Detail</a>
+      {% if tlt_i.tlt_response == 'P' %}
+        <a href="{% url 'Profile:IntAccept' tlt_i.id %}?next={{ request.path|urlencode }}" class="badge badge-success badge-pill" style="width: 7rem">Accept<br>Invitation</a>
+        <a href="{% url 'Profile:IntDecline' tlt_i.id %}?next={{ request.path|urlencode }}" class="badge badge-danger badge-pill" style="width: 7rem">Decline<br>Invitation</a></td>
+      {% endif %}
+      {% if tlt_i.tlt_response == 'A' %}
+        <a href="{% url 'Profile:IntComplete' tlt_i.id %}?next={{ request.path|urlencode }}" class="badge badge-success badge-pill" style="width: 7rem">Interview<br>Completed</a>
+      {% endif %}
+      {% endif %}
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="5">You currently don't have any interviews.</td>
     </tr>
     {% endfor %}
     {% endif %}
-    {% if interviews_tlt %}
+    {% if interviews_emp %}
     <tr>
       <td colspan="3"><h6>As an Employer</h6></td>
     </tr>
@@ -72,17 +88,22 @@ Open Assignments TBP
         {% if tlt_e.tlt_response == 'P' %}
           <p class="badge badge-info badge-pill" style="width: 7rem">Response<br>Pending</p>
         {% elif tlt_e.tlt_response == 'A' %}
-        <a href="{% url 'MarketPlace:Suitable' vac_id=tlt_e.id  tlt_id=tlt_e.talent.id %}" class="badge badge-success badge-pill" style="width: 7rem">Suitable</a>
           <p class="badge badge-info badge-pill" style="width: 7rem">Interview<br>Accepted</p>
-          <a href="{% url 'MarketPlace:NotSuitable' vac_id=tlt_e.id  tlt_id=tlt_e.talent.id %}" class="badge badge-danger badge-pill" style="width: 7rem">Not Suitable</a>
+          <a href="{% url 'MarketPlace:InterviewList' tlt_e.scope.id   %}" class="badge badge-success badge-pill" style="width: 7rem">Interview Page</a>
         {% elif tlt_e.tlt_response == 'D' %}
           <p class="badge badge-danger badge-pill" style="width: 7rem">Interview<br>Declined</p>
-          <a href="{% url 'Profile:IntRemove' tlt_e.id %}" class="badge badge-info badge-pill" style="width: 7rem">Remove</a>
+          <a href="{% url 'Profile:IntRemove' tlt_e.id %}?next={{ request.path|urlencode }}" class="badge badge-info badge-pill" style="width: 7rem">Remove</a>
         {% endif %}
       </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="5">None at the moment.</td>
     </tr>
     {% endfor %}
     {% endif %}
   </tbody>
 </table>
+{% endif %}
+<h5 class="card-header" id="Assignment">Assignments</h5>
 {% endblock Center_Content %}

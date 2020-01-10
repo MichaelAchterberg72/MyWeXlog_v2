@@ -1,0 +1,25 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}{{block.super}}-Reasons{% endblock title %}
+
+{% block content %}
+<div class="container">
+  <h3>Reason for declining {{ instance.scope }}</h3>
+  <form method="post" enctype="multipart/form-data">
+    <input type="hidden" name="next" value="{{ request.GET.next }}">
+    {% csrf_token %}
+    {{ form.tlt_decline_reason|as_crispy_field }}
+    {{ form.comments_tlt|as_crispy_field }}
+    <div class="">
+      <button type="submit" name="done" class="btn btn-primary">Post Reason</button>
+    </div>
+  </form>
+  </div>
+
+{% endblock content %}
+{% block Script %}
+
+{% endblock Script %}
