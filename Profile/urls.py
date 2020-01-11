@@ -72,5 +72,9 @@ urlpatterns = [
         path('int-accept/<int:int_id>/', views.InterviewAcceptView, name='IntAccept'),
         path('int-decline/<int:int_id>/', views.InterviewDeclineView, name='IntDecline'),
         path('int-complete/<int:int_id>/', views.InterviewTltComplete, name='IntComplete'),
+        path('assignment-accept/<slug:slug>/', views.AssignmentAcceptView, name='AssignmentAccept'),
+        path('assignment-decline/<slug:slug>/', views.AssignmentDeclineView, name='AssignmentDecline'),
+        path('assignment-rfi/<slug:slug>/', views.AssignmentClarifyView, name='AssignmentClarify'),
+        path('assignment-reassign/<slug:slug>/', views.AssignmentReAssign, name='AssignmentReassign'),
 
 ]

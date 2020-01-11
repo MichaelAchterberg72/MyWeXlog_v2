@@ -105,5 +105,95 @@ Open Assignments TBP
   </tbody>
 </table>
 {% endif %}
+{% if assigned_tlt or assigned_emp %}
 <h5 class="card-header" id="Assignment">Assignments</h5>
+
+<table class="table table-sm">
+  <col width="45%">
+  <col width="10%">
+  <col width="15%">
+  <col width="10%">
+  <col width="10%">
+  <col width="4%">
+  <thead>
+    <tr>
+      <th class="align-middle text-center">Vacancy<br>(Reference)</th>
+      <th class="align-middle text-center">Date Assigned</th>
+      <th class="align-middle text-center">Offered Rate</th>
+      <th class="align-middle text-center">Assignment Start</th>
+      <th class="align-middle text-center">Assignment Completed</th>
+      <th class="align-middle text-center"></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% if assigned_tlt %}
+    <tr>
+      <td colspan="6"><h6>As Talent ({{ assigned_tltc }} in Workflow)</h6></td>
+    </tr>
+    {% for psn in assigned_tlt %}
+    <tr>
+      <td class="align-middle text-left">{{ psn.work }}<br>({{ psn.work.ref_no }})</td>
+      <td class="align-middle text-left">{{ psn.date_create|date:"j M Y" }}</td>
+      <td class="align-middle text-center">{{ psn.currency.currency_abv }} {{ psn.rate_offered }}<br>{{psn.get_rate_unit_display}}</td>
+      <td class="align-middle text-center">{{ psn.date_begin|date:"j M Y" }}</td>
+      <td class="align-middle text-center">{{ psn.date_deliverable|date:"j M Y" }}</td>
+        <td>
+          <a href="{% url 'MarketPlace:VacancyDetail_Profile' psn.work.id %}?next={{ request.path|urlencode }}" target="_blank" class="badge badge-info badge-pill" style="width: 7rem">See Detail</a>
+          <a href="{% url 'Profile:AssignmentAccept' psn.slug %}?next={{ request.path|urlencode }}" class="badge badge-success badge-pill" style="width: 7rem">Accept<br>Assignment</a>
+          {% if psn.tlt_response == 'C' %}
+            <a href="#" class="badge badge-warning badge-pill" style="width: 7rem">Await<br>Information</a>
+          {% else %}
+            <a href="{% url 'Profile:AssignmentClarify' psn.slug %}?next={{ request.path|urlencode }}" class="badge badge-info badge-pill" style="width: 7rem">Request<br>Information</a>
+          {% endif %}
+          <a href="{% url 'Profile:AssignmentDecline' psn.slug %}?next={{ request.path|urlencode }}" class="badge badge-danger badge-pill" style="width: 7rem">Decline<br>Assignment</a>
+      </td>
+    </tr>
+    {% endfor %}
+    {% endif %}
+    {% if assigned_emp %}
+    <tr>
+      <td colspan="6"><h6>As an Employer ({{ assigned_empc }} in Workflow)</h6></td>
+    </tr>
+    {% for psn in assigned_emp %}
+    <tr>
+      <td class="align-middle text-left">{{ psn.work }}<br>({{ psn.work.ref_no }})</td>
+      <td class="align-middle text-left">{{ psn.date_create|date:"j M Y" }}</td>
+      <td class="align-middle text-center">{{ psn.currency.currency_abv }} {{ psn.rate_offered }}<br>{{psn.get_rate_unit_display}}</td>
+      <td class="align-middle text-center">{{ psn.date_begin|date:"j M Y" }}</td>
+      <td class="align-middle text-center">{{ psn.date_deliverable|date:"j M Y" }}</td>
+      {% if psn.tlt_response == 'C' %}
+        <td>
+            <a href="{% url 'MarketPlace:RFIView' psn.slug %}" class="badge badge-warning badge-pill" style="width: 7rem">Clarification<br>Requested</a>
+        </td>
+      {% elif psn.tlt_response == 'P' %}
+      <td>
+          <a href="#" class="badge badge-info badge-pill" style="width: 7rem">Response<br>Pending</a>
+      </td>
+      {% elif psn.tlt_response == 'D' %}
+      <td>
+          <a href="#" class="badge badge-danger badge-pill" style="width: 7rem">Vacancy<br>Declined</a>
+          <a href="{% url 'Profile:AssignmentReassign' psn.slug %}" class="badge badge-warning badge-pill" style="width: 7rem">ReAssign<br>Vacancy</a>
+      </td>
+      {% elif psn.tlt_response == 'A' %}
+      <td>
+          <a href="#" class="badge badge-success badge-pill" style="width: 7rem">Vacancy<br>Accpeted</a>
+      </td>
+      {% endif %}
+      {% if psn.tlt_response == 'D' %}
+      <tr>
+        <td colspan="4">{{ psn.comments }}</td>
+        <th>Reason:</th>
+        <td>{{ psn.tlt_decline_reason }}</td>
+      </tr>
+      {% elif psn.tlt_response == 'A' %}
+      <tr>
+        <td>Please contact the Talent directly at <a href="emailto:{{ psn.talent.email }}">{{ psn.talent.email }}</a></td>
+      </tr>
+      {% endif %}
+    {% endfor %}
+    {% endif %}
+  </tr>
+  </tbody>
+</table>
+{% endif %}
 {% endblock Center_Content %}

@@ -170,9 +170,17 @@ class BidInterviewList(models.Model):
     tlt_intcomplete = models.BooleanField(default=False)
     emp_intcomplete = models.BooleanField(default=False)
     comments_emp = models.TextField(null=True)
+    slug = models.SlugField(max_length=150, null=True, blank=True)
 
     def __str__(self):
         return f'{self.scope}, {self.talent}, {self.get_outcome_display()}'
+
+
+def InterviewList_slug(sender, instance, *args, **kwargs):
+    if not instance.slug:
+        instance.slug = f'{instance.scope.ref_no}'
+
+pre_save.connect(InterviewList_slug, sender=BidInterviewList)
 
 
 class WorkBid(models.Model):
@@ -217,27 +225,41 @@ class WorkIssuedTo(models.Model):
         ('D','Decline Assignment'),
         ('C','Clarification Requested'),
     )
-    #completed by client
+    #completed by employer
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='Successful_talent')
     work = models.ForeignKey(TalentRequired, on_delete=models.PROTECT)
     tlt_response = models.CharField(max_length=1, choices = RSP, default= 'P')
     tlt_decline_reason = models.ForeignKey(DeclineAssignment, on_delete=models.PROTECT, null=True)
     tlt_response_date = models.DateTimeField(null=True)
-    comments = models.TextField()
-    #rate_accepted = models.DecimalField(max_digits=10, decimal_places=2)
-    #currency = models.ForeignKey(Currency, on_delete=models.PROTECT)
-    #rate_unit = models.CharField(max_length=1, choices=RATE_UNIT, default='H')
-    date_completion_tlt = models.DateTimeField(null=True)
-    date_completion_emp = models.DateTimeField(null=True)
+    comments = models.TextField()#talent decline reasons
+    clarification_required = models.TextField(null=True)
+    #completed by employer
+    rate_offered = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    currency = models.ForeignKey(Currency, on_delete=models.PROTECT, null=True)
+    rate_unit = models.CharField(max_length=1, choices=RATE_UNIT, default='H', null=True)
+    date_deliverable = models.DateTimeField(null=True)
     date_begin = models.DateTimeField(null=True)
     #autocompleted
-    date_create = models.DateField(auto_now_add=True)
-    date_complete = models.DateField(auto_now=True)
+    date_create = models.DateTimeField(auto_now_add=True)
+    date_complete = models.DateTimeField(auto_now=True)
     #completed by talent
-    #start_confirm = models.BooleanField()
+    #start_date = models.BooleanField()
     #rate_confirm = models.BooleanField()
     #deadline_confirm = models.BooleanField()
     #terms_accept = models.BooleanField()
+    assignment_complete_tlt = models.BooleanField(default=False)
+    assignment_complete_emp = models.BooleanField(default=False)
+    slug = models.SlugField(max_length=7, null=True)
+
+    class Meta:
+        unique_together = (('talent', 'work'),)
 
     def __str__(self):
         return f'{self.talent} assigned to {self.work}'
+
+
+def WorkIssuedTo_slug(sender, instance, *args, **kwargs):
+    if not instance.slug:
+        instance.slug = f'{instance.work.ref_no}'
+
+pre_save.connect(WorkIssuedTo_slug, sender=WorkIssuedTo)

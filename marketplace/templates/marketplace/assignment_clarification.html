@@ -1,0 +1,24 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}{{block.super}}-RFI{% endblock title %}
+
+{% block content %}
+<div class="container">
+  <h3>Reason for declining {{ instance.work }}</h3>
+  <form method="post" enctype="multipart/form-data">
+    <input type="hidden" name="next" value="{{ request.GET.next }}">
+    {% csrf_token %}
+    {{ form.clarification_required|as_crispy_field }}
+    <div class="">
+      <button type="submit" name="done" class="btn btn-primary">Request</button>
+    </div>
+  </form>
+  </div>
+
+{% endblock content %}
+{% block Script %}
+
+{% endblock Script %}

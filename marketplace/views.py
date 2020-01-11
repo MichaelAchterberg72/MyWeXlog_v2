@@ -47,6 +47,16 @@ def InterviewDeclineView(request, int_id):
 
 @login_required()
 @subscription(2)
+def TalentRFIView(request, slug):
+    instance = WorkIssuedTo.objects.get(slug=slug)
+
+    template = 'marketplace/rfi_view.html'
+    context = {'instance': instance,}
+    return render(request, template, context)
+
+
+@login_required()
+@subscription(2)
 def InterviewSuitable(request, vac_id, tlt_id):
     BidInterviewList.objects.filter(Q(scope = vac_id) & Q(talent = tlt_id)).update(outcome='S', emp_intcomplete=True)
 
@@ -173,8 +183,6 @@ def InterviewListView(request, vac_id):
         askill_count = len(askillset)
 
         interview_n[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate}
-
-
 
     template = 'marketplace/interview_list.html'
     context = {'interview_p': interview_p, 'interview_n': interview_n, 'interview_s': interview_s, 'scope': scope, 'intv_declined': intv_declined,}

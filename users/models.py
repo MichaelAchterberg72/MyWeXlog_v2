@@ -3,7 +3,7 @@ from django.conf import settings
 from datetime import datetime
 from django.utils import timezone
 from django.contrib.auth.models import AbstractUser, UserManager
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 
 
 from pinax.referrals.models import Referral
@@ -46,11 +46,13 @@ class CustomUser(AbstractUser):
     paid_date = models.DateTimeField(null=True, blank=True)
     paid_type = models.IntegerField(choices=PAID_TYPE, default=0)
     invite_code = models.CharField(max_length=42, null=True, blank=True)
+    alphanum = models.SlugField(max_length=7, unique=True, null=True)
 
     objects = CustomUserManager()
 
     def __str__(self):
         return f'{self.first_name} {self.last_name}, {self.display_text}'
+
 
 @receiver(user_signed_up)
 def after_signup(request, user, **kwargs):

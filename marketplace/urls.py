@@ -39,4 +39,5 @@ urlpatterns = [
     path('suitable/<int:vac_id>/<int:tlt_id>/', views.InterviewSuitable, name='Suitable'),
     path('notsuitable/<int:vac_id>/<int:tlt_id>/', views.InterviewNotSuitable, name='NotSuitable'),
     path('int-decline/<int:int_id>/', views.InterviewDeclineView, name='InterviewDecline'),
+    path('rfi-respond/<slug:slug>/', views.TalentRFIView, name='RFIView'),
 ]

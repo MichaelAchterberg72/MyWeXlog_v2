@@ -1,12 +1,14 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import TemplateView
 from django.utils.http import is_safe_url
+from django.utils import timezone
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 import json
 from django.contrib.auth.models import User
 from django.db.models import Count, Sum, F, Q
+
 
 from csp.decorators import csp_exempt
 from django.contrib.auth.decorators import login_required
@@ -35,6 +37,10 @@ from .forms import (
     ProfileForm, EmailForm, EmailStatusForm, PhysicalAddressForm, PostalAddressForm, PhoneNumberForm, OnlineProfileForm, ProfileTypeForm, FileUploadForm, IdTypeForm, LanguageTrackForm, LanguageListForm, PassportDetailForm, IdentificationDetailForm, BriefCareerHistoryForm, ResignedForm, UserUpdateForm, CustomUserUpdateForm
 )
 
+from marketplace.forms import(
+        AssignmentDeclineReasonsForm, AssignmentClarifyForm
+        )
+
 
 @login_required()
 def ProfileHome(request):
@@ -59,13 +65,75 @@ def ProfileHome(request):
 
     interviews_empc = interviews_emp.count()
 
-    assigned = WorkIssuedTo.objects.filter(Q(talent=talent) & Q(tlt_response='P'))
+    assigned_tlt_qs = WorkIssuedTo.objects.filter(Q(talent=talent))
+    assigned_tlt = assigned_tlt_qs.filter(Q(tlt_response='P') | Q(tlt_response='C'))
+    assigned_tltc = assigned_tlt.count()
+
+    assigned_emp = WorkIssuedTo.objects.filter(Q(work__requested_by=talent) & Q(assignment_complete_emp=False))
+    assigned_empc = assigned_tlt.count()
 
     template = 'Profile/profile_home.html'
     context = {
-        'wf1': wf1, 'total': total, 'interviews_tlt': interviews_tlt, 'assigned': assigned, 'interviews_emp': interviews_emp, 'interviews_empc': interviews_empc, 'interviews_tltc': interviews_tltc,
+        'wf1': wf1, 'total': total, 'interviews_tlt': interviews_tlt, 'interviews_emp': interviews_emp, 'interviews_empc': interviews_empc, 'interviews_tltc': interviews_tltc, 'assigned_tlt': assigned_tlt, 'assigned_emp': assigned_emp, 'assigned_tltc': assigned_empc, 'assigned_empc': assigned_tltc,
     }
     return render(request, template, context)
+
+
+@login_required()
+@subscription(1)
+def AssignmentAcceptView(request, slug):
+    assignment = WorkIssuedTo.objects.filter(slug=slug)
+    assignment.update(tlt_response='A', tlt_response_date=timezone.now())
+
+    return redirect(reverse('Profile:ProfileHome')+'#Assignment')
+
+@login_required()
+@subscription(1)
+def AssignmentDeclineView(request, slug):
+    assignment = WorkIssuedTo.objects.filter(slug=slug)
+    assignment.update(tlt_response='D', tlt_response_date=timezone.now())
+    instance = get_object_or_404(WorkIssuedTo, slug=slug)
+
+    form = AssignmentDeclineReasonsForm(request.POST or None, instance = instance)
+
+    if request.method =='POST':
+        if form.is_valid():
+            new=form.save(commit=False)
+            new.save()
+            return redirect(reverse('Profile:ProfileHome')+'#Assignments')
+    else:
+        template = 'marketplace/assignment_decline_reasons.html'
+        context = {'instance': instance, 'form': form,}
+        return render(request, template, context)
+
+
+@login_required()
+@subscription(2)
+def AssignmentReAssign(request, slug):
+    assignment = WorkIssuedTo.objects.filter(slug=slug).update(assignment_complete_emp=True)
+    instance = WorkIssuedTo.objects.get(slug=slug)
+
+    return redirect(reverse('MarketPlace:InterviewList', kwargs={'vac_id':instance.work.id}))
+
+
+@login_required()
+@subscription(1)
+def AssignmentClarifyView(request, slug):
+    assignment = WorkIssuedTo.objects.filter(slug=slug)
+    assignment.update(tlt_response='C', tlt_response_date=timezone.now())
+    instance = get_object_or_404(WorkIssuedTo, slug=slug)
+
+    form = AssignmentClarifyForm(request.POST or None, instance = instance)
+
+    if request.method =='POST':
+        if form.is_valid():
+            new=form.save(commit=False)
+            new.save()
+            return redirect(reverse('Profile:ProfileHome')+'#Assignments')
+    else:
+        template = 'marketplace/assignment_clarification.html'
+        context = {'instance': instance, 'form': form,}
+        return render(request, template, context)
 
 
 @login_required()

@@ -14,7 +14,7 @@ from django_select2.forms import (
 
 
 from .models import (
-            WorkLocation, TalentRequired, Deliverables, SkillLevel, SkillRequired, TalentAvailabillity, WorkBid, BidInterviewList
+            WorkLocation, TalentRequired, Deliverables, SkillLevel, SkillRequired, TalentAvailabillity, WorkBid, BidInterviewList, WorkIssuedTo
 )
 
 
@@ -102,9 +102,26 @@ class TalentInterViewComments(forms.ModelForm):
     class Meta:
         model=BidInterviewList
         fields = ('comments_tlt', 'tlt_decline_reason',)
-        labels = {
+        labels = {}
 
-        }
+
+class AssignmentClarifyForm(forms.ModelForm):
+    class Meta:
+        model = WorkIssuedTo
+        fields = ('clarification_required', )
+        labels = {
+            'clarification_required': 'Information Required',
+            }
+
+
+class AssignmentDeclineReasonsForm(forms.ModelForm):
+    class Meta:
+        model=WorkIssuedTo
+        fields = ('comments', 'tlt_decline_reason',)
+        labels = {
+            'comments': 'Details',
+            'tlt_decline_reason': 'Reason',
+            }
 
 
 class EmployerInterViewComments(forms.ModelForm):
