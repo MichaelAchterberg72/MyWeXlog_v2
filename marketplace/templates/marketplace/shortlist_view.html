@@ -17,7 +17,7 @@
       <input type="hidden" name="next" value="{{ request.GET.next }}">
       {% csrf_token %}
       <button type="submit" class="btn btn-secondary float-right">Back to {{vacancy.ref_no}}</button>
-    </form> <a href="{% url 'MarketPlace:InterviewList' vacancy.id %}?next={{ request.path|urlencode }}" class="btn btn-warning float-right">View Interview List</a>  
+    </form> <a href="{% url 'MarketPlace:InterviewList' vacancy.id %}?next={{ request.path|urlencode }}" class="btn btn-warning float-right">View Interview List</a>
 
 
     <h3 class="card-title">Short list for {{ vacancy.title }} ({{ vacancy.ref_no }})</h3>
@@ -50,7 +50,7 @@
               {% csrf_token %}
               <button type="submit" class="badge badge-info badge-pill float-right" style="width: 5rem">Interview</button>
             </form>
-            <form  action="{% url 'MarketPlace:VacAssign' tlt=sl.0  vac=vacancy.pk %}" method="post">
+            <form  action="{% url 'MarketPlace:VacAssign' tlt=sl.0  vac=vacancy.pk %}?next={{ request.path|urlencode }}" method="post">
               {% csrf_token %}
               <button type="submit" class="badge badge-success badge-pill float-right" style="width: 5rem">Assign</button>
             </form>

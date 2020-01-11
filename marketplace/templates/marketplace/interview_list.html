@@ -147,7 +147,6 @@
   {% endfor %}
 </tbody>
 </table>
-<h4>Declined Invitation for Interview</h4>
 <table class="table table-sm">
   <col width="15%">
   <col width="15%">
@@ -160,6 +159,9 @@
   </tr>
 </thead>
 <tbody>
+  <tr>
+    <td colspan="3"><h4>Declined Invitation for Interview</h4></td>
+  </tr>
   {% for intd in intv_declined %}
   <tr>
     <td class="align-middle text-center">{{ intd.talent.alias }}</td>
@@ -169,6 +171,20 @@
   {% empty %}
   <tr>
     <td colspan="7">Nobody has Declined the Interview Invitation</td>
+  </tr>
+  {% endfor %}
+  <tr>
+    <td colspan="3"><h4>Declined Assignment</h4></td>
+  </tr>
+  {% for intd in vacancy_declined %}
+  <tr>
+    <td class="align-middle text-center">{{ intd.talent.alias }}</td>
+    <td class="align-middle text-center">{{ intd.tlt_decline_reason }}</td>
+    <td class="align-middle text-left">{{ intd.comments }}</td>
+  </tr>
+  {% empty %}
+  <tr>
+    <td colspan="7">Nobody has declined an assignment.</td>
   </tr>
   {% endfor %}
 </tbody>

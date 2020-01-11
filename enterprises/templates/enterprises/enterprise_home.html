@@ -21,8 +21,6 @@
         <tr>
           <th>Name</th>
           <th>Website</th>
-          <th>Current Employees on WeXLog</th>
-          <th>Past Employees on WeXLog</th>
           <th></th>
         </tr>
       </thead>
@@ -31,13 +29,6 @@
         <tr>
           <td>{{ c.name }}</td>
           <td><a href="{{ c.website }}" target="_blank">{{ c.website }}</a></td>
-          {% if request.user.subscription >= 2 %}
-            <td>Current</td>
-            <td>Past</td>
-          {% else %}
-            <td class="badge badge-info text-wrap" style="width: 6rem;">Active Subscription required</td>
-            <td class="badge badge-info text-wrap" style="width: 6rem;">Active Subscription required</td>
-          {% endif %}
           <td><a href="{% url 'Enterprise:BranchList' c.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">List Branches</a> </td>
         </tr>
       </tbody>

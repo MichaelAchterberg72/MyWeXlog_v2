@@ -15,7 +15,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 
 from .forms import (
-        TalentAvailabillityForm, SkillRequiredForm, SkillLevelForm, DeliverablesForm, TalentRequiredForm, WorkLocationForm, WorkBidForm, TalentRequiredEditForm, TalentInterViewComments, EmployerInterViewComments,
+        TalentAvailabillityForm, SkillRequiredForm, SkillLevelForm, DeliverablesForm, TalentRequiredForm, WorkLocationForm, WorkBidForm, TalentRequiredEditForm, TalentInterViewComments, EmployerInterViewComments, AssignWorkForm,
 )
 
 from .models import(
@@ -99,6 +99,7 @@ def InterviewListView(request, vac_id):
     intv_suitable = intv_qs.filter(outcome = 'S')
     intv_notsuitable = intv_qs.filter(outcome = 'N')
     intv_declined = intv_qs.filter(tlt_response = 'D')
+    vacancy_declined = WorkIssuedTo.objects.filter(work=vac_id, tlt_response='D' )
 
     we = WorkExperience.objects.filter(talent__subscription__gte=1)
     applicants = WorkBid.objects.filter(work=vac_id)
@@ -185,7 +186,7 @@ def InterviewListView(request, vac_id):
         interview_n[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate}
 
     template = 'marketplace/interview_list.html'
-    context = {'interview_p': interview_p, 'interview_n': interview_n, 'interview_s': interview_s, 'scope': scope, 'intv_declined': intv_declined,}
+    context = {'interview_p': interview_p, 'interview_n': interview_n, 'interview_s': interview_s, 'scope': scope, 'intv_declined': intv_declined, 'vacancy_declined': vacancy_declined,}
     return render(request, template, context)
 
 
@@ -536,31 +537,37 @@ def TalentAssign(request, tlt, vac):
     bids = WorkBid.objects.filter(work=vac)
     s_list = BidShortList.objects.filter(scope=vac)
 
+    form = AssignWorkForm(request.POST or None)
     if request.method == 'POST':
-        WorkIssuedTo.objects.create(talent=talent, work=job)
-        s_list.filter(talent=talent).update(status='A')
+        next_url=request.POST.get('next', '/')
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.talent = talent
+            new.work = job
+            new.save()
 
-        subs = list(Profile.objects.filter(talent=talent).values_list('talent__subscription', flat=True))
-        subsi = subs[0]
+            s_list.filter(talent=talent).update(status='A')
 
-        if subsi == 2:
-            s = bids.get(talent=talent)
-            s.bidreview ='A'
-            s.save()
+            subs = list(Profile.objects.filter(talent=talent).values_list('talent__subscription', flat=True))
+            subsi = subs[0]
 
-            bids.filter(~Q(bidreview='A')).update(bidreview='R')
-            s_list.filter(status='S').update(status='R')
+            if subsi == 2:
+                s = bids.get(talent=talent)
+                s.bidreview ='A'
+                s.save()
 
+            if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
+                next_url = reverse('MarketPlace:Entrance')
+            else:
+                return HttpResponseRedirect(next_url)
         else:
-            bids.update(bidreview='R')
-            s_list.filter(status='S').update(status='R')
-
-        t = TalentRequired.objects.get(pk=vac)
-        t.offer_status = 'C'
-        t.save()
-
-    return redirect(reverse('MarketPlace:Entrance'))
-
+            template = 'marketplace/vacancy_assign.html'
+            context = {'form': form,}
+            return render(request, template, context)
+    else:
+        template = 'marketplace/vacancy_assign.html'
+        context = {'form': form,}
+        return render(request, template, context)
 
 @login_required()
 @subscription(2)

@@ -67,7 +67,6 @@
       <div class="form-row">
         <div class="form-group col-md-6 mb-0">
           {{ form.worklocation|as_crispy_field }}
-          <p><a href="{% url 'MarketPlace:WorkLocationAddPop' %}" id='add_location' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a Work Location</a></p>
         </div>
         <div class="form-group col-md-6 mb-0">
           {{ form.city|as_crispy_field }}

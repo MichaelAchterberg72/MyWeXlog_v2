@@ -5,7 +5,7 @@ from .import views
 app_name = 'Profile'
 
 urlpatterns = [
-        path('', views.ProfileHome, name="ProfileHome"),
+        path('dashboard/', views.ProfileHome, name="ProfileHome"),
         path('view/<int:profile_id>/', views.ProfileView, name="ProfileView"),
         path('edit/<int:profile_id>/', views.ProfileEditView, name="ProfileEdit"),
         path('email/<int:profile_id>/', views.EmailEditView, name='EmailEdit'),

@@ -28,19 +28,26 @@ urlpatterns = [
     path('experience/capture/', views.WorkExperienceCaptureView, name="ExperienceCapture"),
     path('popup/designation/add/', views.DesignationAddPopup, name="DesignationAddPop"),
     path('popup/ajax/get_designation_id/', views.get_designation_id, name="AJAX_GetDesignationID"),
+
     path('colleague/select/', views.ColleagueSelectView, name='ColleagueSelect'),
     path('colleague/<int:pk>/add/', views.ColleagueAddView, name='ColleagueAdd'),
+    path('colleague/detail/<int:pk>/', views.ColleagueResponseView, name='ColleagueResponse'),
+
     path('superior/select/<int:pk>/', views.SuperiorSelectView, name='SuperiorSelect'),
     path('superior/add/<int:pk>/', views.SuperiorAddView, name='SuperiorAdd'),
+    path('superior/detail/<int:pk>/', views.SuperiorResponseView, name='SuperiorResponse'),
+
     path('collaborator/select/<int:pk>/', views.CollaboratorSelectView, name='CollaboratorSelect'),
     path('collaborator/add/<int:pk>/', views.CollaboratorAddView, name='CollaboratorAdd'),
+    path('collaborator/detail/<int:pk>/', views.CollaboratorResponseView, name='CollaboratorResponse'),
+
     path('client/select/<int:pk>/', views.ClientSelectView, name='ClientSelect'),
     path('client/add/<int:pk>/', views.ClientAddView, name='ClientAdd'),
-    path('experience/detail/<int:exp_id>/', views.ExperienceDetailView, name='ExperienceDetail'),
-    path('colleague/detail/<int:pk>/', views.ColleagueResponseView, name='ColleagueResponse'),
-    path('superior/detail/<int:pk>/', views.SuperiorResponseView, name='SuperiorResponse'),
-    path('collaborator/detail/<int:pk>/', views.CollaboratorResponseView, name='CollaboratorResponse'),
     path('client/detail/<int:pk>/', views.ClientResponseView, name='ClientResponse'),
+    
+    path('experience/detail/<int:exp_id>/', views.ExperienceDetailView, name='ExperienceDetail'),
+
+
     path('prelogged/capture/', views.PreLoggedExperienceCaptureView, name="PreloggedCapture"),
     path('prelogged/<int:pre_id>/detail/', views.PreLogDetailView, name='PreLogDetail'),
     path('experience-detail/', views.SumAllExperienceView, name='ExperienceSum'),

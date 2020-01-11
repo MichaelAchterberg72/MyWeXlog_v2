@@ -83,7 +83,6 @@ INSTALLED_APPS = [
     'paypal.standard.ipn',
 ]
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -159,8 +158,6 @@ PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
 ]
 
-
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 WSGI_APPLICATION = 'WeXlog.wsgi.application'
 
@@ -337,10 +334,14 @@ CELERY_IMPORTS = ('payments.tasks',)
 
 CELERY_TASK_ANNOTATIONS = {'tasks.add': {'rate_limit': '10/s'}}
 
-# Email settings for Celery
-EMAIL_HOST = ''
-EMAIL_PORT = 465
-EMAIL_HOST_USER = 'do_not_reply@wexlog.io'
-EMAIL_HOST_PASSWORD = ''
-EMAIL_USE_TLS = False
-EMAIL_USE_SSL = True
+if DEBUG == True:
+    #email settings
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+else:
+    # Email settings for Celery
+    EMAIL_HOST = ''
+    EMAIL_PORT = 465
+    EMAIL_HOST_USER = 'do_not_reply@wexlog.io'
+    EMAIL_HOST_PASSWORD = ''
+    EMAIL_USE_TLS = False
+    EMAIL_USE_SSL = True

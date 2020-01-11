@@ -32,8 +32,10 @@ def InvitationView(request):
             temp = Referral.objects.get(user=request.user)
 
             name = cd['name']
+            print(name)
             surname = cd['surname']
             worked_for = cd['worked_for']
+            print(name, surname, worked_for)
 
             subject = f"Invitation to WeXlog"
             context = {'form': form,  'temp': temp }
@@ -49,10 +51,9 @@ def InvitationView(request):
             response = render(request, template, context)
             response.delete_cookie("confirm")
             return response
-#frust
+
     else:
         form = InvitationForm()
-
-    template = 'invitations/invite_form.html'
-    context = {'form': form}
-    return render(request, template, context)
+        template = 'invitations/invite_form.html'
+        context = {'form': form}
+        return render(request, template, context)
