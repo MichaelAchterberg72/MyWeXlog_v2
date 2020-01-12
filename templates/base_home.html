@@ -7,6 +7,7 @@
       <link href="{% static 'css/wexlog_css.css' %}" rel="stylesheet" type="text/css">
     <!-- Bootstrap CSS -->
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+      <script src="https://kit.fontawesome.com/7e5855a9eb.js" crossorigin="anonymous"></script>
 
       <title>{% block title %}WeXlog{% endblock title %}</title>
   {% block Style %}
@@ -50,7 +51,9 @@
     </button>
       <div class="dropdown-menu dropdown-menu-right">
         <a class="dropdown-item"  href="{% url 'Profile:ProfileView' request.user.id %}">View Profile</a>
-        <button class="dropdown-item" type="button">Invite Someone</button>
+
+        <a class="dropdown-item"  href="{% url 'Invitation:FlatInvite' %}">Invite Someone</a>
+
         <div class="dropdown-divider"></div>
         <a class="dropdown-item"  href="{% url 'account_email' %}">Manage email</a>
         <a class="dropdown-item"  href="{% url 'account_change_password' %}">Change Password</a>

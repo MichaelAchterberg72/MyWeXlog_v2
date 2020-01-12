@@ -1,0 +1,40 @@
+{% extends 'base_home.html' %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+{% block title %}{{block.super}}-Invite{% endblock title %}
+
+{% block Style %}
+{{ form.media.css }}
+<style type="text/css">
+  select {
+    width: 100px;
+  }
+  </style>
+{% endblock Style %}
+
+{% block content %}
+
+<h3>Invite Someone</h3>
+<form class="" action="" method="POST">
+  <input type="hidden" name="next" value="{{ request.GET.next }}">
+  {% csrf_token %}
+  {{ form.name|as_crispy_field }}
+  {{ form.surname|as_crispy_field }}
+  {{ form.email|as_crispy_field }}
+  <button type="submit" class="btn btn-primary" name="Invite">Invite</button>
+</form>
+<!--
+<button type="submit" class="btn btn-primary" name="Invite" value="Close this window" onclick="windowClose();">Invite</button>
+-->
+{% endblock content %}
+{% block Script %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{{ form.media.js }}
+<script language="javascript" type="text/javascript">
+  function windowClose() {
+  window.open('','_parent','');
+  window.close();
+  }
+</script>
+{% endblock Script %}

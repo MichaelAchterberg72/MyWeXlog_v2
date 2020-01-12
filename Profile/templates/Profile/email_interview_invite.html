@@ -1,0 +1,26 @@
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+  <head>
+    <meta charset="utf-8">
+    <title>{{ form.instance.invited_by.first_name }} {{ form.instance.invited_by.last_name }} invites you to WeXlog</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/7e5855a9eb.js" crossorigin="anonymous"></script>
+  </head>
+  <body>
+
+      <p>Hi {{ instance.work.requested_by.first_name }},</p>
+      <p>{{ instance.talent.alias }} has asked for additional clarification on vacancy "{{ instance.work.title }}" which you pasted.</p>
+      <hr>
+      <p>Clarification:</p>
+      <p>{{ form.instance.clarification_required }}</p>
+      <hr>
+      <p>Please could you respond directly to {{ instance.talent.alias }} at <a href="emailto: {{ instance.talent.email }}">{{ instance.talent.email }}</a>.</p>
+
+
+      <p>Kind Regards</p>
+      <p>The WexLog Team</p>
+
+  </body>
+</html>

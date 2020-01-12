@@ -188,7 +188,7 @@ X_FRAME_OPTIONS = 'DENY'
 REFERRER_POLICY='same-origin'
     ## Content-Security-policy (3rd party app)
 CSP_DEFAULT_SRC = ("'self'", "'unsafe-inline'", 'SameSite', 'maxcdn.bootstrapcdn.com', 'code.jquery.com',
-'cdnjs.cloudflare.com', 'youtube.com', 'fonts.googleapis.com', 'maps.googleapis.com', 'use.typekit.net', 'netdna.bootstrapcdn.com', 'w3.org', '127.0.0.1', 'lit.fontawesome.com', )
+'cdnjs.cloudflare.com', 'youtube.com', 'fonts.googleapis.com', 'maps.googleapis.com', 'use.typekit.net', 'netdna.bootstrapcdn.com', 'w3.org', '127.0.0.1', 'kit.fontawesome.com', )
 
 CSP_SCRIPT_SRC = None
 CSP_IMG_SRC = ("'self'", '127.0.0.1')

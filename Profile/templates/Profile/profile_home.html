@@ -9,17 +9,54 @@ Summary information relating to the user's network. Number of people on each lev
 
 {% block workflow %}
 <p>Experience confirmations: <a href="{% url 'Profile:Confirm' %}"class="btn btn-info">{{ total }}</a></p>
-{% if interviews_emp %}
-  <p>Interviews Pending: <span class ="btn btn info">{{ interviews_empc }} as the Employer</span></p>
-{% endif %}
-{% if interviews_tlt %}
-  <p>Interviews Pending: <span class ="btn btn info">{{ interviews_tltc }} as the Candidate</span></p>
-{% endif %}
+<table class="table table-sm">
+  <thead>
+    <tr>
+      <th></th>
+      <th class="align-middle text-center">As Employer</th>
+      <th class="align-middle text-center">As Talent</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="align-middle text-center">Interviews Pending</td>
+      <td class="align-middle text-center">
+        {% if interviews_emp %}
+          {{ interviews_empc }}
+        {% else %}
+          None
+        {% endif %}
+      </td>
+      <td class="align-middle text-center">
+        {% if interviews_tlt %}
+          {{ interviews_tltc }}
+        {% else %}
+          None
+        {% endif %}
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 {% endblock workflow %}
 
 {% block score %}
-Open Assignments TBP
+<table class="table table-sm">
+  <thead>
+    <tr>
+      <th class="align-middle text-center">Detail</th>
+      <th class="align-middle text-center">As Employer</th>
+      <th class="align-middle text-center">As Talent</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="align-middle text-center">Open Assignments</td>
+      <td class="align-middle text-center">{{ open_assignments_empc }}</td>
+      <td class="align-middle text-center">{{ open_assignments_tltc }}</td>
+    </tr>
+  </tbody>
+</table>
 {% endblock score %}
 
 {% block TBA %}
@@ -138,7 +175,7 @@ Open Assignments TBP
       <td class="align-middle text-center">{{ psn.date_begin|date:"j M Y" }}</td>
       <td class="align-middle text-center">{{ psn.date_deliverable|date:"j M Y" }}</td>
         <td>
-          <a href="{% url 'MarketPlace:VacancyDetail_Profile' psn.work.id %}?next={{ request.path|urlencode }}" target="_blank" class="badge badge-info badge-pill" style="width: 7rem">See Detail</a>
+          <a href="{% url 'MarketPlace:VacancyDetail_Profile' psn.work.id %}?next={{ request.path|urlencode }}" target="_blank" class="badge badge-info badge-pill" style="width: 7rem;">See Detail</a>
           <a href="{% url 'Profile:AssignmentAccept' psn.slug %}?next={{ request.path|urlencode }}" class="badge badge-success badge-pill" style="width: 7rem">Accept<br>Assignment</a>
           {% if psn.tlt_response == 'C' %}
             <a href="#" class="badge badge-warning badge-pill" style="width: 7rem">Await<br>Information</a>
@@ -172,7 +209,7 @@ Open Assignments TBP
       {% elif psn.tlt_response == 'D' %}
       <td>
           <a href="#" class="badge badge-danger badge-pill" style="width: 7rem">Vacancy<br>Declined</a>
-          <a href="{% url 'Profile:AssignmentReassign' psn.slug %}" class="badge badge-warning badge-pill" style="width: 7rem">ReAssign<br>Vacancy</a>
+          <a href="{% url 'Profile:AssignmentReassign' psn.slug %}" class="badge badge-warning badge-pill" style="width: 7rem; height: 3rem">ReAssign<br>Vacancy</a>
       </td>
       {% elif psn.tlt_response == 'A' %}
       <td>

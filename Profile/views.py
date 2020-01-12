@@ -10,6 +10,12 @@ from django.contrib.auth.models import User
 from django.db.models import Count, Sum, F, Q
 
 
+#email
+from django.core.mail import send_mail, EmailMultiAlternatives
+from django.template.loader import get_template, render_to_string
+from django.utils.html import strip_tags
+
+
 from csp.decorators import csp_exempt
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
@@ -70,11 +76,15 @@ def ProfileHome(request):
     assigned_tltc = assigned_tlt.count()
 
     assigned_emp = WorkIssuedTo.objects.filter(Q(work__requested_by=talent) & Q(assignment_complete_emp=False))
-    assigned_empc = assigned_tlt.count()
+    assigned_empc = assigned_emp.count()
+
+    open_assignments_tltc = assigned_tlt_qs.filter(Q(tlt_response='A') & Q(assignment_complete_tlt=False)).count()
+
+    open_assignments_empc = assigned_emp.filter(Q(tlt_response='A')).count()
 
     template = 'Profile/profile_home.html'
     context = {
-        'wf1': wf1, 'total': total, 'interviews_tlt': interviews_tlt, 'interviews_emp': interviews_emp, 'interviews_empc': interviews_empc, 'interviews_tltc': interviews_tltc, 'assigned_tlt': assigned_tlt, 'assigned_emp': assigned_emp, 'assigned_tltc': assigned_empc, 'assigned_empc': assigned_tltc,
+        'wf1': wf1, 'total': total, 'interviews_tlt': interviews_tlt, 'interviews_emp': interviews_emp, 'interviews_empc': interviews_empc, 'interviews_tltc': interviews_tltc, 'assigned_tlt': assigned_tlt, 'assigned_emp': assigned_emp, 'assigned_tltc': assigned_empc, 'assigned_empc': assigned_tltc, 'open_assignments_tltc': open_assignments_tltc, 'open_assignments_empc': open_assignments_empc,
     }
     return render(request, template, context)
 
@@ -129,7 +139,21 @@ def AssignmentClarifyView(request, slug):
         if form.is_valid():
             new=form.save(commit=False)
             new.save()
-            return redirect(reverse('Profile:ProfileHome')+'#Assignments')
+
+            #>>>email
+            subject = f"{instance.work.title}: Clarification Requested from {instance.talent.alias}"
+
+            context = {'form': form, 'instance': instance}
+
+            html_message = render_to_string('Profile/email_vac_clarification.html', context)
+            plain_message = strip_tags(html_message)
+
+            send_to = instance.work.requested_by.email
+            send_mail(subject, html_message, 'clarifications@wexlog.io', [send_to,])
+            #template = 'Profile/email_vac_clarification.html'
+            #return render(request, template, context)
+            #<<<email
+            return  redirect(reverse('Profile:ProfileHome')+'#Assignments')
     else:
         template = 'marketplace/assignment_clarification.html'
         context = {'instance': instance, 'form': form,}

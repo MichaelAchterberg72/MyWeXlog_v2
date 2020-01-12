@@ -1,0 +1,26 @@
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+  <head>
+    <meta charset="utf-8">
+    <title>{{ form.instance.invited_by.first_name }} {{ form.instance.invited_by.last_name }} interview</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/7e5855a9eb.js" crossorigin="anonymous"></script>
+  </head>
+  <body>
+
+      <p>Hi {{ talent.first_name }},</p>
+      <br>
+      <p>{{ job.requested_by.alias }} has requested to interview you for a vacancy entitled: {{ job.title }} ({{ job.ref_no }}).</p>
+      <br>
+      <p>Please <a href="#">Login</a> to your profile to view details of the vacancy and to respond to the interview request. </p>
+      <br>
+      <p>We wish you a successful interview!</p>
+      <br>
+      <br>
+      <p>Kind Regards</p>
+      <p>The WexLog Team</p>
+
+  </body>
+</html>

@@ -29,3 +29,8 @@ class InvitationForm(forms.ModelForm):
         widgets = {
             'worked_for':  BranchSelect2Widget(),
         }
+
+class InvitationLiteForm(forms.ModelForm):
+    class Meta:
+        model = Invitation
+        fields = ('name', 'surname', 'email')

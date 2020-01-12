@@ -14,6 +14,13 @@ from core.decorators import subscription
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 
+
+#email
+from django.core.mail import send_mail, EmailMultiAlternatives
+from django.template.loader import get_template, render_to_string
+from django.utils.html import strip_tags
+
+
 from .forms import (
         TalentAvailabillityForm, SkillRequiredForm, SkillLevelForm, DeliverablesForm, TalentRequiredForm, WorkLocationForm, WorkBidForm, TalentRequiredEditForm, TalentInterViewComments, EmployerInterViewComments, AssignWorkForm,
 )
@@ -526,6 +533,20 @@ def AddToInterviewListView(request, vac, tlt):
     if request.method == 'POST':
         BidInterviewList.objects.create(talent=talent, scope=job)
 
+        #>>>email
+        subject = f"WeXlog - {job.title} ({job.ref_no}): Interview request"
+
+        context = {'job': job, 'talent': talent}
+
+        html_message = render_to_string('marketplace/email_interview_request.html', context)
+        plain_message = strip_tags(html_message)
+
+        send_to = job.requested_by.email
+        send_mail(subject, html_message, 'no-reply@wexlog.io', [send_to,])
+        #template = 'marketplace/email_interview_request.html'
+        #return render(request, template, context)
+        #<<<email
+
         return redirect(reverse('MarketPlace:ShortListView', kwargs={'slv':vac}))
 
 
@@ -555,6 +576,20 @@ def TalentAssign(request, tlt, vac):
                 s = bids.get(talent=talent)
                 s.bidreview ='A'
                 s.save()
+
+            #>>>email
+            subject = f"WeXlog - Job assigned: {job.title} ({job.ref_no})"
+
+            context = {'job': job, 'talent': talent}
+
+            html_message = render_to_string('marketplace/email_vacancy_assign.html', context)
+            plain_message = strip_tags(html_message)
+
+            send_to = job.requested_by.email
+            send_mail(subject, html_message, 'no-reply@wexlog.io', [send_to,])
+            #template = 'marketplace/email_vacancy_assign.html'
+            #return render(request, template, context)
+            #<<<email
 
             if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
                 next_url = reverse('MarketPlace:Entrance')
