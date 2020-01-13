@@ -44,6 +44,7 @@ def InterviewDeclineView(request, int_id):
     if request.method == 'POST':
         if form.is_valid():
             new = form.save(commit=False)
+            new.tlt_reponded = timezone.now()
             new.save()
             return redirect(reverse('Profile:ProfileHome'))
     else:
@@ -56,6 +57,8 @@ def InterviewDeclineView(request, int_id):
 @subscription(2)
 def TalentRFIView(request, slug):
     instance = WorkIssuedTo.objects.get(slug=slug)
+    instance.tlt_reponded = timezone.now()
+    instance.save()
 
     template = 'marketplace/rfi_view.html'
     context = {'instance': instance,}
@@ -102,9 +105,9 @@ def InterviewNotSuitable(request, vac_id, tlt_id):
 def InterviewListView(request, vac_id):
     scope = TalentRequired.objects.get(pk=vac_id)
     intv_qs = BidInterviewList.objects.filter(scope=vac_id)
-    intv_pending = intv_qs.filter(outcome = 'P')
-    intv_suitable = intv_qs.filter(outcome = 'S')
-    intv_notsuitable = intv_qs.filter(outcome = 'N')
+    intv_pending = intv_qs.filter(Q(outcome = 'P') & ~Q(tlt_response='D'))
+    intv_suitable = intv_qs.filter(Q(outcome = 'S') & ~Q(tlt_response='D'))
+    intv_notsuitable = intv_qs.filter(Q(outcome = 'N') & ~Q(tlt_response='D'))
     intv_declined = intv_qs.filter(tlt_response = 'D')
     vacancy_declined = WorkIssuedTo.objects.filter(work=vac_id, tlt_response='D' )
 
@@ -219,10 +222,10 @@ def WorkBidView(request, pk):
 
 @login_required()
 @subscription(2)
-def VacancyDetailView(request, pk):
-    vacancy = TalentRequired.objects.filter(pk=pk)
-    skills = SkillRequired.objects.filter(scope=pk)
-    deliver = Deliverables.objects.filter(scope=pk)
+def VacancyDetailView(request, ref_no):
+    vacancy = TalentRequired.objects.filter(ref_no=ref_no)
+    skills = SkillRequired.objects.filter(scope__ref_no=ref_no)
+    deliver = Deliverables.objects.filter(scope__ref_no=ref_no)
 
     template = 'marketplace/vacancy_detail.html'
     context = {'vacancy': vacancy, 'skills': skills, 'deliver': deliver}
@@ -380,14 +383,14 @@ def AvailabillityRemoveView(request, avl_id):
 
 @login_required()
 @subscription(2)
-def VacancyPostView(request, pk):
+def VacancyPostView(request, ref):
     #>>>Queryset Cache
-    instance = get_object_or_404(TalentRequired, pk=pk)
-    skille = SkillRequired.objects.filter(scope=pk)
-    delivere = Deliverables.objects.filter(scope=pk)
-    applicants = WorkBid.objects.filter(work=pk)
+    instance = get_object_or_404(TalentRequired, ref_no=ref)
+    skille = SkillRequired.objects.filter(scope__ref_no=ref)
+    delivere = Deliverables.objects.filter(scope__ref_no=ref)
+    applicants = WorkBid.objects.filter(work__ref_no=ref)
     we = WorkExperience.objects.filter(talent__subscription__gte=1)
-    s_list = BidShortList.objects.filter(scope=pk)
+    s_list = BidShortList.objects.filter(scope__ref_no=ref)
     book = ReadBy.objects.all()
     #Queryset Cache<<<
 

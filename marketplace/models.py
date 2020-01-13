@@ -75,7 +75,7 @@ class TalentRequired(models.Model):
     )
     date_entered = models.DateField(auto_now_add=True)
     title = models.CharField(max_length=250)
-    ref_no = models.CharField(max_length=7, unique=True, null=True)
+    ref_no = models.CharField(max_length=7, unique=True, null=True)#SlugField
     enterprise = models.ForeignKey(Branch, on_delete=models.CASCADE, verbose_name="Company Branch")
     requested_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     date_deadline = models.DateField('Work completed by')
@@ -139,12 +139,19 @@ class BidShortList(models.Model):
     preferance_rating = models.SmallIntegerField(null=True, default=0)
     date_listed = models.DateTimeField(auto_now_add=True)
     status =  models.CharField(max_length=1, choices=BID, null=True, default='S')
+    slug = models.SlugField(max_length=150, null=True, blank=True, unique=True)
 
     class Meta:
         unique_together = (('talent', 'scope'),)
 
     def __str__(self):
         return f'{self.scope} shortlist {self.talent}'
+
+def BidShortList_slug(sender, instance, *args, **kwargs):
+    if not instance.slug:
+        instance.slug = f'{instance.scope.ref_no}-{instance.talent.slug}'
+
+pre_save.connect(BidShortList_slug, sender=BidShortList)
 
 
 class BidInterviewList(models.Model):
@@ -170,7 +177,10 @@ class BidInterviewList(models.Model):
     tlt_intcomplete = models.BooleanField(default=False)
     emp_intcomplete = models.BooleanField(default=False)
     comments_emp = models.TextField(null=True)
-    slug = models.SlugField(max_length=150, null=True, blank=True)
+    slug = models.SlugField(max_length=150, null=True, blank=True, unique=True)
+
+    class Meta:
+        unique_together = (('talent', 'scope'),)
 
     def __str__(self):
         return f'{self.scope}, {self.talent}, {self.get_outcome_display()}'
@@ -178,7 +188,7 @@ class BidInterviewList(models.Model):
 
 def InterviewList_slug(sender, instance, *args, **kwargs):
     if not instance.slug:
-        instance.slug = f'{instance.scope.ref_no}'
+        instance.slug = f'{instance.scope.ref_no}-{instance.talent.slug}'
 
 pre_save.connect(InterviewList_slug, sender=BidInterviewList)
 
@@ -196,8 +206,17 @@ class WorkBid(models.Model):
     date_applied = models.DateTimeField(auto_now_add=True)
     date_revised = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        unique_together = (('talent', 'work'),)
+
     def __str__(self):
         return'{}: {}'.format(self.work, self.talent)
+
+def WorkBid_slug(sender, instance, *args, **kwargs):
+    if not instance.slug:
+        instance.slug = f'{instance.work.ref_no}-{instance.talent.slug}'
+
+pre_save.connect(WorkBid_slug, sender=WorkBid)
 
 
 class TalentAvailabillity(models.Model):
@@ -260,6 +279,6 @@ class WorkIssuedTo(models.Model):
 
 def WorkIssuedTo_slug(sender, instance, *args, **kwargs):
     if not instance.slug:
-        instance.slug = f'{instance.work.ref_no}'
+        instance.slug = f'{instance.work.ref_no}-{instance.talent.alias}'
 
 pre_save.connect(WorkIssuedTo_slug, sender=WorkIssuedTo)

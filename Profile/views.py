@@ -163,7 +163,7 @@ def AssignmentClarifyView(request, slug):
 @login_required()
 @subscription(1)
 def InterviewAcceptView(request, int_id):
-    BidInterviewList.objects.filter(pk=int_id).update(tlt_response='A')
+    BidInterviewList.objects.filter(pk=int_id).update(tlt_response='A', tlt_reponded=timezone.now())
 
     return redirect(reverse('Profile:ProfileHome')+ '#Interview')
 
@@ -171,7 +171,7 @@ def InterviewAcceptView(request, int_id):
 @login_required()
 @subscription(1)
 def InterviewDeclineView(request, int_id):
-    BidInterviewList.objects.filter(pk=int_id).update(tlt_response='D', tlt_intcomplete=True)
+    BidInterviewList.objects.filter(pk=int_id).update(tlt_response='D', tlt_intcomplete=True, tlt_reponded=timezone.now())
 
     return redirect(reverse('MarketPlace:InterviewDecline', kwargs={'int_id':int_id}))
 
