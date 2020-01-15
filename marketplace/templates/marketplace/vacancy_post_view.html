@@ -13,7 +13,7 @@
   }
   </style>
 <div class="container">
-<p><a href="{% url 'MarketPlace:VacancyEdit' instance.id %}" class="btn btn-info float-right">Edit Vacancy</a></p>
+<p><a href="{% url 'MarketPlace:VacancyEdit' instance.ref_no %}" class="btn btn-info float-right">Edit Vacancy</a></p>
 <h3>Vacancy Review</h3>
 <h5 class="card-title">Vacancy: {{ instance.title }} ({{ instance.ref_no }})</h5>
 
@@ -79,7 +79,7 @@
 <hr>
 <div class="row">
   <div class="col-sm-6">
-    <a href="{% url 'MarketPlace:Deliverables2' instance.id %}" class="badge badge-primary float-right" style="width: 5rem;">Add</a>
+    <a href="{% url 'MarketPlace:Deliverables2' instance.ref_no %}" class="badge badge-primary float-right" style="width: 5rem;">Add</a>
     <h5 class="card-title" id="deliverables">Deliverables</h5>
       <table class="table table-sm">
         <col width="90%">
@@ -109,7 +109,7 @@
         </table>
   </div>
   <div class="col-sm-6">
-    <a href="{% url 'MarketPlace:Skillsa' instance.id %}" class="badge badge-primary float-right" style="width: 5rem;">Add</a>
+    <a href="{% url 'MarketPlace:Skillsa' instance.ref_no %}" class="badge badge-primary float-right" style="width: 5rem;">Add</a>
     <h5 class="card-title" id="skills">Skills</h5>
     <table class="table table-sm">
       <col width="90%">
@@ -135,7 +135,7 @@
     </table>
   </div>
 </div>
-<p><a href="{% url 'MarketPlace:ShortListView' slv=instance.id %}?next={{ request.path|urlencode }}" class="btn btn-warning">View Short-list</a>  <a href="{% url 'MarketPlace:InterviewList' instance.id %}?next={{ request.path|urlencode }}" class="btn btn-warning">View Interview List</a></p>
+<p><a href="{% url 'MarketPlace:ShortListView' instance.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-warning">View Short-list</a>  <a href="{% url 'MarketPlace:InterviewList' instance.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-warning">View Interview List</a></p>
 <div class="">
   <h3 id='suited'>Talent suited to the Vacancy</h3>
   <hr>
@@ -163,7 +163,7 @@
           <td class="align-middle">{{ key.1.ro.0.1 }} <strong>{{ key.1.ro.0.0 }}</strong> {{ key.1.ro.0.2 }}</td>
           <td class="align-middle">{{ key.1.ro.0.3|truncatechars:200 }}</td>
           <td class="align-middle"><p>
-          <form  action="{% url 'MarketPlace:ShortList' tlt=key.0  s_list=instance.pk %}" method="post">
+          <form  action="{% url 'MarketPlace:ShortList' tlt=key.0  ref=instance.ref_no %}" method="post">
             {% csrf_token %}
             <button type="submit" class="badge badge-info badge-pill float-right" style="width: 5rem;">Short-list</button>
           </form><br>

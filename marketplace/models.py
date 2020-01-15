@@ -118,7 +118,7 @@ class SkillRequired(models.Model):
     skills = models.ForeignKey(SkillTag, on_delete=models.PROTECT)
 
     class Meta:
-        #unique_together = (('skill','scope'),)
+        unique_together = (('skills','scope'),)
         pass
 
     def __str__(self):
