@@ -4,7 +4,7 @@ from django.utils import timezone
 from time import time
 import datetime
 from random import random
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.db.models import Count, Sum, F, Q
 
@@ -28,6 +28,7 @@ class Achievements(models.Model):
     achievement = models.CharField(max_length=500)
     date_achieved = models.DateField()
     description = models.TextField('Describe the Achievement')
+    slug = models.SlugField(max_length=15, unique=True, null=True)
 
     class Meta:
         ordering = ['-date_achieved']
@@ -35,6 +36,13 @@ class Achievements(models.Model):
 
     def __str__(self):
         return f'{self.talent}: {self.achievement} ({self.date_achieved})'
+
+
+def Achievements_slug(sender, instance, *args, **kwargs):
+    if not instance.slug:
+        instance.slug = f'{instance.talent.id}{instance.id}'
+
+pre_save.connect(Achievements_slug, sender=Achievements)
 
 
 class Result(models.Model):#What you receive when completing the course
@@ -67,6 +75,7 @@ class LicenseCertification(models.Model):
     issue_date = models.DateField()
     expiry_date = models.DateField(null=True, blank=True)
     current = models.BooleanField('Is this current?', default = True)
+    slug = models.SlugField(max_length=50, blank=True, null=True)
 
     class Meta:
         ordering = ['-issue_date']
@@ -87,6 +96,12 @@ class LicenseCertification(models.Model):
         else:
             self.current=True
         super(LicenseCertification, self).save(*args, **kwargs)
+
+def LCM_slug(sender, instance, *args, **kwargs):
+    if not instance.slug:
+        instance.slug = f'{instance.talent.id}{instance.cm_no}'
+
+pre_save.connect(LCM_slug, sender=LicenseCertification)
 
 
 class Course(models.Model):

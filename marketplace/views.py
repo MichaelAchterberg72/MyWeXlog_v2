@@ -67,12 +67,12 @@ def TalentRFIView(request, slug):
 
 @login_required()
 @subscription(2)
-def InterviewSuitable(request, vac_id, tlt_id):
-    BidInterviewList.objects.filter(Q(scope = vac_id) & Q(talent = tlt_id)).update(outcome='S', emp_intcomplete=True)
+def InterviewSuitable(request, vac, tlt):
+    BidInterviewList.objects.filter(Q(scope__ref_no = vac) & Q(talent__alias = tlt)).update(outcome='S', emp_intcomplete=True)
 
-    BidShortList.objects.filter(Q(scope = vac_id) & Q(talent = tlt_id)).update(status='P')
+    BidShortList.objects.filter(Q(scope__ref_no = vac) & Q(talent__alias = tlt)).update(status='P')
 
-    bid_qs = WorkBid.objects.filter(Q(work = vac_id) & Q(talent = tlt_id))
+    bid_qs = WorkBid.objects.filter(Q(work__ref_no = vac) & Q(talent__alias = tlt))
 
     if bid_qs:
         bid_qs.update(bidreview = 'P')
@@ -84,14 +84,14 @@ def InterviewSuitable(request, vac_id, tlt_id):
 
 @login_required()
 @subscription(2)
-def InterviewNotSuitable(request, vac_id, tlt_id):
-    bidinterviewlist_qs = BidInterviewList.objects.filter(Q(scope = vac_id) & Q(talent = tlt_id))
+def InterviewNotSuitable(request, vac, tlt):
+    bidinterviewlist_qs = BidInterviewList.objects.filter(Q(scope__ref_no = vac) & Q(talent__alias = tlt))
     bidinterviewlist_qs.update(outcome='N', emp_intcomplete=True)
 
-    bidshortlist_qs = BidShortList.objects.filter(Q(scope = vac_id) & Q(talent = tlt_id))
+    bidshortlist_qs = BidShortList.objects.filter(Q(scope__ref_no = vac) & Q(talent__alias = tlt))
 
     bidshortlist_qs.update(status='R')
-    bid_qs = WorkBid.objects.filter(Q(work = vac_id) & Q(talent = tlt_id))
+    bid_qs = WorkBid.objects.filter(Q(work__ref_no = vac) & Q(talent__alias = tlt))
 
     if bid_qs:
         bid_qs.update(bidreview = 'R')
@@ -102,17 +102,17 @@ def InterviewNotSuitable(request, vac_id, tlt_id):
 
 @login_required()
 @subscription(2)
-def InterviewListView(request, ref):
-    scope = TalentRequired.objects.get(ref_no=ref)
-    intv_qs = BidInterviewList.objects.filter(scope__ref_no=ref)
+def InterviewListView(request, vac):
+    scope = TalentRequired.objects.get(ref_no=vac)
+    intv_qs = BidInterviewList.objects.filter(scope__ref_no=vac)
     intv_pending = intv_qs.filter(Q(outcome = 'P') & ~Q(tlt_response='D'))
     intv_suitable = intv_qs.filter(Q(outcome = 'S') & ~Q(tlt_response='D'))
     intv_notsuitable = intv_qs.filter(Q(outcome = 'N') & ~Q(tlt_response='D'))
     intv_declined = intv_qs.filter(tlt_response = 'D')
-    vacancy_declined = WorkIssuedTo.objects.filter(work__ref_no=ref, tlt_response='D' )
+    vacancy_declined = WorkIssuedTo.objects.filter(work__ref_no=vac, tlt_response='D' )
 
     we = WorkExperience.objects.filter(talent__subscription__gte=1)
-    applicants = WorkBid.objects.filter(work__ref_no=ref)
+    applicants = WorkBid.objects.filter(work__ref_no=vac)
     book = ReadBy.objects.all()
 
     #Information for all suitable applicants
@@ -202,8 +202,8 @@ def InterviewListView(request, ref):
 
 @login_required()
 @subscription(2)
-def WorkBidView(request, ref):
-    detail = TalentRequired.objects.get(ref_no=ref)
+def WorkBidView(request, vac):
+    detail = TalentRequired.objects.get(ref_no=vac)
 
     form = WorkBidForm(request.POST or None)
     if request.method == 'POST':
@@ -222,10 +222,10 @@ def WorkBidView(request, ref):
 
 @login_required()
 @subscription(2)
-def VacancyDetailView(request, ref_no):
-    vacancy = TalentRequired.objects.filter(ref_no=ref_no)
-    skills = SkillRequired.objects.filter(scope__ref_no=ref_no)
-    deliver = Deliverables.objects.filter(scope__ref_no=ref_no)
+def VacancyDetailView(request, vac):
+    vacancy = TalentRequired.objects.filter(ref_no=vac)
+    skills = SkillRequired.objects.filter(scope__ref_no=vac)
+    deliver = Deliverables.objects.filter(scope__ref_no=vac)
 
     template = 'marketplace/vacancy_detail.html'
     context = {'vacancy': vacancy, 'skills': skills, 'deliver': deliver}
@@ -234,10 +234,10 @@ def VacancyDetailView(request, ref_no):
 
 @login_required()
 @subscription(1)
-def VacancyDetailView_Profile(request, ref):
-    vacancy = TalentRequired.objects.filter(ref_no=ref)
-    skills = SkillRequired.objects.filter(scope__ref_no=ref)
-    deliver = Deliverables.objects.filter(scope__ref_no=ref)
+def VacancyDetailView_Profile(request, vac):
+    vacancy = TalentRequired.objects.filter(ref_no=vac)
+    skills = SkillRequired.objects.filter(scope__ref_no=vac)
+    deliver = Deliverables.objects.filter(scope__ref_no=vac)
 
     template = 'marketplace/vacancy_detail_profile.html'
     context = {'vacancy': vacancy, 'skills': skills, 'deliver': deliver}
@@ -383,14 +383,14 @@ def AvailabillityRemoveView(request, avl_id):
 
 @login_required()
 @subscription(2)
-def VacancyPostView(request, ref):
+def VacancyPostView(request, vac):
     #>>>Queryset Cache
-    instance = get_object_or_404(TalentRequired, ref_no=ref)
-    skille = SkillRequired.objects.filter(scope__ref_no=ref)
-    delivere = Deliverables.objects.filter(scope__ref_no=ref)
-    applicants = WorkBid.objects.filter(work__ref_no=ref)
+    instance = get_object_or_404(TalentRequired, ref_no=vac)
+    skille = SkillRequired.objects.filter(scope__ref_no=vac)
+    delivere = Deliverables.objects.filter(scope__ref_no=vac)
+    applicants = WorkBid.objects.filter(work__ref_no=vac)
     we = WorkExperience.objects.filter(talent__subscription__gte=1)
-    s_list = BidShortList.objects.filter(scope__ref_no=ref)
+    s_list = BidShortList.objects.filter(scope__ref_no=vac)
     book = ReadBy.objects.all()
     #Queryset Cache<<<
 
@@ -459,9 +459,9 @@ def VacancyPostView(request, ref):
 
 @csp_exempt
 @login_required()
-def VacancySkillsAddView(request, ref):
-    instance = get_object_or_404(TalentRequired, ref_no=ref)
-    skill_list = SkillRequired.objects.filter(scope__ref_no=ref)
+def VacancySkillsAddView(request, vac):
+    instance = get_object_or_404(TalentRequired, ref_no=vac)
+    skill_list = SkillRequired.objects.filter(scope__ref_no=vac)
     form = SkillRequiredForm(request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
@@ -469,7 +469,7 @@ def VacancySkillsAddView(request, ref):
             new.scope = instance
             new.save()
             if 'another' in request.POST:
-                return redirect(reverse('MarketPlace:Skills', kwargs={'ref': ref}))
+                return redirect(reverse('MarketPlace:Skills', kwargs={'vac': vac}))
             elif 'done' in request.POST:
                 return redirect(reverse('MarketPlace:Entrance'))
         else:
@@ -484,16 +484,16 @@ def VacancySkillsAddView(request, ref):
 
 @login_required()
 @csp_exempt
-def VacancySkillsAdd2View(request, ref):
-    instance = get_object_or_404(TalentRequired, ref_no=ref)
-    skill_list = SkillRequired.objects.filter(scope__ref_no=ref)
+def VacancySkillsAdd2View(request, vac):
+    instance = get_object_or_404(TalentRequired, ref_no=vac)
+    skill_list = SkillRequired.objects.filter(scope__ref_no=vac)
     form = SkillRequiredForm(request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
             new = form.save(commit=False)
             new.scope = instance
             new.save()
-            return redirect(reverse('MarketPlace:VacancyPost', kwargs={'ref': ref})+'#skills')
+            return redirect(reverse('MarketPlace:VacancyPost', kwargs={'vac': vac})+'#skills')
         else:
             template = 'marketplace/vacancy_skills2.html'
             context = {'form': form, 'instance': instance, 'skill_list': skill_list}
@@ -509,13 +509,13 @@ def SkillDeleteView(request, id):
     if request.method == 'POST':
         skilld = SkillRequired.objects.get(pk=id)
         skilld.delete()
-        return redirect(reverse('MarketPlace:VacancyPost', kwargs={'ref':skilld.scope.ref_no})+'#skills')
+        return redirect(reverse('MarketPlace:VacancyPost', kwargs={'vac':skilld.scope.ref_no})+'#skills')
 
 
 @login_required()
 @subscription(2)
-def AddToShortListView(request, ref, tlt):
-    job = get_object_or_404(TalentRequired, ref_no=ref)
+def AddToShortListView(request, vac, tlt):
+    job = get_object_or_404(TalentRequired, ref_no=vac)
     talent = get_object_or_404(CustomUser, pk=tlt)
     if request.method == 'POST':
         b = BidShortList.objects.create(talent=talent, scope=job)
@@ -525,7 +525,7 @@ def AddToShortListView(request, ref, tlt):
             upd.bidreview = 'S'
             upd.save()
 
-        return redirect(reverse('MarketPlace:VacancyPost', kwargs={'ref':ref})+'#suited')
+        return redirect(reverse('MarketPlace:VacancyPost', kwargs={'vac':vac})+'#suited')
 
 
 @login_required()
@@ -556,10 +556,10 @@ def AddToInterviewListView(request, vac, tlt):
 @login_required()
 @subscription(2)
 def TalentAssign(request, tlt, vac):
-    job = get_object_or_404(TalentRequired, pk=vac)
-    talent = get_object_or_404(CustomUser, pk=tlt)
-    bids = WorkBid.objects.filter(work=vac)
-    s_list = BidShortList.objects.filter(scope=vac)
+    job = get_object_or_404(TalentRequired, ref_no=vac)
+    talent = get_object_or_404(CustomUser, alias=tlt)
+    bids = WorkBid.objects.filter(work__ref_no=vac)
+    s_list = BidShortList.objects.filter(scope__ref_no=vac)
 
     form = AssignWorkForm(request.POST or None)
     if request.method == 'POST':
@@ -610,10 +610,10 @@ def TalentAssign(request, tlt, vac):
 @login_required()
 @subscription(2)
 def TalentDecline(request, tlt, vac):
-    job = get_object_or_404(TalentRequired, pk=vac)
-    talent = get_object_or_404(CustomUser, pk=tlt)
-    bids = WorkBid.objects.filter(work=vac)
-    s_list = BidShortList.objects.filter(scope=vac)
+    job = get_object_or_404(TalentRequired, ref_no=vac)
+    talent = get_object_or_404(CustomUser, alias=tlt)
+    bids = WorkBid.objects.filter(work__ref_no=vac)
+    s_list = BidShortList.objects.filter(scope__ref_no=vac)
 
     if request.method == 'POST':
         WorkIssuedTo.objects.create(talent=talent, work=job)
@@ -640,11 +640,11 @@ def TalentDecline(request, tlt, vac):
 
 @login_required()
 @subscription(2)
-def ShortListView(request, ref):
-    vacancy = get_object_or_404(TalentRequired, ref_no=ref)
-    s_list = BidShortList.objects.filter(scope__ref_no=ref)
+def ShortListView(request, vac):
+    vacancy = get_object_or_404(TalentRequired, ref_no=vac)
+    s_list = BidShortList.objects.filter(scope__ref_no=vac)
     we = WorkExperience.objects.filter(talent__subscription__gte=1)
-    applicants = WorkBid.objects.filter(work__ref_no=ref)
+    applicants = WorkBid.objects.filter(work__ref_no=vac)
     book = ReadBy.objects.all()
 
     app_list = list(s_list.values_list('talent', flat=True))
@@ -686,7 +686,7 @@ def DeliverablesEditView(request, refd):
         if form.is_valid():
             new = form.save(commit=False)
             new.save()
-            return redirect(reverse('MarketPlace:VacancyPost', kwargs={'ref': instance.scope.ref_no})+'#deliverables')
+            return redirect(reverse('MarketPlace:VacancyPost', kwargs={'vac': instance.scope.ref_no})+'#deliverables')
     else:
         template = 'marketplace/vacancy_deliverables_edit.html'
         context = {'form': form, 'instance': instance}
@@ -694,15 +694,15 @@ def DeliverablesEditView(request, refd):
 
 
 @login_required()
-def DeliverablesAdd2View(request, ref):
-    instance = get_object_or_404(TalentRequired, ref_no=ref)
+def DeliverablesAdd2View(request, vac):
+    instance = get_object_or_404(TalentRequired, ref_no=vac)
     form = DeliverablesForm(request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
             new = form.save(commit=False)
             new.scope = instance
             new.save()
-            return redirect(reverse('MarketPlace:VacancyPost', kwargs={'ref': ref})+'#deliverables')
+            return redirect(reverse('MarketPlace:VacancyPost', kwargs={'vac': vac})+'#deliverables')
     else:
         template = 'marketplace/vacancy_deliverables_edit.html'
         context = {'form': form, 'instance': instance}
@@ -718,9 +718,9 @@ def DeliverableDeleteView(request, pk):
 
 
 @login_required()
-def DeliverablesAddView(request, ref):
-    instance = get_object_or_404(TalentRequired, ref_no=ref)
-    deliverable = Deliverables.objects.filter(scope__ref_no=ref)
+def DeliverablesAddView(request, vac):
+    instance = get_object_or_404(TalentRequired, ref_no=vac)
+    deliverable = Deliverables.objects.filter(scope__ref_no=vac)
     form = DeliverablesForm(request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
@@ -728,9 +728,9 @@ def DeliverablesAddView(request, ref):
             new.scope = instance
             new.save()
             if 'another' in request.POST:
-                return redirect(reverse('MarketPlace:Deliverables', kwargs={'ref': ref}))
+                return redirect(reverse('MarketPlace:Deliverables', kwargs={'vac': vac}))
             elif 'done' in request.POST:
-                return redirect(reverse('MarketPlace:Skills', kwargs={'ref': instance.ref_no}))
+                return redirect(reverse('MarketPlace:Skills', kwargs={'vac': instance.ref_no}))
         else:
             template = 'marketplace/vacancy_deliverables.html'
             context = {'form': form, 'instance': instance, 'deliverable': deliverable}
@@ -753,7 +753,7 @@ def VacancyView(request):
             new.requested_by = request.user
             new.save()
             form.save_m2m()
-            return redirect(reverse('MarketPlace:Deliverables', kwargs={'ref':new.ref_no}))
+            return redirect(reverse('MarketPlace:Deliverables', kwargs={'vac':new.ref_no}))
         else:
             template = 'marketplace/vacancy.html'
             context = {'form': form}
@@ -768,8 +768,8 @@ def VacancyView(request):
 @login_required()
 @csp_exempt
 @subscription(2)
-def VacancyEditView(request, ref):
-    instance=get_object_or_404(TalentRequired, ref_no=ref)
+def VacancyEditView(request, vac):
+    instance=get_object_or_404(TalentRequired, ref_no=vac)
 
     if request.method == 'POST':
         form = TalentRequiredEditForm(request.POST, request.FILES, instance=instance)

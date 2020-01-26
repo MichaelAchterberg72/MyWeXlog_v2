@@ -2,7 +2,7 @@
 {% load humanize %}
 
 {% block title %}
-  {% if request.user.id == tlt.id %}
+  {% if request.user.id == tlt_p.id %}
     {{block.super}}-Experience Overview
   {% else %}
     {{block.super}}-{{tlt.alias}} Skill Summary
@@ -12,17 +12,13 @@
 {% block content %}
 <div class="card">
   <h5 class="card-header">Skills Summary</h5>
-  {% if request.user.id == tlt.id %}
+  {% if request.user.id == tlt_p.id %}
   <div class="row">
     <div class="col-sm-12">
     <div class="card">
       <div class="">
+        <a href="{% url 'Talent:APV' tlt=request.user.alias vac='1ad9t2' %}" target="_blank" class="btn btn-success float-right">Public Profile</a>
         <a href="{% url 'Talent:Home' %}" class="btn btn-secondary float-right">Experience Home</a>
-        <form  action="{% url 'BookList:BLB' %}" method="post">
-          <input type="hidden" name="next" value="{{ request.GET.next }}">
-          {% csrf_token %}
-          <button type="submit" class="btn btn-secondary float-right">Back to Your Profile</button>
-        </form>  
         <a href="{% url 'Talent:DPCSum' %}" class="btn btn-primary">Designation, Project & Company Summary</a>
       </div>
     </div>

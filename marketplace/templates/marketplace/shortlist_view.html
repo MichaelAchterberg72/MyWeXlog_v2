@@ -45,16 +45,16 @@
         <td class="align-middle">{{ sl.1.ro.0.3|truncatechars:200 }}</td>
         <td class="align-middle">
           <p>
-            <a href="{% url 'Talent:APV' tlt_id=sl.0 vac_id=vacancy.id %}" target="_blank" class="badge badge-success badge-pill float-right" style="width: 5rem">View Profile</a>
-            <form  action="{% url 'MarketPlace:VacInterview' tlt=sl.0  vac=vacancy.pk %}" method="post">
+            <a href="{% url 'Talent:APV' tlt=sl.1.ro.0.4 vac=vacancy.ref_no %}" target="_blank" class="badge badge-success badge-pill float-right" style="width: 5rem">View Profile</a>
+            <form  action="{% url 'MarketPlace:VacInterview' tlt=sl.1.ro.0.4 vac=vacancy.ref_no %}" method="post">
               {% csrf_token %}
               <button type="submit" class="badge badge-info badge-pill float-right" style="width: 5rem">Interview</button>
             </form>
-            <form  action="{% url 'MarketPlace:VacAssign' tlt=sl.0  vac=vacancy.pk %}?next={{ request.path|urlencode }}" method="post">
+            <form  action="{% url 'MarketPlace:VacAssign' tlt=sl.1.ro.0.4 vac=vacancy.ref_no %}?next={{ request.path|urlencode }}" method="post">
               {% csrf_token %}
               <button type="submit" class="badge badge-success badge-pill float-right" style="width: 5rem">Assign</button>
             </form>
-            <form  action="{% url 'MarketPlace:VacDecline' tlt=sl.0  vac=vacancy.pk %}" method="post">
+            <form  action="{% url 'MarketPlace:VacDecline' tlt=sl.1.ro.0.4 vac=vacancy.ref_no %}" method="post">
               {% csrf_token %}
               <button type="submit" class="badge badge-danger badge-pill float-right" style="width: 5rem">Decline</button>
             </form>

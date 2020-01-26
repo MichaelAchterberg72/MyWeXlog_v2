@@ -177,14 +177,14 @@ def DeleteAchievementView(request, ach_pk):
 @login_required()
 @csp_exempt
 def LicenseCertificationCaptureView(request):
-    tlt = get_object_or_404(CustomUser, pk=request.user.id)
+    tlt_i = get_object_or_404(CustomUser, pk=request.user.id)
     form = LicenseCertificationForm(request.POST or None)
 
     if form.is_valid():
         new = form.save(commit=False)
-        new.talent = tlt
+        new.talent = tlt_i
         new.save()
-        return redirect(reverse ('Profile:ProfileView', kwargs={'profile_id':tlt.id})+'#memberships')
+        return redirect(reverse ('Profile:ProfileView', kwargs={'tlt':tlt_i.alias})+'#memberships')
     else:
         template = 'talenttrack/membership_view.html'
         context = {'form': form,}
@@ -193,14 +193,14 @@ def LicenseCertificationCaptureView(request):
 
 @login_required()
 @csp_exempt
-def LicenseCertificationEditView(request, lcm_id):
-    lcm = LicenseCertification.objects.get(pk=lcm_id)
-    form = LicenseCertificationForm(request.POST or None, instance=lcm)
+def LicenseCertificationEditView(request, lcm):
+    lcm_i = LicenseCertification.objects.get(slug=lcm)
+    form = LicenseCertificationForm(request.POST or None, instance=lcm_i)
 
     if form.is_valid():
         edit = form.save(commit=False)
         edit.save()
-        return redirect(reverse ('Profile:ProfileView', kwargs={'profile_id':lcm.talent.id})+'#memberships')
+        return redirect(reverse ('Profile:ProfileView', kwargs={'tlt':lcm_i.talent.alias})+'#memberships')
     else:
         template = 'talenttrack/membership_view.html'
         context = {'form': form,}
@@ -208,38 +208,39 @@ def LicenseCertificationEditView(request, lcm_id):
 
 
 @login_required()
-def LicenseCertificationDeleteView(request, lcm_id):
-    lcm = LicenseCertification.objects.get(pk=lcm_id)
+def LicenseCertificationDeleteView(request, pk, tlt):
+    lcm = LicenseCertification.objects.get(pk=pk)
     if lcm.talent == request.user:
         if request.method =='POST':
             lcm.delete()
-            return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':lcm.talent.id})+'#memberships')
+            return redirect(reverse('Profile:ProfileView', kwargs={'tlt':tlt})+'#memberships')
     else:
         raise PermissionDenied
 
 
 @login_required()
 @subscription(2)
-def ActiveProfileView(request, tlt_id, vac_id):
+def ActiveProfileView(request, tlt, vac):
     #caching
-    bch = BriefCareerHistory.objects.filter(talent=tlt_id).order_by('-date_from')
-    pfl = Profile.objects.only('background', 'alias', 'mentor', 'motivation').filter(talent=tlt_id)
-    als = Profile.objects.only('background', 'alias', 'mentor', 'motivation', 'std_rate', 'currency').get(talent=tlt_id)
-    padd = PhysicalAddress.objects.only('country', 'region', 'city').get(talent=tlt_id)
-    vacancy = TalentRequired.objects.get(pk=vac_id)
-    skr = SkillRequired.objects.filter(scope=vac_id).values_list('skills', flat=True).distinct('skills')
+    bch = BriefCareerHistory.objects.filter(talent__alias=tlt).order_by('-date_from')
+    pfl = Profile.objects.only('id','background', 'alias', 'mentor', 'motivation', 'std_rate', 'currency').filter(alias=tlt)
+    print('tlt:', tlt, 'pfl:', pfl)
+    als = get_object_or_404(Profile, alias=tlt)
+    padd = PhysicalAddress.objects.only('country', 'region', 'city').filter(talent__alias=tlt)
+    vacancy = TalentRequired.objects.filter(ref_no=vac)
+    skr = SkillRequired.objects.filter(scope__ref_no=vac).values_list('skills', flat=True).distinct('skills')
     skill_qs = SkillTag.objects.all()
-    exp = WorkExperience.objects.filter(talent=tlt_id).select_related('topic', 'course', 'project')
-    edtexp = exp.order_by('-date_from')
-    bkl = ReadBy.objects.filter(talent=tlt_id).select_related('book', 'type')[:6]
+    exp = WorkExperience.objects.filter(talent__alias=tlt).select_related('topic', 'course', 'project')
+    edtexp = exp.filter(edt=True).order_by('-date_from')
+    bkl = ReadBy.objects.filter(talent__alias=tlt).select_related('book', 'type')[:6]
     bkl_count = bkl.count()
     prj_qs = ProjectData.objects.all()
-    bid_qs = WorkBid.objects.filter(Q(talent=tlt_id) & Q(work=vac_id))
-    achievement_qs = Achievements.objects.filter(talent=tlt_id).order_by('-date_achieved')
-    language_qs = LanguageTrack.objects.filter(talent=tlt_id).order_by('-language')
-    membership_qs = LicenseCertification.objects.filter(talent=tlt_id).order_by('-issue_date')
-    bslist_qs = BidShortList.objects.filter(Q(talent=tlt_id) & Q(scope=vac_id))
-    int_list = BidInterviewList.objects.filter(Q(talent=tlt_id) & Q(scope=vac_id))
+    bid_qs = WorkBid.objects.filter(Q(talent__alias=tlt) & Q(work__ref_no=vac))
+    achievement_qs = Achievements.objects.filter(talent__alias=tlt).order_by('-date_achieved')
+    language_qs = LanguageTrack.objects.filter(talent__alias=tlt).order_by('-language')
+    membership_qs = LicenseCertification.objects.filter(talent__alias=tlt).order_by('-issue_date')
+    bslist_qs = BidShortList.objects.filter(Q(talent__alias=tlt) & Q(scope__ref_no=vac))
+    int_list = BidInterviewList.objects.filter(Q(talent__alias=tlt) & Q(scope__ref_no=vac))
 
     #Project Summary
     prj = exp.values_list('project', flat=True).distinct('project')
@@ -302,16 +303,16 @@ def ActiveProfileView(request, tlt_id, vac_id):
 
     template = 'talenttrack/active_profile_view.html'
     context = {
-        'bch': bch,'pfl': pfl, 'padd': padd,'vacse_set': vacse_set, 'vacst_set': vacst_set, 'als': als, 'exp': exp, 'bkl': bkl, 'edtexp': edtexp, 'bkl_count': bkl_count, 'prj_set': prj_set, 'prj_count': prj_count, 'bid_qs': bid_qs, 'achievement_qs': achievement_qs, 'language_qs': language_qs, 'membership_qs': membership_qs, 'bslist_qs': bslist_qs, 'vacancy': vacancy, 'int_list': int_list,
+        'bch': bch,'pfl': pfl, 'padd': padd,'vacse_set': vacse_set, 'vacst_set': vacst_set, 'exp': exp, 'bkl': bkl, 'edtexp': edtexp, 'bkl_count': bkl_count, 'prj_set': prj_set, 'prj_count': prj_count, 'bid_qs': bid_qs, 'achievement_qs': achievement_qs, 'language_qs': language_qs, 'membership_qs': membership_qs, 'bslist_qs': bslist_qs, 'vacancy': vacancy, 'int_list': int_list, 'als': als
         }
     return render(request, template, context)
 
 
 @login_required()
 @subscription(1)
-def LCMFullView(request, tlt_id):
-    tlt = Profile.objects.get(pk=tlt_id)
-    lcm_qs = LicenseCertification.objects.filter(talent=tlt_id).order_by('-issue_date')
+def LCMFullView(request, tlt):
+    tlt = Profile.objects.get(alias=tlt)
+    lcm_qs = LicenseCertification.objects.filter(talent__alias=tlt).order_by('-issue_date')
 
     template = 'talenttrack/lcm_full_view.html'
     context = {
@@ -322,11 +323,11 @@ def LCMFullView(request, tlt_id):
 
 @login_required()
 @subscription(2)
-def SkillProfileDetailView(request, tlt_id):
-    tlt = Profile.objects.get(talent=tlt_id)
+def SkillProfileDetailView(request, tlt):
+    tlt_p = Profile.objects.get(alias=tlt)
     skill_qs = SkillTag.objects.all()
     exp = WorkExperience.objects.filter(
-        talent = tlt_id).select_related('topic')
+        talent__alias = tlt).select_related('topic')
 
     exp_s = exp.values_list('skills', flat=True).distinct('skills')
     exp_t = exp.order_by('topic__skills').values_list('topic__skills', flat=True).distinct('topic__skills')
@@ -381,14 +382,14 @@ def SkillProfileDetailView(request, tlt_id):
 
     template = 'talenttrack/talent_detail_summary.html'
     context = {
-        'edt_set': edt_set, 'exp_set': exp_set, 'tlt': tlt,
+        'edt_set': edt_set, 'exp_set': exp_set, 'tlt_p': tlt_p,
     }
     return render(request, template, context)
 
 
 @login_required()
 def SumAllExperienceView(request):
-    pfl = Profile.objects.get(pk=request.user.id)
+    tlt_p = Profile.objects.get(pk=request.user.id)
     skill_qs = SkillTag.objects.all()
     exp = WorkExperience.objects.filter(
         talent = request.user.id).select_related('topic')
@@ -446,7 +447,7 @@ def SumAllExperienceView(request):
 
     template = 'talenttrack/talent_detail_summary.html'
     context = {
-        'edt_set': edt_set, 'exp_set': exp_set
+        'edt_set': edt_set, 'exp_set': exp_set, 'tlt_p': tlt_p
     }
     return render(request, template, context)
 

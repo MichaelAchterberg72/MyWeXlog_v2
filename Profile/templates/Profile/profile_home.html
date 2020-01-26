@@ -60,7 +60,7 @@ Summary information relating to the user's network. Number of people on each lev
 {% endblock score %}
 
 {% block TBA %}
-<a href="{% url 'Talent:APV' tlt_id=request.user.id vac_id=1 %}" target="_blank" class="btn btn-success">My Public Profile</a> <br>
+<a href="{% url 'Talent:APV' tlt=request.user.alias vac='1ad9t2' %}" target="_blank" class="btn btn-success">My Public Profile</a> <br>
 <a href="{% url 'Talent:DPCSum' %}" class="btn btn-primary">Designation, Project & Company Summary</a>
 {% endblock TBA %}
 

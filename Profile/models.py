@@ -4,7 +4,7 @@ from django.conf import settings
 from time import time
 from random import random
 from django.urls import reverse
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 
 
 from django_countries.fields import CountryField
@@ -182,6 +182,7 @@ class LanguageTrack(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
     language = models.ForeignKey(LanguageList, on_delete=models.PROTECT)
     level = models.CharField(max_length=1, choices=LVL, default="B")
+    slug = models.SlugField(max_length=15, blank=True, null=True)
 
     class Meta:
         unique_together = (('talent','language'),)
@@ -190,11 +191,19 @@ class LanguageTrack(models.Model):
         return '{} - {} ({})'.format(self.talent, self.language, self.level)
 
 
+def Language_slug(sender, instance, *args, **kwargs):
+    if not instance.slug:
+        instance.slug = f'{instance.talent.id}{instance.language.id}'
+
+pre_save.connect(Language_slug, sender=LanguageTrack)
+
+
 class Email(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True, related_name='Customuser_email')
     email = models.EmailField(unique=True)
     active = models.BooleanField(default=False)
     company = models.ForeignKey(Enterprise, on_delete=models.SET_NULL, null=True, blank=True)
+    slug = models.SlugField(max_length=50, null=True, unique=True, blank=True)
 
     class Meta:
         unique_together = (('talent','email'),)
@@ -204,6 +213,13 @@ class Email(models.Model):
 
     def __str__(self):
         return self.email
+
+
+def Email_slug(sender, instance, *args, **kwargs):
+    if not instance.slug:
+        instance.slug = f'{instance.talent.id}{instance.id}'
+
+pre_save.connect(Email_slug, sender=Email)
 
 
 class PhysicalAddress(models.Model):

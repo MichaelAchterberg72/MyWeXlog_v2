@@ -8,7 +8,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 from locations.models import Region, City, Suburb
 from db_flatten.models import PhoneNumberType
 
-# Industries: Mining & Metals: Process, Mining & Metals:Underground, Mining & Metals:Open Pit, PetroChem, FMCG, Food & Beverage, Agriculture, Retail, Aviation, 
+# Industries: Mining & Metals: Process, Mining & Metals:Underground, Mining & Metals:Open Pit, PetroChem, FMCG, Food & Beverage, Agriculture, Retail, Aviation,
 class Industry(models.Model):
     industry = models.CharField(max_length=60, unique=True)
 
@@ -21,7 +21,7 @@ class Industry(models.Model):
 class Enterprise(models.Model):
     name = models.CharField('Enterprise name', max_length=250, unique=True)
     description = models.TextField('Enterprise description')
-    website = models.URLField('Website (begin with "http://")', blank=True, null=True)
+    website = models.URLField(blank=True, null=True)
 
     def clean(self):
         self.name = self.name.capitalize()

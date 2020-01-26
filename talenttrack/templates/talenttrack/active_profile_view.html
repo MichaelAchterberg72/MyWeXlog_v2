@@ -14,7 +14,7 @@
         {% if int_list %}
           <button type="button" name="button"class="btn btn-success ">Already on Interview List</button>
         {% else %}
-          <form  action="{% url 'MarketPlace:InterviewList' tlt=als.pk  vac=vacancy.pk %}" method="post">
+          <form  action="{% url 'MarketPlace:InterviewList' tlt=als.alias  vac=vacancy.ref_no %}" method="post">
             {% csrf_token %}
             <button type="submit" class="btn btn-success float-right" style="width: 5rem">Interview</button>
           </form>
@@ -24,7 +24,7 @@
         {% if bslist_qs %}
           <button type="button" name="button"class="btn btn-secondary ">Already Shortlisted</button>
         {% else %}
-        <form  action="{% url 'MarketPlace:ShortList' tlt=als.pk  s_list=vacancy.pk %}" method="post">
+        <form  action="{% url 'MarketPlace:ShortList' tlt=als.alias  vac=vacancy.ref_no %}" method="post">
           {% csrf_token %}
           <button type="submit" class="btn btn-info float-right" style="width: 5rem;">Short-list</button>
         </form>
@@ -41,7 +41,7 @@
 </div>
 <div class="card">
   <div class="card-header">
-    <a href="{% url 'Talent:SPDView' als.id %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right" >View All Skills</a>
+    <a href="{% url 'Talent:SPDView' als.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right" >View All Skills</a>
     <h5>Vacancy Skills Match</h5>
   </div>
   <div class="row">
@@ -188,7 +188,7 @@
             <hr>
             <div class="class="card-title"">
               {% if membership_qs %}
-                <a href="{% url 'Talent:LCM_FV' als.id %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">All Detail</a>
+                <a href="{% url 'Talent:LCM_FV' als.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">All Detail</a>
               {% else %}
 
               {% endif %}
@@ -300,7 +300,7 @@
   <div class="card">
     <div class="card-header">
       {% if bkl %}
-        <a href="{% url 'BookList:VPBL' als.id %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Books</a>
+        <a href="{% url 'BookList:VPBL' als.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Books</a>
       {% else %}
 
       {% endif %}

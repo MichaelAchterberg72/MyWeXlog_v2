@@ -53,9 +53,9 @@ def BookListHome(request, profile_id=None):
 @subscription(2)
 @csp_exempt
 #This view is for the profile to display the complete list of books read.
-def ProfileBookList(request, tlt_id):
-    info = get_object_or_404(Profile, talent=tlt_id)
-    bkl = ReadBy.objects.filter(talent=tlt_id).order_by('-date')
+def ProfileBookList(request, tlt):
+    info = get_object_or_404(Profile, talent__alias=tlt)
+    bkl = ReadBy.objects.filter(talent__alias=tlt).order_by('-date')
     bkl_count = bkl.count()
 
     template_name = 'booklist/vac_profile_list.html'

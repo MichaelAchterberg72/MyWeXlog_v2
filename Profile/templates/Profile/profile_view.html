@@ -5,14 +5,14 @@
 
 {% block content %}
 <div class="card-header">
-  <a href="{% url 'Talent:APV' tlt_id=user_info.id vac_id=1 %}" target="_blank" class="btn btn-success float-right">View Your Public Profile</a>
+  <a href="{% url 'Talent:APV' tlt=user_info.alias vac='1ad9t2' %}" target="_blank" class="btn btn-success float-right">View Your Public Profile</a>
   <h5>Review Your Profile</h5>
 </div>
   <div class="card-group">
     <div class="card">
       <div class="card-body">
         {% for d in info %}
-          <h5 class="card-title">Basic Information <a href="{% url 'Profile:ProfileEdit' d.id %}?next={{ request.path|urlencode }}" class="badge badge-secondary float-right">Edit</a></h5>
+          <h5 class="card-title">Basic Information <a href="{% url 'Profile:ProfileEdit' d.alias %}?next={{ request.path|urlencode }}" class="badge badge-secondary float-right">Edit</a></h5>
           <p class="card-text">Name: {{ user_info.first_name }} {{ user_info.last_name }}</p>
           <p class="card-text">Display name: {{ user_info.alias }}</p>
           <p class="card-text">Date of Birth: {{ d.birth_date }}</p>
@@ -21,7 +21,7 @@
           <p class="card-text">Motivation:<br>{{ d.motivation|linebreaks }}</p>
           <p class="card-text">Do you wish to be a mentor to others? {{ d.get_mentor_display }}</p>
         <div class="card-footer bg-transparent border-success"></div>
-          <h5 class="card-title">Online Profiles <a href="{% url 'Profile:OnlineProfileAdd' request.user.id %}" class="badge badge-primary float-right">Add</a></h5>
+          <h5 class="card-title">Online Profiles <a href="{% url 'Profile:OnlineProfileAdd' request.user.alias %}" class="badge badge-primary float-right">Add</a></h5>
           <table class="table table-sm" id="online">
             <thead>
               <tr>
@@ -35,7 +35,7 @@
                 <td>{{ s.sitename }}</td>
                 <td><a href="{{ s.profileurl }}">{{ s.profileurl }}</a></td>
                 <td>
-                  <form  action="{% url 'Profile:OnlineDelete' s.id %}" method="post">
+                  <form  action="{% url 'Profile:OnlineDelete' pk=s.id tlt=s.talent.alias %}" method="post">
                     {% csrf_token %}
                     <button type="submit" class="badge badge-danger badge-pill">Remove</button>
                   </form>
@@ -48,8 +48,8 @@
           </table>
 
           <div class="card-footer bg-transparent border-success"></div>
-          <h5 class="card-title">Languages <a href="{% url 'Profile:LanguageAdd' request.user.id %}" class="badge badge-primary float-right">Add</a></h5>
-          <table class="table table-sm">
+          <h5 class="card-title">Languages <a href="{% url 'Profile:LanguageAdd' request.user.alias %}" class="badge badge-primary float-right">Add</a></h5>
+          <table class="table table-sm" id="language">
             <col width="35%">
             <col width="30%">
             <col width="35%">
@@ -66,8 +66,8 @@
                 <td class="align-middle text-center">{{ l.language }}</td>
                 <td class="align-middle text-center">{{ l.get_level_display }}</td>
                 <td class="align-middle text-center">
-                  <a href="{% url 'Profile:LanguageEdit' profile_id=request.user.id lang_id=l.id %}" class="badge badge-secondary badge-pill" style="width: 5rem;">Edit</a>
-                  <form  action="{% url 'Profile:LanguageDelete' l.id %}" method="post">
+                  <a href="{% url 'Profile:LanguageEdit' tlt=request.user.alias lang=l.slug %}" class="badge badge-secondary badge-pill" style="width: 5rem;">Edit</a>
+                  <form  action="{% url 'Profile:LanguageDelete' lang_id=l.id tlt=l.talent.alias %}" method="post">
                     {% csrf_token %}
                     <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
                   </form>
@@ -83,7 +83,7 @@
     </div>
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title" id="email">Email addresses <a href="{% url 'Profile:EmailEdit' d.id %}?next={{ request.path|urlencode }}" class="badge badge-primary float-right">Add</a></h5>
+      <h5 class="card-title" id="email">Email addresses <a href="{% url 'Profile:EmailEdit' d.alias %}?next={{ request.path|urlencode }}" class="badge badge-primary float-right">Add</a></h5>
       <h6>Past (No longer active)</h6>
       {% for e in email %}
       {% if e.active is False %}
@@ -91,8 +91,8 @@
         <li class="list-group-item d-flex justify-content-between align-items-center">
           {{ e.email }}
           <span>
-            <a href="{% url 'Profile:EmailStatus' profile_id=request.user.id email_id=e.id %}" class="badge badge-primary badge-pill">Change Status</a>
-            <form  action="{% url 'Profile:EmailDelete' e.id %}" method="post">
+            <a href="{% url 'Profile:EmailStatus' tlt=e.talent.alias eml=e.slug %}" class="badge badge-primary badge-pill">Change Status</a>
+            <form  action="{% url 'Profile:EmailDelete' pk=e.id tlt=e.talent.alias %}" method="post">
               {% csrf_token %}
               <button type="submit" class="badge badge-danger badge-pill">Remove</button>
             </form>
@@ -108,8 +108,8 @@
         <li class="list-group-item d-flex justify-content-between align-items-center">
           {{ e.email }}
           <span>
-            <a href="{% url 'Profile:EmailStatus' profile_id=request.user.id email_id=e.id %}" class="badge badge-primary badge-pill">Change Status</a>
-            <form  action="{% url 'Profile:EmailDelete' e.id %}" method="post">
+            <a href="{% url 'Profile:EmailStatus' tlt=e.talent.alias eml=e.slug %}" class="badge badge-primary badge-pill">Change Status</a>
+            <form  action="{% url 'Profile:EmailDelete' pk=e.id tlt=e.talent.alias %}" method="post">
               {% csrf_token %}
               <button type="submit" class="badge badge-danger badge-pill">Remove</button>
             </form>
@@ -179,8 +179,8 @@
               <td class="align-middle text-center">Expired</td>
             {% endif %}
             <td class="card-text text-justify">
-              <a href="{% url 'Talent:LCMEdit' lcm.id %}" class="badge badge-secondary" style="width: 4rem;">Edit</a>
-              <form  action="{% url 'Talent:LCMDelete' lcm.id %}" method="post">
+              <a href="{% url 'Talent:LCMEdit' lcm.slug %}" class="badge badge-secondary" style="width: 4rem;">Edit</a>
+              <form  action="{% url 'Talent:LCMDelete' pk=lcm.id tlt=lcm.talent.alias %}" method="post">
                 {% csrf_token %}
                 <button type="submit" class="badge badge-danger" style="width: 4rem;">Remove</button>
               </form>

@@ -19,6 +19,7 @@ urlpatterns = [
     path('popup/topic/add/', views.TopicAddPopup, name="TopicAddPop"),
     path('popup/ajax/get_topic_id/', views.get_topic_id, name="AJAX_GetTopicID"),
     path('lecturer/select/', views.LecturerSelectView, name='LecturerSelect'),
+
     path('lecturer/<int:pk>/add/', views.LecturerAddView, name='LecturerAdd'),
     path('education/detail/<int:edu_id>/', views.EducationDetail, name='EducationDetail'),
     path('lecturer/detail/<int:pk>/', views.LecturerResponse, name='LecturerResponse'),
@@ -44,23 +45,24 @@ urlpatterns = [
     path('client/select/<int:pk>/', views.ClientSelectView, name='ClientSelect'),
     path('client/add/<int:pk>/', views.ClientAddView, name='ClientAdd'),
     path('client/detail/<int:pk>/', views.ClientResponseView, name='ClientResponse'),
-    
+
     path('experience/detail/<int:exp_id>/', views.ExperienceDetailView, name='ExperienceDetail'),
 
 
     path('prelogged/capture/', views.PreLoggedExperienceCaptureView, name="PreloggedCapture"),
     path('prelogged/<int:pre_id>/detail/', views.PreLogDetailView, name='PreLogDetail'),
     path('experience-detail/', views.SumAllExperienceView, name='ExperienceSum'),
-    path('skill-profile-detail/<int:tlt_id>/', views.SkillProfileDetailView, name='SPDView'),
+    path('skill-profile-detail/<slug:tlt>/', views.SkillProfileDetailView, name='SPDView'),
     path('dpc-detail/', views.DPC_SummaryView, name='DPCSum'),
-    path('apv/<int:tlt_id>/<int:vac_id>/', views.ActiveProfileView, name='APV'),
+    path('apv/<slug:tlt>/<slug:vac>/', views.ActiveProfileView, name='APV'),
     path('achievement-capture/', views.CaptureAchievementView, name='AchieveCap'),
+
     path('achievement-edit/<int:ach_pk>/', views.EditAchievementView, name='AchieveEdit'),
     path('achievement-del/<int:ach_pk>/', views.DeleteAchievementView, name='AchieveDelete'),
     path('lcm-capture/', views.LicenseCertificationCaptureView, name='LCMCap'),
-    path('lcm-edit/<int:lcm_id>/', views.LicenseCertificationEditView, name='LCMEdit'),
-    path('lcm-del/<int:lcm_id>/', views.LicenseCertificationDeleteView, name='LCMDelete'),
-    path('lcm-fv/<int:tlt_id>/', views.LCMFullView, name='LCM_FV'),
+    path('lcm-edit/<slug:lcm>/', views.LicenseCertificationEditView, name='LCMEdit'),
+    path('lcm-del/<int:pk>/<slug:tlt>/', views.LicenseCertificationDeleteView, name='LCMDelete'),
+    path('lcm-fv/<slug:tlt>/', views.LCMFullView, name='LCM_FV'),
     path('ple-del/<int:ple_pk>/', views.PreLoggedExperienceDeleteView, name='PLEDelete'),
     path('we-del/<int:we_pk>/', views.WorkExperienceDeleteView, name='WEDelete'),
     path('edt-del/<int:edt_pk>/', views.EducationDeleteView, name='EDTDelete'),

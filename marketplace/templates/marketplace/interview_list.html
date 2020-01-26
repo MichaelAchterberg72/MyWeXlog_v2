@@ -44,12 +44,12 @@
         <td class="align-middle">{{ sl.1.ro.0.3|truncatechars:200 }}</td>
         <td class="align-middle">
           <p>
-            <a href="{% url 'Talent:APV' tlt_id=sl.0 vac_id=scope.id %}" target="_blank" class="badge badge-secondary badge-pill float-right" style="width: 6rem">View Profile</a>
-            <form  action="{% url 'MarketPlace:Suitable' tlt_id=sl.0  vac_id=scope.pk %}" method="post">
+            <a href="{% url 'Talent:APV' tlt=sl.1.ro.0.4  ref=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill float-right" style="width: 6rem">View Profile</a>
+            <form  action="{% url 'MarketPlace:Suitable' tlt=sl.1.ro.0.4  ref=scope.ref_no %}" method="post">
               {% csrf_token %}
               <button type="submit" class="badge badge-success badge-pill float-right" style="width: 6rem">Suitable</button>
             </form>
-            <form  action="{% url 'MarketPlace:NotSuitable' tlt_id=sl.0  vac_id=scope.pk %}" method="post">
+            <form  action="{% url 'MarketPlace:NotSuitable' tlt=sl.1.ro.0.4  ref=scope.ref_no %}" method="post">
               {% csrf_token %}
               <button type="submit" class="badge badge-danger badge-pill float-right" style="width: 6rem">Not Suitable</button>
             </form>

@@ -9,7 +9,7 @@
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
       <script src="https://kit.fontawesome.com/7e5855a9eb.js" crossorigin="anonymous"></script>
 
-      <title>{% block title %}WeXlog{% endblock title %}</title>
+      <title>{% block title %}WeXlog Dashboard{% endblock title %}</title>
   {% block Style %}
   {% endblock Style %}
   </head>
@@ -26,7 +26,7 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item active">
-          <a class="nav-link" href="{% url 'Profile:ProfileHome' %}">My Profile <span class="sr-only">(current)</span></a>
+          <a class="nav-link" href="{% url 'Profile:ProfileHome' %}">Dashboard <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{% url 'Talent:Home' %}">Experience</a>
@@ -50,7 +50,7 @@
         <img src="{% static 'images/user-unisex-512.png' %}" height="45" width="45" class="avatar">
     </button>
       <div class="dropdown-menu dropdown-menu-right">
-        <a class="dropdown-item"  href="{% url 'Profile:ProfileView' request.user.id %}">View Profile</a>
+        <a class="dropdown-item"  href="{% url 'Profile:ProfileView' request.user.alias %}">View Profile</a>
 
         <a class="dropdown-item"  href="{% url 'Invitation:FlatInvite' %}">Invite Someone</a>
 

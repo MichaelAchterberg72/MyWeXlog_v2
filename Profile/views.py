@@ -47,7 +47,7 @@ from marketplace.forms import(
         AssignmentDeclineReasonsForm, AssignmentClarifyForm
         )
 
-
+#This is the Dashboard view...
 @login_required()
 def ProfileHome(request):
     #WorkFlow Card
@@ -96,6 +96,7 @@ def AssignmentAcceptView(request, slug):
     assignment.update(tlt_response='A', tlt_response_date=timezone.now())
 
     return redirect(reverse('Profile:ProfileHome')+'#Assignment')
+
 
 @login_required()
 @subscription(1)
@@ -645,11 +646,11 @@ def PreColleagueWrongPersonView(request, pk):
 
 
 @login_required()
-def OnlineDelete(request, pk):
+def OnlineDelete(request, pk, tlt):
     if request.method == 'POST':
         site = OnlineRegistrations.objects.get(pk=pk)
         site.delete()
-    return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':site.talent.id})+'#online')
+    return redirect(reverse('Profile:ProfileView', kwargs={'tlt': tlt})+'#online')
 
 
 @login_required()
@@ -705,8 +706,8 @@ def PassportEditView(request, p_id, profile_id):
 #>>>Language Views
 @csp_exempt
 @login_required()
-def LanguageAddView(request, profile_id):
-    detail = Profile.objects.get(talent=profile_id)
+def LanguageAddView(request, tlt):
+    detail = Profile.objects.get(alias=tlt)
     if detail.talent == request.user:
         form = LanguageTrackForm(request.POST or None)
         if request.method =='POST':
@@ -714,7 +715,7 @@ def LanguageAddView(request, profile_id):
                 new = form.save(commit=False)
                 new.talent = request.user
                 new.save()
-                return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':profile_id}))
+                return redirect(reverse('Profile:ProfileView', kwargs={'tlt':tlt}))
         else:
             template = 'Profile/language_add.html'
             context = {'form': form}
@@ -724,9 +725,9 @@ def LanguageAddView(request, profile_id):
 
 
 @login_required()
-def LanguageEditView(request, profile_id, lang_id):
-    detail = Profile.objects.get(talent=profile_id)
-    info = LanguageTrack.objects.get(pk=lang_id)
+def LanguageEditView(request, tlt, lang):
+    detail = Profile.objects.get(alias=tlt)
+    info = LanguageTrack.objects.get(slug=lang)
     if detail.talent == request.user:
         form = LanguageTrackForm(request.POST or None, instance=info)
         if request.method =='POST':
@@ -734,7 +735,7 @@ def LanguageEditView(request, profile_id, lang_id):
                 new = form.save(commit=False)
                 new.talent = request.user
                 new.save()
-                return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':profile_id}))
+                return redirect(reverse('Profile:ProfileView', kwargs={'tlt':tlt}))
         else:
             template = 'Profile/language_add.html'
             context = {'form': form}
@@ -744,12 +745,12 @@ def LanguageEditView(request, profile_id, lang_id):
 
 
 @login_required()
-def LanguageDeleteView(request, lang_id):
+def LanguageDeleteView(request, lang_id, tlt):
     info = LanguageTrack.objects.get(pk=lang_id)
     if info.talent == request.user:
         if request.method =='POST':
             info.delete()
-            return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':profile_id}))
+            return redirect(reverse('Profile:ProfileView', kwargs={'tlt': tlt})+'#language')
     else:
         raise PermissionDenied
 
@@ -859,35 +860,35 @@ def FileDelete(request, pk):
 
 
 login_required()
-def EmailDelete(request, pk):
+def EmailDelete(request, pk, tlt):
     detail = Email.objects.get(pk=pk)
     if detail.talent == request.user:
         if request.method =='POST':
             detail.delete()
-            return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':detail.talent.id})+'#email')
+            return redirect(reverse('Profile:ProfileView', kwargs={'tlt': tlt})+'#email')
     else:
         raise PermissionDenied
 
 
 @login_required()
-def ProfileView(request, profile_id):
-    detail = Profile.objects.get(talent=profile_id)
-    tlt = request.user.id
+def ProfileView(request, tlt):
+    detail = Profile.objects.get(alias=tlt)
+    tlt_id = request.user.id
     if detail.talent == request.user:
-        info = Profile.objects.filter(talent=profile_id)
-        email = Email.objects.filter(talent=profile_id)
-        physical = PhysicalAddress.objects.get(talent=profile_id)
-        postal = PostalAddress.objects.get(talent=profile_id)
-        pnumbers = PhoneNumber.objects.filter(talent=profile_id)
-        online = OnlineRegistrations.objects.filter(talent=profile_id)
-        upload = FileUpload.objects.filter(talent=profile_id)
-        id = IdentificationDetail.objects.filter(talent=profile_id)
-        passport = PassportDetail.objects.filter(talent=profile_id)
-        speak = LanguageTrack.objects.filter(talent=profile_id)
-        history = BriefCareerHistory.objects.filter(talent=profile_id).order_by('-date_from')
-        user_info = CustomUser.objects.get(pk=tlt)
-        achievement = Achievements.objects.filter(talent=tlt).order_by('-date_achieved')
-        lcm_qs = LicenseCertification.objects.filter(talent=tlt).order_by('-issue_date')
+        info = Profile.objects.filter(alias=tlt)
+        email = Email.objects.filter(talent__alias=tlt)
+        physical = PhysicalAddress.objects.get(talent__alias=tlt)
+        postal = PostalAddress.objects.get(talent__alias=tlt)
+        pnumbers = PhoneNumber.objects.filter(talent__alias=tlt)
+        online = OnlineRegistrations.objects.filter(talent__alias=tlt)
+        upload = FileUpload.objects.filter(talent__alias=tlt)
+        id = IdentificationDetail.objects.filter(talent__alias=tlt)
+        passport = PassportDetail.objects.filter(talent__alias=tlt)
+        speak = LanguageTrack.objects.filter(talent__alias=tlt)
+        history = BriefCareerHistory.objects.filter(talent__alias=tlt).order_by('-date_from')
+        user_info = CustomUser.objects.get(pk=tlt_id)
+        achievement = Achievements.objects.filter(talent=tlt_id).order_by('-date_achieved')
+        lcm_qs = LicenseCertification.objects.filter(talent=tlt_id).order_by('-issue_date')
 
         template = 'Profile/profile_view.html'
         context = {
@@ -900,16 +901,16 @@ def ProfileView(request, profile_id):
 
 
 @login_required()
-def ProfileEditView(request, profile_id):
+def ProfileEditView(request, tlt):
     talent = request.user.id
-    detail = get_object_or_404(Profile, pk=profile_id)
+    detail = Profile.objects.get(alias=tlt)
     #work-around to get first and last names into fields. THere must be a better way for people smarter than me to fix! (JK)
     usr = list(CustomUser.objects.filter(pk=talent).values_list('first_name', 'last_name'))
 
     fn = usr[0][0]
     ln = usr[0][1]
 
-    Profile.objects.filter(pk=profile_id).update(f_name=fn, l_name=ln)
+    Profile.objects.filter(alias=tlt).update(f_name=fn, l_name=ln)
 
     if detail.talent == request.user:
         form = ProfileForm(request.POST or None, instance=detail)
@@ -935,8 +936,8 @@ def ProfileEditView(request, profile_id):
 
 @login_required()
 @csp_exempt
-def EmailEditView(request, profile_id):
-    detail = get_object_or_404(Profile, pk=profile_id)
+def EmailEditView(request, tlt):
+    detail = get_object_or_404(Profile, alias=tlt)
     if detail.talent == request.user:
         form = EmailForm(request.POST or None)
         if request.method =='POST':
@@ -961,9 +962,9 @@ def EmailEditView(request, profile_id):
 
 
 @login_required()
-def EmailStatusView(request, profile_id, email_id):
-    detail = Profile.objects.get(talent=profile_id)
-    detail2 = get_object_or_404(Email, pk=email_id)
+def EmailStatusView(request, tlt, eml):
+    detail = Profile.objects.get(alias=tlt)
+    detail2 = get_object_or_404(Email, slug=eml)
     if detail.talent == request.user:
         form = EmailStatusForm(request.POST or None, instance=detail2)
         if request.method =='POST':
@@ -971,7 +972,7 @@ def EmailStatusView(request, profile_id, email_id):
             if form.is_valid():
                 new=form.save(commit=False)
                 new.save()
-                return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':profile_id}))
+                return redirect(reverse('Profile:ProfileView', kwargs={'tlt':tlt}))
 
         else:
             template = 'Profile/email_status.html'
@@ -1056,8 +1057,8 @@ def PhoneNumberDelete(request, pk):
 
 @login_required()
 @csp_exempt
-def OnlineProfileAdd(request, profile_id):
-    detail = Profile.objects.get(talent=profile_id)
+def OnlineProfileAdd(request, tlt):
+    detail = Profile.objects.get(alias=tlt)
     if detail.talent == request.user:
         form =OnlineProfileForm(request.POST or None)
         if request.method =='POST':
@@ -1065,7 +1066,7 @@ def OnlineProfileAdd(request, profile_id):
                 new=form.save(commit=False)
                 new.talent = request.user
                 new.save()
-                return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':profile_id})+'#online')
+                return redirect(reverse('Profile:ProfileView', kwargs={'tlt':tlt})+'#online')
         else:
             template = 'Profile/online_profile_add.html'
             context = {'form': form}

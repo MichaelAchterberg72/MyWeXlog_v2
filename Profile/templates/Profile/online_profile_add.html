@@ -1,29 +1,10 @@
-{% extends 'profile/base_profile.html' %}
+{% extends 'base_home.html' %}
 {% load crispy_forms_tags %}
 {% load staticfiles %}
 
 {% block title %}My {{block.super}} Online Profiles{% endblock title %}
-{% block subStyle %}
 
-{% endblock subStyle %}
-
-{% block network %}
-
-{% endblock network %}
-
-{% block workflow %}
-
-{% endblock workflow %}
-
-{% block score %}
-
-{% endblock score %}
-
-{% block TBA %}
-
-{% endblock TBA %}
-
-{% block Center_Content %}
+{% block content %}
 {{ form.media.css }}
 <style type="text/css">
   select {
@@ -32,7 +13,7 @@
   </style>
 <div class="container">
 <h3>Add Online Profile</h3>
-<form method="post">
+<form method="post" novalidate>
   <input type="hidden" name="next" value="{{ request.GET.next }}">
   {% csrf_token %}
   <div class="form-row">
@@ -51,8 +32,8 @@
 </form>
 </div>
 
-{% endblock Center_Content %}
-{% block subScript %}
+{% endblock content %}
+{% block Script %}
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script type="text/javascript">
 <!-- code for popups -->
@@ -73,4 +54,4 @@ window.onerror = function (msg) {
   $("body").attr("JSError", msg);
 }
 </script>
-{% endblock subScript %}
+{% endblock Script %}

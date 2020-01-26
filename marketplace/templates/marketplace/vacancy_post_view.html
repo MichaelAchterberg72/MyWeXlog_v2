@@ -163,7 +163,7 @@
           <td class="align-middle">{{ key.1.ro.0.1 }} <strong>{{ key.1.ro.0.0 }}</strong> {{ key.1.ro.0.2 }}</td>
           <td class="align-middle">{{ key.1.ro.0.3|truncatechars:200 }}</td>
           <td class="align-middle"><p>
-          <form  action="{% url 'MarketPlace:ShortList' tlt=key.0  ref=instance.ref_no %}" method="post">
+          <form  action="{% url 'MarketPlace:ShortList' tlt=key.0  vac=instance.ref_no %}" method="post">
             {% csrf_token %}
             <button type="submit" class="badge badge-info badge-pill float-right" style="width: 5rem;">Short-list</button>
           </form><br>
