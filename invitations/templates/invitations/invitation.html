@@ -1,13 +1,10 @@
+{% extends "base_email.html" %}
 {% load pinax_referrals_tags %}
 {% url 'Talent:Home' as myurl %}
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
+{% load humanize %}
+{% load staticfiles %}
 
-  <head>
-    <meta charset="utf-8">
-    <title></title>
-  </head>
-  <body>
+{% block content %}
 
       <p>Hi {{ form.instance.name }},</p>
       <p>{{ form.instance.invited_by }} has indicated that you worked together while you were working at <strong>{{ form.instance.worked_for }}</strong>. {{ form.instance.invited_by }} kindly asks if you could confirm the work experience they have captured. </p>
@@ -20,5 +17,6 @@
       <p>The WexLog Team</p>
       <p>(for and on behalf of {{ form.instance.invited_by }})</p>
 
-  </body>
-</html>
+      <p>&nbsp</p>
+
+  {% enblock content %}

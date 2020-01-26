@@ -1,0 +1,16 @@
+{% extends "base_email.html" %}
+{% load humanize %}
+{% load staticfiles %}
+
+{% block content %}
+
+    <p>Hi {{ user }}!,</p>
+    <p>A friendly reminder that your subscription to <a href="www.wexlog.io">WeLog</a> has
+      was not processed and your account will be temporaly converted to a free account until this
+      subscription payment can be rectified. To enjoy the full bennefits that WexLog
+      can offer please check your PayPal account and make sure that payment is effected.</p>
+    <p>Thanks, we look forward to hearing from you soon.</p>
+    <p>&nbsp</p>
+    <p>- WexLog Team</p>
+
+{% endblock contnt %}
