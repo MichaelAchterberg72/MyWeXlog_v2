@@ -3,27 +3,8 @@
 {% load staticfiles %}
 
 {% block title %}My {{block.super}} Profile{% endblock title %}
-{% block subStyle %}
 
-{% endblock subStyle %}
-
-{% block network %}
-
-{% endblock network %}
-
-{% block workflow %}
-
-{% endblock workflow %}
-
-{% block score %}
-
-{% endblock score %}
-
-{% block TBA %}
-
-{% endblock TBA %}
-
-{% block Center_Content %}
+{% block content %}
 {{ form.media.css }}
 <style type="text/css">
   select {
@@ -48,8 +29,8 @@
 </form>
 </div>
 
-{% endblock Center_Content %}
-{% block subScript %}
+{% endblock content %}
+{% block Script %}
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <!-- code for popups -->
 <script type="text/javascript">
@@ -70,4 +51,4 @@ window.onerror = function (msg) {
   $("body").attr("JSError", msg);
 }
 </script>
-{% endblock subScript %}
+{% endblock Script %}

@@ -1,29 +1,10 @@
-{% extends 'profile/base_profile.html' %}
+{% extends 'base_home.html' %}
 {% load crispy_forms_tags %}
 {% load staticfiles %}
 
 {% block title %}My {{block.super}} Passports{% endblock title %}
-{% block subStyle %}
 
-{% endblock subStyle %}
-
-{% block network %}
-
-{% endblock network %}
-
-{% block workflow %}
-
-{% endblock workflow %}
-
-{% block score %}
-
-{% endblock score %}
-
-{% block TBA %}
-
-{% endblock TBA %}
-
-{% block Center_Content %}
+{% block content %}
 {{ form.media.css }}
 <style type="text/css">
   select {
@@ -48,7 +29,4 @@
 </form>
 </div>
 
-{% endblock Center_Content %}
-{% block subScript %}
-
-{% endblock subScript %}
+{% endblock content %}

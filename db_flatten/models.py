@@ -8,7 +8,7 @@ class PhoneNumberType(models.Model):
         return self.type
 
     def clean(self):
-        self.skill = self.skill.capitalize()
+        self.skill = self.type.capitalize()
 
 
 class SkillTag(models.Model):

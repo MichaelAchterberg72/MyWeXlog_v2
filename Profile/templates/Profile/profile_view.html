@@ -222,8 +222,8 @@
             <td class="align-middle text-center">{{ a.date_achieved|date:"j M Y"}}</td>
             <td class="align-middle text-left">{{ a.description|linebreaks}}</td>
             <td class="align-middle text-justify">
-              <a href="{% url 'Talent:AchieveEdit' a.id %}" class="badge badge-secondary" style="width: 4rem;">Edit</a>
-              <form  action="{% url 'Talent:AchieveDelete' a.id %}" method="post">
+              <a href="{% url 'Talent:AchieveEdit' a.slug %}" class="badge badge-secondary" style="width: 4rem;">Edit</a>
+              <form  action="{% url 'Talent:AchieveDelete' ach_i=a.id tlt=a.talent.alias %}" method="post">
                 {% csrf_token %}
                 <button type="submit" class="badge badge-danger" style="width: 4rem;">Remove</button>
               </form>
@@ -271,7 +271,7 @@
               {% if h.date_to %}
 
               {% else %}
-                <td><a href="{% url 'Profile:Resigned' h.id %}" class="badge badge-primary">I Resigned</a></td>
+                <td><a href="{% url 'Profile:Resigned' bch=h.slug tlt=h.talent.alias %}" class="badge badge-primary">I Resigned</a></td>
               {% endif %}
             </tr>
             {% endfor %}
@@ -284,7 +284,7 @@
 <div class="card-group">
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title">Uploaded Files <a href="{% url 'Profile:FileUploadView' request.user.id %}" class="badge badge-primary float-right">Add File</a></h5>
+      <h5 class="card-title">Uploaded Files <a href="{% url 'Profile:FileUploadView' %}" class="badge badge-primary float-right">Add File</a></h5>
       <table class="table table-sm">
         <thead>
         </thead>
@@ -309,7 +309,7 @@
 <div class="card-group">
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title">Identification Document <a href="{% url 'Profile:IdView' request.user.id %}" class="badge badge-secondary float-right">Edit</a></h5>
+      <h5 class="card-title">Identification Document <a href="{% url 'Profile:IdView' %}" class="badge badge-secondary float-right">Edit</a></h5>
       <table class="table table-sm">
         <thead>
           <tr>
@@ -330,7 +330,7 @@
   </div>
     <div class="card">
       <div class="card-body">
-        <h5 class="card-title">Passport Information <a href="{% url 'Profile:PassportAddView' request.user.id %}" class="badge badge-primary float-right">Add</a></h5>
+        <h5 class="card-title">Passport Information <a href="{% url 'Profile:PassportAddView' %}" class="badge badge-primary float-right">Add</a></h5>
         <table class="table table-sm" id="passport">
         <thead>
           <tr>
@@ -347,8 +347,8 @@
             <td class="align-middle text-center">{{ p.get_issue_display }}</td>
             <td class="align-middle text-center">{{ p.expiry_date }}</td>
             <td class="align-middle text-center">
-                <a href="{% url 'Profile:PassportEditView' p_id=p.id profile_id=request.user.id %}" class="badge badge-secondary badge-pill" style="width: 4rem;">Edit</a>
-                <form  action="{% url 'Profile:PassportDelete' p.id %}" method="post">
+                <a href="{% url 'Profile:PassportEditView' psp=p.slug tlt=p.talent.alias %}" class="badge badge-secondary badge-pill" style="width: 4rem;">Edit</a>
+                <form  action="{% url 'Profile:PassportDelete' pk=p.id tlt=p.talent.alias %}" method="post">
                   {% csrf_token %}
                   <button type="submit" class="badge badge-danger badge-pill" style="width: 4rem;">Remove</button>
                 </form>
@@ -367,7 +367,7 @@
   <div class="card">
     <div class="card-body">
 
-      <h5 class="card-title">Physical Address <a href="{% url 'Profile:PhysicalAddress' physical.talent.id %}" class="badge badge-secondary float-right">Edit</a></h5>
+      <h5 class="card-title">Physical Address <a href="{% url 'Profile:PhysicalAddress' %}" class="badge badge-secondary float-right">Edit</a></h5>
       <table class="table table-sm">
         <thead>
         </thead>
@@ -411,7 +411,7 @@
   </div>
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title">Postal Address <a href="{% url 'Profile:PostalAddress' postal.talent.id %}" class="badge badge-secondary float-right">Edit</a></h5>
+      <h5 class="card-title">Postal Address <a href="{% url 'Profile:PostalAddress' %}" class="badge badge-secondary float-right">Edit</a></h5>
       <table class="table table-sm">
         <thead>
         </thead>
@@ -454,7 +454,7 @@
   </div>
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title">Phone Numbers <a href="{% url 'Profile:PhoneNumberAdd' postal.talent.id %}" class="badge badge-primary float-right">Add</a></h5>
+      <h5 class="card-title">Phone Numbers <a href="{% url 'Profile:PhoneNumberAdd' %}" class="badge badge-primary float-right">Add</a></h5>
       <div id="phone">
         <table class="table table-sm">
           <col width="20%">

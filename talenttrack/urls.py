@@ -57,8 +57,9 @@ urlpatterns = [
     path('apv/<slug:tlt>/<slug:vac>/', views.ActiveProfileView, name='APV'),
     path('achievement-capture/', views.CaptureAchievementView, name='AchieveCap'),
 
-    path('achievement-edit/<int:ach_pk>/', views.EditAchievementView, name='AchieveEdit'),
-    path('achievement-del/<int:ach_pk>/', views.DeleteAchievementView, name='AchieveDelete'),
+    path('achievement-edit/<slug:ach>/', views.EditAchievementView, name='AchieveEdit'),
+    path('achievement-del/<int:ach_i>/<slug:tlt>/', views.DeleteAchievementView, name='AchieveDelete'),
+
     path('lcm-capture/', views.LicenseCertificationCaptureView, name='LCMCap'),
     path('lcm-edit/<slug:lcm>/', views.LicenseCertificationEditView, name='LCMEdit'),
     path('lcm-del/<int:pk>/<slug:tlt>/', views.LicenseCertificationDeleteView, name='LCMDelete'),

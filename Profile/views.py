@@ -219,13 +219,13 @@ def BriefCareerHistoryView(request):
 
 
 @login_required()
-def ResignedView(request, p_job):
-    r_from = get_object_or_404(BriefCareerHistory, pk=p_job)
+def ResignedView(request, bch, tlt):
+    r_from = get_object_or_404(BriefCareerHistory, slug=bch)
     form = ResignedForm(request.POST or None, instance=r_from)
     if request.method == 'POST':
         new = form.save(commit=False)
         new.save()
-        return redirect(reverse('Profile:ProfileView', kwargs={'profile_id': request.user.id})+'#History')
+        return redirect(reverse('Profile:ProfileView', kwargs={'tlt': tlt})+'#History')
 
     else:
         template = 'Profile/brief_career_resigned.html'
@@ -654,8 +654,9 @@ def OnlineDelete(request, pk, tlt):
 
 
 @login_required()
-def PassportAddView(request, profile_id):
-    detail = Profile.objects.get(talent=profile_id)
+def PassportAddView(request):
+    tlt = request.user.alias
+    detail = Profile.objects.get(alias=tlt)
     if detail.talent == request.user:
         form = PassportDetailForm(request.POST or None)
         if request.method =='POST':
@@ -663,7 +664,7 @@ def PassportAddView(request, profile_id):
                 new = form.save(commit=False)
                 new.talent = request.user
                 new.save()
-                return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':profile_id})+'#passport')
+                return redirect(reverse('Profile:ProfileView', kwargs={'tlt':tlt})+'#passport')
         else:
             template = 'Profile/passport_add.html'
             context = {'form': form}
@@ -673,20 +674,19 @@ def PassportAddView(request, profile_id):
 
 
 @login_required()
-def PassportDeleteView(request, pk):
+def PassportDeleteView(request, pk, tlt):
     info = PassportDetail.objects.get(pk=pk)
     if info.talent == request.user:
         if request.method =='POST':
             info.delete()
-            return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':info.talent.id})+'#passport')
+            return redirect(reverse('Profile:ProfileView', kwargs={'tlt':tlt})+'#passport')
     else:
         raise PermissionDenied
 
 
 @login_required()
-def PassportEditView(request, p_id, profile_id):
-    #detail = Profile.objects.get(talent=profile_id)
-    info = PassportDetail.objects.get(pk=p_id)
+def PassportEditView(request, psp, tlt):
+    info = PassportDetail.objects.get(slug=psp)
     if info.talent == request.user:
         form = PassportDetailForm(request.POST or None, instance=info)
         if request.method =='POST':
@@ -694,7 +694,7 @@ def PassportEditView(request, p_id, profile_id):
                 new = form.save(commit=False)
                 new.talent = request.user
                 new.save()
-                return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':profile_id})+'#passport')
+                return redirect(reverse('Profile:ProfileView', kwargs={'tlt':tlt})+'#passport')
         else:
             template = 'Profile/passport_add.html'
             context = {'form': form}
@@ -783,9 +783,10 @@ def get_language_id(request):
 
 @csp_exempt
 @login_required()
-def IdentificationView(request, profile_id):
-    detail = Profile.objects.get(talent=profile_id)
-    info = IdentificationDetail.objects.get(talent=profile_id)
+def IdentificationView(request):
+    tlt = request.user.alias
+    detail = Profile.objects.get(alias=tlt)
+    info = IdentificationDetail.objects.get(talent__alias=tlt)
     if detail.talent == request.user:
         form = IdentificationDetailForm(request.POST or None, instance=info)
         if request.method =='POST':
@@ -793,7 +794,7 @@ def IdentificationView(request, profile_id):
                 new = form.save(commit=False)
                 new.talent = request.user
                 new.save()
-                return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':profile_id}))
+                return redirect(reverse('Profile:ProfileView', kwargs={'tlt':tlt}))
         else:
             template = 'Profile/id_edit.html'
             context = {'form': form}
@@ -830,8 +831,9 @@ def get_IdType_id(request):
 
 
 @login_required()
-def FileUploadView(request, profile_id):
-    detail = Profile.objects.get(talent=profile_id)
+def FileUploadView(request):
+    tlt = request.user.alias
+    detail = Profile.objects.get(alias=tlt)
     if detail.talent == request.user:
         form = FileUploadForm(request.POST, request.FILES)
         if request.method =='POST':
@@ -839,7 +841,7 @@ def FileUploadView(request, profile_id):
                 new = form.save(commit=False)
                 new.talent = request.user
                 new.save()
-                return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':profile_id}))
+                return redirect(reverse('Profile:ProfileView', kwargs={'tlt':tlt}))
         else:
             template = 'Profile/file_upload.html'
             context = {'form': form}
@@ -984,17 +986,18 @@ def EmailStatusView(request, tlt, eml):
 
 @login_required()
 @csp_exempt
-def PhysicalAddressView(request, profile_id):
-    detail = Profile.objects.get(talent=profile_id)
+def PhysicalAddressView(request):
+    tlt = request.user.alias
+    detail = Profile.objects.get(alias=tlt)
     if detail.talent == request.user:
-        info = get_object_or_404(PhysicalAddress, pk=profile_id)
+        info = get_object_or_404(PhysicalAddress, talent__alias=tlt)
         form = PhysicalAddressForm(request.POST or None, instance=info)
         if request.method =='POST':
             if form.is_valid():
                 new=form.save(commit=False)
                 new.talent = request.user
                 new.save()
-                return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':profile_id}))
+                return redirect(reverse('Profile:ProfileView', kwargs={'tlt':tlt})+'#phone')
         else:
             template = 'Profile/physical_address_add.html'
             context = {'form': form}
@@ -1005,17 +1008,18 @@ def PhysicalAddressView(request, profile_id):
 
 @login_required()
 @csp_exempt
-def PostalAddressView(request, profile_id):
-    detail = Profile.objects.get(talent=profile_id)
+def PostalAddressView(request):
+    tlt = request.user.alias
+    detail = Profile.objects.get(alias=tlt)
     if detail.talent == request.user:
-        info = get_object_or_404(PostalAddress, pk=profile_id)
+        info = get_object_or_404(PostalAddress, talent__alias=tlt)
         form = PostalAddressForm(request.POST or None, instance=info)
         if request.method =='POST':
             if form.is_valid():
                 new=form.save(commit=False)
                 new.talent = request.user
                 new.save()
-                return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':profile_id}))
+                return redirect(reverse('Profile:ProfileView', kwargs={'tlt':tlt})+'#phone')
         else:
             template = 'Profile/postal_address_add.html'
             context = {'form': form}
@@ -1026,8 +1030,9 @@ def PostalAddressView(request, profile_id):
 
 @login_required()
 @csp_exempt
-def PhoneNumberAdd(request, profile_id):
-    detail = Profile.objects.get(talent=profile_id)
+def PhoneNumberAdd(request):
+    tlt = request.user.alias
+    detail = Profile.objects.get(alias=tlt)
     if detail.talent == request.user:
         form =PhoneNumberForm(request.POST or None)
         if request.method =='POST':
@@ -1035,7 +1040,11 @@ def PhoneNumberAdd(request, profile_id):
                 new=form.save(commit=False)
                 new.talent = request.user
                 new.save()
-                return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':profile_id})+'#phone')
+                return redirect(reverse('Profile:ProfileView', kwargs={'tlt':tlt})+'#phone')
+            else:
+                template = 'Profile/phone_number_add.html'
+                context = {'form': form}
+                return render(request, template, context)
         else:
             template = 'Profile/phone_number_add.html'
             context = {'form': form}
@@ -1047,10 +1056,11 @@ def PhoneNumberAdd(request, profile_id):
 @login_required()
 def PhoneNumberDelete(request, pk):
     detail = PhoneNumber.objects.get(pk=pk)
+    tlt = detail.talent.alias
     if detail.talent == request.user:
         if request.method =='POST':
             detail.delete()
-            return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':detail.talent.id})+'#phone')
+            return redirect(reverse('Profile:ProfileView', kwargs={'tlt':tlt})+'#phone')
     else:
         raise PermissionDenied
 

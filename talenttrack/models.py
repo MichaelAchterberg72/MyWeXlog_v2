@@ -28,7 +28,7 @@ class Achievements(models.Model):
     achievement = models.CharField(max_length=500)
     date_achieved = models.DateField()
     description = models.TextField('Describe the Achievement')
-    slug = models.SlugField(max_length=15, unique=True, null=True)
+    slug = models.SlugField(max_length=15, unique=True, null=True, blank=True)
 
     class Meta:
         ordering = ['-date_achieved']
@@ -40,7 +40,7 @@ class Achievements(models.Model):
 
 def Achievements_slug(sender, instance, *args, **kwargs):
     if not instance.slug:
-        instance.slug = f'{instance.talent.id}{instance.id}'
+        instance.slug = f'{instance.id}a{instance.talent.id}c{instance.id}'
 
 pre_save.connect(Achievements_slug, sender=Achievements)
 

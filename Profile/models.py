@@ -30,6 +30,7 @@ class BriefCareerHistory(models.Model):
     date_captured = models.DateField(auto_now_add=True)
     date_from = models.DateField()
     date_to = models.DateField(blank=True, null=True)
+    slug = models.SlugField(max_length=15, blank=True, null=True, unique=True)
 
     def __str__(self):
         if self.date_to:
@@ -46,6 +47,14 @@ class BriefCareerHistory(models.Model):
             inject = f'{self.companybranch} ({self.designation})'
             CustomUser.objects.filter(pk=self.talent.id).update(display_text=inject)
             super(BriefCareerHistory, self).save(*args, **kwargs)
+
+
+def BriefCareerHistory_slug(sender, instance, *args, **kwargs):
+    if not instance.slug:
+        instance.slug = f'b{instance.talent.id}{instance.id}h'
+
+pre_save.connect(BriefCareerHistory_slug, sender=BriefCareerHistory)
+
 
 #website for online registrations
 class SiteName(models.Model):
@@ -149,6 +158,7 @@ class PassportDetail(models.Model):
     passport_number = models.CharField(max_length = 20, unique=True, blank=True, null=True)
     issue = CountryField('Country issued in', null=True)
     expiry_date = models.DateField(null=True)
+    slug = models.SlugField(max_length=20, blank=True, null=True, unique=True)
 
     class Meta:
         unique_together = (('talent','passport_number'),)
@@ -160,6 +170,13 @@ class PassportDetail(models.Model):
 
     def __str__(self):
         return '{}-{}'.format(self.talent, self.passport_number)
+
+
+def PassportDetail_slug(sender, instance, *args, **kwargs):
+    if not instance.slug:
+        instance.slug = f'psp{instance.talent.id}{instance.id}'
+
+pre_save.connect(PassportDetail_slug, sender=PassportDetail)
 
 
 class LanguageList(models.Model):

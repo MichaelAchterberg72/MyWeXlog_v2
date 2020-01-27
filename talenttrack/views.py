@@ -148,15 +148,15 @@ def CaptureAchievementView(request):
 
 
 @login_required()
-def EditAchievementView(request, ach_pk):
-    instance = get_object_or_404(Achievements, pk=ach_pk)
+def EditAchievementView(request, ach):
+    instance = get_object_or_404(Achievements, slug=ach)
 
     form = AchievementsForm(request.POST or None, instance=instance)
 
     if request.method == 'POST':
         new = form.save(commit=False)
         new.save()
-        return redirect(reverse('Profile:ProfileView')+'#achievements')
+        return redirect(reverse('Profile:ProfileView', kwargs={'tlt': instance.talent.alias})+'#achievements')
     else:
         template = 'talenttrack/achievement_capture.html'
         context = {'form': form,}
@@ -164,12 +164,12 @@ def EditAchievementView(request, ach_pk):
 
 
 @login_required()
-def DeleteAchievementView(request, ach_pk):
-    info = Achievements.objects.get(pk=ach_pk)
+def DeleteAchievementView(request, ach_i, tlt):
+    info = Achievements.objects.get(pk=ach_i)
     if info.talent == request.user:
         if request.method =='POST':
             info.delete()
-            return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':info.talent.id})+'#achievements')
+            return redirect(reverse('Profile:ProfileView', kwargs={'tlt': tlt})+'#achievements')
     else:
         raise PermissionDenied
 

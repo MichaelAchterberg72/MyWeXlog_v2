@@ -1,28 +1,9 @@
-{% extends 'profile/base_profile.html' %}
+{% extends 'base_home.html' %}
 {% load crispy_forms_tags %}
 
 {% block title %}{{block.super}} File Upload{% endblock title %}
-{% block subStyle %}
 
-{% endblock subStyle %}
-
-{% block network %}
-
-{% endblock network %}
-
-{% block workflow %}
-
-{% endblock workflow %}
-
-{% block score %}
-
-{% endblock score %}
-
-{% block TBA %}
-
-{% endblock TBA %}
-
-{% block Center_Content %}
+{% block content %}
 <div class="container">
   <h3>Upload a file</h3>
   <form method="post" enctype="multipart/form-data">
@@ -40,6 +21,4 @@
   </form>
 </div>
 
-{% endblock Center_Content %}
-{% block subScript %}
-{% endblock subScript %}
+{% endblock content %}
