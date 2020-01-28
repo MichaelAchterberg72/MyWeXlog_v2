@@ -562,17 +562,17 @@ def PreLoggedExperienceDeleteView(request, ple_pk):
 
 
 @login_required()
-def PreLogDetailView(request, pre_id):
-    check = WorkExperience.objects.get(pk=pre_id, prelog=True)
+def PreLogDetailView(request, tex):
+    check = WorkExperience.objects.get(slug=tex, prelog=True)
     if check.talent == request.user:
         sum = WorkExperience.objects.filter(talent=request.user, prelog=True)
         sum_company = sum.filter(company=check.company).aggregate(co_sum=Sum('hours_worked'))
         sum_project = sum.filter(project=check.project).aggregate(p_sum=Sum('hours_worked'))
-        list = WorkExperience.objects.filter(pk=pre_id)
-        confirmed_clg = WorkColleague.objects.filter(experience=pre_id)
-        confirmed_sup = Superior.objects.filter(experience=pre_id)
-        confirmed_clr = WorkCollaborator.objects.filter(experience=pre_id)
-        confirmed_cnt = WorkClient.objects.filter(experience=pre_id)
+        list = WorkExperience.objects.filter(slug=tex)
+        confirmed_clg = WorkColleague.objects.filter(experience__slug=tex)
+        confirmed_sup = Superior.objects.filter(experience__slug=tex)
+        confirmed_clr = WorkCollaborator.objects.filter(experience__slug=tex)
+        confirmed_cnt = WorkClient.objects.filter(experience__slug=tex)
 
         template = 'talenttrack/experience_detail.html'
         context = {
@@ -613,8 +613,8 @@ def ClientSelectView(request, pk):
 
 @login_required()
 @csp_exempt
-def ClientAddView(request, pk):
-    instance = get_object_or_404(WorkExperience, pk=pk)
+def ClientAddView(request, tex):
+    instance = get_object_or_404(WorkExperience, slug=tex)
     form = WorkClientSelectForm(request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
@@ -622,12 +622,12 @@ def ClientAddView(request, pk):
             new.experience = instance
             new.save()
             if 'another' in request.POST:
-                response = redirect(reverse('Talent:ClientAdd', kwargs={'pk':pk}))
+                response = redirect(reverse('Talent:ClientAdd', kwargs={'tex':tex}))
                 response.delete_cookie("confirm")
                 return response
 
             elif 'done' in request.POST:
-                response = redirect(reverse('Talent:ExperienceDetail', kwargs={'exp_id': instance.id}))
+                response = redirect(reverse('Talent:ExperienceDetail', kwargs={'tex': tex}))
                 response.delete_cookie("confirm")
                 return response
     else:
@@ -639,8 +639,8 @@ def ClientAddView(request, pk):
 
 
 @login_required()
-def ClientResponseView(request, pk):
-    check = WorkClient.objects.get(pk=pk)
+def ClientResponseView(request, wkc):
+    check = WorkClient.objects.get(slug=wkc)
     if check.experience.talent == request.user:
         form = WorkClientResponseForm(request.POST or None, instance=check)
         if request.method =='POST':
@@ -670,12 +670,12 @@ def CollaboratorSelectView(request, pk):
             new.experience = instance
             new.save()
             if 'another' in request.POST:
-                response = redirect('Talent:CollaboratorSelect', kwargs={'pk':pk})
+                response = redirect('Talent:CollaboratorSelect', kwargs={'tex':tex})
                 response.delete_cookie("confirm")
                 return response
 
             elif 'done' in request.POST:
-                response = redirect(reverse('Talent:ClientSelect', kwargs={'pk':pk}))
+                response = redirect(reverse('Talent:ClientSelect', kwargs={'tex':tex}))
                 response.delete_cookie("confirm")
                 return response
     else:
@@ -688,8 +688,8 @@ def CollaboratorSelectView(request, pk):
 
 @login_required()
 @csp_exempt
-def CollaboratorAddView(request, pk):
-    instance = get_object_or_404(WorkExperience, pk=pk)
+def CollaboratorAddView(request, tex):
+    instance = get_object_or_404(WorkExperience, slug=tex)
     form = WorkCollaboratorSelectForm(request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
@@ -697,12 +697,12 @@ def CollaboratorAddView(request, pk):
             new.experience = instance
             new.save()
             if 'another' in request.POST:
-                response = redirect(reverse('Talent:CollaboratorAdd', kwargs={'pk':pk}))
+                response = redirect(reverse('Talent:CollaboratorAdd', kwargs={'tex':tex}))
                 response.delete_cookie("confirm")
                 return response
 
             elif 'done' in request.POST:
-                response = redirect(reverse('Talent:ExperienceDetail', kwargs={'exp_id': instance.id}))
+                response = redirect(reverse('Talent:ExperienceDetail', kwargs={'tex': tex}))
                 response.delete_cookie("confirm")
                 return response
     else:
@@ -714,8 +714,8 @@ def CollaboratorAddView(request, pk):
 
 
 @login_required()
-def CollaboratorResponseView(request, pk):
-    check = WorkCollaborator.objects.get(pk=pk)
+def CollaboratorResponseView(request, clb):
+    check = WorkCollaborator.objects.get(slug=clb)
     if check.experience.talent == request.user:
         form = WorkCollaboratorResponseForm(request.POST or None, instance=check)
         if request.method =='POST':
@@ -762,8 +762,8 @@ def SuperiorSelectView(request, pk):
 
 @login_required()
 @csp_exempt
-def SuperiorAddView(request, pk):
-    instance = get_object_or_404(WorkExperience, pk=pk)
+def SuperiorAddView(request, tex):
+    instance = get_object_or_404(WorkExperience, slug=tex)
     form = SuperiorSelectForm(request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
@@ -771,11 +771,11 @@ def SuperiorAddView(request, pk):
             new.experience = instance
             new.save()
             if 'another' in request.POST:
-                response = redirect('Talent:SuperiorAdd', kwargs={'pk':pk})
+                response = redirect('Talent:SuperiorAdd', kwargs={'tex':tex})
                 response.delete_cookie("confirm")
                 return response
             elif 'done' in request.POST:
-                response = redirect(reverse('Talent:ExperienceDetail', kwargs={'exp_id': instance.id}))
+                response = redirect(reverse('Talent:ExperienceDetail', kwargs={'tex': tex}))
                 response.delete_cookie("confirm")
                 return response
     else:
@@ -787,8 +787,8 @@ def SuperiorAddView(request, pk):
 
 
 @login_required()
-def SuperiorResponseView(request, pk):
-    check = Superior.objects.get(pk=pk)
+def SuperiorResponseView(request, spr):
+    check = Superior.objects.get(slug=spr)
     if check.experience.talent == request.user:
         form = WorkColleagueResponseForm(request.POST or None, instance=check)
         if request.method =='POST':
@@ -835,8 +835,8 @@ def ColleagueSelectView(request):
 
 @login_required()
 @csp_exempt
-def ColleagueAddView(request, pk):
-    instance = get_object_or_404(WorkExperience, pk=pk)
+def ColleagueAddView(request, tex):
+    instance = get_object_or_404(WorkExperience, slug=tex)
     form = WorkColleagueSelectForm(request.POST or None)
 
     if request.method == 'POST':
@@ -845,13 +845,13 @@ def ColleagueAddView(request, pk):
             new.experience = instance
             new.save()
             if 'another' in request.POST:
-                response = redirect(reverse('Talent:ColleagueAdd', kwargs={'pk':pk}))
+                response = redirect(reverse('Talent:ColleagueAdd', kwargs={'tex':tex}))
                 response.delete_cookie("confirm")
                 return response
 
             elif 'done' in request.POST:
 
-                response = redirect(reverse('Talent:ExperienceDetail', kwargs={'exp_id':instance.id}))
+                response = redirect(reverse('Talent:ExperienceDetail', kwargs={'tex':tex}))
                 response.delete_cookie("confirm")
                 return response
 
@@ -864,8 +864,8 @@ def ColleagueAddView(request, pk):
 
 
 @login_required()
-def ColleagueResponseView(request, pk):
-    check = WorkColleague.objects.get(pk=pk)
+def ColleagueResponseView(request, clg):
+    check = WorkColleague.objects.get(slug=clg)
     if check.experience.talent == request.user:
         form = WorkColleagueResponseForm(request.POST or None, instance=check)
         if request.method =='POST':
@@ -885,17 +885,18 @@ def ColleagueResponseView(request, pk):
 
 
 @login_required()
-def ExperienceDetailView(request, exp_id):
-    check = WorkExperience.objects.get(pk=exp_id, wexp=True)
+def ExperienceDetailView(request, tex):
+    check = WorkExperience.objects.get(slug=tex, wexp=True)
     if check.talent == request.user:
         sum = WorkExperience.objects.filter(talent=request.user, wexp=True)
         sum_company = sum.filter(company=check.company).aggregate(co_sum=Sum('hours_worked'))
         sum_project = sum.filter(project=check.project).aggregate(p_sum=Sum('hours_worked'))
-        list = WorkExperience.objects.filter(pk=exp_id)
-        confirmed_clg = WorkColleague.objects.filter(experience=exp_id)
-        confirmed_sup = Superior.objects.filter(experience=exp_id)
-        confirmed_clr = WorkCollaborator.objects.filter(experience=exp_id)
-        confirmed_cnt = WorkClient.objects.filter(experience=exp_id)
+        list = WorkExperience.objects.filter(slug=tex)
+        confirmed_clg = WorkColleague.objects.filter(experience__slug=tex)
+        confirmed_sup = Superior.objects.filter(experience__slug=tex)
+        confirmed_clr = WorkCollaborator.objects.filter(experience__slug=tex)
+        confirmed_cnt = WorkClient.objects.filter(experience__slug=tex)
+
         template = 'talenttrack/experience_detail.html'
         context = {'check': check, 'confirmed_clg': confirmed_clg, 'confirmed_sup': confirmed_sup, 'confirmed_clr': confirmed_clr, 'confirmed_cnt': confirmed_cnt, 'list': list, 'sum_company': sum_company, 'sum_project': sum_project}
         return render(request, template, context)
@@ -937,11 +938,11 @@ def WorkExperienceDeleteView(request, we_pk):
 
 
 @login_required()
-def EducationDetail(request, edu_id):
-    check = WorkExperience.objects.get(pk=edu_id, edt=True)
+def EducationDetail(request, tex):
+    check = WorkExperience.objects.get(slug=tex, edt=True)
     if check.talent == request.user:
-        confirmed_l = Lecturer.objects.filter(education=edu_id)
-        confirmed_cm = ClassMates.objects.filter(education=edu_id)
+        confirmed_l = Lecturer.objects.filter(education__slug=tex)
+        confirmed_cm = ClassMates.objects.filter(education__slug=tex)
         template = 'talenttrack/education_detail.html'
         context = {'check': check, 'confirmed_l': confirmed_l, 'confirmed_cm': confirmed_cm}
         return render(request, template, context)
@@ -950,8 +951,8 @@ def EducationDetail(request, edu_id):
 
 
 @login_required()
-def LecturerResponse(request, pk):
-    check = Lecturer.objects.get(pk=pk)
+def LecturerResponse(request, lct):
+    check = Lecturer.objects.get(slug=lct)
     if check.education.talent == request.user:
         form = LecturerRespondForm(request.POST or None, instance=check)
         if request.method =='POST':
@@ -971,8 +972,8 @@ def LecturerResponse(request, pk):
 
 
 @login_required()
-def ClassMatesResponse(request, pk):
-    check = ClassMates.objects.get(pk=pk)
+def ClassMatesResponse(request, cmt):
+    check = ClassMates.objects.get(slug=cmt)
     if check.education.talent == request.user:
         form = ClassMatesRespondForm(request.POST or None, instance=check)
         if request.method =='POST':
@@ -1019,8 +1020,8 @@ def LecturerSelectView(request):
 
 @login_required()
 @csp_exempt
-def LecturerAddView(request, pk):
-    instance = get_object_or_404(WorkExperience, pk=pk)
+def LecturerAddView(request, tex):
+    instance = get_object_or_404(WorkExperience, slug=tex)
     form = LecturerSelectForm(request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
@@ -1028,15 +1029,15 @@ def LecturerAddView(request, pk):
             new.education = instance
             new.save()
             if 'another' in request.POST:
-                response = redirect('Talent:LecturerAdd', kwargs={'pk': pk})
+                response = redirect(reverse('Talent:LecturerAdd', kwargs={'tex': tex}))
                 response.delete_cookie("confirm")
                 return response
             elif 'done' in request.POST:
-                response = redirect(reverse('Talent:EducationDetail', kwargs={'edu_id': instance.id}))
+                response = redirect(reverse('Talent:EducationDetail', kwargs={'tex': tex}))
                 response.delete_cookie("confirm")
                 return response
     else:
-        template = 'talenttrack/education_lecturer_select.html'
+        template = 'talenttrack/education_lecturer_add.html'
         context = {'instance': instance, 'form': form}
         response = render(request, template, context)
         response.set_cookie("confirm","LR")
@@ -1071,8 +1072,8 @@ def ClassMateSelectView(request):
 
 @login_required()
 @csp_exempt
-def ClassMateAddView(request, pk):
-    instance = get_object_or_404(WorkExperience, pk=pk)
+def ClassMateAddView(request, tex):
+    instance = get_object_or_404(WorkExperience, slug=tex)
     form = ClassMatesSelectForm(request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
@@ -1080,15 +1081,15 @@ def ClassMateAddView(request, pk):
             new.education = instance
             new.save()
             if 'another' in request.POST:
-                response = redirect(reverse('Talent:ClassMatesAdd', kwargs={'pk': pk}))
+                response = redirect(reverse('Talent:ClassMatesAdd', kwargs={'tex': tex}))
                 response.delete_cookie("confirm")
                 return response
             elif 'done' in request.POST:
-                response = redirect(reverse('Talent:EducationDetail', kwargs={'edu_id': instance.id}))
+                response = redirect(reverse('Talent:EducationDetail', kwargs={'tex': tex}))
                 response.delete_cookie("confirm")
                 return response
     else:
-        template = 'talenttrack/education_classmate_select.html'
+        template = 'talenttrack/education_classmate_add.html'
         context = {'instance': instance, 'form': form}
         response = render(request, template, context)
         response.set_cookie("confirm","CM")

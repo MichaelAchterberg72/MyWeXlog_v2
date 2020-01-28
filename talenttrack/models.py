@@ -9,11 +9,18 @@ from django.dispatch import receiver
 from django.db.models import Count, Sum, F, Q
 
 
+from Profile.utils import create_code9
+
+
 from enterprises.models import Enterprise, Industry, Branch
 from project.models import ProjectData
 from db_flatten.models import SkillTag
 from django_countries.fields import CountryField
 from locations.models import Region
+
+
+from Profile.utils import create_code9
+
 
 CONFIRM = (
     ('S','Select'),
@@ -37,12 +44,11 @@ class Achievements(models.Model):
     def __str__(self):
         return f'{self.talent}: {self.achievement} ({self.date_achieved})'
 
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
 
-def Achievements_slug(sender, instance, *args, **kwargs):
-    if not instance.slug:
-        instance.slug = f'{instance.id}a{instance.talent.id}c{instance.id}'
-
-pre_save.connect(Achievements_slug, sender=Achievements)
+        super(Achievements, self).save(*args, **kwargs)
 
 
 class Result(models.Model):#What you receive when completing the course
@@ -146,12 +152,19 @@ class Lecturer(models.Model):
     comments = models.TextField(blank=True, null=True)
         #Captured by talent
     response = models.TextField('My Response', blank=True, null=True)
+    slug = models.SlugField(max_length=9, unique=True, null=True)
 
     class Meta:
         unique_together = (('education','lecturer','date_captured'),)
 
     def __str__(self):
         return f"Lecturer for {self.education}"
+
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
+
+        super(Lecturer, self).save(*args, **kwargs)
 
 
 class ClassMates(models.Model):
@@ -167,12 +180,19 @@ class ClassMates(models.Model):
     comments = models.TextField(blank=True, null=True)
         #Captured by talent
     response = models.TextField(blank=True, null=True)
+    slug = models.SlugField(max_length=9, unique=True, null=True)
 
     class Meta:
         unique_together = (('education','colleague','date_captured'),)
 
     def __str__(self):
         return f"ClassMate for {self.education}"
+
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
+
+        super(ClassMates, self).save(*args, **kwargs)
 
 
 class Designation(models.Model):
@@ -217,6 +237,7 @@ class WorkExperience(models.Model):
     edt = models.BooleanField(default=False)
     course = models.ForeignKey(Course, on_delete=models.PROTECT, blank=True, null=True)
     topic = models.ForeignKey(Topic, on_delete=models.PROTECT, blank=True, null=True, verbose_name="Subject")
+    slug = models.SlugField(max_length=30, blank=True, null=True, unique=True)
 
     class Meta:
         unique_together = (('talent','hours_worked','date_from', 'date_to'),)
@@ -239,6 +260,9 @@ class WorkExperience(models.Model):
             else:
                 pass
 
+        if self.slug is None or self.slug == "":
+                self.slug = create_code9(self)
+
         super(WorkExperience, self).save(*args, **kwargs)
 
 
@@ -255,6 +279,7 @@ class WorkColleague(models.Model):
     comments = models.TextField(blank=True, null=True)
         #Captured by talent
     response = models.TextField(blank=True, null=True)
+    slug = models.SlugField(max_length=9, unique=True, null=True)
 
     class Meta:
         unique_together = (('experience','colleague_name','date_captured'),)
@@ -263,6 +288,12 @@ class WorkColleague(models.Model):
         return "WorkColleague for {} on {}".format(
             self.experience.talent, self.experience
         )
+
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
+
+        super(WorkColleague, self).save(*args, **kwargs)
 
 
 class Superior(models.Model):
@@ -278,6 +309,7 @@ class Superior(models.Model):
     comments = models.TextField(blank=True, null=True)
         #Captured by talent
     response = models.TextField(blank=True, null=True)
+    slug = models.SlugField(max_length=9, unique=True, null=True)
 
     class Meta:
         unique_together = (('experience','superior_name','date_captured'),)
@@ -287,6 +319,11 @@ class Superior(models.Model):
             self.experience.talent, self.experience
         )
 
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
+
+        super(Superior, self).save(*args, **kwargs)
 
 class WorkCollaborator(models.Model):
         #Captured by talent
@@ -303,6 +340,7 @@ class WorkCollaborator(models.Model):
     comments = models.TextField(blank=True, null=True)
         #Captured by talent
     response = models.TextField(blank=True, null=True)
+    slug = models.SlugField(max_length=9, unique=True, null=True)
 
     class Meta:
         unique_together = (('experience','collaborator_name','date_captured'),)
@@ -311,6 +349,13 @@ class WorkCollaborator(models.Model):
         return "WorkCollaborator for {} on {}".format(
             self.experience.talent, self.experience
         )
+
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
+
+        super(WorkCollaborator, self).save(*args, **kwargs)
+
 
 class WorkClient(models.Model):
         #Captured by talent
@@ -327,6 +372,7 @@ class WorkClient(models.Model):
     comments = models.TextField(blank=True, null=True)
         #Captured by talent
     response = models.TextField(blank=True, null=True)
+    slug = models.SlugField(max_length=20, unique=True, null=True)
 
     class Meta:
         unique_together = (('experience','client_name','date_captured'),)
@@ -335,3 +381,9 @@ class WorkClient(models.Model):
         return "WorkCollaborator for {} on {}".format(
             self.experience.talent, self.experience
         )
+
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
+
+        super(WorkClient, self).save(*args, **kwargs)

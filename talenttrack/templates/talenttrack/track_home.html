@@ -95,7 +95,7 @@
               <td class="align-middle text-center">{{ t.course }}</td>
               <td class="align-middle text-center">{{ t.topic.hours|intcomma }}</td>
               <td class="align-middle text-center">
-                <a href="{% url 'Talent:EducationDetail' t.id %}" class="badge badge-pill badge-secondary" style="width: 5rem;">Detail</a>
+                <a href="{% url 'Talent:EducationDetail' t.slug %}" class="badge badge-pill badge-secondary" style="width: 5rem;">Detail</a>
                 <form  action="{% url 'Talent:EDTDelete' t.id %}" method="post">
                   {% csrf_token %}
                   <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
@@ -142,7 +142,7 @@
               <td>{{ e.hours_worked|intcomma }}</td>
               <td>{{ e.project }}</td>
               <td>
-                <a href="{% url 'Talent:ExperienceDetail' e.id %}" class="badge badge-pill badge-secondary"  style="width: 5rem;">Detail</a>
+                <a href="{% url 'Talent:ExperienceDetail' e.slug %}" class="badge badge-pill badge-secondary"  style="width: 5rem;">Detail</a>
                 <form  action="{% url 'Talent:WEDelete' e.id %}" method="post">
                   {% csrf_token %}
                   <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
@@ -188,7 +188,7 @@
             <td>{{ p.hours_worked|intcomma }}</td>
             <td>{{ p.project }}</td>
             <td>
-              <a href="{% url 'Talent:PreLogDetail' p.id %}" class="badge badge-pill badge-secondary" style="width: 5rem;">Detail</a>
+              <a href="{% url 'Talent:PreLogDetail' p.slug %}" class="badge badge-pill badge-secondary" style="width: 5rem;">Detail</a>
               <form  action="{% url 'Talent:PLEDelete' p.id %}" method="post">
                 {% csrf_token %}
                 <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>

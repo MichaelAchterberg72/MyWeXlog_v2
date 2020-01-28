@@ -50,7 +50,7 @@
     <div class="col-sm-6">
      <div class="card">
        <div class="card-body">
-         <p class="float-right"><a href="{% url 'Talent:ColleagueAdd' check.id %}" class="badge badge-pill badge-primary">Add Colleague</a></p>
+         <p class="float-right"><a href="{% url 'Talent:ColleagueAdd' check.slug %}" class="badge badge-pill badge-primary">Add Colleague</a></p>
          <h5 class="card-title">Colleagues</h5>
          <table class="table table-sm">
            <thead>
@@ -64,7 +64,7 @@
              <tr>
                <td>{{ c.colleague_name.first_name}} {{ c.colleague_name.last_name }}</td>
                <td>{{c.get_confirm_display}}</td>
-               <td><a href="{% url 'Talent:ColleagueResponse' c.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Detail</a></td>
+               <td><a href="{% url 'Talent:ColleagueResponse' c.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Detail</a></td>
              </tr>
             {% endfor %}
            </tbody>

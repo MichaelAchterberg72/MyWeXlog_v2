@@ -10,7 +10,7 @@ from django.db.models.signals import post_save, pre_save
 from django_countries.fields import CountryField
 from phonenumber_field.modelfields import PhoneNumberField
 
-from .utils import create_code7
+from .utils import create_code7, create_code9
 
 from users.models import CustomUser
 from locations.models import Region, City, Suburb, Currency
@@ -41,13 +41,16 @@ class BriefCareerHistory(models.Model):
     def save(self, *args, **kwargs):
         if self.date_to:
             self.current = False
-            super(BriefCareerHistory, self).save(*args, **kwargs)
+            
         else:
             self.current = True
             inject = f'{self.companybranch} ({self.designation})'
             CustomUser.objects.filter(pk=self.talent.id).update(display_text=inject)
-            super(BriefCareerHistory, self).save(*args, **kwargs)
 
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
+
+        super(BriefCareerHistory, self).save(*args, **kwargs)
 
 def BriefCareerHistory_slug(sender, instance, *args, **kwargs):
     if not instance.slug:
