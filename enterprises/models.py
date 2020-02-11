@@ -8,6 +8,10 @@ from phonenumber_field.modelfields import PhoneNumberField
 from locations.models import Region, City, Suburb
 from db_flatten.models import PhoneNumberType
 
+
+from Profile.utils import create_code9
+
+
 # Industries: Mining & Metals: Process, Mining & Metals:Underground, Mining & Metals:Open Pit, PetroChem, FMCG, Food & Beverage, Agriculture, Retail, Aviation,
 class Industry(models.Model):
     industry = models.CharField(max_length=60, unique=True)
@@ -18,8 +22,10 @@ class Industry(models.Model):
     def __str__(self):
         return self.industry
 
+
 class Enterprise(models.Model):
     name = models.CharField('Enterprise name', max_length=250, unique=True)
+    slug = models.SlugField(max_length=60, blank=True, null=True, unique=True)
     description = models.TextField('Enterprise description')
     website = models.URLField(blank=True, null=True)
 
@@ -29,8 +35,15 @@ class Enterprise(models.Model):
     def __str__(self):
         return self.name
 
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
+
+        super(Enterprise, self).save(*args, **kwargs)
+
+
 class BranchType(models.Model):
-    type = models.CharField(max_length=60, unique=True)
+    type = models.CharField(max_length=70, unique=True)
 
     def clean(self):
         self.type = self.type.capitalize()
@@ -50,6 +63,7 @@ class Branch(models.Model):
     suburb = models.ForeignKey(Suburb, on_delete=models.PROTECT)
     code = models.CharField('Post Code', max_length=12)
     industry = models.ManyToManyField(Industry)
+    slug = models.SlugField(max_length=60, unique=True, blank=True, null=True)
 
     class Meta:
         unique_together = (('company','name', 'city'),)
@@ -59,6 +73,13 @@ class Branch(models.Model):
 
     def __str__(self):
         return '{}, {}, {}'.format(self.company, self.name, self.city)
+
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = f'{self.company.slug}{self.id}{self.city.id}'
+
+        super(Branch, self).save(*args, **kwargs)
+
 
 class PhoneNumber(models.Model):
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE)

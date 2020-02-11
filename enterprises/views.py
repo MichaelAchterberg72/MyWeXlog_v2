@@ -36,18 +36,18 @@ def EnterpriseHome(request):
 
 
 @login_required()
-def BranchListView(request, c_id):
-    list = Branch.objects.filter(company=c_id).order_by('name')
-    detail = get_object_or_404(Enterprise, pk=c_id)
+def BranchListView(request, cmp):
+    list = Branch.objects.filter(company__slug=cmp).order_by('name')
+    detail = get_object_or_404(Enterprise, slug=cmp)
     template = 'enterprises/branch_list.html'
     context = {'list': list, 'detail': detail}
     return render(request, template, context)
 
 
 @login_required()
-def BranchDetailView(request, branch_id):
-    info = get_object_or_404(Branch, pk=branch_id)
-    detail = Branch.objects.filter(pk=branch_id)
+def BranchDetailView(request, bch):
+    info = get_object_or_404(Branch, slug=bch)
+    detail = Branch.objects.filter(slug=bch)
 
     template = 'enterprises/branch_detail.html'
     context = {'detail': detail, 'info': info}
@@ -56,24 +56,45 @@ def BranchDetailView(request, branch_id):
 
 @login_required()
 @csp_exempt
+def BranchEditView(request, bch):
+    info2 = Branch.objects.get(slug=bch)
+    form = BranchForm(request.POST or None, instance=info2)
+    if request.method == 'POST':
+        next_url=request.POST.get('next','/')
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.save()
+            form.save_m2m()
+            if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
+                next_url = redirect(reverse('Profile:ProfileView', kwargs={'tlt':request.user.alias}))
+            return HttpResponseRedirect(next_url)
+        else:
+            context = {'form': form}
+            template = 'enterprises/branch_add.html'
+            return render(request, template, context)
+
+    else:
+        context = {'form': form}
+        template = 'enterprises/branch_add.html'
+        return render(request, template, context)
+
+
+@login_required()
+@csp_exempt
 #this view autopopulated the ebterprise field with the id in e_id
-def BranchAddView(request, e_id):
+def BranchAddView(request, cmp):
     form = BranchForm(request.POST or None)
     if request.method == 'POST':
 
-        info = get_object_or_404(Enterprise, pk=e_id)
+        info = get_object_or_404(Enterprise, slug=cmp)
         next_url=request.POST.get('next','/')
         if form.is_valid():
-            #response = redirect(reverse('Enterprise:BranchList', kwargs={'e_id':e_id}))
-            #response = redirect('Enterprise:EnterpriseHome')
             new = form.save(commit=False)
             new.company = info
             new.save()
             if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
-                next_url = reverse('Enterprise:BranchList', kwargs={'e_id':e_id})
+                next_url = reverse('Enterprise:BranchList', kwargs={'cmp':cmp})
             response = HttpResponseRedirect(next_url)
-            #response._csp_exempt = True
-            #return redirect(reverse('Enterprise:BranchList', kwargs={'e_id':e_id}),)
             return response
         else:
             context = {'form': form}
@@ -123,31 +144,6 @@ def get_branch_id(request):
         return HttpResponse(json.dumps(data), content_type='application/json')
     return HttpResponse("/")
 #Branch Popup <<<
-
-
-@login_required()
-@csp_exempt
-def BranchEditView(request, e_id):
-    info2 = Branch.objects.get(pk=e_id)
-    form = BranchForm(request.POST or None, instance=info2)
-    if request.method == 'POST':
-        next_url=request.POST.get('next','/')
-        if form.is_valid():
-            new = form.save(commit=False)
-            new.save()
-            form.save_m2m()
-            if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
-                next_url = redirect(reverse('Profile:ProfileView', kwargs={'e_id':e_id}))
-            return HttpResponseRedirect(next_url)
-        else:
-            context = {'form': form}
-            template = 'enterprises/branch_add.html'
-            return render(request, template, context)
-
-    else:
-        context = {'form': form}
-        template = 'enterprises/branch_add.html'
-        return render(request, template, context)
 
 
 @login_required()

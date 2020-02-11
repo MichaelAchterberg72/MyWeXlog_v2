@@ -516,7 +516,7 @@ def SkillDeleteView(request, id):
 @subscription(2)
 def AddToShortListView(request, vac, tlt):
     job = get_object_or_404(TalentRequired, ref_no=vac)
-    talent = get_object_or_404(CustomUser, pk=tlt)
+    talent = get_object_or_404(CustomUser, alias=tlt)
     if request.method == 'POST':
         b = BidShortList.objects.create(talent=talent, scope=job)
 

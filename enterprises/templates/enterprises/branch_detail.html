@@ -8,9 +8,9 @@
   <h5 class="card-header">Detail for {{ info.company.name }}'s {{ info.name }} branch</h5>
   <div class="card-body">
     {% if request.user.is_authenticated %}
-    <p><a href="{% url 'Enterprise:EditBranch' info.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Edit Branch</a>
+    <p><a href="{% url 'Enterprise:EditBranch' info.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Edit Branch</a>
     {% endif %}
-    <a href="{% url 'Enterprise:BranchList' info.company.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back to Branch List</a></p>
+    <a href="{% url 'Enterprise:BranchList' info.company.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back to Branch List</a></p>
     <div class="row">
       <div class="col-sm-6">
         <div class="card">

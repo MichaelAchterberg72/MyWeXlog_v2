@@ -50,7 +50,7 @@
     <div class="col-sm-6">
      <div class="card">
        <div class="card-body">
-         <p class="float-right"><a href="{% url 'Talent:ColleagueAdd' check.slug %}" class="badge badge-pill badge-primary">Add Colleague</a></p>
+         <p class="float-right"><a href="{% url 'Talent:ColleagueAdd' check.slug %}}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Add Colleague</a></p>
          <h5 class="card-title">Colleagues</h5>
          <table class="table table-sm">
            <thead>

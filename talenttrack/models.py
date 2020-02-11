@@ -340,7 +340,7 @@ class WorkCollaborator(models.Model):
     comments = models.TextField(blank=True, null=True)
         #Captured by talent
     response = models.TextField(blank=True, null=True)
-    slug = models.SlugField(max_length=9, unique=True, null=True)
+    slug = models.SlugField(max_length=9, unique=True, null=True, blank=True)
 
     class Meta:
         unique_together = (('experience','collaborator_name','date_captured'),)

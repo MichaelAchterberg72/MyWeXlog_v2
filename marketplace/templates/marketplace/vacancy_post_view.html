@@ -163,7 +163,7 @@
           <td class="align-middle">{{ key.1.ro.0.1 }} <strong>{{ key.1.ro.0.0 }}</strong> {{ key.1.ro.0.2 }}</td>
           <td class="align-middle">{{ key.1.ro.0.3|truncatechars:200 }}</td>
           <td class="align-middle"><p>
-          <form  action="{% url 'MarketPlace:ShortList' tlt=key.0  vac=instance.ref_no %}" method="post">
+          <form  action="{% url 'MarketPlace:ShortList' tlt=key.1.ro.0.4  vac=instance.ref_no %}" method="post">
             {% csrf_token %}
             <button type="submit" class="badge badge-info badge-pill float-right" style="width: 5rem;">Short-list</button>
           </form><br>
@@ -211,11 +211,11 @@
         <td class="align-middle">{{ key.1.ro.0.3|truncatechars:200 }}</td>
         <td class="align-middle">
           <p>
-            <form  action="{% url 'MarketPlace:ShortList' tlt=key.0  s_list=instance.pk %}" method="post" name="active">
+            <form  action="{% url 'MarketPlace:ShortList' tlt=key.1.ro.0.4  vac=instance.ref_no %}" method="post" name="active">
             {% csrf_token %}
             <button type="submit"  class="badge badge-info badge-pill float-right" style="width: 5rem;">Short-list</button>
           </form><br>
-          <a href="{% url 'Talent:APV' tlt_id=key.0 vac_id=instance.id %}?next={{ request.path|urlencode }}" class="badge badge-success badge-pill float-right" style="width: 5rem;" target="new">View Profile</a>
+          <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=instance.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-success badge-pill float-right" style="width: 5rem;" target="new">View Profile</a>
         </p>
       </td>
       </tr>

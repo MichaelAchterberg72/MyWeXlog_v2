@@ -9,7 +9,7 @@
   <h5 class="card-header">Detail for project {{ info.name }} </h5>
   <div class="card-body">
     {% if request.user.is_authenticated %}
-    <p><a href="{% url 'Project:EditProject' info.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Edit Project</a>
+    <p><a href="{% url 'Project:EditProject' info.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Edit Project</a>
     {% endif %}
     <a href="{% url 'Project:ProjectHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
         <div class="row">
@@ -66,21 +66,17 @@
           <div class="col-sm-6">
             <div class="card">
               <div class="card-body">
-                <p class="text-right"><a href="{% url 'Project:HoursOnProject' info.id %}?next={{ request.path|urlencode }}" class="btn btn-primary"> WexLog Hours </a>
+              {% if request.user.subscription >= 2 %}
+                <p class="text-right"><a href="{% url 'Project:HoursOnProject' info.slug %}?next={{ request.path|urlencode }}" class="btn btn-primary"> WexLog Hours </a>
                   &nbsp
-
-                {% if request.user.subscription >= 2 %}
-                  <a href="{% url 'Project:HoursOnProject' info.id %}?next={{ request.path|urlencode }}" class="btn btn-primary"> WexLog Employees </a>
-                    &nbsp
                 {% else %}
                   <a href="#" class="btn btn-primary" style="width: 6rem;">Active Subscription required</a></p>
                 {% endif %}
+
               </div>
             </div>
           </div>
         </div>
-
-
       </div>
     </div>
 

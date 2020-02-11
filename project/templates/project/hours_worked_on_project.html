@@ -22,7 +22,6 @@
           <th>Company Name</th>
           <th>Date Complete</th>
           <th>Hours Spent</th>
-          <th></th>
         </tr>
       </thead>
       {% for p in info %}
@@ -31,7 +30,6 @@
           <td>{{ p.company }}</td>
           <td>{{ p.date_to }}</td>
           <td>{{ p.hours_worked|intcomma }}</td>
-          <td><a href="{% url 'Project:DetailExperienceOnProject' p.id %}" class="badge badge-pill badge-primary">View Details</a> </td>
         </tr>
       </tbody>
       {% endfor %}

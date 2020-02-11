@@ -24,7 +24,7 @@ urlpatterns = [
 
     path('interviewlist/<int:vac>/<int:tlt>/', views.AddToInterviewListView, name='InterviewList'),
 
-    path('shortlist/<slug:vac><int:tlt>/', views.AddToShortListView, name='ShortList'),
+    path('shortlist/<slug:vac>/<slug:tlt>/', views.AddToShortListView, name='ShortList'),
 
     path('availabillity/', views.TalentAvailabillityView, name='Availabillity'),
     path('v-detail/<slug:vac>/', views.VacancyDetailView, name='VacancyDetail'),

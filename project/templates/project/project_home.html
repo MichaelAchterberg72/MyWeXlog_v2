@@ -31,7 +31,7 @@
           <td>{{ p.company }} ({{ p.name }})</td>
           <td>{{ p.industry }}</td>
           <td>{{ p.city }}</td>
-          <td><a href="{% url 'Project:ProjectDetail' p.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">See Detail</a> </td>
+          <td><a href="{% url 'Project:ProjectDetail' p.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">See Detail</a> </td>
         </tr>
       </tbody>
       {% endfor %}

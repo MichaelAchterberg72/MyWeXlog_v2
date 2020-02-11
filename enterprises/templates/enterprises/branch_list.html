@@ -8,7 +8,7 @@
   <h5 class="card-header">Branches for {{ detail.name }}</h5>
   <div class="card-body">
     {% if request.user.is_authenticated %}
-    <p><a href="{% url 'Enterprise:AddBranch' detail.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Add Branch</a><a href="{% url 'Enterprise:EnterpriseHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
+    <p><a href="{% url 'Enterprise:AddBranch' detail.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Add Branch</a><a href="{% url 'Enterprise:EnterpriseHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
     {% endif %}
     <table class="table-sm">
       <col width="30%">
@@ -38,7 +38,7 @@
             <td class="badge badge-info text-wrap" style="width: 6rem;">Active Subscription required</td>
           {% endif %}
           <td>{% if request.user.is_authenticated %}
-          <a href="{% url 'Enterprise:BranchDetail' b.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Detail</a>
+          <a href="{% url 'Enterprise:BranchDetail' b.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Detail</a>
           {% endif %}</td>
 
         </tr>

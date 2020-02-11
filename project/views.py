@@ -50,10 +50,10 @@ def ProjectList(request, profile_id=None):
 
 
 @login_required()
-def ProjectDetailView(request, project_id):
-    info = get_object_or_404(ProjectData, pk=project_id)
-    detail = ProjectData.objects.filter(pk=project_id)
-    cache = WorkExperience.objects.filter(project=project_id)
+def ProjectDetailView(request, prj):
+    info = get_object_or_404(ProjectData, slug=prj)
+    detail = ProjectData.objects.filter(slug=prj)
+    cache = WorkExperience.objects.filter(project__slug=prj)
     hr = cache.aggregate(sum_t=Sum('hours_worked'))
     ppl = cache.distinct('talent').count()
 
@@ -64,8 +64,8 @@ def ProjectDetailView(request, project_id):
 
 @login_required()
 @csp_exempt
-def ProjectEditView(request, e_id):
-    info2 = ProjectData.objects.get(pk=e_id)
+def ProjectEditView(request, prj):
+    info2 = ProjectData.objects.get(slug=prj)
     form = ProjectForm(request.POST or None, instance=info2)
     if request.method == 'POST':
         next_url=request.POST.get('next','/')
@@ -74,7 +74,7 @@ def ProjectEditView(request, e_id):
             new.save()
             form.save_m2m()
             if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
-                next_url = redirect(reverse('Project:ProjectHome', kwargs={'e_id':e_id}))
+                next_url = redirect(reverse('Project:ProjectHome', kwargs={'prj':prj}))
             return HttpResponseRedirect(next_url)
     else:
         context = {'form': form}
@@ -137,10 +137,10 @@ def ProjectSearch(request):
 
 
 @login_required()
-def HoursWorkedOnProject(request, project_id):
-    projectdata = get_object_or_404(ProjectData, pk=project_id)
-    info = WorkExperience.objects.filter(project=project_id).annotate(sum_hours=Sum('hours_worked')).order_by('date_to')
-    hr = WorkExperience.objects.filter(project=project_id).aggregate(sum_t=Sum('hours_worked'))
+def HoursWorkedOnProject(request, prj):
+    projectdata = get_object_or_404(ProjectData, slug=prj)
+    info = WorkExperience.objects.filter(project__slug=prj).annotate(sum_hours=Sum('hours_worked')).order_by('date_to')
+    hr = WorkExperience.objects.filter(project__slug=prj).aggregate(sum_t=Sum('hours_worked'))
 
     template_name = 'project/hours_worked_on_project.html'
     context = {
@@ -152,10 +152,10 @@ def HoursWorkedOnProject(request, project_id):
 
 
 @login_required()
-def EmployeesOnProject(request, workexperience_id):
-    projectdata = get_object_or_404(ProjectData, pk=project_id)
-    info = WorkExperience.objects.filter(project=project_id).annotate('talent').order_by('talent')
-    employee = Users.objects.filter(project=project_id)
+def EmployeesOnProject(request, prj):
+    projectdata = get_object_or_404(ProjectData, slug=prj)
+    info = WorkExperience.objects.filter(project__slug=prj).annotate('talent').order_by('talent')
+    employee = Users.objects.filter(project__slug=prj)
 
     template_name = 'project/employees_worked_on_project.html'
     context = {
@@ -167,9 +167,9 @@ def EmployeesOnProject(request, workexperience_id):
 
 
 @login_required()
-def WorkExperienceDetail(request, workexperience_id):
-    info = get_object_or_404(WorkExperience, pk=workexperience_id)
-    detail = WorkExperience.objects.filter(pk=workexperience_id)
+def WorkExperienceDetail(request, prj):
+    info = get_object_or_404(WorkExperience, slug=prj)
+    detail = WorkExperience.objects.filter(project__slug=prj)
 
     template_name = 'project/work_experience_detail.html'
     context = {
