@@ -35,8 +35,14 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    #allauth-applications
+    #these must be installed first
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
     'django.contrib.sites',
+    #allauth-applications
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -57,11 +63,6 @@ INSTALLED_APPS = [
     'invitations.apps.InvitationsConfig',
     'nestedsettree.apps.NestedsettreeConfig',
     ##Django internal applications
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     #'django.contrib.gis',

@@ -281,8 +281,8 @@ def LecturerWrongPersonView(request, pk):
 
 
 @login_required()
-def LecturerCommentView(request, pk):
-    info = get_object_or_404(Lecturer, pk=pk)
+def LecturerCommentView(request, lct):
+    info = get_object_or_404(Lecturer, slug=lct)
     form = LecturerCommentForm(request.POST or None, instance=info)
 
     if request.method == 'POST':
@@ -328,8 +328,8 @@ def ClassMatesRejectView(request, pk):
 
 
 @login_required()
-def ClassMatesCommentView(request, pk):
-    info = get_object_or_404(ClassMates, pk=pk)
+def ClassMatesCommentView(request, cmt):
+    info = get_object_or_404(ClassMates, slug=cmt)
     form = ClassMatesCommentForm(request.POST or None, instance=info)
 
     if request.method == 'POST':
@@ -393,8 +393,8 @@ def ColleagueWrongPersonView(request, pk):
 
 
 @login_required()
-def ColleagueCommentView(request, pk):
-    info = get_object_or_404(WorkColleague, pk=pk)
+def ColleagueCommentView(request, clg):
+    info = get_object_or_404(WorkColleague, slug=clg)
     form = LecturerCommentForm(request.POST or None, instance=info)
 
     if request.method == 'POST':
@@ -441,8 +441,8 @@ def SuperiorRejectView(request, pk):
 
 
 @login_required()
-def SuperiorCommentView(request, pk):
-    info = get_object_or_404(Superior, pk=pk)
+def SuperiorCommentView(request, spr):
+    info = get_object_or_404(Superior, slug=spr)
     form = ClassMatesCommentForm(request.POST or None, instance=info)
 
     if request.method == 'POST':
@@ -498,8 +498,8 @@ def CollaboratorRejectView(request, pk):
 
 
 @login_required()
-def CollaboratorCommentView(request, pk):
-    info = get_object_or_404(WorkCollaborator, pk=pk)
+def CollaboratorCommentView(request, clb):
+    info = get_object_or_404(WorkCollaborator, slug=clb)
     form = ClassMatesCommentForm(request.POST or None, instance=info)
 
     if request.method == 'POST':
@@ -555,8 +555,8 @@ def ClientRejectView(request, pk):
 
 
 @login_required()
-def ClientCommentView(request, pk):
-    info = get_object_or_404(WorkClient, pk=pk)
+def ClientCommentView(request, wkc):
+    info = get_object_or_404(WorkClient, slug=wkc)
     form = ClassMatesCommentForm(request.POST or None, instance=info)
 
     if request.method == 'POST':
