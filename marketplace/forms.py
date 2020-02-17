@@ -98,6 +98,14 @@ class DateInput(forms.DateInput):
     input_type = 'date'
 
 
+class VacancySearchForm(forms.Form):
+    query = forms.CharField()
+    class Meta:
+        labels = {
+            'query': 'Reference Number',
+        }
+
+
 class TalentInterViewComments(forms.ModelForm):
     class Meta:
         model=BidInterviewList

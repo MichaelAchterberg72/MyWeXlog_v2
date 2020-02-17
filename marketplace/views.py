@@ -13,6 +13,7 @@ from csp.decorators import csp_exempt
 from core.decorators import subscription
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.postgres.search import SearchVector, TrigramSimilarity
 
 
 #email
@@ -22,7 +23,7 @@ from django.utils.html import strip_tags
 
 
 from .forms import (
-        TalentAvailabillityForm, SkillRequiredForm, SkillLevelForm, DeliverablesForm, TalentRequiredForm, WorkLocationForm, WorkBidForm, TalentRequiredEditForm, TalentInterViewComments, EmployerInterViewComments, AssignWorkForm,
+        TalentAvailabillityForm, SkillRequiredForm, SkillLevelForm, DeliverablesForm, TalentRequiredForm, WorkLocationForm, WorkBidForm, TalentRequiredEditForm, TalentInterViewComments, EmployerInterViewComments, AssignWorkForm, VacancySearchForm,
 )
 
 from .models import(
@@ -34,6 +35,23 @@ from db_flatten.models import SkillTag
 from users.models import CustomUser
 from Profile.models import Profile
 from booklist.models import ReadBy
+
+
+@login_required()
+@subscription(2)
+def VacancySearch(request):
+    form = VacancySearchForm()
+    query = None
+    results = []
+    if 'query' in request.GET:
+        form = VacancySearchForm(request.GET)
+        if form.is_valid():
+            query=form.cleaned_data['query']
+            results = TalentRequired.objects.annotate(similarity=TrigramSimilarity('ref_no', query),).filter(similarity__gt=0.3).order_by('-similarity')
+
+    template = 'marketplace/vacancy_search.html'
+    context = {'form': form, 'query': query, 'results': results,}
+    return render(request, template, context)
 
 
 @login_required()

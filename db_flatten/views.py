@@ -6,6 +6,7 @@ from django.utils.http import is_safe_url
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.core.exceptions import PermissionDenied
+from django.db.models import Count, Sum, Q, F
 import json
 
 
@@ -17,6 +18,7 @@ from . models import PhoneNumberType, SkillTag
 from . forms import (
         PhoneNumberForm, SkillForm,
 )
+
 
 @login_required()
 @csp_exempt
@@ -74,3 +76,31 @@ def get_skill_id(request):
         data = {'skill_id':skill_id,}
         return HttpResponse(json.dumps(data), content_type='application/json')
     return HttpResponse("/")
+
+@login_required()
+def ListTagsView(request):
+    list = SkillTag.objects.all().order_by('skill')
+    count = list.count()
+
+    #sum all hours logged to a skill
+    skill_set = {}
+    for s in list:
+        #summing the skills
+        i = list.get(skill=s)
+        e = i.experience.all()
+        e_sum = e.aggregate(sum_t=Sum('hours_worked'))
+        e_float = e_sum.get('sum_t')
+        e_count = e.count()
+        skill_set[s] = [e_count, e_float]
+
+    #demand calculation
+    demand_set = {}
+    for d in list:
+        j = list.get(skill=d)
+        f = j.skillrequired_set.all()
+        d_count = f.count()
+        demand_set[d] = d_count
+
+    template = 'db_flatten/skill_list.html'
+    context = {'list': list, 'count': count, 'skill_set': skill_set, 'demand_set': demand_set,}
+    return render(request, template, context)
