@@ -7,7 +7,8 @@
 <div class="card" style="width: 100%;">
   <div class="card-body">
     <div class="float-right">
-      <a href="{% url 'MarketPlace:History' %}" class="badge badge-primary 8rem" style="width: 8rem">View History</a>
+      <a href="{% url 'MarketPlace:History' %}" class="badge badge-primary 8rem" style="width: 8rem">Applications History</a>
+      <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}" class="badge badge-primary 8rem" style="width: 8rem">Interview History</a>
     </div>
     <h5 class="card-title">Vacancies suited for Me </h5>
     <table class="table table-sm">
@@ -92,6 +93,7 @@
           {% endfor %}
         </tbody>
       </table>
+        <a href="{% url 'MarketPlace:EmployerInterviewHistory' request.user.alias %}" class="badge badge-primary 8rem" style="width: 8rem">Interview History</a>
       </div>
     </div>
   </div>

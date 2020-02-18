@@ -1,0 +1,50 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+{% block title %}{{block.super}}-Vacancy History{% endblock title %}
+
+{% block content %}
+
+<div class="card" style="width: 100%;">
+  <div class="card-body">
+    <p class="float-right">
+      <a href="{% url 'MarketPlace:Entrance' %}" class="btn btn-secondary">Back</a>
+    </p>
+    <h5 class="card-title">Interview History</h5>
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th>Vacancy</th>
+          <th>Reference Number</th>
+          <th>Talent Response</th>
+          <th>Outcome</th>
+          <th>Comments</th>
+          <th>Vacancy Detail</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for l in list %}
+          <tr>
+            <td>{{ l.scope.title }}</td>
+            <td>{{ l.scope.ref_no }}</td>
+            <td>{{ l.get_tlt_response_display }}</td>
+            <td>{{ l.get_outcome_display }}</td>
+            <td>
+              {{ l.comments_emp }}
+            </td>
+              {% if request.user.subscription == 2 %}
+                <td><a href="{% url 'MarketPlace:VacancyDetail' l.scope.ref_no %}" class="badge badge-primary 8rem" style="width: 6rem">See Detail</a></td>
+              {% elif request.user.subscription < 2 %}
+                <td><a href="#" class="badge badge-primary 8rem" style="width: 6rem">See Detail</a></td>
+              {% endif %}
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="4">"No interviews listed."</td>
+          </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock content %}

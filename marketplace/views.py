@@ -56,6 +56,26 @@ def VacancySearch(request):
 
 @login_required()
 @subscription(1)
+def EmployerInterviewHistoryView(request, tlt):
+    list = BidInterviewList.objects.filter(scope__requested_by__alias=tlt).order_by('-date_listed')
+
+    template = 'marketplace/talent_interview_history.html'
+    context = {'list': list,}
+    return render(request, template, context)
+
+
+@login_required()
+@subscription(1)
+def TalentInterviewHistoryView(request, tlt):
+    list = BidInterviewList.objects.filter(talent__alias=tlt).order_by('-date_listed')
+
+    template = 'marketplace/talent_interview_history.html'
+    context = {'list': list,}
+    return render(request, template, context)
+
+
+@login_required()
+@subscription(1)
 def InterviewDeclineView(request, int_id):
     instance = BidInterviewList.objects.get(pk=int_id)
     form = TalentInterViewComments(request.POST, instance=instance)

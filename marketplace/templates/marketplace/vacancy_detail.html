@@ -7,7 +7,11 @@
 <p class="float-right">
   <a href="{% url 'MarketPlace:Entrance' %}" class="btn btn-secondary">Back</a>
   {% for i in vacancy %}
-    <a href="{% url 'MarketPlace:WorkBid' i.ref_no %}" class="btn btn-success">Apply for this role</a>
+  {% if i.bidcloses >= datetime.now %}
+    <a href="{% url 'MarketPlace:WorkBid' i.ref_no %}" class="btn btn-warning">Apply for this role</a>
+  {% else %}
+    <a href="#" class="btn btn-success">Closed</a>
+  {% endif %}
   {% endfor %}
 </p>
 <h5 class="card-title">Vacancy: {{ v.title }} ({{ v.ref_no }})</h5>
