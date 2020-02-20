@@ -29,7 +29,7 @@ class SubscriptionExpiredTask(Task):
         subject, from_email, to = 'Your Subscription has Expired', settings.CELERY_SYSTEM_EMAIL, user.Email
         html_content = render_to_string('email_templates/email_subscription_expired.html', {'user': user.first_name})
         text_content = strip_tags(html_content)
-        msg = EmailMultiAlternatives(sunject, text_content, [to])
+        msg = EmailMultiAlternatives(subject, text_content, [to])
         msg.attach_alternative(html_content, "text/html")
         msg.send()
 
@@ -45,7 +45,7 @@ class SubscriptionAmountDifferentTask(Task):
         subject, from_email, to = 'Your Payment Amount with PayPal varies to the Subscription Amount', settings.CELERY_SYSTEM_EMAIL, user.Email
         html_content = render_to_string('email_templates/email_subscription_amount_different.html', {'user': user.first_name})
         text_content = strip_tags(html_content)
-        msg = EmailMultiAlternatives(sunject, text_content, [to])
+        msg = EmailMultiAlternatives(subject, text_content, [to])
         msg.attach_alternative(html_content, "text/html")
         msg.send()
 
@@ -61,7 +61,7 @@ class SubscriptionCancelledTask(Task):
         subject, from_email, to = 'Your Subscription has been Cancelled', settings.CELERY_SYSTEM_EMAIL, user.Email
         html_content = render_to_string('email_templates/email_subscription_cancelled.html', {'user': user.first_name})
         text_content = strip_tags(html_content)
-        msg = EmailMultiAlternatives(sunject, text_content, [to])
+        msg = EmailMultiAlternatives(subject, text_content, [to])
         msg.attach_alternative(html_content, "text/html")
         msg.send()
 
@@ -77,7 +77,7 @@ class SubscriptionFailedTask(Task):
         subject, from_email, to = 'Your Subscription failed to be processed', settings.CELERY_SYSTEM_EMAIL, user.Email
         html_content = render_to_string('email_templates/email_subscription_failed.html', {'user': user.first_name})
         text_content = strip_tags(html_content)
-        msg = EmailMultiAlternatives(sunject, text_content, [to])
+        msg = EmailMultiAlternatives(subject, text_content, [to])
         msg.attach_alternative(html_content, "text/html")
         msg.send()
 
@@ -93,7 +93,7 @@ class SubscriptionSignupTask(Task):
         subject, from_email, to = 'WexLog Sign-up Confirmation', settings.CELERY_SYSTEM_EMAIL, user.Email
         html_content = render_to_string('email_templates/email_subscription_signup.html', {'user': user.first_name})
         text_content = strip_tags(html_content)
-        msg = EmailMultiAlternatives(sunject, text_content, [to])
+        msg = EmailMultiAlternatives(subject, text_content, [to])
         msg.attach_alternative(html_content, "text/html")
         msg.send()
 
@@ -106,31 +106,49 @@ class SubscriptionRefundTask(Task):
 
     def run(self, user, refundamount, payment_txn_id):
 
-        subject, from_email, to = 'Refund Subscriber Upgrade', settings.CELERY_SYSTEM_EMAIL, settings.ACCOUNTS_EMAIL
+        subject, from_email, to = 'Subscriber Upgrade Refund', settings.CELERY_SYSTEM_EMAIL, settings.ACCOUNTS_EMAIL
         html_content = render_to_string('email_templates/email_subscription_upgrade_refund.html', {'user': user, 'refundamount': refundamount, 'txn_id': payment_txn_id})
         text_content = strip_tags(html_content)
-        msg = EmailMultiAlternatives(sunject, text_content, [to])
+        msg = EmailMultiAlternatives(subject, text_content, [to])
         msg.attach_alternative(html_content, "text/html")
         msg.send()
 
 # task.register(SubscriptionExpiredTask)
 
 
+@app.task
+@shared_task
+class RemindDeleteOldSubscription(Task):
+
+    def run(self, user, payment_txn_id):
+
+        subject, from_email, to = 'WeXlog Subscription Reminder', settings.CELERY_SYSTEM_EMAIL, user
+        html_content = render_to_string('email_templates/email_reminder_old_subscription_delete.html', {'user': user, 'txn_id': payment_txn_id})
+        text_content = strip_tags(html_content)
+        msg = EmailMultiAlternatives(subject, text_content, [to])
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()
+
+# task.register(SRemindDeleteOldSubscription)
+
+
 def SubscriptionUpgradeRefund():
 
     def run(self, user):
 
-        q = PayPalStandardBase.objects.get(custom=user).order_by(-payment_date)
+        q = PayPalStandardBase.objects.filter(custom=user).order_by(-payment_date)
         subscriber = q[1]
+        useremail = subscriber.custom
 
         npd = subscriber.next_payment_date
-        cd = date.today()
+        npdd = npd.strftime('%d/%m/%Y')
+        cd = date.today().strftime('%d/%m/%Y')
         nsd = cd - npd
         daysdelta = nsd.days
 
-        npd = subscriber.next_payment_date
         opd = subscriber.payment_date
-        sd = npd - opd
+        opdd = opd.strftime('%d/%m/%Y')
+        sd = npdd - opdd
         subscriptiondaysdelta = sd.days
 
         amp = subscriber.amount1
@@ -140,6 +158,7 @@ def SubscriptionUpgradeRefund():
         payment_txn_id = subscriber.txn_id
 
         if refundamount >= 0:
-            SubscriptionRefundTask(subscriber, refundamount, payment_txn_id)
+            SubscriptionRefundTask(useremail, refundamount, payment_txn_id)
+            RemindDeleteOldSubscription(useremail, payment_txn_id)
         else:
             pass
