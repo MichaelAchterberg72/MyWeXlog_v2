@@ -47,7 +47,7 @@ UNIT = (
 class SkillLevel(models.Model):
     LEVEL = (
         (0,'Student'),
-        (1,'Graduate'),
+        (1,'Apprentice'),
         (2,'Junior'),
         (3,'Intermediate'),
         (4,'Senior'),

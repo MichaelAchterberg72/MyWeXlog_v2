@@ -569,8 +569,8 @@ def AddToShortListView(request, vac, tlt):
 @login_required()
 @subscription(2)
 def AddToInterviewListView(request, vac, tlt):
-    job = get_object_or_404(TalentRequired, pk=vac)
-    talent = get_object_or_404(CustomUser, pk=tlt)
+    job = get_object_or_404(TalentRequired, ref_no=vac)
+    talent = get_object_or_404(CustomUser, alias=tlt)
     if request.method == 'POST':
         BidInterviewList.objects.create(talent=talent, scope=job)
 

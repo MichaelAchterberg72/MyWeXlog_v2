@@ -22,7 +22,7 @@ urlpatterns = [
     path('vacancy-delete-deliverables/<int:pk>/', views.DeliverableDeleteView, name='DeliverablesDelete'),
     path('vacancy-delete-skill/<int:id>/', views.SkillDeleteView, name='SkillDelete'),
 
-    path('interviewlist/<int:vac>/<int:tlt>/', views.AddToInterviewListView, name='InterviewList'),
+    path('interviewlist/<slug:vac>/<slug:tlt>/', views.AddToInterviewListView, name='InterviewList'),
 
     path('shortlist/<slug:vac>/<slug:tlt>/', views.AddToShortListView, name='ShortList'),
 

@@ -100,6 +100,7 @@ def ExperienceHome(request):
             iama = 5
 
         level = sl.get(level=iama)
+
         Profile.objects.filter(talent=request.user.id).update(exp_lvl=level)
 
         #<<<Step 2
@@ -224,7 +225,6 @@ def ActiveProfileView(request, tlt, vac):
     #caching
     bch = BriefCareerHistory.objects.filter(talent__alias=tlt).order_by('-date_from')
     pfl = Profile.objects.only('id','background', 'alias', 'mentor', 'motivation', 'std_rate', 'currency').filter(alias=tlt)
-    print('tlt:', tlt, 'pfl:', pfl)
     als = get_object_or_404(Profile, alias=tlt)
     padd = PhysicalAddress.objects.only('country', 'region', 'city').filter(talent__alias=tlt)
     vacancy = TalentRequired.objects.filter(ref_no=vac)
@@ -389,10 +389,11 @@ def SkillProfileDetailView(request, tlt):
 
 @login_required()
 def SumAllExperienceView(request):
-    tlt_p = Profile.objects.get(pk=request.user.id)
+    talent = request.user.id
+    tlt_p = Profile.objects.get(pk=talent)
     skill_qs = SkillTag.objects.all()
     exp = WorkExperience.objects.filter(
-        talent = request.user.id).select_related('topic')
+        talent = talent).select_related('topic')
 
     exp_s = exp.values_list('skills', flat=True).distinct('skills')
     exp_t = exp.order_by('topic__skills').values_list('topic__skills', flat=True).distinct('topic__skills')
