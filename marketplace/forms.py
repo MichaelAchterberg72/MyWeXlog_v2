@@ -217,7 +217,7 @@ class TalentRequiredForm(forms.ModelForm):
             'ref_no': 'Vacancy Reference Number'
         }
         help_texts = {
-            'ref_no': 'Maximum length: 7 Aplha-numeric characters'
+            'ref_no': 'Maximum length: 7 Alpha-numeric characters'
         }
 
 

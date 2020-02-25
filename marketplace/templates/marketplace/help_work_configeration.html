@@ -1,0 +1,35 @@
+{% extends 'base_homelite.html' %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Help{% endblock title %}
+
+{% block Style %}
+
+{% endblock Style %}
+{% block content %}
+<div class="container">
+<h3>Skill Level Details</h3>
+<p>There are various ways in which talent can engage with an employer. This is a list of the classifications available on WeXlog.</p>
+
+<table class="table table-sm">
+  <thead>
+    <tr>
+      <th>Configeration</th>
+      <th>Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for l in wch %}
+    <tr>
+      <td>{{ l.type }}</td>
+      <td>{{ l.description }}</td>
+    </tr>
+  </tbody>
+  {% endfor %}
+</table>
+</div>
+{% endblock content %}
+{% block Script %}
+
+{% endblock Script %}

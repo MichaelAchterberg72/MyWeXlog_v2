@@ -10,7 +10,7 @@ from locations.models import Currency, City
 from db_flatten.models import SkillTag
 from talenttrack.models import Result
 
-#This is the table that specifies the work configeration (Freelance, Remote Freelent, Consultant, Contractor, Employee, FIFO)
+#This is the table that specifies the work configeration (Freelance, Remote Freelence, Consultant, Contractor, Employee, FIFO)
 class WorkLocation(models.Model):
     type = models.CharField(max_length=255, unique=True)
     description = models.TextField()
@@ -47,7 +47,7 @@ UNIT = (
 class SkillLevel(models.Model):
     LEVEL = (
         (0,'Student'),
-        (1,'Apprentice'),
+        (1,'Beginner'),
         (2,'Junior'),
         (3,'Intermediate'),
         (4,'Senior'),

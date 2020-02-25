@@ -1,0 +1,37 @@
+{% extends 'base_homelite.html' %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Help{% endblock title %}
+
+{% block Style %}
+
+{% endblock Style %}
+{% block content %}
+<div class="container">
+<h3>Skill Level Details</h3>
+<p>The longer you work the more experience you gain. To make it easier to find the experience levels required, a few classifications have been created.</p>
+
+<table class="table table-sm">
+  <thead>
+    <tr>
+      <th>Skill Level</th>
+      <th>Maximum Hours</th>
+      <th>Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for l in lvl %}
+    <tr>
+      <td>{{ l.get_level_display }}</td>
+      <td>{{ l.min_hours|intcomma }}</td>
+      <td>{{ l.description }}</td>
+    </tr>
+  </tbody>
+  {% endfor %}
+</table>
+</div>
+{% endblock content %}
+{% block Script %}
+
+{% endblock Script %}

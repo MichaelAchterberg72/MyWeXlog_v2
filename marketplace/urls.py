@@ -52,4 +52,7 @@ urlpatterns = [
     path('vacancy-search/', views.VacancySearch, name="VacSearch"),
     path('interview-history/<slug:tlt>/', views.TalentInterviewHistoryView, name="TalentInterviewHistory"),
     path('interview-history/<slug:tlt>/', views.EmployerInterviewHistoryView, name="EmployerInterviewHistory"),
+    #Help urls
+    path('help/Experience-level/', views.ExperienceLevelHelpView, name="HelpExperienceLevel"),
+    path('help/Work-Configeration/', views.WorkConfigerationHelpView, name="HelpWorkCOnfigeration"),
 ]

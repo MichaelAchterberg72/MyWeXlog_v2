@@ -27,7 +27,7 @@ from .forms import (
 )
 
 from .models import(
-    TalentRequired, SkillRequired, Deliverables, TalentAvailabillity, WorkBid, SkillLevel, BidShortList, WorkIssuedTo, BidInterviewList,
+    TalentRequired, SkillRequired, Deliverables, TalentAvailabillity, WorkBid, SkillLevel, BidShortList, WorkIssuedTo, BidInterviewList, WorkLocation
 )
 
 from talenttrack.models import WorkExperience
@@ -882,3 +882,22 @@ def get_skilllevel_id(request):
         return HttpResponse(json.dumps(data), content_type='application/json')
     return HttpResponse("/")
 #<<< SkillLevel Popup
+
+#>>> Help views
+@login_required()
+def ExperienceLevelHelpView(request):
+    lvl = SkillLevel.objects.all()
+
+    context = {'lvl': lvl}
+    template = 'marketplace/help_skill_level.html'
+    return render(request, template, context)
+
+@login_required()
+def WorkConfigerationHelpView(request):
+    wch = WorkLocation.objects.all()
+
+    context = {'wch': wch}
+    template = 'marketplace/help_work_configeration.html'
+    return render(request, template, context)
+
+#Help Views <<<
