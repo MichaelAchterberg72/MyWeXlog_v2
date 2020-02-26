@@ -43,7 +43,10 @@ def HomePageView(request):
 
 def SiteStatsView(request):
 
-    mcount= User.objects.all().count()
+    mcount = User.objects.all().count()
+    macount = User.objects.filter(subscription='2').count()
+    mpcount = User.objects.filter(subscription='1').count()
+    pmcount = macount + mpcount
     scount = SkillTag.objects.all().count()
     ecount= Enterprise.objects.all().count()
     vcount = TalentRequired.objects.all().count()
@@ -51,6 +54,9 @@ def SiteStatsView(request):
     response = f'members={mcount}&skills={scount}&enterprises={ecount}&vacancies={vcount}'
     sitestats = [
             {"members": mcount,
+            "ma": macount,
+            "mp": mpcount,
+            "pmcount": pmcount,
             "skills": scount,
             "enterprises": ecount,
             "vacancies": vcount}

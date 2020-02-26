@@ -1,0 +1,15 @@
+{% extends "base_email.html" %}
+{% load humanize %}
+{% load staticfiles %}
+
+{% block content %}
+
+    <p>Hi,</p>
+    <p>Subscriber {{ user }} has upgraded their account today and requires a refund
+      of {{ refundamount }} for transaction ID {{ payment_txn_id }}.</p>
+    <p>Please click effect transfer to their PayPal account.</p>
+    <p>Thanks, we look forward to hearing from you soon.</p>
+    <p>&nbsp</p>
+    <p>- WexLog Team</p>
+
+{% endblock contnt %}

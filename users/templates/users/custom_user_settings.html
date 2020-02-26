@@ -1,4 +1,4 @@
-{% extends "wexlog_home/base_wexlog_home.html" %}
+{% extends "base_home.html" %}
 {% load humanize %}
 {% load crispy_forms_tags %}
 {% load staticfiles %}
@@ -8,16 +8,7 @@
 <p>&nbsp</p>
 <p>&nbsp</p>
 
-      <div class="container">
-        <div class="row no-gutters slider-text align-items-end justify-content-start">
-          <div class="col-md-8 ftco-animate text-center text-md-left mb-5">
-          	<p class="breadcrumbs mb-0"><span class="mr-3"><a href="{% url 'Public:WexlogHomeIndex' %}">Home <i class="ion-ios-arrow-forward"></i></a></span> <span>Setttings</span></p>
-            <h1 class="mb-3 bread">Settings</h1>
-          </div>
-        </div>
-      </div>
-
-    <section class="ftco-section">
+      <section class="ftco-section">
     	<div class="container">
     		<div class="row justify-content-center mb-5 pb-3">
           <div class="col-md-7 text-center heading-section ftco-animate">

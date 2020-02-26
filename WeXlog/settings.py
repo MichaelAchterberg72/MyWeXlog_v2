@@ -263,7 +263,7 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTH_USER_MODEL = 'users.CustomUser'
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/Profile/'
-LOGOUT_REDIRECT_URL = '/public/home/'
+LOGOUT_REDIRECT_URL = 'http://127.0.0.1:8000/public/index/'
 
 
 # Internationalization
@@ -313,6 +313,9 @@ PAYPAL_PRIVATE_CERT = 'paypal/cert/paypal_private.pem'  #'/path/to/paypal_privat
 PAYPAL_PUBLIC_CERT = 'paypal/cert/paypal_public.pem'  # '/path/to/paypal_public.pem'  $ openssl req -new -key paypal_private.pem -x509 -days 365 -out paypal_public.pem
 PAYPAL_CERT = '/path/to/paypal_cert.pem'  # https://www.paypal.com/us/cgi-bin/webscr?cmd=_profile-website-cert or https://www.sandbox.paypal.com/us/cgi-bin/webscr?cmd=_profile-website-cert
 PAYPAL_CERT_ID = 'get-from-paypal-website'
+
+# Accounts department email_id
+ACCOUNTS_EMAIL = "accounts@devoptec.com"
 
 
 # Celery Settings
