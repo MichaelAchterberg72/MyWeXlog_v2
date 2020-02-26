@@ -24,7 +24,11 @@
     {% for l in lvl %}
     <tr>
       <td>{{ l.get_level_display }}</td>
-      <td>{{ l.min_hours|intcomma }}</td>
+      {% if l.level < 5 %}
+        <td>less than {{ l.min_hours|intcomma }}</td>
+      {% else %}
+        <td>greater than {{ l.min_hours|intcomma }}</td>
+      {% endif %}
       <td>{{ l.description }}</td>
     </tr>
   </tbody>

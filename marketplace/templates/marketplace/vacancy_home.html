@@ -6,10 +6,12 @@
 
 <div class="card" style="width: 100%;">
   <div class="card-body">
-    <div class="float-right">
-      <a href="{% url 'MarketPlace:History' %}" class="badge badge-primary 8rem" style="width: 8rem">Applications History</a>
-      <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}" class="badge badge-primary 8rem" style="width: 8rem">Interview History</a>
-    </div>
+    {% if request.user.subscription >= 1 %}
+      <div class="float-right">
+        <a href="{% url 'MarketPlace:History' %}" class="badge badge-primary 8rem" style="width: 8rem">Applications History</a>
+        <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}" class="badge badge-primary 8rem" style="width: 8rem">Interview History</a>
+      </div>
+    {% endif %}
     <h5 class="card-title">Vacancies suited for Me </h5>
     <table class="table table-sm">
       <col width="5%">
@@ -53,7 +55,9 @@
       </tr>
       {% endfor %}
     </table>
-    <a href="{% url 'MarketPlace:VacSearch' %}" class="badge badge-primary 8rem float-right" style="width: 8rem">Search</a>
+    {% if request.user.subscription >= 2 %}
+      <a href="{% url 'MarketPlace:VacSearch' %}" class="badge badge-primary 8rem float-right" style="width: 8rem">Search</a>
+    {% endif %}
   </div>
 </div>
 <br>
@@ -177,5 +181,8 @@
 </div>
 {% endif %}
 {% endif %}
+{% endif %}
+{% if request.user.subscription == 0 %}
+<h6>To see more on this page a subscription is required. A history of interviews and vacancies applied for as well as to be able to search for posted vacancies based on its reference number.</h6>
 {% endif %}
 {% endblock content %}
