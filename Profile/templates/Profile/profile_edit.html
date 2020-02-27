@@ -1,5 +1,6 @@
 {% extends 'base_home.html' %}
 {% load crispy_forms_tags %}
+{% load static %}
 
 {% block title %}My {{block.super}} Profile Edit{% endblock title %}
 
@@ -24,6 +25,7 @@
       <div class="form-row">
         <div class="form-group col-md-6 mb-0">
           {{ form.currency|as_crispy_field }}
+          <p><a href="{% url 'Location:CurrencyAddPop' %}" id='add_currency' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a Currency</a></p>
         </div>
         <div class="form-group col-md-6 mb-0">
           {{ form.std_rate|as_crispy_field }}
@@ -43,3 +45,25 @@
 </form>
 </div>
 {% endblock content %}
+{% block Script %}
+
+<!-- code for popups -->
+<script type="text/javascript">
+function showAddPopup(triggeringLink) {
+    var name = triggeringLink.id.replace(/^add_/, '');
+    href = triggeringLink.href;
+    var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes');
+    win.focus();
+    return false;
+}
+
+function closePopup(win, newID, newRepr, id) {
+    $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
+    win.close();
+}
+
+window.onerror = function (msg) {
+  $("body").attr("JSError", msg);
+}
+</script>
+{% endblock Script %}

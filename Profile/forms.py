@@ -222,6 +222,12 @@ class PhoneNumberForm(forms.ModelForm):
     class Meta:
         model = PhoneNumber
         fields = ('number', 'type', 'current')
+        widgets = {
+            'current': forms.CheckboxInput(attrs={'style':'width:30px;height:30px;'})
+            }
+        labels = {
+            'current': '__Yes',
+        }
 
 
 class OnlineProfileForm(forms.ModelForm):

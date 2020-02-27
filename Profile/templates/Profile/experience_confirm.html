@@ -8,6 +8,9 @@
       <div class="card">
         <div class="card-body">
           <p class="card-text">
+            {% if not wf1 or cm1 or wk1 or spr1 or wclr1 or wc1 %}
+              <p>You currently do not have any experience to confirm.</p>
+            {% endif %}
             {% if wf1 %}
               <h5 class="card-title" id="Lecturer">Confirm as Lecturer</h5>
               <table class="table table-sm">
