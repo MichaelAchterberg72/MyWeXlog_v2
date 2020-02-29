@@ -147,7 +147,7 @@ def TrainingListView(request):
 
     basequery = WorkExperience.objects.select_related('topic').filter(talent=request.user)
 
-    train = basequery.filter(edt=True).order_by('-date_from')[:15]
+    train = basequery.filter(edt=True).order_by('-date_from')
     train_sum = train.aggregate(Edu_sum=Sum('topic__hours'))
 
     t_sum = train_sum.get('Edu_sum')
@@ -191,7 +191,7 @@ def PreExperienceListView(request):
 
     basequery = WorkExperience.objects.select_related('topic').filter(talent=request.user)
 
-    prelog = basequery.filter(prelog=True).order_by('-date_from')[:15]
+    prelog = basequery.filter(prelog=True).order_by('-date_from')
     pre_sum = prelog.aggregate(p_sum=Sum('hours_worked'))
 
     p_sum= pre_sum.get('p_sum')
