@@ -23,24 +23,68 @@ from .forms import (
     EnterprisePopupForm, BranchForm, PhoneNumberForm, IndustryPopUpForm, BranchTypePopUpForm, FullBranchForm
 )
 
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 
 @login_required()
 def EnterpriseHome(request):
     ecount = Enterprise.objects.all().aggregate(sum_e=Count('name'))
     bcount = Branch.objects.all().aggregate(sum_b=Count('name'))
-    company = Enterprise.objects.all()
+    company = Enterprise.objects.all().order_by('name')
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(company, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
 
     template = 'enterprises/enterprise_home.html'
-    context = {'ecount': ecount, 'bcount': bcount, 'company': company,}
+    context = {'ecount': ecount, 'bcount': bcount, 'pageitems': pageitems, 'page_range': page_range}
     return render(request, template, context)
 
 
 @login_required()
 def BranchListView(request, c_id):
-    list = Branch.objects.filter(company=c_id).order_by('name')
+    branches = Branch.objects.filter(company=c_id).order_by('name')
     detail = get_object_or_404(Enterprise, pk=c_id)
+
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(branches, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
     template = 'enterprises/branch_list.html'
-    context = {'list': list, 'detail': detail}
+    context = {'detail': detail, 'pageitems': pageitems, 'page_range': page_range}
     return render(request, template, context)
 
 

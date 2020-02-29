@@ -1,50 +1,47 @@
 {% extends "base_home.html" %}
+{% load humanize %}
 
-{% block title %}{{block.super}}-Branches{% endblock title %}
+{% block title %}{{block.super}}-Training & Education List{% endblock title %}
 
 {% block content %}
-
 <div class="card">
-  <h5 class="card-header">Branches for {{ detail.name }}</h5>
+  <h5 class="card-header">Training & Education - Full List<span><p class="float-right"><a href="{% url 'Talent:Home' %}"  class="badge badge-pill badge-primary">Back</a></p></span></h5>
+
   <div class="card-body">
-    {% if request.user.is_authenticated %}
-    <p><a href="{% url 'Enterprise:AddBranch' detail.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Add Branch</a><a href="{% url 'Enterprise:EnterpriseHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
-    {% endif %}
-    <table class="table-sm">
-      <col width="30%">
-      <col width="30%">
-      <col width="15%">
-      <col width="15%">
-      <col width="10%">
+    <div class="float-right">
+      <p><a href="{% url 'Talent:Capture' %}" class="badge badge-pill badge-primary float-right">Add Education</a></p>
+    </div>
+      <p><strong>Total hours in training: </strong>{{ train_sum.Edu_sum|intcomma }}</p>
+    <div>
+    <table class="table table-sm">
       <thead>
         <tr>
-          <th>Branch Name</th>
-          <th>Type</th>
-          <th>Current Employees (On Wexlog)</th>
-          <th>Past Employees (On Wexlog)</th>
-          <th></th>
+          <th class="align-middle text-center">Start Date</th>
+          <th class="align-middle text-center">Completion Date</th>
+          <th class="align-middle text-center">Course</th>
+          <th class="align-middle text-center">Time Logged</th>
+          <th class="align-middle text-center">Options</th>
         </tr>
       </thead>
-      {% for b in pageitems %}
+      {% for t in pageitems %}
       <tbody>
         <tr>
-          <td>{{ b.name }}</td>
-          <td>{{ b.type }}</td>
-          {% if request.user.subscription >= 2 %}
-            <td>Current</td>
-            <td>Past</td>
-          {% else %}
-            <td class="badge badge-info text-wrap" style="width: 6rem;">Active Subscription required</td>
-            <td class="badge badge-info text-wrap" style="width: 6rem;">Active Subscription required</td>
-          {% endif %}
-          <td>{% if request.user.is_authenticated %}
-          <a href="{% url 'Enterprise:BranchDetail' b.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Detail</a>
-          {% endif %}</td>
-
+          <td class="align-middle text-center">{{ t.date_from|date:"j M Y" }}</td>
+          <td class="align-middle text-center">{{ t.date_to|date:"j M Y" }}</td>
+          <td class="align-middle text-center">{{ t.course }}</td>
+          <td class="align-middle text-center">{{ t.topic.hours|intcomma }}</td>
+          <td class="align-middle text-center">
+            <a href="{% url 'Talent:EducationDetail' t.id %}" class="badge badge-pill badge-secondary" style="width: 5rem;">Detail</a>
+            <form  action="{% url 'Talent:EDTDelete' t.id %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
+            </form>
+          </td>
         </tr>
       </tbody>
-      {% endfor %}
+    {% endfor %}
     </table>
+
     <p>&nbsp</p>
 
     <nav aria-label="Page navigation">
@@ -84,6 +81,7 @@
           </ul>
         {% endif %}
     </nav>
+
   </div>
 </div>
 

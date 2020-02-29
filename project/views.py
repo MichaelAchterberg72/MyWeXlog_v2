@@ -27,14 +27,36 @@ from django_messages.models import Message
 from .forms import ProjectAddForm, ProjectSearchForm, ProjectForm
 from django_messages.forms import ComposeForm
 
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 
 @login_required()
 def ProjectListHome(request):
     pcount = ProjectData.objects.all().aggregate(sum_p=Count('name'))
     projects = ProjectData.objects.all().order_by('-company')
 
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(projects, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
     template_name = 'project/project_home.html'
-    context = {'pcount': pcount, 'projects': projects}
+    context = {'pcount': pcount, 'pageitems': pageitems, 'page_range': page_range}
     return render(request, template_name, context)
 
 

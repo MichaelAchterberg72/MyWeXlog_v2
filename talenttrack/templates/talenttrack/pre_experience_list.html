@@ -1,50 +1,47 @@
 {% extends "base_home.html" %}
+{% load humanize %}
 
-{% block title %}{{block.super}}-Branches{% endblock title %}
+{% block title %}{{block.super}}-Experience List{% endblock title %}
 
 {% block content %}
-
 <div class="card">
-  <h5 class="card-header">Branches for {{ detail.name }}</h5>
-  <div class="card-body">
-    {% if request.user.is_authenticated %}
-    <p><a href="{% url 'Enterprise:AddBranch' detail.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Add Branch</a><a href="{% url 'Enterprise:EnterpriseHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
-    {% endif %}
-    <table class="table-sm">
-      <col width="30%">
-      <col width="30%">
-      <col width="15%">
-      <col width="15%">
-      <col width="10%">
-      <thead>
-        <tr>
-          <th>Branch Name</th>
-          <th>Type</th>
-          <th>Current Employees (On Wexlog)</th>
-          <th>Past Employees (On Wexlog)</th>
-          <th></th>
-        </tr>
-      </thead>
-      {% for b in pageitems %}
-      <tbody>
-        <tr>
-          <td>{{ b.name }}</td>
-          <td>{{ b.type }}</td>
-          {% if request.user.subscription >= 2 %}
-            <td>Current</td>
-            <td>Past</td>
-          {% else %}
-            <td class="badge badge-info text-wrap" style="width: 6rem;">Active Subscription required</td>
-            <td class="badge badge-info text-wrap" style="width: 6rem;">Active Subscription required</td>
-          {% endif %}
-          <td>{% if request.user.is_authenticated %}
-          <a href="{% url 'Enterprise:BranchDetail' b.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Detail</a>
-          {% endif %}</td>
+  <h5 class="card-header">Pre-Logged Experience - Full List<span><p class="float-right"><a href="{% url 'Talent:Home' %}"  class="badge badge-pill badge-primary">Back</a></p></span></h5>
 
-        </tr>
-      </tbody>
-      {% endfor %}
-    </table>
+  <div class="card-body">
+    <div class="float-right">
+      <p><a href="{% url 'Talent:PreloggedCapture' %}" class="badge badge-pill badge-primary float-right">Add Logged Experience</a></p>
+    </div>
+    <p><strong>Total hours of Previously Logged Experience: </strong>{{ pre_sum.p_sum|intcomma }}</p>
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th>Employer</th>
+        <th>Date from</th>
+        <th>Date to</th>
+        <th>Hours</th>
+        <th>Project</th>
+      </tr>
+    </thead>
+    {% for p in pageitems %}
+    <tbody>
+      <tr>
+        <td>{{ p.company }}</td>
+        <td>{{ p.date_from|date:"j M Y" }}</td>
+        <td>{{ p.date_to|date:"j M Y" }}</td>
+        <td>{{ p.hours_worked|intcomma }}</td>
+        <td>{{ p.project }}</td>
+        <td>
+          <a href="{% url 'Talent:PreLogDetail' p.id %}" class="badge badge-pill badge-secondary" style="width: 5rem;">Detail</a>
+          <form  action="{% url 'Talent:PLEDelete' p.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
+          </form>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
     <p>&nbsp</p>
 
     <nav aria-label="Page navigation">
@@ -84,6 +81,7 @@
           </ul>
         {% endif %}
     </nav>
+
   </div>
 </div>
 

@@ -32,6 +32,8 @@ from Profile.models import Profile
 from .models import BookList, Author, ReadBy, Format, Publisher
 from .forms import *
 
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 
 @login_required()
 class BookListHomeView(TemplateView):
@@ -44,8 +46,28 @@ def BookListHome(request, profile_id=None):
     ecount = ReadBy.objects.filter(talent=profile_id).aggregate(sum_e=Count('book'))
     books = ReadBy.objects.filter(talent=profile_id).order_by('-date')
 
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(books, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
     template_name = 'booklist/booklist_home.html'
-    context = {'ecount': ecount, 'books': books,}
+    context = {'ecount': ecount, 'pageitems': pageitems, 'page_range': page_range}
     return render(request, template_name, context)
 
 
@@ -58,8 +80,28 @@ def ProfileBookList(request, tlt_id):
     bkl = ReadBy.objects.filter(talent=tlt_id).order_by('-date')
     bkl_count = bkl.count()
 
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(bkl, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
     template_name = 'booklist/vac_profile_list.html'
-    context = {'bkl': bkl, 'info': info, 'bkl_count': bkl_count,}
+    context = {'info': info, 'bkl_count': bkl_count, 'pageitems': pageitems, 'page_range': page_range}
     return render(request, template_name, context)
 
 
@@ -86,14 +128,34 @@ def BookDetailView(request, book_id):
 
 @login_required()
 def BookListView(request):
-    list = BookList.objects.all().order_by('title')
-    bcount = list.aggregate(sum_b=Count('title'))
+    bk_obj = BookList.objects.all().order_by('title')
+    bcount = bk_obj.aggregate(sum_b=Count('title'))
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(bk_obj, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
 
     template_name = 'booklist/books_list.html'
-    paginate_by = 10  # if pagination is desired'
     context = {
-            'list': list,
-            'bcount': bcount,
+             'bcount': bcount,
+             'pageitems': pageitems,
+             'page_range': page_range
     }
     return render(request, template_name, context)
 
@@ -102,22 +164,28 @@ def BookSearch(request):
     form = BookSearchForm()
     query = None
     results = []
+    count = 0
     if 'query' in request.GET:
         form = BookSearchForm(request.GET)
         if form.is_valid():
             query = form.cleaned_data['query']
-            results = BookList.objects.annotate(
+            results = set(BookList.objects.annotate(
                 search=SearchVector('title',
                                     'tag__skill',
                                     'author__name',
                                     'publisher__publisher'),
-            ).filter(search=query)
+            ).filter(search=query).order_by('title'))
+
+            for q in results:
+                count += 1
+
 
     template_name= 'booklist/book_search.html'
     context = {
             'form': form,
             'query': query,
-            'results': results
+            'results': results,
+            'count': count,
     }
     return render(request, template_name, context)
 

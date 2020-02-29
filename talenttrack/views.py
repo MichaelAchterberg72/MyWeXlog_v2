@@ -37,6 +37,8 @@ from Profile.models import (
 from booklist.models import ReadBy
 from users.models import CustomUser
 
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 
 @login_required()
 def ExperienceHome(request):
@@ -47,13 +49,13 @@ def ExperienceHome(request):
         #<<<Step 1
 
         #>>>Step 2
-        train = basequery.filter(edt=True).order_by('-date_from')
+        train = basequery.filter(edt=True).order_by('-date_from')[:15]
         train_sum = train.aggregate(Edu_sum=Sum('topic__hours'))
 
-        experience = basequery.filter(wexp=True).order_by('-date_from')
+        experience = basequery.filter(wexp=True).order_by('-date_from')[:15]
         exp_sum = experience.aggregate(we_sum=Sum('hours_worked'))
 
-        prelog = basequery.filter(prelog=True).order_by('-date_from')
+        prelog = basequery.filter(prelog=True).order_by('-date_from')[:15]
         pre_sum = prelog.aggregate(p_sum=Sum('hours_worked'))
 
         t_sum = train_sum.get('Edu_sum')
@@ -126,9 +128,150 @@ def ExperienceHome(request):
 
         template = 'talenttrack/track_home.html'
         context = {
-            'train': train, 'train_sum': train_sum, 'experience': experience, 'exp_sum': exp_sum, 'prelog': prelog, 'pre_sum': pre_sum, 'tot_sum': tot_sum, 'skill_name': skill_name, 'skill_count': skill_count, 'level': level,
-            }
+            'train': train,
+            'train_sum': train_sum,
+            'experience': experience,
+            'exp_sum': exp_sum,
+            'prelog': prelog,
+            'pre_sum': pre_sum,
+            'tot_sum': tot_sum,
+            'skill_name': skill_name,
+            'skill_count': skill_count,
+            'level': level,
+        }
         return render(request, template, context)
+
+
+@login_required()
+def TrainingListView(request):
+
+    basequery = WorkExperience.objects.select_related('topic').filter(talent=request.user)
+
+    train = basequery.filter(edt=True).order_by('-date_from')[:15]
+    train_sum = train.aggregate(Edu_sum=Sum('topic__hours'))
+
+    t_sum = train_sum.get('Edu_sum')
+
+    if t_sum:
+        t_sum = t_sum
+    else:
+        t_sum=0
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(train, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+    template = 'talenttrack/training_list.html'
+    context = {
+        'train_sum': train_sum,
+        'pageitems': pageitems,
+        'page_range': page_range
+    }
+    return render(request, template, context)
+
+
+@login_required()
+def PreExperienceListView(request):
+
+    basequery = WorkExperience.objects.select_related('topic').filter(talent=request.user)
+
+    prelog = basequery.filter(prelog=True).order_by('-date_from')[:15]
+    pre_sum = prelog.aggregate(p_sum=Sum('hours_worked'))
+
+    p_sum= pre_sum.get('p_sum')
+
+    if p_sum:
+        p_sum = p_sum
+    else:
+        p_sum = 0
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(prelog, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+    template = 'talenttrack/pre_experience_list.html'
+    context = {
+        'pre_sum': pre_sum,
+        'pageitems': pageitems,
+        'page_range': page_range
+    }
+    return render(request, template, context)
+
+
+@login_required()
+def WorkExperienceListView(request):
+
+    basequery = WorkExperience.objects.select_related('topic').filter(talent=request.user)
+
+    experience = basequery.filter(wexp=True).order_by('-date_from')
+    exp_sum = experience.aggregate(we_sum=Sum('hours_worked'))
+
+    e_sum = exp_sum.get('we_sum')
+
+    if e_sum:
+        e_sum = e_sum
+    else:
+        e_sum = 0
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(experience, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+    template = 'talenttrack/experience_list.html'
+    context = {
+        'exp_sum': exp_sum,
+        'pageitems': pageitems,
+        'page_range': page_range
+    }
+    return render(request, template, context)
 
 
 @login_required()

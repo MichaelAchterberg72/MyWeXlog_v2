@@ -5,6 +5,9 @@ from celery.task import Task
 from celery.decorators import task
 from celery import shared_task
 
+import celery
+from WeXlog.celery import app
+
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
@@ -33,7 +36,7 @@ class SubscriptionExpiredTask(Task):
         msg.attach_alternative(html_content, "text/html")
         msg.send()
 
-# task.register(SubscriptionExpiredTask)
+# app.register_task(SubscriptionExpiredTask())
 
 
 @app.task
@@ -49,7 +52,7 @@ class SubscriptionAmountDifferentTask(Task):
         msg.attach_alternative(html_content, "text/html")
         msg.send()
 
-# task.register(SubscriptionAmountDifferentTask)
+# task.register(SubscriptionAmountDifferentTask())
 
 
 @app.task
@@ -65,7 +68,7 @@ class SubscriptionCancelledTask(Task):
         msg.attach_alternative(html_content, "text/html")
         msg.send()
 
-# task.register(SubscriptionCancelledTask)
+# task.register(SubscriptionCancelledTask())
 
 
 @app.task
@@ -81,7 +84,7 @@ class SubscriptionFailedTask(Task):
         msg.attach_alternative(html_content, "text/html")
         msg.send()
 
-# task.register(SubscriptionCFailedTask)
+# task.register(SubscriptionFailedTask())
 
 
 @app.task
@@ -97,7 +100,7 @@ class SubscriptionSignupTask(Task):
         msg.attach_alternative(html_content, "text/html")
         msg.send()
 
-# task.register(SubscriptionSignupTask)
+# task.register(SubscriptionSignupTask())
 
 
 @app.task
@@ -113,7 +116,7 @@ class SubscriptionRefundTask(Task):
         msg.attach_alternative(html_content, "text/html")
         msg.send()
 
-# task.register(SubscriptionExpiredTask)
+# task.register(SubscriptionExpiredTask())
 
 
 @app.task
@@ -129,7 +132,7 @@ class RemindDeleteOldSubscription(Task):
         msg.attach_alternative(html_content, "text/html")
         msg.send()
 
-# task.register(SRemindDeleteOldSubscription)
+# task.register(RemindDeleteOldSubscription())
 
 
 def SubscriptionUpgradeRefund():

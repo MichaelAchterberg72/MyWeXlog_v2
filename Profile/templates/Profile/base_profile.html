@@ -15,7 +15,8 @@
             <h5 class="card-title">Registration</h5>
             <p class="card-text">Thank you for registering your account with WeXlog.</p>
             <p class="card-text">You are currently registered with a Free Account. To continue with the registration
-              process and upgrade your account to your chosen account type please click <a href="{% url 'Public:WexlogHomePricing' %}">here</a>.</p>
+              process and upgrade your account to your chosen account type please click the 'Upgrade' button.</p>
+            <p><a href="{% url 'Public:WexlogHomePricing' %}" class="badge badge-pill badge-primary" style="width: 7rem">Upgrade</a></p>
           </div>
         </div>
       </div>
@@ -29,8 +30,9 @@
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Registration Upgrade</h5>
-            <p class="card-text">You are currently registered with a Passive Account.
-              To upgrade your account to an Active account please click <a href="{% url 'Payments:PassiveUpgradeSubscription' %}">here</a>.</p>
+            <p class="card-text">You are currently registered with a Passive Account.</p>
+            <p>To upgrade your account to an Active account please click the 'Upgrade' button.</p>
+            <p><a href="{% url 'Payments:PassiveUpgradeSubscription' %}" class="badge badge-pill badge-primary" style="width: 7rem">Upgrade</a>.</p>
           </div>
         </div>
       </div>
@@ -87,7 +89,8 @@
         </div>
       </div>
     </div>
-    <div class="card border-secondary mb-3 m-2" >
+    <p>&nbsp</p>
+    <div class="card mb-3" >
         {% block Center_Content %}
         {% endblock Center_Content %}
     </div>
