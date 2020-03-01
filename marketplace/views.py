@@ -367,7 +367,7 @@ def MarketHome(request):
 
         ds = ds | display
 
-    dsd=ds.distinct('scope__title')
+    dsd=ds.distinct('scope__title')[:5]
 
     already_applied = wb.values_list('work__id', flat=True).distinct()
     #Experience Level check & list skills required in vacancies<<<
