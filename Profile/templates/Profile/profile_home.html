@@ -4,7 +4,28 @@
 
 
 {% block network %}
-Summary information relating to the user's network. Number of people on each level and commission due at the next pay run.
+<p>Summary of people within 5 levels of your network</p>
+<h6>There are {{ tot }} people in your network tree</h6>
+<table class="table table-sm">
+  <thead>
+    <tr>
+      <th class="align-middle text-center">Level 1</th>
+      <th class="align-middle text-center">Level 2</th>
+      <th class="align-middle text-center">Level 3</th>
+      <th class="align-middle text-center">Level 4</th>
+      <th class="align-middle text-center">Level 5</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="align-middle text-center">{{ lvl_1 }}</td>
+      <td class="align-middle text-center">{{ lvl_2 }}</td>
+      <td class="align-middle text-center">{{ lvl_3 }}</td>
+      <td class="align-middle text-center">{{ lvl_4 }}</td>
+      <td class="align-middle text-center">{{ lvl_5 }}</td>
+    </tr>
+  </tbody>
+</table>
 {% endblock network %}
 
 {% block workflow %}
@@ -60,8 +81,8 @@ Summary information relating to the user's network. Number of people on each lev
 {% endblock score %}
 
 {% block TBA %}
-<a href="{% url 'Talent:APV' tlt=request.user.alias vac='1ad9t2' %}" target="_blank" class="btn btn-success">My Public Profile</a> <br>
-<a href="{% url 'Talent:DPCSum' %}" class="btn btn-primary">Designation, Project & Company Summary</a>
+<a href="{% url 'Talent:APV' tlt=request.user.alias vac='1ad9t2' %}" target="_blank" class="badge badge-success">My Public Profile</a> <br>
+<a href="{% url 'Talent:DPCSum' %}" class="badge badge-primary">Designation, Project & Company Summary</a>
 {% endblock TBA %}
 
 {% block Center_Content %}

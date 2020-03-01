@@ -56,11 +56,12 @@
       {% endfor %}
     </table>
     {% if request.user.subscription >= 2 %}
-      <a href="{% url 'MarketPlace:VacSearch' %}" class="badge badge-primary 8rem float-right" style="width: 8rem">Search</a>
-    {% endif %}
     <div class="float-right">
-      <p><a href="{% url 'MarketPlace:VacanciesList' %}" class="btn btn-primary float-right">View All Vacancies</a></p>
+      <a href="{% url 'MarketPlace:VacSearch' %}" class="badge badge-secondary 8rem" style="width: 8rem">Search</a>
+      <a href="{% url 'MarketPlace:VacanciesList' %}" class="badge badge-primary"style="width: 8rem">View All Vacancies</a>
     </div>
+    {% endif %}
+
   </div>
 </div>
 <br>

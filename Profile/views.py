@@ -21,6 +21,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from core.decorators import subscription
 
+from treebeard.mp_tree import MP_Node
 
 from .models import (
         Profile, Email, PhysicalAddress, PostalAddress, PhoneNumber, SiteName, OnlineRegistrations, FileUpload, IdentificationDetail, IdType, PassportDetail, LanguageList, LanguageTrack, BriefCareerHistory,
@@ -37,7 +38,7 @@ from talenttrack.forms import (
 from locations.models import Region
 from users.models import CustomUser
 from marketplace.models import BidInterviewList, WorkIssuedTo
-
+from nestedsettree.models import NtWk
 
 from .forms import (
     ProfileForm, EmailForm, EmailStatusForm, PhysicalAddressForm, PostalAddressForm, PhoneNumberForm, OnlineProfileForm, ProfileTypeForm, FileUploadForm, IdTypeForm, LanguageTrackForm, LanguageListForm, PassportDetailForm, IdentificationDetailForm, BriefCareerHistoryForm, ResignedForm, UserUpdateForm, CustomUserUpdateForm
@@ -50,6 +51,38 @@ from marketplace.forms import(
 #This is the Dashboard view...
 @login_required()
 def ProfileHome(request):
+    #NetworkCard
+    node = NtWk.objects.get(talent=request.user.id)
+    get = lambda node_id: NtWk.objects.get(pk=node_id)
+    list = NtWk.get_annotated_list(node, 5)
+
+    list_length = len(list)
+    n=0
+    lvl_1=0
+    lvl_2=0
+    lvl_3=0
+    lvl_4=0
+    lvl_5=0
+    lvl_6=0
+
+    for n in range(0,list_length):
+        lvl = list[n][1]['level']
+        if lvl == 0:
+            pass
+        elif lvl == 1:
+            lvl_1 += 1
+        elif lvl == 2:
+            lvl_2 += 1
+        elif lvl == 3:
+            lvl_3 += 1
+        elif lvl == 4:
+            lvl_4 += 1
+        elif lvl == 5:
+            lvl_5 += 1
+        n += 1
+
+    tot = lvl_1 + lvl_2 + lvl_3 + lvl_4 + lvl_5
+
     #WorkFlow Card
     talent = request.user
     wf1 = Lecturer.objects.filter(confirm__exact='S').count()
@@ -84,8 +117,9 @@ def ProfileHome(request):
 
     template = 'Profile/profile_home.html'
     context = {
-        'wf1': wf1, 'total': total, 'interviews_tlt': interviews_tlt, 'interviews_emp': interviews_emp, 'interviews_empc': interviews_empc, 'interviews_tltc': interviews_tltc, 'assigned_tlt': assigned_tlt, 'assigned_emp': assigned_emp, 'assigned_tltc': assigned_empc, 'assigned_empc': assigned_tltc, 'open_assignments_tltc': open_assignments_tltc, 'open_assignments_empc': open_assignments_empc,
-    }
+        'wf1': wf1, 'total': total, 'interviews_tlt': interviews_tlt, 'interviews_emp': interviews_emp, 'interviews_empc': interviews_empc, 'interviews_tltc': interviews_tltc, 'assigned_tlt': assigned_tlt, 'assigned_emp': assigned_emp, 'assigned_tltc': assigned_empc, 'assigned_empc': assigned_tltc, 'open_assignments_tltc': open_assignments_tltc, 'open_assignments_empc': open_assignments_empc, 'lvl_1': lvl_1, 'lvl_2': lvl_2, 'lvl_3': lvl_3, 'lvl_4': lvl_4,
+        'lvl_5': lvl_5, 'tot': tot,
+        }
     return render(request, template, context)
 
 

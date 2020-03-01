@@ -35,13 +35,7 @@
               <td>{{ item.title }}</td>
               <td>{{ item.publisher }}</td>
               <td></td>
-    <!--             <td>{% for t in item.author.all %}
-              {{ item.author|join:", " }}
-              {% endfor %}</td>
-           <td>{% for s in list %}
-              {{ s.tag.all|join:", " }}
-              {% endfor %}</td>         -->
-              <td><a href="{% url 'BookList:BookDetail' item.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Book Detail</a> </td>
+              <td><a href="{% url 'BookList:BookDetail' item.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Book Detail</a> </td>
             </tr>
         {% empty %}
             <td>No books yet.</td>

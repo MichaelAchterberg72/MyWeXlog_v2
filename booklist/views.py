@@ -117,9 +117,9 @@ def ProfileBackView(request):
 
 
 @login_required()
-def BookDetailView(request, book_id):
-    info = get_object_or_404(BookList, pk=book_id)
-    detail = BookList.objects.filter(pk=book_id)
+def BookDetailView(request, book):
+    info = get_object_or_404(BookList, slug=book)
+    detail = BookList.objects.filter(slug=book)
 
     template_name = 'booklist/book_detail.html'
     context = {'detail': detail, 'info': info}

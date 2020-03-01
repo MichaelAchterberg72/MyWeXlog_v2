@@ -3,6 +3,7 @@ from django.conf import settings
 
 from db_flatten.models import SkillTag
 
+from Profile.utils import create_code9
 
 class Author(models.Model):
     name = models.CharField('Author name', max_length=250, unique=True)
@@ -41,12 +42,19 @@ class BookList(models.Model):
     author = models.ManyToManyField(Author)
     tag = models.ManyToManyField(SkillTag, verbose_name='Tag / Associated Skill')
     genre = models.ManyToManyField(Genre)
+    slug = models.SlugField(max_length=60, unique=True, blank=True, null=True)
 
     class Meta:
         unique_together = (('title', 'publisher'),)
 
     def __str__(self):
         return '{}, {}'.format(self.title, self.publisher)
+
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
+
+        super(BookList, self).save(*args, **kwargs)
 
 
 #The format of the book (softback, hardcover, E-book, Abridged/Summary, audiobook,  etc.)

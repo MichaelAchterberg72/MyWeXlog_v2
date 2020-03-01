@@ -41,7 +41,7 @@ class BriefCareerHistory(models.Model):
     def save(self, *args, **kwargs):
         if self.date_to:
             self.current = False
-            
+
         else:
             self.current = True
             inject = f'{self.companybranch} ({self.designation})'
@@ -175,11 +175,11 @@ class PassportDetail(models.Model):
         return '{}-{}'.format(self.talent, self.passport_number)
 
 
-def PassportDetail_slug(sender, instance, *args, **kwargs):
-    if not instance.slug:
-        instance.slug = f'psp{instance.talent.id}{instance.id}'
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
 
-pre_save.connect(PassportDetail_slug, sender=PassportDetail)
+        super(PassportDetail, self).save(*args, **kwargs)
 
 
 class LanguageList(models.Model):
@@ -235,11 +235,11 @@ class Email(models.Model):
         return self.email
 
 
-def Email_slug(sender, instance, *args, **kwargs):
-    if not instance.slug:
-        instance.slug = f'{instance.talent.id}{instance.id}'
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
 
-pre_save.connect(Email_slug, sender=Email)
+        super(Email, self).save(*args, **kwargs)
 
 
 class PhysicalAddress(models.Model):
