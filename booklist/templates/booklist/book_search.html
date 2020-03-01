@@ -20,7 +20,7 @@
 </div>
 <div class="card-body">
     <h5 class="card-title">
-      {% with results.count as total_results %}
+      {% with count as total_results %}
         Found {{ total_results|intcomma }} result{{ total_results|pluralize }}
       {% endwith %}
     </h5>

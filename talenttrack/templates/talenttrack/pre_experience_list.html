@@ -1,47 +1,49 @@
 {% extends "base_home.html" %}
 {% load humanize %}
 
-{% block title %}{{block.super}}-Booklist{% endblock title %}
+{% block title %}{{block.super}}-Experience List{% endblock title %}
 
 {% block content %}
-
 <div class="card">
-  <h5 class="card-header">Welcome to the Booklist home page!</h5>
+  <h5 class="card-header">Pre-Logged Experience - Full List<span><p class="float-right"><a href="{% url 'Talent:Home' %}"  class="badge badge-pill badge-primary">Back</a></p></span></h5>
+
   <div class="card-body">
+    <div class="float-right">
+      <p><a href="{% url 'Talent:PreloggedCapture' %}" class="badge badge-pill badge-primary float-right">Add Logged Experience</a></p>
+    </div>
+    <p><strong>Total hours of Previously Logged Experience: </strong>{{ pre_sum.p_sum|intcomma }}</p>
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th>Employer</th>
+        <th>Date from</th>
+        <th>Date to</th>
+        <th>Hours</th>
+        <th>Project</th>
+      </tr>
+    </thead>
+    {% for p in pageitems %}
+    <tbody>
+      <tr>
+        <td>{{ p.company }}</td>
+        <td>{{ p.date_from|date:"j M Y" }}</td>
+        <td>{{ p.date_to|date:"j M Y" }}</td>
+        <td>{{ p.hours_worked|intcomma }}</td>
+        <td>{{ p.project }}</td>
+        <td>
+          <a href="{% url 'Talent:PreLogDetail' p.id %}" class="badge badge-pill badge-secondary" style="width: 5rem;">Detail</a>
+          <form  action="{% url 'Talent:PLEDelete' p.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
+          </form>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
 
-      {% if request.user.is_authenticated %}
-      <p>You currently have {{ ecount.sum_e|intcomma }} books that you have read listed in WeXlog!</p>
-      <p><a href="{% url 'BookList:books-read-new' %}" class="badge badge-pill badge-primary">Add Book</a>
-        <a href="{% url 'BookList:books-list' %}" class="badge badge-pill badge-primary">View All Book</a>
-        <a href="{% url 'BookList:book-search' %}" class="badge badge-pill badge-primary">Search All Books</a>
-
-      {% endif %}
-    <table class="table table-sm">
-      <col width="55%">
-      <col width="20%">
-      <col width="15%">
-      <col width="10%">
-      <thead>
-        <tr>
-          <th>Book Name</th>
-          <th>Book Type</th>
-          <th>Date Read</th>
-          <th> </th>
-        </tr>
-      </thead>
-      {% for b in pageitems %}
-      <tbody>
-        <tr>
-          <td>{{ b.book }}</td>
-          <td>{{ b.type }}</td>
-          <td>{{ b.date }}</td>
-          <td><a href="{% url 'BookList:BookDetail' b.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Book Detail</a> </td>
-        </tr>
-      </tbody>
-      {% endfor %}
-    </table>
     <p>&nbsp</p>
-    
+
     <nav aria-label="Page navigation">
         {% if pageitems.has_other_pages %}
           <ul class="pagination">

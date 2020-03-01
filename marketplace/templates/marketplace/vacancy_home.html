@@ -58,6 +58,9 @@
     {% if request.user.subscription >= 2 %}
       <a href="{% url 'MarketPlace:VacSearch' %}" class="badge badge-primary 8rem float-right" style="width: 8rem">Search</a>
     {% endif %}
+    <div class="float-right">
+      <p><a href="{% url 'MarketPlace:VacanciesList' %}" class="btn btn-primary float-right">View All Vacancies</a></p>
+    </div>
   </div>
 </div>
 <br>

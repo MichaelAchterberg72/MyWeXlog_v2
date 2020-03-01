@@ -1,0 +1,102 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+
+{% block title %}{{block.super}}-Vacancies Suited for Me Full List{% endblock title %}
+
+{% block content %}
+<div class="card">
+  <h5 class="card-header">Vacancies Suited for Me - Full List<span><p class="float-right"><a href="{% url 'MarketPlace:Entrance' %}"  class="badge badge-pill badge-primary">Back</a></p></span></h5>
+
+  <div class="card" style="width: 100%;">
+    <div class="card-body">
+      <div class="float-right">
+        <a href="{% url 'MarketPlace:History' %}" class="badge badge-primary 8rem" style="width: 8rem">View History</a>
+      </div>
+      <h5 class="card-title">Vacancies suited for Me </h5>
+      <table class="table table-sm">
+        <col width="5%">
+        <col width="15%">
+        <col width="6%">
+        <col width="10%">
+        <col width="10%">
+        <col width="10%">
+        <thead>
+          <tr>
+            <th class="align-middle text-center">Reference Number</th>
+            <th class="align-middle text-center">Vacancy Title</th>
+            <th class="align-middle text-center">Hours Required</th>
+            <th class="align-middle text-center">Work Format</th>
+            <th class="align-middle text-center">Country</th>
+            <th class="align-middle text-center">Full Detail</th>
+          </tr>
+        </thead>
+        {% for i in pageitems %}
+        {% if i.scope.id not in already_applied %}
+        <tbody>
+        <tr  class="align-middle text-center">
+          <td>{{ i.scope.ref_no }}</td>
+          <td>{{ i.scope.title }}</td>
+          <td>
+            {{ i.scope.hours_required|intcomma }} ({{ i.scope.get_unit_display }})
+          </td>
+          <td>{{ i.scope.worklocation }}</td>
+          <td>{{ i.scope.city }}</td>
+            {% if request.user.subscription == 2 %}
+              <td><a href="{% url 'MarketPlace:VacancyDetail' i.scope.id %}" class="card-link">See Detail</a></td>
+            {% elif request.user.subscription < 2 %}
+              <td><a href="#" class="card-link">See Detail</a></td>
+            {% endif %}
+          </tr>
+        </tbody>
+        {% endif %}
+        {% empty %}
+        <tr>
+          <td colspan="6">No vacancies matching your skills at the moment</td>
+        </tr>
+        {% endfor %}
+      </table>
+
+    <p>&nbsp</p>
+
+    <nav aria-label="Page navigation">
+        {% if pageitems.has_other_pages %}
+          <ul class="pagination">
+            {% if pageitems.has_previous %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ pageitems.previous_page_number }}" aria-label="Previous">
+                  <span aria-hidden="true">Previous</span>
+                  <span class="sr-only disabled">Previous</span>
+                </a></li>
+            {% else %}
+              <li class="page-link disabled" tabindex="-1"><span>Previous</span></li>
+            {% endif %}
+
+            {% if pageitems.number|add:'-4' > 1 %}
+              <li class="page-link"><a href="?page={{ pageitems.number|add:'-5' }}">&hellip;</a></li>
+            {% endif %}
+
+            {% for i in pageitems.paginator.page_range %}
+              {% if pageitems.number == i %}
+                <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
+              {% elif i > pageitems.number|add:'-5' and i < pageitems.number|add:'5' %}
+                <li class="page-link"><a class="page-item" href="?page={{ i }}">{{ i }}</a></li>
+              {% endif %}
+            {% endfor %}
+
+            {% if pageitems.paginator.num_pages > pageitems.number|add:'4' %}
+              <li class="page-link"><a href="?page={{ pageitems.number|add:'5' }}">&hellip;</a></li>
+            {% endif %}
+
+            {% if pageitems.has_next %}
+              <li class="page-link"><a href="?page={{ pageitems.next_page_number }}">Next</a></li>
+            {% else %}
+              <li class="page-link disabled"><span>Next</span></li>
+            {% endif %}
+          </ul>
+        {% endif %}
+    </nav>
+
+  </div>
+</div>
+
+{% endblock content %}

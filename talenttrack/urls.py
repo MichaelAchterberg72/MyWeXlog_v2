@@ -27,7 +27,13 @@ urlpatterns = [
     path('classmate/detail/<slug:cmt>/', views.ClassMatesResponse, name='ClassMatesResponse'),
     path('experience/capture/', views.WorkExperienceCaptureView, name="ExperienceCapture"),
     path('popup/designation/add/', views.DesignationAddPopup, name="DesignationAddPop"),
+    path('experience/capture/', views.WorkExperienceCaptureView, name="ExperienceCapture"),
     path('popup/ajax/get_designation_id/', views.get_designation_id, name="AJAX_GetDesignationID"),
+
+    path('experience/training-full-list/', views.TrainingListView, name="TrainingList"),
+    path('experience/pre-experience-full-list/', views.PreExperienceListView, name="PreExperienceList"),
+    path('experience/experience-full-list/', views.WorkExperienceListView, name="ExperienceList"),
+
     path('colleague/select/', views.ColleagueSelectView, name='ColleagueSelect'),
 
     path('colleague/<slug:tex>/add/', views.ColleagueAddView, name='ColleagueAdd'),
@@ -44,6 +50,10 @@ urlpatterns = [
     path('client/select/<slug:pk>/', views.ClientSelectView, name='ClientSelect'),
     path('client/add/<slug:tex>/', views.ClientAddView, name='ClientAdd'),
     path('client/detail/<slug:wkc>/', views.ClientResponseView, name='ClientResponse'),
+
+    path('client/select/<int:pk>/', views.ClientSelectView, name='ClientSelect'),
+    path('client/add/<int:pk>/', views.ClientAddView, name='ClientAdd'),
+    path('client/detail/<int:pk>/', views.ClientResponseView, name='ClientResponse'),
 
     path('experience/detail/<slug:tex>/', views.ExperienceDetailView, name='ExperienceDetail'),
 
