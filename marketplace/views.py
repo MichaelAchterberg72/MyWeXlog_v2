@@ -35,6 +35,8 @@ from users.models import CustomUser
 from Profile.models import Profile
 from booklist.models import ReadBy
 
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 
 @login_required()
 @subscription(1)
@@ -334,6 +336,97 @@ def MarketHome(request):
     template = 'marketplace/vacancy_home.html'
     context ={
         'capacity': capacity, 'ipost': ipost, 'ipost_bid_flat': ipost_bid_flat, 'dsd': dsd, 'already_applied': already_applied, 'ipost_closed': ipost_closed}
+    return render(request, template, context)
+
+
+@login_required()
+def VacanciesListView(request):
+    #>>>Queryset caching
+    talent=request.user
+    pfl = Profile.objects.filter(talent=talent)
+    tr = TalentRequired.objects.all()
+    wb = WorkBid.objects.filter(work__requested_by=talent, work__offer_status__iexact='O')
+
+    we = WorkExperience.objects.filter(talent=talent).prefetch_related('topic')
+    sr = SkillRequired.objects.filter(scope__offer_status__exact='O')
+    sl = SkillLevel.objects.all()
+
+    #>>>Create a set of all skills
+    e_skill = we.filter(edt=True).only('pk').values_list('pk', flat=True)
+    l_skill = we.filter(edt=False).only('pk').values_list('pk', flat=True)
+
+    skill_set = SkillTag.objects.none()
+
+    for ls in l_skill:
+        a = we.get(pk=ls)
+        b = a.skills.all().values_list('skill', flat=True)
+
+        skill_set = skill_set | b
+
+    for es in e_skill:
+        c = we.get(pk=es)
+        d = c.topic.skills.all().values_list('skill', flat=True)
+
+        skill_set = skill_set | d
+
+
+    skill_set = skill_set.distinct().order_by('skill')
+    #Create a set of all skills<<<
+
+    #>>>Experience Level check & list skills required in vacancies
+    tlt_lvl = pfl.values_list('exp_lvl__level', flat=True)
+    tlt_lvl = tlt_lvl[0]
+
+    req_experience = tr.filter(Q(experience_level__level=tlt_lvl) & Q(offer_status__iexact='O')).values_list('id',flat=True)
+
+    match = []
+
+    for key in req_experience:
+        skill_required = sr.filter(scope=key).values_list('skills', flat=True).distinct()
+
+        for sk in skill_required:
+            match.append(sk)
+
+
+    ds = sr.none()
+    matchd = set(match) #remove duplicates
+
+    for item in matchd:
+        display = sr.filter(
+                Q(skills__in=match)
+                & Q(scope__bid_closes__gte=timezone.now()) & Q(scope__experience_level__level=tlt_lvl)
+                )
+
+        ds = ds | display
+
+    dsd=ds.distinct('scope__title')
+
+    already_applied = wb.values_list('work__id', flat=True).distinct()
+    #Experience Level check & list skills required in vacancies<<<
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(dsd, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+    template = 'marketplace/vacancy_list.html'
+    context ={
+        'pageitems': pageitems, 'already_applied': already_applied, 'page_range': page_range}
     return render(request, template, context)
 
 

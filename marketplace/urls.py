@@ -17,10 +17,13 @@ urlpatterns = [
     path('vacancy-skilla/<int:pk>/', views.VacancySkillsAdd2View, name='Skillsa'),
     path('popup/skilllevel/add/', views.SkillLevelAddPopup, name="SkillLevelAddPop"),
     path('popup/ajax/get_skilllevel_id/', views.get_skilllevel_id, name="AJAX_GetSkillLevelID"),
+    path('vacancy/vacancies-full-list/', views.VacanciesListView, name="VacanciesList"),
+
     path('vacancy-edit/<int:pk>/', views.VacancyEditView, name="VacancyEdit"),
     path('vacancy-edit-deliverables/<int:pk>/', views.DeliverablesEditView, name='DeliverablesEdit'),
     path('vacancy-delete-deliverables/<int:pk>/', views.DeliverableDeleteView, name='DeliverablesDelete'),
     path('vacancy-delete-skill/<int:pk>/', views.SkillDeleteView, name='SkillDelete'),
+
     path('interviewlist/<int:vac>/<int:tlt>/', views.AddToInterviewListView, name='InterviewList'),
     path('shortlist/<int:s_list>/<int:tlt>/', views.AddToShortListView, name='ShortList'),
     path('availabillity/', views.TalentAvailabillityView, name='Availabillity'),
