@@ -6,7 +6,11 @@
   <div class="card-header">
 <div class="container">
   {% if query %}
-    <h4>Projects for search "{{ query }}"</h4>
+    <h4>Projects for search "{{ query }}"
+      <span><p class="float-right">
+      <a href="{% url 'MarketPlace:HelpWorkCOnfigeration' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
+      <i class="icon icon-question-circle"></i></a>
+    </p></span></h4>
 </div>
 </div>
 <div class="container">
@@ -59,9 +63,13 @@
   </tbody>
 </table>
     <p> </p>
-    <p><a href="{% url "Project:Project-Search" %}" class="btn btn-primary">Search Again</a></p>
+    <p><a href="{% url 'Project:Project-Search' %}" class="btn btn-primary">Search Again</a></p>
   {% else %}
-    <h4>Search for Projects</h4>
+    <h4>Search for Projects
+      <span><p class="float-right">
+      <a href="{% url 'MarketPlace:HelpWorkCOnfigeration' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
+      <i class="icon icon-question-circle"></i></a>
+    </p></span></h4>
     <form action="." method="get">
         {{ form.as_p }}
         <input type="submit" class="btn btn-primary" value="Search">
