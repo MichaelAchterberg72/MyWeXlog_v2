@@ -16,10 +16,6 @@ import operator
 from django.db.models import Q
 import json
 from django.views.generic import (
-        ListView,
-        DetailView,
-        CreateView,
-        UpdateView,
         TemplateView
 )
 from django.views.decorators.csrf import csrf_exempt
@@ -68,6 +64,14 @@ def BookListHome(request, profile_id=None):
 
     template_name = 'booklist/booklist_home.html'
     context = {'ecount': ecount, 'pageitems': pageitems, 'page_range': page_range}
+    return render(request, template_name, context)
+
+
+@login_required()
+def HelpBookListHomeView(request):
+
+    template_name = 'booklist/help_booklist_home.html'
+    context = {}
     return render(request, template_name, context)
 
 

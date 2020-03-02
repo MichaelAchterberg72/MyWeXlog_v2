@@ -28,5 +28,7 @@ urlpatterns = [
     path('booklist-back/', views.ProfileBackView, name='BLB'),
     path('popup/genre/', views.GenreAddPopup, name='GenreCreatePopup'),
     path('popup/ajax/get_genre_id', views.get_genre_id, name='get_genre_id'),
+    # Help urlpatterns
+    path('help/booklist-home/', views.HelpBookListHomeView, name="HelpBooklistHome"),
 
 ]

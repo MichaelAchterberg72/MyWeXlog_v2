@@ -1,0 +1,27 @@
+{% extends 'base_homelite.html' %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Help{% endblock title %}
+
+{% block Style %}
+
+{% endblock Style %}
+{% block content %}
+<div class="container">
+<h3>Booklist Home Page - Help</h3>
+<p>This page displayes a list of the books that you have captured as having read.</p>
+<p>The books are listed in order of having been read and displayed with the
+  book name (publisher), the book type and the date read. This information is
+  displayed in your public profile under the heading of Books Read. The profile
+  will also list the Total Books Read: displaying them by Title, Publisher,	Author(s)
+  Format andDate Completed. If you have not captured any books it will state
+  "No books listed".</p>
+<p>Should you wish to see a listing of all the books that have been captured <body>
+  members into the WeXlog system click on the 'View All Book' button.<p>
+</body>
+</div>
+{% endblock content %}
+{% block Script %}
+
+{% endblock Script %}

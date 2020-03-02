@@ -5,12 +5,16 @@
 {% block content %}
 
 <div class="card">
-  <h5 class="card-header">Branches for {{ detail.name }}</h5>
+  <h5 class="card-header">Branches for {{ detail.name }}
+    <span><p class="float-right">
+    <a href="{% url 'MarketPlace:HelpWorkCOnfigeration' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
+    <i class="icon icon-question-circle"></i></a>
+  </p></span></h5>
   <div class="card-body">
     {% if request.user.is_authenticated %}
     <p><a href="{% url 'Enterprise:AddBranch' detail.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Add Branch</a><a href="{% url 'Enterprise:EnterpriseHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
     {% endif %}
-    <table class="table-sm">
+    <table class="table table-sm">
       <col width="30%">
       <col width="30%">
       <col width="15%">
