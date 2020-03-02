@@ -31,7 +31,7 @@
         <td>{{ p.hours_worked|intcomma }}</td>
         <td>{{ p.project }}</td>
         <td>
-          <a href="{% url 'Talent:PreLogDetail' p.id %}" class="badge badge-pill badge-secondary" style="width: 5rem;">Detail</a>
+          <a href="{% url 'Talent:PreLogDetail' p.slug %}" class="badge badge-pill badge-secondary" style="width: 5rem;">Detail</a>
           <form  action="{% url 'Talent:PLEDelete' p.id %}" method="post">
             {% csrf_token %}
             <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>

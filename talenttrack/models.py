@@ -101,13 +101,11 @@ class LicenseCertification(models.Model):
                 self.current=False
         else:
             self.current=True
+
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
+
         super(LicenseCertification, self).save(*args, **kwargs)
-
-def LCM_slug(sender, instance, *args, **kwargs):
-    if not instance.slug:
-        instance.slug = f'{instance.talent.id}{instance.cm_no}'
-
-pre_save.connect(LCM_slug, sender=LicenseCertification)
 
 
 class Course(models.Model):

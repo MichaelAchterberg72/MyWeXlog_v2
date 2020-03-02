@@ -167,7 +167,7 @@
             {% csrf_token %}
             <button type="submit" class="badge badge-info badge-pill float-right" style="width: 5rem;">Short-list</button>
           </form><br>
-          <a href="{% url 'Talent:APV' tlt_id=key.0 vac_id=instance.id %}" class="badge badge-success badge-pill float-right" style="width: 5rem;" target="new">View Profile</a></p>
+          <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=instance.ref_no %}" class="badge badge-success badge-pill float-right" style="width: 5rem;" target="new">View Profile</a></p>
           </td>
           {% empty %}
             {% if s_list %}

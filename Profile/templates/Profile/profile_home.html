@@ -81,8 +81,8 @@
 {% endblock score %}
 
 {% block TBA %}
-<a href="{% url 'Talent:APV' tlt=request.user.alias vac='1ad9t2' %}" target="_blank" class="badge badge-success">My Public Profile</a> <br>
-<a href="{% url 'Talent:DPCSum' %}" class="badge badge-primary">Designation, Project & Company Summary</a>
+<a href="{% url 'Talent:APV' tlt=request.user.alias vac='1ad9t2' %}" target="_blank"><i class="fa fa-briefcase" data-toggle="tooltip" title="View Public Profile" style="font-size:30px;color:black"></a></i>
+<a href="{% url 'Talent:DPCSum' %}"><i class="fa fa-industry" style="font-size:30px;color:black" data-toggle="tooltip" title="View Summary for Industry, Project and Designation."></i></a>    <i class="fa fa-gears" style="font-size:30px" data-toggle="tooltip" title="Skills Summary"></i>
 {% endblock TBA %}
 
 {% block Center_Content %}

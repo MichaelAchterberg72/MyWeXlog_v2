@@ -19,11 +19,11 @@
         <div class="card-body">
             <table class="table table-sm">
               <thead>
-                <tr align= "middle">
-                  <th width="20%">Total Experience<br>(Hours)</th>
-                  <th width="20%">Training<br>(Hours)<br><a href="{% url 'Talent:Capture' %}" class="badge badge-pill badge-primary">Add</a></th>
-                  <th width="20%">Logged<br>(Hours)<br><a href="{% url 'Talent:ExperienceCapture' %}" class="badge badge-pill badge-primary">Add</a></th>
-                  <th width="20%">Pre-logged<br>(Hours)<br><a href="{% url 'Talent:PreloggedCapture' %}" class="badge badge-pill badge-primary">Add</a></th>
+                <tr>
+                  <th width="20%" class="align-middle text-center">Total Hours Logged</th>
+                  <th width="20%" class="align-middle text-center">Training<br>(Hours)<br><a href="{% url 'Talent:Capture' %}" class="badge badge-pill badge-primary">Add</a></th>
+                  <th width="20%" class="align-middle text-center">Logged<br>(Hours)<br><a href="{% url 'Talent:ExperienceCapture' %}" class="badge badge-pill badge-primary">Add</a></th>
+                  <th width="20%" class="align-middle text-center">Pre-logged<br>(Hours)<br><a href="{% url 'Talent:PreloggedCapture' %}" class="badge badge-pill badge-primary">Add</a></th>
                 </tr>
               </thead>
               <tbody>
@@ -47,14 +47,14 @@
             <table class="table table-sm">
               <thead>
                 <tr align="middle">
-                  <th>Total Skills</th>
-                  <th>Skills List</th>
+                  <th class="align-middle text-center">Total Skills</th>
+                  <th class="align-middle text-center">Skills List</th>
                 </tr>
               </thead>
               <tbody>
                 <tr align="center">
                   <td>{{ skill_count }}</td>
-                  <td>{{ skill_name|join:" - " }}</td>
+                  <td>{{ skill_name|join:" || " }}</td>
                 </tr>
               </tbody>
             </table>

@@ -284,7 +284,7 @@ def CaptureAchievementView(request):
         new = form.save(commit=False)
         new.talent = pfl
         new.save()
-        return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':pfl.id})+'#achievements')
+        return redirect(reverse('Profile:ProfileView', kwargs={'tlt':pfl.alias})+'#achievements')
     else:
         template = 'talenttrack/achievement_capture.html'
         context = {'form': form,}
