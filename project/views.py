@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 
 from django.views.generic import (
         TemplateView
-)
+    )
 
 from itertools import chain
 from operator import attrgetter
@@ -57,6 +57,34 @@ def ProjectListHome(request):
 
     template_name = 'project/project_home.html'
     context = {'pcount': pcount, 'pageitems': pageitems, 'page_range': page_range}
+    return render(request, template_name, context)
+
+
+@login_required()
+def HelpProjectHomeView(request):
+    template_name = 'project/help_project_home.html'
+    context = {}
+    return render(request, template_name, context)
+
+
+@login_required()
+def HelpProjectAddView(request):
+    template_name = 'project/help_project_add.html'
+    context = {}
+    return render(request, template_name, context)
+
+
+@login_required()
+def HelpProjectSearchView(request):
+    template_name = 'project/help_project_search.html'
+    context = {}
+    return render(request, template_name, context)
+
+
+@login_required()
+def HelpProjectDetailView(request):
+    template_name = 'project/help_project_detail.html'
+    context = {}
     return render(request, template_name, context)
 
 
@@ -147,7 +175,7 @@ def ProjectSearch(request):
                                     'country',
                                     'region__region',
                                     'city__city'),
-            ).filter(search=query)
+            ).filter(search=query).order_by('company__name')
 
     template_name= 'project/project_search.html'
     context = {

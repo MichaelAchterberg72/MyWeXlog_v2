@@ -58,6 +58,27 @@ def EnterpriseHome(request):
 
 
 @login_required()
+def HelpEnterpriseHomeView(request):
+    template_name = 'enterprises/help_enterprises_home.html'
+    context = {}
+    return render(request, template_name, context)
+
+
+@login_required()
+def HelpEnterpriseBranchView(request):
+    template_name = 'enterprises/help_enterprises_branch_details.html'
+    context = {}
+    return render(request, template_name, context)
+
+
+@login_required()
+def HelpEnterpriseBranchListView(request):
+    template_name = 'enterprises/help_enterprises_branch_list.html'
+    context = {}
+    return render(request, template_name, context)
+
+
+@login_required()
 def BranchListView(request, cmp):
     branches = Branch.objects.filter(company__slug=cmp).order_by('name')
     detail = get_object_or_404(Enterprise, slug=cmp)

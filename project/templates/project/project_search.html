@@ -8,7 +8,7 @@
   {% if query %}
     <h4>Projects for search "{{ query }}"
       <span><p class="float-right">
-      <a href="{% url 'MarketPlace:HelpWorkCOnfigeration' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
+      <a href="{% url 'Project:HelpProjectSearch' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
       <i class="icon icon-question-circle"></i></a>
     </p></span></h4>
 </div>
@@ -50,7 +50,7 @@
           <td>{{ ProjectData.company }}</td>
           <td>{{ ProjectData.industry }}</td>
           <td>{{ ProjectData.get_country_display }}</td>
-          <td><a href="{% url 'Project:ProjectDetail' ProjectData.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Project Detail</a> </td>
+          <td><a href="{% url 'Project:ProjectDetail' ProjectData.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Project Detail</a> </td>
         </tr>
 
 <!--      <h5 class="card-title">><a href="{{ ProjectData.name }}">{{ProjectData.name }}</a></h5>
@@ -67,7 +67,7 @@
   {% else %}
     <h4>Search for Projects
       <span><p class="float-right">
-      <a href="{% url 'MarketPlace:HelpWorkCOnfigeration' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
+      <a href="{% url 'Project:HelpProjectSearch' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
       <i class="icon icon-question-circle"></i></a>
     </p></span></h4>
     <form action="." method="get">

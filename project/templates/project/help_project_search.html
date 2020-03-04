@@ -1,0 +1,37 @@
+{% extends 'base_homelite.html' %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Help{% endblock title %}
+
+{% block Style %}
+
+{% endblock Style %}
+{% block content %}
+<div class="container">
+  <h3>Project Search Page - Help</h3>
+    <p>&nbsp</p>
+    <p>This page displayes a list of the projects that are captured in the WeXlog system
+      that meet your keyword parameter.</p>
+    <p>The search function will search against the Project Name, the Company Name, the Industry,
+      the Country, Region and City.</p>
+    <p>The projects are listed in alphabetical order of the Project Owner Company Name
+      detailing the Project Name, Project Industry and the Project Country.</p>
+    <p>The <a href="" class="badge badge-pill badge-primary">Project Detail</a> button will open
+      the Details listing for the project.</p>
+    <p>You have the option to:</p>
+      <ul>
+        <li><a href="#" class="badge badge-pill badge-primary">Add Project</a> - Add a new project
+        which will request you to supply the Project Name, Project Owner, Project Site, Industry,
+        Country, Region and a City.</li>
+        <li><a href="#" class="badge badge-pill badge-primary">Search Projects</a> - Using a Keyword
+          search the projects based on the Project Name, Company Name, Industry, Country, Region
+          and City.</li>
+        <li><a href="#" class="badge badge-pill badge-primary">Back</a> - allows you to go back to the
+        Projects Home page.</li>
+      </ul>
+    <p>The <a href="" class="btn btn-primary">Search Again</a> button wil refreash the search page
+      to the initial search form requesting you to enter your search keyword.</p>
+
+</div>
+{% endblock content %}

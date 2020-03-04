@@ -6,7 +6,11 @@
 {% block content %}
 
 <div class="card">
-  <h5 class="card-header">Detail for project {{ info.name }} </h5>
+  <h5 class="card-header">Detail for project {{ info.name }}
+    <span><p class="float-right">
+    <a href="{% url 'Project:HelpProjectDetail' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
+    <i class="icon icon-question-circle"></i></a>
+  </p></span></h5>
   <div class="card-body">
     {% if request.user.is_authenticated %}
     <p><a href="{% url 'Project:EditProject' info.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Edit Project</a>

@@ -30,5 +30,7 @@ urlpatterns = [
     path('popup/ajax/get_genre_id', views.get_genre_id, name='get_genre_id'),
     # Help urlpatterns
     path('help/booklist-home/', views.HelpBookListHomeView, name="HelpBooklistHome"),
-
+    path('help/bookluist-add-new-book-read/', views.HelpBookListAddBookReadView, name='HelpBooklistAddBookRead'),
+    path('help/booklist/', views.HelpBookListView, name='HelpBooklist'),
+    path('help/booklist-search/', views.HelpBookListSearchView, name='HelpBooklistSearch'),
 ]
