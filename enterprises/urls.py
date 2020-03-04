@@ -8,6 +8,10 @@ app_name = 'Enterprise'
 
 urlpatterns = [
     path('home/', views.EnterpriseHome, name="EnterpriseHome"),
+
+    path('help/enterprise-home-page/', views.HelpEnterpriseHomeView, name='HelpEnterpriseHome'),
+    path('help/enterprise-branch-details/', views.HelpEnterpriseBranchView, name='HelpEnterpriseBranchDetails'),
+    path('help/enterprise-branch-list/', views.HelpEnterpriseBranchListView, name='HelpEnterpriseBranchList'),
     #pop-ups
     path('popup/add/', views.EnterpriseAddPopup, name="EnterpriseAddPop"),
     path('add/', views.EnterpriseAddView, name="EnterpriseAdd"),

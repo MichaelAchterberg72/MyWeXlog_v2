@@ -1,0 +1,30 @@
+{% extends 'base_homelite.html' %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Help{% endblock title %}
+
+{% block Style %}
+
+{% endblock Style %}
+{% block content %}
+<div class="container">
+  <h3>Enterprise Branches List Page - Help</h3>
+    <p>&nbsp</p>
+    <p>This page displayes a list of the selected enterprise or company branches that are
+      captured in the WeXlog system.</p>
+    <p>The enterprise branches are listed in alphabetical order detailing the Branch Name, the
+      branch type and the Current and Past Employees as recorded in WeXlog.</p>
+    <p>You have the option to:</p>
+      <ul>
+        <li><a href="#" class="badge badge-pill badge-primary">Add Branch</a> - Button will require you to
+          capture the Company that the branch belongs to, the Branch or Division Name, the Branch Type,
+          Physical Address and Industry.</li>
+          <li><a href="#" class="badge badge-pill badge-primary">Detail</a> - Button will open the
+            branch detail page with the Branch Name, the Branch Type, Physical Address and Industry.</li>
+        <li><a href="#" class="badge badge-pill badge-primary">Back</a> - Navigate back to the
+          Enterprises Home Page.</li>
+      </ul>
+
+</div>
+{% endblock content %}

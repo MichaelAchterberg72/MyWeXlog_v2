@@ -1,0 +1,34 @@
+{% extends 'base_homelite.html' %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Help{% endblock title %}
+
+{% block Style %}
+
+{% endblock Style %}
+{% block content %}
+<div class="container">
+  <h3>Project Home Page - Help</h3>
+    <p>&nbsp</p>
+    <p>This page displayes a list of the projects that are captured in the WeXlog system.</p>
+    <p>The projects are listed in alphabetical order detailing the Project Name, Project
+      Industry and the Project Country.</p>
+    <p>The <a href="#" class="badge badge-pill badge-primary">See Detail</a> button will open
+      the project details page which will detail the Project Owner, Project Name, Industry,
+      Total Project Hours, Country, City, Region and the Total number of people on the project
+      as listed in WeXlog.</p>
+    <p>You have the option to:</p>
+      <ul>
+        <li><a href="#" class="badge badge-pill badge-primary">Add Project</a> - Add a new project
+        which will request you to supply the Project Name, Project Owner, Project Site, Industry,
+        Country, Region and a City.</li>
+        <li><a href="#" class="badge badge-pill badge-primary">Search Projects</a> - Using a Keyword
+          search the projects based on the Project Name, Company Name, Industry, Country, Region
+          and City.</li>
+        <li><a href="#" class="badge badge-pill badge-primary">Back</a> - allows you to go back to the
+        Enterprises Home page.</li>
+      </ul>
+
+</div>
+{% endblock content %}

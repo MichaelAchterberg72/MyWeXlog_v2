@@ -1,0 +1,30 @@
+{% extends 'base_homelite.html' %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Help{% endblock title %}
+
+{% block Style %}
+
+{% endblock Style %}
+{% block content %}
+<div class="container">
+  <h3>Enterprises Home Page - Help</h3>
+    <p>&nbsp</p>
+    <p>This page displayes a list of the enterprises or companies that are captured in the WeXlog system.</p>
+    <p>The enterprises are listed in alphabetical order detailing the Company Name and the
+      Enterprise Wexsite Address.</p>
+    <p>The <a href="#" class="badge badge-pill badge-primary">List Branches</a> button will open
+      the a listing of the branches that have been recorded in WeXlog as representative of that company.</p>
+    <p>You have the option to:</p>
+      <ul>
+        <li><a href="#" class="badge badge-pill badge-primary">Add New Enterprise</a> - Add a new enterprise
+        which will request you to supply the Enterprise Name, Website Address as well as a Debscription of
+        the enterprise.</li>
+        <li><a href="#" class="badge badge-pill badge-primary">Add New Branch</a> - Button will require you to
+          capture the Company that the branch belongs to, the Branch or Division Name, the Branch Type,
+          Physical Address and Industry.</li>
+      </ul>
+
+</div>
+{% endblock content %}

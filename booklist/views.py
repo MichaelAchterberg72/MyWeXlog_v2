@@ -76,6 +76,30 @@ def HelpBookListHomeView(request):
 
 
 @login_required()
+def HelpBookListView(request):
+
+    template_name = 'booklist/help_booklist.html'
+    context = {}
+    return render(request, template_name, context)
+
+
+@login_required()
+def HelpBookListSearchView(request):
+
+    template_name = 'booklist/help_booklist_search.html'
+    context = {}
+    return render(request, template_name, context)
+
+
+@login_required()
+def HelpBookListAddBookReadView(request):
+
+    template_name = 'booklist/help_booklist_add.html'
+    context = {}
+    return render(request, template_name, context)
+
+
+@login_required()
 @subscription(2)
 @csp_exempt
 #This view is for the profile to display the complete list of books read.

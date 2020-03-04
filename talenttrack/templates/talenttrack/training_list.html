@@ -34,7 +34,7 @@
           <td class="align-middle text-center">{{ t.course }}</td>
           <td class="align-middle text-center">{{ t.topic.hours|intcomma }}</td>
           <td class="align-middle text-center">
-            <a href="{% url 'Talent:EducationDetail' t.id %}" class="badge badge-pill badge-secondary" style="width: 5rem;">Detail</a>
+            <a href="{% url 'Talent:EducationDetail' t.slug %}" class="badge badge-pill badge-secondary" style="width: 5rem;">Detail</a>
             <form  action="{% url 'Talent:EDTDelete' t.id %}" method="post">
               {% csrf_token %}
               <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
