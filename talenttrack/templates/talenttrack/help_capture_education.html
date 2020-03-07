@@ -1,0 +1,72 @@
+{% extends 'base_homelite.html' %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Help{% endblock title %}
+
+{% block Style %}
+
+{% endblock Style %}
+{% block content %}
+<div class="container">
+  <h3>Capture Education / Training - Help</h3>
+    <p>&nbsp</p>
+    <p>This page displayes the fields that are required to capture your Education
+      and Training experience.</p>
+    <p>The fields required are:</p>
+    <table class="table table-sm">
+    <col width="10%">
+    <col width="70%">
+    <thead>
+        <tr>
+          <td>Course Name</td>
+          <td>This should be descriptive of the project so it is easily identifyable by
+            people that are in collaboration companies as well. THe drop down items are made up of
+            the course name, the institution name and the form of certification.<br>
+            The <a href="#"><img src="{% static '/images/icon-addlink.svg' %}"> Add a Course</a>
+            link will request you to add an the course details such as the course name, the
+            institution, the course type, the website as well as certification type..</td>
+        </tr>
+        <tr>
+          <td>Course Subject</td>
+          <td>This will be selected from the dropdown list and should be descriptive of the subject
+            in that course.<br>
+            The <a href="#"><img src="{% static '/images/icon-addlink.svg' %}"> Add a Topic</a>
+            link will request you to add brief details of the course subject or topic name, the
+            skills learned as well as the number of hours spent in studies for the course.</td>
+        </tr>
+        <tr>
+          <td>Date from</td>
+          <td>This will be input utilising the date widget that is accessible from the date widget
+            that appears when you hover the mouse over the field. By clicking on the arrows on the
+            right hand side of the date field and clicking them clicking on the year you can
+            navigate to the date you require and you can select the date required.</td>
+        </tr>
+        <tr>
+          <td>Date to</td>
+          <td>This qorks in the same way as the date from field but should be the date you have
+            completed the course subject.</td>
+        </tr>
+        <tr>
+          <td>Upload</td>
+          <td>This should be used to upload the course completion certificate or attendance
+            certificate. Simply click the Choose File button and utilise the standard file
+            explorer dialog box to select the file.</td>
+        </tr>
+        <tr>
+          <td>Comments</td>
+          <td>This is available for you to enter any comments you have on the course.</td>
+        </tr>
+      </table>
+    <br>
+    <p>**In the event that one of the dropdown lists is not populated please refreash the page.</p>
+    <p>You have the option to:</p>
+      <ul>
+        <li><a href="#" class="btn btn-primary">Add Validators</a> - allows you to navigate to the
+        page which allows you to capture lecuurers or classmates that will be requested to validate
+        your attendance, skills learnt and time spent on the course.</li>
+      </ul>
+
+</div>
+{% endblock content %}

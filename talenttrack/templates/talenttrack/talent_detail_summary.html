@@ -10,12 +10,12 @@
 {% endblock title %}
 
 {% block content %}
-<div class="card">
-  <h5 class="card-header">Skills Summary</h5>
+<div class="card border-0">
+  <h4 class="">Skills Summary</h4>
   {% if request.user.id == tlt_p.id %}
   <div class="row">
     <div class="col-sm-12">
-    <div class="card">
+    <div class="card border-0">
       <div class="">
         <a href="{% url 'Talent:APV' tlt=request.user.alias vac='1ad9t2' %}" target="_blank" class="btn btn-success float-right">Public Profile</a>
         <a href="{% url 'Talent:Home' %}" class="btn btn-secondary float-right">Experience Home</a>

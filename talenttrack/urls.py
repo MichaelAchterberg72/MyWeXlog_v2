@@ -76,4 +76,7 @@ urlpatterns = [
     path('ple-del/<int:ple_pk>/', views.PreLoggedExperienceDeleteView, name='PLEDelete'),
     path('we-del/<int:we_pk>/', views.WorkExperienceDeleteView, name='WEDelete'),
     path('edt-del/<int:edt_pk>/', views.EducationDeleteView, name='EDTDelete'),
+    # Help urls
+    path('help/experience-home/', views.HelpExperienceHomeView, name='HelpExperienceHome'),
+    path('help/capture-education/', views.HelpCaptrueEducationView, name='HelpCaptureEducation'),
 ]

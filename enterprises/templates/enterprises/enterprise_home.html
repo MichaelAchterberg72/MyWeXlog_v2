@@ -4,12 +4,12 @@
 
 {% block content %}
 
-<div class="card">
-  <h5 class="card-header">Welcome to the Enterprises home page!
+<div class="card border-0">
+  <h4 class="">Welcome to the Enterprises home page!
     <span><p class="float-right">
     <a href="{% url 'Enterprise:HelpEnterpriseHome' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
     <i class="icon icon-question-circle"></i></a>
-  </p></span></h5>
+  </p></span></h4>
   <div class="card-body">
     <p>There are currently {{ ecount.sum_e }} Enterprises and {{ bcount.sum_b }} Branches listed in WexLog!</p>
     {% if user.is_authenticated %}

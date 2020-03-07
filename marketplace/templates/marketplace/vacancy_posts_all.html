@@ -4,15 +4,20 @@
 
 {% block content %}
 
-<div class="card" style="width: 100%;">
+<div class="card border-0" style="width: 100%;">
   <div class="card-body">
 {% if request.user.subscription >= 2 %}
 <div class="row">
   <div class="col-sm-12">
     <div class="">
       <div class="card-body">
-
-      <h5 class="card-title">My Vacancies Advertised</h5>
+        <div class="float-right">
+          <p>
+          <a href="{% url 'MarketPlace:EmployerInterviewHistory' request.user.alias %}" class="btn btn-primary" style="width: 10rem">Interview History</a>
+          <a href="{% url 'MarketPlace:Vacancy' %}" class="btn btn-primary" style="width: 8rem;">Post Vacancy</a>
+          </p>
+        </div>
+      <h4 class="card-title">My Vacancies Advertised</h4>
       <table class="table table-sm">
         <thead>
           <tr>

@@ -1,0 +1,68 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+
+{% block title %}{{block.super}}-Applications Received for Vacancy Full List{% endblock title %}
+
+{% block content %}
+<div class="card border-0">
+  <h4 class="">Applications for Vacancy - Full List<span><p class="float-right"><a href="{% url 'MarketPlace:Entrance' %}"  class="badge badge-pill badge-primary">Back</a></p></span></h4>
+
+  <div class="card border-0" style="width: 100%;">
+    <div class="card-body">
+
+      <h3 id='suited'>Applications Received for Vacancy</h3>
+      <table class="table table-sm">
+        <thead>
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th class="text-center">Alias</th>
+                <th class="text-center">Experience</th>
+                <th class="text-center">Training</th>
+                <th class="text-center">Captured Skills</th>
+                <th class="text-center">Books Read</th>
+                <th class="text-center">Bid Rate</th>
+                <th class="text-left">Motivation</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for key in applied.items %}
+              <tr>
+
+                <td class="align-middle">{{ key.1.ro.0.4 }}</td>
+                <td class="align-middle">{{ key.1.we }}</td>
+                <td class="align-middle">{{ key.1.te }}</td>
+                <td class="align-middle">{{ key.1.s_no }}</td>
+                <td class="align-middle">{{ key.1.rb }}</td>
+                <td class="align-middle">{{ key.1.ro.0.1 }} <strong>{{ key.1.ro.0.0 }}</strong> {{ key.1.ro.0.2 }}</td>
+                <td class="align-middle">{{ key.1.ro.0.3|truncatechars:200 }}</td>
+                <td class="align-middle">
+                  <p>
+                    <form  action="{% url 'MarketPlace:ShortList' tlt=key.1.ro.0.4  vac=instance.ref_no %}" method="post" name="active">
+                    {% csrf_token %}
+                    <button type="submit"  class="badge badge-info badge-pill float-right" style="width: 5rem;">Short-list</button>
+                  </form><br>
+                  <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=instance.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-success badge-pill float-right" style="width: 5rem;" target="new">View Profile</a>
+                </p>
+              </td>
+              </tr>
+              <tr>
+              <td colspan=6>
+                {% empty %}
+                  {% if s_list %}
+                    <p>All applicants have been short-listed.</p>
+                  {% else %}
+                    <p>No applications for this vacancy.</p>
+                  {% endif %}
+              </td>
+              </tr>
+            </tbody>
+            {% endfor %}
+          </table>
+
+    <p>&nbsp</p>
+
+  </div>
+</div>
+
+{% endblock content %}

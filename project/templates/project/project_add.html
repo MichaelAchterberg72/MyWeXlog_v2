@@ -6,12 +6,12 @@
 
 {% block content %}
 
-<div class="card">
-  <h5 class="card-header">Your Project Details
+<div class="card border-0">
+  <h4 class="">Your Project Details
     <span><p class="float-right">
     <a href="{% url 'Project:HelpProjectAdd' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
     <i class="icon icon-question-circle"></i></a>
-  </p></span></h5>
+  </p></span></h4>
 
   <div class="card-body">
     {% if request.user.is_authenticated %}

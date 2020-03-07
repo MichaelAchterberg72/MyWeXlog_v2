@@ -4,15 +4,15 @@
 {% block title %}{{block.super}}-Vacancies Suited for Me Full List{% endblock title %}
 
 {% block content %}
-<div class="card">
-  <h5 class="card-header">Vacancies Suited for Me - Full List<span><p class="float-right"><a href="{% url 'MarketPlace:Entrance' %}"  class="badge badge-pill badge-primary">Back</a></p></span></h5>
+<div class="card border-0">
+  <h4 class="">Vacancies Suited for Me - Full List<span><p class="float-right"><a href="{% url 'MarketPlace:Entrance' %}"  class="badge badge-pill badge-primary">Back</a></p></span></h4>
 
-  <div class="card" style="width: 100%;">
+  <div class="card border-0" style="width: 100%;">
     <div class="card-body">
       <div class="float-right">
         <a href="{% url 'MarketPlace:History' %}" class="badge badge-primary 8rem" style="width: 8rem">View History</a>
       </div>
-      <h5 class="card-title">Vacancies suited for Me </h5>
+      <h4 class="card-title">Vacancies suited for Me </h4>
       <table class="table table-sm">
         <col width="5%">
         <col width="15%">
@@ -42,7 +42,7 @@
           <td>{{ i.scope.worklocation }}</td>
           <td>{{ i.scope.city }}</td>
             {% if request.user.subscription == 2 %}
-              <td><a href="{% url 'MarketPlace:VacancyDetail' i.scope.id %}" class="card-link">See Detail</a></td>
+              <td><a href="{% url 'MarketPlace:VacancyDetail' i.scope.ref_no %}" class="badge badge-secondary float-right" style="width: 5rem;">See Detail</a></td>
             {% elif request.user.subscription < 2 %}
               <td><a href="#" class="card-link">See Detail</a></td>
             {% endif %}

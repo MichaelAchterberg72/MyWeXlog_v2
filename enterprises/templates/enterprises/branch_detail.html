@@ -4,8 +4,8 @@
 
 {% block content %}
 
-<div class="card">
-  <h5 class="card-header">Detail for {{ info.company.name }}'s {{ info.name }} branch</h5>
+<div class="card border-0">
+  <h4 class="">Detail for {{ info.company.name }}'s {{ info.name }} branch</h4>
   <div class="card-body">
     {% if request.user.is_authenticated %}
     <p><a href="{% url 'Enterprise:EditBranch' info.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Edit Branch</a>

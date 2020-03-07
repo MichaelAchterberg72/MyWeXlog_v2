@@ -135,21 +135,22 @@
     </table>
   </div>
 </div>
-<p><a href="{% url 'MarketPlace:ShortListView' instance.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-warning">View Short-list</a>  <a href="{% url 'MarketPlace:InterviewList' instance.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-warning">View Interview List</a></p>
+<p><a href="{% url 'MarketPlace:ShortListView' instance.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-info">View Short-list</a>  <a href="{% url 'MarketPlace:InterviewList' instance.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-info">View Interview List</a></p>
+<p>&nbsp</p>
 <div class="">
   <h3 id='suited'>Talent suited to the Vacancy</h3>
-  <hr>
+
   <div class="">
     <table class="table table-sm">
       <thead>
         <tr>
-          <th>Alias</th>
-          <th>Experience</th>
-          <th>Training</th>
-          <th>Captured Skills</th>
-          <th>Books Read</th>
-          <th>Rate</th>
-          <th>Motivation</th>
+          <th class="text-center">Alias</th>
+          <th class="text-center">Experience</th>
+          <th class="text-center">Training</th>
+          <th class="text-center">Captured Skills</th>
+          <th class="text-center">Books Read</th>
+          <th class="text-center">Rate</th>
+          <th class="text-left">Motivation</th>
         </tr>
       </thead>
       <tbody>
@@ -180,8 +181,14 @@
       </tbody>
     </table>
   </div>
+
+  <div class="float-right">
+    <a href="{% url 'MarketPlace:TalentSuitedToVacancy' instance.ref_no %}" class="btn btn-primary"style="width: 10rem">View All Talent</a>
+  </div>
+
 </div>
 <hr>
+<p>&nbsp</p>
 <div class="">
   <h3>Applicants</h3>
   <hr>
@@ -189,13 +196,13 @@
   <table class="table table-sm">
     <thead>
       <tr>
-        <th>Alias</th>
-        <th>Experience</th>
-        <th>Training</th>
-        <th>Captured Skills</th>
-        <th>Books Read</th>
-        <th>Bid Rate</th>
-        <th>Motivation</th>
+        <th class="text-center">Alias</th>
+        <th class="text-center">Experience</th>
+        <th class="text-center">Training</th>
+        <th class="text-center">Captured Skills</th>
+        <th class="text-center">Books Read</th>
+        <th class="text-center">Bid Rate</th>
+        <th class="text-left">Motivation</th>
       </tr>
     </thead>
     <tbody>
@@ -232,6 +239,10 @@
     </tbody>
     {% endfor %}
   </table>
+  <p>&nbsp</p>
+  <div class="float-right">
+    <a href="{% url 'MarketPlace:VacanciesList' instance.ref_no %}" class="btn btn-primary"style="width: 10rem">View All Applicants</a>
+  </div>
   </div>
 <p><a href="{% url 'MarketPlace:Entrance' %}" class="btn btn-primary">Back</a></p>
 </div>

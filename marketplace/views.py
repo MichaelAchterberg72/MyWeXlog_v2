@@ -140,6 +140,7 @@ def InterviewNotSuitable(request, vac, tlt):
 
     return redirect(reverse('MarketPlace:InterviewList', kwargs={ 'vac_id': vac_id}))
 
+
 @login_required()
 @subscription(2)
 def InterviewListView(request, vac):
@@ -339,7 +340,6 @@ def MarketHome(request):
 
         skill_set = skill_set | d
 
-
     skill_set = skill_set.distinct().order_by('skill')
     #Create a set of all skills<<<
 
@@ -356,7 +356,6 @@ def MarketHome(request):
 
         for sk in skill_required:
             match.append(sk)
-
 
     ds = sr.none()
     matchd = set(match) #remove duplicates
@@ -585,6 +584,124 @@ def VacancyPostView(request, vac):
 
     template = 'marketplace/vacancy_post_view.html'
     context = {'instance': instance, 'skille': skille, 'delivere': delivere, 'applicants': applicants, 'suitable': suitable, 'applied': applied, 's_list': s_list}
+    return render(request, template, context)
+
+
+@login_required()
+@subscription(2)
+def TalentSuitedVacancyListView(request, vac):
+    #>>>Queryset Cache
+    instance = get_object_or_404(TalentRequired, ref_no=vac)
+    skille = SkillRequired.objects.filter(scope__ref_no=vac)
+    delivere = Deliverables.objects.filter(scope__ref_no=vac)
+    applicants = WorkBid.objects.filter(work__ref_no=vac)
+    we = WorkExperience.objects.filter(talent__subscription__gte=1)
+    s_list = BidShortList.objects.filter(scope__ref_no=vac)
+    book = ReadBy.objects.all()
+    #Queryset Cache<<<
+
+    #>>> List all skills required
+    skill_r = skille.values_list('skills', flat=True).distinct()
+    skill_rl = list(skill_r)
+    #List all skills required<<<
+
+    #>>> Find all talent with required skill
+
+    wes = we.filter(Q(skills__in=skill_r) | Q(topic__skills__in=skill_r)).distinct('talent')
+
+    #ensure applicants don't appear in the suitable skills window
+    app_list = applicants.values_list('talent')
+    suit_list = wes.values_list('talent')
+    short_list = s_list.values_list('talent')
+    short_list_a = s_list.filter(talent__subscription__gte=2).values_list('talent')
+
+    diff_list0 = suit_list.difference(app_list)#removes talent that has applied
+    #removes shortlists talent
+    diff_list = diff_list0.difference(short_list)
+    app_list = app_list.difference(short_list_a)
+
+    we_list = list(diff_list.values_list('talent', flat=True))
+
+    suitable={}
+    for item in we_list:
+        w_exp = we.filter(talent=item, edt=False).aggregate(wet=Sum('hours_worked'))
+        wetv = w_exp.get('wet')
+        t_exp = we.filter(talent=item, edt=True).aggregate(tet=Sum('topic__hours'))
+        tetv = t_exp.get('tet')
+        talent_skill = list(we.filter(talent=item, edt=False).values_list('skills', flat=True))
+        rb = book.filter(talent=item).count()
+        talent_skillt = list(we.filter(talent=item, edt=True).values_list('topic__skills', flat=True))
+        rate = Profile.objects.filter(talent=item).values_list('std_rate', 'currency__currency_abv', 'rate_unit', 'motivation', 'alias',)
+
+        slist = talent_skill + talent_skillt
+        skillset = set(slist)
+        skill_count = len(skillset)
+
+        suitable[item]={'we':wetv, 'te':tetv,'s_no':skill_count, 'rb':rb, 'ro':rate}
+
+
+    template = 'marketplace/talent_suited_vacancy_list_view.html'
+    context = {'instance': instance, 'skille': skille, 'delivere': delivere,  'suitable': suitable, 's_list': s_list}
+    return render(request, template, context)
+
+
+@login_required()
+@subscription(2)
+def ApplicantsForVacancyListView(request, vac):
+    #>>>Queryset Cache
+    instance = get_object_or_404(TalentRequired, ref_no=vac)
+    skille = SkillRequired.objects.filter(scope__ref_no=vac)
+    delivere = Deliverables.objects.filter(scope__ref_no=vac)
+    applicants = WorkBid.objects.filter(work__ref_no=vac)
+    we = WorkExperience.objects.filter(talent__subscription__gte=1)
+    s_list = BidShortList.objects.filter(scope__ref_no=vac)
+    book = ReadBy.objects.all()
+    #Queryset Cache<<<
+
+    #>>> List all skills required
+    skill_r = skille.values_list('skills', flat=True).distinct()
+    skill_rl = list(skill_r)
+    #List all skills required<<<
+
+    #>>> Find all talent with required skill
+
+    wes = we.filter(Q(skills__in=skill_r) | Q(topic__skills__in=skill_r)).distinct('talent')
+
+    #ensure apllicats don't appear in the suitable skills window
+    app_list = applicants.values_list('talent')
+    suit_list = wes.values_list('talent')
+    short_list = s_list.values_list('talent')
+    short_list_a = s_list.filter(talent__subscription__gte=2).values_list('talent')
+
+    diff_list0 = suit_list.difference(app_list)#removes talent that has applied
+    #removes shortlists talent
+    diff_list = diff_list0.difference(short_list)
+    app_list = app_list.difference(short_list_a)
+
+    we_list = list(diff_list.values_list('talent', flat=True))
+
+    #Extracting information for the applicants
+    applied ={}
+    app_list = list(app_list.values_list('talent', flat=True))
+    for app in app_list:
+            aw_exp = we.filter(talent=app, edt=False).aggregate(awet=Sum('hours_worked'))
+            awetv = aw_exp.get('awet')
+            at_exp = we.filter(talent=app, edt=True).aggregate(tet=Sum('topic__hours'))
+            atetv = at_exp.get('tet')
+            atalent_skill = list(we.filter(talent=app, edt=False).values_list('skills', flat=True))
+            atalent_skillt = list(we.filter(talent=app, edt=True).values_list('topic__skills', flat=True))
+            rb = book.filter(talent=app).count()
+            rate = applicants.filter(talent=app).values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation', 'talent__alias')
+
+            aslist = atalent_skill + atalent_skillt
+            askillset = set(aslist)
+            askill_count = len(askillset)
+
+            applied[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate}
+
+
+    template = 'marketplace/applicants_applied_vacancy_list_view.html'
+    context = {'instance': instance, 'skille': skille, 'delivere': delivere, 'applicants': applicants, 'applied': applied, 's_list': s_list}
     return render(request, template, context)
 
 
@@ -908,7 +1025,7 @@ def VacancyEditView(request, vac):
             new = form.save(commit=False)
             new.save()
             form.save_m2m()
-            return redirect(reverse('MarketPlace:VacancyPost', kwargs={'pk':pk}))
+            return redirect(reverse('MarketPlace:VacancyPost', kwargs={'vac':vac}))
         else:
             form = TalentRequiredEditForm(instance=instance)
 

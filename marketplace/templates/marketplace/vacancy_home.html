@@ -12,7 +12,7 @@
         <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}" class="badge badge-primary 8rem" style="width: 8rem">Interview History</a>
       </div>
     {% endif %}
-    <h5 class="card-title">Vacancies suited for Me </h5>
+    <h4 class="card-title">Vacancies suited for Me </h4>
     <table class="table table-sm">
       <col width="5%">
       <col width="15%">
@@ -42,7 +42,7 @@
         <td>{{ i.scope.worklocation }}</td>
         <td>{{ i.scope.city }}</td>
           {% if request.user.subscription == 2 %}
-            <td><a href="{% url 'MarketPlace:VacancyDetail' i.scope.ref_no %}" class="card-link">See Detail</a></td>
+            <td><a href="{% url 'MarketPlace:VacancyDetail' i.scope.ref_no %}" class="badge badge-secondary float-right" style="width: 5rem;">See Detail</a></td>
           {% elif request.user.subscription < 2 %}
             <td><a href="#" class="card-link">See Detail</a></td>
           {% endif %}
@@ -57,8 +57,8 @@
     </table>
     {% if request.user.subscription >= 2 %}
     <div class="float-right">
-      <a href="{% url 'MarketPlace:VacSearch' %}" class="badge badge-secondary 8rem" style="width: 8rem">Search</a>
-      <a href="{% url 'MarketPlace:VacanciesList' %}" class="badge badge-primary"style="width: 8rem">View All Vacancies</a>
+      <a href="{% url 'MarketPlace:VacSearch' %}" class="btn btn-secondary 8rem" style="width: 8rem">Search</a>
+      <a href="{% url 'MarketPlace:VacanciesList' %}" class="btn btn-primary"style="width: 10rem">View All Vacancies</a>
     </div>
     {% endif %}
 
@@ -71,7 +71,7 @@
     <div class="card">
       <div class="card-body">
         <a href="{% url 'MarketPlace:Vacancy' %}" class="badge badge-primary float-right" style="width: 8rem;">Post Vacancy</a>
-      <h5 class="card-title">My Vacancies Advertised (Open)</h5>
+      <h4 class="card-title">My Vacancies Advertised (Open)</h4>
       <table class="table table-sm">
         <thead>
           <tr>
@@ -101,7 +101,10 @@
           {% endfor %}
         </tbody>
       </table>
-        <a href="{% url 'MarketPlace:EmployerInterviewHistory' request.user.alias %}" class="badge badge-primary 8rem float-right" style="width: 8rem">Interview History</a>
+        <div class="float-right">
+          <a href="{% url 'MarketPlace:EmployerInterviewHistory' request.user.alias %}" class="btn btn-primary" style="width: 10rem">Interview History</a>
+          <a href="{% url 'MarketPlace:AllPostedVac' %}" class="btn btn-primary"style="width: 12rem">All Posted Vacancies</a>
+        </div>
       </div>
     </div>
   </div>
@@ -114,7 +117,7 @@
     <div class="card">
       <div class="card-body">
         <a href="{% url 'MarketPlace:AllPostedVac' %}" class="badge badge-primary float-right" style="width: 8rem;">All Posted Vacancies</a>
-      <h5 class="card-title">My Vacancies Advertised (Closed)</h5>
+      <h4 class="card-title">My Vacancies Advertised (Closed)</h4>
       <table class="table table-sm">
         <thead>
           <tr>
@@ -144,6 +147,9 @@
           {% endfor %}
         </tbody>
       </table>
+      <div class="float-right">
+        <a href="{% url 'MarketPlace:AllPostedVac' %}" class="btn btn-primary"style="width: 12rem">All Posted Vacancies</a>
+      </div>
       </div>
     </div>
   </div>
@@ -155,7 +161,7 @@
   <div class="card">
     <div class="card-body" id='Availabillity'>
       <a href="{% url 'MarketPlace:Availabillity' %}" class="badge badge-primary float-right" style="width: 8rem;">Add</a>
-      <h5 class="card-title">My Availability</h5>
+      <h4 class="card-title">My Availability</h4>
       <table class="table table-sm">
         <thead>
           <col width="20%">
@@ -173,7 +179,7 @@
           <tr>
             <td class="align-middle">{{ a.date_from|date:'d M Y' }}</td>
             <td class="align-middle">{{ a.date_to|date:'d M Y' }}</td>
-            <td class="align-middle">{{ a.hours_available }} hrs<br>{{ a.get_unit_display }}</td>
+            <td class="align-middle">{{ a.hours_available }} hrs {{ a.get_unit_display }}</td>
             <td class="align-middle ">
               <form  action="{% url 'MarketPlace:NotAvailable' a.id %}" method="post">
                 {% csrf_token %}
