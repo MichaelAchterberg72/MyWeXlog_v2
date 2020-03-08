@@ -6,8 +6,12 @@
 
 <div class="card border-0" style="width: 100%;">
   <div class="card-body">
-    <p class="float-right">
-      <a href="{% url 'MarketPlace:Entrance' %}" class="btn btn-secondary">Back</a>
+    <p class="">
+      <form  action="{% url 'BookList:BLB' %}" method="post">
+        <input type="hidden" name="next" value="{{ request.GET.next }}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-secondary float-right">Back</button>
+      </form>
     </p>
     {% for d in bil_qs %}
     <h4 class="card-title">Interview Detail</h4>
@@ -35,7 +39,7 @@
             {% endif %}
             {% if request.user.subscription == 2 %}
               <td class="align-middle text-center">
-                <a href="{% url 'MarketPlace:VacancyDetail' d.scope.ref_no %}" class="" data-toggle="tooltip" title="See Vacancy Detail"><i class="fa fa-industry" style="font-size:24px;color:black"></i></a>
+                <a href="{% url 'MarketPlace:VacancyDetail' d.scope.ref_no %}?next={{ request.path|urlencode }}" class="" data-toggle="tooltip" title="See Vacancy Detail"><i class="fa fa-industry" style="font-size:24px;color:black"></i></a>
               </td>
             {% endif %}
           </tr>
@@ -46,7 +50,7 @@
             {% else %}
               <td colspan="4"  class="align-middle"> - </td>
               <td class="align-middle text-center">
-                <a href="{% url 'MarketPlace:TalentIntComment' bil=d.slug tlt=d.talent.alias %}" data-toggle="tooltip" title="Post Comment"><i class="fa fa-pencil-square-o" style="font-size:30px;color:black"></i></a>
+                <a href="{% url 'MarketPlace:TalentIntComment' bil=d.slug tlt=d.talent.alias %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Post Comment"><i class="fa fa-pencil-square-o" style="font-size:30px;color:black"></i></a>
               </td>
             {% endif %}
           </tr>

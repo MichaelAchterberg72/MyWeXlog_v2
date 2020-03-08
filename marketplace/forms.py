@@ -154,14 +154,12 @@ class AssignmentDeclineReasonsForm(forms.ModelForm):
             'tlt_decline_reason': 'Reason',
             }
 
-
+#Why is this not being picked up
 class EmployerInterViewComments(forms.ModelForm):
     class Meta:
         model=BidInterviewList
         fields = ('comments_emp',)
-        lables = {
-            'comments_emp': 'My Comments',
-        }
+        lables = {'comments_emp': 'My Interview Comments',}
 
 
 class WorkBidForm(forms.ModelForm):

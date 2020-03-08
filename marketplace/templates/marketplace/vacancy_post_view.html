@@ -13,7 +13,14 @@
   }
   </style>
 <div class="container">
-<p><a href="{% url 'MarketPlace:VacancyEdit' instance.ref_no %}" class="btn btn-info float-right">Edit Vacancy</a></p>
+<div class="btn-toolbar float-right">
+  <form  action="{% url 'BookList:BLB' %}" method="post">
+    <input type="hidden" name="next" value="{{ request.GET.next }}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-secondary">Back</button>
+  </form>&nbsp
+    <a href="{% url 'MarketPlace:VacancyEdit' instance.ref_no %}" class="btn btn-info ">Edit Vacancy</a>
+</div>
 <h3>Vacancy Review</h3>
 <h5 class="card-title">Vacancy: {{ instance.title }} ({{ instance.ref_no }})</h5>
 
@@ -264,7 +271,6 @@
     <a href="{% url 'MarketPlace:ApplicantsForVacancy' vac=instance.ref_no %}" class="btn btn-primary"style="width: 10rem">View All Applicants</a>
   </div>
   </div>
-<p><a href="{% url 'MarketPlace:Entrance' %}" class="btn btn-primary">Back</a></p>
 </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>

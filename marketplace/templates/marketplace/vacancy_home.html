@@ -9,7 +9,7 @@
     {% if request.user.subscription >= 1 %}
       <div class="float-right">
         <a href="{% url 'MarketPlace:History' %}" class="badge badge-primary 8rem" style="width: 8rem">Applications History</a>
-        <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}" class="badge badge-primary 8rem" style="width: 8rem">Interview History</a>
+        <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="badge badge-primary 8rem" style="width: 8rem">Interview History</a>
       </div>
     {% endif %}
     <h4 class="card-title">Vacancies Suited for Me </h4>
@@ -99,8 +99,8 @@
               {% endif %}
               </td>
               <td class="align-middle text-center">
-                <a href="{% url 'MarketPlace:VacancyPost' p.ref_no %}" class="" data-toggle="tooltip" title="Vacancy Detail"><i class="fa fa-industry" style="font-size:24px;color:black"></i></a>
-                <a href="{% url 'MarketPlace:VacancyIntDetail' p.ref_no %}" class="" data-toggle="tooltip" title="Interview List"><i class="fa fa-users" style="font-size:30px;color:black"></i></a>
+                <a href="{% url 'MarketPlace:VacancyPost' p.ref_no %}?next={{ request.path|urlencode }}" class="" data-toggle="tooltip" title="Vacancy Detail"><i class="fa fa-industry" style="font-size:24px;color:black"></i></a>
+                <a href="{% url 'MarketPlace:VacancyIntDetail' p.ref_no %}?next={{ request.path|urlencode }}" class="" data-toggle="tooltip" title="Interview List"><i class="fa fa-users" style="font-size:30px;color:black"></i></a>
               </td>
             </tr>
           {% endfor %}
@@ -148,7 +148,8 @@
               {% endif %}
               </td>
               <td class="align-middle text-center">
-              <a href="{% url 'MarketPlace:VacancyPost' c.ref_no %}" class="badge badge-secondary" style="width: 5rem;">Detail</a>
+              <a href="{% url 'MarketPlace:VacancyPost' c.ref_no %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Vacancy Detail"><i class="fa fa-industry" style="font-size:24px;color:black"></i></a>
+              <a href="{% url 'MarketPlace:VacancyIntDetail' c.ref_no %}?next={{ request.path|urlencode }}" class="" data-toggle="tooltip" title="Interview List"><i class="fa fa-users" style="font-size:30px;color:black"></i></a>
               </td>
             </tr>
           {% endfor %}

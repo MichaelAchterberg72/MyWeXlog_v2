@@ -4,16 +4,20 @@
 
 {% block content %}
 {% for v in vacancy %}
-<p class="float-right">
-  <a href="{% url 'MarketPlace:Entrance' %}" class="btn btn-secondary">Back</a>
+<div class="btn-toolbar float-right">
+  <form  action="{% url 'BookList:BLB' %}" method="post">
+    <input type="hidden" name="next" value="{{ request.GET.next }}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-secondary float-right">Back</button>
+  </form>&nbsp
   {% for i in vacancy %}
-  {% if i.bidcloses >= datetime.now %}
+  {% if i.bidcloses <= datetime.now %}
     <a href="{% url 'MarketPlace:WorkBid' i.ref_no %}" class="btn btn-warning">Apply for this role</a>
   {% else %}
     <a href="#" class="btn btn-success">Closed</a>
   {% endif %}
   {% endfor %}
-</p>
+</div>
 <h4 class="card-title">Vacancy: {{ v.title }} ({{ v.ref_no }})</h4>
 {% endfor %}
 <table class="table table-sm">

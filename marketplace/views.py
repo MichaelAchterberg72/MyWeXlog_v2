@@ -88,7 +88,7 @@ def TltIntFullDetail(request, bil, tlt):
 @login_required()
 @subscription(2)
 def EmployerInterviewHistoryView(request, tlt):
-    list = BidInterviewList.objects.filter(scope__requested_by__alias=tlt).order_by('-date_listed')
+    list = BidInterviewList.objects.filter(scope__requested_by__alias=tlt).order_by('-scope__ref_no')
 
     template = 'marketplace/interview_history_employer.html'
     context = {'list': list,}
@@ -120,11 +120,15 @@ def TltIntCommentView(request, bil, tlt):
     form = TltIntCommentForm(request.POST or None, instance=instance)
 
     if request.method == 'POST':
+        next_url=request.POST.get('next', '/')
         if form.is_valid():
             new = form.save(commit=False)
             new.tlt_reponded = timezone.now()
             new.save()
-            return redirect(reverse('MarketPlace:TalentIntDetail', kwargs={ 'bil': bil, 'tlt': tlt}))
+
+            if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
+                next_url = reverse('MarketPlace:Entrance')
+            return HttpResponseRedirect(next_url)
     else:
         template = 'marketplace/talent_interview_comment.html'
         context={'form': form, 'instance': instance,}
@@ -149,10 +153,15 @@ def EmpIntCommentView(request, bil, tlt):
     form = EmployerInterViewComments(request.POST or None, instance=instance)
 
     if request.method == 'POST':
+        next_url=request.POST.get('next', '/')
         if form.is_valid():
             new = form.save(commit=False)
             new.save()
-            return redirect(reverse('MarketPlace:EmployerIntDetail', kwargs={ 'bil': bil, 'tlt': tlt}))
+
+            if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
+                next_url = reverse('MarketPlace:Entrance')
+            return HttpResponseRedirect(next_url)
+
     else:
         template = 'marketplace/interview_comment_employer.html'
         context={'form': form, 'instance': instance,}
