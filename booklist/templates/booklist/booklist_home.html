@@ -6,6 +6,7 @@
 {% block content %}
 
 <div class="card border-0">
+  <div class="card-body">
   <h4 class="">Welcome to the Booklist home page!
     <span><p class="float-right">
     <a href="{% url 'BookList:HelpBooklistHome' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
@@ -39,7 +40,7 @@
           <td>{{ b.book }}</td>
           <td>{{ b.type }}</td>
           <td>{{ b.date }}</td>
-          <td><a href="{% url 'BookList:BookDetail' b.book.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Book Detail</a> </td>
+          <td><a href="{% url 'BookList:BookDetail' b.book.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary float-right" style="width: 5rem;">Book Detail</a> </td>
         </tr>
       </tbody>
       {% endfor %}

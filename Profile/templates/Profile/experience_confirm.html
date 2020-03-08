@@ -5,14 +5,14 @@
 {% block content %}
   <div class="row">
     <div class="col-sm-12">
-      <div class="card">
+      <div class="card border-0">
         <div class="card-body">
           <p class="card-text">
             {% if not wf1 or cm1 or wk1 or spr1 or wclr1 or wc1 %}
               <p>You currently do not have any experience to confirm.</p>
             {% endif %}
             {% if wf1 %}
-              <h5 class="card-title" id="Lecturer">Confirm as Lecturer</h5>
+              <h4 class="card-title" id="Lecturer">Confirm as Lecturer</h4>
               <table class="table table-sm">
                 <col width="15%">
                 <col width="40%">
@@ -56,9 +56,19 @@
                   {% endfor %}
                 </tbody>
               </table>
+              <br>
             {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="card border-0">
+            <div class="card-body">
           {% if cm1 %}
-            <h5 class="card-title" id='ClassMates'>Confirm a ClassMate's Entry</h5>
+            <h4 class="card-title" id='ClassMates'>Confirm a ClassMate's Entry</h4>
             <table class="table table-sm">
               <col width="15%">
               <col width="40%">
@@ -102,9 +112,19 @@
                 {% endfor %}
               </tbody>
             </table>
+            <br>
           {% endif %}
+        </div>
+      </div>
+    </div>
+    </div>
+    <br>
+    <div class="row">
+    <div class="col-sm-12">
+      <div class="card border-0">
+        <div class="card-body">
           {% if wk1 %}
-            <h5 class="card-title" id="Colleague">Confirm a Colleagues's Experience</h5>
+            <h4 class="card-title" id="Colleague">Confirm a Colleagues's Experience</h4>
             <table class="table table-sm">
               <thead>
                 <col width="15%">
@@ -127,7 +147,7 @@
               <tbody>
                 {% for l in wk1 %}
                 <tr>
-                  <td rowspan="2"  class="align-middle">{{ l.experience.talent.first_name }} {{ l.experience.talent.last_name }}</td>
+                  <td rowspan="2" class="align-middle">{{ l.experience.talent.first_name }} {{ l.experience.talent.last_name }}</td>
                   <td class="align-middle">{{ l.experience.company }}</td>
                   <td class="align-middle">{{ l.experience.project }}</td>
                   <td class="align-middle">{{ l.experience.designation }}</td>
@@ -156,9 +176,19 @@
                 {% endfor %}
               </tbody>
             </table>
+            <br>
           {% endif %}
+        </div>
+      </div>
+      </div>
+      </div>
+      <br>
+      <div class="row">
+      <div class="col-sm-12">
+      <div class="card border-0">
+        <div class="card-body">
           {% if spr1 %}
-            <h5 class="card-title" id="Superior">Confirm a Subordinate's Experience</h5>
+            <h4 class="card-title" id="Superior">Confirm a Subordinate's Experience</h4>
             <table class="table table-sm">
               <thead>
                 <tr align="center">
@@ -203,9 +233,19 @@
                 {% endfor %}
               </tbody>
             </table>
+            <br>
           {% endif %}
+        </div>
+      </div>
+      </div>
+      </div>
+      <br>
+      <div class="row">
+      <div class="col-sm-12">
+      <div class="card border-0">
+        <div class="card-body">
           {% if wclr1 %}
-            <h5 class="card-title" id="Collaborator">Confirm the experience of someone you have worked with</h5>
+            <h4 class="card-title" id="Collaborator">Confirm the experience of someone you have worked with</h4>
             <table class="table table-sm">
               <thead>
                 <tr align="center">
@@ -251,9 +291,17 @@
               </tbody>
             </table>
           {% endif %}
-          <hr>
+        </div>
+      </div>
+      </div>
+      </div>
+      <br>
+      <div class="row">
+      <div class="col-sm-12">
+      <div class="card border-0">
+        <div class="card-body">
           {% if wc1 %}
-            <h5 class="card-title" id="Client">Confirm the experience of someone working for your company (as a consultalt/contractor)</h5>
+            <h4 class="card-title" id="Client">Confirm the experience of someone working for your company (as a consultalt/contractor)</h4>
             <table class="table table-sm">
               <thead>
                 <tr align="center">

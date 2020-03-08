@@ -52,6 +52,12 @@ urlpatterns = [
     path('vacancy-search/', views.VacancySearch, name="VacSearch"),
     path('vacancy/vacancies-full-list/<slug:vac>/', views.VacanciesListView, name="VacanciesList"),
     path('vacancy/talent-suited-to-vacancy/<slug:vac>/', views.TalentSuitedVacancyListView, name='TalentSuitedToVacancy'),
+    path('vacancy/applicants-for-vacancy/<slug:vac>/', views.ApplicantsForVacancyListView, name='ApplicantsForVacancy'),
+    path('vacancy/application-history-full-list/', views.RolesAppliedForApplicationHistoryView, name='RolesAppliedForFullList'),
+    path('vacancy/shortlisted-history-full-list/', views.RolesShortlistedForApplicationHistoryView, name='RolesShortlistedFullList'),
+    path('vacancy/unsuccessful-applications-history-full-list/', views.UnsuccessfulApplicationHistoryView, name='UnsuccessfulApplicationsFullList'),
+    path('vacancy/successful-applications-history-full-list/', views.SuccessfulApplicationHistoryView, name='SuccessfulApplicationsFullList'),
+
     #Help urls
     path('help/Experience-level/', views.ExperienceLevelHelpView, name="HelpExperienceLevel"),
     path('help/Work-Configeration/', views.WorkConfigerationHelpView, name="HelpWorkCOnfigeration"),

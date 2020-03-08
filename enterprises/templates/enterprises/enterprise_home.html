@@ -5,6 +5,7 @@
 {% block content %}
 
 <div class="card border-0">
+  <div class="card-body">
   <h4 class="">Welcome to the Enterprises home page!
     <span><p class="float-right">
     <a href="{% url 'Enterprise:HelpEnterpriseHome' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
@@ -33,7 +34,7 @@
         <tr>
           <td>{{ c.name }}</td>
           <td><a href="{{ c.website }}" target="_blank">{{ c.website }}</a></td>
-          <td><a href="{% url 'Enterprise:BranchList' c.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">List Branches</a> </td>
+          <td><a href="{% url 'Enterprise:BranchList' c.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 5rem;">List Branches</a> </td>
         </tr>
       </tbody>
       {% endfor %}

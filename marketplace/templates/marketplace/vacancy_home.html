@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<div class="card" style="width: 100%;">
+<div class="card border-0" style="width: 100%;">
   <div class="card-body">
     {% if request.user.subscription >= 1 %}
       <div class="float-right">
@@ -12,7 +12,7 @@
         <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}" class="badge badge-primary 8rem" style="width: 8rem">Interview History</a>
       </div>
     {% endif %}
-    <h4 class="card-title">Vacancies suited for Me </h4>
+    <h4 class="card-title">Vacancies Suited for Me </h4>
     <table class="table table-sm">
       <col width="5%">
       <col width="15%">
@@ -66,11 +66,12 @@
     {% endif %}
   </div>
 </div>
+
 <br>
 {% if request.user.subscription >= 2 %}
 <div class="row">
   <div class="col-sm-12">
-    <div class="card">
+    <div class="card border-0">
       <div class="card-body">
         <a href="{% url 'MarketPlace:Vacancy' %}" class="badge badge-primary float-right" style="width: 8rem;">Post Vacancy</a>
       <h4 class="card-title">My Vacancies Advertised (Open)</h4>
@@ -115,10 +116,11 @@
   {% if request.user.subscription >= 1 %}
 </div>
 {% if request.user.subscription >= 2 %}
+
 <br>
 <div class="row">
   <div class="col-sm-12">
-    <div class="card">
+    <div class="card border-0">
       <div class="card-body">
         <a href="{% url 'MarketPlace:AllPostedVac' %}" class="badge badge-primary float-right" style="width: 8rem;">All Posted Vacancies</a>
       <h4 class="card-title">My Vacancies Advertised (Closed)</h4>
@@ -160,10 +162,11 @@
   </div>
 </div>
 {% if request.user.subscription >= 1 %}
+
 <br>
 <div class="row">
 <div class="col-sm-7">
-  <div class="card">
+  <div class="card border-0">
     <div class="card-body" id='Availabillity'>
       <a href="{% url 'MarketPlace:Availabillity' %}" class="badge badge-primary float-right" style="width: 8rem;">Add</a>
       <h4 class="card-title">My Availability</h4>

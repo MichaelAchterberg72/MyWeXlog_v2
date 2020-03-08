@@ -42,7 +42,7 @@
             <td class="badge badge-info text-wrap" style="width: 6rem;">Active Subscription required</td>
           {% endif %}
           <td>{% if request.user.is_authenticated %}
-          <a href="{% url 'Enterprise:BranchDetail' b.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Detail</a>
+          <a href="{% url 'Enterprise:BranchDetail' b.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary float-right" style="width: 5rem;">Detail</a>
           {% endif %}</td>
 
         </tr>

@@ -11,8 +11,12 @@
     width: 100px;
   }
   </style>
-<div class="container">
 
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card h-100">
+        <div class="card-body">
     <form  action="{% url 'BookList:BLB' %}" method="post">
       <input type="hidden" name="next" value="{{ request.GET.next }}">
       {% csrf_token %}
@@ -20,7 +24,7 @@
     </form> <a href="{% url 'MarketPlace:InterviewList' vacancy.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-warning float-right">View Interview List</a>
 
 
-    <h3 class="card-title">Short list for {{ vacancy.title }} ({{ vacancy.ref_no }})</h3>
+    <h4 class="card-title">Short list for {{ vacancy.title }} ({{ vacancy.ref_no }})</h4>
   <table class="table table-sm">
     <thead>
       <tr>
@@ -64,6 +68,10 @@
       {% endfor %}
     </tbody>
   </table>
+</div>
+</div>
+</div>
+</div>
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 {{ form.media.js }}

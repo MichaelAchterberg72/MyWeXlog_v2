@@ -29,7 +29,8 @@
 {% endblock network %}
 
 {% block workflow %}
-<p>Experience confirmations: <a href="{% url 'Profile:Confirm' %}"class="btn btn-info">{{ total }}</a></p>
+<p>Experience confirmations: <a href="{% url 'Profile:Confirm' %}"class="btn btn-info float-right" style="width: 8rem">{{ total }}</a></p>
+<br>
 <table class="table table-sm">
   <thead>
     <tr>
