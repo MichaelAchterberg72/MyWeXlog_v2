@@ -6,14 +6,15 @@
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-      <link href="{% static 'css/wexlog_css.css' %}" rel="stylesheet" type="text/css">
-    <!-- Bootstrap CSS -->
+      <!-- Bootstrap CSS -->
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
       <script src="https://kit.fontawesome.com/7e5855a9eb.js" crossorigin="anonymous"></script>
       <link rel="stylesheet" href="https://stackpath.bookstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
       <link rel="stylesheet" href="{% static 'css/flaticon.css' %}">
       <link rel="stylesheet" href="{% static 'css/icomoon.css' %}">
+
+      <link href="{% static 'css/wexlog_css.css' %}" rel="stylesheet" type="text/css">
 
       <link rel="stylesheet" href="{% static 'css/wexlog_navbar_css.css' %}">
       <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700&display=swap" rel="stylesheet">
@@ -22,7 +23,7 @@
   {% block Style %}
   {% endblock Style %}
   </head>
-  <body>
+  <body class="bg-light">
 
     <nav class="navbar">
       <ul class="navbar-nav">
@@ -125,21 +126,7 @@
             </div>
             <span class="link-text">Settings
           </a>
-          <div class="btn-group">
-          <button type="button" class="btn btn-link link-text dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 
-          </button>
-            <div class="dropdown-menu dropdown-menu-right">
-              <a class="dropdown-item"  href="{% url 'Profile:ProfileView' request.user.alias %}">View Profile</a>
-              <a class="dropdown-item"  href="{% url 'Invitation:FlatInvite' %}">Invite Someone</a>
-
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item"  href="{% url 'account_email' %}">Manage email</a>
-              <a class="dropdown-item"  href="{% url 'account_change_password' %}">Change Password</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item"  href="{% url 'account_logout' %}">Logout</a>
-            </div>
-          </div>
           </span>
         </li>
         {% else %}
@@ -265,15 +252,34 @@
     </div>
   </main>
 
-
-  <nav class="bottom-navbar sticky-bottom navbar-light bg-light">
+  {% if request.user.is_authenticated %}
+  <nav class="sticky-top navbar-light bg-light top-right-navbar right" style="height: 5rem;">
     <div class="container">
       <a class="navbar-brand" href="https://devoptec.com/public/user-agreement/">User Agreement</a>
       <a class="navbar-brand" href="https://devoptec.com/public/privacy/">Privacy Policy</a>
       <a class="navbar-brand" href="https://devoptec.com/public/contact/">Contact Us</a>
+
+      <div class="btn-group">
+      <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <img src="{% static 'images/user-unisex-512.png' %}" height="45" width="45" class="avatar">
+      </button>
+        <div class="dropdown-menu dropdown-menu-right">
+          <a class="dropdown-item"  href="{% url 'Profile:ProfileView' request.user.alias %}">View Profile</a>
+
+          <a class="dropdown-item"  href="{% url 'Invitation:FlatInvite' %}">Invite Someone</a>
+
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item"  href="{% url 'account_email' %}">Manage email</a>
+          <a class="dropdown-item"  href="{% url 'account_change_password' %}">Change Password</a>
+          <a class="dropdown-item"  href="{% url 'Users:CustomUserSettings' %}">Settings</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item"  href="{% url 'account_logout' %}">Logout</a>
+        </div>
+      </div>
+
     </div>
   </nav>
-
+  {% endif %}
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

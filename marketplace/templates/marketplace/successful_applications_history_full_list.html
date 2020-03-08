@@ -1,0 +1,110 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+{% block title %}{{block.super}}-Vacancy History{% endblock title %}
+
+{% block content %}
+
+<div class="card border-0" style="width: 100%;">
+  <div class="card-body">
+    <p class="float-right">
+      <a href="{% url 'MarketPlace:History' %}" class="btn btn-secondary">Back</a>
+    </p>
+    <h4 class="card-title">Vacancy Application History</h4>
+    <h5 class="card-title">Successful Applications</h5>
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th class="align-middle text-center">Date Applied</th>
+          <th class="align-middle text-center">Vacancy Title</th>
+          <th class="align-middle text-center">Ref. No.</th>
+          <th class="align-middle text-center">Hours Required</th>
+          <th class="align-middle text-center">Work Configeration</th>
+          <th class="align-middle text-center">Country</th>
+          <th class="align-middle text-center">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+
+      {% for s in accepted %}
+        <tr>
+          <td>{{ s.date_applied|date:"d N Y" }}</td>
+          <td>{{ s.work.title }}</td>
+          <td>{{ s.work.ref_no }}</td>
+          <td>
+            {{ s.work.hours_required|intcomma }} ({{ s.work.get_unit_display }})
+          </td>
+          <td>{{ s.work.worklocation }}</td>
+          <td>{{ s.work.city }}</td>
+          <td>{{ s.get_bidreview_display }}</td>
+          {% if request.user.subscription == 2 %}
+            <td><a href="{% url 'MarketPlace:VacancyDetail' s.work.ref_no %}" class="badge badge-primary 8rem" style="width: 6rem">See Detail</a></td>
+          {% elif request.user.subscription < 2 %}
+            <td><a href="#" class="badge badge-primary 8rem" style="width: 6rem">See Detail</a></td>
+          {% endif %}
+        </tr>
+      {% endfor %}
+      {% for s in p_accepted %}
+        <tr>
+          <td>{{ s.date_listed|date:"d N Y" }}</td>
+          <td>{{ s.scope.title }}</td>
+          <td>{{ s.scope.ref_no }}</td>
+          <td>
+            {{ s.scope.hours_required|intcomma }} ({{ s.scope.get_unit_display }})
+          </td>
+          <td>{{ s.scope.worklocation }}</td>
+          <td>{{ s.scope.city }}</td>
+          <td>{{ s.get_status_display }}</td>
+          {% if request.user.subscription == 2 %}
+            <td><a href="{% url 'MarketPlace:VacancyDetail' s.scope.ref_no %}" class="badge badge-primary 8rem" style="width: 6rem">See Detail</a></td>
+          {% elif request.user.subscription < 2 %}
+            <td><a href="#" class="badge badge-primary 8rem" style="width: 6rem">See Detail</a></td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+
+    <p>&nbsp</p>
+
+    <nav aria-label="Page navigation">
+        {% if pageitems.has_other_pages %}
+          <ul class="pagination">
+            {% if pageitems.has_previous %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ pageitems.previous_page_number }}" aria-label="Previous">
+                  <span aria-hidden="true">Previous</span>
+                  <span class="sr-only disabled">Previous</span>
+                </a></li>
+            {% else %}
+              <li class="page-link disabled" tabindex="-1"><span>Previous</span></li>
+            {% endif %}
+
+            {% if pageitems.number|add:'-4' > 1 %}
+              <li class="page-link"><a href="?page={{ pageitems.number|add:'-5' }}">&hellip;</a></li>
+            {% endif %}
+
+            {% for i in pageitems.paginator.page_range %}
+              {% if pageitems.number == i %}
+                <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
+              {% elif i > pageitems.number|add:'-5' and i < pageitems.number|add:'5' %}
+                <li class="page-link"><a class="page-item" href="?page={{ i }}">{{ i }}</a></li>
+              {% endif %}
+            {% endfor %}
+
+            {% if pageitems.paginator.num_pages > pageitems.number|add:'4' %}
+              <li class="page-link"><a href="?page={{ pageitems.number|add:'5' }}">&hellip;</a></li>
+            {% endif %}
+
+            {% if pageitems.has_next %}
+              <li class="page-link"><a href="?page={{ pageitems.next_page_number }}">Next</a></li>
+            {% else %}
+              <li class="page-link disabled"><span>Next</span></li>
+            {% endif %}
+          </ul>
+        {% endif %}
+    </nav>
+
+  </div>
+</div>
+
+{% endblock content %}

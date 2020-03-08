@@ -14,7 +14,7 @@
   {% endif %}
   {% endfor %}
 </p>
-<h5 class="card-title">Vacancy: {{ v.title }} ({{ v.ref_no }})</h5>
+<h4 class="card-title">Vacancy: {{ v.title }} ({{ v.ref_no }})</h4>
 {% endfor %}
 <table class="table table-sm">
   <thead>
@@ -42,7 +42,7 @@
 </table>
 <div class="row">
   <div class="col-sm-6">
-    <div class="card">
+    <div class="card h-100">
       <div class="card-body">
         <h5 class="card-title">Scope</h5>
         {% for s in vacancy %}
@@ -52,7 +52,7 @@
     </div>
   </div>
   <div class="col-sm-6">
-    <div class="card">
+    <div class="card h-100">
       <div class="card-body">
         <h5 class="card-title">Expectations</h5>
         {% for e in vacancy %}
@@ -83,7 +83,7 @@
 </table>
 <div class="row">
   <div class="col-sm-3">
-    <div class="card">
+    <div class="card h-100">
       <div class="card-body">
         <h5 class="card-title">Skills Required</h5>
         {% for s in skills %}
@@ -95,7 +95,7 @@
     </div>
   </div>
   <div class="col-sm-5">
-    <div class="card">
+    <div class="card h-100">
       <div class="card-body">
         <h5 class="card-title">Deliverables</h5>
         {% for d in deliver %}
@@ -107,7 +107,7 @@
     </div>
   </div>
   <div class="col-sm-4">
-    <div class="card">
+    <div class="card h-100">
       <div class="card-body">
         <h5 class="card-title">Certifications Required</h5>
         {% for d in vacancy %}

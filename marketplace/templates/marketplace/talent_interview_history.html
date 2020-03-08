@@ -29,7 +29,7 @@
             <td>{{ l.get_tlt_response_display }}</td>
             <td>{{ l.get_outcome_display }}</td>
             <td>
-              {{ l.comments_emp }}
+              {{ l.comments_emp|truncatechars:200 }}
             </td>
               {% if request.user.subscription == 2 %}
                 <td><a href="{% url 'MarketPlace:VacancyDetail' l.scope.ref_no %}" class="badge badge-primary 8rem" style="width: 6rem">See Detail</a></td>

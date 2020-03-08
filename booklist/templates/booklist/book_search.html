@@ -44,7 +44,7 @@
         <tr>
           <td>{{ BookList.title }}</td>
           <td>{{ BookList.publisher }}</td>
-          <td><a href="{% url 'BookList:BookDetail' BookList.id %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Book Detail</a> </td>
+          <td><a href="{% url 'BookList:BookDetail' BookList.id %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 5rem;">Book Detail</a> </td>
         </tr>
       </tbody>
 

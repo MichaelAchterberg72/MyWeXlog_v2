@@ -4,12 +4,13 @@
 
 {% block content %}
 
-<div class="card" style="width: 100%;">
+<div class="card border-0" style="width: 100%;">
   <div class="card-body">
     <p class="float-right">
       <a href="{% url 'MarketPlace:Entrance' %}" class="btn btn-secondary">Back</a>
     </p>
-    <h5 class="card-title">Vacancy Application History</h5>
+    <h4 class="card-title">Vacancy Application History</h4>
+    <h4 class="card-title">Roles Applied for</h4>
     <table class="table table-sm">
       <thead>
         <tr>
@@ -26,7 +27,7 @@
         <tr>
           <th colspan="7">Roles Applied for</th>
         </tr>
-        {% for i in applied %}
+        {% for i in pageitems %}
           <tr>
             <td>{{ i.date_applied|date:"d N Y" }}</td>
             <td>{{ i.work.title }}</td>
@@ -145,7 +146,179 @@
         {% endfor %}
     </tbody>
     </table>
+    <div class="float-right">
+      <a href="{% url 'MarketPlace:RolesAppliedForFullList' %}" class="btn btn-primary" style="width: 10rem">View Full List</a>
+    </div>
   </div>
 </div>
+<br>
+<div class="card border-0" style="width: 100%;">
+  <div class="card-body">
+    <h4 class="card-title">Roles Shortlisted for</h4>
 
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th class="align-middle text-center">Date Applied</th>
+          <th class="align-middle text-center">Vacancy Title</th>
+          <th class="align-middle text-center">Ref. No.</th>
+          <th class="align-middle text-center">Hours Required</th>
+          <th class="align-middle text-center">Work Configeration</th>
+          <th class="align-middle text-center">Country</th>
+          <th class="align-middle text-center">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        {% for i in s_list %}
+          <tr>
+            <td>{{ i.date_listed|date:"d N Y" }}</td>
+            <td>{{ i.scope.title }}</td>
+            <td>{{ i.scope.ref_no }}</td>
+            <td>
+              {{ i.scope.hours_required|intcomma }} ({{ i.scope.get_unit_display }})
+            </td>
+            <td>{{ i.scope.worklocation }}</td>
+            <td>{{ i.scope.city }}</td>
+            <td>{{ i.get_status_display }}</td>
+            {% if request.user.subscription == 2 %}
+              <td><a href="{% url 'MarketPlace:VacancyDetail' i.scope.ref_no %}" class="badge badge-primary 8rem" style="width: 6rem">See Detail</a></td>
+            {% elif request.user.subscription < 2 %}
+              <td><a href="#" class="badge badge-primary 8rem" style="width: 6rem">See Detail</a></td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+
+    </tbody>
+    </table>
+    <div class="float-right">
+      <a href="{% url 'MarketPlace:RolesShortlistedFullList' %}" class="btn btn-primary" style="width: 10rem">View Full List</a
+    </div>
+  </div>
+</div>
+</div>
+<br>
+<div class="card border-0" style="width: 100%;">
+  <div class="card-body">
+    <h4 class="card-title">Unsuccessful Applications</h4>
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th class="align-middle text-center">Date Applied</th>
+          <th class="align-middle text-center">Vacancy Title</th>
+          <th class="align-middle text-center">Ref. No.</th>
+          <th class="align-middle text-center">Hours Required</th>
+          <th class="align-middle text-center">Work Configeration</th>
+          <th class="align-middle text-center">Country</th>
+          <th class="align-middle text-center">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        {% for r in rejected %}
+          <tr>
+            <td>{{ r.date_applied|date:"d N Y" }}</td>
+            <td>{{ r.work.title }}</td>
+            <td>{{ r.work.ref_no }}</td>
+            <td>
+              {{ r.work.hours_required|intcomma }} ({{ r.work.get_unit_display }})
+            </td>
+            <td>{{ r.work.worklocation }}</td>
+            <td>{{ r.work.city }}</td>
+            <td>{{ r.get_bidreview_display }}</td>
+            {% if request.user.subscription == 2 %}
+              <td><a href="{% url 'MarketPlace:VacancyDetail' r.work.ref_no %}" class="badge badge-primary 8rem" style="width: 6rem">See Detail</a></td>
+            {% elif request.user.subscription < 2 %}
+              <td><a href="#" class="badge badge-primary 8rem" style="width: 6rem">See Detail</a></td>
+            {% endif %}
+          </tr>
+      {% endfor %}
+      {% for r in p_rejected %}
+        <tr>
+          <td>{{ r.date_listed|date:"d N Y" }}</td>
+          <td>{{ r.scope.title }}</td>
+          <td>{{ r.scope.ref_no }}</td>
+          <td>
+            {{ r.scope.hours_required|intcomma }} ({{ r.scope.get_unit_display }})
+          </td>
+          <td>{{ r.scope.worklocation }}</td>
+          <td>{{ r.scope.city }}</td>
+          <td>{{ r.get_status_display }}</td>
+          {% if request.user.subscription == 2 %}
+            <td><a href="{% url 'MarketPlace:VacancyDetail' r.scope.ref_no %}" class="badge badge-primary 8rem" style="width: 6rem">See Detail</a></td>
+          {% elif request.user.subscription < 2 %}
+            <td><a href="#" class="badge badge-primary 8rem" style="width: 6rem">See Detail</a></td>
+          {% endif %}
+        </tr>
+    {% endfor %}
+
+    </tbody>
+    </table>
+    <div class="float-right">
+      <a href="{% url 'MarketPlace:UnsuccessfulApplicationsFullList' %}" class="btn btn-primary" style="width: 10rem">View Full List</a
+    </div>
+  </div>
+</div>
+</div>
+<br>
+<div class="card border-0" style="width: 100%;">
+  <div class="card-body">
+    <h4 class="card-title">Successful Applications</h4>
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th class="align-middle text-center">Date Applied</th>
+          <th class="align-middle text-center">Vacancy Title</th>
+          <th class="align-middle text-center">Ref. No.</th>
+          <th class="align-middle text-center">Hours Required</th>
+          <th class="align-middle text-center">Work Configeration</th>
+          <th class="align-middle text-center">Country</th>
+          <th class="align-middle text-center">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+
+      {% for s in accepted %}
+        <tr>
+          <td>{{ s.date_applied|date:"d N Y" }}</td>
+          <td>{{ s.work.title }}</td>
+          <td>{{ s.work.ref_no }}</td>
+          <td>
+            {{ s.work.hours_required|intcomma }} ({{ s.work.get_unit_display }})
+          </td>
+          <td>{{ s.work.worklocation }}</td>
+          <td>{{ s.work.city }}</td>
+          <td>{{ s.get_bidreview_display }}</td>
+          {% if request.user.subscription == 2 %}
+            <td><a href="{% url 'MarketPlace:VacancyDetail' s.work.ref_no %}" class="badge badge-primary 8rem" style="width: 6rem">See Detail</a></td>
+          {% elif request.user.subscription < 2 %}
+            <td><a href="#" class="badge badge-primary 8rem" style="width: 6rem">See Detail</a></td>
+          {% endif %}
+        </tr>
+      {% endfor %}
+      {% for s in p_accepted %}
+        <tr>
+          <td>{{ s.date_listed|date:"d N Y" }}</td>
+          <td>{{ s.scope.title }}</td>
+          <td>{{ s.scope.ref_no }}</td>
+          <td>
+            {{ s.scope.hours_required|intcomma }} ({{ s.scope.get_unit_display }})
+          </td>
+          <td>{{ s.scope.worklocation }}</td>
+          <td>{{ s.scope.city }}</td>
+          <td>{{ s.get_status_display }}</td>
+          {% if request.user.subscription == 2 %}
+            <td><a href="{% url 'MarketPlace:VacancyDetail' s.scope.ref_no %}" class="badge badge-primary" style="width: 6rem">See Detail</a></td>
+          {% elif request.user.subscription < 2 %}
+            <td><a href="#" class="badge badge-primary" style="width: 6rem">See Detail</a></td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+    <div class="float-right">
+      <a href="{% url 'MarketPlace:SuccessfulApplicationsFullList' %}" class="btn btn-primary" style="width: 10rem">View Full List</a
+    </div>
+  </div>
+</div>
 {% endblock content %}
