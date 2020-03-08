@@ -106,11 +106,20 @@ class VacancySearchForm(forms.Form):
         }
 
 
+#This form used to make comments on a completed interview
+class TltIntCommentForm(forms.ModelForm):
+    class Meta:
+        model = BidInterviewList
+        fields = ('comments_tlt',)
+        labels = {'comments_tlt': 'My Comment'}
+
+
+#This form used when declining an interview
 class TalentInterViewComments(forms.ModelForm):
     class Meta:
-        model=BidInterviewList
+        model = BidInterviewList
         fields = ('comments_tlt', 'tlt_decline_reason',)
-        labels = {}
+        labels = {'comments_tlt': 'Reason for Declining Interview'}
 
 
 class AssignWorkForm(forms.ModelForm):
@@ -151,7 +160,7 @@ class EmployerInterViewComments(forms.ModelForm):
         model=BidInterviewList
         fields = ('comments_emp',)
         lables = {
-            'comments_emp': 'Comments'
+            'comments_emp': 'My Comments',
         }
 
 

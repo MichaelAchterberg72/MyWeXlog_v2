@@ -10,43 +10,32 @@
     {% if als.pk == request.user.id %}
     {% else %}
     <div class="">
-      <div class="">
         {% if int_list %}
           <button type="button" name="button"class="btn btn-success ">Already on Interview List</button>
         {% else %}
-          {% if als.pk == request.user.id %}
-            <form  action="#" method="post">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-success float-right" style="width: 5rem">Interview</button>
-            </form>
-          {% else %}
+          <div class="float-right">
             {% for v in vacancy %}
               <form  action="{% url 'MarketPlace:InterviewList' tlt=als.alias  vac=v.ref_no %}" method="post">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-success float-right" style="width: 5rem">Interview</button>
+                <button type="submit" class="" style="width: 4rem"><i class="fa fa-group" style="font-size:36px;color:green" data-toggle="tooltip" title="Add Candidate to Interview List" style="font-size:30px;color:black"></i></button>
+              </form>
+              <form  action="{% url 'MarketPlace:VacDecline' tlt=als.alias  vac=v.ref_no %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="" style="width: 4rem" data-toggle="tooltip" title="Decline Candidate" style="font-size:30px;color:black"><i class="fa fa-eject" style="font-size:36px;color:red"></i></button>
               </form>
             {% endfor %}
-          {% endif %}
+          </div>
         {% endif %}
-      </div>
-      <div class="">
         {% if bslist_qs %}
           <button type="button" name="button"class="btn btn-secondary ">Already Shortlisted</button>
         {% else %}
         {% for v in vacancy %}
           <form  action="{% url 'MarketPlace:ShortList' tlt=als.alias  vac=v.ref_no %}" method="post">
             {% csrf_token %}
-            <button type="submit" class="btn btn-info float-right" style="width: 5rem;">Short-list</button>
+            <button type="submit" class="btn btn-info " style="width: 5rem;">Short-list</button>
           </form>
         {% endfor %}
         {% endif %}
-      </div>
-        {% for v in vacancy %}
-          <form  action="{% url 'MarketPlace:VacDecline' tlt=als.alias  vac=v.ref_no %}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger float-right" style="width: 5rem">Decline</button>
-          </form>
-        {% endfor %}
       </div>
       {% endif %}
   </div>
@@ -319,7 +308,7 @@
     </div>
       <div class="col-sm-12">
         <p>Total Books Read: <strong>{{ bkl_count }}</strong> </p>
-        
+
             <table class="table table-sm">
               <col width="45%">
               <col width="20%">

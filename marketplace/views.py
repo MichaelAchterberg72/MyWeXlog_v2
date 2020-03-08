@@ -23,7 +23,7 @@ from django.utils.html import strip_tags
 
 
 from .forms import (
-        TalentAvailabillityForm, SkillRequiredForm, SkillLevelForm, DeliverablesForm, TalentRequiredForm, WorkLocationForm, WorkBidForm, TalentRequiredEditForm, TalentInterViewComments, EmployerInterViewComments, AssignWorkForm, VacancySearchForm,
+        TalentAvailabillityForm, SkillRequiredForm, SkillLevelForm, DeliverablesForm, TalentRequiredForm, WorkLocationForm, WorkBidForm, TalentRequiredEditForm, TalentInterViewComments, EmployerInterViewComments, AssignWorkForm, VacancySearchForm, TltIntCommentForm
 )
 
 from .models import(
@@ -58,8 +58,8 @@ def VacancySearch(request):
 
 @login_required()
 @subscription(1)
-def EmployerInterviewHistoryView(request, tlt):
-    list = BidInterviewList.objects.filter(scope__requested_by__alias=tlt).order_by('-date_listed')
+def TalentInterviewHistoryView(request, tlt):
+    list = BidInterviewList.objects.filter(talent__alias=tlt).order_by('-date_listed')
 
     template = 'marketplace/talent_interview_history.html'
     context = {'list': list,}
@@ -67,13 +67,96 @@ def EmployerInterviewHistoryView(request, tlt):
 
 
 @login_required()
-@subscription(1)
-def TalentInterviewHistoryView(request, tlt):
-    list = BidInterviewList.objects.filter(talent__alias=tlt).order_by('-date_listed')
+def TltInterviewClose(request, bil, tlt):
+    bil_qs = BidInterviewList.objects.filter(slug=bil)
 
-    template = 'marketplace/talent_interview_history.html'
+    bil_qs.update(tlt_intcomplete=True)
+
+    return redirect(reverse('MarketPlace:TalentInterviewHistory', kwargs={'tlt': tlt}))
+
+
+@login_required()
+@subscription(1)
+def TltIntFullDetail(request, bil, tlt):
+    bil_qs = BidInterviewList.objects.filter(slug=bil)
+
+    template = 'marketplace/talent_interview_detail.html'
+    context = {'bil_qs': bil_qs}
+    return render(request, template, context)
+
+
+@login_required()
+@subscription(2)
+def EmployerInterviewHistoryView(request, tlt):
+    list = BidInterviewList.objects.filter(scope__requested_by__alias=tlt).order_by('-date_listed')
+
+    template = 'marketplace/interview_history_employer.html'
     context = {'list': list,}
     return render(request, template, context)
+
+
+@login_required()
+def EmpInterviewClose(request, bil, tlt):
+    bil_qs = BidInterviewList.objects.filter(slug=bil)
+
+    bil_qs.update(emp_intcomplete=True)
+
+    return redirect(reverse('MarketPlace:EmployerInterviewHistory', kwargs={'tlt': tlt}))
+
+
+@login_required()
+@subscription(2)
+def EmpIntFullDetail(request, bil, tlt):
+    bil_qs = BidInterviewList.objects.filter(slug=bil)
+
+    template = 'marketplace/interview_detail_employer.html'
+    context = {'bil_qs': bil_qs}
+    return render(request, template, context)
+
+
+@login_required()
+def TltIntCommentView(request, bil, tlt):
+    instance = BidInterviewList.objects.get(slug=bil)
+    form = TltIntCommentForm(request.POST or None, instance=instance)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.tlt_reponded = timezone.now()
+            new.save()
+            return redirect(reverse('MarketPlace:TalentIntDetail', kwargs={ 'bil': bil, 'tlt': tlt}))
+    else:
+        template = 'marketplace/talent_interview_comment.html'
+        context={'form': form, 'instance': instance,}
+        return render(request, template, context)
+
+
+#View all interviews grouped per vacancy
+@login_required()
+@subscription(2)
+def EmpIntDetailVacancy(request, vac):
+    bil_qs = BidInterviewList.objects.filter(scope__ref_no=vac)
+    info = TalentRequired.objects.get(ref_no=vac)
+
+    template = 'marketplace/interview_history_vacancy.html'
+    context = {'bil_qs': bil_qs, 'info': info}
+    return render(request, template, context)
+
+
+@login_required()
+def EmpIntCommentView(request, bil, tlt):
+    instance = BidInterviewList.objects.get(slug=bil)
+    form = EmployerInterViewComments(request.POST or None, instance=instance)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.save()
+            return redirect(reverse('MarketPlace:EmployerIntDetail', kwargs={ 'bil': bil, 'tlt': tlt}))
+    else:
+        template = 'marketplace/interview_comment_employer.html'
+        context={'form': form, 'instance': instance,}
+        return render(request, template, context)
 
 
 @login_required()
@@ -380,7 +463,7 @@ def MarketHome(request):
 
 
 @login_required()
-def VacanciesListView(request):
+def VacanciesListView(request, vac):
     #>>>Queryset caching
     talent=request.user
     pfl = Profile.objects.filter(talent=talent)

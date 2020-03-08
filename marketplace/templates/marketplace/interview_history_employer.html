@@ -9,14 +9,14 @@
     <p class="float-right">
       <a href="{% url 'MarketPlace:Entrance' %}" class="btn btn-secondary">Back</a>
     </p>
-    <h4 class="card-title">Interview History</h4>
+    <h4 class="card-title">Interview History (All Interviews)</h4>
     <table class="table table-sm">
       <thead>
         <tr>
           <th class="align-middle text-center">Vacancy</th>
           <th class="align-middle text-center">Reference Number</th>
+          <th class="align-middle text-center">Talent's Response</th>
           <th class="align-middle text-center">My Response</th>
-          <th class="align-middle text-center">Outcome</th>
           <th class="align-middle text-center">Interview Status</th>
           <th class="align-middle text-center">Detail</th>
         </tr>
@@ -28,21 +28,21 @@
             <td class="align-middle text-center">{{ l.scope.ref_no }}</td>
             <td class="align-middle text-center">{{ l.get_tlt_response_display }}</td>
             <td class="align-middle text-center">{{ l.get_outcome_display }}</td>
-            {% if l.tlt_intcomplete == True %}
-            <td class="align-middle text-center">Closed</td>
+            {% if l.emp_intcomplete == True %}
+              <td class="align-middle text-center">Closed</td>
             {% else %}
-            <td class="align-middle text-center">Open <a href="{% url 'MarketPlace:TalentIntClose' bil=l.slug tlt=l.talent.alias %}" data-toggle="tooltip" title="Close Interview"><i class="fa fa-close" style="font-size:24px;color:red"></i></a> </td>
+              <td class="align-middle text-center">Open <a href="{% url 'MarketPlace:EmployerIntClose' bil=l.slug tlt=l.talent.alias %}" data-toggle="tooltip" title="Close Interview"><i class="fa fa-close" style="font-size:24px;color:red"></i></a></td>
             {% endif %}
-              {% if request.user.subscription == 2 %}
-                <td class="align-middle text-center">
-                  <a href="{% url 'MarketPlace:VacancyDetail' l.scope.ref_no %}" class="" data-toggle="tooltip" title="See Vacancy Detail"><i class="fa fa-industry" style="font-size:24px;color:black"></i></a>
-                  <a href="{% url 'MarketPlace:TalentIntDetail' bil=l.slug tlt=l.talent.alias %}" data-toggle="tooltip" title="See Interview Comments"><i class="fa fa-commenting-o" style="font-size:30px;color:black"></i></a>
-                </td>
-              {% elif request.user.subscription < 2 %}
-                <td>
-                  <a href="#" class="badge badge-primary 8rem" style="width: 6rem">See Detail</a>
-                </td>
-              {% endif %}
+            {% if request.user.subscription == 2 %}
+              <td class="align-middle text-center">
+                <a href="{% url 'MarketPlace:VacancyPost' l.scope.ref_no %}" class="" data-toggle="tooltip" title="See Vacancy Detail"><i class="fa fa-industry" style="font-size:24px;color:black"></i></a>
+                <a href="{% url 'MarketPlace:EmployerIntDetail' bil=l.slug tlt=l.talent.alias %}" data-toggle="tooltip" title="See Interview Comments"><i class="fa fa-commenting-o" style="font-size:30px;color:black"></i></a>
+              </td>
+            {% elif request.user.subscription < 2 %}
+              <td>
+                <a href="#" class="badge badge-primary 8rem" style="width: 6rem">See Detail</a>
+              </td>
+            {% endif %}
           </tr>
         {% empty %}
           <tr>

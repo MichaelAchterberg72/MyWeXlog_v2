@@ -50,12 +50,22 @@ urlpatterns = [
 
     path('rfi-respond/<slug:slug>/', views.TalentRFIView, name='RFIView'),
     path('vacancy-search/', views.VacancySearch, name="VacSearch"),
-    path('interview-history/<slug:tlt>/', views.TalentInterviewHistoryView, name="TalentInterviewHistory"),
-    path('interview-history/<slug:tlt>/', views.EmployerInterviewHistoryView, name="EmployerInterviewHistory"),
-    path('vacancy/vacancies-full-list/', views.VacanciesListView, name="VacanciesList"),
+    path('vacancy/vacancies-full-list/<slug:vac>/', views.VacanciesListView, name="VacanciesList"),
     path('vacancy/talent-suited-to-vacancy/<slug:vac>/', views.TalentSuitedVacancyListView, name='TalentSuitedToVacancy'),
     #Help urls
     path('help/Experience-level/', views.ExperienceLevelHelpView, name="HelpExperienceLevel"),
     path('help/Work-Configeration/', views.WorkConfigerationHelpView, name="HelpWorkCOnfigeration"),
+
+    path('interview-history/<slug:tlt>/', views.TalentInterviewHistoryView, name="TalentInterviewHistory"),
+    path('tlt-int-close/<slug:bil>/<slug:tlt>/', views.TltInterviewClose, name='TalentIntClose'),
+    path('tlt-int-detail/<slug:bil>/<slug:tlt>/', views.TltIntFullDetail, name='TalentIntDetail'),
+    path('tlt-int-comment/<slug:bil>/<slug:tlt>/', views.TltIntCommentView, name='TalentIntComment'),
+
+
+    path('interview-historye/<slug:tlt>/', views.EmployerInterviewHistoryView, name="EmployerInterviewHistory"),
+    path('emp-int-close/<slug:bil>/<slug:tlt>/', views.EmpInterviewClose, name='EmployerIntClose'),
+    path('emp-int-detail/<slug:bil>/<slug:tlt>/', views.EmpIntFullDetail, name='EmployerIntDetail'),
+    path('emp-int-detail/<slug:vac>/', views.EmpIntDetailVacancy, name='VacancyIntDetail'),
+    path('emp-int-comment/<slug:bil>/<slug:tlt>/', views.EmpIntCommentView, name='VacancyIntComment'),#has this not saved agaion
 
 ]

@@ -18,7 +18,6 @@ from db_flatten.models import SkillTag
 from django_countries.fields import CountryField
 from locations.models import Region
 
-
 from Profile.utils import create_code9
 
 

@@ -56,12 +56,14 @@
       {% endfor %}
     </table>
     {% if request.user.subscription >= 2 %}
+
     <div class="float-right">
       <a href="{% url 'MarketPlace:VacSearch' %}" class="btn btn-secondary 8rem" style="width: 8rem">Search</a>
-      <a href="{% url 'MarketPlace:VacanciesList' %}" class="btn btn-primary"style="width: 10rem">View All Vacancies</a>
+    {% for i in dsd %}
+      <a href="{% url 'MarketPlace:VacanciesList' i.scope.ref_no %}" class="btn btn-primary"style="width: 10rem">View All Vacancies</a>
     </div>
+    {% endfor %}
     {% endif %}
-
   </div>
 </div>
 <br>
@@ -75,27 +77,29 @@
       <table class="table table-sm">
         <thead>
           <tr>
-            <th>Date Posted</th>
-            <th>Vacancy Title</th>
-            <th>Status</th>
-            <th>Closing Date</th>
-            <th>Response</th>
+            <th class="align-middle text-center">Date Posted</th>
+            <th class="align-middle text-center">Vacancy Title</th>
+            <th class="align-middle text-center">Closing Date</th>
+            <th class="align-middle text-center">Response</th>
+            <th class="align-middle text-center">Options</th>
           </tr>
         </thead>
         <tbody>
           {% for p in ipost %}
             <tr>
-              <td>{{ p.bid_open|date:'j M Y' }}</td>
-              <td>{{ p.title }}</td>
-              <td>{{ p.get_offer_status_display }}</td>
-              <td>{{ p.bid_closes|date:'j M Y' }}</td>
-              <td>
+              <td class="align-middle text-center">{{ p.bid_open|date:'j M Y' }}</td>
+              <td class="align-middle text-center">{{ p.title }}</td>
+              <td class="align-middle text-center">{{ p.bid_closes|date:'j M Y' }}</td>
+              <td class="align-middle text-center">
               {% if p.id in ipost_bid_flat %}
                 <strong>Yes</strong>
               {% else %}
                 None
               {% endif %}
-              <a href="{% url 'MarketPlace:VacancyPost' p.ref_no %}" class="badge badge-secondary float-right" style="width: 5rem;">Detail</a>
+              </td>
+              <td class="align-middle text-center">
+                <a href="{% url 'MarketPlace:VacancyPost' p.ref_no %}" class="" data-toggle="tooltip" title="Vacancy Detail"><i class="fa fa-industry" style="font-size:24px;color:black"></i></a>
+                <a href="{% url 'MarketPlace:VacancyIntDetail' p.ref_no %}" class="" data-toggle="tooltip" title="Interview List"><i class="fa fa-users" style="font-size:30px;color:black"></i></a>
               </td>
             </tr>
           {% endfor %}
@@ -121,27 +125,28 @@
       <table class="table table-sm">
         <thead>
           <tr>
-            <th>Date Posted</th>
-            <th>Vacancy Title</th>
-            <th>Status</th>
-            <th>Closing Date</th>
-            <th>Response</th>
+            <th class="align-middle text-center">Date Posted</th>
+            <th class="align-middle text-center">Vacancy Title</th>
+            <th class="align-middle text-center">Date Closed</th>
+            <th class="align-middle text-center">Response</th>
+            <th class="align-middle text-center">Options</th>
           </tr>
         </thead>
         <tbody>
           {% for c in ipost_closed %}
             <tr>
-              <td>{{ c.bid_open|date:'j M Y' }}</td>
-              <td>{{ c.title }}</td>
-              <td>{{ c.get_offer_status_display }}</td>
-              <td>{{ c.bid_closes|date:'j M Y' }}</td>
-              <td>
+              <td class="align-middle text-center">{{ c.bid_open|date:'j M Y' }}</td>
+              <td class="align-middle text-center">{{ c.title }}</td>
+              <td class="align-middle text-center">{{ c.bid_closes|date:'j M Y' }}</td>
+              <td class="align-middle text-center">
               {% if c.id in ipost_bid_flat %}
                 <strong>Yes</strong>
               {% else %}
                 None
               {% endif %}
-              <a href="{% url 'MarketPlace:VacancyPost' c.ref_no %}" class="badge badge-secondary float-right" style="width: 5rem;">Detail</a>
+              </td>
+              <td class="align-middle text-center">
+              <a href="{% url 'MarketPlace:VacancyPost' c.ref_no %}" class="badge badge-secondary" style="width: 5rem;">Detail</a>
               </td>
             </tr>
           {% endfor %}

@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 
+from Profile.utils import create_code9
 
 from enterprises.models import Branch
 from locations.models import Currency, City
@@ -147,12 +148,10 @@ class BidShortList(models.Model):
     def __str__(self):
         return f'{self.scope} shortlist {self.talent}'
 
-def BidShortList_slug(sender, instance, *args, **kwargs):
-    if not instance.slug:
-        instance.slug = f'{instance.scope.ref_no}{instance.talent.id}'
-
-pre_save.connect(BidShortList_slug, sender=BidShortList)
-
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
+        super(BidShortList, self).save(*args, **kwargs)
 
 class BidInterviewList(models.Model):
     OC = (
@@ -185,12 +184,10 @@ class BidInterviewList(models.Model):
     def __str__(self):
         return f'{self.scope}, {self.talent}, {self.get_outcome_display()}'
 
-
-def InterviewList_slug(sender, instance, *args, **kwargs):
-    if not instance.slug:
-        instance.slug = f'{instance.scope.ref_no}{instance.talent.id}'
-
-pre_save.connect(InterviewList_slug, sender=BidInterviewList)
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
+        super(BidInterviewList, self).save(*args, **kwargs)
 
 
 class WorkBid(models.Model):
@@ -213,11 +210,10 @@ class WorkBid(models.Model):
     def __str__(self):
         return'{}: {}'.format(self.work, self.talent)
 
-def WorkBid_slug(sender, instance, *args, **kwargs):
-    if not instance.slug:
-        instance.slug = f'{instance.work.ref_no}{instance.talent.id}'
-
-pre_save.connect(WorkBid_slug, sender=WorkBid)
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
+        super(WorkBid, self).save(*args, **kwargs)
 
 
 class TalentAvailabillity(models.Model):
@@ -269,7 +265,7 @@ class WorkIssuedTo(models.Model):
     #terms_accept = models.BooleanField()
     assignment_complete_tlt = models.BooleanField(default=False)
     assignment_complete_emp = models.BooleanField(default=False)
-    slug = models.SlugField(max_length=50, null=True)
+    slug = models.SlugField(max_length=50, null=True, unique=True)
 
     class Meta:
         unique_together = (('talent', 'work'),)
@@ -277,9 +273,63 @@ class WorkIssuedTo(models.Model):
     def __str__(self):
         return f'{self.talent} assigned to {self.work}'
 
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
+        super(WorkIssuedTo, self).save(*args, **kwargs)
 
-def WorkIssuedTo_slug(sender, instance, *args, **kwargs):
-    if not instance.slug:
-        instance.slug = f'{instance.work.ref_no}{instance.talent.id}'
 
-pre_save.connect(WorkIssuedTo_slug, sender=WorkIssuedTo)
+#Employer rating the talent
+class VacancyRate(models.Model):
+    OPNS = (
+        (1,'One'),
+        (2,'Two'),
+        (3,'Three'),
+        (4,'Four'),
+        (5,'Five'),
+    )
+    vacancy = models.ForeignKey(TalentRequired, on_delete=models.PROTECT)
+    talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    rate_1 = models.SmallIntegerField('Talent Performance', choices=OPNS, default=3)
+    rate_2 = models.SmallIntegerField('Work Performance', choices=OPNS, default=3)
+    rate_3 = models.SmallIntegerField('Would you hire this person again?', choices=OPNS)
+    date_rating = models.DateField(auto_now_add=True)
+    comment = models.TextField(blank=True, null=True)
+    complete = models.BooleanField(null=True)
+    slug = models.SlugField(max_length=50, null=True, unique=True)
+
+    def __str__(self):
+        return f'Rating for {self.talent} on {self.vacancy}'
+
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
+        super(VacancyRate, self).save(*args, **kwargs)
+
+
+#Talent rating the employer
+class TalentRate(models.Model):
+    OPNS = (
+        (1,'One'),
+        (2,'Two'),
+        (3,'Three'),
+        (4,'Four'),
+        (5,'Five'),
+    )
+    vacancy = models.ForeignKey(TalentRequired, on_delete=models.PROTECT)
+    talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    rate_1 = models.SmallIntegerField('Employer Performance', choices=OPNS, default=3)
+    rate_2 = models.SmallIntegerField('Payment Receipt', choices=OPNS, default=3)
+    rate_3 = models.SmallIntegerField('Would you work for this employer again?', choices=OPNS, default=3)
+    date_rating = models.DateField(auto_now_add=True)
+    comment = models.TextField(blank=True, null=True)
+    complete = models.BooleanField(null=True)
+    slug = models.SlugField(max_length=50, null=True, unique=True)
+
+    def __str__(self):
+        return f'Rating for {self.vacancy} by {self.talent}'
+
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
+        super(TalentRate, self).save(*args, **kwargs)
