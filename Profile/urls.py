@@ -80,5 +80,6 @@ urlpatterns = [
         path('assignment-decline/<slug:slug>/', views.AssignmentDeclineView, name='AssignmentDecline'),
         path('assignment-rfi/<slug:slug>/', views.AssignmentClarifyView, name='AssignmentClarify'),
         path('assignment-reassign/<slug:slug>/', views.AssignmentReAssign, name='AssignmentReassign'),
+        path('workshop-tlt/', views.TltWorkshopView, name='WorkshopTlt'),
 
 ]

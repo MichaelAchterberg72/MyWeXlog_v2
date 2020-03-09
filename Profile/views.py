@@ -48,6 +48,28 @@ from marketplace.forms import(
         AssignmentDeclineReasonsForm, AssignmentClarifyForm
         )
 
+
+#shows all vacancies a person has been assigned
+@login_required()
+@subscription(1)
+def TltWorkshopView(request):
+    tlt=request.user
+    wit_qs = WorkIssuedTo.objects.filter(talent=tlt).order_by('-date_create')
+    #declined Vacancies
+    wit_qsd = wit_qs.filter(Q(tlt_response='D'))
+    #pending Vacancies
+    wit_qsp = wit_qs.filter(Q(tlt_response='P'))
+    #Accepted Vacancies
+    wit_qsa = wit_qs.filter(Q(tlt_response='A'))
+    wit_qsao = wit_qsa.filter(Q(assignment_complete_tlt=False) | Q(assignment_complete_emp=False))
+    wit_qsac = wit_qsa.filter(Q(assignment_complete_tlt=True) | Q(assignment_complete_emp=True))
+
+    template = 'Profile/workshop_tlt.html'
+    context = {
+        'wit_qsao': wit_qsao, 'wit_qsac': wit_qsac, 'wit_qsp': wit_qsp, 'wit_qsd': wit_qsd,
+        }
+    return render(request, template, context)
+
 #This is the Dashboard view...
 @login_required()
 def ProfileHome(request):

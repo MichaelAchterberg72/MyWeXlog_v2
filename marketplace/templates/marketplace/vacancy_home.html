@@ -56,13 +56,12 @@
       {% endfor %}
     </table>
     {% if request.user.subscription >= 2 %}
-
     <div class="float-right">
-      <a href="{% url 'MarketPlace:VacSearch' %}" class="btn btn-secondary 8rem" style="width: 8rem">Search</a>
-    {% for i in dsd %}
-      <a href="{% url 'MarketPlace:VacanciesList' i.scope.ref_no %}" class="btn btn-primary"style="width: 10rem">View All Vacancies</a>
+      <a href="{% url 'MarketPlace:VacSearch' %}" class="btn btn-secondary 8rem" style="width: 8rem">Search</a>&nbsp
+      {% if dsd %}
+        <a href="{% url 'MarketPlace:VacanciesList' %}" class="btn btn-primary"style="width: 10rem">View All Vacancies</a>
+      {% endif %}
     </div>
-    {% endfor %}
     {% endif %}
   </div>
 </div>
@@ -113,10 +112,7 @@
       </div>
     </div>
   </div>
-  {% if request.user.subscription >= 1 %}
 </div>
-{% if request.user.subscription >= 2 %}
-
 <br>
 <div class="row">
   <div class="col-sm-12">
@@ -162,8 +158,8 @@
     </div>
   </div>
 </div>
+{% endif %}
 {% if request.user.subscription >= 1 %}
-
 <br>
 <div class="row">
 <div class="col-sm-7">
@@ -203,12 +199,8 @@
   </div>
 </div>
 </div>
-
-{% endif %}
-{% endif %}
 {% endif %}
 {% if request.user.subscription == 0 %}
   <h6>To see more information about the vacancies suited to you and other information on this page a subscription is required. A history of interviews and vacancies applied for as well as a search for posted vacancies based on its reference number are also available on a paid subscription.</h6>
-{% endif %}
 {% endif %}
 {% endblock content %}

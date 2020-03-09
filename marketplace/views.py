@@ -352,7 +352,7 @@ def WorkBidView(request, vac):
         context={'form': form, 'detail': detail}
         return render(request, template, context)
 
-
+#This is the detail view for talent and where active users can apply for the role
 @login_required()
 @subscription(2)
 def VacancyDetailView(request, vac):
@@ -472,7 +472,7 @@ def MarketHome(request):
 
 
 @login_required()
-def VacanciesListView(request, vac):
+def VacanciesListView(request):
     #>>>Queryset caching
     talent=request.user
     pfl = Profile.objects.filter(talent=talent)
