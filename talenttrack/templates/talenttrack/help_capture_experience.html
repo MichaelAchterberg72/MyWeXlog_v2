@@ -1,0 +1,113 @@
+{% extends 'base_homelite.html' %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Help{% endblock title %}
+
+{% block Style %}
+
+{% endblock Style %}
+{% block content %}
+<div class="container">
+  <h3>Capture Experience - Help</h3>
+    <p>&nbsp</p>
+    <p>This page displayes the fields that are required to capture your Work Experience.</p>
+    <p>The fields required are:</p>
+    <table class="table table-sm">
+    <col width="10%">
+    <col width="70%">
+    <thead>
+        <tr>
+          <td>Company</td>
+          <td>You are able to type the name of the company into the dropdown list search field.
+            THe list will only show the company, not the branch.<br>
+            The <a href="#"><img src="{% static '/images/icon-addlink.svg' %}"> Add a Company</a>
+            link will request you to add a new company details such as the enterprise name, the
+            website as well as description of the company.</td>
+        </tr>
+        <tr>
+          <td>Company Branch</td>
+          <td>This will be filtered by the selected company and selected from the dropdown
+            list and will be the company name followed by the branch name and city.<br>
+            The <a href="#"><img src="{% static '/images/icon-addlink.svg' %}"> Add a Branch</a>
+            link will request you to add details of the branch, this being the company name,
+            branch or division name, branch type and the physical address.</td>
+        </tr>
+        <tr>
+          <td>On Project</td>
+          <td>This will be selected from the dropdown list and will be the company name followed
+            by the project name and city.<br>
+            The <a href="#"><img src="{% static '/images/icon-addlink.svg' %}"> Add a Project</a>
+            link will request you to add details of the project name, the project owner, project
+            site, industry and regional address information.</td>
+        </tr>
+        <tr>
+          <td>Date from</td>
+          <td>This will be input utilising the date widget that is accessible from the date widget
+            that appears when you hover the mouse over the field. By clicking on the arrows on the
+            right hand side of the date field and clicking them clicking on the year you can
+            navigate to the date you require and you can select the date required.</td>
+        </tr>
+        <tr>
+          <td>Date to</td>
+          <td>This qorks in the same way as the date from field but should be the date you have
+            completed the course subject.</td>
+        </tr>
+        <tr>
+          <td>Hours Worked</td>
+          <td>This should be the number of hours actually worked between the start and end dates
+            of the capture period.</td>
+        </tr>
+        <tr>
+          <td>Estimated</td>
+          <td>This should be selected if the time captured is more than two weeks old.</td>
+        </tr>
+        <tr>
+          <td>Industry</td>
+          <td>This will be selected from the dropdown list and should be descriptive of the
+            industry in which the project operates.<br>
+            The <a href="#"><img src="{% static '/images/icon-addlink.svg' %}"> Add an Industry</a>
+            link will request you to add the Industry type.</td>
+        </tr>
+        <tr>
+          <td>Designation</td>
+          <td>This will be selected from the dropdown list and should be the designation
+            such as manager or director.<br>
+            The <a href="#"><img src="{% static '/images/icon-addlink.svg' %}"> Add an Designation</a>
+            link will request you to add a new designation type.</td>
+        </tr>
+        <tr>
+          <td>Upload</td>
+          <td>This allows you to upload a document such as a timesheet or certificate of performance.</td>
+        </tr>
+        <tr>
+          <td>Skills</td>
+          <td>This will allow you to select the skills you have utilised in the performance of your
+            work during the capture period from the dropdown list and will be listed as tags that you
+            can delete is so wished. You are able to capture as many skill tags as are relevant.<br>
+            To read a description of how to capture skills please click
+            <a href="{% url 'Talent:HelpHowCaptureSkills' %}">here</a>.<br>
+            The <a href="#"><img src="{% static '/images/icon-addlink.svg' %}"> Add a Skill</a>
+            link will allow you to capture a new skill into the system. When you save a new skill
+            it will automatically be populated in the Skills field.</td>
+        </tr>
+        <tr>
+          <td>Comment</td>
+          <td>This allows you to capture a description of the work performed along with any comments
+            you feel would be relevant to document the experiences in the time period captured.</td>
+        </tr>
+      </table>
+    <br>
+    <p>**In the event that one of the dropdown lists is not populated please refreash the page.</p>
+    <p>You have the option to:</p>
+      <ul>
+        <li><a href="#" class="btn btn-primary">Add Validators</a> - allows you to navigate to the
+        page which allows you to capture Colleagues, Superiors, Colaborators and Clients that
+        will be requested to validate your experience, skills learnt and time.<br>
+        If you do not want to select any Colleagues, Superiors, Colaborators or Clients click
+        on the 'Skip' button whilst working through the validation wizard.</li>
+      </ul>
+
+</div>
+{% endblock content %}

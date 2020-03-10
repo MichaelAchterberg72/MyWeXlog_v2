@@ -11,15 +11,11 @@
     <button type="submit" class="btn btn-secondary float-right">Back</button>
   </form>&nbsp
   {% for i in vacancy %}
-  {% if i.offer_status == 'Open' %}
-    <a href="{% url 'MarketPlace:WorkBid' i.ref_no %}" class="btn btn-warning">Apply for this role</a>
-  {% else %}
-    <a href="#" class="btn btn-danger">Closed</a>
-  {% endif %}
-  {% endfor %}
-</div>
+  <a href="{% url 'MarketPlace:WorkBid' i.ref_no %}" class="btn btn-warning">Apply for this role</a>
+{% endfor %}
 <h4 class="card-title">Vacancy: {{ v.title }} ({{ v.ref_no }})</h4>
 {% endfor %}
+
 <table class="table table-sm">
   <thead>
     <tr>
@@ -44,6 +40,8 @@
   </tbody>
   {% endfor %}
 </table>
+</div>
+</div>
 <div class="row">
   <div class="col-sm-6">
     <div class="card h-100">

@@ -102,14 +102,23 @@
 {% endblock score %}
 
 {% block TBA %}
-<a href="{% url 'Talent:APV' tlt=request.user.alias vac='1ad9t2' %}" target="_blank"><i class="fa fa-briefcase" data-toggle="tooltip" title="View Public Profile" style="font-size:30px;color:black"></a></i>
-<a href="{% url 'Talent:DPCSum' %}"><i class="fa fa-industry" style="font-size:30px;color:black" data-toggle="tooltip" title="View Summary for Industry, Project and Designation."></i></a>    <i class="fa fa-gears" style="font-size:30px" data-toggle="tooltip" title="Skills Summary"></i>
-{% endblock TBA %}
+<div class="justify-content">
+<a href="{% url 'Talent:APV' tlt=request.user.alias vac='1ad9t2' %}" target="_blank"><i class="fa fa-briefcase" data-toggle="tooltip" title="View Public Profile" style="font-size:30px;color:black"></a></i>&nbsp&nbsp
+<a href="{% url 'Talent:DPCSum' %}"><i class="fa fa-industry" style="font-size:30px;color:black" data-toggle="tooltip" title="View Summary for Industry, Project and Designation."></i></a>&nbsp&nbsp
+<i class="fa fa-gears" style="font-size:30px" data-toggle="tooltip" title="Skills Summary"></i>
+</div>
+ {% endblock TBA %}
 
 {% block Center_Content %}
 {% if interviews_tlt or interviews_emp %}
 
-<h5 class="card-header" id="Interview">Pending Interviews</h5>
+<div class="card border-0">
+  <div class="card-body">
+    <h4 class="card-title" id="Interview">Pending Interviews<span><p class="float-right">
+    <a href="{% url 'Profile:HelpDesktopPendingInterviews' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px" data-toggle="tooltip title="Click here for help on this page!">
+    <i class="icon icon-question-circle"></i></a>
+  </p></span></h4>
+
 <table class="table table-sm">
   <col width="50%">
   <col width="15%">
@@ -183,9 +192,17 @@
     {% endif %}
   </tbody>
 </table>
+</div>
+</div>
 {% endif %}
+<br>
 {% if assigned_tlt or assigned_emp %}
-<h5 class="card-header" id="Assignment">Assignments</h5>
+<div class="card border-0">
+  <div class="card-body">
+    <h4 class="card-title" id="Assignment">Assignments<span><p class="float-right">
+    <a href="{% url 'Profile:HelpDesktopAssignments' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px" data-toggle="tooltip title="Click here for help on this page!">
+    <i class="icon icon-question-circle"></i></a>
+  </p></span></h4>
 
 <table class="table table-sm">
   <col width="45%">
@@ -274,5 +291,7 @@
   </tr>
   </tbody>
 </table>
+</div>
+</div>
 {% endif %}
 {% endblock Center_Content %}

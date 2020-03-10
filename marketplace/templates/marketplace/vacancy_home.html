@@ -68,51 +68,50 @@
 
 <br>
 {% if request.user.subscription >= 2 %}
-<div class="row">
-  <div class="col-sm-12">
-    <div class="card border-0">
-      <div class="card-body">
-        <a href="{% url 'MarketPlace:Vacancy' %}" class="badge badge-primary float-right" style="width: 8rem;">Post Vacancy</a>
-      <h4 class="card-title">My Vacancies Advertised (Open)</h4>
-      <table class="table table-sm">
-        <thead>
-          <tr>
-            <th class="align-middle text-center">Date Posted</th>
-            <th class="align-middle text-center">Vacancy Title</th>
-            <th class="align-middle text-center">Closing Date</th>
-            <th class="align-middle text-center">Response</th>
-            <th class="align-middle text-center">Options</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for p in ipost %}
-            <tr>
-              <td class="align-middle text-center">{{ p.bid_open|date:'j M Y' }}</td>
-              <td class="align-middle text-center">{{ p.title }}</td>
-              <td class="align-middle text-center">{{ p.bid_closes|date:'j M Y' }}</td>
-              <td class="align-middle text-center">
-              {% if p.id in ipost_bid_flat %}
-                <strong>Yes</strong>
-              {% else %}
-                None
-              {% endif %}
-              </td>
-              <td class="align-middle text-center">
-                <a href="{% url 'MarketPlace:VacancyPost' p.ref_no %}?next={{ request.path|urlencode }}" class="" data-toggle="tooltip" title="Vacancy Detail"><i class="fa fa-industry" style="font-size:24px;color:black"></i></a>
-                <a href="{% url 'MarketPlace:VacancyIntDetail' p.ref_no %}?next={{ request.path|urlencode }}" class="" data-toggle="tooltip" title="Interview List"><i class="fa fa-users" style="font-size:30px;color:black"></i></a>
-              </td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-        <div class="float-right">
-          <a href="{% url 'MarketPlace:EmployerInterviewHistory' request.user.alias %}" class="btn btn-primary" style="width: 10rem">Interview History</a>
-          <a href="{% url 'MarketPlace:AllPostedVac' %}" class="btn btn-primary"style="width: 12rem">All Posted Vacancies</a>
-        </div>
-      </div>
+<div class="card border-0">
+  <div class="card-body">
+    <a href="{% url 'MarketPlace:Vacancy' %}" class="badge badge-primary float-right" style="width: 8rem;">Post Vacancy</a>
+  <h4 class="card-title">My Vacancies Advertised (Open)</h4>
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th class="align-middle text-center">Date Posted</th>
+        <th class="align-middle text-center">Vacancy Title</th>
+        <th class="align-middle text-center">Closing Date</th>
+        <th class="align-middle text-center">Response</th>
+        <th class="align-middle text-center">Options</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in ipost %}
+        <tr>
+          <td class="align-middle text-center">{{ p.bid_open|date:'j M Y' }}</td>
+          <td class="align-middle text-center">{{ p.title }}</td>
+          <td class="align-middle text-center">{{ p.bid_closes|date:'j M Y' }}</td>
+          <td class="align-middle text-center">
+          {% if p.id in ipost_bid_flat %}
+            <strong>Yes</strong>
+          {% else %}
+            None
+          {% endif %}
+          </td>
+          <td class="align-middle text-center">
+            <a href="{% url 'MarketPlace:VacancyPost' p.ref_no %}" class="" data-toggle="tooltip" title="Vacancy Detail"><i class="fa fa-industry" style="font-size:24px;color:grey"></i></a>&nbsp&nbsp
+            <a href="{% url 'MarketPlace:VacancyIntDetail' p.ref_no %}" class="" data-toggle="tooltip" title="Interview List"><i class="fa fa-gg" style="font-size:30px;color:black"></i></a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+    <div class="float-right">
+      <a href="{% url 'MarketPlace:EmployerInterviewHistory' request.user.alias %}" class="btn btn-primary" style="width: 10rem">Interview History</a>
+      <a href="{% url 'MarketPlace:AllPostedVac' %}" class="btn btn-primary"style="width: 12rem">All Posted Vacancies</a>
     </div>
   </div>
 </div>
+  {% if request.user.subscription >= 1 %}
+{% if request.user.subscription >= 2 %}
+
 <br>
 <div class="row">
   <div class="col-sm-12">

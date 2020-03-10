@@ -44,7 +44,11 @@
       <div class="col-sm-6">
         <div class="card h-100">
           <div class="card-body">
-            <h5 class="card-title">My Network</h5>
+            <h4 class="card-title">My Network<span><p class="float-right">
+            <a href="{% url 'Profile:HelpDesktopNetwork' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px" data-toggle="tooltip title="Click here for help on this page!">
+            <i class="icon icon-question-circle"></i></a>
+          </p></span></h4>
+
             <p class="card-text">
               {% block network %}
               {% endblock network %}
@@ -55,7 +59,10 @@
       <div class="col-sm-6">
         <div class="card h-100">
           <div class="card-body">
-            <h5 class="card-title">Workflow</h5>
+            <h4 class="card-title">Workflow<span><p class="float-right">
+            <a href="{% url 'Profile:HelpDesktopWorkflow' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px" data-toggle="tooltip title="Click here for help on this page!">
+            <i class="icon icon-question-circle"></i></a>
+          </p></span></h4>
             <p class="card-text">
               {% block workflow %}
               {% endblock workflow %}
@@ -80,7 +87,10 @@
       <div class="col-sm-6 pt-3">
         <div class="card h-100">
           <div class="card-body">
-            <h5 class="card-title">Information</h5>
+            <h4 class="card-title">Information<span><p class="float-right">
+            <a href="{% url 'Profile:HelpDesktopInformation' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px" data-toggle="tooltip title="Click here for help on this page!">
+            <i class="icon icon-question-circle"></i></a>
+          </p></span></h4>
             <p class="card-text">
               {% block TBA %}
               {% endblock TBA %}
@@ -90,7 +100,7 @@
       </div>
     </div>
     <p>&nbsp</p>
-    <div class="card mb-3" >
+    <div class="mb-3" >
         {% block Center_Content %}
         {% endblock Center_Content %}
     </div>

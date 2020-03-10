@@ -79,4 +79,6 @@ urlpatterns = [
     # Help urls
     path('help/experience-home/', views.HelpExperienceHomeView, name='HelpExperienceHome'),
     path('help/capture-education/', views.HelpCaptrueEducationView, name='HelpCaptureEducation'),
+    path('help/capture-experience/', views.HelpCaptrueExperienceView, name='HelpCaptureExperience'),
+    path('help/how-to-capture-skills/', views.HelpHowCaptrueSkillsView, name='HelpHowCaptureSkills'),
 ]

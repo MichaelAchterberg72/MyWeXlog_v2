@@ -12,7 +12,10 @@
   }
   </style>
 <div class="container">
-<h3>Capture Logged Experience</h3>
+<h3>Capture Logged Experience<span><p class="float-right">
+<a href="{% url 'Talent:HelpCaptureExperience' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px" data-toggle="tooltip title="Click here for help on this page!">
+<i class="icon icon-question-circle"></i></a>
+</p></span></h3>
 <form method="post" id="BranchForm" enctype="multipart/form-data">
   {% csrf_token %}
   <div class="form-row">

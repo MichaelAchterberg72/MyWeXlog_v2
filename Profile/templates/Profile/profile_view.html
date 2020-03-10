@@ -81,6 +81,7 @@
 
       </div>
     </div>
+
   <div class="card">
     <div class="card-body">
       <h5 class="card-title" id="email">Email addresses <a href="{% url 'Profile:EmailEdit' d.alias %}?next={{ request.path|urlencode }}" class="badge badge-primary float-right">Add</a></h5>
@@ -121,6 +122,7 @@
     </div>
   </div>
 </div>
+<br>
 <div class="card-group">
   <div class="card">
     <div class="card-body">
@@ -131,7 +133,7 @@
   </div>
 </div>
 {% endfor %}
-
+<br>
 <div class="card-group" id="memberships">
   <div class="card">
     <div class="card-body">
@@ -197,7 +199,7 @@
     </div>
   </div>
 </div>
-
+<br>
 <div class="card-group">
   <div class="card">
     <div class="card-body" >
@@ -240,6 +242,7 @@
     </div>
   </div>
 </div>
+<br>
 <div class="card-group">
   <div class="card">
     <div class="card-body" id="History">
@@ -281,6 +284,7 @@
     </div>
   </div>
 </div>
+<br>
 <div class="card-group">
   <div class="card">
     <div class="card-body">
@@ -305,6 +309,7 @@
     </div>
   </div>
 </div>
+<br>
 <div class="card-header">Identification</div>
 <div class="card-group">
   <div class="card">
@@ -328,6 +333,7 @@
       </table>
     </div>
   </div>
+
     <div class="card">
       <div class="card-body">
         <h5 class="card-title">Passport Information <a href="{% url 'Profile:PassportAddView' %}" class="badge badge-primary float-right">Add</a></h5>
@@ -360,7 +366,7 @@
       </div>
     </div>
   </div>
-
+<br>
 <div class="card-header">Contact Information</div>
 
 <div class="card-group">

@@ -1,0 +1,33 @@
+{% extends 'base_homelite.html' %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Help{% endblock title %}
+
+{% block Style %}
+
+{% endblock Style %}
+{% block content %}
+<div class="container">
+  <h3>Desktop Network - Help</h3>
+    <p>&nbsp</p>
+    <p>This is a summary of the people that have connected to Wexlog that are part
+    of your network.</p>
+    <p>Your network is the people that have connected to and have become members of the
+      WeXlog services. These Network members are members that have connected as a result
+      of a validation request invite or have been specifically invited by you to join the
+      WeXlog family.</p>
+    <p>A networked member is recognised as a result of your direct invite request. Members
+      that are presubscribed members that you request validations from will not be included
+      in your network.</p>
+    <p>The Levels explanation:</p>
+      <ul>
+        <li>Level 1 - Members that have joined as a direct result of your direct invite requests</li>
+        <li>Level 2 - Members that join as a result of the Level 1 member invite requests</li>
+        <li>Level 3 - Members that join as a result of the Level 2 member invite requests</li>
+        <li>Level 4 - Members that join as a result of the Level 3 member invite requests</li>
+        <li>Level 5 - Members that join as a result of the Level 4 member invite requests</li>
+      </ul>
+
+</div>
+{% endblock content %}

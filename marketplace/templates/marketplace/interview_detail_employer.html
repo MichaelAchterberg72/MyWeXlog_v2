@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<div class="card border-0" style="width: 100%;">
+<div class="card border-0">
   <div class="card-body">
     <p class="float-right">
       <form  action="{% url 'BookList:BLB' %}" method="post">
@@ -37,7 +37,7 @@
             {% if d.emp_intcomplete == True %}
               <td class="align-middle text-center">Closed</td>
             {% else %}
-              <td class="align-middle text-center">Open <a href="{% url 'MarketPlace:EmployerIntClose' bil=d.slug tlt=d.talent.alias %}" data-toggle="tooltip" title="Close Interview"><i class="fa fa-close" style="font-size:24px;color:red"></i></a> </td>
+              <td class="align-middle text-center">Open &nbsp&nbsp<a href="{% url 'MarketPlace:EmployerIntClose' bil=d.slug tlt=d.talent.alias %}" data-toggle="tooltip" title="Close Interview"><i class="fa fa-close" style="font-size:24px;color:red"></i></a> </td>
             {% endif %}
             {% if request.user.subscription == 2 %}
               <td class="align-middle text-center">
@@ -48,7 +48,7 @@
           <tr>
             <th class="align-middle text-center">My Comments</th>
             {% if d.comments_emp %}
-              <td colspan="5"  class="align-middle">{{ d.comments_emp }}</td>
+              <td colspan="5"  class="align-middle">{{ d.comments_emp|truncate:200 }}</td>
             {% else %}
               <td colspan="4"  class="align-middle"> - </td>
               <td class="align-middle text-center">
