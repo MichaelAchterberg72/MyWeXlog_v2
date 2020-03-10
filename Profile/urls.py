@@ -81,5 +81,7 @@ urlpatterns = [
         path('assignment-rfi/<slug:slug>/', views.AssignmentClarifyView, name='AssignmentClarify'),
         path('assignment-reassign/<slug:slug>/', views.AssignmentReAssign, name='AssignmentReassign'),
         path('workshop-tlt/', views.TltWorkshopView, name='WorkshopTlt'),
+        path('workshop-emp/', views.EmpWorkshopView, name='WorkshopEmp'),
+        path('rate-emp/<slug:wit>/', views.EmpUpdateStatusRate, name='EmpRatePerformance'),
 
 ]

@@ -290,13 +290,16 @@ class VacancyRate(models.Model):
     )
     vacancy = models.ForeignKey(TalentRequired, on_delete=models.PROTECT)
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
-    rate_1 = models.SmallIntegerField('Talent Performance', choices=OPNS, default=3)
-    rate_2 = models.SmallIntegerField('Work Performance', choices=OPNS, default=3)
-    rate_3 = models.SmallIntegerField('Would you hire this person again?', choices=OPNS)
-    date_rating = models.DateField(auto_now_add=True)
+    rate_1 = models.SmallIntegerField('Talent Work Performance', choices=OPNS, default=3)
+    rate_2 = models.SmallIntegerField('Completed on Time?', choices=OPNS, default=3)
+    rate_3 = models.SmallIntegerField('Would you hire this person again?', choices=OPNS, default=3)
+    date_rating = models.DateField(auto_now=True)
     comment = models.TextField(blank=True, null=True)
-    complete = models.BooleanField(null=True)
+    complete = models.BooleanField(null=True, default=False)
     slug = models.SlugField(max_length=50, null=True, unique=True)
+
+    class Meta:
+        unique_together = (('vacancy','talent'), )
 
     def __str__(self):
         return f'Rating for {self.talent} on {self.vacancy}'
@@ -316,15 +319,30 @@ class TalentRate(models.Model):
         (4,'Four'),
         (5,'Five'),
     )
+
+    PYMT = (
+        (0,'Select'),
+        (1,'Within 5 days'),
+        (2,'Within 14 days'),
+        (3,'Within 30 days'),
+        (4,'Within 60 days'),
+        (5,'Within 120 days'),
+        (6,'Still Waiting!'),
+    )
+
     vacancy = models.ForeignKey(TalentRequired, on_delete=models.PROTECT)
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     rate_1 = models.SmallIntegerField('Employer Performance', choices=OPNS, default=3)
     rate_2 = models.SmallIntegerField('Payment Receipt', choices=OPNS, default=3)
     rate_3 = models.SmallIntegerField('Would you work for this employer again?', choices=OPNS, default=3)
-    date_rating = models.DateField(auto_now_add=True)
+    payment_time = models.SmallIntegerField('Days from work complete to receipt of payment', choices=PYMT, default=0) #This is now corrected
+    date_rating = models.DateField(auto_now=True)
     comment = models.TextField(blank=True, null=True)
-    complete = models.BooleanField(null=True)
+    complete = models.BooleanField(null=True, default=False)
     slug = models.SlugField(max_length=50, null=True, unique=True)
+
+    class Meta:
+        unique_together = (('vacancy','talent'), )
 
     def __str__(self):
         return f'Rating for {self.vacancy} by {self.talent}'

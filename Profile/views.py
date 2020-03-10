@@ -45,7 +45,7 @@ from .forms import (
 )
 
 from marketplace.forms import(
-        AssignmentDeclineReasonsForm, AssignmentClarifyForm
+        AssignmentDeclineReasonsForm, AssignmentClarifyForm, VacancyRateForm, TalentRateForm
         )
 
 
@@ -69,6 +69,59 @@ def TltWorkshopView(request):
         'wit_qsao': wit_qsao, 'wit_qsac': wit_qsac, 'wit_qsp': wit_qsp, 'wit_qsd': wit_qsd,
         }
     return render(request, template, context)
+
+
+@login_required()
+@subscription(2)
+def EmpWorkshopView(request):
+    tlt=request.user
+    wit_qs = WorkIssuedTo.objects.filter(work__requested_by=tlt).order_by('-date_create')
+    #pending Vacancies
+    wit_qsp = wit_qs.filter(Q(tlt_response='P'))
+    #Accepted Vacancies
+    wit_qsa = wit_qs.filter(Q(tlt_response='A'))
+    wit_qsao = wit_qsa.filter(Q(assignment_complete_tlt=False) | Q(assignment_complete_emp=False))
+    wit_qsac = wit_qsa.filter(Q(assignment_complete_tlt=True) | Q(assignment_complete_emp=True))
+
+    template = 'Profile/workshop_emp.html'
+    context = {
+        'wit_qsao': wit_qsao, 'wit_qsac': wit_qsac, 'wit_qsp': wit_qsp,
+        }
+    return render(request, template, context)
+
+
+@login_required()
+def EmpVacancyComplete(request, wit):
+    wit_qs = WorkIssuedTo.objects.filter(slug=wit)
+
+    wit_qs.update(assignment_complete_emp=True)
+
+    return redirect(reverse('XXX:XXX', kwargs={'tlt': tlt}))
+
+
+@login_required()
+def EmpUpdateStatusRate(request, wit):
+    wit_qs = WorkIssuedTo.objects.get(slug=wit)
+    form = VacancyRateForm(request.POST or None, instance = wit_qs)
+
+    if request.method == 'POST':
+        next_url=request.POST.get('next', '/')
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.vacancy = wit_qs.work
+            new.talent = wit_qs.talent
+            new.save()
+
+            if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
+                next_url = reverse('Profile:WorkshopEmp')
+            return HttpResponseRedirect(next_url)
+    else:
+        template = 'marketplace/rate_by_employer.html'
+        context={'form': form, 'wit_qs': wit_qs,}
+        return render(request, template, context)
+
+
+
 
 #This is the Dashboard view...
 @login_required()

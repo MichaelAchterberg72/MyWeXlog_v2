@@ -14,7 +14,7 @@ from django_select2.forms import (
 
 
 from .models import (
-            WorkLocation, TalentRequired, Deliverables, SkillLevel, SkillRequired, TalentAvailabillity, WorkBid, BidInterviewList, WorkIssuedTo
+            WorkLocation, TalentRequired, Deliverables, SkillLevel, SkillRequired, TalentAvailabillity, WorkBid, BidInterviewList, WorkIssuedTo, VacancyRate, TalentRate
 )
 
 
@@ -98,6 +98,23 @@ class DateInput(forms.DateInput):
     input_type = 'date'
 
 
+class VacancyRateForm(forms.ModelForm):
+    class Meta:
+        model = VacancyRate
+        fields = ('rate_1', 'rate_2', 'rate_3', 'comment',)
+        labels = {
+            'comment': 'My Comments',
+        }
+
+
+class TalentRateForm(forms.ModelForm):
+    class Meta:
+        model = TalentRate
+        fields = ('rate_1', 'rate_2', 'rate_3', 'comment', 'payment_time',)
+        labels = {
+            'comment': 'My Comments',
+        }
+
 class VacancySearchForm(forms.Form):
     query = forms.CharField()
     class Meta:
@@ -159,7 +176,7 @@ class EmployerInterViewComments(forms.ModelForm):
     class Meta:
         model=BidInterviewList
         fields = ('comments_emp',)
-        lables = {'comments_emp': 'My Interview Comments',}
+        labels = {'comments_emp': 'My Interview Comments',}
 
 
 class WorkBidForm(forms.ModelForm):

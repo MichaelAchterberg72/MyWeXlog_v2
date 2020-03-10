@@ -1,0 +1,36 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}{{block.super}}-Rate Performance{% endblock title %}
+
+{% block content %}
+<div class="card border-0" style="width: 100%;">
+  <div class="card-body">
+    <div class="float-right">
+      <form  action="{% url 'BookList:BLB' %}" method="post">
+      <input type="hidden" name="next" value="{{ request.GET.next }}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-secondary">Back</button>
+    </form>
+    </div>
+    <h4 class="card-title">Rate Performance</h4>
+    <form method="post" id="EmpRateForm" enctype="multipart/form-data">
+      <input type="hidden" name="next" value="{{ request.GET.next }}">
+      {% csrf_token %}
+      <div class="form-row">
+        <div class="form-group col-md-12 mb-0">
+          {{ form.rate_1|as_crispy_field }}
+          {{ form.rate_2|as_crispy_field }}
+          {{ form.rate_3|as_crispy_field }}
+          {{ form.comment|as_crispy_field }}
+        </div>
+      <div class="">
+        <p><button type="submit" name="Done" class="btn btn-primary">Submit</button></p>
+      </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock content %}

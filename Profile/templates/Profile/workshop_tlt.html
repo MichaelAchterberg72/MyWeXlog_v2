@@ -18,9 +18,9 @@
       <thead>
         <tr>
           <th class="align-middle text-center">Vacancy</th>
-          <th class="align-middle text-center">Reference Number</th>
-          <th class="align-middle text-center">Task Complete (Me)</th>
-          <th class="align-middle text-center">Task Complete (Employer)</th>
+          <th class="align-middle text-center">Reference<br>Number</th>
+          <th class="align-middle text-center">Task Complete<br>(Me)</th>
+          <th class="align-middle text-center">Task Complete<br>(Employer)</th>
           <th class="align-middle text-center">Pay Rate</th>
           <th class="align-middle text-center">Due Date</th>
         </tr>
@@ -43,11 +43,83 @@
             {% else %}
               <td class="align-middle text-center">Complete</td>
             {% endif %}
-            <td class="align-middle text-center">{{ o.currency }} {{ o.rate_offered }} {{ o.get_rate_unit_display }}</td>
-            <td class="align-middle text-center">{{ o.date_deliverable }}</td>
+            <td class="align-middle text-center">{{ o.currency }} {{ o.rate_offered }}<br>{{ o.get_rate_unit_display }}</td>
+            <td class="align-middle text-center">{{ o.date_deliverable|date:"j M Y" }}</td>
         {% empty %}
           <tr>
             <td colspan="6">No open assignments</td>
+          </tr>
+        {% endfor %}
+        <tr>
+          <th colspan="6">Pending Assignments</th>
+        </tr>
+        {% for o in wit_qsp %}
+          <tr>
+            <td class="align-middle text-center">{{ o.work.title }}</td>
+            <td class="align-middle text-center">{{ o.work.ref_no }}</td>
+            {% if o.assignment_complete_tlt == False %}
+              <td class="align-middle text-center">Incomplete</td>
+            {% else %}
+              <td class="align-middle text-center">Complete</td>
+            {% endif %}
+            {% if o.assignment_complete_emp == False %}
+              <td class="align-middle text-center">Incomplete</td>
+            {% else %}
+              <td class="align-middle text-center">Complete</td>
+            {% endif %}
+            <td class="align-middle text-center">{{ o.currency }} {{ o.rate_offered }}<br>{{ o.get_rate_unit_display }}</td>
+            <td class="align-middle text-center">{{ o.date_deliverable|date:"j M Y" }}</td>
+        {% empty %}
+          <tr>
+            <td colspan="6">No Pending Assignments</td>
+          </tr>
+        {% endfor %}
+        <tr>
+          <th colspan="6">Completed Assignments</th>
+        </tr>
+        {% for o in wit_qsac %}
+          <tr>
+            <td class="align-middle text-center">{{ o.work.title }}</td>
+            <td class="align-middle text-center">{{ o.work.ref_no }}</td>
+            {% if o.assignment_complete_tlt == False %}
+              <td class="align-middle text-center">Incomplete</td>
+            {% else %}
+              <td class="align-middle text-center">Complete</td>
+            {% endif %}
+            {% if o.assignment_complete_emp == False %}
+              <td class="align-middle text-center">Incomplete</td>
+            {% else %}
+              <td class="align-middle text-center">Complete</td>
+            {% endif %}
+            <td class="align-middle text-center">{{ o.currency }} {{ o.rate_offered }}<br>{{ o.get_rate_unit_display }}</td>
+            <td class="align-middle text-center">{{ o.date_deliverable|date:"j M Y" }}</td>
+        {% empty %}
+          <tr>
+            <td colspan="6">No Complete Assignments</td>
+          </tr>
+        {% endfor %}
+        <tr>
+          <th colspan="6">Declined Assignments</th>
+        </tr>
+        {% for o in wit_qsac %}
+          <tr>
+            <td class="align-middle text-center">{{ o.work.title }}</td>
+            <td class="align-middle text-center">{{ o.work.ref_no }}</td>
+            {% if o.assignment_complete_tlt == False %}
+              <td class="align-middle text-center">Incomplete</td>
+            {% else %}
+              <td class="align-middle text-center">Complete</td>
+            {% endif %}
+            {% if o.assignment_complete_emp == False %}
+              <td class="align-middle text-center">Incomplete</td>
+            {% else %}
+              <td class="align-middle text-center">Complete</td>
+            {% endif %}
+            <td class="align-middle text-center">{{ o.currency }} {{ o.rate_offered }}<br>{{ o.get_rate_unit_display }}</td>
+            <td class="align-middle text-center">{{ o.date_deliverable|date:"j M Y" }}</td>
+        {% empty %}
+          <tr>
+            <td colspan="6">No Declined Assignments</td>
           </tr>
         {% endfor %}
     </tbody>

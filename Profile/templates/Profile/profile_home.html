@@ -79,7 +79,7 @@
     <tr>
       <td class="align-middle text-center">Open Assignments</td>
       <td class="align-middle text-center">
-        <a href="{% url 'Profile:WorkshopTlt' %}?next={{ request.path|urlencode }}" class="badge badge-primary 8rem" style="width: 8rem">Enter Workshop</a>
+        <a href="{% url 'Profile:WorkshopEmp' %}?next={{ request.path|urlencode }}" class="badge badge-primary 8rem" style="width: 8rem">Enter Office</a>
         <br>
         {% if open_assignments_empc  %}
           {{ open_assignments_empc }}
