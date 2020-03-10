@@ -1,0 +1,54 @@
+{% extends 'base_homelite.html' %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Help{% endblock title %}
+
+{% block Style %}
+
+{% endblock Style %}
+{% block content %}
+<div class="container">
+  <h3>Desktop Information - Help</h3>
+    <p>&nbsp</p>
+    <p>The desktop Information dialog box lists icons which allow you access to the summary
+      profile information.</p>
+      <p>The fields required are:</p>
+      <table class="table table-sm">
+      <col width="10%">
+      <col width="70%">
+      <tbody>
+          <tr>
+            <td class="text-center"><i class="fa fa-briefcase" data-toggle="tooltip" title="View Public Profile" style="font-size:30px;color:black"></i></td>
+            <td>Opens a copy of your Public Profile</td>
+          </tr>
+          <tr>
+            <td class="text-center"><i class="fa fa-industry" style="font-size:30px;color:black" data-toggle="tooltip" title="View Summary for Industry, Project and Designation."></i></td>
+            <td>Opens a copy of your Summary for Industry, Project and Designation.</td>
+          </tr>
+          <tr>
+            <td class="text-center"><i class="fa fa-gears" style="font-size:30px" data-toggle="tooltip" title="Skills Summary"></i></td>
+            <td>Opens a copy of your settings<td>
+          </tr>
+        </tbody>
+    </table>
+    <br>
+    <p><strong>Public Profile</strong></p>
+    <p>The public profile is what potential employers see when they view your information
+      relating to a vacancy and the skills that match it.</p>
+    <p>This is also the information that will be make available shouuld you publish your
+      public profile link for additional information on your CV, LinkedIn profile, Facebook
+      profile, etc.</p>
+    <br>
+    <p><strong>Summary for Industry, Project and Designation</strong></p>
+    <p>This lists a Designation Summary, a Company Summary detailing the amount of hours
+      you have captured whilst capturing your skills that you have worked at a company
+      and branch as well as a Project summary detailing a list of the time spent on
+      a Project.</p>
+    <br>
+    <p><strong>Settings</strong></p>
+    <p>This lists the features you are able to to on and off within your WeXlog
+      environment.</p>
+    <br>
+</div>
+{% endblock content %}

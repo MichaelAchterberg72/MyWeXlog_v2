@@ -13,6 +13,8 @@
   }
   </style>
 <div class="container">
+  <div class="card h-100">
+    <div class="card-body">
 <p><a href="{% url 'MarketPlace:VacancyEdit' instance.ref_no %}" class="btn btn-info float-right">Edit Vacancy</a></p>
 <h3>Vacancy Review</h3>
 <h5 class="card-title">Vacancy: {{ instance.title }} ({{ instance.ref_no }})</h5>
@@ -39,9 +41,11 @@
     </tr>
   </tbody>
 </table>
+
+<br>
 <div class="row">
   <div class="col-sm-6">
-    <div class="card h-100">
+    <div class="h-100">
       <div class="card-body">
         <h5 class="card-title">Scope</h5>
         <p>{{ instance.scope|linebreaks }}</p>
@@ -49,7 +53,7 @@
     </div>
   </div>
   <div class="col-sm-6">
-    <div class="card h-100">
+    <div class="h-100">
       <div class="card-body">
         <h5 class="card-title">Expectations</h5>
         <p>{{ instance.expectations|linebreaks }}</p>
@@ -58,8 +62,8 @@
   </div>
 </div>
 <br>
-<div class="col-sm-12">
-  <div class="card h-100">
+<div class="">
+  <div class="">
     <div class="card-body">
 <table class="table table-sm">
   <thead>
@@ -86,7 +90,7 @@
 <div class="row">
 
   <div class="col-sm-6">
-    <div class="card h-100">
+    <div class="h-100">
       <div class="card-body">
         <a href="{% url 'MarketPlace:Deliverables2' instance.ref_no %}" class="badge badge-primary float-right" style="width: 5rem;">Add</a>
         <h5 class="card-title" id="deliverables">Deliverables</h5>
@@ -123,7 +127,7 @@
 
 
   <div class="col-sm-6">
-    <div class="card h-100">
+    <div class="h-100">
       <div class="card-body">
     <a href="{% url 'MarketPlace:Skillsa' instance.ref_no %}" class="badge badge-primary float-right" style="width: 5rem;">Add</a>
     <h5 class="card-title" id="skills">Skills</h5>
@@ -151,6 +155,8 @@
     </table>
   </div>
   </div>
+</div>
+</div>
   </div>
 </div>
 <p>&nbsp</p>

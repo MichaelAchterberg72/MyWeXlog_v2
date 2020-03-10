@@ -7,7 +7,7 @@
 
 {% block content %}
   {% if query %}
-  <h1>Vacancies with Reference Number containing "{{ query }}"</h1>
+  <h4>Vacancies with Reference Number containing "{{ query }}"</h4>
   <h3>
     {% with results.count as total_results %}
     Found {{ total_results }} result{{ total_results|pluralize }}
@@ -58,7 +58,7 @@
   <input type="submit" class="btn btn-primary 8rem " style="width: 8rem" value="Search Again">
   </form>
   {% else %}
-  <h1>Search for Vacancy</h1>
+  <h4>Search for Vacancy</h4>
     <form action="." method="get">
     {{ form.as_p }}
     <input type="submit" value="Search" class="btn btn-primary 8rem " style="width: 8rem">

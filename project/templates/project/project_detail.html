@@ -6,19 +6,20 @@
 {% block content %}
 
 <div class="card border-0">
+  <div class="card-body border-0">
   <h4 class="">Detail for project {{ info.name }}
     <span><p class="float-right">
     <a href="{% url 'Project:HelpProjectDetail' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
     <i class="icon icon-question-circle"></i></a>
   </p></span></h4>
-  <div class="card-body border-0">
+
     {% if request.user.is_authenticated %}
     <p><a href="{% url 'Project:EditProject' info.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Edit Project</a>
     {% endif %}
     <a href="{% url 'Project:ProjectHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
         <div class="row">
           <div class="col-sm-12">
-            <div class="card border-0">
+            <div class="border-0">
               <div class="card-body">
                 <h5 class="card-title">Project Details</h5>
                 <table class="table table-bordered">
@@ -68,7 +69,7 @@
           <div class="col-sm-6">
           </div>
           <div class="col-sm-6">
-            <div class="card">
+            <div class="">
               <div class="card-body">
               {% if request.user.subscription >= 2 %}
                 <p class="text-right"><a href="{% url 'Project:HoursOnProject' info.slug %}?next={{ request.path|urlencode }}" class="btn btn-primary"> WexLog Hours </a>

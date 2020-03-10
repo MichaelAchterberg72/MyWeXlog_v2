@@ -6,8 +6,9 @@
 {% block content %}
 
 <div class="card border-0">
-  <h4 class="">List of hours worked on {{ projectdata.name }}!</h4>
   <div class="card-body">
+  <h4 class="">List of hours worked on {{ projectdata.name }}!</h4>
+
       {% if request.user.is_authenticated %}
       <p><a href="{% url 'Project:ProjectAdd' %}" class="badge badge-pill badge-primary">Add Project</a><a href="{% url 'Project:ProjectHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
       {% endif %}

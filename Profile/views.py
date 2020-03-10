@@ -1144,3 +1144,45 @@ def get_SiteType_id(request):
         return HttpResponse(json.dumps(data), content_type='application/json')
     return HttpResponse("/")
 #<<< SiteType Popup
+
+
+@login_required()
+def HelpDesktopNetworkView(request):
+    template_name = 'Profile/help_desktop_network.html'
+    context = {}
+    return render(request, template_name, context)
+
+
+@login_required()
+def HelpDesktopWorkflowView(request):
+    template_name = 'Profile/help_desktop_workflow.html'
+    context = {}
+    return render(request, template_name, context)
+
+
+@login_required()
+def HelpDesktopAssignmentTrackingView(request):
+    template_name = 'Profile/help_desktop_assignment_tracking.html'
+    context = {}
+    return render(request, template_name, context)
+
+
+@login_required()
+def HelpDesktopInformationView(request):
+    template_name = 'Profile/help_desktop_information.html'
+    context = {}
+    return render(request, template_name, context)
+
+
+@login_required()
+def HelpDesktopPendingInterviewsView(request):
+    template_name = 'Profile/help_desktop_pending_interviews.html'
+    context = {}
+    return render(request, template_name, context)
+
+
+@login_required()
+def HelpDesktopAssignmentsView(request):
+    template_name = 'Profile/help_desktop_assignments.html'
+    context = {}
+    return render(request, template_name, context)

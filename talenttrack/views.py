@@ -158,6 +158,20 @@ def HelpCaptrueEducationView(request):
 
 
 @login_required()
+def HelpCaptrueExperienceView(request):
+    template_name = 'talenttrack/help_capture_experience.html'
+    context = {}
+    return render(request, template_name, context)
+
+
+@login_required()
+def HelpHowCaptrueSkillsView(request):
+    template_name = 'talenttrack/help_how_to_capture_skills.html'
+    context = {}
+    return render(request, template_name, context)
+
+
+@login_required()
 def TrainingListView(request):
 
     basequery = WorkExperience.objects.select_related('topic').filter(talent=request.user)
