@@ -98,19 +98,20 @@ class DateInput(forms.DateInput):
     input_type = 'date'
 
 
+#Employer rating the talent
 class VacancyRateForm(forms.ModelForm):
     class Meta:
         model = VacancyRate
-        fields = ('rate_1', 'rate_2', 'rate_3', 'comment',)
+        fields = ('rate_1', 'rate_2', 'rate_3', 'comment', 'suggestions',)
         labels = {
             'comment': 'My Comments',
         }
 
-
+#Talent rating the employer
 class TalentRateForm(forms.ModelForm):
     class Meta:
         model = TalentRate
-        fields = ('rate_1', 'rate_2', 'rate_3', 'comment', 'payment_time',)
+        fields = ('rate_1', 'rate_2', 'rate_3', 'comment', 'payment_time', 'suggestions',)
         labels = {
             'comment': 'My Comments',
         }

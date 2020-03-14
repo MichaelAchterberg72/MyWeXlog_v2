@@ -1,0 +1,65 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}{{block.super}}-Rating{% endblock title %}
+
+{% block content %}
+<div class="card border-0" style="width: 100%;">
+  <div class="card-body">
+    <div class="float-right">
+      <form  action="{% url 'BookList:BLB' %}" method="post">
+      <input type="hidden" name="next" value="{{ request.GET.next }}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-secondary">Back</button>
+    </form>
+    </div>
+
+      <h4 class="card-title">Rating of {{ emp_qs.talent.alias }}</h4>
+      <h5 class="card-title">on {{ emp_qs.vacancy.title }}</h5>
+      <p>Rating date - {{ emp_qs.date_rating|date:"j F Y" }}</p>
+
+      <table class="table table-sm">
+        <thead>
+          <tr>
+            <th>Question</th>
+            <th class="text-center">Rating</th>
+            <th class="text-center">Average Rating</th>
+
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1. Talent Work Performance</td>
+            <td class="text-center">{{ emp_qs.rate_1 }}</td>
+            <td colspan="3" class="align-middle text-center">5</td>
+          </tr>
+          <tr>
+            <td>2. Completed on Time?</td>
+            <td class="text-center">{{ emp_qs.rate_2 }}</td>
+          </tr>
+          <tr>
+            <td>3. Would you hire this person again?</td>
+            <td class="text-center">{{ emp_qs.rate_3 }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <hr>
+      <h6>My Comments</h6>
+      <div class="container">
+        <p>{{ emp_qs.comment }}</p>
+      </div>
+      <hr>
+      <h6>My Suggestions to Talent</h6>
+      <div class="container">
+        <p>{{ emp_qs.suggestions }}</p>
+      </div>
+      <hr>
+      <h6></h6>
+
+
+
+  </div>
+</div>
+{% endblock content %}

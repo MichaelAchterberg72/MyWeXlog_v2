@@ -103,9 +103,20 @@
 
 {% block TBA %}
 <div class="justify-content">
-<a href="{% url 'Talent:APV' tlt=request.user.alias vac='1ad9t2' %}" target="_blank"><i class="fa fa-briefcase" data-toggle="tooltip" title="View Public Profile" style="font-size:30px;color:black"></a></i>&nbsp&nbsp
-<a href="{% url 'Talent:DPCSum' %}"><i class="fa fa-industry" style="font-size:30px;color:black" data-toggle="tooltip" title="View Summary for Industry, Project and Designation."></i></a>&nbsp&nbsp
-<i class="fa fa-gears" style="font-size:30px" data-toggle="tooltip" title="Skills Summary"></i>
+<a href="{% url 'Talent:APV' tlt=request.user.alias vac='1ad9t2' %}?next={{ request.path|urlencode }}" target="_blank"><i class="fa fa-id-badge" aria-hidden="true"style="font-size:30px;color:black" data-toggle="tooltip" title="Public Profile"></i></a>
+&nbsp &nbsp
+<a href="{% url 'Talent:DPCSum' %}?next={{ request.path|urlencode }}"><i class="fa fa-industry" style="font-size:30px;color:black" data-toggle="tooltip" title="View Summary for Industry, Project and Designation."></i></a>
+&nbsp &nbsp
+<a href="{% url 'BookList:VPBL' tlt=request.user.alias %}?next={{ request.path|urlencode }}" class=""><i class="fa fa-book" aria-hidden="true" style="font-size:30px;color:black" data-toggle="tooltip" title="Book Summary"></i></a>
+&nbsp &nbsp
+<a href="{% url 'Talent:SPDView' tlt=request.user.alias %}?next={{ request.path|urlencode }}"><i class="fa fa-database" aria-hidden="true" style="font-size:30px;color:black" data-toggle="tooltip" title="Skills Summary"></i></a>
+&nbsp &nbsp
+<a href="{% url 'Talent:Capture' %}"><i class="fa fa-graduation-cap" aria-hidden="true" style="font-size:30px;color:black" data-toggle="tooltip" title="Capture Training"></i></a>
+&nbsp &nbsp
+<a href="{% url 'Talent:Capture' %}" class=""><i class="fa fa-laptop" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Capture Experience"></i></a>
+&nbsp &nbsp
+<a href="{% url 'BookList:books-read-new' %}" class=""><i class="fa fa-bookmark-o" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Capture Book"></i></a>
+
 </div>
  {% endblock TBA %}
 

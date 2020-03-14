@@ -263,7 +263,9 @@ class WorkIssuedTo(models.Model):
     #rate_confirm = models.BooleanField()
     #deadline_confirm = models.BooleanField()
     #terms_accept = models.BooleanField()
+    tlt_rated = models.BooleanField(default=False)
     assignment_complete_tlt = models.BooleanField(default=False)
+    emp_rated = models.BooleanField(default=False)
     assignment_complete_emp = models.BooleanField(default=False)
     slug = models.SlugField(max_length=50, null=True, unique=True)
 
@@ -296,6 +298,7 @@ class VacancyRate(models.Model):
     date_rating = models.DateField(auto_now=True)
     comment = models.TextField(blank=True, null=True)
     complete = models.BooleanField(null=True, default=False)
+    suggestions = models.TextField(blank=True, null=True)
     slug = models.SlugField(max_length=50, null=True, unique=True)
 
     class Meta:
@@ -322,12 +325,11 @@ class TalentRate(models.Model):
 
     PYMT = (
         (0,'Select'),
-        (1,'Within 5 days'),
-        (2,'Within 14 days'),
+        (1,'Still Waiting!'),
+        (2,'Within 60 days or more'),
         (3,'Within 30 days'),
-        (4,'Within 60 days'),
-        (5,'Within 120 days'),
-        (6,'Still Waiting!'),
+        (4,'Within 14 days'),
+        (5,'Within 5 days'),
     )
 
     vacancy = models.ForeignKey(TalentRequired, on_delete=models.PROTECT)
@@ -335,9 +337,10 @@ class TalentRate(models.Model):
     rate_1 = models.SmallIntegerField('Employer Performance', choices=OPNS, default=3)
     rate_2 = models.SmallIntegerField('Payment Receipt', choices=OPNS, default=3)
     rate_3 = models.SmallIntegerField('Would you work for this employer again?', choices=OPNS, default=3)
-    payment_time = models.SmallIntegerField('Days from work complete to receipt of payment', choices=PYMT, default=0) #This is now corrected
+    payment_time = models.SmallIntegerField('Days from invoice to receipt of payment', choices=PYMT, default=0) #This is now corrected
     date_rating = models.DateField(auto_now=True)
     comment = models.TextField(blank=True, null=True)
+    suggestions = models.TextField(blank=True, null=True)
     complete = models.BooleanField(null=True, default=False)
     slug = models.SlugField(max_length=50, null=True, unique=True)
 

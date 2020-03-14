@@ -50,7 +50,11 @@
             <td class="align-middle text-center">{{ o.date_deliverable|date:"j M Y" }}</td>
             <td class="align-middle text-center">
               <a href="{% url 'MarketPlace:VacancyDetail' o.work.ref_no %}?next={{ request.path|urlencode }}" class="" data-toggle="tooltip" title="See Vacancy Detail"><i class="fa fa-industry" style="font-size:24px;color:black"></i></a>
-              <a href="{% url 'Profile:EmpRatePerformance' o.slug %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Update Status"><i class="fa fa-line-chart" style="font-size:24px;color:black"></i></a>
+              {% if o.emp_rated == False %}
+                <a href="{% url 'Profile:EmpRatePerformance' o.slug %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Rating View"><i class="fa fa-star-half-o" aria-hidden="true" style="font-size:24px;color:black"></i></a>
+              {% else %}
+                <a href="{% url 'Profile:EmpRateView' o.slug %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Rating View"><i class="fa fa-star" aria-hidden="true" style="font-size:24px;color:black"></i></a>
+              {% endif %}
             </td>
         {% empty %}
           <tr>

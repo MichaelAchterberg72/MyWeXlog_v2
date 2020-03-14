@@ -37,7 +37,7 @@ from talenttrack.forms import (
 
 from locations.models import Region
 from users.models import CustomUser
-from marketplace.models import BidInterviewList, WorkIssuedTo
+from marketplace.models import BidInterviewList, WorkIssuedTo, VacancyRate, TalentRate
 from nestedsettree.models import NtWk
 
 from .forms import (
@@ -101,8 +101,9 @@ def EmpVacancyComplete(request, wit):
 
 @login_required()
 def EmpUpdateStatusRate(request, wit):
-    wit_qs = WorkIssuedTo.objects.get(slug=wit)
-    form = VacancyRateForm(request.POST or None, instance = wit_qs)
+    wit_qs = get_object_or_404(WorkIssuedTo,slug=wit)
+    ref = wit_qs.work.ref_no
+    form = VacancyRateForm(request.POST or None)
 
     if request.method == 'POST':
         next_url=request.POST.get('next', '/')
@@ -110,7 +111,11 @@ def EmpUpdateStatusRate(request, wit):
             new = form.save(commit=False)
             new.vacancy = wit_qs.work
             new.talent = wit_qs.talent
+            new.complete = True
             new.save()
+
+            wit_qs.emp_rated=True
+            wit_qs.save()
 
             if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
                 next_url = reverse('Profile:WorkshopEmp')
@@ -121,6 +126,15 @@ def EmpUpdateStatusRate(request, wit):
         return render(request, template, context)
 
 
+@login_required()
+def EmpRatingView(request, wit):
+    wit_qs = get_object_or_404(WorkIssuedTo,slug=wit)
+    ref = wit_qs.work.ref_no
+    emp_qs = VacancyRate.objects.get(vacancy__ref_no=ref)
+
+    template = 'marketplace/rated_by_employer.html'
+    context={'emp_qs': emp_qs,}
+    return render(request, template, context)
 
 
 #This is the Dashboard view...
