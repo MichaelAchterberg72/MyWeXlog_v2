@@ -61,6 +61,7 @@ urlpatterns = [
     #Help urls
     path('help/Experience-level/', views.ExperienceLevelHelpView, name="HelpExperienceLevel"),
     path('help/Work-Configeration/', views.WorkConfigerationHelpView, name="HelpWorkCOnfigeration"),
+    path('help/vacancy-capture/', views.HelpPostVacancyView, name='HelpPostVacancy'),
 
     path('interview-history/<slug:tlt>/', views.TalentInterviewHistoryView, name="TalentInterviewHistory"),
     path('tlt-int-close/<slug:bil>/<slug:tlt>/', views.TltInterviewClose, name='TalentIntClose'),

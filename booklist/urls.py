@@ -20,6 +20,7 @@ urlpatterns = [
     path('popup/ajax/get_publisher_id', views.get_publisher_id, name='get_publisher_id'),
     path('popup/ajax/get_format_id', views.get_format_id, name='get_format_id'),
     path('add/books/', views.BookAddView, name='books-new'),
+    path('add/book/', views.AddBookView, name='AddBook'),
     path('popup/add/books/', views.BookAddPopupView, name='booksNewPopup'),
     path('add/books-read/', views.AddBookReadView, name='books-read-new'),
     path('add/book-type/', views.FormatAddView, name='FormatCreate'),
@@ -30,7 +31,8 @@ urlpatterns = [
     path('popup/ajax/get_genre_id', views.get_genre_id, name='get_genre_id'),
     # Help urlpatterns
     path('help/booklist-home/', views.HelpBookListHomeView, name="HelpBooklistHome"),
-    path('help/bookluist-add-new-book-read/', views.HelpBookListAddBookReadView, name='HelpBooklistAddBookRead'),
+    path('help/booklist-add-new-book-read/', views.HelpBookListAddBookReadView, name='HelpBooklistAddBookRead'),
     path('help/booklist/', views.HelpBookListView, name='HelpBooklist'),
     path('help/booklist-search/', views.HelpBookListSearchView, name='HelpBooklistSearch'),
+    path('help/add/book/', views.HelpAddBookView, name="HelpAddBook"),
 ]

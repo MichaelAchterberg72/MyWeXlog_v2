@@ -1,0 +1,153 @@
+{% extends 'base_homelite.html' %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Help{% endblock title %}
+
+{% block Style %}
+
+{% endblock Style %}
+{% block content %}
+<div class="container">
+  <h3>Add or Edit a Vacancy - Help</h3>
+    <p>&nbsp</p>
+    <p>This page displayes the fields that are required to capture a new or edit vacancy.</p>
+    <p>The fields required are:</p>
+    <table class="table table-sm">
+    <col width="10%">
+    <col width="70%">
+    <thead>
+        <tr>
+          <td>Vacancy Title</td>
+          <td>Please enter the title for the vacancy making sure that it is reflective of the
+            vacancy and position that it refers to.</td>
+        </tr>
+        <tr>
+          <td>Vacancy Reference Number</td>
+          <td>Enter a unique reference number for the vacancy. This is the reference number
+            that will be used in the event of performing a search.</td>
+        </tr>
+        <tr>
+          <td>Company Branch</td>
+          <td>Type the company name in the search field at the top of the dropdown list that
+            appears when you click on the field, select from the dropdown list the Company name
+            and branch that you are wanting, if you add a new Company Branch it will
+            automatically populate the field.<br>
+            The <a href="#"><img src="{% static '/images/icon-addlink.svg' %}"> Add a Company Branch</a>
+            link will open a popup window and request you to add the company, branch or division name,
+            type, and physical address.</td>
+        </tr>
+        <tr>
+          <td>Hours</td>
+          <td>Enter the number of hours the vacancy is expected to take for completion
+            or alternativly the number of hours the company has budgeted for at the rate
+            offered.</td>
+        </tr>
+        <tr>
+          <td>Unit</td>
+          <td>Enter the unit typ of hours required for the vacancy is expected to take
+            for completion or alternativly the type of contract the company has budgeted
+            for at the rate offered. The selection possibilities are once off, per month,
+            per day, per week, short term contract and as and when contract.</td>
+        </tr>
+        <tr>
+          <td>Experience Level</td>
+          <td>Select from the drop down list the experience level required for prospective
+            tenders on the vacancy. The categories are:<br>
+            <ul>
+              <li>Student (<=326 hours or up to 2 months of experience)</li>
+              <li>Beginner (<=2,282 hours or up to 14 months (two years) of experience)</li>
+              <li>Junior (<=12,062 hours or  62 months (five years) of experience)</li>
+              <li>Intermediate (<=25,754 hours or 134 months (eleven years) of experience)</li>
+              <li>Senior (<=45,314 hours or 254 months (twenty one years) of experience)</li>
+              <li>Lead ( more than 45,314 hours (more than twenty one years) of experience)</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>Currency</td>
+          <td>Select the currency that you will be remunerating with from the dropdown list
+            and if you add a currency that is not available ion the list it will
+            automatically populate the field.<br>
+            The <a href="#"><img src="{% static '/images/icon-addlink.svg' %}"> Add a Currency</a>
+            link will open a popup window and request you to add the country, currency in full
+            written format with country and currancy name and the internationally recognised
+            currency abbreviation loke USD or AUD.</td>
+        </tr>
+        <tr>
+          <td>Rate Offered</td>
+          <td>Enter the offered rate of remuneration to be paid.</td>
+        </tr>
+        <tr>
+          <td>Rate Unit</td>
+          <td>Enter the offered rate unit to be paid. The categories are:<br>
+          <ul>
+            <li>per Hour</li>
+            <li>per Day</li>
+            <li>per Month</li>
+            <li>Lump Sum</li>
+            </ul></td>
+        </tr>
+        <tr>
+          <td>Work Type Congiguration</td>
+          <td>Enter the expected location limit required. The options are:<br>
+          <ul>
+            <li>Local</li>
+            <li>Remote</li>
+          </ul></td>
+        </tr>
+        <tr>
+          <td>City, Town or Place</td>
+          <td>Select from the dropdown list and the localised location the company branch operates.<br>
+            The <a href="#"><img src="{% static '/images/icon-addlink.svg' %}"> Add a City, Town
+            or place</a> link will request you to add the Region and City, Town or Place name
+            if your desired option is not in the list.</td>
+        </tr>
+        <tr>
+          <td>To be Completed By</td>
+          <td>Here please enter the date that you required the job to be completed. Open the date
+            picker by clicking on the up or down arrows that appear on the right of the capture
+            field when you hover over it.</td>
+        </tr>
+        <tr>
+          <td>Vacancy Status</td>
+          <td>Select whether or not the vacancy is either:<br>
+          <ul>
+            <li>Open</li>
+            <li>Closed</li>
+          </ul></td>
+        </tr>
+        <tr>
+          <td>Vacancy Closes</td>
+          <td>Here please enter the date that vacancy offering for the job to be completed. Open the date
+            picker by clicking on the up or down arrows that appear on the right of the capture
+            field when you hover over it.</td>
+        </tr>
+        <tr>
+          <td>Certifications Required</td>
+          <td>Please enter any certifications that will be required for the performance of the vacancy.
+            You may start typing the name of the certificate and the search field of the drop down list
+            will filter for what you are looking for and capture the required certificates in tags
+            allowing more than one to be captured.<br>
+            The <a href="#"><img src="{% static '/images/icon-addlink.svg' %}"> Add a Certificate</a>
+            link will request you to add a certificate type if your desired option is not in the list.</td>
+        </tr>
+        <tr>
+          <td>Scope</td>
+          <td>Here you are able to enter the scope for the vacancy offering to be completed.
+            The field will allow you to enter paragraphs.</td>
+        </tr>
+        <tr>
+          <td>Expectations</td>
+          <td>Here you are able to enter the expectations for the vacancy offering to be completed.
+            The field will allow you to enter paragraphs.</td>
+        </tr>
+      </table>
+    <br>
+    <p>**In the event that one of the dropdown lists is not populated please refreash the page.</p>
+    <p>Click the <button type="submit" class="btn btn-primary" name="button">Add Deliverables</button>
+      or <button type="submit" class="btn btn-primary" name="button">Save</button> button when complete.</p>
+
+</div>
+{% endblock content %}

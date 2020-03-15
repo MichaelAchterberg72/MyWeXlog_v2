@@ -84,7 +84,7 @@ urlpatterns = [
         path('workshop-emp/', views.EmpWorkshopView, name='WorkshopEmp'),
         path('rate-emp/<slug:wit>/', views.EmpUpdateStatusRate, name='EmpRatePerformance'),
         # Help pages
-        path('help/desktop/assignment-tracking/', views.HelpDesktopAssignmentTrackingView, name='HelpDesktopAssignmentTracking'),
+        path('help/desktop/assignment-tracking/', views.HelpDesktopWorkshopView, name='HelpDesktopWorkshop'),
         path('help/desktop/information/', views.HelpDesktopInformationView, name='HelpDesktopInformation'),
         path('help/desktop/network/', views.HelpDesktopNetworkView, name='HelpDesktopNetwork'),
         path('help/desktop/workflow/', views.HelpDesktopWorkflowView, name='HelpDesktopWorkflow'),

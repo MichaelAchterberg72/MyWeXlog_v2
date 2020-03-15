@@ -1381,6 +1381,7 @@ def ExperienceLevelHelpView(request):
     template = 'marketplace/help_skill_level.html'
     return render(request, template, context)
 
+
 @login_required()
 def WorkConfigerationHelpView(request):
     wch = WorkLocation.objects.all()
@@ -1389,4 +1390,11 @@ def WorkConfigerationHelpView(request):
     template = 'marketplace/help_work_configeration.html'
     return render(request, template, context)
 
+
+@login_required()
+def HelpPostVacancyView(request):
+
+    context = {}
+    template = 'marketplace/help_post_vacancy.html'
+    return render(request, template, context)
 #Help Views <<<

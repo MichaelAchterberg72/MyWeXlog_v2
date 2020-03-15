@@ -13,46 +13,88 @@
     <p>&nbsp</p>
     <p>This is broken down into two sections, the number of Experience confirmations
       you have been requested and the Interviews Pending.</p>
+      <table class="table table-sm">
+      <col width="10%">
+      <col width="70%">
+      <tbody>
+        <tr>
+            <td class="text-center"><a href="#"class="btn btn-info float-right" style="width: 8rem"> 4 </a></td>
+            <td>Lists the numer of experience comfirmations that have been requested.<br>
+              Opens the Interview History (All Interviews) page as required by the Employer.</td>
+          </tr>
+        </tbody>
+      </table>
+      <br>
+      <p>The options you will be provided with when confirming experience as a lecturer, a class mate,
+        a colleague, a superior or manager, the experience of someone you have worked with and
+        the experience of someone working for your company (as a consultalt/contractor) will be:</p>
+      <table class="table table-sm">
+      <col width="10%">
+      <col width="70%">
+      <tbody>
+          <tr>
+            <td class="text-center"><button type="submit" class="badge badge-primary badge-pill" style="width: 10rem">Confirm</button>
+        </td>
+            <td>Allows you to comfirm the experience without providing a comment.</td>
+          </tr>
+          <tr>
+            <td class="text-center"><button type="submit" class="badge badge-danger badge-pill" style="width: 10rem">Reject</button></td>
+            <td>Allows you to reject the validation request, reasons are personal.</td>
+          </tr>
+          <tr>
+            <td class="text-center"><a href="#" class="badge badge-pill badge-success" style="width: 10rem">Review with Comment</a></td>
+            <td>Preferred option which allows you to confirm the experience and provide a
+              comment as to the performance of the validation requestee. This option is usually
+              utilised by managers or clients.<td>
+          </tr>
+          <tr>
+            <td class="text-center"><button type="submit" class="badge badge-info badge-pill" style="width: 10rem">Wrong Person</button></td>
+            <td>In the event that the requestee has got the wrong email address resulting in
+              a validation request from the wrong person.<td>
+          </tr>
+        </tbody>
+    </table>
     <br>
-    <p><strong>Experience confirmations</strong></p>
-    <p>This will list validation requests that have been requested in the event that
-      you are a lecturer, classmate, colleague, supervisor or manager, worked with
-      someone, as well as if someone has worked with your company as a
-      consultant/contractor.</p>
-    <p>The options you will be provided with when validating experience will be:</p>
+    <p>The workflow has to option buttons, one for the employer and one for the talent
+      also detailing the number of Interviews pending respectivly.</p>
+    <p><strong>Interviews Pending</strong></p>
     <table class="table table-sm">
     <col width="10%">
     <col width="70%">
     <tbody>
+        <th>As Employer</th>
         <tr>
-          <td class="text-center"><button type="submit" class="badge badge-primary badge-pill" style="width: 10rem">Confirm</button>
+          <td class="text-center"><button type="submit" class="badge badge-primary badge-pill" style="width: 10rem">Interview History</button>
       </td>
-          <td>Allows you to comfirm the experience without providing a comment.</td>
+          <td>Opens the Interview History (All Interviews) page as required by the Employer.</td>
         </tr>
+        <th>As Talent</th>
         <tr>
-          <td class="text-center"><button type="submit" class="badge badge-danger badge-pill" style="width: 10rem">Reject</button></td>
-          <td>Allows you to reject the validation request, reasons are personal.</td>
-        </tr>
-        <tr>
-          <td class="text-center"><a href="#" class="badge badge-pill badge-success" style="width: 10rem">Review with Comment</a></td>
-          <td>Preferred option which allows you to confirm the experience and provide a
-            comment as to the performance of the validation requestee. This option is usually
-            utilised by managers or clients.<td>
-        </tr>
-        <tr>
-          <td class="text-center"><button type="submit" class="badge badge-info badge-pill" style="width: 10rem">Wrong Person</button></td>
-          <td>In the event that the requestee has got the wrong email address resulting in
-            a validation request from the wrong person.<td>
+          <td class="text-center"><button type="submit" class="badge badge-primary badge-pill" style="width: 10rem">Interview History</button></td>
+          <td>Opens the Interview History as required by the Talent.</td>
         </tr>
       </tbody>
-  </table>
-  <br>
+    </table>
     <br>
-    <p><strong>Interviews Pending</strong></p>
-    <p>This details the number of interviews that have been requested in the form of
-      an interview request from a potential employer as well as on the side of the
-      talent who submitted the proposal bid for any vacancies advertised.</p>
-    <br>
-
+    <p>The Interviews peding page will open listing the interviews that have been requested detailing
+      Talent,	Vacancy Name,	Reference Number,	Talent's Response, My Response,	Interview Status and
+      Detail.</p>
+    <p>Interview Status will indicate whether the vacancy is either 'Open' or 'Closed'.<p>
+    <p>The Detail wil have the following icons which will allow you to:<p>
+      <table class="table table-sm">
+      <col width="10%">
+      <col width="70%">
+      <tbody>
+        <tr>
+          <td class="text-center"><i class="fa fa-industry" style="font-size:24px;color:black"></i></td>
+          <td>Opens the Vacancy Detail page.</td>
+        </tr>
+        <tr>
+          <td class="text-center"><i class="fa fa-commenting-o" style="font-size:30px;color:black"></i></td>
+          <td>Opens the Interview Detail page.</td>
+        </tr>
+      </tbody>
+      </table>
+      <br>
 </div>
 {% endblock content %}

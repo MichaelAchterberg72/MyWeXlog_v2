@@ -12,4 +12,6 @@ urlpatterns = [
 #        path('user/edit/<int:pk>/', views.EditUser, name='EditUser'),
         path('settings/', views.CustomUserSettingsView, name='CustomUserSettings'),
         path('right-to-say-no/', views.RightToSayNoView, name='RightToSayNo'),
+        path('user-agreement/', views.UserAgreementView, name='UserAgreement'),
+        path('privacy-policy/', views.PrivacyPolicyView, name='PrivacyPolicy'),
 ]

@@ -79,6 +79,14 @@ def HelpEnterpriseBranchListView(request):
 
 
 @login_required()
+def HelpAddEnterpriseView(request):
+
+    context = {}
+    template = 'enterprises/help_add_enterprise.html'
+    return render(request, template, context)
+
+
+@login_required()
 def BranchListView(request, cmp):
     branches = Branch.objects.filter(company__slug=cmp).order_by('name')
     detail = get_object_or_404(Enterprise, slug=cmp)

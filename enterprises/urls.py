@@ -12,6 +12,7 @@ urlpatterns = [
     path('help/enterprise-home-page/', views.HelpEnterpriseHomeView, name='HelpEnterpriseHome'),
     path('help/enterprise-branch-details/', views.HelpEnterpriseBranchView, name='HelpEnterpriseBranchDetails'),
     path('help/enterprise-branch-list/', views.HelpEnterpriseBranchListView, name='HelpEnterpriseBranchList'),
+    path('help/add-enterprise/', views.HelpAddEnterpriseView, name='HelpAddEnterprise'),
     #pop-ups
     path('popup/add/', views.EnterpriseAddPopup, name="EnterpriseAddPop"),
     path('add/', views.EnterpriseAddView, name="EnterpriseAdd"),

@@ -11,6 +11,8 @@
     width: 200px;
   }
   </style>
+<div class="card border-0">
+<div class="card-body">
 <div class="container">
 <h3>Capture Work Experience<span><p class="float-right">
 <a href="{% url 'Talent:HelpCaptureExperience' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px" data-toggle="tooltip title="Click here for help on this page!">
@@ -59,7 +61,7 @@
         </div>
 </div>
   </div>
-  </div>
+
     {{ form.skills|as_crispy_field }}
     <p><a href="{% url 'Flatten:SkillAddPop' %}" id='add_skill' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a Skill</a></p>
     {{ form.comment|as_crispy_field }}
@@ -67,7 +69,9 @@
     <p><button type="submit" name="Done" class="btn btn-primary">Add Validators</button></p>
   </div>
 </form>
-
+</div>
+</div>
+</div>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 {{ form.media.js }}
 {% endblock content %}

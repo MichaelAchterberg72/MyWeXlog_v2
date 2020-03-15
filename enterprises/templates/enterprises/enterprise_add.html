@@ -5,8 +5,12 @@
 
 
 {% block content %}
-<div class="container">
-<h4>Add a Company / Enterprise</h4>
+<div class="card border-0">
+  <div class="card-body">
+<h4>Add a Company / Enterprise<span><p class="float-right">
+<a href="{% url 'Enterprise:HelpAddEnterprise' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
+<i class="icon icon-question-circle"></i></a>
+</p></span></h4>
 
 <form method="post" novalidate>
   {% csrf_token %}
@@ -23,5 +27,6 @@
     <p><button type="submit" class="btn btn-primary">Save</button>
   </div>
 </form>
+</div>
 </div>
 {% endblock content %}

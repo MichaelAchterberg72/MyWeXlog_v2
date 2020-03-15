@@ -4,6 +4,8 @@
 
 {% block content %}
 {% for v in vacancy %}
+<div class="card h-100">
+  <div class="card-body">
 <div class="btn-toolbar float-right">
   <form  action="{% url 'BookList:BLB' %}" method="post">
     <input type="hidden" name="next" value="{{ request.GET.next }}">
@@ -12,8 +14,9 @@
   </form>&nbsp
   {% for i in vacancy %}
   <a href="{% url 'MarketPlace:WorkBid' i.ref_no %}" class="btn btn-warning">Apply for this role</a>
+  </div>
 {% endfor %}
-<h4 class="card-title">Vacancy: {{ v.title }} ({{ v.ref_no }})</h4>
+<h4 class="card-title">Vacancy: {{ v.title }} ({{ v.ref_no }})</h4><br>
 {% endfor %}
 
 <table class="table table-sm">
@@ -40,11 +43,10 @@
   </tbody>
   {% endfor %}
 </table>
-</div>
-</div>
+
 <div class="row">
   <div class="col-sm-6">
-    <div class="card h-100">
+    <div class="h-100">
       <div class="card-body">
         <h5 class="card-title">Scope</h5>
         {% for s in vacancy %}
@@ -54,7 +56,7 @@
     </div>
   </div>
   <div class="col-sm-6">
-    <div class="card h-100">
+    <div class="h-100">
       <div class="card-body">
         <h5 class="card-title">Expectations</h5>
         {% for e in vacancy %}
@@ -85,7 +87,7 @@
 </table>
 <div class="row">
   <div class="col-sm-3">
-    <div class="card h-100">
+    <div class="h-100">
       <div class="card-body">
         <h5 class="card-title">Skills Required</h5>
         {% for s in skills %}
@@ -97,7 +99,7 @@
     </div>
   </div>
   <div class="col-sm-5">
-    <div class="card h-100">
+    <div class="h-100">
       <div class="card-body">
         <h5 class="card-title">Deliverables</h5>
         {% for d in deliver %}
@@ -109,7 +111,7 @@
     </div>
   </div>
   <div class="col-sm-4">
-    <div class="card h-100">
+    <div class="h-100">
       <div class="card-body">
         <h5 class="card-title">Certifications Required</h5>
         {% for d in vacancy %}
@@ -124,5 +126,7 @@
       </div>
     </div>
   </div>
+</div>
+</div>
 </div>
 {% endblock content %}
