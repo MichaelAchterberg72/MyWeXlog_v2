@@ -23,6 +23,7 @@
           <th class="align-middle text-center">Task Complete<br>(Employer)</th>
           <th class="align-middle text-center">Pay Rate</th>
           <th class="align-middle text-center">Due Date</th>
+          <th class="align-middle text-center">Action</th>
         </tr>
       </thead>
       <tbody>
@@ -34,17 +35,30 @@
             <td class="align-middle text-center">{{ o.work.title }}</td>
             <td class="align-middle text-center">{{ o.work.ref_no }}</td>
             {% if o.assignment_complete_tlt == False %}
-              <td class="align-middle text-center">Incomplete</td>
+              <td class="align-middle text-center">
+                Incomplete
+                <a href="{% url 'Profile:TltMarkComp' o.slug %}" data-toggle="tooltip" title="Mark Complete"><i class="fa fa-check-square-o" aria-hidden="true" style="font-size:24px;color:green"></i></a>
+              </td>
             {% else %}
               <td class="align-middle text-center">Complete</td>
             {% endif %}
             {% if o.assignment_complete_emp == False %}
-              <td class="align-middle text-center">Incomplete</td>
+              <td class="align-middle text-center">
+                Incomplete
+              </td>
             {% else %}
               <td class="align-middle text-center">Complete</td>
             {% endif %}
             <td class="align-middle text-center">{{ o.currency }} {{ o.rate_offered }}<br>{{ o.get_rate_unit_display }}</td>
             <td class="align-middle text-center">{{ o.date_deliverable|date:"j M Y" }}</td>
+            <td class="align-middle text-center">
+              <a href="{% url 'MarketPlace:VacancyDetail' o.work.ref_no %}?next={{ request.path|urlencode }}" class="" data-toggle="tooltip" title="See Vacancy Detail"><i class="fa fa-industry" style="font-size:24px;color:black"></i></a>
+              {% if o.tlt_rated == False %}
+                <a href="{% url 'Profile:TltRatePerformance' o.slug %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Rating View"><i class="fa fa-star-half-o" aria-hidden="true" style="font-size:24px;color:black"></i></a>
+              {% else %}
+                <a href="{% url 'Profile:TltRateView' o.slug %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Rating View"><i class="fa fa-star" aria-hidden="true" style="font-size:24px;color:black"></i></a>
+              {% endif %}
+            </td>
         {% empty %}
           <tr>
             <td colspan="6">No open assignments</td>
@@ -69,6 +83,9 @@
             {% endif %}
             <td class="align-middle text-center">{{ o.currency }} {{ o.rate_offered }}<br>{{ o.get_rate_unit_display }}</td>
             <td class="align-middle text-center">{{ o.date_deliverable|date:"j M Y" }}</td>
+            <td class="align-middle text-center">
+              <a href="{% url 'MarketPlace:VacancyDetail' o.work.ref_no %}?next={{ request.path|urlencode }}" class="" data-toggle="tooltip" title="See Vacancy Detail"><i class="fa fa-industry" style="font-size:24px;color:black"></i></a>
+            </td>
         {% empty %}
           <tr>
             <td colspan="6">No Pending Assignments</td>
@@ -93,6 +110,14 @@
             {% endif %}
             <td class="align-middle text-center">{{ o.currency }} {{ o.rate_offered }}<br>{{ o.get_rate_unit_display }}</td>
             <td class="align-middle text-center">{{ o.date_deliverable|date:"j M Y" }}</td>
+            <td class="align-middle text-center">
+              <a href="{% url 'MarketPlace:VacancyDetail' o.work.ref_no %}?next={{ request.path|urlencode }}" class="" data-toggle="tooltip" title="See Vacancy Detail"><i class="fa fa-industry" style="font-size:24px;color:black"></i></a>
+              {% if o.tlt_rated == False %}
+                <a href="{% url 'Profile:TltRatePerformance' o.slug %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Rating View"><i class="fa fa-star-half-o" aria-hidden="true" style="font-size:24px;color:black"></i></a>
+              {% else %}
+                <a href="{% url 'Profile:TltRateView' o.slug %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Rating View"><i class="fa fa-star" aria-hidden="true" style="font-size:24px;color:black"></i></a>
+              {% endif %}
+            </td>
         {% empty %}
           <tr>
             <td colspan="6">No Complete Assignments</td>
@@ -117,6 +142,10 @@
             {% endif %}
             <td class="align-middle text-center">{{ o.currency }} {{ o.rate_offered }}<br>{{ o.get_rate_unit_display }}</td>
             <td class="align-middle text-center">{{ o.date_deliverable|date:"j M Y" }}</td>
+            <td class="align-middle text-center">
+              <a href="{% url 'MarketPlace:VacancyDetail' o.work.ref_no %}?next={{ request.path|urlencode }}" class="" data-toggle="tooltip" title="See Vacancy Detail"><i class="fa fa-industry" style="font-size:24px;color:black"></i></a>
+
+            </td>
         {% empty %}
           <tr>
             <td colspan="6">No Declined Assignments</td>

@@ -42,7 +42,10 @@
               <td class="align-middle text-center">Complete</td>
             {% endif %}
             {% if o.assignment_complete_emp == False %}
-              <td class="align-middle text-center">Incomplete</td>
+              <td class="align-middle text-center">
+                Incomplete
+                <a href="{% url 'Profile:EmpMarkComp' o.slug %}" data-toggle="tooltip" title="Mark Complete"><i class="fa fa-check-square-o" aria-hidden="true" style="font-size:24px;color:green"></i></a>
+              </td>
             {% else %}
               <td class="align-middle text-center">Complete</td>
             {% endif %}
@@ -111,7 +114,11 @@
             <td class="align-middle text-center">{{ o.date_deliverable|date:"j M Y" }}</td>
             <td class="align-middle text-center">
               <a href="{% url 'MarketPlace:VacancyDetail' o.work.ref_no %}?next={{ request.path|urlencode }}" class="" data-toggle="tooltip" title="See Vacancy Detail"><i class="fa fa-industry" style="font-size:24px;color:black"></i></a>
-              <a href="{% url 'Profile:EmpRatePerformance' o.slug %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Rate Work Performance"><i class="fa fa-thermometer-4" style="font-size:24px;color:black"></i></a>
+              {% if o.emp_rated == False %}
+                <a href="{% url 'Profile:EmpRatePerformance' o.slug %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Rating View"><i class="fa fa-star-half-o" aria-hidden="true" style="font-size:24px;color:black"></i></a>
+              {% else %}
+                <a href="{% url 'Profile:EmpRateView' o.slug %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Rating View"><i class="fa fa-star" aria-hidden="true" style="font-size:24px;color:black"></i></a>
+              {% endif %}
 
             </td>
         {% empty %}

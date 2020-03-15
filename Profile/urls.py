@@ -80,11 +80,16 @@ urlpatterns = [
         path('assignment-decline/<slug:slug>/', views.AssignmentDeclineView, name='AssignmentDecline'),
         path('assignment-rfi/<slug:slug>/', views.AssignmentClarifyView, name='AssignmentClarify'),
         path('assignment-reassign/<slug:slug>/', views.AssignmentReAssign, name='AssignmentReassign'),
+        #Talent Workshop
         path('workshop-tlt/', views.TltWorkshopView, name='WorkshopTlt'),
+        path('tlt-mark-complete/<slug:wit>/', views.TltVacancyComplete, name="TltMarkComp"),
+        path('rate-tlt/<slug:wit>/', views.TltUpdateStatusRate, name='TltRatePerformance'),
+        path('rate-tlt-view/<slug:wit>/', views.TltRatingView, name='TltRateView'),
+        #Employer Office
         path('workshop-emp/', views.EmpWorkshopView, name='WorkshopEmp'),
         path('rate-emp/<slug:wit>/', views.EmpUpdateStatusRate, name='EmpRatePerformance'),
         path('rate-emp-view/<slug:wit>/', views.EmpRatingView, name='EmpRateView'),
-        
+        path('emp-mark-complete/<slug:wit>/', views.EmpVacancyComplete, name="EmpMarkComp"),
         # Help pages
         path('help/desktop/assignment-tracking/', views.HelpDesktopAssignmentTrackingView, name='HelpDesktopAssignmentTracking'),
         path('help/desktop/information/', views.HelpDesktopInformationView, name='HelpDesktopInformation'),

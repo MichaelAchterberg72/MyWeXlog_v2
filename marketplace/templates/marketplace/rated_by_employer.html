@@ -33,7 +33,7 @@
           <tr>
             <td>1. Talent Work Performance</td>
             <td class="text-center">{{ emp_qs.rate_1 }}</td>
-            <td colspan="3" class="align-middle text-center">5</td>
+            <td colspan="3" class="align-middle text-center">{{ emp_qs.average }}</td>
           </tr>
           <tr>
             <td>2. Completed on Time?</td>
@@ -56,10 +56,14 @@
         <p>{{ emp_qs.suggestions }}</p>
       </div>
       <hr>
-      <h6></h6>
-
-
-
+      <h6>Talent Suggestions for Me</h6>
+      <div class="container">
+        {% if tlt_qs == 0 %}
+          <p>None - Talent has not posted any suggestions at this time</p>
+        {% else %}
+          <p>{{ tlt_qs.suggestions }}</p>
+        {% endif %}
+      </div>
   </div>
 </div>
 {% endblock content %}

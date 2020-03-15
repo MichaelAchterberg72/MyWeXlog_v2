@@ -337,7 +337,7 @@ class TalentRate(models.Model):
     rate_1 = models.SmallIntegerField('Employer Performance', choices=OPNS, default=3)
     rate_2 = models.SmallIntegerField('Payment Receipt', choices=OPNS, default=3)
     rate_3 = models.SmallIntegerField('Would you work for this employer again?', choices=OPNS, default=3)
-    payment_time = models.SmallIntegerField('Days from invoice to receipt of payment', choices=PYMT, default=0) #This is now corrected
+    payment_time = models.SmallIntegerField('Days from invoice to receipt of payment', choices=PYMT, default=0)
     date_rating = models.DateField(auto_now=True)
     comment = models.TextField(blank=True, null=True)
     suggestions = models.TextField(blank=True, null=True)
@@ -346,6 +346,11 @@ class TalentRate(models.Model):
 
     class Meta:
         unique_together = (('vacancy','talent'), )
+
+    def avg_rate(self):
+        sum = self.rate_1+self.rate_2+self.rate_3
+        return sum
+    average = property(avg_rate)
 
     def __str__(self):
         return f'Rating for {self.vacancy} by {self.talent}'

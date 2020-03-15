@@ -49,7 +49,7 @@ from marketplace.forms import(
         )
 
 
-#shows all vacancies a person has been assigned
+#>>> Workshop view for Talent
 @login_required()
 @subscription(1)
 def TltWorkshopView(request):
@@ -71,6 +71,60 @@ def TltWorkshopView(request):
     return render(request, template, context)
 
 
+@login_required()
+def TltVacancyComplete(request, wit):
+    wit_qs = WorkIssuedTo.objects.filter(slug=wit)
+
+    wit_qs.update(assignment_complete_tlt=True)
+
+    return redirect(reverse('Profile:WorkshopTlt'))
+
+
+@login_required()
+def TltUpdateStatusRate(request, wit):
+    wit_qs = get_object_or_404(WorkIssuedTo, slug=wit)
+    ref = wit_qs.work.ref_no
+    form = TalentRateForm(request.POST or None)
+
+    if request.method == 'POST':
+        next_url=request.POST.get('next', '/')
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.vacancy = wit_qs.work
+            new.talent = wit_qs.talent
+            new.complete = True
+            new.save()
+
+            wit_qs.tlt_rated=True
+            wit_qs.save()
+
+            if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
+                next_url = reverse('Profile:WorkshopEmp')
+            return HttpResponseRedirect(next_url)
+    else:
+        template = 'marketplace/rate_by_talent.html'
+        context={'form': form, 'wit_qs': wit_qs,}
+        return render(request, template, context)
+
+
+@login_required()
+def TltRatingView(request, wit):
+    wit_qs = get_object_or_404(WorkIssuedTo,slug=wit)
+    ref = wit_qs.work.ref_no
+    tlt_qs = TalentRate.objects.get(vacancy__ref_no=ref)
+
+    if wit_qs.emp_rated == True:
+        emp_qs = VacancyRate.objects.get(vacancy__ref_no=ref)
+    else:
+        emp_qs = 'To be submitted'
+
+    template = 'marketplace/rated_by_talent.html'
+    context={'emp_qs': emp_qs, 'tlt_qs': tlt_qs,}
+    return render(request, template, context)
+#Workshop view for Talent<<<
+
+
+#>>>Office view for Employer
 @login_required()
 @subscription(2)
 def EmpWorkshopView(request):
@@ -96,7 +150,7 @@ def EmpVacancyComplete(request, wit):
 
     wit_qs.update(assignment_complete_emp=True)
 
-    return redirect(reverse('XXX:XXX', kwargs={'tlt': tlt}))
+    return redirect(reverse('Profile:WorkshopEmp'))
 
 
 @login_required()
@@ -132,9 +186,15 @@ def EmpRatingView(request, wit):
     ref = wit_qs.work.ref_no
     emp_qs = VacancyRate.objects.get(vacancy__ref_no=ref)
 
+    if wit_qs.tlt_rated == True:
+        tlt_qs = TalentRate.objects.get(vacancy__ref_no=ref)
+    else:
+        tlt_qs = 0
+
     template = 'marketplace/rated_by_employer.html'
-    context={'emp_qs': emp_qs,}
+    context={'emp_qs': emp_qs, 'tlt_qs': tlt_qs,}
     return render(request, template, context)
+#Office view for Employer<<<
 
 
 #This is the Dashboard view...
