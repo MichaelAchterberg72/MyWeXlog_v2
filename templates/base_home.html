@@ -29,7 +29,7 @@
       <ul class="navbar-nav">
         <li class="logo">
           <a href="https://devoptec.com/public/index/" class="nav-link">
-            <span class="link-text logo-text">WeXlog</span>
+            <span class="link-text logo-text">myWeXlog</span>
             <svg
               aria-hidden="true"
               focusable="false"
@@ -170,8 +170,8 @@
   {% if request.user.is_authenticated %}
   <nav class="sticky-top navbar-light bg-light top-right-navbar right" style="height: 5rem;">
     <div class="container">
-      <a class="navbar-brand" href="https://devoptec.com/public/user-agreement/">User Agreement</a>
-      <a class="navbar-brand" href="https://devoptec.com/public/privacy/">Privacy Policy</a>
+      <a class="navbar-brand" href="{% url 'Users:UserAgreement' %}">User Agreement</a>
+      <a class="navbar-brand" href="{% url 'Users:PrivacyPolicy' %}">Privacy Policy</a>
       <a class="navbar-brand" href="https://devoptec.com/public/contact/">Contact Us</a>
 
       <div class="btn-group">

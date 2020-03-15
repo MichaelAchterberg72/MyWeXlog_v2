@@ -1310,8 +1310,8 @@ def HelpDesktopWorkflowView(request):
 
 
 @login_required()
-def HelpDesktopAssignmentTrackingView(request):
-    template_name = 'Profile/help_desktop_assignment_tracking.html'
+def HelpDesktopWorkshopView(request):
+    template_name = 'Profile/help_desktop_workshop.html'
     context = {}
     return render(request, template_name, context)
 

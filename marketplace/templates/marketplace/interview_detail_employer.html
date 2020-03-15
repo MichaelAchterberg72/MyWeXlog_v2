@@ -48,7 +48,7 @@
           <tr>
             <th class="align-middle text-center">My Comments</th>
             {% if d.comments_emp %}
-              <td colspan="5"  class="align-middle">{{ d.comments_emp|truncate:200 }}</td>
+              <td colspan="5"  class="align-middle">{{ d.comments_emp|truncatechars:200 }}</td>
             {% else %}
               <td colspan="4"  class="align-middle"> - </td>
               <td class="align-middle text-center">

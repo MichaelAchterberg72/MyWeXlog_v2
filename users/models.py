@@ -89,6 +89,8 @@ class CustomUserSettings(models.Model):
     right_to_be_forgotten = models.BooleanField('Right to be forgotten / Permanently delete my account', default=False)
     payment_notifications = models.BooleanField('Receive subscription payment notifications', default=True)
     subscription_notifications = models.BooleanField('Receive subscription status notifications', default=True)
+    privacy = models.BooleanField('Accept Privacy Policy', default=False)
+    useragree = models.BooleanField('Accept User Agreement', default=False)
 
     def __str__(self):
         return f"Settings for {self.talent}"

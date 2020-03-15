@@ -14,6 +14,8 @@
   </style>
 
 <div class="container">
+  <div class="card">
+    <div class="card-body">
 <div class="btn-toolbar float-right">
   <form  action="{% url 'BookList:BLB' %}" method="post">
     <input type="hidden" name="next" value="{{ request.GET.next }}">
@@ -165,6 +167,7 @@
 </div>
   </div>
 </div>
+
 <p>&nbsp</p>
 <p><a href="{% url 'MarketPlace:ShortListView' instance.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-info">View Short-list</a>  <a href="{% url 'MarketPlace:InterviewList' instance.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-info">View Interview List</a></p>
 <p>&nbsp</p>

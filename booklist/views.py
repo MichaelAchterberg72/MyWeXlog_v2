@@ -100,6 +100,14 @@ def HelpBookListAddBookReadView(request):
 
 
 @login_required()
+def HelpAddBookView(request):
+
+    template_name = 'booklist/help_add_book.html'
+    context = {}
+    return render(request, template_name, context)
+
+
+@login_required()
 @subscription(2)
 @csp_exempt
 #This view is for the profile to display the complete list of books read.
@@ -244,6 +252,24 @@ def BookAddView(request):
 
     context = {'form': form}
     template_name = 'booklist/create_new_book.html'
+    return render(request, template_name, context)
+
+
+@csp_exempt
+@login_required()
+def AddBookView(request):
+    if request.method == 'POST':
+        form = BookAddForm(request.POST)
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.save()
+            form.save_m2m()
+            return redirect(reverse('BookList:books-read-new'))
+    else:
+        form = BookAddForm()
+
+    context = {'form': form}
+    template_name = 'booklist/add_new_book.html'
     return render(request, template_name, context)
 
 

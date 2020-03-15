@@ -1,0 +1,50 @@
+{% extends 'base_homelite.html' %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Help{% endblock title %}
+
+{% block Style %}
+
+{% endblock Style %}
+{% block content %}
+<div class="container">
+  <h3>Desktop Workshop - Help</h3>
+    <p>&nbsp</p>
+    <p>This is a summary of the assignments that you have as an Employer or as a Talent.</p>
+    <p>The summary displayes the active open assignments.</p>
+    <table class="table table-sm">
+    <col width="10%">
+    <col width="70%">
+    <tbody>
+        <th>As Employer</th>
+        <tr>
+          <td class="text-center"><button type="submit" class="badge badge-primary badge-pill" style="width: 10rem">Enter Office</button>
+      </td>
+          <td>The enter office button will opena page displaying Open Assignments, Pending
+            Assignments, Completed Assignments.</td>
+        </tr>
+        <th>As Talent</th>
+        <tr>
+          <td class="text-center"><button type="submit" class="badge badge-primary badge-pill" style="width: 10rem">Enter Workshop</button></td>
+          <td>The enter workshop button will opens the assignments page as required by
+            the Talent detailing Open Assignments, Pending Assignments, Completed
+            Assignments and Declined Assignments.</td>
+        </tr>
+      </tbody>
+    </table>
+    <br>
+    <br>
+    <p><strong>As Employer</strong></p>
+    <p>Assignments are created in interview process in which once the interview has been
+      completed you may assign the vacancy to a talent by utilising the 'Assign' button.</p>
+    <p>Once the vacancy has been assigned it will be listed as an open assignment under
+      the 'As Employer' heading.</p>
+    <br>
+    <p><strong>As Talent</strong></p>
+    <p>Assignments are created after the interview has been completed and the employer
+      assigns the vacancy to a specific talent.</p>
+    <br>
+
+</div>
+{% endblock content %}

@@ -16,8 +16,13 @@
     width: 200px;
   }
   </style>
-<div class="container">
-<h3>Advertise Work</h3>
+<div class="card border-0">
+<div class="card-body">
+<h3>Advertise Work<span><p class="float-right">
+<a href="{% url 'MarketPlace:HelpPostVacancy' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
+<i class="icon icon-question-circle"></i></a>
+
+</p></span></h3>
 <form method="post" id="BranchForm" enctype="multipart/form-data">
   {% csrf_token %}
   <div class="form-row">
@@ -96,6 +101,7 @@
     <p><button type="submit" name="Done" class="btn btn-primary">Add Deliverables</button></p>
   </div>
 </form>
+</div>
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 {{ form.media.js }}

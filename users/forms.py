@@ -52,3 +52,15 @@ class RightToSayNoForm(forms.ModelForm):
     class Meta:
         model = CustomUserSettings
         fields = ('right_to_say_no',)
+
+
+class PrivacyPolicyForm(forms.ModelForm):
+    class Meta:
+        model = CustomUserSettings
+        fields = ('privacy',)
+
+
+class UserAgreementForm(forms.ModelForm):
+    class Meta:
+        model = CustomUserSettings
+        fields = ('useragree',)
