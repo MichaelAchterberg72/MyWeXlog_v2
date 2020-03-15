@@ -33,7 +33,7 @@
           <tr>
             <td>1. Talent Work Performance</td>
             <td class="text-center">{{ emp_qs.rate_1 }}</td>
-            <td colspan="3" class="align-middle text-center">{{ emp_qs.average }}</td>
+            <td colspan="3" class="align-middle text-center">{{ emp_qs.average|floatformat:2 }}</td>
           </tr>
           <tr>
             <td>2. Completed on Time?</td>

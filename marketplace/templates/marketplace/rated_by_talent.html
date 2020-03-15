@@ -1,0 +1,73 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}{{block.super}}-Rating{% endblock title %}
+
+{% block content %}
+<div class="card border-0" style="width: 100%;">
+  <div class="card-body">
+    <div class="float-right">
+      <form  action="{% url 'BookList:BLB' %}" method="post">
+      <input type="hidden" name="next" value="{{ request.GET.next }}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-secondary">Back</button>
+    </form>
+    </div>
+
+      <h4 class="card-title">Rating of {{ tlt_qs.talent.alias }}</h4>
+      <h5 class="card-title">on {{ tlt_qs.vacancy.title }}</h5>
+      <p>Rating date - {{ tlt_qs.date_rating|date:"j F Y" }}</p>
+
+      <table class="table table-sm">
+        <thead>
+          <tr>
+            <th>Question</th>
+            <th class="text-center">Rating</th>
+            <th class="text-center">Average Rating</th>
+
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1. Employer Performance</td>
+            <td class="text-center">{{ tlt_qs.rate_1 }}</td>
+            <td colspan="3" class="align-middle text-center">{{ tlt_qs.average|floatformat:2 }}</td>
+          </tr>
+          <tr>
+            <td>2. Payment Receipt</td>
+            <td class="text-center">{{ tlt_qs.rate_2 }}</td>
+          </tr>
+          <tr>
+            <td>3. Would you work for this employer again?</td>
+            <td class="text-center">{{ tlt_qs.rate_3 }}</td>
+          </tr>
+          <tr>
+            <td>4. Days from invoice to receipt of payment</td>
+            <td class="text-center">{{ tlt_qs.rate_3 }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <hr>
+      <h6>My Comments</h6>
+      <div class="container">
+        <p>{{ tlt_qs.comment }}</p>
+      </div>
+      <hr>
+      <h6>My Suggestions to Talent</h6>
+      <div class="container">
+        <p>{{ tlt_qs.suggestions }}</p>
+      </div>
+      <hr>
+      <h6>Talent Suggestions for Me</h6>
+      <div class="container">
+        {% if tlt_qs == 0 %}
+          <p>None - Talent has not posted any suggestions at this time</p>
+        {% else %}
+          <p>{{ emp_qs.suggestions }}</p>
+        {% endif %}
+      </div>
+  </div>
+</div>
+{% endblock content %}

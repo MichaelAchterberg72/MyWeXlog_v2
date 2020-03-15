@@ -307,6 +307,11 @@ class VacancyRate(models.Model):
     def __str__(self):
         return f'Rating for {self.talent} on {self.vacancy}'
 
+    def avg_rate(self):
+        sum = self.rate_1+self.rate_2+self.rate_3
+        return sum/3
+    average = property(avg_rate)
+
     def save(self, *args, **kwargs):
         if self.slug is None or self.slug == "":
             self.slug = create_code9(self)
@@ -348,8 +353,8 @@ class TalentRate(models.Model):
         unique_together = (('vacancy','talent'), )
 
     def avg_rate(self):
-        sum = self.rate_1+self.rate_2+self.rate_3
-        return sum
+        sum = self.rate_1+self.rate_2+self.rate_3+self.payment_time
+        return sum/4
     average = property(avg_rate)
 
     def __str__(self):
