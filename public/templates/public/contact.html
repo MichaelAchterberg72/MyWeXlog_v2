@@ -1,25 +1,45 @@
-{% extends "base_public.html" %}
+{% extends "base_home.html" %}
 {% load humanize %}
 {% load crispy_forms_tags %}
 {% load staticfiles %}
 
 {% block content %}
-
+<div class="card border-0">
+<div class="card-body">
 <div class="container">
-  <p>&nbsp</p>
-  <p>&nbsp</p>
+
   <h1 class="display-4">Contact Us!</h1>
   <p class="lead">We would love to hear from you, please feel free to contact
     us by social media on one of the links or complete the below form and send
     it through to us.</p>
-
-    <p>&nbsp</p>
-    <p><a href="{% url 'Public:AboutUs' %}"><img src="{% static 'images/social-media/twittera.png' %}" alt="Twitter"></a> &nbsp
-      <a href="{% url 'Public:AboutUs' %}"><img src="{% static 'images/social-media/facebooka.png' %}" alt="Facebook"></a> &nbsp
-        <a href="{% url 'Public:AboutUs' %}"><img src="{% static 'images/social-media/linkedinb.png' %}" alt="LinkedIn"></a> &nbsp
-          <a href="{% url 'Public:AboutUs' %}"><img src="{% static 'images/social-media/youtube.png' %}" alt="Youtube"></a></p>
-
+  <p>&nbsp</p>
   <hr class="my-4">
+
+<div class="container">
+      <p><a href="https://twitter.com/WeXlog_io"><img src="{% static 'images/social-media/twittera.png' %}" alt="Twitter"></a> &nbsp
+        <a href="https://web.facebook.com/WeXlog-110146303820922"><img src="{% static 'images/social-media/facebooka.png' %}" alt="Facebook"></a> &nbsp
+          <a href="https://www.linkedin.com/company/wexlog-io"><img src="{% static 'images/social-media/linkedinb.png' %}" alt="LinkedIn"></a> &nbsp
+            <a href="https://www.youtube.com/channel/UCqT7Jr6aKefHsqPlWmpPqhA/channels"><img src="{% static 'images/social-media/youtube.png' %}" alt="Youtube"></a></p>
+            <br>
+
+              <div class="row d-flex mb-5 contact-info">
+            <div class="col-md-3">
+              <p><span>Address:</span> DevOpTec (Pty) Ltd,<br>32 Viewland Crescent, Thornlands, Queensland, Australia</p>
+            </div>
+            <div class="col-md-3">
+              <p><span>Phone:</span> <a href="tel://1234567920">+ 1235 2355 98</a></p>
+            </div>
+            <div class="col-md-3">
+              <p><span>Email:</span> <a href="mailto:info@wexlog.io">info@wexlog.io</a></p>
+            </div>
+            <div class="col-md-3">
+              <p><span>Website:</span> <a href="#">wexlog.io</a></p>
+            </div>
+          </div>
+        </div>
+
+    <hr class="my-4">
+
   <p>At WeXlog we strive to stay in contact with our members requirements at all
     times. So feel free to complete the below form and we will respond as soon as
     possible depending on your requirements.</p>
@@ -35,5 +55,7 @@
 
       </div>
     </div>
+  </div>
+</div>
 
 {% endblock content %}

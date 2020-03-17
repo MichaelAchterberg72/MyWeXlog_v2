@@ -1,0 +1,49 @@
+{% extends 'base_homelite.html' %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Help{% endblock title %}
+
+{% block Style %}
+
+{% endblock Style %}
+{% block content %}
+<div class="container">
+  <h3>Vacancies Suited for Me - Full List - Help</h3>
+    <p>&nbsp</p>
+    <p>This provides a full listing of the current most recent vacancies that are a match to your skillset
+      and experience level.</p>
+    <br>
+    <p><strong>Application History</strong></p>
+    <p><button type="submit" class="badge badge-primary badge-pill" style="width: 8rem">Applications History</button></p>
+    <p>This will open the page containing the vacancy application history abbreviated
+      lists for Roles Applied for, Roles Shortlisted for, Unsuccessful Applications and
+      Successful Applications.</p>
+    <br>
+    <p><strong>Interview History</strong></p>
+    <p><button type="submit" class="badge badge-primary badge-pill" style="width: 8rem">Interview History</button></p>
+    <p>This will open the page listing your interview history across all vacancies that you
+      submitted bids or have been shortlisted for.</p>
+    <br>
+    <p>The table lists the vacancy reference numbers, vacancy title, hours required, work
+      format, city and a button for opening the full detail of the vacancy where you
+      will be able to apply for the role.</p>
+    <p>The options you will be provided with when on the table will be:</p>
+    <table class="table table-sm">
+    <col width="10%">
+    <col width="70%">
+    <tbody>
+        <tr>
+          <td class="text-center"><button type="submit" class="badge badge-secondary" style="width: 5rem;">See Detail</button>
+      </td>
+          <td>Shows the detail of the vacancy allowing you to apply for the vacancy should it still be open.
+          If the vacancy is closed it will show a closed button and you will not be able to apply for the
+          position.</td>
+        </tr>
+    </tbody>
+  </table>
+  <br>
+  <br>
+  
+</div>
+{% endblock content %}

@@ -6,6 +6,8 @@
 {% block title %}{{block.super}}-Assign job {{ job.ref_no }}{% endblock title %}
 
 {% block content %}
+<div class="card border-0">
+<div class="card-body">
 <div class="container">
   <h3>Assign {{ job.title }} ({{ job.ref_no }})</h3>
   <h4>to {{ talent.alias }}</h4>
@@ -42,6 +44,8 @@
     </div>
   </form>
   </div>
+  </div>
+</div>
 
 {% endblock content %}
 {% block Script %}

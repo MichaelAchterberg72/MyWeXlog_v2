@@ -6,15 +6,18 @@
 {% block title %}{{block.super}}-RFI{% endblock title %}
 
 {% block content %}
-<div class="container">
-  <h3>Requested Clarifications for {{ instance.work.title }} ({{ instance.work.ref_no }})</h3>
+<div class="card border-0">
+  <div class="card-body">
+    <div class="container">
+  <h3 class="card-title">Requested Clarifications for {{ instance.work.title }} ({{ instance.work.ref_no }})</h3>
   <hr>
   <h6>Information Requested:</h6>
   <p>{{ instance.clarification_required }}</p>
   <hr>
   <p>Please contact the Talent directly at <a href="mailto:{{ instance.talent.email }} ">{{ instance.talent.email }}</a> to further discuss this vacancy.</p>
+    </div>
   </div>
-
+</div>
 {% endblock content %}
 {% block Script %}
 
