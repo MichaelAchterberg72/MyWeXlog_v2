@@ -6,12 +6,16 @@
 {% block content %}
 <div class="card border-0">
   <div class="card-body">
-  <h4 class="">Vacancies Suited for Me - Full List<span><p class="float-right"><a href="{% url 'MarketPlace:Entrance' %}"  class="badge badge-pill badge-primary">Back</a></p></span></h4>
+  <h4 class="">Vacancies Suited for Me - Full List<span><p class="float-right"><a href="{% url 'MarketPlace:Entrance' %}"  class="badge badge-pill badge-primary">Back</a>
+    <a href="{% url 'MarketPlace:HelpVacanciesSuitedForMeFull' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
+    <i class="icon icon-question-circle"></i></a>
+  </p></span></h4>
 
   <div class="border-0" style="width: 100%;">
     <div class="card-body">
       <div class="float-right">
         <a href="{% url 'MarketPlace:History' %}" class="badge badge-primary 8rem" style="width: 8rem">View History</a>
+        <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="badge badge-primary 8rem" style="width: 8rem">Interview History</a>
       </div>
       <h4 class="card-title">Vacancies Suited for Me </h4>
       <table class="table table-sm">

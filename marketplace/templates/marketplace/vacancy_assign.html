@@ -6,8 +6,10 @@
 {% block title %}{{block.super}}-Assign job {{ job.ref_no }}{% endblock title %}
 
 {% block content %}
+<div class="card border-0">
+<div class="card-body">
 <div class="container">
-  <h3>Assign {{ job.title }} ({{ job.ref_no }})</h3>
+  <h3 class="card-title">Assign {{ job.title }} ({{ job.ref_no }})</h3>
   <form method="post" enctype="multipart/form-data">
     <input type="hidden" name="next" value="{{ request.GET.next }}">
     {% csrf_token %}
@@ -41,6 +43,8 @@
     </div>
   </form>
   </div>
+  </div>
+</div>
 
 {% endblock content %}
 {% block Script %}

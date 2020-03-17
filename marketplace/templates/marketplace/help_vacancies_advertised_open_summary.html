@@ -1,0 +1,69 @@
+{% extends 'base_homelite.html' %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Help{% endblock title %}
+
+{% block Style %}
+
+{% endblock Style %}
+{% block content %}
+<div class="container">
+  <h3>Vacancies Home Page - Vacancies Advertised (Open) - Help</h3>
+    <p>&nbsp</p>
+    <p>This provides a brief list of the five most recent vacancies that you have listed
+      as currently open.</p>
+    <br>
+    <p><strong>Post Vacancy</strong></p>
+    <p><button type="submit" class="badge badge-primary" style="width: 8rem">Post Vacancy</button></p>
+    <p>This will open the page that will allow you to capture a new vacancy.</p>
+    <br>
+    <br>
+    <p>The table lists the date posted, vacancy title, the closing date, the response
+      which will reflect 'Yes' if members have replied to the vacancy submitting a bid
+      and 'None' if no bids have been received as yet.</p>
+    <p>The options you will be provided with will be:</p>
+    <table class="table table-sm">
+    <col width="10%">
+    <col width="70%">
+    <tbody>
+        <tr>
+          <td class="text-center"><a href="#" class="" data-toggle="tooltip" title="Vacancy Detail"><i class="fa fa-industry" style="font-size:24px;color:grey"></i></a>
+          </td>
+          <td>Shows the detail of the vacancy allowing you to edit the vacancy as well as a list of the
+            talent suited to the vacancy and a list of applicants for the vacancy. You will have access
+          to the vacancy interview and short lists.</td>
+        </tr>
+        <tr>
+          <td class="text-center"><a href="#" class="" data-toggle="tooltip" title="Interview List"><i class="fa fa-gg" style="font-size:30px;color:black"></i></a>
+          </td>
+          <td>Opens the interview details list specifically for the vacancy advertised. This will
+            list all the interviews of talent for the position.</td>
+        </tr>
+    </tbody>
+  </table>
+  <p>By hovering over the icons a tooltip will appear indicating what the icon functionality is.</p>
+  <br>
+  <br>
+  <p>The following buttons will all you to view:</p>
+  <p><strong>Interview History</strong></p>
+  <p><a href="#" class="btn btn-primary" style="width: 10rem">Interview History</a>
+</p>
+<p>This will open the page listing the paginated full list of all interviews that you have
+  scheduled accross all vacancies posted.</p>
+<p>The talents responce will indicate the following options:</p>
+<ul>
+  <li>Interview Pending</li>
+  <li>Accept Interview</li>
+  <li>Decline Interview</li>
+</ul>
+<p>as well as whether or not you have responded to the interview and the interview
+  status being either 'Open' or 'Closed'.</p>
+  <br>
+  <p><strong>All Open Posted Vacancies</strong></p>
+  <p><a href="#" class="btn btn-primary"style="width: 12rem">All Open Vacancies</a></p>
+  <p>This will open the page listing the paginated full list of all vacancies that you have
+    posted that still have a status of 'Open'.</p>
+
+</div>
+{% endblock content %}

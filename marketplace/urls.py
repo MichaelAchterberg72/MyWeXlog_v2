@@ -40,7 +40,9 @@ urlpatterns = [
 
     path('vac-decline/<slug:vac>/<slug:tlt>/', views.TalentDecline, name='VacDecline'),
 
-    path('all-vac/', views.AllPostedVacanciesView, name='AllPostedVac'),
+    path('all-vac/', views.AllPostedVacanciesView, name="AllPostedVac"),
+    path('all-vac/open/', views.AllPostedVacanciesOpenView, name='AllPostedVacOpen'),
+    path('all-vac/closed/', views.AllPostedVacanciesClosedView, name='AllPostedVacClosed'),
     path('availabillity-remove/<int:avl_id>/', views.AvailabillityRemoveView, name='NotAvailable'),
     path('vac-interview/<slug:vac>/<slug:tlt>/', views.AddToInterviewListView, name='VacInterview'),
     path('suitable/<slug:vac>/<slug:tlt>/', views.InterviewSuitable, name='Suitable'),
@@ -62,6 +64,13 @@ urlpatterns = [
     path('help/Experience-level/', views.ExperienceLevelHelpView, name="HelpExperienceLevel"),
     path('help/Work-Configeration/', views.WorkConfigerationHelpView, name="HelpWorkCOnfigeration"),
     path('help/vacancy-capture/', views.HelpPostVacancyView, name='HelpPostVacancy'),
+    path('help/vacancies-suited-for-me-summary/', views.HelpVacancySuitedSummaryView, name='HelpVacanciesSuitedForMeSummary'),
+    path('help/vacancies-suited-for- me-full-list/', views.HelpVacancySuitedFullView, name='HelpVacanciesSuitedForMeFull'),
+    path('help/vacancies-advertised-open-summary/', views.HelpVacancyAdvertisedOpenSummaryView, name='HelpVacanciesAdvertisedOpenSummary'),
+    path('help/vacancies-advertised-open-all/', views.HelpVacancyAdvertisedOpenAllView, name='HelpVacanciesAdvertisedOpenAll'),
+
+    path('help/vacancies-advertised-closed-all/', views.HelpVacancyAdvertisedClosedAllView, name='HelpVacanciesAdvertisedClosedAll'),
+    path('help/vacancies-advertised-closed-summary/', views.HelpVacancyAdvertisedClosedSummaryView, name='HelpVacanciesAdvertisedClosedSummary'),
 
     path('interview-history/<slug:tlt>/', views.TalentInterviewHistoryView, name="TalentInterviewHistory"),
     path('tlt-int-close/<slug:bil>/<slug:tlt>/', views.TltInterviewClose, name='TalentIntClose'),

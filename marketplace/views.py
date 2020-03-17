@@ -385,10 +385,103 @@ def AllPostedVacanciesView(request):
     #Queryset caching<<<
     ipost = tr.order_by('-bid_open')
 
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(ipost, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
     template = 'marketplace/vacancy_posts_all.html'
     context ={
-        'ipost': ipost,
-        }
+        'pageitems': pageitems,
+        'page_range': page_range
+    }
+    return render(request, template, context)
+
+
+@login_required()
+@subscription(2)
+def AllPostedVacanciesOpenView(request):
+    #>>>Queryset caching
+    tr = TalentRequired.objects.filter(requested_by=request.user)
+    #Queryset caching<<<
+    ipost = tr.filter(offer_status='O').order_by('-bid_open')
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(ipost, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+    template = 'marketplace/vacancy_posts_open.html'
+    context ={
+        'pageitems': pageitems,
+        'page_range': page_range
+    }
+    return render(request, template, context)
+
+
+@login_required()
+@subscription(2)
+def AllPostedVacanciesClosedView(request):
+    #>>>Queryset caching
+    tr = TalentRequired.objects.filter(requested_by=request.user)
+    #Queryset caching<<<
+    ipost = tr.filter(offer_status='C').order_by('-bid_open')
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(ipost, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+    template = 'marketplace/vacancy_posts_closed.html'
+    context ={
+        'pageitems': pageitems,
+        'page_range': page_range
+    }
     return render(request, template, context)
 
 
@@ -1396,5 +1489,53 @@ def HelpPostVacancyView(request):
 
     context = {}
     template = 'marketplace/help_post_vacancy.html'
+    return render(request, template, context)
+
+
+@login_required()
+def HelpVacancySuitedSummaryView(request):
+
+    context = {}
+    template = 'marketplace/help_vacancies_suited_for_me_summary.html'
+    return render(request, template, context)
+
+
+@login_required()
+def HelpVacancySuitedFullView(request):
+
+    context = {}
+    template = 'marketplace/help_vacancies_suited_for_me_full.html'
+    return render(request, template, context)
+
+
+@login_required()
+def HelpVacancyAdvertisedOpenSummaryView(request):
+
+    context = {}
+    template = 'marketplace/help_vacancies_advertised_open_summary.html'
+    return render(request, template, context)
+
+
+@login_required()
+def HelpVacancyAdvertisedOpenAllView(request):
+
+    context = {}
+    template = 'marketplace/help_vacancies_advertised_open_all.html'
+    return render(request, template, context)
+
+
+@login_required()
+def HelpVacancyAdvertisedClosedSummaryView(request):
+
+    context = {}
+    template = 'marketplace/help_vacancies_advertised_closed_summary.html'
+    return render(request, template, context)
+
+
+@login_required()
+def HelpVacancyAdvertisedClosedAllView(request):
+
+    context = {}
+    template = 'marketplace/help_vacancies_advertised_closed_all.html'
     return render(request, template, context)
 #Help Views <<<
