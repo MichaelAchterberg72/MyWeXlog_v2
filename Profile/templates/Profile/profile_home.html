@@ -102,33 +102,32 @@
 {% endblock score %}
 
 {% block TBA %}
-<div class="justify-content">
-<a href="{% url 'Talent:APV' tlt=request.user.alias vac='1ad9t2' %}?next={{ request.path|urlencode }}" target="_blank"><i class="fa fa-id-badge" aria-hidden="true"style="font-size:30px;color:black" data-toggle="tooltip" title="Public Profile"></i></a>
-&nbsp &nbsp
-<a href="{% url 'Talent:DPCSum' %}?next={{ request.path|urlencode }}"><i class="fa fa-industry" style="font-size:30px;color:black" data-toggle="tooltip" title="View Summary for Industry, Project and Designation."></i></a>
-&nbsp &nbsp
-<a href="{% url 'BookList:VPBL' tlt=request.user.alias %}?next={{ request.path|urlencode }}" class=""><i class="fa fa-book" aria-hidden="true" style="font-size:30px;color:black" data-toggle="tooltip" title="Book Summary"></i></a>
-&nbsp &nbsp
-<a href="{% url 'Talent:SPDView' tlt=request.user.alias %}?next={{ request.path|urlencode }}"><i class="fa fa-database" aria-hidden="true" style="font-size:30px;color:black" data-toggle="tooltip" title="Skills Summary"></i></a>
-&nbsp &nbsp
-<a href="{% url 'Talent:Capture' %}"><i class="fa fa-graduation-cap" aria-hidden="true" style="font-size:30px;color:black" data-toggle="tooltip" title="Capture Training"></i></a>
-&nbsp &nbsp
-<a href="{% url 'Talent:Capture' %}" class=""><i class="fa fa-laptop" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Capture Experience"></i></a>
-&nbsp &nbsp
-<a href="{% url 'BookList:books-read-new' %}" class=""><i class="fa fa-bookmark-o" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Capture Book"></i></a>
-
-</div>
+  <div class="justify-content">
+    <a href="{% url 'Talent:APV' tlt=request.user.alias vac='1ad9t2' %}?next={{ request.path|urlencode }}" target="_blank"><i class="fa fa-id-badge" aria-hidden="true"style="font-size:30px;color:black" data-toggle="tooltip" title="Public Profile"></i></a>
+    &nbsp &nbsp
+    <a href="{% url 'Talent:DPCSum' %}?next={{ request.path|urlencode }}"><i class="fa fa-industry" style="font-size:30px;color:black" data-toggle="tooltip" title="View Summary for Industry, Project and Designation."></i></a>
+    &nbsp &nbsp
+    <a href="{% url 'BookList:VPBL' tlt=request.user.alias %}?next={{ request.path|urlencode }}" class=""><i class="fa fa-book" aria-hidden="true" style="font-size:30px;color:black" data-toggle="tooltip" title="Book Summary"></i></a>
+    &nbsp &nbsp
+    <a href="{% url 'Talent:SPDView' tlt=request.user.alias %}?next={{ request.path|urlencode }}"><i class="fa fa-database" aria-hidden="true" style="font-size:30px;color:black" data-toggle="tooltip" title="Skills Summary"></i></a>
+    &nbsp &nbsp
+    <a href="{% url 'Talent:Capture' %}"><i class="fa fa-graduation-cap" aria-hidden="true" style="font-size:30px;color:black" data-toggle="tooltip" title="Capture Training"></i></a>
+    &nbsp &nbsp
+    <a href="{% url 'Talent:Capture' %}" class=""><i class="fa fa-laptop" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Capture Experience"></i></a>
+    &nbsp &nbsp
+    <a href="{% url 'BookList:books-read-new' %}" class=""><i class="fa fa-bookmark-o" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Capture Book"></i></a>
+  </div>
  {% endblock TBA %}
 
 {% block Center_Content %}
 {% if interviews_tlt or interviews_emp %}
-
 <div class="card border-0">
   <div class="card-body">
-    <h4 class="card-title" id="Interview">Pending Interviews<span><p class="float-right">
-    <a href="{% url 'Profile:HelpDesktopPendingInterviews' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px" data-toggle="tooltip title="Click here for help on this page!">
-    <i class="icon icon-question-circle"></i></a>
-  </p></span></h4>
+    <div class="float-right">
+      <a href="{% url 'Profile:HelpDesktopPendingInterviews' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
+      <i class="icon icon-question-circle"></i></a>
+    </div>
+    <h4 class="card-title" id="Interview">Pending Interviews</h4>
 
 <table class="table table-sm">
   <col width="50%">
@@ -188,10 +187,10 @@
           <p class="badge badge-info badge-pill" style="width: 7rem">Response<br>Pending</p>
         {% elif tlt_e.tlt_response == 'A' %}
           <p class="badge badge-info badge-pill" style="width: 7rem">Interview<br>Accepted</p>
-          <a href="{% url 'MarketPlace:InterviewList' tlt_e.scope.id   %}" class="badge badge-success badge-pill" style="width: 7rem">Interview Page</a>
+          <a href="{% url 'MarketPlace:InterviewList' tlt_e.scope.ref_no   %}" class="badge badge-success badge-pill" style="width: 7rem">Interview Page</a>
         {% elif tlt_e.tlt_response == 'D' %}
           <p class="badge badge-danger badge-pill" style="width: 7rem">Interview<br>Declined</p>
-          <a href="{% url 'Profile:IntRemove' tlt_e.id %}?next={{ request.path|urlencode }}" class="badge badge-info badge-pill" style="width: 7rem">Remove</a>
+          <a href="{% url 'Profile:IntRemove' tlt_e.alias %}?next={{ request.path|urlencode }}" class="badge badge-info badge-pill" style="width: 7rem">Remove</a>
         {% endif %}
       </td>
     </tr>
@@ -211,7 +210,7 @@
 <div class="card border-0">
   <div class="card-body">
     <h4 class="card-title" id="Assignment">Assignments<span><p class="float-right">
-    <a href="{% url 'Profile:HelpDesktopAssignments' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px" data-toggle="tooltip title="Click here for help on this page!">
+    <a href="{% url 'Profile:HelpDesktopAssignments' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
     <i class="icon icon-question-circle"></i></a>
   </p></span></h4>
 

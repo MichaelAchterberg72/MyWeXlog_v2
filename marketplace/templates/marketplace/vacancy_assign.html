@@ -8,6 +8,7 @@
 {% block content %}
 <div class="container">
   <h3>Assign {{ job.title }} ({{ job.ref_no }})</h3>
+  <h4>to {{ talent.alias }}</h4>
   <form method="post" enctype="multipart/form-data">
     <input type="hidden" name="next" value="{{ request.GET.next }}">
     {% csrf_token %}

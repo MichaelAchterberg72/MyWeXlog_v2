@@ -312,10 +312,10 @@ def AssignmentReAssign(request, slug):
 
 @login_required()
 @subscription(1)
-def AssignmentClarifyView(request, slug):
-    assignment = WorkIssuedTo.objects.filter(slug=slug)
+def AssignmentClarifyView(request, wit):
+    assignment = WorkIssuedTo.objects.filter(slug=wit)
     assignment.update(tlt_response='C', tlt_response_date=timezone.now())
-    instance = get_object_or_404(WorkIssuedTo, slug=slug)
+    instance = get_object_or_404(WorkIssuedTo, slug=wit)
 
     form = AssignmentClarifyForm(request.POST or None, instance = instance)
 

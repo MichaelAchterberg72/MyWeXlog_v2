@@ -17,13 +17,13 @@
     <div class="col-sm-12">
       <div class="card h-100">
         <div class="card-body">
-    <form  action="{% url 'BookList:BLB' %}" method="post">
-      <input type="hidden" name="next" value="{{ request.GET.next }}">
-      {% csrf_token %}
-      <button type="submit" class="btn btn-secondary float-right">Back to {{vacancy.ref_no}}</button>
-    </form> <a href="{% url 'MarketPlace:InterviewList' vacancy.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-warning float-right">View Interview List</a>
-
-
+          <div class="btn-toolbar float-right">
+            <form  action="{% url 'BookList:BLB' %}" method="post">
+              <input type="hidden" name="next" value="{{ request.GET.next }}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-secondary">Back to {{vacancy.ref_no}}</button>
+            </form>&nbsp <a href="{% url 'MarketPlace:InterviewList' vacancy.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-warning">View Interview List</a>
+          </div>
     <h4 class="card-title">Short list for {{ vacancy.title }} ({{ vacancy.ref_no }})</h4>
   <table class="table table-sm">
     <thead>

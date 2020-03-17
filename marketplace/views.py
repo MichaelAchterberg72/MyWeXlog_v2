@@ -187,8 +187,8 @@ def InterviewDeclineView(request, int_id):
 
 @login_required()
 @subscription(2)
-def TalentRFIView(request, slug):
-    instance = WorkIssuedTo.objects.get(slug=slug)
+def TalentRFIView(request, wit):
+    instance = WorkIssuedTo.objects.get(slug=wit)
     instance.tlt_reponded = timezone.now()
     instance.save()
 
@@ -1077,7 +1077,7 @@ def AddToInterviewListView(request, vac, tlt):
         #return render(request, template, context)
         #<<<email
 
-        return redirect(reverse('MarketPlace:ShortListView', kwargs={'slv':vac}))
+        return redirect(reverse('MarketPlace:ShortListView', kwargs={'vac':vac}))
 
 
 @login_required()
@@ -1127,11 +1127,11 @@ def TalentAssign(request, tlt, vac):
                 return HttpResponseRedirect(next_url)
         else:
             template = 'marketplace/vacancy_assign.html'
-            context = {'form': form,}
+            context = {'form': form, 'job': job, 'talent': talent,}
             return render(request, template, context)
     else:
         template = 'marketplace/vacancy_assign.html'
-        context = {'form': form,}
+        context = {'form': form, 'job': job, 'talent': talent,}
         return render(request, template, context)
 
 @login_required()
@@ -1162,7 +1162,7 @@ def TalentDecline(request, tlt, vac):
             bids.update(bidreview='R')
             s_list.filter(status='S').update(status='R')
 
-    return redirect(reverse('MarketPlace:ShortListView',kwargs={'slv':'vac'}))
+    return redirect(reverse('MarketPlace:ShortListView',kwargs={'vac':'vac'}))
 
 
 @login_required()

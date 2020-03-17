@@ -78,7 +78,7 @@ urlpatterns = [
         path('int-complete/<int:int_id>/', views.InterviewTltComplete, name='IntComplete'),
         path('assignment-accept/<slug:slug>/', views.AssignmentAcceptView, name='AssignmentAccept'),
         path('assignment-decline/<slug:slug>/', views.AssignmentDeclineView, name='AssignmentDecline'),
-        path('assignment-rfi/<slug:slug>/', views.AssignmentClarifyView, name='AssignmentClarify'),
+        path('assignment-rfi/<slug:wit>/', views.AssignmentClarifyView, name='AssignmentClarify'),
         path('assignment-reassign/<slug:slug>/', views.AssignmentReAssign, name='AssignmentReassign'),
         #Talent Workshop
         path('workshop-tlt/', views.TltWorkshopView, name='WorkshopTlt'),

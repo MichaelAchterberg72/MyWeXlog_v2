@@ -18,6 +18,9 @@
 
       <h4 class="card-title">Rate Performance of {{ wit_qs.talent.alias }}</h4>
       <h5 class="card-title">on {{wit_qs.work.title}}</h5>
+      <br>
+      <h6>Please Note: This rating will not be displayed to anyone but you - the talent will only see their ratings as an average of 5 or more.</h6>
+      <br>
       <form method="post" id="EmpRateForm" enctype="multipart/form-data">
         <input type="hidden" name="next" value="{{ request.GET.next }}">
         {% csrf_token %}
