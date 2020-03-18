@@ -150,8 +150,8 @@
               {% endif %}
               </td>
               <td class="align-middle text-center">
-              <a href="{% url 'MarketPlace:VacancyPost' c.ref_no %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Vacancy Detail"><i class="fa fa-industry" style="font-size:24px;color:black"></i></a>
-              <a href="{% url 'MarketPlace:VacancyIntDetail' c.ref_no %}?next={{ request.path|urlencode }}" class="" data-toggle="tooltip" title="Interview List"><i class="fa fa-users" style="font-size:30px;color:black"></i></a>
+              <a href="{% url 'MarketPlace:VacancyPost' c.ref_no %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Vacancy Detail"><i class="fa fa-industry" style="font-size:24px;color:grey"></i></a>
+              <a href="{% url 'MarketPlace:VacancyIntDetail' c.ref_no %}?next={{ request.path|urlencode }}" class="" data-toggle="tooltip" title="Interview List"><i class="fa fa-gg" style="font-size:30px;color:black"></i></a>
               </td>
             </tr>
           {% endfor %}

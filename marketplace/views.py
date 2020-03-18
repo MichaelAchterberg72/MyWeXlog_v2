@@ -211,7 +211,7 @@ def InterviewSuitable(request, vac, tlt):
     else:
         pass
 
-    return redirect(reverse('MarketPlace:InterviewList', kwargs={ 'vac_id': vac_id}))
+    return redirect(reverse('MarketPlace:InterviewList', kwargs={ 'vac': vac,}))
 
 
 @login_required()
@@ -230,7 +230,7 @@ def InterviewNotSuitable(request, vac, tlt):
     else:
         pass
 
-    return redirect(reverse('MarketPlace:InterviewList', kwargs={ 'vac_id': vac_id}))
+    return redirect(reverse('MarketPlace:InterviewList', kwargs={ 'vac': vac,}))#this is thoejfg
 
 
 @login_required()
@@ -1195,10 +1195,12 @@ def TalentAssign(request, tlt, vac):
             subs = list(Profile.objects.filter(talent=talent).values_list('talent__subscription', flat=True))
             subsi = subs[0]
 
+
             if subsi == 2:
-                s = bids.get(talent=talent)
-                s.bidreview ='A'
-                s.save()
+                if bids is not None:
+                    s = bids.get(talent=talent)
+                    s.bidreview ='A'
+                    s.save()
 
             #>>>email
             subject = f"WeXlog - Job assigned: {job.title} ({job.ref_no})"
@@ -1236,20 +1238,21 @@ def TalentDecline(request, tlt, vac):
     s_list = BidShortList.objects.filter(scope__ref_no=vac)
 
     if request.method == 'POST':
-        WorkIssuedTo.objects.create(talent=talent, work=job)
-        s_list.filter(talent=talent).update(status='A')
+        #WorkIssuedTo.objects.create(talent=talent, work=job)
+        s_list.filter(talent=talent).update(status='U')
 
         #sets all status fields to "rejected"
         subs = list(Profile.objects.filter(talent=talent).values_list('talent__subscription', flat=True))
         subsi = subs[0]
 
         if subsi == 2:
-            s = bids.get(talent=talent)
-            s.bidreview ='R'
-            s.save()
+            if bids is not None:
+                s = bids.get(talent=talent)
+                s.bidreview ='R'
+                s.save()
 
-            bids.filter(~Q(bidreview='A')).update(bidreview='R')
-            s_list.filter(status='S').update(status='R')
+                bids.filter(~Q(bidreview='A')).update(bidreview='R')
+                s_list.filter(status='S').update(status='R')
 
         else:
             bids.update(bidreview='R')
@@ -1266,7 +1269,8 @@ def ShortListView(request, vac):
     we = WorkExperience.objects.filter(talent__subscription__gte=1)
     applicants = WorkBid.objects.filter(work__ref_no=vac)
     book = ReadBy.objects.all()
-
+    active = WorkIssuedTo.objects.filter(Q(work__ref_no=vac)).filter(Q(tlt_response='A') | Q(tlt_response='P')| Q(tlt_response='C')).exists()
+    declined = list(WorkIssuedTo.objects.filter(Q(work__ref_no=vac) &Q(tlt_response='D')).values_list('talent', flat=True))
     app_list = list(s_list.values_list('talent', flat=True))
 
     short ={}
@@ -1294,7 +1298,7 @@ def ShortListView(request, vac):
         short[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate}
 
     template = 'marketplace/shortlist_view.html'
-    context = {'s_list': s_list, 'short': short, 'vacancy': vacancy}
+    context = {'s_list': s_list, 'short': short, 'vacancy': vacancy, 'active': active, 'declined': declined,}
     return render(request, template, context)
 
 
@@ -1334,7 +1338,7 @@ def DeliverableDeleteView(request, pk):
     if request.method == 'POST':
         deld = Deliverables.objects.get(pk=pk)
         deld.delete()
-    return redirect(reverse('MarketPlace:VacancyPost', kwargs={'pk':deld.scope.id})+'#deliverables')
+    return redirect(reverse('MarketPlace:VacancyPost', kwargs={'vac':deld.scope.ref_no})+'#deliverables')
 
 
 @login_required()
