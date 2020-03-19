@@ -230,7 +230,7 @@ def InterviewNotSuitable(request, vac, tlt):
     else:
         pass
 
-    return redirect(reverse('MarketPlace:InterviewList', kwargs={ 'vac': vac,}))#this is thoejfg
+    return redirect(reverse('MarketPlace:InterviewList', kwargs={ 'vac': vac,}))
 
 
 @login_required()
@@ -1178,12 +1178,11 @@ def AddToInterviewListView(request, vac, tlt):
 def TalentAssign(request, tlt, vac):
     job = get_object_or_404(TalentRequired, ref_no=vac)
     talent = get_object_or_404(CustomUser, alias=tlt)
-    bids = WorkBid.objects.filter(work__ref_no=vac)
+    bids = WorkBid.objects.filter(Q(work__ref_no=vac) & Q(talent__alias=tlt))
     s_list = BidShortList.objects.filter(scope__ref_no=vac)
 
     form = AssignWorkForm(request.POST or None)
     if request.method == 'POST':
-        next_url=request.POST.get('next', '/')
         if form.is_valid():
             new = form.save(commit=False)
             new.talent = talent
@@ -1192,15 +1191,8 @@ def TalentAssign(request, tlt, vac):
 
             s_list.filter(talent=talent).update(status='A')
 
-            subs = list(Profile.objects.filter(talent=talent).values_list('talent__subscription', flat=True))
-            subsi = subs[0]
-
-
-            if subsi == 2:
-                if bids is not None:
-                    s = bids.get(talent=talent)
-                    s.bidreview ='A'
-                    s.save()
+            if bids is not None:
+                bids.update(bidreview='A')
 
             #>>>email
             subject = f"WeXlog - Job assigned: {job.title} ({job.ref_no})"
@@ -1216,56 +1208,34 @@ def TalentAssign(request, tlt, vac):
             #return render(request, template, context)
             #<<<email
 
-            if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
-                next_url = reverse('MarketPlace:Entrance')
-            else:
-                return HttpResponseRedirect(next_url)
-        else:
-            template = 'marketplace/vacancy_assign.html'
-            context = {'form': form, 'job': job, 'talent': talent,}
-            return render(request, template, context)
+            return redirect(reverse('MarketPlace:Entrance'))
+
     else:
         template = 'marketplace/vacancy_assign.html'
         context = {'form': form, 'job': job, 'talent': talent,}
         return render(request, template, context)
 
+
 @login_required()
 @subscription(2)
 def TalentDecline(request, tlt, vac):
-    job = get_object_or_404(TalentRequired, ref_no=vac)
-    talent = get_object_or_404(CustomUser, alias=tlt)
-    bids = WorkBid.objects.filter(work__ref_no=vac)
+    bids = WorkBid.objects.filter(Q(talent__alias=tlt) & Q(work__ref_no=vac))
     s_list = BidShortList.objects.filter(scope__ref_no=vac)
 
-    if request.method == 'POST':
-        #WorkIssuedTo.objects.create(talent=talent, work=job)
-        s_list.filter(talent=talent).update(status='U')
+    s_list.filter(talent__alias=tlt).update(status='R')
 
-        #sets all status fields to "rejected"
-        subs = list(Profile.objects.filter(talent=talent).values_list('talent__subscription', flat=True))
-        subsi = subs[0]
+    if bids is not None:
+        bids.update(bidreview='R')
 
-        if subsi == 2:
-            if bids is not None:
-                s = bids.get(talent=talent)
-                s.bidreview ='R'
-                s.save()
-
-                bids.filter(~Q(bidreview='A')).update(bidreview='R')
-                s_list.filter(status='S').update(status='R')
-
-        else:
-            bids.update(bidreview='R')
-            s_list.filter(status='S').update(status='R')
-
-    return redirect(reverse('MarketPlace:ShortListView',kwargs={'vac':'vac'}))
+    print('this ran')
+    return redirect(reverse('MarketPlace:ShortListView', kwargs={'vac': vac,}))
 
 
 @login_required()
 @subscription(2)
 def ShortListView(request, vac):
     vacancy = get_object_or_404(TalentRequired, ref_no=vac)
-    s_list = BidShortList.objects.filter(scope__ref_no=vac)
+    s_list = BidShortList.objects.filter(Q(scope__ref_no=vac) & Q(status='S'))
     we = WorkExperience.objects.filter(talent__subscription__gte=1)
     applicants = WorkBid.objects.filter(work__ref_no=vac)
     book = ReadBy.objects.all()

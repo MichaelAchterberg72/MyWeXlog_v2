@@ -35,6 +35,7 @@
         <th class="align-middle text-center">Books Read</th>
         <th class="align-middle text-center">Rate</th>
         <th class="align-middle text-center">Motivation</th>
+        <th class="align-middle text-center">Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -51,28 +52,32 @@
           <p>
             {{s1.0}}
             {% if sl.0 in declined %}
-              <button type="submit" class="badge badge-danger badge-pill float-right" style="width: 5rem">Talent<br>Declined</button>
+              <button type="submit" class="badge badge-danger badge-pill float-right" style="width: 6rem">Talent<br>Declined</button>
             {% else %}
-              <a href="{% url 'Talent:APV' tlt=sl.1.ro.0.4 vac=vacancy.ref_no %}" target="_blank" class="badge badge-success badge-pill float-right" style="width: 5rem">View Profile</a>
+              <a href="{% url 'Talent:APV' tlt=sl.1.ro.0.4 vac=vacancy.ref_no %}" target="_blank" class="badge badge-success badge-pill float-right" style="width: 6rem">View Profile</a>
               <form  action="{% url 'MarketPlace:VacInterview' tlt=sl.1.ro.0.4 vac=vacancy.ref_no %}" method="post">
                 {% csrf_token %}
-                <button type="submit" class="badge badge-info badge-pill float-right" style="width: 5rem">Interview</button>
+                <button type="submit" class="badge badge-info badge-pill float-right" style="width: 6rem">Interview</button>
               </form>
               {% if active == False %}
               <form  action="{% url 'MarketPlace:VacAssign' tlt=sl.1.ro.0.4 vac=vacancy.ref_no %}?next={{ request.path|urlencode }}" method="post">
                 {% csrf_token %}
-                <button type="submit" class="badge badge-success badge-pill float-right" style="width: 5rem">Assign</button>
+                <button type="submit" class="badge badge-success badge-pill float-right" style="width: 6rem">Assign</button>
               </form>
               {% else %}
-                <button type="submit" class="badge badge-success badge-pill float-right" style="width: 5rem">Pending</button>
+                <button type="submit" class="badge badge-success badge-pill float-right" style="width: 6rem">Pending</button>
               {% endif %}
               <form  action="{% url 'MarketPlace:VacDecline' tlt=sl.1.ro.0.4 vac=vacancy.ref_no %}" method="post">
                 {% csrf_token %}
-                <button type="submit" class="badge badge-danger badge-pill float-right" style="width: 5rem">Decline</button>
+                <button type="submit" class="badge badge-danger badge-pill float-right" style="width: 6rem">Not Suitable</button>
               </form>
             {% endif %}
           </p>
         </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="8">Nobody is currently shortlisted for this vacancy.</td>
       </tr>
       {% endfor %}
     </tbody>

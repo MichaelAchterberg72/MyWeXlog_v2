@@ -123,7 +123,7 @@ class SkillRequired(models.Model):
         pass
 
     def __str__(self):
-        return f'{self.scope}'
+        return f'{self.scope.title}'
 
 
 BID = (
@@ -146,7 +146,7 @@ class BidShortList(models.Model):
         unique_together = (('talent', 'scope'),)
 
     def __str__(self):
-        return f'{self.scope} shortlist {self.talent}'
+        return f'{self.scope.title} shortlist {self.talent}'
 
     def save(self, *args, **kwargs):
         if self.slug is None or self.slug == "":
@@ -182,7 +182,7 @@ class BidInterviewList(models.Model):
         unique_together = (('talent', 'scope'),)
 
     def __str__(self):
-        return f'{self.scope}, {self.talent}, {self.get_outcome_display()}'
+        return f'{self.scope.title}, {self.talent}, {self.get_outcome_display()}'
 
     def save(self, *args, **kwargs):
         if self.slug is None or self.slug == "":
@@ -208,7 +208,7 @@ class WorkBid(models.Model):
         unique_together = (('talent', 'work'),)
 
     def __str__(self):
-        return'{}: {}'.format(self.work, self.talent)
+        return'{}: {}'.format(self.work.title, self.talent)
 
     def save(self, *args, **kwargs):
         if self.slug is None or self.slug == "":
@@ -273,7 +273,7 @@ class WorkIssuedTo(models.Model):
         unique_together = (('talent', 'work'),)
 
     def __str__(self):
-        return f'{self.talent} assigned to {self.work}'
+        return f'{self.work.title} assigned to {self.talent}'
 
     def save(self, *args, **kwargs):
         if self.slug is None or self.slug == "":
@@ -305,7 +305,7 @@ class VacancyRate(models.Model):
         unique_together = (('vacancy','talent'), )
 
     def __str__(self):
-        return f'Rating for {self.talent} on {self.vacancy}'
+        return f'Rating for {self.talent} on {self.vacancy.title}'
 
     def avg_rate(self):
         sum = self.rate_1+self.rate_2+self.rate_3
@@ -347,7 +347,7 @@ class TalentRate(models.Model):
     comment = models.TextField(blank=True, null=True)
     suggestions = models.TextField(blank=True, null=True)
     complete = models.BooleanField(null=True, default=False)
-    slug = models.SlugField(max_length=50, null=True, unique=True)
+    slug = models.SlugField(max_length=50, null=True, unique=True, blank=True)
 
     class Meta:
         unique_together = (('vacancy','talent'), )
@@ -358,7 +358,7 @@ class TalentRate(models.Model):
     average = property(avg_rate)
 
     def __str__(self):
-        return f'Rating for {self.vacancy} by {self.talent}'
+        return f'Rating for {self.vacancy.title} by {self.talent}'
 
     def save(self, *args, **kwargs):
         if self.slug is None or self.slug == "":
