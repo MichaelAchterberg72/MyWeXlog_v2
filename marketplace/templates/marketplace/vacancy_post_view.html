@@ -16,67 +16,15 @@
 <div class="container">
   <div class="card">
     <div class="card-body">
-<<<<<<< HEAD
       <div class="btn-toolbar float-right">
         <form  action="{% url 'BookList:BLB' %}" method="post">
           <input type="hidden" name="next" value="{{ request.GET.next }}">
           {% csrf_token %}
           <button type="submit" class="btn btn-secondary">Back</button>
         </form>&nbsp
-          <a href="{% url 'MarketPlace:VacancyEdit' instance.ref_no %}" class="btn btn-info ">Edit Vacancy</a>
-=======
-<div class="btn-toolbar float-right">
-  <form  action="{% url 'BookList:BLB' %}" method="post">
-    <input type="hidden" name="next" value="{{ request.GET.next }}">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-secondary">Back</button>
-  </form>&nbsp
-    <a href="{% url 'MarketPlace:VacancyEdit' instance.ref_no %}" class="btn btn-info ">Edit Vacancy</a>&nbsp
-    <a href="{% url 'MarketPlace:HelpVacancyPost' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
-    <i class="icon icon-question-circle"></i></a>
-</div>
-<h3>Vacancy Review</h3>
-<h5 class="card-title">Vacancy: {{ instance.title }} ({{ instance.ref_no }})</h5>
-
-<table class="table table-sm">
-  <thead>
-    <tr>
-      <th>Hours Required</th>
-      <th>Work Format</th>
-      <th>Office Location</th>
-      <th>Experience Level</th>
-      <th>Company</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>
-        {{ instance.hours_required|intcomma }} ({{ instance.get_unit_display }})
-      </td>
-      <td>{{ instance.worklocation }}</td>
-      <td>{{ instance.city.city }}</td>
-      <td>{{ instance.experience_level }}</td>
-      <td>{{ instance.enterprise.company }}</td>
-    </tr>
-  </tbody>
-</table>
-
-<br>
-<div class="row">
-  <div class="col-sm-6">
-    <div class="h-100">
-      <div class="card-body">
-        <h5 class="card-title">Scope</h5>
-        <p>{{ instance.scope|linebreaks }}</p>
-      </div>
-    </div>
-  </div>
-  <div class="col-sm-6">
-    <div class="h-100">
-      <div class="card-body">
-        <h5 class="card-title">Expectations</h5>
-        <p>{{ instance.expectations|linebreaks }}</p>
->>>>>>> origin/2020-03-21-Mike
+          <a href="{% url 'MarketPlace:VacancyEdit' instance.ref_no %}" class="btn btn-info ">Edit Vacancy</a>&nbsp
+          <a href="{% url 'MarketPlace:HelpVacancyPost' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
+          <i class="icon icon-question-circle"></i></a>
       </div>
       <h3>Vacancy Review</h3>
       <h5 class="card-title">Vacancy: {{ instance.title }} ({{ instance.ref_no }})</h5>
@@ -103,7 +51,6 @@
           </tr>
         </tbody>
       </table>
-
       <br>
       <div class="row">
         <div class="col-sm-6">
@@ -229,8 +176,7 @@
         <a href="{% url 'MarketPlace:HelpTalentSuitedVacancy' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
         <i class="icon icon-question-circle"></i></a>
       </div>
-    <h3 id='suited'>Talent suited to the Vacancy</h3>
-
+      <h3 id='suited'>Talent suited to the Vacancy</h3>
       <div class="">
         <table class="table table-sm">
           <col width="15%">
@@ -292,8 +238,11 @@
   <br>
   <div class="card">
     <div class="card-body">
+      <div class="float-right">
+        <a href="{% url 'MarketPlace:HelpApplicantsVacancy' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
+        <i class="icon icon-question-circle"></i></a>
+      </div>
     <h3>Applicants</h3>
-    <hr>
     <div class="">
     <table class="table table-sm">
       <col width="15%">
@@ -354,81 +303,13 @@
     {% endif %}
     </div>
   </div>
-<<<<<<< HEAD
-=======
+</div>
 
-  <div class="float-right">
-    <a href="{% url 'MarketPlace:TalentSuitedToVacancy' instance.ref_no %}" class="btn btn-primary"style="width: 10rem">View All Talent</a>
-  </div>
-</div>
-</div>
-<br>
-<div class="card">
-  <div class="card-body">
-    <div class="float-right">
-      <a href="{% url 'MarketPlace:HelpApplicantsVacancy' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
-      <i class="icon icon-question-circle"></i></a>
-    </div>
-  <h3>Applicants</h3>
-  <hr>
-  <div class="">
-  <table class="table table-sm">
-    <thead>
-      <tr>
-        <th class="text-center">Alias</th>
-        <th class="text-center">Experience</th>
-        <th class="text-center">Training</th>
-        <th class="text-center">Captured Skills</th>
-        <th class="text-center">Books Read</th>
-        <th class="text-center">Bid Rate</th>
-        <th class="text-left">Motivation</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for key in applied.items %}
-      <tr>
-
-        <td class="align-middle">{{ key.1.ro.0.4 }}</td>
-        <td class="align-middle">{{ key.1.we }}</td>
-        <td class="align-middle">{{ key.1.te }}</td>
-        <td class="align-middle">{{ key.1.s_no }}</td>
-        <td class="align-middle">{{ key.1.rb }}</td>
-        <td class="align-middle">{{ key.1.ro.0.1 }} <strong>{{ key.1.ro.0.0 }}</strong> {{ key.1.ro.0.2 }}</td>
-        <td class="align-middle">{{ key.1.ro.0.3|truncatechars:200 }}</td>
-        <td class="align-middle">
-          <p>
-            <form  action="{% url 'MarketPlace:ShortList' tlt=key.1.ro.0.4  vac=instance.ref_no %}" method="post" name="active">
-            {% csrf_token %}
-            <button type="submit"  class="badge badge-info badge-pill float-right" style="width: 5rem;">Short-list</button>
-          </form><br>
-          <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=instance.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-success badge-pill float-right" style="width: 5rem;" target="new">View Profile</a>
-        </p>
-      </td>
-      </tr>
-      <tr>
-      <td colspan=6>
-        {% empty %}
-          {% if s_list %}
-            <p>All applicants have been short-listed.</p>
-          {% else %}
-            <p>No applications for this vacancy.</p>
-          {% endif %}
-      </td>
-      </tr>
-    </tbody>
-    {% endfor %}
-  </table>
-  <p>&nbsp</p>
-  <div class="float-right">
-    <a href="{% url 'MarketPlace:ApplicantsForVacancy' vac=instance.ref_no %}" class="btn btn-primary"style="width: 10rem">View All Applicants</a>
-  </div>
-  </div>
-</div>
->>>>>>> origin/2020-03-21-Mike
-</div>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 {{ form.media.js }}
+
 {% endblock content %}
+
 {% block Script %}
 <!-- code for popups -->
 <script type="text/javascript">
