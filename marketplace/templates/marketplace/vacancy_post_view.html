@@ -22,7 +22,9 @@
     {% csrf_token %}
     <button type="submit" class="btn btn-secondary">Back</button>
   </form>&nbsp
-    <a href="{% url 'MarketPlace:VacancyEdit' instance.ref_no %}" class="btn btn-info ">Edit Vacancy</a>
+    <a href="{% url 'MarketPlace:VacancyEdit' instance.ref_no %}" class="btn btn-info ">Edit Vacancy</a>&nbsp
+    <a href="{% url 'MarketPlace:HelpVacancyPost' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
+    <i class="icon icon-question-circle"></i></a>
 </div>
 <h3>Vacancy Review</h3>
 <h5 class="card-title">Vacancy: {{ instance.title }} ({{ instance.ref_no }})</h5>
@@ -173,6 +175,10 @@
 <p>&nbsp</p>
 <div class="card">
   <div class="card-body">
+    <div class="float-right">
+      <a href="{% url 'MarketPlace:HelpTalentSuitedVacancy' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
+      <i class="icon icon-question-circle"></i></a>
+    </div>
   <h3 id='suited'>Talent suited to the Vacancy</h3>
 
   <div class="">
@@ -225,6 +231,10 @@
 <br>
 <div class="card">
   <div class="card-body">
+    <div class="float-right">
+      <a href="{% url 'MarketPlace:HelpApplicantsVacancy' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
+      <i class="icon icon-question-circle"></i></a>
+    </div>
   <h3>Applicants</h3>
   <hr>
   <div class="">

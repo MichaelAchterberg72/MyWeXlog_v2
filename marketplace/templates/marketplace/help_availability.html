@@ -1,0 +1,38 @@
+{% extends 'base_homelite.html' %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Help{% endblock title %}
+
+{% block Style %}
+
+{% endblock Style %}
+{% block content %}
+<div class="container">
+  <h3>My Availability - Help</h3>
+    <p>&nbsp</p>
+    <p>This provides a list of the time you have available.</p>
+    <br>
+    <p><strong>Add</strong></p>
+    <p><button type="submit" class="badge badge-primary" style="width: 8rem;">Add</button></p>
+    <p>This will open the Availability page that will allow you to add a new time
+      available. The units are catagorised into Once Off, per Day, per Week, per Month,
+      Short Term Contract and As and When Contract.</p>
+    <br>
+    <p>The table lists the date from, date to and Time Available.</p>
+    <p>The options you will be provided with will be:</p>
+    <table class="table table-sm">
+    <col width="10%">
+    <col width="70%">
+    <tbody>
+        <tr>
+          <td class="text-center"><a href="#" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</a>
+          </td>
+          <td>This will allow you to delete an entry, there is no confimation step.</td>
+        </tr>
+    </tbody>
+  </table>
+  <br>
+
+</div>
+{% endblock content %}

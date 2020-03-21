@@ -1,0 +1,75 @@
+{% extends 'base_homelite.html' %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Help{% endblock title %}
+
+{% block Style %}
+
+{% endblock Style %}
+{% block content %}
+<div class="container">
+  <h3>Shortlisted For Full List - Help</h3>
+    <p>&nbsp</p>
+    <p>This provides a paginated full list of the vacancies that you have been
+      shortlisted for. This will include the positions where you have been selected
+      from a searh list as having the skills required for the position as well as
+      roles that you have submitted an application for the vacancy that you have been
+      selected for consideration shortlisting.</p>
+    <br>
+    <p><strong>Back Button</strong></p>
+    <p><button type="submit" class="btn btn-secondary">Back</button></p>
+    <p>This will take you back to the Vacancy Application History summary page.</p>
+    <br>
+    <br>
+    <p>The table lists the date you applied for the vacancy, the vacancy title, the system
+      reference number, the hours required by the position, whether or not the position is
+      a local or a remote work configuration, the city that the work office is provided from
+      and the status of the position as well as a button for opening the full detail of
+      the vacancy where you will be able to apply for the role.</p>
+    <p>The options you will be provided with when on the table will be:</p>
+    <table class="table table-sm">
+    <col width="10%">
+    <col width="70%">
+    <tbody>
+        <tr>
+          <td class="text-center"><button type="submit" class="badge badge-secondary" style="width: 6rem;">See Detail</button>
+      </td>
+          <td>Opens the detail page of the vacancy allowing you to apply for the vacancy should it still be open.
+          On the detail page, if the vacancy is closed it will show a closed button and you will not be able to apply for the
+          position.</td>
+        </tr>
+        <tr>
+          <td class="text-center"><a href="#" class="card-link">See Detail</a>
+      </td>
+          <td>Should you not have an Active Subscription you will be provided with an inactive
+            'See Detail' link.</td>
+        </tr>
+    </tbody>
+  </table>
+  <br>
+  <br>
+  <p><strong>Pagination</strong></p>
+  <nav aria-label="...">
+    <ul class="pagination">
+      <li class="page-item disabled">
+        <span class="page-link">Previous</span>
+      </li>
+      <li class="page-item"><a class="page-link" href="#">1</a></li>
+      <li class="page-item active">
+        <span class="page-link">
+          2
+          <span class="sr-only">(current)</span>
+        </span>
+      </li>
+      <li class="page-item"><a class="page-link" href="#">3</a></li>
+      <li class="page-item">
+        <a class="page-link" href="#">Next</a>
+      </li>
+    </ul>
+  </nav>
+
+<p>The pagination may be navigated by clicking on the required page number or alternativly
+  by clicking the 'Previous' or 'Next' selectors.</p>
+</div>
+{% endblock content %}

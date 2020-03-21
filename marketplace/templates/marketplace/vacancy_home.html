@@ -8,7 +8,9 @@
   <div class="card-body">
     {% if request.user.subscription >= 1 %}
       <div class="float-right">
+        {% if request.user.subscription == 2 %}
         <a href="{% url 'MarketPlace:History' %}" class="badge badge-primary 8rem" style="width: 8rem">Applications History</a>
+        {% endif %}
         <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="badge badge-primary 8rem" style="width: 8rem">Interview History</a>
         <a href="{% url 'MarketPlace:HelpVacanciesSuitedForMeSummary' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
         <i class="icon icon-question-circle"></i></a>
@@ -173,7 +175,7 @@
     <div class="card-body" id='Availabillity'>
       <div class="float-right">
       <a href="{% url 'MarketPlace:Availabillity' %}" class="badge badge-primary" style="width: 8rem;">Add</a>
-      <a href="{% url 'MarketPlace:HelpPostVacancy' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
+      <a href="{% url 'MarketPlace:HelpAvailability' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
       <i class="icon icon-question-circle"></i></a>
       </div>
       <h4 class="card-title">My Availability</h4>

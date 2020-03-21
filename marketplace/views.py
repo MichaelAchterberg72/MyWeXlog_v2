@@ -59,10 +59,30 @@ def VacancySearch(request):
 @login_required()
 @subscription(1)
 def TalentInterviewHistoryView(request, tlt):
-    list = BidInterviewList.objects.filter(talent__alias=tlt).order_by('-date_listed')
+    interviews = BidInterviewList.objects.filter(talent__alias=tlt).order_by('-date_listed')
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(interviews, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
 
     template = 'marketplace/talent_interview_history.html'
-    context = {'list': list,}
+    context = {'pageitems': pageitems, 'page_range': page_range}
     return render(request, template, context)
 
 
@@ -668,26 +688,6 @@ def ApplicationHistoryView(request):
     p_rejected = q_list.filter(status='R')[:10]
     p_accepted = q_list.filter(status='A')[:10]
 
-    try:
-        page = int(request.GET.get('page', 1))
-    except:
-        page = 1
-
-    paginator = Paginator(applied, 20)
-
-    try:
-        pageitems = paginator.page(page)
-    except PageNotAnInteger:
-        pageitems = paginator.page(1)
-    except EmptyPage:
-        pageitems = paginator.page(paginator.num_pages)
-
-    index = pageitems.number - 1
-    max_index = len(paginator.page_range)
-    start_index = index - 3 if index >= 3 else 0
-    end_index = index + 3 if index <= max_index - 3 else max_index
-    page_range = list(paginator.page_range)[start_index:end_index]
-
 
     template = 'marketplace/vacancy_application_history.html'
     context ={
@@ -696,9 +696,7 @@ def ApplicationHistoryView(request):
         'rejected': rejected,
         'p_rejected': p_rejected,
         'p_accepted': p_accepted,
-        's_list': s_list,
-        'pageitems': pageitems,
-        'page_range': page_range}
+        's_list': s_list}
     return render(request, template, context)
 
 
@@ -1537,5 +1535,157 @@ def HelpVacancyAdvertisedClosedAllView(request):
 
     context = {}
     template = 'marketplace/help_vacancies_advertised_closed_all.html'
+    return render(request, template, context)
+
+
+@login_required()
+def HelpVacancyAdvertisedFullView(request):
+
+    context = {}
+    template = 'marketplace/help_vacancies_advertised_full.html'
+    return render(request, template, context)
+
+
+@login_required()
+def HelpAvailabilityView(request):
+
+    context = {}
+    template = 'marketplace/help_availability.html'
+    return render(request, template, context)
+
+
+@login_required()
+def HelpApplicationHistoryRolesAppliedForSummaryView(request):
+
+    context = {}
+    template = 'marketplace/help_application_history_roles_applied_for_summary.html'
+    return render(request, template, context)
+
+
+@login_required()
+def HelpApplicationHistoryRolesAppliedForFullView(request):
+
+    context = {}
+    template = 'marketplace/help_application_history_roles_applied_for_full.html'
+    return render(request, template, context)
+
+
+@login_required()
+def HelpApplicationHistoryRolesShortlistedForSummaryView(request):
+
+    context = {}
+    template = 'marketplace/help_application_history_roles_shortlisted_for_summary.html'
+    return render(request, template, context)
+
+
+@login_required()
+def HelpApplicationHistoryRolesShortlistedForFullView(request):
+
+    context = {}
+    template = 'marketplace/help_application_history_roles_shortlisted_for_full.html'
+    return render(request, template, context)
+
+
+@login_required()
+def HelpApplicationHistoryUnsuccessfulApplicationsSummaryView(request):
+
+    context = {}
+    template = 'marketplace/help_application_history_unsuccessful_summary.html'
+    return render(request, template, context)
+
+
+@login_required()
+def HelpApplicationHistoryUnsuccessfulApplicationsFullView(request):
+
+    context = {}
+    template = 'marketplace/help_application_history_unsuccessful_full.html'
+    return render(request, template, context)
+
+
+@login_required()
+def HelpApplicationHistorySuccessfulApplicationsSummaryView(request):
+
+    context = {}
+    template = 'marketplace/help_application_history_successful_summary.html'
+    return render(request, template, context)
+
+
+@login_required()
+def HelpApplicationHistorySuccessfulApplicationsFullView(request):
+
+    context = {}
+    template = 'marketplace/help_application_history_successful_full.html'
+    return render(request, template, context)
+
+
+@login_required()
+def HelpVacancyPostView(request):
+
+    context = {}
+    template = 'marketplace/help_vacancy_post.html'
+    return render(request, template, context)
+
+
+@login_required()
+def HelpTalentSuitedToVacancyView(request):
+
+    context = {}
+    template = 'marketplace/help_talent_suited_to_vacancy.html'
+    return render(request, template, context)
+
+
+@login_required()
+def HelpTalentSuitedToVacancyFullView(request):
+
+    context = {}
+    template = 'marketplace/help_talent_suited_to_vacancy_full.html'
+    return render(request, template, context)
+
+
+@login_required()
+def HelpApplicantsView(request):
+
+    context = {}
+    template = 'marketplace/help_vacancy_applicants.html'
+    return render(request, template, context)
+
+
+@login_required()
+def HelpApplicantsFullView(request):
+
+    context = {}
+    template = 'marketplace/help_vacancy_applicants_full.html'
+    return render(request, template, context)
+
+
+@login_required()
+def HelpInterviewHistoryAllView(request):
+
+    context = {}
+    template = 'marketplace/help_interview_history_all.html'
+    return render(request, template, context)
+
+
+@login_required()
+def HelpInterviewDetailView(request):
+
+    context = {}
+    template = 'marketplace/help_interview_detail.html'
+    return render(request, template, context)
+
+
+@login_required()
+def HelpDeliverable2View(request):
+
+    context = {}
+    template = 'marketplace/help_deliverable2.html'
+    return render(request, template, context)
+
+
+@login_required()
+def HelpDeliverablesView(request):
+
+    context = {}
+    template = 'marketplace/help_deliverables.html'
     return render(request, template, context)
 #Help Views <<<

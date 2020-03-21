@@ -1,0 +1,58 @@
+{% extends 'base_homelite.html' %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Help{% endblock title %}
+
+{% block Style %}
+
+{% endblock Style %}
+{% block content %}
+<div class="container">
+  <h3>Vacancy Review - Help</h3>
+    <p>&nbsp</p>
+    <p>This page displayes the the information about the vacancy allowing you to add, edit or remove the
+      deliverables and skills. It will provide a seach feature of all Talent suited to the Vacancy as
+      well as listing the Applicants that have submitted a bid for the vacancy. Talent or applicants may
+      be shortlisted from these lists and a button is available to open the Short-list as well as the
+      interview list.</p>
+    <br>
+    <p><strong>Navigation Buttons</strong></p>
+    <p></p>
+    <p>This will open the page listing the paginated full list of vacancies that you
+      have been accepted from after having been shortlisted for with the same
+      information and functionality as described above.</p>
+    <p>The button options available are:</p>
+    <table class="table table-sm">
+    <col width="10%">
+    <col width="70%">
+    <thead>
+        <tr>
+          <td><button type="submit" class="btn btn-secondary">Back</button></td>
+          <td>This will navigate you back to the vacancies home page.</td>
+        </tr>
+        <tr>
+          <td><a href="#" class="btn btn-info ">Edit Vacancy</a></td>
+          <td>This will open the vacancy in a form allowing you to edit as required.</td>
+        </tr>
+        <tr>
+          <td><a href="#" class="btn btn-info">View Short-list</a></td>
+          <td>This will open the short list for the vacancy listing all talent that has
+            been selected for short listing.</td>
+        </tr>
+        <tr>
+          <td><a href="#" class="btn btn-info">View Interview List</a></td>
+          <td>This will detail the short listed telent that has been selected for an interview.</td>
+        </tr>
+      </table>
+    <br>
+    <br>
+    <p><strong>Deliverables</strong></p>
+    <p>This will allow you to add to, edit or remove the listed deliverables as depicted.</p>
+    <br>
+    <p><strong>Skills</strong></p>
+    <p>This will allow you to add to or remove the list of skills as depicted.</p>
+
+</div>
+{% endblock content %}

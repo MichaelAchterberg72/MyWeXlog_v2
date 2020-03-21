@@ -12,16 +12,16 @@
       <div class="col-sm-12">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">Registration</h5>
+            <h5 class="card-title">Complete Your Registration</h5>
             <p class="card-text">Thank you for registering your account with WeXlog.</p>
             <p class="card-text">You are currently registered with a Free Account. To continue with the registration
               process and upgrade your account to your chosen account type please click the 'Upgrade' button.</p>
-            <p><a href="{% url 'Public:WexlogHomePricing' %}" class="badge badge-pill badge-primary" style="width: 7rem">Upgrade</a></p>
+            <p class="float-right"><a href="{% url 'Public:WexlogHomePricing' %}" class="btn btn-primary" style="width: 7rem">Upgrade</a></p>
           </div>
         </div>
       </div>
     </div>
-    <p>&nbsp</p>
+    <br>
   {% endif %}
 
   {% if request.user.subscription == 1 %}
@@ -31,13 +31,15 @@
           <div class="card-body">
             <h5 class="card-title">Registration Upgrade</h5>
             <p class="card-text">You are currently registered with a Passive Account.</p>
-            <p>To upgrade your account to an Active account please click the 'Upgrade' button.</p>
-            <p><a href="{% url 'Payments:PassiveUpgradeSubscription' %}" class="badge badge-pill badge-primary" style="width: 7rem">Upgrade</a>.</p>
+            <p>To upgrade your account to an Active account giving you access to the vacancies
+              and the ability to view and apply for them as well as many other bennefits
+              please click the 'Upgrade' button.</p>
+            <p class="float-right"><a href="{% url 'Payments:PassiveUpgradeSubscription' %}" class="btn btn-primary" style="width: 7rem">Upgrade</a>.</p>
           </div>
         </div>
       </div>
     </div>
-    <p>&nbsp</p>
+    <br>
   {% endif %}
 
     <div class="row">

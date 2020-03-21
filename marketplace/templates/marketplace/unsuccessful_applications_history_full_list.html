@@ -6,9 +6,11 @@
 
 <div class="card border-0" style="width: 100%;">
   <div class="card-body">
-    <p class="float-right">
+    <div class="float-right">
       <a href="{% url 'MarketPlace:History' %}" class="btn btn-secondary">Back</a>
-    </p>
+      <a href="{% url 'MarketPlace:HelpUnseccessfulApplicationsFull' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
+      <i class="icon icon-question-circle"></i></a>
+    </div>
     <h4 class="card-title">Vacancy Application History</h4>
     <h5 class="card-title">Unsuccessful Applications</h5>
     <table class="table table-sm">

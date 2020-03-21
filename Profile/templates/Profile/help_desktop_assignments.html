@@ -9,49 +9,87 @@
 {% endblock Style %}
 {% block content %}
 <div class="container">
-  <h3>Desktop Workflow - Help</h3>
+  <h3>Desktop Assignments - Help</h3>
     <p>&nbsp</p>
-    <p>This is broken down into two sections, the number of Experience confirmations
-      you have been requested and the Interviews Pending.</p>
+    <p>This details the assignments that have been authorised. The talent will have the
+      authorised assignments listed and the employers will also have their authorised
+      assignments listed.</p>
+    <p>The information listed will be the Vacancy Name, Company Branch and city as well
+      as the Reference Number. The date assigned, Offered Rate, Assignment Start date
+      and Assignment Completed date are also detailed.</p>
     <br>
-    <p><strong>Experience confirmations</strong></p>
-    <p>This will list validation requests that have been requested in the event that
-      you are a lecturer, classmate, colleague, supervisor or manager, worked with
-      someone, as well as if someone has worked with your company as a
-      consultant/contractor.</p>
+    <p><strong>Assignments as Talent</strong></p>
+    <p>This will list your assignments that are current.</p>
     <p>The options you will be provided with when validating experience will be:</p>
     <table class="table table-sm">
     <col width="10%">
     <col width="70%">
     <tbody>
         <tr>
-          <td class="text-center"><button type="submit" class="badge badge-primary badge-pill" style="width: 10rem">Confirm</button>
+          <td class="text-center"><button type="submit" class="badge badge-info badge-pill" style="width: 7rem;">See Detail</button>
       </td>
-          <td>Allows you to comfirm the experience without providing a comment.</td>
+          <td>Allows you to open and review the vacancy detail.</td>
         </tr>
         <tr>
-          <td class="text-center"><button type="submit" class="badge badge-danger badge-pill" style="width: 10rem">Reject</button></td>
-          <td>Allows you to reject the validation request, reasons are personal.</td>
+          <td class="text-center"><button type="submit" class="badge badge-success badge-pill" style="width: 7rem">Accept<br>Assignment</button></td>
+          <td>Allows you to accept the assignment, functional button only so does not
+            open any informational pages.</td>
         </tr>
         <tr>
-          <td class="text-center"><a href="#" class="badge badge-pill badge-success" style="width: 10rem">Review with Comment</a></td>
-          <td>Preferred option which allows you to confirm the experience and provide a
-            comment as to the performance of the validation requestee. This option is usually
-            utilised by managers or clients.<td>
+          <td class="text-center"><button type="submit" class="badge badge-warning badge-pill" style="width: 7rem">Await<br>Information</button></td>
+          <td>Informational button only detailing that you have requested further information
+            and as yet have not received it.</td>
         </tr>
         <tr>
-          <td class="text-center"><button type="submit" class="badge badge-info badge-pill" style="width: 10rem">Wrong Person</button></td>
-          <td>In the event that the requestee has got the wrong email address resulting in
-            a validation request from the wrong person.<td>
+          <td class="text-center"><a href="#" class="badge badge-info badge-pill" style="width: 7rem">Request<br>Information</a></td>
+          <td>Once the vacancy has been assigned you are able to request more detailed
+            information. This will open a dialog box in which you will be able to detail
+            the information required.<td>
+        </tr>
+        <tr>
+          <td class="text-center"><button type="submit" class="badge badge-danger badge-pill" style="width: 7rem">Decline<br>Assignment</button></td>
+          <td>In the event that the assignment has been issued to you and you are unable
+            to perform you will be able to decline the assignment. You will be required to
+            select a reason from the drop down list and provide a detailed reason as to
+            why the assignment is being decline.<td>
         </tr>
       </tbody>
   </table>
   <br>
     <br>
-    <p><strong>Interviews Pending</strong></p>
-    <p>This details the number of interviews that have been requested in the form of
-      an interview request from a potential employer as well as on the side of the
-      talent who submitted the proposal bid for any vacancies advertised.</p>
+    <p><strong>Assignment as an Employer</strong></p>
+    <p>This will list all the current vacancies that have been assigned and are in progress.</p>
+    <p>The options you will be provided with when validating experience will be:</p>
+    <table class="table table-sm">
+    <col width="10%">
+    <col width="70%">
+    <tbody>
+        <tr>
+          <td class="text-center"><button type="submit" class="badge badge-warning badge-pill" style="width: 7rem">Clarification<br>Requested</button>
+      </td>
+          <td>Will be visible when the talent has requested more information.</td>
+        </tr>
+        <tr>
+          <td class="text-center"><button type="submit" class="badge badge-info badge-pill" style="width: 7rem">Response<br>Pending</button></td>
+          <td>Will be visible while awaiting the acceptance of the assignment by the talent.</td>
+        </tr>
+        <tr>
+          <td class="text-center"><button type="submit"class="badge badge-danger badge-pill" style="width: 7rem">Vacancy<br>Declined</button></td>
+          <td>Will be visible should the talent that the vacancy has been assigned to
+            declines the assignment.</td>
+        </tr>
+        <tr>
+          <td class="text-center"><a href="#" class="badge badge-warning badge-pill" style="width: 7rem; height: 3rem">ReAssign<br>Vacancy</td>
+          <td>Should the vacancy assignment be declined this button will be visible
+            allowing you to reassign the position to another talent.<td>
+        </tr>
+        <tr>
+          <td class="text-center"><button type="submit" class="badge badge-success badge-pill" style="width: 7rem">Vacancy<br>Accpeted</button></td>
+          <td>Will be visible and will indicate that the assignment has been
+            accepted by the talent.<td>
+        </tr>
+      </tbody>
+  </table>
     <br>
 
 </div>

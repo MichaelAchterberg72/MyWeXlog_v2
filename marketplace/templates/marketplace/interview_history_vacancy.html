@@ -10,7 +10,9 @@
       <form  action="{% url 'BookList:BLB' %}" method="post">
     <input type="hidden" name="next" value="{{ request.GET.next }}">
     {% csrf_token %}
-    <button type="submit" class="btn btn-secondary float-right">Back</button>
+    <button type="submit" class="btn btn-secondary">Back</button>
+    <a href="{% url 'MarketPlace:HelpInterviewDetail' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
+    <i class="icon icon-question-circle"></i></a>
   </form>
     </div>
 

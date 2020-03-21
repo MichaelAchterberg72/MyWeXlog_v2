@@ -4,11 +4,13 @@
 
 {% block content %}
 
-<div class="card border-0" style="width: 100%;">
+<div class="card border-0">
   <div class="card-body">
-    <p class="float-right">
+    <div class="float-right">
       <a href="{% url 'MarketPlace:Entrance' %}" class="btn btn-secondary">Back</a>
-    </p>
+      <a href="{% url 'MarketPlace:HelpRolesAppliedForSummary' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
+      <i class="icon icon-question-circle"></i></a>
+    </div>
     <h4 class="card-title">Vacancy Application History</h4>
     <h4 class="card-title">Roles Applied for</h4>
     <table class="table table-sm">
@@ -24,8 +26,8 @@
         </tr>
       </thead>
       <tbody>
-      
-        {% for i in pageitems %}
+
+        {% for i in applied %}
           <tr>
             <td>{{ i.date_applied|date:"d N Y" }}</td>
             <td>{{ i.work.title }}</td>
@@ -37,9 +39,9 @@
             <td>{{ i.work.city }}</td>
             <td>{{ i.get_bidreview_display }}</td>
             {% if request.user.subscription == 2 %}
-              <td><a href="{% url 'MarketPlace:VacancyDetail' i.work.ref_no %}" class="badge badge-primary 8rem" style="width: 6rem">See Detail</a></td>
+              <td><a href="{% url 'MarketPlace:VacancyDetail' i.work.ref_no %}" class="badge badge-secondary" style="width: 6rem">See Detail</a></td>
             {% elif request.user.subscription < 2 %}
-              <td><a href="#" class="badge badge-primary 8rem" style="width: 6rem">See Detail</a></td>
+              <td><a href="#" class="badge badge-primary" style="width: 6rem">See Detail</a></td>
             {% endif %}
           </tr>
         {% endfor %}
@@ -53,6 +55,10 @@
 <br>
 <div class="card border-0" style="width: 100%;">
   <div class="card-body">
+    <div class="float-right">
+      <a href="{% url 'MarketPlace:HelpRolesShortlistedForSummary' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
+      <i class="icon icon-question-circle"></i></a>
+    </div>
     <h4 class="card-title">Roles Shortlisted for</h4>
 
     <table class="table table-sm">
@@ -81,7 +87,7 @@
             <td>{{ i.scope.city }}</td>
             <td>{{ i.get_status_display }}</td>
             {% if request.user.subscription == 2 %}
-              <td><a href="{% url 'MarketPlace:VacancyDetail' i.scope.ref_no %}" class="badge badge-primary 8rem" style="width: 6rem">See Detail</a></td>
+              <td><a href="{% url 'MarketPlace:VacancyDetail' i.scope.ref_no %}" class="badge badge-secondary 8rem" style="width: 6rem">See Detail</a></td>
             {% elif request.user.subscription < 2 %}
               <td><a href="#" class="badge badge-primary 8rem" style="width: 6rem">See Detail</a></td>
             {% endif %}
@@ -99,6 +105,10 @@
 <br>
 <div class="card border-0" style="width: 100%;">
   <div class="card-body">
+    <div class="float-right">
+      <a href="{% url 'MarketPlace:HelpUnseccessfulApplicationsSummary' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
+      <i class="icon icon-question-circle"></i></a>
+    </div>
     <h4 class="card-title">Unsuccessful Applications</h4>
     <table class="table table-sm">
       <thead>
@@ -126,7 +136,7 @@
             <td>{{ r.work.city }}</td>
             <td>{{ r.get_bidreview_display }}</td>
             {% if request.user.subscription == 2 %}
-              <td><a href="{% url 'MarketPlace:VacancyDetail' r.work.ref_no %}" class="badge badge-primary 8rem" style="width: 6rem">See Detail</a></td>
+              <td><a href="{% url 'MarketPlace:VacancyDetail' r.work.ref_no %}" class="badge badge-secondary 8rem" style="width: 6rem">See Detail</a></td>
             {% elif request.user.subscription < 2 %}
               <td><a href="#" class="badge badge-primary 8rem" style="width: 6rem">See Detail</a></td>
             {% endif %}
@@ -144,7 +154,7 @@
           <td>{{ r.scope.city }}</td>
           <td>{{ r.get_status_display }}</td>
           {% if request.user.subscription == 2 %}
-            <td><a href="{% url 'MarketPlace:VacancyDetail' r.scope.ref_no %}" class="badge badge-primary 8rem" style="width: 6rem">See Detail</a></td>
+            <td><a href="{% url 'MarketPlace:VacancyDetail' r.scope.ref_no %}" class="badge badge-secondary 8rem" style="width: 6rem">See Detail</a></td>
           {% elif request.user.subscription < 2 %}
             <td><a href="#" class="badge badge-primary 8rem" style="width: 6rem">See Detail</a></td>
           {% endif %}
@@ -162,6 +172,10 @@
 <br>
 <div class="card border-0" style="width: 100%;">
   <div class="card-body">
+    <div class="float-right">
+      <a href="{% url 'MarketPlace:HelpSeccessfulApplicationsSummary' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
+      <i class="icon icon-question-circle"></i></a>
+    </div>
     <h4 class="card-title">Successful Applications</h4>
     <table class="table table-sm">
       <thead>
