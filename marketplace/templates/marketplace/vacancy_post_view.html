@@ -88,7 +88,14 @@
             <td class="align-middle text-center">{{ instance.currency }} {{ instance.rate_offered|intcomma }} ({{ instance.get_rate_unit_display }})</td>
             <td class="align-middle text-center">{{ instance.bid_closes|date:'j M Y' }}</td>
             <td class="align-middle text-center">{{ instance.date_deadline|date:'j M Y' }}</td>
-            <td class="align-middle text-center">{{ instance.get_offer_status_display }}</td>
+            <td class="align-middle text-center">
+              {% if instance.offer_status == 'O' %}
+                {{ instance.get_offer_status_display }}
+                <a href="{% url 'MarketPlace:VacClose' instance.ref_no %}" style="font-size: 25px;color:red" data-toggle="popover" title="Close Vacancy"><i class="fa fa-times" aria-hidden="true"></i></a>
+              {% else %}
+                {{ instance.get_offer_status_display }}
+              {% endif %}
+            </td>
           </tr>
         </tbody>
       </table>
@@ -168,7 +175,7 @@
     </div>
   </div>
   <p>&nbsp</p>
-  <p><a href="{% url 'MarketPlace:ShortListView' instance.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-info">View Short-list</a>&nbsp<a href="{% url 'MarketPlace:InterviewList' instance.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-info">View Interview List</a></p>
+  <p><a href="{% url 'MarketPlace:ShortListView' instance.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-info">View Short-list</a>&nbsp<a href="{% url 'MarketPlace:InterviewList' instance.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-info">Vacancy Dashboard</a></p>
 
   <div class="card">
     <div class="card-body">

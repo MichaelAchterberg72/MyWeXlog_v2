@@ -177,7 +177,7 @@ class EmployerInterViewComments(forms.ModelForm):
     class Meta:
         model=BidInterviewList
         fields = ('comments_emp',)
-        labels = {'comments_emp': 'My Interview Comments',}
+        labels = {'comments_emp': 'Comments',}
 
 
 class WorkBidForm(forms.ModelForm):

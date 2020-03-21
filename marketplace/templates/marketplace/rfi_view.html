@@ -9,6 +9,13 @@
 <div class="card border-0">
   <div class="card-body">
     <div class="container">
+      <div class="btn-toolbar float-right">
+        <form  action="{% url 'BookList:BLB' %}" method="post">
+          <input type="hidden" name="next" value="{{ request.GET.next }}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-secondary">Back</button>
+        </form>
+      </div>
   <h3 class="card-title">Requested Clarifications for {{ instance.work.title }} ({{ instance.work.ref_no }})</h3>
   <hr>
   <h6>Information Requested:</h6>

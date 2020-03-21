@@ -79,7 +79,7 @@
     <tr>
       <td class="align-middle text-center">Open Assignments</td>
       <td class="align-middle text-center">
-        <a href="{% url 'Profile:WorkshopEmp' %}?next={{ request.path|urlencode }}" class="badge badge-primary 8rem" style="width: 8rem">Enter Office</a>
+        <a href="{% url 'Profile:WorkshopEmp' %}?next={{ request.path|urlencode }}" class="badge badge-primary" style="width: 8rem">Enter Office</a>
         <br>
         {% if open_assignments_empc  %}
           {{ open_assignments_empc }}
@@ -88,7 +88,7 @@
         {% endif %}
       </td>
       <td class="align-middle text-center">
-        <a href="{% url 'Profile:WorkshopTlt' %}?next={{ request.path|urlencode }}" class="badge badge-primary 8rem" style="width: 8rem">Enter Workshop</a>
+        <a href="{% url 'Profile:WorkshopTlt' %}?next={{ request.path|urlencode }}" class="badge badge-primary" style="width: 8rem">Enter Workshop</a>
         <br>
         {% if open_assignments_tltc  %}
           {{ open_assignments_tltc }}
@@ -269,7 +269,7 @@
       <td class="align-middle text-center">{{ psn.date_deliverable|date:"j M Y" }}</td>
       {% if psn.tlt_response == 'C' %}
         <td>
-            <a href="{% url 'MarketPlace:RFIView' psn.slug %}" class="badge badge-warning badge-pill" style="width: 7rem">Clarification<br>Requested</a>
+            <a href="{% url 'MarketPlace:RFIView' psn.slug %}?next={{ request.path|urlencode }}" class="badge badge-warning badge-pill" style="width: 7rem">Clarification<br>Requested</a>
         </td>
       {% elif psn.tlt_response == 'P' %}
       <td>

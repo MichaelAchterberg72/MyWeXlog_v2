@@ -7,7 +7,7 @@
 
 {% block content %}
 <div class="container">
-  <h3>Reason for declining {{ instance.work }}</h3>
+  <h3>Queries regarding {{ instance.work }}</h3>
   <form method="post" enctype="multipart/form-data">
     <input type="hidden" name="next" value="{{ request.GET.next }}">
     {% csrf_token %}

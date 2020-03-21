@@ -74,6 +74,13 @@ class TalentRequired(models.Model):
         ('O','Open'),
         ('C','Closed'),
     )
+    WKFLOW = (
+        ('S','Assigned'),#Vacancy has been assigned, but not yet accepted
+        ('A','Accepted'),#Vacancy has been accepted
+        ('I','Interviewing'),#Interviews have been requested
+        ('L','Short-listed'),#People have been shortlisted
+        ('P','Pending'),#No movement Yet
+    )
     date_entered = models.DateField(auto_now_add=True)
     title = models.CharField(max_length=250)
     ref_no = models.CharField(max_length=10, unique=True, null=True)#SlugField
@@ -96,6 +103,7 @@ class TalentRequired(models.Model):
     terms = models.FileField(upload_to=BidTerms, blank=True, null=True)
     city = models.ForeignKey(City, on_delete=models.PROTECT, verbose_name='City, Town or Place')
     date_modified = models.DateField(auto_now=True)
+    vac_wkfl = models.CharField(max_length=1, choices=WKFLOW, default='P')
 
     class Meta:
         unique_together = (('enterprise','title', 'requested_by'),)
@@ -134,8 +142,9 @@ BID = (
         ('P','Pending'),
         ('R','Unsuccessful'),
         ('S','Short-listed'),
+        ('D','Talent Declined'),
+        ('I','Interview'),
     )
-
 
 class BidShortList(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='Shortlisted')
@@ -156,17 +165,21 @@ class BidShortList(models.Model):
             self.slug = create_code9(self)
         super(BidShortList, self).save(*args, **kwargs)
 
+#This table is also used to track all declined talent
 class BidInterviewList(models.Model):
     OC = (
-        ('P','Pending'),
+        ('P','Offer Pending'),
+        ('I','Interview Pending'),
         ('S','Suitable'),
         ('N','Not Suitable'),
-        ('D','Candidate Declined'),
+        ('D','Declined Offer'),
+        ('A','Accepted Offer'),
     )
     RSP = (
         ('P','Interview Pending'),
         ('A','Accept Interview'),
         ('D','Decline Interview'),
+        ('N','Not Interviewed'),
     )
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='Interviewed')
     scope = models.ForeignKey(TalentRequired, on_delete=models.CASCADE)

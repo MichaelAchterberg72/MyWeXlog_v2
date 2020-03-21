@@ -24,32 +24,50 @@ urlpatterns = [
 
     path('interviewlist/<slug:vac>/<slug:tlt>/', views.AddToInterviewListView, name='InterviewList'),
 
-    path('shortlist/<slug:vac>/<slug:tlt>/', views.AddToShortListView, name='ShortList'),
-
     path('availabillity/', views.TalentAvailabillityView, name='Availabillity'),
     path('v-detail/<slug:vac>/', views.VacancyDetailView, name='VacancyDetail'),
     path('vp-detail/<slug:vac>/', views.VacancyDetailView_Profile, name='VacancyDetail_Profile'),
     path('apply/<slug:vac>/', views.WorkBidView, name='WorkBid'),
     path('history/', views.ApplicationHistoryView, name='History'),
     path('postview/<slug:vac>/', views.VacancyPostView, name='VacancyPost'),
+    path('vac-close/<slug:vac>/', views.VacancyCloseSwitch, name='VacClose'),
 
-    path('shortlist-review/<slug:vac>/', views.ShortListView, name='ShortListView'),
+
     path('interviewlist/<slug:vac>/', views.InterviewListView, name='InterviewList'),
 
     path('vac-assign/<slug:vac>/<slug:tlt>/', views.TalentAssign, name='VacAssign'),
 
-    path('vac-decline/<slug:vac>/<slug:tlt>/', views.TalentDecline, name='VacDecline'),
 
     path('all-vac/', views.AllPostedVacanciesView, name="AllPostedVac"),
     path('all-vac/open/', views.AllPostedVacanciesOpenView, name='AllPostedVacOpen'),
     path('all-vac/closed/', views.AllPostedVacanciesClosedView, name='AllPostedVacClosed'),
     path('availabillity-remove/<int:avl_id>/', views.AvailabillityRemoveView, name='NotAvailable'),
+
+    #ShortList URLs
+    path('shortlist-review/<slug:vac>/', views.ShortListView, name='ShortListView'),
+    path('shortlist/<slug:vac>/<slug:tlt>/', views.AddToShortListView, name='ShortList'),
+    path('vac-decline/<slug:vac>/<slug:tlt>/', views.TalentDecline, name='VacDecline'),
+    path('sl-notsuitable/<slug:vac>/<slug:tlt>/', views.EmpSlDeclineComment, name='SlNotSuitable'),
+
+    #Interview URLs
     path('vac-interview/<slug:vac>/<slug:tlt>/', views.AddToInterviewListView, name='VacInterview'),
-    path('suitable/<slug:vac>/<slug:tlt>/', views.InterviewSuitable, name='Suitable'),
-    path('notsuitable/<slug:vac>/<slug:tlt>/', views.InterviewNotSuitable, name='NotSuitable'),
-
     path('int-decline/<int:int_id>/', views.InterviewDeclineView, name='InterviewDecline'),
-
+        #InterviewList Views
+    path('suitable/<slug:vac>/<slug:tlt>/', views.InterviewSuitable, name='Suitable'),
+    path('not-suitable/<slug:vac>/<slug:tlt>/', views.InterviewNotSuitable, name='NotSuitable'),
+        #InterView History
+    path('interview-history/<slug:tlt>/', views.TalentInterviewHistoryView, name="TalentInterviewHistory"),
+    path('interview-history/<slug:tlt>/', views.EmployerInterviewHistoryView, name="EmployerInterviewHistory"),
+        #tlt int close URLs
+    path('tlt-int-close/<slug:bil>/<slug:tlt>/', views.TltInterviewClose, name='TalentIntClose'),
+    path('tlt-int-detail/<slug:bil>/<slug:tlt>/', views.TltIntFullDetail, name='TalentIntDetail'),
+    path('tlt-int-comment/<slug:bil>/<slug:tlt>/', views.TltIntCommentView, name='TalentIntComment'),
+        #emp int close URLs
+    path('emp-int-close/<slug:bil>/<slug:tlt>/', views.EmpInterviewClose, name='EmployerIntClose'),
+    path('emp-int-detail/<slug:bil>/<slug:tlt>/', views.EmpIntFullDetail, name='EmployerIntDetail'),
+    path('emp-int-detail/<slug:vac>/', views.EmpIntDetailVacancy, name='VacancyIntDetail'),
+    path('emp-int-comment/<slug:bil>/<slug:tlt>/', views.EmpIntCommentView, name='VacancyIntComment'),
+    
     path('rfi-respond/<slug:wit>/', views.TalentRFIView, name='RFIView'),
     path('vacancy-search/', views.VacancySearch, name="VacSearch"),
     path('vacancy/vacancies-full-list/', views.VacanciesListView, name="VacanciesList"),
@@ -90,16 +108,7 @@ urlpatterns = [
     path('help/deliverable/', views.HelpDeliverable2View, name='HelpDeliverable2'),
     path('help/deliverables/', views.HelpDeliverablesView, name='HelpDeliverables'),
 
-    path('interview-history/<slug:tlt>/', views.TalentInterviewHistoryView, name="TalentInterviewHistory"),
-    path('tlt-int-close/<slug:bil>/<slug:tlt>/', views.TltInterviewClose, name='TalentIntClose'),
-    path('tlt-int-detail/<slug:bil>/<slug:tlt>/', views.TltIntFullDetail, name='TalentIntDetail'),
-    path('tlt-int-comment/<slug:bil>/<slug:tlt>/', views.TltIntCommentView, name='TalentIntComment'),
 
 
-    path('interview-historye/<slug:tlt>/', views.EmployerInterviewHistoryView, name="EmployerInterviewHistory"),
-    path('emp-int-close/<slug:bil>/<slug:tlt>/', views.EmpInterviewClose, name='EmployerIntClose'),
-    path('emp-int-detail/<slug:bil>/<slug:tlt>/', views.EmpIntFullDetail, name='EmployerIntDetail'),
-    path('emp-int-detail/<slug:vac>/', views.EmpIntDetailVacancy, name='VacancyIntDetail'),
-    path('emp-int-comment/<slug:bil>/<slug:tlt>/', views.EmpIntCommentView, name='VacancyIntComment'),
 
 ]

@@ -188,6 +188,26 @@ def EmpIntCommentView(request, bil, tlt):
         return render(request, template, context)
 
 
+#comments when lablelling talent as unsuitable in the short list
+@login_required()
+def EmpSlDeclineComment(request, bil, tlt):
+    instance = BidInterviewList.objects.get(slug=bil)
+    vac = instance.scope.ref_no
+    form = EmployerInterViewComments(request.POST or None, instance=instance)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.save()
+
+            return redirect(reverse('MarketPlace:ShortListView', kwargs={'vac': vac,}))
+
+    else:
+        template = 'marketplace/interview_comment_employer.html'
+        context={'form': form, 'instance': instance,}
+        return render(request, template, context)
+
+
 @login_required()
 @subscription(1)
 def InterviewDeclineView(request, int_id):
@@ -220,49 +240,70 @@ def TalentRFIView(request, wit):
 @login_required()
 @subscription(2)
 def InterviewSuitable(request, vac, tlt):
-    BidInterviewList.objects.filter(Q(scope__ref_no = vac) & Q(talent__alias = tlt)).update(outcome='S', emp_intcomplete=True)
+    instance = BidInterviewList.objects.get(Q(talent__alias=tlt) & Q(scope__ref_no=vac))
 
-    BidShortList.objects.filter(Q(scope__ref_no = vac) & Q(talent__alias = tlt)).update(status='P')
+    form = EmployerInterViewComments(request.POST or None, instance=instance)
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.outcome = 'S'
+            emp_intcomplete=True
+            new.save()
 
-    bid_qs = WorkBid.objects.filter(Q(work__ref_no = vac) & Q(talent__alias = tlt))
+            BidShortList.objects.filter(Q(scope__ref_no = vac) & Q(talent__alias = tlt)).update(status='P')
 
-    if bid_qs:
-        bid_qs.update(bidreview = 'P')
-    else:
-        pass
+            bid_qs = WorkBid.objects.filter(Q(work__ref_no = vac) & Q(talent__alias = tlt))
 
-    return redirect(reverse('MarketPlace:InterviewList', kwargs={ 'vac': vac,}))
+            if bid_qs:
+                bid_qs.update(bidreview = 'P')
 
+    return redirect(reverse('MarketPlace:InterviewList', kwargs={'vac': vac,}))
 
+#Switch in InterviewList view to mark talent as not-suitable
 @login_required()
 @subscription(2)
 def InterviewNotSuitable(request, vac, tlt):
-    bidinterviewlist_qs = BidInterviewList.objects.filter(Q(scope__ref_no = vac) & Q(talent__alias = tlt))
-    bidinterviewlist_qs.update(outcome='N', emp_intcomplete=True)
+    instance = BidInterviewList.objects.get(Q(talent__alias=tlt) & Q(scope__ref_no=vac))
 
-    bidshortlist_qs = BidShortList.objects.filter(Q(scope__ref_no = vac) & Q(talent__alias = tlt))
+    form = EmployerInterViewComments(request.POST or None, instance=instance)
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.outcome = 'N'
+            emp_intcomplete=True
+            tlt_intcomplete=True
+            new.save()
 
-    bidshortlist_qs.update(status='R')
-    bid_qs = WorkBid.objects.filter(Q(work__ref_no = vac) & Q(talent__alias = tlt))
+            BidShortList.objects.filter(Q(scope__ref_no = vac) & Q(talent__alias = tlt)).update(status='R')
 
-    if bid_qs:
-        bid_qs.update(bidreview = 'R')
-    else:
-        pass
+            bid_qs = WorkBid.objects.filter(Q(work__ref_no = vac) & Q(talent__alias = tlt))
 
-    return redirect(reverse('MarketPlace:InterviewList', kwargs={ 'vac': vac,}))
+            if bid_qs:
+                bid_qs.update(bidreview = 'R')
 
+        return redirect(reverse('MarketPlace:InterviewList', kwargs={'vac': vac,}))
 
+    template = 'marketplace/interview_comment_employer.html'
+    context = {'form': form, 'instance': instance,}
+    return render(request, template, context)
+
+#This has been re-purposed for a vacancy dashboard
 @login_required()
 @subscription(2)
 def InterviewListView(request, vac):
     scope = TalentRequired.objects.get(ref_no=vac)
     intv_qs = BidInterviewList.objects.filter(scope__ref_no=vac)
     intv_pending = intv_qs.filter(Q(outcome = 'P') & ~Q(tlt_response='D'))
-    intv_suitable = intv_qs.filter(Q(outcome = 'S') & ~Q(tlt_response='D'))
+    intv_suitable = intv_qs.filter(Q(outcome = 'S') & ~Q(tlt_response='D') & ~Q(tlt_response='A'))
     intv_notsuitable = intv_qs.filter(Q(outcome = 'N') & ~Q(tlt_response='D'))
     intv_declined = intv_qs.filter(tlt_response = 'D')
-    vacancy_declined = WorkIssuedTo.objects.filter(work__ref_no=vac, tlt_response='D' )
+    vacancy_declined = WorkIssuedTo.objects.filter(work__ref_no=vac, tlt_response='D')
+
+    wit_qs = WorkIssuedTo.objects.filter(Q(work__ref_no=vac)).filter(Q(tlt_response='A') | Q(tlt_response='P') | Q(tlt_response='C'))
+    if wit_qs:
+        active = wit_qs.exists()
+    else:
+        active = 'False'
 
     we = WorkExperience.objects.filter(talent__subscription__gte=1)
     applicants = WorkBid.objects.filter(work__ref_no=vac)
@@ -349,7 +390,9 @@ def InterviewListView(request, vac):
         interview_n[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate}
 
     template = 'marketplace/interview_list.html'
-    context = {'interview_p': interview_p, 'interview_n': interview_n, 'interview_s': interview_s, 'scope': scope, 'intv_declined': intv_declined, 'vacancy_declined': vacancy_declined,}
+    context = {
+        'interview_p': interview_p, 'interview_n': interview_n, 'interview_s': interview_s, 'scope': scope, 'intv_declined': intv_declined, 'vacancy_declined': vacancy_declined, 'wit_qs': wit_qs, 'active': active,
+        }
     return render(request, template, context)
 
 
@@ -959,6 +1002,14 @@ def VacancyPostView(request, vac):
 
 @login_required()
 @subscription(2)
+def VacancyCloseSwitch(request, vac):
+    interview = TalentRequired.objects.filter(ref_no=vac).update(offer_status='C')
+
+    return redirect(reverse('MarketPlace:VacancyPostView', kwargs={'vac': vac,}))
+
+
+@login_required()
+@subscription(2)
 def TalentSuitedVacancyListView(request, vac):
     #>>>Queryset Cache
     instance = get_object_or_404(TalentRequired, ref_no=vac)
@@ -1152,7 +1203,15 @@ def AddToInterviewListView(request, vac, tlt):
     job = get_object_or_404(TalentRequired, ref_no=vac)
     talent = get_object_or_404(CustomUser, alias=tlt)
     if request.method == 'POST':
-        BidInterviewList.objects.create(talent=talent, scope=job)
+        BidInterviewList.objects.create(talent=talent, scope=job, outcome='P')
+        BidShortList.objects.filter(Q(talent=talent) & Q(scope=job)).update(status='I')
+
+        wb_qs = WorkBid.objects.filter(Q(talent=talent) & Q(work=job))
+        if wb_qs:
+            wb_qs.update(bidreview='I')
+
+        job.vac_wkfl == 'I'
+        job.save()
 
         #>>>email
         subject = f"WeXlog - {job.title} ({job.ref_no}): Interview request"
@@ -1174,6 +1233,7 @@ def AddToInterviewListView(request, vac, tlt):
 @login_required()
 @subscription(2)
 def TalentAssign(request, tlt, vac):
+    #instance = WorkIssuedTo.objects.get(Q(talent__alias=tlt) & Q(work__ref_no=vac))
     job = get_object_or_404(TalentRequired, ref_no=vac)
     talent = get_object_or_404(CustomUser, alias=tlt)
     bids = WorkBid.objects.filter(Q(work__ref_no=vac) & Q(talent__alias=tlt))
@@ -1185,12 +1245,18 @@ def TalentAssign(request, tlt, vac):
             new = form.save(commit=False)
             new.talent = talent
             new.work = job
+            new.tlt_response = 'P'
             new.save()
 
-            s_list.filter(talent=talent).update(status='A')
+            s_list.filter(talent=talent).update(status='P')
+
+            job.vac_wkfl = 'S'
+            job.save()
+
+            BidInterviewList.objects.filter(Q(talent=talent) & Q(scope=job)).update(outcome='P')
 
             if bids is not None:
-                bids.update(bidreview='A')
+                bids.update(bidreview='P')
 
             #>>>email
             subject = f"WeXlog - Job assigned: {job.title} ({job.ref_no})"
@@ -1206,27 +1272,39 @@ def TalentAssign(request, tlt, vac):
             #return render(request, template, context)
             #<<<email
 
-            return redirect(reverse('MarketPlace:Entrance'))
+            return redirect(reverse('MarketPlace:InterviewList', kwargs={'vac': vac,}))
+        else:
+            template = 'marketplace/vacancy_assign.html'
+            context = {'form': form, 'job': job, 'talent': talent,}
+            return render(request, template, context)
 
     else:
         template = 'marketplace/vacancy_assign.html'
         context = {'form': form, 'job': job, 'talent': talent,}
         return render(request, template, context)
 
-
+#used in the Shortlistview to decline a person
 @login_required()
 @subscription(2)
 def TalentDecline(request, tlt, vac):
+    job = get_object_or_404(TalentRequired, ref_no=vac)
+    talent = get_object_or_404(CustomUser, alias=tlt)
     bids = WorkBid.objects.filter(Q(talent__alias=tlt) & Q(work__ref_no=vac))
     s_list = BidShortList.objects.filter(scope__ref_no=vac)
+
+    if request.method == 'POST':
+        BidInterviewList.objects.create(talent=talent, scope=job, outcome='N')
+        job.save()
 
     s_list.filter(talent__alias=tlt).update(status='R')
 
     if bids is not None:
         bids.update(bidreview='R')
 
-    print('this ran')
-    return redirect(reverse('MarketPlace:ShortListView', kwargs={'vac': vac,}))
+    bil_qs = BidInterviewList.objects.get(talent=talent, scope=job)
+    bil_qs.update(tlt_response='N', outcome='N')
+
+    return redirect(reverse('MarketPlace:SlNotSuitable', kwargs={'bil': bil_qs.slug,'tlt': tlt,}))
 
 
 @login_required()
@@ -1237,7 +1315,8 @@ def ShortListView(request, vac):
     we = WorkExperience.objects.filter(talent__subscription__gte=1)
     applicants = WorkBid.objects.filter(work__ref_no=vac)
     book = ReadBy.objects.all()
-    active = WorkIssuedTo.objects.filter(Q(work__ref_no=vac)).filter(Q(tlt_response='A') | Q(tlt_response='P')| Q(tlt_response='C')).exists()
+    closed = WorkIssuedTo.objects.filter(Q(work__ref_no=vac) & Q(tlt_response='A')).exists()
+    active = WorkIssuedTo.objects.filter(Q(work__ref_no=vac)).filter(Q(tlt_response='P')| Q(tlt_response='C')).exists()
     declined = list(WorkIssuedTo.objects.filter(Q(work__ref_no=vac) &Q(tlt_response='D')).values_list('talent', flat=True))
     app_list = list(s_list.values_list('talent', flat=True))
 
@@ -1266,7 +1345,7 @@ def ShortListView(request, vac):
         short[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate}
 
     template = 'marketplace/shortlist_view.html'
-    context = {'s_list': s_list, 'short': short, 'vacancy': vacancy, 'active': active, 'declined': declined,}
+    context = {'s_list': s_list, 'short': short, 'vacancy': vacancy, 'active': active, 'declined': declined, 'closed': closed,}
     return render(request, template, context)
 
 

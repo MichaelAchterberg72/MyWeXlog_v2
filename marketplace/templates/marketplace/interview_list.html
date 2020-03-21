@@ -2,7 +2,7 @@
 {% load humanize %}
 {% load static %}
 
-{% block title %}{{block.super}}-Interviewlist{{ scope.ref_no }}{% endblock title %}
+{% block title %}{{block.super}}-Dashboard{{ scope.ref_no }}{% endblock title %}
 
 {% block content %}
 {{ form.media.css }}
@@ -12,220 +12,274 @@
   }
   </style>
 <div class="container">
-  <form  action="{% url 'BookList:BLB' %}" method="post">
-    <input type="hidden" name="next" value="{{ request.GET.next }}">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-secondary float-right">Back to {{scope.ref_no}}</button>
-  </form>
-    <h3 class="card-title">Interview list for {{ scope.title }} ({{ scope.ref_no }})</h3>
+  <a href="{% url 'MarketPlace:ShortListView' scope.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-secondary float-right">Short-list</a>
+    <h3 class="card-title">Talent Dashboard for {{ scope.title }} ({{ scope.ref_no }})</h3>
+      <div class="card border-0">
+        <div class="card-body">
+          <h4>Pending Acceptance</h4>
+          <table class="table table-sm">
+            <col width="45%">
+            <col width="45%">
+            <col width="10%">
+            <thead>
+              {% for a in wit_qs %}
+              <tr>
+                <th class="align-middle text-center">Alias</th>
+                <th class="align-middle text-center">Response</th>
+                <th class="align-middle text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="align-middle text-center">{{ a.talent.alias }}</td>
+                <td class="align-middle text-center">{{ a.get_tlt_response_display }}</td>
+                <td class="align-middle text-center">
+                  <a href="{% url 'Talent:APV' tlt=a.talent.alias  vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill" style="width: 7rem">View Profile</a>
+                  <a href="{% url 'Profile:WorkshopTlt' %}?next={{ request.path|urlencode }}" class="badge badge-primary badge-pill" style="width: 7rem">Enter Workshop</a
+                  {% if a.tlt_response == 'C' %}
+                    <a href="{% url 'MarketPlace:RFIView' a.slug %}?next={{ request.path|urlencode }}" class="badge badge-warning badge-pill" style="width: 7rem">Clarification<br>Requested</a>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <br>
     <div class="card border-0">
       <div class="card-body">
-    <h4>Pending Applicants</h4>
-  <table class="table table-sm">
-    <thead>
-      <tr>
-        <th class="align-middle text-center">Alias</th>
-        <th class="align-middle text-center">Experience</th>
-        <th class="align-middle text-center">Training</th>
-        <th class="align-middle text-center">Skills Logged</th>
-        <th class="align-middle text-center">Books Read</th>
-        <th class="align-middle text-center">Rate</th>
-        <th class="align-middle text-center">Motivation</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for sl in interview_p.items %}
-      <tr>
-        <td class="align-middle text-center">{{ sl.1.ro.0.4 }}</td>
-        <td class="align-middle text-center">{{ sl.1.we|intcomma }}</td>
-        <td class="align-middle text-center">{{ sl.1.te|intcomma }}</td>
-        <td class="align-middle text-center">{{ sl.1.s_no }}</td>
-        <td class="align-middle text-center">{{ sl.1.rb }}</td>
-        <td class="align-middle text-center">{{ sl.1.ro.0.1 }} <strong>{{ sl.1.ro.0.0|intcomma }}</strong> {{ sl.1.ro.0.2 }}</td>
-        <td class="align-middle">{{ sl.1.ro.0.3|truncatechars:200 }}</td>
-        <td class="align-middle">
-          <p>
-            <a href="{% url 'Talent:APV' tlt=sl.1.ro.0.4  vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill float-right" style="width: 6rem">View Profile</a>
-            <form  action="{% url 'MarketPlace:Suitable' tlt=sl.1.ro.0.4  vac=scope.ref_no %}" method="post">
-              {% csrf_token %}
-              <button type="submit" class="badge badge-success badge-pill float-right" style="width: 6rem">Suitable</button>
-            </form>
-            <form  action="{% url 'MarketPlace:NotSuitable' tlt=sl.1.ro.0.4  vac=scope.ref_no %}" method="post">
-              {% csrf_token %}
-              <button type="submit" class="badge badge-danger badge-pill float-right" style="width: 6rem">Not Suitable</button>
-            </form>
-          </p>
-        </td>
-      </tr>
-      {% empty %}
-      <tr>
-        <td colspan="7">There are no people pending review.</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  </div>
-</div>
-<br>
-<div class="card border-0">
-  <div class="card-body">
-  <h4>Suitable Applicants</h4>
-<table class="table table-sm">
-  <thead>
-    <tr>
-      <th class="align-middle text-center">Alias</th>
-      <th class="align-middle text-center">Experience</th>
-      <th class="align-middle text-center">Training</th>
-      <th class="align-middle text-center">Skills Logged</th>
-      <th class="align-middle text-center">Books Read</th>
-      <th class="align-middle text-center">Rate</th>
-      <th class="align-middle text-center">Motivation</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for sl in interview_s.items %}
-    <tr>
-      <td class="align-middle">{{ sl.1.ro.0.4 }}</td>
-      <td class="align-middle text-center">{{ sl.1.we|intcomma }}</td>
-      <td class="align-middle text-center">{{ sl.1.te|intcomma }}</td>
-      <td class="align-middle text-center">{{ sl.1.s_no }}</td>
-      <td class="align-middle text-center">{{ sl.1.rb }}</td>
-      <td class="align-middle text-center">{{ sl.1.ro.0.1 }} <strong>{{ sl.1.ro.0.0|intcomma }}</strong> {{ sl.1.ro.0.2 }}</td>
-      <td class="align-middle">{{ sl.1.ro.0.3|truncatechars:200 }}</td>
-      <td class="align-middle">
-        <p>
-          <a href="{% url 'Talent:APV' tlt=sl.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill float-right" style="width: 6rem">View Profile</a>
-          <form  action="{% url 'MarketPlace:VacAssign' tlt=sl.1.ro.0.4 vac=scope.ref_no %}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="badge badge-success badge-pill float-right" style="width: 6rem">Assign</button>
-          </form>
-          <form  action="{% url 'MarketPlace:NotSuitable' tlt=sl.1.ro.0.4 vac=scope.ref_no %}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="badge badge-danger badge-pill float-right" style="width: 6rem">Not Suitable</button>
-          </form>
-        </p>
-      </td>
-    </tr>
-    {% empty %}
-    <tr>
-      <td colspan="7">No talent identified or selected at the moment.</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-</div>
-</div>
-<br>
-<div class="card border-0">
-<div class="card-body">
-<h4>Unsuitable Applicants</h4>
-<table class="table table-sm">
-<thead>
-  <tr>
-    <th class="align-middle text-center">Alias</th>
-    <th class="align-middle text-center">Experience</th>
-    <th class="align-middle text-center">Training</th>
-    <th class="align-middle text-center">Skills Logged</th>
-    <th class="align-middle text-center">Books Read</th>
-    <th class="align-middle text-center">Rate</th>
-    <th class="align-middle text-center">Motivation</th>
-  </tr>
-</thead>
-<tbody>
-  {% for sl in interview_n.items %}
-  <tr>
-    <td class="align-middle">{{ sl.1.ro.0.4 }}</td>
-    <td class="align-middle text-center">{{ sl.1.we|intcomma }}</td>
-    <td class="align-middle text-center">{{ sl.1.te|intcomma }}</td>
-    <td class="align-middle text-center">{{ sl.1.s_no }}</td>
-    <td class="align-middle text-center">{{ sl.1.rb }}</td>
-    <td class="align-middle text-center">{{ sl.1.ro.0.1 }} <strong>{{ sl.1.ro.0.0|intcomma }}</strong> {{ sl.1.ro.0.2 }}</td>
-    <td class="align-middle">{{ sl.1.ro.0.3|truncatechars:200 }}</td>
-    <td class="align-middle">
-      <p>
-        <a href="{% url 'Talent:APV' tlt=sl.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill float-right" style="width: 5rem">View Profile</a>
-        <form  action="{% url 'MarketPlace:Suitable' tlt=sl.1.ro.0.4  vac=scope.ref_no %}" method="post">
-          {% csrf_token %}
-          <button type="submit" class="badge badge-success badge-pill float-right" style="width: 5rem">Suitable</button>
-        </form>
-      </p>
-    </td>
-  </tr>
-  {% empty %}
-  <tr>
-    <td colspan="7">No talent identified as unsuitbale for this scope.</td>
-  </tr>
-  {% endfor %}
-</tbody>
-</table>
-</div>
-</div>
-<br>
-<div class="card border-0">
-<div class="card-body">
+        <h4>Pending Interviews</h4>
+        <table class="table table-sm">
+          <col width="15%">
+          <col width="5%">
+          <col width="5%">
+          <col width="1%">
+          <col width="8%">
+          <col width="45%">
+          <col width="10%">
+          <thead>
+            <tr>
+              <th class="align-middle text-center">Alias</th>
+              <th class="align-middle text-center">Experience</th>
+              <th class="align-middle text-center">Training</th>
+              <th class="align-middle text-center">Books Read</th>
+              <th class="align-middle text-center">Rate</th>
+              <th class="align-middle text-left">Motivation</th>
+              <th class="align-middle text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for sl in interview_p.items %}
+            <tr>
+              <td class="align-middle text-center">{{ sl.1.ro.0.4 }}</td>
+              <td class="align-middle text-center">{{ sl.1.we|intcomma }}<br>(<strong>{{ sl.1.s_no }}</strong> skills)</td>
+              <td class="align-middle text-center">{{ sl.1.te|intcomma }}</td>
+              <td class="align-middle text-center">{{ sl.1.rb }}</td>
+              <td class="align-middle text-center">{{ sl.1.ro.0.1 }} <strong>{{ sl.1.ro.0.0|intcomma }}</strong> {{ sl.1.ro.0.2 }}</td>
+              <td class="align-middle">{{ sl.1.ro.0.3|truncatechars:200 }}</td>
+              <td class="align-middle">
+                <p>
+                  <a href="{% url 'Talent:APV' tlt=sl.1.ro.0.4  vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill float-right" style="width: 6rem">View Profile</a>
+                  <form  action="{% url 'MarketPlace:Suitable' tlt=sl.1.ro.0.4 vac=scope.ref_no %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="badge badge-success badge-pill float-right" style="width: 6rem">Suitable</button>
+                  </form>
+                    <a href="{% url 'MarketPlace:NotSuitable' tlt=sl.1.ro.0.4 vac=scope.ref_no %}" class="badge badge-danger badge-pill float-right" style="width: 6rem">Not Suitable</a>
+                </p>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="7">There are no people pending review.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <br>
+    <div class="card border-0">
+      <div class="card-body">
+        {% if wit_qs %}
+          {% for a in wit_qs %}
+            {% if a.tlt_response == 'A' %}
+              <h4>Unsuccessful Applicants</h4>
+            {% endif %}
+          {% endfor %}
+        {% else %}
+          <h4>Suitable Applicants</h4>
+        {% endif %}
+        <table class="table table-sm">
+          <col width="15%">
+          <col width="5%">
+          <col width="5%">
+          <col width="1%">
+          <col width="8%">
+          <col width="45%">
+          <col width="10%">
+          <thead>
+            <tr>
+              <th class="align-middle text-center">Alias</th>
+              <th class="align-middle text-center">Experience</th>
+              <th class="align-middle text-center">Training</th>
+              <th class="align-middle text-center">Books Read</th>
+              <th class="align-middle text-center">Rate</th>
+              <th class="align-middle text-left">Motivation</th>
+              <th class="align-middle text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for sl in interview_s.items %}
+            <tr>
+              <td class="align-middle text-center">{{ sl.1.ro.0.4 }}</td>
+              <td class="align-middle text-center">{{ sl.1.we|intcomma }}<br>(<strong>{{ sl.1.s_no }}</strong> skills)</td>
+              <td class="align-middle text-center">{{ sl.1.te|intcomma }}</td>
+              <td class="align-middle text-center">{{ sl.1.rb }}</td>
+              <td class="align-middle text-center">{{ sl.1.ro.0.1 }} <strong>{{ sl.1.ro.0.0|intcomma }}</strong> {{ sl.1.ro.0.2 }}</td>
+              <td class="align-middle">{{ sl.1.ro.0.3|truncatechars:200 }}</td>
+              <td class="align-middle text-center">
+                <p>
+                  <a href="{% url 'Talent:APV' tlt=sl.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill float-right" style="width: 6rem">View Profile</a>
+                  {% if active == False %}
+                  <form  action="{% url 'MarketPlace:VacAssign' tlt=sl.1.ro.0.4 vac=scope.ref_no %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="badge badge-success badge-pill float-right" style="width: 6rem">Assign</button>
+                    <a href="{% url 'MarketPlace:NotSuitable' tlt=sl.1.ro.0.4 vac=scope.ref_no %}" class="badge badge-danger badge-pill float-right" style="width: 6rem">Not Suitable</a>
+                  </form>
+                  {% else %}
+                    <button type="submit" class="badge badge-success badge-pill float-right" style="width: 6rem">Pending</button>
+                  {% endif %}
 
-    <h4>Declined Invitation for Interview</h4>
+                </p>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="7">No talent identified or selected at the moment.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <br>
+    <div class="card border-0">
+      <div class="card-body">
+        <h4>Unsuitable Applicants</h4>
+        <table class="table table-sm">
+          <col width="15%">
+          <col width="5%">
+          <col width="5%">
+          <col width="1%">
+          <col width="8%">
+          <col width="45%">
+          <col width="10%">
+          <thead>
+            <tr>
+              <th class="align-middle text-center">Alias</th>
+              <th class="align-middle text-center">Experience</th>
+              <th class="align-middle text-center">Training</th>
+              <th class="align-middle text-center">Books Read</th>
+              <th class="align-middle text-center">Rate</th>
+              <th class="align-middle text-left">Motivation</th>
+              <th class="align-middle text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for sl in interview_n.items %}
+            <tr>
+              <td class="align-middle text-center">{{ sl.1.ro.0.4 }}</td>
+              <td class="align-middle text-center">{{ sl.1.we|intcomma }}<br>(<strong>{{ sl.1.s_no }}</strong> skills)</td>
+              <td class="align-middle text-center">{{ sl.1.te|intcomma }}</td>
+              <td class="align-middle text-center">{{ sl.1.rb }}</td>
+              <td class="align-middle text-center">{{ sl.1.ro.0.1 }} <strong>{{ sl.1.ro.0.0|intcomma }}</strong> {{ sl.1.ro.0.2 }}</td>
+              <td class="align-middle">{{ sl.1.ro.0.3|truncatechars:200 }}</td>
+              <td class="align-middle text-center">
+                <p>
+                  <a href="{% url 'Talent:APV' tlt=sl.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill float-right" style="width: 5rem">View Profile</a>
+                  <form  action="{% url 'MarketPlace:Suitable' tlt=sl.1.ro.0.4  vac=scope.ref_no %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="badge badge-success badge-pill float-right" style="width: 5rem">Suitable</button>
+                  </form>
+                </p>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="7">No talent identified as unsuitbale for this scope.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <br>
+    <div class="card border-0">
+      <div class="card-body">
 
-<table class="table table-sm">
-  <col width="15%">
-  <col width="15%">
-  <col width="70%">
-<thead>
-  <tr>
-    <th class="align-middle text-center">Alias</th>
-    <th class="align-middle text-center">Reason</th>
-    <th class="align-middle text-left">Details</th>
-  </tr>
-</thead>
-<tbody>
+        <h4>Declined Invitation for Interview</h4>
 
-  {% for intd in intv_declined %}
-  <tr>
-    <td class="align-middle text-center">{{ intd.talent.alias }}</td>
-    <td class="align-middle text-center">{{ intd.tlt_decline_reason }}</td>
-    <td class="align-middle text-left">{{ intd.comments_tlt }}</td>
-  </tr>
-  {% empty %}
-  <tr>
-    <td colspan="7">Nobody has Declined the Interview Invitation</td>
-  </tr>
-  {% endfor %}
-  </tbody>
-  </table>
-</div>
-</div>
-<br>
-<div class="card border-0">
-<div class="card-body">
-    <h4>Declined Assignment</h4>
-  <table class="table table-sm">
-    <col width="15%">
-    <col width="15%">
-    <col width="70%">
-  <thead>
-    <tr>
-      <th class="align-middle text-center">Alias</th>
-      <th class="align-middle text-center">Reason</th>
-      <th class="align-middle text-left">Details</th>
-    </tr>
-  </thead>
-  <tbody>
+        <table class="table table-sm">
+          <col width="15%">
+          <col width="15%">
+          <col width="70%">
+        <thead>
+          <tr>
+            <th class="align-middle text-center">Alias</th>
+            <th class="align-middle text-center">Reason</th>
+            <th class="align-middle text-left">Details</th>
+          </tr>
+        </thead>
+        <tbody>
 
-  {% for intd in vacancy_declined %}
-  <tr>
-    <td class="align-middle text-center">{{ intd.talent.alias }}</td>
-    <td class="align-middle text-center">{{ intd.tlt_decline_reason }}</td>
-    <td class="align-middle text-left">{{ intd.comments }}</td>
-  </tr>
-  {% empty %}
-  <tr>
-    <td colspan="7">Nobody has declined an assignment.</td>
-  </tr>
-  {% endfor %}
-</tbody>
-</table>
-</div>
-</div>
+          {% for intd in intv_declined %}
+          <tr>
+            <td class="align-middle text-center">{{ intd.talent.alias }}</td>
+            <td class="align-middle text-center">{{ intd.tlt_decline_reason }}</td>
+            <td class="align-middle text-left">{{ intd.comments_tlt }}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="7">Nobody has Declined the Interview Invitation</td>
+          </tr>
+          {% endfor %}
+          </tbody>
+          </table>
+        </div>
+      </div>
+      <br>
+      <div class="card border-0">
+        <div class="card-body">
+            <h4>Declined Assignment</h4>
+            <table class="table table-sm">
+              <col width="15%">
+              <col width="15%">
+              <col width="70%">
+              <thead>
+                <tr>
+                  <th class="align-middle text-center">Alias</th>
+                  <th class="align-middle text-center">Reason</th>
+                  <th class="align-middle text-left">Details</th>
+                </tr>
+              </thead>
+              <tbody>
+
+              {% for intd in vacancy_declined %}
+              <tr>
+                <td class="align-middle text-center">{{ intd.talent.alias }}</td>
+                <td class="align-middle text-center">{{ intd.tlt_decline_reason }}</td>
+                <td class="align-middle text-left">{{ intd.comments }}</td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="7">Nobody has declined an assignment.</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 {{ form.media.js }}

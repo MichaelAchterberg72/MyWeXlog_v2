@@ -7,43 +7,43 @@
 
 {% block content %}
 <div class="card border-0">
-<div class="card-body">
-<div class="container">
-  <h3>Assign {{ job.title }} ({{ job.ref_no }})</h3>
-  <h4>to {{ talent.alias }}</h4>
-  <form method="post" enctype="multipart/form-data">
-    <input type="hidden" name="next" value="{{ request.GET.next }}">
-    {% csrf_token %}
-    <div class="form-row">
-        <div class="form-group col-md-6 mb-0">
-          <div class="form-row">
-            <div class="form-group col-md-4 mb-0">
-              {{ form.currency|as_crispy_field }}
+  <div class="card-body">
+    <div class="container">
+    <h3>Assign {{ job.title }} ({{ job.ref_no }})</h3>
+    <h4>to {{ talent.alias }}</h4>
+    <form method="post" enctype="multipart/form-data">
+      <input type="hidden" name="next" value="{{ request.GET.next }}">
+      {% csrf_token %}
+      <div class="form-row">
+          <div class="form-group col-md-6 mb-0">
+            <div class="form-row">
+              <div class="form-group col-md-4 mb-0">
+                {{ form.currency|as_crispy_field }}
+              </div>
+              <div class="form-group col-md-4 mb-0">
+                {{ form.rate_offered|as_crispy_field }}
+              </div>
+              <div class="form-group col-md-4 mb-0">
+                {{ form.rate_unit|as_crispy_field }}
+              </div>
             </div>
-            <div class="form-group col-md-4 mb-0">
-              {{ form.rate_offered|as_crispy_field }}
-            </div>
-            <div class="form-group col-md-4 mb-0">
-              {{ form.rate_unit|as_crispy_field }}
-            </div>
-        </div>
-      </div>
-      <div class="form-group col-md-6 mb-0">
-        <div class="form-row">
-          <div class="form-group col-md-4 mb-0">
-            {{ form.date_begin|as_crispy_field }}
           </div>
-          <div class="form-group col-md-4 mb-0">
-            {{ form.date_deliverable|as_crispy_field }}
+          <div class="form-group col-md-6 mb-0">
+            <div class="form-row">
+              <div class="form-group col-md-5 mb-0">
+                {{ form.date_begin|as_crispy_field }}
+              </div>
+              <div class="form-group col-md-5 mb-0">
+                {{ form.date_deliverable|as_crispy_field }}
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-  </div>
-    <div class="">
-      <button type="submit" name="done" class="btn btn-primary">Assign</button>
+        <div class="">
+          <button type="submit" name="done" class="btn btn-primary">Assign</button>
+        </div>
+    </form>
     </div>
-  </form>
-  </div>
   </div>
 </div>
 

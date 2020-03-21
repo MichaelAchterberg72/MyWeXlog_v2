@@ -278,6 +278,17 @@ def AssignmentAcceptView(request, slug):
     assignment = WorkIssuedTo.objects.filter(slug=slug)
     assignment.update(tlt_response='A', tlt_response_date=timezone.now())
 
+    tlt = assignment[0].talent
+    vac = assignment[0].work
+
+    TalentRequired.objects.filter(Q(ref_no=vac.ref_no)).update(vac_wkfl='A', offer_status='C')
+    BidShortList.objects.filter(Q(talent=tlt) & Q(scope=vac)).update(status='A')
+    BidInterviewList.objects.filter(Q(talent=tlt) & Q(scope=vac)).update(outcome='A')
+
+    wb_qs = WorkBid.objects.filter(Q(talent=tlt) & Q(scope=vac))
+    if wb_qs:
+        wb_qs.update(bidreview='A')
+
     return redirect(reverse('Profile:ProfileHome')+'#Assignment')
 
 
@@ -288,12 +299,24 @@ def AssignmentDeclineView(request, slug):
     assignment.update(tlt_response='D', tlt_response_date=timezone.now())
     instance = get_object_or_404(WorkIssuedTo, slug=slug)
 
+    tlt = assignment[0].talent
+    vac = assignment[0].work
+
     form = AssignmentDeclineReasonsForm(request.POST or None, instance = instance)
 
     if request.method =='POST':
         if form.is_valid():
             new=form.save(commit=False)
             new.save()
+
+            TalentRequired.objects.filter(Q(ref_no=vac.ref_no)).update(vac_wkfl='I', offer_status='O')
+            BidShortList.objects.filter(Q(talent=tlt) & Q(scope=vac)).update(status='D')
+            BidInterviewList.objects.filter(Q(talent=tlt) & Q(scope=vac)).update(outcome='D')
+
+            wb_qs = WorkBid.objects.filter(Q(talent=tlt) & Q(scope=vac))
+            if wb_qs:
+                wb_qs.update(bidreview='D')
+
             return redirect(reverse('Profile:ProfileHome')+'#Assignments')
     else:
         template = 'marketplace/assignment_decline_reasons.html'
@@ -347,7 +370,16 @@ def AssignmentClarifyView(request, wit):
 @login_required()
 @subscription(1)
 def InterviewAcceptView(request, int_id):
-    BidInterviewList.objects.filter(pk=int_id).update(tlt_response='A', tlt_reponded=timezone.now())
+    bil_qs = BidInterviewList.objects.filter(pk=int_id)
+    bil_qs.update(tlt_response='A', tlt_reponded=timezone.now())
+
+    tlt = bil_qs[0].talent
+    vac = bil_qs[0].scope
+    BidShortList.objects.filter(Q(talent=tlt) & Q(scope=vac)).update(bidreview='I')
+
+    wb_qs = WorkBid.objects.filter(Q(talent=tlt) & Q(work=vac))
+    if wb_qs:
+        wb_qs.update(bidreview='I')
 
     return redirect(reverse('Profile:ProfileHome')+ '#Interview')
 
@@ -355,7 +387,16 @@ def InterviewAcceptView(request, int_id):
 @login_required()
 @subscription(1)
 def InterviewDeclineView(request, int_id):
-    BidInterviewList.objects.filter(pk=int_id).update(tlt_response='D', tlt_intcomplete=True, tlt_reponded=timezone.now())
+    bil_qs = BidInterviewList.objects.filter(pk=int_id)
+    bil_qs.update(tlt_response='D', tlt_intcomplete=True, tlt_reponded=timezone.now())
+
+    tlt = bil_qs[0].talent
+    vac = bil_qs[0].scope
+    wb_qs = WorkBid.objects.filter(Q(talent=tlt) & Q(work=vac))
+    BidShortList.objects.filter(Q(talent=tlt) & Q(scope=vac)).update(bidreview='D')
+
+    if wb_qs:
+        wb_qs.update(bidreview='D')
 
     return redirect(reverse('MarketPlace:InterviewDecline', kwargs={'int_id':int_id}))
 
