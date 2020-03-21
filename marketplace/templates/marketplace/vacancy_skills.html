@@ -3,7 +3,7 @@
 {% load crispy_forms_tags %}
 {% load static %}
 
-{% block title %}{{block.super}}-Deliverables{% endblock title %}
+{% block title %}{{block.super}}-Add Skills{% endblock title %}
 
 {% block content %}
 {{ form.media.css }}
@@ -13,7 +13,7 @@
   }
   </style>
 <div class="container">
-<h3>Skills for {{ instance.title }}</h3>
+<h3>Skills required for {{ instance.title }}</h3>
 <form method="post" enctype="multipart/form-data">
   {% csrf_token %}
   <div class="form-row">
@@ -27,13 +27,16 @@
     <p><button type="submit" name="another" class="btn btn-primary">Add Another</button> <button type="submit" name="done" class="btn btn-primary">Complete</button></p>
   </div>
 </form>
-{% if skill_list %}
-  {% for s in skill_list %}
-  <ul>
-    <li>{{ s.skills }}</li>
-  </ul>
-  {% endfor %}
-{% endif %}
+  <h5>Skills already captured</h5>
+    <div class="container">
+      {% if skill_list %}
+        {% for s in skill_list %}
+        <ul class="list-group">
+          <li>{{ s.skills }}</li>
+        </ul>
+        {% endfor %}
+      {% endif %}
+    </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 {{ form.media.js }}

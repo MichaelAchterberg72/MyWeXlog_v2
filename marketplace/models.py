@@ -95,6 +95,7 @@ class TalentRequired(models.Model):
     expectations = models.TextField()
     terms = models.FileField(upload_to=BidTerms, blank=True, null=True)
     city = models.ForeignKey(City, on_delete=models.PROTECT, verbose_name='City, Town or Place')
+    date_modified = models.DateField(auto_now=True)
 
     class Meta:
         unique_together = (('enterprise','title', 'requested_by'),)
@@ -106,6 +107,7 @@ class TalentRequired(models.Model):
 class Deliverables(models.Model):
     scope = models.ForeignKey(TalentRequired, on_delete=models.CASCADE)
     deliverable = models.TextField()
+    date_modified = models.DateField(auto_now=True)
 
     class Meta:
         unique_together = (('scope','deliverable'),)
@@ -117,6 +119,7 @@ class Deliverables(models.Model):
 class SkillRequired(models.Model):
     scope = models.ForeignKey(TalentRequired, on_delete=models.CASCADE)
     skills = models.ForeignKey(SkillTag, on_delete=models.PROTECT)
+    date_modified = models.DateField(auto_now=True)
 
     class Meta:
         unique_together = (('skills','scope'),)
@@ -222,6 +225,7 @@ class TalentAvailabillity(models.Model):
     date_to = models.DateField()
     hours_available = models.IntegerField()
     unit = models.CharField(max_length=1, choices=UNIT, default='D')
+    date_modified = models.DateField(auto_now=True)
 
     def __str__(self):
         return '{} - {} {} ({})'.format(self.talent, self.hours_available, self.get_unit_display, self.date_to)

@@ -1273,8 +1273,8 @@ def ShortListView(request, vac):
 
 
 @login_required()
-def DeliverablesEditView(request, refd):
-    instance = get_object_or_404(Deliverables, slug=refd)
+def DeliverablesEditView(request, vac):
+    instance = get_object_or_404(Deliverables, scope__ref_no=vac)
     form = DeliverablesForm(request.POST or None, instance=instance)
     if request.method == 'POST':
         if form.is_valid():

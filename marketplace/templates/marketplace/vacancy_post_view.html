@@ -16,270 +16,286 @@
 <div class="container">
   <div class="card">
     <div class="card-body">
-<div class="btn-toolbar float-right">
-  <form  action="{% url 'BookList:BLB' %}" method="post">
-    <input type="hidden" name="next" value="{{ request.GET.next }}">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-secondary">Back</button>
-  </form>&nbsp
-    <a href="{% url 'MarketPlace:VacancyEdit' instance.ref_no %}" class="btn btn-info ">Edit Vacancy</a>
-</div>
-<h3>Vacancy Review</h3>
-<h5 class="card-title">Vacancy: {{ instance.title }} ({{ instance.ref_no }})</h5>
-
-<table class="table table-sm">
-  <thead>
-    <tr>
-      <th>Hours Required</th>
-      <th>Work Format</th>
-      <th>Office Location</th>
-      <th>Experience Level</th>
-      <th>Company</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>
-        {{ instance.hours_required|intcomma }} ({{ instance.get_unit_display }})
-      </td>
-      <td>{{ instance.worklocation }}</td>
-      <td>{{ instance.city.city }}</td>
-      <td>{{ instance.experience_level }}</td>
-      <td>{{ instance.enterprise.company }}</td>
-    </tr>
-  </tbody>
-</table>
-
-<br>
-<div class="row">
-  <div class="col-sm-6">
-    <div class="h-100">
-      <div class="card-body">
-        <h5 class="card-title">Scope</h5>
-        <p>{{ instance.scope|linebreaks }}</p>
+      <div class="btn-toolbar float-right">
+        <form  action="{% url 'BookList:BLB' %}" method="post">
+          <input type="hidden" name="next" value="{{ request.GET.next }}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-secondary">Back</button>
+        </form>&nbsp
+          <a href="{% url 'MarketPlace:VacancyEdit' instance.ref_no %}" class="btn btn-info ">Edit Vacancy</a>
       </div>
-    </div>
-  </div>
-  <div class="col-sm-6">
-    <div class="h-100">
-      <div class="card-body">
-        <h5 class="card-title">Expectations</h5>
-        <p>{{ instance.expectations|linebreaks }}</p>
-      </div>
-    </div>
-  </div>
-</div>
-<br>
-<div class="">
-  <div class="">
-    <div class="card-body">
-<table class="table table-sm">
-  <thead>
-    <tr>
-      <th>Proposed Rate</th>
-      <th>Bid Closing Date</th>
-      <th>Work Completion Date</th>
-      <th>Status</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>{{ instance.currency }} {{ instance.rate_offered }} ({{ instance.get_rate_unit_display }})</td>
-      <td>{{ instance.bid_closes|date:'j M Y' }}</td>
-      <td>{{ instance.date_deadline|date:'j M Y' }}</td>
-      <td>{{ instance.get_offer_status_display }}</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-</div>
-</div>
-<br>
-<div class="row">
-
-  <div class="col-sm-6">
-    <div class="h-100">
-      <div class="card-body">
-        <a href="{% url 'MarketPlace:Deliverables2' instance.ref_no %}" class="badge badge-primary float-right" style="width: 5rem;">Add</a>
-        <h5 class="card-title" id="deliverables">Deliverables</h5>
+      <h3>Vacancy Review</h3>
+      <h5 class="card-title">Vacancy: {{ instance.title }} ({{ instance.ref_no }})</h5>
 
       <table class="table table-sm">
-        <col width="90%">
-        <col width="10%">
         <thead>
-          <col width="85%">
-          <col width="15%">
           <tr>
-            <th>Deliverable</th>
-            <th>Options</th>
+            <th>Hours Required</th>
+            <th>Work Format</th>
+            <th>Office Location</th>
+            <th>Experience Level</th>
+            <th>Company</th>
           </tr>
         </thead>
-        {% for d in delivere %}
         <tbody>
           <tr>
-            <td>{{ d.deliverable|linebreaks|truncatechars:100 }}</td>
             <td>
-              <a href="{% url 'MarketPlace:DeliverablesEdit' d.id %}" class="badge badge-secondary badge-pill float-right" style="width: 5rem;">Edit</a>
-              <form  action="{% url 'MarketPlace:DeliverablesDelete' d.id %}" method="post">
-                {% csrf_token %}
-              <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
-              </form>
+              {{ instance.hours_required|intcomma }} ({{ instance.get_unit_display }})
             </td>
+            <td>{{ instance.worklocation }}</td>
+            <td>{{ instance.city.city }}</td>
+            <td>{{ instance.experience_level }}</td>
+            <td>{{ instance.enterprise.company }}</td>
           </tr>
         </tbody>
-        {% endfor %}
+      </table>
+
+      <br>
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="h-100">
+            <div class="card-body">
+              <h5 class="card-title">Scope</h5>
+              <p>{{ instance.scope|linebreaks }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="h-100">
+            <div class="card-body">
+              <h5 class="card-title">Expectations</h5>
+              <p>{{ instance.expectations|linebreaks }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="">
+        <div class="">
+          <div class="card-body">
+      <table class="table table-sm">
+        <thead>
+          <tr>
+            <th class="align-middle text-center">Proposed Rate</th>
+            <th class="align-middle text-center">Bid Closing Date</th>
+            <th class="align-middle text-center">Work Completion Date</th>
+            <th class="align-middle text-center">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="align-middle text-center">{{ instance.currency }} {{ instance.rate_offered|intcomma }} ({{ instance.get_rate_unit_display }})</td>
+            <td class="align-middle text-center">{{ instance.bid_closes|date:'j M Y' }}</td>
+            <td class="align-middle text-center">{{ instance.date_deadline|date:'j M Y' }}</td>
+            <td class="align-middle text-center">{{ instance.get_offer_status_display }}</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      </div>
+      </div>
+      <br>
+      <div class="row">
+
+        <div class="col-sm-6">
+          <div class="h-100">
+            <div class="card-body">
+              <a href="{% url 'MarketPlace:Deliverables2' instance.ref_no %}" class="badge badge-primary float-right" style="width: 5rem;">Add</a>
+              <h5 class="card-title" id="deliverables">Deliverables</h5>
+
+            <table class="table table-sm">
+              <col width="90%">
+              <col width="10%">
+              <thead>
+                <col width="85%">
+                <col width="15%">
+                <tr>
+                  <th>Deliverable</th>
+                  <th>Options</th>
+                </tr>
+              </thead>
+              {% for d in delivere %}
+              <tbody>
+                <tr>
+                  <td>{{ d.deliverable|linebreaks|truncatechars:100 }}</td>
+                  <td>
+                    <a href="{% url 'MarketPlace:DeliverablesEdit' d.scope.ref_no %}" class="badge badge-secondary badge-pill float-right" style="width: 5rem;">Edit</a>
+                    <form  action="{% url 'MarketPlace:DeliverablesDelete' d.id %}" method="post">
+                      {% csrf_token %}
+                    <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
+                    </form>
+                  </td>
+                </tr>
+              </tbody>
+              {% endfor %}
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6">
+          <div class="h-100">
+            <div class="card-body">
+              <a href="{% url 'MarketPlace:Skillsa' instance.ref_no %}" class="badge badge-primary float-right" style="width: 5rem;">Add</a>
+              <h5 class="card-title" id="skills">Skills</h5>
+              <table class="table table-sm">
+                <col width="90%">
+                <col width="10%">
+                <thead>
+                  <col width="85%">
+                  <col width="15%">
+                  <tr>
+                    <th>Skill</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for s in skille %}
+                  <tr>
+                    <td>{{ s.skills }}</td>
+                    <td><form  action="{% url 'MarketPlace:SkillDelete' s.id %}" method="post">
+                      {% csrf_token %}
+                      <button type="submit" class="badge badge-danger badge-pill float-right" style="width: 5rem;">Remove</button>
+                    </form></td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p>&nbsp</p>
+  <p><a href="{% url 'MarketPlace:ShortListView' instance.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-info">View Short-list</a>&nbsp<a href="{% url 'MarketPlace:InterviewList' instance.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-info">View Interview List</a></p>
+
+  <div class="card">
+    <div class="card-body">
+      <h3 id='suited'>Talent suited to the Vacancy</h3>
+
+      <div class="">
+        <table class="table table-sm">
+          <col width="15%">
+          <col width="5%">
+          <col width="5%">
+          <col width="1%">
+          <col width="8%">
+          <col width="45%">
+          <col width="10%">
+          <thead>
+            <tr>
+              <th class="align-middle text-center">Alias</th>
+              <th class="align-middle text-center">Experience</th>
+              <th class="align-middle text-center">Training</th>
+              <th class="align-middle text-center">Books Read</th>
+              <th class="align-middle text-center">Rate</th>
+              <th class="align-middle text-left">Motivation</th>
+              <th class="align-middle text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for key in suitable.items %}
+            <tr>
+              <td class="align-middle text-center">{{ key.1.ro.0.4 }}</td>
+              <td class="align-middle text-center">{{ key.1.we|intcomma }}<br>(<strong>{{ key.1.s_no }}</strong> skills)</td>
+              <td class="align-middle text-center">{{ key.1.te|intcomma }}</td>
+              <td class="align-middle text-center">{{ key.1.rb }}</td>
+              <td class="align-middle text-center">{{ key.1.ro.0.1 }}<br><strong>{{ key.1.ro.0.0|intcomma }}</strong><br>{{ key.1.ro.0.2 }}</td>
+              <td class="align-middle text-left">{{ key.1.ro.0.3|truncatechars:200 }}</td>
+              <td class="align-middle text-center">
+                <p>
+              <form  action="{% url 'MarketPlace:ShortList' tlt=key.1.ro.0.4  vac=instance.ref_no %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="badge badge-info badge-pill float-right" style="width: 5rem;">Short-list</button>
+              </form><br>
+              <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=instance.ref_no %}" class="badge badge-success badge-pill float-right" style="width: 5rem;" target="new">View Profile</a></p>
+              </td>
+            {% empty %}
+              {% if s_list %}
+                  <td colspan="6">All suitable talent has been short-listed.</td>
+                  <td>
+                    <a href="{% url 'MarketPlace:ShortListView' instance.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-info">Goto Short-list</a>
+                  </td>
+              {% else %}
+                    <td colspan="7">There is no talent currently in MyWexLog suited to this vacancy.</td>
+              {% endif %}
+            </tr>
+            {% endfor %}
+          </tbody>
         </table>
+      </div>
+      {% if suitable %}
+        <div class="float-right">
+          <a href="{% url 'MarketPlace:TalentSuitedToVacancy' instance.ref_no %}" class="btn btn-primary"style="width: 10rem">View All Talent</a>
+        </div>
+      {% endif %}
+    </div>
   </div>
-  </div>
-  </div>
-
-
-  <div class="col-sm-6">
-    <div class="h-100">
-      <div class="card-body">
-    <a href="{% url 'MarketPlace:Skillsa' instance.ref_no %}" class="badge badge-primary float-right" style="width: 5rem;">Add</a>
-    <h5 class="card-title" id="skills">Skills</h5>
+  <br>
+  <div class="card">
+    <div class="card-body">
+    <h3>Applicants</h3>
+    <hr>
+    <div class="">
     <table class="table table-sm">
-      <col width="90%">
+      <col width="15%">
+      <col width="5%">
+      <col width="5%">
+      <col width="1%">
+      <col width="8%">
+      <col width="45%">
       <col width="10%">
       <thead>
-        <col width="85%">
-        <col width="15%">
         <tr>
-          <th>Skill</th>
+          <th class="align-middle text-center">Alias</th>
+          <th class="align-middle text-center">Experience</th>
+          <th class="align-middle text-center">Training</th>
+          <th class="align-middle text-center">Books Read</th>
+          <th class="align-middle text-center">Bid Rate</th>
+          <th class="align-middle text-left">Motivation</th>
+          <th class="align-middle text-center">Action</th>
         </tr>
       </thead>
       <tbody>
-        {% for s in skille %}
+        {% for key in applied.items %}
         <tr>
-          <td>{{ s.skills }}</td>
-          <td><form  action="{% url 'MarketPlace:SkillDelete' s.id %}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="badge badge-danger badge-pill float-right" style="width: 5rem;">Remove</button>
-          </form></td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-  </div>
-</div>
-</div>
-  </div>
-</div>
-
-<p>&nbsp</p>
-<p><a href="{% url 'MarketPlace:ShortListView' instance.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-info">View Short-list</a>  <a href="{% url 'MarketPlace:InterviewList' instance.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-info">View Interview List</a></p>
-<p>&nbsp</p>
-<div class="card">
-  <div class="card-body">
-  <h3 id='suited'>Talent suited to the Vacancy</h3>
-
-  <div class="">
-    <table class="table table-sm">
-      <thead>
-        <tr>
-          <th class="text-center">Alias</th>
-          <th class="text-center">Experience</th>
-          <th class="text-center">Training</th>
-          <th class="text-center">Captured Skills</th>
-          <th class="text-center">Books Read</th>
-          <th class="text-center">Rate</th>
-          <th class="text-left">Motivation</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for key in suitable.items %}
-        <tr>
-          <td class="align-middle">{{ key.1.ro.0.4 }}</td>
-          <td class="align-middle">{{ key.1.we }}</td>
-          <td class="align-middle">{{ key.1.te }}</td>
-          <td class="align-middle text-center">{{ key.1.s_no }}</td>
+          <td class="align-middle text-center">{{ key.1.ro.0.4 }}</td>
+          <td class="align-middle text-center">{{ key.1.we|intcomma }}<br>(<strong>{{ key.1.s_no }}</strong> skills)</td>
+          <td class="align-middle text-center">{{ key.1.te|intcomma }}</td>
           <td class="align-middle text-center">{{ key.1.rb }}</td>
-          <td class="align-middle">{{ key.1.ro.0.1 }} <strong>{{ key.1.ro.0.0 }}</strong> {{ key.1.ro.0.2 }}</td>
-          <td class="align-middle">{{ key.1.ro.0.3|truncatechars:200 }}</td>
-          <td class="align-middle"><p>
-          <form  action="{% url 'MarketPlace:ShortList' tlt=key.1.ro.0.4  vac=instance.ref_no %}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="badge badge-info badge-pill float-right" style="width: 5rem;">Short-list</button>
-          </form><br>
-          <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=instance.ref_no %}" class="badge badge-success badge-pill float-right" style="width: 5rem;" target="new">View Profile</a></p>
-          </td>
+          <td class="align-middle text-center">{{ key.1.ro.0.1 }}<br><strong>{{ key.1.ro.0.0|intcomma }}</strong><br>{{ key.1.ro.0.2 }}</td>
+          <td class="align-middle text-left">{{ key.1.ro.0.3|truncatechars:200 }}</td>
+          <td class="align-middle text-center">
+            <p>
+              <form  action="{% url 'MarketPlace:ShortList' tlt=key.1.ro.0.4  vac=instance.ref_no %}" method="post" name="active">
+              {% csrf_token %}
+              <button type="submit"  class="badge badge-info badge-pill float-right" style="width: 5rem;">Short-list</button>
+            </form><br>
+            <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=instance.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-success badge-pill float-right" style="width: 5rem;" target="new">View Profile</a>
+          </p>
+        </td>
           {% empty %}
             {% if s_list %}
-              <p>All suitable talent has been short-listed.</p>
+              <td colspan="6">All applicants have been short-listed.</td>
+              <td>
+                <a href="{% url 'MarketPlace:ShortListView' instance.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-info">Goto Short-list</a>
+              </td>
             {% else %}
-              <p>No talent suited to this vacancy.</p>
+            <td colspan="7">No applications for this vacancy.</td>
             {% endif %}
+          </td>
         </tr>
-        {% endfor %}
       </tbody>
+      {% endfor %}
     </table>
+    {% if applied %}
+      <p>&nbsp</p>
+      <div class="float-right">
+        <a href="{% url 'MarketPlace:ApplicantsForVacancy' vac=instance.ref_no %}" class="btn btn-primary"style="width: 10rem">View All Applicants</a>
+      </div>
+    {% endif %}
+    </div>
   </div>
-
-  <div class="float-right">
-    <a href="{% url 'MarketPlace:TalentSuitedToVacancy' instance.ref_no %}" class="btn btn-primary"style="width: 10rem">View All Talent</a>
-  </div>
-</div>
-</div>
-<br>
-<div class="card">
-  <div class="card-body">
-  <h3>Applicants</h3>
-  <hr>
-  <div class="">
-  <table class="table table-sm">
-    <thead>
-      <tr>
-        <th class="text-center">Alias</th>
-        <th class="text-center">Experience</th>
-        <th class="text-center">Training</th>
-        <th class="text-center">Captured Skills</th>
-        <th class="text-center">Books Read</th>
-        <th class="text-center">Bid Rate</th>
-        <th class="text-left">Motivation</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for key in applied.items %}
-      <tr>
-
-        <td class="align-middle">{{ key.1.ro.0.4 }}</td>
-        <td class="align-middle">{{ key.1.we }}</td>
-        <td class="align-middle">{{ key.1.te }}</td>
-        <td class="align-middle">{{ key.1.s_no }}</td>
-        <td class="align-middle">{{ key.1.rb }}</td>
-        <td class="align-middle">{{ key.1.ro.0.1 }} <strong>{{ key.1.ro.0.0 }}</strong> {{ key.1.ro.0.2 }}</td>
-        <td class="align-middle">{{ key.1.ro.0.3|truncatechars:200 }}</td>
-        <td class="align-middle">
-          <p>
-            <form  action="{% url 'MarketPlace:ShortList' tlt=key.1.ro.0.4  vac=instance.ref_no %}" method="post" name="active">
-            {% csrf_token %}
-            <button type="submit"  class="badge badge-info badge-pill float-right" style="width: 5rem;">Short-list</button>
-          </form><br>
-          <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=instance.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-success badge-pill float-right" style="width: 5rem;" target="new">View Profile</a>
-        </p>
-      </td>
-      </tr>
-      <tr>
-      <td colspan=6>
-        {% empty %}
-          {% if s_list %}
-            <p>All applicants have been short-listed.</p>
-          {% else %}
-            <p>No applications for this vacancy.</p>
-          {% endif %}
-      </td>
-      </tr>
-    </tbody>
-    {% endfor %}
-  </table>
-  <p>&nbsp</p>
-  <div class="float-right">
-    <a href="{% url 'MarketPlace:ApplicantsForVacancy' vac=instance.ref_no %}" class="btn btn-primary"style="width: 10rem">View All Applicants</a>
-  </div>
-  </div>
-</div>
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 {{ form.media.js }}
