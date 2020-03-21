@@ -6,7 +6,12 @@
 {% block content %}
 <div class="card border-0">
   <div class="card-body">
-  <h4 class="">Applications Received for Vacancy - Full List<span><p class="float-right"><a href="{% url 'MarketPlace:Entrance' %}"  class="badge badge-pill badge-primary">Back</a></p></span></h4>
+    <div class="float-right">
+      <a href="{% url 'MarketPlace:Entrance' %}"  class="btn btn-secondary">Back</a>
+      <a href="{% url 'MarketPlace:HelpApplicantsVacancyFull' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
+      <i class="icon icon-question-circle"></i></a>
+    </div>
+  <h4 class="">Applications Received for Vacancy - Full List</h4>
 
   <div class="border-0" style="width: 100%;">
     <div class="card-body">

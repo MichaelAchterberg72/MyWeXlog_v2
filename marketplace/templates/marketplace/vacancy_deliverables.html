@@ -6,7 +6,12 @@
 {% block title %}{{block.super}}-Deliverables{% endblock title %}
 
 {% block content %}
-<div class="container">
+<div class="card border-0">
+  <div class="card-body">
+    <div class="float-right">
+      <a href="{% url 'MarketPlace:HelpDeliverables' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
+      <i class="icon icon-question-circle"></i></a>
+    </div>
 <h3>Deliverables for {{ instance.title }}</h3>
 <form method="post" enctype="multipart/form-data">
   {% csrf_token %}
@@ -24,6 +29,7 @@
     </ul>
 
 {% endif %}
+</div>
 </div>
 
 {% endblock content %}

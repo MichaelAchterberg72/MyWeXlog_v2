@@ -1,0 +1,33 @@
+{% extends 'base_homelite.html' %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Help{% endblock title %}
+
+{% block Style %}
+
+{% endblock Style %}
+{% block content %}
+<div class="container">
+  <h3>Vacancy Deliverables - Help</h3>
+    <p>&nbsp</p>
+    <p>This page allows you to add deliverables to the vacancy. A deliverable is a tangible
+      or intangible good or service produced as a result of a project that is intended to
+      be delivered to a customer. A deliverable could be a report, a document, a software
+      product, a server upgrade or any other building block of an overall project.</p>
+    <p>Each deliverable must be written in point form as a single point, then another
+      added.</p>
+    <p><strong>Existing Deliverables</strong></p>
+    <p>The deliverables added will automatically be listed below the dialog box for your
+      convenience added.</p>
+    <br>
+    <p><strong>Navigation Buttons</strong></p>
+    <p></p>
+    <p><button type="submit" name="another" class="btn btn-primary">Add Another</button>
+    <p>This will allow you to save the documented deliverable and add another.</p>
+    <br>
+    <p><button type="submit" name="done" class="btn btn-primary">Add Skills Required</button></p>
+    <p>This will allow you to navigate to the Skill Required page.</p>
+</div>
+{% endblock content %}

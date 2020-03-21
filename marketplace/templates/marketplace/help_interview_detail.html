@@ -1,0 +1,57 @@
+{% extends 'base_homelite.html' %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Help{% endblock title %}
+
+{% block Style %}
+
+{% endblock Style %}
+{% block content %}
+<div class="container">
+  <h3>My Vacancies Advertised - Interview Detail - Help</h3>
+    <p>&nbsp</p>
+    <p>This provides detail of the interview with a list of comments for each of the
+      talent that has been interviewed for that vacancy.</p>
+    <p>It will display the vacancy title and system reference number at the top of
+      the list.</p>
+    <p>Each of the talent interviews or scheduled for an interview will be listed
+      with the talents alias, the talents response to the interview request, your
+      selection as to the talents suitability, the interview status as well as the
+      your comments from the interview.</p>
+    <br>
+    <p><strong>Talent listed Option Buttons</strong></p>
+    <p></p>
+    <p>The button options available are:</p>
+    <table class="table table-sm">
+    <col width="10%">
+    <col width="70%">
+    <thead>
+        <tr>
+          <td class="align-middle text-center">Open <a href="#" data-toggle="tooltip" title="Close Interview"><i class="fa fa-close" style="font-size:24px;color:red"></i></a> </td>
+          <td>This will allow you to easily close the interview status by clicking on
+            the red cross.</td>
+        </tr>
+        <tr>
+          <td class="align-middle text-center"><a href="#" class="" data-toggle="tooltip" title="See Vacancy Detail"><i class="fa fa-industry" style="font-size:24px;color:black"></i></a>
+          </td>
+        <td>This will allow you to open and view the vacancy detail page.</td>
+        </tr>
+        <tr>
+          <td class="align-middle text-center">
+            <a href="#" data-toggle="tooltip" title="Post Comment"><i class="fa fa-pencil-square-o" style="font-size:30px;color:black"></i></a>
+          </td>
+          <td>This will open the dialog page to allow you to add a comment for the
+            interview.</td>
+        </tr>
+      </table>
+    <br>
+    <br>
+    <p><strong>View All Talent</strong></p>
+    <p><a href="#" class="btn btn-primary"style="width: 10rem">View All Talent</a></p>
+    <p>This will open the full list of talent suited to the vacancy.</p>
+    <br>
+
+</div>
+{% endblock content %}
