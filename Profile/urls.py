@@ -97,5 +97,10 @@ urlpatterns = [
         path('help/desktop/workflow/', views.HelpDesktopWorkflowView, name='HelpDesktopWorkflow'),
         path('help/desktop/pending-interviews/', views.HelpDesktopPendingInterviewsView, name='HelpDesktopPendingInterviews'),
         path('help/desktop/assignments/', views.HelpDesktopAssignmentsView, name='HelpDesktopAssignments'),
-
+        path('help/experience-review/lecturer/', views.HelpLecturerConfirmView, name='HelpConfirmLecturer'),
+        path('help/experience-review/classmate/', views.HelpClassmateConfirmView, name='HelpConfirmClassmate'),
+        path('help/experience-review/colleague/', views.HelpColleqagueConfirmView, name='HelpConfirmColleague'),
+        path('help/experience-review/subordinate/', views.HelpSubordinateConfirmView, name='HelpConfirmSubordinate'),
+        path('help/experience-review/co-worker/', views.HelpCoworkerConfirmView, name='HelpConfirmCoworker'),
+        path('help/experience-review/coonsultant-contractor/', views.HelpContractorConfirmView, name='HelpConfirmContractor'),
 ]

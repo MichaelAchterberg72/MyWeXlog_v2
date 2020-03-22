@@ -17,7 +17,7 @@
       <p>There are currently {{ pcount.sum_p|intcomma }} projects listed in WeXlog!</p>
       <p><a href="{% url 'Project:ProjectAdd' %}" class="badge badge-pill badge-primary">Add Project</a><a href="{% url 'Project:Project-Search' %}" class="badge badge-pill badge-primary">Search Projects</a><a href="{% url 'Enterprise:EnterpriseHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
       {% endif %}
-      <table class="table table-sm">
+      <table class="table table-hover table-sm">
       <col width="40%">
       <col width="20%">
       <col width="20%">
@@ -32,7 +32,7 @@
       </thead>
       {% for p in pageitems %}
       <tbody>
-        <tr>
+        <tr onclick="window.location='{% url 'Project:ProjectDetail' p.slug %}?next={{ request.path|urlencode }}'">
           <td>{{ p.company }} ({{ p.name }})</td>
           <td>{{ p.industry }}</td>
           <td>{{ p.city }}</td>

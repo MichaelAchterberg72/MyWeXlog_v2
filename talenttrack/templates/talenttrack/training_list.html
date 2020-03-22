@@ -17,7 +17,7 @@
     </div>
       <p><strong>Total hours in training: </strong>{{ train_sum.Edu_sum|intcomma }}</p>
     <div>
-    <table class="table table-sm">
+    <table class="table table-hover table-sm">
       <thead>
         <tr>
           <th class="align-middle text-center">Start Date</th>
@@ -29,7 +29,7 @@
       </thead>
       {% for t in pageitems %}
       <tbody>
-        <tr>
+        <tr onclick="window.location='{% url 'Talent:EducationDetail' t.slug %}'">
           <td class="align-middle text-center">{{ t.date_from|date:"j M Y" }}</td>
           <td class="align-middle text-center">{{ t.date_to|date:"j M Y" }}</td>
           <td class="align-middle text-center">{{ t.course }}</td>

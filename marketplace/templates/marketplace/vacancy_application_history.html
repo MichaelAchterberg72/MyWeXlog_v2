@@ -13,7 +13,7 @@
     </div>
     <h4 class="card-title">Vacancy Application History</h4>
     <h4 class="card-title">Roles Applied for</h4>
-    <table class="table table-sm">
+    <table class="table table-hover table-sm">
       <thead>
         <tr>
           <th class="align-middle text-center">Date Applied</th>
@@ -28,7 +28,7 @@
       <tbody>
 
         {% for i in applied %}
-          <tr>
+          <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' i.work.ref_no %}'">
             <td>{{ i.date_applied|date:"d N Y" }}</td>
             <td>{{ i.work.title }}</td>
             <td>{{ i.work.ref_no }}</td>
@@ -61,7 +61,7 @@
     </div>
     <h4 class="card-title">Roles Shortlisted for</h4>
 
-    <table class="table table-sm">
+    <table class="table table-hover table-sm">
       <thead>
         <tr>
           <th class="align-middle text-center">Date Applied</th>
@@ -76,7 +76,7 @@
       <tbody>
 
         {% for i in s_list %}
-          <tr>
+          <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' i.scope.ref_no %}'">
             <td>{{ i.date_listed|date:"d N Y" }}</td>
             <td>{{ i.scope.title }}</td>
             <td>{{ i.scope.ref_no }}</td>
@@ -110,7 +110,7 @@
       <i class="icon icon-question-circle"></i></a>
     </div>
     <h4 class="card-title">Unsuccessful Applications</h4>
-    <table class="table table-sm">
+    <table class="table table-hover table-sm">
       <thead>
         <tr>
           <th class="align-middle text-center">Date Applied</th>
@@ -125,7 +125,7 @@
       <tbody>
 
         {% for r in rejected %}
-          <tr>
+          <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' r.work.ref_no %}'">
             <td>{{ r.date_applied|date:"d N Y" }}</td>
             <td>{{ r.work.title }}</td>
             <td>{{ r.work.ref_no }}</td>
@@ -143,7 +143,7 @@
           </tr>
       {% endfor %}
       {% for r in p_rejected %}
-        <tr>
+        <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' r.scope.ref_no %}'">
           <td>{{ r.date_listed|date:"d N Y" }}</td>
           <td>{{ r.scope.title }}</td>
           <td>{{ r.scope.ref_no }}</td>
@@ -177,7 +177,7 @@
       <i class="icon icon-question-circle"></i></a>
     </div>
     <h4 class="card-title">Successful Applications</h4>
-    <table class="table table-sm">
+    <table class="table table-hover table-sm">
       <thead>
         <tr>
           <th class="align-middle text-center">Date Applied</th>
@@ -192,7 +192,7 @@
       <tbody>
 
       {% for s in accepted %}
-        <tr>
+        <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' s.work.ref_no %}'">
           <td>{{ s.date_applied|date:"d N Y" }}</td>
           <td>{{ s.work.title }}</td>
           <td>{{ s.work.ref_no }}</td>
@@ -210,7 +210,7 @@
         </tr>
       {% endfor %}
       {% for s in p_accepted %}
-        <tr>
+        <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' s.scope.ref_no %}'">
           <td>{{ s.date_listed|date:"d N Y" }}</td>
           <td>{{ s.scope.title }}</td>
           <td>{{ s.scope.ref_no }}</td>

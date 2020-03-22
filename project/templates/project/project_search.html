@@ -29,7 +29,7 @@
 
 
     {% for ProjectData in results %}
-    <table class="table table-sm">
+    <table class="table table-hover table-sm">
       <col width="30%">
       <col width="20%">
       <col width="20%">
@@ -45,7 +45,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <tr onclick="window.location='{% url 'Project:ProjectDetail' ProjectData.slug %}?next={{ request.path|urlencode }}'">
           <td>{{ ProjectData.name }}</td>
           <td>{{ ProjectData.company }}</td>
           <td>{{ ProjectData.industry }}</td>

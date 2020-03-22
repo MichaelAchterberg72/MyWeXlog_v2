@@ -4,17 +4,19 @@
 
 {% block content %}
 
-<div class="card border-0" style="width: 100%;">
+<div class="card border-0">
   <div class="card-body">
     <div class="float-right">
       <form  action="{% url 'BookList:BLB' %}" method="post">
       <input type="hidden" name="next" value="{{ request.GET.next }}">
       {% csrf_token %}
       <button type="submit" class="btn btn-secondary">Back</button>
+      <a href="{% url 'MarketPlace:HelpInterviewHistoryEmployerAll' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
+      <i class="icon icon-question-circle"></i></a>
     </form>
     </div>
     <h4 class="card-title">Interview History (All Interviews)</h4>
-    <table class="table table-sm">
+    <table class="table table-hover table-sm">
       <thead>
         <tr>
           <th class="align-middle text-center">Talent</th>
@@ -27,8 +29,8 @@
         </tr>
       </thead>
       <tbody>
-        {% for l in list %}
-          <tr>
+        {% for l in pageitems %}
+          <tr onclick="window.location='{% url 'MarketPlace:VacancyPost' l.scope.ref_no %}?next={{ request.path|urlencode }}'">
             <td class="align-middle text-center">{{ l.talent.alias }}</td>
             <td class="align-middle text-center">{{ l.scope.title }}</td>
             <td class="align-middle text-center">{{ l.scope.ref_no }}</td>
@@ -59,6 +61,45 @@
         {% endfor %}
     </tbody>
     </table>
+    <p>&nbsp</p>
+
+    <nav aria-label="Page navigation">
+        {% if pageitems.has_other_pages %}
+          <ul class="pagination">
+            {% if pageitems.has_previous %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ pageitems.previous_page_number }}" aria-label="Previous">
+                  <span aria-hidden="true">Previous</span>
+                  <span class="sr-only disabled">Previous</span>
+                </a></li>
+            {% else %}
+              <li class="page-link disabled" tabindex="-1"><span>Previous</span></li>
+            {% endif %}
+
+            {% if pageitems.number|add:'-4' > 1 %}
+              <li class="page-link"><a href="?page={{ pageitems.number|add:'-5' }}">&hellip;</a></li>
+            {% endif %}
+
+            {% for i in pageitems.paginator.page_range %}
+              {% if pageitems.number == i %}
+                <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
+              {% elif i > pageitems.number|add:'-5' and i < pageitems.number|add:'5' %}
+                <li class="page-link"><a class="page-item" href="?page={{ i }}">{{ i }}</a></li>
+              {% endif %}
+            {% endfor %}
+
+            {% if pageitems.paginator.num_pages > pageitems.number|add:'4' %}
+              <li class="page-link"><a href="?page={{ pageitems.number|add:'5' }}">&hellip;</a></li>
+            {% endif %}
+
+            {% if pageitems.has_next %}
+              <li class="page-link"><a href="?page={{ pageitems.next_page_number }}">Next</a></li>
+            {% else %}
+              <li class="page-link disabled"><span>Next</span></li>
+            {% endif %}
+          </ul>
+        {% endif %}
+    </nav>
   </div>
 </div>
 

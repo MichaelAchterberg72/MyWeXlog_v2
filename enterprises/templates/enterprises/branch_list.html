@@ -15,7 +15,7 @@
     {% if request.user.is_authenticated %}
     <p><a href="{% url 'Enterprise:AddBranch' detail.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Add Branch</a><a href="{% url 'Enterprise:EnterpriseHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
     {% endif %}
-    <table class="table table-sm">
+    <table class="table table-hover table-sm">
       <col width="30%">
       <col width="30%">
       <col width="15%">
@@ -32,7 +32,7 @@
       </thead>
       {% for b in pageitems %}
       <tbody>
-        <tr>
+        <tr onclick="window.location='{% url 'Enterprise:BranchDetail' b.slug %}?next={{ request.path|urlencode }}'">
           <td>{{ b.name }}</td>
           <td>{{ b.type }}</td>
           {% if request.user.subscription >= 2 %}

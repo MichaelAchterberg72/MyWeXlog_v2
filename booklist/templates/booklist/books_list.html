@@ -18,7 +18,7 @@
       <a href="{% url 'BookList:book-search' %}" class="badge badge-pill badge-primary">Search All Books</a>
       <a href="{% url 'BookList:BookListHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
     {% endif %}
-          <table class="table table-sm">
+          <table class="table table-hover table-sm">
           <col width="30%">
           <col width="15%">
           <col width="20%">
@@ -35,7 +35,7 @@
           </thead>
             {% for item in pageitems %}
           <tbody>
-            <tr>
+            <tr onclick="window.location='{% url 'BookList:BookDetail' item.slug %}?next={{ request.path|urlencode }}'">
               <td>{{ item.title }}</td>
               <td>{{ item.publisher }}</td>
               <td></td>

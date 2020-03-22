@@ -104,11 +104,10 @@ urlpatterns = [
     path('help/vacancy-review/applicants-for-vacancy/', views.HelpApplicantsView, name='HelpApplicantsVacancy'),
     path('help/vacancy-review/applicants-for-vacancy-full-list/', views.HelpApplicantsFullView, name='HelpApplicantsVacancyFull'),
     path('help/interview-history-all/', views.HelpInterviewHistoryAllView, name='HelpInterviewHistoryAll'),
+    path('help/interview-history-employer-all/', views.HelpEmployerInterviewHistoryAllView, name='HelpInterviewHistoryEmployerAll'),
     path('help/interview-detail/', views.HelpInterviewDetailView, name='HelpInterviewDetail'),
     path('help/deliverable/', views.HelpDeliverable2View, name='HelpDeliverable2'),
     path('help/deliverables/', views.HelpDeliverablesView, name='HelpDeliverables'),
-
-
 
 
 ]

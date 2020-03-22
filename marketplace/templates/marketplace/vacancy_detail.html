@@ -17,27 +17,28 @@
   <div class="">
     <h4 class="card-title">Vacancy: {{ v.title }} ({{ v.ref_no }})</h4>
   </div>
+  <br>
   {% endfor %}
 <table class="table table-sm">
   <thead>
     <tr>
-      <th class="align-middle text-center">Hours Required</th>
-      <th class="align-middle text-center">Work Configeration</th>
-      <th class="align-middle text-center">Office Location</th>
-      <th class="align-middle text-center">Experience Level</th>
-      <th class="align-middle text-center">Company</th>
+      <th>Hours Required</th>
+      <th>Work Format</th>
+      <th>Office Location</th>
+      <th>Experience Level</th>
+      <th>Company</th>
     </tr>
   </thead>
   <tbody>
     {% for v in vacancy %}
     <tr>
-      <td class="align-middle text-center">
+      <td>
         {{ v.hours_required|intcomma }} ({{ v.get_unit_display }})
       </td>
-      <td class="align-middle text-center">{{ v.worklocation }}</td>
-      <td class="align-middle text-center">{{ v.city.city }}</td>
-      <td class="align-middle text-center">{{ v.experience_level }}</td>
-      <td class="align-middle text-center">{{ v.enterprise.company }}</td>
+      <td>{{ v.worklocation }}</td>
+      <td>{{ v.city.city }}</td>
+      <td>{{ v.experience_level }}</td>
+      <td>{{ v.enterprise.company }}</td>
     </tr>
   </tbody>
   {% endfor %}
@@ -69,17 +70,17 @@
 <table class="table table-sm">
   <thead>
     <tr>
-      <th class="align-middle text-center">Proposed Rate</th>
-      <th class="align-middle text-center">Bid Closing Date</th>
-      <th class="align-middle text-center">Work Completion Date</th>
+      <th>Proposed Rate</th>
+      <th>Bid Closing Date</th>
+      <th>Work Completion Date</th>
     </tr>
   </thead>
   <tbody>
     {% for v in vacancy %}
     <tr>
-      <td class="align-middle text-center">{{ v.currency.currency_abv }} {{ v.rate_offered|intcomma }} ({{ v.get_rate_unit_display }})</td>
-      <td class="align-middle text-center">{{ v.bid_closes|date:"j M Y" }}</td>
-      <td class="align-middle text-center">{{ v.date_deadline|date:"j M Y" }}</td>
+      <td>{{ v.currency }}{{ v.rate_offered }} ({{ v.get_rate_unit_display }})</td>
+      <td>{{ v.bid_closes }}</td>
+      <td>{{ v.date_deadline }}</td>
     </tr>
   </tbody>
   {% endfor %}

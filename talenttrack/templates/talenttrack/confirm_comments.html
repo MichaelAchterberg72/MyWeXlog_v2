@@ -6,8 +6,12 @@
 
 {% block content %}
 <div class="card">
-  <h5 class="card-header">Confirm Experience with Comment</h5>
   <div class="card-body">
+    <div class="float-right">
+      <a href="{% url 'Profile:HelpDesktopPendingInterviews' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
+      <i class="icon icon-question-circle"></i></a>
+    </div>
+    <h4 class="card-title">Confirm Experience with Comment</h4>
     <h6 class="card-title">{{ info.education.talent.first_name }} {{ info.education.talent.last_name }}</h5>
     <table class="table table-sm">
       <col width="40%">

@@ -14,9 +14,10 @@
     </form>
     </div>
     <h4 class="card-title">My Office</h4>
-    <table class="table table-sm">
+    <br>
+    <table class="table table-hover table-sm">
       <thead>
-        <tr>
+        <tr class="no-hover">
           <th class="align-middle text-center">Vacancy</th>
           <th class="align-middle text-center">Reference<br>Number</th>
           <th class="align-middle text-center">Assigned<br>to</th>
@@ -28,7 +29,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <tr class="no-hover">
           <th colspan="7">Open Assignments</th>
         </tr>
         {% for o in wit_qsao %}
@@ -64,7 +65,7 @@
             <td colspan="6">No open assignments</td>
           </tr>
         {% endfor %}
-        <tr>
+        <tr class="no-hover">
           <th colspan="7">Pending Assignments</th>
         </tr>
         {% for o in wit_qsp %}
@@ -92,7 +93,7 @@
             <td colspan="6">No Pending assignments</td>
           </tr>
         {% endfor %}
-        <tr>
+        <tr class="no-hover">
           <th colspan="7">Completed Assignments</th>
         </tr>
         {% for o in wit_qsac %}
