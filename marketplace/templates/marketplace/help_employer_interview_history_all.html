@@ -1,0 +1,75 @@
+{% extends 'base_homelite.html' %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Help{% endblock title %}
+
+{% block Style %}
+
+{% endblock Style %}
+{% block content %}
+<div class="container">
+  <h3>Employer Interview History - Help</h3>
+    <p>&nbsp</p>
+    <p>This provides a full list of all the interviews that you have listed.</p>
+    <br>
+    <p><strong>Interview History</strong></p>
+    <p><button type="submit" class="btn btn-secondary">Back</button></p>
+    <p>This will navigate you back to the vacancies home page.</p>
+    <br>
+    <br>
+    <p>The table lists the talent alias, the vacancy title, the system reference number,
+      the talents Response to the interview request being Accept, peding or reject,
+      your response to the being pending, suitable, not suitaable or candidate declined
+      and the interview status being either open or closed.</p>
+    <p>The options you will be provided with will be:</p>
+    <table class="table table-sm">
+    <col width="10%">
+    <col width="70%">
+    <tbody>
+        <tr>
+          <td class="align-middle text-center">Open <a href="#" data-toggle="tooltip" title="Close Interview"><i class="fa fa-close" style="font-size:24px;color:red"></i></a>
+          </td>
+          <td>Shows that the interview status is classified as open. You are able to change the
+            status to closed by clicking on the <a href="#"><i class="fa fa-close" style="font-size:24px;color:red"></i></a>.</td>
+        </tr>
+        <tr>
+          <td class="text-center"><a href="#" class="" data-toggle="tooltip" title="See Vacancy Detail"><i class="fa fa-industry" style="font-size:24px;color:black"></i></a>
+          </td>
+          <td>Opens the vacancy detail page.</td>
+        </tr>
+        <tr>
+          <td class="text-center"><a href="#" data-toggle="tooltip" title="See Interview Comments"><i class="fa fa-commenting-o" style="font-size:30px;color:black"></i></a>
+          </td>
+          <td>Opens the interview detail for that vacancy position page.</td>
+        </tr>
+    </tbody>
+  </table>
+  <p>By hovering over the icons a tooltip will appear indicating what the icon functionality is.</p>
+  <br>
+  <br>
+  <p><strong>Pagination</strong></p>
+  <nav aria-label="...">
+    <ul class="pagination">
+      <li class="page-item disabled">
+        <span class="page-link">Previous</span>
+      </li>
+      <li class="page-item"><a class="page-link" href="#">1</a></li>
+      <li class="page-item active">
+        <span class="page-link">
+          2
+          <span class="sr-only">(current)</span>
+        </span>
+      </li>
+      <li class="page-item"><a class="page-link" href="#">3</a></li>
+      <li class="page-item">
+        <a class="page-link" href="#">Next</a>
+      </li>
+    </ul>
+  </nav>
+
+<p>The pagination may be navigated by clicking on the required page number or alternativly
+  by clicking the 'Previous' or 'Next' selectors.</p>
+
+</div>
+{% endblock content %}

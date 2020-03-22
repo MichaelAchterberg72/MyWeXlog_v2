@@ -25,7 +25,8 @@
             </form>&nbsp <a href="{% url 'MarketPlace:InterviewList' vacancy.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-warning">View Interview List</a>
           </div>
     <h4 class="card-title">Short list for {{ vacancy.title }} ({{ vacancy.ref_no }})</h4>
-  <table class="table table-sm">
+    <br>
+  <table class="table table-hover table-sm">
     <thead>
       <tr>
         <th class="align-middle text-center">Alias</th>

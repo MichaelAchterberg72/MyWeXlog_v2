@@ -17,7 +17,8 @@
       </div>
     {% endif %}
     <h4 class="card-title">Vacancies Suited for Me </h4>
-    <table class="table table-sm">
+    <p>We only list the 5 most recent vacancies here, you currently have {{ dsd_count }} vacancies that match your skillset experience.</p>
+    <table class="table table-hover table-sm">
       <col width="5%">
       <col width="15%">
       <col width="6%">
@@ -37,7 +38,7 @@
       {% for i in dsd %}
       {% if i.scope.id not in already_applied %}
       <tbody>
-      <tr  class="align-middle text-center">
+        <tr class="align-middle text-center" onclick="window.location='{% url 'MarketPlace:VacancyDetail' i.scope.ref_no %}'">
         <td>{{ i.scope.ref_no }}</td>
         <td>{{ i.scope.title }}</td>
         <td>
@@ -80,7 +81,8 @@
     <i class="icon icon-question-circle"></i></a>
     </div>
   <h4 class="card-title">My Vacancies Advertised (Open)</h4>
-  <table class="table table-sm">
+  <p>We only list the 5 most recent vacancies here, you currently have {{ ipost_count }} open vacancies listed.</p>
+  <table class="table table-hover table-sm">
     <thead>
       <tr>
         <th class="align-middle text-center">Date Posted</th>
@@ -92,7 +94,7 @@
     </thead>
     <tbody>
       {% for p in ipost %}
-        <tr>
+        <tr onclick="window.location='{% url 'MarketPlace:VacancyPost' p.ref_no %}'">
           <td class="align-middle text-center">{{ p.bid_open|date:'j M Y' }}</td>
           <td class="align-middle text-center">{{ p.title }}</td>
           <td class="align-middle text-center">{{ p.bid_closes|date:'j M Y' }}</td>
@@ -128,7 +130,8 @@
         <i class="icon icon-question-circle"></i></a>
         </div>
       <h4 class="card-title">My Vacancies Advertised (Closed)</h4>
-      <table class="table table-sm">
+      <p>We only list the 5 most recent vacancies here, you currently have {{ ipost_closed_count }} closed vacancies listed.</p>
+      <table class="table table-hover table-sm">
         <thead>
           <tr>
             <th class="align-middle text-center">Date Posted</th>
@@ -140,7 +143,7 @@
         </thead>
         <tbody>
           {% for c in ipost_closed %}
-            <tr>
+            <tr onclick="window.location='{% url 'MarketPlace:VacancyPost' c.ref_no %}?next={{ request.path|urlencode }}'">
               <td class="align-middle text-center">{{ c.bid_open|date:'j M Y' }}</td>
               <td class="align-middle text-center">{{ c.title }}</td>
               <td class="align-middle text-center">{{ c.bid_closes|date:'j M Y' }}</td>
@@ -179,7 +182,7 @@
       <i class="icon icon-question-circle"></i></a>
       </div>
       <h4 class="card-title">My Availability</h4>
-      <table class="table table-sm">
+      <table class="table table-hover table-sm">
         <thead>
           <col width="20%">
           <col width="20%">

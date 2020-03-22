@@ -32,7 +32,7 @@
     </thead>
     {% for i in results %}
     <tbody>
-    <tr  class="align-middle text-center">
+    <tr class="align-middle text-center" onclick="window.location='{% url 'MarketPlace:VacancyDetail' i.ref_no %}'">
       <td>{{ i.ref_no }}</td>
       <td>{{ i.title }}</td>
       <td>

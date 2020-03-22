@@ -12,7 +12,8 @@
     width: 200px;
   }
   </style>
-<div class="container">
+<div class="card border-0">
+  <div class="card-body">
 <h3>Skills required for {{ instance.title }}</h3>
 <form method="post" enctype="multipart/form-data">
   {% csrf_token %}
@@ -37,6 +38,7 @@
         {% endfor %}
       {% endif %}
     </div>
+</div>
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 {{ form.media.js }}

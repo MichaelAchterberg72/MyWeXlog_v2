@@ -18,7 +18,7 @@
 
     <h4 class="card-title">Interview Detail</h4>
 
-    <table class="table table-sm">
+    <table class="table table-hover table-sm">
       <thead>
         <tr>
           <th class="align-middle text-center">Vacancy Title</th>
@@ -44,7 +44,7 @@
       </thead>
       <tbody>
         {% for d in bil_qs %}
-          <tr>
+          <tr onclick="window.location='{% url 'MarketPlace:VacancyPost' d.scope.ref_no %}?next={{ request.path|urlencode }}'">
             <td rowspan="2" class="align-middle text-center">{{ d.talent.alias }}</td>
             <td class="align-middle text-center">{{ d.get_tlt_response_display }}</td>
             <td class="align-middle text-center">{{ d.get_outcome_display }}</td>

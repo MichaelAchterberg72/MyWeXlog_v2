@@ -13,7 +13,7 @@
       <p><a href="{% url 'Talent:ExperienceCapture' %}" class="badge badge-pill badge-primary float-right">Add Experience</a></p>
     </div>
       <p><strong>Total hours of Experience: </strong>{{ exp_sum.we_sum|intcomma }}</p>
-    <table class="table table-sm">
+    <table class="table table-hover table-sm">
       <thead>
         <tr>
           <th>Employer</th>
@@ -25,7 +25,7 @@
       </thead>
       {% for e in pageitems %}
       <tbody>
-        <tr>
+        <tr onclick="window.location='{% url 'Talent:ExperienceDetail' e.slug %}'">
           <td>{{ e.company }}</td>
           <td>{{ e.date_from|date:"j M Y" }}</td>
           <td>{{ e.date_to|date:"j M Y" }}</td>

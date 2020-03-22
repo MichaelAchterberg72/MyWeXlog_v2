@@ -1335,3 +1335,52 @@ def HelpDesktopAssignmentsView(request):
     template_name = 'Profile/help_desktop_assignments.html'
     context = {}
     return render(request, template_name, context)
+
+
+@login_required()
+def HelpLecturerCommentView(request):
+    template_name = 'Profile/help_lecturer_comment.html'
+    context = {}
+    return render(request, template_name, context)
+
+
+@login_required()
+def HelpLecturerConfirmView(request):
+    template_name = 'Profile/help_confirm_lecturer.html'
+    context = {}
+    return render(request, template_name, context)
+
+
+@login_required()
+def HelpClassmateConfirmView(request):
+    template_name = 'Profile/help_confirm_classmate.html'
+    context = {}
+    return render(request, template_name, context)
+
+
+@login_required()
+def HelpColleqagueConfirmView(request):
+    template_name = 'Profile/help_confirm_colleague.html'
+    context = {}
+    return render(request, template_name, context)
+
+
+@login_required()
+def HelpSubordinateConfirmView(request):
+    template_name = 'Profile/help_confirm_subordinate.html'
+    context = {}
+    return render(request, template_name, context)
+
+
+@login_required()
+def HelpCoworkerConfirmView(request):
+    template_name = 'Profile/help_confirm_coworker.html'
+    context = {}
+    return render(request, template_name, context)
+
+
+@login_required()
+def HelpContractorConfirmView(request):
+    template_name = 'Profile/help_confirm_contractor.html'
+    context = {}
+    return render(request, template_name, context)

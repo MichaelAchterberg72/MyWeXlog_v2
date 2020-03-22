@@ -103,7 +103,9 @@
 
 {% block TBA %}
   <div class="justify-content">
+    <div class="tooltip">hover<span class="tooltiptext">Public Profile</span></div>
     <a href="{% url 'Talent:APV' tlt=request.user.alias vac='1ad9t2' %}?next={{ request.path|urlencode }}" target="_blank"><i class="fa fa-id-badge" aria-hidden="true"style="font-size:30px;color:black" data-toggle="tooltip" title="Public Profile"></i></a>
+
     &nbsp &nbsp
     <a href="{% url 'Talent:DPCSum' %}?next={{ request.path|urlencode }}"><i class="fa fa-industry" style="font-size:30px;color:black" data-toggle="tooltip" title="View Summary for Industry, Project and Designation."></i></a>
     &nbsp &nbsp
@@ -129,7 +131,7 @@
     </div>
     <h4 class="card-title" id="Interview">Pending Interviews</h4>
 
-<table class="table table-sm">
+<table class="table table-hover table-sm">
   <col width="50%">
   <col width="15%">
   <col width="15%">
@@ -146,7 +148,7 @@
   </thead>
   <tbody>
     {% if interviews_tlt %}
-    <tr>
+    <tr class="no-hover">
       <td colspan="3"><h6>As a Candidate</h6></td>
     </tr>
     {% for tlt_i in interviews_tlt %}
@@ -173,7 +175,7 @@
     {% endfor %}
     {% endif %}
     {% if interviews_emp %}
-    <tr>
+    <tr class="no-hover">
       <td colspan="3"><h6>As an Employer</h6></td>
     </tr>
     {% for tlt_e in interviews_emp %}
@@ -204,8 +206,9 @@
 </table>
 </div>
 </div>
-{% endif %}
 <br>
+{% endif %}
+
 {% if assigned_tlt or assigned_emp %}
 <div class="card border-0">
   <div class="card-body">
@@ -214,7 +217,7 @@
     <i class="icon icon-question-circle"></i></a>
   </p></span></h4>
 
-<table class="table table-sm">
+<table class="table table-hover table-sm">
   <col width="45%">
   <col width="10%">
   <col width="15%">
@@ -233,7 +236,7 @@
   </thead>
   <tbody>
     {% if assigned_tlt %}
-    <tr>
+    <tr class="no-hover">
       <td colspan="6"><h6>As Talent ({{ assigned_tltc }} in Workflow)</h6></td>
     </tr>
     {% for psn in assigned_tlt %}
@@ -257,7 +260,7 @@
     {% endfor %}
     {% endif %}
     {% if assigned_emp %}
-    <tr>
+    <tr  class="no-hover">
       <td colspan="6"><h6>As an Employer ({{ assigned_empc }} in Workflow)</h6></td>
     </tr>
     {% for psn in assigned_emp %}
@@ -293,7 +296,7 @@
       </tr>
       {% elif psn.tlt_response == 'A' %}
       <tr>
-        <td>Please contact the Talent directly at <a href="emailto:{{ psn.talent.email }}">{{ psn.talent.email }}</a></td>
+        <td colspan="5">Please contact the Talent directly at <a href="emailto:{{ psn.talent.email }}">{{ psn.talent.email }}</a></td>
       </tr>
       {% endif %}
     {% endfor %}

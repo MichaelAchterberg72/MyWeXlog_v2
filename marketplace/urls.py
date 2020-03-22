@@ -86,6 +86,7 @@ urlpatterns = [
     path('help/vacancy-review/applicants-for-vacancy/', views.HelpApplicantsView, name='HelpApplicantsVacancy'),
     path('help/vacancy-review/applicants-for-vacancy-full-list/', views.HelpApplicantsFullView, name='HelpApplicantsVacancyFull'),
     path('help/interview-history-all/', views.HelpInterviewHistoryAllView, name='HelpInterviewHistoryAll'),
+    path('help/interview-history-employer-all/', views.HelpEmployerInterviewHistoryAllView, name='HelpInterviewHistoryEmployerAll'),
     path('help/interview-detail/', views.HelpInterviewDetailView, name='HelpInterviewDetail'),
     path('help/deliverable/', views.HelpDeliverable2View, name='HelpDeliverable2'),
     path('help/deliverables/', views.HelpDeliverablesView, name='HelpDeliverables'),
@@ -94,7 +95,6 @@ urlpatterns = [
     path('tlt-int-close/<slug:bil>/<slug:tlt>/', views.TltInterviewClose, name='TalentIntClose'),
     path('tlt-int-detail/<slug:bil>/<slug:tlt>/', views.TltIntFullDetail, name='TalentIntDetail'),
     path('tlt-int-comment/<slug:bil>/<slug:tlt>/', views.TltIntCommentView, name='TalentIntComment'),
-
 
     path('interview-historye/<slug:tlt>/', views.EmployerInterviewHistoryView, name="EmployerInterviewHistory"),
     path('emp-int-close/<slug:bil>/<slug:tlt>/', views.EmpInterviewClose, name='EmployerIntClose'),

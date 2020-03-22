@@ -108,10 +108,30 @@ def TltIntFullDetail(request, bil, tlt):
 @login_required()
 @subscription(2)
 def EmployerInterviewHistoryView(request, tlt):
-    list = BidInterviewList.objects.filter(scope__requested_by__alias=tlt).order_by('-scope__ref_no')
+    interviews = BidInterviewList.objects.filter(scope__requested_by__alias=tlt).order_by('-scope__ref_no')
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(interviews, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
 
     template = 'marketplace/interview_history_employer.html'
-    context = {'list': list,}
+    context = {'pageitems': pageitems, 'page_range': page_range}
     return render(request, template, context)
 
 
@@ -401,9 +421,13 @@ def VacancyDetailView_Profile(request, vac):
 @subscription(2)
 def AllPostedVacanciesView(request):
     #>>>Queryset caching
+    talent=request.user
     tr = TalentRequired.objects.filter(requested_by=request.user)
+    wb = WorkBid.objects.filter(work__requested_by=talent)
     #Queryset caching<<<
     ipost = tr.order_by('-bid_open')
+    ipost_bid = wb.filter(Q(bidreview__exact='R') | Q(bidreview__exact='P') | Q(bidreview__exact='A'))
+    ipost_bid_flat = ipost_bid.values_list('work', flat=True).distinct()
 
     try:
         page = int(request.GET.get('page', 1))
@@ -427,6 +451,7 @@ def AllPostedVacanciesView(request):
 
     template = 'marketplace/vacancy_posts_all.html'
     context ={
+        'ipost_bid_flat': ipost_bid_flat,
         'pageitems': pageitems,
         'page_range': page_range
     }
@@ -437,9 +462,13 @@ def AllPostedVacanciesView(request):
 @subscription(2)
 def AllPostedVacanciesOpenView(request):
     #>>>Queryset caching
+    talent=request.user
     tr = TalentRequired.objects.filter(requested_by=request.user)
+    wb = WorkBid.objects.filter(work__requested_by=talent, work__offer_status__iexact='O')
     #Queryset caching<<<
     ipost = tr.filter(offer_status='O').order_by('-bid_open')
+    ipost_bid = wb.filter(Q(bidreview__exact='R') | Q(bidreview__exact='P') | Q(bidreview__exact='A'))
+    ipost_bid_flat = ipost_bid.values_list('work', flat=True).distinct()
 
     try:
         page = int(request.GET.get('page', 1))
@@ -463,6 +492,7 @@ def AllPostedVacanciesOpenView(request):
 
     template = 'marketplace/vacancy_posts_open.html'
     context ={
+        'ipost_bid_flat': ipost_bid_flat,
         'pageitems': pageitems,
         'page_range': page_range
     }
@@ -473,9 +503,13 @@ def AllPostedVacanciesOpenView(request):
 @subscription(2)
 def AllPostedVacanciesClosedView(request):
     #>>>Queryset caching
+    talent=request.user
     tr = TalentRequired.objects.filter(requested_by=request.user)
+    wb = WorkBid.objects.filter(work__requested_by=talent, work__offer_status__iexact='C')
     #Queryset caching<<<
     ipost = tr.filter(offer_status='C').order_by('-bid_open')
+    ipost_bid = wb.filter(Q(bidreview__exact='R') | Q(bidreview__exact='P') | Q(bidreview__exact='A'))
+    ipost_bid_flat = ipost_bid.values_list('work', flat=True).distinct()
 
     try:
         page = int(request.GET.get('page', 1))
@@ -499,6 +533,7 @@ def AllPostedVacanciesClosedView(request):
 
     template = 'marketplace/vacancy_posts_closed.html'
     context ={
+        'ipost_bid_flat': ipost_bid_flat,
         'pageitems': pageitems,
         'page_range': page_range
     }
@@ -520,7 +555,9 @@ def MarketHome(request):
     #Queryset caching<<<
 
     ipost = trt.filter(offer_status__iexact='O').order_by('-bid_open')[:5]
+    ipost_count = trt.filter(offer_status__iexact='O').order_by('-bid_open').count()
     ipost_closed = trt.filter(offer_status__iexact='C').order_by('-bid_open')[:5]
+    ipost_closed_count = trt.filter(offer_status__iexact='C').order_by('-bid_open').count()
     ipost_bid = wb.filter(Q(bidreview__exact='R') | Q(bidreview__exact='P') | Q(bidreview__exact='A'))
     ipost_bid_flat = ipost_bid.values_list('work', flat=True).distinct()
     capacity = ta.filter(date_to__gte=timezone.now()).order_by('-date_to')[:5]
@@ -574,13 +611,23 @@ def MarketHome(request):
         ds = ds | display
 
     dsd=ds.distinct('scope__title')[:5]
+    dsd_count = ds.distinct('scope__title').count()
 
     already_applied = wb.values_list('work__id', flat=True).distinct()
     #Experience Level check & list skills required in vacancies<<<
 
     template = 'marketplace/vacancy_home.html'
     context ={
-        'capacity': capacity, 'ipost': ipost, 'ipost_bid_flat': ipost_bid_flat, 'dsd': dsd, 'already_applied': already_applied, 'ipost_closed': ipost_closed}
+        'capacity': capacity,
+        'ipost': ipost,
+        'ipost_count': ipost_count,
+        'ipost_bid_flat': ipost_bid_flat,
+        'ipost_closed_count': ipost_closed_count,
+        'dsd': dsd,
+        'already_applied': already_applied,
+        'ipost_closed': ipost_closed,
+        'dsd_count': dsd_count,
+    }
     return render(request, template, context)
 
 
@@ -595,6 +642,9 @@ def VacanciesListView(request):
     we = WorkExperience.objects.filter(talent=talent).prefetch_related('topic')
     sr = SkillRequired.objects.filter(scope__offer_status__exact='O')
     sl = SkillLevel.objects.all()
+
+    ipost_bid = wb.filter(Q(bidreview__exact='R') | Q(bidreview__exact='P') | Q(bidreview__exact='A'))
+    ipost_bid_flat = ipost_bid.values_list('work', flat=True).distinct()
 
     #>>>Create a set of all skills
     e_skill = we.filter(edt=True).only('pk').values_list('pk', flat=True)
@@ -671,7 +721,7 @@ def VacanciesListView(request):
 
     template = 'marketplace/vacancy_list.html'
     context ={
-        'pageitems': pageitems, 'already_applied': already_applied, 'page_range': page_range}
+        'pageitems': pageitems, 'ipost_bid_flat': ipost_bid_flat, 'already_applied': already_applied, 'page_range': page_range}
     return render(request, template, context)
 
 
@@ -1637,6 +1687,14 @@ def HelpInterviewHistoryAllView(request):
 
     context = {}
     template = 'marketplace/help_interview_history_all.html'
+    return render(request, template, context)
+
+
+@login_required()
+def HelpEmployerInterviewHistoryAllView(request):
+
+    context = {}
+    template = 'marketplace/help_employer_interview_history_all.html'
     return render(request, template, context)
 
 

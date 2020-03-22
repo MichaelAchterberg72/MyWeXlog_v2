@@ -13,7 +13,7 @@
     </div>
     <h4 class="card-title">Vacancy Application History</h4>
     <h5 class="card-title">Successful Applications</h5>
-    <table class="table table-sm">
+    <table class="table table-hover table-sm">
       <thead>
         <tr>
           <th class="align-middle text-center">Date Applied</th>
@@ -28,7 +28,7 @@
       <tbody>
 
       {% for s in accepted %}
-        <tr>
+        <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' s.work.ref_no %}'">
           <td>{{ s.date_applied|date:"d N Y" }}</td>
           <td>{{ s.work.title }}</td>
           <td>{{ s.work.ref_no }}</td>

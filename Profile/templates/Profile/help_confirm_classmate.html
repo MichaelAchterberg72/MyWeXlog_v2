@@ -1,0 +1,54 @@
+{% extends 'base_homelite.html' %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Help{% endblock title %}
+
+{% block Style %}
+
+{% endblock Style %}
+{% block content %}
+<div class="container">
+  <h3>Confirm as a Classmate - Help</h3>
+    <p>&nbsp</p>
+    <p>This details the validations that have been requested of you as a
+      fellow classmate.</p>
+    <p>The information listed will be the Name of the person who requested the
+      validation from you, the course you attended with the company who provided it,
+      the subject topic and the dates from and till that the talent studied the
+      course with you.</p>
+    <br>
+    <p><strong>Actions Required</strong></p>
+    <p>The options you will be provided with when validating the experience will be:</p>
+    <table class="table table-sm">
+    <col width="10%">
+    <col width="70%">
+    <tbody>
+        <tr>
+          <td class="text-center">  <button type="submit" class="badge badge-primary badge-pill" style="width: 10rem">Confirm</button>
+      </td>
+          <td>Allows you to confirm the validation without requiring any further action.
+            No comment or reference will be provided.</td>
+        </tr>
+        <tr>
+          <td class="text-center"><button type="submit" class="badge badge-danger badge-pill" style="width: 10rem">Reject</button></td>
+          <td>Allows you to reject the validation due to the person not knowing you or
+            having not attended the course. This does not requier any further action.</td>
+        </tr>
+        <tr>
+          <td class="text-center"><a href="#" class="badge badge-pill badge-success" style="width: 10rem">Review with Comment</a></td>
+          <td>This will allow you to confirm the experience and provide reference comments
+            as to your experience of the person during the course.</td>
+        </tr>
+        <tr>
+          <td class="text-center"><button type="submit" class="badge badge-info badge-pill" style="width: 10rem">Wrong Person</button></td>
+          <td>Should you have received the validation request in error please select
+            this option as it will cancel the request and notify the requester of
+            their error.<td>
+        </tr>
+      </tbody>
+  </table>
+  <br>
+
+</div>
+{% endblock content %}

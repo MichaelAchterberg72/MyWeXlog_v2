@@ -21,7 +21,7 @@
         <a href="{% url 'BookList:book-search' %}" class="badge badge-pill badge-primary">Search All Books</a>
 
       {% endif %}
-    <table class="table table-sm">
+    <table class="table table-hover table-sm">
       <col width="55%">
       <col width="20%">
       <col width="15%">
@@ -36,7 +36,7 @@
       </thead>
       {% for b in pageitems %}
       <tbody>
-        <tr>
+        <tr onclick="window.location='{% url 'BookList:BookDetail' b.book.slug %}?next={{ request.path|urlencode }}'">
           <td>{{ b.book }}</td>
           <td>{{ b.type }}</td>
           <td>{{ b.date }}</td>

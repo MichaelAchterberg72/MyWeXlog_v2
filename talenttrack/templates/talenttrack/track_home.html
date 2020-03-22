@@ -81,7 +81,7 @@
         </div>
           <p><strong>Total hours in training: </strong>{{ train_sum.Edu_sum|intcomma }}</p>
         <div>
-        <table class="table table-sm">
+        <table class="table table-hover table-sm">
           <thead>
             <tr>
               <th class="align-middle text-center">Start Date</th>
@@ -93,7 +93,7 @@
           </thead>
           {% for t in train %}
           <tbody>
-            <tr>
+            <tr onclick="window.location='{% url 'Talent:EducationDetail' t.slug %}'">
               <td class="align-middle text-center">{{ t.date_from|date:"j M Y" }}</td>
               <td class="align-middle text-center">{{ t.date_to|date:"j M Y" }}</td>
               <td class="align-middle text-center">{{ t.course }}</td>
@@ -131,7 +131,7 @@
           <p><a href="{% url 'Talent:ExperienceCapture' %}" class="badge badge-pill badge-primary float-right">Add Experience</a></p>
         </div>
           <p><strong>Total hours of Experience: </strong>{{ exp_sum.we_sum|intcomma }}</p>
-        <table class="table table-sm">
+        <table class="table table-hover table-sm">
           <thead>
             <tr>
               <th>Employer</th>
@@ -143,7 +143,7 @@
           </thead>
           {% for e in experience %}
           <tbody>
-            <tr>
+            <tr onclick="window.location='{% url 'Talent:ExperienceDetail' e.slug %}'">
               <td>{{ e.company }}</td>
               <td>{{ e.date_from|date:"j M Y" }}</td>
               <td>{{ e.date_to|date:"j M Y" }}</td>
@@ -181,7 +181,7 @@
           <p><a href="{% url 'Talent:PreloggedCapture' %}" class="badge badge-pill badge-primary float-right">Add Logged Experience</a></p>
         </div>
         <p><strong>Total hours of Previously Logged Experience: </strong>{{ pre_sum.p_sum|intcomma }}</p>
-      <table class="table table-sm">
+      <table class="table table-hover table-sm">
         <thead>
           <tr>
             <th>Employer</th>
@@ -193,7 +193,7 @@
         </thead>
         {% for p in prelog %}
         <tbody>
-          <tr>
+          <tr onclick="window.location='{% url 'Talent:PreLogDetail' p.slug %}'">
             <td>{{ p.company }}</td>
             <td>{{ p.date_from|date:"j M Y" }}</td>
             <td>{{ p.date_to|date:"j M Y" }}</td>

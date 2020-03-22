@@ -16,7 +16,7 @@
     {% if user.is_authenticated %}
     <p><a href="{% url 'Enterprise:EnterpriseAdd' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Add New Enterprise</a>  <a href="{% url 'Enterprise:FullBranchAdd' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Add New Branch</a></p>
     {% endif %}
-    <table class="table table-sm">
+    <table class="table table-hover table-sm">
       <col width="30%">
       <col width="30%">
       <col width="15%">
@@ -31,7 +31,7 @@
       </thead>
       {% for c in pageitems %}
       <tbody>
-        <tr>
+        <tr onclick="window.location='{% url 'Enterprise:BranchList' c.slug %}?next={{ request.path|urlencode }}'">
           <td>{{ c.name }}</td>
           <td><a href="{{ c.website }}" target="_blank">{{ c.website }}</a></td>
           <td><a href="{% url 'Enterprise:BranchList' c.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 5rem;">List Branches</a> </td>

@@ -18,7 +18,7 @@
         <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="badge badge-primary 8rem" style="width: 8rem">Interview History</a>
       </div>
       <h4 class="card-title">Vacancies Suited for Me </h4>
-      <table class="table table-sm">
+      <table class="table table-hover table-sm">
         <col width="5%">
         <col width="15%">
         <col width="6%">
@@ -38,7 +38,7 @@
         {% for i in pageitems %}
         {% if i.scope.id not in already_applied %}
         <tbody>
-        <tr  class="align-middle text-center">
+        <tr class="align-middle text-center" onclick="window.location='{% url 'MarketPlace:VacancyDetail' i.scope.ref_no %}'">
           <td>{{ i.scope.ref_no }}</td>
           <td>{{ i.scope.title }}</td>
           <td>

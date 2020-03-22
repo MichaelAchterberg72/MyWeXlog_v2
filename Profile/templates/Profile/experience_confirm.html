@@ -3,17 +3,25 @@
 {% block title %}My {{block.super}} Profile{% endblock title %}
 
 {% block content %}
+{% if not wf1 or cm1 or wk1 or spr1 or wclr1 or wc1 %}
+<div class="card border-0">
+  <div class="card-body">
+    <p>You currently do not have any experience to confirm.</p>
+  </div>
+</div>
+<br>
+{% endif %}
+{% if wf1 %}
   <div class="row">
     <div class="col-sm-12">
       <div class="card border-0">
         <div class="card-body">
-          <p class="card-text">
-            {% if not wf1 or cm1 or wk1 or spr1 or wclr1 or wc1 %}
-              <p>You currently do not have any experience to confirm.</p>
-            {% endif %}
-            {% if wf1 %}
+            <div class="float-right">
+              <a href="{% url 'Profile:HelpConfirmLecturer' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
+              <i class="icon icon-question-circle"></i></a>
+            </div>
               <h4 class="card-title" id="Lecturer">Confirm as Lecturer</h4>
-              <table class="table table-sm">
+              <table class="table table-hover table-sm">
                 <col width="15%">
                 <col width="40%">
                 <col width="20%">
@@ -57,19 +65,24 @@
                 </tbody>
               </table>
               <br>
-            {% endif %}
+
             </div>
           </div>
         </div>
       </div>
       <br>
+    {% endif %}
+    {% if cm1 %}
       <div class="row">
         <div class="col-sm-12">
           <div class="card border-0">
             <div class="card-body">
-          {% if cm1 %}
+          <div class="float-right">
+            <a href="{% url 'Profile:HelpConfirmClassmate' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
+            <i class="icon icon-question-circle"></i></a>
+          </div>
             <h4 class="card-title" id='ClassMates'>Confirm a ClassMate's Entry</h4>
-            <table class="table table-sm">
+            <table class="table table-hover table-sm">
               <col width="15%">
               <col width="40%">
               <col width="20%">
@@ -113,19 +126,23 @@
               </tbody>
             </table>
             <br>
-          {% endif %}
         </div>
       </div>
     </div>
     </div>
     <br>
+  {% endif %}
+  {% if wk1 %}
     <div class="row">
     <div class="col-sm-12">
       <div class="card border-0">
         <div class="card-body">
-          {% if wk1 %}
+          <div class="float-right">
+            <a href="{% url 'Profile:HelpConfirmColleague' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
+            <i class="icon icon-question-circle"></i></a>
+          </div>
             <h4 class="card-title" id="Colleague">Confirm a Colleagues's Experience</h4>
-            <table class="table table-sm">
+            <table class="table table-hover table-sm">
               <thead>
                 <col width="15%">
                 <col width="20%">
@@ -177,19 +194,23 @@
               </tbody>
             </table>
             <br>
-          {% endif %}
-        </div>
+          </div>
       </div>
       </div>
       </div>
       <br>
+    {% endif %}
+    {% if spr1 %}
       <div class="row">
       <div class="col-sm-12">
       <div class="card border-0">
         <div class="card-body">
-          {% if spr1 %}
+          <div class="float-right">
+            <a href="{% url 'Profile:HelpConfirmSubordinate' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
+            <i class="icon icon-question-circle"></i></a>
+          </div>
             <h4 class="card-title" id="Superior">Confirm a Subordinate's Experience</h4>
-            <table class="table table-sm">
+            <table class="table table-hover table-sm">
               <thead>
                 <tr align="center">
                   <th>Name</th>
@@ -234,19 +255,23 @@
               </tbody>
             </table>
             <br>
-          {% endif %}
-        </div>
+          </div>
       </div>
       </div>
       </div>
       <br>
+    {% endif %}
+    {% if wclr1 %}
       <div class="row">
       <div class="col-sm-12">
       <div class="card border-0">
         <div class="card-body">
-          {% if wclr1 %}
+          <div class="float-right">
+            <a href="{% url 'Profile:HelpConfirmCoworker' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
+            <i class="icon icon-question-circle"></i></a>
+          </div>
             <h4 class="card-title" id="Collaborator">Confirm the experience of someone you have worked with</h4>
-            <table class="table table-sm">
+            <table class="table table-hover -sm">
               <thead>
                 <tr align="center">
                   <th>Name</th>
@@ -290,19 +315,23 @@
                 {% endfor %}
               </tbody>
             </table>
-          {% endif %}
-        </div>
+          </div>
       </div>
       </div>
       </div>
       <br>
+    {% endif %}
+    {% if wc1 %}
       <div class="row">
       <div class="col-sm-12">
       <div class="card border-0">
         <div class="card-body">
-          {% if wc1 %}
+          <div class="float-right">
+            <a href="{% url 'Profile:HelpConfirmContractor' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
+            <i class="icon icon-question-circle"></i></a>
+          </div>
             <h4 class="card-title" id="Client">Confirm the experience of someone working for your company (as a consultalt/contractor)</h4>
-            <table class="table table-sm">
+            <table class="table table-hover table-sm">
               <thead>
                 <tr align="center">
                   <th>Name</th>
@@ -346,9 +375,21 @@
                 {% endfor %}
               </tbody>
             </table>
-          {% endif %}
-          <hr>
-          {% if pc1 %}
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr>
+  {% endif %}
+  {% if pc1 %}
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card border-0">
+        <div class="card-body">
+          <div class="float-right">
+            <a href="{% url 'Profile:HelpDesktopPendingInterviews' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
+            <i class="icon icon-question-circle"></i></a>
+          </div>
             <h5 class="card-title" id="PreColleague">Confirm the already logged (on paper) experience of a colleague</h5>
             <table class="table table-sm">
               <thead>
@@ -394,7 +435,12 @@
                 {% endfor %}
               </tbody>
             </table>
-          {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+  {% endif %}
 {% endblock content %}
 {% block Script %}
 {% block subScript %}{% endblock subScript %}

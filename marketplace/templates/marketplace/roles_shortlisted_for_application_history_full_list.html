@@ -13,7 +13,7 @@
     </div>
     <h4 class="card-title">Vacancy Application History</h4>
     <h5 class="card-title">Roles Shortlisted for</h5>
-    <table class="table table-sm">
+    <table class="table table-hover table-sm">
       <thead>
         <tr>
           <th class="align-middle text-center">Date Applied</th>
@@ -28,7 +28,7 @@
       <tbody>
 
         {% for i in pageitems %}
-          <tr>
+          <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' i.scope.ref_no %}'">
             <td>{{ i.date_listed|date:"d N Y" }}</td>
             <td>{{ i.scope.title }}</td>
             <td>{{ i.scope.ref_no }}</td>
