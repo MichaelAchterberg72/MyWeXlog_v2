@@ -6,39 +6,39 @@
 <h3>Profile for {{ als.alias }}</h3>
 <div class="row">
   <div class="col-sm-12">
-  <div class="">
-    {% if als.pk == request.user.id %}
-    {% else %}
     <div class="">
-        {% if int_list %}
-          <button type="button" name="button"class="btn btn-success ">Already on Interview List</button>
-        {% else %}
-          <div class="float-right">
-            {% for v in vacancy %}
-              <form  action="{% url 'MarketPlace:InterviewList' tlt=als.alias  vac=v.ref_no %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="" style="width: 4rem"><i class="fa fa-group" style="font-size:36px;color:green" data-toggle="tooltip" title="Add Candidate to Interview List" style="font-size:30px;color:black"></i></button>
-              </form>
-              <form  action="{% url 'MarketPlace:VacDecline' tlt=als.alias  vac=v.ref_no %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="" style="width: 4rem" data-toggle="tooltip" title="Decline Candidate" style="font-size:30px;color:black"><i class="fa fa-eject" style="font-size:36px;color:red"></i></button>
-              </form>
-            {% endfor %}
-          </div>
+      {% if als.pk == request.user.id %}
+      {% else %}
+          <div class="">
+          {% if int_list %}
+            <button type="button" name="button"class="btn btn-success ">Already on Interview List</button>
+          {% else %}
+            <div class="btn-toolbar float-right">
+              {% for v in vacancy %}
+                <form  action="{% url 'MarketPlace:InterviewList' tlt=als.alias  vac=v.ref_no %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="" style="width: 4rem"><i class="fa fa-group" style="font-size:36px;color:green" data-toggle="tooltip" title="Add to Interview List" style="font-size:30px;color:black"></i></button>
+                </form>
+                <form  action="{% url 'MarketPlace:VacDecline' tlt=als.alias  vac=v.ref_no %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="" style="width: 4rem" data-toggle="tooltip" title="Decline Candidate" style="font-size:30px;color:black"><i class="fa fa-eject" style="font-size:36px;color:red"></i></button>
+                </form>
+              {% endfor %}
+            </div>
+          {% endif %}
+          {% if bslist_qs %}
+            <button type="button" name="button"class="btn btn-secondary ">Already Shortlisted</button>
+          {% else %}
+          {% for v in vacancy %}
+            <form  action="{% url 'MarketPlace:ShortList' tlt=als.alias  vac=v.ref_no %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-info " style="width: 5rem;">Short-list</button>
+            </form>
+          {% endfor %}
+          {% endif %}
+        </div>
         {% endif %}
-        {% if bslist_qs %}
-          <button type="button" name="button"class="btn btn-secondary ">Already Shortlisted</button>
-        {% else %}
-        {% for v in vacancy %}
-          <form  action="{% url 'MarketPlace:ShortList' tlt=als.alias  vac=v.ref_no %}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-info " style="width: 5rem;">Short-list</button>
-          </form>
-        {% endfor %}
-        {% endif %}
-      </div>
-      {% endif %}
-  </div>
+    </div>
   </div>
 </div>
 <div class="card">
@@ -46,68 +46,68 @@
     <a href="{% url 'Talent:SPDView' als.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right" >View All Skills</a>
     <h5>Vacancy Skills Match</h5>
   </div>
-  <div class="row">
-    <div class="col-sm-6">
-      <div class="card">
-        <div class="card-body">
-        <h5 class="card-title">Experience skills</h5>
-        <p>Experience for skills listed in the Vacancy.</p>
-        <table class="table table-sm">
-          <thead>
-            <tr>
-              <th>Skill</th>
-              <th>Hours</th>
-            </tr>
-          </thead>
-          <tbody>
-          {% if als.pk == request.user.pk %}
-              <tr>
-                <td colspan="2">This is where skills speficially required in the vancany are shown together with the time you have logged against those skills.</td>
-              </tr>
-          {% else %}
-            {% for key in vacse_set.items %}
-              <tr>
-                <td>{{ key.0 }}</td>
-                <td>{{ key.1|intcomma }}</td>
-              </tr>
-            {% endfor %}
-            {% endif %}
-          </tbody>
-        </table>
-        </div>
-      </div>
-    </div>
-    <div class="col-sm-6">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Training Skills</h5>
-          <p>Training time for the skills listed on the vacancy.</p>
-          <table class="table table-sm">
-            <thead>
-              <tr>
-                <th>Skill</th>
-                <th>Hours</th>
-              </tr>
-            </thead>
-            <tbody>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Experience skills</h5>
+            <p>Experience for skills listed in the Vacancy.</p>
+            <table class="table table-sm">
+              <thead>
+                <tr>
+                  <th>Skill</th>
+                  <th>Hours</th>
+                </tr>
+              </thead>
+              <tbody>
               {% if als.pk == request.user.pk %}
-                <tr>
-                  <td colspan="2">This is where skills speficially required in the vancany are shown together with the time you have spent training on those skills.</td>
-                </tr>
+                  <tr>
+                    <td colspan="2">This is where skills speficially required in the vancany are shown together with the time you have logged against those skills.</td>
+                  </tr>
               {% else %}
-              {% for key in vacst_set.items %}
+                {% for key in vacse_set.items %}
+                  <tr>
+                    <td>{{ key.0 }}</td>
+                    <td>{{ key.1|intcomma }}</td>
+                  </tr>
+                {% endfor %}
+                {% endif %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Training Skills</h5>
+            <p>Training time for the skills listed on the vacancy.</p>
+            <table class="table table-sm">
+              <thead>
                 <tr>
-                  <td>{{ key.0 }}</td>
-                  <td>{{ key.1|intcomma }}</td>
+                  <th>Skill</th>
+                  <th>Hours</th>
                 </tr>
-              {% endfor %}
-              {% endif %}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {% if als.pk == request.user.pk %}
+                  <tr>
+                    <td colspan="2">This is where skills speficially required in the vancany are shown together with the time you have spent training on those skills.</td>
+                  </tr>
+                {% else %}
+                {% for key in vacst_set.items %}
+                  <tr>
+                    <td>{{ key.0 }}</td>
+                    <td>{{ key.1|intcomma }}</td>
+                  </tr>
+                {% endfor %}
+                {% endif %}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
-  </div>
   </div>
   <br>
   <div class="card">

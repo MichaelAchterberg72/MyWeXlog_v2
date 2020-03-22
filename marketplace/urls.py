@@ -47,7 +47,7 @@ urlpatterns = [
     path('shortlist-review/<slug:vac>/', views.ShortListView, name='ShortListView'),
     path('shortlist/<slug:vac>/<slug:tlt>/', views.AddToShortListView, name='ShortList'),
     path('vac-decline/<slug:vac>/<slug:tlt>/', views.TalentDecline, name='VacDecline'),
-    path('sl-notsuitable/<slug:vac>/<slug:tlt>/', views.EmpSlDeclineComment, name='SlNotSuitable'),
+    path('sl-notsuitable/<slug:bil>/<slug:tlt>/', views.EmpSlDeclineComment, name='SlNotSuitable'),
 
     #Interview URLs
     path('vac-interview/<slug:vac>/<slug:tlt>/', views.AddToInterviewListView, name='VacInterview'),
@@ -67,7 +67,7 @@ urlpatterns = [
     path('emp-int-detail/<slug:bil>/<slug:tlt>/', views.EmpIntFullDetail, name='EmployerIntDetail'),
     path('emp-int-detail/<slug:vac>/', views.EmpIntDetailVacancy, name='VacancyIntDetail'),
     path('emp-int-comment/<slug:bil>/<slug:tlt>/', views.EmpIntCommentView, name='VacancyIntComment'),
-    
+
     path('rfi-respond/<slug:wit>/', views.TalentRFIView, name='RFIView'),
     path('vacancy-search/', views.VacancySearch, name="VacSearch"),
     path('vacancy/vacancies-full-list/', views.VacanciesListView, name="VacanciesList"),

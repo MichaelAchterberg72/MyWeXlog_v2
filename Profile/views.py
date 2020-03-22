@@ -276,18 +276,23 @@ def ProfileHome(request):
 @subscription(1)
 def AssignmentAcceptView(request, slug):
     assignment = WorkIssuedTo.objects.filter(slug=slug)
-    assignment.update(tlt_response='A', tlt_response_date=timezone.now())
+    assignment.update(tlt_response='A', tlt_response_date=timezone.now())#6
 
     tlt = assignment[0].talent
     vac = assignment[0].work
 
-    TalentRequired.objects.filter(Q(ref_no=vac.ref_no)).update(vac_wkfl='A', offer_status='C')
-    BidShortList.objects.filter(Q(talent=tlt) & Q(scope=vac)).update(status='A')
-    BidInterviewList.objects.filter(Q(talent=tlt) & Q(scope=vac)).update(outcome='A')
+    TalentRequired.objects.filter(Q(ref_no=vac.ref_no)).update(vac_wkfl='A', offer_status='C')#5
 
-    wb_qs = WorkBid.objects.filter(Q(talent=tlt) & Q(scope=vac))
+    bsl_qs = BidShortList.objects.filter(scope=vac)
+    bsl_qs.filter(talent=tlt).update(status='A')#3
+    bsl_qs.filter(~Q(talent=tlt)).update(status='R')#4
+
+    BidInterviewList.objects.filter(Q(talent=tlt) & Q(scope=vac)).update(outcome='A')#7
+
+    wb_qs = WorkBid.objects.filter(Q(scope=vac))
     if wb_qs:
-        wb_qs.update(bidreview='A')
+        wb_qs.filter(Q(talent=tlt)).update(bidreview='A')#1
+        wb_qs.filter(~Q(talent=tlt)).update(bidreview='R')#2
 
     return redirect(reverse('Profile:ProfileHome')+'#Assignment')
 
@@ -296,7 +301,7 @@ def AssignmentAcceptView(request, slug):
 @subscription(1)
 def AssignmentDeclineView(request, slug):
     assignment = WorkIssuedTo.objects.filter(slug=slug)
-    assignment.update(tlt_response='D', tlt_response_date=timezone.now())
+    assignment.update(tlt_response='D', tlt_response_date=timezone.now())#5
     instance = get_object_or_404(WorkIssuedTo, slug=slug)
 
     tlt = assignment[0].talent
@@ -309,13 +314,13 @@ def AssignmentDeclineView(request, slug):
             new=form.save(commit=False)
             new.save()
 
-            TalentRequired.objects.filter(Q(ref_no=vac.ref_no)).update(vac_wkfl='I', offer_status='O')
-            BidShortList.objects.filter(Q(talent=tlt) & Q(scope=vac)).update(status='D')
-            BidInterviewList.objects.filter(Q(talent=tlt) & Q(scope=vac)).update(outcome='D')
+            TalentRequired.objects.filter(Q(ref_no=vac.ref_no)).update(vac_wkfl='I', offer_status='O')#3
+            BidShortList.objects.filter(Q(talent=tlt) & Q(scope=vac)).update(status='D')#2
+            BidInterviewList.objects.filter(Q(talent=tlt) & Q(scope=vac)).update(outcome='D')#5
 
             wb_qs = WorkBid.objects.filter(Q(talent=tlt) & Q(scope=vac))
             if wb_qs:
-                wb_qs.update(bidreview='D')
+                wb_qs.update(bidreview='D')#1
 
             return redirect(reverse('Profile:ProfileHome')+'#Assignments')
     else:
@@ -371,15 +376,14 @@ def AssignmentClarifyView(request, wit):
 @subscription(1)
 def InterviewAcceptView(request, int_id):
     bil_qs = BidInterviewList.objects.filter(pk=int_id)
-    bil_qs.update(tlt_response='A', tlt_reponded=timezone.now())
+    bil_qs.update(tlt_response='A', tlt_reponded=timezone.now())#1
 
     tlt = bil_qs[0].talent
     vac = bil_qs[0].scope
-    BidShortList.objects.filter(Q(talent=tlt) & Q(scope=vac)).update(bidreview='I')
 
     wb_qs = WorkBid.objects.filter(Q(talent=tlt) & Q(work=vac))
     if wb_qs:
-        wb_qs.update(bidreview='I')
+        wb_qs.update(bidreview='I')#2
 
     return redirect(reverse('Profile:ProfileHome')+ '#Interview')
 
@@ -388,15 +392,15 @@ def InterviewAcceptView(request, int_id):
 @subscription(1)
 def InterviewDeclineView(request, int_id):
     bil_qs = BidInterviewList.objects.filter(pk=int_id)
-    bil_qs.update(tlt_response='D', tlt_intcomplete=True, tlt_reponded=timezone.now())
+    bil_qs.update(tlt_response='D', tlt_intcomplete=True, tlt_reponded=timezone.now(), outcome='D')#1
 
     tlt = bil_qs[0].talent
     vac = bil_qs[0].scope
-    wb_qs = WorkBid.objects.filter(Q(talent=tlt) & Q(work=vac))
-    BidShortList.objects.filter(Q(talent=tlt) & Q(scope=vac)).update(bidreview='D')
+    wb_qs = WorkBid.objects.filter(Q(talent=tlt) & Q(work=vac))#3
+    BidShortList.objects.filter(Q(talent=tlt) & Q(scope=vac)).update(status='D')
 
     if wb_qs:
-        wb_qs.update(bidreview='D')
+        wb_qs.update(bidreview='D')#2
 
     return redirect(reverse('MarketPlace:InterviewDecline', kwargs={'int_id':int_id}))
 

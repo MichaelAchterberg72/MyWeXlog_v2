@@ -195,9 +195,20 @@ def EmpSlDeclineComment(request, bil, tlt):
     vac = instance.scope.ref_no
     form = EmployerInterViewComments(request.POST or None, instance=instance)
 
+    BidShortList.objects.filter(Q(scope__ref_no = vac) & Q(talent__alias = tlt)).update(status='R')#1
+
+    bid_qs = WorkBid.objects.filter(Q(work__ref_no = vac) & Q(talent__alias = tlt))
+
+    if bid_qs:
+        bid_qs.update(bidreview = 'R')#2
+
     if request.method == 'POST':
         if form.is_valid():
             new = form.save(commit=False)
+            new.outcome = 'N'#3
+            new.tlt_response = 'N'#3
+            new.emp_intcomplete = True#3
+            new.tlt_intcomplete = True#3
             new.save()
 
             return redirect(reverse('MarketPlace:ShortListView', kwargs={'vac': vac,}))
@@ -246,16 +257,18 @@ def InterviewSuitable(request, vac, tlt):
     if request.method == 'POST':
         if form.is_valid():
             new = form.save(commit=False)
-            new.outcome = 'S'
-            emp_intcomplete=True
             new.save()
 
-            BidShortList.objects.filter(Q(scope__ref_no = vac) & Q(talent__alias = tlt)).update(status='P')
+        instance.outcome = 'S'#3
+        instance.emp_intcomplete=True#3
+        instance.save()
 
-            bid_qs = WorkBid.objects.filter(Q(work__ref_no = vac) & Q(talent__alias = tlt))
+        BidShortList.objects.filter(Q(scope__ref_no = vac) & Q(talent__alias = tlt)).update(status='P')#1
 
-            if bid_qs:
-                bid_qs.update(bidreview = 'P')
+        bid_qs = WorkBid.objects.filter(Q(work__ref_no = vac) & Q(talent__alias = tlt))
+
+        if bid_qs:
+            bid_qs.update(bidreview = 'P')#2
 
     return redirect(reverse('MarketPlace:InterviewList', kwargs={'vac': vac,}))
 
@@ -269,17 +282,16 @@ def InterviewNotSuitable(request, vac, tlt):
     if request.method == 'POST':
         if form.is_valid():
             new = form.save(commit=False)
-            new.outcome = 'N'
-            emp_intcomplete=True
-            tlt_intcomplete=True
+            new.outcome = 'N'#3
+            new.emp_intcomplete = True#3
             new.save()
 
-            BidShortList.objects.filter(Q(scope__ref_no = vac) & Q(talent__alias = tlt)).update(status='R')
+            BidShortList.objects.filter(Q(scope__ref_no = vac) & Q(talent__alias = tlt)).update(status='R')#1
 
             bid_qs = WorkBid.objects.filter(Q(work__ref_no = vac) & Q(talent__alias = tlt))
 
             if bid_qs:
-                bid_qs.update(bidreview = 'R')
+                bid_qs.update(bidreview = 'R')#2
 
         return redirect(reverse('MarketPlace:InterviewList', kwargs={'vac': vac,}))
 
@@ -1187,11 +1199,11 @@ def AddToShortListView(request, vac, tlt):
     job = get_object_or_404(TalentRequired, ref_no=vac)
     talent = get_object_or_404(CustomUser, alias=tlt)
     if request.method == 'POST':
-        b = BidShortList.objects.create(talent=talent, scope=job)
+        b = BidShortList.objects.create(talent=talent, scope=job, status = 'S')#1
 
         if 'active' in request.POST:
             upd = WorkBid.objects.get(Q(talent=talent) & Q(work=job))
-            upd.bidreview = 'S'
+            upd.bidreview = 'S'#2
             upd.save()
 
         return redirect(reverse('MarketPlace:VacancyPost', kwargs={'vac':vac})+'#suited')
@@ -1203,15 +1215,15 @@ def AddToInterviewListView(request, vac, tlt):
     job = get_object_or_404(TalentRequired, ref_no=vac)
     talent = get_object_or_404(CustomUser, alias=tlt)
     if request.method == 'POST':
-        BidInterviewList.objects.create(talent=talent, scope=job, outcome='P')
-        BidShortList.objects.filter(Q(talent=talent) & Q(scope=job)).update(status='I')
+        BidInterviewList.objects.create(talent=talent, scope=job, outcome='I', tlt_response='P')#1
+        BidShortList.objects.filter(Q(talent=talent) & Q(scope=job)).update(status='I')#4
 
         wb_qs = WorkBid.objects.filter(Q(talent=talent) & Q(work=job))
         if wb_qs:
-            wb_qs.update(bidreview='I')
+            wb_qs.update(bidreview='I')#2
 
         job.vac_wkfl == 'I'
-        job.save()
+        job.save()#3
 
         #>>>email
         subject = f"WeXlog - {job.title} ({job.ref_no}): Interview request"
@@ -1245,18 +1257,18 @@ def TalentAssign(request, tlt, vac):
             new = form.save(commit=False)
             new.talent = talent
             new.work = job
-            new.tlt_response = 'P'
+            new.tlt_response = 'P'#4
             new.save()
 
-            s_list.filter(talent=talent).update(status='P')
+            s_list.filter(talent=talent).update(status='P')#2
 
             job.vac_wkfl = 'S'
-            job.save()
+            job.save()#3
 
-            BidInterviewList.objects.filter(Q(talent=talent) & Q(scope=job)).update(outcome='P')
+            BidInterviewList.objects.filter(Q(talent=talent) & Q(scope=job)).update(outcome='P')#5
 
             if bids is not None:
-                bids.update(bidreview='P')
+                bids.update(bidreview='P')#1
 
             #>>>email
             subject = f"WeXlog - Job assigned: {job.title} ({job.ref_no})"
@@ -1293,7 +1305,7 @@ def TalentDecline(request, tlt, vac):
     s_list = BidShortList.objects.filter(scope__ref_no=vac)
 
     if request.method == 'POST':
-        BidInterviewList.objects.create(talent=talent, scope=job, outcome='N')
+        BidInterviewList.objects.create(talent=talent, scope=job, outcome='N', tlt_response='N', tlt_intcomplete = True, emp_intcomplete = True, comments_tlt='No Interview - Marked as not suitable without an interview by employer')
         job.save()
 
     s_list.filter(talent__alias=tlt).update(status='R')
@@ -1302,9 +1314,9 @@ def TalentDecline(request, tlt, vac):
         bids.update(bidreview='R')
 
     bil_qs = BidInterviewList.objects.get(talent=talent, scope=job)
-    bil_qs.update(tlt_response='N', outcome='N')
+    bil = bil_qs.slug
 
-    return redirect(reverse('MarketPlace:SlNotSuitable', kwargs={'bil': bil_qs.slug,'tlt': tlt,}))
+    return redirect(reverse('MarketPlace:SlNotSuitable', kwargs={'bil': bil,'tlt': tlt,}))
 
 
 @login_required()
