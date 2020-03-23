@@ -17,6 +17,7 @@
 
 /* Tooltip container */
 .tooltip {
+  color: #000000;
   position: relative;
   display: inline-block;
   border-bottom: 1px dotted black; /* If you want dots under the hoverable text */

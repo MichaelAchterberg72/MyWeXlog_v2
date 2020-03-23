@@ -31,7 +31,7 @@
         </thead>
         <tbody>
           {% for key in suitable.items %}
-          <tr>
+          <tr onclick="window.open('{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=instance.ref_no %}');">
             <td class="align-middle">{{ key.1.ro.0.4 }}</td>
             <td class="align-middle">{{ key.1.we }}</td>
             <td class="align-middle">{{ key.1.te }}</td>

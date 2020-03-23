@@ -6,16 +6,16 @@
 
 <div class="card border-0" style="width: 100%;">
   <div class="card-body">
-    <p class="">
+    <div class="">
       <form  action="{% url 'BookList:BLB' %}" method="post">
         <input type="hidden" name="next" value="{{ request.GET.next }}">
         {% csrf_token %}
         <button type="submit" class="btn btn-secondary float-right">Back</button>
       </form>
-    </p>
+    </div>
     {% for d in bil_qs %}
     <h4 class="card-title">Interview Detail</h4>
-    <table class="table table-sm">
+    <table class="table table-hover table-sm">
       <thead>
         <tr>
           <th class="align-middle text-center">Vacancy</th>
@@ -27,7 +27,7 @@
         </tr>
       </thead>
       <tbody>
-          <tr>
+          <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' d.scope.ref_no %}?next={{ request.path|urlencode }}'">
             <td>{{ d.scope.title }}</td>
             <td class="align-middle text-center">{{ d.scope.ref_no }}</td>
             <td class="align-middle text-center">{{ d.get_tlt_response_display }}</td>

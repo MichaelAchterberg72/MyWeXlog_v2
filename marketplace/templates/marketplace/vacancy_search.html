@@ -6,6 +6,8 @@
 {% block title %}{{block.super}}-Vacancy Search{% endblock title %}
 
 {% block content %}
+<div class="card border-0">
+  <div class="card-body">
   {% if query %}
   <h4>Vacancies with Reference Number containing "{{ query }}"</h4>
   <h3>
@@ -59,11 +61,14 @@
   </form>
   {% else %}
   <h4>Search for Vacancy</h4>
+  <div class="card-body">
     <form action="." method="get">
     {{ form.as_p }}
     <input type="submit" value="Search" class="btn btn-primary 8rem " style="width: 8rem">
     </form>
   {% endif %}
+</div>
+</div>
 
 {% endblock content %}
 {% block Script %}

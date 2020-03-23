@@ -206,7 +206,7 @@
           </thead>
           <tbody>
             {% for key in suitable.items %}
-            <tr onclick="window.location='{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=instance.ref_no %}'">
+            <tr onclick="window.open('{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=instance.ref_no %}');">
               <td class="align-middle text-center">{{ key.1.ro.0.4 }}</td>
               <td class="align-middle text-center">{{ key.1.we|intcomma }}<br>(<strong>{{ key.1.s_no }}</strong> skills)</td>
               <td class="align-middle text-center">{{ key.1.te|intcomma }}</td>
@@ -272,7 +272,7 @@
       </thead>
       <tbody>
         {% for key in applied.items %}
-        <tr onclick="window.location='{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=instance.ref_no %}?next={{ request.path|urlencode }}'">
+        <tr onclick="window.open('{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=instance.ref_no %}?next={{ request.path|urlencode }}');">
           <td class="align-middle text-center">{{ key.1.ro.0.4 }}</td>
           <td class="align-middle text-center">{{ key.1.we|intcomma }}<br>(<strong>{{ key.1.s_no }}</strong> skills)</td>
           <td class="align-middle text-center">{{ key.1.te|intcomma }}</td>

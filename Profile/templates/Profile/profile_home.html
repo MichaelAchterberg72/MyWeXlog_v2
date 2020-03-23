@@ -103,8 +103,9 @@
 
 {% block TBA %}
   <div class="justify-content">
+
     <div class="tooltip">hover<span class="tooltiptext">Public Profile</span></div>
-    <a href="{% url 'Talent:APV' tlt=request.user.alias vac='1ad9t2' %}?next={{ request.path|urlencode }}" target="_blank"><i class="fa fa-id-badge" aria-hidden="true"style="font-size:30px;color:black" data-toggle="tooltip" title="Public Profile"></i></a>
+    <a href="{% url 'Talent:APV' tlt=request.user.alias vac='1ad9t2' %}?next={{ request.path|urlencode }}" target="_blank"><i class="fa fa-id-badge" aria-hidden="true"style="font-size:30px;color:black" data-toggle="tooltip" data-placement="top" title="Public Profile"></i></a>
 
     &nbsp &nbsp
     <a href="{% url 'Talent:DPCSum' %}?next={{ request.path|urlencode }}"><i class="fa fa-industry" style="font-size:30px;color:black" data-toggle="tooltip" title="View Summary for Industry, Project and Designation."></i></a>
