@@ -484,6 +484,8 @@ def AllPostedVacanciesView(request):
     ipost_bid = wb.filter(Q(bidreview__exact='R') | Q(bidreview__exact='P') | Q(bidreview__exact='A'))
     ipost_bid_flat = ipost_bid.values_list('work', flat=True).distinct()
 
+    ipost_count = tr.order_by('-bid_open').count()
+
     try:
         page = int(request.GET.get('page', 1))
     except:
@@ -506,6 +508,7 @@ def AllPostedVacanciesView(request):
 
     template = 'marketplace/vacancy_posts_all.html'
     context ={
+        'ipost_count': ipost_count,
         'ipost_bid_flat': ipost_bid_flat,
         'pageitems': pageitems,
         'page_range': page_range
@@ -524,6 +527,8 @@ def AllPostedVacanciesOpenView(request):
     ipost = tr.filter(offer_status='O').order_by('-bid_open')
     ipost_bid = wb.filter(Q(bidreview__exact='R') | Q(bidreview__exact='P') | Q(bidreview__exact='A'))
     ipost_bid_flat = ipost_bid.values_list('work', flat=True).distinct()
+
+    ipost_count = tr.filter(offer_status='O').order_by('-bid_open').count()
 
     try:
         page = int(request.GET.get('page', 1))
@@ -547,6 +552,7 @@ def AllPostedVacanciesOpenView(request):
 
     template = 'marketplace/vacancy_posts_open.html'
     context ={
+        'ipost_count': ipost_count,
         'ipost_bid_flat': ipost_bid_flat,
         'pageitems': pageitems,
         'page_range': page_range
@@ -565,6 +571,8 @@ def AllPostedVacanciesClosedView(request):
     ipost = tr.filter(offer_status='C').order_by('-bid_open')
     ipost_bid = wb.filter(Q(bidreview__exact='R') | Q(bidreview__exact='P') | Q(bidreview__exact='A'))
     ipost_bid_flat = ipost_bid.values_list('work', flat=True).distinct()
+
+    ipost_count = tr.filter(offer_status='C').order_by('-bid_open').count()
 
     try:
         page = int(request.GET.get('page', 1))
@@ -588,6 +596,7 @@ def AllPostedVacanciesClosedView(request):
 
     template = 'marketplace/vacancy_posts_closed.html'
     context ={
+        'ipost_count': ipost_count,
         'ipost_bid_flat': ipost_bid_flat,
         'pageitems': pageitems,
         'page_range': page_range
@@ -669,6 +678,9 @@ def MarketHome(request):
     dsd_count = ds.distinct('scope__title').count()
 
     already_applied = wb.values_list('work__id', flat=True).distinct()
+    already_applied_count = already_applied.count()
+
+    vsm_count = dsd_count - already_applied_count
     #Experience Level check & list skills required in vacancies<<<
 
     template = 'marketplace/vacancy_home.html'
@@ -682,6 +694,7 @@ def MarketHome(request):
         'already_applied': already_applied,
         'ipost_closed': ipost_closed,
         'dsd_count': dsd_count,
+        'vsm_count': vsm_count,
     }
     return render(request, template, context)
 
@@ -750,8 +763,12 @@ def VacanciesListView(request):
         ds = ds | display
 
     dsd=ds.distinct('scope__title')
+    dsd_count = dsd.count()
 
     already_applied = wb.values_list('work__id', flat=True).distinct()
+    already_applied_count = already_applied.count()
+
+    vsm_count = dsd_count - already_applied_count
     #Experience Level check & list skills required in vacancies<<<
 
     try:
@@ -759,7 +776,7 @@ def VacanciesListView(request):
     except:
         page = 1
 
-    paginator = Paginator(dsd, 20)
+    paginator = Paginator(dsd, 1)
 
     try:
         pageitems = paginator.page(page)
@@ -776,7 +793,13 @@ def VacanciesListView(request):
 
     template = 'marketplace/vacancy_list.html'
     context ={
-        'pageitems': pageitems, 'ipost_bid_flat': ipost_bid_flat, 'already_applied': already_applied, 'page_range': page_range}
+        'dsd': dsd,
+        'pageitems': pageitems,
+        'ipost_bid_flat': ipost_bid_flat,
+        'already_applied': already_applied,
+        'page_range': page_range,
+        'vsm_count': vsm_count,
+        }
     return render(request, template, context)
 
 
@@ -1067,7 +1090,7 @@ def VacancyPostView(request, vac):
 def VacancyCloseSwitch(request, vac):
     interview = TalentRequired.objects.filter(ref_no=vac).update(offer_status='C')
 
-    return redirect(reverse('MarketPlace:VacancyPostView', kwargs={'vac': vac,}))
+    return redirect(reverse('MarketPlace:VacancyPost', kwargs={'vac': vac,}))
 
 
 @login_required()

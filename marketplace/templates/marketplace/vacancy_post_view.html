@@ -23,7 +23,7 @@
           <button type="submit" class="btn btn-secondary">Back</button>
         </form>&nbsp
           <a href="{% url 'MarketPlace:VacancyEdit' instance.ref_no %}" class="btn btn-info ">Edit Vacancy</a>&nbsp
-          <a href="{% url 'MarketPlace:HelpVacancyPost' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
+          <a href="{% url 'MarketPlace:HelpVacancyPost' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
           <i class="icon icon-question-circle"></i></a>
       </div>
       <h3>Vacancy Review</h3>
@@ -175,7 +175,17 @@
     </div>
   </div>
   <p>&nbsp</p>
-  <p><a href="{% url 'MarketPlace:ShortListView' instance.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-info">View Short-list</a>&nbsp<a href="{% url 'MarketPlace:InterviewList' instance.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-info">Vacancy Dashboard</a></p>
+  <div class="float-right">
+    <a href="{% url 'Profile:WorkshopEmp' %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 8rem">Enter Office</a>
+    <a href="{% url 'MarketPlace:EmployerInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary">Interview History</a>
+  </div>
+  <div><a href="{% url 'MarketPlace:ShortListView' instance.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-info">View Short-list</a>
+    &nbsp
+    <a href="{% url 'MarketPlace:VacancyIntDetail' instance.ref_no %}" class="btn btn-info">Interview List</a>
+    &nbsp
+    <a href="{% url 'MarketPlace:InterviewList' instance.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-info">Vacancy Dashboard</a>
+  </div>
+  <br>
 
   <div class="card">
     <div class="card-body">
@@ -206,7 +216,7 @@
           </thead>
           <tbody>
             {% for key in suitable.items %}
-            <tr onclick="window.open('{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=instance.ref_no %}');">
+            <tr>
               <td class="align-middle text-center">{{ key.1.ro.0.4 }}</td>
               <td class="align-middle text-center">{{ key.1.we|intcomma }}<br>(<strong>{{ key.1.s_no }}</strong> skills)</td>
               <td class="align-middle text-center">{{ key.1.te|intcomma }}</td>
@@ -272,7 +282,7 @@
       </thead>
       <tbody>
         {% for key in applied.items %}
-        <tr onclick="window.open('{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=instance.ref_no %}?next={{ request.path|urlencode }}');">
+        <tr>
           <td class="align-middle text-center">{{ key.1.ro.0.4 }}</td>
           <td class="align-middle text-center">{{ key.1.we|intcomma }}<br>(<strong>{{ key.1.s_no }}</strong> skills)</td>
           <td class="align-middle text-center">{{ key.1.te|intcomma }}</td>

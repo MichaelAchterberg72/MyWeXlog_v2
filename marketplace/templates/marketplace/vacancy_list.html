@@ -4,52 +4,56 @@
 {% block title %}{{block.super}}-Vacancies Suited for Me Full List{% endblock title %}
 
 {% block content %}
-<div class="card border-0">
+<div class="card border-0" style="width: 68rem;">
   <div class="card-body">
   <h4 class="">Vacancies Suited for Me - Full List<span><p class="float-right"><a href="{% url 'MarketPlace:Entrance' %}"  class="badge badge-pill badge-primary">Back</a>
-    <a href="{% url 'MarketPlace:HelpVacanciesSuitedForMeFull' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
+    <a href="{% url 'MarketPlace:HelpVacanciesSuitedForMeFull' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
     <i class="icon icon-question-circle"></i></a>
   </p></span></h4>
 
   <div class="border-0" style="width: 100%;">
     <div class="card-body">
       <div class="float-right">
-        <a href="{% url 'MarketPlace:History' %}" class="badge badge-primary 8rem" style="width: 8rem">View History</a>
-        <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="badge badge-primary 8rem" style="width: 8rem">Interview History</a>
+        <a href="{% url 'MarketPlace:History' %}" class="btn btn-primary 8rem" style="width: 8rem">View History</a>
+        <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary 8rem" style="width: 10rem">Interview History</a>
       </div>
       <h4 class="card-title">Vacancies Suited for Me </h4>
-      <table class="table table-hover table-sm">
-        <col width="5%">
-        <col width="15%">
-        <col width="6%">
-        <col width="10%">
-        <col width="10%">
-        <col width="10%">
+      <p>You currently have {{ vsm_count }} vacancies that match your skillset experience.</p>
+      <table class="table table-hover table-sm w-50rem">
+        <col width="0rem">
+        <col width="100px">
+        <col width="400px">
+        <col width="180px">
+        <col width="100px">
+        <col width="100px">
+        <col width="100px">
         <thead>
           <tr>
+            <th class="align-middle text-center"></th>
             <th class="align-middle text-center">Reference Number</th>
             <th class="align-middle text-center">Vacancy Title</th>
             <th class="align-middle text-center">Hours Required</th>
             <th class="align-middle text-center">Work Format</th>
-            <th class="align-middle text-center">Country</th>
+            <th class="align-middle text-center">City</th>
             <th class="align-middle text-center">Full Detail</th>
           </tr>
         </thead>
-        {% for i in pageitems %}
+        {% for i in dsd %}
         {% if i.scope.id not in already_applied %}
         <tbody>
-        <tr class="align-middle text-center" onclick="window.location='{% url 'MarketPlace:VacancyDetail' i.scope.ref_no %}'">
-          <td>{{ i.scope.ref_no }}</td>
-          <td>{{ i.scope.title }}</td>
-          <td>
-            {{ i.scope.hours_required|intcomma }} ({{ i.scope.get_unit_display }})
+        <tr class="align-middle text-center divide" onclick="window.location='{% url 'MarketPlace:VacancyDetail' i.scope.ref_no %}'">
+          <td class="bottom">{{ i.scope.scope|truncatechars:345 }}</td>
+          <td class="text-left top"><strong>{{ i.scope.ref_no }}</strong></td>
+          <td class="text-left top"><strong>{{ i.scope.title|truncatechars:47 }}</strong></td>
+          <td class="no-wrap top">
+            {{ i.scope.hours_required|intcomma }} Hrs ({{ i.scope.get_unit_display }})
           </td>
-          <td>{{ i.scope.worklocation }}</td>
-          <td>{{ i.scope.city }}</td>
+          <td class="no-wrap top">{{ i.scope.worklocation }}</td>
+          <td class="no-wrap top">{{ i.scope.city }}</td>
             {% if request.user.subscription == 2 %}
-              <td><a href="{% url 'MarketPlace:VacancyDetail' i.scope.ref_no %}" class="badge badge-secondary float-right" style="width: 5rem;">See Detail</a></td>
+              <td class="detail"><a href="{% url 'MarketPlace:VacancyDetail' i.scope.ref_no %}" class="btn btn-primary float-right" style="width: 6rem;">See Detail</a></td>
             {% elif request.user.subscription < 2 %}
-              <td><a href="#" class="card-link">See Detail</a></td>
+              <td class="detail"><a href="#" class="card-link">See Detail</a></td>
             {% endif %}
           </tr>
         </tbody>

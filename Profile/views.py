@@ -37,7 +37,7 @@ from talenttrack.forms import (
 
 from locations.models import Region
 from users.models import CustomUser
-from marketplace.models import BidInterviewList, WorkIssuedTo, VacancyRate, TalentRate
+from marketplace.models import BidInterviewList, WorkIssuedTo, VacancyRate, TalentRate, TalentRequired, WorkBid, BidShortList
 from nestedsettree.models import NtWk
 
 from .forms import (
@@ -289,7 +289,7 @@ def AssignmentAcceptView(request, slug):
 
     BidInterviewList.objects.filter(Q(talent=tlt) & Q(scope=vac)).update(outcome='A')#7
 
-    wb_qs = WorkBid.objects.filter(Q(scope=vac))
+    wb_qs = WorkBid.objects.filter(Q(work__ref_no=vac))
     if wb_qs:
         wb_qs.filter(Q(talent=tlt)).update(bidreview='A')#1
         wb_qs.filter(~Q(talent=tlt)).update(bidreview='R')#2

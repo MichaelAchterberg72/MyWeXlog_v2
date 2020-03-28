@@ -57,7 +57,7 @@ urlpatterns = [
     path('not-suitable/<slug:vac>/<slug:tlt>/', views.InterviewNotSuitable, name='NotSuitable'),
         #InterView History
     path('interview-history/<slug:tlt>/', views.TalentInterviewHistoryView, name="TalentInterviewHistory"),
-    path('interview-history/<slug:tlt>/', views.EmployerInterviewHistoryView, name="EmployerInterviewHistory"),
+    path('interview-historye/<slug:tlt>/', views.EmployerInterviewHistoryView, name="EmployerInterviewHistory"),
         #tlt int close URLs
     path('tlt-int-close/<slug:bil>/<slug:tlt>/', views.TltInterviewClose, name='TalentIntClose'),
     path('tlt-int-detail/<slug:bil>/<slug:tlt>/', views.TltIntFullDetail, name='TalentIntDetail'),

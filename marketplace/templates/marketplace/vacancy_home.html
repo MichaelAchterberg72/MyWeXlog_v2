@@ -12,12 +12,12 @@
         <a href="{% url 'MarketPlace:History' %}" class="badge badge-primary 8rem" style="width: 8rem">Applications History</a>
         {% endif %}
         <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="badge badge-primary 8rem" style="width: 8rem">Interview History</a>
-        <a href="{% url 'MarketPlace:HelpVacanciesSuitedForMeSummary' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
+        <a href="{% url 'MarketPlace:HelpVacanciesSuitedForMeSummary' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
         <i class="icon icon-question-circle"></i></a>
       </div>
     {% endif %}
     <h4 class="card-title">Vacancies Suited for Me </h4>
-    <p>We only list the 5 most recent vacancies here, you currently have {{ dsd_count }} vacancies that match your skillset experience.</p>
+    <p>We only list the 5 most recent vacancies here, you currently have {{ vsm_count }} vacancies that match your skillset experience.</p>
     <table class="table table-hover table-sm">
       <col width="5%">
       <col width="15%">
@@ -40,7 +40,7 @@
       <tbody>
         <tr class="align-middle text-center" onclick="window.location='{% url 'MarketPlace:VacancyDetail' i.scope.ref_no %}'">
         <td>{{ i.scope.ref_no }}</td>
-        <td>{{ i.scope.title }}</td>
+        <td>{{ i.scope.title|truncatechars:37 }}</td>
         <td>
           {{ i.scope.hours_required|intcomma }} ({{ i.scope.get_unit_display }})
         </td>
@@ -77,7 +77,7 @@
   <div class="card-body">
     <div class="float-right">
     <a href="{% url 'MarketPlace:Vacancy' %}" class="badge badge-primary" style="width: 8rem;">Post Vacancy</a>
-    <a href="{% url 'MarketPlace:HelpVacanciesAdvertisedOpenSummary' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
+    <a href="{% url 'MarketPlace:HelpVacanciesAdvertisedOpenSummary' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
     <i class="icon icon-question-circle"></i></a>
     </div>
   <h4 class="card-title">My Vacancies Advertised (Open)</h4>
@@ -96,7 +96,7 @@
       {% for p in ipost %}
         <tr onclick="window.location='{% url 'MarketPlace:VacancyPost' p.ref_no %}'">
           <td class="align-middle text-center">{{ p.bid_open|date:'j M Y' }}</td>
-          <td class="align-middle text-center">{{ p.title }}</td>
+          <td class="align-middle text-center">{{ p.title|truncatechars:37 }}</td>
           <td class="align-middle text-center">{{ p.bid_closes|date:'j M Y' }}</td>
           <td class="align-middle text-center">
           {% if p.id in ipost_bid_flat %}
@@ -126,7 +126,7 @@
       <div class="card-body">
         <div class="float-right">
         <a href="{% url 'MarketPlace:AllPostedVac' %}" class="badge badge-primary" style="width: 8rem;">All Posted Vacancies</a>
-        <a href="{% url 'MarketPlace:HelpVacanciesAdvertisedClosedSummary' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
+        <a href="{% url 'MarketPlace:HelpVacanciesAdvertisedClosedSummary' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
         <i class="icon icon-question-circle"></i></a>
         </div>
       <h4 class="card-title">My Vacancies Advertised (Closed)</h4>
@@ -145,7 +145,7 @@
           {% for c in ipost_closed %}
             <tr onclick="window.location='{% url 'MarketPlace:VacancyPost' c.ref_no %}?next={{ request.path|urlencode }}'">
               <td class="align-middle text-center">{{ c.bid_open|date:'j M Y' }}</td>
-              <td class="align-middle text-center">{{ c.title }}</td>
+              <td class="align-middle text-center">{{ c.title|truncatechars:37 }}</td>
               <td class="align-middle text-center">{{ c.bid_closes|date:'j M Y' }}</td>
               <td class="align-middle text-center">
               {% if c.id in ipost_bid_flat %}
@@ -178,7 +178,7 @@
     <div class="card-body" id='Availabillity'>
       <div class="float-right">
       <a href="{% url 'MarketPlace:Availabillity' %}" class="badge badge-primary" style="width: 8rem;">Add</a>
-      <a href="{% url 'MarketPlace:HelpAvailability' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
+      <a href="{% url 'MarketPlace:HelpAvailability' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
       <i class="icon icon-question-circle"></i></a>
       </div>
       <h4 class="card-title">My Availability</h4>

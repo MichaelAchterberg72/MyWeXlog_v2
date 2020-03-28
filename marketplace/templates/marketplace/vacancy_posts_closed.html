@@ -12,11 +12,12 @@
           <p>
           <a href="{% url 'MarketPlace:EmployerInterviewHistory' request.user.alias %}" class="btn btn-primary" style="width: 10rem">Interview History</a>
           <a href="{% url 'MarketPlace:Vacancy' %}" class="btn btn-primary" style="width: 8rem;">Post Vacancy</a>
-          <a href="{% url 'MarketPlace:HelpVacanciesAdvertisedClosedAll' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
+          <a href="{% url 'MarketPlace:HelpVacanciesAdvertisedClosedAll' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
           <i class="icon icon-question-circle"></i></a>
           </p>
         </div>
       <h4 class="card-title">My Vacancies Advertised (Closed)</h4>
+      <p>You currently have {{ ipost_count }} closed vacancies listed.</p>
       <table class="table table-hover table-sm">
         <thead>
           <tr>
@@ -31,7 +32,7 @@
           {% for c in pageitems %}
             <tr onclick="window.location='{% url 'MarketPlace:VacancyPost' c.ref_no %}'">
               <td>{{ c.bid_open|date:'j M Y' }}</td>
-              <td>{{ c.title }}</td>
+              <td>{{ c.title|truncatechars:37 }}</td>
               <td>{{ c.get_offer_status_display }}</td>
               <td>{{ c.bid_closes|date:'j M Y' }}</td>
               <td>

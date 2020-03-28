@@ -12,12 +12,15 @@
   }
   </style>
 <div class="container">
-  <a href="{% url 'MarketPlace:ShortListView' scope.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-secondary float-right">Short-list</a>
+  <div class="float-right">
+  <a href="{% url 'MarketPlace:VacancyIntDetail' scope.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-secondary">Interview list</a>
+  <a href="{% url 'MarketPlace:ShortListView' scope.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-secondary">Short-list</a>
+  </div>
     <h3 class="card-title">Talent Dashboard for {{ scope.title }} ({{ scope.ref_no }})</h3>
       <div class="card border-0">
         <div class="card-body">
           <h4>Pending Acceptance</h4>
-          <table class="table table-sm">
+          <table class="table table-hover table-sm">
             <col width="45%">
             <col width="45%">
             <col width="10%">
@@ -50,7 +53,7 @@
     <div class="card border-0">
       <div class="card-body">
         <h4>Pending Interviews</h4>
-        <table class="table table-sm">
+        <table class="table table-hover table-sm">
           <col width="15%">
           <col width="5%">
           <col width="5%">
@@ -110,7 +113,7 @@
         {% else %}
           <h4>Suitable Applicants</h4>
         {% endif %}
-        <table class="table table-sm">
+        <table class="table table-hover table-sm">
           <col width="15%">
           <col width="5%">
           <col width="5%">
@@ -167,7 +170,7 @@
     <div class="card border-0">
       <div class="card-body">
         <h4>Unsuitable Applicants</h4>
-        <table class="table table-sm">
+        <table class="table table-hover table-sm">
           <col width="15%">
           <col width="5%">
           <col width="5%">

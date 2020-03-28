@@ -842,12 +842,12 @@ def CollaboratorSelectView(request, pk):
             new.experience = instance
             new.save()
             if 'another' in request.POST:
-                response = redirect('Talent:CollaboratorSelect', kwargs={'tex':tex})
+                response = redirect('Talent:CollaboratorSelect', kwargs={'pk':pk})
                 response.delete_cookie("confirm")
                 return response
 
             elif 'done' in request.POST:
-                response = redirect(reverse('Talent:ClientSelect', kwargs={'tex':tex}))
+                response = redirect(reverse('Talent:ClientSelect', kwargs={'pk':pk}))
                 response.delete_cookie("confirm")
                 return response
     else:
