@@ -15,7 +15,7 @@
     </div>
     {% for d in bil_qs %}
     <h4 class="card-title">Interview Detail</h4>
-    <table class="table table-hover table-sm">
+    <table class="table table-sm">
       <thead>
         <tr>
           <th class="align-middle text-center">Vacancy</th>
@@ -43,7 +43,7 @@
               </td>
             {% endif %}
           </tr>
-          <tr>
+          <tr onclick="window.location='{% url 'MarketPlace:TalentIntComment' bil=d.slug tlt=d.talent.alias %}?next={{ request.path|urlencode }}'">
             <th class="align-middle text-center">My Comments</th>
             {% if d.comments_tlt %}
               <td colspan="5"  class="align-middle">{{ d.comments_tlt }}</td>

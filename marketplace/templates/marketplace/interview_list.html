@@ -14,16 +14,99 @@
   </style>
 
 <div class="container">
-  <a href="{% url 'MarketPlace:ShortListView' scope.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-secondary float-right">Short-list</a>
-  <h3 class="card-title">Talent Dashboard for {{ scope.title }} ({{ scope.ref_no }})</h3>
-  <div class="card border-0">
-    <div class="card-body">
-      <h4>Pending Acceptance</h4>
-      <table class="table table-sm">
-        <col width="45%">
-        <col width="45%">
-        <col width="10%">
-        <thead>
+  <div class="float-right">
+  <a href="{% url 'MarketPlace:VacancyIntDetail' scope.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-secondary">Interview list</a>
+  <a href="{% url 'MarketPlace:ShortListView' scope.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-secondary">Short-list</a>
+  </div>
+    <h3 class="card-title">Talent Dashboard for {{ scope.title }} ({{ scope.ref_no }})</h3>
+      <div class="card border-0">
+        <div class="card-body">
+          <h4>Pending Acceptance</h4>
+          <table class="table table-hover table-sm">
+            <col width="45%">
+            <col width="45%">
+            <col width="10%">
+            <thead>
+              {% for a in wit_qs %}
+              <tr>
+                <th class="align-middle text-center">Alias</th>
+                <th class="align-middle text-center">Response</th>
+                <th class="align-middle text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="align-middle text-center">{{ a.talent.alias }}</td>
+                <td class="align-middle text-center">{{ a.get_tlt_response_display }}</td>
+                <td class="align-middle text-center">
+                  <a href="{% url 'Talent:APV' tlt=a.talent.alias  vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill" style="width: 7rem">View Profile</a>
+                  <a href="{% url 'Profile:WorkshopTlt' %}?next={{ request.path|urlencode }}" class="badge badge-primary badge-pill" style="width: 7rem">Enter Workshop</a
+                  {% if a.tlt_response == 'C' %}
+                    <a href="{% url 'MarketPlace:RFIView' a.slug %}?next={{ request.path|urlencode }}" class="badge badge-warning badge-pill" style="width: 7rem">Clarification<br>Requested</a>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <br>
+    <div class="card border-0">
+      <div class="card-body">
+        <h4>Pending Interviews</h4>
+        <table class="table table-hover table-sm">
+          <col width="15%">
+          <col width="5%">
+          <col width="5%">
+          <col width="1%">
+          <col width="8%">
+          <col width="45%">
+          <col width="10%">
+          <thead>
+            <tr>
+              <th class="align-middle text-center">Alias</th>
+              <th class="align-middle text-center">Experience</th>
+              <th class="align-middle text-center">Training</th>
+              <th class="align-middle text-center">Books Read</th>
+              <th class="align-middle text-center">Rate</th>
+              <th class="align-middle text-left">Motivation</th>
+              <th class="align-middle text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for sl in interview_p.items %}
+            <tr>
+              <td class="align-middle text-center">{{ sl.1.ro.0.4 }}</td>
+              <td class="align-middle text-center">{{ sl.1.we|intcomma }}<br>(<strong>{{ sl.1.s_no }}</strong> skills)</td>
+              <td class="align-middle text-center">{{ sl.1.te|intcomma }}</td>
+              <td class="align-middle text-center">{{ sl.1.rb }}</td>
+              <td class="align-middle text-center">{{ sl.1.ro.0.1 }} <strong>{{ sl.1.ro.0.0|intcomma }}</strong> {{ sl.1.ro.0.2 }}</td>
+              <td class="align-middle">{{ sl.1.ro.0.3|truncatechars:200 }}</td>
+              <td class="align-middle">
+                <p>
+                  <a href="{% url 'Talent:APV' tlt=sl.1.ro.0.4  vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill float-right" style="width: 6rem">View Profile</a>
+                  <form  action="{% url 'MarketPlace:Suitable' tlt=sl.1.ro.0.4 vac=scope.ref_no %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="badge badge-success badge-pill float-right" style="width: 6rem">Suitable</button>
+                  </form>
+                    <a href="{% url 'MarketPlace:NotSuitable' tlt=sl.1.ro.0.4 vac=scope.ref_no %}" class="badge badge-danger badge-pill float-right" style="width: 6rem">Not Suitable</a>
+                </p>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="7">There are no people pending review.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <br>
+    <div class="card border-0">
+      <div class="card-body">
+        {% if wit_qs %}
           {% for a in wit_qs %}
           <tr>
             <th class="align-middle text-center">Alias</th>
@@ -44,95 +127,30 @@
             </td>
           </tr>
           {% endfor %}
-        </tbody>
-      </table>
-    </div>
-  </div>
-  <br>
-  <div class="card border-0">
-    <div class="card-body">
-      <h4>Pending Interviews</h4>
-      <table class="table table-sm">
-        <col width="15%">
-        <col width="5%">
-        <col width="5%">
-        <col width="1%">
-        <col width="8%">
-        <col width="45%">
-        <col width="10%">
-        <thead>
-          <tr>
-            <th class="align-middle text-center">Alias</th>
-            <th class="align-middle text-center">Experience</th>
-            <th class="align-middle text-center">Training</th>
-            <th class="align-middle text-center">Books Read</th>
-            <th class="align-middle text-center">Rate</th>
-            <th class="align-middle text-left">Motivation</th>
-            <th class="align-middle text-center">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for sl in interview_p.items %}
-          <tr>
-            <td class="align-middle text-center">{{ sl.1.ro.0.4 }}</td>
-            <td class="align-middle text-center">{{ sl.1.we|intcomma }}<br>(<strong>{{ sl.1.s_no }}</strong> skills)</td>
-            <td class="align-middle text-center">{{ sl.1.te|intcomma }}</td>
-            <td class="align-middle text-center">{{ sl.1.rb }}</td>
-            <td class="align-middle text-center">{{ sl.1.ro.0.1 }} <strong>{{ sl.1.ro.0.0|intcomma }}</strong> {{ sl.1.ro.0.2 }}</td>
-            <td class="align-middle">{{ sl.1.ro.0.3|truncatechars:200 }}</td>
-            <td class="align-middle">
-              <p>
-                <a href="{% url 'Talent:APV' tlt=sl.1.ro.0.4  vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill float-right" style="width: 6rem">View Profile</a>
-                <form  action="{% url 'MarketPlace:Suitable' tlt=sl.1.ro.0.4 vac=scope.ref_no %}" method="post">
-                  {% csrf_token %}
-                  <button type="submit" class="badge badge-success badge-pill float-right" style="width: 6rem">Suitable</button>
-                </form>
-                  <a href="{% url 'MarketPlace:NotSuitable' tlt=sl.1.ro.0.4 vac=scope.ref_no %}" class="badge badge-danger badge-pill float-right" style="width: 6rem">Not Suitable</a>
-              </p>
-            </td>
-          </tr>
-          {% empty %}
-          <tr>
-            <td colspan="7">There are no people pending review.</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-  </div>
-  <br>
-  <div class="card border-0">
-    <div class="card-body">
-      {% if wit_qs %}
-        {% for a in wit_qs %}
-          {% if a.tlt_response == 'A' or a.tlt_response == 'P' or a.tlt_response == 'C' %}
-            <h4>Unsuccessful Applicants</h4>
-          {% endif %}
-        {% endfor %}
-      {% elif a.tlt_response == 'D' %}
-        <h4>Suitable Applicants</h4>
-      {% endif %}
-      <table class="table table-sm">
-        <col width="15%">
-        <col width="5%">
-        <col width="5%">
-        <col width="1%">
-        <col width="8%">
-        <col width="45%">
-        <col width="10%">
-        <thead>
-          <tr>
-            <th class="align-middle text-center">Alias</th>
-            <th class="align-middle text-center">Experience</th>
-            <th class="align-middle text-center">Training</th>
-            <th class="align-middle text-center">Books Read</th>
-            <th class="align-middle text-center">Rate</th>
-            <th class="align-middle text-left">Motivation</th>
-            <th class="align-middle text-center">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for sl in interview_s.items %}
+        {% else %}
+          <h4>Suitable Applicants</h4>
+        {% endif %}
+        <table class="table table-hover table-sm">
+          <col width="15%">
+          <col width="5%">
+          <col width="5%">
+          <col width="1%">
+          <col width="8%">
+          <col width="45%">
+          <col width="10%">
+          <thead>
+            <tr>
+              <th class="align-middle text-center">Alias</th>
+              <th class="align-middle text-center">Experience</th>
+              <th class="align-middle text-center">Training</th>
+              <th class="align-middle text-center">Books Read</th>
+              <th class="align-middle text-center">Rate</th>
+              <th class="align-middle text-left">Motivation</th>
+              <th class="align-middle text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for sl in interview_s.items %}
             <tr>
               <td class="align-middle text-center">{{ sl.1.ro.0.4 }}</td>
               <td class="align-middle text-center">{{ sl.1.we|intcomma }}<br>(<strong>{{ sl.1.s_no }}</strong> skills)</td>
@@ -163,32 +181,31 @@
         </tbody>
       </table>
     </div>
-  </div>
-  <br>
-  <div class="card border-0">
-    <div class="card-body">
-      <h4>Unsuitable Applicants</h4>
-      <table class="table table-sm">
-        <col width="15%">
-        <col width="5%">
-        <col width="5%">
-        <col width="1%">
-        <col width="8%">
-        <col width="45%">
-        <col width="10%">
-        <thead>
-          <tr>
-            <th class="align-middle text-center">Alias</th>
-            <th class="align-middle text-center">Experience</th>
-            <th class="align-middle text-center">Training</th>
-            <th class="align-middle text-center">Books Read</th>
-            <th class="align-middle text-center">Rate</th>
-            <th class="align-middle text-left">Motivation</th>
-            <th class="align-middle text-center">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for sl in interview_n.items %}
+    <br>
+    <div class="card border-0">
+      <div class="card-body">
+        <h4>Unsuitable Applicants</h4>
+        <table class="table table-hover table-sm">
+          <col width="15%">
+          <col width="5%">
+          <col width="5%">
+          <col width="1%">
+          <col width="8%">
+          <col width="45%">
+          <col width="10%">
+          <thead>
+            <tr>
+              <th class="align-middle text-center">Alias</th>
+              <th class="align-middle text-center">Experience</th>
+              <th class="align-middle text-center">Training</th>
+              <th class="align-middle text-center">Books Read</th>
+              <th class="align-middle text-center">Rate</th>
+              <th class="align-middle text-left">Motivation</th>
+              <th class="align-middle text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for sl in interview_n.items %}
             <tr>
               <td class="align-middle text-center">{{ sl.1.ro.0.4 }}</td>
               <td class="align-middle text-center">{{ sl.1.we|intcomma }}<br>(<strong>{{ sl.1.s_no }}</strong> skills)</td>

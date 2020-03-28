@@ -15,7 +15,7 @@
     </p>
     {% for d in bil_qs %}
     <h4 class="card-title">Interview Detail</h4>
-    <table class="table table-sm">
+    <table class="table table-hover table-sm">
       <thead>
         <tr>
           <th class="align-middle text-center">Talent</th>
@@ -28,7 +28,7 @@
         </tr>
       </thead>
       <tbody>
-          <tr>
+          <tr onclick="window.location='{% url 'MarketPlace:VacancyPost' d.scope.ref_no %}?next={{ request.path|urlencode }}'">
             <td rowspan="2" class="align-middle text-center">{{ d.talent.alias }}</td>
             <td class="align-middle text-center">{{ d.scope.title }}</td>
             <td class="align-middle text-center">{{ d.scope.ref_no }}</td>
@@ -45,10 +45,10 @@
               </td>
             {% endif %}
           </tr>
-          <tr>
+          <tr onclick="window.location='{% url 'MarketPlace:VacancyIntComment' bil=d.slug tlt=d.talent.alias %}?next={{ request.path|urlencode }}'">
             <th class="align-middle text-center">My Comments</th>
             {% if d.comments_emp %}
-              <td colspan="5"  class="align-middle">{{ d.comments_emp|truncatechars:200 }}</td>
+              <td colspan="5"  class="align-middle">{{ d.comments_emp }}</td>
             {% else %}
               <td colspan="4"  class="align-middle"> - </td>
               <td class="align-middle text-center">

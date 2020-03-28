@@ -16,7 +16,7 @@
     <h4 class="card-title">My Workshop</h4>
     <table class="table table-hover table-sm">
       <thead>
-        <tr>
+        <tr onclick="window.open('')";>
           <th class="align-middle text-center">Vacancy</th>
           <th class="align-middle text-center">Reference<br>Number</th>
           <th class="align-middle text-center">Task Complete<br>(Me)</th>
@@ -31,8 +31,8 @@
           <th colspan="6">Open Assignments</th>
         </tr>
         {% for o in wit_qsao %}
-          <tr>
-            <td class="align-middle text-center">{{ o.work.title }}</td>
+          <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' o.work.ref_no %}?next={{ request.path|urlencode }}'">
+            <td class="align-middle text-center">{{ o.work.title|truncatechars:37 }}</td>
             <td class="align-middle text-center">{{ o.work.ref_no }}</td>
             {% if o.assignment_complete_tlt == False %}
               <td class="align-middle text-center">
@@ -68,8 +68,8 @@
           <th colspan="6">Pending Assignments</th>
         </tr>
         {% for o in wit_qsp %}
-          <tr>
-            <td class="align-middle text-center">{{ o.work.title }}</td>
+          <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' o.work.ref_no %}?next={{ request.path|urlencode }}'">
+            <td class="align-middle text-center">{{ o.work.title|truncatechars:37 }}</td>
             <td class="align-middle text-center">{{ o.work.ref_no }}</td>
             {% if o.assignment_complete_tlt == False %}
               <td class="align-middle text-center">Incomplete</td>
@@ -95,8 +95,8 @@
           <th colspan="6">Completed Assignments</th>
         </tr>
         {% for o in wit_qsac %}
-          <tr>
-            <td class="align-middle text-center">{{ o.work.title }}</td>
+          <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' o.work.ref_no %}?next={{ request.path|urlencode }}'">
+            <td class="align-middle text-center">{{ o.work.title|truncatechars:37 }}</td>
             <td class="align-middle text-center">{{ o.work.ref_no }}</td>
             {% if o.assignment_complete_tlt == False %}
               <td class="align-middle text-center">Incomplete</td>
@@ -126,9 +126,9 @@
         <tr class="no-hover">
           <th colspan="6">Declined Assignments</th>
         </tr>
-        {% for o in wit_qsac %}
-          <tr>
-            <td class="align-middle text-center">{{ o.work.title }}</td>
+        {% for o in wit_qsd %}
+          <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' o.work.ref_no %}?next={{ request.path|urlencode }}'">
+            <td class="align-middle text-center">{{ o.work.title|truncatechars:37 }}</td>
             <td class="align-middle text-center">{{ o.work.ref_no }}</td>
             {% if o.assignment_complete_tlt == False %}
               <td class="align-middle text-center">Incomplete</td>

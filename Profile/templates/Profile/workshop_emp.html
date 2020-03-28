@@ -33,8 +33,8 @@
           <th colspan="7">Open Assignments</th>
         </tr>
         {% for o in wit_qsao %}
-          <tr>
-            <td class="align-middle text-center">{{ o.work.title }}</td>
+          <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' o.work.ref_no %}?next={{ request.path|urlencode }}'">
+            <td class="align-middle text-center">{{ o.work.title|truncatechars:37 }}</td>
             <td class="align-middle text-center">{{ o.work.ref_no }}</td>
             <td class="align-middle text-center">{{ o.talent.alias }}</td>
             {% if o.assignment_complete_tlt == False %}
@@ -69,8 +69,8 @@
           <th colspan="7">Pending Assignments</th>
         </tr>
         {% for o in wit_qsp %}
-          <tr>
-            <td class="align-middle text-center">{{ o.work.title }}</td>
+          <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' o.work.ref_no %}?next={{ request.path|urlencode }}'">
+            <td class="align-middle text-center">{{ o.work.title|truncatechars:37 }}</td>
             <td class="align-middle text-center">{{ o.work.ref_no }}</td>
             <td class="align-middle text-center">{{ o.talent.alias }}</td>
             {% if o.assignment_complete_tlt == False %}
@@ -97,8 +97,8 @@
           <th colspan="7">Completed Assignments</th>
         </tr>
         {% for o in wit_qsac %}
-          <tr>
-            <td class="align-middle text-center">{{ o.work.title }}</td>
+          <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' o.work.ref_no %}?next={{ request.path|urlencode }}'">
+            <td class="align-middle text-center">{{ o.work.title|truncatechars:37 }}</td>
             <td class="align-middle text-center">{{ o.work.ref_no }}</td>
             <td class="align-middle text-center">{{ o.talent.alias }}</td>
             {% if o.assignment_complete_tlt == False %}
