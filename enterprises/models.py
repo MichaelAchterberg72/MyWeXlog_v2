@@ -72,7 +72,7 @@ class Branch(models.Model):
         self.name = self.name.capitalize()
 
     def __str__(self):
-        return '{}, {}, {}'.format(self.company, self.name, self.city)
+        return f'{self.company}, {self.name}, {self.type}'
 
     def save(self, *args, **kwargs):
         if self.slug is None or self.slug == "":

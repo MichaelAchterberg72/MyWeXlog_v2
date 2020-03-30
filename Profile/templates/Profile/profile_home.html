@@ -52,7 +52,7 @@
         {% endif %}
       </td>
       <td class="align-middle text-center">
-        <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="badge badge-primary 8rem" style="width: 8rem">Interview History</a>
+        <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}?next={{ request.path|urlencode }}" class="badge badge-primary 8rem" style="width: 8rem">Interview History</a>
         <br>
         {% if interviews_tlt %}
           {{ interviews_tltc }}

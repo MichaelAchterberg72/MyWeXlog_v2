@@ -103,9 +103,18 @@ class Profile(models.Model):
     rate_unit = models.CharField(max_length=1, choices=RATE_UNIT, default='H')
     motivation = models.TextField(blank=True, null=True)
     exp_lvl = models.ForeignKey(SkillLevel, on_delete=models.PROTECT, related_name='profile_tenure', null=True)
+    rate_1 = models.FloatField(null=True)#average for marketplace.models.VacancyRate
+    rate_2 = models.FloatField(null=True)#average for marketplace.models.VacancyRate
+    rate_3 = models.FloatField(null=True)#average for marketplace.models.VacancyRate
+    rate_count = models.IntegerField(null=True)#count for marketplace.models.VacancyRate
 
     def __str__(self):
         return str(self.talent)
+
+    def avg_rate(self):
+        sum = self.rate_1+self.rate_2+self.rate_3
+        return sum/300
+    average = property(avg_rate)
 
     def save(self, *args, **kwargs):
         if self.alias is None or self.alias == "":

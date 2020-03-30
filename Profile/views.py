@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 import json
 from django.contrib.auth.models import User
-from django.db.models import Count, Sum, F, Q
+from django.db.models import Count, Sum, F, Q, Avg
 
 
 #email
@@ -58,7 +58,7 @@ def TltWorkshopView(request):
     #declined Vacancies
     wit_qsd = wit_qs.filter(Q(tlt_response='D'))
     #pending Vacancies
-    wit_qsp = wit_qs.filter(Q(tlt_response='P'))
+    wit_qsp = wit_qs.filter(Q(tlt_response='P') | Q(tlt_response='C'))
     #Accepted Vacancies
     wit_qsa = wit_qs.filter(Q(tlt_response='A'))
     wit_qsao = wit_qsa.filter(Q(assignment_complete_tlt=False) | Q(assignment_complete_emp=False))
@@ -131,7 +131,7 @@ def EmpWorkshopView(request):
     tlt=request.user
     wit_qs = WorkIssuedTo.objects.filter(work__requested_by=tlt).order_by('-date_create')
     #pending Vacancies
-    wit_qsp = wit_qs.filter(Q(tlt_response='P'))
+    wit_qsp = wit_qs.filter(Q(tlt_response='P') | Q(tlt_response='C'))
     #Accepted Vacancies
     wit_qsa = wit_qs.filter(Q(tlt_response='A'))
     wit_qsao = wit_qsa.filter(Q(assignment_complete_tlt=False) | Q(assignment_complete_emp=False))
@@ -167,6 +167,24 @@ def EmpUpdateStatusRate(request, wit):
             new.talent = wit_qs.talent
             new.complete = True
             new.save()
+
+            #injecting average rating into profile table
+            tlt = wit_qs.talent
+            vrm = VacancyRate.objects.filter(talent=tlt)
+            pfl = Profile.objects.filter(talent=tlt)
+
+            avg_1 = vrm.aggregate(a1=Avg('rate_1'))
+            a1 = avg_1.get('a1')*100
+
+            avg_2 = vrm.aggregate(a2=Avg('rate_2'))
+            a2 = avg_2.get('a2')*100
+
+            avg_3 = vrm.aggregate(a3=Avg('rate_3'))
+            a3 = avg_3.get('a3')*100
+
+            cnt = vrm.count()
+
+            pfl.update(rate_1=a1, rate_2=a2, rate_3=a3, rate_count=cnt)
 
             wit_qs.emp_rated=True
             wit_qs.save()

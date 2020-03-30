@@ -12,7 +12,11 @@
       {% csrf_token %}
       <button type="submit" class="btn btn-secondary">Back</button>
     </form>&nbsp
-    <a href="{% url 'MarketPlace:WorkBid' v.ref_no %}" class="btn btn-warning">Apply for this role</a>
+    {% if v.offer_status == 'O' %}
+      <a href="{% url 'MarketPlace:WorkBid' v.ref_no %}" class="btn btn-warning">Apply for this role</a>
+    {% else %}
+      <a href="#" class="btn btn-danger">Closed</a>
+    {% endif %}
   </div>
   <div class="">
     <h4 class="card-title">Vacancy: {{ v.title }} ({{ v.ref_no }})</h4>

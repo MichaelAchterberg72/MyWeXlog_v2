@@ -455,6 +455,12 @@ def VacancyDetailView(request, vac):
     skills = SkillRequired.objects.filter(scope__ref_no=vac)
     deliver = Deliverables.objects.filter(scope__ref_no=vac)
 
+    date1 = vacancy[0].bid_closes
+    date2 = timezone.now()
+
+    if date1 < date2:
+        vacancy.update(offer_status = 'C')
+
     template = 'marketplace/vacancy_detail.html'
     context = {'vacancy': vacancy, 'skills': skills, 'deliver': deliver}
     return render(request, template, context)
