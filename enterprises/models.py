@@ -64,9 +64,20 @@ class Branch(models.Model):
     code = models.CharField('Post Code', max_length=12)
     industry = models.ManyToManyField(Industry)
     slug = models.SlugField(max_length=60, unique=True, blank=True, null=True)
+    rate_1 = models.FloatField(null=True)#Average score from marketplace.models.TalentRate (rate_1)
+    rate_2 = models.FloatField(null=True)#Average score from marketplace.models.TalentRate (rate_2)
+    rate_3 = models.FloatField(null=True)#Average score from marketplace.models.TalentRate (rate_3)
+    rate_4 = models.FloatField(null=True)#Average score from marketplace.models.TalentRate (payment_time)
+    rate_count = models.IntegerField(null=True)
+
 
     class Meta:
         unique_together = (('company','name', 'city'),)
+
+    def avg_rate(self):
+        sum = self.rate_1+self.rate_2+self.rate_3+self.rate_4
+        return sum/400
+    average = property(avg_rate)
 
     def clean(self):
         self.name = self.name.capitalize()

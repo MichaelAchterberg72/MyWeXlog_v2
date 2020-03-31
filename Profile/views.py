@@ -27,6 +27,10 @@ from .models import (
         Profile, Email, PhysicalAddress, PostalAddress, PhoneNumber, SiteName, OnlineRegistrations, FileUpload, IdentificationDetail, IdType, PassportDetail, LanguageList, LanguageTrack, BriefCareerHistory,
         )
 
+from .forms import (
+    ProfileForm, EmailForm, EmailStatusForm, PhysicalAddressForm, PostalAddressForm, PhoneNumberForm, OnlineProfileForm, ProfileTypeForm, FileUploadForm, IdTypeForm, LanguageTrackForm, LanguageListForm, PassportDetailForm, IdentificationDetailForm, BriefCareerHistoryForm, ResignedForm, UserUpdateForm, CustomUserUpdateForm
+)
+
 from talenttrack.models import (
         Lecturer, ClassMates, WorkColleague, Superior, WorkCollaborator,  WorkClient, WorkExperience, Achievements, LicenseCertification,
 )
@@ -35,15 +39,15 @@ from talenttrack.forms import (
         LecturerCommentForm, ClassMatesCommentForm
 )
 
+from enterprises.models import Branch
 from locations.models import Region
 from users.models import CustomUser
-from marketplace.models import BidInterviewList, WorkIssuedTo, VacancyRate, TalentRate, TalentRequired, WorkBid, BidShortList
+
 from nestedsettree.models import NtWk
 
-from .forms import (
-    ProfileForm, EmailForm, EmailStatusForm, PhysicalAddressForm, PostalAddressForm, PhoneNumberForm, OnlineProfileForm, ProfileTypeForm, FileUploadForm, IdTypeForm, LanguageTrackForm, LanguageListForm, PassportDetailForm, IdentificationDetailForm, BriefCareerHistoryForm, ResignedForm, UserUpdateForm, CustomUserUpdateForm
+from marketplace.models import (
+            BidInterviewList, WorkIssuedTo, VacancyRate, TalentRate, TalentRequired, WorkBid, BidShortList
 )
-
 from marketplace.forms import(
         AssignmentDeclineReasonsForm, AssignmentClarifyForm, VacancyRateForm, TalentRateForm
         )
@@ -94,6 +98,30 @@ def TltUpdateStatusRate(request, wit):
             new.talent = wit_qs.talent
             new.complete = True
             new.save()
+
+            #injecting average rating into branch table
+
+            bch_id = wit_qs.work.enterprise.id
+            bch = Branch.objects.filter(id=bch_id)
+
+            tlt = wit_qs.talent
+            trt = TalentRate.objects.filter(talent=tlt)
+
+            avg_1 = trt.aggregate(a1=Avg('rate_1'))
+            a1 = avg_1.get('a1')*100
+
+            avg_2 = trt.aggregate(a2=Avg('rate_2'))
+            a2 = avg_2.get('a2')*100
+
+            avg_3 = trt.aggregate(a3=Avg('rate_3'))
+            a3 = avg_3.get('a3')*100
+
+            avg_4 = trt.aggregate(a4=Avg('payment_time'))
+            a4 = avg_4.get('a4')*100
+
+            cnt = trt.count()
+
+            bch.update(rate_1=a1, rate_2=a2, rate_3=a3, rate_4=a4, rate_count=cnt)
 
             wit_qs.tlt_rated=True
             wit_qs.save()
