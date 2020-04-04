@@ -35,6 +35,7 @@ from db_flatten.models import SkillTag
 from users.models import CustomUser
 from Profile.models import Profile
 from booklist.models import ReadBy
+from marketplace.models import Branch
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
@@ -331,6 +332,7 @@ def InterviewListView(request, vac):
     intv_declined = intv_qs.filter(tlt_response = 'D')
     vacancy_declined = WorkIssuedTo.objects.filter(work__ref_no=vac, tlt_response='D')
 
+
     wit_qs = WorkIssuedTo.objects.filter(Q(work__ref_no=vac)).filter(Q(tlt_response='A') | Q(tlt_response='P') | Q(tlt_response='C'))
     if wit_qs:
         active = wit_qs.exists()
@@ -354,6 +356,7 @@ def InterviewListView(request, vac):
         atalent_skill = list(we.filter(talent=app, edt=False).values_list('skills', flat=True))
         rb = book.filter(talent=app).count()
         atalent_skillt = list(we.filter(talent=app, edt=True).values_list('topic__skills', flat=True))
+        pfl = Profile.objects.filter(talent=app).values_list('avg_rate', flat=True)
 
         applied = applicants.filter(talent=app)
 
@@ -367,7 +370,7 @@ def InterviewListView(request, vac):
         askillset = set(aslist)
         askill_count = len(askillset)
 
-        interview_s[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate}
+        interview_s[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate, 'score':pfl}
 
     #Information for all pending applicants
     pending_list = list(intv_pending.values_list('talent', flat=True))
@@ -383,6 +386,7 @@ def InterviewListView(request, vac):
         rb = book.filter(talent=app).count()
         atalent_skillt = list(we.filter(talent=app, edt=True).values_list('topic__skills', flat=True))
         applied = applicants.filter(talent=app)
+        pfl = Profile.objects.filter(talent=app).values_list('avg_rate', flat=True)
 
         if applied:
             rate = applied.values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation','talent__alias')
@@ -393,7 +397,7 @@ def InterviewListView(request, vac):
         askillset = set(aslist)
         askill_count = len(askillset)
 
-        interview_p[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate}
+        interview_p[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate, 'score':pfl}
 
     #Information for all not suitable applicants
     nots_list = list(intv_notsuitable.values_list('talent', flat=True))
@@ -409,6 +413,7 @@ def InterviewListView(request, vac):
         rb = book.filter(talent=app).count()
         atalent_skillt = list(we.filter(talent=app, edt=True).values_list('topic__skills', flat=True))
         applied = applicants.filter(talent=app)
+        pfl = Profile.objects.filter(talent=app).values_list('avg_rate', flat=True)
 
         if applied:
             rate = applied.values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation','talent__alias')
@@ -419,7 +424,7 @@ def InterviewListView(request, vac):
         askillset = set(aslist)
         askill_count = len(askillset)
 
-        interview_n[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate}
+        interview_n[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate, 'score':pfl}
 
     template = 'marketplace/interview_list.html'
     context = {
@@ -454,6 +459,8 @@ def VacancyDetailView(request, vac):
     vacancy = TalentRequired.objects.filter(ref_no=vac)
     skills = SkillRequired.objects.filter(scope__ref_no=vac)
     deliver = Deliverables.objects.filter(scope__ref_no=vac)
+    bch = vacancy[0].enterprise.slug
+    rate_b = Branch.objects.get(slug=bch)
 
     date1 = vacancy[0].bid_closes
     date2 = timezone.now()
@@ -462,7 +469,7 @@ def VacancyDetailView(request, vac):
         vacancy.update(offer_status = 'C')
 
     template = 'marketplace/vacancy_detail.html'
-    context = {'vacancy': vacancy, 'skills': skills, 'deliver': deliver}
+    context = {'vacancy': vacancy, 'skills': skills, 'deliver': deliver, 'rate_b': rate_b}
     return render(request, template, context)
 
 

@@ -58,6 +58,21 @@ def EnterpriseHome(request):
 
 
 @login_required()
+@subscription(2)
+def EmpRatingDetailView(request, bch):
+    rte = Branch.objects.get(slug=bch)
+
+    r_1 = rte.rate_1/100
+    r_2 = rte.rate_2/100
+    r_3 = rte.rate_3/100
+    r_4 = rte.rate_4/100
+
+    template = 'enterprises/rating_bch_detail.html'
+    context = {'rte': rte, 'r_1': r_1, 'r_2': r_2, 'r_3': r_3, 'r_4': r_4,}
+    return render(request, template, context)
+
+
+@login_required()
 def HelpEnterpriseHomeView(request):
     template_name = 'enterprises/help_enterprises_home.html'
     context = {}

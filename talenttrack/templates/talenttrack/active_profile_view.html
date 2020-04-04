@@ -119,6 +119,11 @@
         <div class="card h-100">
           <div class="card-body">
           <h5 class="card-title">General Information</h5>
+            {% if als.rate_count >= 5 %}
+              <a href="{% url 'Talent:TltRatingDetail' als.alias %}" class="btn btn-info float-right" style="width: 8rem" target="_blank">{{ als.avg_rate|floatformat:2 }} ({{ als.rate_count }} votes)</a>
+            {% else %}
+              <p class="btn btn-info float-right" style="width: 8rem" data-toggle="tooltip" title="Rating calculated for 5 or more votes">{{ als.rate_count }} votes</p>
+            {% endif %}
             <p><strong>Alias:</strong> {{ als.alias }}</p>
             <hr>
             <p><strong>Languages</strong></p>

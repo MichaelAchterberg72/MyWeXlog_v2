@@ -1,4 +1,5 @@
 {% extends 'Profile/base_profile.html' %}
+{% load humanize %}
 
 {% block title %}My {{block.super}}{% endblock title %}
 
@@ -102,9 +103,7 @@
 {% endblock score %}
 
 {% block TBA %}
-  <div class="justify-content">
-
-    &nbsp &nbsp
+  <div class="text-center">
     <a href="{% url 'Talent:APV' tlt=request.user.alias vac='1ad9t2' %}?next={{ request.path|urlencode }}" target="_blank"><i class="fa fa-id-badge" aria-hidden="true"style="font-size:30px;color:black" data-toggle="tooltip" data-placement="top" title="Public Profile"></i></a>
     &nbsp &nbsp
     <a href="{% url 'Talent:DPCSum' %}?next={{ request.path|urlencode }}"><i class="fa fa-industry" style="font-size:30px;color:black" data-toggle="tooltip" title="View Summary for Industry, Project and Designation."></i></a>
@@ -118,9 +117,86 @@
     <a href="{% url 'Talent:ExperienceCapture' %}" class=""><i class="fa fa-laptop" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Capture Experience"></i></a>
     &nbsp &nbsp
     <a href="{% url 'BookList:books-read-new' %}" class=""><i class="fa fa-bookmark-o" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Capture Book"></i></a>
-
   </div>
-
+    <hr>
+    <div class="text-center">
+      {% if pfl.rate_count >= 5 %}
+        <p style="font-size:20px;color:black">
+          Your Rating:
+          {% if pfl.avg_rate >= 0 and pfl.avg_rate < 0.5 %}
+            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+          {% elif pfl.avg_rate >= 0.5 and pfl.avg_rate < 1 %}
+            <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+          {% elif pfl.avg_rate >= 1 and pfl.avg_rate < 1.5 %}
+            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+          {% elif pfl.avg_rate >= 1.5 and pfl.avg_rate < 2 %}
+            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+          {% elif pfl.avg_rate >= 2 and pfl.avg_rate < 2.5 %}
+            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+          {% elif pfl.avg_rate >= 2.5 and pfl.avg_rate < 3 %}
+            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+          {% elif pfl.avg_rate >= 3 and pfl.avg_rate < 3.5 %}
+            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+          {% elif pfl.avg_rate >= 3.5 and pfl.avg_rate < 4 %}
+            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+          {% elif pfl.avg_rate >= 4 and pfl.avg_rate < 4.5 %}
+            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+          {% elif pfl.avg_rate >= 4.5 and pfl.avg_rate < 4.95 %}
+            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+          {% elif pfl.avg_rate >= 4.95 %}
+            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          {% endif %}
+          {{ pfl.avg_rate|floatformat:2 }} from {{ pfl.rate_count|intcomma }} votes
+          <a href="{% url 'Talent:TltRatingDetail' pfl.alias %}" style="font-size:20px;color:black" target="_blank" data-toggle="tooltip" title="Ratings Breakdown"><i class="fa fa-pie-chart" aria-hidden="true"></i></a>
+      {% else %}
+        Ratings calculated over 5 or more votes, you currently have {{ pfl.rate_count|intcomma }}.
+      {% endif %}
+    </p>
+    </div>
  {% endblock TBA %}
 
 {% block Center_Content %}

@@ -392,10 +392,24 @@ def LicenseCertificationDeleteView(request, pk, tlt):
 
 @login_required()
 @subscription(2)
+def TltRatingDetailView(request, tlt):
+    pfl = Profile.objects.get(alias=tlt)
+
+    r_1 = pfl.rate_1/100
+    r_2 = pfl.rate_2/100
+    r_3 = pfl.rate_3/100
+
+    template = 'talenttrack/rating_detail_tlt.html'
+    context = {'pfl': pfl, 'r_1': r_1, 'r_2': r_2, 'r_3': r_3,}
+    return render(request, template, context)
+
+
+@login_required()
+@subscription(2)
 def ActiveProfileView(request, tlt, vac):
     #caching
     bch = BriefCareerHistory.objects.filter(talent__alias=tlt).order_by('-date_from')
-    pfl = Profile.objects.only('id','background', 'alias', 'mentor', 'motivation', 'std_rate', 'currency').filter(alias=tlt)
+    pfl = Profile.objects.filter(alias=tlt)
     als = get_object_or_404(Profile, alias=tlt)
     padd = PhysicalAddress.objects.only('country', 'region', 'city').filter(talent__alias=tlt)
     vacancy = TalentRequired.objects.filter(ref_no=vac)

@@ -1,0 +1,400 @@
+{% extends 'base_homelite.html' %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+{% block title %}{{block.super}} Branch Rating{% endblock title %}
+
+
+{% block content %}
+  <div class="container">
+    <h5>Rating detail for {{ rte.company }}, {{ rte.name }} ({{ rte.type }})</h5>
+    <div class="container">
+      <p>Total Votes: {{ rte.rate_count }}</p>
+    </div>
+    {% if rte.rate_count < 1 %}
+      <p>Average rating only calculated if 5 ore more votes</p>
+    {% else %}
+      <table class="table table-sm">
+        <thead>
+          <tr>
+            <th class="text-center">Employer Performance</th>
+            <th class="text-center">Payment Receipt</th>
+            <th class="text-center">Repeat Work Potential</th>
+            <th class="text-center">Payment Duration</th>
+            <th class="text-center">Average</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-center">
+              {% if r_1 >= 0 and r_1 < 0.5 %}
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif r_1 >= 0.5 and r_1 < 1 %}
+                <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif r_1 >= 1 and r_1 < 1.5 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif r_1 >= 1.5 and r_1 < 2 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif r_1 >= 2 and r_1 < 2.5 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif r_1 >= 2.5 and r_1 < 3 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif r_1 >= 3 and r_1 < 3.5 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif r_1 >= 3.5 and r_1 < 4 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif r_1 >= 4 and r_1 < 4.5 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif r_1 >= 4.5 and r_1 < 4.95 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+              {% elif r_1 >= 4.95 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+              {% endif %}
+            </td>
+            <td class="text-center">
+              {% if r_2 >= 0 and r_2 < 0.5 %}
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif r_2 >= 0.5 and r_2 < 1 %}
+                <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif r_2 >= 1 and r_2 < 1.5 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif r_2 >= 1.5 and r_2 < 2 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif r_2 >= 2 and r_2 < 2.5 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif r_2 >= 2.5 and r_2 < 3 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif r_2 >= 3 and r_2 < 3.5 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif r_2 >= 3.5 and r_2 < 4 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif r_2 >= 4 and r_2 < 4.5 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif r_2 >= 4.5 and r_2 < 4.95 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+              {% elif r_2 >= 4.95 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+              {% endif %}
+            </td>
+            <td class="text-center">
+              {% if r_3 >= 0 and r_3 < 0.5 %}
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif r_3 >= 0.5 and r_3 < 1 %}
+                <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif r_3 >= 1 and r_3 < 1.5 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif r_3 >= 1.5 and r_3 < 2 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif r_3 >= 2 and r_3 < 2.5 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif r_3 >= 2.5 and r_3 < 3 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif r_3 >= 3 and r_3 < 3.5 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif r_3 >= 3.5 and r_3 < 4 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif r_3 >= 4 and r_3 < 4.5 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif r_3 >= 4.5 and r_3 < 4.95 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+              {% elif r_3 >= 4.95 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+              {% endif %}
+            </td>
+            <td class="text-center">
+              {% if r_4 >= 0 and r_4 < 0.5 %}
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif r_4 >= 0.5 and r_4 < 1 %}
+                <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif r_4 >= 1 and r_4 < 1.5 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif r_4 >= 1.5 and r_4 < 2 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif r_4 >= 2 and r_4 < 2.5 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif r_4 >= 2.5 and r_4 < 3 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif r_4 >= 3 and r_4 < 3.5 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif r_4 >= 3.5 and r_4 < 4 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif r_4 >= 4 and r_4 < 4.5 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif r_4 >= 4.5 and r_4 < 4.95 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+              {% elif r_4 >= 4.95 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+              {% endif %}
+            </td>
+            <td class="text-center">
+              {% if rte.avg_rate >= 0 and rte.avg_rate < 0.5 %}
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif rte.avg_rate >= 0.5 and rte.avg_rate < 1 %}
+                <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif rte.avg_rate >= 1 and rte.avg_rate < 1.5 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif rte.avg_rate >= 1.5 and rte.avg_rate < 2 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif rte.avg_rate >= 2 and rte.avg_rate < 2.5 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif rte.avg_rate >= 2.5 and rte.avg_rate < 3 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif rte.avg_rate >= 3 and rte.avg_rate < 3.5 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif rte.avg_rate >= 3.5 and rte.avg_rate < 4 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif rte.avg_rate >= 4 and rte.avg_rate < 4.5 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif rte.avg_rate >= 4.5 and rte.avg_rate < 4.95 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+              {% elif rte.avg_rate >= 4.95 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+              {% endif %}
+            </td>
+          </tr>
+          <tr>
+            <td class="text-center">
+              {{ r_1|floatformat:2 }}
+            </td>
+            <td class="text-center">
+              {{ r_2|floatformat:2 }}
+            </td>
+            <td class="text-center">
+              {{ r_3|floatformat:2 }}
+            </td>
+            <td class="text-center">
+              {{ r_4|floatformat:2 }}
+            </td>
+            <td class="text-center">
+              {{ rte.avg_rate|floatformat:2 }}
+            </td class="text-center">
+          </tr>
+        </tbody>
+      </table>
+    {% endif %}
+  </div>
+{% endblock content %}
+
+{% block Script %}
+
+{% endblock Script %}

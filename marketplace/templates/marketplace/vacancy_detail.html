@@ -26,23 +26,36 @@
 <table class="table table-sm">
   <thead>
     <tr>
-      <th>Hours Required</th>
-      <th>Work Format</th>
-      <th>Office Location</th>
-      <th>Experience Level</th>
-      <th>Company</th>
+      <th class="align-middle text-center">Hours Required</th>
+      <th class="align-middle text-center">Work Format</th>
+      <th class="align-middle text-center">Office Location</th>
+      <th class="align-middle text-center">Experience Level</th>
+      <th class="align-middle text-center">Company</th>
     </tr>
   </thead>
   <tbody>
     {% for v in vacancy %}
     <tr>
-      <td>
-        {{ v.hours_required|intcomma }} ({{ v.get_unit_display }})
+      <td class="align-middle text-center">
+        {{ v.hours_required|intcomma }}<br>({{ v.get_unit_display }})
       </td>
-      <td>{{ v.worklocation }}</td>
-      <td>{{ v.city.city }}</td>
-      <td>{{ v.experience_level }}</td>
-      <td>{{ v.enterprise.company }}</td>
+      <td class="align-middle text-center">{{ v.worklocation }}</td>
+      <td class="align-middle text-center">{{ v.city.city }}</td>
+      <td class="align-middle text-center">{{ v.experience_level }}</td>
+      <td class="align-middle text-center">
+        {% if request.user.subscription >= 2 %}
+          {{ v.enterprise.company }} ({{ v.enterprise.name }})<br>
+          {{ v.enterprise.type }}<br>
+          {% if rate_b.rate_count > 1 %}
+            {{ rate_b.avg_rate }} ({{ rate_b.rate_count }} ratings)
+            <a href="{% url 'Enterprise:EmpRatingDetail' v.enterprise.slug %}" style="font-size:20px;color:black" target="_blank" data-toggle="tooltip" title="Ratings Breakdown"><i class="fa fa-pie-chart" aria-hidden="true"></i></a>
+          {% else %}
+            Ratings are calculated from 5 <br>or more votes. There are currently {{ rate_b.rate_count }}.
+          {% endif %}
+        {% else %}
+          Upgrade your subscription to<br>view company & company score
+        {% endif %}
+      </td>
     </tr>
   </tbody>
   {% endfor %}
@@ -74,17 +87,17 @@
 <table class="table table-sm">
   <thead>
     <tr>
-      <th>Proposed Rate</th>
-      <th>Bid Closing Date</th>
-      <th>Work Completion Date</th>
+      <th class="align-middle text-center">Proposed Rate</th>
+      <th class="align-middle text-center">Bid Closing Date</th>
+      <th class="align-middle text-center">Work Completion Date</th>
     </tr>
   </thead>
   <tbody>
     {% for v in vacancy %}
     <tr>
-      <td>{{ v.currency }}{{ v.rate_offered }} ({{ v.get_rate_unit_display }})</td>
-      <td>{{ v.bid_closes }}</td>
-      <td>{{ v.date_deadline }}</td>
+      <td class="align-middle text-center">{{ v.currency }}{{ v.rate_offered }} ({{ v.get_rate_unit_display }})</td>
+      <td class="align-middle text-center">{{ v.bid_closes }}<br>({{ v.get_offer_status_display }})</td>
+      <td class="align-middle text-center">{{ v.date_deadline }}</td>
     </tr>
   </tbody>
   {% endfor %}

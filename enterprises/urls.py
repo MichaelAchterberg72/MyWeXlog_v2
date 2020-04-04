@@ -29,5 +29,6 @@ urlpatterns = [
     path('branches/<slug:cmp>/', views.BranchListView, name='BranchList'),
     path('branches/detail/<slug:bch>/', views.BranchDetailView, name='BranchDetail'),
     path('branch/add/', views.FullBranchAddView, name="FullBranchAdd"),
+    path('<slug:bch>/rating', views.EmpRatingDetailView, name="EmpRatingDetail"),
 
 ]
