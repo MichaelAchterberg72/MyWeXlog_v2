@@ -44,7 +44,7 @@
     <tr>
       <td class="align-middle text-center">Interviews Pending</td>
       <td class="align-middle text-center">
-        <a href="{% url 'MarketPlace:EmployerInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="badge badge-primary" style="width: 8rem">Interview History</a>
+        <a href="{% url 'MarketPlace:EmployerInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 10rem">Interview History</a>
         <br>
         {% if interviews_emp %}
           {{ interviews_empc }}
@@ -53,7 +53,7 @@
         {% endif %}
       </td>
       <td class="align-middle text-center">
-        <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}?next={{ request.path|urlencode }}" class="badge badge-primary 8rem" style="width: 8rem">Interview History</a>
+        <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary 8rem" style="width: 10rem">Interview History</a>
         <br>
         {% if interviews_tlt %}
           {{ interviews_tltc }}
@@ -80,7 +80,7 @@
     <tr>
       <td class="align-middle text-center">Open Assignments</td>
       <td class="align-middle text-center">
-        <a href="{% url 'Profile:WorkshopEmp' %}?next={{ request.path|urlencode }}" class="badge badge-primary" style="width: 8rem">Enter Office</a>
+        <a href="{% url 'Profile:WorkshopEmp' %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 10rem">Enter Office</a>
         <br>
         {% if open_assignments_empc  %}
           {{ open_assignments_empc }}
@@ -89,7 +89,7 @@
         {% endif %}
       </td>
       <td class="align-middle text-center">
-        <a href="{% url 'Profile:WorkshopTlt' %}?next={{ request.path|urlencode }}" class="badge badge-primary" style="width: 8rem">Enter Workshop</a>
+        <a href="{% url 'Profile:WorkshopTlt' %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 10rem">Enter Workshop</a>
         <br>
         {% if open_assignments_tltc  %}
           {{ open_assignments_tltc }}

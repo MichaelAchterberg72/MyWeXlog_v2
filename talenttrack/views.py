@@ -506,8 +506,6 @@ def LCMFullView(request, tlt):
     return render(request, template, context)
 
 
-@login_required()
-@subscription(2)
 def SkillProfileDetailView(request, tlt):
     tlt_p = Profile.objects.get(alias=tlt)
     skill_qs = SkillTag.objects.all()
@@ -638,7 +636,6 @@ def SumAllExperienceView(request):
     return render(request, template, context)
 
 
-@login_required()
 def DPC_SummaryView(request):
     #caching
     exp = WorkExperience.objects.filter(
