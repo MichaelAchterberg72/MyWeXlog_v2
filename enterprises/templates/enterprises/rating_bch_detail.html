@@ -11,7 +11,7 @@
     <div class="container">
       <p>Total Votes: {{ rte.rate_count }}</p>
     </div>
-    {% if rte.rate_count < 1 %}
+    {% if rte.rate_count < 4 %}
       <p>Average rating only calculated if 5 ore more votes</p>
     {% else %}
       <table class="table table-sm">

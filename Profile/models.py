@@ -5,6 +5,7 @@ from time import time
 from random import random
 from django.urls import reverse
 from django.db.models.signals import post_save, pre_save
+from decimal import getcontext, Decimal
 
 
 from django_countries.fields import CountryField
@@ -112,8 +113,11 @@ class Profile(models.Model):
         return str(self.talent)
 
     def avg_rate(self):
-        sum = self.rate_1+self.rate_2+self.rate_3
-        return sum/300
+        if self.rate_count is not None:
+            sum = self.rate_1+self.rate_2+self.rate_3
+        else:
+            sum=0
+        return round(Decimal(sum/300),2)
     average = property(avg_rate)
 
     def save(self, *args, **kwargs):

@@ -17,34 +17,51 @@
     {% endif %}
     <table class="table table-hover table-sm">
       <col width="30%">
-      <col width="30%">
-      <col width="15%">
+      <col width="25%">
+      <col width="20%">
       <col width="15%">
       <col width="10%">
       <thead>
         <tr>
-          <th>Branch Name</th>
-          <th>Type</th>
-          <th>Current Employees (On Wexlog)</th>
-          <th>Past Employees (On Wexlog)</th>
-          <th></th>
+          <th class="align-middle text-center">Branch Name</th>
+          <th class="align-middle text-center">Type</th>
+          <th class="align-middle text-center">Rating</th>
+          <th class="align-middle text-center">Number of votes</th>
+          <th class="align-middle text-center"></th>
         </tr>
       </thead>
       {% for b in pageitems %}
       <tbody>
-        <tr onclick="window.location='{% url 'Enterprise:BranchDetail' b.slug %}?next={{ request.path|urlencode }}'">
-          <td>{{ b.name }}</td>
-          <td>{{ b.type }}</td>
+        <tr>
+          <td class="align-middle text-center">{{ b.name }}</td>
+          <td class="align-middle text-center">{{ b.type }}</td>
           {% if request.user.subscription >= 2 %}
-            <td>Current</td>
-            <td>Past</td>
+            <td class="align-middle text-center">
+              {% if b.rate_count > 4 %}
+                {{ b.average }}
+                <a href="{% url 'Enterprise:EmpRatingDetail' b.slug %}" style="font-size:20px;color:black" target="_blank" data-toggle="tooltip" title="Ratings Breakdown"><i class="fa fa-pie-chart" aria-hidden="true"></i></a>
+              {% else %}
+                A minimum of 5 votes<br>is required for a rating.
+              {% endif %}
+            </td>
+            <td class="align-middle text-center">{{ b.rate_count }}</td>
           {% else %}
-            <td class="badge badge-info text-wrap" style="width: 6rem;">Active Subscription required</td>
-            <td class="badge badge-info text-wrap" style="width: 6rem;">Active Subscription required</td>
+            <td>
+              <span class="badge badge-info text-wrap" style="width: 12rem;">
+                Active Subscription required
+              </span>
+            </td>
+            <td>
+              <span class="badge badge-info text-wrap" style="width: 12rem;">
+                Active Subscription required
+              </span>
+            </td>
           {% endif %}
-          <td>{% if request.user.is_authenticated %}
-          <a href="{% url 'Enterprise:BranchDetail' b.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary float-right" style="width: 5rem;">Detail</a>
-          {% endif %}</td>
+          <td class="align-middle text-center">
+            {% if request.user.is_authenticated %}
+              <a href="{% url 'Enterprise:BranchDetail' b.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary float-right" style="width: 5rem;">Detail</a>
+            {% endif %}
+          </td>
 
         </tr>
       </tbody>

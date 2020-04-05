@@ -39,7 +39,7 @@ from talenttrack.forms import (
         LecturerCommentForm, ClassMatesCommentForm
 )
 
-from enterprises.models import Branch
+from enterprises.models import Branch, Enterprise
 from locations.models import Region
 from users.models import CustomUser
 
@@ -99,13 +99,35 @@ def TltUpdateStatusRate(request, wit):
             new.complete = True
             new.save()
 
-            #injecting average rating into branch table
+            #average for company as a whole
+            cmp_id = wit_qs.work.enterprise.company.id
+            cmp = Enterprise.objects.get(id=cmp_id)
+            cmpu = Enterprise.objects.filter(id=cmp_id)
 
+            tctr = TalentRate.objects.filter(vacancy__enterprise__company=cmp)
+
+            avg_1 = tctr.aggregate(c1=Avg('rate_1'))
+            c1 = avg_1.get('c1')*100
+
+            avg_2 = tctr.aggregate(c2=Avg('rate_2'))
+            c2 = avg_2.get('c2')*100
+
+            avg_3 = tctr.aggregate(c3=Avg('rate_3'))
+            c3 = avg_3.get('c3')*100
+
+            avg_4 = tctr.aggregate(c4=Avg('payment_time'))
+            c4 = avg_4.get('c4')*100
+
+            cnt = tctr.count()
+
+            cmpu.update(rate_1=c1, rate_2=c2, rate_3=c3, rate_4=c4, rate_count=cnt)
+
+            #average branch rating
             bch_id = wit_qs.work.enterprise.id
-            bch = Branch.objects.filter(id=bch_id)
+            bch = Branch.objects.get(id=bch_id)
+            bchu = Branch.objects.filter(id=bch_id)
 
-            tlt = wit_qs.talent
-            trt = TalentRate.objects.filter(talent=tlt)
+            trt = TalentRate.objects.filter(vacancy__enterprise=bch)
 
             avg_1 = trt.aggregate(a1=Avg('rate_1'))
             a1 = avg_1.get('a1')*100
@@ -121,7 +143,7 @@ def TltUpdateStatusRate(request, wit):
 
             cnt = trt.count()
 
-            bch.update(rate_1=a1, rate_2=a2, rate_3=a3, rate_4=a4, rate_count=cnt)
+            bchu.update(rate_1=a1, rate_2=a2, rate_3=a3, rate_4=a4, rate_count=cnt)
 
             wit_qs.tlt_rated=True
             wit_qs.save()

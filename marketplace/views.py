@@ -7,7 +7,7 @@ from django.core.exceptions import PermissionDenied
 import json
 from django.db.models import Count, Sum, F, Q
 from django.utils import timezone
-from decimal import Decimal
+from decimal import getcontext, Decimal
 
 from csp.decorators import csp_exempt
 from core.decorators import subscription
@@ -326,19 +326,24 @@ def InterviewNotSuitable(request, vac, tlt):
 def InterviewListView(request, vac):
     scope = TalentRequired.objects.get(ref_no=vac)
     intv_qs = BidInterviewList.objects.filter(scope__ref_no=vac)
-    intv_pending = intv_qs.filter(Q(outcome = 'P') & ~Q(tlt_response='D'))
-    intv_suitable = intv_qs.filter(Q(outcome = 'S') & ~Q(tlt_response='D') & ~Q(tlt_response='A'))
+
+    intv_pending = intv_qs.filter(Q(outcome='I')).filter(Q(tlt_response='A') | Q(tlt_response='P'))
+
+    intv_suitable = intv_qs.filter(Q(outcome = 'S') & ~Q(tlt_response='D'))
     intv_notsuitable = intv_qs.filter(Q(outcome = 'N') & ~Q(tlt_response='D'))
     intv_declined = intv_qs.filter(tlt_response = 'D')
     vacancy_declined = WorkIssuedTo.objects.filter(work__ref_no=vac, tlt_response='D')
 
-
     wit_qs = WorkIssuedTo.objects.filter(Q(work__ref_no=vac)).filter(Q(tlt_response='A') | Q(tlt_response='P') | Q(tlt_response='C'))
-    if wit_qs:
-        active = wit_qs.exists()
+
+    print(wit_qs)
+    
+    if wit_qs is None:
+        active ='True'
     else:
         active = 'False'
 
+    print('active: ', active)
     we = WorkExperience.objects.filter(talent__subscription__gte=1)
     applicants = WorkBid.objects.filter(work__ref_no=vac)
     book = ReadBy.objects.all()
@@ -356,7 +361,10 @@ def InterviewListView(request, vac):
         atalent_skill = list(we.filter(talent=app, edt=False).values_list('skills', flat=True))
         rb = book.filter(talent=app).count()
         atalent_skillt = list(we.filter(talent=app, edt=True).values_list('topic__skills', flat=True))
-        pfl = Profile.objects.filter(talent=app).values_list('avg_rate', flat=True)
+
+        pfl = Profile.objects.get(talent=app)
+        avg = pfl.avg_rate
+        cnt = pfl.rate_count
 
         applied = applicants.filter(talent=app)
 
@@ -370,7 +378,9 @@ def InterviewListView(request, vac):
         askillset = set(aslist)
         askill_count = len(askillset)
 
-        interview_s[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate, 'score':pfl}
+        interview_s[app]={
+            'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate, 'score':avg, 'count': cnt
+            }
 
     #Information for all pending applicants
     pending_list = list(intv_pending.values_list('talent', flat=True))
@@ -386,7 +396,10 @@ def InterviewListView(request, vac):
         rb = book.filter(talent=app).count()
         atalent_skillt = list(we.filter(talent=app, edt=True).values_list('topic__skills', flat=True))
         applied = applicants.filter(talent=app)
-        pfl = Profile.objects.filter(talent=app).values_list('avg_rate', flat=True)
+
+        pfl = Profile.objects.get(talent=app)
+        avg = pfl.avg_rate
+        cnt = pfl.rate_count
 
         if applied:
             rate = applied.values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation','talent__alias')
@@ -397,7 +410,7 @@ def InterviewListView(request, vac):
         askillset = set(aslist)
         askill_count = len(askillset)
 
-        interview_p[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate, 'score':pfl}
+        interview_p[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate, 'score':avg, 'count':cnt}
 
     #Information for all not suitable applicants
     nots_list = list(intv_notsuitable.values_list('talent', flat=True))
@@ -412,8 +425,12 @@ def InterviewListView(request, vac):
         atalent_skill = list(we.filter(talent=app, edt=False).values_list('skills', flat=True))
         rb = book.filter(talent=app).count()
         atalent_skillt = list(we.filter(talent=app, edt=True).values_list('topic__skills', flat=True))
+
+        pfl = Profile.objects.get(talent=app)
+        avg = pfl.avg_rate
+        cnt = pfl.rate_count
+
         applied = applicants.filter(talent=app)
-        pfl = Profile.objects.filter(talent=app).values_list('avg_rate', flat=True)
 
         if applied:
             rate = applied.values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation','talent__alias')
@@ -424,7 +441,7 @@ def InterviewListView(request, vac):
         askillset = set(aslist)
         askill_count = len(askillset)
 
-        interview_n[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate, 'score':pfl}
+        interview_n[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate, 'score':avg, 'count': cnt}
 
     template = 'marketplace/interview_list.html'
     context = {
@@ -479,9 +496,11 @@ def VacancyDetailView_Profile(request, vac):
     vacancy = TalentRequired.objects.filter(ref_no=vac)
     skills = SkillRequired.objects.filter(scope__ref_no=vac)
     deliver = Deliverables.objects.filter(scope__ref_no=vac)
+    bch = vacancy[0].enterprise.slug
+    bch_r = Branch.objects.get(slug=bch)
 
     template = 'marketplace/vacancy_detail_profile.html'
-    context = {'vacancy': vacancy, 'skills': skills, 'deliver': deliver}
+    context = {'vacancy': vacancy, 'skills': skills, 'deliver': deliver, 'bch_r': bch_r}
     return render(request, template, context)
 
 
@@ -1068,11 +1087,17 @@ def VacancyPostView(request, vac):
         talent_skillt = list(we.filter(talent=item, edt=True).values_list('topic__skills', flat=True))
         rate = Profile.objects.filter(talent=item).values_list('std_rate', 'currency__currency_abv', 'rate_unit', 'motivation', 'alias',)
 
+        pfl = Profile.objects.get(talent=item)
+        avg = pfl.avg_rate
+        cnt = pfl.rate_count
+
         slist = talent_skill + talent_skillt
         skillset = set(slist)
         skill_count = len(skillset)
 
-        suitable[item]={'we':wetv, 'te':tetv,'s_no':skill_count, 'rb':rb, 'ro':rate}
+        suitable[item]={
+            'we':wetv, 'te':tetv,'s_no':skill_count, 'rb':rb, 'ro':rate, 'score':avg, 'count':cnt
+            }
 
     #Extracting information for the applicants
     applied ={}
@@ -1086,12 +1111,17 @@ def VacancyPostView(request, vac):
             atalent_skillt = list(we.filter(talent=app, edt=True).values_list('topic__skills', flat=True))
             rb = book.filter(talent=app).count()
             rate = applicants.filter(talent=app).values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation', 'talent__alias')
+            pfl = Profile.objects.get(talent=app)
+            avg = pfl.avg_rate
+            cnt = pfl.rate_count
 
             aslist = atalent_skill + atalent_skillt
             askillset = set(aslist)
             askill_count = len(askillset)
 
-            applied[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate}
+            applied[app]={
+                'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate, 'score': avg, 'count': cnt
+                }
 
     template = 'marketplace/vacancy_post_view.html'
     context = {'instance': instance, 'skille': skille, 'delivere': delivere, 'applicants': applicants, 'suitable': suitable, 'applied': applied, 's_list': s_list}
@@ -1429,6 +1459,10 @@ def ShortListView(request, vac):
         rb = book.filter(talent=app).count()
         atalent_skillt = list(we.filter(talent=app, edt=True).values_list('topic__skills', flat=True))
 
+        pfl = Profile.objects.get(talent=app)
+        avg = pfl.avg_rate
+        cnt = pfl.rate_count
+
         applied = applicants.filter(talent=app)
 
         if applied:
@@ -1440,7 +1474,9 @@ def ShortListView(request, vac):
         askillset = set(aslist)
         askill_count = len(askillset)
 
-        short[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate}
+        short[app]={
+            'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate, 'score':avg, 'count': cnt
+            }
 
     template = 'marketplace/shortlist_view.html'
     context = {'s_list': s_list, 'short': short, 'vacancy': vacancy, 'active': active, 'declined': declined, 'closed': closed,}

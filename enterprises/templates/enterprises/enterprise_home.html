@@ -19,22 +19,47 @@
     <table class="table table-hover table-sm">
       <col width="30%">
       <col width="30%">
-      <col width="15%">
-      <col width="15%">
+      <col width="20%">
+      <col width="10%">
       <col width="10%">
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Website</th>
-          <th></th>
+          <th class="align-middle text-center">Name</th>
+          <th class="align-middle text-center">Website</th>
+          <th class="align-middle text-center">Rating</th>
+          <th class="align-middle text-center">Vote Count</th>
+          <th class="align-middle text-center"></th>
         </tr>
       </thead>
       {% for c in pageitems %}
       <tbody>
         <tr onclick="window.location='{% url 'Enterprise:BranchList' c.slug %}?next={{ request.path|urlencode }}'">
-          <td>{{ c.name }}</td>
-          <td><a href="{{ c.website }}" target="_blank">{{ c.website }}</a></td>
-          <td><a href="{% url 'Enterprise:BranchList' c.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 5rem;">List Branches</a> </td>
+          <td class="align-middle text-left">{{ c.name }}</td>
+          <td class="align-middle text-left"><a href="{{ c.website }}" target="_blank">{{ c.website }}</a></td>
+          {% if request.user.subscription >= 2 %}
+            <td class="align-middle text-center">
+              {% if c.rate_count > 4 %}
+                {{ c.avg_rate }}
+              {% else %}
+                Ratings are calculated<br>from 5 or more votes.
+              {% endif %}
+            </td>
+            <td class="align-middle text-center">
+              {{ c.rate_count }}
+            </td>
+          {% else %}
+            <td class="align-middle text-center">
+              <span class="badge badge-info text-wrap" style="width: 8rem;">
+                Active Subscription<br>required
+              </span>
+            </td>
+            <td class="align-middle text-center">
+              <span class="badge badge-info text-wrap" style="width: 8rem;">
+                Active Subscription<br>required
+              </span>
+            </td>
+          {% endif %}
+          <td class="align-middle text-center"><a href="{% url 'Enterprise:BranchList' c.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 5rem;">List Branches</a> </td>
         </tr>
       </tbody>
       {% endfor %}

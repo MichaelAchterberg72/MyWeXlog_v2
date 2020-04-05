@@ -22,8 +22,6 @@ urlpatterns = [
     path('vacancy-delete-deliverables/<int:pk>/', views.DeliverableDeleteView, name='DeliverablesDelete'),
     path('vacancy-delete-skill/<int:id>/', views.SkillDeleteView, name='SkillDelete'),
 
-    path('interviewlist/<slug:vac>/<slug:tlt>/', views.AddToInterviewListView, name='InterviewList'),
-
     path('availabillity/', views.TalentAvailabillityView, name='Availabillity'),
     path('v-detail/<slug:vac>/', views.VacancyDetailView, name='VacancyDetail'),
     path('vp-detail/<slug:vac>/', views.VacancyDetailView_Profile, name='VacancyDetail_Profile'),
@@ -31,9 +29,6 @@ urlpatterns = [
     path('history/', views.ApplicationHistoryView, name='History'),
     path('postview/<slug:vac>/', views.VacancyPostView, name='VacancyPost'),
     path('vac-close/<slug:vac>/', views.VacancyCloseSwitch, name='VacClose'),
-
-
-    path('interviewlist/<slug:vac>/', views.InterviewListView, name='InterviewList'),
 
     path('vac-assign/<slug:vac>/<slug:tlt>/', views.TalentAssign, name='VacAssign'),
 
@@ -50,6 +45,8 @@ urlpatterns = [
     path('sl-notsuitable/<slug:bil>/<slug:tlt>/', views.EmpSlDeclineComment, name='SlNotSuitable'),
 
     #Interview URLs
+    path('interviewlist/<slug:vac>/<slug:tlt>/', views.AddToInterviewListView, name='InterviewList'),
+    path('interviewlist/<slug:vac>/', views.InterviewListView, name='InterviewList'),
     path('vac-interview/<slug:vac>/<slug:tlt>/', views.AddToInterviewListView, name='VacInterview'),
     path('int-decline/<int:int_id>/', views.InterviewDeclineView, name='InterviewDecline'),
         #InterviewList Views

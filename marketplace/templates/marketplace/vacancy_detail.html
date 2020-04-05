@@ -46,7 +46,7 @@
         {% if request.user.subscription >= 2 %}
           {{ v.enterprise.company }} ({{ v.enterprise.name }})<br>
           {{ v.enterprise.type }}<br>
-          {% if rate_b.rate_count > 1 %}
+          {% if rate_b.rate_count > 5 %}
             {{ rate_b.avg_rate }} ({{ rate_b.rate_count }} ratings)
             <a href="{% url 'Enterprise:EmpRatingDetail' v.enterprise.slug %}" style="font-size:20px;color:black" target="_blank" data-toggle="tooltip" title="Ratings Breakdown"><i class="fa fa-pie-chart" aria-hidden="true"></i></a>
           {% else %}
@@ -95,7 +95,7 @@
   <tbody>
     {% for v in vacancy %}
     <tr>
-      <td class="align-middle text-center">{{ v.currency }}{{ v.rate_offered }} ({{ v.get_rate_unit_display }})</td>
+      <td class="align-middle text-center">{{ v.currency }}<br><strong>{{ v.rate_offered }}</strong><br>({{ v.get_rate_unit_display }})</td>
       <td class="align-middle text-center">{{ v.bid_closes }}<br>({{ v.get_offer_status_display }})</td>
       <td class="align-middle text-center">{{ v.date_deadline }}</td>
     </tr>

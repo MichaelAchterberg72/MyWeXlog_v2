@@ -32,22 +32,22 @@
       <table class="table table-sm">
         <thead>
           <tr>
-            <th>Hours Required</th>
-            <th>Work Format</th>
-            <th>Office Location</th>
-            <th>Experience Level</th>
-            <th>Company</th>
+            <th class="align-middle text-center">Hours Required</th>
+            <th class="align-middle text-center">Work Format</th>
+            <th class="align-middle text-center">Office Location</th>
+            <th class="align-middle text-center">Experience Level</th>
+            <th class="align-middle text-center">Company</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>
-              {{ instance.hours_required|intcomma }} ({{ instance.get_unit_display }})
+            <td class="align-middle text-center">
+              {{ instance.hours_required|intcomma }}<br>({{ instance.get_unit_display }})
             </td>
-            <td>{{ instance.worklocation }}</td>
-            <td>{{ instance.city.city }}</td>
-            <td>{{ instance.experience_level }}</td>
-            <td>{{ instance.enterprise.company }}</td>
+            <td class="align-middle text-center">{{ instance.worklocation }}</td>
+            <td class="align-middle text-center">{{ instance.city.city }}</td>
+            <td class="align-middle text-center">{{ instance.experience_level }}</td>
+            <td class="align-middle text-center">{{ instance.enterprise.company }}<br>{{ instance.enterprise.name }}<br>({{ instance.enterprise.type }})</td>
           </tr>
         </tbody>
       </table>
@@ -85,7 +85,7 @@
         </thead>
         <tbody>
           <tr>
-            <td class="align-middle text-center">{{ instance.currency }} {{ instance.rate_offered|intcomma }} ({{ instance.get_rate_unit_display }})</td>
+            <td class="align-middle text-center">{{ instance.currency }}<br><strong>{{ instance.rate_offered|intcomma }}</strong><br>({{ instance.get_rate_unit_display }})</td>
             <td class="align-middle text-center">{{ instance.bid_closes|date:'j M Y' }}</td>
             <td class="align-middle text-center">{{ instance.date_deadline|date:'j M Y' }}</td>
             <td class="align-middle text-center">
@@ -197,15 +197,15 @@
       <div class="">
         <table class="table table-hover table-sm">
           <col width="15%">
-          <col width="5%">
-          <col width="5%">
+          <col width="6%">
+          <col width="6%">
           <col width="1%">
           <col width="8%">
           <col width="45%">
-          <col width="10%">
+          <col width="8%">
           <thead>
             <tr>
-              <th class="align-middle text-center">Alias</th>
+              <th class="align-middle text-center">Alias<br>& Rating</th>
               <th class="align-middle text-center">Experience</th>
               <th class="align-middle text-center">Training</th>
               <th class="align-middle text-center">Books Read</th>
@@ -217,7 +217,13 @@
           <tbody>
             {% for key in suitable.items %}
             <tr>
-              <td class="align-middle text-center">{{ key.1.ro.0.4 }}</td>
+              <td class="align-middle text-center">
+                {% if key.1.count > 5 %}
+                  {{ key.1.ro.0.4 }}<br><strong>{{ key.1.score }}</strong><br>(by {{ key.1.count }} people)
+                {% else %}
+                  {{ key.1.ro.0.4 }}<br><strong>Not Rated</strong><br>(by < 5 people)
+                {% endif %}
+              </td>
               <td class="align-middle text-center">{{ key.1.we|intcomma }}<br>(<strong>{{ key.1.s_no }}</strong> skills)</td>
               <td class="align-middle text-center">{{ key.1.te|intcomma }}</td>
               <td class="align-middle text-center">{{ key.1.rb }}</td>
@@ -263,15 +269,15 @@
     <div class="">
     <table class="table table-hover table-sm">
       <col width="15%">
-      <col width="5%">
-      <col width="5%">
+      <col width="6%">
+      <col width="6%">
       <col width="1%">
       <col width="8%">
       <col width="45%">
-      <col width="10%">
+      <col width="8%">
       <thead>
         <tr>
-          <th class="align-middle text-center">Alias</th>
+          <th class="align-middle text-center">Alias<br>& Rating</th>
           <th class="align-middle text-center">Experience</th>
           <th class="align-middle text-center">Training</th>
           <th class="align-middle text-center">Books Read</th>
@@ -283,7 +289,13 @@
       <tbody>
         {% for key in applied.items %}
         <tr>
-          <td class="align-middle text-center">{{ key.1.ro.0.4 }}</td>
+          <td class="align-middle text-center">
+            {% if key.1.count > 5 %}
+              {{ key.1.ro.0.4 }}<br><strong>{{ key.1.score }}</strong><br>(by {{ key.1.count }} people)
+            {% else %}
+              {{ key.1.ro.0.4 }}<br><strong>Not Rated</strong><br>(by < 5 people)
+            {% endif %}
+          </td>
           <td class="align-middle text-center">{{ key.1.we|intcomma }}<br>(<strong>{{ key.1.s_no }}</strong> skills)</td>
           <td class="align-middle text-center">{{ key.1.te|intcomma }}</td>
           <td class="align-middle text-center">{{ key.1.rb }}</td>

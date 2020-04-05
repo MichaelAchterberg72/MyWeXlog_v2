@@ -1,5 +1,6 @@
 from django.db import models
-
+from decimal import getcontext, Decimal
+from django.db.models.signals import post_save
 
 from django_countries.fields import CountryField
 from phonenumber_field.modelfields import PhoneNumberField
@@ -28,6 +29,20 @@ class Enterprise(models.Model):
     slug = models.SlugField(max_length=60, blank=True, null=True, unique=True)
     description = models.TextField('Enterprise description')
     website = models.URLField(blank=True, null=True)
+    rate_1 = models.FloatField(null=True)#Average score from marketplace.models.TalentRate (rate_1)
+    rate_2 = models.FloatField(null=True)#Average score from marketplace.models.TalentRate (rate_2)
+    rate_3 = models.FloatField(null=True)#Average score from marketplace.models.TalentRate (rate_3)
+    rate_4 = models.FloatField(null=True)#Average score from marketplace.models.TalentRate (payment_time)
+    rate_count = models.IntegerField(null=True)
+
+    def avg_rate(self):
+        if self.rate_count is not None:
+            sum = self.rate_1+self.rate_2+self.rate_3+self.rate_4
+        else:
+            sum=0
+
+        return round(Decimal(sum/400),2)
+    average = property(avg_rate)
 
     def clean(self):
         self.name = self.name.capitalize()
@@ -51,17 +66,18 @@ class BranchType(models.Model):
     def __str__(self):
         return self.type
 
+
 class Branch(models.Model):
     company = models.ForeignKey(Enterprise, on_delete=models.PROTECT)
     name = models.CharField('Branch or Division Name', max_length=100)
-    type = models.ForeignKey(BranchType, on_delete=models.PROTECT)
+    type = models.ForeignKey(BranchType, on_delete=models.PROTECT, null=True)
     phy_address_line1 = models.CharField('Physical address line 1', max_length=150, blank=True, null=True)
     phy_address_line2 = models.CharField('Physical address line 2', max_length=150, blank=True, null=True)
-    country = CountryField()
-    region = models.ForeignKey(Region, on_delete=models.PROTECT)
-    city = models.ForeignKey(City, on_delete=models.PROTECT)
-    suburb = models.ForeignKey(Suburb, on_delete=models.PROTECT)
-    code = models.CharField('Post Code', max_length=12)
+    country = CountryField(null=True)
+    region = models.ForeignKey(Region, on_delete=models.PROTECT, null=True)
+    city = models.ForeignKey(City, on_delete=models.PROTECT, null=True)
+    suburb = models.ForeignKey(Suburb, on_delete=models.PROTECT, null=True)
+    code = models.CharField('Post Code', max_length=12, null=True)
     industry = models.ManyToManyField(Industry)
     slug = models.SlugField(max_length=60, unique=True, blank=True, null=True)
     rate_1 = models.FloatField(null=True)#Average score from marketplace.models.TalentRate (rate_1)
@@ -70,13 +86,15 @@ class Branch(models.Model):
     rate_4 = models.FloatField(null=True)#Average score from marketplace.models.TalentRate (payment_time)
     rate_count = models.IntegerField(null=True)
 
-
     class Meta:
         unique_together = (('company','name', 'city'),)
 
     def avg_rate(self):
-        sum = self.rate_1+self.rate_2+self.rate_3+self.rate_4
-        return sum/400
+        if self.rate_count is not None:
+            sum = self.rate_1+self.rate_2+self.rate_3+self.rate_4
+        else:
+            sum=0
+        return round(Decimal(sum/400),2)
     average = property(avg_rate)
 
     def clean(self):

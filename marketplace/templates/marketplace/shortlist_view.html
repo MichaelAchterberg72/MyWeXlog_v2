@@ -30,15 +30,15 @@
           {% else %}
             <table class="table table-hover table-sm">
               <col width="15%">
-              <col width="5%">
-              <col width="5%">
+              <col width="6%">
+              <col width="6%">
               <col width="1%">
               <col width="8%">
               <col width="45%">
-              <col width="10%">
+              <col width="8%">
               <thead>
                 <tr>
-                  <th class="align-middle text-center">Alias</th>
+                  <th class="align-middle text-center">Alias<br>& Rating</th>
                   <th class="align-middle text-center">Experience</th>
                   <th class="align-middle text-center">Training</th>
                   <th class="align-middle text-center">Books Read</th>
@@ -50,7 +50,13 @@
               <tbody>
                 {% for sl in short.items %}
                 <tr>
-                  <td class="align-middle text-center">{{ sl.1.ro.0.4 }}</td>
+                  <td class="align-middle text-center">
+                    {% if sl.1.count > 5 %}
+                      {{ sl.1.ro.0.4 }}<br><strong>{{ sl.1.score }}</strong><br>(by {{ sl.1.count }} people)
+                    {% else %}
+                      {{ sl.1.ro.0.4 }}<br><strong>Not Rated</strong><br>(by < 5 people)
+                    {% endif %}
+                  </td>
                   <td class="align-middle text-center">{{ sl.1.we|intcomma }}<br>(<strong>{{ sl.1.s_no }}</strong> skills)</td>
                   <td class="align-middle text-center">{{ sl.1.te|intcomma }}</td>
                   <td class="align-middle text-center">{{ sl.1.rb }}</td>

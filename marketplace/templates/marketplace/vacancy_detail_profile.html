@@ -14,23 +14,29 @@
 <table class="table table-sm">
   <thead>
     <tr>
-      <th>Hours Required</th>
-      <th>Work Format</th>
-      <th>Office Location</th>
-      <th>Experience Level</th>
-      <th>Company</th>
+      <th class="align-middle text-center">Hours Required</th>
+      <th class="align-middle text-center">Work Format</th>
+      <th class="align-middle text-center">Office Location</th>
+      <th class="align-middle text-center">Experience Level</th>
+      <th class="align-middle text-center">Company</th>
     </tr>
   </thead>
   <tbody>
     {% for v in vacancy %}
     <tr>
-      <td>
-        {{ v.hours_required|intcomma }} ({{ v.get_unit_display }})
+      <td class="align-middle text-center">
+        {{ v.hours_required|intcomma }}<br>({{ v.get_unit_display }})
       </td>
-      <td>{{ v.worklocation }}</td>
-      <td>{{ v.city.city }}</td>
-      <td>{{ v.experience_level }}</td>
-      <td>{{ v.enterprise.company }}</td>
+      <td class="align-middle text-center">{{ v.worklocation }}</td>
+      <td class="align-middle text-center">{{ v.city.city }}</td>
+      <td class="align-middle text-center">{{ v.experience_level }}</td>
+      <td class="align-middle text-center">
+        {% if bch_r.rate_count > 4 %}
+          {{ v.enterprise.company }}<br>{{ v.enterprise.name }}<br><strong>{{ bch_r.avg_rate }} ({{ bch_r.rate_count }} votes)</strong>
+        {% else %}
+          {{ v.enterprise.company }}<br>{{ v.enterprise.name }}<br><strong>No Rating (Votes < 5)</strong>
+        {% endif %}
+      </td>
     </tr>
   </tbody>
   {% endfor %}
@@ -65,17 +71,17 @@
 <table class="table table-sm">
   <thead>
     <tr>
-      <th>Proposed Rate</th>
-      <th>Bid Closing Date</th>
-      <th>Work Completion Date</th>
+      <th class="align-middle text-center">Proposed Rate</th>
+      <th class="align-middle text-center">Bid Closing Date</th>
+      <th class="align-middle text-center">Work Completion Date</th>
     </tr>
   </thead>
   <tbody>
     {% for v in vacancy %}
     <tr>
-      <td>{{ v.currency }}{{ v.rate_offered }} ({{ v.get_rate_unit_display }})</td>
-      <td>{{ v.bid_closes }}</td>
-      <td>{{ v.date_deadline }}</td>
+      <td class="align-middle text-center">{{ v.currency }}<br><strong>{{ v.rate_offered }}</strong><br>({{ v.get_rate_unit_display }})</td>
+      <td class="align-middle text-center">{{ v.bid_closes }}<br>({{ v.get_offer_status_display }})</td>
+      <td class="align-middle text-center">{{ v.date_deadline }}</td>
     </tr>
   </tbody>
   {% endfor %}

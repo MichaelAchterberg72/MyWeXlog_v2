@@ -28,9 +28,9 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 @login_required()
 def EnterpriseHome(request):
-    ecount = Enterprise.objects.all().aggregate(sum_e=Count('name'))
     bcount = Branch.objects.all().aggregate(sum_b=Count('name'))
     company = Enterprise.objects.all().order_by('name')
+    ecount = company.aggregate(sum_e=Count('name'))
 
     try:
         page = int(request.GET.get('page', 1))
@@ -137,8 +137,14 @@ def BranchDetailView(request, bch):
     info = get_object_or_404(Branch, slug=bch)
     detail = Branch.objects.filter(slug=bch)
 
+    r_1 = detail[0].rate_1/100
+    r_2 = detail[0].rate_2/100
+    r_3 = detail[0].rate_3/100
+    r_4 = detail[0].rate_4/100
+    r_a = detail[0].avg_rate
+
     template = 'enterprises/branch_detail.html'
-    context = {'detail': detail, 'info': info}
+    context = {'detail': detail, 'info': info, 'r_1': r_1, 'r_2': r_2, 'r_3': r_3, 'r_4': r_4, 'r_a': r_a}
     return render(request, template, context)
 
 

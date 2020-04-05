@@ -6,13 +6,6 @@
 
 {% block content %}
 
-{{ form.media.css }}
-<style type="text/css">
-  select {
-    width: 100px;
-  }
-  </style>
-
 <div class="container">
   <div class="float-right">
   <a href="{% url 'MarketPlace:VacancyIntDetail' scope.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-secondary">Interview list</a>
@@ -21,7 +14,13 @@
     <h3 class="card-title">Talent Dashboard for {{ scope.title }} ({{ scope.ref_no }})</h3>
       <div class="card border-0">
         <div class="card-body">
-          <h4>Pending Acceptance</h4>
+          {% for a in wit_qs %}
+          {% if a.tlt_response == 'A' %}
+            <h4>Vacancy Accepted By</h4>
+          {% else %}
+            <h4>Pending Vacancy Acceptance</h4>
+          {% endif %}
+          {% endfor %}
           <table class="table table-hover table-sm">
             <col width="45%">
             <col width="45%">
@@ -57,12 +56,12 @@
         <h4>Pending Interviews</h4>
         <table class="table table-hover table-sm">
           <col width="15%">
-          <col width="5%">
-          <col width="5%">
+          <col width="6%">
+          <col width="6%">
           <col width="1%">
           <col width="8%">
           <col width="45%">
-          <col width="10%">
+          <col width="8%">
           <thead>
             <tr>
               <th class="align-middle text-center">Alias</th>
@@ -77,7 +76,13 @@
           <tbody>
             {% for sl in interview_p.items %}
             <tr>
-              <td class="align-middle text-center">{{ sl.1.ro.0.4 }}</td>
+              <td class="align-middle text-center">
+                {% if sl.1.count > 1 %}
+                  {{ sl.1.ro.0.4 }}<br><strong>{{ sl.1.score }}</strong><br>(by {{ sl.1.count }} people)
+                {% else %}
+                  {{ sl.1.ro.0.4 }}<br><strong>Not Rated</strong><br>(by < 5 people)
+                {% endif %}
+              </td>
               <td class="align-middle text-center">{{ sl.1.we|intcomma }}<br>(<strong>{{ sl.1.s_no }}</strong> skills)</td>
               <td class="align-middle text-center">{{ sl.1.te|intcomma }}</td>
               <td class="align-middle text-center">{{ sl.1.rb }}</td>
@@ -110,9 +115,11 @@
           {% for a in wit_qs %}
             {% if a.tlt_response == 'A' or a.tlt_response == 'P' or a.tlt_response == 'C' %}
               <h4>Unsuccessful Applicants</h4>
+            {% elif a.tlt_response == 'D' %}
+              <h4>Suitable Applicants</h4>
             {% endif %}
           {% endfor %}
-        {% elif a.tlt_response == 'D' %}
+        {% else %}
           <h4>Suitable Applicants</h4>
         {% endif %}
         <table class="table table-hover table-sm">
@@ -137,7 +144,13 @@
            <tbody>
              {% for sl in interview_s.items %}
                <tr>
-                 <td class="align-middle text-center">{{ sl.1.ro.0.4 }}</td>
+                 <td class="align-middle text-center">
+                   {% if sl.1.count > 1 %}
+                     {{ sl.1.ro.0.4 }}<br><strong>{{ sl.1.score }}</strong><br>(by {{ sl.1.count }} people)
+                   {% else %}
+                     {{ sl.1.ro.0.4 }}<br><strong>Not Rated</strong><br>(by < 5 people)
+                   {% endif %}
+                 </td>
                  <td class="align-middle text-center">{{ sl.1.we|intcomma }}<br>(<strong>{{ sl.1.s_no }}</strong> skills)</td>
                  <td class="align-middle text-center">{{ sl.1.te|intcomma }}</td>
                  <td class="align-middle text-center">{{ sl.1.rb }}</td>
@@ -146,7 +159,7 @@
                  <td class="align-middle text-center">
                    <p>
                      <a href="{% url 'Talent:APV' tlt=sl.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill float-right" style="width: 6rem">View Profile</a>
-                     {% if active == False %}
+                     {% if active == 'False' %}
                        <form  action="{% url 'MarketPlace:VacAssign' tlt=sl.1.ro.0.4 vac=scope.ref_no %}" method="post">
                          {% csrf_token %}
                          <button type="submit" class="badge badge-success badge-pill float-right" style="width: 6rem">Assign</button>
@@ -193,7 +206,13 @@
           <tbody>
             {% for sl in interview_n.items %}
             <tr>
-              <td class="align-middle text-center">{{ sl.1.ro.0.4 }}</td>
+              <td class="align-middle text-center">
+                {% if sl.1.count > 1 %}
+                  {{ sl.1.ro.0.4 }}<br><strong>{{ sl.1.score }}</strong><br>(by {{ sl.1.count }} people)
+                {% else %}
+                  {{ sl.1.ro.0.4 }}<br><strong>Not Rated</strong><br>(by < 5 people)
+                {% endif %}
+              </td>
               <td class="align-middle text-center">{{ sl.1.we|intcomma }}<br>(<strong>{{ sl.1.s_no }}</strong> skills)</td>
               <td class="align-middle text-center">{{ sl.1.te|intcomma }}</td>
               <td class="align-middle text-center">{{ sl.1.rb }}</td>

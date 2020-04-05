@@ -184,7 +184,7 @@ class BidInterviewList(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='Interviewed')
     scope = models.ForeignKey(TalentRequired, on_delete=models.CASCADE)
     date_listed = models.DateTimeField(auto_now_add=True)
-    outcome = models.CharField(max_length=1, choices=OC, default='P')
+    outcome = models.CharField(max_length=1, choices=OC, default='I')
     tlt_decline_reason = models.ForeignKey('DeclineAssignment', on_delete=models.PROTECT, null=True)
     comments_tlt = models.TextField(null=True)
     tlt_response = models.CharField(max_length=1, choices=RSP, default='P')
