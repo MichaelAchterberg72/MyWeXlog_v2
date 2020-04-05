@@ -390,8 +390,6 @@ def LicenseCertificationDeleteView(request, pk, tlt):
         raise PermissionDenied
 
 
-@login_required()
-@subscription(2)
 def ActiveProfileView(request, tlt, vac):
     #caching
     bch = BriefCareerHistory.objects.filter(talent__alias=tlt).order_by('-date_from')
@@ -492,8 +490,6 @@ def LCMFullView(request, tlt):
     return render(request, template, context)
 
 
-@login_required()
-@subscription(2)
 def SkillProfileDetailView(request, tlt):
     tlt_p = Profile.objects.get(alias=tlt)
     skill_qs = SkillTag.objects.all()
@@ -624,7 +620,6 @@ def SumAllExperienceView(request):
     return render(request, template, context)
 
 
-@login_required()
 def DPC_SummaryView(request):
     #caching
     exp = WorkExperience.objects.filter(

@@ -32,7 +32,7 @@
           {% for c in pageitems %}
             <tr onclick="window.location='{% url 'MarketPlace:VacancyPost' c.ref_no %}'">
               <td>{{ c.bid_open|date:'j M Y' }}</td>
-              <td>{{ c.title }}</td>
+              <td>{{ c.title|truncatechars:37 }}</td>
               <td>{{ c.get_offer_status_display }}</td>
               <td>{{ c.bid_closes|date:'j M Y' }}</td>
               <td>

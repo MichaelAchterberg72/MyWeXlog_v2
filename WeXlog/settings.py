@@ -29,7 +29,7 @@ SECRET_KEY = 'hx*but#(z9!jwy1b2o%sjv3d=k)1h1n^qu%xkwzwb8$h5o4dzf'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]',  '107.191.57.249', 'app.mywexlog.dev',]
 
 
 # Application definition
@@ -189,17 +189,18 @@ X_FRAME_OPTIONS = 'DENY'
 REFERRER_POLICY='same-origin'
     ## Content-Security-policy (3rd party app)
 CSP_DEFAULT_SRC = ("'self'", "'unsafe-inline'", 'SameSite', 'maxcdn.bootstrapcdn.com', 'code.jquery.com',
-'cdnjs.cloudflare.com', 'youtube.com', 'fonts.googleapis.com', 'maps.googleapis.com', 'use.typekit.net', 'netdna.bootstrapcdn.com', 'w3.org', '127.0.0.1', 'kit.fontawesome.com', )
+'cdnjs.cloudflare.com', 'youtube.com', 'fonts.googleapis.com', 'maps.googleapis.com', 'use.typekit.net',
+'netdna.bootstrapcdn.com', 'w3.org', '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'kit.fontawesome.com', )
 
 CSP_SCRIPT_SRC = None
-CSP_IMG_SRC = ("'self'", '127.0.0.1')
+CSP_IMG_SRC = ("'self'", '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev')
 CSP_OBJECT_SRC = None
 CSP_MEDIA_SRC = None
 CSP_FRAME_SRC = None
-CSP_FONT_SRC = ("'self'", 'fonts.googleapis.com', '*', 'w3.org', '127.0.0.1')
+CSP_FONT_SRC = ("'self'", 'fonts.googleapis.com', '*', 'w3.org', '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev')
 CSP_CONNECT_SRC = None
-CSP_STYLE_SRC = ("'self'", 'maxcdn.bootstrapcdn.com', 'code.jquery.com',
-'cdnjs.cloudflare.com', 'w3.org', '127.0.0.1', 'fonts.googleapis.com', "'unsafe-inline'")
+CSP_STYLE_SRC = ("'self'", 'maxcdn.bootstrapcdn.com', 'code.jquery.com', 'app.mywexlog.dev',
+'cdnjs.cloudflare.com', 'w3.org', '127.0.0.1', '107.191.57.249', 'fonts.googleapis.com', "'unsafe-inline'")
 CSP_BASE_URI = None
 CSP_CHILD_SRC = None
 CSP_FRAME_ANCESTORS = None
@@ -263,7 +264,7 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTH_USER_MODEL = 'users.CustomUser'
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/Profile/'
-LOGOUT_REDIRECT_URL = 'http://127.0.0.1:8000/public/index/'
+LOGOUT_REDIRECT_URL = 'http://mywexlog.dev/public/index/'
 
 
 # Internationalization
@@ -305,13 +306,13 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 DJANGO_MESSAGES_NOTIFY = False
 
 # PayPal settings
-PAYPAL_RECEIVER_EMAIL = "yourpaypalemail@example.com"
+PAYPAL_RECEIVER_EMAIL = "sb-wynfk1244760@business.example.com"
 PAYPAL_TEST = True              # set to False for production
 
 # Follow instructions to create new certs for server from https://re.readthedocs.io/es/stable/standard/encrypted_buttons.html to create certs
 PAYPAL_PRIVATE_CERT = 'paypal/cert/paypal_private.pem'  #'/path/to/paypal_private.pem'  $ openssl genrsa -out paypal_private.pem 1024
 PAYPAL_PUBLIC_CERT = 'paypal/cert/paypal_public.pem'  # '/path/to/paypal_public.pem'  $ openssl req -new -key paypal_private.pem -x509 -days 365 -out paypal_public.pem
-PAYPAL_CERT = '/path/to/paypal_cert.pem'  # https://www.paypal.com/us/cgi-bin/webscr?cmd=_profile-website-cert or https://www.sandbox.paypal.com/us/cgi-bin/webscr?cmd=_profile-website-cert
+PAYPAL_CERT = 'paypal/cert/paypal_cert_pen.txt'  # https://www.paypal.com/us/cgi-bin/webscr?cmd=_profile-website-cert or https://www.sandbox.paypal.com/us/cgi-bin/webscr?cmd=_profile-website-cert
 PAYPAL_CERT_ID = 'get-from-paypal-website'
 
 # Accounts department email_id
@@ -319,7 +320,7 @@ ACCOUNTS_EMAIL = "accounts@devoptec.com"
 
 
 # Celery Settings
-CELERY_SYSTEM_EMAIL = 'do_not_reply@wexlog.io'
+CELERY_SYSTEM_EMAIL = 'do_not_reply@mywexlog.io'
 
 ## Broker settings.
 CELERY_BROKER_URL = 'redis://localhost:6379/0'      # 'amqp://guest:guest@localhost:5672//' for RabbitMQ
@@ -345,7 +346,7 @@ else:
     # Email settings for Celery
     EMAIL_HOST = ''
     EMAIL_PORT = 465
-    EMAIL_HOST_USER = 'do_not_reply@wexlog.io'
+    EMAIL_HOST_USER = 'do_not_reply@mywexlog.io'
     EMAIL_HOST_PASSWORD = ''
     EMAIL_USE_TLS = False
     EMAIL_USE_SSL = True

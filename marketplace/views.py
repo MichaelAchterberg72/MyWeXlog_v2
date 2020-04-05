@@ -1061,7 +1061,7 @@ def VacancyPostView(request, vac):
 
         suitable[item]={'we':wetv, 'te':tetv,'s_no':skill_count, 'rb':rb, 'ro':rate}
 
-    #Extracting information for the applicants
+        #Extracting information for the applicants
     applied ={}
     app_list = list(app_list.values_list('talent', flat=True))
     for app in app_list:
@@ -1081,7 +1081,14 @@ def VacancyPostView(request, vac):
             applied[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate}
 
     template = 'marketplace/vacancy_post_view.html'
-    context = {'instance': instance, 'skille': skille, 'delivere': delivere, 'applicants': applicants, 'suitable': suitable, 'applied': applied, 's_list': s_list}
+    context = {
+            'instance': instance,
+            'skille': skille,
+            'delivere': delivere,
+            'applicants': applicants,
+            'suitable': suitable,
+            'applied': applied,
+            's_list': s_list}
     return render(request, template, context)
 
 
