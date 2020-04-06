@@ -11,13 +11,9 @@ urlpatterns = [
         path('email/<slug:tlt>/', views.EmailEditView, name='EmailEdit'),
         path('email/<slug:tlt>/<slug:eml>/', views.EmailStatusView, name='EmailStatus'),
         path('email/delete/<int:pk>/<slug:tlt>/', views.EmailDelete, name='EmailDelete'),
-
         path('address/physical/', views.PhysicalAddressView, name='PhysicalAddress'),
-
         path('address/postal/', views.PostalAddressView, name='PostalAddress'),
-
         path('phone/add/', views.PhoneNumberAdd, name='PhoneNumberAdd'),
-
         path('online/add/<slug:tlt>/', views.OnlineProfileAdd, name='OnlineProfileAdd'),
         path('online/delete/<int:pk>/<slug:tlt>/', views.OnlineDelete, name='OnlineDelete'),
         path('popup/add/', views.ProfileTypePopup, name="ProfileTypeAddPop"),
@@ -103,4 +99,5 @@ urlpatterns = [
         path('help/experience-review/subordinate/', views.HelpSubordinateConfirmView, name='HelpConfirmSubordinate'),
         path('help/experience-review/co-worker/', views.HelpCoworkerConfirmView, name='HelpConfirmCoworker'),
         path('help/experience-review/coonsultant-contractor/', views.HelpContractorConfirmView, name='HelpConfirmContractor'),
+        path('contact-detail/<slug:tlt>/<slug:vac>/', views.ContactDetailView, name="ContactDetail"),
 ]

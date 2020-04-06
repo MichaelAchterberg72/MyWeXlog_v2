@@ -52,6 +52,17 @@ from marketplace.forms import(
         AssignmentDeclineReasonsForm, AssignmentClarifyForm, VacancyRateForm, TalentRateForm
         )
 
+#>>>Contact details view for Assigned vacancies and interviews
+@login_required()
+@subscription(1)
+def ContactDetailView(request, tlt, vac):
+    pfl_qs = Profile.objects.get(alias = tlt)
+    vac_qs = TalentRequired.objects.get(ref_no=vac)
+
+    template = 'Profile/contact_details.html'
+    context = {'pfl_qs': pfl_qs, 'vac_qs': vac_qs}
+    return render(request, template, context)
+#Contact details view for Assigned vacancies and interviews<<<
 
 #>>> Workshop view for Talent
 @login_required()

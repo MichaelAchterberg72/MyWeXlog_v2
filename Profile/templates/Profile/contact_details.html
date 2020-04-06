@@ -1,0 +1,35 @@
+{% extends 'base_home.html' %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+{% block title %}My {{block.super}} Contact{% endblock title %}
+
+{% block content %}
+<div class="card border-0">
+  <div class="card-body">
+    <div class="float-right">
+      <form  action="{% url 'BookList:BLB' %}" method="post">
+        <input type="hidden" name="next" value="{{ request.GET.next }}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-secondary">Back</button>
+      </form>
+    </div>
+    <h3>Contact Details for {{ vac_qs.title }} ({{ vac_qs.ref_no }})</h3>
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>eMail</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ pfl_qs.talent.first_name }} {{ pfl_qs.talent.last_name }}</td>
+          <td><a href="emailto:{{ pfl_qs.talent.email }}">{{ pfl_qs.talent.email }}</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock content %}
