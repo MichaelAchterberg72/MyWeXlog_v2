@@ -337,7 +337,7 @@ def InterviewListView(request, vac):
     wit_qs = WorkIssuedTo.objects.filter(Q(work__ref_no=vac)).filter(Q(tlt_response='A') | Q(tlt_response='P') | Q(tlt_response='C'))
 
     print(wit_qs)
-    
+
     if wit_qs is None:
         active ='True'
     else:
@@ -478,6 +478,12 @@ def VacancyDetailView(request, vac):
     deliver = Deliverables.objects.filter(scope__ref_no=vac)
     bch = vacancy[0].enterprise.slug
     rate_b = Branch.objects.get(slug=bch)
+    int = BidInterviewList.objects.filter(Q(scope__ref_no=vac)).count()
+    bid_qs = WorkBid.objects.filter(work__ref_no=vac).order_by('rate_bid')
+    bid = bid_qs.count()
+    slist = BidShortList.objects.filter(scope__ref_no=vac).count()
+    wit = WorkIssuedTo.objects.filter(Q(tlt_response='A') & Q(work__ref_no=vac))
+
 
     date1 = vacancy[0].bid_closes
     date2 = timezone.now()
@@ -486,7 +492,7 @@ def VacancyDetailView(request, vac):
         vacancy.update(offer_status = 'C')
 
     template = 'marketplace/vacancy_detail.html'
-    context = {'vacancy': vacancy, 'skills': skills, 'deliver': deliver, 'rate_b': rate_b}
+    context = {'vacancy': vacancy, 'skills': skills, 'deliver': deliver, 'rate_b': rate_b, 'int': int, 'bid': bid, 'slist': slist, 'wit': wit, 'bid_qs': bid_qs,}
     return render(request, template, context)
 
 
@@ -1396,7 +1402,7 @@ def TalentAssign(request, tlt, vac):
             #>>>email
             subject = f"WeXlog - Job assigned: {job.title} ({job.ref_no})"
 
-            context = {'job': job, 'talent': talent}
+            context = {'job': job, 'talent': talent, }
 
             html_message = render_to_string('marketplace/email_vacancy_assign.html', context)
             plain_message = strip_tags(html_message)
@@ -1410,12 +1416,12 @@ def TalentAssign(request, tlt, vac):
             return redirect(reverse('MarketPlace:InterviewList', kwargs={'vac': vac,}))
         else:
             template = 'marketplace/vacancy_assign.html'
-            context = {'form': form, 'job': job, 'talent': talent,}
+            context = {'form': form, 'job': job, 'talent': talent, 'bids': bids,}
             return render(request, template, context)
 
     else:
         template = 'marketplace/vacancy_assign.html'
-        context = {'form': form, 'job': job, 'talent': talent,}
+        context = {'form': form, 'job': job, 'talent': talent, 'bids': bids,}
         return render(request, template, context)
 
 #used in the Shortlistview to decline a person

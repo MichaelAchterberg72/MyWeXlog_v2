@@ -23,6 +23,11 @@
   </div>
   <br>
   {% endfor %}
+  {% if wit %}
+    {% for i in wit %}
+    <p class="text-center">Vacancy is closed and issued to: <strong>{{ i.talent.alias }}</strong></p>
+    {% endfor %}
+  {% endif %}
 <table class="table table-sm">
   <thead>
     <tr>
@@ -90,6 +95,9 @@
       <th class="align-middle text-center">Proposed Rate</th>
       <th class="align-middle text-center">Bid Closing Date</th>
       <th class="align-middle text-center">Work Completion Date</th>
+      <th class="align-middle text-center" data-toggle="tooltip" title="The number of people Shortlisted for this role"># Shortlisted</th>
+      <th class="align-middle text-center" data-toggle="tooltip" title="The number of people invited to Interview"># Interviews</th>
+      <th class="align-middle text-center" data-toggle="tooltip" title="The number of Active Subscribers that has applied for the role"># Applicants</th>
     </tr>
   </thead>
   <tbody>
@@ -97,7 +105,10 @@
     <tr>
       <td class="align-middle text-center">{{ v.currency }}<br><strong>{{ v.rate_offered }}</strong><br>({{ v.get_rate_unit_display }})</td>
       <td class="align-middle text-center">{{ v.bid_closes }}<br>({{ v.get_offer_status_display }})</td>
-      <td class="align-middle text-center">{{ v.date_deadline }}</td>
+      <td class="align-middle text-center">{{ v.date_deadline|date:"j M Y" }}</td>
+      <td class="align-middle text-center">{{ slist }}</td>
+      <td class="align-middle text-center">{{ int }}</td>
+      <td class="align-middle text-center">{{ bid }}</td>
     </tr>
   </tbody>
   {% endfor %}
@@ -133,9 +144,7 @@
         <h5 class="card-title">Certifications Required</h5>
         {% for d in vacancy %}
         {% if d.certification %}
-
           <p>{{ d.certification.all|join:", " }}</p>
-
         {% else %}
           <p>No Certification requirements</p>
         {% endif %}
@@ -147,9 +156,41 @@
 </div>
 </div>
 <br>
+<div class="card border-0">
+  {% if request.user.subscription >= 2 %}
+    <div class="card-body">
+      <h5 class="card-title">Bids Received</h5>
+      <table class="table table-sm">
+        <col width="15%">
+        <col width="65%">
+        <col width="20%">
+        <thead>
+          <tr>
+            <th class="align-middle text-center">Date Applied</th>
+            <th class="align-middle text-center">Motivation</th>
+            <th class="align-middle text-center">Rate Offered</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            {% for app in bid_qs %}
+              <td class="align-middle text-center">{{ app.date_applied|date:"j M Y" }}</td>
+              <td class="align-middle text-left">{{ app.motivation|linebreaks }}</td>
+              <td class="align-middle text-center">{{ app.currency }} {{ app.rate_bid }} {{ app.get_rate_unit_display }}</td>
+            {% empty %}
+              <td>There are currently no applications for this vacancy</td>
+            {% endfor %}
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  {% endif %}
+</div>
+<br>
 <div class="float-right">
   <a href="{% url 'Profile:WorkshopTlt' %}?next={{ request.path|urlencode }}" class="btn btn-primary">Enter Workshop</a>
   <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary">Interview History</a>
 </div>
 <p>&nbsp</p>
+
 {% endblock content %}

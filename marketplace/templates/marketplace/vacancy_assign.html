@@ -46,6 +46,42 @@
     </div>
   </div>
 </div>
+<br>
+<div class="card border-0">
+  <div class="card-body">
+    <div class="container">
+      <h4>Proposed Rates</h4>
+      <table class="table table-sm">
+        <thead>
+          <tr>
+            <th class="align-middle text-center">Original rate proposed for the vacancy</th>
+            <th class="align-middle text-center">Applicant Proposed Rate</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="align-middle text-center">
+              {{ job.currency }}<br><strong>{{ job.rate_offered }}</strong><br>{{ job.get_unit_display }}
+            </td>
+            <td class="align-middle text-center">
+              {% if bids %}
+                {% for b in bids %}
+                  {{ b.currency }}<br><strong>{{ b.rate_bid }}</strong><br>{{ b.get_rate_unit_display }}
+                {% endfor %}
+              {% else %}
+                {% if talent.subscription == 1 %}
+                  Could not bid (Passive Subscriber)
+                {% else %}
+                  No bid submitted
+                {% endif %}
+              {% endif %}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
 {% endblock content %}
 {% block Script %}
