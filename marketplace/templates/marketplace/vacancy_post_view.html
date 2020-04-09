@@ -32,22 +32,22 @@
       <table class="table table-sm">
         <thead>
           <tr>
-            <th class="align-middle text-center">Hours Required</th>
-            <th class="align-middle text-center">Work Format</th>
-            <th class="align-middle text-center">Office Location</th>
-            <th class="align-middle text-center">Experience Level</th>
-            <th class="align-middle text-center">Company</th>
+            <th>Hours Required</th>
+            <th>Work Format</th>
+            <th>Office Location</th>
+            <th>Experience Level</th>
+            <th>Company</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td class="align-middle text-center">
-              {{ instance.hours_required|intcomma }}<br>({{ instance.get_unit_display }})
+            <td>
+              {{ instance.hours_required|intcomma }} ({{ instance.get_unit_display }})
             </td>
-            <td class="align-middle text-center">{{ instance.worklocation }}</td>
-            <td class="align-middle text-center">{{ instance.city.city }}</td>
-            <td class="align-middle text-center">{{ instance.experience_level }}</td>
-            <td class="align-middle text-center">{{ instance.enterprise.company }}<br>{{ instance.enterprise.name }}<br>({{ instance.enterprise.type }})</td>
+            <td>{{ instance.worklocation }}</td>
+            <td>{{ instance.city.city }}</td>
+            <td>{{ instance.experience_level }}</td>
+            <td>{{ instance.enterprise.company }}</td>
           </tr>
         </tbody>
       </table>
@@ -85,13 +85,13 @@
         </thead>
         <tbody>
           <tr>
-            <td class="align-middle text-center">{{ instance.currency }}<br><strong>{{ instance.rate_offered|intcomma }}</strong><br>({{ instance.get_rate_unit_display }})</td>
+            <td class="align-middle text-center">{{ instance.currency }} {{ instance.rate_offered|intcomma }} ({{ instance.get_rate_unit_display }})</td>
             <td class="align-middle text-center">{{ instance.bid_closes|date:'j M Y' }}</td>
             <td class="align-middle text-center">{{ instance.date_deadline|date:'j M Y' }}</td>
             <td class="align-middle text-center">
               {% if instance.offer_status == 'O' %}
                 {{ instance.get_offer_status_display }}
-                <a href="{% url 'MarketPlace:VacClose' instance.ref_no %}" style="font-size: 25px;color:red" data-toggle="popover" title="Close Vacancy"><i class="fa fa-times" aria-hidden="true"></i></a>
+                <a href="{% url 'MarketPlace:VacClose' instance.ref_no %}" style="font-size: 25px;color:red" data-toggle="tooltip" title="Close Vacancy"><i class="fa fa-times" aria-hidden="true"></i></a>
               {% else %}
                 {{ instance.get_offer_status_display }}
               {% endif %}
@@ -194,18 +194,19 @@
         <i class="icon icon-question-circle"></i></a>
       </div>
       <h3 id='suited'>Talent suited to the Vacancy</h3>
+      <p>There are a total of {{ suitable_count }} talent suited to the vacancy, we only list the top 5 here.</p>
       <div class="">
         <table class="table table-hover table-sm">
           <col width="15%">
-          <col width="6%">
-          <col width="6%">
+          <col width="5%">
+          <col width="5%">
           <col width="1%">
           <col width="8%">
           <col width="45%">
-          <col width="8%">
+          <col width="10%">
           <thead>
             <tr>
-              <th class="align-middle text-center">Alias<br>& Rating</th>
+              <th class="align-middle text-center">Alias</th>
               <th class="align-middle text-center">Experience</th>
               <th class="align-middle text-center">Training</th>
               <th class="align-middle text-center">Books Read</th>
@@ -215,20 +216,14 @@
             </tr>
           </thead>
           <tbody>
-            {% for key in suitable.items %}
+            {% for key in suitable_slice.items %}
             <tr>
-              <td class="align-middle text-center">
-                {% if key.1.count > 5 %}
-                  {{ key.1.ro.0.4 }}<br><strong>{{ key.1.score }}</strong><br>(by {{ key.1.count }} people)
-                {% else %}
-                  {{ key.1.ro.0.4 }}<br><strong>Not Rated</strong><br>(by < 5 people)
-                {% endif %}
-              </td>
+              <td class="align-middle text-center">{{ key.1.ro.0.4 }}</td>
               <td class="align-middle text-center">{{ key.1.we|intcomma }}<br>(<strong>{{ key.1.s_no }}</strong> skills)</td>
               <td class="align-middle text-center">{{ key.1.te|intcomma }}</td>
               <td class="align-middle text-center">{{ key.1.rb }}</td>
               <td class="align-middle text-center">{{ key.1.ro.0.1 }}<br><strong>{{ key.1.ro.0.0|intcomma }}</strong><br>{{ key.1.ro.0.2 }}</td>
-              <td class="align-middle text-left">{{ key.1.ro.0.3|truncatechars:200 }}</td>
+              <td class="align-middle text-left">{{ key.1.ro.0.3|truncatechars:190 }}</td>
               <td class="align-middle text-center">
                 <p>
               <form  action="{% url 'MarketPlace:ShortList' tlt=key.1.ro.0.4  vac=instance.ref_no %}" method="post">
@@ -266,18 +261,19 @@
         <i class="icon icon-question-circle"></i></a>
       </div>
     <h3>Applicants</h3>
+    <p>There are a total of {{ applied_count }} bids that talent have applied for the vacancy, we only list the first 5 here.</p>
     <div class="">
     <table class="table table-hover table-sm">
       <col width="15%">
-      <col width="6%">
-      <col width="6%">
+      <col width="5%">
+      <col width="5%">
       <col width="1%">
       <col width="8%">
       <col width="45%">
-      <col width="8%">
+      <col width="10%">
       <thead>
         <tr>
-          <th class="align-middle text-center">Alias<br>& Rating</th>
+          <th class="align-middle text-center">Alias</th>
           <th class="align-middle text-center">Experience</th>
           <th class="align-middle text-center">Training</th>
           <th class="align-middle text-center">Books Read</th>
@@ -287,20 +283,14 @@
         </tr>
       </thead>
       <tbody>
-        {% for key in applied.items %}
+        {% for key in applied_slice.items %}
         <tr>
-          <td class="align-middle text-center">
-            {% if key.1.count > 5 %}
-              {{ key.1.ro.0.4 }}<br><strong>{{ key.1.score }}</strong><br>(by {{ key.1.count }} people)
-            {% else %}
-              {{ key.1.ro.0.4 }}<br><strong>Not Rated</strong><br>(by < 5 people)
-            {% endif %}
-          </td>
+          <td class="align-middle text-center">{{ key.1.ro.0.4 }}</td>
           <td class="align-middle text-center">{{ key.1.we|intcomma }}<br>(<strong>{{ key.1.s_no }}</strong> skills)</td>
           <td class="align-middle text-center">{{ key.1.te|intcomma }}</td>
           <td class="align-middle text-center">{{ key.1.rb }}</td>
           <td class="align-middle text-center">{{ key.1.ro.0.1 }}<br><strong>{{ key.1.ro.0.0|intcomma }}</strong><br>{{ key.1.ro.0.2 }}</td>
-          <td class="align-middle text-left">{{ key.1.ro.0.3|truncatechars:200 }}</td>
+          <td class="align-middle text-left">{{ key.1.ro.0.3|truncatechars:190 }}</td>
           <td class="align-middle text-center">
             <p>
               <form  action="{% url 'MarketPlace:ShortList' tlt=key.1.ro.0.4  vac=instance.ref_no %}" method="post" name="active">

@@ -312,8 +312,8 @@ PAYPAL_TEST = True              # set to False for production
 # Follow instructions to create new certs for server from https://re.readthedocs.io/es/stable/standard/encrypted_buttons.html to create certs
 PAYPAL_PRIVATE_CERT = 'paypal/cert/paypal_private.pem'  #'/path/to/paypal_private.pem'  $ openssl genrsa -out paypal_private.pem 1024
 PAYPAL_PUBLIC_CERT = 'paypal/cert/paypal_public.pem'  # '/path/to/paypal_public.pem'  $ openssl req -new -key paypal_private.pem -x509 -days 365 -out paypal_public.pem
-PAYPAL_CERT = 'paypal/cert/paypal_cert_pen.txt'  # https://www.paypal.com/us/cgi-bin/webscr?cmd=_profile-website-cert or https://www.sandbox.paypal.com/us/cgi-bin/webscr?cmd=_profile-website-cert
-PAYPAL_CERT_ID = 'get-from-paypal-website'
+PAYPAL_CERT = 'paypal/cert/paypal_cert_pem_1.txt'  # https://www.paypal.com/us/cgi-bin/webscr?cmd=_profile-website-cert or https://www.sandbox.paypal.com/us/cgi-bin/webscr?cmd=_profile-website-cert 'paypal/cert/paypal_cert_pen.txt'
+PAYPAL_CERT_ID = 'J7C4RR9N34PZJ'
 
 # Accounts department email_id
 ACCOUNTS_EMAIL = "accounts@devoptec.com"
@@ -350,3 +350,12 @@ else:
     EMAIL_HOST_PASSWORD = ''
     EMAIL_USE_TLS = False
     EMAIL_USE_SSL = True
+
+"""
+# SendGrid mail Settings
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = 'apikey'
+EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+"""
