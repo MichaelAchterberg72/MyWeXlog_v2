@@ -17,7 +17,7 @@
       </div>
     {% endif %}
     <h4 class="card-title">Vacancies Suited for Me </h4>
-    <p>We only list the 5 most recent vacancies here, you currently have {{ vsm_count }} vacancies that match your skillset experience.</p>
+    <p>You currently have {{ vsm_count }} vacancies that match your skillset experience, we only list the 5 most recent vacancies here.</p>
     <table class="table table-hover table-sm">
       <col width="5%">
       <col width="15%">
@@ -81,7 +81,7 @@
     <i class="icon icon-question-circle"></i></a>
     </div>
   <h4 class="card-title">My Vacancies Advertised (Open)</h4>
-  <p>We only list the 5 most recent vacancies here, you currently have {{ ipost_count }} open vacancies listed.</p>
+  <p>You currently have {{ ipost_count }} open vacancies listed, we only list the 5 most recent vacancies here.</p>
   <table class="table table-hover table-sm">
     <thead>
       <tr>
@@ -106,7 +106,7 @@
           {% endif %}
           </td>
           <td class="align-middle text-center">
-            <a href="{% url 'MarketPlace:VacancyPost' p.ref_no %}" class="" data-toggle="tooltip" title="Vacancy Detail"><i class="fa fa-industry" style="font-size:24px;color:grey"></i></a>&nbsp&nbsp
+            <a href="{% url 'MarketPlace:VacancyPost' p.ref_no %}" class="" data-toggle="tooltip" title="Vacancy Detail"><i class="fa fa-industry" style="font-size:24px;color:black"></i></a>
             <a href="{% url 'MarketPlace:VacancyIntDetail' p.ref_no %}" class="" data-toggle="tooltip" title="Interview List"><i class="fa fa-gg" style="font-size:30px;color:black"></i></a>
           </td>
         </tr>
@@ -130,7 +130,7 @@
         <i class="icon icon-question-circle"></i></a>
         </div>
       <h4 class="card-title">My Vacancies Advertised (Closed)</h4>
-      <p>We only list the 5 most recent vacancies here, you currently have {{ ipost_closed_count }} closed vacancies listed.</p>
+      <p>You currently have {{ ipost_closed_count }} closed vacancies listed, we only list the 5 most recent vacancies here.</p>
       <table class="table table-hover table-sm">
         <thead>
           <tr>
@@ -155,7 +155,7 @@
               {% endif %}
               </td>
               <td class="align-middle text-center">
-              <a href="{% url 'MarketPlace:VacancyPost' c.ref_no %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Vacancy Detail"><i class="fa fa-industry" style="font-size:24px;color:grey"></i></a>
+              <a href="{% url 'MarketPlace:VacancyPost' c.ref_no %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Vacancy Detail"><i class="fa fa-industry" style="font-size:24px;color:black"></i></a>
               <a href="{% url 'MarketPlace:VacancyIntDetail' c.ref_no %}?next={{ request.path|urlencode }}" class="" data-toggle="tooltip" title="Interview List"><i class="fa fa-gg" style="font-size:30px;color:black"></i></a>
               </td>
             </tr>

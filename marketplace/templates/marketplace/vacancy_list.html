@@ -43,8 +43,8 @@
         <tbody>
         <tr class="align-middle text-center divide" onclick="window.location='{% url 'MarketPlace:VacancyDetail' i.scope.ref_no %}'">
           <td class="bottom">{{ i.scope.scope|truncatechars:345 }}</td>
-          <td class="text-left top"><strong>{{ i.scope.ref_no }}</strong></td>
-          <td class="text-left top"><strong>{{ i.scope.title|truncatechars:47 }}</strong></td>
+          <td class="text-left top">{{ i.scope.ref_no }}</td>
+          <td class="text-left top">{{ i.scope.title|truncatechars:47 }}</td>
           <td class="no-wrap top">
             {{ i.scope.hours_required|intcomma }} Hrs ({{ i.scope.get_unit_display }})
           </td>

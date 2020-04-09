@@ -8,6 +8,7 @@ import json
 from django.db.models import Count, Sum, F, Q
 from django.utils import timezone
 from decimal import getcontext, Decimal
+import itertools
 
 from csp.decorators import csp_exempt
 from core.decorators import subscription
@@ -837,7 +838,7 @@ def VacanciesListView(request):
         'already_applied': already_applied,
         'page_range': page_range,
         'vsm_count': vsm_count,
-        }
+    }
     return render(request, template, context)
 
 
@@ -1129,6 +1130,12 @@ def VacancyPostView(request, vac):
                 'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate, 'score': avg, 'count': cnt
                 }
 
+    suitable_slice = dict(itertools.islice(suitable.items(), 5))
+    applied_slice = dict(itertools.islice(applied.items(), 5))
+
+    suitable_count = len(suitable)
+    applied_count = len(applied)
+
     template = 'marketplace/vacancy_post_view.html'
     context = {
             'instance': instance,
@@ -1136,8 +1143,14 @@ def VacancyPostView(request, vac):
             'delivere': delivere,
             'applicants': applicants,
             'suitable': suitable,
+            'suitable_slice': suitable_slice,
+            'suitable_count': suitable_count,
             'applied': applied,
-            's_list': s_list}
+            'applied_slice': applied_slice,
+            'applied_count': applied_count,
+            's_list': s_list
+    }
+
     return render(request, template, context)
 
 
@@ -1201,9 +1214,18 @@ def TalentSuitedVacancyListView(request, vac):
 
         suitable[item]={'we':wetv, 'te':tetv,'s_no':skill_count, 'rb':rb, 'ro':rate}
 
+    suitable_count = len(suitable)
 
     template = 'marketplace/talent_suited_vacancy_list_view.html'
-    context = {'instance': instance, 'skille': skille, 'delivere': delivere,  'suitable': suitable, 's_list': s_list}
+    context = {
+            'instance': instance,
+            'skille': skille,
+            'delivere': delivere,
+            'suitable': suitable,
+            'suitable_count': suitable_count,
+            's_list': s_list
+    }
+
     return render(request, template, context)
 
 
@@ -1261,9 +1283,19 @@ def ApplicantsForVacancyListView(request, vac):
 
             applied[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate}
 
+    applied_count = len(applied)
 
     template = 'marketplace/applicants_applied_vacancy_list_view.html'
-    context = {'instance': instance, 'skille': skille, 'delivere': delivere, 'applicants': applicants, 'applied': applied, 's_list': s_list}
+    context = {
+            'instance': instance,
+            'skille': skille,
+            'delivere': delivere,
+            'applicants': applicants,
+            'applied': applied,
+            'applied_count': applied_count,
+            's_list': s_list
+    }
+
     return render(request, template, context)
 
 

@@ -11,7 +11,7 @@ from WeXlog.celery import app
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
-from django.core.mail import EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives, send_mail
 
 from users.models import CustomUserSettings
 
@@ -36,6 +36,12 @@ class SubscriptionExpiredTask(Task):
         msg.attach_alternative(html_content, "text/html")
         msg.send()
 
+        subject = 'Your Subscription has Expired'
+        context = {'user': user.first_name}
+        html_message = render_to_string('email_templates/email_subscription_expired.html', context)
+        plain_message = strip_tags(html_message)
+        send_to = user.Email
+        send_mail(subject, html_message, settings.CELERY_SYSTEM_EMAIL, [send_to,])
 # app.register_task(SubscriptionExpiredTask())
 
 
