@@ -68,9 +68,19 @@ class BranchType(models.Model):
 
 
 class Branch(models.Model):
+    SZE = (
+        ('A','1-10'),
+        ('B','11-50'),
+        ('C','51-150'),
+        ('D','151-500'),
+        ('E','501-1 000'),
+        ('F','1 001-10 000'),
+        ('G','10 001+'),
+    )
     company = models.ForeignKey(Enterprise, on_delete=models.PROTECT)
     name = models.CharField('Branch or Division Name', max_length=100)
     type = models.ForeignKey(BranchType, on_delete=models.PROTECT, null=True)
+    size = models.CharField('Branch Size', max_length=1, choices = SZE, default='A', null=True)
     phy_address_line1 = models.CharField('Physical address line 1', max_length=150, blank=True, null=True)
     phy_address_line2 = models.CharField('Physical address line 2', max_length=150, blank=True, null=True)
     country = CountryField(null=True)

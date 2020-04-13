@@ -19,16 +19,14 @@
     <h4 class="card-title">Vacancies Suited for Me </h4>
     <p>You currently have {{ vsm_count }} vacancies that match your skillset experience, we only list the 5 most recent vacancies here.</p>
     <table class="table table-hover table-sm">
-      <col width="5%">
-      <col width="15%">
+      <col width="20%">
       <col width="6%">
       <col width="10%">
       <col width="10%">
       <col width="10%">
       <thead>
         <tr>
-          <th class="align-middle text-center">Reference Number</th>
-          <th class="align-middle text-center">Vacancy Title</th>
+          <th class="align-middle text-center">Vacancy Title<br>Reference Number</th>
           <th class="align-middle text-center">Hours Required</th>
           <th class="align-middle text-center">Work Format</th>
           <th class="align-middle text-center">Country</th>
@@ -39,17 +37,16 @@
       {% if i.scope.id not in already_applied %}
       <tbody>
         <tr class="align-middle text-center" onclick="window.location='{% url 'MarketPlace:VacancyDetail' i.scope.ref_no %}'">
-        <td>{{ i.scope.ref_no }}</td>
-        <td>{{ i.scope.title|truncatechars:37 }}</td>
-        <td>
+        <td class="align-middle text-center">{{ i.scope.title|truncatechars:37 }}<br>{{ i.scope.ref_no }}</td>
+        <td class="align-middle text-center">
           {{ i.scope.hours_required|intcomma }} ({{ i.scope.get_unit_display }})
         </td>
-        <td>{{ i.scope.worklocation }}</td>
-        <td>{{ i.scope.city }}</td>
-          {% if request.user.subscription == 2 %}
-            <td><a href="{% url 'MarketPlace:VacancyDetail' i.scope.ref_no %}" class="badge badge-secondary" style="width: 5rem;">See Detail</a></td>
-          {% elif request.user.subscription < 2 %}
-            <td><a href="#" class="card-link">See Detail</a></td>
+        <td class="align-middle text-center">{{ i.scope.worklocation }}</td>
+        <td class="align-middle text-center">{{ i.scope.city }}</td>
+          {% if request.user.subscription >= 2 %}
+            <td class="align-middle text-center"><a href="{% url 'MarketPlace:VacancyDetail' i.scope.ref_no %}" class="badge badge-secondary" style="width: 5rem;">See Detail</a></td>
+          {% else %}
+            <td class="align-middle text-center"><a href="#" class="badge badge-secondary" style="width: 5rem;" data-toggle="tooltip" data-placement="top" title="Active subscription required to see vacancy detail">See Detail</a></td>
           {% endif %}
         </tr>
       </tbody>

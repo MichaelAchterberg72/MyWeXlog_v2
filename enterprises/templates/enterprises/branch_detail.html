@@ -17,7 +17,7 @@
         <div class="">
           <div class="card-body">
             <h5 class="card-title">General</h5>
-            <table>
+            <table class="table table-sm">
               <thead>
               </thead>
               <tbody>
@@ -29,6 +29,10 @@
                 <tr>
                   <th>Branch Type</th>
                   <td>{{ d.type }}</td>
+                </tr>
+                <tr>
+                  <th>Branch Size</th>
+                  <td>{{ d.get_size_display }}</td>
                 </tr>
                   <tr>
                     <th>Industry</th>
@@ -46,7 +50,7 @@
         <div class="">
           <div class="card-body">
             <h5 class="card-title">Location</h5>
-              <table>
+              <table class="table table-sm">
                 <thead>
                 </thead>
                 <tbody>

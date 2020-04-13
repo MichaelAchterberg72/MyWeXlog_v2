@@ -70,9 +70,9 @@
                 {% endfor %}
               {% else %}
                 {% if talent.subscription == 1 %}
-                  Could not bid (Passive Subscriber)
+                  Could not bid (Passive Subscriber), their standard rate is<br>{{ pfl_qs.currency }} {{ pfl_qs.std_rate }} {{ pfl_qs.get_rate_unit_display }}
                 {% else %}
-                  No bid submitted
+                  No bid submitted.<br>Their standard rate is<br>{{ pfl_qs.currency }} {{ pfl_qs.std_rate }} {{ pfl_qs.get_rate_unit_display }}
                 {% endif %}
               {% endif %}
             </td>

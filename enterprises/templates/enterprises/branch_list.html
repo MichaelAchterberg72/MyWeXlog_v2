@@ -17,14 +17,16 @@
     {% endif %}
     <table class="table table-hover table-sm">
       <col width="30%">
-      <col width="25%">
-      <col width="20%">
       <col width="15%">
+      <col width="10%">
+      <col width="15%">
+      <col width="10%">
       <col width="10%">
       <thead>
         <tr>
           <th class="align-middle text-center">Branch Name</th>
           <th class="align-middle text-center">Type</th>
+          <th class="align-middle text-center">Size</th>
           <th class="align-middle text-center">Rating</th>
           <th class="align-middle text-center">Number of votes</th>
           <th class="align-middle text-center"></th>
@@ -35,14 +37,19 @@
         <tr>
           <td class="align-middle text-center">{{ b.name }}</td>
           <td class="align-middle text-center">{{ b.type }}</td>
+          <td class="align-middle text-center">{{ b.get_size_display }}</td>
           {% if request.user.subscription >= 2 %}
             <td class="align-middle text-center">
+            {% if request.user.subscription >= 1 %}
               {% if b.rate_count > 4 %}
                 {{ b.average }}
                 <a href="{% url 'Enterprise:EmpRatingDetail' b.slug %}" style="font-size:20px;color:black" target="_blank" data-toggle="tooltip" title="Ratings Breakdown"><i class="fa fa-pie-chart" aria-hidden="true"></i></a>
               {% else %}
                 A minimum of 5 votes<br>is required for a rating.
               {% endif %}
+            {% else %}
+              Paid Subscription Required.
+            {% endif %}
             </td>
             <td class="align-middle text-center">{{ b.rate_count }}</td>
           {% else %}

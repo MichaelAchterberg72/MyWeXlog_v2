@@ -1409,6 +1409,7 @@ def TalentAssign(request, tlt, vac):
     #instance = WorkIssuedTo.objects.get(Q(talent__alias=tlt) & Q(work__ref_no=vac))
     job = get_object_or_404(TalentRequired, ref_no=vac)
     talent = get_object_or_404(CustomUser, alias=tlt)
+    pfl_qs = Profile.objects.get(alias=tlt)
     bids = WorkBid.objects.filter(Q(work__ref_no=vac) & Q(talent__alias=tlt))
     s_list = BidShortList.objects.filter(scope__ref_no=vac)
 
@@ -1448,7 +1449,7 @@ def TalentAssign(request, tlt, vac):
             return redirect(reverse('MarketPlace:InterviewList', kwargs={'vac': vac,}))
         else:
             template = 'marketplace/vacancy_assign.html'
-            context = {'form': form, 'job': job, 'talent': talent, 'bids': bids,}
+            context = {'form': form, 'job': job, 'talent': talent, 'bids': bids, 'pfl_qs': pfl_qs,}
             return render(request, template, context)
 
     else:

@@ -176,9 +176,9 @@
             {% for app in bid_qs %}
               <td class="align-middle text-center">{{ app.date_applied|date:"j M Y" }}</td>
               <td class="align-middle text-left">{{ app.motivation|linebreaks }}</td>
-              <td class="align-middle text-center">{{ app.currency }} {{ app.rate_bid }} {{ app.get_rate_unit_display }}</td>
+              <td class="align-middle text-center">{{ app.currency }}<br>{{ app.rate_bid }}<br>{{ app.get_rate_unit_display }}</td>
             {% empty %}
-              <td>There are currently no applications for this vacancy</td>
+              <td colspan="3">There are currently no applications for this vacancy</td>
             {% endfor %}
           </tr>
         </tbody>

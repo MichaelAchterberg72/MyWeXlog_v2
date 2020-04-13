@@ -26,8 +26,15 @@
       {{ form.company|as_crispy_field }}
       <p><a href="{% url 'Enterprise:EnterpriseAddPop' %}" id='add_company' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a Company</a></p>
       {{ form.name|as_crispy_field }}
-      {{ form.type|as_crispy_field }}
-      <p><a href="{% url 'Enterprise:BranchTypeAddPop' %}" id='add_branch_type' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a new Branch Type</a></p>
+      <div class="form-row">
+        <div class="form-group col-md-6 mb-0">
+          {{ form.type|as_crispy_field }}
+          <p><a href="{% url 'Enterprise:BranchTypeAddPop' %}" id='add_branch_type' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a new Branch Type</a></p>
+        </div>
+        <div class="form-group col-md-6 mb-0" data-toggle="tooltip" data-placement="top" title="The number of people in the branch">
+          {{ form.size|as_crispy_field }}
+        </div>
+      </div>
       {{ form.phy_address_line1|as_crispy_field }}
       {{ form.phy_address_line2|as_crispy_field }}
       {{ form.industry|as_crispy_field }}

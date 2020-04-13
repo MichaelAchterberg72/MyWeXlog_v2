@@ -13,11 +13,19 @@ from talenttrack.models import Result
 
 #This is the table that specifies the work configeration (Freelance, Remote Freelence, Consultant, Contractor, Employee, FIFO)
 class WorkLocation(models.Model):
-    type = models.CharField(max_length=255, unique=True)
+    WTPE = (
+        ('Remote freelance','Remote freelance'),
+        ('Freelance','Freelance'),
+        ('Consultant','Consultant'),
+        ('Contractor','Contractor'),
+        ('Employee','Employee'),
+        ('FiFo','FiFo'),
+    )
+    type = models.CharField(max_length=40, unique=True, choices=WTPE)
     description = models.TextField()
 
     class Meta:
-        ordering = ['type']
+        pass
 
     def __str__(self):
         return self.type
@@ -55,7 +63,7 @@ class SkillLevel(models.Model):
         (5,'Lead'),
     )
 
-    level = models.IntegerField(choices=LEVEL, unique=True)
+    level = models.IntegerField(choices=LEVEL, unique=True, default=0)
     min_hours = models.IntegerField()#Read max_hours
     description = models.TextField()
 

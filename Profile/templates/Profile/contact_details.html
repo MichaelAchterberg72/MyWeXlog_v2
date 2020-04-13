@@ -20,12 +20,16 @@
         <tr>
           <th>Name</th>
           <th>eMail</th>
+          <th class="align-middle text-center">Profile</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td>{{ pfl_qs.talent.first_name }} {{ pfl_qs.talent.last_name }}</td>
           <td><a href="emailto:{{ pfl_qs.talent.email }}">{{ pfl_qs.talent.email }}</a></td>
+          <td class="align-middle text-center">
+                <a href="{% url 'Talent:APV' tlt=pfl_qs.talent.alias vac=vac_qs.ref_no %}?next={{ request.path|urlencode }}" target="_blank"><i class="fa fa-id-badge" aria-hidden="true"style="font-size:30px;color:black" data-toggle="tooltip" data-placement="top" title="Profile"></i></a>
+          </td>
         </tr>
       </tbody>
     </table>
