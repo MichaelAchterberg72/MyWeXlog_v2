@@ -26,6 +26,7 @@ urlpatterns = [
     path('marketplace/', include('marketplace.urls', namespace='MarketPlace')),
     path('user/', include('users.urls', namespace='Users')),
     path('aliu8926kjak/', admin.site.urls),
+    path('feedback/', include('feedback.urls', namespace='Feedback')),
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     path('referrals/', include("pinax.referrals.urls", namespace='pinax_referrals')),

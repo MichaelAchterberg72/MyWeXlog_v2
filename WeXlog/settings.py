@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'public.apps.PublicConfig',
     'invitations.apps.InvitationsConfig',
     'nestedsettree.apps.NestedsettreeConfig',
+    'feedback.apps.FeedbackConfig',
     ##Django internal applications
     'django.contrib.staticfiles',
     'django.contrib.humanize',
@@ -286,6 +287,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
+STATIC_ROOT = os.path.join(BASE_DIR, 'prod_static')
 
 MEDIA_URL = '/library/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'filelibrary')

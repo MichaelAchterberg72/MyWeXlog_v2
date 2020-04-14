@@ -169,12 +169,15 @@
 
   {% if request.user.is_authenticated %}
   <nav class="sticky-top navbar-light bg-light top-right-navbar right" style="height: 5rem;">
-    <div class="container">
+    <div class="">
+
+      <a class="navbar-brand" href="{% url 'Feedback:FeedBack' %}?next={{ request.path|urlencode }}"><i class="fa fa-bullhorn" aria-hidden="true" style="font-size:30px;color:black" data-toggle="tooltip" title="We love to hear your feedback!"></i></a>
+      <div class="btn-group">
       <a class="navbar-brand" href="{% url 'Users:UserAgreement' %}">User Agreement</a>
       <a class="navbar-brand" href="{% url 'Users:PrivacyPolicy' %}">Privacy Policy</a>
       <a class="navbar-brand" href="{% url 'Public:ContactUs' %}">Contact Us</a>
 
-      <div class="btn-group">
+
       <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <img src="{% static 'images/user-unisex-512.png' %}" height="45" width="45" class="avatar">
       </button>

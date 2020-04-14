@@ -1,0 +1,39 @@
+{% extends "base_homelite.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}{{block.super}}-Feedback{% endblock title %}
+
+{% block content %}
+<div class="card border-0" style="width: 100%;">
+  <div class="card-body">
+    <h4 class="card-title">MyWeXlog Feedback Form</h4>
+    <form method="post" id="Form">
+      <input type="hidden" name="next" value="{{ request.GET.next }}">
+      {% csrf_token %}
+      <div class="form-row">
+        <div class="form-group col-md-3 mb-0">
+          {{ form.type|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-9 mb-0">
+          {{ form.details|as_crispy_field }}
+        </div>
+
+        <div class="form-group col-md-12 mb-0">
+          <hr>
+          <h5>Optional Fields</h5>
+        </div>
+        <div class="form-group col-md-6 mb-0">
+          {{ form.optional_1|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-6 mb-0">
+          {{ form.optional_2|as_crispy_field }}
+        </div>
+        <div class="">
+          <p><button type="submit" name="Done" class="btn btn-primary">Submit</button> </p>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock content %}
