@@ -1,0 +1,57 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+{% load static %}
+
+{% block title %}{{block.super}}-Dashboard{{ scope.ref_no }}{% endblock title %}
+
+{% block content %}
+
+<div class="container">
+  <div class="float-right">
+    <a href="{% url 'MarketPlace:InterviewList' vac %}?next={{ request.path|urlencode }}" class="btn btn-secondary" style="width:6rem;">Back</a>
+    <a href="{% url 'MarketPlace:VacancyIntDetail' scope.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-secondary">Interview list</a>
+    <a href="{% url 'MarketPlace:ShortListView' scope.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-secondary">Short-list</a>
+  </div>
+    <h3 class="card-title">Talent Dashboard for {{ scope.title }} ({{ scope.ref_no }})</h3>
+
+  <div class="card border-0">
+    <div class="card-body">
+      <h4>Accepted Invitation for Interview</h4>
+      <p>There are a total of {{ intv_accepted_count }} interview invitations accepted listed.</p>
+      <table class="table table-hover table-sm">
+        <col width="15%">
+        <col width="15%">
+        <col width="70%">
+        <thead>
+          <tr>
+            <th class="align-middle text-center">Alias</th>
+            <th class="align-middle text-center">Reason</th>
+            <th class="align-middle text-left">Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for intd in intv_accepted %}
+            <tr>
+              <td class="align-middle text-center">{{ intd.talent.alias }}</td>
+              <td class="align-middle text-center">{{ intd.tlt_decline_reason }}</td>
+              <td class="align-middle text-left">{{ intd.comments_tlt|linebreaks }}</td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="7">Nobody has Accepted the Interview Invitation</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{{ form.media.js }}
+
+{% endblock content %}
+
+{% block Script %}
+
+{% endblock Script %}

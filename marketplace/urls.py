@@ -31,6 +31,7 @@ urlpatterns = [
     path('vac-close/<slug:vac>/', views.VacancyCloseSwitch, name='VacClose'),
 
     path('vac-assign/<slug:vac>/<slug:tlt>/', views.TalentAssign, name='VacAssign'),
+    path('suitable-vac-assign/<slug:vac>/<slug:tlt>/', views.SuitableTalentAssign, name='SuitableVacAssign'),
 
 
     path('all-vac/', views.AllPostedVacanciesView, name="AllPostedVac"),
@@ -41,17 +42,28 @@ urlpatterns = [
     #ShortList URLs
     path('shortlist-review/<slug:vac>/', views.ShortListView, name='ShortListView'),
     path('shortlist/<slug:vac>/<slug:tlt>/', views.AddToShortListView, name='ShortList'),
+    path('full-list/shortlist/<slug:vac>/<slug:tlt>/', views.AddToShortListFullListView, name='FullListShortList'),
+    path('applicants/shortlist/<slug:vac>/<slug:tlt>/', views.AddToShortListApplicantsView, name='ApplicantsShortList'),
     path('vac-decline/<slug:vac>/<slug:tlt>/', views.TalentDecline, name='VacDecline'),
     path('sl-notsuitable/<slug:bil>/<slug:tlt>/', views.EmpSlDeclineComment, name='SlNotSuitable'),
 
     #Interview URLs
     path('interviewlist/<slug:vac>/<slug:tlt>/', views.AddToInterviewListView, name='InterviewList'),
     path('interviewlist/<slug:vac>/', views.InterviewListView, name='InterviewList'),
+    path('pending-interviewlist/<slug:vac>/', views.PendingInterviewListView, name='PendingInterviewList'),
+    path('suitable-interviewlist/<slug:vac>/', views.SuitableInterviewListView, name='SuitableInterviewList'),
+    path('unsuitable-interviewlist/<slug:vac>/', views.UnsuitableInterviewListView, name='UnsuitableInterviewList'),
+    path('declined-invitation-interviewlist/<slug:vac>/', views.DeclinedInvInterviewListView, name='DeclinedInvInterviewList'),
+    path('declined-assignment-interviewlist/<slug:vac>/', views.DeclinedAssignmentInterviewListView, name='DeclinedAssignmentInterviewList'),
     path('vac-interview/<slug:vac>/<slug:tlt>/', views.AddToInterviewListView, name='VacInterview'),
     path('int-decline/<int:int_id>/', views.InterviewDeclineView, name='InterviewDecline'),
         #InterviewList Views
     path('suitable/<slug:vac>/<slug:tlt>/', views.InterviewSuitable, name='Suitable'),
+    path('unsuitable-suitable/<slug:vac>/<slug:tlt>/', views.UnsuitableInterviewSuitable, name='UnsuitableSuitable'),
+    path('pending-suitable/<slug:vac>/<slug:tlt>/', views.PendingInterviewSuitable, name='PendingSuitable'),
     path('not-suitable/<slug:vac>/<slug:tlt>/', views.InterviewNotSuitable, name='NotSuitable'),
+    path('pending-not-suitable/<slug:vac>/<slug:tlt>/', views.PendingInterviewNotSuitable, name='PendingNotSuitable'),
+    path('suitable-not-suitable/<slug:vac>/<slug:tlt>/', views.SuitableInterviewNotSuitable, name='SuitableNotSuitable'),
         #InterView History
     path('interview-history/<slug:tlt>/', views.TalentInterviewHistoryView, name="TalentInterviewHistory"),
     path('interview-historye/<slug:tlt>/', views.EmployerInterviewHistoryView, name="EmployerInterviewHistory"),

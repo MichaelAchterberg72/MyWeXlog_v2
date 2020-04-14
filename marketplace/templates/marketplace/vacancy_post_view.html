@@ -32,6 +32,7 @@
       <table class="table table-sm">
         <thead>
           <tr>
+            <th>Own Ref No.</th>
             <th>Hours Required</th>
             <th>Work Format</th>
             <th>Office Location</th>
@@ -41,6 +42,7 @@
         </thead>
         <tbody>
           <tr>
+            <td>{{ instance.own_ref_no }}</td>
             <td>
               {{ instance.hours_required|intcomma }} ({{ instance.get_unit_display }})
             </td>
@@ -194,7 +196,7 @@
         <i class="icon icon-question-circle"></i></a>
       </div>
       <h3 id='suited'>Talent suited to the Vacancy</h3>
-      <p>There are a total of {{ suitable_count }} talent suited to the vacancy, we only list the top 5 here.</p>
+      <p>There are a total of {{ suitable_count }} talent suited to the vacancy{% if suitable_count >= 5 %}, we only list the top 5 here.{% else %}.{% endif %}</p>
       <div class="">
         <table class="table table-hover table-sm">
           <col width="15%">
@@ -246,7 +248,7 @@
           </tbody>
         </table>
       </div>
-      {% if suitable %}
+      {% if suitable_count > 5 %}
         <div class="float-right">
           <a href="{% url 'MarketPlace:TalentSuitedToVacancy' instance.ref_no %}" class="btn btn-primary"style="width: 10rem">View All Talent</a>
         </div>
@@ -261,7 +263,7 @@
         <i class="icon icon-question-circle"></i></a>
       </div>
     <h3>Applicants</h3>
-    <p>There are a total of {{ applied_count }} bids that talent have applied for the vacancy, we only list the first 5 here.</p>
+    <p>There are a total of {{ applied_count }} bids that talent have applied for the vacancy{% if applied_count >= 5 %}, we only list the top 5 here.{% else %}.{% endif %}</p>
     <div class="">
     <table class="table table-hover table-sm">
       <col width="15%">
@@ -314,7 +316,7 @@
       </tbody>
       {% endfor %}
     </table>
-    {% if applied %}
+    {% if applied_count > 5 %}
       <p>&nbsp</p>
       <div class="float-right">
         <a href="{% url 'MarketPlace:ApplicantsForVacancy' vac=instance.ref_no %}" class="btn btn-primary"style="width: 10rem">View All Applicants</a>

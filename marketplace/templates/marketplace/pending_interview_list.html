@@ -1,0 +1,123 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+{% load static %}
+
+{% block title %}{{block.super}}-Dashboard{{ scope.ref_no }}{% endblock title %}
+
+{% block content %}
+
+<div class="container">
+  <div class="float-right">
+  <a href="{% url 'MarketPlace:InterviewList' vac %}?next={{ request.path|urlencode }}" class="btn btn-secondary" style="width:6rem;">Back</a>
+  <a href="{% url 'MarketPlace:VacancyIntDetail' scope.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-secondary">Interview list</a>
+  <a href="{% url 'MarketPlace:ShortListView' scope.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-secondary">Short-list</a>
+  </div>
+    <h3 class="card-title">Talent Dashboard for {{ scope.title }} ({{ scope.ref_no }})</h3>
+    <br>
+</div>
+    <div class="card border-0">
+      <div class="card-body">
+        <h4>Pending Interviews</h4>
+        <p>There are a total of {{ interview_p_count }} pending interviews listed here.</p>
+        <table class="table table-hover table-sm">
+          <col width="15%">
+          <col width="6%">
+          <col width="6%">
+          <col width="1%">
+          <col width="8%">
+          <col width="45%">
+          <col width="8%">
+          <thead>
+            <tr>
+              <th class="align-middle text-center">Alias</th>
+              <th class="align-middle text-center">Experience</th>
+              <th class="align-middle text-center">Training</th>
+              <th class="align-middle text-center">Books Read</th>
+              <th class="align-middle text-center">Rate</th>
+              <th class="align-middle text-left">Motivation</th>
+              <th class="align-middle text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for sl in pageitems %}
+            <tr>
+              <td class="align-middle text-center">
+                {% if sl.1.count > 1 %}
+                  {{ sl.1.ro.0.4 }}<br><strong>{{ sl.1.score }}</strong><br>(by {{ sl.1.count }} people)
+                {% else %}
+                  {{ sl.1.ro.0.4 }}<br><strong>Not Rated</strong><br>(by < 5 people)
+                {% endif %}
+              </td>
+              <td class="align-middle text-center">{{ sl.1.we|intcomma }}<br>(<strong>{{ sl.1.s_no }}</strong> skills)</td>
+              <td class="align-middle text-center">{{ sl.1.te|intcomma }}</td>
+              <td class="align-middle text-center">{{ sl.1.rb }}</td>
+              <td class="align-middle text-center">{{ sl.1.ro.0.1 }} <strong>{{ sl.1.ro.0.0|intcomma }}</strong> {{ sl.1.ro.0.2 }}</td>
+              <td class="align-middle">{{ sl.1.ro.0.3|truncatechars:200 }}</td>
+              <td class="align-middle">
+                <p>
+                  <a href="{% url 'Talent:APV' tlt=sl.1.ro.0.4  vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill float-right" style="width: 6rem">View Profile</a>
+                  <form  action="{% url 'MarketPlace:PendingSuitable' tlt=sl.1.ro.0.4 vac=scope.ref_no %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="badge badge-success badge-pill float-right" style="width: 6rem">Suitable</button>
+                  </form>
+                    <a href="{% url 'MarketPlace:PendingNotSuitable' tlt=sl.1.ro.0.4 vac=scope.ref_no %}" class="badge badge-danger badge-pill float-right" style="width: 6rem">Not Suitable</a>
+                </p>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="7">There are no people pending review.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        <nav aria-label="Page navigation">
+          {% if pageitems.has_other_pages %}
+            <ul class="pagination">
+              {% if pageitems.has_previous %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ pageitems.previous_page_number }}" aria-label="Previous">
+                    <span aria-hidden="true">Previous</span>
+                    <span class="sr-only disabled">Previous</span>
+                  </a></li>
+              {% else %}
+                <li class="page-link disabled" tabindex="-1"><span>Previous</span></li>
+              {% endif %}
+
+              {% if pageitems.number|add:'-4' > 1 %}
+                <li class="page-link"><a href="?page={{ pageitems.number|add:'-5' }}">&hellip;</a></li>
+              {% endif %}
+
+              {% for i in pageitems.paginator.page_range %}
+                {% if pageitems.number == i %}
+                  <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
+                {% elif i > pageitems.number|add:'-5' and i < pageitems.number|add:'5' %}
+                  <li class="page-link"><a class="page-item" href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+              {% endfor %}
+
+              {% if pageitems.paginator.num_pages > pageitems.number|add:'4' %}
+                <li class="page-link"><a href="?page={{ pageitems.number|add:'5' }}">&hellip;</a></li>
+              {% endif %}
+
+              {% if pageitems.has_next %}
+                <li class="page-link"><a href="?page={{ pageitems.next_page_number }}">Next</a></li>
+              {% else %}
+                <li class="page-link disabled"><span>Next</span></li>
+              {% endif %}
+            </ul>
+          {% endif %}
+      </nav>
+
+      </div>
+    </div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{{ form.media.js }}
+
+{% endblock content %}
+
+{% block Script %}
+
+{% endblock Script %}

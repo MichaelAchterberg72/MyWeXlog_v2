@@ -223,7 +223,7 @@ class DeliverablesForm(forms.ModelForm):
 class TalentRequiredForm(forms.ModelForm):
     class Meta:
         model = TalentRequired
-        fields = ('title', 'enterprise', 'date_deadline', 'hours_required', 'unit', 'worklocation', 'rate_offered', 'rate_unit', 'currency', 'rate_unit', 'offer_status', 'certification', 'scope', 'expectations', 'terms', 'city', 'experience_level', 'bid_closes', 'ref_no',)
+        fields = ('title', 'enterprise', 'date_deadline', 'hours_required', 'unit', 'worklocation', 'rate_offered', 'rate_unit', 'currency', 'rate_unit', 'offer_status', 'certification', 'scope', 'expectations', 'terms', 'city', 'experience_level', 'bid_closes', 'own_ref_no',)
         widgets={
             'city': CitySelect2Widget(),
             'currency': CurrencySelect2Widget(),
@@ -239,17 +239,17 @@ class TalentRequiredForm(forms.ModelForm):
             'worklocation': 'Work Type Configeration',
             'date_deadline': 'To be Completed By',
             'hours_required': 'Hours',
-            'ref_no': 'Vacancy Reference Number'
+            'own_ref_no': 'Own Internal Vacancy Reference Number'
         }
         help_texts = {
-            'ref_no': 'Maximum length: 7 Alpha-numeric characters'
+            'own_ref_no': 'Maximum length: 7 Alpha-numeric characters'
         }
 
 
 class TalentRequiredEditForm(forms.ModelForm):
     class Meta:
         model = TalentRequired
-        fields = ('title', 'enterprise', 'date_deadline', 'hours_required', 'unit', 'worklocation', 'rate_offered', 'rate_unit', 'currency', 'rate_unit', 'offer_status', 'certification', 'scope', 'expectations', 'terms', 'city', 'experience_level', 'bid_closes',)
+        fields = ('title', 'enterprise', 'date_deadline', 'hours_required', 'unit', 'worklocation', 'rate_offered', 'rate_unit', 'currency', 'rate_unit', 'offer_status', 'certification', 'scope', 'expectations', 'terms', 'city', 'experience_level', 'bid_closes', 'own_ref_no',)
         widgets={
             'city': CitySelect2Widget(),
             'currency': CurrencySelect2Widget(),
@@ -265,6 +265,7 @@ class TalentRequiredEditForm(forms.ModelForm):
             'worklocation': 'Work Type Configeration',
             'date_deadline': 'To be Completed By',
             'hours_required': 'Hours',
+            'own_ref_no': 'Own Internal Vacancy Reference Number',
         }
 
 
