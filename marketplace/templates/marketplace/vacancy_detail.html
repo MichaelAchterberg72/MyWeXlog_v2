@@ -51,7 +51,76 @@
         {% if request.user.subscription >= 2 %}
           {{ v.enterprise.company }} ({{ v.enterprise.name }})<br>
           {{ v.enterprise.type }}<br>
-          {% if rate_b.rate_count > 5 %}
+          {% if rate_b.rate_count >= 5 %}
+
+            {% if rate_b.avg_rate >= 0 and rate_b.avg_rate < 0.5 %}
+              <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+            {% elif rate_b.avg_rate >= 0.5 and rate_b.avg_rate < 1 %}
+              <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+            {% elif rate_b.avg_rate >= 1 and rate_b.avg_rate < 1.5 %}
+              <span><i class="fa fa-star" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+            {% elif rate_b.avg_rate >= 1.5 and rate_b.avg_rate < 2 %}
+              <span><i class="fa fa-star" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+            {% elif rate_b.avg_rate >= 2 and rate_b.avg_rate < 2.5 %}
+              <span><i class="fa fa-star" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+            {% elif rate_b.avg_rate >= 2.5 and rate_b.avg_rate < 3 %}
+              <span><i class="fa fa-star" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+            {% elif rate_b.avg_rate >= 3 and rate_b.avg_rate < 3.5 %}
+              <span><i class="fa fa-star" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+            {% elif rate_b.avg_rate >= 3.5 and rate_b.avg_rate < 4 %}
+              <span><i class="fa fa-star" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+            {% elif rate_b.avg_rate >= 4 and rate_b.avg_rate < 4.5 %}
+              <span><i class="fa fa-star" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+            {% elif rate_b.avg_rate >= 4.5 and rate_b.avg_rate < 4.95 %}
+              <span><i class="fa fa-star" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+            {% elif rate_b.avg_rate >= 4.95 %}
+              <span><i class="fa fa-star" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star" aria-hidden="true"></i></span>
+              <span><i class="fa fa-star" aria-hidden="true"></i></span>
+            {% endif %}
+
             {{ rate_b.avg_rate }} ({{ rate_b.rate_count }} ratings)
             <a href="{% url 'Enterprise:EmpRatingDetail' v.enterprise.slug %}" style="font-size:20px;color:black" target="_blank" data-toggle="tooltip" title="Ratings Breakdown"><i class="fa fa-pie-chart" aria-hidden="true"></i></a>
           {% else %}
@@ -160,7 +229,7 @@
   {% if request.user.subscription >= 2 %}
     <div class="card-body">
       <h5 class="card-title">Bids Received</h5>
-      <table class="table table-sm">
+      <table class="table table-hover table-sm">
         <col width="15%">
         <col width="65%">
         <col width="20%">
@@ -178,7 +247,7 @@
               <td class="align-middle text-left">{{ app.motivation|linebreaks }}</td>
               <td class="align-middle text-center">{{ app.currency }} {{ app.rate_bid }} {{ app.get_rate_unit_display }}</td>
             {% empty %}
-              <td>There are currently no applications for this vacancy</td>
+              <td colspan="3">There are currently no applications for this vacancy</td>
             {% endfor %}
           </tr>
         </tbody>

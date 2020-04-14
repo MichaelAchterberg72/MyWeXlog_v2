@@ -316,11 +316,11 @@ PAYPAL_CERT = 'paypal/cert/paypal_cert_pem_1.txt'  # https://www.paypal.com/us/c
 PAYPAL_CERT_ID = 'J7C4RR9N34PZJ'
 
 # Accounts department email_id
-ACCOUNTS_EMAIL = "accounts@devoptec.com"
+ACCOUNTS_EMAIL = "machterberg@tkgm.co.za"
 
 
 # Celery Settings
-CELERY_SYSTEM_EMAIL = 'do_not_reply@mywexlog.io'
+CELERY_SYSTEM_EMAIL = 'do_not_reply@mywexlog.com'
 
 ## Broker settings.
 CELERY_BROKER_URL = 'redis://localhost:6379/0'      # 'amqp://guest:guest@localhost:5672//' for RabbitMQ
@@ -346,7 +346,7 @@ else:
     # Email settings for Celery
     EMAIL_HOST = ''
     EMAIL_PORT = 465
-    EMAIL_HOST_USER = 'do_not_reply@mywexlog.io'
+    EMAIL_HOST_USER = 'do_not_reply@mywexlog.com'
     EMAIL_HOST_PASSWORD = ''
     EMAIL_USE_TLS = False
     EMAIL_USE_SSL = True
@@ -358,4 +358,6 @@ EMAIL_HOST_USER = 'apikey'
 EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'sendgrid email'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 """

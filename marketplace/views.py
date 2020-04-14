@@ -184,8 +184,29 @@ def EmpIntDetailVacancy(request, vac):
     bil_qs = BidInterviewList.objects.filter(scope__ref_no=vac)
     info = TalentRequired.objects.get(ref_no=vac)
 
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(bil_qs, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+
     template = 'marketplace/interview_history_vacancy.html'
-    context = {'bil_qs': bil_qs, 'info': info}
+    context = {'bil_qs': bil_qs, 'info': info, 'pageitems': pageitems, 'page_range': page_range}
     return render(request, template, context)
 
 
@@ -294,6 +315,56 @@ def InterviewSuitable(request, vac, tlt):
 
     return redirect(reverse('MarketPlace:InterviewList', kwargs={'vac': vac,}))
 
+
+@login_required()
+@subscription(2)
+def PendingInterviewSuitable(request, vac, tlt):
+    instance = BidInterviewList.objects.get(Q(talent__alias=tlt) & Q(scope__ref_no=vac))
+
+    form = EmployerInterViewComments(request.POST or None, instance=instance)
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.save()
+
+        instance.outcome = 'S'#3
+        instance.emp_intcomplete=True#3
+        instance.save()
+
+        BidShortList.objects.filter(Q(scope__ref_no = vac) & Q(talent__alias = tlt)).update(status='P')#1
+
+        bid_qs = WorkBid.objects.filter(Q(work__ref_no = vac) & Q(talent__alias = tlt))
+
+        if bid_qs:
+            bid_qs.update(bidreview = 'P')#2
+
+    return redirect(reverse('MarketPlace:PendingInterviewList', kwargs={'vac': vac,}))
+
+
+@login_required()
+@subscription(2)
+def UnsuitableInterviewSuitable(request, vac, tlt):
+    instance = BidInterviewList.objects.get(Q(talent__alias=tlt) & Q(scope__ref_no=vac))
+
+    form = EmployerInterViewComments(request.POST or None, instance=instance)
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.save()
+
+        instance.outcome = 'S'#3
+        instance.emp_intcomplete=True#3
+        instance.save()
+
+        BidShortList.objects.filter(Q(scope__ref_no = vac) & Q(talent__alias = tlt)).update(status='P')#1
+
+        bid_qs = WorkBid.objects.filter(Q(work__ref_no = vac) & Q(talent__alias = tlt))
+
+        if bid_qs:
+            bid_qs.update(bidreview = 'P')#2
+
+    return redirect(reverse('MarketPlace:UnsuitableInterviewList', kwargs={'vac': vac,}))
+
 #Switch in InterviewList view to mark talent as not-suitable
 @login_required()
 @subscription(2)
@@ -321,6 +392,60 @@ def InterviewNotSuitable(request, vac, tlt):
     context = {'form': form, 'instance': instance,}
     return render(request, template, context)
 
+
+@login_required()
+@subscription(2)
+def PendingInterviewNotSuitable(request, vac, tlt):
+    instance = BidInterviewList.objects.get(Q(talent__alias=tlt) & Q(scope__ref_no=vac))
+
+    form = EmployerInterViewComments(request.POST or None, instance=instance)
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.outcome = 'N'#3
+            new.emp_intcomplete = True#3
+            new.save()
+
+            BidShortList.objects.filter(Q(scope__ref_no = vac) & Q(talent__alias = tlt)).update(status='R')#1
+
+            bid_qs = WorkBid.objects.filter(Q(work__ref_no = vac) & Q(talent__alias = tlt))
+
+            if bid_qs:
+                bid_qs.update(bidreview = 'R')#2
+
+        return redirect(reverse('MarketPlace:PendingInterviewList', kwargs={'vac': vac,}))
+
+    template = 'marketplace/interview_comment_employer.html'
+    context = {'form': form, 'instance': instance,}
+    return render(request, template, context)
+
+
+@login_required()
+@subscription(2)
+def SuitableInterviewNotSuitable(request, vac, tlt):
+    instance = BidInterviewList.objects.get(Q(talent__alias=tlt) & Q(scope__ref_no=vac))
+
+    form = EmployerInterViewComments(request.POST or None, instance=instance)
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.outcome = 'N'#3
+            new.emp_intcomplete = True#3
+            new.save()
+
+            BidShortList.objects.filter(Q(scope__ref_no = vac) & Q(talent__alias = tlt)).update(status='R')#1
+
+            bid_qs = WorkBid.objects.filter(Q(work__ref_no = vac) & Q(talent__alias = tlt))
+
+            if bid_qs:
+                bid_qs.update(bidreview = 'R')#2
+
+        return redirect(reverse('MarketPlace:SuitableInterviewList', kwargs={'vac': vac,}))
+
+    template = 'marketplace/interview_comment_employer.html'
+    context = {'form': form, 'instance': instance,}
+    return render(request, template, context)
+
 #This has been re-purposed for a vacancy dashboard
 @login_required()
 @subscription(2)
@@ -332,10 +457,16 @@ def InterviewListView(request, vac):
 
     intv_suitable = intv_qs.filter(Q(outcome = 'S') & ~Q(tlt_response='D'))
     intv_notsuitable = intv_qs.filter(Q(outcome = 'N') & ~Q(tlt_response='D'))
-    intv_declined = intv_qs.filter(tlt_response = 'D')
-    vacancy_declined = WorkIssuedTo.objects.filter(work__ref_no=vac, tlt_response='D')
+    intv_declined = intv_qs.filter(tlt_response = 'D')[:5]
+    intv_accepted = intv_qs.filter(tlt_response = 'A')[:5]
+    vacancy_declined = WorkIssuedTo.objects.filter(work__ref_no=vac, tlt_response='D')[:5]
 
-    wit_qs = WorkIssuedTo.objects.filter(Q(work__ref_no=vac)).filter(Q(tlt_response='A') | Q(tlt_response='P') | Q(tlt_response='C'))
+    intv_accepted_count = intv_accepted.count()
+    intv_declined_count = intv_declined.count()
+    vacancy_declined_count = vacancy_declined.count()
+
+    wit_qs = WorkIssuedTo.objects.filter(Q(work__ref_no=vac)).filter(Q(tlt_response='A'))
+    wit_qs_p = WorkIssuedTo.objects.filter(Q(work__ref_no=vac)).filter(Q(tlt_response='P') | Q(tlt_response='C'))
 
     print(wit_qs)
 
@@ -383,6 +514,9 @@ def InterviewListView(request, vac):
             'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate, 'score':avg, 'count': cnt
             }
 
+    interview_s_slice = dict(itertools.islice(interview_s.items(), 5))
+    interview_s_count = len(interview_s)
+
     #Information for all pending applicants
     pending_list = list(intv_pending.values_list('talent', flat=True))
 
@@ -412,6 +546,9 @@ def InterviewListView(request, vac):
         askill_count = len(askillset)
 
         interview_p[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate, 'score':avg, 'count':cnt}
+
+    interview_p_slice = dict(itertools.islice(interview_p.items(), 5))
+    interview_p_count = len(interview_p)
 
     #Information for all not suitable applicants
     nots_list = list(intv_notsuitable.values_list('talent', flat=True))
@@ -444,9 +581,377 @@ def InterviewListView(request, vac):
 
         interview_n[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate, 'score':avg, 'count': cnt}
 
+    interview_n_slice = dict(itertools.islice(interview_n.items(), 5))
+    interview_n_count = len(interview_n)
+
     template = 'marketplace/interview_list.html'
     context = {
-        'interview_p': interview_p, 'interview_n': interview_n, 'interview_s': interview_s, 'scope': scope, 'intv_declined': intv_declined, 'vacancy_declined': vacancy_declined, 'wit_qs': wit_qs, 'active': active,
+        'interview_p': interview_p,
+        'interview_p_slice': interview_p_slice,
+        'interview_p_count': interview_p_count,
+        'interview_n': interview_n,
+        'interview_n_slice': interview_n_slice,
+        'interview_n_count': interview_n_count,
+        'interview_s': interview_s,
+        'interview_s_slice': interview_s_slice,
+        'interview_s_count': interview_s_count,
+        'scope': scope,
+        'intv_accepted': intv_accepted,
+        'intv_accepted_count': intv_accepted_count,
+        'intv_declined': intv_declined,
+        'intv_declined_count': intv_declined_count,
+        'vacancy_declined': vacancy_declined,
+        'vacancy_declined_count': vacancy_declined_count,
+        'wit_qs': wit_qs,
+        'wit_qs_p': wit_qs_p,
+        'active': active,
+        'vac': vac,
+        }
+    return render(request, template, context)
+
+
+@login_required()
+@subscription(2)
+def PendingInterviewListView(request, vac):
+    scope = TalentRequired.objects.get(ref_no=vac)
+    intv_qs = BidInterviewList.objects.filter(scope__ref_no=vac)
+
+    intv_pending = intv_qs.filter(Q(outcome='I')).filter(Q(tlt_response='A') | Q(tlt_response='P'))
+
+    we = WorkExperience.objects.filter(talent__subscription__gte=1)
+    applicants = WorkBid.objects.filter(work__ref_no=vac)
+    book = ReadBy.objects.all()
+    vac = vac
+
+    #Information for all pending applicants
+    pending_list = list(intv_pending.values_list('talent', flat=True))
+
+    interview_p ={}
+    for app in pending_list:
+
+        aw_exp = we.filter(talent=app, edt=False).aggregate(awet=Sum('hours_worked'))
+        awetv = aw_exp.get('awet')
+        at_exp = we.filter(talent=app, edt=True).aggregate(tet=Sum('topic__hours'))
+        atetv = at_exp.get('tet')
+        atalent_skill = list(we.filter(talent=app, edt=False).values_list('skills', flat=True))
+        rb = book.filter(talent=app).count()
+        atalent_skillt = list(we.filter(talent=app, edt=True).values_list('topic__skills', flat=True))
+        applied = applicants.filter(talent=app)
+
+        pfl = Profile.objects.get(talent=app)
+        avg = pfl.avg_rate
+        cnt = pfl.rate_count
+
+        if applied:
+            rate = applied.values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation','talent__alias')
+        else:
+            rate = Profile.objects.filter(talent=app).values_list('std_rate', 'currency__currency_abv', 'rate_unit', 'motivation', 'alias')
+
+        aslist = atalent_skill + atalent_skillt
+        askillset = set(aslist)
+        askill_count = len(askillset)
+
+        interview_p[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate, 'score':avg, 'count':cnt}
+
+    interview_p_count = len(interview_p)
+
+    t = tuple(interview_p.items())
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(t, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+
+    template = 'marketplace/pending_interview_list.html'
+    context = {
+        'interview_p': interview_p,
+        'interview_p_count': interview_p_count,
+        'scope': scope,
+        'vac': vac,
+        'pageitems': pageitems,
+        'page_range': page_range
+        }
+    return render(request, template, context)
+
+
+@login_required()
+@subscription(2)
+def SuitableInterviewListView(request, vac):
+    scope = TalentRequired.objects.get(ref_no=vac)
+    intv_qs = BidInterviewList.objects.filter(scope__ref_no=vac)
+
+    intv_pending = intv_qs.filter(Q(outcome='I')).filter(Q(tlt_response='A') | Q(tlt_response='P'))
+
+    intv_suitable = intv_qs.filter(Q(outcome = 'S') & ~Q(tlt_response='D'))
+
+    wit_qs = WorkIssuedTo.objects.filter(Q(work__ref_no=vac)).filter(Q(tlt_response='A') | Q(tlt_response='P') | Q(tlt_response='C'))
+
+    vac = vac
+
+    print(wit_qs)
+
+    if wit_qs is None:
+        active ='True'
+    else:
+        active = 'False'
+
+    we = WorkExperience.objects.filter(talent__subscription__gte=1)
+    applicants = WorkBid.objects.filter(work__ref_no=vac)
+    book = ReadBy.objects.all()
+
+    #Information for all suitable applicants
+    suitable_list = list(intv_suitable.values_list('talent', flat=True))
+
+    interview_s ={}
+    for app in suitable_list:
+
+        aw_exp = we.filter(talent=app, edt=False).aggregate(awet=Sum('hours_worked'))
+        awetv = aw_exp.get('awet')
+        at_exp = we.filter(talent=app, edt=True).aggregate(tet=Sum('topic__hours'))
+        atetv = at_exp.get('tet')
+        atalent_skill = list(we.filter(talent=app, edt=False).values_list('skills', flat=True))
+        rb = book.filter(talent=app).count()
+        atalent_skillt = list(we.filter(talent=app, edt=True).values_list('topic__skills', flat=True))
+
+        pfl = Profile.objects.get(talent=app)
+        avg = pfl.avg_rate
+        cnt = pfl.rate_count
+
+        applied = applicants.filter(talent=app)
+
+        if applied:
+            rate = applied.values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation','talent__alias')
+
+        else:
+            rate = Profile.objects.filter(talent=app).values_list('std_rate', 'currency__currency_abv', 'rate_unit', 'motivation', 'alias')
+
+        aslist = atalent_skill + atalent_skillt
+        askillset = set(aslist)
+        askill_count = len(askillset)
+
+        interview_s[app]={
+            'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate, 'score':avg, 'count': cnt
+            }
+
+    interview_s_count = len(interview_s)
+
+    t = tuple(interview_s.items())
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(t, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+
+    template = 'marketplace/suitable_interview_list.html'
+    context = {
+        'interview_s': interview_s,
+        'interview_s_count': interview_s_count,
+        'scope': scope,
+        'wit_qs': wit_qs,
+        'active': active,
+        'vac': vac,
+        'pageitems': pageitems,
+        'page_range': page_range
+        }
+    return render(request, template, context)
+
+
+@login_required()
+@subscription(2)
+def UnsuitableInterviewListView(request, vac):
+    scope = TalentRequired.objects.get(ref_no=vac)
+    intv_qs = BidInterviewList.objects.filter(scope__ref_no=vac)
+
+    intv_notsuitable = intv_qs.filter(Q(outcome = 'N') & ~Q(tlt_response='D'))
+
+    vacancy_declined = WorkIssuedTo.objects.filter(work__ref_no=vac, tlt_response='D')
+
+    we = WorkExperience.objects.filter(talent__subscription__gte=1)
+    applicants = WorkBid.objects.filter(work__ref_no=vac)
+    book = ReadBy.objects.all()
+
+    #Information for all not suitable applicants
+    nots_list = list(intv_notsuitable.values_list('talent', flat=True))
+
+    interview_n ={}
+    for app in nots_list:
+
+        aw_exp = we.filter(talent=app, edt=False).aggregate(awet=Sum('hours_worked'))
+        awetv = aw_exp.get('awet')
+        at_exp = we.filter(talent=app, edt=True).aggregate(tet=Sum('topic__hours'))
+        atetv = at_exp.get('tet')
+        atalent_skill = list(we.filter(talent=app, edt=False).values_list('skills', flat=True))
+        rb = book.filter(talent=app).count()
+        atalent_skillt = list(we.filter(talent=app, edt=True).values_list('topic__skills', flat=True))
+
+        pfl = Profile.objects.get(talent=app)
+        avg = pfl.avg_rate
+        cnt = pfl.rate_count
+
+        applied = applicants.filter(talent=app)
+
+        if applied:
+            rate = applied.values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation','talent__alias')
+        else:
+            rate = Profile.objects.filter(talent=app).values_list('std_rate', 'currency__currency_abv', 'rate_unit', 'motivation', 'alias')
+
+        aslist = atalent_skill + atalent_skillt
+        askillset = set(aslist)
+        askill_count = len(askillset)
+
+        interview_n[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate, 'score':avg, 'count': cnt}
+
+    interview_n_count = len(interview_n)
+
+    t = tuple(interview_n.items())
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(t, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+
+    template = 'marketplace/unsuitable_interview_list.html'
+    context = {
+        'interview_n': interview_n,
+        'interview_n_count': interview_n_count,
+        'scope': scope,
+        'vac': vac,
+        'pageitems': pageitems,
+        'page_range': page_range
+        }
+    return render(request, template, context)
+
+
+@login_required()
+@subscription(2)
+def DeclinedInvInterviewListView(request, vac):
+    scope = TalentRequired.objects.get(ref_no=vac)
+    intv_qs = BidInterviewList.objects.filter(scope__ref_no=vac)
+
+    intv_declined = intv_qs.filter(tlt_response = 'D')
+    intv_declined_count = intv_declined.count()
+
+    vac = vac
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(intv_declined, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+
+    template = 'marketplace/decline_inv_interview_list.html'
+    context = {
+        'intv_declined': intv_declined,
+        'intv_declined_count': intv_declined_count,
+        'scope': scope,
+        'vac': vac,
+        'pageitems': pageitems,
+        'page_range': page_range
+        }
+    return render(request, template, context)
+
+
+@login_required()
+@subscription(2)
+def DeclinedAssignmentInterviewListView(request, vac):
+    scope = TalentRequired.objects.get(ref_no=vac)
+    vacancy_declined = WorkIssuedTo.objects.filter(work__ref_no=vac, tlt_response='D')
+    vacancy_declined_count = vacancy_declined.count()
+
+    vac = vac
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(vacancy_declined, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+
+    template = 'marketplace/declined_assignments_interview_list.html'
+    context = {
+        'vacancy_declined': vacancy_declined,
+        'vacancy_declined_count': vacancy_declined_count,
+        'vac': vac,
+        'scope': scope,
+        'pageitems': pageitems,
+        'page_range': page_range
         }
     return render(request, template, context)
 
@@ -815,7 +1320,7 @@ def VacanciesListView(request):
     except:
         page = 1
 
-    paginator = Paginator(dsd, 1)
+    paginator = Paginator(dsd, 20)
 
     try:
         pageitems = paginator.page(page)
@@ -1216,6 +1721,29 @@ def TalentSuitedVacancyListView(request, vac):
 
     suitable_count = len(suitable)
 
+    t = tuple(suitable.items())
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(t, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+
     template = 'marketplace/talent_suited_vacancy_list_view.html'
     context = {
             'instance': instance,
@@ -1223,7 +1751,9 @@ def TalentSuitedVacancyListView(request, vac):
             'delivere': delivere,
             'suitable': suitable,
             'suitable_count': suitable_count,
-            's_list': s_list
+            's_list': s_list,
+            'pageitems': pageitems,
+            'page_range': page_range
     }
 
     return render(request, template, context)
@@ -1285,6 +1815,29 @@ def ApplicantsForVacancyListView(request, vac):
 
     applied_count = len(applied)
 
+    t = tuple(applied.items())
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(t, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+
     template = 'marketplace/applicants_applied_vacancy_list_view.html'
     context = {
             'instance': instance,
@@ -1293,7 +1846,9 @@ def ApplicantsForVacancyListView(request, vac):
             'applicants': applicants,
             'applied': applied,
             'applied_count': applied_count,
-            's_list': s_list
+            's_list': s_list,
+            'pageitems': pageitems,
+            'page_range': page_range
     }
 
     return render(request, template, context)
@@ -1372,6 +1927,38 @@ def AddToShortListView(request, vac, tlt):
 
 @login_required()
 @subscription(2)
+def AddToShortListFullListView(request, vac, tlt):
+    job = get_object_or_404(TalentRequired, ref_no=vac)
+    talent = get_object_or_404(CustomUser, alias=tlt)
+    if request.method == 'POST':
+        b = BidShortList.objects.create(talent=talent, scope=job, status = 'S')#1
+
+        if 'active' in request.POST:
+            upd = WorkBid.objects.get(Q(talent=talent) & Q(work=job))
+            upd.bidreview = 'S'#2
+            upd.save()
+
+        return redirect(reverse('MarketPlace:TalentSuitedToVacancy', kwargs={'vac':vac})+'#suited')
+
+
+@login_required()
+@subscription(2)
+def AddToShortListApplicantsView(request, vac, tlt):
+    job = get_object_or_404(TalentRequired, ref_no=vac)
+    talent = get_object_or_404(CustomUser, alias=tlt)
+    if request.method == 'POST':
+        b = BidShortList.objects.create(talent=talent, scope=job, status = 'S')#1
+
+        if 'active' in request.POST:
+            upd = WorkBid.objects.get(Q(talent=talent) & Q(work=job))
+            upd.bidreview = 'S'#2
+            upd.save()
+
+        return redirect(reverse('MarketPlace:ApplicantsForVacancy', kwargs={'vac':vac})+'#suited')
+
+
+@login_required()
+@subscription(2)
 def AddToInterviewListView(request, vac, tlt):
     job = get_object_or_404(TalentRequired, ref_no=vac)
     talent = get_object_or_404(CustomUser, alias=tlt)
@@ -1440,12 +2027,66 @@ def TalentAssign(request, tlt, vac):
             plain_message = strip_tags(html_message)
 
             send_to = job.requested_by.email
-            send_mail(subject, html_message, 'no-reply@wexlog.io', [send_to,])
+            send_mail(subject, html_message, 'no-reply@mywexlog.com', [send_to,])
             #template = 'marketplace/email_vacancy_assign.html'
             #return render(request, template, context)
             #<<<email
 
             return redirect(reverse('MarketPlace:InterviewList', kwargs={'vac': vac,}))
+        else:
+            template = 'marketplace/vacancy_assign.html'
+            context = {'form': form, 'job': job, 'talent': talent, 'bids': bids,}
+            return render(request, template, context)
+
+    else:
+        template = 'marketplace/vacancy_assign.html'
+        context = {'form': form, 'job': job, 'talent': talent, 'bids': bids,}
+        return render(request, template, context)
+
+
+@login_required()
+@subscription(2)
+def SuitableTalentAssign(request, tlt, vac):
+    #instance = WorkIssuedTo.objects.get(Q(talent__alias=tlt) & Q(work__ref_no=vac))
+    job = get_object_or_404(TalentRequired, ref_no=vac)
+    talent = get_object_or_404(CustomUser, alias=tlt)
+    bids = WorkBid.objects.filter(Q(work__ref_no=vac) & Q(talent__alias=tlt))
+    s_list = BidShortList.objects.filter(scope__ref_no=vac)
+
+    form = AssignWorkForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.talent = talent
+            new.work = job
+            new.tlt_response = 'P'#4
+            new.save()
+
+            s_list.filter(talent=talent).update(status='P')#2
+
+            job.vac_wkfl = 'S'
+            job.save()#3
+
+            BidInterviewList.objects.filter(Q(talent=talent) & Q(scope=job)).update(outcome='P')#5
+
+            if bids is not None:
+                bids.update(bidreview='P')#1
+
+            #>>>email
+            subject = f"WeXlog - Job assigned: {job.title} ({job.ref_no})"
+
+            context = {'job': job, 'talent': talent, }
+
+            html_message = render_to_string('marketplace/email_vacancy_assign.html', context)
+            plain_message = strip_tags(html_message)
+
+            send_to = job.requested_by.email
+            send_mail(subject, html_message, 'no-reply@wexlog.io', [send_to,])
+            #template = 'marketplace/email_vacancy_assign.html'
+            #return render(request, template, context)
+            #<<<email
+
+            return redirect(reverse('MarketPlace:SuitableInterviewList', kwargs={'vac': vac,}))
         else:
             template = 'marketplace/vacancy_assign.html'
             context = {'form': form, 'job': job, 'talent': talent, 'bids': bids,}
@@ -1523,8 +2164,40 @@ def ShortListView(request, vac):
             'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate, 'score':avg, 'count': cnt
             }
 
+    t = tuple(short.items())
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(t, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+
     template = 'marketplace/shortlist_view.html'
-    context = {'s_list': s_list, 'short': short, 'vacancy': vacancy, 'active': active, 'declined': declined, 'closed': closed,}
+    context = {
+        's_list': s_list,
+        'short': short,
+        'vacancy': vacancy,
+        'active': active,
+        'declined': declined,
+        'closed': closed,
+        'pageitems': pageitems,
+        'page_range': page_range
+        }
     return render(request, template, context)
 
 

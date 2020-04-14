@@ -17,7 +17,7 @@
               {% for v in vacancy %}
                 <form  action="{% url 'MarketPlace:InterviewList' tlt=als.alias  vac=v.ref_no %}" method="post">
                   {% csrf_token %}
-                  <button type="submit" class="" style="width: 4rem"><i class="fa fa-group" style="font-size:36px;color:green" data-toggle="tooltip" title="Add to Interview List" style="font-size:30px;color:black"></i></button>
+                  <button type="submit" class="" style="width: 4rem"><i class="fa fa-group" style="font-size:36px;color:green" data-toggle="tooltip" title="Add to Interview List" style="font-size:30px;color:black"></i></button>&nbsp
                 </form>
                 <form  action="{% url 'MarketPlace:VacDecline' tlt=als.alias  vac=v.ref_no %}" method="post">
                   {% csrf_token %}
@@ -32,7 +32,7 @@
           {% for v in vacancy %}
             <form  action="{% url 'MarketPlace:ShortList' tlt=als.alias  vac=v.ref_no %}" method="post">
               {% csrf_token %}
-              <button type="submit" class="btn btn-info " style="width: 5rem;">Short-list</button>
+              <button type="submit" class="btn btn-info ">Short-list</button>
             </form>
           {% endfor %}
           {% endif %}

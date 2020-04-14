@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 
-from Profile.utils import create_code9
+from Profile.utils import create_code9, create_code8
 
 from enterprises.models import Branch
 from locations.models import Currency, City
@@ -83,7 +83,8 @@ class TalentRequired(models.Model):
     )
     date_entered = models.DateField(auto_now_add=True)
     title = models.CharField(max_length=250)
-    ref_no = models.CharField(max_length=10, unique=True, null=True)#SlugField
+    ref_no = models.CharField(max_length=10, unique=True, null=True, blank=True)#SlugField
+    own_ref_no = models.CharField(max_length=10, unique=True, null=True, blank=True)
     enterprise = models.ForeignKey(Branch, on_delete=models.CASCADE, verbose_name="Company Branch")
     requested_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     date_deadline = models.DateField('Work completed by')
@@ -106,10 +107,15 @@ class TalentRequired(models.Model):
     vac_wkfl = models.CharField(max_length=1, choices=WKFLOW, default='P')
 
     class Meta:
-        unique_together = (('enterprise','title', 'requested_by'),)
+        unique_together = (('enterprise','title', 'requested_by'),('enterprise', 'own_ref_no'),)
 
     def __str__(self):
         return f'{self.title}, {self.enterprise}'
+
+    def save(self, *args, **kwargs):
+        if self.ref_no is None or self.ref_no == "":
+            self.ref_no = create_code8(self)
+        super(TalentRequired, self).save(*args, **kwargs)
 
 
 class Deliverables(models.Model):

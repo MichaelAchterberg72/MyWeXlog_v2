@@ -18,7 +18,6 @@
           <p class="card-text">Date of Birth: {{ d.birth_date }}</p>
           <p class="card-text">Profile email: {{ request.user.email }}</p>
           <p class="card-text">Standard Rate (per hour): {{ d.currency }} {{ d.std_rate }}</p>
-          <p class="card-text">Motivation:<br>{{ d.motivation|linebreaks }}</p>
           <p class="card-text">Do you wish to be a mentor to others? {{ d.get_mentor_display }}</p>
         <div class="card-footer bg-transparent border-success"></div>
           <h5 class="card-title">Online Profiles <a href="{% url 'Profile:OnlineProfileAdd' request.user.alias %}" class="badge badge-primary float-right">Add</a></h5>
@@ -129,6 +128,10 @@
       <h5 class="card-title">Background</h5>
       <p class="card-text text-justify">
         {{ d.background|linebreaks }}</p>
+      <br>
+      <h5 class="card-title">Motivation:</h5>
+      <p class="card-text text-justify">
+        {{ d.motivation|linebreaks }}</p>
     </div>
   </div>
 </div>
