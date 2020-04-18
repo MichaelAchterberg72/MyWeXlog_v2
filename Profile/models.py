@@ -15,7 +15,7 @@ from .utils import create_code7, create_code9
 
 from users.models import CustomUser
 from locations.models import Region, City, Suburb, Currency
-from db_flatten.models import PhoneNumberType
+from db_flatten.models import PhoneNumberType, LanguageList
 from enterprises.models import Enterprise, Branch
 from pinax.referrals.models import Referral
 from marketplace.models import WorkLocation, SkillLevel
@@ -193,16 +193,6 @@ class PassportDetail(models.Model):
             self.slug = create_code9(self)
 
         super(PassportDetail, self).save(*args, **kwargs)
-
-
-class LanguageList(models.Model):
-    language = models.CharField(max_length=30, unique=True)
-
-    def clean(self):
-        self.language = self.language.capitalize()
-
-    def __str__(self):
-        return self.language
 
 
 class LanguageTrack(models.Model):

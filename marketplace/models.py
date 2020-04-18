@@ -8,10 +8,10 @@ from Profile.utils import create_code9, create_code8
 
 from enterprises.models import Branch
 from locations.models import Currency, City
-from db_flatten.models import SkillTag
+from db_flatten.models import SkillTag, LanguageList
 from talenttrack.models import Result
 
-#This is the table that specifies the work configeration (Freelance, Remote Freelence, Consultant, Contractor, Employee, FIFO)
+
 class WorkLocation(models.Model):
     WTPE = (
         ('Remote freelance','Remote freelance'),
@@ -99,6 +99,7 @@ class TalentRequired(models.Model):
     hours_required = models.IntegerField()
     unit = models.CharField(max_length=1, choices=UNIT)
     experience_level = models.ForeignKey(SkillLevel, on_delete=models.PROTECT)
+    language = models.ManyToManyField(LanguageList)
     worklocation = models.ForeignKey(WorkLocation, on_delete=models.PROTECT)
     rate_offered = models.DecimalField(max_digits=6, decimal_places=2)
     currency = models.ForeignKey(Currency, on_delete=models.PROTECT)
@@ -110,7 +111,7 @@ class TalentRequired(models.Model):
     scope = models.TextField()
     expectations = models.TextField()
     terms = models.FileField(upload_to=BidTerms, blank=True, null=True)
-    city = models.ForeignKey(City, on_delete=models.PROTECT, verbose_name='City, Town or Place')
+    city = models.ForeignKey(City, on_delete=models.PROTECT, verbose_name='City or Town')
     date_modified = models.DateField(auto_now=True)
     vac_wkfl = models.CharField(max_length=1, choices=WKFLOW, default='P')
 

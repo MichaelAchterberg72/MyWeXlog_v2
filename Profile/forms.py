@@ -20,9 +20,22 @@ from enterprises.models import Enterprise, Branch
 from locations.models import Region, City, Suburb
 from talenttrack.models import Designation
 from users.models import CustomUser
+from db_flatten.models import LanguageList
 
 
 #>>> Select 2
+class LanguageSearchFieldMixin:
+    search_fields = [
+        'language__icontains', 'pk__startswith'
+    ]
+
+class LanguageWidget(LanguageSearchFieldMixin, ModelSelect2Widget):
+    model = LanguageList
+
+    def create_value(self, value):
+        self.get_queryset().create(language=value)
+
+
 class DesignationSearchFieldMixin:
     search_fields = [
         'name__icontains', 'pk__startswith'
@@ -46,6 +59,8 @@ class BranchSelect2Widget(BranchSearchFieldMixin, ModelSelect2Widget):
         self.get_queryset().create(name=value)
 
 #Select 2 <<<
+
+
 class DateInput(forms.DateInput):
     input_type = 'date'
 
@@ -75,6 +90,9 @@ class LanguageTrackForm(forms.ModelForm):
     class Meta:
         model = LanguageTrack
         fields = ('language', 'level')
+        widgets={
+            'language': LanguageWidget(),
+            }
 
 
 class LanguageListForm(forms.ModelForm):

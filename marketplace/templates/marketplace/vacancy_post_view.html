@@ -32,24 +32,24 @@
       <table class="table table-sm">
         <thead>
           <tr>
-            <th>Own Ref No.</th>
-            <th>Hours Required</th>
-            <th>Work Format</th>
-            <th>Office Location</th>
-            <th>Experience Level</th>
-            <th>Company</th>
+            <th class="align-middle text-center">Own Ref No.</th>
+            <th class="align-middle text-center">Hours Required</th>
+            <th class="align-middle text-center">Work Format</th>
+            <th class="align-middle text-center">Office Location</th>
+            <th class="align-middle text-center">Experience Level</th>
+            <th class="align-middle text-center">Company</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>{{ instance.own_ref_no }}</td>
-            <td>
+            <td class="align-middle text-center">{{ instance.own_ref_no }}</td>
+            <td class="align-middle text-center">
               {{ instance.hours_required|intcomma }} ({{ instance.get_unit_display }})
             </td>
-            <td>{{ instance.worklocation }}</td>
-            <td>{{ instance.city.city }}</td>
-            <td>{{ instance.experience_level }}</td>
-            <td>{{ instance.enterprise.company }}</td>
+            <td class="align-middle text-center">{{ instance.worklocation }}</td>
+            <td class="align-middle text-center">{{ instance.city.city }}</td>
+            <td class="align-middle text-center">{{ instance.experience_level }}</td>
+            <td class="align-middle text-center">{{ instance.enterprise.company }}</td>
           </tr>
         </tbody>
       </table>
@@ -82,14 +82,16 @@
             <th class="align-middle text-center">Proposed Rate</th>
             <th class="align-middle text-center">Bid Closing Date</th>
             <th class="align-middle text-center">Work Completion Date</th>
+            <th class="align-middle text-center">Required Language</th>
             <th class="align-middle text-center">Status</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td class="align-middle text-center">{{ instance.currency }} {{ instance.rate_offered|intcomma }} ({{ instance.get_rate_unit_display }})</td>
+            <td class="align-middle text-center">{{ instance.currency }}<br><strong>{{ instance.rate_offered|intcomma }}</strong><br>({{ instance.get_rate_unit_display }})</td>
             <td class="align-middle text-center">{{ instance.bid_closes|date:'j M Y' }}</td>
             <td class="align-middle text-center">{{ instance.date_deadline|date:'j M Y' }}</td>
+            <td class="align-middle text-center">{{ instance.language.all|join:", " }}</td>
             <td class="align-middle text-center">
               {% if instance.offer_status == 'O' %}
                 {{ instance.get_offer_status_display }}

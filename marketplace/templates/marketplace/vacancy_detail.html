@@ -164,6 +164,7 @@
       <th class="align-middle text-center">Proposed Rate</th>
       <th class="align-middle text-center">Bid Closing Date</th>
       <th class="align-middle text-center">Work Completion Date</th>
+      <th class="align-middle text-center">Required Language</th>
       <th class="align-middle text-center" data-toggle="tooltip" title="The number of people Shortlisted for this role"># Shortlisted</th>
       <th class="align-middle text-center" data-toggle="tooltip" title="The number of people invited to Interview"># Interviews</th>
       <th class="align-middle text-center" data-toggle="tooltip" title="The number of Active Subscribers that has applied for the role"># Applicants</th>
@@ -173,8 +174,9 @@
     {% for v in vacancy %}
     <tr>
       <td class="align-middle text-center">{{ v.currency }}<br><strong>{{ v.rate_offered }}</strong><br>({{ v.get_rate_unit_display }})</td>
-      <td class="align-middle text-center">{{ v.bid_closes }}<br>({{ v.get_offer_status_display }})</td>
+      <td class="align-middle text-center">{{ v.bid_closes|date:"j M Y" }}<br>({{ v.get_offer_status_display }})</td>
       <td class="align-middle text-center">{{ v.date_deadline|date:"j M Y" }}</td>
+      <td class="align-middle text-center">{{ v.language.all|join:", " }}</td>
       <td class="align-middle text-center">{{ slist }}</td>
       <td class="align-middle text-center">{{ int }}</td>
       <td class="align-middle text-center">{{ bid }}</td>

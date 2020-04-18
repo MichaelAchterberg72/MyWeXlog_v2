@@ -31,7 +31,7 @@ from .models import(
     TalentRequired, SkillRequired, Deliverables, TalentAvailabillity, WorkBid, SkillLevel, BidShortList, WorkIssuedTo, BidInterviewList, WorkLocation
 )
 
-from talenttrack.models import WorkExperience
+from talenttrack.models import WorkExperience, LicenseCertification
 from db_flatten.models import SkillTag
 from users.models import CustomUser
 from Profile.models import Profile
@@ -1153,12 +1153,12 @@ def MarketHome(request):
     #>>>Queryset caching
     talent=request.user
     pfl = Profile.objects.filter(talent=talent)
-    tr = TalentRequired.objects.all()
+    tr = TalentRequired.objects.filter(offer_status='O')
     trt = tr.filter(requested_by=talent)
-    wb = WorkBid.objects.filter(work__requested_by=talent, work__offer_status__iexact='O')
+    wb = WorkBid.objects.filter(work__requested_by=talent, work__offer_status='O')
     ta = TalentAvailabillity.objects.filter(talent=talent)
     we = WorkExperience.objects.filter(talent=talent).prefetch_related('topic')
-    sr = SkillRequired.objects.filter(scope__offer_status__exact='O')
+    sr = SkillRequired.objects.filter(scope__offer_status='O')
     sl = SkillLevel.objects.all()
     #Queryset caching<<<
 
@@ -1197,23 +1197,37 @@ def MarketHome(request):
     tlt_lvl = pfl.values_list('exp_lvl__level', flat=True)
     tlt_lvl = tlt_lvl[0]
 
-    req_experience = tr.filter(Q(experience_level__level=tlt_lvl) & Q(offer_status__iexact='O')).values_list('id',flat=True)
+    #finds all vacancies that require talent's experience level and below
+    vac_exp = tr.filter(experience_level__level__lte=tlt_lvl)
 
-    match = []
+    #Certifications Matching
+    cert_required = vac_exp.values_list('certification').exists()
+    print(cert_required)
+    if cert_required is not None:#if not certifications required, pass
+        tlt_cert = set(LicenseCertification.objects.filter(talent=talent).values_list('certification', flat=True))
+        print('tlt_cert: ', tlt_cert)
+        vac_cert = vac_exp.filter(certification__in=tlt_cert).values_list('id',flat=True).distinct()
+        req_experience = vac_cert
+        print(vac_cert)
+    else:
+        req_experience = vac_exp.values_list('id',flat=True)
 
+    #>>>Skill Matching
+    skl_lst = []
+    #listing the skills the vacancies already found contain.
     for key in req_experience:
         skill_required = sr.filter(scope=key).values_list('skills', flat=True).distinct()
-
+        #combining the skills from various vacancies into one list
         for sk in skill_required:
-            match.append(sk)
+            skl_lst.append(sk)
 
     ds = sr.none()
-    matchd = set(match) #remove duplicates
+    matchd = set(skl_lst) #remove duplicates
 
     for item in matchd:
         display = sr.filter(
-                Q(skills__in=match)
-                & Q(scope__bid_closes__gte=timezone.now()) & Q(scope__experience_level__level=tlt_lvl)
+                Q(skills__in=skl_lst)
+                & Q(scope__bid_closes__gte=timezone.now()) & Q(scope__experience_level__level__lte=tlt_lvl)
                 )
 
         ds = ds | display

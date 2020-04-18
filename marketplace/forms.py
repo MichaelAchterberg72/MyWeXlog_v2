@@ -21,7 +21,8 @@ from .models import (
 from locations.models import Currency, City
 from enterprises.models import Branch
 from talenttrack.models import Result
-from db_flatten.models import SkillTag
+from db_flatten.models import SkillTag, LanguageList
+
 
 #>>> Select 2
 class BranchSearchFieldMixin:
@@ -34,6 +35,19 @@ class BranchSelect2Widget(BranchSearchFieldMixin, ModelSelect2Widget):
 
     def create_value(self, value):
         self.get_queryset().create(name=value)
+
+
+class LanguageSearchFieldMixin:
+    search_fields = [
+        'language__icontains', 'pk__startswith'
+    ]
+
+class LanguageWidget(LanguageSearchFieldMixin, ModelSelect2MultipleWidget):
+    model = LanguageList
+
+    def create_value(self, value):
+        self.get_queryset().create(language=value)
+
 
 class VacancySkillSearchFieldMixin:
     search_fields = [
@@ -172,6 +186,7 @@ class AssignmentDeclineReasonsForm(forms.ModelForm):
             'tlt_decline_reason': 'Reason',
             }
 
+
 #Why is this not being picked up
 class EmployerInterViewComments(forms.ModelForm):
     class Meta:
@@ -223,11 +238,12 @@ class DeliverablesForm(forms.ModelForm):
 class TalentRequiredForm(forms.ModelForm):
     class Meta:
         model = TalentRequired
-        fields = ('title', 'enterprise', 'date_deadline', 'hours_required', 'unit', 'worklocation', 'rate_offered', 'rate_unit', 'currency', 'rate_unit', 'offer_status', 'certification', 'scope', 'expectations', 'terms', 'city', 'experience_level', 'bid_closes', 'own_ref_no',)
+        fields = ('title', 'enterprise', 'date_deadline', 'hours_required', 'unit', 'worklocation', 'rate_offered', 'rate_unit', 'currency', 'rate_unit', 'offer_status', 'certification', 'scope', 'expectations', 'terms', 'city', 'experience_level', 'bid_closes', 'own_ref_no', 'language')
         widgets={
             'city': CitySelect2Widget(),
             'currency': CurrencySelect2Widget(),
             'enterprise': BranchSelect2Widget(),
+            'language': LanguageWidget(),
             'date_deadline': DateInput(),
             'bid_closes': DateInput(),
             'certification': CertModelSelect2MultipleWidget(),
@@ -236,7 +252,8 @@ class TalentRequiredForm(forms.ModelForm):
             'title': 'Vacancy Title',
             'bid_closes': 'Vacancy Closes',
             'offer_status': 'Vacancy Status',
-            'worklocation': 'Work Type Configeration',
+            'worklocation': 'Configeration',
+            'language': 'Language Required',
             'date_deadline': 'To be Completed By',
             'hours_required': 'Hours',
             'own_ref_no': 'Own Internal Vacancy Reference Number'
@@ -249,11 +266,12 @@ class TalentRequiredForm(forms.ModelForm):
 class TalentRequiredEditForm(forms.ModelForm):
     class Meta:
         model = TalentRequired
-        fields = ('title', 'enterprise', 'date_deadline', 'hours_required', 'unit', 'worklocation', 'rate_offered', 'rate_unit', 'currency', 'rate_unit', 'offer_status', 'certification', 'scope', 'expectations', 'terms', 'city', 'experience_level', 'bid_closes', 'own_ref_no',)
+        fields = ('title', 'enterprise', 'date_deadline', 'hours_required', 'unit', 'worklocation', 'rate_offered', 'rate_unit', 'currency', 'rate_unit', 'offer_status', 'certification', 'scope', 'expectations', 'terms', 'city', 'experience_level', 'bid_closes', 'own_ref_no', 'language')
         widgets={
             'city': CitySelect2Widget(),
             'currency': CurrencySelect2Widget(),
             'enterprise': BranchSelect2Widget(),
+            'language': LanguageWidget(),
             'date_deadline': DateInput(),
             'bid_closes': DateInput(),
             'certification': CertModelSelect2MultipleWidget(),
@@ -262,8 +280,9 @@ class TalentRequiredEditForm(forms.ModelForm):
             'title': 'Vacancy Title',
             'bid_closes': 'Vacancy Closes',
             'offer_status': 'Vacancy Status',
-            'worklocation': 'Work Type Configeration',
-            'date_deadline': 'To be Completed By',
+            'language': 'Language Required',
+            'worklocation': 'Work Configeration',
+            'date_deadline': 'Completion Date',
             'hours_required': 'Hours',
             'own_ref_no': 'Own Internal Vacancy Reference Number',
         }

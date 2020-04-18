@@ -26,3 +26,13 @@ class SkillTag(models.Model):
 
     def __str__(self):
         return self.skill
+
+
+class LanguageList(models.Model):
+    language = models.CharField(max_length=30, unique=True, null=True)
+
+    def clean(self):
+        self.language = self.language.capitalize()
+
+    def __str__(self):
+        return self.language
