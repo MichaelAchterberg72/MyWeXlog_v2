@@ -1154,7 +1154,7 @@ def MarketHome(request):
     talent=request.user
     pfl = Profile.objects.filter(talent=talent)
     tr = TalentRequired.objects.filter(offer_status='O')
-    trt = tr.filter(requested_by=talent)
+    tr_emp = TalentRequired.objects.filter(requested_by=talent)
     wb = WorkBid.objects.filter(work__requested_by=talent, work__offer_status='O')
     ta = TalentAvailabillity.objects.filter(talent=talent)
     we = WorkExperience.objects.filter(talent=talent).prefetch_related('topic')
@@ -1164,10 +1164,10 @@ def MarketHome(request):
     bsl = BidShortList.objects.filter(Q(talent=talent) & Q(scope__offer_status='O'))
     #Queryset caching<<<
 
-    ipost = trt.filter(offer_status__iexact='O').order_by('-bid_open')[:5]
-    ipost_count = trt.filter(offer_status__iexact='O').order_by('-bid_open').count()
-    ipost_closed = trt.filter(offer_status__iexact='C').order_by('-bid_open')[:5]
-    ipost_closed_count = trt.filter(offer_status__iexact='C').order_by('-bid_open').count()
+    ipost = tr_emp.filter(offer_status='O').order_by('-bid_open')[:5]
+    ipost_count = ipost.count()
+    ipost_closed = tr_emp.filter(offer_status='C').order_by('-bid_open')[:5]
+    ipost_closed_count = ipost_closed.count()
     ipost_bid = wb.filter(Q(bidreview__exact='R') | Q(bidreview__exact='P') | Q(bidreview__exact='A'))
     ipost_bid_flat = ipost_bid.values_list('work', flat=True).distinct()
     capacity = ta.filter(date_to__gte=timezone.now()).order_by('-date_to')[:5]
