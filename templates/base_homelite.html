@@ -25,19 +25,7 @@
     </div>
     </nav>
     </div>
-    <div class="container">
-      <div class="row-sm-12">
-        <ul class="messages">
-            {% for message in messages %}
-            <li{% if message.tags %} class="alert alert-{{ message.tags }}" role="alert" {% endif %}>{% if "html_safe" in messages.tags %}{{ message|safe }} {% else %}{{message}}{% endif %}</li>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-            {% endfor %}
-        </ul>
-      </div>
-
-
+    
     <div class="container pt-3">
     {% block content %}
     {% endblock content %}

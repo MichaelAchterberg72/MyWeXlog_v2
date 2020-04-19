@@ -78,6 +78,9 @@ urlpatterns = [
     path('edt-del/<int:edt_pk>/', views.EducationDeleteView, name='EDTDelete'),
     # Help urls
     path('help/experience-home/', views.HelpExperienceHomeView, name='HelpExperienceHome'),
+    path('help/experience-education/', views.HelpExperienceEducationView, name='HelpExperienceEducation'),
+    path('help/experience-experience/', views.HelpExperienceExperienceView, name='HelpExperienceExperience'),
+    path('help/experience-pre-experience/', views.HelpExperiencePreExperienceView, name='HelpExperiencePreExperience'),
     path('help/capture-education/', views.HelpCaptrueEducationView, name='HelpCaptureEducation'),
     path('help/capture-experience/', views.HelpCaptrueExperienceView, name='HelpCaptureExperience'),
     path('help/how-to-capture-skills/', views.HelpHowCaptrueSkillsView, name='HelpHowCaptureSkills'),

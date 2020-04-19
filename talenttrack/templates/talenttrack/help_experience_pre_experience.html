@@ -1,0 +1,102 @@
+{% extends 'base_homelite.html' %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Help{% endblock title %}
+
+{% block Style %}
+
+{% endblock Style %}
+{% block content %}
+<div class="container">
+  <h3>Experience Home Page - Pre Logged Experience - Help</h3>
+    <p>&nbsp</p>
+    <p>The experience in the 'Previously Logged Experience' card lists the
+      'Employer, 'Date from', 'Date to', 'Hours' and 'Project' data items with the most
+      recent date first.</p>
+    <p>The ‘Previously logged Experience’ card
+      contains an abbreviated list of the relevant captured experience items. This list will
+    only list the five most recent items.</p>
+    <p>You are able to open the full list by clicking on the
+      'View All Experience' button as required. This button will only be visible when you
+      have a minimum of six captured Previously Logged Experience items.</p>
+      <ul>
+        <li>You are able to add a new experience entry by clicking on the
+          ‘Add Logged Experience’ button at the top right of the Previoulsly Logged Experience
+          card.</li>
+        <li>Previously logged experience is past experience for which you already have a
+          timesheet and want to upload it to WeXlog. A copy of the timesheet will need
+          to be uploaded when claiming the experience.</li>
+      </ul>
+    <br>
+    <p>The options you will be provided with will be:</p>
+    <table class="table table-sm">
+    <col width="10%">
+    <col width="70%">
+    <tbody>
+        <tr>
+          <td class="text-center"><a href="#" class="badge badge-pill badge-secondary" style="width: 5rem;">Detail</a>
+          </td>
+          <td>This will allow you to view the detail of the entry.</td>
+        </tr>
+        <tr>
+          <td class="text-center"><a href="#" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</a>
+          </td>
+          <td>This will allow you to delete an entry, there is no confimation step.</td>
+        </tr>
+    </tbody>
+  </table>
+  <br>
+    <p><strong>Pre-Logged Experience</strong></p>
+    <p>Pre-logged experience is experience that is captured for which you have approved
+      timesheets from the past. It allows you to capture all the experience you have
+      throughout your career.</p>
+    <br>
+    <p<strong>Parameters for Capturing Experience</strong></p>
+    <p>When capturing experience or pre logged experience the system has been designed
+       a few parameters and logic.</p>
+       <ol>
+         <li>You cannot enter a 'date_to' that is after today</li>
+         <li>The 'date_from' must be less than or equal to the 'date_to'</li>
+         <li>Capturing experience is limited to no more than:
+           <ul>
+             <li>12 hours per </li>
+             <li>6 × 12 hours per week</li>
+             <li>52 × 6 × 12 hours per year</li>
+             <li>6 × working days per week (will vary)</li>
+            </ul></li>
+        </ol>
+    <br>
+    <p><strong>What can be Claimed as Experience</strong></p>
+    <p>There are a number of activities that can be classified as experience, These are:</p>
+      <ol>
+        <li>Time spent working at your day job</li>
+        <li>Time spent working at a freelancer job</li>
+        <li>Time spent "working" on social club / sports club committees</li>
+        <li>Time spent on governing bodies
+          <ul>
+            <li>School</li>
+            <li>Housing estates</li>
+            <li>Charity Work</li>
+            <li>Etc</li>
+          </ul></li>
+        <li>Time spent volunteering for a charity or at a place of worship.</li>
+      </ol>
+    <p>Once experience has been captured you will need to tag skills used during that time.</p>
+    <p>This can include:</p>
+      <ul>
+        <li>Government departments that were dealt with</li>
+        <li>Computer programs used</li>
+        <li>Laws being worked with</li>
+        <li>Case Law you worked with</li>
+        <li>Regulations you worked with</li>
+        <li>Codes and standards you worked with</li>
+        <li>Activities (report writing)</li>
+        <li>Skills (coding, meetings, research, etc.)</li>
+        <li>Commodities you worked with (Gold, platinum, coal, etc.)</li>
+        <li>Country where the work was performed (shows familiarity with customs etc.)</li>
+        <li>Many, many others...</li>
+      </ul>
+
+</div>
+{% endblock content %}

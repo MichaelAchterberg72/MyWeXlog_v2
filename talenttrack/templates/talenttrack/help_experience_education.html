@@ -1,0 +1,75 @@
+{% extends 'base_homelite.html' %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Help{% endblock title %}
+
+{% block Style %}
+
+{% endblock Style %}
+{% block content %}
+<div class="container">
+  <h3>Experience Home Page - Education & Training - Help</h3>
+    <p>&nbsp</p>
+    <p>The experience is listed in date order with, in
+      the 'Education and Training', the 'Start Date, 'Completion Date', Course' and
+      'Time Logged', and in the 'Eork Experience' and 'Previously Logged Experience' the
+      'Employer, 'Date from', 'Date to', 'Hours' and 'Project' data items with the most
+      recent date first.</p>
+    <p>The ‘Education and Training’ card contains an abbreviated list of the five most recent
+      relevant captured experience.</p>
+    <p>You are able to open the full list by clicking on the 'View All Education' button as
+      required. This button will only be visible once you have more than five items in
+      the list.</p>
+      <ul>
+        <li>You are able to add a new experience entry by clicking on the
+          ‘Add Education’ button at the top right of the experience card.
+          Education and Training is self describing in that it is where you
+          can capture all time spent studying or on course. Time logged against this is
+          not counted in your overall experience rating.</li>
+
+      </ul>
+    <br>
+    <p>The options you will be provided with will be:</p>
+    <table class="table table-sm">
+    <col width="10%">
+    <col width="70%">
+    <tbody>
+        <tr>
+          <td class="text-center"><a href="#" class="badge badge-pill badge-secondary" style="width: 5rem;">Detail</a>
+          </td>
+          <td>This will allow you to view the detail of the entry.</td>
+        </tr>
+        <tr>
+          <td class="text-center"><a href="#" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</a>
+          </td>
+          <td>This will allow you to delete an entry, there is no confimation step.</td>
+        </tr>
+    </tbody>
+  </table>
+  <br>
+    <p><strong>What can be Claimed as Experience</strong></p>
+    <p>There are a number of activities that can be classified as experience, These are:</p>
+      <ol>
+        <li>Time spent studying at university or colledge</li>
+        <li>Time spent studying on a course provided by your job</li>
+        <li>Time spent "studying" at social club / sports club committees</li>
+      </ol>
+    <p>Once experience has been captured you will need to tag skills used during that time.</p>
+    <p>This can include:</p>
+      <ul>
+        <li>Government departments that were dealt with</li>
+        <li>Computer programs used</li>
+        <li>Laws being worked with</li>
+        <li>Case Law you worked with</li>
+        <li>Regulations you worked with</li>
+        <li>Codes and standards you worked with</li>
+        <li>Activities (report writing)</li>
+        <li>Skills (coding, meetings, research, etc.)</li>
+        <li>Commodities you worked with (Gold, platinum, coal, etc.)</li>
+        <li>Country where the work was performed (shows familiarity with customs etc.)</li>
+        <li>Many, many others...</li>
+      </ul>
+
+</div>
+{% endblock content %}

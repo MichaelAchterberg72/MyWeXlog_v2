@@ -49,14 +49,20 @@ def ExperienceHome(request):
         #<<<Step 1
 
         #>>>Step 2
-        train = basequery.filter(edt=True).order_by('-date_from')[:15]
-        train_sum = train.aggregate(Edu_sum=Sum('topic__hours'))
+        train_base = basequery.filter(edt=True).order_by('-date_from')
+        train = train_base[:5]
+        train_sum = train_base.aggregate(Edu_sum=Sum('topic__hours'))
+        train_count = train_base.count()
 
-        experience = basequery.filter(wexp=True).order_by('-date_from')[:15]
-        exp_sum = experience.aggregate(we_sum=Sum('hours_worked'))
+        exp_base = basequery.filter(wexp=True).order_by('-date_from')
+        experience = exp_base[:5]
+        exp_sum = exp_base.aggregate(we_sum=Sum('hours_worked'))
+        exp_count = exp_base.count()
 
-        prelog = basequery.filter(prelog=True).order_by('-date_from')[:15]
-        pre_sum = prelog.aggregate(p_sum=Sum('hours_worked'))
+        pre_base = basequery.filter(prelog=True).order_by('-date_from')
+        prelog = pre_base[:5]
+        pre_sum = pre_base.aggregate(p_sum=Sum('hours_worked'))
+        pre_count = pre_base.count()
 
         t_sum = train_sum.get('Edu_sum')
         e_sum = exp_sum.get('we_sum')
@@ -131,10 +137,13 @@ def ExperienceHome(request):
         context = {
             'train': train,
             'train_sum': train_sum,
+            'train_count': train_count,
             'experience': experience,
             'exp_sum': exp_sum,
+            'exp_count': exp_count,
             'prelog': prelog,
             'pre_sum': pre_sum,
+            'pre_count': pre_count,
             'tot_sum': tot_sum,
             'skill_name': skill_name,
             'skill_count': skill_count,
@@ -146,6 +155,27 @@ def ExperienceHome(request):
 @login_required()
 def HelpExperienceHomeView(request):
     template_name = 'talenttrack/help_experience_home.html'
+    context = {}
+    return render(request, template_name, context)
+
+
+@login_required()
+def HelpExperienceEducationView(request):
+    template_name = 'talenttrack/help_experience_education.html'
+    context = {}
+    return render(request, template_name, context)
+
+
+@login_required()
+def HelpExperienceExperienceView(request):
+    template_name = 'talenttrack/help_experience_experience.html'
+    context = {}
+    return render(request, template_name, context)
+
+
+@login_required()
+def HelpExperiencePreExperienceView(request):
+    template_name = 'talenttrack/help_experience_pre_experience.html'
     context = {}
     return render(request, template_name, context)
 
@@ -178,6 +208,7 @@ def TrainingListView(request):
 
     train = basequery.filter(edt=True).order_by('-date_from')
     train_sum = train.aggregate(Edu_sum=Sum('topic__hours'))
+    train_count = train.count()
 
     t_sum = train_sum.get('Edu_sum')
 
@@ -209,6 +240,7 @@ def TrainingListView(request):
     template = 'talenttrack/training_list.html'
     context = {
         'train_sum': train_sum,
+        'train_count': train_count,
         'pageitems': pageitems,
         'page_range': page_range
     }
@@ -222,6 +254,7 @@ def PreExperienceListView(request):
 
     prelog = basequery.filter(prelog=True).order_by('-date_from')
     pre_sum = prelog.aggregate(p_sum=Sum('hours_worked'))
+    pre_count = prelog.count()
 
     p_sum= pre_sum.get('p_sum')
 
@@ -253,6 +286,7 @@ def PreExperienceListView(request):
     template = 'talenttrack/pre_experience_list.html'
     context = {
         'pre_sum': pre_sum,
+        'pre_count': pre_count,
         'pageitems': pageitems,
         'page_range': page_range
     }
@@ -266,6 +300,7 @@ def WorkExperienceListView(request):
 
     experience = basequery.filter(wexp=True).order_by('-date_from')
     exp_sum = experience.aggregate(we_sum=Sum('hours_worked'))
+    exp_count = experience.count()
 
     e_sum = exp_sum.get('we_sum')
 
@@ -297,6 +332,7 @@ def WorkExperienceListView(request):
     template = 'talenttrack/experience_list.html'
     context = {
         'exp_sum': exp_sum,
+        'exp_count': exp_count,
         'pageitems': pageitems,
         'page_range': page_range
     }
@@ -390,8 +426,6 @@ def LicenseCertificationDeleteView(request, pk, tlt):
         raise PermissionDenied
 
 
-@login_required()
-@subscription(2)
 def TltRatingDetailView(request, tlt):
     pfl = Profile.objects.get(alias=tlt)
 
@@ -404,8 +438,6 @@ def TltRatingDetailView(request, tlt):
     return render(request, template, context)
 
 
-@login_required()
-@subscription(2)
 def ActiveProfileView(request, tlt, vac):
     #caching
     bch = BriefCareerHistory.objects.filter(talent__alias=tlt).order_by('-date_from')
@@ -570,7 +602,6 @@ def SkillProfileDetailView(request, tlt):
     return render(request, template, context)
 
 
-@login_required()
 def SumAllExperienceView(request):
     talent = request.user.id
     tlt_p = Profile.objects.get(pk=talent)

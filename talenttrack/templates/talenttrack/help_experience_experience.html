@@ -1,0 +1,106 @@
+{% extends 'base_homelite.html' %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Help{% endblock title %}
+
+{% block Style %}
+
+{% endblock Style %}
+{% block content %}
+<div class="container">
+  <h3>Experience Home Page - Work Experience - Help</h3>
+    <p>&nbsp</p>
+    <p>The experience in the list is listed in date order  only the five most recent
+      experience items listed, in the 'Work Experience' the
+      'Employer, 'Date from', 'Date to', 'Hours' and 'Project' data items with the most
+      recent date first.</p>
+    <p>You are able to open the full list by clicking on the
+      'View All Experience' button as required. This button will only be visible once
+      you have captured a minimum of six work experience items.</p>
+      <ul>
+        <li>You are able to add a new experience entry by clicking on the relative
+          ‘Add Experience’ button at the top right of the experience type
+          card.</li>
+        <li>Logged experience is experience that has been logged within 2 weeks of having
+          completed the work. Any experience that is older than this will be tagged as
+          being “estimated”.</li>
+        <li>Previously logged experience is past experience for which you already have a
+          timesheet and want to upload it to WeXlog. A copy of the timesheet will need
+          to be uploaded when claiming the experience.</li>
+      </ul>
+    <br>
+    <p>The options you will be provided with will be:</p>
+    <table class="table table-sm">
+    <col width="10%">
+    <col width="70%">
+    <tbody>
+        <tr>
+          <td class="text-center"><a href="#" class="badge badge-pill badge-secondary" style="width: 5rem;">Detail</a>
+          </td>
+          <td>This will allow you to view the detail of the entry.</td>
+        </tr>
+        <tr>
+          <td class="text-center"><a href="#" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</a>
+          </td>
+          <td>This will allow you to delete an entry, there is no confimation step.</td>
+        </tr>
+    </tbody>
+  </table>
+  <br>
+    <p><strong>Experience</strong></p>
+    <p>Experience should be captured within 14 days of the capture date or else it must
+      be captured as estimated experience. The reasons behind this are that it is difficult
+      to remember with any certainty what you did, in the case of capturing, or what someone
+      else did, in the case of validations, more than two weeks in arrears.</p>
+    <p>This means that you should log-in and capture your experience at least every week
+      or at the worst every fortnight.</p>
+    <br>
+    <p<strong>Parameters for Capturing Experience</strong></p>
+    <p>When capturing experience or pre logged experience the system has been designed
+       a few parameters and logic.</p>
+       <ol>
+         <li>You cannot enter a 'date_to' that is after today</li>
+         <li>The 'date_from' must be less than or equal to the 'date_to'</li>
+         <li>Capturing experience is limited to no more than:
+           <ul>
+             <li>12 hours per </li>
+             <li>6 × 12 hours per week</li>
+             <li>52 × 6 × 12 hours per year</li>
+             <li>6 × working days per week (will vary)</li>
+            </ul></li>
+        </ol>
+    <br>
+    <p><strong>What can be Claimed as Experience</strong></p>
+    <p>There are a number of activities that can be classified as experience, These are:</p>
+      <ol>
+        <li>Time spent working at your day job</li>
+        <li>Time spent working at a freelancer job</li>
+        <li>Time spent "working" on social club / sports club committees</li>
+        <li>Time spent on governing bodies
+          <ul>
+            <li>School</li>
+            <li>Housing estates</li>
+            <li>Charity Work</li>
+            <li>Etc</li>
+          </ul></li>
+        <li>Time spent volunteering for a charity or at a place of worship.</li>
+      </ol>
+    <p>Once experience has been captured you will need to tag skills used during that time.</p>
+    <p>This can include:</p>
+      <ul>
+        <li>Government departments that were dealt with</li>
+        <li>Computer programs used</li>
+        <li>Laws being worked with</li>
+        <li>Case Law you worked with</li>
+        <li>Regulations you worked with</li>
+        <li>Codes and standards you worked with</li>
+        <li>Activities (report writing)</li>
+        <li>Skills (coding, meetings, research, etc.)</li>
+        <li>Commodities you worked with (Gold, platinum, coal, etc.)</li>
+        <li>Country where the work was performed (shows familiarity with customs etc.)</li>
+        <li>Many, many others...</li>
+      </ul>
+
+</div>
+{% endblock content %}

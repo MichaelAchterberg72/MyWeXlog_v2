@@ -10,7 +10,8 @@
     <a href="{% url 'Talent:Home' %}"  class="badge badge-pill badge-primary">Back</a>
     <a href="{% url 'MarketPlace:HelpWorkCOnfigeration' %}" target="_blank" class="align-middle" style="font-size: 27px""><i class="icon icon-question-circle"></i></a>
   </p></span></h4>
-
+  <p>There are a total of {{ train_count }} Training & Education experience items that have been captured.</p>
+  <br>
 
     <div class="float-right">
       <p><a href="{% url 'Talent:Capture' %}" class="badge badge-pill badge-primary float-right">Add Education</a></p>
@@ -34,12 +35,12 @@
           <td class="align-middle text-center">{{ t.date_to|date:"j M Y" }}</td>
           <td class="align-middle text-center">{{ t.course }}</td>
           <td class="align-middle text-center">{{ t.topic.hours|intcomma }}</td>
-          <td class="align-middle text-center">
+          <td class="align-middle text-center"><div class="float-right">
             <a href="{% url 'Talent:EducationDetail' t.slug %}" class="badge badge-pill badge-secondary" style="width: 5rem;">Detail</a>
             <form  action="{% url 'Talent:EDTDelete' t.id %}" method="post">
               {% csrf_token %}
               <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
-            </form>
+            </form></div>
           </td>
         </tr>
       </tbody>
