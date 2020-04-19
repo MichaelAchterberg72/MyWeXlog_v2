@@ -257,7 +257,7 @@ class PhysicalAddress(models.Model):
     code = models.CharField('Postal Code', max_length=12, blank=True, null=True)
 
     def __str__(self):
-        return '{}: {}, {}, {},{}'.format(self.talent, self.line1, self.line2, self.line3, self.country)
+        return f'{self.talent}: {self.country}'
 
     def create_physical_add(sender, **kwargs):
         if kwargs['created']:
@@ -278,7 +278,7 @@ class PostalAddress(models.Model):
     code = models.CharField('Postal Code', max_length=12, blank=True, null=True)
 
     def __str__(self):
-        return '{}: {}, {}, {},{}'.format(self.talent, self.line1, self.line2, self.line3, self.country)
+        return f'{self.talent}: {self.country}'
 
     def create_postal_add(sender, **kwargs):
         if kwargs['created']:
