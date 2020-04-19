@@ -30,8 +30,7 @@
 {% endblock network %}
 
 {% block workflow %}
-<p>Experience confirmations: <a href="{% url 'Profile:Confirm' %}" class="btn btn-info float-right" style="width: 8rem">{{ total }}</a></p>
-<br>
+
 <table class="table table-sm">
   <thead>
     <tr>
@@ -64,6 +63,8 @@
     </tr>
   </tbody>
 </table>
+<br>
+<p>Experience confirmations: <a href="{% url 'Profile:Confirm' %}" class="btn btn-info float-right" style="width: 8rem">{{ total }}</a></p>
 
 {% endblock workflow %}
 
@@ -119,6 +120,7 @@
     <a href="{% url 'BookList:books-read-new' %}" class=""><i class="fa fa-bookmark-o" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Capture Book"></i></a>
   </div>
     <hr>
+    <br>
     <div class="text-center">
       {% if pfl.rate_count >= 5 %}
         <p style="font-size:20px;color:black">

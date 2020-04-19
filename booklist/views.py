@@ -107,8 +107,6 @@ def HelpAddBookView(request):
     return render(request, template_name, context)
 
 
-@login_required()
-@subscription(2)
 @csp_exempt
 #This view is for the profile to display the complete list of books read.
 def ProfileBookList(request, tlt):
@@ -141,7 +139,6 @@ def ProfileBookList(request, tlt):
     return render(request, template_name, context)
 
 
-@login_required()
 def ProfileBackView(request):
     if request.method =='POST':
         next_url=request.POST.get('next', '/')

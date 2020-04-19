@@ -3,184 +3,124 @@
 {% block title %}{{block.super}}-Experience{% endblock title %}
 
 {% block content %}
-
-<div class=" border-0">
-  <h4 class="">Welcome to the Experience Home Page!<span><p class="float-right">
-  <a href="{% url 'Talent:HelpExperienceHome' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px" data-toggle="tooltip title="Click here for help on this page!">
-  <i class="icon icon-question-circle"></i></a>
-</p></span></h4>
-  <br>
-  <div id="accordion">
-    <div class="card">
-      <div class="card-header" id="headingFour">
-        <h5 class="mb-0">
-          <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-            Summary
-          </button>
-        </h5>
-      </div>
-      <div id="collapseFour" class="collapse show" aria-labelledby="headingFour" data-parent="#accordion">
-        <div class="card-body">
-            <table class="table table-sm">
-              <thead>
-                <tr>
-                  <th width="20%" class="align-middle text-center">Total Hours Logged</th>
-                  <th width="20%" class="align-middle text-center">Training<br>(Hours)<br><a href="{% url 'Talent:Capture' %}" class="badge badge-pill badge-primary">Add</a></th>
-                  <th width="20%" class="align-middle text-center">Logged<br>(Hours)<br><a href="{% url 'Talent:ExperienceCapture' %}" class="badge badge-pill badge-primary">Add</a></th>
-                  <th width="20%" class="align-middle text-center">Pre-logged<br>(Hours)<br><a href="{% url 'Talent:PreloggedCapture' %}" class="badge badge-pill badge-primary">Add</a></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr align= "middle">
-                  <td>{{ tot_sum|intcomma }}</td>
-                  <td>{{ train_sum.Edu_sum|intcomma }}</td>
-                  <td>{{ exp_sum.we_sum|intcomma }}</td>
-                  <td>{{ pre_sum.p_sum|intcomma }}</td>
-                </tr>
-              </tbody>
-            </table>
-            <div class="float-right">
-              <p>
-                <a href="{% url 'Talent:DPCSum' %}" class="badge badge-pill badge-primary">Designation, Project & Company Summary</a>
-                <a href="{% url 'Talent:ExperienceSum' %}" class="badge badge-pill badge-primary">Skills Summary</a>
-              </p>
-            </div>
-
-            <p>Experience Level: <strong>{{ level }}</strong></p>
-
-            <table class="table table-sm">
-              <thead>
-                <tr align="middle">
-                  <th class="align-middle text-center">Total Skills</th>
-                  <th class="align-middle text-center">Skills List</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr align="center">
-                  <td>{{ skill_count }}</td>
-                  <td>{{ skill_name|join:" || " }}</td>
-                </tr>
-              </tbody>
-            </table>
-        </div>
-      </div>
+<div class="card border-0" style="width: 100%;">
+  <div class="card-body">
+    <div class="float-right">
+      <a href="{% url 'Talent:HelpExperienceHome' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px" data-toggle="tooltip title="Click here for help on this page!">
+      <i class="icon icon-question-circle"></i></a>
     </div>
-  <div class="card">
-    <div class="card-header" id="headingOne">
-      <h5 class="mb-0">
-        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-          Education and Training
-        </button>
-      </h5>
+    <h4 class="card-title">Experience Summary</h4>
+    <br>
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th width="20%" class="align-middle text-center">Total Hours Logged</th>
+          <th width="20%" class="align-middle text-center">Training<br>(Hours)<br><a href="{% url 'Talent:Capture' %}" class="badge badge-pill badge-primary">Add</a></th>
+          <th width="20%" class="align-middle text-center">Logged<br>(Hours)<br><a href="{% url 'Talent:ExperienceCapture' %}" class="badge badge-pill badge-primary">Add</a></th>
+          <th width="20%" class="align-middle text-center">Pre-logged<br>(Hours)<br><a href="{% url 'Talent:PreloggedCapture' %}" class="badge badge-pill badge-primary">Add</a></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr align= "middle">
+          <td>{{ tot_sum|intcomma }}</td>
+          <td>{{ train_sum.Edu_sum|intcomma }}</td>
+          <td>{{ exp_sum.we_sum|intcomma }}</td>
+          <td>{{ pre_sum.p_sum|intcomma }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="float-right">
+      <p>
+        <a href="{% url 'Talent:DPCSum' %}" class="badge badge-pill badge-primary">Designation, Project & Company Summary</a>
+        <a href="{% url 'Talent:ExperienceSum' %}" class="badge badge-pill badge-primary">Skills Summary</a>
+      </p>
     </div>
 
-    <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
-      <div class="card-body">
-        <div class="float-right">
-          <p><a href="{% url 'Talent:Capture' %}" class="badge badge-pill badge-primary float-right">Add Education</a></p>
-        </div>
-          <p><strong>Total hours in training: </strong>{{ train_sum.Edu_sum|intcomma }}</p>
-        <div>
-        <table class="table table-hover table-sm">
-          <thead>
-            <tr>
-              <th class="align-middle text-center">Start Date</th>
-              <th class="align-middle text-center">Completion Date</th>
-              <th class="align-middle text-center">Course</th>
-              <th class="align-middle text-center">Time Logged</th>
-              <th class="align-middle text-center">Options</th>
-            </tr>
-          </thead>
-          {% for t in train %}
-          <tbody>
-            <tr onclick="window.location='{% url 'Talent:EducationDetail' t.slug %}'">
-              <td class="align-middle text-center">{{ t.date_from|date:"j M Y" }}</td>
-              <td class="align-middle text-center">{{ t.date_to|date:"j M Y" }}</td>
-              <td class="align-middle text-center">{{ t.course }}</td>
-              <td class="align-middle text-center">{{ t.topic.hours|intcomma }}</td>
-              <td class="align-middle text-center">
-                <a href="{% url 'Talent:EducationDetail' t.slug %}" class="badge badge-pill badge-secondary" style="width: 5rem;">Detail</a>
-                <form  action="{% url 'Talent:EDTDelete' t.id %}" method="post">
-                  {% csrf_token %}
-                  <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
-                </form>
-              </td>
-            </tr>
-          </tbody>
-        {% endfor %}
-        </table>
-        <div class="float-right">
-          <p><a href="{% url 'Talent:TrainingList' %}" class="btn btn-primary float-right">View All Education</a></p>
-        </div>
-        <p>&nbsp</p>
-        </div>
-      </div>
+    <p>Experience Level: <strong>{{ level }}</strong></p>
+
+    <table class="table table-sm">
+      <thead>
+        <tr align="middle">
+          <th class="align-middle text-center">Total Skills</th>
+          <th class="align-middle text-center">Skills List</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr align="center">
+          <td>{{ skill_count }}</td>
+          <td>{{ skill_name|join:" || " }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>&nbsp</p>
+  </div>
+</div>
+<br>
+<div class="card border-0" style="width: 100%;">
+  <div class="card-body">
+    <div class="float-right">
+      <a href="{% url 'Talent:HelpExperienceEducation' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px" data-toggle="tooltip title="Click here for help on this page!">
+      <i class="icon icon-question-circle"></i></a>
+    </div>
+    <h4 class="card-title">Education & Training</h4>
+    <p>There are a total of {{ train_count }} Training & Education experience items that have been captured{% if train_count >= 5 %}, we only list the most recent 5 here.{% else %}.{% endif %}</p>
+    <br>
+    <div class="float-right">
+      <p><a href="{% url 'Talent:Capture' %}" class="badge badge-pill badge-primary float-right">Add Education</a></p>
+    </div>
+      <p><strong>Total hours in training: </strong>{{ train_sum.Edu_sum|intcomma }}</p>
+    <div>
+    <table class="table table-hover table-sm">
+      <thead>
+        <tr>
+          <th class="align-middle text-center">Start Date</th>
+          <th class="align-middle text-center">Completion Date</th>
+          <th class="align-middle text-center">Course</th>
+          <th class="align-middle text-center">Time Logged</th>
+          <th class="align-middle text-center">Options</th>
+        </tr>
+      </thead>
+      {% for t in train %}
+      <tbody>
+        <tr onclick="window.location='{% url 'Talent:EducationDetail' t.slug %}'">
+          <td class="align-middle text-center">{{ t.date_from|date:"j M Y" }}</td>
+          <td class="align-middle text-center">{{ t.date_to|date:"j M Y" }}</td>
+          <td class="align-middle text-center">{{ t.course }}</td>
+          <td class="align-middle text-center">{{ t.topic.hours|intcomma }}</td>
+          <td class="align-middle text-center"><div class="float-right">
+            <a href="{% url 'Talent:EducationDetail' t.slug %}" class="badge badge-pill badge-secondary" style="width: 5rem;">Detail</a>
+            <form  action="{% url 'Talent:EDTDelete' t.id %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
+            </form></div>
+          </td>
+        </tr>
+      </tbody>
+    {% endfor %}
+    </table>
+    {% if train_count > 5 %}
+    <div class="float-right">
+      <p><a href="{% url 'Talent:TrainingList' %}" class="btn btn-primary float-right">View All Education</a></p>
+    </div>
+    {% endif %}
+    <p>&nbsp</p>
     </div>
   </div>
-  <div class="card">
-    <div class="card-header" id="headingTwo">
-      <h5 class="mb-0">
-        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-          Work Experience
-        </button>
-      </h5>
+</div>
+<br>
+<div class="card border-0" style="width: 100%;">
+  <div class="card-body">
+    <div class="float-right">
+      <a href="{% url 'Talent:HelpExperienceExperience' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px" data-toggle="tooltip title="Click here for help on this page!">
+      <i class="icon icon-question-circle"></i></a>
     </div>
-    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
-      <div class="card-body">
-        <div class="float-right">
-          <p><a href="{% url 'Talent:ExperienceCapture' %}" class="badge badge-pill badge-primary float-right">Add Experience</a></p>
-        </div>
-          <p><strong>Total hours of Experience: </strong>{{ exp_sum.we_sum|intcomma }}</p>
-        <table class="table table-hover table-sm">
-          <thead>
-            <tr>
-              <th>Employer</th>
-              <th>Date from</th>
-              <th>Date to</th>
-              <th>Hours</th>
-              <th>Project</th>
-            </tr>
-          </thead>
-          {% for e in experience %}
-          <tbody>
-            <tr onclick="window.location='{% url 'Talent:ExperienceDetail' e.slug %}'">
-              <td>{{ e.company }}</td>
-              <td>{{ e.date_from|date:"j M Y" }}</td>
-              <td>{{ e.date_to|date:"j M Y" }}</td>
-              <td>{{ e.hours_worked|intcomma }}</td>
-              <td>{{ e.project }}</td>
-              <td>
-                <a href="{% url 'Talent:ExperienceDetail' e.slug %}" class="badge badge-pill badge-secondary"  style="width: 5rem;">Detail</a>
-                <form  action="{% url 'Talent:WEDelete' e.id %}" method="post">
-                  {% csrf_token %}
-                  <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
-                </form>
-              </td>
-            </tr>
-          {% endfor %}
-          </tbody>
-        </table>
-        <div class="float-right">
-          <p><a href="{% url 'Talent:ExperienceList' %}" class="btn btn-primary float-right">View All Experience</a></p>
-        </div>
-        <p>&nbsp</p>
+    <h4 class="card-title">Work Experience</h4>
+    <p>There are a total of {{ exp_count }} Experience items that have been captured{% if exp_count >= 5 %}, we only list the most recent 5 here.{% else %}.{% endif %}</p>
+    <br>
+      <div class="float-right">
+        <p><a href="{% url 'Talent:ExperienceCapture' %}" class="badge badge-pill badge-primary float-right">Add Experience</a></p>
       </div>
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-header" id="headingThree">
-      <h5 class="mb-0">
-        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-          Previously Logged Experience
-        </button>
-      </h5>
-    </div>
-    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
-      <div class="card-body">
-        <div class="float-right">
-          <p><a href="{% url 'Talent:PreloggedCapture' %}" class="badge badge-pill badge-primary float-right">Add Logged Experience</a></p>
-        </div>
-        <p><strong>Total hours of Previously Logged Experience: </strong>{{ pre_sum.p_sum|intcomma }}</p>
+        <p><strong>Total hours of Experience: </strong>{{ exp_sum.we_sum|intcomma }}</p>
       <table class="table table-hover table-sm">
         <thead>
           <tr>
@@ -191,33 +131,84 @@
             <th>Project</th>
           </tr>
         </thead>
-        {% for p in prelog %}
+        {% for e in experience %}
         <tbody>
-          <tr onclick="window.location='{% url 'Talent:PreLogDetail' p.slug %}'">
-            <td>{{ p.company }}</td>
-            <td>{{ p.date_from|date:"j M Y" }}</td>
-            <td>{{ p.date_to|date:"j M Y" }}</td>
-            <td>{{ p.hours_worked|intcomma }}</td>
-            <td>{{ p.project }}</td>
-            <td>
-              <a href="{% url 'Talent:PreLogDetail' p.slug %}" class="badge badge-pill badge-secondary" style="width: 5rem;">Detail</a>
-              <form  action="{% url 'Talent:PLEDelete' p.id %}" method="post">
+          <tr onclick="window.location='{% url 'Talent:ExperienceDetail' e.slug %}'">
+            <td>{{ e.company }}</td>
+            <td>{{ e.date_from|date:"j M Y" }}</td>
+            <td>{{ e.date_to|date:"j M Y" }}</td>
+            <td>{{ e.hours_worked|intcomma }}</td>
+            <td>{{ e.project }}</td>
+            <td><div class="float-right">
+              <a href="{% url 'Talent:ExperienceDetail' e.slug %}" class="badge badge-pill badge-secondary"  style="width: 5rem;">Detail</a>
+              <form  action="{% url 'Talent:WEDelete' e.id %}" method="post">
                 {% csrf_token %}
                 <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
-              </form>
+              </form></div>
             </td>
           </tr>
         {% endfor %}
         </tbody>
       </table>
+      {% if exp_count > 5 %}
       <div class="float-right">
-        <p><a href="{% url 'Talent:PreExperienceList' %}" class="btn btn-primary float-right">View All Experience</a></p>
+        <p><a href="{% url 'Talent:ExperienceList' %}" class="btn btn-primary float-right">View All Experience</a></p>
       </div>
+      {% endif %}
       <p>&nbsp</p>
-      </div>
     </div>
   </div>
+<br>
+<div class="card border-0" style="width: 100%;">
+  <div class="card-body">
+    <div class="float-right">
+      <a href="{% url 'Talent:HelpExperiencePreExperience' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px" data-toggle="tooltip title="Click here for help on this page!">
+      <i class="icon icon-question-circle"></i></a>
+    </div>
+    <h4 class="card-title">Previously Logged Experience</h4>
+    <p>There are a total of {{ pre_count }} Previously Logged experience items that have been captured{% if pre_count >= 5 %}, we only list the most recent 5 here.{% else %}.{% endif %}</p>
+    <br>
+      <div class="float-right">
+        <p><a href="{% url 'Talent:PreloggedCapture' %}" class="badge badge-pill badge-primary float-right">Add Logged Experience</a></p>
+      </div>
+      <p><strong>Total hours of Previously Logged Experience: </strong>{{ pre_sum.p_sum|intcomma }}</p>
+    <table class="table table-hover table-sm">
+      <thead>
+        <tr>
+          <th>Employer</th>
+          <th>Date from</th>
+          <th>Date to</th>
+          <th>Hours</th>
+          <th>Project</th>
+        </tr>
+      </thead>
+      {% for p in prelog %}
+      <tbody>
+        <tr onclick="window.location='{% url 'Talent:PreLogDetail' p.slug %}'">
+          <td>{{ p.company }}</td>
+          <td>{{ p.date_from|date:"j M Y" }}</td>
+          <td>{{ p.date_to|date:"j M Y" }}</td>
+          <td>{{ p.hours_worked|intcomma }}</td>
+          <td>{{ p.project }}</td>
+          <td><div class="float-right">
+            <a href="{% url 'Talent:PreLogDetail' p.slug %}" class="badge badge-pill badge-secondary" style="width: 5rem;">Detail</a>
+            <form  action="{% url 'Talent:PLEDelete' p.id %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
+            </form></div>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% if pre_count > 5 %}
+    <div class="float-right">
+      <p><a href="{% url 'Talent:PreExperienceList' %}" class="btn btn-primary float-right">View All Experience</a></p>
+    </div>
+    {% endif %}
+    <p>&nbsp</p>
+  </div>
 </div>
-</div>
+    <br>
 
 {% endblock content %}

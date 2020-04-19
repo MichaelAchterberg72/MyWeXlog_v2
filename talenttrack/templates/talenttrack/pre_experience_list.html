@@ -7,7 +7,8 @@
 <div class="card border-0">
   <div class="card-body">
   <h4 class="">Pre-Logged Experience - Full List<span><p class="float-right"><a href="{% url 'Talent:Home' %}"  class="badge badge-pill badge-primary">Back</a></p></span></h4>
-
+  <p>There are a total of {{ pre_count }} Previously Logged experience items that have been captured.</p>
+  <br>
 
     <div class="float-right">
       <p><a href="{% url 'Talent:PreloggedCapture' %}" class="badge badge-pill badge-primary float-right">Add Logged Experience</a></p>
@@ -31,12 +32,12 @@
         <td>{{ p.date_to|date:"j M Y" }}</td>
         <td>{{ p.hours_worked|intcomma }}</td>
         <td>{{ p.project }}</td>
-        <td>
+        <td><div class="float-right">
           <a href="{% url 'Talent:PreLogDetail' p.slug %}" class="badge badge-pill badge-secondary" style="width: 5rem;">Detail</a>
           <form  action="{% url 'Talent:PLEDelete' p.id %}" method="post">
             {% csrf_token %}
             <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
-          </form>
+          </form></div>
         </td>
       </tr>
     {% endfor %}
