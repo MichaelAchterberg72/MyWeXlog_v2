@@ -137,11 +137,13 @@ def BranchDetailView(request, bch):
     info = get_object_or_404(Branch, slug=bch)
     detail = Branch.objects.filter(slug=bch)
 
-    r_1 = detail[0].rate_1/100
-    r_2 = detail[0].rate_2/100
-    r_3 = detail[0].rate_3/100
-    r_4 = detail[0].rate_4/100
     r_a = detail[0].avg_rate
+    r_c = detail[0].rate_count*1
+    if r_c > 0:
+        r_1 = detail[0].rate_1/100
+        r_2 = detail[0].rate_2/100
+        r_3 = detail[0].rate_3/100
+        r_4 = detail[0].rate_4/100
 
     template = 'enterprises/branch_detail.html'
     context = {'detail': detail, 'info': info, 'r_1': r_1, 'r_2': r_2, 'r_3': r_3, 'r_4': r_4, 'r_a': r_a}

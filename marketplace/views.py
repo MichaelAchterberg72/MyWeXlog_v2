@@ -468,14 +468,11 @@ def InterviewListView(request, vac):
     wit_qs = WorkIssuedTo.objects.filter(Q(work__ref_no=vac)).filter(Q(tlt_response='A'))
     wit_qs_p = WorkIssuedTo.objects.filter(Q(work__ref_no=vac)).filter(Q(tlt_response='P') | Q(tlt_response='C'))
 
-    print(wit_qs)
-
     if wit_qs is None:
         active ='True'
     else:
         active = 'False'
 
-    print('active: ', active)
     we = WorkExperience.objects.filter(talent__subscription__gte=1)
     applicants = WorkBid.objects.filter(work__ref_no=vac)
     book = ReadBy.objects.all()
@@ -703,8 +700,6 @@ def SuitableInterviewListView(request, vac):
     wit_qs = WorkIssuedTo.objects.filter(Q(work__ref_no=vac)).filter(Q(tlt_response='A') | Q(tlt_response='P') | Q(tlt_response='C'))
 
     vac = vac
-
-    print(wit_qs)
 
     if wit_qs is None:
         active ='True'
@@ -1213,29 +1208,33 @@ def MarketHome(request):
 
 
     #Certifications Matching
-    cert_required = vac_exp.values_list('certification').exists()
+    #identifies the vacancies that do not required certification
+    cert_null_s = set(vac_exp.filter(certification__isnull=True).values_list('id', flat=True))
+    vac_cert_s = set(vac_exp.filter(certification__isnull=False).values_list('certification', flat=True))
 
-    if cert_required is not None:#if not certifications required, pass
+    if vac_cert_s is None: #if not certifications required, pass
+        if vac_lang is None:
+            req_experience = set(vac_exp.values_list('id',flat=True))
+        else:
+            req_experience = set(vac_exp.values_list('id',flat=True)).intersection(vac_lang)
+    else:
         tlt_cert = set(LicenseCertification.objects.filter(talent=talent).values_list('certification', flat=True))
         vac_cert = set(vac_exp.filter(certification__in=tlt_cert).values_list('id',flat=True))
         if vac_lang is not None:
             req_experience = vac_cert.intersection(vac_lang)
         else:
             req_experience = vac_cert
-    else:
-        if vac_lang is not None:
-            req_experience = set(vac_exp.values_list('id',flat=True)).intersection(vac_lang)
-        else:
-            req_experience = set(vac_exp.values_list('id',flat=True))
+
+    req_experience = req_experience | cert_null_s
 
     #Checking for locations
-    #Remote Freelance open to all talent, other vacanciesTypes only for region (to be updated to distances in later revisions)
+    #Remote Freelance open to all talent, other vacanciesTypes only for region (to be updated to distances in later revisions) this will require gEOdJANGO
     tlt_loc = PhysicalAddress.objects.filter(talent=talent).values_list('region', flat=True)
     tlt_loc=tlt_loc[0]
 
-    vac_loc_rm = set(tr.filter(worklocation__type='Remote Freelance').values_list('id', flat=True))
+    vac_loc_rm = set(tr.filter(worklocation__type__icontains='Remote freelance').values_list('id', flat=True))
 
-    vac_loc_reg = set(tr.filter(~Q(worklocation__type='Remote Freelance')& Q(city__region=tlt_loc)).values_list('id', flat=True))
+    vac_loc_reg = set(tr.filter(~Q(worklocation__type__icontains='Remote Freelance')& Q(city__region=tlt_loc)).values_list('id', flat=True))
 
     vac_loc = vac_loc_rm | vac_loc_reg
 

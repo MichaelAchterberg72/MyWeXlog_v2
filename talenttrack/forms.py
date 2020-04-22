@@ -62,7 +62,7 @@ class ResultWidget(ResultSearchFieldMixin, ModelSelect2Widget):
 
 class BranchSearchFieldMixin:
     search_fields = [
-        'name__icontains', 'pk__startswith'
+        'name__icontains', 'pk__startswith',
         ]
     dependent_fields = {'company': 'company'}
 
@@ -329,7 +329,10 @@ class WorkExperienceForm(forms.ModelForm):
             'skills': SkillModelSelect2MultipleWidget(),
             'industry': IndSelect2Widget(),
             'branch': BranchSelect2Widget(),
-}
+            }
+        labels = {
+            'hours_worked': 'Hours',
+        }
 
 
 class DesignationForm(forms.ModelForm):
