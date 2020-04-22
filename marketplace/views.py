@@ -990,15 +990,28 @@ def VacancyDetailView(request, vac):
     slist = BidShortList.objects.filter(scope__ref_no=vac).count()
     wit = WorkIssuedTo.objects.filter(Q(tlt_response='A') & Q(work__ref_no=vac))
 
-
     date1 = vacancy[0].bid_closes
     date2 = timezone.now()
+    date3 = date1 - date2
+    date4 = abs(date3.days)
 
     if date1 < date2:
         vacancy.update(offer_status = 'C')
 
     template = 'marketplace/vacancy_detail.html'
-    context = {'vacancy': vacancy, 'skills': skills, 'deliver': deliver, 'rate_b': rate_b, 'int': int, 'bid': bid, 'slist': slist, 'wit': wit, 'bid_qs': bid_qs,}
+    context = {
+        'vacancy': vacancy,
+        'skills': skills,
+        'deliver': deliver,
+        'rate_b': rate_b,
+        'int': int,
+        'bid': bid,
+        'slist': slist,
+        'wit': wit,
+        'bid_qs': bid_qs,
+        'date2': date2,
+        'date4': date4,
+        }
     return render(request, template, context)
 
 
@@ -1211,7 +1224,6 @@ def MarketHome(request):
     else:
         pass
 
-
     #Certifications Matching
     cert_required = vac_exp.values_list('certification').exists()
 
@@ -1227,15 +1239,15 @@ def MarketHome(request):
             req_experience = set(vac_exp.values_list('id',flat=True)).intersection(vac_lang)
         else:
             req_experience = set(vac_exp.values_list('id',flat=True))
-
+    
     #Checking for locations
     #Remote Freelance open to all talent, other vacanciesTypes only for region (to be updated to distances in later revisions)
     tlt_loc = PhysicalAddress.objects.filter(talent=talent).values_list('region', flat=True)
     tlt_loc=tlt_loc[0]
 
-    vac_loc_rm = set(tr.filter(worklocation__type='Remote Freelance').values_list('id', flat=True))
+    vac_loc_rm = set(tr.filter(worklocation__type__icontains='Remote freelance').values_list('id', flat=True))
 
-    vac_loc_reg = set(tr.filter(~Q(worklocation__type='Remote Freelance')& Q(city__region=tlt_loc)).values_list('id', flat=True))
+    vac_loc_reg = set(tr.filter(~Q(worklocation__type__icontains='Remote freelance')& Q(city__region=tlt_loc)).values_list('id', flat=True))
 
     vac_loc = vac_loc_rm | vac_loc_reg
 
@@ -1261,6 +1273,7 @@ def MarketHome(request):
         ds = ds | display
 
     dsi = ds.intersection(req_experience)
+
     tot_vac = len(dsi)
     #remove the vacancies that have already been applied for
     wbt_s = set(wbt.values_list('work__id', flat=True))
@@ -1275,7 +1288,6 @@ def MarketHome(request):
     dsi = dsi - wbt_s
 
     dsi = dsi - bsl_s
-
 
     #Recreating the QuerySet
     suitable = tr.filter(id__in=dsi)
@@ -1307,15 +1319,26 @@ def VacanciesListView(request):
     #>>>Queryset caching
     talent=request.user
     pfl = Profile.objects.filter(talent=talent)
-    tr = TalentRequired.objects.all()
-    wb = WorkBid.objects.filter(work__requested_by=talent, work__offer_status__iexact='O')
-
+    tr = TalentRequired.objects.filter(offer_status='O')
+    tr_emp = TalentRequired.objects.filter(requested_by=talent)
+    wb = WorkBid.objects.filter(work__requested_by=talent, work__offer_status='O')
+    ta = TalentAvailabillity.objects.filter(talent=talent)
     we = WorkExperience.objects.filter(talent=talent).prefetch_related('topic')
-    sr = SkillRequired.objects.filter(scope__offer_status__exact='O')
+    sr = SkillRequired.objects.filter(scope__offer_status='O')
     sl = SkillLevel.objects.all()
+    wbt = WorkBid.objects.filter(Q(talent=talent) & Q(work__offer_status='O'))
+    bsl = BidShortList.objects.filter(Q(talent=talent) & Q(scope__offer_status='O'))
+    #Queryset caching<<<
 
+    ipost = tr_emp.filter(offer_status='O').order_by('-bid_open')[:5]
+    ipost_count = ipost.count()
+    ipost_closed = tr_emp.filter(offer_status='C').order_by('-bid_open')[:5]
+    ipost_closed_count = ipost_closed.count()
     ipost_bid = wb.filter(Q(bidreview__exact='R') | Q(bidreview__exact='P') | Q(bidreview__exact='A'))
     ipost_bid_flat = ipost_bid.values_list('work', flat=True).distinct()
+    capacity = ta.filter(date_to__gte=timezone.now()).order_by('-date_to')[:5]
+
+    #Code for stacked lookup for talent's skills
 
     #>>>Create a set of all skills
     e_skill = we.filter(edt=True).only('pk').values_list('pk', flat=True)
@@ -1335,7 +1358,6 @@ def VacanciesListView(request):
 
         skill_set = skill_set | d
 
-
     skill_set = skill_set.distinct().order_by('skill')
     #Create a set of all skills<<<
 
@@ -1343,36 +1365,88 @@ def VacanciesListView(request):
     tlt_lvl = pfl.values_list('exp_lvl__level', flat=True)
     tlt_lvl = tlt_lvl[0]
 
-    req_experience = tr.filter(Q(experience_level__level=tlt_lvl) & Q(offer_status__iexact='O')).values_list('id',flat=True)
+    #finds all vacancies that require talent's experience level and below
+    vac_exp = tr.filter(experience_level__level__lte=tlt_lvl)
 
-    match = []
+    #>>> Check for language
+    lang_req = tr.values_list('language')
 
+    if lang_req is not None:
+        tlt_lang = set(LanguageTrack.objects.filter(talent=talent).values_list('language', flat=True))
+        vac_lang=set(vac_exp.filter(language__in=tlt_lang).values_list('id', flat=True))
+    else:
+        pass
+
+    #Certifications Matching
+    cert_required = vac_exp.values_list('certification').exists()
+
+    if cert_required is not None:#if not certifications required, pass
+        tlt_cert = set(LicenseCertification.objects.filter(talent=talent).values_list('certification', flat=True))
+        vac_cert = set(vac_exp.filter(certification__in=tlt_cert).values_list('id',flat=True))
+        if vac_lang is not None:
+            req_experience = vac_cert.intersection(vac_lang)
+        else:
+            req_experience = vac_cert
+    else:
+        if vac_lang is not None:
+            req_experience = set(vac_exp.values_list('id',flat=True)).intersection(vac_lang)
+        else:
+            req_experience = set(vac_exp.values_list('id',flat=True))
+
+    #Checking for locations
+    #Remote Freelance open to all talent, other vacanciesTypes only for region (to be updated to distances in later revisions)
+    tlt_loc = PhysicalAddress.objects.filter(talent=talent).values_list('region', flat=True)
+    tlt_loc=tlt_loc[0]
+
+    vac_loc_rm = set(tr.filter(worklocation__type__icontains='Remote freelance').values_list('id', flat=True))
+
+    vac_loc_reg = set(tr.filter(~Q(worklocation__type__icontains='Remote freelance')& Q(city__region=tlt_loc)).values_list('id', flat=True))
+
+    vac_loc = vac_loc_rm | vac_loc_reg
+
+    req_experience = req_experience.symmetric_difference(vac_loc)
+
+    #>>>Skill Matching
+    skl_lst = []
+    #listing the skills the vacancies already found contain.
     for key in req_experience:
         skill_required = sr.filter(scope=key).values_list('skills', flat=True).distinct()
-
+        #combining the skills from various vacancies into one list
         for sk in skill_required:
-            match.append(sk)
+            skl_lst.append(sk)
 
-
-    ds = sr.none()
-    matchd = set(match) #remove duplicates
+    ds = set()
+    matchd = set(skl_lst) #remove duplicates
 
     for item in matchd:
-        display = sr.filter(
-                Q(skills__in=match)
-                & Q(scope__bid_closes__gte=timezone.now()) & Q(scope__experience_level__level=tlt_lvl)
-                )
+        display = set(sr.filter(
+                Q(skills__in=skl_lst)
+                & Q(scope__bid_closes__gte=timezone.now())).values_list('scope__id', flat=True))
 
         ds = ds | display
 
-    dsd=ds.distinct('scope__title')
-    dsd_count = dsd.count()
+    dsi = ds.intersection(req_experience)
 
-    already_applied = wb.values_list('work__id', flat=True).distinct()
-    already_applied_count = already_applied.count()
+    tot_vac = len(dsi)
+    #remove the vacancies that have already been applied for
+    wbt_s = set(wbt.values_list('work__id', flat=True))
+    wbt_c = len(wbt_s)
 
-    vsm_count = dsd_count - already_applied_count
-    #Experience Level check & list skills required in vacancies<<<
+    #remove the vacancies to which talent has been shortlisted
+    bsl_s = set(bsl.values_list('scope__id', flat=True))
+    bsl_c = len(bsl_s)
+
+    #finding the difference (suitable vacancies minus x)
+
+    dsi = dsi - wbt_s
+
+    dsi = dsi - bsl_s
+
+    #Recreating the QuerySet
+    suitable = tr.filter(id__in=dsi)
+
+    rem_vac = suitable.count()
+    dsd = suitable
 
     try:
         page = int(request.GET.get('page', 1))
@@ -1399,9 +1473,8 @@ def VacanciesListView(request):
         'dsd': dsd,
         'pageitems': pageitems,
         'ipost_bid_flat': ipost_bid_flat,
-        'already_applied': already_applied,
         'page_range': page_range,
-        'vsm_count': vsm_count,
+        'rem_vac': rem_vac,
     }
     return render(request, template, context)
 
@@ -1419,15 +1492,26 @@ def ApplicationHistoryView(request):
     p_rejected = q_list.filter(status='R')[:10]
     p_accepted = q_list.filter(status='A')[:10]
 
+    unsuccessful = rejected.union(p_rejected)
+
+    s_list_count = s_list.count()
+    applied_count = applied.count()
+    rejected_count = rejected.count()
+    accepted_count = accepted.count()
 
     template = 'marketplace/vacancy_application_history.html'
     context ={
         'applied': applied,
+        'applied_count': applied_count,
         'accepted': accepted,
+        'accepted_count': accepted_count,
         'rejected': rejected,
+        'rejected_count': rejected_count,
         'p_rejected': p_rejected,
         'p_accepted': p_accepted,
-        's_list': s_list}
+        's_list': s_list,
+        's_list_count': s_list_count,
+        }
     return render(request, template, context)
 
 
@@ -1437,6 +1521,8 @@ def RolesAppliedForApplicationHistoryView(request):
     talent = request.user
     role = WorkBid.objects.filter(talent=talent).order_by('-date_applied')
     applied = role.filter(bidreview__exact='P')
+
+    applied_count = applied.count()
 
     try:
         page = int(request.GET.get('page', 1))
@@ -1461,7 +1547,7 @@ def RolesAppliedForApplicationHistoryView(request):
 
     template = 'marketplace/roles_applied_for_application_history_full_list.html'
     context ={
-        'applied': applied,
+        'applied_count': applied_count,
         'pageitems': pageitems,
         'page_range': page_range}
     return render(request, template, context)
@@ -1471,11 +1557,9 @@ def RolesAppliedForApplicationHistoryView(request):
 @subscription(2)
 def RolesShortlistedForApplicationHistoryView(request):
     talent = request.user
-    role = WorkBid.objects.filter(talent=talent).order_by('-date_applied')
-    applied = role.filter(bidreview__exact='P')
-    rejected = role.filter(bidreview__exact='R')
-    accepted = role.filter(bidreview__exact='A')
     s_list = BidShortList.objects.filter(Q(talent=talent) & ~Q(status='A')).order_by('-date_listed')
+
+    s_list_count = s_list.count()
 
     try:
         page = int(request.GET.get('page', 1))
@@ -1500,10 +1584,7 @@ def RolesShortlistedForApplicationHistoryView(request):
 
     template = 'marketplace/roles_shortlisted_for_application_history_full_list.html'
     context ={
-        'applied': applied,
-        'accepted': accepted,
-        'rejected': rejected,
-        's_list': s_list,
+        's_list_count': s_list_count,
         'pageitems': pageitems,
         'page_range': page_range}
     return render(request, template, context)

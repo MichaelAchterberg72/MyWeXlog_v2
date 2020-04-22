@@ -547,7 +547,8 @@ def SkillProfileDetailView(request, tlt):
     exp_s = exp.values_list('skills', flat=True).distinct('skills')
     exp_t = exp.order_by('topic__skills').values_list('topic__skills', flat=True).distinct('topic__skills')
     edt_topic = exp.values_list('topic', flat=True).distinct('topic')
-
+    print(exp_t)
+    print(edt_topic)
     #gathering all experience hours per topic
     exp_set = {}
     for s in exp_s:
@@ -555,7 +556,7 @@ def SkillProfileDetailView(request, tlt):
             pass
         else:
             b = skill_qs.get(pk=s)
-            c = b.experience.all()
+            c = b.experience.filter(talent__alias=tlt)
             cnt = c.count()
             sum = c.aggregate(sum_s=Sum('hours_worked'))
             sum_float = float(sum.get('sum_s'))
@@ -1441,6 +1442,7 @@ def TopicAddPopup(request):
         if form.is_valid():
             instance=form.save(commit=False)
             instance.save()
+            form.save_m2m()
             return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_topic");</script>' % (instance.pk, instance))
         else:
             context = {'form':form,}

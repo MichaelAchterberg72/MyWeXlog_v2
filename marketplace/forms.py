@@ -238,7 +238,7 @@ class DeliverablesForm(forms.ModelForm):
 class TalentRequiredForm(forms.ModelForm):
     class Meta:
         model = TalentRequired
-        fields = ('title', 'enterprise', 'date_deadline', 'hours_required', 'unit', 'worklocation', 'rate_offered', 'rate_unit', 'currency', 'rate_unit', 'offer_status', 'certification', 'scope', 'expectations', 'terms', 'city', 'experience_level', 'bid_closes', 'own_ref_no', 'language')
+        fields = ('title', 'enterprise', 'date_deadline', 'hours_required', 'unit', 'worklocation', 'rate_offered', 'rate_unit', 'currency', 'rate_unit', 'offer_status', 'certification', 'scope', 'expectations', 'terms', 'city', 'experience_level', 'bid_closes', 'own_ref_no', 'language',)
         widgets={
             'city': CitySelect2Widget(),
             'currency': CurrencySelect2Widget(),

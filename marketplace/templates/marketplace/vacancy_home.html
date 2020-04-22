@@ -9,15 +9,18 @@
     {% if request.user.subscription >= 1 %}
       <div class="float-right">
         {% if request.user.subscription == 2 %}
-        <a href="{% url 'MarketPlace:History' %}" class="badge badge-primary 8rem" style="width: 8rem">Applications History</a>
+        <a href="{% url 'MarketPlace:History' %}" class="btn btn-primary 8rem">Applications History</a>
         {% endif %}
-        <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="badge badge-primary 8rem" style="width: 8rem">Interview History</a>
+        <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary 8rem">Interview History</a>
         <a href="{% url 'MarketPlace:HelpVacanciesSuitedForMeSummary' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
         <i class="icon icon-question-circle"></i></a>
       </div>
     {% endif %}
     <h4 class="card-title">Vacancies Suited for Me </h4>
-    <p>There are currently a total of <strong>{{ tot_vac }}</strong> vacancies suitable to you. You have already applied for <strong>{{ wbt_c }}</strong>, and have been shortlisted for <strong>{{ bsl_c }}</strong>. That leaves <strong>{{ rem_vac }}</strong> for you to review. We only list the 5 most recent vacancies here.</p>
+    <p>There are currently a total of <strong>{{ tot_vac }}</strong> vacancies suitable to you.
+      You have already applied for <strong>{{ wbt_c }}</strong>, and have been shortlisted for
+      <strong>{{ bsl_c }}</strong>. That leaves <strong>{{ rem_vac }}</strong> for you to review.
+      {% if rem_vac > 5 %}We only list the 5 most recent vacancies here.{% endif %}</p>
     <table class="table table-hover table-sm">
       <col width="20%">
       <col width="6%">
@@ -36,9 +39,9 @@
       {% for s in dsd %}
       <tbody>
         <tr class="align-middle text-center" onclick="window.location='{% url 'MarketPlace:VacancyDetail' s.ref_no %}'">
-        <td class="align-middle text-center">{{ s.title|truncatechars:37 }}<br>{{ s.ref_no }}</td>
+        <td class="align-middle text-center">{{ s.title|truncatechars:37 }}<br>({{ s.ref_no }})</td>
         <td class="align-middle text-center">
-          {{ s.hours_required|intcomma }}<br>({{ s.get_unit_display }})
+          {{ s.hours_required|intcomma }} Hours<br>({{ s.get_unit_display }})
         </td>
         <td class="align-middle text-center">{{ s.worklocation }}</td>
         <td class="align-middle text-center">{{ s.city }}</td>
@@ -59,7 +62,7 @@
     {% if request.user.subscription >= 2 %}
     <div class="float-right">
       <a href="{% url 'MarketPlace:VacSearch' %}" class="btn btn-secondary 8rem" style="width: 8rem">Search</a>&nbsp
-      {% if dsd %}
+      {% if rem_vac > 5 %}
         <a href="{% url 'MarketPlace:VacanciesList' %}" class="btn btn-primary"style="width: 10rem">View All Vacancies</a>
       {% endif %}
     </div>
@@ -72,7 +75,7 @@
 <div class="card border-0">
   <div class="card-body">
     <div class="float-right">
-    <a href="{% url 'MarketPlace:Vacancy' %}" class="badge badge-primary" style="width: 8rem;">Post Vacancy</a>
+    <a href="{% url 'MarketPlace:Vacancy' %}" class="btn btn-primary">Post Vacancy</a>
     <a href="{% url 'MarketPlace:HelpVacanciesAdvertisedOpenSummary' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
     <i class="icon icon-question-circle"></i></a>
     </div>
@@ -121,7 +124,7 @@
     <div class="card border-0">
       <div class="card-body">
         <div class="float-right">
-        <a href="{% url 'MarketPlace:AllPostedVac' %}" class="badge badge-primary" style="width: 8rem;">All Posted Vacancies</a>
+        <a href="{% url 'MarketPlace:AllPostedVac' %}" class="btn btn-primary">All Posted Vacancies</a>
         <a href="{% url 'MarketPlace:HelpVacanciesAdvertisedClosedSummary' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
         <i class="icon icon-question-circle"></i></a>
         </div>

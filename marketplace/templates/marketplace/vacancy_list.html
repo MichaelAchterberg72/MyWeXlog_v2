@@ -5,28 +5,25 @@
 
 {% block content %}
 <div class="card border-0" style="width: 68rem;">
-  <div class="card-body">
-  <h4 class="">Vacancies Suited for Me - Full List<span><p class="float-right"><a href="{% url 'MarketPlace:Entrance' %}"  class="badge badge-pill badge-primary">Back</a>
-    <a href="{% url 'MarketPlace:HelpVacanciesSuitedForMeFull' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
-    <i class="icon icon-question-circle"></i></a>
-  </p></span></h4>
-
   <div class="border-0" style="width: 100%;">
     <div class="card-body">
       <div class="float-right">
-        <a href="{% url 'MarketPlace:History' %}" class="btn btn-primary 8rem" style="width: 8rem">View History</a>
+        <a href="{% url 'MarketPlace:Entrance' %}"  class="btn btn-primary">Back</a>
+        <a href="{% url 'MarketPlace:History' %}" class="btn btn-primary" style="width: 8rem">View History</a>
         <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary 8rem" style="width: 10rem">Interview History</a>
+        <a href="{% url 'MarketPlace:HelpVacanciesSuitedForMeFull' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
+        <i class="icon icon-question-circle"></i></a>
       </div>
-      <h4 class="card-title">Vacancies Suited for Me </h4>
-      <p>You currently have {{ vsm_count }} vacancies that match your skillset experience.</p>
+      <h4 class="card-title">Vacancies Suited for Me - Full List</h4>
+      <p>You currently have {{ rem_vac }} vacancies that match your skillset experience.</p>
       <table class="table table-hover table-sm w-50rem">
         <col width="0rem">
         <col width="100px">
-        <col width="360px">
-        <col width="220px">
-        <col width="100px">
+        <col width="343px">
+        <col width="250px">
+        <col width="140px">
         <col width="120px">
-        <col width="100px">
+        <col width="60px">
         <thead>
           <tr>
             <th class="align-middle text-center"></th>
@@ -39,25 +36,23 @@
           </tr>
         </thead>
         {% for i in pageitems %}
-        {% if i.scope.id not in already_applied %}
         <tbody>
-        <tr class="align-middle text-center divide" onclick="window.location='{% url 'MarketPlace:VacancyDetail' i.scope.ref_no %}'">
-          <td class="bottom">{{ i.scope.scope|truncatechars:345 }}</td>
-          <td class="text-left top">{{ i.scope.ref_no }}</td>
-          <td class="text-left top">{{ i.scope.title|truncatechars:47 }}</td>
+        <tr class="align-middle text-center divide" onclick="window.location='{% url 'MarketPlace:VacancyDetail' i.ref_no %}'">
+          <td class="bottom">{{ i.scope|truncatechars:345 }}</td>
+          <td class="text-left top">{{ i.ref_no }}</td>
+          <td class="text-left top">{{ i.title|truncatechars:47 }}</td>
           <td class="no-wrap top">
-            {{ i.scope.hours_required|intcomma }} Hrs ({{ i.scope.get_unit_display }})
+            {{ i.hours_required|intcomma }} Hrs ({{ i.get_unit_display }})
           </td>
-          <td class="no-wrap top">{{ i.scope.worklocation }}</td>
-          <td class="no-wrap top">{{ i.scope.city }}</td>
+          <td class="no-wrap top">{{ i.worklocation }}</td>
+          <td class="no-wrap top">{{ i.city }}</td>
             {% if request.user.subscription == 2 %}
-              <td class="detail"><a href="{% url 'MarketPlace:VacancyDetail' i.scope.ref_no %}" class="btn btn-primary float-right" style="width: 6rem;">See Detail</a></td>
+              <td class="detail"><a href="{% url 'MarketPlace:VacancyDetail' i.ref_no %}" class="btn btn-primary float-right" style="width: 6rem;">See Detail</a></td>
             {% elif request.user.subscription < 2 %}
               <td class="detail"><a href="#" class="card-link">See Detail</a></td>
             {% endif %}
           </tr>
         </tbody>
-        {% endif %}
         {% empty %}
         <tr>
           <td colspan="6">No vacancies matching your skills at the moment</td>
@@ -106,7 +101,6 @@
     </nav>
 
   </div>
-</div>
 </div>
 
 {% endblock content %}

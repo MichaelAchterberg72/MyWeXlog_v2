@@ -13,6 +13,7 @@
     </div>
     <h4 class="card-title">Vacancy Application History</h4>
     <h4 class="card-title">Roles Applied for</h4>
+    <p>You have a total of <strong>{{ applied_count }}</strong> roles that you have applied for{% if applied_count > 10 %}, we only list the most recent 10 here.{% else %}.{% endif %}</p>
     <table class="table table-hover table-sm">
       <thead>
         <tr>
@@ -30,7 +31,7 @@
         {% for i in applied %}
           <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' i.work.ref_no %}'">
             <td>{{ i.date_applied|date:"d N Y" }}</td>
-            <td>{{ i.work.title }}</td>
+            <td>{{ i.work.title|truncatechars:37 }}</td>
             <td>{{ i.work.ref_no }}</td>
             <td>
               {{ i.work.hours_required|intcomma }} ({{ i.work.get_unit_display }})
@@ -47,9 +48,11 @@
         {% endfor %}
       </tbody>
     </table>
+    {% if applied_count > 10 %}
     <div class="float-right">
       <a href="{% url 'MarketPlace:RolesAppliedForFullList' %}" class="btn btn-primary" style="width: 10rem">View Full List</a>
     </div>
+    {% endif %}
   </div>
 </div>
 <br>
@@ -60,7 +63,7 @@
       <i class="icon icon-question-circle"></i></a>
     </div>
     <h4 class="card-title">Roles Shortlisted for</h4>
-
+    <p>You have a total of <strong>{{ s_list_count }}</strong> roles that you have been shortlisted for{% if s_list_count > 10 %}, we only list the most recent 10 here.{% else %}.{% endif %}</p>
     <table class="table table-hover table-sm">
       <thead>
         <tr>
@@ -78,7 +81,7 @@
         {% for i in s_list %}
           <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' i.scope.ref_no %}'">
             <td>{{ i.date_listed|date:"d N Y" }}</td>
-            <td>{{ i.scope.title }}</td>
+            <td>{{ i.scope.title|truncatechars:37 }}</td>
             <td>{{ i.scope.ref_no }}</td>
             <td>
               {{ i.scope.hours_required|intcomma }} ({{ i.scope.get_unit_display }})
@@ -96,9 +99,11 @@
 
     </tbody>
     </table>
+    {% if s_list_count > 10 %}
     <div class="float-right">
       <a href="{% url 'MarketPlace:RolesShortlistedFullList' %}" class="btn btn-primary" style="width: 10rem">View Full List</a
     </div>
+    {% endif %}
   </div>
 </div>
 </div>
@@ -110,6 +115,7 @@
       <i class="icon icon-question-circle"></i></a>
     </div>
     <h4 class="card-title">Unsuccessful Applications</h4>
+    <p>You have a total of <strong>{{ rejected_count }}</strong> roles that you have been rejected for{% if rejected_count > 10 %}, we only list the most recent 10 here.{% else %}.{% endif %}</p>
     <table class="table table-hover table-sm">
       <thead>
         <tr>
@@ -126,8 +132,8 @@
 
         {% for r in rejected %}
           <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' r.work.ref_no %}'">
-            <td>{{ r.date_applied|date:"d N Y" }}</td>
-            <td>{{ r.work.title }}</td>
+            <td>{{ r.work.date_applied|date:"d N Y" }}</td>
+            <td>{{ r.work.title|truncatechars:37 }}</td>
             <td>{{ r.work.ref_no }}</td>
             <td>
               {{ r.work.hours_required|intcomma }} ({{ r.work.get_unit_display }})
@@ -145,7 +151,7 @@
       {% for r in p_rejected %}
         <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' r.scope.ref_no %}'">
           <td>{{ r.date_listed|date:"d N Y" }}</td>
-          <td>{{ r.scope.title }}</td>
+          <td>{{ r.scope.title|truncatechars:37 }}</td>
           <td>{{ r.scope.ref_no }}</td>
           <td>
             {{ r.scope.hours_required|intcomma }} ({{ r.scope.get_unit_display }})
@@ -177,6 +183,7 @@
       <i class="icon icon-question-circle"></i></a>
     </div>
     <h4 class="card-title">Successful Applications</h4>
+    <p>You have a total of <strong>{{ accepted_count }}</strong> roles that you have been successful in{% if accepted_count > 10 %}, we only list the most recent 10 here.{% else %}.{% endif %}</p>
     <table class="table table-hover table-sm">
       <thead>
         <tr>
@@ -194,7 +201,7 @@
       {% for s in accepted %}
         <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' s.work.ref_no %}'">
           <td>{{ s.date_applied|date:"d N Y" }}</td>
-          <td>{{ s.work.title }}</td>
+          <td>{{ s.work.title|truncatechars:37 }}</td>
           <td>{{ s.work.ref_no }}</td>
           <td>
             {{ s.work.hours_required|intcomma }} ({{ s.work.get_unit_display }})
@@ -212,7 +219,7 @@
       {% for s in p_accepted %}
         <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' s.scope.ref_no %}'">
           <td>{{ s.date_listed|date:"d N Y" }}</td>
-          <td>{{ s.scope.title }}</td>
+          <td>{{ s.scope.title|truncatechars:37 }}</td>
           <td>{{ s.scope.ref_no }}</td>
           <td>
             {{ s.scope.hours_required|intcomma }} ({{ s.scope.get_unit_display }})

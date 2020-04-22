@@ -13,6 +13,7 @@
     </div>
     <h4 class="card-title">Vacancy Application History</h4>
     <h5 class="card-title">Roles Shortlisted for</h5>
+    <p>You have a total of <strong>{{ s_list_count }}</strong> that you have been shortlisted for.</p>
     <table class="table table-hover table-sm">
       <thead>
         <tr>
@@ -30,7 +31,7 @@
         {% for i in pageitems %}
           <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' i.scope.ref_no %}'">
             <td>{{ i.date_listed|date:"d N Y" }}</td>
-            <td>{{ i.scope.title }}</td>
+            <td>{{ i.scope.title|truncatechars:37 }}</td>
             <td>{{ i.scope.ref_no }}</td>
             <td>
               {{ i.scope.hours_required|intcomma }} ({{ i.scope.get_unit_display }})
