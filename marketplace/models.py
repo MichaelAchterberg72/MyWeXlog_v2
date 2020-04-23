@@ -11,7 +11,7 @@ from locations.models import Currency, City
 from db_flatten.models import SkillTag, LanguageList
 from talenttrack.models import Result
 
-
+#This is the table that specifies the work configeration (Freelance, Remote Freelence, Consultant, Contractor, Employee, FIFO)
 class WorkLocation(models.Model):
     WTPE = (
         ('Remote freelance','Remote freelance'),
@@ -111,7 +111,7 @@ class TalentRequired(models.Model):
     scope = models.TextField()
     expectations = models.TextField()
     terms = models.FileField(upload_to=BidTerms, blank=True, null=True)
-    city = models.ForeignKey(City, on_delete=models.PROTECT, verbose_name='City or Town')
+    city = models.ForeignKey(City, on_delete=models.PROTECT, verbose_name='City, Town or Place')
     date_modified = models.DateField(auto_now=True)
     vac_wkfl = models.CharField(max_length=1, choices=WKFLOW, default='P')
 

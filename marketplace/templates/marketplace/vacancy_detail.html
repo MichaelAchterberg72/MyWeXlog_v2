@@ -174,7 +174,7 @@
     {% for v in vacancy %}
     <tr>
       <td class="align-middle text-center">{{ v.currency }}<br><strong>{{ v.rate_offered }}</strong><br>({{ v.get_rate_unit_display }})</td>
-      <td class="align-middle text-center">{{ v.bid_closes|date:"j M Y" }}<br>({{ v.get_offer_status_display }})</td>
+      <td class="align-middle text-center">{{ v.bid_closes|date:"j M Y" }}<br>{% if v.bid_closes > date2 %}({{ date4 }} Days Left){% else %}({{ v.get_offer_status_display }}){% endif %}</td>
       <td class="align-middle text-center">{{ v.date_deadline|date:"j M Y" }}</td>
       <td class="align-middle text-center">{{ v.language.all|join:", " }}</td>
       <td class="align-middle text-center">{{ slist }}</td>
@@ -184,6 +184,7 @@
   </tbody>
   {% endfor %}
 </table>
+<hr>
 <div class="row">
   <div class="col-sm-3">
     <div class="h-100">

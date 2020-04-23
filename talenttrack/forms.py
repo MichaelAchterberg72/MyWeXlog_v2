@@ -88,6 +88,7 @@ class TopicSearchFieldMixin:
     search_fields = [
         'topic__icontains', 'pk__startswith'
         ]
+    dependent_fields = {'name': 'name'}
 
 class TopicSelect2Widget(TopicSearchFieldMixin, ModelSelect2Widget):
     model = Topic
