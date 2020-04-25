@@ -9,13 +9,15 @@
     <div class="card-body">
       <div class="float-right">
         <a href="{% url 'MarketPlace:Entrance' %}"  class="btn btn-primary">Back</a>
+        {% if request.user.subscription >= 2 %}
         <a href="{% url 'MarketPlace:History' %}" class="btn btn-primary" style="width: 8rem">View History</a>
         <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary 8rem" style="width: 10rem">Interview History</a>
+        {% endif %}
         <a href="{% url 'MarketPlace:HelpVacanciesSuitedForMeFull' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
         <i class="icon icon-question-circle"></i></a>
       </div>
       <h4 class="card-title">Vacancies Suited for Me - Full List</h4>
-      <p>You currently have {{ rem_vac }} vacancies that match your skillset experience.</p>
+      <p>You currently have <strong>{{ rem_vac }}</strong> vacancies that match your skillset experience.</p>
       <table class="table table-hover table-sm w-50rem">
         <col width="0rem">
         <col width="100px">
@@ -35,6 +37,7 @@
             <th class="align-middle text-center">Full Detail</th>
           </tr>
         </thead>
+        {% if request.user.subscription >= 2 %}
         {% for i in pageitems %}
         <tbody>
         <tr class="align-middle text-center divide" onclick="window.location='{% url 'MarketPlace:VacancyDetail' i.ref_no %}'">
@@ -46,11 +49,9 @@
           </td>
           <td class="no-wrap top">{{ i.worklocation }}</td>
           <td class="no-wrap top">{{ i.city }}</td>
-            {% if request.user.subscription == 2 %}
-              <td class="detail"><a href="{% url 'MarketPlace:VacancyDetail' i.ref_no %}" class="btn btn-primary float-right" style="width: 6rem;">See Detail</a></td>
-            {% elif request.user.subscription < 2 %}
-              <td class="detail"><a href="#" class="card-link">See Detail</a></td>
-            {% endif %}
+
+          <td class="align-middle text-center"><a href="{% url 'MarketPlace:VacancyDetail' i.ref_no %}" class="badge badge-secondary" style="width: 6rem;">See Detail</a></td>
+
           </tr>
         </tbody>
         {% empty %}
@@ -58,8 +59,32 @@
           <td colspan="6">No vacancies matching your skills at the moment</td>
         </tr>
         {% endfor %}
-      </table>
 
+      {% else %}
+
+      {% for i in pageitems %}
+      <tbody>
+      <tr class="align-middle text-center divide">
+        <td class="bottom">{{ i.scope|truncatechars:345 }}</td>
+        <td class="text-left top">{{ i.ref_no }}</td>
+        <td class="text-left top">{{ i.title|truncatechars:47 }}</td>
+        <td class="no-wrap top">
+          {{ i.hours_required|intcomma }} Hrs ({{ i.get_unit_display }})
+        </td>
+        <td class="no-wrap top">{{ i.worklocation }}</td>
+        <td class="no-wrap top">{{ i.city }}</td>
+
+        <td class="align-middle text-center"><a href="{% url 'Payments:ActiveSubscription' %}" class="badge badge-secondary" style="width: 5rem;" data-toggle="tooltip" data-placement="top" title="Active subscription required to see vacancy detail">See Detail</a></td>
+
+        </tr>
+      </tbody>
+      {% empty %}
+      <tr>
+        <td colspan="6">No vacancies matching your skills at the moment</td>
+      </tr>
+      {% endfor %}
+    {% endif %}
+      </table>
     <p>&nbsp</p>
 
     <nav aria-label="Page navigation">

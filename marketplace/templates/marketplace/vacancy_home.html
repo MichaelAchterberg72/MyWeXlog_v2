@@ -36,6 +36,7 @@
           <th class="align-middle text-center">Full Detail</th>
         </tr>
       </thead>
+      {% if request.user.subscription >= 2 %}
       {% for s in dsd %}
       <tbody>
         <tr class="align-middle text-center" onclick="window.location='{% url 'MarketPlace:VacancyDetail' s.ref_no %}'">
@@ -45,12 +46,9 @@
         </td>
         <td class="align-middle text-center">{{ s.worklocation }}</td>
         <td class="align-middle text-center">{{ s.city }}</td>
-          {% if request.user.subscription >= 2 %}
 
-            <td class="align-middle text-center"><a href="{% url 'MarketPlace:VacancyDetail' s.ref_no %}" class="badge badge-secondary" style="width: 5rem;">See Detail</a></td>
-          {% else %}
-            <td class="align-middle text-center"><a href="#" class="badge badge-secondary" style="width: 5rem;" data-toggle="tooltip" data-placement="top" title="Active subscription required to see vacancy detail">See Detail</a></td>
-          {% endif %}
+        <td class="align-middle text-center"><a href="{% url 'MarketPlace:VacancyDetail' s.ref_no %}" class="badge badge-secondary" style="width: 5rem;">See Detail</a></td>
+
         </tr>
       </tbody>
       {% empty %}
@@ -58,15 +56,38 @@
         <td colspan="6">No vacancies matching your skills at the moment</td>
       </tr>
       {% endfor %}
+
+    {% else %}
+
+      {% for s in dsd %}
+      <tbody>
+        <tr class="align-middle text-center">
+        <td class="align-middle text-center">{{ s.title|truncatechars:37 }}<br>({{ s.ref_no }})</td>
+        <td class="align-middle text-center">
+          {{ s.hours_required|intcomma }} Hours<br>({{ s.get_unit_display }})
+        </td>
+        <td class="align-middle text-center">{{ s.worklocation }}</td>
+        <td class="align-middle text-center">{{ s.city }}</td>
+
+        <td class="align-middle text-center"><a href="{% url 'Payments:ActiveSubscription' %}" class="badge badge-secondary" style="width: 5rem;" data-toggle="tooltip" data-placement="top" title="Active subscription required to see vacancy detail">See Detail</a></td>
+
+        </tr>
+      </tbody>
+      {% empty %}
+      <tr>
+        <td colspan="6">No vacancies matching your skills at the moment</td>
+      </tr>
+      {% endfor %}
+    {% endif %}
     </table>
-    {% if request.user.subscription >= 2 %}
+
     <div class="float-right">
       <a href="{% url 'MarketPlace:VacSearch' %}" class="btn btn-secondary 8rem" style="width: 8rem">Search</a>&nbsp
       {% if rem_vac > 5 %}
         <a href="{% url 'MarketPlace:VacanciesList' %}" class="btn btn-primary"style="width: 10rem">View All Vacancies</a>
       {% endif %}
     </div>
-    {% endif %}
+
   </div>
 </div>
 

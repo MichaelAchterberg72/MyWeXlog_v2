@@ -1329,10 +1329,6 @@ def VacanciesListView(request):
     bsl = BidShortList.objects.filter(Q(talent=talent) & Q(scope__offer_status='O'))
     #Queryset caching<<<
 
-    ipost = tr_emp.filter(offer_status='O').order_by('-bid_open')[:5]
-    ipost_count = ipost.count()
-    ipost_closed = tr_emp.filter(offer_status='C').order_by('-bid_open')[:5]
-    ipost_closed_count = ipost_closed.count()
     ipost_bid = wb.filter(Q(bidreview__exact='R') | Q(bidreview__exact='P') | Q(bidreview__exact='A'))
     ipost_bid_flat = ipost_bid.values_list('work', flat=True).distinct()
     capacity = ta.filter(date_to__gte=timezone.now()).order_by('-date_to')[:5]
@@ -1377,33 +1373,37 @@ def VacanciesListView(request):
         pass
 
     #Certifications Matching
-    cert_required = vac_exp.values_list('certification').exists()
+    #identifies the vacancies that do not required certification
+    cert_null_s = set(vac_exp.filter(certification__isnull=True).values_list('id', flat=True))
+    vac_cert_s = set(vac_exp.filter(certification__isnull=False).values_list('certification', flat=True))
 
-    if cert_required is not None:#if not certifications required, pass
+    if vac_cert_s is None: #if not certifications required, pass
+        if vac_lang is None:
+            req_experience = set(vac_exp.values_list('id',flat=True))
+        else:
+            req_experience = set(vac_exp.values_list('id',flat=True)).intersection(vac_lang)
+    else:
         tlt_cert = set(LicenseCertification.objects.filter(talent=talent).values_list('certification', flat=True))
         vac_cert = set(vac_exp.filter(certification__in=tlt_cert).values_list('id',flat=True))
         if vac_lang is not None:
             req_experience = vac_cert.intersection(vac_lang)
         else:
             req_experience = vac_cert
-    else:
-        if vac_lang is not None:
-            req_experience = set(vac_exp.values_list('id',flat=True)).intersection(vac_lang)
-        else:
-            req_experience = set(vac_exp.values_list('id',flat=True))
+
+    req_experience = req_experience | cert_null_s
 
     #Checking for locations
-    #Remote Freelance open to all talent, other vacanciesTypes only for region (to be updated to distances in later revisions)
+    #Remote Freelance open to all talent, other vacanciesTypes only for region (to be updated to distances in later revisions) this will require gEOdJANGO
     tlt_loc = PhysicalAddress.objects.filter(talent=talent).values_list('region', flat=True)
     tlt_loc=tlt_loc[0]
 
     vac_loc_rm = set(tr.filter(worklocation__type__icontains='Remote freelance').values_list('id', flat=True))
 
-    vac_loc_reg = set(tr.filter(~Q(worklocation__type__icontains='Remote freelance')& Q(city__region=tlt_loc)).values_list('id', flat=True))
+    vac_loc_reg = set(tr.filter(~Q(worklocation__type__icontains='Remote Freelance')& Q(city__region=tlt_loc)).values_list('id', flat=True))
 
     vac_loc = vac_loc_rm | vac_loc_reg
 
-    req_experience = req_experience.symmetric_difference(vac_loc)
+    req_experience = req_experience.intersection(vac_loc)
 
     #>>>Skill Matching
     skl_lst = []
@@ -1446,6 +1446,8 @@ def VacanciesListView(request):
 
     rem_vac = suitable.count()
     dsd = suitable
+
+    #Experience Level check & list skills required in vacancies<<<
 
     try:
         page = int(request.GET.get('page', 1))
