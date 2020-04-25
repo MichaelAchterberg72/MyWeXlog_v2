@@ -7,6 +7,7 @@ from Profile.utils import create_code9
 class FeedBack(models.Model):
     OPTS = (
         ('X','Select'),
+        ('B','Bug'),
         ('T','Comment'),
         ('S','Suggestion'),
         ('F','Request Feature'),

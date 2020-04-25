@@ -48,11 +48,15 @@
       <td class="align-middle text-center">{{ v.city.city }}</td>
       <td class="align-middle text-center">{{ v.experience_level }}</td>
       <td class="align-middle text-center">
-        {% if request.user.subscription >= 2 %}
+        {% if request.user.subscription >= 8 %}
           {{ v.enterprise.company }} ({{ v.enterprise.name }})<br>
           {{ v.enterprise.type }}<br>
-          {% if rate_b.rate_count >= 5 %}
+        {% else %}
+          <p data-toggle="tooltip" title="Company information for Active Subscriptions only"><i class="fa fa-eye-slash" aria-hidden="true" style="font-size: 27px"></i></p>
+        {% endif %}
 
+        {% if request.user.subscription >= 1 %}
+          {% if rate_b.rate_count >= 5 %}
             {% if rate_b.avg_rate >= 0 and rate_b.avg_rate < 0.5 %}
               <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
               <span><i class="fa fa-star-o" aria-hidden="true"></i></span>

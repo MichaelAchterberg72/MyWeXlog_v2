@@ -29,11 +29,11 @@ class Enterprise(models.Model):
     slug = models.SlugField(max_length=60, blank=True, null=True, unique=True)
     description = models.TextField('Enterprise description')
     website = models.URLField(blank=True, null=True)
-    rate_1 = models.FloatField(null=True)#Average score from marketplace.models.TalentRate (rate_1)
-    rate_2 = models.FloatField(null=True)#Average score from marketplace.models.TalentRate (rate_2)
-    rate_3 = models.FloatField(null=True)#Average score from marketplace.models.TalentRate (rate_3)
-    rate_4 = models.FloatField(null=True)#Average score from marketplace.models.TalentRate (payment_time)
-    rate_count = models.IntegerField(null=True)
+    rate_1 = models.FloatField(null=True, default=0)#Average score from marketplace.models.TalentRate (rate_1)
+    rate_2 = models.FloatField(null=True, default=0)#Average score from marketplace.models.TalentRate (rate_2)
+    rate_3 = models.FloatField(null=True, default=0)#Average score from marketplace.models.TalentRate (rate_3)
+    rate_4 = models.FloatField(null=True, default=0)#Average score from marketplace.models.TalentRate (payment_time)
+    rate_count = models.IntegerField(null=True, default=0)
 
     def avg_rate(self):
         if self.rate_count is not None:
@@ -90,11 +90,11 @@ class Branch(models.Model):
     code = models.CharField('Post Code', max_length=12, null=True)
     industry = models.ManyToManyField(Industry)
     slug = models.SlugField(max_length=60, unique=True, blank=True, null=True)
-    rate_1 = models.FloatField(null=True)#Average score from marketplace.models.TalentRate (rate_1)
-    rate_2 = models.FloatField(null=True)#Average score from marketplace.models.TalentRate (rate_2)
-    rate_3 = models.FloatField(null=True)#Average score from marketplace.models.TalentRate (rate_3)
-    rate_4 = models.FloatField(null=True)#Average score from marketplace.models.TalentRate (payment_time)
-    rate_count = models.IntegerField(null=True)
+    rate_1 = models.FloatField(null=True, default=0)#Average score from marketplace.models.TalentRate (rate_1)
+    rate_2 = models.FloatField(null=True, default=0)#Average score from marketplace.models.TalentRate (rate_2)
+    rate_3 = models.FloatField(null=True, default=0)#Average score from marketplace.models.TalentRate (rate_3)
+    rate_4 = models.FloatField(null=True, default=0)#Average score from marketplace.models.TalentRate (payment_time)
+    rate_count = models.IntegerField(null=True, default=0)
 
     class Meta:
         unique_together = (('company','name', 'city'),)

@@ -11,9 +11,17 @@
       <a href="{% url 'MarketPlace:HelpRolesAppliedForSummary' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
       <i class="icon icon-question-circle"></i></a>
     </div>
-    <h4 class="card-title">Vacancy Application History</h4>
-    <h4 class="card-title">Roles Applied for</h4>
-    <p>You have a total of <strong>{{ applied_count }}</strong> roles that you have applied for{% if applied_count > 10 %}, we only list the most recent 10 here.{% else %}.{% endif %}</p>
+    <h4 class="card-title">Vacancy History</h4>
+  </div>
+</div>
+<br>
+{% if request.user.subscription >= 2 %}
+<div class="card border-0">
+  <div class="card-body">
+    <h4 class="card-title">Roles You have Applied for</h4>
+    <p>You have a total of <strong>{{ role_c }}</strong> roles that you have applied for{% if role_c > 10 %}, we only list the most recent 5 for each condition here.{% else %}.{% endif %}</p>
+    <p>These are only roles you have applied for - there is a chance that an employer has seen you and shortlisted you without you applying for the role: You impressive person you... keep it up!</p>
+
     <table class="table table-hover table-sm">
       <thead>
         <tr>
@@ -24,46 +32,160 @@
           <th class="align-middle text-center">Work Configeration</th>
           <th class="align-middle text-center">Country</th>
           <th class="align-middle text-center">Status</th>
+          <th class="align-middle text-center">Action</th>
         </tr>
       </thead>
       <tbody>
-
+        <tr>
+          <th></th>
+          <th colspan="2">Pending Positions</th>
+          <td colspan="4">{% if applied_c == 0 %}None{% elif applied_c < 5 %}(Showing <strong>{{ applied_c }}</strong> out of <strong>{{ role_c }}</strong> applications){% else %}(Showing <strong>5</strong> of a total of <strong>{{ applied_c }}</strong> out of <strong>{{role_c}}</strong> applications){% endif %}</td>
+          <td>PAGINATION</td>
+        </tr>
         {% for i in applied %}
-          <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' i.work.ref_no %}'">
-            <td>{{ i.date_applied|date:"d N Y" }}</td>
-            <td>{{ i.work.title|truncatechars:37 }}</td>
-            <td>{{ i.work.ref_no }}</td>
-            <td>
+          <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' i.work.ref_no %}'?next={{ request.path|urlencode }}">
+            <td class="align-middle text-center">{{ i.date_applied|date:"d N Y" }}</td>
+            <td class="align-middle text-center">{{ i.work.title|truncatechars:37 }}</td>
+            <td class="align-middle text-center">{{ i.work.ref_no }}</td>
+            <td class="align-middle text-center">
               {{ i.work.hours_required|intcomma }} ({{ i.work.get_unit_display }})
             </td>
-            <td>{{ i.work.worklocation }}</td>
-            <td>{{ i.work.city }}</td>
-            <td>{{ i.get_bidreview_display }}</td>
-            {% if request.user.subscription == 2 %}
-              <td><a href="{% url 'MarketPlace:VacancyDetail' i.work.ref_no %}" class="badge badge-secondary" style="width: 6rem">See Detail</a></td>
-            {% elif request.user.subscription < 2 %}
-              <td><a href="#" class="badge badge-primary" style="width: 6rem">See Detail</a></td>
-            {% endif %}
+            <td class="align-middle text-center">{{ i.work.worklocation }}</td>
+            <td class="align-middle text-center">{{ i.work.city }}</td>
+            <td class="align-middle text-center">{{ i.get_bidreview_display }}</td>
+            <td class="align-middle text-center">
+              <a href="{% url 'MarketPlace:VacancyDetail' i.work.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 6rem">See Detail</a>
+            </td>
+          </tr>
+        {% empty %}
+        <tr>
+          <td colspan="8">No applications are currently pending - go and apply for more vacancies!</td>
+        </tr>
+        {% endfor %}
+        <tr>
+          <th></th>
+          <th colspan="2">Shortlisted Positions</th>
+          <td colspan="4">{% if applied_sl_c == 0 %}None{% elif applied_sl_c < 5 %} (Showing <strong>{{ applied_sl_c }}</strong>  out of <strong>{{ role_c }}</strong> applications){% elif applied_sl_c >= 5 %} (Showing <strong>5</strong> of a total of <strong>{{ applied_sl_c }}</strong> out of <strong>{{role_c}}</strong> applications){% endif %}</td>
+          <td>PAGINATION</td>
+        </tr>
+        {% for s in applied_sl %}
+          <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' s.work.ref_no %}'?next={{ request.path|urlencode }}">
+            <td class="align-middle text-center">{{ s.date_applied|date:"d N Y" }}</td>
+            <td class="align-middle text-center">{{ s.work.title|truncatechars:37 }}</td>
+            <td class="align-middle text-center">{{ s.work.ref_no }}</td>
+            <td class="align-middle text-center">
+              {{ s.work.hours_required|intcomma }} ({{ s.work.get_unit_display }})
+            </td>
+            <td class="align-middle text-center">{{ s.work.worklocation }}</td>
+            <td class="align-middle text-center">{{ s.work.city }}</td>
+            <td class="align-middle text-center">{{ s.get_bidreview_display }}</td>
+            <td class="align-middle text-center">
+              <a href="{% url 'MarketPlace:VacancyDetail' s.work.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 6rem">See Detail</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="7">None of your applications have been shortlisted - go and apply for more vacancies!</td>
+          </tr>
+        {% endfor %}
+        <tr>
+          <th></th>
+          <th colspan="2">Open Interviews</th>
+          <td colspan="4">{% if int_qs_c == 0 %}None{% elif int_qs_c < 5 %} (Showing <strong>{{ int_qs_c }}</strong>  out of <strong>{{ role_c }}</strong> applications){% elif int_qs_c >= 5 %} (Showing <strong>5</strong> of a total of <strong>{{ int_qs_c }}</strong> out of <strong>{{role_c}}</strong> applications){% endif %}</td>
+          <td>PAGINATION</td>
+        </tr>
+        {% for s in int_qs_s %}
+          <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' s.work.ref_no %}'?next={{ request.path|urlencode }}">
+            <td class="align-middle text-center">{{ s.date_applied|date:"d N Y" }}</td>
+            <td class="align-middle text-center">{{ s.work.title|truncatechars:37 }}</td>
+            <td class="align-middle text-center">{{ s.work.ref_no }}</td>
+            <td class="align-middle text-center">
+              {{ s.work.hours_required|intcomma }} ({{ s.work.get_unit_display }})
+            </td>
+            <td class="align-middle text-center">{{ s.work.worklocation }}</td>
+            <td class="align-middle text-center">{{ s.work.city }}</td>
+            <td class="align-middle text-center">{{ s.get_bidreview_display }}</td>
+            <td class="align-middle text-center">
+              <a href="{% url 'MarketPlace:VacancyDetail' s.work.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 6rem">See Detail</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="7">You have not been invited to, <strong>OR</strong>, you have no open interviews at this time - go and apply for more vacancies!</td>
+          </tr>
+        {% endfor %}
+        <tr>
+          <th></th>
+          <th colspan="2">Successful Applications</th>
+          <td colspan="4">{% if accepted_c == 0 %}None{% elif accepted_c < 5 %} (Showing <strong>{{ accepted_c }}</strong>  out of <strong>{{ role_c }}</strong> applications){% else %} (Showing <strong>5</strong> of a total of <strong>{{ accepted_c }}</strong> out of <strong>{{role_c}}</strong> applications){% endif %}</td>
+          <td>PAGINATION</td>
+        </tr>
+        {% for i in accepted %}
+          <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' i.work.ref_no %}'?next={{ request.path|urlencode }}">
+            <td class="align-middle text-center">{{ i.date_applied|date:"d N Y" }}</td>
+            <td class="align-middle text-center">{{ i.work.title|truncatechars:37 }}</td>
+            <td class="align-middle text-center">{{ i.work.ref_no }}</td>
+            <td class="align-middle text-center">
+              {{ i.work.hours_required|intcomma }} ({{ i.work.get_unit_display }})
+            </td>
+            <td class="align-middle text-center">{{ i.work.worklocation }}</td>
+            <td class="align-middle text-center">{{ i.work.city }}</td>
+            <td class="align-middle text-center">{{ i.get_bidreview_display }}</td>
+            <td class="align-middle text-center">
+              <a href="{% url 'MarketPlace:VacancyDetail' i.work.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 6rem">See Detail</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr colspan="7">
+            None of your applications have been successful - Keep Applying!
+          </tr>
+        {% endfor %}
+        <tr>
+          <th></th>
+          <th colspan="2">Unsuccessful Applications</th>
+          <td colspan="4">{% if rejected_c == 0 %}None{% elif rejected_c < 5 %} (Showing <strong>{{ rejected_c }}</strong> out of <strong>{{ role_c }}</strong> applications){% else %} (Showing <strong>5</strong> of a total of <strong>{{ rejected_c }}</strong> out of <strong>{{role_c}}</strong> applications){% endif %}</td>
+          <td>PAGINATION</td>
+        </tr>
+        {% for i in rejected %}
+          <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' i.work.ref_no %}'?next={{ request.path|urlencode }}">
+            <td class="align-middle text-center">{{ i.date_applied|date:"d N Y" }}</td>
+            <td class="align-middle text-center">{{ i.work.title|truncatechars:37 }}</td>
+            <td class="align-middle text-center">{{ i.work.ref_no }}</td>
+            <td class="align-middle text-center">
+              {{ i.work.hours_required|intcomma }} ({{ i.work.get_unit_display }})
+            </td class="align-middle text-center">
+            <td class="align-middle text-center">{{ i.work.worklocation }}</td>
+            <td class="align-middle text-center">{{ i.work.city }}</td>
+            <td class="align-middle text-center">{{ i.get_bidreview_display }}</td>
+            <td class="align-middle text-center">
+              <a href="{% url 'MarketPlace:VacancyDetail' i.work.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 6rem">See Detail</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr colspan="7">
+            None of your applications have been unsuccessful - Nice going!
           </tr>
         {% endfor %}
       </tbody>
     </table>
     {% if applied_count > 10 %}
     <div class="float-right">
-      <a href="{% url 'MarketPlace:RolesAppliedForFullList' %}" class="btn btn-primary" style="width: 10rem">View Full List</a>
+      <a href="{% url 'MarketPlace:RolesAppliedForFullList' %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 10rem">View Full List</a>
     </div>
     {% endif %}
   </div>
 </div>
+{% endif %}
 <br>
+
 <div class="card border-0" style="width: 100%;">
   <div class="card-body">
     <div class="float-right">
       <a href="{% url 'MarketPlace:HelpRolesShortlistedForSummary' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
       <i class="icon icon-question-circle"></i></a>
     </div>
-    <h4 class="card-title">Roles Shortlisted for</h4>
-    <p>You have a total of <strong>{{ s_list_count }}</strong> roles that you have been shortlisted for{% if s_list_count > 10 %}, we only list the most recent 10 here.{% else %}.{% endif %}</p>
+    <h4 class="card-title">Roles the Employer has shortlisted you for</h4>
+    <p>You have been shortlisted for <strong>{{ sl_qs_c }}</strong> roles {% if sl_qs_c > 10 %}, we only list the most recent 5 for each condition here.{% else %}.{% endif %}</p>
     <table class="table table-hover table-sm">
       <thead>
         <tr>
@@ -74,171 +196,124 @@
           <th class="align-middle text-center">Work Configeration</th>
           <th class="align-middle text-center">Country</th>
           <th class="align-middle text-center">Status</th>
+          <th class="align-middle text-center">Action</th>
         </tr>
       </thead>
       <tbody>
-
-        {% for i in s_list %}
-          <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' i.scope.ref_no %}'">
-            <td>{{ i.date_listed|date:"d N Y" }}</td>
-            <td>{{ i.scope.title|truncatechars:37 }}</td>
-            <td>{{ i.scope.ref_no }}</td>
-            <td>
+        <tr>
+          <th></th>
+          <th colspan="2">Pending</th>
+          <td colspan="4">{% if sl_pending_c == 0 %}None{% elif sl_pending_c < 5 %} (Showing <strong>{{ sl_pending_c }}</strong>  out of <strong>{{ sl_qs_c }}</strong>){% else %} (Showing <strong>5</strong> of a total of <strong>{{ sl_pending_c }}</strong> out of <strong>{{sl_qs_c}}</strong>){% endif %}</td>
+          <td>PAGINATION</td>
+        </tr>
+        {% for i in sl_pending_s %}
+          <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' i.scope.ref_no %}'?next={{ request.path|urlencode }}">
+            <td class="align-middle text-center">{{ i.date_listed|date:"d N Y" }}</td>
+            <td class="align-middle text-center">{{ i.scope.title|truncatechars:37 }}</td>
+            <td class="align-middle text-center">{{ i.scope.ref_no }}</td>
+            <td class="align-middle text-center">
               {{ i.scope.hours_required|intcomma }} ({{ i.scope.get_unit_display }})
             </td>
-            <td>{{ i.scope.worklocation }}</td>
-            <td>{{ i.scope.city }}</td>
-            <td>{{ i.get_status_display }}</td>
-            {% if request.user.subscription == 2 %}
-              <td><a href="{% url 'MarketPlace:VacancyDetail' i.scope.ref_no %}" class="badge badge-secondary 8rem" style="width: 6rem">See Detail</a></td>
-            {% elif request.user.subscription < 2 %}
-              <td><a href="#" class="badge badge-primary 8rem" style="width: 6rem">See Detail</a></td>
-            {% endif %}
+            <td class="align-middle text-center">{{ i.scope.worklocation }}</td>
+            <td class="align-middle text-center">{{ i.scope.city }}</td>
+            <td class="align-middle text-center">{{ i.get_status_display }}</td>
+            <td>
+              <a href="{% url 'MarketPlace:VacancyDetail' i.scope.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 6rem">See Detail</a>
+            </td>
           </tr>
+        {% empty %}
+        <tr>
+          <td colspan="8">You have never been shortlisted for a vacancy.</td>
+        </tr>
         {% endfor %}
-
+        <tr>
+          <th></th>
+          <th colspan="2">Open Interviews</th>
+          <td colspan="4">{% if sl_interview_c == 0 %}None{% elif sl_interview_c < 5 %} (Showing <strong>{{ sl_interview_c }}</strong>  out of <strong>{{ sl_qs_c }}</strong>){% else %} (Showing <strong>5</strong> of a total of <strong>{{ sl_interview_c }}</strong> out of <strong>{{sl_qs_c}}</strong>){% endif %}</td>
+          <td>PAGINATION</td>
+        </tr>
+        {% for i in sl_interview_s %}
+          <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' i.scope.ref_no %}'?next={{ request.path|urlencode }}">
+            <td class="align-middle text-center">{{ i.date_listed|date:"d N Y" }}</td>
+            <td class="align-middle text-center">{{ i.scope.title|truncatechars:37 }}</td>
+            <td class="align-middle text-center">{{ i.scope.ref_no }}</td>
+            <td class="align-middle text-center">
+              {{ i.scope.hours_required|intcomma }} ({{ i.scope.get_unit_display }})
+            </td>
+            <td class="align-middle text-center">{{ i.scope.worklocation }}</td>
+            <td class="align-middle text-center">{{ i.scope.city }}</td>
+            <td class="align-middle text-center">{{ i.get_status_display }}</td>
+            <td>
+              <a href="{% url 'MarketPlace:VacancyDetail' i.scope.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 6rem">See Detail</a>
+            </td>
+          </tr>
+        {% empty %}
+        <tr>
+          <td colspan="8">You have not been invited to, <strong>OR</strong>, you have no open interviews at this time - {% if request.user.subscription >= 1 %} upgrade to an active subscription to apply for roles. {% else %} apply for more roles!{% endif %}</td>
+        </tr>
+        {% endfor %}
+        <tr>
+          <th></th>
+          <th colspan="2">Successful</th>
+          <td colspan="4">{% if sl_accepted_c == 0 %}None{% elif sl_accepted_c < 5 %} (Showing <strong>{{ sl_accepted_c }}</strong>  out of <strong>{{ sl_qs_c }}</strong>){% else %} (Showing <strong>5</strong> out of a total of <strong>{{ sl_accepted_c }}</strong> out of <strong>{{sl_qs_c}}</strong>){% endif %}</td>
+          <td>PAGINATION</td>
+        </tr>
+        {% for i in sl_accepted_s %}
+          <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' i.scope.ref_no %}'?next={{ request.path|urlencode }}">
+            <td class="align-middle text-center">{{ i.date_listed|date:"d N Y" }}</td>
+            <td class="align-middle text-center">{{ i.scope.title|truncatechars:37 }}</td>
+            <td class="align-middle text-center">{{ i.scope.ref_no }}</td>
+            <td class="align-middle text-center">
+              {{ i.scope.hours_required|intcomma }} ({{ i.scope.get_unit_display }})
+            </td>
+            <td class="align-middle text-center">{{ i.scope.worklocation }}</td>
+            <td class="align-middle text-center">{{ i.scope.city }}</td>
+            <td class="align-middle text-center">{{ i.get_status_display }}</td>
+            <td>
+              <a href="{% url 'MarketPlace:VacancyDetail' i.scope.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 6rem">See Detail</a>
+            </td>
+          </tr>
+        {% empty %}
+        <tr>
+          <td colspan="8">You have never been shortlisted, <strong>OR</strong>, you have never been successful in any of the roles for which you have been shortlisted.</td>
+        </tr>
+        {% endfor %}
+        <tr>
+          <th></th>
+          <th colspan="2">Unsuccessful</th>
+          <td colspan="4">{% if sl_rejected_c == 0 %}None{% elif sl_rejected_c < 5 %} (Showing <strong>{{ sl_rejected_c }}</strong>  out of <strong>{{ sl_qs_c }}</strong>){% else %} (Showing <strong>5</strong> of a total of <strong>{{ sl_rejected_c }}</strong> out of <strong>{{sl_qs_c}}</strong>){% endif %}</td>
+          <td>PAGINATION</td>
+        </tr>
+        {% for i in sl_rejected_s %}
+          <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' i.scope.ref_no %}'?next={{ request.path|urlencode }}">
+            <td class="align-middle text-center">{{ i.date_listed|date:"d N Y" }}</td>
+            <td class="align-middle text-center">{{ i.scope.title|truncatechars:37 }}</td>
+            <td class="align-middle text-center">{{ i.scope.ref_no }}</td>
+            <td class="align-middle text-center">
+              {{ i.scope.hours_required|intcomma }} ({{ i.scope.get_unit_display }})
+            </td>
+            <td class="align-middle text-center">{{ i.scope.worklocation }}</td>
+            <td class="align-middle text-center">{{ i.scope.city }}</td>
+            <td class="align-middle text-center">{{ i.get_status_display }}</td>
+            <td>
+              <a href="{% url 'MarketPlace:VacancyDetail' i.scope.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 6rem">See Detail</a>
+            </td>
+          </tr>
+        {% empty %}
+        <tr>
+          <td colspan="8">You have never been shortlisted, <strong>OR</strong>, you have never been unsuccessful in any of the roles for which you have been shortlisted.</td>
+        </tr>
+        {% endfor %}
     </tbody>
     </table>
+    <!--
     {% if s_list_count > 10 %}
     <div class="float-right">
-      <a href="{% url 'MarketPlace:RolesShortlistedFullList' %}" class="btn btn-primary" style="width: 10rem">View Full List</a
+      <a href="{% url 'MarketPlace:RolesShortlistedFullList' %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 10rem">View Full List</a
     </div>
     {% endif %}
+  -->
   </div>
 </div>
-</div>
-<br>
-<div class="card border-0" style="width: 100%;">
-  <div class="card-body">
-    <div class="float-right">
-      <a href="{% url 'MarketPlace:HelpUnseccessfulApplicationsSummary' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
-      <i class="icon icon-question-circle"></i></a>
-    </div>
-    <h4 class="card-title">Unsuccessful Applications</h4>
-    <p>You have a total of <strong>{{ rejected_count }}</strong> roles that you have been rejected for{% if rejected_count > 10 %}, we only list the most recent 10 here.{% else %}.{% endif %}</p>
-    <table class="table table-hover table-sm">
-      <thead>
-        <tr>
-          <th class="align-middle text-center">Date Applied</th>
-          <th class="align-middle text-center">Vacancy Title</th>
-          <th class="align-middle text-center">Ref. No.</th>
-          <th class="align-middle text-center">Hours Required</th>
-          <th class="align-middle text-center">Work Configeration</th>
-          <th class="align-middle text-center">Country</th>
-          <th class="align-middle text-center">Status</th>
-        </tr>
-      </thead>
-      <tbody>
-
-        {% for r in rejected %}
-          <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' r.work.ref_no %}'">
-            <td>{{ r.work.date_applied|date:"d N Y" }}</td>
-            <td>{{ r.work.title|truncatechars:37 }}</td>
-            <td>{{ r.work.ref_no }}</td>
-            <td>
-              {{ r.work.hours_required|intcomma }} ({{ r.work.get_unit_display }})
-            </td>
-            <td>{{ r.work.worklocation }}</td>
-            <td>{{ r.work.city }}</td>
-            <td>{{ r.get_bidreview_display }}</td>
-            {% if request.user.subscription == 2 %}
-              <td><a href="{% url 'MarketPlace:VacancyDetail' r.work.ref_no %}" class="badge badge-secondary 8rem" style="width: 6rem">See Detail</a></td>
-            {% elif request.user.subscription < 2 %}
-              <td><a href="#" class="badge badge-primary 8rem" style="width: 6rem">See Detail</a></td>
-            {% endif %}
-          </tr>
-      {% endfor %}
-      {% for r in p_rejected %}
-        <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' r.scope.ref_no %}'">
-          <td>{{ r.date_listed|date:"d N Y" }}</td>
-          <td>{{ r.scope.title|truncatechars:37 }}</td>
-          <td>{{ r.scope.ref_no }}</td>
-          <td>
-            {{ r.scope.hours_required|intcomma }} ({{ r.scope.get_unit_display }})
-          </td>
-          <td>{{ r.scope.worklocation }}</td>
-          <td>{{ r.scope.city }}</td>
-          <td>{{ r.get_status_display }}</td>
-          {% if request.user.subscription == 2 %}
-            <td><a href="{% url 'MarketPlace:VacancyDetail' r.scope.ref_no %}" class="badge badge-secondary 8rem" style="width: 6rem">See Detail</a></td>
-          {% elif request.user.subscription < 2 %}
-            <td><a href="#" class="badge badge-primary 8rem" style="width: 6rem">See Detail</a></td>
-          {% endif %}
-        </tr>
-    {% endfor %}
-
-    </tbody>
-    </table>
-    <div class="float-right">
-      <a href="{% url 'MarketPlace:UnsuccessfulApplicationsFullList' %}" class="btn btn-primary" style="width: 10rem">View Full List</a
-    </div>
-  </div>
-</div>
-</div>
-<br>
-<div class="card border-0" style="width: 100%;">
-  <div class="card-body">
-    <div class="float-right">
-      <a href="{% url 'MarketPlace:HelpSeccessfulApplicationsSummary' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
-      <i class="icon icon-question-circle"></i></a>
-    </div>
-    <h4 class="card-title">Successful Applications</h4>
-    <p>You have a total of <strong>{{ accepted_count }}</strong> roles that you have been successful in{% if accepted_count > 10 %}, we only list the most recent 10 here.{% else %}.{% endif %}</p>
-    <table class="table table-hover table-sm">
-      <thead>
-        <tr>
-          <th class="align-middle text-center">Date Applied</th>
-          <th class="align-middle text-center">Vacancy Title</th>
-          <th class="align-middle text-center">Ref. No.</th>
-          <th class="align-middle text-center">Hours Required</th>
-          <th class="align-middle text-center">Work Configeration</th>
-          <th class="align-middle text-center">Country</th>
-          <th class="align-middle text-center">Status</th>
-        </tr>
-      </thead>
-      <tbody>
-
-      {% for s in accepted %}
-        <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' s.work.ref_no %}'">
-          <td>{{ s.date_applied|date:"d N Y" }}</td>
-          <td>{{ s.work.title|truncatechars:37 }}</td>
-          <td>{{ s.work.ref_no }}</td>
-          <td>
-            {{ s.work.hours_required|intcomma }} ({{ s.work.get_unit_display }})
-          </td>
-          <td>{{ s.work.worklocation }}</td>
-          <td>{{ s.work.city }}</td>
-          <td>{{ s.get_bidreview_display }}</td>
-          {% if request.user.subscription == 2 %}
-            <td><a href="{% url 'MarketPlace:VacancyDetail' s.work.ref_no %}" class="badge badge-primary 8rem" style="width: 6rem">See Detail</a></td>
-          {% elif request.user.subscription < 2 %}
-            <td><a href="#" class="badge badge-primary 8rem" style="width: 6rem">See Detail</a></td>
-          {% endif %}
-        </tr>
-      {% endfor %}
-      {% for s in p_accepted %}
-        <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' s.scope.ref_no %}'">
-          <td>{{ s.date_listed|date:"d N Y" }}</td>
-          <td>{{ s.scope.title|truncatechars:37 }}</td>
-          <td>{{ s.scope.ref_no }}</td>
-          <td>
-            {{ s.scope.hours_required|intcomma }} ({{ s.scope.get_unit_display }})
-          </td>
-          <td>{{ s.scope.worklocation }}</td>
-          <td>{{ s.scope.city }}</td>
-          <td>{{ s.get_status_display }}</td>
-          {% if request.user.subscription == 2 %}
-            <td><a href="{% url 'MarketPlace:VacancyDetail' s.scope.ref_no %}" class="badge badge-primary" style="width: 6rem">See Detail</a></td>
-          {% elif request.user.subscription < 2 %}
-            <td><a href="#" class="badge badge-primary" style="width: 6rem">See Detail</a></td>
-          {% endif %}
-        </tr>
-        {% endfor %}
-    </tbody>
-    </table>
-    <div class="float-right">
-      <a href="{% url 'MarketPlace:SuccessfulApplicationsFullList' %}" class="btn btn-primary" style="width: 10rem">View Full List</a
-    </div>
-  </div>
 </div>
 {% endblock content %}

@@ -205,7 +205,7 @@ class Designation(models.Model):
 #Function to randomise filename for Profile Upload
 def ExpFilename(instance, filename):
 	ext = filename.split('.')[-1]
-	return "experience\%s_%s.%s" % (str(time()).replace('.','_'), random(), ext)
+	return "%s/experience\%s_%s.%s" % (instance.talent.id, str(time()).replace('.','_'), random(), ext)
 
 
 class WorkExperience(models.Model):

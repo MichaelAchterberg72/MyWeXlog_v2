@@ -399,7 +399,7 @@ def AssignmentDeclineView(request, slug):
             BidShortList.objects.filter(Q(talent=tlt) & Q(scope=vac)).update(status='D')#2
             BidInterviewList.objects.filter(Q(talent=tlt) & Q(scope=vac)).update(outcome='D')#5
 
-            wb_qs = WorkBid.objects.filter(Q(talent=tlt) & Q(scope=vac))
+            wb_qs = WorkBid.objects.filter(Q(talent=tlt) & Q(work=vac))
             if wb_qs:
                 wb_qs.update(bidreview='D')#1
 
@@ -416,7 +416,7 @@ def AssignmentReAssign(request, slug):
     assignment = WorkIssuedTo.objects.filter(slug=slug).update(assignment_complete_emp=True)
     instance = WorkIssuedTo.objects.get(slug=slug)
 
-    return redirect(reverse('MarketPlace:InterviewList', kwargs={'vac_id':instance.work.id}))
+    return redirect(reverse('MarketPlace:InterviewList', kwargs={'vac':instance.work.ref_no}))
 
 
 @login_required()

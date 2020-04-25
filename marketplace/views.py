@@ -1483,33 +1483,65 @@ def VacanciesListView(request):
 def ApplicationHistoryView(request):
     talent = request.user
     role = WorkBid.objects.filter(talent=talent).order_by('-date_applied')
-    applied = role.filter(bidreview__exact='P')[:10]
-    rejected = role.filter(bidreview__exact='R')[:10]
-    accepted = role.filter(bidreview__exact='A')[:10]
-    s_list = BidShortList.objects.filter(Q(talent=talent) & ~Q(status='A')).order_by('-date_listed')[:10]
-    q_list = BidShortList.objects.filter(Q(talent=talent) & ~Q(status='A')).order_by('-date_listed')
-    p_rejected = q_list.filter(status='R')[:10]
-    p_accepted = q_list.filter(status='A')[:10]
+    role_c = role.count()
 
-    unsuccessful = rejected.union(p_rejected)
+    applied_c = role.filter(Q(bidreview='P') | Q(bidreview='I')).count()
+    applied = role.filter(Q(bidreview='P') | Q(bidreview='I'))[:5]
 
-    s_list_count = s_list.count()
-    applied_count = applied.count()
-    rejected_count = rejected.count()
-    accepted_count = accepted.count()
+    rejected_c = role.filter(bidreview='R').count()
+    rejected = role.filter(bidreview='R')[:5]
+
+    accepted_c = role.filter(bidreview='A').count()
+    accepted = role.filter(bidreview='A')[:5]
+
+    applied_sl_c = role.filter(bidreview='S').count()
+    applied_sl = role.filter(bidreview='S')[:5]
+
+    int_qs = role.filter(bidreview='I')
+    int_qs_c = int_qs.count()
+    int_qs_s = int_qs[:5]
+
+    sl_qs = BidShortList.objects.filter(talent=talent).order_by('-date_listed')
+    sl_qs_c = sl_qs.count()
+
+    sl_pending = sl_qs.filter(status='S')
+    sl_pending_c = sl_pending.count()
+    sl_pending_s = sl_pending[:5]
+
+    sl_interview = sl_qs.filter(status='I')
+    sl_interview_c = sl_interview.count()
+    sl_interview_s = sl_interview[:5]
+
+    sl_accepted = sl_qs.filter(status='A')
+    sl_accepted_c = sl_accepted.count()
+    sl_accepted_s = sl_accepted[:5]
+
+    sl_rejected = sl_qs.filter(status='R')
+    sl_rejected_c = sl_rejected.count()
+    sl_rejected_s = sl_rejected[:5]
 
     template = 'marketplace/vacancy_application_history.html'
     context ={
+        'role_c': role_c,
+        'applied_c': applied_c,
+        'rejected_c': rejected_c,
+        'accepted_c': accepted_c,
+        'applied_sl_c': applied_sl_c,
+        'applied_sl': applied_sl,
         'applied': applied,
-        'applied_count': applied_count,
         'accepted': accepted,
-        'accepted_count': accepted_count,
         'rejected': rejected,
-        'rejected_count': rejected_count,
-        'p_rejected': p_rejected,
-        'p_accepted': p_accepted,
-        's_list': s_list,
-        's_list_count': s_list_count,
+        'int_qs_c': int_qs_c,
+        'int_qs_s': int_qs_s,
+        'sl_qs_c': sl_qs_c,
+        'sl_interview_c': sl_interview_c,
+        'sl_interview_s': sl_interview_s,
+        'sl_pending_c': sl_pending_c,
+        'sl_pending_s': sl_pending_s,
+        'sl_accepted_c': sl_accepted_c,
+        'sl_accepted_s': sl_accepted_s,
+        'sl_rejected_c': sl_rejected_c,
+        'sl_rejected_s': sl_rejected_s,
         }
     return render(request, template, context)
 
@@ -2056,7 +2088,8 @@ def AddToShortListView(request, vac, tlt):
     if request.method == 'POST':
         b = BidShortList.objects.create(talent=talent, scope=job, status = 'S')#1
 
-        if 'active' in request.POST:
+        bidded = WorkBid.objects.filter(Q(talent=talent) & Q(work=job)).exists()
+        if bidded:
             upd = WorkBid.objects.get(Q(talent=talent) & Q(work=job))
             upd.bidreview = 'S'#2
             upd.save()

@@ -104,10 +104,10 @@ class Profile(models.Model):
     rate_unit = models.CharField(max_length=1, choices=RATE_UNIT, default='H')
     motivation = models.TextField(blank=True, null=True)
     exp_lvl = models.ForeignKey(SkillLevel, on_delete=models.PROTECT, related_name='profile_tenure', null=True)
-    rate_1 = models.FloatField(null=True)#average for marketplace.models.VacancyRate
-    rate_2 = models.FloatField(null=True)#average for marketplace.models.VacancyRate
-    rate_3 = models.FloatField(null=True)#average for marketplace.models.VacancyRate
-    rate_count = models.IntegerField(null=True)#count for marketplace.models.VacancyRate
+    rate_1 = models.FloatField(null=True, default=0)#average for marketplace.models.VacancyRate
+    rate_2 = models.FloatField(null=True, default=0)#average for marketplace.models.VacancyRate
+    rate_3 = models.FloatField(null=True, default=0)#average for marketplace.models.VacancyRate
+    rate_count = models.IntegerField(null=True, default=0)#count for marketplace.models.VacancyRate
 
     def __str__(self):
         return str(self.talent)

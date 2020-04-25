@@ -59,7 +59,7 @@
               </span>
             </td>
           {% endif %}
-          <td class="align-middle text-center"><a href="{% url 'Enterprise:BranchList' c.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 5rem;">List Branches</a> </td>
+          <td class="align-middle text-center"><a href="{% url 'Enterprise:BranchList' c.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 6rem;">List<br>Branches</a></td>
         </tr>
       </tbody>
       {% endfor %}

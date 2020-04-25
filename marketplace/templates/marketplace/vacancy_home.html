@@ -8,7 +8,7 @@
   <div class="card-body">
     {% if request.user.subscription >= 1 %}
       <div class="float-right">
-        {% if request.user.subscription == 2 %}
+        {% if request.user.subscription >= 1 %}
         <a href="{% url 'MarketPlace:History' %}" class="btn btn-primary 8rem">Applications History</a>
         {% endif %}
         <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary 8rem">Interview History</a>

@@ -361,7 +361,7 @@
       {% elif psn.tlt_response == 'D' %}
       <td>
           <a href="#" class="badge badge-danger badge-pill" style="width: 7rem">Vacancy<br>Declined</a>
-          <a href="{% url 'Profile:AssignmentReassign' psn.slug %}" class="badge badge-warning badge-pill" style="width: 7rem; height: 3rem">ReAssign<br>Vacancy</a>
+          <a href="{% url 'Profile:AssignmentReassign' psn.slug %}?next={{ request.path|urlencode }}" class="badge badge-warning badge-pill" style="width: 7rem; height: 3rem">ReAssign<br>Vacancy</a>
       </td>
       {% elif psn.tlt_response == 'A' %}
       <td>

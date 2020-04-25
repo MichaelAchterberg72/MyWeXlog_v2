@@ -3,9 +3,13 @@ from django.conf import settings
 from django.utils import timezone
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
+from random import random
+from time import time
 
 from Profile.utils import create_code9, create_code8
 
+from django.contrib.auth.models import User
+from users.models import CustomUser
 from enterprises.models import Branch
 from locations.models import Currency, City
 from db_flatten.models import SkillTag, LanguageList
@@ -30,10 +34,11 @@ class WorkLocation(models.Model):
     def __str__(self):
         return self.type
 
+
 #Function to randomise filename for Profile Upload
 def BidTerms(instance, filename):
 	ext = filename.split('.')[-1]
-	return "bidterms\%s_%s.%s" % (str(time()).replace('.','_'), random(), ext)
+	return "%s/bidterms\%s_%s.%s" % (instance.requested_by.id, str(time()).replace('.','_'), random(), ext)
 
 
 RATE_UNIT = (
