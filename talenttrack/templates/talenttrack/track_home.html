@@ -6,26 +6,39 @@
 <div class="card border-0" style="width: 100%;">
   <div class="card-body">
     <div class="float-right">
-      <a href="{% url 'Talent:HelpExperienceHome' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px" data-toggle="tooltip title="Click here for help on this page!">
+      <a href="{% url 'Talent:HelpExperienceHome' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
       <i class="icon icon-question-circle"></i></a>
     </div>
     <h4 class="card-title">Experience Summary</h4>
-    <br>
     <table class="table table-sm">
+      <col width = "20%">
+      <col width = "20%">
+      <col width = "20%">
+      <col width = "20%">
+      <col width = "20%">
       <thead>
         <tr>
-          <th width="20%" class="align-middle text-center">Total Hours Logged</th>
-          <th width="20%" class="align-middle text-center">Training<br>(Hours)<br><a href="{% url 'Talent:Capture' %}" class="badge badge-pill badge-primary">Add</a></th>
-          <th width="20%" class="align-middle text-center">Logged<br>(Hours)<br><a href="{% url 'Talent:ExperienceCapture' %}" class="badge badge-pill badge-primary">Add</a></th>
-          <th width="20%" class="align-middle text-center">Pre-logged<br>(Hours)<br><a href="{% url 'Talent:PreloggedCapture' %}" class="badge badge-pill badge-primary">Add</a></th>
+          <th></th>
+          <th class="align-middle text-center">Total Hours Logged</th>
+          <th class="align-middle text-center">Training<br>(Hours)<br><a href="{% url 'Talent:Capture' %}" class="badge badge-pill badge-primary">Add</a></th>
+          <th class="align-middle text-center">Logged<br>(Hours)<br><a href="{% url 'Talent:ExperienceCapture' %}" class="badge badge-pill badge-primary">Add</a></th>
+          <th class="align-middle text-center">Pre-logged<br>(Hours)<br><a href="{% url 'Talent:PreloggedCapture' %}" class="badge badge-pill badge-primary">Add</a></th>
         </tr>
       </thead>
       <tbody>
-        <tr align= "middle">
-          <td>{{ tot_sum|intcomma }}</td>
-          <td>{{ train_sum.Edu_sum|intcomma }}</td>
-          <td>{{ exp_sum.we_sum|intcomma }}</td>
-          <td>{{ pre_sum.p_sum|intcomma }}</td>
+        <tr>
+          <th class="align-middle text-center">Unconfirmed<br>Experience</th>
+          <td class="align-middle text-center">{{ tot_sum|intcomma }}</td>
+          <td class="align-middle text-center">{{ train_sum.Edu_sum|intcomma }}<br>{{ train_count }} skills</td>
+          <td class="align-middle text-center">{{ exp_sum.we_sum|intcomma }}</td>
+          <td class="align-middle text-center">{{ pre_sum.p_sum|intcomma }}</td>
+        </tr>
+        <tr>
+          <th class="align-middle text-center">Confirmed<br>Experience</th>
+          <td class="align-middle text-center">{{ tot_sum|intcomma }}</td>
+          <td class="align-middle text-center">{{ train_sum_c.Edu_sumc|intcomma }}<br>{{ train_count_c }} skills</td>
+          <td class="align-middle text-center">{{ exp_sum_c.we_sumc|intcomma }}<br>{{ exp_count_c }} skills</td>
+          <td class="align-middle text-center">{{ pre_sum_c.p_sumc|intcomma }}<br>{{ pre_sum_count_c }} skills</td>
         </tr>
       </tbody>
     </table>

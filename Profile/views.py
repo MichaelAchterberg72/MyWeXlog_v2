@@ -23,6 +23,9 @@ from core.decorators import subscription
 
 from treebeard.mp_tree import MP_Node
 
+from WeXlog.app_config import (
+    client_score, colleague_score, collaborator_score, superior_score, lecturer_score, classmate_score, pre_colleague_score
+)
 from .models import (
         Profile, Email, PhysicalAddress, PostalAddress, PhoneNumber, SiteName, OnlineRegistrations, FileUpload, IdentificationDetail, IdType, PassportDetail, LanguageList, LanguageTrack, BriefCareerHistory,
         )
@@ -566,7 +569,7 @@ def LecturerConfirmView(request, pk):
         info.confirm = 'C'
         info.save()
         edu = WorkExperience.objects.get(pk=info.education.id)
-        edu.score += 2
+        edu.score += lecturer_score
         edu.save()
     return redirect(reverse('Profile:Confirm')+'#Lecturer')
 
@@ -600,7 +603,7 @@ def LecturerCommentView(request, lct):
             new.save()
             if new.confirm == 'C':
                 edu = WorkExperience.objects.get(pk=info.education.id)
-                edu.score += 2
+                edu.score += lecturer_score
                 edu.save()
             else:
                 pass
@@ -622,7 +625,7 @@ def ClassMatesConfirmView(request, pk):
         info.confirm = 'C'
         info.save()
         edu = WorkExperience.objects.get(pk=info.education.id)
-        edu.score += 1
+        edu.score += classmate_score
         edu.save()
     return redirect(reverse('Profile:Confirm')+'#ClassMates')
 
@@ -647,7 +650,7 @@ def ClassMatesCommentView(request, cmt):
             new.save()
             if new.confirm == 'C':
                 edu = WorkExperience.objects.get(pk=info.education.id)
-                edu.score += 1
+                edu.score += classmate_score
                 edu.save()
             else:
                 pass
@@ -677,7 +680,7 @@ def ColleagueConfirmView(request, pk):
         info.confirm = 'C'
         info.save()
         exp = WorkExperience.objects.get(pk=info.experience.id)
-        exp.score += 1
+        exp.score += colleague_score
         exp.save()
 
     return redirect(reverse('Profile:Confirm')+'#Colleague')
@@ -712,7 +715,7 @@ def ColleagueCommentView(request, clg):
             new.save()
             if new.confirm == 'C':
                 exp = WorkExperience.objects.get(pk=info.experience.id)
-                exp.score += 2
+                exp.score += colleague_score
                 exp.save()
             else:
                 pass
@@ -734,7 +737,7 @@ def SuperiorConfirmView(request, pk):
         info.confirm = 'C'
         info.save()
         exp = WorkExperience.objects.get(pk=info.experience.id)
-        exp.score += 1
+        exp.score += superior_score
         exp.save()
 
     return redirect(reverse('Profile:Confirm')+'#Superior')
@@ -760,7 +763,7 @@ def SuperiorCommentView(request, spr):
             new.save()
             if new.confirm == 'C':
                 exp = WorkExperience.objects.get(pk=info.experience.id)
-                exp.score += 1
+                exp.score += superior_score
                 exp.save()
             else:
                 pass
@@ -791,7 +794,7 @@ def CollaboratorConfirmView(request, pk):
         info.confirm = 'C'
         info.save()
         exp = WorkExperience.objects.get(pk=info.experience.id)
-        exp.score += 1
+        exp.score += collaborator_score
         exp.save()
 
     return redirect(reverse('Profile:Confirm')+'#Collaborator')
@@ -817,7 +820,7 @@ def CollaboratorCommentView(request, clb):
             new.save()
             if new.confirm == 'C':
                 exp = WorkExperience.objects.get(pk=info.experience.id)
-                exp.score += 1
+                exp.score += collaborator_score
                 exp.save()
             else:
                 pass
@@ -848,7 +851,7 @@ def ClientConfirmView(request, pk):
         info.confirm = 'C'
         info.save()
         exp = WorkExperience.objects.get(pk=info.experience.id)
-        exp.score += 1
+        exp.score += client_score
         exp.save()
 
     return redirect(reverse('Profile:Confirm')+'#Client')
@@ -874,7 +877,7 @@ def ClientCommentView(request, wkc):
             new.save()
             if new.confirm == 'C':
                 exp = WorkExperience.objects.get(pk=info.experience.id)
-                exp.score += 1
+                exp.score += client_score
                 exp.save()
             else:
                 pass
@@ -905,7 +908,7 @@ def PreColleagueConfirmView(request, pk):
         info.confirm = 'C'
         info.save()
         exp = PreLoggedExperience.objects.get(pk=info.pre_experience.id)
-        exp.score += 3
+        exp.score += colleague_score
         exp.save()
 
     return redirect(reverse('Profile:Confirm')+'#PreColleague')
@@ -931,7 +934,7 @@ def PreColleagueCommentView(request, pk):
             new.save()
             if new.confirm == 'C':
                 exp = PreLoggedExperience.objects.get(pk=info.pre_experience.id)
-                exp.score += 3
+                exp.score += pre_colleague_score
                 exp.save()
             else:
                 pass

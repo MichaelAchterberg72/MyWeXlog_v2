@@ -48,7 +48,7 @@
       <td class="align-middle text-center">{{ v.city.city }}</td>
       <td class="align-middle text-center">{{ v.experience_level }}</td>
       <td class="align-middle text-center">
-        {% if request.user.subscription >= 8 %}
+        {% if request.user.subscription >= 2 %}
           {{ v.enterprise.company }} ({{ v.enterprise.name }})<br>
           {{ v.enterprise.type }}<br>
         {% else %}

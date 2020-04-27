@@ -31,6 +31,9 @@ from .models import(
     TalentRequired, SkillRequired, Deliverables, TalentAvailabillity, WorkBid, SkillLevel, BidShortList, WorkIssuedTo, BidInterviewList, WorkLocation
 )
 
+from WeXlog.app_config import (
+    skill_pass_score,
+)
 from talenttrack.models import WorkExperience, LicenseCertification
 from db_flatten.models import SkillTag
 from users.models import CustomUser
@@ -473,7 +476,7 @@ def InterviewListView(request, vac):
     else:
         active = 'False'
 
-    we = WorkExperience.objects.filter(talent__subscription__gte=1)
+    we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
     applicants = WorkBid.objects.filter(work__ref_no=vac)
     book = ReadBy.objects.all()
 
@@ -615,7 +618,7 @@ def PendingInterviewListView(request, vac):
 
     intv_pending = intv_qs.filter(Q(outcome='I')).filter(Q(tlt_response='A') | Q(tlt_response='P'))
 
-    we = WorkExperience.objects.filter(talent__subscription__gte=1)
+    we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
     applicants = WorkBid.objects.filter(work__ref_no=vac)
     book = ReadBy.objects.all()
     vac = vac
@@ -706,7 +709,7 @@ def SuitableInterviewListView(request, vac):
     else:
         active = 'False'
 
-    we = WorkExperience.objects.filter(talent__subscription__gte=1)
+    we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
     applicants = WorkBid.objects.filter(work__ref_no=vac)
     book = ReadBy.objects.all()
 
@@ -793,7 +796,7 @@ def UnsuitableInterviewListView(request, vac):
 
     vacancy_declined = WorkIssuedTo.objects.filter(work__ref_no=vac, tlt_response='D')
 
-    we = WorkExperience.objects.filter(talent__subscription__gte=1)
+    we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
     applicants = WorkBid.objects.filter(work__ref_no=vac)
     book = ReadBy.objects.all()
 
@@ -1165,7 +1168,7 @@ def MarketHome(request):
     tr_emp = TalentRequired.objects.filter(requested_by=talent)
     wb = WorkBid.objects.filter(work__requested_by=talent, work__offer_status='O')
     ta = TalentAvailabillity.objects.filter(talent=talent)
-    we = WorkExperience.objects.filter(talent=talent).prefetch_related('topic')
+    we = WorkExperience.objects.filter(Q(talent=talent) & Q(score__gte=skill_pass_score)).prefetch_related('topic')
     sr = SkillRequired.objects.filter(scope__offer_status='O')
     sl = SkillLevel.objects.all()
     wbt = WorkBid.objects.filter(Q(talent=talent) & Q(work__offer_status='O'))
@@ -1224,7 +1227,7 @@ def MarketHome(request):
     cert_null_s = set(vac_exp.filter(certification__isnull=True).values_list('id', flat=True))
     vac_cert_s = set(vac_exp.filter(certification__isnull=False).values_list('certification', flat=True))
 
-    if vac_cert_s is None: #if not certifications required, pass
+    if vac_cert_s is None: #if no certifications required, pass
         if vac_lang is None:
             req_experience = set(vac_exp.values_list('id',flat=True))
         else:
@@ -1246,7 +1249,7 @@ def MarketHome(request):
 
     vac_loc_rm = set(tr.filter(worklocation__type__icontains='Remote freelance').values_list('id', flat=True))
 
-    vac_loc_reg = set(tr.filter(~Q(worklocation__type__icontains='Remote Freelance')& Q(city__region=tlt_loc)).values_list('id', flat=True))
+    vac_loc_reg = set(tr.filter(~Q(worklocation__type__icontains='Remote freelance')& Q(city__region=tlt_loc)).values_list('id', flat=True))
 
     vac_loc = vac_loc_rm | vac_loc_reg
 
@@ -1322,7 +1325,7 @@ def VacanciesListView(request):
     tr_emp = TalentRequired.objects.filter(requested_by=talent)
     wb = WorkBid.objects.filter(work__requested_by=talent, work__offer_status='O')
     ta = TalentAvailabillity.objects.filter(talent=talent)
-    we = WorkExperience.objects.filter(talent=talent).prefetch_related('topic')
+    we = WorkExperience.objects.filter(Q(talent=talent) & Q(score__gte=skill_pass_score)).prefetch_related('topic')
     sr = SkillRequired.objects.filter(scope__offer_status='O')
     sl = SkillLevel.objects.all()
     wbt = WorkBid.objects.filter(Q(talent=talent) & Q(work__offer_status='O'))
@@ -1734,9 +1737,11 @@ def VacancyPostView(request, vac):
     skille = SkillRequired.objects.filter(scope__ref_no=vac)
     delivere = Deliverables.objects.filter(scope__ref_no=vac)
     applicants = WorkBid.objects.filter(work__ref_no=vac)
-    we = WorkExperience.objects.filter(talent__subscription__gte=1)
+    we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
     s_list = BidShortList.objects.filter(scope__ref_no=vac)
     book = ReadBy.objects.all()
+    tr_qs = TalentRequired.objects.filter(ref_no=vac)
+    tlt = Profile.objects.filter(talent__subscription__gte=1)
     #Queryset Cache<<<
 
     #>>> List all skills required
@@ -1745,21 +1750,48 @@ def VacancyPostView(request, vac):
     #List all skills required<<<
 
     #>>> Find all talent with required skill
+    wes = set(we.filter(Q(skills__in=skill_r) | Q(topic__skills__in=skill_r)).values_list('talent', flat=True))
+    #Find all talent with required skill<<<
 
-    wes = we.filter(Q(skills__in=skill_r) | Q(topic__skills__in=skill_r)).distinct('talent')
+    #>>> Find all talent that have the required Experience
+    wee = set(tlt.filter(exp_lvl__lte=instance.experience_level).values_list('talent', flat=True))
 
-    #ensure apllicats don't appear in the suitable skills window
-    app_list = applicants.values_list('talent')
-    suit_list = wes.values_list('talent')
-    short_list = s_list.values_list('talent')
-    short_list_a = s_list.filter(talent__subscription__gte=2).values_list('talent')
+    wee = wee.intersection(wes)
+
+    #Find all talent that have the required Experience<<<
+
+    #>>> Find all talent that are in the correct geographic location
+    vac_type = instance.worklocation.id
+
+    if vac_type == 1:
+        wel_i=wee
+    else:
+        wel = set(PhysicalAddress.objects.filter(region=instance.city.region).values_list('talent', flat=True))
+        wel_i = wel.intersection(wee)
+    #Find all talent that are in the correct geographic location<<<
+
+    #>>> Find all talent that have the required certifications
+    certnull = tr_qs.filter(certification__isnull=True)
+
+    if certnull is not None:
+        wec = wel_i
+    else:
+        cert_req = tr_qs.values_list('certification', flat=True)
+        tlt_cert = set(LicenseCertification.objects.filter(certification__in=cert_req).values_list('talent', flat=True))
+        wec = wel_i.intersection(tlt_cert)
+    #Find all talent that have the required certifications<<<
+
+    #ensure apllicants don't appear in the suitable skills window
+    app_list = set(applicants.values_list('talent', flat=True))
+    suit_list = wec
+    short_list = set(s_list.values_list('talent', flat=True))
+    short_list_a = set(s_list.filter(talent__subscription__gte=2).values_list('talent', flat=True))
 
     diff_list0 = suit_list.difference(app_list)#removes talent that has applied
-    #removes shortlists talent
-    diff_list = diff_list0.difference(short_list)
+    diff_list = diff_list0.difference(short_list)#removes shortlists talent
     app_list = app_list.difference(short_list_a)
 
-    we_list = list(diff_list.values_list('talent', flat=True))
+    we_list = list(diff_list)
 
     suitable={}
     for item in we_list:
@@ -1786,7 +1818,6 @@ def VacancyPostView(request, vac):
 
         #Extracting information for the applicants
     applied ={}
-    app_list = list(app_list.values_list('talent', flat=True))
     for app in app_list:
             aw_exp = we.filter(talent=app, edt=False).aggregate(awet=Sum('hours_worked'))
             awetv = aw_exp.get('awet')
@@ -1848,7 +1879,7 @@ def TalentSuitedVacancyListView(request, vac):
     skille = SkillRequired.objects.filter(scope__ref_no=vac)
     delivere = Deliverables.objects.filter(scope__ref_no=vac)
     applicants = WorkBid.objects.filter(work__ref_no=vac)
-    we = WorkExperience.objects.filter(talent__subscription__gte=1)
+    we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
     s_list = BidShortList.objects.filter(scope__ref_no=vac)
     book = ReadBy.objects.all()
     #Queryset Cache<<<
@@ -1940,7 +1971,7 @@ def ApplicantsForVacancyListView(request, vac):
     skille = SkillRequired.objects.filter(scope__ref_no=vac)
     delivere = Deliverables.objects.filter(scope__ref_no=vac)
     applicants = WorkBid.objects.filter(work__ref_no=vac)
-    we = WorkExperience.objects.filter(talent__subscription__gte=1)
+    we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
     s_list = BidShortList.objects.filter(scope__ref_no=vac)
     book = ReadBy.objects.all()
     #Queryset Cache<<<
@@ -2301,7 +2332,7 @@ def TalentDecline(request, tlt, vac):
 def ShortListView(request, vac):
     vacancy = get_object_or_404(TalentRequired, ref_no=vac)
     s_list = BidShortList.objects.filter(Q(scope__ref_no=vac) & Q(status='S'))
-    we = WorkExperience.objects.filter(talent__subscription__gte=1)
+    we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
     applicants = WorkBid.objects.filter(work__ref_no=vac)
     book = ReadBy.objects.all()
     closed = WorkIssuedTo.objects.filter(Q(work__ref_no=vac) & Q(tlt_response='A')).exists()

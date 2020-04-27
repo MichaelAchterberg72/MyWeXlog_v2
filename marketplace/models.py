@@ -105,7 +105,7 @@ class TalentRequired(models.Model):
     unit = models.CharField(max_length=1, choices=UNIT)
     experience_level = models.ForeignKey(SkillLevel, on_delete=models.PROTECT)
     language = models.ManyToManyField(LanguageList)
-    worklocation = models.ForeignKey(WorkLocation, on_delete=models.PROTECT)
+    worklocation = models.ForeignKey(WorkLocation, on_delete=models.PROTECT)#Job configeration
     rate_offered = models.DecimalField(max_digits=6, decimal_places=2)
     currency = models.ForeignKey(Currency, on_delete=models.PROTECT)
     rate_unit = models.CharField(max_length=1, choices=RATE_UNIT, default='H')

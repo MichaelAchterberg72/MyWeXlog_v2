@@ -63,7 +63,7 @@ INSTALLED_APPS = [
     'invitations.apps.InvitationsConfig',
     'nestedsettree.apps.NestedsettreeConfig',
     'feedback.apps.FeedbackConfig',
-    ##Django internal applications
+    #Django internal applications
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     #'django.contrib.gis',
@@ -162,8 +162,8 @@ PASSWORD_HASHERS = [
 
 
 WSGI_APPLICATION = 'WeXlog.wsgi.application'
-
 ASGI_APPLICATION = 'WeXlog.routing.application'
+#>>>Removed as not required for current site
 '''
 CHANNEL_LAYERS = {
     'default': {
@@ -174,6 +174,8 @@ CHANNEL_LAYERS = {
     },
 }
 '''
+#Removed as not required for current site<<<
+
 ## Web Security Headers
     ##To test use www.securityheaders.com
     ##X-XSS-Protection
@@ -189,19 +191,28 @@ X_FRAME_OPTIONS = 'DENY'
     ##django-referrer-policy (3rd party app)
 REFERRER_POLICY='same-origin'
     ## Content-Security-policy (3rd party app)
-CSP_DEFAULT_SRC = ("'self'", "'unsafe-inline'", 'SameSite', 'maxcdn.bootstrapcdn.com', 'code.jquery.com',
-'cdnjs.cloudflare.com', 'youtube.com', 'fonts.googleapis.com', 'maps.googleapis.com', 'use.typekit.net',
-'netdna.bootstrapcdn.com', 'w3.org', '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'kit.fontawesome.com', )
+CSP_DEFAULT_SRC = (
+    "'self'", "'unsafe-inline'", 'SameSite', 'maxcdn.bootstrapcdn.com', 'code.jquery.com', 'cdnjs.cloudflare.com', 'youtube.com', 'fonts.googleapis.com', 'maps.googleapis.com', 'use.typekit.net', 'netdna.bootstrapcdn.com', 'w3.org', '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'kit.fontawesome.com', 'mywexlog.dev',
+    )#app_config
 
-CSP_SCRIPT_SRC = None
-CSP_IMG_SRC = ("'self'", '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev')
+CSP_SCRIPT_SRC = (
+    "'self'", '127.0.0.1', '107.191.57.249', 'code.jquery.com', 'maxcdn.bootstrapcdn.com', 'kit.fontawesome.com', 'app.mywexlog.dev', 'mywexlog.dev',
+    )#app_config
+CSP_IMG_SRC = (
+    "'self'", '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev',
+    )#app_config
 CSP_OBJECT_SRC = None
-CSP_MEDIA_SRC = None
+CSP_MEDIA_SRC = (
+    "'self'", '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev',
+    )
 CSP_FRAME_SRC = None
-CSP_FONT_SRC = ("'self'", 'fonts.googleapis.com', '*', 'w3.org', '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev')
+CSP_FONT_SRC = (
+    "'self'", 'fonts.googleapis.com', '*', 'w3.org', '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev',
+    )#app_config
 CSP_CONNECT_SRC = None
-CSP_STYLE_SRC = ("'self'", 'maxcdn.bootstrapcdn.com', 'code.jquery.com', 'app.mywexlog.dev',
-'cdnjs.cloudflare.com', 'w3.org', '127.0.0.1', '107.191.57.249', 'fonts.googleapis.com', "'unsafe-inline'")
+CSP_STYLE_SRC = (
+    "'self'", 'maxcdn.bootstrapcdn.com', 'app.mywexlog.dev', 'cdnjs.cloudflare.com', 'w3.org', '127.0.0.1', '107.191.57.249', 'fonts.googleapis.com', 'stackpath.bookstrapcdn.com', "'unsafe-inline'", 'mywexlog.dev',
+    )#app_config
 CSP_BASE_URI = None
 CSP_CHILD_SRC = None
 CSP_FRAME_ANCESTORS = None
@@ -309,7 +320,10 @@ DJANGO_MESSAGES_NOTIFY = False
 
 # PayPal settings
 PAYPAL_RECEIVER_EMAIL = "sb-wynfk1244760@business.example.com"
-PAYPAL_TEST = True              # set to False for production
+if DEBUG == True:
+    PAYPAL_TEST = True              # set to False for production
+else:
+    PAYPAL_TEST = False
 
 # Follow instructions to create new certs for server from https://re.readthedocs.io/es/stable/standard/encrypted_buttons.html to create certs
 PAYPAL_PRIVATE_CERT = 'paypal/cert/paypal_private.pem'  #'/path/to/paypal_private.pem'  $ openssl genrsa -out paypal_private.pem 1024

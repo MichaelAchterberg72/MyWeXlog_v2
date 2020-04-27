@@ -37,6 +37,10 @@ from Profile.models import (
 from booklist.models import ReadBy
 from users.models import CustomUser
 
+from WeXlog.app_config import (
+    skill_pass_score,
+)
+
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
@@ -46,18 +50,29 @@ def ExperienceHome(request):
         basequery = WorkExperience.objects.select_related('topic').filter(talent=request.user)
         skills = SkillTag.objects.all()
         sl = SkillLevel.objects.all()
+        we_c = basequery.filter(score__gte=skill_pass_score)
         #<<<Step 1
 
         #>>>Step 2
-        train_base = basequery.filter(edt=True).order_by('-date_from')
-        train = train_base[:5]
+        #unconfirmed
+        train_base = basequery.filter(Q(edt=True)).order_by('-date_from')
         train_sum = train_base.aggregate(Edu_sum=Sum('topic__hours'))
         train_count = train_base.count()
+        train = train_base[:5]
+        #Confirmed
+        train_c = train_base.filter(Q(score__gte=skill_pass_score))
+        train_sum_c = train_c.aggregate(Edu_sumc=Sum('topic__hours'))
+        train_count_c = train_c.count()
 
+        #unconfirmed
         exp_base = basequery.filter(wexp=True).order_by('-date_from')
-        experience = exp_base[:5]
         exp_sum = exp_base.aggregate(we_sum=Sum('hours_worked'))
         exp_count = exp_base.count()
+        experience = exp_base[:5]
+        #Confirmed
+        exp_c = exp_base.filter(Q(score__gte=skill_pass_score))
+        exp_sum_c = exp_c.aggregate(we_sumc=Sum('hours_worked'))
+        exp_count_c = exp_c.count()
 
         pre_base = basequery.filter(prelog=True).order_by('-date_from')
         prelog = pre_base[:5]
@@ -137,10 +152,14 @@ def ExperienceHome(request):
         context = {
             'train': train,
             'train_sum': train_sum,
+            'train_sum_c': train_sum_c,
+            'train_count_c': train_count_c,
             'train_count': train_count,
             'experience': experience,
             'exp_sum': exp_sum,
+            'exp_sum_c': exp_sum_c,
             'exp_count': exp_count,
+            'exp_count_c': exp_count_c,
             'prelog': prelog,
             'pre_sum': pre_sum,
             'pre_count': pre_count,
