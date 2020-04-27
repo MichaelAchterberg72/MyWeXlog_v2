@@ -29,7 +29,7 @@ SECRET_KEY = 'hx*but#(z9!jwy1b2o%sjv3d=k)1h1n^qu%xkwzwb8$h5o4dzf'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]',  '107.191.57.249', 'app.mywexlog.dev',]
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]',  '107.191.57.249', 'app.mywexlog.dev','mywexlog.dev',]
 
 
 # Application definition

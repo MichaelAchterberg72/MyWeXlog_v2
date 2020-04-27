@@ -74,11 +74,17 @@ def ExperienceHome(request):
         exp_sum_c = exp_c.aggregate(we_sumc=Sum('hours_worked'))
         exp_count_c = exp_c.count()
 
+        #unconfirmed
         pre_base = basequery.filter(prelog=True).order_by('-date_from')
         prelog = pre_base[:5]
         pre_sum = pre_base.aggregate(p_sum=Sum('hours_worked'))
         pre_count = pre_base.count()
+        #Confirmed
+        pre_c = pre_base.filter(Q(score__gte=skill_pass_score))
+        pre_sum_c = pre_c.aggregate(p_sumc=Sum('hours_worked'))
+        pre_count_c = pre_c.count()
 
+        #UNCONFIRMED
         t_sum = train_sum.get('Edu_sum')
         e_sum = exp_sum.get('we_sum')
         p_sum= pre_sum.get('p_sum')
@@ -100,7 +106,30 @@ def ExperienceHome(request):
             p_sum = 0
 
         tot_sum = t_sum + e_sum + p_sum
-        exp_lvls = [Decimal(e_sum+p_sum)]
+
+        #CONFIRMED
+        t_sum_c = train_sum_c.get('Edu_sumc')
+        e_sum_c = exp_sum_c.get('we_sumc')
+        p_sum_c= pre_sum_c.get('p_sumc')
+
+
+        if t_sum_c:
+            t_sum_c = t_sum_c
+        else:
+            t_sum_c=0
+
+        if e_sum_c:
+            e_sum_c = e_sum_c
+        else:
+            e_sum_c = 0
+
+        if p_sum_c:
+            p_sum_c = p_sum_c
+        else:
+            p_sum_c = 0
+
+        tot_sum_c = t_sum_c + e_sum_c + p_sum_c
+        exp_lvls = [Decimal(e_sum_c + p_sum_c)]
 
         std = list(sl.filter(level__exact=0).values_list('min_hours', flat=True))
         grd = list(sl.filter(level__exact=1).values_list('min_hours', flat=True))
@@ -163,7 +192,10 @@ def ExperienceHome(request):
             'prelog': prelog,
             'pre_sum': pre_sum,
             'pre_count': pre_count,
+            'pre_sum_c': pre_sum_c,
+            'pre_count_c': pre_count_c,
             'tot_sum': tot_sum,
+            'tot_sum_c': tot_sum_c,
             'skill_name': skill_name,
             'skill_count': skill_count,
             'level': level,
