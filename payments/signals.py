@@ -23,40 +23,40 @@ from django.conf import settings
 def show_me_the_money(sender, **kwargs):
     ipn_obj = sender
     ipn_username = User.objects.get(username=str(ipn_obj.custom))
-    if ipn_obj.item_name == "WeXlog Passive Subscription":
+    if ipn_obj.item_name == "MyWeXlog Passive Subscription":
         price = "4.00"
 
-    elif ipn_obj.item_name == "WeXlog 6 Month Passive Subscription":
+    elif ipn_obj.item_name == "MyWeXlog 6 Month Passive Subscription":
         price = "22.00"
 
-    elif ipn_obj.item_name == "WeXlog 12 Month Passive Subscription":
+    elif ipn_obj.item_name == "MyWeXlog 12 Month Passive Subscription":
         price = "43.56"
 
-    elif ipn_obj.item_name == "WeXlog Active Subscription" | "WeXlog Active Subscription Upgrade":
+    elif ipn_obj.item_name == "MyWeXlog Active Subscription" | "MyWeXlog Active Subscription Upgrade":
         price = "5.20"
 
-    elif ipn_obj.item_name == "WeXlog 6 Month Active Subscription" | "WeXlog 6 Month Active Subscription Upgrade":
+    elif ipn_obj.item_name == "MyWeXlog 6 Month Active Subscription" | "MyWeXlog 6 Month Active Subscription Upgrade":
         price = "29.20"
 
-    elif ipn_obj.item_name == "WeXlog 12 Month Active Subscription" | "WeXlog 12 Month Active Subscription Upgrade":
+    elif ipn_obj.item_name == "MyWeXlog 12 Month Active Subscription" | "MyWeXlog 12 Month Active Subscription Upgrade":
         price = "57.96"
 
-    elif ipn_obj.item_name == "WeXlog Passive Subscription - Beta":
+    elif ipn_obj.item_name == "MyWeXlog Passive Subscription - Beta":
         price = "4.00" | "0.00"
 
-    elif ipn_obj.item_name == "WeXlog 6 Month Passive Subscription - Beta":
+    elif ipn_obj.item_name == "MyWeXlog 6 Month Passive Subscription - Beta":
         price = "22.00" | "0.00"
 
-    elif ipn_obj.item_name == "WeXlog 12 Month Passive Subscription - Beta":
+    elif ipn_obj.item_name == "MyWeXlog 12 Month Passive Subscription - Beta":
         price = "43.56" | "0.00"
 
-    elif ipn_obj.item_name == "WeXlog Active Subscription - Beta":
+    elif ipn_obj.item_name == "MyWeXlog Active Subscription - Beta":
         price = "5.20" | "0.00"
 
-    elif ipn_obj.item_name == "WeXlog 6 Month Active Subscription - Beta":
+    elif ipn_obj.item_name == "MyWeXlog 6 Month Active Subscription - Beta":
         price = "29.20" | "0.00"
 
-    elif ipn_obj.item_name == "WeXlog 12 Month Active Subscription - Beta":
+    elif ipn_obj.item_name == "MyWeXlog 12 Month Active Subscription - Beta":
         price = "57.96" | "0.00"
 
      # check for payment received IPN
@@ -79,23 +79,23 @@ def show_me_the_money(sender, **kwargs):
                 Users.objects.filter(ipn_username).update(paid=True)
                 Users.objects.filter(ipn_username).update(paid_date=datetime.now())
                 # set passive subscription
-                if ipn_obj.item_name == "WeXlog Passive Subscription" | "WeXlog Passive Subscription - Beta":
+                if ipn_obj.item_name == "MyWeXlog Passive Subscription" | "MyWeXlog Passive Subscription - Beta":
                     Users.objects.filter(ipn_username).update(subscription="1")
                     Users.objects.filter(ipn_username).update(paid_type="1")
-                elif ipn_obj.item_name == "WeXlog 6 Month Passive Subscription" | "WeXlog 6 Month Passive Subscription - Beta":
+                elif ipn_obj.item_name == "MyWeXlog 6 Month Passive Subscription" | "MyWeXlog 6 Month Passive Subscription - Beta":
                     Users.objects.filter(ipn_username).update(subscription="1")
                     Users.objects.filter(ipn_username).update(paid_type="2")
-                elif ipn_obj.item_name == "WeXlog 12 Month Passive Subscription" | "WeXlog 12 Month Passive Subscription - Beta":
+                elif ipn_obj.item_name == "MyWeXlog 12 Month Passive Subscription" | "MyWeXlog 12 Month Passive Subscription - Beta":
                     Users.objects.filter(ipn_username).update(subscription="1")
                     Users.objects.filter(ipn_username).update(paid_type="3")
                 # set active subscription
-                elif ipn_obj.item_name == "WeXlog Active Subscription" | "WeXlog Active Subscription Upgrade" | "WeXlog Active Subscription - Beta":
+                elif ipn_obj.item_name == "MyWeXlog Active Subscription" | "MyWeXlog Active Subscription Upgrade" | "MyWeXlog Active Subscription - Beta":
                     Users.objects.filter(ipn_username).update(subscription="2")
                     Users.objects.filter(ipn_username).update(paid_type="1")
-                elif ipn_obj.item_name == "WeXlog 6 Month Active Subscription" | "WeXlog 6 Month Subscription Upgrade" | "WeXlog 6 Month Active Subscription - Beta":
+                elif ipn_obj.item_name == "MyWeXlog 6 Month Active Subscription" | "MyWeXlog 6 Month Subscription Upgrade" | "MyWeXlog 6 Month Active Subscription - Beta":
                     Users.objects.filter(ipn_username).update(subscription="2")
                     Users.objects.filter(ipn_username).update(paid_type="2")
-                elif ipn_obj.item_name == "WeXlog 12 Month Active Subscription" | "WeXlog 12 Month Active Subscription Upgrade" | "WeXlog 12 Month Active Subscription - Beta":
+                elif ipn_obj.item_name == "MyWeXlog 12 Month Active Subscription" | "MyWeXlog 12 Month Active Subscription Upgrade" | "MyWeXlog 12 Month Active Subscription - Beta":
                     Users.objects.filter(ipn_username).update(subscription="2")
                     Users.objects.filter(ipn_username).update(paid_type="3")
                 else:
@@ -152,7 +152,7 @@ def show_me_the_money(sender, **kwargs):
             elif ipn_obj.custom == ipn_username:
                 Users.objects.filter(ipn_username).update(paid_date=datetime.now())
                 # set passive subscription
-                if ipn_obj.item_name == "WeXlog Active Subscription Upgrade" | "WeXlog 6 Month Active Subscription Upgrade" | "WeXlog 6 Month Active Subscription Upgrade":
+                if ipn_obj.item_name == "MyWeXlog Active Subscription Upgrade" | "MyWeXlog 6 Month Active Subscription Upgrade" | "MyWeXlog 6 Month Active Subscription Upgrade":
                     Users.objects.filter(ipn_username).update(paid=False)
                     Users.objects.filter(ipn_username).update(subscription="0")
                     Users.objects.filter(ipn_username).update(paid_type="0")
@@ -161,7 +161,7 @@ def show_me_the_money(sender, **kwargs):
                 else:
                     pass
 
-        if ipn_obj.custom == ipn_username and ipn_obj.item_name != "WeXlog Active Subscription Upgrade" | "WeXlog 6 Month Active Subscription Upgrade" | "WeXlog 6 Month Active Subscription Upgrade":
+        if ipn_obj.custom == ipn_username and ipn_obj.item_name != "MyWeXlog Active Subscription Upgrade" | "MyWeXlog 6 Month Active Subscription Upgrade" | "MyWeXlog 6 Month Active Subscription Upgrade":
             SubscriptionSignupTask(ipn_username)
         else:
             pass
@@ -178,23 +178,23 @@ def show_me_the_money(sender, **kwargs):
                 Users.objects.filter(ipn_username).update(paid=True)
                 Users.objects.filter(ipn_username).update(paid_date=datetime.now())
                 # set passive subscription
-                if ipn_obj.item_name == "WeXlog Passive Subscription" | "WeXlog Passive Subscription - Beta":
+                if ipn_obj.item_name == "MyWeXlog Passive Subscription" | "MyWeXlog Passive Subscription - Beta":
                     Users.objects.filter(ipn_username).update(subscription="1")
                     Users.objects.filter(ipn_username).update(paid_type="1")
-                elif ipn_obj.item_name == "WeXlog 6 Month Passive Subscription" | "WeXlog 6 Month Passive Subscription - Beta":
+                elif ipn_obj.item_name == "MyWeXlog 6 Month Passive Subscription" | "MyWeXlog 6 Month Passive Subscription - Beta":
                     Users.objects.filter(ipn_username).update(subscription="1")
                     Users.objects.filter(ipn_username).update(paid_type="2")
-                elif ipn_obj.item_name == "WeXlog 12 Month Passive Subscription" | "WeXlog 12 Month Passive Subscription - Beta":
+                elif ipn_obj.item_name == "MyWeXlog 12 Month Passive Subscription" | "MyWeXlog 12 Month Passive Subscription - Beta":
                     Users.objects.filter(ipn_username).update(subscription="1")
                     Users.objects.filter(ipn_username).update(paid_type="3")
                 # set active subscription
-                elif ipn_obj.item_name == "WeXlog Active Subscription" | "WeXlog Active Subscription Upgrade" | "WeXlog Active Subscription - Beta":
+                elif ipn_obj.item_name == "MyWeXlog Active Subscription" | "MyWeXlog Active Subscription Upgrade" | "MyWeXlog Active Subscription - Beta":
                     Users.objects.filter(ipn_username).update(subscription="2")
                     Users.objects.filter(ipn_username).update(paid_type="1")
-                elif ipn_obj.item_name == "WeXlog 6 Month Active Subscription" | "WeXlog 6 Month Active Subscription Upgrade" | "WeXlog 6 Month Active Subscription - Beta":
+                elif ipn_obj.item_name == "MyWeXlog 6 Month Active Subscription" | "MyWeXlog 6 Month Active Subscription Upgrade" | "MyWeXlog 6 Month Active Subscription - Beta":
                     Users.objects.filter(ipn_username).update(subscription="2")
                     Users.objects.filter(ipn_username).update(paid_type="2")
-                elif ipn_obj.item_name == "WeXlog 12 Month Active Subscription" | "WeXlog 12 Month Active Subscription Upgrade" | "WeXlog 12 Month Active Subscription - Beta":
+                elif ipn_obj.item_name == "MyWeXlog 12 Month Active Subscription" | "MyWeXlog 12 Month Active Subscription Upgrade" | "MyWeXlog 12 Month Active Subscription - Beta":
                     Users.objects.filter(ipn_username).update(subscription="2")
                     Users.objects.filter(ipn_username).update(paid_type="3")
 
@@ -252,23 +252,23 @@ def show_me_the_money(sender, **kwargs):
                 Users.objects.filter(ipn_username).update(paid=True)
                 Users.objects.filter(ipn_username).update(paid_date=datetime.now())
                 # set passive subscription
-                if ipn_obj.item_name == "WeXlog Passive Subscription" | "WeXlog Passive Subscription - Beta":
+                if ipn_obj.item_name == "MyWeXlog Passive Subscription" | "MyWeXlog Passive Subscription - Beta":
                     Users.objects.filter(ipn_username).update(subscription="1")
                     Users.objects.filter(ipn_username).update(paid_type="1")
-                elif ipn_obj.item_name == "WeXlog 6 Month Passive Subscription" | "WeXlog 6 Month Passive Subscription - Beta":
+                elif ipn_obj.item_name == "MyWeXlog 6 Month Passive Subscription" | "MyWeXlog 6 Month Passive Subscription - Beta":
                     Users.objects.filter(ipn_username).update(subscription="1")
                     Users.objects.filter(ipn_username).update(paid_type="2")
-                elif ipn_obj.item_name == "WeXlog 12 Month Passive Subscription" | "WeXlog 12 Month Passive Subscription - Beta":
+                elif ipn_obj.item_name == "MyWeXlog 12 Month Passive Subscription" | "MyWeXlog 12 Month Passive Subscription - Beta":
                     Users.objects.filter(ipn_username).update(subscription="1")
                     Users.objects.filter(ipn_username).update(paid_type="3")
                 # set active subscription
-                elif ipn_obj.item_name == "WeXlog Active Subscription" | "WeXlog Active Subscription Upgrade" | "WeXlog Active Subscription - Beta":
+                elif ipn_obj.item_name == "MyWeXlog Active Subscription" | "MyWeXlog Active Subscription Upgrade" | "MyWeXlog Active Subscription - Beta":
                     Users.objects.filter(ipn_username).update(subscription="2")
                     Users.objects.filter(ipn_username).update(paid_type="1")
-                elif ipn_obj.item_name == "WeXlog 6 Month Active Subscription" | "WeXlog 6 Month Active Subscription Upgrade" | "WeXlog 6 Month Active Subscription - Beta":
+                elif ipn_obj.item_name == "MyWeXlog 6 Month Active Subscription" | "MyWeXlog 6 Month Active Subscription Upgrade" | "MyWeXlog 6 Month Active Subscription - Beta":
                     Users.objects.filter(ipn_username).update(subscription="2")
                     Users.objects.filter(ipn_username).update(paid_type="2")
-                elif ipn_obj.item_name == "WeXlog 12 Month Active Subscription" | "WeXlog 12 Month Subscription Upgrade" | "WeXlog 12 Month Active Subscription - Beta":
+                elif ipn_obj.item_name == "MyWeXlog 12 Month Active Subscription" | "MyWeXlog 12 Month Subscription Upgrade" | "MyWeXlog 12 Month Active Subscription - Beta":
                     Users.objects.filter(ipn_username).update(subscription="2")
                     Users.objects.filter(ipn_username).update(paid_type="3")
 

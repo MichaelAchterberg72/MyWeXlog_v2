@@ -12,8 +12,8 @@
       <i class="icon icon-question-circle"></i></a>
     </div>
     <h4 class="card-title">Vacancy Application History</h4>
-    <h5 class="card-title">Roles Shortlisted for</h5>
-    <p>You have a total of <strong>{{ s_list_count }}</strong> that you have been shortlisted for.</p>
+    <h5 class="card-title">Roles Applied for - Shortlisted Positions</h5>
+    <p>{% if applied_sl_c == 0 %}You have not been shortlisted for any positions that you have applied for yet.{% elif applied_sl_c < 5 %}Showing <strong>{{ applied_sl_c }}</strong> out of <strong>{{ role_c }}</strong> applications that you have been shortlisted for.{% else %}You currently have a total of <strong>{{ applied_sl_c }}</strong> applications that you have been shortlisted for out of <strong>{{role_c}}</strong> applications{% endif %}</p>
     <table class="table table-hover table-sm">
       <thead>
         <tr>
@@ -29,21 +29,25 @@
       <tbody>
 
         {% for i in pageitems %}
-          <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' i.scope.ref_no %}'">
-            <td>{{ i.date_listed|date:"d N Y" }}</td>
-            <td>{{ i.scope.title|truncatechars:37 }}</td>
-            <td>{{ i.scope.ref_no }}</td>
-            <td>
-              {{ i.scope.hours_required|intcomma }} ({{ i.scope.get_unit_display }})
+          <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' i.work.ref_no %}'">
+            <td class="align-middle text-center">{{ i.date_applied|date:"d N Y" }}</td>
+            <td class="align-middle text-center">{{ i.work.title|truncatechars:37 }}</td>
+            <td class="align-middle text-center">{{ i.work.ref_no }}</td>
+            <td class="align-middle text-center">
+              {{ i.work.hours_required|intcomma }} ({{ i.work.get_unit_display }})
             </td>
-            <td>{{ i.scope.worklocation }}</td>
-            <td>{{ i.scope.city }}</td>
-            <td>{{ i.get_status_display }}</td>
+            <td class="align-middle text-center">{{ i.work.worklocation }}</td>
+            <td class="align-middle text-center">{{ i.work.city }}</td>
+            <td class="align-middle text-center">{{ i.get_bidreview_display }}</td>
             {% if request.user.subscription == 2 %}
-              <td><a href="{% url 'MarketPlace:VacancyDetail' i.scope.ref_no %}" class="badge badge-secondary" style="width: 6rem">See Detail</a></td>
+              <td><a href="{% url 'MarketPlace:VacancyDetail' i.work.ref_no %}" class="badge badge-secondary" style="width: 6rem">See Detail</a></td>
             {% elif request.user.subscription < 2 %}
               <td><a href="#" class="badge badge-primary 8rem" style="width: 6rem">See Detail</a></td>
             {% endif %}
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="7">None of your applications have been shortlisted - go and apply for more vacancies!</td>
           </tr>
         {% endfor %}
 

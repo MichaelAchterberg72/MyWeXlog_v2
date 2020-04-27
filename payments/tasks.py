@@ -86,7 +86,7 @@ class SubscriptionSignupTask(Task):
 
     def run(self, user):
 
-        subject = 'WexLog Sign-up Confirmation'
+        subject = 'MyWeXlog Sign-up Confirmation'
         context = {'user': user.first_name}
         html_message = render_to_string('email_templates/email_subscription_signup.html', context)
         plain_message = strip_tags(html_message)
@@ -114,7 +114,7 @@ class RemindDeleteOldSubscription(Task):
 
     def run(self, user, payment_txn_id):
 
-        subject = 'WeXlog Subscription Reminder'
+        subject = 'MyWeXlog Subscription Reminder'
         context = {'user': user, 'txn_id': payment_txn_id}
         html_message = render_to_string('email_templates/email_reminder_old_subscription_delete.html', context)
         plain_message = strip_tags(html_message)

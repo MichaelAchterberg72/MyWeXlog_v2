@@ -61,7 +61,7 @@ def GeneralPassiveSubscriptionView(request):
             "no_note": "1",                    # remove extra notes (optional)
             "custom": request.user,            # system member pk or braintree pk
             "on0": datetime.now(),             # optional field value (date of subscription)
-            "item_name": "WeXlog Passive Subscription",
+            "item_name": "MyWeXlog Passive Subscription",
             "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
             "return_url": request.build_absolute_uri(reverse('Payments:paypal-return-view')),
             "cancel_return": request.build_absolute_uri(reverse('Payments:passive-paypal-cancel-view')),
@@ -79,7 +79,7 @@ def GeneralPassiveSubscriptionView(request):
             "no_note": "1",                    # remove extra notes (optional)
             "custom": request.user,            # system member pk or braintree pk
             "on0": datetime.now(),             # optional field value (date of subscription)
-            "item_name": "WeXlog 6 Month Passive Subscription",
+            "item_name": "MyWeXlog 6 Month Passive Subscription",
             "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
             "return_url": request.build_absolute_uri(reverse('Payments:paypal-return-view')),
             "cancel_return": request.build_absolute_uri(reverse('Payments:passive-paypal-cancel-view')),
@@ -97,7 +97,7 @@ def GeneralPassiveSubscriptionView(request):
             "no_note": "1",                    # remove extra notes (optional)
             "custom": request.user,            # system member pk or braintree pk
             "on0": datetime.now(),             # optional field value (date of subscription)
-            "item_name": "WeXlog 12 Month Passive Subscription",
+            "item_name": "MyWeXlog 12 Month Passive Subscription",
             "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
             "return_url": request.build_absolute_uri(reverse('Payments:paypal-return-view')),
             "cancel_return": request.build_absolute_uri(reverse('Payments:passive-paypal-cancel-view')),
@@ -131,7 +131,7 @@ def GeneralActiveSubscriptionView(request):
             "no_note": "1",                    # remove extra notes (optional)
             "custom": request.user,            # system member pk or braintree pk
             "on0": datetime.now(),             # optional field value (date of subscription)
-            "item_name": "WeXlog Active Subscription",
+            "item_name": "MyWeXlog Active Subscription",
             "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
             "return_url": request.build_absolute_uri(reverse('Payments:paypal-return-view')),
             "cancel_return": request.build_absolute_uri(reverse('Payments:active-paypal-cancel-view')),
@@ -149,7 +149,7 @@ def GeneralActiveSubscriptionView(request):
             "no_note": "1",                    # remove extra notes (optional)
             "custom": request.user,            # system member pk or braintree pk
             "on0": datetime.now(),             # optional field value (date of subscription)
-            "item_name": "WeXlog 6 Month Active Subscription",
+            "item_name": "MyWeXlog 6 Month Active Subscription",
             "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
             "return_url": request.build_absolute_uri(reverse('Payments:paypal-return-view')),
             "cancel_return": request.build_absolute_uri(reverse('Payments:active-paypal-cancel-view')),
@@ -168,7 +168,7 @@ def GeneralActiveSubscriptionView(request):
             "no_note": "1",                    # remove extra notes (optional)
             "custom": request.user,            # system member pk or braintree pk
             "on0": datetime.now(),             # optional field value (date of subscription)
-            "item_name": "WeXlog 12 Month Active Subscription",
+            "item_name": "MyWeXlog 12 Month Active Subscription",
             "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
             "return_url": request.build_absolute_uri(reverse('Payments:paypal-return-view')),
             "cancel_return": request.build_absolute_uri(reverse('Payments:active-paypal-cancel-view')),
@@ -204,7 +204,7 @@ def BetaGeneralPassiveSubscriptionView(request):
             "no_note": "1",                    # remove extra notes (optional)
             "custom": request.user,            # system member pk or braintree pk
             "on0": datetime.now(),             # optional field value (date of subscription)
-            "item_name": "WeXlog Passive Subscription - Beta",
+            "item_name": "MyWeXlog Passive Subscription - Beta",
             "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
             "return_url": request.build_absolute_uri(reverse('Payments:paypal-return-view')),
             "cancel_return": request.build_absolute_uri(reverse('Payments:passive-paypal-cancel-view')),
@@ -225,7 +225,7 @@ def BetaGeneralPassiveSubscriptionView(request):
             "no_note": "1",                    # remove extra notes (optional)
             "custom": request.user,            # system member pk or braintree pk
             "on0": datetime.now(),             # optional field value (date of subscription)
-            "item_name": "WeXlog 6 Month Passive Subscription - Beta",
+            "item_name": "MyWeXlog 6 Month Passive Subscription - Beta",
             "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
             "return_url": request.build_absolute_uri(reverse('Payments:paypal-return-view')),
             "cancel_return": request.build_absolute_uri(reverse('Payments:passive-paypal-cancel-view')),
@@ -246,7 +246,7 @@ def BetaGeneralPassiveSubscriptionView(request):
             "no_note": "1",                    # remove extra notes (optional)
             "custom": request.user,            # system member pk or braintree pk
             "on0": datetime.now(),             # optional field value (date of subscription)
-            "item_name": "WeXlog 12 Month Passive Subscription - Beta",
+            "item_name": "MyWeXlog 12 Month Passive Subscription - Beta",
             "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
             "return_url": request.build_absolute_uri(reverse('Payments:paypal-return-view')),
             "cancel_return": request.build_absolute_uri(reverse('Payments:passive-paypal-cancel-view')),
@@ -283,7 +283,7 @@ def BetaGeneralActiveSubscriptionView(request):
             "no_note": "1",                    # remove extra notes (optional)
             "custom": request.user,            # system member pk or braintree pk
             "on0": datetime.now(),             # optional field value (date of subscription)
-            "item_name": "WeXlog Active Subscription - Beta",
+            "item_name": "MyWeXlog Active Subscription - Beta",
             "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
             "return_url": request.build_absolute_uri(reverse('Payments:paypal-return-view')),
             "cancel_return": request.build_absolute_uri(reverse('Payments:active-paypal-cancel-view')),
@@ -304,7 +304,7 @@ def BetaGeneralActiveSubscriptionView(request):
             "no_note": "1",                    # remove extra notes (optional)
             "custom": request.user,            # system member pk or braintree pk
             "on0": datetime.now(),             # optional field value (date of subscription)
-            "item_name": "WeXlog 6 Month Active Subscription - Beta",
+            "item_name": "MyWeXlog 6 Month Active Subscription - Beta",
             "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
             "return_url": request.build_absolute_uri(reverse('Payments:paypal-return-view')),
             "cancel_return": request.build_absolute_uri(reverse('Payments:active-paypal-cancel-view')),
@@ -325,7 +325,7 @@ def BetaGeneralActiveSubscriptionView(request):
             "no_note": "1",                    # remove extra notes (optional)
             "custom": request.user,            # system member pk or braintree pk
             "on0": datetime.now(),             # optional field value (date of subscription)
-            "item_name": "WeXlog 12 Month Active Subscription - Beta",
+            "item_name": "MyWeXlog 12 Month Active Subscription - Beta",
             "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
             "return_url": request.build_absolute_uri(reverse('Payments:paypal-return-view')),
             "cancel_return": request.build_absolute_uri(reverse('Payments:active-paypal-cancel-view')),
@@ -358,7 +358,7 @@ def PassiveUpgradeActiveSubscriptionView(request):
             "no_note": "1",                    # remove extra notes (optional)
             "custom": request.user,            # system member pk or braintree pk
             "on0": datetime.now(),             # optional field value (date of subscription)
-            "item_name": "WeXlog Active Subscription Upgrade",
+            "item_name": "MyWeXlog Active Subscription Upgrade",
             "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
             "return_url": request.build_absolute_uri(reverse('Payments:paypal-return-view')),
             "cancel_return": request.build_absolute_uri(reverse('Payments:active-paypal-cancel-view')),
@@ -376,7 +376,7 @@ def PassiveUpgradeActiveSubscriptionView(request):
             "no_note": "1",                    # remove extra notes (optional)
             "custom": request.user,            # system member pk or braintree pk
             "on0": datetime.now(),             # optional field value (date of subscription)
-            "item_name": "WeXlog 6 Month Active Subscription Upgrade",
+            "item_name": "MyWeXlog 6 Month Active Subscription Upgrade",
             "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
             "return_url": request.build_absolute_uri(reverse('Payments:paypal-return-view')),
             "cancel_return": request.build_absolute_uri(reverse('Payments:active-paypal-cancel-view')),
@@ -395,7 +395,7 @@ def PassiveUpgradeActiveSubscriptionView(request):
             "no_note": "1",                    # remove extra notes (optional)
             "custom": request.user,            # system member pk or braintree pk
             "on0": datetime.now(),             # optional field value (date of subscription)
-            "item_name": "WeXlog 12 Month Active Subscription Upgrade",
+            "item_name": "MyWeXlog 12 Month Active Subscription Upgrade",
             "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
             "return_url": request.build_absolute_uri(reverse('Payments:paypal-return-view')),
             "cancel_return": request.build_absolute_uri(reverse('Payments:active-paypal-cancel-view')),

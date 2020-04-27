@@ -84,8 +84,13 @@ urlpatterns = [
     path('vacancy/applicants-for-vacancy/<slug:vac>/', views.ApplicantsForVacancyListView, name='ApplicantsForVacancy'),
     path('vacancy/application-history-full-list/', views.RolesAppliedForApplicationHistoryView, name='RolesAppliedForFullList'),
     path('vacancy/shortlisted-history-full-list/', views.RolesShortlistedForApplicationHistoryView, name='RolesShortlistedFullList'),
+    path('vacancy/open-interviews-full-list/', views.RolesOpenInterviewsApplicationHistoryView, name='RolesOpenInterviewsFullList'),
     path('vacancy/unsuccessful-applications-history-full-list/', views.UnsuccessfulApplicationHistoryView, name='UnsuccessfulApplicationsFullList'),
     path('vacancy/successful-applications-history-full-list/', views.SuccessfulApplicationHistoryView, name='SuccessfulApplicationsFullList'),
+    path('vacancy/pending-shortlisted-application-history-full-list/', views.RolesAppliedForShortlistedApplicationHistoryView, name='RolesAppliedForShortlistedFullList'),
+    path('vacancy/pending-interviews-application-history-full-list/', views.RolesAppliedForInterviewsApplicationHistoryView, name='RolesAppliedForInterviewsFullList'),
+    path('vacancy/successful-application-history-full-list/', views.RolesAppliedForSuccessfulApplicationHistoryView, name='RolesAppliedForSuccessfulFullList'),
+    path('vacancy/unsuccessful-application-history-full-list/', views.RolesAppliedForUnsuccessfulApplicationHistoryView, name='RolesAppliedForUnsuccessfulFullList'),
 
     #Help urls
     path('help/Experience-level/', views.ExperienceLevelHelpView, name="HelpExperienceLevel"),

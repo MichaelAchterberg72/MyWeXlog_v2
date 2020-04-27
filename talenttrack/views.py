@@ -576,10 +576,8 @@ def ActiveProfileView(request, tlt, vac):
     return render(request, template, context)
 
 
-@login_required()
-@subscription(1)
 def LCMFullView(request, tlt):
-    tlt = Profile.objects.get(alias=tlt)
+#    tlt = Profile.objects.get(alias=tlt)
     lcm_qs = LicenseCertification.objects.filter(talent__alias=tlt).order_by('-issue_date')
 
     template = 'talenttrack/lcm_full_view.html'
