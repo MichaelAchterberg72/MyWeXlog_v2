@@ -12,16 +12,16 @@
       <i class="icon icon-question-circle"></i></a>
     </div>
     <h4 class="card-title">Vacancy Application History</h4>
-    <h4 class="card-title">Roles Applied for - Pending Positions</h4>
-    <p>{% if applied_c == 0 %}You have not applied for any positions yet.{% elif applied_c < 5 %}Showing <strong>{{ applied_c }}</strong> out of <strong>{{ role_c }}</strong> applications.{% else %}You currently have a total of <strong>{{ applied_c }}</strong> applications pending out of <strong>{{role_c}}</strong> applications{% endif %}</p>
+    <h4 class="card-title">Roles Shortlisted for - Open Interviews</h4>
+    <p>{% if sl_interview_c == 0 %}You have not got any open interviews for any positions yet.{% elif sl_interview_c < 5 %}Showing <strong>{{ sl_interview_c }}</strong> out of <strong>{{ sl_qs_c }}</strong> positions that you have been shortlisted for.{% else %}You currently have a total of <strong>{{ sl_interview_c }}</strong> roles that you have open interviews for after having been shortlisted for out of <strong>{{sl_qs_c}}</strong> shortlistings.{% endif %}</p>
     <table class="table table-hover table-sm">
       <thead>
         <tr>
-          <th class="align-middle text-center">Date Applied</th>
+          <th class="align-middle text-center">Date Listed</th>
           <th class="align-middle text-center">Vacancy Title</th>
           <th class="align-middle text-center">Ref. No.</th>
           <th class="align-middle text-center">Hours Required</th>
-          <th class="align-middle text-center">Work Configeration</th>
+          <th class="align-middle text-center">scope Configeration</th>
           <th class="align-middle text-center">Country</th>
           <th class="align-middle text-center">Status</th>
         </tr>
@@ -29,25 +29,25 @@
       <tbody>
 
         {% for i in pageitems %}
-          <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' i.work.ref_no %}?next={{ request.path|urlencode }}'">
-            <td class="align-middle text-center">{{ i.date_applied|date:"d N Y" }}</td>
-            <td class="align-middle text-center">{{ i.work.title|truncatechars:37 }}</td>
-            <td class="align-middle text-center">{{ i.work.ref_no }}</td>
+          <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' i.scope.ref_no %}?next={{ request.path|urlencode }}'">
+            <td class="align-middle text-center">{{ i.date_listed|date:"d N Y" }}</td>
+            <td class="align-middle text-center">{{ i.scope.title|truncatechars:37 }}</td>
+            <td class="align-middle text-center">{{ i.scope.ref_no }}</td>
             <td class="align-middle text-center">
-              {{ i.work.hours_required|intcomma }} ({{ i.work.get_unit_display }})
+              {{ i.scope.hours_required|intcomma }} ({{ i.scope.get_unit_display }})
             </td>
-            <td class="align-middle text-center">{{ i.work.worklocation }}</td>
-            <td class="align-middle text-center">{{ i.work.city }}</td>
+            <td class="align-middle text-center">{{ i.scope.worklocation }}</td>
+            <td class="align-middle text-center">{{ i.scope.city }}</td>
             <td class="align-middle text-center">{{ i.get_bidreview_display }}</td>
             {% if request.user.subscription == 2 %}
-              <td><a href="{% url 'MarketPlace:VacancyDetail' i.work.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-secondary 8rem" style="width: 6rem">See Detail</a></td>
+              <td><a href="{% url 'MarketPlace:VacancyDetail' i.scope.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-secondary 8rem" style="width: 6rem">See Detail</a></td>
             {% elif request.user.subscription < 2 %}
               <td><a href="#" class="badge badge-primary 8rem" style="width: 6rem">See Detail</a></td>
             {% endif %}
           </tr>
           {% empty %}
           <tr>
-            <td colspan="8">No applications are currently pending - go and apply for more vacancies!</td>
+            <td colspan="8">You have not been invited to, <strong>OR</strong>, you have no open interviews at this time - {% if request.user.subscription >= 1 %} upgrade to an active subscription to apply for roles. {% else %} apply for more roles!{% endif %}</td>
           </tr>
           {% endfor %}
 

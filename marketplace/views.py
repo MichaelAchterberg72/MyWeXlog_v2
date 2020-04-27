@@ -1481,7 +1481,7 @@ def VacanciesListView(request):
 
 
 @login_required()
-@subscription(2)
+@subscription(1)
 def ApplicationHistoryView(request):
     talent = request.user
     role = WorkBid.objects.filter(talent=talent).order_by('-date_applied')
@@ -1553,9 +1553,10 @@ def ApplicationHistoryView(request):
 def RolesAppliedForApplicationHistoryView(request):
     talent = request.user
     role = WorkBid.objects.filter(talent=talent).order_by('-date_applied')
-    applied = role.filter(bidreview__exact='P')
+    role_c = role.count()
 
-    applied_count = applied.count()
+    applied_c = role.filter(Q(bidreview='P') | Q(bidreview='I')).count()
+    applied = role.filter(Q(bidreview='P') | Q(bidreview='I'))
 
     try:
         page = int(request.GET.get('page', 1))
@@ -1580,7 +1581,8 @@ def RolesAppliedForApplicationHistoryView(request):
 
     template = 'marketplace/roles_applied_for_application_history_full_list.html'
     context ={
-        'applied_count': applied_count,
+        'role_c': role_c,
+        'applied_c': applied_c,
         'pageitems': pageitems,
         'page_range': page_range}
     return render(request, template, context)
@@ -1590,16 +1592,18 @@ def RolesAppliedForApplicationHistoryView(request):
 @subscription(2)
 def RolesShortlistedForApplicationHistoryView(request):
     talent = request.user
-    s_list = BidShortList.objects.filter(Q(talent=talent) & ~Q(status='A')).order_by('-date_listed')
+    role = WorkBid.objects.filter(talent=talent).order_by('-date_applied')
+    role_c = role.count()
 
-    s_list_count = s_list.count()
+    applied_sl_c = role.filter(bidreview='S').count()
+    applied_sl = role.filter(bidreview='S')
 
     try:
         page = int(request.GET.get('page', 1))
     except:
         page = 1
 
-    paginator = Paginator(s_list, 20)
+    paginator = Paginator(applied_sl, 20)
 
     try:
         pageitems = paginator.page(page)
@@ -1617,7 +1621,49 @@ def RolesShortlistedForApplicationHistoryView(request):
 
     template = 'marketplace/roles_shortlisted_for_application_history_full_list.html'
     context ={
-        's_list_count': s_list_count,
+        'role_c': role_c,
+        'applied_sl_c': applied_sl_c,
+        'pageitems': pageitems,
+        'page_range': page_range}
+    return render(request, template, context)
+
+
+@login_required()
+@subscription(2)
+def RolesOpenInterviewsApplicationHistoryView(request):
+    talent = request.user
+    role = WorkBid.objects.filter(talent=talent).order_by('-date_applied')
+    role_c = role.count()
+
+    int_qs = role.filter(bidreview='I')
+    int_qs_c = int_qs.count()
+    int_qs_s = int_qs
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(int_qs_s, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+
+    template = 'marketplace/roles_open_interviews_application_history_full_list.html'
+    context ={
+        'role_c': role_c,
+        'int_qs_c': int_qs_c,
         'pageitems': pageitems,
         'page_range': page_range}
     return render(request, template, context)
@@ -1628,9 +1674,10 @@ def RolesShortlistedForApplicationHistoryView(request):
 def UnsuccessfulApplicationHistoryView(request):
     talent = request.user
     role = WorkBid.objects.filter(talent=talent).order_by('-date_applied')
-    rejected = role.filter(bidreview__exact='R')
-    s_list = BidShortList.objects.filter(Q(talent=talent) & ~Q(status='A')).order_by('-date_listed')
-    p_rejected = s_list.filter(status='R')
+    role_c = role.count()
+
+    rejected_c = role.filter(bidreview='R').count()
+    rejected = role.filter(bidreview='R')
 
     try:
         page = int(request.GET.get('page', 1))
@@ -1655,9 +1702,8 @@ def UnsuccessfulApplicationHistoryView(request):
 
     template = 'marketplace/unsuccessful_applications_history_full_list.html'
     context ={
-        'rejected': rejected,
-        'p_rejected': p_rejected,
-        's_list': s_list,
+        'role_c': role_c,
+        'rejected_c': rejected_c,
         'pageitems': pageitems,
         'page_range': page_range}
     return render(request, template, context)
@@ -1668,9 +1714,10 @@ def UnsuccessfulApplicationHistoryView(request):
 def SuccessfulApplicationHistoryView(request):
     talent = request.user
     role = WorkBid.objects.filter(talent=talent).order_by('-date_applied')
-    accepted = role.filter(bidreview__exact='A')
-    s_list = BidShortList.objects.filter(Q(talent=talent) & ~Q(status='A')).order_by('-date_listed')
-    p_accepted = s_list.filter(status='A')
+    role_c = role.count()
+
+    accepted_c = role.filter(bidreview='A').count()
+    accepted = role.filter(bidreview='A')
 
     try:
         page = int(request.GET.get('page', 1))
@@ -1695,9 +1742,169 @@ def SuccessfulApplicationHistoryView(request):
 
     template = 'marketplace/successful_applications_history_full_list.html'
     context ={
-        'accepted': accepted,
-        'p_accepted': p_accepted,
-        's_list': s_list,
+        'role_c': role_c,
+        'accepted_c': accepted_c,
+        'pageitems': pageitems,
+        'page_range': page_range}
+    return render(request, template, context)
+
+
+@login_required()
+@subscription(1)
+def RolesAppliedForShortlistedApplicationHistoryView(request):
+    talent = request.user
+    sl_qs = BidShortList.objects.filter(talent=talent).order_by('-date_listed')
+    sl_qs_c = sl_qs.count()
+
+    sl_pending = sl_qs.filter(status='S')
+    sl_pending_c = sl_pending.count()
+    sl_pending_s = sl_pending
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(sl_pending_s, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+
+    template = 'marketplace/roles_applied_for_shortlisted_application_history_full_list.html'
+    context ={
+        'sl_qs_c': sl_qs_c,
+        'sl_pending_c': sl_pending_c,
+        'pageitems': pageitems,
+        'page_range': page_range}
+    return render(request, template, context)
+
+
+@login_required()
+@subscription(1)
+def RolesAppliedForInterviewsApplicationHistoryView(request):
+    talent = request.user
+    sl_qs = BidShortList.objects.filter(talent=talent).order_by('-date_listed')
+    sl_qs_c = sl_qs.count()
+
+    sl_interview = sl_qs.filter(status='I')
+    sl_interview_c = sl_interview.count()
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(sl_interview, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+
+    template = 'marketplace/roles_applied_for_interviews_application_history_full_list.html'
+    context ={
+        'sl_qs_c': sl_qs_c,
+        'sl_interview_c': sl_interview_c,
+        'pageitems': pageitems,
+        'page_range': page_range}
+    return render(request, template, context)
+
+
+@login_required()
+@subscription(1)
+def RolesAppliedForSuccessfulApplicationHistoryView(request):
+    talent = request.user
+    sl_qs = BidShortList.objects.filter(talent=talent).order_by('-date_listed')
+    sl_qs_c = sl_qs.count()
+
+    sl_accepted = sl_qs.filter(status='A')
+    sl_accepted_c = sl_accepted.count()
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(sl_accepted, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+
+    template = 'marketplace/roles_applied_for_successful_application_history_full_list.html'
+    context ={
+        'sl_qs_c': sl_qs_c,
+        'sl_accepted_c': sl_accepted_c,
+        'pageitems': pageitems,
+        'page_range': page_range}
+    return render(request, template, context)
+
+
+@login_required()
+@subscription(1)
+def RolesAppliedForUnsuccessfulApplicationHistoryView(request):
+    talent = request.user
+    sl_qs = BidShortList.objects.filter(talent=talent).order_by('-date_listed')
+    sl_qs_c = sl_qs.count()
+
+    sl_rejected = sl_qs.filter(status='R')
+    sl_rejected_c = sl_rejected.count()
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(sl_rejected, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+
+    template = 'marketplace/roles_applied_for_unsuccessful_application_history_full_list.html'
+    context ={
+        'sl_qs_c': sl_qs_c,
+        'sl_rejected_c': sl_rejected_c,
         'pageitems': pageitems,
         'page_range': page_range}
     return render(request, template, context)

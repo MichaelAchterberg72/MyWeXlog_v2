@@ -8,12 +8,12 @@
   <div class="card-body">
     <div class="float-right">
       <a href="{% url 'MarketPlace:History' %}" class="btn btn-secondary">Back</a>
-      <a href="{% url 'MarketPlace:HelpRolesAppliedForFull' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
+      <a href="{% url 'MarketPlace:HelpRolesShortlistedForFull' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
       <i class="icon icon-question-circle"></i></a>
     </div>
     <h4 class="card-title">Vacancy Application History</h4>
-    <h4 class="card-title">Roles Applied for - Pending Positions</h4>
-    <p>{% if applied_c == 0 %}You have not applied for any positions yet.{% elif applied_c < 5 %}Showing <strong>{{ applied_c }}</strong> out of <strong>{{ role_c }}</strong> applications.{% else %}You currently have a total of <strong>{{ applied_c }}</strong> applications pending out of <strong>{{role_c}}</strong> applications{% endif %}</p>
+    <h5 class="card-title">Roles Applied for - Open Interviews</h5>
+    <p>{% if int_qs_c == 0 %}You have not been sheduled for any interviews in positions that you have applied for yet.{% elif applied_sl_c < 5 %}Showing <strong>{{ int_qs_c }}</strong> out of <strong>{{ role_c }}</strong> open interviews for positions that you have applied for.{% else %}You currently have a total of <strong>{{ int_qs_c }}</strong> open interviews for positions that you have been shortlisted for out of <strong>{{role_c}}</strong> applications.{% endif %}</p>
     <table class="table table-hover table-sm">
       <thead>
         <tr>
@@ -40,16 +40,16 @@
             <td class="align-middle text-center">{{ i.work.city }}</td>
             <td class="align-middle text-center">{{ i.get_bidreview_display }}</td>
             {% if request.user.subscription == 2 %}
-              <td><a href="{% url 'MarketPlace:VacancyDetail' i.work.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-secondary 8rem" style="width: 6rem">See Detail</a></td>
+              <td><a href="{% url 'MarketPlace:VacancyDetail' i.work.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 6rem">See Detail</a></td>
             {% elif request.user.subscription < 2 %}
               <td><a href="#" class="badge badge-primary 8rem" style="width: 6rem">See Detail</a></td>
             {% endif %}
           </tr>
-          {% empty %}
+        {% empty %}
           <tr>
-            <td colspan="8">No applications are currently pending - go and apply for more vacancies!</td>
+            <td colspan="7">You have not been invited to, <strong>OR</strong>, you have no open interviews at this time - go and apply for more vacancies!</td>
           </tr>
-          {% endfor %}
+        {% endfor %}
 
     </tbody>
     </table>
