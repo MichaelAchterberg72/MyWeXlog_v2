@@ -1,7 +1,9 @@
 from django import forms
 from django.contrib.auth.models import User
+from users.models import CustomUser
 from django.utils.encoding import force_text
 from django.db.models import Q
+from django.forms import ModelChoiceField
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Row, Column
@@ -33,7 +35,7 @@ class UserSelect2Widget(UserSearchFieldMixin, ModelSelect2Widget):
     model = CustomUser
 
     def create_value(self, value):
-        self.get_queryset().create(Q(last_name=value) | Q(first_name=value))
+        self.get_queryset().exclude(id__in=pwd).create(Q(last_name=value) | Q(first_name=value))
 
 
 class CompanySearchFieldMixin:
@@ -236,8 +238,17 @@ class WorkClientConfirmForm(forms.ModelForm):
         model = WorkClient
         fields = ('confirm', 'comments', )
 
-
+#work dammit
 class WorkClientSelectForm(forms.ModelForm):
+    #client_name = forms.ModelChoiceField(queryset=None)
+    pwd = None
+    def __init__(self, *args, **kwargs):
+        global pwd
+        pwd = kwargs.pop('pwd', None)
+        print('FORM: ', pwd)
+        super().__init__(*args, **kwargs)
+        #self.fields['client_name'].queryset = CustomUser.objects.exclude(id__in=pwd)
+    print('FORM2: ', pwd)
     class Meta:
         model = WorkClient
         fields = ('client_name', 'designation', 'company', 'branch', )

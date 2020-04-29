@@ -596,8 +596,7 @@ def SkillProfileDetailView(request, tlt):
     exp_s = exp.values_list('skills', flat=True).distinct('skills')
     exp_t = exp.order_by('topic__skills').values_list('topic__skills', flat=True).distinct('topic__skills')
     edt_topic = exp.values_list('topic', flat=True).distinct('topic')
-    print(exp_t)
-    print(edt_topic)
+
     #gathering all experience hours per topic
     exp_set = {}
     for s in exp_s:
@@ -852,7 +851,18 @@ def PreLogDetailView(request, tex):
 @csp_exempt
 def ClientSelectView(request, pk):
     instance = WorkExperience.objects.get(pk=pk)
-    form = WorkClientSelectForm(request.POST or None)
+    #>>>Create a set of users to exclude
+    colleague_excl = set(WorkColleague.objects.filter(experience=pk).values_list('colleague_name__id', flat=True))
+    superior_excl = set(Superior.objects.filter(experience=pk).values_list('superior_name__id', flat=True))
+    collab_excl = set(WorkCollaborator.objects.filter(experience=pk).values_list('collaborator_name__id', flat=True))
+    client_excl = set(WorkClient.objects.filter(experience=pk).values_list('client_name__id', flat=True))
+    myself = set(Profile.objects.filter(talent=request.user).values_list('talent__id', flat=True))
+
+    filt = colleague_excl | superior_excl | collab_excl | client_excl | myself
+    client_qs = CustomUser.objects.exclude(id__in=filt)
+
+    form = WorkClientSelectForm(request.POST or None, pwd=filt)
+
     if request.method == 'POST':
         if form.is_valid():
             new = form.save(commit=False)
@@ -871,7 +881,7 @@ def ClientSelectView(request, pk):
         template = 'talenttrack/experience_client_select.html'
         context = {'instance': instance, 'form': form}
         response = render(request, template, context)
-        response.set_cookie("confirm","WT")
+        response.set_cookie("confirm","WT", "check",pk)
         return response
 
 
