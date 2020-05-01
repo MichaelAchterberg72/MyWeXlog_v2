@@ -25,6 +25,7 @@
           <th class="align-middle text-center">Completion Date</th>
           <th class="align-middle text-center">Course</th>
           <th class="align-middle text-center">Time Logged</th>
+          <th class="align-middle text-center" data-toggle="tooltip" data-placement="top" title="A score > 3 is required to achieve a 'confirmed' status">Score</th>
           <th class="align-middle text-center">Options</th>
         </tr>
       </thead>
@@ -35,6 +36,7 @@
           <td class="align-middle text-center">{{ t.date_to|date:"j M Y" }}</td>
           <td class="align-middle text-center">{{ t.course }}</td>
           <td class="align-middle text-center">{{ t.topic.hours|intcomma }}</td>
+          <td class="align-middle text-center" data-toggle="tooltip" data-placement="top" title="A score > 3 is required to achieve a 'confirmed' status">{{ t.score }}</td>
           <td class="align-middle text-center"><div class="float-right">
             <a href="{% url 'Talent:EducationDetail' t.slug %}" class="badge badge-pill badge-secondary" style="width: 5rem;">Detail</a>
             <form  action="{% url 'Talent:EDTDelete' t.id %}" method="post">

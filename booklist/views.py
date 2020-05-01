@@ -113,6 +113,7 @@ def ProfileBookList(request, tlt):
     info = get_object_or_404(Profile, talent__alias=tlt)
     bkl = ReadBy.objects.filter(talent__alias=tlt).order_by('-date')
     bkl_count = bkl.count()
+    tlt = tlt
 
     try:
         page = int(request.GET.get('page', 1))
@@ -135,7 +136,7 @@ def ProfileBookList(request, tlt):
     page_range = list(paginator.page_range)[start_index:end_index]
 
     template_name = 'booklist/vac_profile_list.html'
-    context = {'info': info, 'bkl_count': bkl_count, 'pageitems': pageitems, 'page_range': page_range}
+    context = {'info': info, 'bkl_count': bkl_count, 'tlt': tlt, 'pageitems': pageitems, 'page_range': page_range}
     return render(request, template_name, context)
 
 

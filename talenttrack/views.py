@@ -52,7 +52,7 @@ def ExperienceHome(request):
         sl = SkillLevel.objects.all()
         we_c = basequery.filter(score__gte=skill_pass_score)
         #<<<Step 1
-
+        tlt = request.user.alias
         #>>>Step 2
         #unconfirmed
         train_base = basequery.filter(Q(edt=True)).order_by('-date_from')
@@ -179,6 +179,7 @@ def ExperienceHome(request):
 
         template = 'talenttrack/track_home.html'
         context = {
+            'tlt': tlt,
             'train': train,
             'train_sum': train_sum,
             'train_sum_c': train_sum_c,
@@ -535,7 +536,7 @@ def ActiveProfileView(request, tlt, vac):
         if s in pst:
             #populating the values
             d = skill_qs.get(pk=s)
-            e = d.experience.all()
+            e = d.experience.filter(talent__alias=tlt)
             e_sum = e.aggregate(sum_t=Sum('hours_worked'))
             sum_float = float(e_sum.get('sum_t'))
             if vacse_set[skill_f]:
@@ -549,6 +550,7 @@ def ActiveProfileView(request, tlt, vac):
     #Training hours on skills required
     vacst_set = {}
     edt = exp.only('topic__skills').values_list('topic__skills', flat=True).distinct('topic__skills')
+    edc = exp.only('topic').values_list('topic', flat=True).distinct('topic')
     #populating the keys
     for s in skr:
         #populating the set
@@ -557,15 +559,20 @@ def ActiveProfileView(request, tlt, vac):
         vacst_set[skill_f]=float(0)
         if s in edt:
             #populating the values
-            d = skill_qs.get(pk=s)
-            e = d.topic_set.all()
-            e_sum = e.aggregate(sum_t=Sum('hours'))
-            sum_float = float(e_sum.get('sum_t'))
-            if vacst_set[skill_f]:
-                new = vacst_set[skill_f]+sum_float
-                vacst_set[skill_f]=new
-            else:
-                vacst_set[skill_f] = sum_float
+            for t in edc:
+                d = skill_qs.get(pk=s)
+                e = d.topic_set.filter(topic=t)
+                e_sum = e.aggregate(sum_t=Sum('hours'))
+                sum_float = e_sum.get('sum_t')
+                if sum_float is None:
+                    sum_float = float(0)
+                else:
+                    sum_float = float(sum_float)
+                if vacst_set[skill_f]:
+                    new = vacst_set[skill_f]+sum_float
+                    vacst_set[skill_f]=new
+                else:
+                    vacst_set[skill_f] = sum_float
         else:
             pass
 
@@ -590,8 +597,74 @@ def LCMFullView(request, tlt):
 def SkillProfileDetailView(request, tlt):
     tlt_p = Profile.objects.get(alias=tlt)
     skill_qs = SkillTag.objects.all()
-    exp = WorkExperience.objects.filter(
-        talent__alias = tlt).select_related('topic')
+    exp = WorkExperience.objects.filter(talent__alias = tlt).select_related('topic')
+
+    exp_s = exp.values_list('skills', flat=True).distinct('skills')
+    exp_t = exp.order_by('topic__skills').values_list('topic__skills', flat=True).distinct('topic__skills')
+    edt_topic = exp.values_list('topic', flat=True).distinct('topic')
+
+    tlt = tlt
+
+    #gathering all experience hours per topic
+    exp_set = {}
+    for s in exp_s:
+        if s == None:
+            pass
+        else:
+            b = skill_qs.get(pk=s)
+            c = b.experience.filter(talent__alias=tlt)
+            cnt = c.count()
+            sum = c.aggregate(sum_s=Sum('hours_worked'))
+            sum_float = float(sum.get('sum_s'))
+            info_set = {}
+            info_set['count']=cnt
+            info_set['sum']=sum_float
+            skill_q = skill_qs.filter(pk=s).values_list('skill', flat=True)
+            skill_f = skill_q[0]
+            exp_set[skill_f] = info_set
+
+    #gathering all training hours per topic
+    edt_set = {}
+    for c in edt_topic:
+        #populating the keys
+        for t in exp_t:
+            if t == None:
+                pass
+            else:
+                skill_q = skill_qs.filter(pk=t).values_list('skill', flat=True)
+                skill_f = skill_q[0]
+                edt_set[skill_f]=float(0)
+
+        #populating the values
+        for t in exp_t:
+            if t == None:
+                pass
+            else:
+                d = skill_qs.get(pk=t)
+                e = d.topic_set.all()
+                e_sum = e.aggregate(sum_t=Sum('hours'))
+                sum_float = float(e_sum.get('sum_t'))
+                skill_q = skill_qs.filter(pk=t).values_list('skill', flat=True)
+                skill_f = skill_q[0]
+                if edt_set[skill_f]:
+                    new = edt_t[skill_f]+sum_float
+                    d[skill_f]=new
+                else:
+                    edt_set[skill_f] = sum_float
+
+    template = 'talenttrack/talent_detail_summary.html'
+    context = {
+        'edt_set': edt_set, 'exp_set': exp_set, 'tlt_p': tlt_p, 'tlt': tlt,
+    }
+    return render(request, template, context)
+
+
+def SumAllExperienceView(request, tlt):
+    talent = request.user.id
+    tlt_p = Profile.objects.get(alias=tlt)
+    skill_qs = SkillTag.objects.all()
+    exp = WorkExperience.objects.filter(talent__alias = tlt).select_related('topic')
+    tlt = tlt
 
     exp_s = exp.values_list('skills', flat=True).distinct('skills')
     exp_t = exp.order_by('topic__skills').values_list('topic__skills', flat=True).distinct('topic__skills')
@@ -646,83 +719,18 @@ def SkillProfileDetailView(request, tlt):
 
     template = 'talenttrack/talent_detail_summary.html'
     context = {
-        'edt_set': edt_set, 'exp_set': exp_set, 'tlt_p': tlt_p,
+        'edt_set': edt_set, 'tlt': tlt, 'exp_set': exp_set, 'tlt_p': tlt_p
     }
     return render(request, template, context)
 
 
-def SumAllExperienceView(request):
-    talent = request.user.id
-    tlt_p = Profile.objects.get(pk=talent)
-    skill_qs = SkillTag.objects.all()
-    exp = WorkExperience.objects.filter(
-        talent = talent).select_related('topic')
-
-    exp_s = exp.values_list('skills', flat=True).distinct('skills')
-    exp_t = exp.order_by('topic__skills').values_list('topic__skills', flat=True).distinct('topic__skills')
-    edt_topic = exp.values_list('topic', flat=True).distinct('topic')
-
-    #gathering all experience hours per topic
-    exp_set = {}
-    for s in exp_s:
-        if s == None:
-            pass
-        else:
-            b = skill_qs.get(pk=s)
-            c = b.experience.all()
-            cnt = c.count()
-            sum = c.aggregate(sum_s=Sum('hours_worked'))
-            sum_float = float(sum.get('sum_s'))
-            info_set = {}
-            info_set['count']=cnt
-            info_set['sum']=sum_float
-            skill_q = skill_qs.filter(pk=s).values_list('skill', flat=True)
-            skill_f = skill_q[0]
-            exp_set[skill_f] = info_set
-
-    #gathering all training hours per topic
-    edt_set = {}
-    for c in edt_topic:
-        #populating the keys
-        for t in exp_t:
-            if t == None:
-                pass
-            else:
-                skill_q = skill_qs.filter(pk=t).values_list('skill', flat=True)
-                skill_f = skill_q[0]
-                edt_set[skill_f]=float(0)
-
-        #populating the values
-        for t in exp_t:
-            if t == None:
-                pass
-            else:
-                d = skill_qs.get(pk=t)
-                e = d.topic_set.all()
-                e_sum = e.aggregate(sum_t=Sum('hours'))
-                sum_float = float(e_sum.get('sum_t'))
-                skill_q = skill_qs.filter(pk=t).values_list('skill', flat=True)
-                skill_f = skill_q[0]
-                if edt_set[skill_f]:
-                    new = edt_t[skill_f]+sum_float
-                    d[skill_f]=new
-                else:
-                    edt_set[skill_f] = sum_float
-
-    template = 'talenttrack/talent_detail_summary.html'
-    context = {
-        'edt_set': edt_set, 'exp_set': exp_set, 'tlt_p': tlt_p
-    }
-    return render(request, template, context)
-
-
-def DPC_SummaryView(request):
+def DPC_SummaryView(request, tlt):
     #caching
-    exp = WorkExperience.objects.filter(
-        talent = request.user.id).select_related('designation')
+    exp = WorkExperience.objects.filter(talent__alias = tlt).select_related('designation')
     designation_qs = Designation.objects.all()
     companybranch_qs = Branch.objects.all()
     project_qs = ProjectData.objects.all()
+    tlt = tlt
 
     #Designation Summary
     dgn = exp.values_list('designation', flat=True).distinct('designation')
@@ -785,7 +793,7 @@ def DPC_SummaryView(request):
 
     template = 'talenttrack/talent_dpc_summary.html'
     context = {
-        'dgn_set': dgn_set, 'cmp_set': cmp_set, 'prj_set': prj_set,
+        'dgn_set': dgn_set, 'tlt': tlt, 'cmp_set': cmp_set, 'prj_set': prj_set,
     }
     return render(request, template, context)
 

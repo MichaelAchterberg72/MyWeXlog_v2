@@ -17,21 +17,23 @@
     <table class="table table-hover table-sm">
       <thead>
         <tr>
-          <th>Employer</th>
-          <th>Date from</th>
-          <th>Date to</th>
-          <th>Hours</th>
-          <th>Project</th>
+          <th class="align-middle text-center">Employer</th>
+          <th class="align-middle text-center">Date from</th>
+          <th class="align-middle text-center">Date to</th>
+          <th class="align-middle text-center">Hours</th>
+          <th class="align-middle text-center">Project</th>
+          <th class="align-middle text-center" data-toggle="tooltip" data-placement="top" title="A score > 3 is required to achieve a 'confirmed' status">Score</th>
         </tr>
       </thead>
       {% for e in pageitems %}
       <tbody>
         <tr onclick="window.location='{% url 'Talent:ExperienceDetail' e.slug %}'">
-          <td>{{ e.company }}</td>
-          <td>{{ e.date_from|date:"j M Y" }}</td>
-          <td>{{ e.date_to|date:"j M Y" }}</td>
-          <td>{{ e.hours_worked|intcomma }}</td>
-          <td>{{ e.project }}</td>
+          <td class="align-middle text-center">{{ e.company }}</td>
+          <td class="align-middle text-center">{{ e.date_from|date:"j M Y" }}</td>
+          <td class="align-middle text-center">{{ e.date_to|date:"j M Y" }}</td>
+          <td class="align-middle text-center">{{ e.hours_worked|intcomma }}</td>
+          <td class="align-middle text-center">{{ e.project }}</td>
+          <td class="align-middle text-center" data-toggle="tooltip" data-placement="top" title="A score > 3 is required to achieve a 'confirmed' status">{{ e.score }}</td>
           <td><div class="float-right">
             <a href="{% url 'Talent:ExperienceDetail' e.slug %}" class="badge badge-pill badge-secondary"  style="width: 5rem;">Detail</a>
             <form  action="{% url 'Talent:WEDelete' e.id %}" method="post">
