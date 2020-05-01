@@ -238,17 +238,14 @@ class WorkClientConfirmForm(forms.ModelForm):
         model = WorkClient
         fields = ('confirm', 'comments', )
 
-#work dammit
+
 class WorkClientSelectForm(forms.ModelForm):
-    #client_name = forms.ModelChoiceField(queryset=None)
     pwd = None
     def __init__(self, *args, **kwargs):
         global pwd
-        pwd = kwargs.pop('pwd', None)
-        print('FORM: ', pwd)
+        pwd = kwargs.pop('pwd')
         super().__init__(*args, **kwargs)
-        #self.fields['client_name'].queryset = CustomUser.objects.exclude(id__in=pwd)
-    print('FORM2: ', pwd)
+
     class Meta:
         model = WorkClient
         fields = ('client_name', 'designation', 'company', 'branch', )
@@ -258,6 +255,13 @@ class WorkClientSelectForm(forms.ModelForm):
             'designation': DesignationSelect2Widget(),
             'branch': BranchSelect2Widget(),
             }
+    def clean_client_name(self):
+        client_passed = self.cleaned_data.get("client_name")
+        als = client_passed.id
+
+        if als in pwd:
+            raise forms.ValidationError("This person is already in your confirmation list! Please Choose another person.")
+        return client_passed
 
 
 class WorkCollaboratorResponseForm(forms.ModelForm):
@@ -273,6 +277,12 @@ class WorkCollaboratorConfirmForm(forms.ModelForm):
 
 
 class WorkCollaboratorSelectForm(forms.ModelForm):
+    pwd = None
+    def __init__(self, *args, **kwargs):
+        global pwd
+        pwd = kwargs.pop('pwd')
+        super().__init__(*args, **kwargs)
+
     class Meta:
         model = WorkCollaborator
         fields = ('collaborator_name', 'designation', 'company', 'branch', )
@@ -282,7 +292,13 @@ class WorkCollaboratorSelectForm(forms.ModelForm):
             'designation': DesignationSelect2Widget(),
             'branch': BranchSelect2Widget(),
             }
+    def clean_collaborator_name(self):
+        collaborator_passed = self.cleaned_data.get("collaborator_name")
+        als = collaborator_passed.id
 
+        if als in pwd:
+            raise forms.ValidationError("This person is already in your confirmation list! Please Choose another person.")
+        return collaborator_passed
 
 class SuperiorResponseForm(forms.ModelForm):
     class Meta:
@@ -297,6 +313,12 @@ class SuperiorConfirmForm(forms.ModelForm):
 
 
 class SuperiorSelectForm(forms.ModelForm):
+    pwd = None
+    def __init__(self, *args, **kwargs):
+        global pwd
+        pwd = kwargs.pop('pwd')
+        super().__init__(*args, **kwargs)
+
     class Meta:
         model = Superior
         fields = ('superior_name', 'designation', )
@@ -304,6 +326,14 @@ class SuperiorSelectForm(forms.ModelForm):
             'superior_name': UserSelect2Widget(),
             'designation': DesignationSelect2Widget(),
             }
+    def clean_superior_name(self):
+        superior_passed = self.cleaned_data.get("superior_name")
+        als = superior_passed.id
+
+        if als in pwd:
+            raise forms.ValidationError("This person is already in your confirmation list! Please Choose another person.")
+        return superior_passed
+
 
 class WorkColleagueResponseForm(forms.ModelForm):
     class Meta:
@@ -318,6 +348,12 @@ class WorkColleagueConfirmForm(forms.ModelForm):
 
 
 class WorkColleagueSelectForm(forms.ModelForm):
+    pwd = None
+    def __init__(self, *args, **kwargs):
+        global pwd
+        pwd = kwargs.pop('pwd')
+        super().__init__(*args, **kwargs)
+
     class Meta:
         model = WorkColleague
         fields = ('colleague_name', 'designation')
@@ -325,6 +361,13 @@ class WorkColleagueSelectForm(forms.ModelForm):
             'colleague_name': UserSelect2Widget(),
             'designation': DesignationSelect2Widget(),
             }
+    def clean_colleague_name(self):
+        colleague_passed = self.cleaned_data.get("colleague_name")
+        als = colleague_passed.id
+
+        if als in pwd:
+            raise forms.ValidationError("This person is already in your confirmation list! Please Choose another person.")
+        return colleague_passed
 
 class WorkExperienceForm(forms.ModelForm):
     class Meta:
@@ -366,6 +409,12 @@ class ClassMatesResponseForm(forms.ModelForm):
 
 
 class ClassMatesSelectForm(forms.ModelForm):
+    pwd = None
+    def __init__(self, *args, **kwargs):
+        global pwd
+        pwd = kwargs.pop('pwd')
+        super().__init__(*args, **kwargs)
+
     class Meta:
         model = ClassMates
         fields = ('colleague', 'topic',)
@@ -373,6 +422,13 @@ class ClassMatesSelectForm(forms.ModelForm):
             'topic': TopicSelect2Widget(),
             'colleague': UserSelect2Widget(),
             }
+    def clean_colleague_name(self):
+        colleague_passed = self.cleaned_data.get("colleague")
+        als = colleague_passed.id
+
+        if als in pwd:
+            raise forms.ValidationError("This person is already in your confirmation list! Please Choose another person.")
+        return colleague_passed
 
 class ClassMatesConfirmForm(forms.ModelForm):
     class Meta:
@@ -399,6 +455,12 @@ class ClassMatesRespondForm(forms.ModelForm):
 
 
 class LecturerSelectForm(forms.ModelForm):
+    pwd = None
+    def __init__(self, *args, **kwargs):
+        global pwd
+        pwd = kwargs.pop('pwd')
+        super().__init__(*args, **kwargs)
+
     class Meta:
         model = Lecturer
         fields = ('lecturer', 'topic',)
@@ -406,6 +468,14 @@ class LecturerSelectForm(forms.ModelForm):
             'topic': TopicSelect2Widget(),
             'lecturer': UserSelect2Widget(),
             }
+    def clean_lecturer_name(self):
+        lecturer_passed = self.cleaned_data.get("lecturer")
+        als = lecturer_passed.id
+
+        if als in pwd:
+            raise forms.ValidationError("This person is already in your confirmation list! Please Choose another person.")
+        return lecturer_passed
+
 
 class LecturerConfirmForm(forms.ModelForm):
     class Meta:

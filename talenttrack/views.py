@@ -852,14 +852,13 @@ def PreLogDetailView(request, tex):
 def ClientSelectView(request, pk):
     instance = WorkExperience.objects.get(pk=pk)
     #>>>Create a set of users to exclude
-    colleague_excl = set(WorkColleague.objects.filter(experience=pk).values_list('colleague_name__id', flat=True))
-    superior_excl = set(Superior.objects.filter(experience=pk).values_list('superior_name__id', flat=True))
-    collab_excl = set(WorkCollaborator.objects.filter(experience=pk).values_list('collaborator_name__id', flat=True))
-    client_excl = set(WorkClient.objects.filter(experience=pk).values_list('client_name__id', flat=True))
-    myself = set(Profile.objects.filter(talent=request.user).values_list('talent__id', flat=True))
+    colleague_excl = set(WorkColleague.objects.filter(experience=pk).values_list('colleague_name', flat=True))
+    superior_excl = set(Superior.objects.filter(experience=pk).values_list('superior_name', flat=True))
+    collab_excl = set(WorkCollaborator.objects.filter(experience=pk).values_list('collaborator_name', flat=True))
+    client_excl = set(WorkClient.objects.filter(experience=pk).values_list('client_name', flat=True))
+    myself = set(Profile.objects.filter(talent=request.user).values_list('talent', flat=True))
 
     filt = colleague_excl | superior_excl | collab_excl | client_excl | myself
-    client_qs = CustomUser.objects.exclude(id__in=filt)
 
     form = WorkClientSelectForm(request.POST or None, pwd=filt)
 
@@ -869,13 +868,18 @@ def ClientSelectView(request, pk):
             new.experience = instance
             new.save()
             if 'another' in request.POST:
-                response = redirect('Talent:ClientSelect', kwargs={'pk':pk})
+                response = redirect(reverse('Talent:ClientSelect', kwargs={'pk':pk}))
                 response.delete_cookie("confirm")
                 return response
             elif 'done' in request.POST:
                 response = redirect('Talent:Home')
                 response.delete_cookie("confirm")
                 return response
+        else:
+            template = 'talenttrack/experience_client_select.html'
+            context = {'instance': instance, 'form': form}
+            response = render(request, template, context)
+            return response
     else:
 
         template = 'talenttrack/experience_client_select.html'
@@ -889,7 +893,16 @@ def ClientSelectView(request, pk):
 @csp_exempt
 def ClientAddView(request, tex):
     instance = get_object_or_404(WorkExperience, slug=tex)
-    form = WorkClientSelectForm(request.POST or None)
+    #>>>Create a set of users to exclude
+    colleague_excl = set(WorkColleague.objects.filter(experience__slug=tex).values_list('colleague_name', flat=True))
+    superior_excl = set(Superior.objects.filter(experience__slug=tex).values_list('superior_name', flat=True))
+    collab_excl = set(WorkCollaborator.objects.filter(experience__slug=tex).values_list('collaborator_name', flat=True))
+    client_excl = set(WorkClient.objects.filter(experience__slug=tex).values_list('client_name', flat=True))
+    myself = set(Profile.objects.filter(talent=request.user).values_list('talent', flat=True))
+
+    filt = colleague_excl | superior_excl | collab_excl | client_excl | myself
+
+    form = WorkClientSelectForm(request.POST or None, pwd=filt)
     if request.method == 'POST':
         if form.is_valid():
             new = form.save(commit=False)
@@ -937,7 +950,17 @@ def ClientResponseView(request, wkc):
 @csp_exempt
 def CollaboratorSelectView(request, pk):
     instance = WorkExperience.objects.get(pk=pk)
-    form = WorkCollaboratorSelectForm(request.POST or None)
+
+    colleague_excl = set(WorkColleague.objects.filter(experience=pk).values_list('colleague_name', flat=True))
+    superior_excl = set(Superior.objects.filter(experience=pk).values_list('superior_name', flat=True))
+    collab_excl = set(WorkCollaborator.objects.filter(experience=pk).values_list('collaborator_name', flat=True))
+    client_excl = set(WorkClient.objects.filter(experience=pk).values_list('client_name', flat=True))
+    myself = set(Profile.objects.filter(talent=request.user).values_list('talent', flat=True))
+
+    filt = colleague_excl | superior_excl | collab_excl | client_excl | myself
+
+    form = WorkCollaboratorSelectForm(request.POST or None, pwd=filt)
+
     if request.method == 'POST':
         if form.is_valid():
             new = form.save(commit=False)
@@ -964,7 +987,17 @@ def CollaboratorSelectView(request, pk):
 @csp_exempt
 def CollaboratorAddView(request, tex):
     instance = get_object_or_404(WorkExperience, slug=tex)
-    form = WorkCollaboratorSelectForm(request.POST or None)
+
+    colleague_excl = set(WorkColleague.objects.filter(experience__slug=tex).values_list('colleague_name', flat=True))
+    superior_excl = set(Superior.objects.filter(experience__slug=tex).values_list('superior_name', flat=True))
+    collab_excl = set(WorkCollaborator.objects.filter(experience__slug=tex).values_list('collaborator_name', flat=True))
+    client_excl = set(WorkClient.objects.filter(experience__slug=tex).values_list('client_name', flat=True))
+    myself = set(Profile.objects.filter(talent=request.user).values_list('talent', flat=True))
+
+    filt = colleague_excl | superior_excl | collab_excl | client_excl | myself
+
+    form = WorkCollaboratorSelectForm(request.POST or None, pwd=filt)
+
     if request.method == 'POST':
         if form.is_valid():
             new = form.save(commit=False)
@@ -1012,7 +1045,16 @@ def CollaboratorResponseView(request, clb):
 @csp_exempt
 def SuperiorSelectView(request, pk):
     instance = WorkExperience.objects.get(pk=pk)
-    form = SuperiorSelectForm(request.POST or None)
+
+    colleague_excl = set(WorkColleague.objects.filter(experience=pk).values_list('colleague_name', flat=True))
+    superior_excl = set(Superior.objects.filter(experience=pk).values_list('superior_name', flat=True))
+    collab_excl = set(WorkCollaborator.objects.filter(experience=pk).values_list('collaborator_name', flat=True))
+    client_excl = set(WorkClient.objects.filter(experience=pk).values_list('client_name', flat=True))
+    myself = set(Profile.objects.filter(talent=request.user).values_list('talent', flat=True))
+
+    filt = colleague_excl | superior_excl | collab_excl | client_excl | myself
+
+    form = SuperiorSelectForm(request.POST or None, pwd=filt)
     if request.method == 'POST':
         if form.is_valid():
             new = form.save(commit=False)
@@ -1038,7 +1080,16 @@ def SuperiorSelectView(request, pk):
 @csp_exempt
 def SuperiorAddView(request, tex):
     instance = get_object_or_404(WorkExperience, slug=tex)
-    form = SuperiorSelectForm(request.POST or None)
+
+    colleague_excl = set(WorkColleague.objects.filter(experience__slug=tex).values_list('colleague_name', flat=True))
+    superior_excl = set(Superior.objects.filter(experience__slug=tex).values_list('superior_name', flat=True))
+    collab_excl = set(WorkCollaborator.objects.filter(experience__slug=tex).values_list('collaborator_name', flat=True))
+    client_excl = set(WorkClient.objects.filter(experience__slug=tex).values_list('client_name', flat=True))
+    myself = set(Profile.objects.filter(talent=request.user).values_list('talent', flat=True))
+
+    filt = colleague_excl | superior_excl | collab_excl | client_excl | myself
+
+    form = SuperiorSelectForm(request.POST or None, pwd=filt)
     if request.method == 'POST':
         if form.is_valid():
             new = form.save(commit=False)
@@ -1085,7 +1136,17 @@ def SuperiorResponseView(request, spr):
 @csp_exempt
 def ColleagueSelectView(request):
     instance = WorkExperience.objects.filter(talent=request.user).latest('date_captured')
-    form = WorkColleagueSelectForm(request.POST or None)
+    tex = instance.experience.slug
+
+    colleague_excl = set(WorkColleague.objects.filter(experience__slug=tex).values_list('colleague_name', flat=True))
+    superior_excl = set(Superior.objects.filter(experience__slug=tex).values_list('superior_name', flat=True))
+    collab_excl = set(WorkCollaborator.objects.filter(experience__slug=tex).values_list('collaborator_name', flat=True))
+    client_excl = set(WorkClient.objects.filter(experience__slug=tex).values_list('client_name', flat=True))
+    myself = set(Profile.objects.filter(talent=request.user).values_list('talent', flat=True))
+
+    filt = colleague_excl | superior_excl | collab_excl | client_excl | myself
+
+    form = WorkColleagueSelectForm(request.POST or None, pwd=filt)
     if request.method == 'POST':
         if form.is_valid():
             new = form.save(commit=False)
@@ -1111,7 +1172,16 @@ def ColleagueSelectView(request):
 @csp_exempt
 def ColleagueAddView(request, tex):
     instance = get_object_or_404(WorkExperience, slug=tex)
-    form = WorkColleagueSelectForm(request.POST or None)
+
+    colleague_excl = set(WorkColleague.objects.filter(experience__slug=tex).values_list('colleague_name', flat=True))
+    superior_excl = set(Superior.objects.filter(experience__slug=tex).values_list('superior_name', flat=True))
+    collab_excl = set(WorkCollaborator.objects.filter(experience__slug=tex).values_list('collaborator_name', flat=True))
+    client_excl = set(WorkClient.objects.filter(experience__slug=tex).values_list('client_name', flat=True))
+    myself = set(Profile.objects.filter(talent=request.user).values_list('talent', flat=True))
+
+    filt = colleague_excl | superior_excl | collab_excl | client_excl | myself
+
+    form = WorkColleagueSelectForm(request.POST or None, pwd=tex)
 
     if request.method == 'POST':
         if form.is_valid():
@@ -1270,7 +1340,17 @@ def ClassMatesResponse(request, cmt):
 @csp_exempt
 def LecturerSelectView(request):
     instance = WorkExperience.objects.filter(talent=request.user, edt=True).latest('date_captured')
-    form = LecturerSelectForm(request.POST or None)
+    pk = instance.experience.pk
+
+    colleague_excl = set(WorkColleague.objects.filter(experience=pk).values_list('colleague_name', flat=True))
+    superior_excl = set(Superior.objects.filter(experience=pk).values_list('superior_name', flat=True))
+    collab_excl = set(WorkCollaborator.objects.filter(experience=pk).values_list('collaborator_name', flat=True))
+    client_excl = set(WorkClient.objects.filter(experience=pk).values_list('client_name', flat=True))
+    myself = set(Profile.objects.filter(talent=request.user).values_list('talent', flat=True))
+
+    filt = colleague_excl | superior_excl | collab_excl | client_excl | myself
+
+    form = LecturerSelectForm(request.POST or None, pwd=filt)
     if request.method == 'POST':
         if form.is_valid():
             new = form.save(commit=False)
@@ -1296,7 +1376,16 @@ def LecturerSelectView(request):
 @csp_exempt
 def LecturerAddView(request, tex):
     instance = get_object_or_404(WorkExperience, slug=tex)
-    form = LecturerSelectForm(request.POST or None)
+
+        colleague_excl = set(WorkColleague.objects.filter(experience__slug=tex).values_list('colleague_name', flat=True))
+        superior_excl = set(Superior.objects.filter(experience__slug=tex).values_list('superior_name', flat=True))
+        collab_excl = set(WorkCollaborator.objects.filter(experience__slug=tex).values_list('collaborator_name', flat=True))
+        client_excl = set(WorkClient.objects.filter(experience__slug=tex).values_list('client_name', flat=True))
+        myself = set(Profile.objects.filter(talent=request.user).values_list('talent', flat=True))
+
+        filt = colleague_excl | superior_excl | collab_excl | client_excl | myself
+
+    form = LecturerSelectForm(request.POST or None, pwd=filt)
     if request.method == 'POST':
         if form.is_valid():
             new = form.save(commit=False)
@@ -1322,7 +1411,17 @@ def LecturerAddView(request, tex):
 @csp_exempt
 def ClassMateSelectView(request):
     instance = WorkExperience.objects.filter(talent=request.user,edt=True).latest('date_captured')
-    form = ClassMatesSelectForm(request.POST or None)
+    tex = instance.experience.slug
+
+    colleague_excl = set(WorkColleague.objects.filter(experience__slug=tex).values_list('colleague_name', flat=True))
+    superior_excl = set(Superior.objects.filter(experience__slug=tex).values_list('superior_name', flat=True))
+    collab_excl = set(WorkCollaborator.objects.filter(experience__slug=tex).values_list('collaborator_name', flat=True))
+    client_excl = set(WorkClient.objects.filter(experience__slug=tex).values_list('client_name', flat=True))
+    myself = set(Profile.objects.filter(talent=request.user).values_list('talent', flat=True))
+
+    filt = colleague_excl | superior_excl | collab_excl | client_excl | myself
+
+    form = ClassMatesSelectForm(request.POST or None, pwd=filt)
     if request.method == 'POST':
         if form.is_valid():
             new = form.save(commit=False)
@@ -1348,7 +1447,19 @@ def ClassMateSelectView(request):
 @csp_exempt
 def ClassMateAddView(request, tex):
     instance = get_object_or_404(WorkExperience, slug=tex)
-    form = ClassMatesSelectForm(request.POST or None)
+
+    instance = WorkExperience.objects.filter(talent=request.user,edt=True).latest('date_captured')
+    tex = instance.experience.slug
+
+    colleague_excl = set(WorkColleague.objects.filter(experience__slug=tex).values_list('colleague_name', flat=True))
+    superior_excl = set(Superior.objects.filter(experience__slug=tex).values_list('superior_name', flat=True))
+    collab_excl = set(WorkCollaborator.objects.filter(experience__slug=tex).values_list('collaborator_name', flat=True))
+    client_excl = set(WorkClient.objects.filter(experience__slug=tex).values_list('client_name', flat=True))
+    myself = set(Profile.objects.filter(talent=request.user).values_list('talent', flat=True))
+
+    filt = colleague_excl | superior_excl | collab_excl | client_excl | myself
+
+    form = ClassMatesSelectForm(request.POST or None, pwd=filt)
     if request.method == 'POST':
         if form.is_valid():
             new = form.save(commit=False)
