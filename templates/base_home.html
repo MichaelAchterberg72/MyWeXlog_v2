@@ -5,19 +5,19 @@
     <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <!-- CDN Stylsheets-->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css">
-        <link rel="stylesheet" href="https://stackpath.bookstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700&display=swap" type="text/css">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-      <!-- Local Stylsheets-->
-        <link rel="stylesheet" href="{% static 'css/flaticon.css' %}" type="text/css">
-        <link rel="stylesheet" href="{% static 'css/icomoon.css' %}" type="text/css">
-        <link rel="stylesheet" href="{% static 'css/wexlog_css.css' %}" type="text/css">
-        <link rel="stylesheet" href="{% static 'css/wexlog_navbar_css.css' %}" type="text/css">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+      <!-- Bootstrap CSS -->
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+      <link rel="stylesheet" href="https://stackpath.bookstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+      <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700&display=swap" rel="stylesheet">
 
+      <link rel="stylesheet" href="{% static 'css/flaticon.css' %}">
+      <link rel="stylesheet" href="{% static 'css/icomoon.css' %}">
 
-      <title>{% block title %}MyWeXlog{% endblock title %}</title>
+      <link href="{% static 'css/wexlog_css.css' %}" rel="stylesheet" type="text/css">
+      <link rel="stylesheet" href="{% static 'css/wexlog_navbar_css.css' %}">
+
+      <title>{% block title %}MyWeXlog Dashboard{% endblock title %}</title>
   {% block Style %}
   {% endblock Style %}
   </head>
@@ -145,11 +145,11 @@
         </li>
 
         <li class="nav-item">
-          <a href="{% url 'Users:CustomUserSettings' %}" class="nav-link">
+          <a href="#" class="nav-link">
             <div class="fa-primary">
-              <i style="font-size: 27px" class="icon icon-settings"></i>
+              <i style="font-size: 27px" class=""></i>
             </div>
-            <span class="link-text">Settings</span>
+            <span class="link-text"> </span>
           </a>
         </li>
         {% endif %}
@@ -199,12 +199,11 @@
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-      <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-      <script src="https://kit.fontawesome.com/7e5855a9eb.js" crossorigin="anonymous"></script>
-    <!-- Local JS -->
-      <script src="{% static 'js/tooltip.js' %}"></script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="{% static 'js/tooltip.js' %}"></script>
     {% block Script %}
     {% endblock Script %}
   </body>

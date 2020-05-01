@@ -17,21 +17,24 @@
   <table class="table table-hover table-sm">
     <thead>
       <tr>
-        <th>Employer</th>
-        <th>Date from</th>
-        <th>Date to</th>
-        <th>Hours</th>
-        <th>Project</th>
+        <th class="align-middle text-center">Employer</th>
+        <th class="align-middle text-center">Date from</th>
+        <th class="align-middle text-center">Date to</th>
+        <th class="align-middle text-center">Hours</th>
+        <th class="align-middle text-center">Project</th>
+        <th class="align-middle text-center" data-toggle="tooltip" data-placement="top" title="A score > 3 is required to achieve a 'confirmed' status">Score</th>
+        <th class="align-middle text-center">Actions</th>
       </tr>
     </thead>
     {% for p in pageitems %}
     <tbody>
       <tr onclick="window.location='{% url 'Talent:PreLogDetail' p.slug %}'">
-        <td>{{ p.company }}</td>
-        <td>{{ p.date_from|date:"j M Y" }}</td>
-        <td>{{ p.date_to|date:"j M Y" }}</td>
-        <td>{{ p.hours_worked|intcomma }}</td>
-        <td>{{ p.project }}</td>
+        <td class="align-middle text-center">{{ p.company }}</td>
+        <td class="align-middle text-center">{{ p.date_from|date:"j M Y" }}</td>
+        <td class="align-middle text-center">{{ p.date_to|date:"j M Y" }}</td>
+        <td class="align-middle text-center">{{ p.hours_worked|intcomma }}</td>
+        <td class="align-middle text-center">{{ p.project }}</td>
+        <td class="align-middle text-center" data-toggle="tooltip" data-placement="top" title="A score > 3 is required to achieve a 'confirmed' status">{{ p.score }}</td>
         <td><div class="float-right">
           <a href="{% url 'Talent:PreLogDetail' p.slug %}" class="badge badge-pill badge-secondary" style="width: 5rem;">Detail</a>
           <form  action="{% url 'Talent:PLEDelete' p.id %}" method="post">

@@ -1978,12 +1978,12 @@ def VacancyPostView(request, vac):
     #Find all talent that are in the correct geographic location<<<
 
     #>>> Find all talent that have the required certifications
-    certnull = tr_qs.filter(certification__isnull=True)
+    certnull = tr_qs.filter(certification__isnull=False).exists()
 
-    if certnull is not None:
+    if certnull is False:
         wec = wel_i
     else:
-        cert_req = tr_qs.values_list('certification', flat=True)
+        cert_req = tr_qs.values_list('certification')
         tlt_cert = set(LicenseCertification.objects.filter(certification__in=cert_req).values_list('talent', flat=True))
         wec = wel_i.intersection(tlt_cert)
     #Find all talent that have the required certifications<<<

@@ -60,9 +60,9 @@ urlpatterns = [
 
     path('prelogged/capture/', views.PreLoggedExperienceCaptureView, name="PreloggedCapture"),
     path('prelogged/<slug:tex>/detail/', views.PreLogDetailView, name='PreLogDetail'),
-    path('experience-detail/', views.SumAllExperienceView, name='ExperienceSum'),
+    path('experience-detail/<slug:tlt>/', views.SumAllExperienceView, name='ExperienceSum'),
     path('skill-profile-detail/<slug:tlt>/', views.SkillProfileDetailView, name='SPDView'),
-    path('dpc-detail/', views.DPC_SummaryView, name='DPCSum'),
+    path('dpc-detail/<slug:tlt>/', views.DPC_SummaryView, name='DPCSum'),
     path('apv/<slug:tlt>/<slug:vac>/', views.ActiveProfileView, name='APV'),
     path('achievement-capture/', views.CaptureAchievementView, name='AchieveCap'),
 

@@ -286,6 +286,7 @@ def ProfileHome(request):
     node = NtWk.objects.get(talent=request.user)
     get = lambda node_id: NtWk.objects.get(pk=node_id)
     list = NtWk.get_annotated_list(node, 5)
+    tlt = request.user.alias
 
     list_length = len(list)
     n=0
@@ -351,7 +352,7 @@ def ProfileHome(request):
 
     template = 'Profile/profile_home.html'
     context = {
-        'wf1': wf1, 'total': total, 'interviews_tlt': interviews_tlt, 'interviews_emp': interviews_emp, 'interviews_empc': interviews_empc, 'interviews_tltc': interviews_tltc, 'assigned_tlt': assigned_tlt, 'assigned_emp': assigned_emp, 'assigned_tltc': assigned_empc, 'assigned_empc': assigned_tltc, 'open_assignments_tltc': open_assignments_tltc, 'open_assignments_empc': open_assignments_empc, 'lvl_1': lvl_1, 'lvl_2': lvl_2, 'lvl_3': lvl_3, 'lvl_4': lvl_4,'lvl_5': lvl_5, 'tot': tot, 'pfl': pfl,
+        'wf1': wf1, 'tlt': tlt, 'total': total, 'interviews_tlt': interviews_tlt, 'interviews_emp': interviews_emp, 'interviews_empc': interviews_empc, 'interviews_tltc': interviews_tltc, 'assigned_tlt': assigned_tlt, 'assigned_emp': assigned_emp, 'assigned_tltc': assigned_empc, 'assigned_empc': assigned_tltc, 'open_assignments_tltc': open_assignments_tltc, 'open_assignments_empc': open_assignments_empc, 'lvl_1': lvl_1, 'lvl_2': lvl_2, 'lvl_3': lvl_3, 'lvl_4': lvl_4,'lvl_5': lvl_5, 'tot': tot, 'pfl': pfl,
         }
     return render(request, template, context)
 

@@ -18,7 +18,7 @@
     <div class="col-sm-12">
     <div class="border-0">
       <div class="btn-toolbar float-right">
-        <a href="{% url 'Talent:APV' tlt=request.user.alias vac='1ad9t2' %}" target="_blank" class="btn btn-success float-right">Public Profile</a>
+        <a href="{% url 'Talent:APV' tlt=request.user.alias vac='1ad9t2' %}" class="btn btn-success float-right">Public Profile</a>
         &nbsp
         <form  action="{% url 'BookList:BLB' %}" method="post">
           <input type="hidden" name="next" value="{{ request.GET.next }}">
@@ -27,18 +27,27 @@
         </form>
       </div>
       <div class="btn-toolbar">
-        <a href="{% url 'Talent:DPCSum' %}" class="btn btn-primary">Designation, Project & Company Summary</a>
+        <a href="{% url 'Talent:DPCSum' tlt %}" class="btn btn-primary">Designation, Project & Company Summary</a>
       </div>
     </div>
     </div>
   </div>
   <br>
   {% else %}
-  <form  action="{% url 'BookList:BLB' %}" method="post">
-    <input type="hidden" name="next" value="{{ request.GET.next }}">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-secondary float-right">Back to {{tlt_p.alias}}'s Profile</button>
-  </form>
+  <div class="row">
+    <div class="col-sm-12">
+    <div class="border-0">
+      <div class="btn-toolbar float-right">
+        <form  action="{% url 'BookList:BLB' %}" method="post">
+          <input type="hidden" name="next" value="{{ request.GET.next }}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-secondary float-right">Back to {{tlt_p.alias}}'s Profile</button>
+        </form>
+      </div>
+    </div>
+    </div>
+  </div>
+  <br>
   {% endif %}
   <div class="row">
     <div class="col-sm-6">
