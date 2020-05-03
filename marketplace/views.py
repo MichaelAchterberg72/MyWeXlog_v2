@@ -2089,6 +2089,8 @@ def TalentSuitedVacancyListView(request, vac):
     we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
     s_list = BidShortList.objects.filter(scope__ref_no=vac)
     book = ReadBy.objects.all()
+    tr_qs = TalentRequired.objects.filter(ref_no=vac)
+    tlt = Profile.objects.filter(talent__subscription__gte=1)
     #Queryset Cache<<<
 
     #>>> List all skills required
@@ -2097,21 +2099,48 @@ def TalentSuitedVacancyListView(request, vac):
     #List all skills required<<<
 
     #>>> Find all talent with required skill
+    wes = set(we.filter(Q(skills__in=skill_r) | Q(topic__skills__in=skill_r)).values_list('talent', flat=True))
+    #Find all talent with required skill<<<
 
-    wes = we.filter(Q(skills__in=skill_r) | Q(topic__skills__in=skill_r)).distinct('talent')
+    #>>> Find all talent that have the required Experience
+    wee = set(tlt.filter(exp_lvl__lte=instance.experience_level).values_list('talent', flat=True))
 
-    #ensure applicants don't appear in the suitable skills window
-    app_list = applicants.values_list('talent')
-    suit_list = wes.values_list('talent')
-    short_list = s_list.values_list('talent')
-    short_list_a = s_list.filter(talent__subscription__gte=2).values_list('talent')
+    wee = wee.intersection(wes)
+
+    #Find all talent that have the required Experience<<<
+
+    #>>> Find all talent that are in the correct geographic location
+    vac_type = instance.worklocation.id
+
+    if vac_type == 1:
+        wel_i=wee
+    else:
+        wel = set(PhysicalAddress.objects.filter(region=instance.city.region).values_list('talent', flat=True))
+        wel_i = wel.intersection(wee)
+    #Find all talent that are in the correct geographic location<<<
+
+    #>>> Find all talent that have the required certifications
+    certnull = tr_qs.filter(certification__isnull=False).exists()
+
+    if certnull is False:
+        wec = wel_i
+    else:
+        cert_req = tr_qs.values_list('certification')
+        tlt_cert = set(LicenseCertification.objects.filter(certification__in=cert_req).values_list('talent', flat=True))
+        wec = wel_i.intersection(tlt_cert)
+    #Find all talent that have the required certifications<<<
+
+    #ensure apllicants don't appear in the suitable skills window
+    app_list = set(applicants.values_list('talent', flat=True))
+    suit_list = wec
+    short_list = set(s_list.values_list('talent', flat=True))
+    short_list_a = set(s_list.filter(talent__subscription__gte=2).values_list('talent', flat=True))
 
     diff_list0 = suit_list.difference(app_list)#removes talent that has applied
-    #removes shortlists talent
-    diff_list = diff_list0.difference(short_list)
+    diff_list = diff_list0.difference(short_list)#removes shortlists talent
     app_list = app_list.difference(short_list_a)
 
-    we_list = list(diff_list.values_list('talent', flat=True))
+    we_list = list(diff_list)
 
     suitable={}
     for item in we_list:
@@ -2124,11 +2153,20 @@ def TalentSuitedVacancyListView(request, vac):
         talent_skillt = list(we.filter(talent=item, edt=True).values_list('topic__skills', flat=True))
         rate = Profile.objects.filter(talent=item).values_list('std_rate', 'currency__currency_abv', 'rate_unit', 'motivation', 'alias',)
 
+        pfl = Profile.objects.get(talent=item)
+        avg = pfl.avg_rate
+        cnt = pfl.rate_count
+
         slist = talent_skill + talent_skillt
         skillset = set(slist)
         skill_count = len(skillset)
 
-        suitable[item]={'we':wetv, 'te':tetv,'s_no':skill_count, 'rb':rb, 'ro':rate}
+        suitable[item]={
+            'we':wetv, 'te':tetv,'s_no':skill_count, 'rb':rb, 'ro':rate, 'score':avg, 'count':cnt
+            }
+
+
+    suitable_slice = dict(itertools.islice(suitable.items(), 5))
 
     suitable_count = len(suitable)
 

@@ -1144,7 +1144,7 @@ def SuperiorResponseView(request, spr):
 @csp_exempt
 def ColleagueSelectView(request):
     instance = WorkExperience.objects.filter(talent=request.user).latest('date_captured')
-    tex = instance.experience.slug
+    tex = instance.slug
 
     colleague_excl = set(WorkColleague.objects.filter(experience__slug=tex).values_list('colleague_name', flat=True))
     superior_excl = set(Superior.objects.filter(experience__slug=tex).values_list('superior_name', flat=True))
@@ -1385,13 +1385,13 @@ def LecturerSelectView(request):
 def LecturerAddView(request, tex):
     instance = get_object_or_404(WorkExperience, slug=tex)
 
-        colleague_excl = set(WorkColleague.objects.filter(experience__slug=tex).values_list('colleague_name', flat=True))
-        superior_excl = set(Superior.objects.filter(experience__slug=tex).values_list('superior_name', flat=True))
-        collab_excl = set(WorkCollaborator.objects.filter(experience__slug=tex).values_list('collaborator_name', flat=True))
-        client_excl = set(WorkClient.objects.filter(experience__slug=tex).values_list('client_name', flat=True))
-        myself = set(Profile.objects.filter(talent=request.user).values_list('talent', flat=True))
+    colleague_excl = set(WorkColleague.objects.filter(experience__slug=tex).values_list('colleague_name', flat=True))
+    superior_excl = set(Superior.objects.filter(experience__slug=tex).values_list('superior_name', flat=True))
+    collab_excl = set(WorkCollaborator.objects.filter(experience__slug=tex).values_list('collaborator_name', flat=True))
+    client_excl = set(WorkClient.objects.filter(experience__slug=tex).values_list('client_name', flat=True))
+    myself = set(Profile.objects.filter(talent=request.user).values_list('talent', flat=True))
 
-        filt = colleague_excl | superior_excl | collab_excl | client_excl | myself
+    filt = colleague_excl | superior_excl | collab_excl | client_excl | myself
 
     form = LecturerSelectForm(request.POST or None, pwd=filt)
     if request.method == 'POST':
