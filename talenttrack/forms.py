@@ -422,7 +422,7 @@ class ClassMatesSelectForm(forms.ModelForm):
             'topic': TopicSelect2Widget(),
             'colleague': UserSelect2Widget(),
             }
-    def clean_colleague_name(self):
+    def clean_colleague(self):
         colleague_passed = self.cleaned_data.get("colleague")
         als = colleague_passed.id
 
@@ -468,10 +468,10 @@ class LecturerSelectForm(forms.ModelForm):
             'topic': TopicSelect2Widget(),
             'lecturer': UserSelect2Widget(),
             }
-    def clean_lecturer_name(self):
+
+    def clean_lecturer(self):
         lecturer_passed = self.cleaned_data.get("lecturer")
         als = lecturer_passed.id
-
         if als in pwd:
             raise forms.ValidationError("This person is already in your confirmation list! Please Choose another person.")
         return lecturer_passed

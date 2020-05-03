@@ -975,7 +975,7 @@ def CollaboratorSelectView(request, pk):
             new.experience = instance
             new.save()
             if 'another' in request.POST:
-                response = redirect('Talent:CollaboratorSelect', kwargs={'pk':pk})
+                response = redirect(reverse('Talent:CollaboratorSelect', kwargs={'pk':pk}))
                 response.delete_cookie("confirm")
                 return response
 
@@ -983,6 +983,11 @@ def CollaboratorSelectView(request, pk):
                 response = redirect(reverse('Talent:ClientSelect', kwargs={'pk':pk}))
                 response.delete_cookie("confirm")
                 return response
+        else:
+            template = 'talenttrack/experience_collaborator_select.html'
+            context = {'instance': instance, 'form': form}
+            response = render(request, template, context)
+            return response
     else:
         template = 'talenttrack/experience_collaborator_select.html'
         context = {'instance': instance, 'form': form}
@@ -1020,6 +1025,11 @@ def CollaboratorAddView(request, tex):
                 response = redirect(reverse('Talent:ExperienceDetail', kwargs={'tex': tex}))
                 response.delete_cookie("confirm")
                 return response
+        else:
+            template = 'talenttrack/experience_collaborator_add.html'
+            context = {'instance': instance, 'form': form}
+            response = render(request, template, context)
+            return response
     else:
         template = 'talenttrack/experience_collaborator_add.html'
         context = {'instance': instance, 'form': form}
@@ -1069,13 +1079,18 @@ def SuperiorSelectView(request, pk):
             new.experience = instance
             new.save()
             if 'another' in request.POST:
-                response = redirect('Talent:SuperiorSelect', kwargs={'pk':pk})
+                response = redirect(reverse('Talent:SuperiorSelect', kwargs={'pk':pk}))
                 response.delete_cookie("confirm")
                 return response
             elif 'done' in request.POST:
                 response = redirect(reverse('Talent:CollaboratorSelect', kwargs={'pk':pk}))
                 response.delete_cookie("confirm")
                 return response
+        else:
+            template = 'talenttrack/experience_superior_select.html'
+            context = {'instance': instance, 'form': form}
+            response = render(request, template, context)
+            return response
     else:
         template = 'talenttrack/experience_superior_select.html'
         context = {'instance': instance, 'form': form}
@@ -1111,6 +1126,11 @@ def SuperiorAddView(request, tex):
                 response = redirect(reverse('Talent:ExperienceDetail', kwargs={'tex': tex}))
                 response.delete_cookie("confirm")
                 return response
+        else:
+            template = 'talenttrack/experience_superior_add.html'
+            context = {'instance': instance, 'form': form}
+            response = render(request, template, context)
+            return response
     else:
         template = 'talenttrack/experience_superior_add.html'
         context = {'instance': instance, 'form': form}
@@ -1144,7 +1164,7 @@ def SuperiorResponseView(request, spr):
 @csp_exempt
 def ColleagueSelectView(request):
     instance = WorkExperience.objects.filter(talent=request.user).latest('date_captured')
-    tex = instance.experience.slug
+    tex = instance.slug
 
     colleague_excl = set(WorkColleague.objects.filter(experience__slug=tex).values_list('colleague_name', flat=True))
     superior_excl = set(Superior.objects.filter(experience__slug=tex).values_list('superior_name', flat=True))
@@ -1162,12 +1182,16 @@ def ColleagueSelectView(request):
             new.save()
             if 'another' in request.POST:
                 response = redirect('Talent:ColleagueSelect')
-                response.delete_cookie("confirm")
                 return response
             elif 'done' in request.POST:
                 response = redirect(reverse('Talent:SuperiorSelect', kwargs={'pk':instance.id}))
                 response.delete_cookie("confirm")
                 return response
+        else:
+            template = 'talenttrack/experience_colleague_select.html'
+            context = {'instance': instance, 'form': form}
+            response =  render(request, template, context)
+            return response
     else:
         template = 'talenttrack/experience_colleague_select.html'
         context = {'instance': instance, 'form': form}
@@ -1348,16 +1372,14 @@ def ClassMatesResponse(request, cmt):
 @csp_exempt
 def LecturerSelectView(request):
     instance = WorkExperience.objects.filter(talent=request.user, edt=True).latest('date_captured')
-    pk = instance.experience.pk
+    tex = instance.slug
 
-    colleague_excl = set(WorkColleague.objects.filter(experience=pk).values_list('colleague_name', flat=True))
-    superior_excl = set(Superior.objects.filter(experience=pk).values_list('superior_name', flat=True))
-    collab_excl = set(WorkCollaborator.objects.filter(experience=pk).values_list('collaborator_name', flat=True))
-    client_excl = set(WorkClient.objects.filter(experience=pk).values_list('client_name', flat=True))
+    lecturer_excl = set(Lecturer.objects.filter(education__slug=tex).values_list('lecturer', flat=True))
+    colleague_excl = set(ClassMates.objects.filter(education__slug=tex).values_list('colleague', flat=True))
     myself = set(Profile.objects.filter(talent=request.user).values_list('talent', flat=True))
 
-    filt = colleague_excl | superior_excl | collab_excl | client_excl | myself
-
+    filt = lecturer_excl | colleague_excl | myself
+    print('view: ', filt)
     form = LecturerSelectForm(request.POST or None, pwd=filt)
     if request.method == 'POST':
         if form.is_valid():
@@ -1372,6 +1394,12 @@ def LecturerSelectView(request):
                 response = redirect('Talent:ClassMatesSelect')
                 response.delete_cookie("confirm")
                 return response
+        else:
+            template = 'talenttrack/education_lecturer_select.html'
+            context = {'instance': instance, 'form': form}
+            response = render(request, template, context)
+            response.set_cookie("confirm","LR")
+            return response
     else:
         template = 'talenttrack/education_lecturer_select.html'
         context = {'instance': instance, 'form': form}
@@ -1385,13 +1413,11 @@ def LecturerSelectView(request):
 def LecturerAddView(request, tex):
     instance = get_object_or_404(WorkExperience, slug=tex)
 
-        colleague_excl = set(WorkColleague.objects.filter(experience__slug=tex).values_list('colleague_name', flat=True))
-        superior_excl = set(Superior.objects.filter(experience__slug=tex).values_list('superior_name', flat=True))
-        collab_excl = set(WorkCollaborator.objects.filter(experience__slug=tex).values_list('collaborator_name', flat=True))
-        client_excl = set(WorkClient.objects.filter(experience__slug=tex).values_list('client_name', flat=True))
-        myself = set(Profile.objects.filter(talent=request.user).values_list('talent', flat=True))
+    lecturer_excl = set(Lecturer.objects.filter(education__slug=tex).values_list('lecturer', flat=True))
+    colleague_excl = set(ClassMates.objects.filter(education__slug=tex).values_list('colleague', flat=True))
+    myself = set(Profile.objects.filter(talent=request.user).values_list('talent', flat=True))
 
-        filt = colleague_excl | superior_excl | collab_excl | client_excl | myself
+    filt = lecturer_excl | colleague_excl | myself
 
     form = LecturerSelectForm(request.POST or None, pwd=filt)
     if request.method == 'POST':
@@ -1407,6 +1433,12 @@ def LecturerAddView(request, tex):
                 response = redirect(reverse('Talent:EducationDetail', kwargs={'tex': tex}))
                 response.delete_cookie("confirm")
                 return response
+        else:
+            template = 'talenttrack/education_lecturer_add.html'
+            context = {'instance': instance, 'form': form}
+            response = render(request, template, context)
+            response.set_cookie("confirm","LR")
+            return response
     else:
         template = 'talenttrack/education_lecturer_add.html'
         context = {'instance': instance, 'form': form}
@@ -1419,15 +1451,13 @@ def LecturerAddView(request, tex):
 @csp_exempt
 def ClassMateSelectView(request):
     instance = WorkExperience.objects.filter(talent=request.user,edt=True).latest('date_captured')
-    tex = instance.experience.slug
+    tex = instance.slug
 
-    colleague_excl = set(WorkColleague.objects.filter(experience__slug=tex).values_list('colleague_name', flat=True))
-    superior_excl = set(Superior.objects.filter(experience__slug=tex).values_list('superior_name', flat=True))
-    collab_excl = set(WorkCollaborator.objects.filter(experience__slug=tex).values_list('collaborator_name', flat=True))
-    client_excl = set(WorkClient.objects.filter(experience__slug=tex).values_list('client_name', flat=True))
+    lecturer_excl = set(Lecturer.objects.filter(education__slug=tex).values_list('lecturer', flat=True))
+    colleague_excl = set(ClassMates.objects.filter(education__slug=tex).values_list('colleague', flat=True))
     myself = set(Profile.objects.filter(talent=request.user).values_list('talent', flat=True))
 
-    filt = colleague_excl | superior_excl | collab_excl | client_excl | myself
+    filt = lecturer_excl | colleague_excl | myself
 
     form = ClassMatesSelectForm(request.POST or None, pwd=filt)
     if request.method == 'POST':
@@ -1437,12 +1467,16 @@ def ClassMateSelectView(request):
             new.save()
             if 'another' in request.POST:
                 reponse = redirect('Talent:ClassMatesSelect')
-                response.delete_cookie("confirm")
                 return response
             elif 'done' in request.POST:
                 response = redirect(reverse('Talent:Home'))
                 response.delete_cookie("confirm")
                 return response
+        else:
+            template = 'talenttrack/education_classmate_select.html'
+            context = {'instance': instance, 'form': form}
+            response = render(request, template, context)
+            return response
     else:
         template = 'talenttrack/education_classmate_select.html'
         context = {'instance': instance, 'form': form}
@@ -1457,15 +1491,13 @@ def ClassMateAddView(request, tex):
     instance = get_object_or_404(WorkExperience, slug=tex)
 
     instance = WorkExperience.objects.filter(talent=request.user,edt=True).latest('date_captured')
-    tex = instance.experience.slug
+    tex = instance.slug
 
-    colleague_excl = set(WorkColleague.objects.filter(experience__slug=tex).values_list('colleague_name', flat=True))
-    superior_excl = set(Superior.objects.filter(experience__slug=tex).values_list('superior_name', flat=True))
-    collab_excl = set(WorkCollaborator.objects.filter(experience__slug=tex).values_list('collaborator_name', flat=True))
-    client_excl = set(WorkClient.objects.filter(experience__slug=tex).values_list('client_name', flat=True))
+    lecturer_excl = set(Lecturer.objects.filter(education__slug=tex).values_list('lecturer', flat=True))
+    colleague_excl = set(ClassMates.objects.filter(education__slug=tex).values_list('colleague', flat=True))
     myself = set(Profile.objects.filter(talent=request.user).values_list('talent', flat=True))
 
-    filt = colleague_excl | superior_excl | collab_excl | client_excl | myself
+    filt = lecturer_excl | colleague_excl | myself
 
     form = ClassMatesSelectForm(request.POST or None, pwd=filt)
     if request.method == 'POST':
@@ -1481,6 +1513,12 @@ def ClassMateAddView(request, tex):
                 response = redirect(reverse('Talent:EducationDetail', kwargs={'tex': tex}))
                 response.delete_cookie("confirm")
                 return response
+        else:
+            template = 'talenttrack/education_classmate_add.html'
+            context = {'instance': instance, 'form': form}
+            response = render(request, template, context)
+            response.set_cookie("confirm","CM")
+            return response
     else:
         template = 'talenttrack/education_classmate_add.html'
         context = {'instance': instance, 'form': form}
