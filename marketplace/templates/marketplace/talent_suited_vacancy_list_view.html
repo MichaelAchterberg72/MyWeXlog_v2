@@ -7,16 +7,15 @@
 <div class="card border-0">
   <div class="card-body">
     <div class="float-right">
-      <a href="{% url 'MarketPlace:Entrance' %}"  class="btn btn-secondary">Back</a>
+
+      <a href="{% url 'MarketPlace:ShortListView' instance.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-info">View Short-list</a>
+      <a href="{% url 'MarketPlace:VacancyIntDetail' instance.ref_no %}" class="btn btn-info">Interview List</a>
+      <a href="{% url 'MarketPlace:InterviewList' instance.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-info">Vacancy Dashboard</a>
+      <a href="{% url 'MarketPlace:VacancyPost' instance.ref_no %}?next={{ request.path|urlencode }}"  class="btn btn-secondary">Back</a>
       <a href="{% url 'MarketPlace:HelpTalentSuitedVacancyFull' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
       <i class="icon icon-question-circle"></i></a>
     </div>
-  <h4 class="">Vacancies Suited for Me - Full List</h4>
-
-  <div class="border-0" style="width: 100%;">
-    <div class="card-body">
-
-      <h3 id='suited'>Talent suited to the Vacancy</h3>
+      <h4 id='suited'>Talent suited to the Vacancy Full List</h4>
       <p>There is a total of {{ suitable_count }} talent suited to the vacancy listed here.</p>
       <table class="table table-hover table-sm">
         <thead>
@@ -49,9 +48,12 @@
             </td>
             {% empty %}
               {% if s_list %}
-                <p>All suitable talent has been short-listed.</p>
+                  <td colspan="6">All suitable talent has been short-listed.</td>
+                  <td>
+                    <a href="{% url 'MarketPlace:ShortListView' instance.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-info">Goto Short-list</a>
+                  </td>
               {% else %}
-                <p>No talent suited to this vacancy.</p>
+                    <td colspan="7">There is no talent currently in MyWexLog suited to this vacancy.</td>
               {% endif %}
           </tr>
           {% endfor %}
