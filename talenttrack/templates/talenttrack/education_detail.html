@@ -13,6 +13,7 @@
     <p class="card-text">Attended from {{ check.date_from }} to {{ check.date_to }}</p>
     <p class="card-text float-right"><strong>Hours: </strong>{{ check.topic.hours }}</p>
     <p class="card-text"><strong>Topic: </strong>{{ check.topic.topic }}</p>
+    <p class="card-text"><strong>Skills: </strong>{{ check.topic.skills.all|join:" || " }}</p>
   </div>
 </div>
 <br>
