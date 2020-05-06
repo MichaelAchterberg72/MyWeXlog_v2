@@ -641,8 +641,8 @@ def SkillProfileDetailView(request, tlt):
                 pass
             else:
                 d = skill_qs.get(pk=t)
-                e = d.topic_set.all()
-                e_sum = e.aggregate(sum_t=Sum('hours'))
+                e = exp.filter(topic__skills=d)
+                e_sum = e.aggregate(sum_t=Sum('topic__hours'))
                 sum_float = float(e_sum.get('sum_t'))
                 skill_q = skill_qs.filter(pk=t).values_list('skill', flat=True)
                 skill_f = skill_q[0]
@@ -706,8 +706,8 @@ def SumAllExperienceView(request, tlt):
                 pass
             else:
                 d = skill_qs.get(pk=t)
-                e = d.topic_set.all()
-                e_sum = e.aggregate(sum_t=Sum('hours'))
+                e = exp.filter(topic__skills=d)
+                e_sum = e.aggregate(sum_t=Sum('topic__hours'))
                 sum_float = float(e_sum.get('sum_t'))
                 skill_q = skill_qs.filter(pk=t).values_list('skill', flat=True)
                 skill_f = skill_q[0]
