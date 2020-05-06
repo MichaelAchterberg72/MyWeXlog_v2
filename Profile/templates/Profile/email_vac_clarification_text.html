@@ -1,0 +1,72 @@
+
+
+
+
+
+      <p>{{ form.instance.invited_by.first_name }} {{ form.instance.invited_by.last_name }} invites you to MyWeXlog</p>
+
+
+      <p>Hi {{ instance.work.requested_by.first_name }},</p>
+      <p>{{ instance.talent.alias }} has asked for additional clarification on vacancy "{{ instance.work.title }}" which you posted.</p>
+      <hr>
+      <p>Clarification:</p>
+      <p>{{ form.instance.clarification_required }}</p>
+      <hr>
+      <p>Please could you respond directly to {{ instance.talent.alias }} at <a href="emailto: {{ instance.talent.email }}">{{ instance.talent.email }}</a>.</p>
+
+
+      <p>Kind Regards</p>
+      <p>The MyWexLog Team</p>
+
+      <p>&nbsp</p>
+      <p>&nbsp</p>
+      <p>&nbsp</p>
+
+      <table class="table table-sm">
+        <col width="20%">
+        <col width="60%">
+        <col width="20%">
+          <thead>
+            <tr>
+              <th scope="col"></th>
+      <th scope="col"><center>Contact Details</center></th>
+      <th scope="col"></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td></td>
+      <td align="center"></td>
+      <td></td>
+      </tr>
+      <tr>
+      <td></td>
+      <td align="center"><small><strong>DevOpTec (Pty.) Ltd T/A MyWeXlog</strong><br>
+        <div class="center">
+        32 Viewland Crescent, Thornlands, Queensland, 4164, Australia<br>
+        Email: info@mywexlog.com<br>
+        Web: www.mywexlog.com</div></small></td>
+      <td></td>
+      </tr>
+      <tr>
+      <td></td>
+      <td align="center">
+        <small>
+
+        @copyright 2020 DevOpTec (Pty.) Ltd. All rights reserved</small></td>
+      <td></td>
+      </tr>
+
+      <tr>
+      <td></td>
+      <td align="center"><small><div class="center"><p>
+        This email was sent to {{ user.email }}.<br>
+        You are receiving this email as you are registered to receive notifications,
+        updates, news and/or promotional updates.</p>
+        <p>* Please do not reply to this email. You may log into
+        your account and contact Customer Care for any queries.<br>
+        *To change your preference or unsubscrie please navigate to {% url 'Users:CustomUserSettings' %}.</div></small></p></td>
+      <td></td>
+      </tr>
+      </tbody>
+      </table>

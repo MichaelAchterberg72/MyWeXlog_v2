@@ -438,15 +438,20 @@ def AssignmentClarifyView(request, wit):
             new.save()
 
             #>>>email
+            sg = sendgrid.SendGridAPIClient(api_key=os.environ.get('SENDGRID_API_KEY'))
+            from_email = Email('clarifications@wexlog.io')
+            to_email = To(instance.work.requested_by.email)
             subject = f"{instance.work.title}: Clarification Requested from {instance.talent.alias}"
-
             context = {'form': form, 'instance': instance}
-
-            html_message = render_to_string('Profile/email_vac_clarification.html', context)
-            plain_message = strip_tags(html_message)
-
-            send_to = instance.work.requested_by.email
-            send_mail(subject, html_message, 'clarifications@wexlog.io', [send_to,])
+            content = get_template('Profile/email_vac_clarification.html').render(context)
+            plain_message = render_to_string('Profile/email_vac_clarification_text.html', context)
+            text_content = strip_tags(plain_message)
+            html_content = Content("text/html", content)
+            mail = Mail(from_email, to_email, subject, text_content, html_content)
+            response = sg.client.mail.send.post(request_body=mail.get())
+            print(response.status_code)
+            print(response.body)
+            print(response.headers)
             #template = 'Profile/email_vac_clarification.html'
             #return render(request, template, context)
             #<<<email
