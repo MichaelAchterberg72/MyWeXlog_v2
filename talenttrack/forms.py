@@ -369,6 +369,7 @@ class WorkColleagueSelectForm(forms.ModelForm):
             raise forms.ValidationError("This person is already in your confirmation list! Please Choose another person.")
         return colleague_passed
 
+
 class WorkExperienceForm(forms.ModelForm):
     class Meta:
         model = WorkExperience
@@ -429,6 +430,7 @@ class ClassMatesSelectForm(forms.ModelForm):
         if als in pwd:
             raise forms.ValidationError("This person is already in your confirmation list! Please Choose another person.")
         return colleague_passed
+
 
 class ClassMatesConfirmForm(forms.ModelForm):
     class Meta:

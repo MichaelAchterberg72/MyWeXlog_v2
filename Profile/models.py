@@ -13,12 +13,13 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 from .utils import create_code7, create_code9
 
+
+from marketplace.models import WorkLocation, SkillLevel
 from users.models import CustomUser
 from locations.models import Region, City, Suburb, Currency
 from db_flatten.models import PhoneNumberType, LanguageList
 from enterprises.models import Enterprise, Branch
 from pinax.referrals.models import Referral
-from marketplace.models import WorkLocation, SkillLevel
 from talenttrack.models import Designation
 
 
@@ -278,8 +279,8 @@ class PostalAddress(models.Model):
     code = models.CharField('Postal Code', max_length=12, blank=True, null=True)
 
     def __str__(self):
-        return f'{self.talent}: {self.country}'
 
+        return f'{self.talent}: {self.country}'
     def create_postal_add(sender, **kwargs):
         if kwargs['created']:
             create_postal_add = PostalAddress.objects.create(talent=kwargs['instance'])

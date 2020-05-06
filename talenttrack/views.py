@@ -641,8 +641,8 @@ def SkillProfileDetailView(request, tlt):
                 pass
             else:
                 d = skill_qs.get(pk=t)
-                e = d.topic_set.all()
-                e_sum = e.aggregate(sum_t=Sum('hours'))
+                e = exp.filter(topic__skills=d)
+                e_sum = e.aggregate(sum_t=Sum('topic__hours'))
                 sum_float = float(e_sum.get('sum_t'))
                 skill_q = skill_qs.filter(pk=t).values_list('skill', flat=True)
                 skill_f = skill_q[0]
@@ -925,6 +925,11 @@ def ClientAddView(request, tex):
                 response = redirect(reverse('Talent:ExperienceDetail', kwargs={'tex': tex}))
                 response.delete_cookie("confirm")
                 return response
+        else:
+            template = 'talenttrack/experience_client_add.html'
+            context = {'instance': instance, 'form': form}
+            response =  render(request, template, context)
+            return response
     else:
         template = 'talenttrack/experience_client_add.html'
         context = {'instance': instance, 'form': form}
@@ -1226,10 +1231,14 @@ def ColleagueAddView(request, tex):
                 return response
 
             elif 'done' in request.POST:
-
                 response = redirect(reverse('Talent:ExperienceDetail', kwargs={'tex':tex}))
                 response.delete_cookie("confirm")
                 return response
+        else:
+            template = 'talenttrack/experience_colleague_add.html'
+            context = {'instance': instance, 'form': form}
+            response = render(request, template, context)
+            return response
 
     else:
         template = 'talenttrack/experience_colleague_add.html'
