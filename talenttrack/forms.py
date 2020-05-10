@@ -226,6 +226,14 @@ class PreLoggedExperienceForm(forms.ModelForm):
             'skills': SkillModelSelect2MultipleWidget(),
             }
 
+    def clean_date_to(self):
+        '''Ensures the end date is after the begin date'''
+        date_to = self.cleaned_data.get("date_to")
+        date_from = self.cleaned_data.get("date_from")
+        if date_to < date_from:
+            raise forms.ValidationError("You can't finish a period before it starts!, please ensure End date is after Start date.")
+        return date_to
+
 
 class WorkClientResponseForm(forms.ModelForm):
     class Meta:
@@ -390,6 +398,14 @@ class WorkExperienceForm(forms.ModelForm):
             'hours_worked': 'Hours',
         }
 
+    def clean_date_to(self):
+        '''Ensures the end date is after the begin date'''
+        date_to = self.cleaned_data.get("date_to")
+        date_from = self.cleaned_data.get("date_from")
+        if date_to < date_from:
+            raise forms.ValidationError("You can't finish a period before it starts!, please ensure End date is after Start date.")
+        return date_to
+
 
 class DesignationForm(forms.ModelForm):
     class Meta:
@@ -506,6 +522,14 @@ class EducationForm(forms.ModelForm):
             'course': 'Course Name',
             'topic' : 'Course Subject',
         }
+        
+    def clean_date_to(self):
+        '''Ensures the end date is after the begin date'''
+        date_to = self.cleaned_data.get("date_to")
+        date_from = self.cleaned_data.get("date_from")
+        if date_to < date_from:
+            raise forms.ValidationError("You can't finish a period before it starts!, please ensure End date is after Start date.")
+        return date_to
 
 
 class CourseForm(forms.ModelForm):

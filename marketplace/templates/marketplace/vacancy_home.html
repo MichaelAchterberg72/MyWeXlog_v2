@@ -8,7 +8,7 @@
   <div class="card-body">
     {% if request.user.subscription >= 1 %}
       <div class="float-right">
-        {% if request.user.subscription >= 1 %}
+        {% if request.user.subscription >= 2 %}
         <a href="{% url 'MarketPlace:History' %}" class="btn btn-primary 8rem">Applications History</a>
         {% endif %}
         <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary 8rem">Interview History</a>
@@ -17,10 +17,9 @@
       </div>
     {% endif %}
     <h4 class="card-title">Vacancies Suited for Me </h4>
-    <p>There are currently a total of <strong>{{ tot_vac }}</strong> vacancies suitable to you.<br>
-      You have already applied for <strong>{{ wbt_c }}</strong>, and have been shortlisted for
-      <strong>{{ bsl_c }}</strong>. That leaves <strong>{{ rem_vac }}</strong> for you to review.
-      {% if rem_vac > 5 %}We only list the 5 most recent vacancies here.{% endif %}</p>
+    <p>There are currently a total of <strong>{{ tot_vac }}</strong> vacancies suitable to you.<br>{% if request.user.subscription >= 2 %}You have already applied for <strong>{{ wbt_c }}</strong>.{% endif %}You have been shortlisted for
+    <strong>{{ bsl_c }}</strong>. That leaves <strong>{{ rem_vac }}</strong> for you to review.
+    {% if rem_vac > 5 %}We only list the 5 most recent vacancies here.{% endif %}</p>
     <table class="table table-hover table-sm">
       <col width="20%">
       <col width="6%">
@@ -236,6 +235,6 @@
 </div>
 {% endif %}
 {% if request.user.subscription == 0 %}
-  <h6>To see more information about the vacancies suited to you and other information on this page a subscription is required. A history of interviews and vacancies applied for as well as a search for posted vacancies based on its reference number are also available on a paid subscription.</h6>
+  <h6>To see more information about the vacancies suited to you and other information on this page a subscription is required.<br>A history of interviews and vacancies applied for as well as a search for posted vacancies based on its reference number are also available on a paid subscription.</h6>
 {% endif %}
 {% endblock content %}

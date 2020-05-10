@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
+from django.core.validators import FileExtensionValidator
 from time import time
 import datetime
 from random import random
@@ -212,7 +213,7 @@ class WorkExperience(models.Model):
     date_from = models.DateField()
     date_to = models.DateField()
     date_captured = models.DateField(auto_now_add=True)
-    upload = models.FileField(upload_to=ExpFilename, blank=True, null=True)
+    upload = models.FileField(upload_to=ExpFilename, blank=True, null=True, validators=[FileExtensionValidator(['pdf'])])
     score = models.SmallIntegerField(default=0)
     comment = models.TextField(blank=True, null=True)
     #Work Experience Fields (Captured & Pre-Experience)
@@ -230,8 +231,8 @@ class WorkExperience(models.Model):
     skills = models.ManyToManyField(SkillTag, related_name='experience')
     #Fields for Education & Training
     edt = models.BooleanField(default=False)
-    course = models.ForeignKey(Course, on_delete=models.PROTECT, blank=True, null=True)
-    topic = models.ForeignKey(Topic, on_delete=models.PROTECT, blank=True, null=True, verbose_name="Subject")
+    course = models.ForeignKey(Course, on_delete=models.PROTECT, null=True)
+    topic = models.ForeignKey(Topic, on_delete=models.PROTECT, null=True, verbose_name="Subject")
     slug = models.SlugField(max_length=30, blank=True, null=True, unique=True)
 
     class Meta:
@@ -293,7 +294,7 @@ class WorkColleague(models.Model):
 
 class Superior(models.Model):
         #Captured by talent
-    experience = models.ForeignKey(WorkExperience, on_delete=models.PROTECT)
+    experience = models.ForeignKey(WorkExperience, on_delete=models.CASCADE)
     superior_name = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     designation = models.ForeignKey(Designation, on_delete=models.PROTECT)
         #AutoCaptured
@@ -322,7 +323,7 @@ class Superior(models.Model):
 
 class WorkCollaborator(models.Model):
         #Captured by talent
-    experience = models.ForeignKey(WorkExperience, on_delete=models.PROTECT)
+    experience = models.ForeignKey(WorkExperience, on_delete=models.CASCADE)
     collaborator_name = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     company = models.ForeignKey(Enterprise, on_delete=models.PROTECT)
     branch = models.ForeignKey(Branch, on_delete=models.PROTECT)
@@ -354,7 +355,7 @@ class WorkCollaborator(models.Model):
 
 class WorkClient(models.Model):
         #Captured by talent
-    experience = models.ForeignKey(WorkExperience, on_delete=models.PROTECT)
+    experience = models.ForeignKey(WorkExperience, on_delete=models.CASCADE)
     client_name = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     designation = models.ForeignKey(Designation, on_delete=models.PROTECT)
     company = models.ForeignKey(Enterprise, on_delete=models.PROTECT)

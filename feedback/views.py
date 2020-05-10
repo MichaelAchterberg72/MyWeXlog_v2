@@ -25,6 +25,7 @@ def FeedBackView(request):
             new = form.save(commit=False)
             new.talent = request.user
             new.save()
+
             if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
                 next_url = reverse('Profile:Home')
             return HttpResponseRedirect(next_url)

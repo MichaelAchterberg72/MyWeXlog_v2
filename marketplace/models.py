@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.core.validators import FileExtensionValidator
 from django.utils import timezone
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
@@ -115,7 +116,7 @@ class TalentRequired(models.Model):
     certification = models.ManyToManyField(Result, verbose_name='Certifications Required', blank=True)
     scope = models.TextField()
     expectations = models.TextField()
-    terms = models.FileField(upload_to=BidTerms, blank=True, null=True)
+    terms = models.FileField(upload_to=BidTerms, blank=True, null=True, validators=[FileExtensionValidator(['pdf'])])
     city = models.ForeignKey(City, on_delete=models.PROTECT, verbose_name='City, Town or Place')
     date_modified = models.DateField(auto_now=True)
     vac_wkfl = models.CharField(max_length=1, choices=WKFLOW, default='P')
@@ -279,7 +280,7 @@ class WorkIssuedTo(models.Model):
         ('C','Clarification Requested'),
     )
     #completed by employer
-    talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='Successful_talent')
+    talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='Successful_talent')
     work = models.ForeignKey(TalentRequired, on_delete=models.PROTECT)
     tlt_response = models.CharField(max_length=1, choices = RSP, default= 'P')
     tlt_decline_reason = models.ForeignKey(DeclineAssignment, on_delete=models.PROTECT, null=True)

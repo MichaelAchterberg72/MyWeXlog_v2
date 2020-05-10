@@ -669,9 +669,9 @@ def ClassMatesCommentView(request, cmt):
 
 
 @login_required()
-def ClassMatesWrongPersonView(request, pk):
+def ClassMatesWrongPersonView(request, cmt):
     if request.method == 'POST':
-        info = ClassMates.objects.get(pk=pk)
+        info = ClassMates.objects.get(slug=cmt)
         info.confirm = 'Y'
         info.save()
     return redirect(reverse('Profile:Confirm')+'#ClassMates')

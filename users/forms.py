@@ -25,6 +25,22 @@ class CustomSignupForm(SignupForm):
     class Meta:
         model = CustomUser
 
+    def clean_first_name(self):
+        first_name = self.clean_data.get("first_name")
+        testf = first_name.isalpha()
+        if testf == True:
+            return first_name
+        else:
+            raise forms.ValidationError("Only aphabetical characters allowed!")
+
+    def clean_last_name(self):
+        last_name = self.clean_data.get("last_name")
+        testl = last_name.isalpha()
+        if testl == True:
+            return last_name
+        else:
+            raise forms.ValidationError("Only aphabetical characters allowed!")
+
     def save(self, request):
 
         CustomUser = super(CustomSignupForm, self).save(request)

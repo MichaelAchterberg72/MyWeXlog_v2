@@ -25,6 +25,7 @@ class Invitation(models.Model):
     date_invited = models.DateTimeField(auto_now_add=True)
     accpeted = models.BooleanField(null=True, default=False)
     date_accepted = models.DateTimeField(auto_now=True)
+    assigned = models.BooleanField('Assigned since registration', default=False)
 
     def __str__(self):
         return f"{self.name} {self.surname} invited by {self.invited_by} on {self.date_invited} - {self.date_accepted}"
