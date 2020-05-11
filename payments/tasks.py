@@ -36,7 +36,7 @@ class SubscriptionExpiredTask(Task):
 
         sg = sendgrid.SendGridAPIClient(api_key=os.environ.get('SENDGRID_API_KEY'))
         from_email = Email(settings.CELERY_SYSTEM_EMAIL)
-        to_email = To(user.Email)
+        to_email = To(user)
         subject = 'Your Subscription has Expired'
         context = {'user': user.first_name}
         content = get_template('email_templates/email_subscription_expired.html').render(context)
@@ -58,7 +58,7 @@ class SubscriptionAmountDifferentTask(Task):
 
         sg = sendgrid.SendGridAPIClient(api_key=os.environ.get('SENDGRID_API_KEY'))
         from_email = Email(settings.CELERY_SYSTEM_EMAIL)
-        to_email = To(user.Email)
+        to_email = To(user)
         subject = 'Your Payment Amount with PayPal varies to the Subscription Amount'
         context = {'user': user.first_name}
         content = get_template('email_templates/email_subscription_amount_different.html').render(context)
@@ -80,7 +80,7 @@ class SubscriptionCancelledTask(Task):
 
         sg = sendgrid.SendGridAPIClient(api_key=os.environ.get('SENDGRID_API_KEY'))
         from_email = Email(settings.CELERY_SYSTEM_EMAIL)
-        to_email = To(user.Email)
+        to_email = To(user)
         subject = 'Your Subscription has been Cancelled'
         context = {'user': user.first_name}
         content = get_template('email_templates/email_subscription_cancelled.html').render(context)
@@ -102,7 +102,7 @@ class SubscriptionFailedTask(Task):
 
         sg = sendgrid.SendGridAPIClient(api_key=os.environ.get('SENDGRID_API_KEY'))
         from_email = Email(settings.CELERY_SYSTEM_EMAIL)
-        to_email = To(user.Email)
+        to_email = To(user)
         subject = 'Your Subscription failed to be processed'
         context = {'user': user.first_name}
         content = get_template('email_templates/email_subscription_failed.html').render(context)
@@ -124,7 +124,7 @@ class SubscriptionSignupTask(Task):
 
         sg = sendgrid.SendGridAPIClient(api_key=os.environ.get('SENDGRID_API_KEY'))
         from_email = Email(settings.CELERY_SYSTEM_EMAIL)
-        to_email = To(user.Email)
+        to_email = To(user)
         subject = 'MyWeXlog Sign-up Confirmation'
         context = {'user': user.first_name}
         content = get_template('email_templates/email_subscription_signup.html').render(context)
@@ -168,7 +168,7 @@ class RemindDeleteOldSubscription(Task):
 
         sg = sendgrid.SendGridAPIClient(api_key=os.environ.get('SENDGRID_API_KEY'))
         from_email = Email(settings.CELERY_SYSTEM_EMAIL)
-        to_email = To(user.Email)
+        to_email = To(user)
         subject = 'MyWeXlog Subscription Reminder'
         context = {'user': user, 'txn_id': payment_txn_id}
         content = get_template('email_templates/email_reminder_old_subscription_delete.html').render(context)
@@ -187,7 +187,8 @@ def SubscriptionUpgradeRefund():
 
     def run(self, user):
 
-        q = PayPalStandardBase.objects.filter(custom=user).order_by(-payment_date)
+        p = PayPalStandardBase.objects.filter(custom=user)
+        q = p.filter(flag = "True").order_by(-payment_date)
         subscriber = q[1]
         useremail = subscriber.custom
 

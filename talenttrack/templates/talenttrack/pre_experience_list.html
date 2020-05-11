@@ -37,7 +37,7 @@
         <td class="align-middle text-center" data-toggle="tooltip" data-placement="top" title="A score > 3 is required to achieve a 'confirmed' status">{{ p.score }}</td>
         <td><div class="float-right">
           <a href="{% url 'Talent:PreLogDetail' p.slug %}" class="badge badge-pill badge-secondary" style="width: 5rem;">Detail</a>
-          <form  action="{% url 'Talent:PLEDelete' p.id %}" method="post">
+          <form  action="{% url 'Talent:PLEFDelete' p.id %}" method="post">
             {% csrf_token %}
             <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
           </form></div>

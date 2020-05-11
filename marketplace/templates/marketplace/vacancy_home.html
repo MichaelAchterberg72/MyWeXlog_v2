@@ -93,6 +93,7 @@
 
 <br>
 {% if request.user.subscription >= 2 %}
+{% if ipost_count >= 1 %}
 <div class="card border-0">
   <div class="card-body">
     <div class="float-right">
@@ -101,7 +102,7 @@
     <i class="icon icon-question-circle"></i></a>
     </div>
   <h4 class="card-title">My Vacancies Advertised (Open)</h4>
-  <p>You currently have {{ ipost_count }} open vacancies listed, we only list the 5 most recent vacancies here.</p>
+  <p>You currently have {{ ipost_count }} open vacancies listed{% if ipost_count > 5 %}, we only list the 5 most recent vacancies here.{% else %}.{% endif %}</p>
   <table class="table table-hover table-sm">
     <thead>
       <tr>
@@ -135,11 +136,27 @@
   </table>
     <div class="float-right">
       <a href="{% url 'MarketPlace:EmployerInterviewHistory' request.user.alias %}" class="btn btn-primary" style="width: 10rem">Interview History</a>
+      {% if ipost_count > 5 %}
       <a href="{% url 'MarketPlace:AllPostedVacOpen' %}" class="btn btn-primary"style="width: 12rem">All Open Vacancies</a>
+      {% endif %}
     </div>
   </div>
 </div>
 <br>
+{% else %}
+<div class="card border-0">
+  <div class="card-body">
+  <h4 class="card-title">My Posted Vacancies Information</h4>
+  <p>Information regarding your vacancies with details as to the Talent suited to the Vacancy as well as Applicants for the Vacancy will only be available once you have posted your first vacancy.</p>
+  <p>In order to do this please click the below "Post Vacancy" button and complete the form.</p>
+  <div class="float-right">
+  <a href="{% url 'MarketPlace:Vacancy' %}" class="btn btn-primary">Post Vacancy</a>
+  </div>
+  </div>
+</div>
+<br>
+{% endif %}
+{% if ipost_closed_count >= 1 %}
 <div class="row">
   <div class="col-sm-12">
     <div class="card border-0">
@@ -150,7 +167,7 @@
         <i class="icon icon-question-circle"></i></a>
         </div>
       <h4 class="card-title">My Vacancies Advertised (Closed)</h4>
-      <p>You currently have {{ ipost_closed_count }} closed vacancies listed, we only list the 5 most recent vacancies here.</p>
+      <p>You currently have {{ ipost_closed_count }} closed vacancies listed{% if ipost_closed_count > 5 %}, we only list the 5 most recent vacancies here.{% else %}.{% endif %}</p>
       <table class="table table-hover table-sm">
         <thead>
           <tr>
@@ -183,12 +200,15 @@
         </tbody>
       </table>
       <div class="float-right">
+        {% if ipost_closed_count > 5 %}
         <a href="{% url 'MarketPlace:AllPostedVacClosed' %}" class="btn btn-primary"style="width: 12rem">All Closed Vacancies</a>
+        {% endif %}
       </div>
       </div>
     </div>
   </div>
 </div>
+{% endif %}
 {% endif %}
 {% if request.user.subscription >= 1 %}
 <br>

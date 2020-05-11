@@ -833,6 +833,17 @@ def PreLoggedExperienceDeleteView(request, ple_pk):
 
 
 @login_required()
+def PreLoggedExperienceDeleteFullView(request, ple_pk):
+    info = WorkExperience.objects.get(pk=ple_pk)
+    if info.talent == request.user:
+        if request.method =='POST':
+            info.delete()
+            return redirect(reverse('Talent:PreExperienceList'))
+    else:
+        raise PermissionDenied
+
+
+@login_required()
 def PreLogDetailView(request, tex):
     check = WorkExperience.objects.get(slug=tex, prelog=True)
     if check.talent == request.user:
@@ -1323,6 +1334,17 @@ def WorkExperienceDeleteView(request, we_pk):
 
 
 @login_required()
+def WorkExperienceDeleteFullView(request, we_pk):
+    info = WorkExperience.objects.get(pk=we_pk)
+    if info.talent == request.user:
+        if request.method =='POST':
+            info.delete()
+            return redirect(reverse('Talent:ExperienceList'))
+    else:
+        raise PermissionDenied
+
+
+@login_required()
 def EducationDetail(request, tex):
     check = WorkExperience.objects.get(slug=tex, edt=True)
     if check.talent == request.user:
@@ -1561,6 +1583,17 @@ def EducationDeleteView(request, edt_pk):
         if request.method =='POST':
             info.delete()
             return redirect(reverse('Talent:Home')+'#headingOne')
+    else:
+        raise PermissionDenied
+
+
+@login_required()
+def EducationDeleteFullView(request, edt_pk):
+    info = WorkExperience.objects.get(pk=edt_pk)
+    if info.talent == request.user:
+        if request.method =='POST':
+            info.delete()
+            return redirect(reverse('Talent:TrainingList'))
     else:
         raise PermissionDenied
 
