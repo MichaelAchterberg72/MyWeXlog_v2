@@ -7,7 +7,7 @@
 <div class="card border-0">
   <div class="card-body">
   <h4 class="">Training & Education - Full List<span><p class="float-right">
-    <a href="{% url 'Talent:Home' %}"  class="badge badge-pill badge-primary">Back</a>
+    <a href="{% url 'Talent:Home' %}"  class="btn btn-primary">Back</a>
     <a href="{% url 'MarketPlace:HelpWorkCOnfigeration' %}" target="_blank" class="align-middle" style="font-size: 27px""><i class="icon icon-question-circle"></i></a>
   </p></span></h4>
   <p>There are a total of {{ train_count }} Training & Education experience items that have been captured.</p>
@@ -39,7 +39,7 @@
           <td class="align-middle text-center" data-toggle="tooltip" data-placement="top" title="A score > 3 is required to achieve a 'confirmed' status">{{ t.score }}</td>
           <td class="align-middle text-center"><div class="float-right">
             <a href="{% url 'Talent:EducationDetail' t.slug %}" class="badge badge-pill badge-secondary" style="width: 5rem;">Detail</a>
-            <form  action="{% url 'Talent:EDTDelete' t.id %}" method="post">
+            <form  action="{% url 'Talent:EDTFDelete' t.id %}" method="post">
               {% csrf_token %}
               <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
             </form></div>

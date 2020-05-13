@@ -74,8 +74,11 @@ urlpatterns = [
     path('lcm-del/<int:pk>/<slug:tlt>/', views.LicenseCertificationDeleteView, name='LCMDelete'),
     path('lcm-fv/<slug:tlt>/', views.LCMFullView, name='LCM_FV'),
     path('ple-del/<int:ple_pk>/', views.PreLoggedExperienceDeleteView, name='PLEDelete'),
+    path('ple-del-full/<int:ple_pk>/', views.PreLoggedExperienceDeleteFullView, name='PLEFDelete'),
     path('we-del/<int:we_pk>/', views.WorkExperienceDeleteView, name='WEDelete'),
+    path('we-del-full/<int:we_pk>/', views.WorkExperienceDeleteFullView, name='WEFDelete'),
     path('edt-del/<int:edt_pk>/', views.EducationDeleteView, name='EDTDelete'),
+    path('edt-del-full/<int:edt_pk>/', views.EducationDeleteFullView, name='EDTFDelete'),
     # Help urls
     path('help/experience-home/', views.HelpExperienceHomeView, name='HelpExperienceHome'),
     path('help/experience-education/', views.HelpExperienceEducationView, name='HelpExperienceEducation'),

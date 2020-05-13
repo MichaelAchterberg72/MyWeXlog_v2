@@ -6,7 +6,7 @@
 {% block content %}
 <div class="card border-0">
   <div class="card-body">
-  <h4 class="">Experience - Full List<span><p class="float-right"><a href="{% url 'Talent:Home' %}"  class="badge badge-pill badge-primary">Back</a></p></span></h4>
+  <h4 class="">Experience - Full List<span><p class="float-right"><a href="{% url 'Talent:Home' %}?next={{ request.path|urlencode }}"  class="badge badge-pill badge-primary">Back</a></p></span></h4>
   <p>There are a total of {{ exp_count }} Experience items that have been captured.</p>
   <br>
 
@@ -36,7 +36,7 @@
           <td class="align-middle text-center" data-toggle="tooltip" data-placement="top" title="A score > 3 is required to achieve a 'confirmed' status">{{ e.score }}</td>
           <td><div class="float-right">
             <a href="{% url 'Talent:ExperienceDetail' e.slug %}" class="badge badge-pill badge-secondary"  style="width: 5rem;">Detail</a>
-            <form  action="{% url 'Talent:WEDelete' e.id %}" method="post">
+            <form  action="{% url 'Talent:WEFDelete' e.id %}" method="post">
               {% csrf_token %}
               <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
             </form></div>

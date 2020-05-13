@@ -264,7 +264,7 @@ class WorkExperience(models.Model):
 
 class WorkColleague(models.Model):
         #Captured by talent
-    experience = models.ForeignKey(WorkExperience, on_delete=models.CASCADE)
+    experience = models.ForeignKey(WorkExperience, on_delete=models.PROTECT)
     colleague_name = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     designation = models.ForeignKey(Designation, on_delete=models.PROTECT)
         #AutoCaptured
