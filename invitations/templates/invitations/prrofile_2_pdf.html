@@ -1,0 +1,26 @@
+{% extends 'base_homelite.html' %}
+{% load staticfiles %}
+
+{% block title %}{{block.super}}-Invite{% endblock title %}
+
+{% block Style %}{% endblock Style %}
+
+{% block content %}
+<h1>MyWeXlog Profile Export</h1>
+<p>Date printed: {{ tdy }}</p>
+<hr>
+<h3>Profile Background</h3>
+<p>Name: {{ pfl.f_name }} {{ pfl.l_name }}<br>
+Alias: {{ pfl.alias }}<br>
+Birthdate: {{ pfl.birth_date }}<br>
+Background: {{ pfl.background }}<br>
+Mentor: {{ pfl.get_mentor_display }}<br>
+Standard Rate: {{ pfl.currency }} {{ pfl.std_rate }} {{ pfl.get_rate_unit_display }}<br>
+Motivation: {{ pfl.motivation }}<br>
+Experience Level: {{ pfl.exp_lvl }}<br>
+Work Rating: {{ pfl.avg_rate }} / 5</p>
+
+
+
+{% endblock content %}
+{% block Script %}{% endblock Script %}

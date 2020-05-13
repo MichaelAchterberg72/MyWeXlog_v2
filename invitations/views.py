@@ -1,6 +1,15 @@
 from django.shortcuts import render, redirect, reverse
 from django.utils.http import is_safe_url
+from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+
+#html to pdf
+from django.utils import timezone
+from invitations.utils import render_to_pdf
+from weasyprint import HTML
+from weasyprint.fonts import FontConfiguration
+
+from Profile.models import Profile
 
 #email
 from django.core.mail import send_mail, EmailMultiAlternatives
@@ -60,6 +69,7 @@ def InvitationView(request):
         context = {'form': form}
         return render(request, template, context)
 
+
 @login_required()
 def FlatInviteview(request):
     invitee = request.user
@@ -94,3 +104,24 @@ def FlatInviteview(request):
         template = 'invitations/invite_lite_form.html'
         context = {'form': form}
         return render(request, template, context)
+
+
+
+
+@login_required()
+def profile_2_pdf(request):
+    tlt = request.user
+    tdy = timezone.now()
+    pfl = Profile.objects.get(talent=tlt)
+
+    response = HttpResponse(content_type="application/pdf")
+    response['Content-Disposition'] = "inline; filename=MyWeXlogProfile.pdf"
+    template = 'invitations/prrofile_2_pdf.html'
+    context = {
+            'pfl': pfl, 'tdy': tdy,
+            }
+    html = render_to_string(template, context)
+    font_config = FontConfiguration()
+    HTML(string=html).write_pdf(response, font_config=font_config)
+
+    return response
