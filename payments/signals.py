@@ -137,7 +137,7 @@ def show_me_the_money(sender, **kwargs):
 
 
      # check for subscription payment IPN
-    elif ipn_obj.txn_type == "subscr_payment" and ipn_obj.flag = "True":
+    elif ipn_obj.txn_type == "subscr_payment" and ipn_obj.flag == "True":
         if ipn_obj.payment_status == "Completed":
 
             if ipn_obj.receiver_email != settings.PAYPAL_RECEIVER_EMAIL:
