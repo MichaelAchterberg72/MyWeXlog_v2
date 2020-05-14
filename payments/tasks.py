@@ -19,11 +19,12 @@ import os
 from sendgrid.helpers.mail import *
 
 from users.models import CustomUserSettings
+#from paypal.standard.models import PayPalStandardBase
 
 from datetime import datetime
 from datetime import date
 
-from paypal.standard.models import PayPalStandardBase
+#from paypal.standard.models import PayPalStandardBase
 
 
 app = Celery('tasks', broker=settings.CELERY_BROKER_URL)
@@ -185,12 +186,12 @@ class RemindDeleteOldSubscription(Task):
 
 def SubscriptionUpgradeRefund():
 
-    def run(self, user):
+    def run(self, user, useremail):
 
-        p = PayPalStandardBase.objects.filter(custom=user)
-        q = p.filter(flag = "True").order_by(-payment_date)
+        p = PayPalStandardBase.objects.filter(custom=user.custom)
+        q = p.filter(flag = True).order_by(-payment_date)
         subscriber = q[1]
-        useremail = subscriber.custom
+        useremail = useremail
 
         npd = subscriber.next_payment_date
         npdd = npd.strftime('%d/%m/%Y')

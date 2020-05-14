@@ -7,6 +7,9 @@ import requests
 from paypal.standard.ipn.signals import invalid_ipn_received, valid_ipn_received
 from paypal.standard.models import PayPalStandardBase
 
+from django.db.models.signals import post_save
+
+from payments.signals import show_me_the_money
 
 class PayPalIPN(PayPalStandardBase):
     """Logs PayPal IPN interactions."""
@@ -37,3 +40,5 @@ class PayPalIPN(PayPalStandardBase):
 
     def __str__(self):
         return "PayPalIPN: {0}".format(self.id)
+
+post_save.connect(show_me_the_money, sender=PayPalIPN)

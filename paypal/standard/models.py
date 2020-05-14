@@ -4,10 +4,15 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.utils.functional import cached_property
+from django.db.models.signals import post_save
 
 from paypal.standard.conf import POSTBACK_ENDPOINT, SANDBOX_POSTBACK_ENDPOINT
 from paypal.standard.helpers import check_secret, duplicate_txn_id
 from paypal.utils import warn_untested
+
+from payments.signals import show_me_the_money
+
+
 
 ST_PP_ACTIVE = 'Active'
 ST_PP_CANCELLED = 'Cancelled'
