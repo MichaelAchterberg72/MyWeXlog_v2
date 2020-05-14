@@ -5,11 +5,17 @@ from django.contrib.auth.decorators import login_required
 
 #html to pdf
 from django.utils import timezone
-from invitations.utils import render_to_pdf
 from weasyprint import HTML
 from weasyprint.fonts import FontConfiguration
 
-from Profile.models import Profile
+from Profile.models import (
+        Profile, BriefCareerHistory, OnlineRegistrations, IdentificationDetail, PassportDetail, LanguageTrack, Email, PhysicalAddress, PostalAddress, PhoneNumber
+)
+from marketplace.models import (
+        TalentRequired, BidShortList, BidInterviewList, WorkBid, TalentAvailabillity, WorkIssuedTo, VacancyRate, TalentRate
+)
+from booklist.models import ReadBy
+from .models import Invitation
 
 #email
 from django.core.mail import send_mail, EmailMultiAlternatives
@@ -106,19 +112,36 @@ def FlatInviteview(request):
         return render(request, template, context)
 
 
-
-
 @login_required()
 def profile_2_pdf(request):
     tlt = request.user
     tdy = timezone.now()
     pfl = Profile.objects.get(talent=tlt)
+    bch = BriefCareerHistory.objects.filter(talent=tlt).order_by('-date_from')
+    osr = OnlineRegistrations.objects.filter(talent=tlt)
+    idt = IdentificationDetail.objects.filter(talent=tlt)
+    psp = PassportDetail.objects.filter(talent=tlt)
+    lng = LanguageTrack.objects.filter(talent=tlt)
+    eml = Email.objects.filter(talent=tlt)
+    pad = PhysicalAddress.objects.filter(talent=tlt)
+    pst = PostalAddress.objects.filter(talent=tlt)
+    pnr = PhoneNumber.objects.filter(talent=tlt)
+    bks = ReadBy.objects.filter(talent=tlt)
+    ite = Invitation.objects.filter(invited_by=tlt)
+    vac = TalentRequired.objects.filter(requested_by=tlt)
+    bsl = BidShortList.objects.filter(talent=tlt)
+    bil = BidInterviewList.objects.filter(talent=tlt)
+    wkb = WorkBid.objects.filter(talent=tlt)
+    tla = TalentAvailabillity.objects.filter(talent=tlt)
+    wit = WorkIssuedTo.objects.filter(talent=tlt)
+    vyr = VacancyRate.objects.filter(talent=tlt)
+    tlr = TalentRate.objects.filter(talent=tlt)
 
     response = HttpResponse(content_type="application/pdf")
     response['Content-Disposition'] = "inline; filename=MyWeXlogProfile.pdf"
     template = 'invitations/prrofile_2_pdf.html'
     context = {
-            'pfl': pfl, 'tdy': tdy,
+            'pfl': pfl, 'tdy': tdy, 'bch': bch, 'osr': osr, 'psp': psp, 'lng': lng, 'eml': eml,'pad': pad, 'pst': pst, 'pnr': pnr, 'bks': bks, 'ite': ite, 'vac': vac, 'bsl': bsl, 'bil': bil, 'wkb': wkb, 'tla': tla, 'wit': wit, 'vyr': vyr, 'tlr': tlr,
             }
     html = render_to_string(template, context)
     font_config = FontConfiguration()

@@ -289,7 +289,7 @@ class PostalAddress(models.Model):
 #Function to randomise filename for Profile Upload
 def ExtFilename(instance, filename):
 	ext = filename.split('.')[-1]
-	return "profile\%s_%s.%s" % (str(time()).replace('.','_'), random(), ext)
+	return "%s/profile\%s_%s.%s" % (instance.talent.id, str(time()).replace('.','_'), random(), ext)
 
 
 class FileUpload(models.Model):

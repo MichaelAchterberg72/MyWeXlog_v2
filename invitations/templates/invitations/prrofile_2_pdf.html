@@ -9,18 +9,483 @@
 <h1>MyWeXlog Profile Export</h1>
 <p>Date printed: {{ tdy }}</p>
 <hr>
-<h3>Profile Background</h3>
-<p>Name: {{ pfl.f_name }} {{ pfl.l_name }}<br>
-Alias: {{ pfl.alias }}<br>
-Birthdate: {{ pfl.birth_date }}<br>
-Background: {{ pfl.background }}<br>
-Mentor: {{ pfl.get_mentor_display }}<br>
-Standard Rate: {{ pfl.currency }} {{ pfl.std_rate }} {{ pfl.get_rate_unit_display }}<br>
-Motivation: {{ pfl.motivation }}<br>
-Experience Level: {{ pfl.exp_lvl }}<br>
-Work Rating: {{ pfl.avg_rate }} / 5</p>
 
+<div class="">
+  <h3>Profile Background</h3>
+  <p>
+    Name: {{ pfl.f_name }} {{ pfl.l_name }}<br>
+    Alias: {{ pfl.alias }}<br>
+    Birthdate: {{ pfl.birth_date }}<br>
+    Background: {{ pfl.background }}<br>
+    Mentor: {{ pfl.get_mentor_display }}<br>
+    Standard Rate: {{ pfl.currency }} {{ pfl.std_rate }} {{ pfl.get_rate_unit_display }}<br>
+    Motivation: {{ pfl.motivation }}<br>
+    Experience Level: {{ pfl.exp_lvl }}<br>
+    Work Rating: {{ pfl.avg_rate }} / 5
+  </p>
+  <hr>
+</div>
 
+<div class="">
+  <h3>Brief Career History</h3>
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th class="align-middle text-center">Date From</th>
+        <th class="align-middle text-center">Date To</th>
+        <th class="align-middle text-center">Company<br>Branch</th>
+        <th class="align-middle text-center">Designation</th>
+        <th class="align-middle text-center">Configeration</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for x in bch %}
+      <tr>
+        <td class="align-middle text-center">{{ x.date_from }}</td>
+        <td class="align-middle text-center">{{ x.date_to }}</td>
+        <td class="align-middle text-center">{{ x.companybranch.company.name }}<br>{{ x.companybranch.name }}</td>
+        <td class="align-middle text-center">{{ x.designation }}</td>
+        <td class="align-middle text-center">{{ x.work_configeration }}</td>
+      </tr>
+      {% empty %}
+        <tr>
+          <td colspan="5">"None Captured"</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <hr>
+</div>
 
+<div class="">
+  <h3>Online Site Registrations</h3>
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th class="align-middle text-center">Site Name</th>
+        <th class="align-middle text-center">Profile URL</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for x in ocr %}
+      <tr>
+        <td class="align-middle text-center">{{ x.sitename }}</td>
+        <td class="align-middle text-center">{{ x.profileurl }}</td>
+      </tr>
+      {% empty %}
+        <tr>
+          <td colspan="2">"None Captured"</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <hr>
+</div>
+
+<div class="">
+  <h3>Indentification Detail</h3>
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th class="align-middle text-center">Identification Number</th>
+        <th class="align-middle text-center">Type</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for x in idt %}
+      <tr>
+        <td class="align-middle text-center">{{ x.identification }}</td>
+        <td class="align-middle text-center">{{ x.id_type }}</td>
+      </tr>
+      {% empty %}
+        <tr>
+          <td colspan="2">"None Captured"</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <hr>
+</div>
+
+<div class="">
+  <h3>Passport Detail</h3>
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th class="align-middle text-center">Passport Number</th>
+        <th class="align-middle text-center">Country</th>
+        <th class="align-middle text-center">Expiry Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for x in psp %}
+      <tr>
+        <td class="align-middle text-center">{{ x.passport_number }}</td>
+        <td class="align-middle text-center">{{ x.issue }}</td>
+        <td class="align-middle text-center">{{ x.expiry_date }}</td>
+      </tr>
+      {% empty %}
+        <tr>
+          <td colspan="2">"None Captured"</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <hr>
+</div>
+
+<div class="">
+  <h3>Languages</h3>
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th class="align-middle text-center">Language</th>
+        <th class="align-middle text-center">Level</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for x in lng %}
+      <tr>
+        <td class="align-middle text-center">{{ x.language }}</td>
+        <td class="align-middle text-center">{{ x.get_level_display }}</td>
+      </tr>
+      {% empty %}
+        <tr>
+          <td colspan="2">"None Captured"</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <hr>
+</div>
+
+<div class="">
+  <h3>Email</h3>
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th class="align-middle text-center">Alias</th>
+        <th class="align-middle text-center">Active?</th>
+        <th class="align-middle text-center">Company</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for x in eml %}
+      <tr>
+        <td class="align-middle text-center">{{ x.email }}</td>
+        <td class="align-middle text-center">{{ x.active }}</td>
+        <td class="align-middle text-center">{{ x.company }}</td>
+      </tr>
+      {% empty %}
+        <tr>
+          <td colspan="2">"None Captured"</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <hr>
+</div>
+
+<div class="">
+  <h3>Physical Address</h3>
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th class="align-middle text-center">Address</th>
+        <th class="align-middle text-center">Country<br>Region</th>
+        <th class="align-middle text-center">City<br>Suburb</th>
+        <th class="align-middle text-center">Code</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for x in pad %}
+      <tr>
+        <td class="align-middle text-center">{{ x.line1 }}<br>{{ x.line2 }}<br>{{ x.line3 }}</td>
+        <td class="align-middle text-center">{{ x.country.name }}<br>{{ x.region }}</td>
+        <td class="align-middle text-center">{{ x.city }}<br>{{ x.suburb }}</td>
+        <td class="align-middle text-center">{{ x.code }}</td>
+      </tr>
+      {% empty %}
+        <tr>
+          <td colspan="2">"None Captured"</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <hr>
+</div>
+
+<div class="">
+  <h3>Postal Address</h3>
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th class="align-middle text-center">Address</th>
+        <th class="align-middle text-center">Country<br>Region</th>
+        <th class="align-middle text-center">City<br>Suburb</th>
+        <th class="align-middle text-center">Code</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for x in pst %}
+      <tr>
+        <td class="align-middle text-center">{{ x.line1 }}<br>{{ x.line2 }}<br>{{ x.line3 }}</td>
+        <td class="align-middle text-center">{{ x.country.name }}<br>{{ x.region }}</td>
+        <td class="align-middle text-center">{{ x.city }}<br>{{ x.suburb }}</td>
+        <td class="align-middle text-center">{{ x.code }}</td>
+      </tr>
+      {% empty %}
+        <tr>
+          <td colspan="2">"None Captured"</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <hr>
+</div>
+
+<div class="">
+  <h3>Books</h3>
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th class="align-middle text-center">Title</th>
+        <th class="align-middle text-center">Author</th>
+        <th class="align-middle text-center">Format</th>
+        <th class="align-middle text-center">Date Captured</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for x in bks %}
+      <tr>
+        <td class="align-middle text-center">{{ x.book.title }}</td>
+        <td class="align-middle text-center">{{ x.book.author.all|join:", " }}</td>
+        <td class="align-middle text-center">{{ x.type }}</td>
+        <td class="align-middle text-center">{{ x.date }}</td>
+      </tr>
+      {% empty %}
+        <tr>
+          <td colspan="2">"None Captured"</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <hr>
+</div>
+
+<div class="">
+  <h3>Invitations Sent</h3>
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th class="align-middle text-center">Invitee</th>
+        <th class="align-middle text-center">Worked For</th>
+        <th class="align-middle text-center">Relationship</th>
+        <th class="align-middle text-center">Date Invited</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for x in ite %}
+      <tr>
+        <td class="align-middle text-center">{{ x.name }} {{ x.surname }}</td>
+        <td class="align-middle text-center">{{ x.worked_for }}</td>
+        <td class="align-middle text-center">{{ x.get_relationship_display }}</td>
+        <td class="align-middle text-center">{{ x.date_invited }}</td>
+      </tr>
+      {% empty %}
+        <tr>
+          <td colspan="2">"None Captured"</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <hr>
+</div>
+
+<div class="">
+  <h3>Vacancies I posted</h3>
+  <table class="table table-sm">
+    <thead>
+
+    </thead>
+    <tbody>
+      {% for x in vac %}
+      <tr>
+        <th colspan="2"</th>
+        <td colspan="3">{{ x.title }} - {{ x.ref_no }}</td>
+      </tr>
+      <tr>
+        <th class="align-middle text-center">Date Entered</th>
+        <th class="align-middle text-center">Title</th>
+        <th class="align-middle text-center">Reference Number</th>
+        <th class="align-middle text-center">On Behalf of</th>
+        <th class="align-middle text-center">Hours Required</th>
+
+      </tr>
+      <tr>
+        <td class="align-middle text-center">{{ x.date_entered }}</td>
+        <td class="align-middle text-center">{{ x.title }}</td>
+        <td class="align-middle text-center">{{ x.own_ref_no }}</td>
+        <td class="align-middle text-center">{{ x.enterprise }}</td>
+        <td class="align-middle text-center">{{ x.hours_required }}<br>{{ unit }}</td>
+      </tr>
+      <tr>
+        <th class="align-middle text-center">Experience<br>Level</th>
+        <th class="align-middle text-center">Language</th>
+        <th class="align-middle text-center">Configeration</th>
+        <th class="align-middle text-center">Rate Offered</th>
+        <th class="align-middle text-center">Date Closed</th>
+      </tr>
+      <tr>
+        <td class="align-middle text-center">{{ x.experience_level.get_level_display }}</td>
+        <td class="align-middle text-center">{{ x.language.all|join:", " }}</td>
+        <td class="align-middle text-center">{{ x.worklocation }}</td>
+        <td class="align-middle text-center">{{ x.currency }}<br>{{ x.rate_offered }}<br>{{ x.rate_unit }}</td>
+        <td class="align-middle text-center">{{ x.bid_closes }}</td>
+      </tr>
+      <tr>
+        <th>Required Certifications</th>
+        <td colspan="4">{{ x.certification.all|join:", " }}</td>
+      </tr>
+      <tr>
+        <th>Scope</th>
+        <td colspan="4">{{ x.scope }}</td>
+      </tr>
+      <tr>
+        <th>Expectations</th>
+        <td colspan="4">{{ x.expectations }}</td>
+      </tr>
+      {% empty %}
+        <tr>
+          <td colspan="2">"None Captured"</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <hr>
+</div>
+
+<div class="">
+  <h3>Vacancies Shortlisted for</h3>
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th class="align-middle text-center">Vacancy Title</th>
+        <th class="align-middle text-center">Vacancy Reference</th>
+        <th class="align-middle text-center">Date Shortlisted</th>
+        <th class="align-middle text-center">Company</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for x in bsl %}
+      <tr>
+        <td class="align-middle text-center">{{ x.scope.title }}</td>
+        <td class="align-middle text-center">{{ x.scope.ref_no }}</td>
+        <td class="align-middle text-center">{{ x.date_listed }}</td>
+        <td class="align-middle text-center">{{ x.scope.enterprise }}</td>
+      </tr>
+      {% empty %}
+        <tr>
+          <td colspan="2">"None"</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <hr>
+</div>
+
+<div class="">
+  <h3>Interview Invitations</h3>
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th class="align-middle text-center">Vacancy Title</th>
+        <th class="align-middle text-center">Vacancy Reference</th>
+        <th class="align-middle text-center">Date Invited</th>
+        <th class="align-middle text-center">Your Response</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for x in bil %}
+      <tr>
+        <td class="align-middle text-center">{{ x.scope.title }}</td>
+        <td class="align-middle text-center">{{ x.scope.ref_no }}</td>
+        <td class="align-middle text-center">{{ x.date_listed }}</td>
+        <td class="align-middle text-center">{{ x.get_tlt_response_display }}</td>
+      </tr>
+      <tr>
+        <th colspan="2">Decline Reason</th>
+        <td>
+          {% if x.tlt_decline_reason %}
+            {{ x.tlt_decline_reason }}
+          {% else %}
+            Vacancy Not Declined OR no comments made!
+          {% endif %}
+        </td>
+      </tr>
+      <tr>
+        <th colspan="2">Your interview remarks</th>
+        <td>
+          {% if x.comments_tlt %}
+            {{ x.comments_tlt }}
+          {% else %}
+            No comments made!
+          {% endif %}
+        </td>
+      </tr>
+      {% empty %}
+        <tr>
+          <td colspan="2">"None"</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <hr>
+</div>
+
+<div class="">
+  <h3>Vacancies you Bid for</h3>
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th class="align-middle text-center">Vacancy Title</th>
+        <th class="align-middle text-center">Vacancy Reference</th>
+        <th class="align-middle text-center">Bid Date</th>
+        <th class="align-middle text-center">Rate Proposed</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for x in wkb %}
+      <tr>
+        <td class="align-middle text-center">{{ x.work.title }}</td>
+        <td class="align-middle text-center">{{ x.work.ref_no }}</td>
+        <td class="align-middle text-center">{{ x.date_applied }}</td>
+        <td class="align-middle text-center">
+          {% if x.rate_bid %}
+            {{ x.currency }}<br>{{ x.rate_bid }}<br>{{ x.get_rate_unit_display }}
+          {% else %}
+            You did not bid for this position!
+          {% endif %}
+        </td>
+      </tr>
+      <tr>
+        <th colspan="1">Motivation</th>
+        <td colspan="3">
+          {% if x.motivation %}
+            {{ x.motivation }}
+          {% else %}
+            No motivation made.
+          {% endif %}
+        </td>
+      </tr>
+      {% empty %}
+        <tr>
+          <td colspan="4">None</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <hr>
+</div>
 {% endblock content %}
 {% block Script %}{% endblock Script %}
