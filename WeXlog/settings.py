@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'invitations.apps.InvitationsConfig',
     'nestedsettree.apps.NestedsettreeConfig',
     'feedback.apps.FeedbackConfig',
+    'tasks',
     #Django internal applications
     'django.contrib.staticfiles',
     'django.contrib.humanize',
@@ -327,26 +328,42 @@ PAYPAL_CERT_ID = 'J7C4RR9N34PZJ'
 # Accounts department email_id
 ACCOUNTS_EMAIL = "machterberg@tkgm.co.za"
 
+#Broker set up information
+BROKER_USER = os.environ.get("myuser")
+BROKER_PASSWORD = os.environ.get("mypassword")
+BROKER_HOST = os.environ.get("Localhost")
+BROKER_PORT = os.environ.get("5672")
+BROKER_VHOST = os.environ.get("myvhost")
+
+# CELERY_BROKER_URL = f"amqp://{BROKER_USER}:{BROKER_PASSWORD}@{BROKER_HOST}:{BROKER_PORT}/{BROKER_VHOST}"
 
 # Celery Settings
 CELERY_SYSTEM_EMAIL = 'do_not_reply@mywexlog.com'
 
 ## Broker settings.
-CELERY_BROKER_URL = 'pyamqp://guest@localhost//'   #'redis://127.0.0.1:6379/0'    #'amqp://myuser:mypassword@localhost:5672/myvhost'    #'redis://localhost:6379/0'      # 'amqp://guest:guest@localhost:5672//' for RabbitMQ
-CELERY_BACKEND = '#'
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+                        # 'amqp://myuser:mypassword@localhost:5672/myvhost'
+                        # 'pyamqp://guest@localhost//'
+                        #'redis://127.0.0.1:6379/0'
+                        #'amqp://myuser:mypassword@localhost:5672/myvhost'
+                        #'redis://localhost:6379/0'
+                        # 'amqp://guest:guest@localhost:5672//' for RabbitMQ
+# CELERY_BACKEND = '#'
 #: Only add pickle to this list if your broker is secured
 #: from unwanted access (see userguide/security.html)
 CELERY_ACCEPT_CONTENT = ['application/json']
 ## Using the database to store task state and results.
-CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'  # 'db+sqlite:///results.sqlite'
+# CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'  # 'db+sqlite:///results.sqlite'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Australia/Sydney'
 
 # List of modules to import when the Celery worker starts.
 CELERY_IMPORTS = ('WeXlog.tasks',)
-
+CELERY_SEND_EVENTS = True
 CELERY_TASK_ANNOTATIONS = {'tasks.add': {'rate_limit': '10/s'}}
+
+
 
 if DEBUG == True:
     #email settings

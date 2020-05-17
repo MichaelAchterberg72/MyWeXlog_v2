@@ -3,6 +3,7 @@ from __future__ import absolute_import, unicode_literals
 from celery import Celery
 from celery.task import Task
 from celery.schedules import crontab
+from tasks.celery import app as celery_app
 
 from django.conf import settings
 from celery.task.schedules import crontab
@@ -17,11 +18,9 @@ from datetime import timedelta
 from users.models import CustomUser
 
 
-app = Celery('tasks', broker=settings.CELERY_BROKER_URL)
-
-@app.task
-@periodic_task(run_every=(crontab(hour=1, minute=1)), name="UpdateSubscriptionPaidDate", ignore_result=True)
-def UpdateSubscriptionPaidDate(Task):
+@celery_app.task(name="UpdateSubscriptionPaidDate")
+@periodic_task(run_every=(crontab(hour=0, minute=5)), name="UpdateSubscriptionPaidDate", ignore_result=True)
+def UpdateSubscriptionPaidDate():
     #monthly = timedelta(days=31, seconds=0, microseconds=0, milliseconds=0, minutes=0, hours=0)
     monthly = timedelta(days=0, seconds=0, microseconds=0, milliseconds=0, minutes=0, hours=1)
 
@@ -37,18 +36,18 @@ def UpdateSubscriptionPaidDate(Task):
                 username.paid = False
                 username.subscription = 0
                 # send user an email to let them know the subscription has expired
-#                SubscriptionExpiredTask(username)
+#                SubscriptionExpiredTask.delay(username)
 
         elif username.paid_type == 2:
             if username.paid_date <= datetime.now() - six_monthly:
                 username.paid = False
                 username.subscription = 0
                 # send user an email to let them know the subscription has expired
-#                SubscriptionExpiredTask(username)
+#                SubscriptionExpiredTask.delay(username)
 
         elif username.paid_type == 3:
             if username.paid_date <= datetime.now() - twelve_monthly:
                 username.paid = False
                 username.subscription = 0
                 # send user an email to let them know the subscription has expired
-#                SubscriptionExpiredTask(username)
+#                SubscriptionExpiredTask.delay(username)
