@@ -1,0 +1,18 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+{% block title %}{{block.super}}-Cookie Policy{% endblock title %}
+
+{% block content %}
+
+<div class="card border-0">
+  <div class="card-body">
+    <h4 class="card-title">MyWeXlog Cookie Policy</h4>
+    {% include 'users/cookie_policy.html' %}
+    <div class="float-right">
+      <a href="{% url 'account_signup' %}" class="btn btn-primary 8rem">Close</a>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

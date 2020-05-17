@@ -21,6 +21,7 @@ class CustomUserChangeForm(UserChangeForm):
 class CustomSignupForm(SignupForm):
     first_name = forms.CharField(max_length=30, label='First Name')
     last_name = forms.CharField(max_length=30, label='Last Name')
+    terms = forms.BooleanField(required=True, label="Accept Terms and Conditions")
 
     class Meta:
         model = CustomUser
@@ -46,6 +47,7 @@ class CustomSignupForm(SignupForm):
         CustomUser = super(CustomSignupForm, self).save(request)
         CustomUser.first_name=self.cleaned_data['first_name']
         CustomUser.last_name=self.cleaned_data['last_name']
+        CustomUser.terms=self.cleaned_data['terms']
 
         return CustomUser
 
@@ -59,7 +61,6 @@ class CustomUserSettingsForm(forms.ModelForm):
                     'validation_requests',
                     'subscription_notifications',
                     'payment_notifications',
-                    'takeout',
                     'dnt',
                     'right_to_be_forgotten')
 

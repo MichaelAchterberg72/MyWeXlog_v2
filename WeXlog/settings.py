@@ -306,14 +306,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'filelibrary')
 #Crispy Forms
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-# GDAL_LIBRARY_PATH = r'C:/OSGeo4W64/bin/gdal111'
-
 #  os.environ["PATH"] += os.pathsep + BASE_DIR + '\\venv\\Lib\\site-packages\\osgeo'
-
-#POPUP_TEMPLATE_NAME_CREATE = 'popup/create.html'
-#POPUP_TEMPLATE_NAME_UPDATE = 'popup/update.html'
-
-#FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
 
 #Django Messages settings
 DJANGO_MESSAGES_NOTIFY = False
@@ -339,19 +332,19 @@ ACCOUNTS_EMAIL = "machterberg@tkgm.co.za"
 CELERY_SYSTEM_EMAIL = 'do_not_reply@mywexlog.com'
 
 ## Broker settings.
-CELERY_BROKER_URL = 'redis://localhost:6379/0'      # 'amqp://guest:guest@localhost:5672//' for RabbitMQ
+CELERY_BROKER_URL = 'pyamqp://guest@localhost//'   #'redis://127.0.0.1:6379/0'    #'amqp://myuser:mypassword@localhost:5672/myvhost'    #'redis://localhost:6379/0'      # 'amqp://guest:guest@localhost:5672//' for RabbitMQ
 CELERY_BACKEND = '#'
 #: Only add pickle to this list if your broker is secured
 #: from unwanted access (see userguide/security.html)
 CELERY_ACCEPT_CONTENT = ['application/json']
 ## Using the database to store task state and results.
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'  # 'db+sqlite:///results.sqlite'
+CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'  # 'db+sqlite:///results.sqlite'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Australia/Sydney'
 
 # List of modules to import when the Celery worker starts.
-CELERY_IMPORTS = ('payments.tasks',)
+CELERY_IMPORTS = ('WeXlog.tasks',)
 
 CELERY_TASK_ANNOTATIONS = {'tasks.add': {'rate_limit': '10/s'}}
 

@@ -12,7 +12,7 @@
     <i class="icon icon-question-circle"></i></a>
   </p></span></h4>
   <div class="card-body">
-    <p>There are currently {{ ecount.sum_e }} Enterprises and {{ bcount.sum_b }} Branches listed in WexLog!</p>
+    <p>There are currently {{ ecount.sum_e }} Enterprises and {{ bcount.sum_b }} Branches listed in MyWeXlog!</p>
     {% if user.is_authenticated %}
     <p><a href="{% url 'Enterprise:EnterpriseAdd' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Add New Enterprise</a>  <a href="{% url 'Enterprise:FullBranchAdd' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Add New Branch</a></p>
     {% endif %}

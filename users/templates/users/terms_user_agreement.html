@@ -1,0 +1,25 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+{% block title %}{{block.super}}-User Agreement{% endblock title %}
+
+{% block content %}
+
+<div class="card border-0">
+  <div class="card-body">
+    <h4 class="card-title">User Agreement</h4>
+    <p>&nbsp</p>
+    <p></p>
+    <form class="" action="" method="POST" id="UserAgreeForm">
+
+      {% csrf_token %}
+      {{ form|crispy }}
+
+    <p>&nbsp</p>
+    <p><button type="submit" class="btn btn-primary py-3 px-5" name="button">Update Settings</button></p>
+
+    </form>
+  </div>
+</div>
+
+{% endblock content %}

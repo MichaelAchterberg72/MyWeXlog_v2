@@ -1,8 +1,9 @@
 from datetime import datetime
+from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 #from paypal.standard.models import PayPalStandardBase
-from users.models import CustomUser
+from users.models import CustomUser, CustomUserSettings
 #from paypal.standard.models import ST_PP_COMPLETED, ST_PP_EXPIRED, ST_PP_PENDING
 from paypal.standard.ipn.signals import valid_ipn_received
 
@@ -24,6 +25,7 @@ def show_me_the_money(sender, instance, **kwargs):
     ipn_obj = instance
     ipn_username = CustomUser.objects.get(pk=ipn_obj.custom)
     username = ipn_username.email
+    CustomUserSettingsUser = CustomUserSettings.objects.get(talent=ipn_username.pk)
 
 #    import pdb
 #    pdb.set_trace()
@@ -70,190 +72,146 @@ def show_me_the_money(sender, instance, **kwargs):
      # check for payment received IPN
      # check for subscriber sign-up IPN
      # check for recurring payment IPN
-    if ipn_obj.txn_type == "recurring_payment":
-        if ipn_obj.payment_status == "Completed":
+    if ipn_obj.txn_type == "subscr_payment":
 
-            if ipn_obj.receiver_email != settings.PAYPAL_RECEIVER_EMAIL:
-                # Not a valid payment
-                pass
+        if ipn_obj.flag == True:
 
-            elif ipn_obj.custom:
-                ipn_username.paid = True
-                ipn_username.paid_date = datetime.now()
-                # set passive subscription
-                if ipn_obj.item_name == "MyWeXlog Passive Subscription" or "MyWeXlog Passive Subscription - Beta":
-                    ipn_username.subscription = 1
-                    ipn_username.paid_type = 1
-                elif ipn_obj.item_name == "MyWeXlog 6 Month Passive Subscription" or "MyWeXlog 6 Month Passive Subscription - Beta":
-                    ipn_username.subscription = 1
-                    ipn_username.paid_type = 2
-                elif ipn_obj.item_name == "MyWeXlog 12 Month Passive Subscription" or "MyWeXlog 12 Month Passive Subscription - Beta":
-                    ipn_username.subscription = 1
-                    ipn_username.paid_type = 3
-                # set active subscription
-                elif ipn_obj.item_name == "MyWeXlog Active Subscription" or "MyWeXlog Active Subscription Upgrade" or "MyWeXlog Active Subscription - Beta":
-                    ipn_username.subscription = 2
-                    ipn_username.paid_type = 1
-                elif ipn_obj.item_name == "MyWeXlog 6 Month Active Subscription" or "MyWeXlog 6 Month Active Subscription Upgrade" or "MyWeXlog 6 Month Active Subscription - Beta":
-                    ipn_username.subscription = 2
-                    ipn_username.paid_type = 2
-                elif ipn_obj.item_name == "MyWeXlog 12 Month Active Subscription" or "MyWeXlog 12 Month Active Subscription Upgrade" or "MyWeXlog 12 Month Active Subscription - Beta":
-                    ipn_username.subscription = 2
-                    ipn_username.paid_type = 3
+            if ipn_obj.payment_status == "Completed":
 
-
-            elif ipn_obj.mc_gross != price and ipn_obj.mc_currency != 'USD':
-                ipn_username.paid = False
-                ipn_username.paid_date = datetime.now()
-                ipn_username.subscription = 0
-                if CustomUserSettings.talent.filter(ipn_username) and CustomUserSettings.unsubscribe == True:
+                if ipn_obj.receiver_email != settings.PAYPAL_RECEIVER_EMAIL:
+                    # Not a valid payment
                     pass
-                elif CustomUserSettings.talent.filter(ipn_username) and CustomUserSettings.subscription_notifications == False:
+
+                elif ipn_obj.mc_gross != price and ipn_obj.mc_currency != 'USD':
+                    ipn_username.paid = False
+                    ipn_username.paid_date = timezone.now()
+                    ipn_username.subscription = 0
+                    if CustomUserSettingsUser.unsubscribe == True:
+                        pass
+                    elif CustomUserSettingsUser.subscription_notifications == False:
+                        pass
+                    else:
+#                        SubscriptionAmountDifferentTask(ipn_username)
+                        pass
+
+                elif ipn_obj.custom:
+
+                    if "Upgrade" in ipn_obj.item_name:
+                        if "Active" in ipn_obj.item_name:
+                            ipn_username.subscription = 2
+                            ipn_username.paid = True
+                            ipn_username.paid_date = timezone.now()
+#                            SubscriptionSignupTask(ipn_username)
+#                            SubscriptionUpgradeRefund(ipn_username, username)
+
+                            if "Monthly" in ipn_obj.item_name:
+                                ipn_username.paid_type = 1
+                                if "Beta" in ipn_obj.item_name:
+                                    ipn_username.role = 1
+
+                            elif "6 Month" in ipn_obj.item_name:
+                                ipn_username.paid_type = 2
+                                if "Beta" in ipn_obj.item_name:
+                                    ipn_username.role = 1
+
+                            elif "12 Month" in ipn_obj.item_name:
+                                ipn_username.paid_type = 3
+                                if "Beta" in ipn_obj.item_name:
+                                    ipn_username.role = 1
+
+                    elif "Passive" in ipn_obj.item_name:
+                        ipn_username.subscription = 1
+                        ipn_username.paid = True
+                        ipn_username.paid_date = timezone.now()
+                        if "Monthly" in ipn_obj.item_name:
+                            ipn_username.paid_type = 1
+                            if "Beta" in ipn_obj.item_name:
+                                ipn_username.role = 1
+
+                        elif "6 Month" in ipn_obj.item_name:
+                            ipn_username.paid_type = 2
+                            if "Beta" in ipn_obj.item_name:
+                                ipn_username.role = 1
+
+                        elif "12 Month" in ipn_obj.item_name:
+                            ipn_username.paid_type = 3
+                            if "Beta" in ipn_obj.item_name:
+                                ipn_username.role = 1
+
+                    elif "Active" in ipn_obj.item_name:
+                        ipn_username.subscription = 2
+                        ipn_username.paid = True
+                        ipn_username.paid_date = timezone.now()
+
+                        if "Monthly" in ipn_obj.item_name:
+                            ipn_username.paid_type = 1
+                            if "Beta" in ipn_obj.item_name:
+                                ipn_username.role = 1
+
+                        elif "6 Month" in ipn_obj.item_name:
+                            ipn_username.paid_type = 2
+                            if "Beta" in ipn_obj.item_name:
+                                ipn_username.role = 1
+
+                        elif "12 Month" in ipn_obj.item_name:
+                            ipn_username.paid_type = 3
+                            if "Beta" in ipn_obj.item_name:
+                                ipn_username.role = 1
+
+
+            elif ipn_obj.payment_status == "Expired":
+                if ipn_obj.receiver_email != settings.PAYPAL_RECEIVER_EMAIL:
+                    # Not a valid payment
                     pass
-                else:
-                    SubscriptionAmountDifferentTask(ipn_username)
 
+                elif ipn_obj.custom:
+                    ipn_username.paid = False
+                    ipn_username.paid_date = timezone.now()
+                    ipn_username.subscription = 0
+                    if CustomUserSettingsUser.unsubscribe == True:
+                        pass
+                    elif CustomUserSettingsUser.subscription_notifications == False:
+                        pass
+                    else:
+#                        SubscriptionExpiredTask(ipn_username)
+                        pass
 
-        elif ipn_obj.payment_status == "Expired":
-            if ipn_obj.receiver_email != settings.PAYPAL_RECEIVER_EMAIL:
-                # Not a valid payment
-                pass
-
-            elif ipn_obj.custom == ipn_username:
-                ipn_username.paid = False
-                ipn_username.paid_date = datetime.now()
-                ipn_username.subscription = 0
-                if CustomUserSettings.talent.filter(ipn_username) and CustomUserSettings.unsubscribe == True:
+            elif ipn_obj.payment_status == "Pending":
+                if ipn_obj.receiver_email != settings.PAYPAL_RECEIVER_EMAIL:
+                    # Not a valid payment
                     pass
-                elif CustomUserSettings.talent.filter(ipn_username) and CustomUserSettings.subscription_notifications == False:
-                    pass
-                else:
-                    SubscriptionExpiredTask(ipn_username)
+
+                elif ipn_obj.custom:
+                    ipn_username.paid = False
+                    ipn_username.paid_date = timezone.now()
+                    ipn_username.subscription = 0
 
 
-        elif ipn_obj.payment_status == "Pending":
-            if ipn_obj.receiver_email != settings.PAYPAL_RECEIVER_EMAIL:
-                # Not a valid payment
-                pass
-
-            elif ipn_obj.custom == ipn_username:
-                ipn_username.paid = False
-                ipn_username.paid_date = datetime.now()
-                ipn_username.subscription = 0
 
 
-     # check for subscription payment IPN
-    elif ipn_obj.txn_type == "subscr_payment" and ipn_obj.flag == True:
-
-        if ipn_obj.payment_status == "Completed":
-
-            if ipn_obj.receiver_email != settings.PAYPAL_RECEIVER_EMAIL:
-                # Not a valid payment
-                pass
-
-            elif ipn_obj.custom:
-#                ipn_username.paid = True
-#                ipn_username.paid_date = datetime.now()
-
-                # set active subscription
-                if ipn_obj.item_name == "MyWeXlog Active Subscription" or "MyWeXlog Active Subscription Upgrade" or "MyWeXlog Active Subscription - Beta":
-                    ipn_username.subscription = 2
-                    ipn_username.paid_type = 1
-                    ipn_username.paid = True
-                    ipn_username.paid_date = datetime.now()
-                elif ipn_obj.item_name == "MyWeXlog 6 Month Active Subscription" or "MyWeXlog 6 Month Active Subscription Upgrade" or "MyWeXlog 6 Month Active Subscription - Beta":
-                    ipn_username.subscription = 2
-                    ipn_username.paid_type = 2
-                elif ipn_obj.item_name == "MyWeXlog 12 Month Active Subscription" or "MyWeXlog 12 Month Subscription Upgrade" or "MyWeXlog 12 Month Active Subscription - Beta":
-                    ipn_username.subscription = 2
-                    ipn_username.paid_type = 3
-
-                # set passive subscription
-            elif ipn_obj.item_name == "MyWeXlog Passive Subscription" or "MyWeXlog Passive Subscription - Beta":
-                    ipn_username.subscription = 1
-                    ipn_username.paid_type = 1
-                    ipn_username.paid = True
-                    ipn_username.paid_date = datetime.now()
-                elif ipn_obj.item_name == "MyWeXlog 6 Month Passive Subscription" or "MyWeXlog 6 Month Passive Subscription - Beta":
-                    ipn_username.subscription = 1
-                    ipn_username.paid_type = 2
-                elif ipn_obj.item_name == "MyWeXlog 12 Month Passive Subscription" or "MyWeXlog 12 Month Passive Subscription - Beta":
-                    ipn_username.subscription = 1
-                    ipn_username.paid_type = 3
-
-            elif ipn_obj.mc_gross != price and ipn_obj.mc_currency != 'USD':
-                ipn_username.paid = False
-                ipn_username.paid_date = datetime.now()
-                ipn_username.subscription = 0
-                if CustomUserSettings.talent.filter(ipn_username) and CustomUserSettings.unsubscribe == True:
-                    pass
-                elif CustomUserSettings.talent.filter(ipn_username) and CustomUserSettings.subscription_notifications == False:
-                    pass
-                else:
-                    SubscriptionAmountDifferentTask(ipn_username)
-
-            elif ipn_obj.custom == ipn_username and ipn_obj.item_name != "MyWeXlog Active Subscription Upgrade" or "MyWeXlog 6 Month Active Subscription Upgrade" or "MyWeXlog 6 Month Active Subscription Upgrade":
-
-                SubscriptionSignupTask(ipn_username)
-#                SubscriptionUpgradeRefund(ipn_username, username)
-                pass
-
-            else:
-                pass
-
-
-        elif ipn_obj.payment_status == "Expired":
-            if ipn_obj.receiver_email != settings.PAYPAL_RECEIVER_EMAIL:
-                # Not a valid payment
-                pass
-
-            elif ipn_obj.custom == ipn_username:
-                ipn_username.paid = False
-                ipn_username.paid_date = datetime.now()
-                ipn_username.subscription = 0
-                if CustomUserSettings.talent.filter(ipn_username) and CustomUserSettings.unsubscribe == True:
-                    pass
-                elif CustomUserSettings.talent.filter(ipn_username) and CustomUserSettings.subscription_notifications == False:
-                    pass
-                else:
-                    SubscriptionExpiredTask(ipn_username)
-
-
-        elif ipn_obj.payment_status == "Pending":
-            if ipn_obj.receiver_email != settings.PAYPAL_RECEIVER_EMAIL:
-                # Not a valid payment
-                pass
-
-            elif ipn_obj.custom == ipn_username:
-                ipn_username.paid = False
-                ipn_username.paid_date = datetime.now()
-                ipn_username.subscription = 0
-
-
-     # check for failed subscription payment IPN
+         # check for failed subscription payment IPN
     elif ipn_obj.txn_type == "subscr_failed":
-        if ipn_obj.custom == ipn_username:
+        if ipn_obj.custom:
             ipn_username.paid = False
-            ipn_username.paid_date = datetime.now()
+            ipn_username.paid_date = timezone.now()
             ipn_username.subscription = 0
-            if CustomUserSettings.talent.filter(ipn_username) and CustomUserSettings.unsubscribe == True:
+            if CustomUserSettingsUser.unsubscribe == True:
                 pass
-            elif CustomUserSettings.talent.filter(ipn_username) and CustomUserSettings.subscription_notifications == False:
+            elif CustomUserSettingsUser.subscription_notifications == False:
                 pass
             else:
-                SubscriptionFailedTask(ipn_username)
+#                    SubscriptionFailedTask(ipn_username)
+                pass
      # check for subscription cancellation IPN
     elif ipn_obj.txn_type == "subscr_cancel":
-        if ipn_obj.custom == ipn_username:
-            ipn_username.paid = False
-            ipn_username.paid_date = datetime.now()
-            ipn_username.subscription = 0
-            if CustomUserSettings.talent.filter(ipn_username) and CustomUserSettings.unsubscribe == True:
+        if ipn_obj.custom:
+            if CustomUserSettingsUser.unsubscribe == True:
                 pass
-            elif CustomUserSettings.talent.filter(ipn_username) and CustomUserSettings.subscription_notifications == False:
+            elif CustomUserSettingsUser.subscription_notifications == False:
                 pass
             else:
-                SubscriptionCancelledTask(ipn_username)
+#                    SubscriptionCancelledTask(ipn_username)
+                pass
 
     ipn_username.save()
 
