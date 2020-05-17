@@ -14,6 +14,9 @@ from Profile.models import (
 from marketplace.models import (
         TalentRequired, BidShortList, BidInterviewList, WorkBid, TalentAvailabillity, WorkIssuedTo, VacancyRate, TalentRate
 )
+from talenttrack.models import (
+        Achievements, LicenseCertification, Lecturer, ClassMates, WorkExperience, WorkColleague, Superior, WorkClient, WorkCollaborator
+)
 from booklist.models import ReadBy
 from .models import Invitation
 
@@ -136,15 +139,38 @@ def profile_2_pdf(request):
     wit = WorkIssuedTo.objects.filter(talent=tlt)
     vyr = VacancyRate.objects.filter(talent=tlt)
     tlr = TalentRate.objects.filter(talent=tlt)
+    ach = Achievements.objects.filter(talent=tlt)
+    lcn = LicenseCertification.objects.filter(talent=tlt)
+
+    lco = Lecturer.objects.filter(education__talent=tlt)
+    cmo = ClassMates.objects.filter(education__talent=tlt)
+    wke = WorkExperience.objects.filter(talent=tlt).order_by("-date_from")
+
+    wco = WorkColleague.objects.filter(experience__talent=tlt)
+    wso = Superior.objects.filter(experience__talent=tlt)
+    wco = WorkClient.objects.filter(experience__talent=tlt)
+    wlo = WorkCollaborator.objects.filter(experience__talent=tlt)
+
+    lct = Lecturer.objects.filter(lecturer=tlt)
+    cmt = ClassMates.objects.filter(colleague=tlt)
+    wct = WorkColleague.objects.filter(colleague_name=tlt)
+    wst = Superior.objects.filter(superior_name=tlt)
+    wct = WorkClient.objects.filter(client_name=tlt)
+    wlt = WorkCollaborator.objects.filter(collaborator_name=tlt)
 
     response = HttpResponse(content_type="application/pdf")
-    response['Content-Disposition'] = "inline; filename=MyWeXlogProfile.pdf"
+    content = "inline; filename=MyWeXlogProfile.pdf"
+
     template = 'invitations/prrofile_2_pdf.html'
     context = {
-            'pfl': pfl, 'tdy': tdy, 'bch': bch, 'osr': osr, 'psp': psp, 'lng': lng, 'eml': eml,'pad': pad, 'pst': pst, 'pnr': pnr, 'bks': bks, 'ite': ite, 'vac': vac, 'bsl': bsl, 'bil': bil, 'wkb': wkb, 'tla': tla, 'wit': wit, 'vyr': vyr, 'tlr': tlr,
+            'pfl': pfl, 'tdy': tdy, 'bch': bch, 'osr': osr, 'psp': psp, 'lng': lng, 'eml': eml,'pad': pad, 'pst': pst, 'pnr': pnr, 'bks': bks, 'ite': ite, 'vac': vac, 'bsl': bsl, 'bil': bil, 'wkb': wkb, 'tla': tla, 'wit': wit, 'vyr': vyr, 'tlr': tlr, 'ach': ach, 'lcn': lcn, 'lco': lco, 'cmo': cmo, 'wke': wke, 'wco': wco, 'wlo': wlo, 'lct': lct, 'cmt': cmt, 'wct': wct, 'wst': wst, 'wct': wct, 'wlt': wlt,
             }
+    download = request.GET.get("download")
+    if download:
+        content2 = "attachment; filename=MyWeXlogProfile.pdf"
+        response['Content-Disposition'] = content2
+    response['Content-Disposition'] = content
     html = render_to_string(template, context)
     font_config = FontConfiguration()
     HTML(string=html).write_pdf(response, font_config=font_config)
-
     return response

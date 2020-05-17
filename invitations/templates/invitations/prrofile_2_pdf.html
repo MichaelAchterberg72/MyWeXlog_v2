@@ -487,5 +487,764 @@
   </table>
   <hr>
 </div>
+
+<div class="">
+  <h3>Your availabillities</h3>
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th class="align-middle text-center">Date From</th>
+        <th class="align-middle text-center">Date To</th>
+        <th class="align-middle text-center">Hours Available</th>
+        <th class="align-middle text-center">Rate Proposed</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for x in tla %}
+      <tr>
+        <td class="align-middle text-center">{{ x.date_from }}</td>
+        <td class="align-middle text-center">{{ x.date_to }}</td>
+        <td class="align-middle text-center">{{ x.hours_available }}<br>{{ x.get_unit_display }}</td>
+      </tr>
+      {% empty %}
+        <tr>
+          <td colspan="3">None</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <hr>
+</div>
+
+<div class="">
+  <h3>People you issued a vacancy to</h3>
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th class="align-middle text-center">Vacancy</th>
+        <th class="align-middle text-center">Company<br>Branch</th>
+        <th class="align-middle text-center">Talent's Response<br>Response Date</th>
+        <th class="align-middle text-center">Rate Offered</th>
+        <th class="align-middle text-center">Deliverable<br>Date</th>
+        <th class="align-middle text-center">Start Date<br>Complet Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for x in wit %}
+      <tr>
+        <th colspan="6"  class="align-middle text-center">{{ x.work.title }} - {{ x.date_create }}</th>
+      </tr>
+      <tr>
+        <td class="align-middle text-center">{{ x.work.title }}<br>{{ x.work.ref_no }}</td>
+        <td class="align-middle text-center">{{ x.work.enterprise.company.name }}<br>{{ x.work.enterprise.name }}</td>
+        <td class="align-middle text-center">{{ x.get_tlt_response_display }}<br>{{ x.tlt_response_date }}</td>
+        <td class="align-middle text-center">{{ x.currency }}<br>{{ x.rate_offered }}<br>{{ x.get_rate_unit_display }}</td>
+        <td class="align-middle text-center">{{ x.date_deliverable }}</td>
+        <td class="align-middle text-center">{{ x.date_begin }}<br>{{ x.date_complete }}<br>{{ x.get_rate_unit_display }}</td>
+      </tr>
+      {% empty %}
+        <tr>
+          <td colspan="3">None</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <hr>
+</div>
+
+<div class="">
+  <h3>People You Have rated after a completed Vacancy</h3>
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th class="align-middle text-center">Vacancy</th>
+        <th class="align-middle text-center">Company<br>Branch</th>
+        <th class="align-middle text-center">Talent Work Performance</th>
+        <th class="align-middle text-center">Completed on Time?</th>
+        <th class="align-middle text-center">Would you hire this person again?</th>
+        <th class="align-middle text-center">Rating Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for x in vyr %}
+      <tr>
+        <td class="align-middle text-center">{{ x.vacancy.title }}<br>{{ x.vacancy.ref_no }}</td>
+        <td class="align-middle text-center">{{ x.vacancy.enterprise.company.name }}<br>{{ x.vacancy.enterprise.name }}</td>
+        <td class="align-middle text-center">{{ x.rate_1 }}</td>
+        <td class="align-middle text-center">{{ x.rate_2 }}</td>
+        <td class="align-middle text-center">{{ x.rate_3 }}</td>
+        <td class="align-middle text-center">{{ x.date_rating }}</td>
+      </tr>
+      <tr>
+        <th>Comment</th>
+        <td colspan="5">{{ x.comment }}</td>
+      </tr>
+      <tr>
+        <th>Suggestions</th>
+        <td colspan="5">{{ x.suggestions }}</td>
+      </tr>
+      {% empty %}
+        <tr>
+          <td colspan="3">None</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <hr>
+</div>
+
+<div class="">
+  <h3>Companies You Have rated after a completed Vacancy</h3>
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th class="align-middle text-center">Vacancy</th>
+        <th class="align-middle text-center">Company<br>Branch</th>
+        <th class="align-middle text-center">Employer Performance</th>
+        <th class="align-middle text-center">Payment Receipt</th>
+        <th class="align-middle text-center">Would you work for this employer again?</th>
+        <th class="align-middle text-center">Days from invoice to receipt of payment</th>
+        <th class="align-middle text-center">Rating Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for x in tlr %}
+      <tr>
+        <td class="align-middle text-center">{{ x.vacancy.title }}<br>{{ x.vacancy.ref_no }}</td>
+        <td class="align-middle text-center">{{ x.vacancy.enterprise.company.name }}<br>{{ x.vacancy.enterprise.name }}</td>
+        <td class="align-middle text-center">{{ x.rate_1 }}</td>
+        <td class="align-middle text-center">{{ x.rate_2 }}</td>
+        <td class="align-middle text-center">{{ x.rate_3 }}</td>
+        <td class="align-middle text-center">{{ x.payment_time }}</td>
+        <td class="align-middle text-center">{{ x.date_rating }}</td>
+      </tr>
+      <tr>
+        <th>Comment</th>
+        <td colspan="5">{{ x.comment }}</td>
+      </tr>
+      <tr>
+        <th>Suggestions</th>
+        <td colspan="5">{{ x.suggestions }}</td>
+      </tr>
+      {% empty %}
+        <tr>
+          <td colspan="3">None</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <hr>
+</div>
+
+<div class="">
+  <h3>Achievements you Captured</h3>
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th class="align-middle text-center">Achievement</th>
+        <th class="align-middle text-center">Date Achieved</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for x in ach %}
+      <tr>
+        <td class="align-middle text-center">{{ x.achievement }}</td>
+        <td class="align-middle text-center">{{ x.date_achieved }}</td>
+      </tr>
+      <tr>
+        <th>Comment</th>
+        <td>{{ x.comment }}</td>
+      </tr>
+      {% empty %}
+        <tr>
+          <td colspan="3">None</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <hr>
+</div>
+
+<div class="">
+  <h3>Licenses and Certifications Logged</h3>
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th class="align-middle text-center">Certification</th>
+        <th class="align-middle text-center">Country<br>Region</th>
+        <th class="align-middle text-center">Membership / Credential Number</th>
+        <th class="align-middle text-center">Issued By</th>
+        <th class="align-middle text-center">Issue Date</th>
+        <th class="align-middle text-center">Expiry Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for x in lcn %}
+      <tr>
+        <td class="align-middle text-center">{{ x.certification }}</td>
+        <td class="align-middle text-center">{{ x.country.name }}<br>{{ x.region }}</td>
+        <td class="align-middle text-center">{{ x.cm_no }}</td>
+        <td class="align-middle text-center">{{ x.companybranch }}</td>
+        <td class="align-middle text-center">{{ x.issue_date }}</td>
+        <td class="align-middle text-center">{{ x.expiry_date }}</td>
+      </tr>
+      {% empty %}
+        <tr>
+          <td colspan="3">None</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <hr>
+</div>
+
+<div class="">
+  <h3>Education, Training & Experience</h3>
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th colspan="5" class="align-middle text-center">Experience</th>
+      </tr>
+      <tr>
+        <th class="align-middle text-center">Date From<br>Date To</th>
+        <th class="align-middle text-center">Score</th>
+        <th class="align-middle text-center">Company<br>Branch</th>
+        <th class="align-middle text-center">Project<br>Industry</th>
+        <th class="align-middle text-center">Hours Claimed<br>Designation</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for x in wke %}
+        {% if x.wexp == True or x.estimated == True or x.prelog == True %}
+          <tr>
+            <td class="align-middle text-center">{{ x.date_from }}<br>{{ date_to }}</td>
+            <td class="align-middle text-center">{{ x.score }}</td>
+            <td class="align-middle text-center">{{ x.company.name }}<br>{{ x.branch.name }}</td>
+            <td class="align-middle text-center">{{ x.project }}<br>{{ x.industry }}</td>
+            <td class="align-middle text-center">{{ x.hours_worked }}<br>{{ x.designation }}</td>
+          </tr>
+          <tr>
+            <th>Skills Claimed</th>
+            <td colspan="4">{{ x.skills.all|join:" || " }}</td>
+          </tr>
+          <tr>
+            <th>Comment</th>
+            <td colspan="4">{{ x.comment }}</td>
+          </tr>
+        {% endif %}
+      {% empty %}
+        <tr>
+          <td colspan="3">None</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th colspan="5" class="align-middle text-center">Education</th>
+      </tr>
+      <tr>
+        <th class="align-middle text-center">Date From<br>Date To</th>
+        <th class="align-middle text-center">Score</th>
+        <th class="align-middle text-center">Course<br>Topic</th>
+        <th class="align-middle text-center">Institution</th>
+        <th class="align-middle text-center">Hours Achieved</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for x in wke %}
+        {% if x.edt == True %}
+          <tr>
+            <td class="align-middle text-center">{{ x.date_from }}<br>{{ date_to }}</td>
+            <td class="align-middle text-center">{{ x.score }}</td>
+            <td class="align-middle text-center">{{ x.course.name }}<br>{{ x.topic.topic }}</td>
+            <td class="align-middle text-center">{{ x.course.company.name }}</td>
+            <td class="align-middle text-center">{{ x.topic.hours }}</td>
+          </tr>
+          <tr>
+            <th>Skills Achieved</th>
+            <td colspan="4">{{ x.topic.skills.all|join:" || " }}</td>
+          </tr>
+          <tr>
+            <th>Comment</th>
+            <td colspan="4">{{ x.comment }}</td>
+          </tr>
+        {% endif %}
+      {% empty %}
+        <tr>
+          <td colspan="3">None</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <hr>
+</div>
+
+{% if lco %}
+  <div class="">
+    <h3>Confirmation Received from Lecturerers</h3>
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th class="align-middle text-center">Lecturer</th>
+          <th class="align-middle text-center">Course</th>
+          <th class="align-middle text-center">Topic</th>
+          <th class="align-middle text-center">Action Date</th>
+          <th class="align-middle text-center">Action Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for x in lco %}
+        <tr>
+          <td class="align-middle text-center">{{ x.lecturer.alias }}</td>
+          <td class="align-middle text-center">{{ x.course }}</td>
+          <td class="align-middle text-center">{{ x.topic }}</td>
+          <td class="align-middle text-center">{{ x.date_confirmed }}</td>
+          <td class="align-middle text-center">{{ x.get_confirm_display }}</td>
+        </tr>
+        <tr>
+          <th>Lecturer Comment</th>
+          <td colspan="3">{{ x.comments }}</td>
+        </tr>
+        <tr>
+          <th>My Response</th>
+          <td colspan="4">{{ x.response }}</td>
+        </tr>
+        {% empty %}
+          <tr>
+            <td colspan="4">None</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <hr>
+  </div>
+{% endif %}
+
+{% if lct %}
+  <div class="">
+    <h3>Confirmation given as a Lecturer</h3>
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th class="align-middle text-center">Student</th>
+          <th class="align-middle text-center">Course</th>
+          <th class="align-middle text-center">Topic</th>
+          <th class="align-middle text-center">Action Date</th>
+          <th class="align-middle text-center">Action Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for x in lct %}
+        <tr>
+          <td class="align-middle text-center">{{ x.experience.talent.alias }}</td>
+          <td class="align-middle text-center">{{ x.course }}</td>
+          <td class="align-middle text-center">{{ x.topic }}</td>
+          <td class="align-middle text-center">{{ x.date_confirmed }}</td>
+          <td class="align-middle text-center">{{ x.get_confirm_display }}</td>
+        </tr>
+        <tr>
+          <th>Your Comment</th>
+          <td colspan="4">{{ x.comments }}</td>
+        </tr>
+        {% empty %}
+          <tr>
+            <td colspan="4">None</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <hr>
+  </div>
+{% endif %}
+
+{% if cmo %}
+  <div class="">
+    <h3>Confirmation Received from Class Mates</h3>
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th class="align-middle text-center">Person</th>
+          <th class="align-middle text-center">Topic</th>
+          <th class="align-middle text-center">Action Date</th>
+          <th class="align-middle text-center">Action Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for x in cmo %}
+        <tr>
+          <td class="align-middle text-center">{{ x.colleague.alias }}</td>
+          <td class="align-middle text-center">{{ x.topic }}</td>
+          <td class="align-middle text-center">{{ x.date_confirmed }}</td>
+          <td class="align-middle text-center">{{ x.get_confirm_display }}</td>
+        </tr>
+        <tr>
+          <th>Classmate Comment</th>
+          <td colspan="4">{{ x.comments }}</td>
+        </tr>
+        <tr>
+          <th>My Response</th>
+          <td colspan="4">{{ x.response }}</td>
+        </tr>
+        {% empty %}
+          <tr>
+            <td colspan="3">None</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <hr>
+  </div>
+{% endif %}
+
+{% if cmt %}
+  <div class="">
+    <h3>Confirmation given as a Classmate</h3>
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th class="align-middle text-center">Student</th>
+          <th class="align-middle text-center">Course</th>
+          <th class="align-middle text-center">Topic</th>
+          <th class="align-middle text-center">Action Date</th>
+          <th class="align-middle text-center">Action Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for x in cmt %}
+        <tr>
+          <td class="align-middle text-center">{{ x.experience.talent.alias }}</td>
+          <td class="align-middle text-center">{{ x.course }}</td>
+          <td class="align-middle text-center">{{ x.topic }}</td>
+          <td class="align-middle text-center">{{ x.date_confirmed }}</td>
+          <td class="align-middle text-center">{{ x.get_confirm_display }}</td>
+        </tr>
+        <tr>
+          <th>Your Comment</th>
+          <td colspan="4">{{ x.comments }}</td>
+        </tr>
+        {% empty %}
+          <tr>
+            <td colspan="4">None</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <hr>
+  </div>
+{% endif %}
+
+{% if wco %}
+  <div class="">
+    <h3>Confirmation Received from Colleagues</h3>
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th class="align-middle text-center">Person<br>Designation</th>
+          <th class="align-middle text-center">Vacancy<br>Ref No</th>
+          <th class="align-middle text-center">Company<br>Branch</th>
+          <th class="align-middle text-center">Action Date</th>
+          <th class="align-middle text-center">Action Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for x in wco %}
+        <tr>
+          <td class="align-middle text-center">{{ x.colleague_name.alias }}<br>{{ x.designation }}</td>
+          <td class="align-middle text-center">{{ x.experience.title }}<br>{{ x.experience.ref_no }}</td>
+          <td class="align-middle text-center">{{ x.experience.company.name }}<br>{{ x.experience.branch.name }}</td>
+          <td class="align-middle text-center">{{ x.date_confirmed }}</td>
+          <td class="align-middle text-center">{{ x.get_confirm_display }}</td>
+        </tr>
+        <tr>
+          <th>Colleague's Comment</th>
+          <td colspan="4">{{ x.comments }}</td>
+        </tr>
+        <tr>
+          <th>My Response</th>
+          <td colspan="4">{{ x.response }}</td>
+        </tr>
+        {% empty %}
+          <tr>
+            <td colspan="3">None</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <hr>
+  </div>
+{% endif %}
+
+{% if wso %}
+  <div class="">
+    <h3>Confirmation Received from Superiors</h3>
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th class="align-middle text-center">Person<br>Designation</th>
+          <th class="align-middle text-center">Vacancy<br>Ref No</th>
+          <th class="align-middle text-center">Company<br>Branch</th>
+          <th class="align-middle text-center">Action Date</th>
+          <th class="align-middle text-center">Action Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for x in wso %}
+        <tr>
+          <td class="align-middle text-center">{{ x.superior_name.alias }}<br>{{ x.designation }}</td>
+          <td class="align-middle text-center">{{ x.experience.title }}<br>{{ x.experience.ref_no }}</td>
+          <td class="align-middle text-center">{{ x.experience.company.name }}<br>{{ x.experience.branch.name }}</td>
+          <td class="align-middle text-center">{{ x.date_confirmed }}</td>
+          <td class="align-middle text-center">{{ x.get_confirm_display }}</td>
+        </tr>
+        <tr>
+          <th>Superior's Comment</th>
+          <td colspan="4">{{ x.comments }}</td>
+        </tr>
+        <tr>
+          <th>My Response</th>
+          <td colspan="4">{{ x.response }}</td>
+        </tr>
+        {% empty %}
+          <tr>
+            <td colspan="3">None</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <hr>
+  </div>
+{% endif %}
+
+{% if wco %}
+  <div class="">
+    <h3>Confirmation Received from Clients</h3>
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th class="align-middle text-center">Person<br>Designation</th>
+          <th class="align-middle text-center">Vacancy<br>Ref No</th>
+          <th class="align-middle text-center">Company<br>Branch</th>
+          <th class="align-middle text-center">Action Date</th>
+          <th class="align-middle text-center">Action Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for x in wco %}
+        <tr>
+          <td class="align-middle text-center">{{ x.client_name.alias }}<br>{{ x.designation }}</td>
+          <td class="align-middle text-center">{{ x.experience.title }}<br>{{ x.experience.ref_no }}</td>
+          <td class="align-middle text-center">{{ x.experience.company.name }}<br>{{ x.experience.branch.name }}</td>
+          <td class="align-middle text-center">{{ x.date_confirmed }}</td>
+          <td class="align-middle text-center">{{ x.get_confirm_display }}</td>
+        </tr>
+        <tr>
+          <th>Client's Comment</th>
+          <td colspan="4">{{ x.comments }}</td>
+        </tr>
+        <tr>
+          <th>My Response</th>
+          <td colspan="4">{{ x.response }}</td>
+        </tr>
+        {% empty %}
+          <tr>
+            <td colspan="3">None</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <hr>
+  </div>
+{% endif %}
+
+{% if wlo %}
+  <div class="">
+    <h3>Confirmation Received from Collaborators</h3>
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th class="align-middle text-center">Person<br>Designation</th>
+          <th class="align-middle text-center">Vacancy<br>Ref No</th>
+          <th class="align-middle text-center">Company<br>Branch</th>
+          <th class="align-middle text-center">Action Date</th>
+          <th class="align-middle text-center">Action Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for x in wlo %}
+        <tr>
+          <td class="align-middle text-center">{{ x.collaborator_name.alias }}<br>{{ x.designation }}</td>
+          <td class="align-middle text-center">{{ x.experience.title }}<br>{{ x.experience.ref_no }}</td>
+          <td class="align-middle text-center">{{ x.experience.company.name }}<br>{{ x.experience.branch.name }}</td>
+          <td class="align-middle text-center">{{ x.date_confirmed }}</td>
+          <td class="align-middle text-center">{{ x.get_confirm_display }}</td>
+        </tr>
+        <tr>
+          <th>Collaborator's Comment</th>
+          <td colspan="4">{{ x.comments }}</td>
+        </tr>
+        <tr>
+          <th>My Response</th>
+          <td colspan="4">{{ x.response }}</td>
+        </tr>
+        {% empty %}
+          <tr>
+            <td colspan="3">None</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <hr>
+  </div>
+{% endif %}
+
+{% if wct %}
+  <div class="">
+    <h3>Confirmation given as a Colleague</h3>
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th class="align-middle text-center">Person</th>
+          <th class="align-middle text-center">Vacancy<br>Ref No</th>
+          <th class="align-middle text-center">Company<br>Branch</th>
+          <th class="align-middle text-center">Action Date</th>
+          <th class="align-middle text-center">Action Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for x in wct %}
+        <tr>
+          <td class="align-middle text-center">{{ x.experience.talent.alias }}</td>
+          <td class="align-middle text-center">{{ x.experience.title }}<br>{{ x.experience.ref_no }}</td>
+          <td class="align-middle text-center">{{ x.experience.company.name }}<br>{{ x.experience.branch.name }}</td>
+          <td class="align-middle text-center">{{ x.date_confirmed }}</td>
+          <td class="align-middle text-center">{{ x.get_confirm_display }}</td>
+        </tr>
+        <tr>
+          <th>Your Comment</th>
+          <td colspan="4">{{ x.comments }}</td>
+        </tr>
+        {% empty %}
+          <tr>
+            <td colspan="3">None</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <hr>
+  </div>
+{% endif %}
+
+{% if wst %}
+  <div class="">
+    <h3>Confirmation given as a Superior</h3>
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th class="align-middle text-center">Person</th>
+          <th class="align-middle text-center">Vacancy<br>Ref No</th>
+          <th class="align-middle text-center">Company<br>Branch</th>
+          <th class="align-middle text-center">Action Date</th>
+          <th class="align-middle text-center">Action Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for x in wst %}
+        <tr>
+          <td class="align-middle text-center">{{ x.experience.talent.alias }}</td>
+          <td class="align-middle text-center">{{ x.experience.title }}<br>{{ x.experience.ref_no }}</td>
+          <td class="align-middle text-center">{{ x.experience.company.name }}<br>{{ x.experience.branch.name }}</td>
+          <td class="align-middle text-center">{{ x.date_confirmed }}</td>
+          <td class="align-middle text-center">{{ x.get_confirm_display }}</td>
+        </tr>
+        <tr>
+          <th>Your Comment</th>
+          <td colspan="4">{{ x.comments }}</td>
+        </tr>
+        {% empty %}
+          <tr>
+            <td colspan="3">None</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <hr>
+  </div>
+{% endif %}
+
+{% if wct %}
+  <div class="">
+    <h3>Confirmation given as a Client</h3>
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th class="align-middle text-center">Person</th>
+          <th class="align-middle text-center">Vacancy<br>Ref No</th>
+          <th class="align-middle text-center">Company<br>Branch</th>
+          <th class="align-middle text-center">Action Date</th>
+          <th class="align-middle text-center">Action Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for x in wct %}
+        <tr>
+          <td class="align-middle text-center">{{ x.experience.talent.alias }}</td>
+          <td class="align-middle text-center">{{ x.experience.title }}<br>{{ x.experience.ref_no }}</td>
+          <td class="align-middle text-center">{{ x.experience.company.name }}<br>{{ x.experience.branch.name }}</td>
+          <td class="align-middle text-center">{{ x.date_confirmed }}</td>
+          <td class="align-middle text-center">{{ x.get_confirm_display }}</td>
+        </tr>
+        <tr>
+          <th>Your Comment</th>
+          <td colspan="4">{{ x.comments }}</td>
+        </tr>
+        {% empty %}
+          <tr>
+            <td colspan="3">None</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <hr>
+  </div>
+{% endif %}
+
+{% if wlt %}
+  <div class="">
+    <h3>Confirmation given as a Collaborator</h3>
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th class="align-middle text-center">Person</th>
+          <th class="align-middle text-center">Vacancy<br>Ref No</th>
+          <th class="align-middle text-center">Company<br>Branch</th>
+          <th class="align-middle text-center">Action Date</th>
+          <th class="align-middle text-center">Action Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for x in wlt %}
+        <tr>
+          <td class="align-middle text-center">{{ x.experience.talent.alias }}</td>
+          <td class="align-middle text-center">{{ x.experience.title }}<br>{{ x.experience.ref_no }}</td>
+          <td class="align-middle text-center">{{ x.experience.company.name }}<br>{{ x.experience.branch.name }}</td>
+          <td class="align-middle text-center">{{ x.date_confirmed }}</td>
+          <td class="align-middle text-center">{{ x.get_confirm_display }}</td>
+        </tr>
+        <tr>
+          <th>Your Comment</th>
+          <td colspan="4">{{ x.comments }}</td>
+        </tr>
+        {% empty %}
+          <tr>
+            <td colspan="3">None</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <hr>
+  </div>
+{% endif %}
 {% endblock content %}
 {% block Script %}{% endblock Script %}
