@@ -55,7 +55,7 @@ def GeneralPassiveSubscriptionView(request):
             "currency_code": "USD",
             "a3": "4.00",                      # monthly price
             "p3": "1",                         # duration of each unit (depends on unit)
-            "t3": "D",                         # duration unit ("M for Month")
+            "t3": "M",                         # duration unit ("M for Month")
             "src": "1",                        # make payments recur
             "sra": "1",                        # reattempt payment on payment error
             "no_note": "1",                    # remove extra notes (optional)
@@ -73,7 +73,7 @@ def GeneralPassiveSubscriptionView(request):
             "currency_code": "USD",
             "a3": "22.00",                      # monthly price
             "p3": "6",                         # duration of each unit (depends on unit)
-            "t3": "D",                         # duration unit ("M for Month")
+            "t3": "M",                         # duration unit ("M for Month")
             "src": "1",                        # make payments recur
             "sra": "1",                        # reattempt payment on payment error
             "no_note": "1",                    # remove extra notes (optional)
@@ -125,7 +125,7 @@ def GeneralActiveSubscriptionView(request):
             "currency_code": "USD",
             "a3": "5.20",                      # monthly price
             "p3": "1",                         # duration of each unit (depends on unit)
-            "t3": "D",                         # duration unit ("M for Month")
+            "t3": "M",                         # duration unit ("M for Month")
             "src": "1",                        # make payments recur
             "sra": "1",                        # reattempt payment on payment error
             "no_note": "1",                    # remove extra notes (optional)
@@ -143,7 +143,7 @@ def GeneralActiveSubscriptionView(request):
             "currency_code": "USD",
             "a3": "29.20",                      # monthly price
             "p3": "6",                         # duration of each unit (depends on unit)
-            "t3": "D",                         # duration unit ("M for Month")
+            "t3": "M",                         # duration unit ("M for Month")
             "src": "1",                        # make payments recur
             "sra": "1",                        # reattempt payment on payment error
             "no_note": "1",                    # remove extra notes (optional)
@@ -195,10 +195,10 @@ def BetaGeneralPassiveSubscriptionView(request):
             "currency_code": "USD",
             "a1": "0.00",                      # trial period monthly price
             "p1": "12",                        # number months trial period
-            "t1": "D",                         # duration of unit ('M' for months)
+            "t1": "M",                         # duration of unit ('M' for months)
             "a3": "4.00",                      # monthly price
             "p3": "1",                         # duration of each unit (depends on unit)
-            "t3": "D",                         # duration unit ("M for Month")
+            "t3": "M",                         # duration unit ("M for Month")
             "src": "1",                        # make payments recur
             "sra": "1",                        # reattempt payment on payment error
             "no_note": "1",                    # remove extra notes (optional)
@@ -216,10 +216,10 @@ def BetaGeneralPassiveSubscriptionView(request):
             "currency_code": "USD",
             "a1": "0.00",                      # trial period monthly price
             "p1": "12",                        # number months trial period
-            "t1": "D",                         # duration of unit ('M' for months)
+            "t1": "M",                         # duration of unit ('M' for months)
             "a3": "22.00",                      # monthly price
             "p3": "6",                         # duration of each unit (depends on unit)
-            "t3": "D",                         # duration unit ("M for Month")
+            "t3": "M",                         # duration unit ("M for Month")
             "src": "1",                        # make payments recur
             "sra": "1",                        # reattempt payment on payment error
             "no_note": "1",                    # remove extra notes (optional)
@@ -274,10 +274,10 @@ def BetaGeneralActiveSubscriptionView(request):
             "currency_code": "USD",
             "a1": "0.00",                      # trial period monthly price
             "p1": "12",                        # number months trial period
-            "t1": "D",                         # duration of unit ('M' for months)
+            "t1": "M",                         # duration of unit ('M' for months)
             "a3": "5.20",                      # monthly price
             "p3": "1",                         # duration of each unit (depends on unit)
-            "t3": "D",                         # duration unit ("M for Month")
+            "t3": "M",                         # duration unit ("M for Month")
             "src": "1",                        # make payments recur
             "sra": "1",                        # reattempt payment on payment error
             "no_note": "1",                    # remove extra notes (optional)
@@ -295,10 +295,10 @@ def BetaGeneralActiveSubscriptionView(request):
             "currency_code": "USD",
             "a1": "0.00",                      # trial period monthly price
             "p1": "12",                        # number months trial period
-            "t1": "D",                         # duration of unit ('M' for months)
+            "t1": "M",                         # duration of unit ('M' for months)
             "a3": "29.20",                      # monthly price
             "p3": "6",                         # duration of each unit (depends on unit)
-            "t3": "D",                         # duration unit ("M for Month")
+            "t3": "M",                         # duration unit ("M for Month")
             "src": "1",                        # make payments recur
             "sra": "1",                        # reattempt payment on payment error
             "no_note": "1",                    # remove extra notes (optional)
@@ -352,7 +352,7 @@ def PassiveUpgradeActiveSubscriptionView(request):
             "currency_code": "USD",
             "a3": "5.20",                      # monthly price
             "p3": "1",                         # duration of each unit (depends on unit)
-            "t3": "D",                         # duration unit ("M for Month")
+            "t3": "M",                         # duration unit ("M for Month")
             "src": "1",                        # make payments recur
             "sra": "1",                        # reattempt payment on payment error
             "no_note": "1",                    # remove extra notes (optional)
@@ -370,7 +370,7 @@ def PassiveUpgradeActiveSubscriptionView(request):
             "currency_code": "USD",
             "a3": "29.20",                      # monthly price
             "p3": "6",                         # duration of each unit (depends on unit)
-            "t3": "D",                         # duration unit ("M for Month")
+            "t3": "M",                         # duration unit ("M for Month")
             "src": "1",                        # make payments recur
             "sra": "1",                        # reattempt payment on payment error
             "no_note": "1",                    # remove extra notes (optional)

@@ -84,6 +84,7 @@ INSTALLED_APPS = [
     'channels',
 #    'M2Crypto',
     'paypal.standard.ipn',
+    'django_celery_beat',
 ]
 
 
@@ -376,8 +377,10 @@ else:
     EMAIL_HOST_PASSWORD = ''
     EMAIL_USE_TLS = False
     EMAIL_USE_SSL = True
-    """
+
     # SendGrid mail Settings
+    SENDGRID_API_KEY = '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'
+    """
     EMAIL_HOST = 'smtp.sendgrid.net'
     EMAIL_HOST_USER = 'apikey'
     EMAIL_HOST_PASSWORD = SENDGRID_API_KEY

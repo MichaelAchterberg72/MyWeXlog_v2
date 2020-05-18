@@ -1,4 +1,4 @@
-from datetime import datetime
+#from datetime import datetime
 from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -26,9 +26,6 @@ def show_me_the_money(sender, instance, **kwargs):
     ipn_username = CustomUser.objects.get(pk=ipn_obj.custom)
     username = ipn_username.email
     CustomUserSettingsUser = CustomUserSettings.objects.get(talent=ipn_username.pk)
-
-#    import pdb
-#    pdb.set_trace()
 
     if ipn_obj.item_name == "MyWeXlog Passive Subscription":
         price = "4.00"
@@ -101,7 +98,7 @@ def show_me_the_money(sender, instance, **kwargs):
                             ipn_username.subscription = 2
                             ipn_username.paid = True
                             ipn_username.paid_date = timezone.now()
-#                            SubscriptionSignupTask.delay(ipn_username)
+#                            SubscriptionSignupTask.delay(ipn_username.pk)
 #                            SubscriptionUpgradeRefund.delay(ipn_username, username)
 
                             if "Monthly" in ipn_obj.item_name:
@@ -210,7 +207,7 @@ def show_me_the_money(sender, instance, **kwargs):
             elif CustomUserSettingsUser.subscription_notifications == False:
                 pass
             else:
-#                    SubscriptionCancelledTask.delay(ipn_username)
+#                SubscriptionCancelledTask.delay(ipn_username)
                 pass
 
     ipn_username.save()

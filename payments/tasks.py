@@ -16,7 +16,8 @@ from django.template.loader import get_template
 
 import sendgrid
 import os
-from sendgrid.helpers.mail import *
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 
 from users.models import CustomUserSettings
 #from paypal.standard.models import PayPalStandardBase
@@ -109,23 +110,29 @@ def SubscriptionFailedTask(self, user):
 
 @celery_app.task(name="payments.SubscriptionSignupTask")
 @shared_task
-def SubscriptionSignupTask(self, user):
+def SubscriptionSignupTask(self, ipn_user):
+    from users.models import CustomUser
+    username = CustomUser.object.get(pk=ipn_user)
+    message = Mail(
+        from_email = settings.CELERY_SYSTEM_EMAIL,
+        to_email = username.email,
+        subject = 'MyWeXlog Sign-up Confirmation',
+        context = {'user': username.first_name},
+        content = get_template('email_templates/email_subscription_signup.html').render(context),
+        plain_message = render_to_string('email_templates/email_subscription_signup_text.html', context),
+        text_content = strip_tags(plain_message),
+        html_content = Content("text/html", content))
 
-    sg = sendgrid.SendGridAPIClient(api_key=os.environ.get('SENDGRID_API_KEY'))
-    from_email = Email(settings.CELERY_SYSTEM_EMAIL)
-    to_email = To(user.email)
-    subject = 'MyWeXlog Sign-up Confirmation'
-    context = {'user': user.first_name}
-    content = get_template('email_templates/email_subscription_signup.html').render(context)
-    plain_message = render_to_string('email_templates/email_subscription_signup_text.html', context)
-    text_content = strip_tags(plain_message)
-    html_content = Content("text/html", content)
-    mail = Mail(from_email, to_email, subject, text_content, html_content)
-    response = sg.client.mail.send.post(request_body=mail.get())
-    print(response.status_code)
-    print(response.body)
-    print(response.headers)
+    try:
+        sg = sendgrid.SendGridAPIClient(api_key=os.environ.get('SENDGRID_API_KEY'))
+#        response = sg.client.mail.send.post(request_body=mail.get())
+        response = sg.send(message)
+        print(response.status_code)
+        print(response.body)
+        print(response.headers)
 
+    except Exception as e:
+        print(e.message)
 
 @celery_app.task(name="payments.SubscriptionRefundTask")
 @shared_task
