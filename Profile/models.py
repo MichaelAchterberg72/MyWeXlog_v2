@@ -135,6 +135,15 @@ class Profile(models.Model):
             target.update(alias=inject_al, first_name=inject_fn, last_name=inject_ln)
         super(Profile, self).save(*args, **kwargs)
 
+        '''
+        #check for confirmations
+        eml_i = Invitation.objects.filter(email=self.talent.email)
+        if eml_i:
+            rel = eml_i.relationship
+            if rel == LR:
+                Lecturer.create()
+        '''
+
     def create_profile(sender, **kwargs):
         if kwargs['created']:
             create_profile = Profile.objects.create(talent=kwargs['instance'])

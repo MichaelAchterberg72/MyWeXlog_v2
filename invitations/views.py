@@ -167,8 +167,7 @@ def profile_2_pdf(request):
             }
     download = request.GET.get("download")
     if download:
-        content2 = "attachment; filename=MyWeXlogProfile.pdf"
-        response['Content-Disposition'] = content2
+        content = "inline; attachment; filename=MyWeXlogProfile.pdf"
     response['Content-Disposition'] = content
     html = render_to_string(template, context)
     font_config = FontConfiguration()
