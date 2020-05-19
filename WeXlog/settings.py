@@ -379,13 +379,13 @@ else:
     EMAIL_USE_SSL = True
 
     # SendGrid mail Settings
-    SENDGRID_API_KEY = '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'
-    """
-    EMAIL_HOST = 'smtp.sendgrid.net'
-    EMAIL_HOST_USER = 'apikey'
-    EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
-    EMAIL_PORT = 587
-    EMAIL_USE_TLS = True
-    DEFAULT_FROM_EMAIL = 'sendgrid email'
-    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-    """
+SENDGRID_API_KEY = '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'
+
+#    EMAIL_HOST_USER = 'apikey'
+#    EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
+#    EMAIL_PORT = 587
+#    EMAIL_HOST = 'smtp.sendgrid.net'
+#    EMAIL_USE_TLS = True
+#    DEFAULT_FROM_EMAIL = 'sendgrid email'
+#    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+#"""

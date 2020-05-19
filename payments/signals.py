@@ -98,7 +98,8 @@ def show_me_the_money(sender, instance, **kwargs):
                             ipn_username.subscription = 2
                             ipn_username.paid = True
                             ipn_username.paid_date = timezone.now()
-#                            SubscriptionSignupTask.delay(ipn_username.pk)
+                            tlt = ipn_username.pk
+                            SubscriptionSignupTask.delay(tlt)
 #                            SubscriptionUpgradeRefund.delay(ipn_username, username)
 
                             if "Monthly" in ipn_obj.item_name:

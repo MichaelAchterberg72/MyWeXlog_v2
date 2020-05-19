@@ -110,21 +110,23 @@ def SubscriptionFailedTask(self, user):
 
 @celery_app.task(name="payments.SubscriptionSignupTask")
 @shared_task
-def SubscriptionSignupTask(self, ipn_user):
+def SubscriptionSignupTask(tlt):
     from users.models import CustomUser
-    username = CustomUser.object.get(pk=ipn_user)
+
+    username = CustomUser.objects.get(pk=tlt)
+    context = {'user': username.first_name}
+    html_message = render_to_string('email_templates/email_subscription_signup.html', context)
+#    content = get_template('email_templates/email_subscription_signup.html').render(context)
+#    plain_message = render_to_string('email_templates/email_subscription_signup_text.html' context)
+#    text_content = strip_tags(plain_message)
     message = Mail(
         from_email = settings.CELERY_SYSTEM_EMAIL,
-        to_email = username.email,
+        to_emails = username.email,
         subject = 'MyWeXlog Sign-up Confirmation',
-        context = {'user': username.first_name},
-        content = get_template('email_templates/email_subscription_signup.html').render(context),
-        plain_message = render_to_string('email_templates/email_subscription_signup_text.html', context),
-        text_content = strip_tags(plain_message),
-        html_content = Content("text/html", content))
+        html_content = html_message)
 
     try:
-        sg = sendgrid.SendGridAPIClient(api_key=os.environ.get('SENDGRID_API_KEY'))
+        sg = sendgrid.SendGridAPIClient(settings.SENDGRID_API_KEY)
 #        response = sg.client.mail.send.post(request_body=mail.get())
         response = sg.send(message)
         print(response.status_code)
@@ -132,7 +134,7 @@ def SubscriptionSignupTask(self, ipn_user):
         print(response.headers)
 
     except Exception as e:
-        print(e.message)
+        print(e)
 
 @celery_app.task(name="payments.SubscriptionRefundTask")
 @shared_task
