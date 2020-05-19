@@ -109,6 +109,7 @@ class Profile(models.Model):
     rate_2 = models.FloatField(null=True, default=0)#average for marketplace.models.VacancyRate
     rate_3 = models.FloatField(null=True, default=0)#average for marketplace.models.VacancyRate
     rate_count = models.IntegerField(null=True, default=0)#count for marketplace.models.VacancyRate
+    confirm_check = models.BooleanField(null=True, default=False)
 
     def __str__(self):
         return str(self.talent)
@@ -133,16 +134,29 @@ class Profile(models.Model):
             target.update(alias=inject_al, alphanum=inject_al)
         else:
             target.update(alias=inject_al, first_name=inject_fn, last_name=inject_ln)
-        super(Profile, self).save(*args, **kwargs)
 
-        '''
-        #check for confirmations
-        eml_i = Invitation.objects.filter(email=self.talent.email)
-        if eml_i:
-            rel = eml_i.relationship
-            if rel == LR:
-                Lecturer.create()
-        '''
+        #check for confirmations once registering
+        if self.confirm_check == False:
+            eml_i = Invitation.objects.get(email=self.talent.email)
+            self.confirm_check = True
+            if eml_i:
+                rel = eml_i.relationship
+                if rel == 'LR':
+                    Lecturer.create(education = eml_i.experience, lecturer=self.talent, topic=eml_i.experience.topic)
+                if rel == 'CM':
+                    ClassMates.create(education = eml_i.experience, colleague=self.talent, topic=eml_i.experience.topic)
+                if rel == 'WC':
+                    WorkColleague.create(experience = eml_i.experience, colleague=self.talent)
+                if rel == 'PC':
+                    WorkColleague.create(experience = eml_i.experience, colleague=self.talent)
+                if rel == 'WS':
+                    Superior.create(experience = eml_i.experience, superior_name=self.talent)
+                if rel == 'WL':
+                    WorkCollaborator.create(experience = eml_i.experience, collaborator_name=self.talent)
+                if rel == 'WT':
+                    WorkClient.create(experience = eml_i.experience, client_name=self.talent)
+
+        super(Profile, self).save(*args, **kwargs)
 
     def create_profile(sender, **kwargs):
         if kwargs['created']:

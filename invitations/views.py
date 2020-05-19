@@ -35,14 +35,17 @@ from .forms import InvitationForm, InvitationLiteForm
 
 @login_required()
 #in the app, add information relating to the job
-def InvitationView(request):
+def InvitationView(request, tex):
     invitee = request.user
+    qs = get_object_or_404(WorkExperience, slug=tex)
+
     if request.method == 'POST':
         next_url=request.POST.get('next', '/')
         form = InvitationForm(request.POST)
         if form.is_valid():
             new = form.save(commit=False)
             new.invited_by = request.user
+            new.experience = qs
             if 'confirm' in request.COOKIES:
                 rel = request.COOKIES['confirm']
                 new.relationship = rel

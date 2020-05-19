@@ -255,7 +255,6 @@ def HelpHowCaptrueSkillsView(request):
 
 @login_required()
 def TrainingListView(request):
-
     basequery = WorkExperience.objects.select_related('topic').filter(talent=request.user)
 
     train = basequery.filter(edt=True).order_by('-date_from')
@@ -1481,7 +1480,7 @@ def LecturerAddView(request, tex):
 @login_required()
 @csp_exempt
 def ClassMateSelectView(request):
-    instance = WorkExperience.objects.filter(talent=request.user,edt=True).latest('date_captured')
+    instance = WorkExperience.objects.filter(talent=request.user, edt=True).latest('date_captured')
     tex = instance.slug
 
     lecturer_excl = set(Lecturer.objects.filter(education__slug=tex).values_list('lecturer', flat=True))
