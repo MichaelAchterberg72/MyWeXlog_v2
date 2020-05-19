@@ -1970,7 +1970,7 @@ def VacancyPostView(request, vac):
     #>>> Find all talent that are in the correct geographic location
     vac_type = instance.worklocation.id
 
-    if vac_type == 1:
+    if vac_type == 0:
         wel_i=wee
     else:
         wel = set(PhysicalAddress.objects.filter(region=instance.city.region).values_list('talent', flat=True))
@@ -2112,7 +2112,7 @@ def TalentSuitedVacancyListView(request, vac):
     #>>> Find all talent that are in the correct geographic location
     vac_type = instance.worklocation.id
 
-    if vac_type == 1:
+    if vac_type == 0:
         wel_i=wee
     else:
         wel = set(PhysicalAddress.objects.filter(region=instance.city.region).values_list('talent', flat=True))

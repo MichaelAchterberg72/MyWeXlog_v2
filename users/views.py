@@ -64,7 +64,7 @@ def UserAgreementView(request):
                 return redirect(reverse('Profile:ProfileHome',))
         else:
             context = {'form': form}
-            template = 'users/user_agreement.html'
+            template = 'users/terms_user_agreement.html'
             return render(request, template, context)
 
     else:
@@ -84,7 +84,28 @@ def PrivacyPolicyView(request):
                 return redirect(reverse('Profile:ProfileHome'))
         else:
             context = {'form': form}
-            template = 'users/privacy_policy.html'
+            template = 'users/terms_privacy_policy.html'
             return render(request, template, context)
     else:
         raise PermissionDenied
+
+
+def LoginUserAgreementView(request):
+
+    context = {}
+    template = 'users/login_user_agreement.html'
+    return render(request, template, context)
+
+
+def LoginPrivacyView(request):
+
+    context = {}
+    template = 'users/login_privacy_policy.html'
+    return render(request, template, context)
+
+
+def LoginCookieView(request):
+
+    context = {}
+    template = 'users/login_cookie_policy.html'
+    return render(request, template, context)

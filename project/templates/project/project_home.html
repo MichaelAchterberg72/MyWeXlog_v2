@@ -14,7 +14,7 @@
   </p></span></h4>
   <div class="card-body">
       {% if request.user.is_authenticated %}
-      <p>There are currently {{ pcount.sum_p|intcomma }} projects listed in WeXlog!</p>
+      <p>There are currently {{ pcount.sum_p|intcomma }} projects listed in MyWeXlog!</p>
       <p><a href="{% url 'Project:ProjectAdd' %}" class="badge badge-pill badge-primary">Add Project</a><a href="{% url 'Project:Project-Search' %}" class="badge badge-pill badge-primary">Search Projects</a><a href="{% url 'Enterprise:EnterpriseHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
       {% endif %}
       <table class="table table-hover table-sm">

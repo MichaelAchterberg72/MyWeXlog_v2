@@ -4,9 +4,9 @@ from celery.task import task
 from celery.task import Task
 from celery.decorators import task
 from celery import shared_task
+from tasks.celery import app as celery_app
 
 import celery
-from WeXlog.celery import app
 
 from django.conf import settings
 from django.template.loader import render_to_string
@@ -16,201 +16,193 @@ from django.template.loader import get_template
 
 import sendgrid
 import os
-from sendgrid.helpers.mail import *
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 
 from users.models import CustomUserSettings
+#from paypal.standard.models import PayPalStandardBase
 
 from datetime import datetime
 from datetime import date
 
-from paypal.standard.models import PayPalStandardBase
+#from paypal.standard.models import PayPalStandardBase
 
 
-app = Celery('tasks', broker=settings.CELERY_BROKER_URL)
-
-@app.task
+@celery_app.task(name="payments.SubscriptionExpiredTask")
 @shared_task
-class SubscriptionExpiredTask(Task):
+def SubscriptionExpiredTask(self, user):
 
-    def run(self, user):
+    sg = sendgrid.SendGridAPIClient(api_key=os.environ.get('SENDGRID_API_KEY'))
+    from_email = Email(settings.CELERY_SYSTEM_EMAIL)
+    to_email = To(user.email)
+    subject = 'Your Subscription has Expired'
+    context = {'user': user.first_name}
+    content = get_template('email_templates/email_subscription_expired.html').render(context)
+    plain_message = render_to_string('email_templates/email_subscription_expired_text.html', context)
+    text_content = strip_tags(plain_message)
+    html_content = Content("text/html", content)
+    mail = Mail(from_email, to_email, subject, text_content, html_content)
+    response = sg.client.mail.send.post(request_body=mail.get())
+    print(response.status_code)
+    print(response.body)
+    print(response.headers)
 
-        sg = sendgrid.SendGridAPIClient(api_key=os.environ.get('SENDGRID_API_KEY'))
-        from_email = Email(settings.CELERY_SYSTEM_EMAIL)
-        to_email = To(user)
-        subject = 'Your Subscription has Expired'
-        context = {'user': user.first_name}
-        content = get_template('email_templates/email_subscription_expired.html').render(context)
-        plain_message = render_to_string('email_templates/email_subscription_expired_text.html', context)
-        text_content = strip_tags(plain_message)
-        html_content = Content("text/html", content)
-        mail = Mail(from_email, to_email, subject, text_content, html_content)
-        response = sg.client.mail.send.post(request_body=mail.get())
+
+@celery_app.task(name="payments.SubscriptionAmountDifferentTask")
+@shared_task
+def SubscriptionAmountDifferentTask(self, user):
+
+    sg = sendgrid.SendGridAPIClient(api_key=os.environ.get('SENDGRID_API_KEY'))
+    from_email = Email(settings.CELERY_SYSTEM_EMAIL)
+    to_email = To(user.email)
+    subject = 'Your Payment Amount with PayPal varies to the Subscription Amount'
+    context = {'user': user.first_name}
+    content = get_template('email_templates/email_subscription_amount_different.html').render(context)
+    plain_message = render_to_string('email_templates/email_subscription_amount_different_text.html', context)
+    text_content = strip_tags(plain_message)
+    html_content = Content("text/html", content)
+    mail = Mail(from_email, to_email, subject, text_content, html_content)
+    response = sg.client.mail.send.post(request_body=mail.get())
+    print(response.status_code)
+    print(response.body)
+    print(response.headers)
+
+
+@celery_app.task(name="payments.SubscriptionCancelledTask")
+@shared_task
+def SubscriptionCancelledTask(self, user):
+
+    sg = sendgrid.SendGridAPIClient(api_key=os.environ.get('SENDGRID_API_KEY'))
+    from_email = Email(settings.CELERY_SYSTEM_EMAIL)
+    to_email = To(user.email)
+    subject = 'Your Subscription has been Cancelled'
+    context = {'user': user.first_name}
+    content = get_template('email_templates/email_subscription_cancelled.html').render(context)
+    plain_message = render_to_string('email_templates/email_subscription_cancelled_text.html', context)
+    text_content = strip_tags(plain_message)
+    html_content = Content("text/html", content)
+    mail = Mail(from_email, to_email, subject, text_content, html_content)
+    response = sg.client.mail.send.post(request_body=mail.get())
+    print(response.status_code)
+    print(response.body)
+    print(response.headers)
+
+
+@celery_app.task(name="payments.SubscriptionFailedTask")
+@shared_task
+def SubscriptionFailedTask(self, user):
+
+    sg = sendgrid.SendGridAPIClient(api_key=os.environ.get('SENDGRID_API_KEY'))
+    from_email = Email(settings.CELERY_SYSTEM_EMAIL)
+    to_email = To(user.email)
+    subject = 'Your Subscription failed to be processed'
+    context = {'user': user.first_name}
+    content = get_template('email_templates/email_subscription_failed.html').render(context)
+    plain_message = render_to_string('email_templates/email_subscription_failed_text.html', context)
+    text_content = strip_tags(plain_message)
+    html_content = Content("text/html", content)
+    mail = Mail(from_email, to_email, subject, text_content, html_content)
+    response = sg.client.mail.send.post(request_body=mail.get())
+    print(response.status_code)
+    print(response.body)
+    print(response.headers)
+
+
+@celery_app.task(name="payments.SubscriptionSignupTask")
+@shared_task
+def SubscriptionSignupTask(tlt):
+    from users.models import CustomUser
+
+    username = CustomUser.objects.get(pk=tlt)
+    context = {'user': username.first_name}
+    html_message = render_to_string('email_templates/email_subscription_signup.html', context)
+#    content = get_template('email_templates/email_subscription_signup.html').render(context)
+#    plain_message = render_to_string('email_templates/email_subscription_signup_text.html' context)
+#    text_content = strip_tags(plain_message)
+    message = Mail(
+        from_email = settings.CELERY_SYSTEM_EMAIL,
+        to_emails = username.email,
+        subject = 'MyWeXlog Sign-up Confirmation',
+        html_content = html_message)
+
+    try:
+        sg = sendgrid.SendGridAPIClient(settings.SENDGRID_API_KEY)
+#        response = sg.client.mail.send.post(request_body=mail.get())
+        response = sg.send(message)
         print(response.status_code)
         print(response.body)
         print(response.headers)
 
+    except Exception as e:
+        print(e)
 
-@app.task
+@celery_app.task(name="payments.SubscriptionRefundTask")
 @shared_task
-class SubscriptionAmountDifferentTask(Task):
+def SubscriptionRefundTask(self, user, refundamount, payment_txn_id):
 
-    def run(self, user):
-
-        sg = sendgrid.SendGridAPIClient(api_key=os.environ.get('SENDGRID_API_KEY'))
-        from_email = Email(settings.CELERY_SYSTEM_EMAIL)
-        to_email = To(user)
-        subject = 'Your Payment Amount with PayPal varies to the Subscription Amount'
-        context = {'user': user.first_name}
-        content = get_template('email_templates/email_subscription_amount_different.html').render(context)
-        plain_message = render_to_string('email_templates/email_subscription_amount_different_text.html', context)
-        text_content = strip_tags(plain_message)
-        html_content = Content("text/html", content)
-        mail = Mail(from_email, to_email, subject, text_content, html_content)
-        response = sg.client.mail.send.post(request_body=mail.get())
-        print(response.status_code)
-        print(response.body)
-        print(response.headers)
+    sg = sendgrid.SendGridAPIClient(api_key=os.environ.get('SENDGRID_API_KEY'))
+    from_email = Email(settings.CELERY_SYSTEM_EMAIL)
+    to_email = To(settings.ACCOUNTS_EMAIL)
+    subject = 'Subscriber Upgrade Refund'
+    context = {'user': user, 'refundamount': refundamount, 'txn_id': payment_txn_id}
+    content = get_template('email_templates/email_subscription_upgrade_refund.html').render(context)
+    plain_message = render_to_string('email_templates/email_subscription_upgrade_refund_text.html', context)
+    text_content = strip_tags(plain_message)
+    html_content = Content("text/html", content)
+    mail = Mail(from_email, to_email, subject, text_content, html_content)
+    response = sg.client.mail.send.post(request_body=mail.get())
+    print(response.status_code)
+    print(response.body)
+    print(response.headers)
 
 
-@app.task
+@celery_app.task(name="payments.RemindDeleteOldSubscription")
 @shared_task
-class SubscriptionCancelledTask(Task):
+def RemindDeleteOldSubscription(self, user, payment_txn_id):
 
-    def run(self, user):
-
-        sg = sendgrid.SendGridAPIClient(api_key=os.environ.get('SENDGRID_API_KEY'))
-        from_email = Email(settings.CELERY_SYSTEM_EMAIL)
-        to_email = To(user)
-        subject = 'Your Subscription has been Cancelled'
-        context = {'user': user.first_name}
-        content = get_template('email_templates/email_subscription_cancelled.html').render(context)
-        plain_message = render_to_string('email_templates/email_subscription_cancelled_text.html', context)
-        text_content = strip_tags(plain_message)
-        html_content = Content("text/html", content)
-        mail = Mail(from_email, to_email, subject, text_content, html_content)
-        response = sg.client.mail.send.post(request_body=mail.get())
-        print(response.status_code)
-        print(response.body)
-        print(response.headers)
-
-
-@app.task
-@shared_task
-class SubscriptionFailedTask(Task):
-
-    def run(self, user):
-
-        sg = sendgrid.SendGridAPIClient(api_key=os.environ.get('SENDGRID_API_KEY'))
-        from_email = Email(settings.CELERY_SYSTEM_EMAIL)
-        to_email = To(user)
-        subject = 'Your Subscription failed to be processed'
-        context = {'user': user.first_name}
-        content = get_template('email_templates/email_subscription_failed.html').render(context)
-        plain_message = render_to_string('email_templates/email_subscription_failed_text.html', context)
-        text_content = strip_tags(plain_message)
-        html_content = Content("text/html", content)
-        mail = Mail(from_email, to_email, subject, text_content, html_content)
-        response = sg.client.mail.send.post(request_body=mail.get())
-        print(response.status_code)
-        print(response.body)
-        print(response.headers)
-
-
-@app.task
-@shared_task
-class SubscriptionSignupTask(Task):
-
-    def run(self, user):
-
-        sg = sendgrid.SendGridAPIClient(api_key=os.environ.get('SENDGRID_API_KEY'))
-        from_email = Email(settings.CELERY_SYSTEM_EMAIL)
-        to_email = To(user)
-        subject = 'MyWeXlog Sign-up Confirmation'
-        context = {'user': user.first_name}
-        content = get_template('email_templates/email_subscription_signup.html').render(context)
-        plain_message = render_to_string('email_templates/email_subscription_signup_text.html', context)
-        text_content = strip_tags(plain_message)
-        html_content = Content("text/html", content)
-        mail = Mail(from_email, to_email, subject, text_content, html_content)
-        response = sg.client.mail.send.post(request_body=mail.get())
-        print(response.status_code)
-        print(response.body)
-        print(response.headers)
-
-
-@app.task
-@shared_task
-class SubscriptionRefundTask(Task):
-
-    def run(self, user, refundamount, payment_txn_id):
-
-        sg = sendgrid.SendGridAPIClient(api_key=os.environ.get('SENDGRID_API_KEY'))
-        from_email = Email(settings.CELERY_SYSTEM_EMAIL)
-        to_email = To(settings.ACCOUNTS_EMAIL)
-        subject = 'Subscriber Upgrade Refund'
-        context = {'user': user, 'refundamount': refundamount, 'txn_id': payment_txn_id}
-        content = get_template('email_templates/email_subscription_upgrade_refund.html').render(context)
-        plain_message = render_to_string('email_templates/email_subscription_upgrade_refund_text.html', context)
-        text_content = strip_tags(plain_message)
-        html_content = Content("text/html", content)
-        mail = Mail(from_email, to_email, subject, text_content, html_content)
-        response = sg.client.mail.send.post(request_body=mail.get())
-        print(response.status_code)
-        print(response.body)
-        print(response.headers)
-
-
-@app.task
-@shared_task
-class RemindDeleteOldSubscription(Task):
-
-    def run(self, user, payment_txn_id):
-
-        sg = sendgrid.SendGridAPIClient(api_key=os.environ.get('SENDGRID_API_KEY'))
-        from_email = Email(settings.CELERY_SYSTEM_EMAIL)
-        to_email = To(user)
-        subject = 'MyWeXlog Subscription Reminder'
-        context = {'user': user, 'txn_id': payment_txn_id}
-        content = get_template('email_templates/email_reminder_old_subscription_delete.html').render(context)
-        plain_message = render_to_string('email_templates/email_reminder_old_subscription_delete_text.html', context)
-        text_content = strip_tags(plain_message)
-        html_content = Content("text/html", content)
-        mail = Mail(from_email, to_email, subject, text_content, html_content)
-        response = sg.client.mail.send.post(request_body=mail.get())
-        print(response.status_code)
-        print(response.body)
-        print(response.headers)
+    sg = sendgrid.SendGridAPIClient(api_key=os.environ.get('SENDGRID_API_KEY'))
+    from_email = Email(settings.CELERY_SYSTEM_EMAIL)
+    to_email = To(user.email)
+    subject = 'MyWeXlog Subscription Reminder'
+    context = {'user': user, 'txn_id': payment_txn_id}
+    content = get_template('email_templates/email_reminder_old_subscription_delete.html').render(context)
+    plain_message = render_to_string('email_templates/email_reminder_old_subscription_delete_text.html', context)
+    text_content = strip_tags(plain_message)
+    html_content = Content("text/html", content)
+    mail = Mail(from_email, to_email, subject, text_content, html_content)
+    response = sg.client.mail.send.post(request_body=mail.get())
+    print(response.status_code)
+    print(response.body)
+    print(response.headers)
 # task.register(RemindDeleteOldSubscription())
 
+@celery_app.task(name="payments.SubscriptionUpgradeRefund")
+def SubscriptionUpgradeRefund(self, user, useremail):
 
-def SubscriptionUpgradeRefund():
+    p = PayPalStandardBase.objects.filter(custom=user.custom)
+    q = p.filter(flag = True).order_by(-payment_date)
+    subscriber = q[1]
+    useremail = user.email
 
-    def run(self, user):
+    npd = subscriber.next_payment_date
+    npdd = npd.strftime('%d/%m/%Y')
+    cd = date.today().strftime('%d/%m/%Y')
+    nsd = cd - npd
+    daysdelta = nsd.days
 
-        p = PayPalStandardBase.objects.filter(custom=user)
-        q = p.filter(flag = "True").order_by(-payment_date)
-        subscriber = q[1]
-        useremail = subscriber.custom
+    opd = subscriber.payment_date
+    opdd = opd.strftime('%d/%m/%Y')
+    sd = npdd - opdd
+    subscriptiondaysdelta = sd.days
 
-        npd = subscriber.next_payment_date
-        npdd = npd.strftime('%d/%m/%Y')
-        cd = date.today().strftime('%d/%m/%Y')
-        nsd = cd - npd
-        daysdelta = nsd.days
+    amp = subscriber.amount1
+    subscriptionperday = amp / subscriptiondaysdelta
+    refundamount = subscriptionperday * daysdelta
 
-        opd = subscriber.payment_date
-        opdd = opd.strftime('%d/%m/%Y')
-        sd = npdd - opdd
-        subscriptiondaysdelta = sd.days
+    payment_txn_id = subscriber.txn_id
 
-        amp = subscriber.amount1
-        subscriptionperday = amp / subscriptiondaysdelta
-        refundamount = subscriptionperday * daysdelta
-
-        payment_txn_id = subscriber.txn_id
-
-        if refundamount >= 0:
-            SubscriptionRefundTask(useremail, refundamount, payment_txn_id)
-            RemindDeleteOldSubscription(useremail, payment_txn_id)
-        else:
-            pass
+    if refundamount >= 0:
+        SubscriptionRefundTask.delay(useremail, refundamount, payment_txn_id)
+        RemindDeleteOldSubscription.delay(useremail, payment_txn_id)
+    else:
+        pass

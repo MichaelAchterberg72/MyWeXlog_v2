@@ -2,20 +2,61 @@
 
 {% load i18n %}
 
+{% load crispy_forms_tags %}
+
 {% block head_title %}{% trans "Signup" %}{% endblock %}
 
 {% block content %}
-<h1>{% trans "Sign Up" %}</h1>
+
+
+<div class="card border-0 col-sm-5 mx-auto">
+
+  <div class="card-body">
+    <h1 class="card-title text-center">{% trans "Sign Up" %}</h1>
 
 <p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
 
 <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
   {% csrf_token %}
-  {{ form.as_p }}
+  {{ form|crispy }}
   {% if redirect_field_value %}
   <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
   {% endif %}
-  <button type="submit">{% trans "Sign Up" %} &raquo;</button>
+    <!-- Button trigger modal -->
+  <div class="text-center">
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+    Terms and Conditions
+  </button>
+  <button class="btn btn-primary" type="submit">{% trans "Sign Up" %} &raquo;</button>
+  </div>
 </form>
 
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">View Terms and Conditions</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body text-center">
+
+        <a href="{% url 'Users:LoginUserAgreement' %}" class="btn btn-primary 8rem">User Agreement</a>
+        <a href="{% url 'Users:LoginPrivacyPolicy' %}" class="btn btn-primary 8rem">Privacy Policy</a>
+        <a href="{% url 'Users:LoginCookiePolicy' %}" class="btn btn-primary 8rem">Cookie Policy</a>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+</div>
 {% endblock %}

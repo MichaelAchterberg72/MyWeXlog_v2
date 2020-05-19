@@ -72,10 +72,10 @@
             <div class="">
               <div class="card-body">
               {% if request.user.subscription >= 2 %}
-                <p class="text-right"><a href="{% url 'Project:HoursOnProject' info.slug %}?next={{ request.path|urlencode }}" class="btn btn-primary">MyWexLog Hours</a>
+                <p class="text-right"><a href="{% url 'Project:HoursOnProject' info.slug %}?next={{ request.path|urlencode }}" class="btn btn-primary">MyWeXlog Hours</a>
                   &nbsp
                 {% else %}
-                  <a href="#" class="btn btn-primary" style="width: 6rem;">Active Subscription required</a></p>
+                  <a href="#" class="btn btn-primary">Active Subscription Required</a></p>
                 {% endif %}
 
               </div>

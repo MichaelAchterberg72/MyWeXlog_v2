@@ -12,7 +12,7 @@
 
   <div class="card-body">
     {% if request.user.is_authenticated %}
-    <p>There are currently {{ bcount.sum_b|intcomma }} books listed in WexLog!</p>
+    <p>There are currently {{ bcount.sum_b|intcomma }} books listed in MyWeXlog!</p>
     <p><a href="{% url 'BookList:AddBook' %}" class="badge badge-pill badge-primary">Add Book</a>
       <a href="{% url 'BookList:BookListHome' %}" class="badge badge-pill badge-primary">View Books Read</a>
       <a href="{% url 'BookList:book-search' %}" class="badge badge-pill badge-primary">Search All Books</a>
