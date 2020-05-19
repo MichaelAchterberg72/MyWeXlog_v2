@@ -60,13 +60,13 @@ def InvitationView(request, tex):
             worked_for = cd['worked_for']
             print(name, surname, worked_for)
 
-            subject = f"Invitation to WeXlog"
+            subject = f"Invitation to MyWeXlog"
             context = {'form': form,  'temp': temp }
             html_message = render_to_string('invitations/invitation.html', context)
             plain_message = strip_tags(html_message)
 
             invitee = cd['email']
-            send_mail(subject, html_message, 'admin@wexlog.io', [invitee,])
+            send_mail(subject, html_message, 'admin@mywexlog.com', [invitee,])
             template = 'invitations/invitation.html'
             if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
                 next_url = reverse('Talent:Home')

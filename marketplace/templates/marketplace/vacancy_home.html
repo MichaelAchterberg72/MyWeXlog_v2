@@ -9,12 +9,77 @@
     {% if request.user.subscription >= 1 %}
       <div class="float-right">
         {% if request.user.subscription >= 2 %}
+        <!-- Button trigger modal -->
+
         <a href="{% url 'MarketPlace:History' %}" class="btn btn-primary 8rem">Applications History</a>
         {% endif %}
         <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary 8rem">Interview History</a>
+        {% if request.user.subscription >= 1 %}
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Availability</button>
+        {% endif %}
         <a href="{% url 'MarketPlace:HelpVacanciesSuitedForMeSummary' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
         <i class="icon icon-question-circle"></i></a>
       </div>
+
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title" id="exampleModalLabel">My Availability</h4>
+              <div class="float-right">
+              <a href="{% url 'MarketPlace:Availabillity' %}" class="badge badge-primary" style="width: 8rem;">Add</a>
+              <a href="{% url 'MarketPlace:HelpAvailability' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
+              <i class="icon icon-question-circle"></i></a>
+            </div>
+          </div>
+            <div class="modal-body">
+              <div class="row">
+              <div class="col-sm-12">
+                <div class="border-0">
+
+
+                    <table class="table table-hover table-sm">
+                      <thead>
+                        <col width="30%">
+                        <col width="30%">
+                        <col width="30%">
+                        <col width="10%">
+                        <tr>
+                          <th class="align-middle text-center">Date From</th>
+                          <th class="align-middle text-center">Date to</th>
+                          <th class="align-middle text-center">Time Available</th>
+                        </tr>
+                      </thead>
+                      {% for a in capacity %}
+                      <tbody>
+                        <tr>
+                          <td class="align-middle text-center">{{ a.date_from|date:'d M Y' }}</td>
+                          <td class="align-middle text-center">{{ a.date_to|date:'d M Y' }}</td>
+                          <td class="align-middle text-center">{{ a.hours_available }} hrs {{ a.get_unit_display }}</td>
+                          <td class="align-middle float-right">
+                            <form  action="{% url 'MarketPlace:NotAvailable' a.id %}" method="post">
+                              {% csrf_token %}
+                              <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
+                            </form>
+                          </td>
+                        </tr>
+                      </tbody>
+                      {% endfor %}
+                    </table>
+
+                </div>
+              </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
     {% endif %}
     <h4 class="card-title">Vacancies Suited for Me </h4>
     <p>There are currently a total of <strong>{{ tot_vac }}</strong> vacancies suitable to you.<br>{% if request.user.subscription >= 2 %}You have already applied for <strong>{{ wbt_c }}</strong>.{% endif %}You have been shortlisted for
@@ -101,7 +166,7 @@
     <i class="icon icon-question-circle"></i></a>
     </div>
   <h4 class="card-title">My Vacancies Advertised (Open)</h4>
-  <p>You currently have {{ ipost_count }} open vacancies listed{% if ipost_count > 5 %}, we only list the 5 most recent vacancies here.{% else %}.{% endif %}</p>
+  <p>You currently have <strong>{{ ipost_count }}</strong> open vacancies listed{% if ipost_count > 5 %}, we only list the 5 most recent vacancies here.{% else %}.{% endif %}</p>
   <table class="table table-hover table-sm">
     <thead>
       <tr>
@@ -113,7 +178,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for p in ipost %}
+      {% for p in ipost_list %}
         <tr onclick="window.location='{% url 'MarketPlace:VacancyPost' p.ref_no %}'">
           <td class="align-middle text-center">{{ p.bid_open|date:'j M Y' }}</td>
           <td class="align-middle text-center">{{ p.title|truncatechars:37 }}</td>
@@ -166,7 +231,7 @@
         <i class="icon icon-question-circle"></i></a>
         </div>
       <h4 class="card-title">My Vacancies Advertised (Closed)</h4>
-      <p>You currently have {{ ipost_closed_count }} closed vacancies listed{% if ipost_closed_count > 5 %}, we only list the 5 most recent vacancies here.{% else %}.{% endif %}</p>
+      <p>You currently have <strong>{{ ipost_closed_count }}</strong> closed vacancies listed{% if ipost_closed_count > 5 %}, we only list the 5 most recent vacancies here.{% else %}.{% endif %}</p>
       <table class="table table-hover table-sm">
         <thead>
           <tr>
@@ -178,7 +243,7 @@
           </tr>
         </thead>
         <tbody>
-          {% for c in ipost_closed %}
+          {% for c in ipost_closed_list %}
             <tr onclick="window.location='{% url 'MarketPlace:VacancyPost' c.ref_no %}?next={{ request.path|urlencode }}'">
               <td class="align-middle text-center">{{ c.bid_open|date:'j M Y' }}</td>
               <td class="align-middle text-center">{{ c.title|truncatechars:37 }}</td>
@@ -209,51 +274,7 @@
 </div>
 {% endif %}
 {% endif %}
-{% if request.user.subscription >= 1 %}
-<br>
-<div class="row">
-<div class="col-sm-7">
-  <div class="card border-0">
-    <div class="card-body" id='Availabillity'>
-      <div class="float-right">
-      <a href="{% url 'MarketPlace:Availabillity' %}" class="badge badge-primary" style="width: 8rem;">Add</a>
-      <a href="{% url 'MarketPlace:HelpAvailability' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
-      <i class="icon icon-question-circle"></i></a>
-      </div>
-      <h4 class="card-title">My Availability</h4>
-      <table class="table table-hover table-sm">
-        <thead>
-          <col width="20%">
-          <col width="20%">
-          <col width="20%">
-          <col width="20%">
-          <tr>
-            <th class="align-middle">Date From</th>
-            <th class="align-middle">Date to</th>
-            <th class="align-middle">Time Available</th>
-          </tr>
-        </thead>
-        {% for a in capacity %}
-        <tbody>
-          <tr>
-            <td class="align-middle">{{ a.date_from|date:'d M Y' }}</td>
-            <td class="align-middle">{{ a.date_to|date:'d M Y' }}</td>
-            <td class="align-middle">{{ a.hours_available }} hrs {{ a.get_unit_display }}</td>
-            <td class="align-middle ">
-              <form  action="{% url 'MarketPlace:NotAvailable' a.id %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
-              </form>
-            </td>
-          </tr>
-        </tbody>
-        {% endfor %}
-      </table>
-    </div>
-  </div>
-</div>
-</div>
-{% endif %}
+
 {% if request.user.subscription == 0 %}
   <h6>To see more information about the vacancies suited to you and other information on this page a subscription is required.<br>A history of interviews and vacancies applied for as well as a search for posted vacancies based on its reference number are also available on a paid subscription.</h6>
 {% endif %}

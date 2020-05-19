@@ -1175,9 +1175,11 @@ def MarketHome(request):
     bsl = BidShortList.objects.filter(Q(talent=talent) & Q(scope__offer_status='O'))
     #Queryset caching<<<
 
-    ipost = tr_emp.filter(offer_status='O').order_by('-bid_open')[:5]
+    ipost = tr_emp.filter(offer_status='O').order_by('-bid_open')
+    ipost_list = ipost[:5]
     ipost_count = ipost.count()
-    ipost_closed = tr_emp.filter(offer_status='C').order_by('-bid_open')[:5]
+    ipost_closed = tr_emp.filter(offer_status='C').order_by('-bid_open')
+    ipost_closed_list = ipost_closed[:5]
     ipost_closed_count = ipost_closed.count()
     ipost_bid = wb.filter(Q(bidreview__exact='R') | Q(bidreview__exact='P') | Q(bidreview__exact='A'))
     ipost_bid_flat = ipost_bid.values_list('work', flat=True).distinct()
@@ -1303,7 +1305,9 @@ def MarketHome(request):
     context ={
         'capacity': capacity,
         'ipost': ipost,
+        'ipost_list': ipost_list,
         'ipost_count': ipost_count,
+        'ipost_closed_list': ipost_closed_list,
         'ipost_bid_flat': ipost_bid_flat,
         'ipost_closed_count': ipost_closed_count,
         'dsd': dsd,

@@ -17,9 +17,11 @@ from django.template.loader import get_template
 import sendgrid
 import os
 from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import (Mail, Subject, To, ReplyTo, SendAt, Content, From, CustomArg, Header)
 
-from users.models import CustomUserSettings
+
+from users.models import CustomUserSettings, CustomUser
 #from paypal.standard.models import PayPalStandardBase
 
 from datetime import datetime
@@ -111,22 +113,20 @@ def SubscriptionFailedTask(self, user):
 @celery_app.task(name="payments.SubscriptionSignupTask")
 @shared_task
 def SubscriptionSignupTask(tlt):
-    from users.models import CustomUser
 
     username = CustomUser.objects.get(pk=tlt)
     context = {'user': username.first_name}
     html_message = render_to_string('email_templates/email_subscription_signup.html', context)
-#    content = get_template('email_templates/email_subscription_signup.html').render(context)
-#    plain_message = render_to_string('email_templates/email_subscription_signup_text.html' context)
-#    text_content = strip_tags(plain_message)
+#    text_content = strip_tags(html_message)
     message = Mail(
         from_email = settings.CELERY_SYSTEM_EMAIL,
         to_emails = username.email,
         subject = 'MyWeXlog Sign-up Confirmation',
+        plain_text_content = strip_tags(html_message),
         html_content = html_message)
 
     try:
-        sg = sendgrid.SendGridAPIClient(settings.SENDGRID_API_KEY)
+        sg = sendgrid.SendGridAPIClient(os.environ.get("SENDGRID_API_KEY"))
 #        response = sg.client.mail.send.post(request_body=mail.get())
         response = sg.send(message)
         print(response.status_code)
@@ -135,6 +135,7 @@ def SubscriptionSignupTask(tlt):
 
     except Exception as e:
         print(e)
+
 
 @celery_app.task(name="payments.SubscriptionRefundTask")
 @shared_task

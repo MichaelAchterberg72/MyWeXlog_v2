@@ -366,20 +366,28 @@ CELERY_TASK_ANNOTATIONS = {'tasks.add': {'rate_limit': '10/s'}}
 
 
 
-if DEBUG == True:
-    #email settings
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-else:
-    # Email settings for Celery
-    EMAIL_HOST = ''
-    EMAIL_PORT = 465
-    EMAIL_HOST_USER = 'do_not_reply@mywexlog.com'
-    EMAIL_HOST_PASSWORD = ''
-    EMAIL_USE_TLS = False
-    EMAIL_USE_SSL = True
+#if DEBUG == True:
+#    #email settings
+#    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+#else:
+#    # Email settings for Celery
+#    EMAIL_HOST = ''
+#    EMAIL_PORT = 465
+#    EMAIL_HOST_USER = 'do_not_reply@mywexlog.com'
+#    EMAIL_HOST_PASSWORD = ''
+#    EMAIL_USE_TLS = False
+#    EMAIL_USE_SSL = True
 
     # SendGrid mail Settings
-SENDGRID_API_KEY = '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'
+#EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
+SENDGRID_API_KEY = 'vjyx80LySg2NE1VAZOP20g.cSx65I8IFWV20_bIKkb4y3oAm0HojT7Q1'
+
+# Toggle sandbox mode (when running in DEBUG mode)
+SENDGRID_SANDBOX_MODE_IN_DEBUG=True
+
+# echo to stdout or any other file-like object that is passed to the backend via the stream kwarg.
+SENDGRID_ECHO_TO_STDOUT=True
+
 
 #    EMAIL_HOST_USER = 'apikey'
 #    EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
