@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.utils.http import is_safe_url
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 
@@ -66,6 +66,7 @@ def InvitationView(request, tex):
             name = cd['name']
             surname = cd['surname']
             worked_for = cd['worked_for']
+            invitee = cd['email']
 
             subject = f"Invitation to MyWeXlog"
             context = {'form': form,  'temp': temp, 'user_email': invitee }
@@ -74,7 +75,7 @@ def InvitationView(request, tex):
 
             #send_mail(subject, html_message, 'admin@mywexlog.com', [invitee,])
 
-            invitee = cd['email']
+
             html_message = render_to_string('invitations/invitation.html', context)
 
             message = Mail(

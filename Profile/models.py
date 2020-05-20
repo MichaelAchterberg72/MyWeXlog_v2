@@ -20,7 +20,10 @@ from locations.models import Region, City, Suburb, Currency
 from db_flatten.models import PhoneNumberType, LanguageList
 from enterprises.models import Enterprise, Branch
 from pinax.referrals.models import Referral
-from talenttrack.models import Designation
+from talenttrack.models import(
+        Designation, Lecturer, ClassMates, WorkColleague, Superior, WorkCollaborator, WorkClient
+        )
+from invitations.models import Invitation
 
 
 class BriefCareerHistory(models.Model):
@@ -142,19 +145,26 @@ class Profile(models.Model):
             if eml_i:
                 rel = eml_i.relationship
                 if rel == 'LR':
-                    Lecturer.create(education = eml_i.experience, lecturer=self.talent, topic=eml_i.experience.topic)
+                    lct = Lecturer(education = eml_i.experience, lecturer=self.talent, topic=eml_i.experience.topic)
+                    lct.save()
                 if rel == 'CM':
-                    ClassMates.create(education = eml_i.experience, colleague=self.talent, topic=eml_i.experience.topic)
+                    cm = ClassMates(education = eml_i.experience, colleague=self.talent, topic=eml_i.experience.topic)
+                    cm.save()
                 if rel == 'WC':
-                    WorkColleague.create(experience = eml_i.experience, colleague=self.talent)
+                    wc = WorkColleague(experience = eml_i.experience, colleague=self.talent)
+                    wc.save()
                 if rel == 'PC':
-                    WorkColleague.create(experience = eml_i.experience, colleague=self.talent)
+                    wc = WorkColleague(experience = eml_i.experience, colleague=self.talent)
+                    wc.save()
                 if rel == 'WS':
-                    Superior.create(experience = eml_i.experience, superior_name=self.talent)
+                    ws = Superior(experience = eml_i.experience, superior_name=self.talent)
+                    ws.save()
                 if rel == 'WL':
-                    WorkCollaborator.create(experience = eml_i.experience, collaborator_name=self.talent)
+                    wl = WorkCollaborator(experience = eml_i.experience, collaborator_name=self.talent)
+                    wl.save()
                 if rel == 'WT':
-                    WorkClient.create(experience = eml_i.experience, client_name=self.talent)
+                    wt = WorkClient(experience = eml_i.experience, client_name=self.talent)
+                    wt.save()
 
         super(Profile, self).save(*args, **kwargs)
 
