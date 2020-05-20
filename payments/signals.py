@@ -25,6 +25,7 @@ def show_me_the_money(sender, instance, **kwargs):
     ipn_obj = instance
     ipn_username = CustomUser.objects.get(pk=ipn_obj.custom)
     username = ipn_username.email
+    tlt = ipn_username.pk
     CustomUserSettingsUser = CustomUserSettings.objects.get(talent=ipn_username.pk)
 
     if ipn_obj.item_name == "MyWeXlog Passive Subscription":
@@ -98,9 +99,8 @@ def show_me_the_money(sender, instance, **kwargs):
                             ipn_username.subscription = 2
                             ipn_username.paid = True
                             ipn_username.paid_date = timezone.now()
-                            tlt = ipn_username.pk
                             SubscriptionSignupTask.delay(tlt)
-#                            SubscriptionUpgradeRefund.delay(tlt, username)
+#                            SubscriptionUpgradeRefund(tlt, username)
 
                             if "Monthly" in ipn_obj.item_name:
                                 ipn_username.paid_type = 1

@@ -17,17 +17,16 @@ from django.template.loader import get_template
 import sendgrid
 import os
 from sendgrid import SendGridAPIClient
-from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import (Mail, Subject, To, ReplyTo, SendAt, Content, From, CustomArg, Header)
 
 
 from users.models import CustomUserSettings, CustomUser
-#from paypal.standard.models import PayPalStandardBase
+
+#from paypal.standard.ipn.models import PayPalIPN
+from paypal.standard.models import PayPalStandardBase
 
 from datetime import datetime
 from datetime import date
-
-#from paypal.standard.models import PayPalStandardBase
 
 
 @celery_app.task(name="payments.SubscriptionExpiredTask")
@@ -215,7 +214,7 @@ def RemindDeleteOldSubscription(tlt, payment_txn_id):
 @celery_app.task(name="payments.SubscriptionUpgradeRefund")
 def SubscriptionUpgradeRefund(tlt, useremail):
 
-    p = PayPalStandardBase.objects.filter(custom=user.custom)
+    p = PayPalStandardBase.objects.filter(custom=tlt.custom)
     q = p.filter(flag = True).order_by(-payment_date)
     subscriber = q[1]
     useremail = user.email

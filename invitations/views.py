@@ -8,6 +8,11 @@ from django.utils import timezone
 from weasyprint import HTML
 from weasyprint.fonts import FontConfiguration
 
+import sendgrid
+import os
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import (Mail, Subject, To, ReplyTo, SendAt, Content, From, CustomArg, Header)
+
 from Profile.models import (
         Profile, BriefCareerHistory, OnlineRegistrations, IdentificationDetail, PassportDetail, LanguageTrack, Email, PhysicalAddress, PostalAddress, PhoneNumber
 )
@@ -36,7 +41,7 @@ from .forms import InvitationForm, InvitationLiteForm
 @login_required()
 #in the app, add information relating to the job
 def InvitationView(request, tex):
-    invitee = request.user
+    invitor = request.user
     qs = get_object_or_404(WorkExperience, slug=tex)
 
     if request.method == 'POST':
@@ -59,14 +64,33 @@ def InvitationView(request, tex):
             surname = cd['surname']
             worked_for = cd['worked_for']
             print(name, surname, worked_for)
+            invitee = cd['email']
 
             subject = f"Invitation to MyWeXlog"
-            context = {'form': form,  'temp': temp }
+            context = {'form': form,  'temp': temp, 'user_email': invitee }
             html_message = render_to_string('invitations/invitation.html', context)
             plain_message = strip_tags(html_message)
 
-            invitee = cd['email']
-            send_mail(subject, html_message, 'admin@mywexlog.com', [invitee,])
+            html_message = render_to_string('email_templates/email_subscription_expired.html', context)
+
+            message = Mail(
+                from_email = settings.SENDGRID_FROM_EMAIL,
+                to_emails = invitee,
+                subject = subject,
+                plain_text_content = strip_tags(html_message),
+                html_content = html_message)
+
+            try:
+                sg = sendgrid.SendGridAPIClient(settings.SENDGRID_API_KEY)
+                response = sg.send(message)
+                print(response.status_code)
+                print(response.body)
+                print(response.headers)
+
+            except Exception as e:
+                print(e)
+
+#            send_mail(subject, html_message, 'admin@mywexlog.com', [invitee,])
             template = 'invitations/invitation.html'
             if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
                 next_url = reverse('Talent:Home')
@@ -84,10 +108,11 @@ def InvitationView(request, tex):
 
 @login_required()
 def FlatInviteview(request):
-    invitee = request.user
+
+    invitor = request.user
     if request.method == 'POST':
         next_url=request.POST.get('next', '/')
-        form = InvitationLiteForm(request.POST)
+        form = InvitationLiteForm(request.POST or None)
         if form.is_valid():
             new = form.save(commit=False)
             new.invited_by = request.user
@@ -99,14 +124,31 @@ def FlatInviteview(request):
 
             name = cd['name']
             surname = cd['surname']
+            invitee = cd['email']
 
-            subject = f"{invitee.first_name} {invitee.last_name} invites you to MyWeXlog"
-            context = {'form': form,  'referral_code': referral_code }
+            subject = f"{invitor.first_name} {invitor.last_name} invites you to MyWeXlog"
+            context = {'form': form,  'referral_code': referral_code, 'user_email': invitee}
             html_message = render_to_string('invitations/flat_invitation.html', context)
             plain_message = strip_tags(html_message)
 
-            invitee = cd['email']
-            send_mail(subject, html_message, 'no-reply@mywexlog.com', [invitee,])
+            message = Mail(
+                from_email = settings.SENDGRID_FROM_EMAIL,
+                to_emails = invitee,
+                subject = subject,
+                plain_text_content = strip_tags(html_message),
+                html_content = html_message)
+
+            try:
+                sg = sendgrid.SendGridAPIClient(settings.SENDGRID_API_KEY)
+                response = sg.send(message)
+                print(response.status_code)
+                print(response.body)
+                print(response.headers)
+
+            except Exception as e:
+                print(e)
+
+#            send_mail(subject, html_message, 'no-reply@mywexlog.com', [invitee,])
             template = 'invitations/flat_invitation.html'
             #return redirect(reverse('Profile:ProfileHome'))
             return render(request, template, context)
