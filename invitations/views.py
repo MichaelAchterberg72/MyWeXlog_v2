@@ -100,13 +100,13 @@ def FlatInviteview(request):
             name = cd['name']
             surname = cd['surname']
 
-            subject = f"{invitee.first_name} {invitee.last_name} invites you to WeXlog"
+            subject = f"{invitee.first_name} {invitee.last_name} invites you to MyWeXlog"
             context = {'form': form,  'referral_code': referral_code }
             html_message = render_to_string('invitations/flat_invitation.html', context)
             plain_message = strip_tags(html_message)
 
             invitee = cd['email']
-            send_mail(subject, html_message, 'no-reply@wexlog.io', [invitee,])
+            send_mail(subject, html_message, 'no-reply@mywexlog.com', [invitee,])
             template = 'invitations/flat_invitation.html'
             #return redirect(reverse('Profile:ProfileHome'))
             return render(request, template, context)

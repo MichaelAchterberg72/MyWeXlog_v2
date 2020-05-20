@@ -88,8 +88,8 @@ def show_me_the_money(sender, instance, **kwargs):
                     elif CustomUserSettingsUser.subscription_notifications == False:
                         pass
                     else:
-#                        SubscriptionAmountDifferentTask.delay(ipn_username)
-                        pass
+                        SubscriptionAmountDifferentTask.delay(tlt)
+
 
                 elif ipn_obj.custom:
 
@@ -100,7 +100,7 @@ def show_me_the_money(sender, instance, **kwargs):
                             ipn_username.paid_date = timezone.now()
                             tlt = ipn_username.pk
                             SubscriptionSignupTask.delay(tlt)
-#                            SubscriptionUpgradeRefund.delay(ipn_username, username)
+#                            SubscriptionUpgradeRefund.delay(tlt, username)
 
                             if "Monthly" in ipn_obj.item_name:
                                 ipn_username.paid_type = 1
@@ -171,8 +171,8 @@ def show_me_the_money(sender, instance, **kwargs):
                     elif CustomUserSettingsUser.subscription_notifications == False:
                         pass
                     else:
-#                        SubscriptionExpiredTask.delay(ipn_username)
-                        pass
+                        SubscriptionExpiredTask.delay(tlt)
+
 
             elif ipn_obj.payment_status == "Pending":
                 if ipn_obj.receiver_email != settings.PAYPAL_RECEIVER_EMAIL:
@@ -198,8 +198,8 @@ def show_me_the_money(sender, instance, **kwargs):
             elif CustomUserSettingsUser.subscription_notifications == False:
                 pass
             else:
-#                    SubscriptionFailedTask.delay(ipn_username)
-                pass
+                    SubscriptionFailedTask.delay(tlt)
+
      # check for subscription cancellation IPN
     elif ipn_obj.txn_type == "subscr_cancel":
         if ipn_obj.custom:
@@ -208,8 +208,8 @@ def show_me_the_money(sender, instance, **kwargs):
             elif CustomUserSettingsUser.subscription_notifications == False:
                 pass
             else:
-#                SubscriptionCancelledTask.delay(ipn_username)
-                pass
+                SubscriptionCancelledTask.delay(tlt)
+
 
     ipn_username.save()
 

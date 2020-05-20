@@ -438,20 +438,25 @@ def AssignmentClarifyView(request, wit):
             new.save()
 
             #>>>email
-            sg = sendgrid.SendGridAPIClient(api_key=os.environ.get('SENDGRID_API_KEY'))
-            from_email = Email('clarifications@wexlog.io')
-            to_email = To(instance.work.requested_by.email)
-            subject = f"{instance.work.title}: Clarification Requested from {instance.talent.alias}"
-            context = {'form': form, 'instance': instance}
-            content = get_template('Profile/email_vac_clarification.html').render(context)
-            plain_message = render_to_string('Profile/email_vac_clarification_text.html', context)
-            text_content = strip_tags(plain_message)
-            html_content = Content("text/html", content)
-            mail = Mail(from_email, to_email, subject, text_content, html_content)
-            response = sg.client.mail.send.post(request_body=mail.get())
-            print(response.status_code)
-            print(response.body)
-            print(response.headers)
+            context = {'form': form, 'instance': instance, 'user_email': instance.work.requested_by.email }
+            html_message = render_to_string('Profile/email_vac_clarification_text.html', context)
+
+            message = Mail(
+                from_email = settings.SENDGRID_FROM_EMAIL,
+                to_emails = instance.work.requested_by.email,
+                subject = f"{instance.work.title}: Clarification Requested from {instance.talent.alias}",
+                plain_text_content = strip_tags(html_message),
+                html_content = html_message)
+
+            try:
+                sg = sendgrid.SendGridAPIClient(settings.SENDGRID_API_KEY)
+                response = sg.send(message)
+                print(response.status_code)
+                print(response.body)
+                print(response.headers)
+
+            except Exception as e:
+                print(e)
             #template = 'Profile/email_vac_clarification.html'
             #return render(request, template, context)
             #<<<email

@@ -73,7 +73,6 @@ INSTALLED_APPS = [
     'crispy_forms',
     'django.contrib.postgres',
     'django_extensions',
-    'django_messages',
     'utils',
     'phonenumber_field',
     'leaflet',
@@ -364,36 +363,7 @@ CELERY_IMPORTS = ('WeXlog.tasks',)
 CELERY_SEND_EVENTS = True
 CELERY_TASK_ANNOTATIONS = {'tasks.add': {'rate_limit': '10/s'}}
 
-
-
-#if DEBUG == True:
-#    #email settings
-#    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-#else:
-#    # Email settings for Celery
-#    EMAIL_HOST = ''
-#    EMAIL_PORT = 465
-#    EMAIL_HOST_USER = 'do_not_reply@mywexlog.com'
-#    EMAIL_HOST_PASSWORD = ''
-#    EMAIL_USE_TLS = False
-#    EMAIL_USE_SSL = True
-
     # SendGrid mail Settings
-#EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
-SENDGRID_API_KEY = 'vjyx80LySg2NE1VAZOP20g.cSx65I8IFWV20_bIKkb4y3oAm0HojT7Q1'
+SENDGRID_API_KEY = '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'
 
-# Toggle sandbox mode (when running in DEBUG mode)
-SENDGRID_SANDBOX_MODE_IN_DEBUG=True
-
-# echo to stdout or any other file-like object that is passed to the backend via the stream kwarg.
-SENDGRID_ECHO_TO_STDOUT=True
-
-
-#    EMAIL_HOST_USER = 'apikey'
-#    EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
-#    EMAIL_PORT = 587
-#    EMAIL_HOST = 'smtp.sendgrid.net'
-#    EMAIL_USE_TLS = True
-#    DEFAULT_FROM_EMAIL = 'sendgrid email'
-#    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-#"""
+SENDGRID_FROM_EMAIL = 'machterberg@devoptec.com'

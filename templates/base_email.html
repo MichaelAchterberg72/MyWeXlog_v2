@@ -18,8 +18,8 @@
     {% block content %}
     {% endblock content %}
 
-    <p>&nbsp</p>
-    <p>&nbsp</p>
+    <br>
+    <br>
     <table class="table table-sm">
       <col width="20%">
       <col width="60%">
@@ -34,9 +34,9 @@
         <tbody>
           <tr>
             <td></td>
-            <td align="center"><a href="https://twitter.com/WeXlog_io"><img src="{% static 'images/social-media/twittera.png' %}" alt="Twitter"></a> &nbsp
-              <a href="https://web.facebook.com/WeXlog-110146303820922"><img src="{% static 'images/social-media/facebooka.png' %}" alt="Facebook"></a> &nbsp
-              <a href="https://www.linkedin.com/company/wexlog-io"><img src="{% static 'images/social-media/linkedinb.png' %}" alt="LinkedIn"></a> &nbsp
+            <td align="center"><a href="https://twitter.com/WeXlog_io"><img src="{% static 'images/social-media/twittera.png' %}" alt="Twitter"></a>
+              <a href="https://web.facebook.com/WeXlog-110146303820922"><img src="{% static 'images/social-media/facebooka.png' %}" alt="Facebook"></a>
+              <a href="https://www.linkedin.com/company/wexlog-io"><img src="{% static 'images/social-media/linkedinb.png' %}" alt="LinkedIn"></a>
               <a href="https://www.youtube.com/channel/UCqT7Jr6aKefHsqPlWmpPqhA/channels"><img src="{% static 'images/social-media/youtube.png' %}" alt="Youtube"></a></td>
             <td></td>
           </tr>
@@ -55,9 +55,9 @@
             <td align="center">
               <small>
 
-              <a href="{% url 'Users:CustomUserSettings' %}">Manage your account</a> |
-              <a href="{% url 'Users:PrivacyPolicy' %}">Privacy Policy</a> |
-              <a href="{% url 'Users:UserAgreement' %}">User Agreement</a><br>
+              <a href="https://mywexlog.com/user/settings/">Manage your account</a> |
+              <a href="https://mywexlog.com//user/privacy-policy/">Privacy Policy</a> |
+              <a href="https://mywexlog.com/user/user-agreement/">User Agreement</a><br>
               @copyright 2020 DevOpTec (Pty.) Ltd. All rights reserved</small></td>
             <td></td>
           </tr>
@@ -65,12 +65,12 @@
           <tr>
             <td></td>
             <td align="center"><small><div class="center"><p>
-              This email was sent to {{ user.email }}.<br>
+              This email was sent to {{ user_email }}.<br>
               You are receiving this email as you are registered to receive notifications,
               updates, news and/or promotional updates.</p>
               <p>* Please do not reply to this email. You may log into
               your account and contact Customer Care for any queries.<br>
-              *To change your preference or unsubscrie please <a href="{% url 'Users:CustomUserSettings' %}">click here</a>.</div></small></p></td>
+              *To change your preference or unsubscrie please <a href="https://mywexlog.com/user/settings/">click here</a>.</div></small></p></td>
             <td></td>
           </tr>
         </tbody>
