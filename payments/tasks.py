@@ -22,7 +22,6 @@ from sendgrid.helpers.mail import (Mail, Subject, To, ReplyTo, SendAt, Content, 
 
 from users.models import CustomUserSettings, CustomUser
 
-#from paypal.standard.ipn.models import PayPalIPN
 from paypal.standard.models import PayPalStandardBase
 
 from datetime import datetime
@@ -236,7 +235,7 @@ def SubscriptionUpgradeRefund(tlt, useremail):
 
     payment_txn_id = subscriber.txn_id
 
-    if refundamount >= 0:
+    if refundamount >= 0.48:
         SubscriptionRefundTask.delay(useremail, refundamount, payment_txn_id)
         RemindDeleteOldSubscription.delay(useremail, payment_txn_id)
     else:

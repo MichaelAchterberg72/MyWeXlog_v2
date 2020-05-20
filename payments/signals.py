@@ -2,9 +2,9 @@
 from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-#from paypal.standard.models import PayPalStandardBase
+
 from users.models import CustomUser, CustomUserSettings
-#from paypal.standard.models import ST_PP_COMPLETED, ST_PP_EXPIRED, ST_PP_PENDING
+
 from paypal.standard.ipn.signals import valid_ipn_received
 
 from .tasks import (
@@ -99,7 +99,7 @@ def show_me_the_money(sender, instance, **kwargs):
                             ipn_username.subscription = 2
                             ipn_username.paid = True
                             ipn_username.paid_date = timezone.now()
-                            SubscriptionSignupTask.delay(tlt)
+#                            SubscriptionSignupTask.delay(tlt)
 #                            SubscriptionUpgradeRefund(tlt, username)
 
                             if "Monthly" in ipn_obj.item_name:
