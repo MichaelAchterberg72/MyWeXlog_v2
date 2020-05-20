@@ -1,7 +1,8 @@
-from django.shortcuts import render, redirect, reverse
+from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.utils.http import is_safe_url
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.conf import settings
 
 #html to pdf
 from django.utils import timezone
@@ -29,6 +30,10 @@ from .models import Invitation
 from django.core.mail import send_mail, EmailMultiAlternatives
 from django.template.loader import get_template, render_to_string
 from django.utils.html import strip_tags
+import sendgrid
+import os
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import (Mail, Subject, To, ReplyTo, SendAt, Content, From, CustomArg, Header)
 
 
 #pinax_referrals
@@ -41,8 +46,7 @@ from .forms import InvitationForm, InvitationLiteForm
 @login_required()
 #in the app, add information relating to the job
 def InvitationView(request, tex):
-    invitor = request.user
-    qs = get_object_or_404(WorkExperience, slug=tex)
+    qset = get_object_or_404(WorkExperience, slug=tex)
 
     if request.method == 'POST':
         next_url=request.POST.get('next', '/')
@@ -50,7 +54,7 @@ def InvitationView(request, tex):
         if form.is_valid():
             new = form.save(commit=False)
             new.invited_by = request.user
-            new.experience = qs
+            new.experience = qset
             if 'confirm' in request.COOKIES:
                 rel = request.COOKIES['confirm']
                 new.relationship = rel
@@ -60,18 +64,18 @@ def InvitationView(request, tex):
             temp = Referral.objects.get(user=request.user)
 
             name = cd['name']
-            print(name)
             surname = cd['surname']
             worked_for = cd['worked_for']
-            print(name, surname, worked_for)
-            invitee = cd['email']
 
             subject = f"Invitation to MyWeXlog"
             context = {'form': form,  'temp': temp, 'user_email': invitee }
             html_message = render_to_string('invitations/invitation.html', context)
             plain_message = strip_tags(html_message)
 
-            html_message = render_to_string('email_templates/email_subscription_expired.html', context)
+            #send_mail(subject, html_message, 'admin@mywexlog.com', [invitee,])
+
+            invitee = cd['email']
+            html_message = render_to_string('invitations/invitation.html', context)
 
             message = Mail(
                 from_email = settings.SENDGRID_FROM_EMAIL,
@@ -90,12 +94,10 @@ def InvitationView(request, tex):
             except Exception as e:
                 print(e)
 
-#            send_mail(subject, html_message, 'admin@mywexlog.com', [invitee,])
             template = 'invitations/invitation.html'
             if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
                 next_url = reverse('Talent:Home')
-            #response =  HttpResponseRedirect(next_url)
-            response = render(request, template, context)
+            response = HttpResponseRedirect(next_url)
             response.delete_cookie("confirm")
             return response
 
