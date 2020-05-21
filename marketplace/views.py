@@ -1965,16 +1965,16 @@ def VacancyPostView(request, vac):
     #Find all talent with required skill<<<
 
     #>>> Find all talent that have the required Experience
-    wee = set(tlt.filter(exp_lvl__lte=instance.experience_level).values_list('talent', flat=True))
+    wee = set(tlt.filter(exp_lvl__gte=instance.experience_level).values_list('talent', flat=True))
 
     wee = wee.intersection(wes)
 
     #Find all talent that have the required Experience<<<
 
     #>>> Find all talent that are in the correct geographic location
-    vac_type = instance.worklocation.id
+    vac_type = instance.worklocation.type
 
-    if vac_type == 0:
+    if vac_type == 'Remote freelance':
         wel_i=wee
     else:
         wel = set(PhysicalAddress.objects.filter(region=instance.city.region).values_list('talent', flat=True))

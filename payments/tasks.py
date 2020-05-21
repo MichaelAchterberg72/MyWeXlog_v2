@@ -235,7 +235,7 @@ def SubscriptionUpgradeRefund(tlt, useremail):
 
     payment_txn_id = subscriber.txn_id
 
-    if refundamount >= 0.48:
+    if refundamount > 0.48:
         SubscriptionRefundTask.delay(useremail, refundamount, payment_txn_id)
         RemindDeleteOldSubscription.delay(useremail, payment_txn_id)
     else:

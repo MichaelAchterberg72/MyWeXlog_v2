@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'nestedsettree.apps.NestedsettreeConfig',
     'feedback.apps.FeedbackConfig',
     'tasks',
+    'analytics',
     #Django internal applications
     'django.contrib.staticfiles',
     'django.contrib.humanize',
