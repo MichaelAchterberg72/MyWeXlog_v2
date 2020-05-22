@@ -86,6 +86,7 @@ urlpatterns = [
         path('rate-emp/<slug:wit>/', views.EmpUpdateStatusRate, name='EmpRatePerformance'),
         path('rate-emp-view/<slug:wit>/', views.EmpRatingView, name='EmpRateView'),
         path('emp-mark-complete/<slug:wit>/', views.EmpVacancyComplete, name="EmpMarkComp"),
+        path('profile-viewed-report/', views.ProfileViewedReport, name='ProfileViewed'),
         # Help pages
         path('help/desktop/assignment-tracking/', views.HelpDesktopWorkshopView, name='HelpDesktopWorkshop'),
         path('help/desktop/information/', views.HelpDesktopInformationView, name='HelpDesktopInformation'),

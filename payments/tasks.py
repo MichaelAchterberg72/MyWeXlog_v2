@@ -11,7 +11,6 @@ import celery
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
-from django.core.mail import EmailMultiAlternatives, send_mail
 from django.template.loader import get_template
 
 import sendgrid
@@ -160,10 +159,10 @@ def SubscriptionSignupTask(tlt):
 
 @celery_app.task(name="payments.SubscriptionRefundTask")
 @shared_task
-def SubscriptionRefundTask(tlt, refundamount, payment_txn_id):
+def SubscriptionRefundTask(tlt, useremail, refundamount, payment_txn_id):
 
     username = CustomUser.objects.get(pk=tlt)
-    context = {'user': username, 'refundamount': refundamount, 'txn_id': payment_txn_id, 'user_email': username.email }
+    context = {'user': username, 'refundamount': refundamount, 'txn_id': payment_txn_id, 'user_email': useremail }
     html_message = render_to_string('email_templates/email_subscription_upgrade_refund.html', context)
 
     message = Mail(
@@ -213,7 +212,8 @@ def RemindDeleteOldSubscription(tlt, payment_txn_id):
 @celery_app.task(name="payments.SubscriptionUpgradeRefund")
 def SubscriptionUpgradeRefund(tlt, useremail):
 
-    p = PayPalStandardBase.objects.filter(custom=tlt.custom)
+    from payments.models import PayPalInfo
+    p = PayPalInfo.objects.filter(custom=tlt.custom)
     q = p.filter(flag = True).order_by(-payment_date)
     subscriber = q[1]
     useremail = user.email
@@ -235,8 +235,8 @@ def SubscriptionUpgradeRefund(tlt, useremail):
 
     payment_txn_id = subscriber.txn_id
 
-    if refundamount >= 0.48:
-        SubscriptionRefundTask.delay(useremail, refundamount, payment_txn_id)
+    if refundamount > 0.48:
+        SubscriptionRefundTask.delay(tlt, useremail, refundamount, payment_txn_id)
         RemindDeleteOldSubscription.delay(useremail, payment_txn_id)
     else:
         pass

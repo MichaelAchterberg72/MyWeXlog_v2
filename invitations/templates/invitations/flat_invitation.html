@@ -7,8 +7,8 @@
 {% block content %}
 
       <p>Hi {{ form.instance.name }},</p>
-      <p>{{ form.instance.invited_by.first_name }} {{ form.instance.invited_by.last_name }} has indicated that they know you and have sent you this invitation to MyWeXlog.</p>
-      <p> Please click on this link: <a href="{{ referral_code.referral.url }}">MyWexlog</a> to see what MyWeXlog is all about.</p>
+      <p>{{ form.instance.invited_by.first_name }} {{ form.instance.invited_by.last_name }} has indicated that they know you and have sent you this invitation to WeXlog.</p>
+      <p> Please click on this link: <a href="{{ temp.url }}">MyWexlog</a> to see what MyWeXlog is all about.</p>
 
       <p>MyWeXlog is a combination of a CV and a timesheet, making it a live experience log on which you can capture your experience and associate skills with that experience. Then, depending on your subscription, you can either search for companies looking for your skills or find people that have skills you require.</p>
       <p>All skills are confirmed by other people, selected by you.</p>
@@ -21,6 +21,6 @@
       <p>The MyWexLog Team</p>
       <p>(for and on behalf of {{ form.instance.invited_by.first_name }} {{ form.instance.invited_by.last_name }})</p>
 
-      <p>&nbsp</p>
+      <br>
 
   {% endblock content %}
