@@ -1,0 +1,46 @@
+{% extends 'base_home.html' %}
+
+{% block title %}My {{block.super}} Profile View{% endblock title %}
+
+
+{% block content %}
+<div class="card">
+  <div class="card-body">
+  <h5>Profile</h5>
+  <a href="{% url 'Talent:APV' tlt=tlt.alias vac='1ad9t2' %}" target="_blank" class="btn btn-success float-right">View Your Public Profile</a>
+  </div>
+</div>
+  <br>
+  <div class="">
+    <div class="card">
+      <div class="card-body">
+          
+          <h5 class="card-title">Profile Viewed Report</h5>
+          <p>Your profile has been viewed by the following people on the dates indicated.</p>
+          <table class="table table-sm" id="pvr">
+            <col width="35%">
+            <col width="30%">
+            <thead>
+              <tr>
+                <th class="align-middle text-center">User</th>
+                <th class="align-middle text-center">Date</th>
+              </tr>
+            </thead>
+            {% for p in pvr %}
+            <tbody>
+              <tr>
+                <td class="align-middle text-center">{{ p.user }}</td>
+                <td class="align-middle text-center">{{ p.timestamp }}</td>
+
+              </tr>
+              {% empty %}
+                <p>No-one has viewed you profile yet.</p>
+              {% endfor %}
+            </tbody>
+          </table>
+
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}

@@ -42,6 +42,7 @@ from WeXlog.app_config import (
 )
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from analytics.signals import object_viewed_signal
 
 
 @login_required()
@@ -489,10 +490,11 @@ def TltRatingDetailView(request, tlt):
     return render(request, template, context)
 
 
+@login_required()
 def ActiveProfileView(request, tlt, vac):
     #caching
     bch = BriefCareerHistory.objects.filter(talent__alias=tlt).order_by('-date_from')
-    pfl = Profile.objects.filter(alias=tlt)
+    pfl = Profile.objects.filter(alias=tlt).first()
     als = get_object_or_404(Profile, alias=tlt)
     padd = PhysicalAddress.objects.only('country', 'region', 'city').filter(talent__alias=tlt)
     vacancy = TalentRequired.objects.filter(ref_no=vac)
@@ -575,8 +577,7 @@ def ActiveProfileView(request, tlt, vac):
         else:
             pass
 
-    from analytics.signals import object_viewed_signal
-    object_viewed_signal.send(als.__class__, instance=als, request=request)
+    object_viewed_signal.send(pfl.__class__, instance=pfl, request=request)
 
 
     template = 'talenttrack/active_profile_view.html'

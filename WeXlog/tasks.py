@@ -56,3 +56,38 @@ def UpdateSubscriptionPaidDate():
                     # send user an email to let them know the subscription has expired
     #                SubscriptionExpiredTask.delay(username)
         username.save()
+
+
+def UpgradeRefunds():
+    from paypal.standard.ipn.models import PayPalIPN
+
+    monthly = datetime.timedelta(days=31)
+    mda = datetime.today() - monthly  #.strftime('%d/%m/%Y')
+
+    qs = PayPalIPN.objects.filter(Q(txn_type='subscr_signup') & Q(item_name__icontains='Upgrade'))
+    item = qs.values('payer_id').filter(subscr_date >= mda)
+
+    subject = f"Refunds for MyWeXlog Upgrades"
+    context = {'item': item, 'user_email': invitee }
+    html_message = render_to_string('payments/invitation.html', context)
+    plain_message = strip_tags(html_message)
+
+    invitee = cd['email']
+    html_message = render_to_string('invitations/invitation.html', context)
+
+    message = Mail(
+        from_email = settings.SENDGRID_FROM_EMAIL,
+        to_emails = invitee,
+        subject = subject,
+        plain_text_content = strip_tags(html_message),
+        html_content = html_message)
+
+    try:
+        sg = sendgrid.SendGridAPIClient(settings.SENDGRID_API_KEY)
+        response = sg.send(message)
+        print(response.status_code)
+        print(response.body)
+        print(response.headers)
+
+    except Exception as e:
+        print(e)

@@ -8,6 +8,31 @@
     <p>Subscriber {{ user }} has upgraded their account today and requires a refund
       of {{ refundamount }} for transaction ID {{ payment_txn_id }}.</p>
     <p>Please effect transfer to their PayPal account.</p>
+
+    <table class="table table-sm" id="pvr">
+      <col width="35%">
+      <col width="30%">
+      <thead>
+        <tr>
+          <th class="align-middle text-center">PayPal Email Address</th>
+          <th class="align-middle text-center">Date Subscribed</th>
+          <th class="align-middle text-center">Amount</th>
+        </tr>
+      </thead>
+      {% for p in item %}
+      <tbody>
+        <tr>
+          <td class="align-middle text-center">{{ p.payer_email }}</td>
+          <td class="align-middle text-center">{{ p.subscr_date }}</td>
+          <td class="align-middle text-center">{{ mc_amount3 }}</td>
+
+        </tr>
+        {% empty %}
+          <p>No-one has viewed you profile yet.</p>
+        {% endfor %}
+      </tbody>
+    </table>
+
     <p>Thanks, we look forward to hearing from you soon.</p>
     <p>&nbsp</p>
     <p>- MyWeXlog Team</p>

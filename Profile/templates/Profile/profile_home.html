@@ -64,7 +64,7 @@
   </tbody>
 </table>
 <br>
-<p>Experience confirmations: <a href="{% url 'Profile:Confirm' %}" class="btn btn-info float-right" style="width: 8rem">{{ total }}</a></p>
+<p>Experience confirmations: <a href="{% url 'Profile:Confirm' %}" class="btn btn-info float-right" style="width: 8rem">{{ total }} Requests</a></p>
 
 {% endblock workflow %}
 
@@ -101,6 +101,9 @@
     </tr>
   </tbody>
 </table>
+<br>
+<p>Your Profile has been viewed: {% if request.user.subscription >= 2 %}<a href="{% url 'Profile:ProfileViewed' %}" class="btn btn-info float-right">Profile Viewed Report: {{ pvr_count }} times</a>{% else %}<strong>{{ pvr_count }}</strong> times.{% endif %}</p>
+
 {% endblock score %}
 
 {% block TBA %}
