@@ -140,9 +140,11 @@ class Profile(models.Model):
 
         #check for confirmations once registering
         if self.confirm_check == False:
-            eml_i = Invitation.objects.get(email=self.talent.email)
+            tlt = self.talent.email
+            eml_i = Invitation.objects.filter(email=tlt)
             self.confirm_check = True
             if eml_i:
+                eml_i = eml_i.get(email=tlt)
                 rel = eml_i.relationship
                 if rel == 'LR':
                     lct = Lecturer(education = eml_i.experience, lecturer=self.talent, topic=eml_i.experience.topic)
@@ -165,6 +167,8 @@ class Profile(models.Model):
                 if rel == 'WT':
                     wt = WorkClient(experience = eml_i.experience, client_name=self.talent)
                     wt.save()
+            else:
+                pass
 
         super(Profile, self).save(*args, **kwargs)
 

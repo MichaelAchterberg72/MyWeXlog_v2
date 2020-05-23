@@ -5,7 +5,7 @@ from django.utils.encoding import force_text
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Row, Column
-
+from django.utils import timezone
 
 from django_select2.forms import (
     ModelSelect2TagWidget, ModelSelect2Widget, Select2MultipleWidget,
@@ -139,6 +139,14 @@ class ProfileForm(forms.ModelForm):
             'f_name': 'First Name',
             'l_name': 'Last Name / Surname',
         }
+    def clean_birth_date(self):
+        birth_date = self.cleaned_data.get("birth_date")
+        age = int((timezone.now().date() - birth_date).days/365.25)
+        if age < 16:
+            raise forms.ValidationError("You need to be older than 16 to use MyWeXlog")
+        else:
+            return birth_date
+
 
 class UserUpdateForm(forms.ModelForm):
     class Meta:
