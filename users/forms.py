@@ -56,16 +56,14 @@ class CustomSignupForm(SignupForm):
 #            return age_accept
 #        else:
 #            raise forms.ValidationError("Your are required to be sixteen years old or older!")
-#
-#    def save(self, request):
-#
-#        CustomUser = super(CustomSignupForm, self).save(request)
-#        CustomUser.first_name=self.cleaned_data['first_name']
-#        CustomUser.last_name=self.cleaned_data['last_name']
-#        CustomUser.terms=self.cleaned_data['terms']
-#        CustomUser.age_accept=self.cleaned_data['age_accept']
-#
-#        return CustomUser
+    def save(self, request):
+        CustomUser = super(CustomSignupForm, self).save(request)
+        CustomUser.first_name=self.cleaned_data['first_name']
+        CustomUser.last_name=self.cleaned_data['last_name']
+        CustomUser.terms=self.cleaned_data['terms']
+        CustomUser.age_accept=self.cleaned_data['age_accept']
+
+        return CustomUser
 
 
 class CustomUserSettingsForm(forms.ModelForm):
