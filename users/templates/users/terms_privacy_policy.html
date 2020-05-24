@@ -8,7 +8,7 @@
 <div class="card border-0">
   <div class="card-body">
     <h4 class="card-title">Privacy Policy</h4>
-    <p>&nbsp</p>
+    {% include 'users/privacy_policy.html' %}
     <p></p>
     <form class="" action="" method="POST" id="PrivacyPolicyForm">
 
@@ -16,7 +16,33 @@
       {{ form|crispy }}
 
     <p>&nbsp</p>
-    <p><button type="submit" class="btn btn-primary py-3 px-5" name="button">Update Settings</button></p>
+    <!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#PrivacyModelCenter">
+  Update Settings
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="PrivacyModelCenter" tabindex="-1" role="dialog" aria-labelledby="PrivacyModelCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="PrivacyModelLongTitle">WARNING!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>If you remove your consent to the acceptance of the MyWeXlog Privacy Policy your account will be deactivated and deleted from the system.</p>
+        <p>Do you wish to proceed?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-secondary" name="button">Proceed</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
     </form>
   </div>

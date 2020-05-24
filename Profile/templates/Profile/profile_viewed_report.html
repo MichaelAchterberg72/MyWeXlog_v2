@@ -20,10 +20,12 @@
           <table class="table table-sm" id="pvr">
             <col width="35%">
             <col width="30%">
+            <col width="30%">
             <thead>
               <tr>
                 <th class="align-middle text-center">User Alias</th>
                 <th class="align-middle text-center">Date</th>
+                <th class="align-middle text-center">View Profile</th>
               </tr>
             </thead>
             {% for p in pvr %}
@@ -31,6 +33,8 @@
               <tr>
                 <td class="align-middle text-center">{{ p.user.alias }}</td>
                 <td class="align-middle text-center">{{ p.timestamp }}</td>
+                <td>{% if request.user.subscription >= 2 %}<a href="{% url 'Talent:APV' tlt=p.user.alias vac='1ad9t2' %}" class="badge badge-success badge-pill align-middle text-center" style="width: 5rem;" target="new">View Profile</a>{% else %}<button class="badge badge-success badge-pill align-middle text-center" style="width: 5rem;">Active Subscription Required</button>{% endif %}</td>
+
 
               </tr>
               {% empty %}
