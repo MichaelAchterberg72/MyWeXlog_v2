@@ -113,6 +113,8 @@ class Profile(models.Model):
     rate_3 = models.FloatField(null=True, default=0)#average for marketplace.models.VacancyRate
     rate_count = models.IntegerField(null=True, default=0)#count for marketplace.models.VacancyRate
     confirm_check = models.BooleanField(null=True, default=False)
+    accepted_terms = models.BooleanField(default=False)
+    age_accept = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.talent)
@@ -174,7 +176,7 @@ class Profile(models.Model):
 
     def create_profile(sender, **kwargs):
         if kwargs['created']:
-            create_profile = Profile.objects.create(talent=kwargs['instance'])
+            create_profile = Profile.objects.create(talent=kwargs['instance'], accepted_terms=True, age_accept=True)
 
     post_save.connect(create_profile, sender=CustomUser)
 

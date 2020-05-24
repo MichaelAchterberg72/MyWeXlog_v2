@@ -27,35 +27,6 @@ class CustomSignupForm(SignupForm):
     class Meta:
         model = CustomUser
 
-#    def clean_first_name(self):
-#        first_name = self.cleaned_data.get("first_name")
-#        testf = first_name.isalpha()
-#        if testf == True:
-#            return first_name
-#        else:
-#            raise forms.ValidationError("Only aphabetical characters allowed!")
-#
-#    def clean_last_name(self):
-#        last_name = self.cleaned_data.get("last_name")
-#        testl = last_name.isalpha()
-#        if testl == True:
-#            return last_name
-#        else:
-#            raise forms.ValidationError("Only aphabetical characters allowed!")
-#
-#    def clean_terms(self):
-#        terms = self.cleaned_data.get("terms")
-#        if terms == True:
-#            return terms
-#        else:
-#            raise forms.ValidationError("You are required to accept our Terms of Service to register!")
-#
-#    def clean_age_accept(self):
-#        age_accept = self.cleaned_data.get("age_accept")
-#        if age_accept == True:
-#            return age_accept
-#        else:
-#            raise forms.ValidationError("Your are required to be sixteen years old or older!")
     def save(self, request):
         CustomUser = super(CustomSignupForm, self).save(request)
         CustomUser.first_name=self.cleaned_data['first_name']

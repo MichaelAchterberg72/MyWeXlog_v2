@@ -47,8 +47,6 @@ class CustomUser(AbstractUser):
     paid_type = models.IntegerField(choices=PAID_TYPE, default=0)
     invite_code = models.CharField(max_length=42, null=True, blank=True)
     alphanum = models.SlugField(max_length=7, unique=True, null=True)
-    terms = models.BooleanField(default=False, blank=True)
-    age_accept = models.BooleanField(default=False, blank=True)
 
     objects = CustomUserManager()
 
