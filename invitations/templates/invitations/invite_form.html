@@ -14,7 +14,8 @@
 {% endblock Style %}
 
 {% block content %}
-
+<div class="card">
+  <div class="card-body">
 <h3>Invite Talent</h3>
 <form class="" action="" method="POST">
   <input type="hidden" name="next" value="{{ request.GET.next }}">
@@ -25,6 +26,8 @@
   {{ form.email|as_crispy_field }}
   <button type="submit" class="btn btn-primary" name="Invite">Invite</button>
 </form>
+</div>
+</div>
 <!--
 <button type="submit" class="btn btn-primary" name="Invite" value="Close this window" onclick="windowClose();">Invite</button>
 -->

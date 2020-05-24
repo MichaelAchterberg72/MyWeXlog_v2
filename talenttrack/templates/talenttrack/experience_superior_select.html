@@ -11,7 +11,8 @@
     width: 100px;
   }
   </style>
-<div class="container">
+  <div class="card">
+    <div class="card-body">
 <h3>Identify a Superior to confirm your claimed experience</h3>
 <form method="post">
 <!--   <input type="hidden" name="next" value="{{ request.GET.next }}"> -->
@@ -30,6 +31,7 @@
 <p>
   <a href="{% url 'Talent:CollaboratorSelect' instance.id %}" class="btn btn-danger">Skip</a>
 </p>
+</div>
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 {{ form.media.js }}
