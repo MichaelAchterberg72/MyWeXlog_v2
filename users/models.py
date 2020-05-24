@@ -47,6 +47,8 @@ class CustomUser(AbstractUser):
     paid_type = models.IntegerField(choices=PAID_TYPE, default=0)
     invite_code = models.CharField(max_length=42, null=True, blank=True)
     alphanum = models.SlugField(max_length=7, unique=True, null=True)
+    terms = models.BooleanField(default=False, blank=True)
+    age_accept = models.BooleanField(default=False, blank=True)
 
     objects = CustomUserManager()
 
@@ -89,8 +91,8 @@ class CustomUserSettings(models.Model):
     right_to_be_forgotten = models.BooleanField('Right to be forgotten / Permanently delete my account', default=False)
     payment_notifications = models.BooleanField('Receive subscription payment notifications', default=True)
     subscription_notifications = models.BooleanField('Receive subscription status notifications', default=True)
-    privacy = models.BooleanField('Accept Privacy Policy', default=False)
-    useragree = models.BooleanField('Accept User Agreement', default=False)
+    privacy = models.BooleanField('Accept Privacy Policy', default=True)
+    useragree = models.BooleanField('Accept User Agreement', default=True)
 
     def __str__(self):
         return f"Settings for {self.talent}"

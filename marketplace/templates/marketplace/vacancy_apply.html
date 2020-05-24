@@ -6,28 +6,29 @@
 {% block title %}{{block.super}}-Apply{% endblock title %}
 
 {% block content %}
-<div class="container">
-<h3>Apply for  {{ detail.title }}</h3>
-<form method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-  <div class="form-row">
-    <div class="form-group col-md-8 mb-0">
-      {{ form.rate_bid|as_crispy_field }}
-      {{ form.currency|as_crispy_field }}
-      {{ form.rate_unit|as_crispy_field }}
-    </div>
+<div class="card">
+  <div class="card-body">
+    <h4>Apply for  {{ detail.title }}</h4>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="form-row">
+        <div class="form-group col-md-8 mb-0">
+          {{ form.rate_bid|as_crispy_field }}
+          {{ form.currency|as_crispy_field }}
+          {{ form.rate_unit|as_crispy_field }}
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-12 mb-0">
+          {{ form.motivation|as_crispy_field }}
+        </div>
+      </div>
+      <div class="">
+        <p><button type="submit" name="another" class="btn btn-primary">Apply</button></p>
+      </div>
+    </form>
   </div>
-  <div class="form-row">
-    <div class="form-group col-md-12 mb-0">
-      {{ form.motivation|as_crispy_field }}
-    </div>
-  </div>
-  <div class="">
-    <p><button type="submit" name="another" class="btn btn-primary">Apply</button></p>
-  </div>
-</form>
 </div>
-
 {% endblock content %}
 {% block Script %}
 <!-- code for popups -->
