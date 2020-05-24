@@ -11,7 +11,8 @@
     width: 100px;
   }
   </style>
-<div class="container">
+  <div class="card">
+    <div class="card-body">
   <h3>Identify a collaborator to confirm your claimed experience</h3>
   <p>A collaborator is someone from another company who is not a client that you worked with during this experience.</p>
   <form method="post">
@@ -35,6 +36,7 @@
   <p>
     <a href="{% url 'Talent:ClientSelect' instance.id %}" class="btn btn-danger">Skip</a>
   </p>
+</div>
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 {{ form.media.js }}
