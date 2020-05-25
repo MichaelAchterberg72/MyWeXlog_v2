@@ -7,19 +7,18 @@
 
 <div class="card border-0">
   <div class="card-body">
-    <h4 class="card-title">Privacy Policy</h4>
-    {% include 'users/privacy_policy.html' %}
-    <p></p>
+      {% include 'users/privacy_policy.html' %}
     <form class="" action="" method="POST" id="PrivacyPolicyForm">
 
       {% csrf_token %}
       {{ form|crispy }}
 
-    <p>&nbsp</p>
     <!-- Button trigger modal -->
+<div class="text-center">
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#PrivacyModelCenter">
   Update Settings
 </button>
+</div>
 
 <!-- Modal -->
 <div class="modal fade" id="PrivacyModelCenter" tabindex="-1" role="dialog" aria-labelledby="PrivacyModelCenterTitle" aria-hidden="true">

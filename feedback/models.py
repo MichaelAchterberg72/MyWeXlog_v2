@@ -12,6 +12,7 @@ class FeedBack(models.Model):
         ('S','Suggestion'),
         ('F','Request Feature'),
         ('C','Complaint'),
+        ('M', 'Compliance'),
     )
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     date_captured = models.DateTimeField(auto_now_add=True)

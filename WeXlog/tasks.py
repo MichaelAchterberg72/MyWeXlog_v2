@@ -65,7 +65,7 @@ def UpgradeRefunds():
     mda = datetime.today() - monthly  #.strftime('%d/%m/%Y')
 
     qs = PayPalIPN.objects.filter(Q(txn_type='subscr_signup') & Q(item_name__icontains='Upgrade'))
-    item = qs.values('payer_id').filter(subscr_date >= mda)
+    item = qs.filter(subscr_date >= mda).values_list('payer_id', flat=True)
 
     subject = f"Refunds for MyWeXlog Upgrades"
     context = {'item': item, 'user_email': invitee }

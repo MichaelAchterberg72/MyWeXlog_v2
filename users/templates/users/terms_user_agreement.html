@@ -7,20 +7,18 @@
 
 <div class="card border-0">
   <div class="card-body">
-    <h4 class="card-title">User Agreement</h4>
-    <p>&nbsp</p>
-    <p></p>
+    {% include 'users/user_agreement.html' %}
     <form class="" action="" method="POST" id="UserAgreeForm">
 
       {% csrf_token %}
       {{ form|crispy }}
 
-    <p>&nbsp</p>
         <!-- Button trigger modal -->
+    <div class="text-center">
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#TermsModelCenter">
       Update Settings
     </button>
-
+    </div>
     <!-- Modal -->
     <div class="modal fade" id="TermsModelCenter" tabindex="-1" role="dialog" aria-labelledby="TermsModelCenterTitle" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
