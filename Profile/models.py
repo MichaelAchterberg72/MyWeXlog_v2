@@ -114,7 +114,7 @@ class Profile(models.Model):
     rate_count = models.IntegerField(null=True, default=0)#count for marketplace.models.VacancyRate
     confirm_check = models.BooleanField(null=True, default=False)
     accepted_terms = models.BooleanField(default=False)
-    age_accept = models.BooleanField(default=False)
+    age_accept = models.BooleanField(default=False, null=True)
 
     def __str__(self):
         return str(self.talent)
