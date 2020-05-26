@@ -916,6 +916,7 @@ def ClientSelectView(request, pk):
 @csp_exempt
 def ClientAddView(request, tex):
     instance = get_object_or_404(WorkExperience, slug=tex)
+    tex = tex
     #>>>Create a set of users to exclude
     colleague_excl = set(WorkColleague.objects.filter(experience__slug=tex).values_list('colleague_name', flat=True))
     superior_excl = set(Superior.objects.filter(experience__slug=tex).values_list('superior_name', flat=True))
@@ -942,12 +943,12 @@ def ClientAddView(request, tex):
                 return response
         else:
             template = 'talenttrack/experience_client_add.html'
-            context = {'instance': instance, 'form': form}
+            context = {'instance': instance, 'form': form, 'tex': tex}
             response =  render(request, template, context)
             return response
     else:
         template = 'talenttrack/experience_client_add.html'
-        context = {'instance': instance, 'form': form}
+        context = {'instance': instance, 'form': form, 'tex': tex}
         response =  render(request, template, context)
         response.set_cookie("confirm","WT")
         return response
@@ -1020,6 +1021,7 @@ def CollaboratorSelectView(request, pk):
 @csp_exempt
 def CollaboratorAddView(request, tex):
     instance = get_object_or_404(WorkExperience, slug=tex)
+    tex = tex
 
     colleague_excl = set(WorkColleague.objects.filter(experience__slug=tex).values_list('colleague_name', flat=True))
     superior_excl = set(Superior.objects.filter(experience__slug=tex).values_list('superior_name', flat=True))
@@ -1047,12 +1049,12 @@ def CollaboratorAddView(request, tex):
                 return response
         else:
             template = 'talenttrack/experience_collaborator_add.html'
-            context = {'instance': instance, 'form': form}
+            context = {'instance': instance, 'form': form, 'tex': tex}
             response = render(request, template, context)
             return response
     else:
         template = 'talenttrack/experience_collaborator_add.html'
-        context = {'instance': instance, 'form': form}
+        context = {'instance': instance, 'form': form, 'tex': tex}
         response = render(request, template, context)
         response.set_cookie("confirm","WL")
         return response
@@ -1123,6 +1125,7 @@ def SuperiorSelectView(request, pk):
 @csp_exempt
 def SuperiorAddView(request, tex):
     instance = get_object_or_404(WorkExperience, slug=tex)
+    tex = tex
 
     colleague_excl = set(WorkColleague.objects.filter(experience__slug=tex).values_list('colleague_name', flat=True))
     superior_excl = set(Superior.objects.filter(experience__slug=tex).values_list('superior_name', flat=True))
@@ -1148,12 +1151,12 @@ def SuperiorAddView(request, tex):
                 return response
         else:
             template = 'talenttrack/experience_superior_add.html'
-            context = {'instance': instance, 'form': form}
+            context = {'instance': instance, 'form': form, 'tex': tex}
             response = render(request, template, context)
             return response
     else:
         template = 'talenttrack/experience_superior_add.html'
-        context = {'instance': instance, 'form': form}
+        context = {'instance': instance, 'form': form, 'tex': tex}
         response = render(request, template, context)
         response.set_cookie("confirm","WS")
         return response
@@ -1251,13 +1254,13 @@ def ColleagueAddView(request, tex):
                 return response
         else:
             template = 'talenttrack/experience_colleague_add.html'
-            context = {'instance': instance, 'form': form}
+            context = {'instance': instance, 'form': form, 'tex': tex}
             response = render(request, template, context)
             return response
 
     else:
         template = 'talenttrack/experience_colleague_add.html'
-        context = {'instance': instance, 'form': form}
+        context = {'instance': instance, 'form': form, 'tex': tex}
         response = render(request, template, context)
         response.set_cookie("confirm","WC")
         return response
@@ -1447,6 +1450,7 @@ def LecturerSelectView(request):
 @csp_exempt
 def LecturerAddView(request, tex):
     instance = get_object_or_404(WorkExperience, slug=tex)
+    tex = tex
 
     lecturer_excl = set(Lecturer.objects.filter(education__slug=tex).values_list('lecturer', flat=True))
     colleague_excl = set(ClassMates.objects.filter(education__slug=tex).values_list('colleague', flat=True))
@@ -1470,13 +1474,13 @@ def LecturerAddView(request, tex):
                 return response
         else:
             template = 'talenttrack/education_lecturer_add.html'
-            context = {'instance': instance, 'form': form}
+            context = {'instance': instance, 'form': form, 'tex': tex}
             response = render(request, template, context)
             response.set_cookie("confirm","LR")
             return response
     else:
         template = 'talenttrack/education_lecturer_add.html'
-        context = {'instance': instance, 'form': form}
+        context = {'instance': instance, 'form': form, 'tex': tex}
         response = render(request, template, context)
         response.set_cookie("confirm","LR")
         return response
@@ -1550,13 +1554,13 @@ def ClassMateAddView(request, tex):
                 return response
         else:
             template = 'talenttrack/education_classmate_add.html'
-            context = {'instance': instance, 'form': form}
+            context = {'instance': instance, 'form': form, 'tex': tex}
             response = render(request, template, context)
             response.set_cookie("confirm","CM")
             return response
     else:
         template = 'talenttrack/education_classmate_add.html'
-        context = {'instance': instance, 'form': form}
+        context = {'instance': instance, 'form': form, 'tex': tex}
         response = render(request, template, context)
         response.set_cookie("confirm","CM")
         return response

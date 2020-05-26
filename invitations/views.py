@@ -153,8 +153,8 @@ def FlatInviteview(request):
 
 #            send_mail(subject, html_message, 'no-reply@mywexlog.com', [invitee,])
             template = 'invitations/flat_invitation.html'
-            #return redirect(reverse('Profile:ProfileHome'))
-            return render(request, template, context)
+            return redirect(reverse('Profile:ProfileHome'))
+            #return render(request, template, context)
 
     else:
         form = InvitationLiteForm()

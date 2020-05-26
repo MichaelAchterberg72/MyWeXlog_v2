@@ -329,17 +329,8 @@ PAYPAL_CERT_ID = 'J7C4RR9N34PZJ'
 # Accounts department email_id
 ACCOUNTS_EMAIL = "machterberg@tkgm.co.za"
 
-#Broker set up information
-BROKER_USER = os.environ.get("myuser")
-BROKER_PASSWORD = os.environ.get("mypassword")
-BROKER_HOST = os.environ.get("Localhost")
-BROKER_PORT = os.environ.get("5672")
-BROKER_VHOST = os.environ.get("myvhost")
-
-# CELERY_BROKER_URL = f"amqp://{BROKER_USER}:{BROKER_PASSWORD}@{BROKER_HOST}:{BROKER_PORT}/{BROKER_VHOST}"
-
 # Celery Settings
-CELERY_SYSTEM_EMAIL = 'do_not_reply@mywexlog.com'
+CELERY_SYSTEM_EMAIL = 'do_not_reply@mywexlog.dev'
 
 ## Broker settings.
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
@@ -366,6 +357,7 @@ CELERY_TASK_ANNOTATIONS = {'tasks.add': {'rate_limit': '10/s'}}
 
     # SendGrid mail Settings
 #EMAIL_BACKEND = 'sendgrid_backend.SendgridBackend'
-SENDGRID_API_KEY = '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'
+SENDGRID_API_KEY = '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'  # MyWeXlog Domain
+# SENDGRID_API_KEY = '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'  # Test machterberg@devoptec.com single sender auth
 
-SENDGRID_FROM_EMAIL = 'machterberg@devoptec.com'
+SENDGRID_FROM_EMAIL = 'no-reply@mywexlog.com'    # 'machterberg@devoptec.com'

@@ -11,7 +11,8 @@
     width: 100px;
   }
   </style>
-<div class="container">
+<div class="card">
+  <div class="card-body">
 <h3>List a Colleague to confirm your experience</h3>
 <form method="post">
 <!--   <input type="hidden" name="next" value="{{ request.GET.next }}"> -->
@@ -23,9 +24,10 @@
     </div>
   </div>
   <div class="">
-    <p><button type="submit" name="done" class="btn btn-primary">Save</button>  <a href="{% url 'Invitation:Invite2' %}?next={{ request.path|urlencode }}" class="btn btn-info" target="_blank">Invite</a></p>
+    <p><button type="submit" name="done" class="btn btn-primary">Save</button>  <a href="{% url 'Invitation:Invite2' tex %}?next={{ request.path|urlencode }}" class="btn btn-info" target="_blank">Invite</a></p>
   </div>
 </form>
+</div>
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 {{ form.media.js }}
