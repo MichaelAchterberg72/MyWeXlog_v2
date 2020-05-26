@@ -372,11 +372,10 @@ class WorkColleagueSelectForm(forms.ModelForm):
     def clean_colleague_name(self):
         colleague_passed = self.cleaned_data.get("colleague_name")
         als = colleague_passed.id
-
         if als in pwd:
             raise forms.ValidationError("This person is already in your confirmation list! Please Choose another person.")
-        return colleague_passed
-
+        else:
+            return colleague_passed
 
 class WorkExperienceForm(forms.ModelForm):
     class Meta:
@@ -522,7 +521,7 @@ class EducationForm(forms.ModelForm):
             'course': 'Course Name',
             'topic' : 'Course Subject',
         }
-        
+
     def clean_date_to(self):
         '''Ensures the end date is after the begin date'''
         date_to = self.cleaned_data.get("date_to")

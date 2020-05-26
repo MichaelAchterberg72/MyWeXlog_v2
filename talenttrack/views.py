@@ -1236,7 +1236,7 @@ def ColleagueAddView(request, tex):
 
     filt = colleague_excl | superior_excl | collab_excl | client_excl | myself
 
-    form = WorkColleagueSelectForm(request.POST or None, pwd=tex)
+    form = WorkColleagueSelectForm(request.POST or None, pwd=filt)
 
     if request.method == 'POST':
         if form.is_valid():
