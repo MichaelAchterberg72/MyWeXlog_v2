@@ -51,9 +51,9 @@ urlpatterns = [
     path('client/add/<slug:tex>/', views.ClientAddView, name='ClientAdd'),
     path('client/detail/<slug:wkc>/', views.ClientResponseView, name='ClientResponse'),
 
-    path('client/select/<int:pk>/', views.ClientSelectView, name='ClientSelect'),
-    path('client/add/<int:pk>/', views.ClientAddView, name='ClientAdd'),
-    path('client/detail/<int:pk>/', views.ClientResponseView, name='ClientResponse'),
+#    path('client/select/<int:pk>/', views.ClientSelectView, name='ClientSelect'),
+#    path('client/add/<int:pk>/', views.ClientAddView, name='ClientAdd'),
+#    path('client/detail/<int:pk>/', views.ClientResponseView, name='ClientResponse'),
 
     path('experience/detail/<slug:tex>/', views.ExperienceDetailView, name='ExperienceDetail'),
 
