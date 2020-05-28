@@ -113,6 +113,7 @@ class DesignationSearchFieldMixin:
     search_fields = [
         'name__icontains', 'pk__startswith'
     ]
+
 class DesignationSelect2Widget(DesignationSearchFieldMixin, ModelSelect2Widget):
     model = Designation
 
@@ -123,6 +124,7 @@ class ProjectSearchFieldMixin:
     search_fields = [
         'name__icontains', 'pk__startswith'
     ]
+
 class ProjectSelect2Widget(ProjectSearchFieldMixin, ModelSelect2Widget):
     model = ProjectData
 
