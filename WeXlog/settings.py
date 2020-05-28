@@ -330,7 +330,7 @@ PAYPAL_CERT_ID = 'J7C4RR9N34PZJ'
 ACCOUNTS_EMAIL = "machterberg@tkgm.co.za"
 
 # Celery Settings
-CELERY_SYSTEM_EMAIL = 'do_not_reply@mywexlog.dev'
+CELERY_SYSTEM_EMAIL = 'no_reply@mywexlog.dev'
 
 ## Broker settings.
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
