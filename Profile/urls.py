@@ -40,7 +40,7 @@ urlpatterns = [
         path('classmates-confirm/<int:pk>/', views.ClassMatesConfirmView, name='ClassMatesConfirm'),
         path('classmates-reject/<int:pk>/', views.ClassMatesRejectView, name='ClassMatesReject'),
         path('classmates-comment/<slug:cmt>/', views.ClassMatesCommentView, name='ClassMatesComment'),
-        path('classmates-wrongperson/<slug:cmt>/', views.ClassMatesWrongPersonView, name='ClassMatesWrongPerson'),
+        path('classmates-wrongperson/<int:pk>/', views.ClassMatesWrongPersonView, name='ClassMatesWrongPerson'),
         #Colleague Confirm
         path('colleague-confirm/<int:pk>/', views.ColleagueConfirmView, name='ColleagueConfirm'),
         path('colleague-reject/<int:pk>/', views.ColleagueRejectView, name='ColleagueReject'),

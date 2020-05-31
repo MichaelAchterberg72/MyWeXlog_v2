@@ -3,6 +3,8 @@ from django.conf import settings
 from django.utils import timezone
 from Profile.utils import create_code9
 
+from Profile.utils import create_code9
+
 
 class FeedBack(models.Model):
     OPTS = (
@@ -12,7 +14,7 @@ class FeedBack(models.Model):
         ('S','Suggestion'),
         ('F','Request Feature'),
         ('C','Complaint'),
-        ('M', 'Compliance'),
+        ('M','Compliance'),
     )
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     date_captured = models.DateTimeField(auto_now_add=True)
@@ -33,3 +35,29 @@ class FeedBackActions(models.Model):
 
     def __str__(self):
         return f'{self.item} by {self.review_by.alias}'
+
+
+class Notices(models.Model):
+    notice_date = models.DateTimeField()
+    subject = models.CharField(max_length=200, null=True)
+    notice = models.TextField(null=True)
+    slug = models.SlugField(max_length=10, blank=True, null=True, unique=True)
+
+    def __str__(self):
+        return '{}, {}'.format(self.notice_date, self.subject)
+
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
+
+        super(Notices, self).save(*args, **kwargs)
+
+
+class NoticeRead(models.Model):
+    talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    notice = models.ForeignKey(Notices, on_delete=models.PROTECT, null=True)
+    date_read = models.DateTimeField(auto_now_add=True)
+    notice_read = models.BooleanField(default=False, null=True)
+
+    def __str__(self):
+        return f'{self.notice} {self.talent}'

@@ -102,7 +102,7 @@
   </tbody>
 </table>
 <br>
-<p>Your Profile has been viewed: {% if request.user.subscription >= 2 %}<a href="{% url 'Profile:ProfileViewed' %}" class="btn btn-info float-right">Profile Viewed Report: {{ pvr_count }} times</a>{% else %}<span class="float-right"><strong>{{ pvr_count }}</strong> times.</span>{% endif %}</p>
+<p>Your Profile has been viewed: {% if request.user.subscription >= 1 %}<a href="{% url 'Profile:ProfileViewed' %}" class="btn btn-info float-right">Profile Viewed Report: {{ pvr_count }} times</a>{% else %}<span class="float-right"><strong>{{ pvr_count }}</strong> times.</span>{% endif %}</p>
 
 {% endblock score %}
 

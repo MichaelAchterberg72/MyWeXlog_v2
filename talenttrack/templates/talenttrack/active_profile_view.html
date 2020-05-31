@@ -381,23 +381,23 @@
               <col width="10%">
               <thead>
                 <tr>
-                  <th>Date from</th>
-                  <th>Date to</th>
-                  <th>Institution</th>
-                  <th>Course</th>
-                  <th>Topic</th>
-                  <th>Certification</th>
+                  <th class="align-middle">Date from</th>
+                  <th class="align-middle">Date to</th>
+                  <th class="align-middle">Institution</th>
+                  <th class="align-middle">Course</th>
+                  <th class="align-middle">Topic</th>
+                  <th class="align-middle">Certification</th>
                 </tr>
               </thead>
               <tbody>
                 {% for e in edtexp %}
                   <tr>
-                    <td>{{ e.date_from|date:"j M Y" }}</td>
-                    <td>{{ e.date_to|date:"j M Y" }}</td>
-                    <td>{{ e.course.company }}</td>
-                    <td>{{ e.course }}</td>
-                    <td>{{ e.topic }}</td>
-                    <td>{{ e.course.certification }}</td>
+                    <td class="align-middle">{{ e.date_from|date:"j M Y" }}</td>
+                    <td class="align-middle">{{ e.date_to|date:"j M Y" }}</td>
+                    <td class="align-middle">{{ e.course.company }}</td>
+                    <td class="align-middle">{{ e.course }}</td>
+                    <td class="align-middle">{{ e.topic }}</td>
+                    <td class="align-middle">{{ e.course.certification }}{% if e.upload %}<br>(Uploaded){% else %}{% endif %}</td>
                     {% empty %}
                       <td colspan="6">Nothing Captured.</td>
                   </tr>

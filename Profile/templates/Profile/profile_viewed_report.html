@@ -16,7 +16,9 @@
       <div class="card-body">
 
           <h5 class="card-title">Profile Viewed Report</h5>
-          <p>Your profile has been viewed by the following people on the dates indicated.</p>
+          {% if request.user.subscription >= 2 %}
+          <p>Your profile has been viewed by the following <strong>{{ pvr_count }}</strong> people on the dates indicated.</p>
+          <br>
           <table class="table table-sm" id="pvr">
             <col width="35%">
             <col width="30%">
@@ -33,7 +35,7 @@
               <tr>
                 <td class="align-middle text-center">{{ p.user.alias }}</td>
                 <td class="align-middle text-center">{{ p.timestamp }}</td>
-                <td>{% if request.user.subscription >= 2 %}<a href="{% url 'Talent:APV' tlt=p.user.alias vac='1ad9t2' %}" class="badge badge-success badge-pill align-middle text-center" style="width: 5rem;" target="new">View Profile</a>{% else %}<button class="badge badge-success badge-pill align-middle text-center" style="width: 5rem;">Active Subscription Required</button>{% endif %}</td>
+                <td class="text-center">{% if request.user.subscription >= 2 %}<a href="{% url 'Talent:APV' tlt=p.user.alias vac='1ad9t2' %}" class="badge badge-success badge-pill align-middle text-center" target="new">View Profile</a>{% else %}<button class="badge badge-success badge-pill align-middle">Active Subscription Required</button>{% endif %}</td>
 
 
               </tr>
@@ -42,7 +44,38 @@
               {% endfor %}
             </tbody>
           </table>
+          {% else %}
+          <p>Your profile has been viewed <strong>{{ pvr_count }}</strong> times, you are currently registered with a 'Passive' account so will only able to see a list of the 5  most recent people that have viewed your profile.  To view the full list and have access to view the the public profiles please click the 'Upgrade' button below.</p>
+          <p class="float-right">
+            <a href="{% url 'Payments:PassiveUpgradeSubscription' %}" class="btn btn-primary" style="width: 7rem">Upgrade</a>
+          </p>
+          <br>
+          <table class="table table-sm" id="pvr_s">
+            <col width="35%">
+            <col width="30%">
+            <col width="30%">
+            <thead>
+              <tr>
+                <th class="align-middle text-center">User Alias</th>
+                <th class="align-middle text-center">Date</th>
+                <th class="align-middle text-center">View Profile</th>
+              </tr>
+            </thead>
+            {% for p in pvr_s %}
+            <tbody>
+              <tr>
+                <td class="align-middle text-center">{{ p.user.alias }}</td>
+                <td class="align-middle text-center">{{ p.timestamp }}</td>
+                <td class="text-center">{% if request.user.subscription >= 2 %}<a href="{% url 'Talent:APV' tlt=p.user.alias vac='1ad9t2' %}" class="badge badge-success badge-pill align-middle text-center" target="new">View Profile</a>{% else %}<button class="badge badge-success badge-pill align-middle">Active Subscription Required</button>{% endif %}</td>
 
+
+              </tr>
+              {% empty %}
+                <p>No-one has viewed you profile yet.</p>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% endif %}
       </div>
     </div>
   </div>
