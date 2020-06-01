@@ -35,6 +35,7 @@
             <p>Do you wish to proceed?</p>
           </div>
           <div class="modal-footer">
+            <a class="btn btn-primary" href="{% url 'Invitation:Profile2PDF' %}" target="_blank">Download Data</a>
             <button type="submit" class="btn btn-danger" name="button">Proceed</button>
             <a href="{% url 'Profile:ProfileHome' %}?next={{ request.path|urlencode }}" class="btn btn-primary">Cancel</a>
           </div>

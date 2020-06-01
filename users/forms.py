@@ -49,6 +49,10 @@ class CustomUserSettingsForm(forms.ModelForm):
                     'dnt',
                     'right_to_be_forgotten')
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['right_to_be_forgotten'].widget.attrs.update({'data-toggle': 'modal', 'data-target': '#DeleteModelCenter',})
+
 
 class RightToSayNoForm(forms.ModelForm):
     class Meta:
