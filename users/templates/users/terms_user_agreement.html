@@ -18,6 +18,7 @@
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#TermsModelCenter">
       Update Settings
     </button>
+    <a href="{% url 'Profile:ProfileHome' %}?next={{ request.path|urlencode }}" class="btn btn-primary">Close</a>
     </div>
     <!-- Modal -->
     <div class="modal fade" id="TermsModelCenter" tabindex="-1" role="dialog" aria-labelledby="TermsModelCenterTitle" aria-hidden="true">
@@ -35,7 +36,7 @@
           </div>
           <div class="modal-footer">
             <button type="submit" class="btn btn-danger" name="button">Proceed</button>
-            <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+            <a href="{% url 'Profile:ProfileHome' %}?next={{ request.path|urlencode }}" class="btn btn-primary">Cancel</a>
           </div>
         </div>
       </div>
