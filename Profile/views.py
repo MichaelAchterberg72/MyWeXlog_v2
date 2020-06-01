@@ -61,10 +61,12 @@ def ProfileViewedReport(request):
     tlt = request.user
     tlt_id = tlt.id
     qs = ObjectViewed.objects.filter(object_id=tlt_id)
-    pvr = qs.filter(content_type__app_label="Profile")
+    pvr = qs.filter(content_type__app_label="Profile").order_by('-timestamp')
+    pvr_count = pvr.count()
+    pvr_s = pvr[:5]
 
     template = 'Profile/profile_viewed_report.html'
-    context = {'pvr': pvr, 'tlt': tlt}
+    context = {'pvr': pvr, 'pvr_s': pvr_s, 'pvr_count': pvr_count, 'tlt': tlt}
     return render(request, template, context)
 #>>>Contact details view for Assigned vacancies and interviews
 @login_required()
@@ -690,9 +692,9 @@ def ClassMatesCommentView(request, cmt):
 
 
 @login_required()
-def ClassMatesWrongPersonView(request, cmt):
+def ClassMatesWrongPersonView(request, pk):
     if request.method == 'POST':
-        info = ClassMates.objects.get(slug=cmt)
+        info = ClassMates.objects.get(pk=pk)
         info.confirm = 'Y'
         info.save()
     return redirect(reverse('Profile:Confirm')+'#ClassMates')

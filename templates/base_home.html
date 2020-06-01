@@ -171,10 +171,12 @@
     <div class="">
 
       <a class="navbar-brand" href="{% url 'Feedback:FeedBack' %}?next={{ request.path|urlencode }}"><i class="fa fa-bullhorn" aria-hidden="true" style="font-size:30px;color:black" data-toggle="tooltip" title="We love to hear your feedback!"></i></a>
+
       <div class="btn-group">
+      <a class="navbar-brand" href="{% url 'Feedback:NoticesList' %}?next={{ request.path|urlencode }}"><i class="fa fa-bell" aria-hidden="true" style="font-size:30px;color:black" data-toggle="tooltip" title="Please click here to view MyWeXlog Notices!"></i></a>
       <a class="navbar-brand" href="{% url 'Users:UserAgreement' %}">User Agreement</a>
       <a class="navbar-brand" href="{% url 'Users:PrivacyPolicy' %}">Privacy Policy</a>
-      <a class="navbar-brand" href="{% url 'Public:ContactUs' %}">Contact Us</a>
+
 
 
       <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -190,6 +192,7 @@
           <a class="dropdown-item"  href="{% url 'account_change_password' %}">Change Password</a>
           <a class="dropdown-item"  href="{% url 'Users:CustomUserSettings' %}">Settings</a>
           <a class="dropdown-item" href="{% url 'Invitation:Profile2PDF' %}" target="_blank" >Profile to PDF</a>
+          <a class="dropdown-item" href="{% url 'Public:ContactUs' %}">Contact Us</a>
           <div class="dropdown-divider">
           </div>
           <a class="dropdown-item"  href="{% url 'account_logout' %}">Logout</a>

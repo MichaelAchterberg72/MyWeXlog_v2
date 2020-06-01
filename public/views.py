@@ -93,6 +93,10 @@ def WexlogHomeContactView(request):
         return render(request, template, context)
 
 
+class WexlogHomeDeletedView(TemplateView):
+    template_name = 'wexlog_home/deleted.html'
+
+
 class WexlogHomePostVacancyView(TemplateView):
     template_name = 'wexlog_home/post_vacancy.html'
 

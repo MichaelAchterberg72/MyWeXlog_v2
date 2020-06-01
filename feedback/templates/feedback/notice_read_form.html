@@ -1,0 +1,32 @@
+{% extends "base_home.html" %}
+
+{% block title %}{{block.super}}-MyWeXlog Notice Detail{% endblock title %}
+
+{% block content %}
+
+<div class="card border-0">
+  <div class="card-body">
+      <h4 class="">{{ qs.subject }}</h4>
+    <div class="row">
+      <div class="container">
+      {{ qs.notice }}
+      <br>
+      </div>
+    </div>
+    {% if qs2 == False %}
+    <form class="float-right" action="" method="POST" id="NoticeReadForm">
+
+    {% csrf_token %}
+
+      <button type="submit" class="btn btn-primary" id='check_notice_read' name="button">Close</button>
+
+      </form>
+    {% else %}
+    <div class="float-right">
+      <a href="{% url 'Feedback:NoticesList' %}?next={{ request.path|urlencode }}" class="btn btn-primary">Close</a>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock content %}

@@ -19,8 +19,8 @@ class CustomUserChangeForm(UserChangeForm):
 
 
 class CustomSignupForm(SignupForm):
-    first_name = forms.CharField(max_length=30, label='First Name')
-    last_name = forms.CharField(max_length=30, label='Last Name')
+    first_name = forms.CharField(max_length=30, label='First Name', widget=forms.TextInput(attrs={'placeholder': 'First name'}))
+    last_name = forms.CharField(max_length=30, label='Last Name', widget=forms.TextInput(attrs={'placeholder': 'Last name'}))
     terms = forms.BooleanField(required=True, label="Accept Terms and Conditions")
     age_accept = forms.BooleanField(required=True, label="Confirm you are 16 Years or Older")
 
@@ -48,6 +48,10 @@ class CustomUserSettingsForm(forms.ModelForm):
                     'payment_notifications',
                     'dnt',
                     'right_to_be_forgotten')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['right_to_be_forgotten'].widget.attrs.update({'data-toggle': 'modal', 'data-target': '#DeleteModelCenter',})
 
 
 class RightToSayNoForm(forms.ModelForm):
