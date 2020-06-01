@@ -28,6 +28,7 @@ urlpatterns = [
     path('site-suggestions/', views.WexlogHomeSuggestionsView, name='WexlogHomeSuggestions'),
     path('data-protection-officer/', views.WexlogHomeDataPrivacyView, name='WexlogHomeDataPrivacy'),
     path('thank-contact/', views.WexlogHomeThankContactView.as_view(), name='WexlogHomeThankContact'),
+    path('account-removed/', views.WexlogHomeDeletedView.as_view(), name='WexlogHomeDeleted'),
 
 #    path('home/', views.LandingPageHomePageView, name='LandingPage'),
 #    path('test/', views.HtmlTestView.as_view(), name='Test'),

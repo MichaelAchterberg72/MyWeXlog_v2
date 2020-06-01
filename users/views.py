@@ -28,6 +28,7 @@ def CustomUserSettingsView(request):
                 if new.right_to_be_forgotten == True:
                     u.delete()
                     messages.success(request, "Your account has been deleted")
+                    return redirect(reverse('Public:WexlogHomeDeleted'))
 
                 return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':user_id.id})+'#online')
         else:
@@ -71,6 +72,7 @@ def UserAgreementView(request):
                 if new.useragree == False:
                     u.delete()
                     messages.success(request, "Your account has been deleted")
+                    return redirect(reverse('Public:WexlogHomeDeleted'))
 
                 return redirect(reverse('Profile:ProfileHome',))
         else:
@@ -96,7 +98,8 @@ def PrivacyPolicyView(request):
                 if new.privacy == False:
                     u.delete()
                     messages.success(request, "Your account has been deleted")
-
+                    return redirect(reverse('Public:WexlogHomeDeleted'))
+                    
                 return redirect(reverse('Profile:ProfileHome'))
         else:
             context = {'form': form}
