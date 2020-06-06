@@ -23,6 +23,7 @@
   {{ form.name|as_crispy_field }}
   {{ form.surname|as_crispy_field }}
   {{ form.worked_for|as_crispy_field }}
+  <a href="{% url 'Enterprise:BranchAddPop' %}" id='add_worked_for' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a Company Branch</a>
   {{ form.email|as_crispy_field }}
   <button type="submit" class="btn btn-primary" name="Invite">Invite</button>
 </form>
@@ -36,9 +37,25 @@
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 {{ form.media.js }}
 <script language="javascript" type="text/javascript">
-  function windowClose() {
-  window.open('','_parent','');
-  window.close();
-  }
+function windowClose() {
+window.open('','_parent','');
+window.close();
+}
+function showAddPopup(triggeringLink) {
+    var name = triggeringLink.id.replace(/^add_/, '');
+    href = triggeringLink.href;
+    var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes');
+    win.focus();
+    return false;
+}
+
+function closePopup(win, newID, newRepr, id) {
+    $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
+    win.close();
+}
+
+window.onerror = function (msg) {
+  $("body").attr("JSError", msg);
+}
 </script>
 {% endblock Script %}

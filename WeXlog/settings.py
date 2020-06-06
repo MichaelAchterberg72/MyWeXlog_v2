@@ -254,6 +254,26 @@ DATABASES = {
     }
 }
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    },
+
+    "select2": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/2",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
+# Tell select2 which cache configuration to use:
+SELECT2_CACHE_BACKEND = "select2"
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -315,6 +335,7 @@ DJANGO_MESSAGES_NOTIFY = False
 
 # PayPal settings
 PAYPAL_RECEIVER_EMAIL = "sb-wynfk1244760@business.example.com"
+
 if DEBUG == True:
     PAYPAL_TEST = True              # set to False for production
 else:
@@ -360,4 +381,4 @@ CELERY_TASK_ANNOTATIONS = {'tasks.add': {'rate_limit': '10/s'}}
 SENDGRID_API_KEY = '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'  # MyWeXlog Domain
 # SENDGRID_API_KEY = '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'  # Test machterberg@devoptec.com single sender auth
 
-SENDGRID_FROM_EMAIL = 'no-reply@mywexlog.com'    # 'machterberg@devoptec.com'
+SENDGRID_FROM_EMAIL = 'no-reply@mywexlog.dev'    # 'machterberg@devoptec.com'

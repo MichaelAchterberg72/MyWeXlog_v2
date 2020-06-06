@@ -11,6 +11,16 @@ from django.utils import timezone
 from celery.task.schedules import crontab
 from celery.task import periodic_task
 
+from django.conf import settings
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.template.loader import get_template
+
+import sendgrid
+import os
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import (Mail, Subject, To, ReplyTo, SendAt, Content, From, CustomArg, Header)
+
 import datetime
 from datetime import timedelta
 
@@ -65,19 +75,47 @@ def UpgradeRefunds():
     mda = datetime.today() - monthly  #.strftime('%d/%m/%Y')
 
     qs = PayPalIPN.objects.filter(Q(txn_type='subscr_signup') & Q(item_name__icontains='Upgrade'))
-    item = qs.filter(subscr_date >= mda).values_list('payer_id', flat=True)
+    item = qs.filter(subscr_date__gte=mda).values_list('payer_id', flat=True)
+
+#    for r in item:
+#        username = CustomUser.objects.get(pk=r.custom)
+#        useremail = username.email
+#        tlt = username.pk
+
+#        p = PayPalIPN.objects.filter(custom=r.custom)
+#        q = p.filter(flag = True).order_by(-payment_date)
+#        subscriber = q[1]
+
+#        npd = subscriber.next_payment_date
+#        npdd = npd.strftime('%d/%m/%Y')
+#        cd = date.today().strftime('%d/%m/%Y')
+#        nsd = cd - npd
+#        daysdelta = nsd.days
+
+#        opd = subscriber.payment_date
+#        opdd = opd.strftime('%d/%m/%Y')
+#        sd = npdd - opdd
+#        subscriptiondaysdelta = sd.days
+
+#        amp = subscriber.amount1
+#        subscriptionperday = amp / subscriptiondaysdelta
+#        refundamount = subscriptionperday * daysdelta
+
+#        payment_txn_id = subscriber.txn_id
+
+#        if refundamount > 0.48:
+#            SubscriptionRefundTask.delay(username, useremail, refundamount, payment_txn_id)
+#            RemindDeleteOldSubscription.delay(useremail, payment_txn_id)
+
 
     subject = f"Refunds for MyWeXlog Upgrades"
-    context = {'item': item, 'user_email': invitee }
-    html_message = render_to_string('payments/invitation.html', context)
+    context = {'item': item }
+    html_message = render_to_string('payments/email_subscription_subscription_refund.html', context)
     plain_message = strip_tags(html_message)
-
-    invitee = cd['email']
-    html_message = render_to_string('invitations/invitation.html', context)
 
     message = Mail(
         from_email = settings.SENDGRID_FROM_EMAIL,
-        to_emails = invitee,
+        to_emails = settings.ACCOUNTS_EMAIL,
         subject = subject,
         plain_text_content = strip_tags(html_message),
         html_content = html_message)

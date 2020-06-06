@@ -29,7 +29,7 @@ class CustomSignupForm(SignupForm):
 
     def save(self, request):
         CustomUser = super(CustomSignupForm, self).save(request)
-        terms = seld.cleaned_data.get('terms')
+        terms = self.cleaned_data.get('terms')
         age = self.cleaned_data.get('age_accept')
         CustomUser.first_name=self.cleaned_data['first_name']
         CustomUser.last_name=self.cleaned_data['last_name']
