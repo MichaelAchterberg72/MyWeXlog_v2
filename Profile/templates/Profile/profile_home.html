@@ -123,7 +123,6 @@
     <a href="{% url 'BookList:books-read-new' %}" class=""><i class="fa fa-bookmark-o" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Capture Book"></i></a>
   </div>
     <hr>
-    <br>
     <div class="text-center">
       {% if pfl.rate_count >= 5 %}
         <p style="font-size:20px;color:black">
@@ -201,6 +200,15 @@
         Ratings calculated over 5 or more votes, you currently have {{ pfl.rate_count|intcomma }}.
       {% endif %}
     </p>
+    </div>
+    <div class="">
+      <p>
+        Referral link:<br>
+        <hr>
+        <small><span class="text-primary">{{ referral_code.url }}</span></small><br>
+        <hr>
+        Copy and past the above url address into an email or a Social Netowrk Post for your firends to join MyWeXlog in your network.
+      </p>
     </div>
  {% endblock TBA %}
 

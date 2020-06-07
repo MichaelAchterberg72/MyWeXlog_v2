@@ -155,6 +155,12 @@ ACCOUNT_ADAPTER = 'users.adapter.AccountAdapter'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/public/home/'
 #ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL =
 
+
+#>>>Pinax Settings
+PINAX_REFERRALS_SECURE_URLS = True
+#Pinax Settings<<<
+
+
 PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.Argon2PasswordHasher',
     'django.contrib.auth.hashers.PBKDF2PasswordHasher',
@@ -237,8 +243,6 @@ CSP_REPORT_ONLY = False
 #SESSION_COOKIE_SECURE = True
 #SESSION_COOKIE_SAMESITE = 'Strict'
 
-# Database
-# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
     'default': {

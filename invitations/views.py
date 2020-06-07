@@ -9,10 +9,8 @@ from django.utils import timezone
 from weasyprint import HTML
 from weasyprint.fonts import FontConfiguration
 
-import sendgrid
+
 import os
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import (Mail, Subject, To, ReplyTo, SendAt, Content, From, CustomArg, Header)
 
 from Profile.models import (
         Profile, BriefCareerHistory, OnlineRegistrations, IdentificationDetail, PassportDetail, LanguageTrack, Email, PhysicalAddress, PostalAddress, PhoneNumber
@@ -31,7 +29,6 @@ from django.core.mail import send_mail, EmailMultiAlternatives
 from django.template.loader import get_template, render_to_string
 from django.utils.html import strip_tags
 import sendgrid
-import os
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import (Mail, Subject, To, ReplyTo, SendAt, Content, From, CustomArg, Header)
 
@@ -153,7 +150,7 @@ def FlatInviteview(request):
 
 #            send_mail(subject, html_message, 'no-reply@mywexlog.com', [invitee,])
             template = 'invitations/flat_invitation.html'
-            return redirect(reverse('Profile:ProfileHome'))
+            return render(request, template, context)
             #return render(request, template, context)
 
     else:

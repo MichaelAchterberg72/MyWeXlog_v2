@@ -22,6 +22,7 @@ from django.views.decorators.csrf import csrf_exempt
 from core.decorators import subscription
 
 from treebeard.mp_tree import MP_Node
+from pinax.referrals.models import Referral
 
 from WeXlog.app_config import (
     client_score, colleague_score, collaborator_score, superior_score, lecturer_score, classmate_score, pre_colleague_score
@@ -68,6 +69,8 @@ def ProfileViewedReport(request):
     template = 'Profile/profile_viewed_report.html'
     context = {'pvr': pvr, 'pvr_s': pvr_s, 'pvr_count': pvr_count, 'tlt': tlt}
     return render(request, template, context)
+
+
 #>>>Contact details view for Assigned vacancies and interviews
 @login_required()
 @subscription(1)
@@ -79,6 +82,7 @@ def ContactDetailView(request, tlt, vac):
     context = {'pfl_qs': pfl_qs, 'vac_qs': vac_qs}
     return render(request, template, context)
 #Contact details view for Assigned vacancies and interviews<<<
+
 
 #>>> Workshop view for Talent
 @login_required()
@@ -295,7 +299,7 @@ def EmpRatingView(request, wit):
 #This is the Dashboard view...
 @login_required()
 def ProfileHome(request):
-    #NetworkCard
+    #>>>NetworkCard
     node = NtWk.objects.get(talent=request.user)
     get = lambda node_id: NtWk.objects.get(pk=node_id)
     list = NtWk.get_annotated_list(node, 5)
@@ -332,8 +336,9 @@ def ProfileHome(request):
         n += 1
 
     tot = lvl_1 + lvl_2 + lvl_3 + lvl_4 + lvl_5
+    #NetworkCard<<<
 
-    #WorkFlow Card
+    #>>>WorkFlow Card
     talent = request.user
     wf1 = Lecturer.objects.filter(confirm__exact='S').count()
     cm1 = ClassMates.objects.filter(confirm__exact='S').count()
@@ -364,14 +369,17 @@ def ProfileHome(request):
     open_assignments_tltc = assigned_tlt_qs.filter(Q(tlt_response='A') & Q(assignment_complete_tlt=False)).count()
 
     open_assignments_empc = assigned_emp.filter(Q(tlt_response='A')).count()
+    #WorkFlow Card<<<
 
-    #QuickAccess card
+    #>>>QuickAccess card
     pfl = Profile.objects.get(talent=talent)
+    referral_code = Referral.objects.get(user=talent)
 
     template = 'Profile/profile_home.html'
     context = {
-        'wf1': wf1, 'tlt': tlt, 'pvr_count': pvr_count, 'total': total, 'interviews_tlt': interviews_tlt, 'interviews_emp': interviews_emp, 'interviews_empc': interviews_empc, 'interviews_tltc': interviews_tltc, 'assigned_tlt': assigned_tlt, 'assigned_emp': assigned_emp, 'assigned_tltc': assigned_empc, 'assigned_empc': assigned_tltc, 'open_assignments_tltc': open_assignments_tltc, 'open_assignments_empc': open_assignments_empc, 'lvl_1': lvl_1, 'lvl_2': lvl_2, 'lvl_3': lvl_3, 'lvl_4': lvl_4,'lvl_5': lvl_5, 'tot': tot, 'pfl': pfl,
+        'wf1': wf1, 'tlt': tlt, 'pvr_count': pvr_count, 'total': total, 'interviews_tlt': interviews_tlt, 'interviews_emp': interviews_emp, 'interviews_empc': interviews_empc, 'interviews_tltc': interviews_tltc, 'assigned_tlt': assigned_tlt, 'assigned_emp': assigned_emp, 'assigned_tltc': assigned_empc, 'assigned_empc': assigned_tltc, 'open_assignments_tltc': open_assignments_tltc, 'open_assignments_empc': open_assignments_empc, 'lvl_1': lvl_1, 'lvl_2': lvl_2, 'lvl_3': lvl_3, 'lvl_4': lvl_4,'lvl_5': lvl_5, 'tot': tot, 'pfl': pfl, 'referral_code': referral_code,
         }
+
     return render(request, template, context)
 
 
