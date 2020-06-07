@@ -132,7 +132,14 @@ class DefaultAccountAdapter(object):
                 )
 
             if 'html' in bodies:
-                msg.attach_alternative(bodies['html'], 'text/html')
+#                msg.attach_alternative(bodies['html'], 'text/html')
+                msg = Mail(
+                    from_email = settings.SENDGRID_FROM_EMAIL,
+                    to_emails = email,
+                    subject = subject,
+                    html_content = bodies['html']
+                    )
+
         else:
             msg = Mail(
                 from_email = settings.SENDGRID_FROM_EMAIL,

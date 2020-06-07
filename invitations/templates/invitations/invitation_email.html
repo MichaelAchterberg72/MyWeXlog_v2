@@ -7,12 +7,20 @@
 {% block content %}
 
       <p>Hi {{ form.instance.name }},</p>
-      <p>{{ form.instance.invited_by.first_name }} {{ form.instance.invited_by.last_name }} has indicated that you worked together while you were working at <strong>{{ form.instance.worked_for }}</strong>. {{{ form.instance.invited_by.first_name }} kindly asks if you could confirm the work experience they have captured. </p>
-      <p>Please click on this link: <a href="{{ temp.url }}">MyWeXlog</a> to see what MyWeXlog is all about.</p>
+      <br>
+      <p>{{ form.instance.invited_by.first_name }} {{ form.instance.invited_by.last_name }} has indicated that you worked together while you were working at <strong>{{ form.instance.worked_for }}</strong>. {{ form.instance.invited_by.first_name }} kindly asks if you could confirm the work experience they have captured. </p>
+      <p>Please click on this link or copy and paste it into your browser address bar:
+
+      <p><a href="{{ temp.url }}">{{ temp.url }}</a></p>
+    
+      <p>to see what MyWeXlog is all about.</p>
 
       <p>MyWeXlog is a combination of a CV and a timesheet, making it a live experience log on which you can capture your experience and associate skills with that experience. Then, depending on your subscription, you can eather search for companies looking for your skills or find people that have skills you require.</p>
       <p>All skills are confirmed by other people, selected by you, as {{ form.instance.invited_by }} is asking you to do for them right now.</p>
-
+      <br>
+      <p>Alternativly please click here to register:</p>
+      <p><a href="{{ temp.url }}" class="btn btn-primary">Click to Register</a></p>
+      <br>
       <p>Kind Regards</p>
       <p>The MyWexLog Team</p>
       <p>(for and on behalf of {{ form.instance.invited_by.first_name }} {{ form.instance.invited_by.last_name }})</p>
