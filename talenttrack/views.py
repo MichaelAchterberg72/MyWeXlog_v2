@@ -816,8 +816,12 @@ def PreLoggedExperienceCaptureView(request):
             response = redirect('Talent:ColleagueSelect')
             response.delete_cookie("confirm")
             return response
+        else:
+            template = 'talenttrack/prelogged_capture.html'
+            context = {'form': form}
+            response = render(request, template, context)
+            return response
     else:
-
         template = 'talenttrack/prelogged_capture.html'
         context = {'form': form}
         response = render(request, template, context)
@@ -1578,6 +1582,10 @@ def EducationCaptureView(request):
             new.save()
             form.save_m2m()
             return redirect(reverse('Talent:LecturerSelect'))
+        else:
+            template = 'talenttrack/education_capture.html'
+            context = {'form': form}
+            return render(request, template, context)
     else:
         template = 'talenttrack/education_capture.html'
         context = {'form': form}
