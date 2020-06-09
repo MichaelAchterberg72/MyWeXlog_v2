@@ -32,6 +32,7 @@ import sendgrid
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import (Mail, Subject, To, ReplyTo, SendAt, Content, From, CustomArg, Header)
 
+from csp.decorators import csp_exempt
 
 #pinax_referrals
 from pinax.notifications.models import send, send_now
@@ -41,6 +42,7 @@ from django.contrib.contenttypes.models import ContentType
 from .forms import InvitationForm, InvitationLiteForm
 
 @login_required()
+@csp_exempt
 #in the app, add information relating to the job
 def InvitationView(request, tex):
     qset = get_object_or_404(WorkExperience, slug=tex)

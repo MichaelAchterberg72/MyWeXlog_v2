@@ -203,14 +203,15 @@
     </div>
     <div class="">
       <p>
-        Referral link:<br>
+        Referral link:
         <hr>
-        <input type="text" value="{{ referral_code.url }}" id="myInput"><br>
-        <button class="btn btn-secondary" onclick="myFunction()">Copy Link</button>
+        <input type="text" class="form-control" value="{{ referral_code.url }}" id="myInput">
+<!--        <button class="btn btn-secondary" id="myButton">Copy Link</button> -->
         <hr>
         Copy and past the above url address into an email or a Social Netowrk Post for your firends to join MyWeXlog in your network.
       </p>
     </div>
+
  {% endblock TBA %}
 
 {% block Center_Content %}
@@ -399,20 +400,5 @@
 </div>
 </div>
 {% endif %}
-<script type="text/javascript">
-  /* Get the text field */
-  function myFunction() {
-    var copyText = document.getElementById("myInput");
 
-    /* Select the text field */
-    copyText.select();
-    copyText.setSelectionRange(0, 99999); /*For mobile devices*/
-
-    /* Copy the text inside the text field */
-    document.execCommand("copy");
-
-    /* Alert the copied text */
-    alert("Copied the Link to the Clipboard!");
-  }
-</script>
 {% endblock Center_Content %}
