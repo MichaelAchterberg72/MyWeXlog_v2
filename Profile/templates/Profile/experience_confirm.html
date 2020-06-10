@@ -202,7 +202,7 @@
                       {% csrf_token %}
                       <button type="submit" class="badge badge-danger badge-pill" style="width: 10rem">Reject</button>
                     </form><br>
-                    <a href="{% url 'Profile:ColleagueComment' l.slug %}" class="badge badge-pill badge-secondary" style="width: 10rem">Confirm with Comment</a>
+                    <a href="{% url 'Profile:ColleagueComment' l.slug %}" class="badge badge-pill badge-success" style="width: 10rem">Confirm with Comment</a>
                     <form  action="{% url 'Profile:ColleagueWrongPerson' l.id %}" method="post">
                       {% csrf_token %}
                       <button type="submit" class="badge badge-info badge-pill" style="width: 10rem">Wrong Person</button>
@@ -243,29 +243,36 @@
             <a href="{% url 'Profile:HelpConfirmSubordinate' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
             <i class="icon icon-question-circle"></i></a>
           </div>
-            <h4 class="card-title" id="Superior">Confirm a Subordinate's Experience</h4>
+            <h4 class="card-title text-center" id="Superior">Confirm a Subordinate's Experience</h4>
             <table class="table table-hover table-sm">
+              <col width="15%">
+              <col width="20%">
+              <col width="20%">
+              <col width="20%">
+              <col width="10%">
+              <col width="15%">
+              <col width="15%">
               <thead>
-                <tr align="center">
-                  <th>Name</th>
-                  <th>Company</th>
-                  <th>Project</th>
-                  <th>Designation</th>
-                  <th>Dates</th>
-                  <th>Hours</th>
-                  <th>Action</th>
+                <tr>
+                  <th class="align-middle text-center">Name</th>
+                  <th class="align-middle text-center">Company</th>
+                  <th class="align-middle text-center">Project</th>
+                  <th class="align-middle text-center">Designation</th>
+                  <th class="align-middle text-center">Hours</th>
+                  <th class="align-middle text-center">Dates</th>
+                  <th class="align-middle text-center">Action</th>
                 </tr>
               </thead>
               <tbody>
                 {% for l in spr1 %}
                 <tr>
-                  <td rowspan="2"  class="align-middle">{{ l.experience.talent.first_name }} {{ l.experience.talent.last_name }}</td>
+                  <td rowspan="3"  class="align-middle">{{ l.experience.talent.first_name }} <br>{{ l.experience.talent.last_name }}</td>
                   <td class="align-middle">{{ l.experience.company }}</td>
                   <td class="align-middle">{{ l.experience.project }}</td>
                   <td class="align-middle">{{ l.experience.designation }}</td>
-                  <td class="align-middle" align="Center">{{ l.experience.date_from|date:"j M Y" }}<br>to<br> {{ l.experience.date_to|date:"j M Y" }}</td>
-                  <td class="align-middle">{{ l.experience.hours_worked }}</td>
-                  <td class="align-middle">
+                  <td class="align-middle text-center">{{ l.experience.hours_worked }}</td>
+                  <td class="align-middle text-center" rowspan="2">{{ l.experience.date_from|date:"j M Y" }}<br>to<br> {{ l.experience.date_to|date:"j M Y" }}</td>
+                  <td class="align-middle text-center" rowspan="3">
                     <form  action="{% url 'Profile:SuperiorConfirm' l.id %}" method="post">
                       {% csrf_token %}
                       <button type="submit" class="badge badge-primary badge-pill" style="width: 10rem">Confirm</button>
@@ -274,7 +281,7 @@
                       {% csrf_token %}
                       <button type="submit" class="badge badge-danger badge-pill" style="width: 10rem">Reject</button>
                     </form><br>
-                    <a href="{% url 'Profile:SuperiorComment' l.slug %}" class="badge badge-pill badge-secondary" style="width: 10rem">Confirm with Comment</a>
+                    <a href="{% url 'Profile:SuperiorComment' l.slug %}" class="badge badge-pill badge-success" style="width: 10rem">Confirm with Comment</a>
                     <form  action="{% url 'Profile:SuperiorWrongPerson' l.id %}" method="post">
                       {% csrf_token %}
                       <button type="submit" class="badge badge-info badge-pill" style="width: 10rem">Wrong Person</button>
@@ -282,8 +289,19 @@
                   </td>
                 </tr>
                 <tr>
-                  <th class="text-right">Skills: </th>
-                  <td colspan="5">{{ l.experience.skills.all|join:" & " }}</td>
+                  <th class="align-middle text-right">Skills: </th>
+                  <td colspan="3">{{ l.experience.skills.all|join:" & " }}</td>
+                </tr>
+                <tr>
+                  <td colspan="5">
+                    <strong>
+                      {% if l.experience.comment %}
+                        {{ l.experience.comment }}
+                      {% else %}
+                        No comment captured.
+                      {% endif %}
+                    </strong>
+                  </td>
                 </tr>
                 {% endfor %}
               </tbody>
@@ -304,29 +322,36 @@
             <a href="{% url 'Profile:HelpConfirmCoworker' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
             <i class="icon icon-question-circle"></i></a>
           </div>
-            <h4 class="card-title" id="Collaborator">Confirm the experience of someone you have worked with</h4>
-            <table class="table table-hover -sm">
+            <h4 class="card-title text-center" id="Collaborator">Confirm the experience of someone you have worked with</h4>
+            <table class="table table-hover table-sm">
+              <col width="15%">
+              <col width="20%">
+              <col width="20%">
+              <col width="20%">
+              <col width="10%">
+              <col width="15%">
+              <col width="15%">
               <thead>
-                <tr align="center">
-                  <th>Name</th>
-                  <th>Company</th>
-                  <th>Project</th>
-                  <th>Designation</th>
-                  <th>Dates</th>
-                  <th>Hours</th>
-                  <th>Action</th>
+                <tr>
+                  <th class="align-middle text-center">Name</th>
+                  <th class="align-middle text-center">Company</th>
+                  <th class="align-middle text-center">Project</th>
+                  <th class="align-middle text-center">Designation</th>
+                  <th class="align-middle text-center">Hours</th>
+                  <th class="align-middle text-center">Dates</th>
+                  <th class="align-middle text-center">Action</th>
                 </tr>
               </thead>
               <tbody>
                 {% for l in wclr1 %}
                 <tr>
-                  <td rowspan="2"  class="align-middle">{{ l.experience.talent.first_name }} {{ l.experience.talent.last_name }}</td>
+                  <td rowspan="3"  class="align-middle">{{ l.experience.talent.first_name }} <br>{{ l.experience.talent.last_name }}</td>
                   <td class="align-middle">{{ l.experience.company }}</td>
                   <td class="align-middle">{{ l.experience.project }}</td>
                   <td class="align-middle">{{ l.experience.designation }}</td>
-                  <td class="align-middle" align="Center">{{ l.experience.date_from|date:"j M Y" }}<br>to<br> {{ l.experience.date_to|date:"j M Y" }}</td>
-                  <td class="align-middle">{{ l.experience.hours_worked }}</td>
-                  <td class="align-middle">
+                  <td class="align-middle text-center">{{ l.experience.hours_worked }}</td>
+                  <td class="align-middle text-center">{{ l.experience.date_from|date:"j M Y" }}<br>to<br> {{ l.experience.date_to|date:"j M Y" }}</td>
+                  <td class="align-middle text-center" rowspan="3">
                     <form  action="{% url 'Profile:CollaboratorConfirm' l.id %}" method="post">
                       {% csrf_token %}
                       <button type="submit" class="badge badge-primary badge-pill" style="width: 10rem">Confirm</button>
@@ -335,7 +360,7 @@
                       {% csrf_token %}
                       <button type="submit" class="badge badge-danger badge-pill" style="width: 10rem">Reject</button>
                     </form><br>
-                    <a href="{% url 'Profile:CollaboratorComment' l.slug %}" class="badge badge-pill badge-secondary" style="width: 10rem">Confirm with Comment</a>
+                    <a href="{% url 'Profile:CollaboratorComment' l.slug %}" class="badge badge-pill badge-success" style="width: 10rem">Confirm with Comment</a>
                     <form  action="{% url 'Profile:CollaboratorWrongPerson' l.id %}" method="post">
                       {% csrf_token %}
                       <button type="submit" class="badge badge-info badge-pill" style="width: 10rem">Wrong Person</button>
@@ -343,8 +368,19 @@
                   </td>
                 </tr>
                 <tr>
-                  <th class="text-right">Skills: </th>
-                  <td colspan="5">{{ l.experience.skills.all|join:" & " }}</td>
+                  <th class="align-middle text-right">Skills: </th>
+                  <td colspan="4">{{ l.experience.skills.all|join:" & " }}</td>
+                </tr>
+                <tr>
+                  <td colspan="5">
+                    <strong>
+                      {% if l.experience.comment %}
+                        {{ l.experience.comment }}
+                      {% else %}
+                        No comment captured.
+                      {% endif %}
+                    </strong>
+                  </td>
                 </tr>
                 {% endfor %}
               </tbody>
@@ -364,29 +400,36 @@
             <a href="{% url 'Profile:HelpConfirmContractor' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
             <i class="icon icon-question-circle"></i></a>
           </div>
-            <h4 class="card-title" id="Client">Confirm the experience of someone working for your company (as a consultalt/contractor)</h4>
+            <h4 class="card-title text-center" id="Client">Confirm the experience of someone working for your company (as a consultalt/contractor)</h4>
             <table class="table table-hover table-sm">
+              <col width="15%">
+              <col width="20%">
+              <col width="20%">
+              <col width="20%">
+              <col width="10%">
+              <col width="15%">
+              <col width="15%">
               <thead>
-                <tr align="center">
-                  <th>Name</th>
-                  <th>Company</th>
-                  <th>Project</th>
-                  <th>Designation</th>
-                  <th>Dates</th>
-                  <th>Hours</th>
-                  <th>Action</th>
+                <tr>
+                  <th class="align-middle text-center">Name</th>
+                  <th class="align-middle text-center">Company</th>
+                  <th class="align-middle text-center">Project</th>
+                  <th class="align-middle text-center">Designation</th>
+                  <th class="align-middle text-center">Hours</th>
+                  <th class="align-middle text-center">Dates</th>
+                  <th class="align-middle text-center">Action</th>
                 </tr>
               </thead>
               <tbody>
                 {% for l in wc1 %}
                 <tr>
-                  <td rowspan="2"  class="align-middle">{{ l.experience.talent.first_name }} {{ l.experience.talent.last_name }}</td>
+                  <td rowspan="3"  class="align-middle">{{ l.experience.talent.first_name }} <br>{{ l.experience.talent.last_name }}</td>
                   <td class="align-middle">{{ l.experience.company }}</td>
                   <td class="align-middle">{{ l.experience.project }}</td>
                   <td class="align-middle">{{ l.experience.designation }}</td>
+                  <td class="align-middle text-center">{{ l.experience.hours_worked }}</td>
                   <td class="align-middle" align="Center">{{ l.experience.date_from|date:"j M Y" }}<br>to<br> {{ l.experience.date_to|date:"j M Y" }}</td>
-                  <td class="align-middle">{{ l.experience.hours_worked }}</td>
-                  <td class="align-middle">
+                  <td class="align-middle text-center" rowspan="3">
                     <form  action="{% url 'Profile:ClientConfirm' l.id %}" method="post">
                       {% csrf_token %}
                       <button type="submit" class="badge badge-primary badge-pill" style="width: 10rem">Confirm</button>
@@ -395,7 +438,7 @@
                       {% csrf_token %}
                       <button type="submit" class="badge badge-danger badge-pill" style="width: 10rem">Reject</button>
                     </form><br>
-                    <a href="{% url 'Profile:ClientComment' l.slug %}" class="badge badge-pill badge-secondary" style="width: 10rem">Confirm with Comment</a>
+                    <a href="{% url 'Profile:ClientComment' l.slug %}" class="badge badge-pill badge-success" style="width: 10rem">Confirm with Comment</a>
                     <form  action="{% url 'Profile:ClientWrongPerson' l.id %}" method="post">
                       {% csrf_token %}
                       <button type="submit" class="badge badge-info badge-pill" style="width: 10rem">Wrong Person</button>
@@ -403,8 +446,19 @@
                   </td>
                 </tr>
                 <tr>
-                  <th class="text-right">Skills: </th>
-                  <td colspan="5">{{ l.experience.skills.all|join:" & " }}</td>
+                  <th class="align-middle text-right">Skills:</th>
+                  <td colspan="4">{{ l.experience.skills.all|join:" & " }}</td>
+                </tr>
+                <tr>
+                  <td colspan="5">
+                    <strong>
+                      {% if l.experience.comment %}
+                        {{ l.experience.comment }}
+                      {% else %}
+                        No comment captured.
+                      {% endif %}
+                    </strong>
+                  </td>
                 </tr>
                 {% endfor %}
               </tbody>
@@ -455,7 +509,7 @@
                       {% csrf_token %}
                       <button type="submit" class="badge badge-danger badge-pill">Reject</button>
                     </form><br>
-                    <a href="{% url 'Profile:PreColleagueComment' l.slug %}" class="badge badge-pill badge-secondary">Confirm with Comment</a>
+                    <a href="{% url 'Profile:PreColleagueComment' l.slug %}" class="badge badge-pill badge-success">Confirm with Comment</a>
                     <form  action="{% url 'Profile:PreColleagueWrongPerson' l.id %}" method="post">
                       {% csrf_token %}
                       <button type="submit" class="badge badge-info badge-pill">Wrong Person</button>

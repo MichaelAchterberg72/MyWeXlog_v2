@@ -10,7 +10,9 @@ from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 import json
 from django.db.models import Count, Sum, Q, F
+from django.db.models.functions import Greatest
 from decimal import Decimal
+from django.contrib.postgres.search import SearchVector, TrigramSimilarity
 
 
 from csp.decorators import csp_exempt
@@ -18,7 +20,7 @@ from core.decorators import subscription
 
 
 from .forms import (
-        TopicForm, ResultForm, CourseTypeForm, CourseForm, DesignationForm, ClassMatesSelectForm, ClassMatesConfirmForm, LecturerSelectForm, LecturerConfirmForm, EducationForm, WorkExperienceForm, WorkColleagueSelectForm, WorkColleagueConfirmForm, WorkColleagueResponseForm, ClassMatesResponseForm, LecturerResponseForm, SuperiorSelectForm, WorkCollaboratorResponseForm, WorkCollaboratorConfirmForm, WorkCollaboratorSelectForm, WorkClientResponseForm, WorkClientConfirmForm, WorkClientSelectForm, PreLoggedExperienceForm, TopicPopForm, LecturerRespondForm, ClassMatesRespondForm, WorkColleagueSelectForm, SuperiorSelectForm, WorkCollaboratorSelectForm, AchievementsForm, LicenseCertificationForm,
+        TopicForm, ResultForm, CourseTypeForm, CourseForm, DesignationForm, ClassMatesSelectForm, ClassMatesConfirmForm, LecturerSelectForm, LecturerConfirmForm, EducationForm, WorkExperienceForm, WorkColleagueSelectForm, WorkColleagueConfirmForm, WorkColleagueResponseForm, ClassMatesResponseForm, LecturerResponseForm, SuperiorSelectForm, WorkCollaboratorResponseForm, WorkCollaboratorConfirmForm, WorkCollaboratorSelectForm, WorkClientResponseForm, WorkClientConfirmForm, WorkClientSelectForm, PreLoggedExperienceForm, TopicPopForm, LecturerRespondForm, ClassMatesRespondForm, WorkColleagueSelectForm, SuperiorSelectForm, WorkCollaboratorSelectForm, AchievementsForm, LicenseCertificationForm, ProfileSearchForm,
 )
 
 from .models import (
@@ -203,6 +205,27 @@ def ExperienceHome(request):
             'level': level,
         }
         return render(request, template, context)
+
+
+@login_required()
+@subscription(2)
+def profile_search(request):
+    form = ProfileSearchForm()
+    query = None
+    results = []
+    if 'query' in request.GET:
+        form = ProfileSearchForm(request.GET)
+        if form.is_valid():
+            query=form.cleaned_data['query']
+            results = Profile.objects.annotate(similarity=Greatest(
+                TrigramSimilarity('alias', query),
+                TrigramSimilarity('f_name', query),
+                TrigramSimilarity('l_name', query),
+                )).filter(similarity__gt=0.3).order_by('-similarity')
+
+    template = 'talenttrack/profile_search_results.html'
+    context = {'form': form, 'query': query, 'results': results,}
+    return render(request, template, context)
 
 
 @login_required()

@@ -29,7 +29,7 @@ urlpatterns = [
     path('popup/designation/add/', views.DesignationAddPopup, name="DesignationAddPop"),
     path('experience/capture/', views.WorkExperienceCaptureView, name="ExperienceCapture"),
     path('popup/ajax/get_designation_id/', views.get_designation_id, name="AJAX_GetDesignationID"),
-
+    path('profile-search/', views.profile_search, name="PflSearch"),
     path('experience/training-full-list/', views.TrainingListView, name="TrainingList"),
     path('experience/pre-experience-full-list/', views.PreExperienceListView, name="PreExperienceList"),
     path('experience/experience-full-list/', views.WorkExperienceListView, name="ExperienceList"),

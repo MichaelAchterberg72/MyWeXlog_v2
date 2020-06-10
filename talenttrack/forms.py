@@ -175,6 +175,14 @@ class DateInput(forms.DateInput):
     input_type = 'date'
 
 
+class ProfileSearchForm(forms.Form):
+    query = forms.CharField()
+    class Meta:
+        labels = {
+            'query': 'Search by Alias or Name',
+        }
+
+
 class AchievementsForm(forms.ModelForm):
     class Meta:
         model = Achievements
