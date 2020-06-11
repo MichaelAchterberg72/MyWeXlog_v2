@@ -223,9 +223,9 @@
         <tbody>
           {% for a in achievement %}
           <tr>
-            <td class="align-middle text-left">{{ a.achievement}}</td>
-            <td class="align-middle text-center">{{ a.date_achieved|date:"j M Y"}}</td>
-            <td class="align-middle text-left">{{ a.description|linebreaks}}</td>
+            <td class="align-middle text-left">{{ a.achievement }}</td>
+            <td class="align-middle text-center">{{ a.date_achieved|date:"j M Y" }}</td>
+            <td class="align-middle text-left">{{ a.description|linebreaks|truncatechars:190 }}</td>
             <td class="align-middle text-justify">
               <a href="{% url 'Talent:AchieveEdit' a.slug %}" class="badge badge-secondary" style="width: 4rem;">Edit</a>
               <form  action="{% url 'Talent:AchieveDelete' ach_i=a.id tlt=a.talent.alias %}" method="post">

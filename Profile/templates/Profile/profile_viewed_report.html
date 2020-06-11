@@ -30,7 +30,7 @@
                 <th class="align-middle text-center">View Profile</th>
               </tr>
             </thead>
-            {% for p in pvr %}
+            {% for p in pageitems %}
             <tbody>
               <tr>
                 <td class="align-middle text-center">{{ p.user.alias }}</td>
@@ -44,8 +44,48 @@
               {% endfor %}
             </tbody>
           </table>
+          <p>&nbsp</p>
+
+          <nav aria-label="Page navigation">
+              {% if pageitems.has_other_pages %}
+                <ul class="pagination">
+                  {% if pageitems.has_previous %}
+                    <li class="page-item">
+                      <a class="page-link" href="?page={{ pageitems.previous_page_number }}" aria-label="Previous">
+                        <span aria-hidden="true">Previous</span>
+                        <span class="sr-only disabled">Previous</span>
+                      </a></li>
+                  {% else %}
+                    <li class="page-link disabled" tabindex="-1"><span>Previous</span></li>
+                  {% endif %}
+
+                  {% if pageitems.number|add:'-4' > 1 %}
+                    <li class="page-link"><a href="?page={{ pageitems.number|add:'-5' }}">&hellip;</a></li>
+                  {% endif %}
+
+                  {% for i in pageitems.paginator.page_range %}
+                    {% if pageitems.number == i %}
+                      <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
+                    {% elif i > pageitems.number|add:'-5' and i < pageitems.number|add:'5' %}
+                      <li class="page-link"><a class="page-item" href="?page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                  {% endfor %}
+
+                  {% if pageitems.paginator.num_pages > pageitems.number|add:'4' %}
+                    <li class="page-link"><a href="?page={{ pageitems.number|add:'5' }}">&hellip;</a></li>
+                  {% endif %}
+
+                  {% if pageitems.has_next %}
+                    <li class="page-link"><a href="?page={{ pageitems.next_page_number }}">Next</a></li>
+                  {% else %}
+                    <li class="page-link disabled"><span>Next</span></li>
+                  {% endif %}
+                </ul>
+              {% endif %}
+          </nav>
+
           {% else %}
-          <p>Your profile has been viewed <strong>{{ pvr_count }}</strong> times, you are currently registered with a 'Passive' account so will only able to see a list of the 5  most recent people that have viewed your profile.  To view the full list and have access to view the the public profiles please click the 'Upgrade' button below.</p>
+          <p>Your profile has been viewed <strong>{{ pvr_count }}</strong> times, you are currently registered with a {% if request.user.subscription == 0 %}'Free'{% else %}'Passive'{% endif %} account so will only able to see a list of the 5 most recent people that have viewed your profile.  To view the full list and have access to view the the public profiles please click the 'Upgrade' button below.</p>
           <p class="float-right">
             <a href="{% url 'Payments:PassiveUpgradeSubscription' %}" class="btn btn-primary" style="width: 7rem">Upgrade</a>
           </p>
@@ -76,6 +116,7 @@
             </tbody>
           </table>
         {% endif %}
+
       </div>
     </div>
   </div>

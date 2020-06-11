@@ -5,7 +5,8 @@
 {% block title %}Achievements{% endblock title %}
 
 {% block content %}
-<div class="container">
+<div class="card">
+  <div class="card-body">
 <h3>Achievements</h3>
 <form method="post" id="BranchForm" enctype="multipart/form-data">
   {% csrf_token %}
@@ -24,5 +25,6 @@
     <p><button type="submit" name="Done" class="btn btn-primary">Done</button></p>
   </div>
 </form>
+</div>
 </div>
 {% endblock content %}
