@@ -1087,6 +1087,10 @@ def LanguageAddView(request, tlt):
                 new.talent = request.user
                 new.save()
                 return redirect(reverse('Profile:ProfileView', kwargs={'tlt':tlt}))
+            else:
+                template = 'Profile/language_add.html'
+                context = {'form': form}
+                return render(request, template, context)
         else:
             template = 'Profile/language_add.html'
             context = {'form': form}
@@ -1136,6 +1140,10 @@ def LanguagePopup(request):
             instance=form.save(commit=False)
             instance.save()
             return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_language");</script>' % (instance.pk, instance))
+        else:
+            context = {'form':form,}
+            template = 'Profile/language_popup.html'
+            return render(request, template, context)
     else:
         context = {'form':form,}
         template = 'Profile/language_popup.html'

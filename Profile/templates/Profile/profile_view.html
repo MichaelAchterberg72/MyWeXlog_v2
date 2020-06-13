@@ -184,7 +184,7 @@
               <td class="align-middle text-center">Expired</td>
             {% endif %}
             <td class="card-text text-justify">
-              <a href="{% url 'Talent:LCMEdit' lcm.slug %}" class="badge badge-secondary" style="width: 4rem;">Edit</a>
+              <a href="{% url 'Talent:LCMEdit' lcm.slug %}" class="badge badge-secondary" style="width: 4rem;">Update</a>
               <form  action="{% url 'Talent:LCMDelete' pk=lcm.id tlt=lcm.talent.alias %}" method="post">
                 {% csrf_token %}
                 <button type="submit" class="badge badge-danger" style="width: 4rem;">Remove</button>
