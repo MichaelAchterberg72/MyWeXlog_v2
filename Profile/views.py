@@ -1190,7 +1190,11 @@ def FileUploadView(request):
                 new = form.save(commit=False)
                 new.talent = request.user
                 new.save()
-                return redirect(reverse('Profile:ProfileView', kwargs={'tlt':tlt}))
+                return redirect(reverse('Profile:ProfileView', kwargs={'tlt':tlt})+'#Upload')
+            else:
+                template = 'Profile/file_upload.html'
+                context = {'form': form}
+                return render(request, template, context)
         else:
             template = 'Profile/file_upload.html'
             context = {'form': form}
@@ -1201,11 +1205,12 @@ def FileUploadView(request):
 
 login_required()
 def FileDelete(request, pk):
+    tlt=request.user.alias
     detail = FileUpload.objects.get(pk=pk)
     if detail.talent == request.user:
         if request.method =='POST':
             detail.delete()
-            return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':detail.talent.id})+'#online')
+            return redirect(reverse('Profile:ProfileView', kwargs={'tlt': tlt})+'#Upload')
     else:
         raise PermissionDenied
 
@@ -1275,7 +1280,7 @@ def ProfileEditView(request, tlt):
                 new.save()
 
                 if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
-                    next_url = reverse('Profile:ProfileHome')
+                    next_url = reverse('Profile:ProfileView')
                 return HttpResponseRedirect(next_url)
         else:
             template = 'Profile/profile_edit.html'
@@ -1299,7 +1304,7 @@ def EmailEditView(request, tlt):
                 new.save()
                 if 'Done' in request.POST:
                     if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
-                        next_url = reverse('Profile:ProfileHome')
+                        next_url = reverse('Profile:ProfileView')
                     return HttpResponseRedirect(next_url)
                 elif 'Another' in request.POST:
                     form=EmailForm()

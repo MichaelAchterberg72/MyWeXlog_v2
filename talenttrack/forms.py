@@ -251,6 +251,18 @@ class PreLoggedExperienceForm(forms.ModelForm):
 
         return date_to
 
+    def clean_hours_worked(self):
+        '''Ensures excessive hours per day are not claimed'''
+        date_to = self.cleaned_data.get("date_to")
+        date_from = self.cleaned_data.get("date_from")
+        hours_worked = self.cleaned_data.get("hours_worked")
+        duration = date_to - date_from
+        max = duration.days * 12
+
+        if hours_worked > max:
+            raise forms.ValidationError("You can't claim more than 12 hours per day!")
+
+        return hours_worked
 
 class WorkClientResponseForm(forms.ModelForm):
     class Meta:
@@ -413,6 +425,10 @@ class WorkExperienceForm(forms.ModelForm):
         labels = {
             'hours_worked': 'Hours',
         }
+        help_texts = {
+            'company': 'Please complete the Company field before the Branch Field',
+            'branch': 'This field is dependant on the Company Field - fill Company Field first',
+        }
 
     def clean_date_to(self):
         '''Ensures the end date is after the begin date and before current date'''
@@ -426,6 +442,19 @@ class WorkExperienceForm(forms.ModelForm):
             raise forms.ValidationError("You can't claim experience in the future! End date must be  equal to, or less than today")
 
         return date_to
+
+    def clean_hours_worked(self):
+        '''Ensures excessive hours per day are not claimed'''
+        date_to = self.cleaned_data.get("date_to")
+        date_from = self.cleaned_data.get("date_from")
+        hours_worked = self.cleaned_data.get("hours_worked")
+        duration = date_to - date_from
+        max = duration.days * 12
+
+        if hours_worked > max:
+            raise forms.ValidationError("You can't claim more than 12 hours per day!")
+
+        return hours_worked
 
 
 class DesignationForm(forms.ModelForm):

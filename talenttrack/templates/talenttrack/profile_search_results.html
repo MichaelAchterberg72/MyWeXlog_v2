@@ -25,18 +25,15 @@
     <thead>
       <tr>
         <th class="align-middle text-center">Alias</th>
-        <th class="align-middle text-center">Name</th>
         <th class="align-middle text-center">Profile</th>
-
       </tr>
     </thead>
     {% for i in results %}
     <tbody>
     <tr class="align-middle text-center">
       <td>{{ i.alias }}</td>
-      <td>{{ i.talent.first_name }} {{ i.talent.last_name }}</td>
       <td>
-        <a href="{% url 'Talent:SPDView' tlt=i.alias %}?next={{ request.path|urlencode }}" target="_blank"><i class="fa fa-id-badge" aria-hidden="true"style="font-size:30px;color:black" data-toggle="tooltip" data-placement="top" title="Talent's Public Profile"></i></a>
+        <a href="{% url 'Talent:APV_L' tlt=i.alias %}?next={{ request.path|urlencode }}" target="_blank"><i class="fa fa-id-badge" aria-hidden="true"style="font-size:30px;color:black" data-toggle="tooltip" data-placement="top" title="Talent's Public Profile"></i></a>
       </td>
       </tr>
     </tbody>

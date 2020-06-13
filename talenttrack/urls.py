@@ -64,6 +64,7 @@ urlpatterns = [
     path('skill-profile-detail/<slug:tlt>/', views.SkillProfileDetailView, name='SPDView'),
     path('dpc-detail/<slug:tlt>/', views.DPC_SummaryView, name='DPCSum'),
     path('apv/<slug:tlt>/<slug:vac>/', views.ActiveProfileView, name='APV'),
+    path('apv/<slug:tlt>/', views.profile_view, name='APV_L'),
     path('achievement-capture/', views.CaptureAchievementView, name='AchieveCap'),
 
     path('achievement-edit/<slug:ach>/', views.EditAchievementView, name='AchieveEdit'),

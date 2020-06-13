@@ -49,162 +49,163 @@ from analytics.signals import object_viewed_signal
 
 @login_required()
 def ExperienceHome(request):
-        #>>>Step 1
-        basequery = WorkExperience.objects.select_related('topic').filter(talent=request.user)
-        skills = SkillTag.objects.all()
-        sl = SkillLevel.objects.all()
-        we_c = basequery.filter(score__gte=skill_pass_score)
-        #<<<Step 1
-        tlt = request.user.alias
-        #>>>Step 2
-        #unconfirmed
-        train_base = basequery.filter(Q(edt=True)).order_by('-date_from')
-        train_sum = train_base.aggregate(Edu_sum=Sum('topic__hours'))
-        train_count = train_base.count()
-        train = train_base[:5]
-        #Confirmed
-        train_c = train_base.filter(Q(score__gte=skill_pass_score))
-        train_sum_c = train_c.aggregate(Edu_sumc=Sum('topic__hours'))
-        train_count_c = train_c.count()
+    '''The view for the main page for Talenttrack app'''
+    #>>>Step 1
+    basequery = WorkExperience.objects.select_related('topic').filter(talent=request.user)
+    skills = SkillTag.objects.all()
+    sl = SkillLevel.objects.all()
+    we_c = basequery.filter(score__gte=skill_pass_score)
+    #<<<Step 1
+    tlt = request.user.alias
+    #>>>Step 2
+    #unconfirmed
+    train_base = basequery.filter(Q(edt=True)).order_by('-date_from')
+    train_sum = train_base.aggregate(Edu_sum=Sum('topic__hours'))
+    train_count = train_base.count()
+    train = train_base[:5]
+    #Confirmed
+    train_c = train_base.filter(Q(score__gte=skill_pass_score))
+    train_sum_c = train_c.aggregate(Edu_sumc=Sum('topic__hours'))
+    train_count_c = train_c.count()
 
-        #unconfirmed
-        exp_base = basequery.filter(wexp=True).order_by('-date_from')
-        exp_sum = exp_base.aggregate(we_sum=Sum('hours_worked'))
-        exp_count = exp_base.count()
-        experience = exp_base[:5]
-        #Confirmed
-        exp_c = exp_base.filter(Q(score__gte=skill_pass_score))
-        exp_sum_c = exp_c.aggregate(we_sumc=Sum('hours_worked'))
-        exp_count_c = exp_c.count()
+    #unconfirmed
+    exp_base = basequery.filter(wexp=True).order_by('-date_from')
+    exp_sum = exp_base.aggregate(we_sum=Sum('hours_worked'))
+    exp_count = exp_base.count()
+    experience = exp_base[:5]
+    #Confirmed
+    exp_c = exp_base.filter(Q(score__gte=skill_pass_score))
+    exp_sum_c = exp_c.aggregate(we_sumc=Sum('hours_worked'))
+    exp_count_c = exp_c.count()
 
-        #unconfirmed
-        pre_base = basequery.filter(prelog=True).order_by('-date_from')
-        prelog = pre_base[:5]
-        pre_sum = pre_base.aggregate(p_sum=Sum('hours_worked'))
-        pre_count = pre_base.count()
-        #Confirmed
-        pre_c = pre_base.filter(Q(score__gte=skill_pass_score))
-        pre_sum_c = pre_c.aggregate(p_sumc=Sum('hours_worked'))
-        pre_count_c = pre_c.count()
+    #unconfirmed
+    pre_base = basequery.filter(prelog=True).order_by('-date_from')
+    prelog = pre_base[:5]
+    pre_sum = pre_base.aggregate(p_sum=Sum('hours_worked'))
+    pre_count = pre_base.count()
+    #Confirmed
+    pre_c = pre_base.filter(Q(score__gte=skill_pass_score))
+    pre_sum_c = pre_c.aggregate(p_sumc=Sum('hours_worked'))
+    pre_count_c = pre_c.count()
 
-        #UNCONFIRMED
-        t_sum = train_sum.get('Edu_sum')
-        e_sum = exp_sum.get('we_sum')
-        p_sum= pre_sum.get('p_sum')
-
-
-        if t_sum:
-            t_sum = t_sum
-        else:
-            t_sum=0
-
-        if e_sum:
-            e_sum = e_sum
-        else:
-            e_sum = 0
-
-        if p_sum:
-            p_sum = p_sum
-        else:
-            p_sum = 0
-
-        tot_sum = t_sum + e_sum + p_sum
-
-        #CONFIRMED
-        t_sum_c = train_sum_c.get('Edu_sumc')
-        e_sum_c = exp_sum_c.get('we_sumc')
-        p_sum_c= pre_sum_c.get('p_sumc')
+    #UNCONFIRMED
+    t_sum = train_sum.get('Edu_sum')
+    e_sum = exp_sum.get('we_sum')
+    p_sum= pre_sum.get('p_sum')
 
 
-        if t_sum_c:
-            t_sum_c = t_sum_c
-        else:
-            t_sum_c=0
+    if t_sum:
+        t_sum = t_sum
+    else:
+        t_sum=0
 
-        if e_sum_c:
-            e_sum_c = e_sum_c
-        else:
-            e_sum_c = 0
+    if e_sum:
+        e_sum = e_sum
+    else:
+        e_sum = 0
 
-        if p_sum_c:
-            p_sum_c = p_sum_c
-        else:
-            p_sum_c = 0
+    if p_sum:
+        p_sum = p_sum
+    else:
+        p_sum = 0
 
-        tot_sum_c = t_sum_c + e_sum_c + p_sum_c
-        exp_lvls = [Decimal(e_sum_c + p_sum_c)]
+    tot_sum = t_sum + e_sum + p_sum
 
-        std = list(sl.filter(level__exact=0).values_list('min_hours', flat=True))
-        grd = list(sl.filter(level__exact=1).values_list('min_hours', flat=True))
-        jnr = list(sl.filter(level__exact=2).values_list('min_hours', flat=True))
-        int = list(sl.filter(level__exact=3).values_list('min_hours', flat=True))
-        snr = list(sl.filter(level__exact=4).values_list('min_hours', flat=True))
-        lead = list(sl.filter(level__exact=5).values_list('min_hours', flat=True))
-
-        if exp_lvls < std:
-            iama = 0
-        elif exp_lvls >= std and exp_lvls < grd:
-            iama = 1
-        elif exp_lvls >= grd and exp_lvls < jnr:
-            iama = 2
-        elif exp_lvls >= jnr and exp_lvls < int:
-            iama = 3
-        elif exp_lvls >= int and exp_lvls < snr:
-            iama = 4
-        elif exp_lvls >= snr:
-            iama = 5
-
-        level = sl.get(level=iama)
-
-        Profile.objects.filter(talent=request.user.id).update(exp_lvl=level)
-
-        #<<<Step 2
-
-        #>>>Step 3
-        e_skill = basequery.filter(edt=True).values_list('topic__skills', flat=True)
-        l_skill = basequery.filter(edt=False).values_list('skills', flat=True)
-
-        e_skill_l = list(e_skill)
-        l_skill_l = list(l_skill)
-
-        skill_list = e_skill_l + l_skill_l
-        skill_set = set(skill_list)
-        skill_count = len(skill_set)
+    #CONFIRMED
+    t_sum_c = train_sum_c.get('Edu_sumc')
+    e_sum_c = exp_sum_c.get('we_sumc')
+    p_sum_c= pre_sum_c.get('p_sumc')
 
 
-        skill_name = skills.none()
+    if t_sum_c:
+        t_sum_c = t_sum_c
+    else:
+        t_sum_c=0
 
-        for ls in skill_set:
-            b = skills.filter(pk=ls).values_list('skill', flat=True)
+    if e_sum_c:
+        e_sum_c = e_sum_c
+    else:
+        e_sum_c = 0
 
-            skill_name = skill_name | b
-        #<<< Step 3
+    if p_sum_c:
+        p_sum_c = p_sum_c
+    else:
+        p_sum_c = 0
 
-        template = 'talenttrack/track_home.html'
-        context = {
-            'tlt': tlt,
-            'train': train,
-            'train_sum': train_sum,
-            'train_sum_c': train_sum_c,
-            'train_count_c': train_count_c,
-            'train_count': train_count,
-            'experience': experience,
-            'exp_sum': exp_sum,
-            'exp_sum_c': exp_sum_c,
-            'exp_count': exp_count,
-            'exp_count_c': exp_count_c,
-            'prelog': prelog,
-            'pre_sum': pre_sum,
-            'pre_count': pre_count,
-            'pre_sum_c': pre_sum_c,
-            'pre_count_c': pre_count_c,
-            'tot_sum': tot_sum,
-            'tot_sum_c': tot_sum_c,
-            'skill_name': skill_name,
-            'skill_count': skill_count,
-            'level': level,
-        }
-        return render(request, template, context)
+    tot_sum_c = t_sum_c + e_sum_c + p_sum_c
+    exp_lvls = [Decimal(e_sum_c + p_sum_c)]
+
+    std = list(sl.filter(level__exact=0).values_list('min_hours', flat=True))
+    grd = list(sl.filter(level__exact=1).values_list('min_hours', flat=True))
+    jnr = list(sl.filter(level__exact=2).values_list('min_hours', flat=True))
+    int = list(sl.filter(level__exact=3).values_list('min_hours', flat=True))
+    snr = list(sl.filter(level__exact=4).values_list('min_hours', flat=True))
+    lead = list(sl.filter(level__exact=5).values_list('min_hours', flat=True))
+
+    if exp_lvls < std:
+        iama = 0
+    elif exp_lvls >= std and exp_lvls < grd:
+        iama = 1
+    elif exp_lvls >= grd and exp_lvls < jnr:
+        iama = 2
+    elif exp_lvls >= jnr and exp_lvls < int:
+        iama = 3
+    elif exp_lvls >= int and exp_lvls < snr:
+        iama = 4
+    elif exp_lvls >= snr:
+        iama = 5
+
+    level = sl.get(level=iama)
+
+    Profile.objects.filter(talent=request.user.id).update(exp_lvl=level)
+
+    #<<<Step 2
+
+    #>>>Step 3
+    e_skill = basequery.filter(edt=True).values_list('topic__skills', flat=True)
+    l_skill = basequery.filter(edt=False).values_list('skills', flat=True)
+
+    e_skill_l = list(e_skill)
+    l_skill_l = list(l_skill)
+
+    skill_list = e_skill_l + l_skill_l
+    skill_set = set(skill_list)
+    skill_count = len(skill_set)
+
+
+    skill_name = skills.none()
+
+    for ls in skill_set:
+        b = skills.filter(pk=ls).values_list('skill', flat=True)
+
+        skill_name = skill_name | b
+    #<<< Step 3
+
+    template = 'talenttrack/track_home.html'
+    context = {
+        'tlt': tlt,
+        'train': train,
+        'train_sum': train_sum,
+        'train_sum_c': train_sum_c,
+        'train_count_c': train_count_c,
+        'train_count': train_count,
+        'experience': experience,
+        'exp_sum': exp_sum,
+        'exp_sum_c': exp_sum_c,
+        'exp_count': exp_count,
+        'exp_count_c': exp_count_c,
+        'prelog': prelog,
+        'pre_sum': pre_sum,
+        'pre_count': pre_count,
+        'pre_sum_c': pre_sum_c,
+        'pre_count_c': pre_count_c,
+        'tot_sum': tot_sum,
+        'tot_sum_c': tot_sum_c,
+        'skill_name': skill_name,
+        'skill_count': skill_count,
+        'level': level,
+    }
+    return render(request, template, context)
 
 
 @login_required()
@@ -515,6 +516,7 @@ def TltRatingDetailView(request, tlt):
 
 @login_required()
 def ActiveProfileView(request, tlt, vac):
+    '''View for profile and skills for specified vacancy'''
     #caching
     bch = BriefCareerHistory.objects.filter(talent__alias=tlt).order_by('-date_from')
     pfl = Profile.objects.filter(alias=tlt).first()
@@ -609,9 +611,51 @@ def ActiveProfileView(request, tlt, vac):
         }
     return render(request, template, context)
 
+@login_required()
+def profile_view(request, tlt):
+    '''View for profile without reference to a vacancy. Used for the seach feature'''
+    #caching
+    bch = BriefCareerHistory.objects.filter(talent__alias=tlt).order_by('-date_from')
+    pfl = Profile.objects.filter(alias=tlt).first()
+    als = get_object_or_404(Profile, alias=tlt)
+    padd = PhysicalAddress.objects.only('country', 'region', 'city').filter(talent__alias=tlt)
+    skill_qs = SkillTag.objects.all()
+    exp = WorkExperience.objects.filter(talent__alias=tlt).select_related('topic', 'course', 'project')
+    edtexp = exp.filter(edt=True).order_by('-date_from')
+    bkl = ReadBy.objects.filter(talent__alias=tlt).select_related('book', 'type')[:6]
+    bkl_count = bkl.count()
+    prj_qs = ProjectData.objects.all()
+    achievement_qs = Achievements.objects.filter(talent__alias=tlt).order_by('-date_achieved')
+    language_qs = LanguageTrack.objects.filter(talent__alias=tlt).order_by('-language')
+    membership_qs = LicenseCertification.objects.filter(talent__alias=tlt).order_by('-issue_date')
+
+    #Project Summary
+    prj = exp.values_list('project', flat=True).distinct('project')
+    prj_set = {}
+    prj_count = 0
+    for p in prj:
+        if p == None:
+            pass
+        else:
+            prj_count +=1
+            project_q = prj_qs.filter(pk=p).values_list('name', 'company__name', 'branch__name', 'industry__industry')
+            info_list=[project_q[0][1], project_q[0][2], project_q[0][3]]
+            prj_set[project_q[0][0]] = info_list
+
+    object_viewed_signal.send(pfl.__class__, instance=pfl, request=request)
+
+
+    template = 'talenttrack/active_profile_view_light.html'
+    context = {
+        'bch': bch, 'pfl': pfl, 'padd': padd, 'exp': exp, 'bkl': bkl, 'edtexp': edtexp, 'bkl_count': bkl_count, 'prj_set': prj_set, 'prj_count': prj_count, 'achievement_qs': achievement_qs, 'language_qs': language_qs, 'membership_qs': membership_qs, 'als': als
+        }
+    return render(request, template, context)
+
+
 
 def LCMFullView(request, tlt):
-#    tlt = Profile.objects.get(alias=tlt)
+    '''View to show all licenses and certifications for a person.'''
+    #tlt = Profile.objects.get(alias=tlt)
     lcm_qs = LicenseCertification.objects.filter(talent__alias=tlt).order_by('-issue_date')
 
     template = 'talenttrack/lcm_full_view.html'
@@ -622,6 +666,7 @@ def LCMFullView(request, tlt):
 
 
 def SkillProfileDetailView(request, tlt):
+    '''A list of all hours logged against a skill for experience and training'''
     tlt_p = Profile.objects.get(alias=tlt)
     skill_qs = SkillTag.objects.all()
     exp = WorkExperience.objects.filter(talent__alias = tlt).select_related('topic')
@@ -687,6 +732,7 @@ def SkillProfileDetailView(request, tlt):
 
 
 def SumAllExperienceView(request, tlt):
+    '''A list of all hours logged against a skill for experience and training'''
     talent = request.user.id
     tlt_p = Profile.objects.get(alias=tlt)
     skill_qs = SkillTag.objects.all()
@@ -752,6 +798,7 @@ def SumAllExperienceView(request, tlt):
 
 
 def DPC_SummaryView(request, tlt):
+    '''View for Designation, Project and Company hours logged'''
     #caching
     exp = WorkExperience.objects.filter(talent__alias = tlt).select_related('designation')
     designation_qs = Designation.objects.all()
@@ -931,7 +978,6 @@ def ClientSelectView(request, pk):
             response = render(request, template, context)
             return response
     else:
-
         template = 'talenttrack/experience_client_select.html'
         context = {'instance': instance, 'form': form}
         response = render(request, template, context)
