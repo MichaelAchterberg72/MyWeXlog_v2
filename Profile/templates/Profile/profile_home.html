@@ -27,6 +27,17 @@
     </tr>
   </tbody>
 </table>
+<div class="">
+  <p>
+    Referral link:
+    <hr>
+    <input type="text" class="form-control" value="{{ referral_code.url }}" id="myInput">
+<!--        <button class="btn btn-secondary" id="myButton">Copy Link</button> -->
+    <hr>
+    Copy and past the above url address into an email or a Social Netowrk Post for your firends to join MyWeXlog in your network.
+  </p>
+</div>
+
 {% endblock network %}
 
 {% block workflow %}
@@ -209,17 +220,7 @@
       {% endif %}
     </p>
     </div>
-    <div class="">
-      <p>
-        Referral link:
-        <hr>
-        <input type="text" class="form-control" value="{{ referral_code.url }}" id="myInput">
-<!--        <button class="btn btn-secondary" id="myButton">Copy Link</button> -->
-        <hr>
-        Copy and past the above url address into an email or a Social Netowrk Post for your firends to join MyWeXlog in your network.
-      </p>
-    </div>
-
+    <hr>
  {% endblock TBA %}
 
 {% block Center_Content %}
