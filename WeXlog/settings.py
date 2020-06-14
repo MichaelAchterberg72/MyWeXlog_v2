@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 # from __future__ import absolute_import, unicode_literals
 
 import os
+from . import app_config
 
 # from distutils.sysconfig import get_python_lib
 # os.environ["PATH"] += os.pathsep + get_python_lib() + '\\osgeo'
@@ -340,7 +341,7 @@ DJANGO_MESSAGES_NOTIFY = False
 # PayPal settings
 PAYPAL_RECEIVER_EMAIL = "sb-wynfk1244760@business.example.com"
 
-if DEBUG == True:
+if app_config.paypal_switch == 'sandbox':
     PAYPAL_TEST = True              # set to False for production
 else:
     PAYPAL_TEST = False

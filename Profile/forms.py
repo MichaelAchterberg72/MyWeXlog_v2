@@ -14,7 +14,7 @@ from django_select2.forms import (
 
 
 from .models import (
-            Profile, Email, PhysicalAddress, PostalAddress, PhoneNumber, OnlineRegistrations, SiteName, FileUpload, IdentificationDetail, IdType, PassportDetail, LanguageList, LanguageTrack, BriefCareerHistory
+            Profile, Email, PhysicalAddress, PostalAddress, PhoneNumber, OnlineRegistrations, SiteName, FileUpload, IdentificationDetail, IdType, PassportDetail, LanguageTrack, BriefCareerHistory
           )
 from enterprises.models import Enterprise, Branch
 from locations.models import Region, City, Suburb
@@ -40,6 +40,7 @@ class DesignationSearchFieldMixin:
     search_fields = [
         'name__icontains', 'pk__startswith'
     ]
+
 class DesignationSelect2Widget(DesignationSearchFieldMixin, ModelSelect2Widget):
     model = Designation
 
@@ -90,7 +91,7 @@ class LanguageTrackForm(forms.ModelForm):
     class Meta:
         model = LanguageTrack
         fields = ('language', 'level')
-        widgets={
+        widgets= {
             'language': LanguageWidget(),
             }
 

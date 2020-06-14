@@ -325,7 +325,6 @@ def TrainingListView(request):
 
 @login_required()
 def PreExperienceListView(request):
-
     basequery = WorkExperience.objects.select_related('topic').filter(talent=request.user)
 
     prelog = basequery.filter(prelog=True).order_by('-date_from')
@@ -371,7 +370,6 @@ def PreExperienceListView(request):
 
 @login_required()
 def WorkExperienceListView(request):
-
     basequery = WorkExperience.objects.select_related('topic').filter(talent=request.user)
 
     experience = basequery.filter(wexp=True).order_by('-date_from')

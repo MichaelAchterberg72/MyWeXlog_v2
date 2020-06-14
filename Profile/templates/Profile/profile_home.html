@@ -122,7 +122,11 @@
     &nbsp &nbsp
     <a href="{% url 'BookList:books-read-new' %}" class=""><i class="fa fa-bookmark-o" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Capture Book"></i></a>
     &nbsp &nbsp
-    <a href="{% url 'MarketPlace:VacSearch' %}" class=""><i class="fa fa-map-signs" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Vacancy Search"></i></a>
+    {% if user.subscription < 1 %}
+        <a href="#" class=""><i class="fa fa-map-signs" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Vacancy Search (Not available to free users)"></i></a>
+    {% else %}
+      <a href="{% url 'MarketPlace:VacSearch' %}" class=""><i class="fa fa-map-signs" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Vacancy Search"></i></a>
+    {% endif %}
     &nbsp &nbsp
     <a href="{% url 'Talent:PflSearch' %}" class=""><i class="fa fa-users" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Profile Search"></i></a>
   </div>
