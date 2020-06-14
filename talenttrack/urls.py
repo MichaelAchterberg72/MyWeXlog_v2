@@ -29,7 +29,7 @@ urlpatterns = [
     path('popup/designation/add/', views.DesignationAddPopup, name="DesignationAddPop"),
     path('experience/capture/', views.WorkExperienceCaptureView, name="ExperienceCapture"),
     path('popup/ajax/get_designation_id/', views.get_designation_id, name="AJAX_GetDesignationID"),
-
+    path('profile-search/', views.profile_search, name="PflSearch"),
     path('experience/training-full-list/', views.TrainingListView, name="TrainingList"),
     path('experience/pre-experience-full-list/', views.PreExperienceListView, name="PreExperienceList"),
     path('experience/experience-full-list/', views.WorkExperienceListView, name="ExperienceList"),
@@ -64,6 +64,7 @@ urlpatterns = [
     path('skill-profile-detail/<slug:tlt>/', views.SkillProfileDetailView, name='SPDView'),
     path('dpc-detail/<slug:tlt>/', views.DPC_SummaryView, name='DPCSum'),
     path('apv/<slug:tlt>/<slug:vac>/', views.ActiveProfileView, name='APV'),
+    path('apv/<slug:tlt>/', views.profile_view, name='APV_L'),
     path('achievement-capture/', views.CaptureAchievementView, name='AchieveCap'),
 
     path('achievement-edit/<slug:ach>/', views.EditAchievementView, name='AchieveEdit'),

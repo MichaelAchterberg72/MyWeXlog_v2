@@ -12,7 +12,7 @@
     <div class="card">
       <div class="card-body">
         {% for d in info %}
-          <h5 class="card-title">Basic Information <a href="{% url 'Profile:ProfileEdit' d.alias %}?next={{ request.path|urlencode }}" class="badge badge-secondary float-right">Edit</a></h5>
+          <h5 class="card-title">Basic Information <a href="{% url 'Profile:ProfileEdit' d.alias %}" class="badge badge-secondary float-right">Edit</a></h5>
           <p class="card-text">Name: {{ user_info.first_name }} {{ user_info.last_name }}</p>
           <p class="card-text">Display name: {{ user_info.alias }}</p>
           <p class="card-text">Date of Birth: {{ d.birth_date }}</p>
@@ -291,7 +291,7 @@
 <div class="card-group">
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title">Uploaded Files <a href="{% url 'Profile:FileUploadView' %}" class="badge badge-primary float-right">Add File</a></h5>
+      <h5 class="card-title" id="Upload">Uploaded Files <a href="{% url 'Profile:FileUploadView' %}" class="badge badge-primary float-right">Add File</a></h5>
       <table class="table table-sm">
         <thead>
         </thead>

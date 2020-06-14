@@ -215,7 +215,7 @@ def BranchAddPopView(request):
         if form.is_valid():
             instance=form.save(commit=False)
             instance.save()
-            response = HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_companybranch");</script>' % (instance.pk, instance))
+            response = HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_branch");</script>' % (instance.pk, instance))
             return response
         else:
             context = {'form': form}

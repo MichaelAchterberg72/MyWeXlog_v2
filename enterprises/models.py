@@ -18,7 +18,7 @@ class Industry(models.Model):
     industry = models.CharField(max_length=60, unique=True)
 
     def clean(self):
-        self.industry = self.industry.capitalize()
+        self.industry = self.industry.title()
 
     def __str__(self):
         return self.industry
@@ -45,7 +45,7 @@ class Enterprise(models.Model):
     average = property(avg_rate)
 
     def clean(self):
-        self.name = self.name.capitalize()
+        self.name = self.name.title()
 
     def __str__(self):
         return self.name
@@ -61,7 +61,7 @@ class BranchType(models.Model):
     type = models.CharField(max_length=70, unique=True)
 
     def clean(self):
-        self.type = self.type.capitalize()
+        self.type = self.type.title()
 
     def __str__(self):
         return self.type
@@ -108,7 +108,7 @@ class Branch(models.Model):
     average = property(avg_rate)
 
     def clean(self):
-        self.name = self.name.capitalize()
+        self.name = self.name.title()
 
     def __str__(self):
         return f'{self.company}, {self.name}, {self.type}'

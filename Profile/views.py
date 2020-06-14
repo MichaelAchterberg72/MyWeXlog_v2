@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import TemplateView
 from django.utils.http import is_safe_url
 from django.utils import timezone
+from django.conf import settings
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.core.exceptions import PermissionDenied
@@ -9,6 +10,7 @@ import json
 from django.contrib.auth.models import User
 from django.db.models import Count, Sum, F, Q, Avg
 
+from WeXlog import app_config
 
 #email
 from django.core.mail import send_mail, EmailMultiAlternatives
@@ -28,7 +30,7 @@ from WeXlog.app_config import (
     client_score, colleague_score, collaborator_score, superior_score, lecturer_score, classmate_score, pre_colleague_score
 )
 from .models import (
-        Profile, Email, PhysicalAddress, PostalAddress, PhoneNumber, SiteName, OnlineRegistrations, FileUpload, IdentificationDetail, IdType, PassportDetail, LanguageList, LanguageTrack, BriefCareerHistory,
+        Profile, Email, PhysicalAddress, PostalAddress, PhoneNumber, SiteName, OnlineRegistrations, FileUpload, IdentificationDetail, IdType, PassportDetail, LanguageTrack, BriefCareerHistory,
         )
 
 from .forms import (
@@ -340,12 +342,20 @@ def ProfileHome(request):
 
     #>>>WorkFlow Card
     talent = request.user
-    wf1 = Lecturer.objects.filter(confirm__exact='S').count()
-    cm1 = ClassMates.objects.filter(confirm__exact='S').count()
-    wk1 = WorkColleague.objects.filter(confirm__exact='S').count()
-    spr1 = Superior.objects.filter(confirm__exact='S').count()
-    wclr1 = WorkCollaborator.objects.filter(confirm__exact='S').count()
-    wc1 = WorkClient.objects.filter(confirm__exact='S').count()
+    if app_config.switch_confirmation == 'on':
+        wf1 = Lecturer.objects.filter(Q(lecturer=talent) & Q(confirm__exact='S')).count()
+        cm1 = ClassMates.objects.filter(Q(colleague=talent) & Q(confirm__exact='S')).count()
+        wk1 = WorkColleague.objects.filter(Q(colleague_name=talent) & Q(confirm__exact='S')).count()
+        spr1 = Superior.objects.filter(Q(superior_name=talent) & Q(confirm__exact='S')).count()
+        wclr1 = WorkCollaborator.objects.filter(Q(collaborator_name=talent) & Q(confirm__exact='S')).count()
+        wc1 = WorkClient.objects.filter(Q(client_name=talent) & Q(confirm__exact='S')).count()
+    else:
+        wf1 = Lecturer.objects.filter(confirm__exact='S').count()
+        cm1 = ClassMates.objects.filter(confirm__exact='S').count()
+        wk1 = WorkColleague.objects.filter(confirm__exact='S').count()
+        spr1 = Superior.objects.filter(confirm__exact='S').count()
+        wclr1 = WorkCollaborator.objects.filter(confirm__exact='S').count()
+        wc1 = WorkClient.objects.filter(confirm__exact='S').count()
 
     total = wf1 + cm1 + wk1 + spr1 + wclr1 + wc1
 
@@ -584,12 +594,22 @@ def ResignedView(request, bch, tlt):
 
 @login_required()
 def ConfirmView(request):
-    wf1 = Lecturer.objects.filter(confirm__exact='S')
-    cm1 = ClassMates.objects.filter(confirm__exact='S')
-    wk1 = WorkColleague.objects.filter(confirm__exact='S')
-    spr1 = Superior.objects.filter(confirm__exact='S')
-    wclr1 = WorkCollaborator.objects.filter(confirm__exact='S')
-    wc1 = WorkClient.objects.filter(confirm__exact='S')
+
+    if app_config.switch_confirmation == 'off':
+        wf1 = Lecturer.objects.filter(confirm__exact='S')
+        cm1 = ClassMates.objects.filter(confirm__exact='S')
+        wk1 = WorkColleague.objects.filter(confirm__exact='S')
+        spr1 = Superior.objects.filter(confirm__exact='S')
+        wclr1 = WorkCollaborator.objects.filter(confirm__exact='S')
+        wc1 = WorkClient.objects.filter(confirm__exact='S')
+    else:
+        talent = request.user
+        wf1 = Lecturer.objects.filter(Q(lecturer=talent) & Q(confirm__exact='S'))
+        cm1 = ClassMates.objects.filter(Q(colleague=talent) & Q(confirm__exact='S'))
+        wk1 = WorkColleague.objects.filter(Q(colleague_name=talent) & Q(confirm__exact='S'))
+        spr1 = Superior.objects.filter(Q(superior_name=talent) & Q(confirm__exact='S'))
+        wclr1 = WorkCollaborator.objects.filter(Q(collaborator_name=talent) & Q(confirm__exact='S'))
+        wc1 = WorkClient.objects.filter(Q(client_name=talent) & Q(confirm__exact='S'))
 
     template = 'Profile/experience_confirm.html'
     context = {
@@ -1113,6 +1133,10 @@ def LanguagePopup(request):
             instance=form.save(commit=False)
             instance.save()
             return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_language");</script>' % (instance.pk, instance))
+        else:
+            context = {'form':form,}
+            template = 'Profile/language_popup.html'
+            return render(request, template, context)
     else:
         context = {'form':form,}
         template = 'Profile/language_popup.html'
@@ -1190,7 +1214,11 @@ def FileUploadView(request):
                 new = form.save(commit=False)
                 new.talent = request.user
                 new.save()
-                return redirect(reverse('Profile:ProfileView', kwargs={'tlt':tlt}))
+                return redirect(reverse('Profile:ProfileView', kwargs={'tlt':tlt})+'#Upload')
+            else:
+                template = 'Profile/file_upload.html'
+                context = {'form': form}
+                return render(request, template, context)
         else:
             template = 'Profile/file_upload.html'
             context = {'form': form}
@@ -1201,11 +1229,12 @@ def FileUploadView(request):
 
 login_required()
 def FileDelete(request, pk):
+    tlt=request.user.alias
     detail = FileUpload.objects.get(pk=pk)
     if detail.talent == request.user:
         if request.method =='POST':
             detail.delete()
-            return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':detail.talent.id})+'#online')
+            return redirect(reverse('Profile:ProfileView', kwargs={'tlt': tlt})+'#Upload')
     else:
         raise PermissionDenied
 
@@ -1275,7 +1304,7 @@ def ProfileEditView(request, tlt):
                 new.save()
 
                 if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
-                    next_url = reverse('Profile:ProfileHome')
+                    next_url = reverse('Profile:ProfileView')
                 return HttpResponseRedirect(next_url)
         else:
             template = 'Profile/profile_edit.html'
@@ -1299,7 +1328,7 @@ def EmailEditView(request, tlt):
                 new.save()
                 if 'Done' in request.POST:
                     if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
-                        next_url = reverse('Profile:ProfileHome')
+                        next_url = reverse('Profile:ProfileView')
                     return HttpResponseRedirect(next_url)
                 elif 'Another' in request.POST:
                     form=EmailForm()

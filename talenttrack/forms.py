@@ -4,6 +4,7 @@ from users.models import CustomUser
 from django.utils.encoding import force_text
 from django.db.models import Q
 from django.forms import ModelChoiceField
+from django.utils import timezone
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Row, Column
@@ -174,6 +175,14 @@ class DateInput(forms.DateInput):
     input_type = 'date'
 
 
+class ProfileSearchForm(forms.Form):
+    query = forms.CharField()
+    class Meta:
+        labels = {
+            'query': 'Search by Alias or Name',
+        }
+
+
 class AchievementsForm(forms.ModelForm):
     class Meta:
         model = Achievements
@@ -215,6 +224,7 @@ class LicenseCertificationForm(forms.ModelForm):
         }
 
 class PreLoggedExperienceForm(forms.ModelForm):
+    '''Form to capture experience earned and captured on previously approved timesheets'''
     class Meta:
         model = WorkExperience
         fields = ('date_from', 'date_to', 'company', 'branch', 'project', 'industry', 'hours_worked', 'comment', 'designation', 'upload', 'skills',)
@@ -229,13 +239,30 @@ class PreLoggedExperienceForm(forms.ModelForm):
             }
 
     def clean_date_to(self):
-        '''Ensures the end date is after the begin date'''
+        '''Ensures the end date is after the begin date and before current date'''
         date_to = self.cleaned_data.get("date_to")
         date_from = self.cleaned_data.get("date_from")
+        today = timezone.now().date()
+
         if date_to < date_from:
             raise forms.ValidationError("You can't finish a period before it starts!, please ensure End date is after Start date.")
+        elif date_to > today:
+            raise forms.ValidationError("You can't claim experience in the future! End date must be  equal to, or less than today")
+
         return date_to
 
+    def clean_hours_worked(self):
+        '''Ensures excessive hours per day are not claimed'''
+        date_to = self.cleaned_data.get("date_to")
+        date_from = self.cleaned_data.get("date_from")
+        hours_worked = self.cleaned_data.get("hours_worked")
+        duration = date_to - date_from
+        max = duration.days * 12
+
+        if hours_worked > max:
+            raise forms.ValidationError("You can't claim more than 12 hours per day!")
+
+        return hours_worked
 
 class WorkClientResponseForm(forms.ModelForm):
     class Meta:
@@ -398,14 +425,36 @@ class WorkExperienceForm(forms.ModelForm):
         labels = {
             'hours_worked': 'Hours',
         }
+        help_texts = {
+            'company': 'Please complete the Company field before the Branch Field',
+            'branch': 'This field is dependant on the Company Field - fill Company Field first',
+        }
 
     def clean_date_to(self):
-        '''Ensures the end date is after the begin date'''
+        '''Ensures the end date is after the begin date and before current date'''
         date_to = self.cleaned_data.get("date_to")
         date_from = self.cleaned_data.get("date_from")
+        today = timezone.now().date()
+
         if date_to < date_from:
             raise forms.ValidationError("You can't finish a period before it starts!, please ensure End date is after Start date.")
+        elif date_to > today:
+            raise forms.ValidationError("You can't claim experience in the future! End date must be  equal to, or less than today")
+
         return date_to
+
+    def clean_hours_worked(self):
+        '''Ensures excessive hours per day are not claimed'''
+        date_to = self.cleaned_data.get("date_to")
+        date_from = self.cleaned_data.get("date_from")
+        hours_worked = self.cleaned_data.get("hours_worked")
+        duration = date_to - date_from
+        max = duration.days * 12
+
+        if hours_worked > max:
+            raise forms.ValidationError("You can't claim more than 12 hours per day!")
+
+        return hours_worked
 
 
 class DesignationForm(forms.ModelForm):
@@ -440,6 +489,7 @@ class ClassMatesSelectForm(forms.ModelForm):
             'topic': TopicSelect2Widget(),
             'colleague': UserSelect2Widget(),
             }
+
     def clean_colleague(self):
         colleague_passed = self.cleaned_data.get("colleague")
         als = colleague_passed.id
@@ -525,11 +575,16 @@ class EducationForm(forms.ModelForm):
         }
 
     def clean_date_to(self):
-        '''Ensures the end date is after the begin date'''
+        '''Ensures the end date is after the begin date and before current date'''
         date_to = self.cleaned_data.get("date_to")
         date_from = self.cleaned_data.get("date_from")
+        today = timezone.now().date()
+
         if date_to < date_from:
             raise forms.ValidationError("You can't finish a period before it starts!, please ensure End date is after Start date.")
+        elif date_to > today:
+            raise forms.ValidationError("You can't claim experience in the future! End date must be  equal to, or less than today")
+
         return date_to
 
 

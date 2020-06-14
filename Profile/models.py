@@ -6,6 +6,7 @@ from random import random
 from django.urls import reverse
 from django.db.models.signals import post_save, pre_save
 from decimal import getcontext, Decimal
+from django.core.validators import FileExtensionValidator
 
 
 from django_countries.fields import CountryField
@@ -334,7 +335,7 @@ def ExtFilename(instance, filename):
 class FileUpload(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
     title = models.CharField(max_length=150)
-    file = models.FileField(upload_to=ExtFilename)
+    file = models.FileField(upload_to=ExtFilename, validators=[FileExtensionValidator(['pdf'])])
 
     def __str__(self):
         return '{}: {}'.format(self.talent, self.title)

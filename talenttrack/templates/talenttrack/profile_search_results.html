@@ -1,0 +1,63 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}{{block.super}}-Profile Search{% endblock title %}
+
+{% block content %}
+<div class="card border-0">
+  <div class="card-body">
+  {% if query %}
+  <h4>Profiles containing "{{ query }}"</h4>
+  <h3>
+    {% with results.count as total_results %}
+    Found {{ total_results }} result{{ total_results|pluralize }}
+    {% endwith %}
+  </h3>
+  <table class="table table-sm">
+    <col width="5%">
+    <col width="15%">
+    <col width="6%">
+    <col width="10%">
+    <col width="10%">
+    <col width="10%">
+    <thead>
+      <tr>
+        <th class="align-middle text-center">Alias</th>
+        <th class="align-middle text-center">Profile</th>
+      </tr>
+    </thead>
+    {% for i in results %}
+    <tbody>
+    <tr class="align-middle text-center">
+      <td>{{ i.alias }}</td>
+      <td>
+        <a href="{% url 'Talent:APV_L' tlt=i.alias %}?next={{ request.path|urlencode }}" target="_blank"><i class="fa fa-id-badge" aria-hidden="true"style="font-size:30px;color:black" data-toggle="tooltip" data-placement="top" title="Talent's Public Profile"></i></a>
+      </td>
+      </tr>
+    </tbody>
+    {% empty %}
+    <tr>
+      <td colspan="6">No Profiles matching your query</td>
+    </tr>
+    {% endfor %}
+  </table>
+  <form action="." method="get">
+  {{ form.as_p }}
+  <input type="submit" class="btn btn-primary 8rem " style="width: 8rem" value="Search Again">
+  </form>
+  {% else %}
+  <h4>Search for Profile</h4>
+  <div class="card-body">
+    <form action="." method="get">
+    {{ form.as_p }}
+    <input type="submit" value="Search" class="btn btn-primary 8rem " style="width: 8rem">
+    </form>
+  {% endif %}
+</div>
+</div>
+
+{% endblock content %}
+{% block Script %}
+{% endblock Script %}
