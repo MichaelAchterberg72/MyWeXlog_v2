@@ -16,7 +16,8 @@
     width: 200px;
   }
   </style>
-<div class="container">
+<div class="card">
+  <div class="card-body">
 <h3>Licences, Certifications and Memberships</h3>
 <form method="post"  enctype="multipart/form-data">
   {% csrf_token %}
@@ -55,6 +56,7 @@
     <p><button type="submit" name="Done" class="btn btn-primary">Done</button></p>
   </div>
 </form>
+</div>
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 {{ form.media.js }}

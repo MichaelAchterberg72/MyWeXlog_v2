@@ -11,7 +11,8 @@
     width: 100px;
   }
   </style>
-<div class="container">
+<div class="card">
+  <div class="card-body">
 <h3>Spoken Languages</h3>
 <form method="post">
   <input type="hidden" name="next" value="{{ request.GET.next }}">
@@ -30,7 +31,7 @@
   </div>
 </form>
 </div>
-
+</div>
 {% endblock content %}
 {% block Script %}
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
