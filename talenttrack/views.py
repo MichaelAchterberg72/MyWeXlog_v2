@@ -519,7 +519,7 @@ def ActiveProfileView(request, tlt, vac):
     bch = BriefCareerHistory.objects.filter(talent__alias=tlt).order_by('-date_from')
     pfl = Profile.objects.filter(alias=tlt).first()
     als = get_object_or_404(Profile, alias=tlt)
-    padd = PhysicalAddress.objects.only('country', 'region', 'city').filter(talent__alias=tlt)
+    padd = PhysicalAddress.objects.only('country', 'region', 'city').get(talent__alias=tlt)
     vacancy = TalentRequired.objects.filter(ref_no=vac)
     skr = SkillRequired.objects.filter(scope__ref_no=vac).values_list('skills', flat=True).distinct('skills')
     skill_qs = SkillTag.objects.all()
@@ -605,7 +605,7 @@ def ActiveProfileView(request, tlt, vac):
 
     template = 'talenttrack/active_profile_view.html'
     context = {
-        'bch': bch, 'pfl': pfl, 'padd': padd,'vacse_set': vacse_set, 'vacst_set': vacst_set, 'exp': exp, 'bkl': bkl, 'edtexp': edtexp, 'bkl_count': bkl_count, 'prj_set': prj_set, 'prj_count': prj_count, 'bid_qs': bid_qs, 'achievement_qs': achievement_qs, 'language_qs': language_qs, 'membership_qs': membership_qs, 'bslist_qs': bslist_qs, 'vacancy': vacancy, 'int_list': int_list, 'als': als
+        'bch': bch, 'pfl': pfl, 'padd': padd,'vacse_set': vacse_set, 'vacst_set': vacst_set, 'exp': exp, 'bkl': bkl, 'edtexp': edtexp, 'bkl_count': bkl_count, 'prj_set': prj_set, 'prj_count': prj_count, 'bid_qs': bid_qs, 'achievement_qs': achievement_qs, 'language_qs': language_qs, 'membership_qs': membership_qs, 'bslist_qs': bslist_qs, 'vacancy': vacancy, 'int_list': int_list, 'als': als,
         }
     return render(request, template, context)
 
@@ -616,7 +616,7 @@ def profile_view(request, tlt):
     bch = BriefCareerHistory.objects.filter(talent__alias=tlt).order_by('-date_from')
     pfl = Profile.objects.filter(alias=tlt).first()
     als = get_object_or_404(Profile, alias=tlt)
-    padd = PhysicalAddress.objects.only('country', 'region', 'city').filter(talent__alias=tlt)
+    padd = PhysicalAddress.objects.only('country', 'region', 'city').get(talent__alias=tlt)
     skill_qs = SkillTag.objects.all()
     exp = WorkExperience.objects.filter(talent__alias=tlt).select_related('topic', 'course', 'project')
     edtexp = exp.filter(edt=True).order_by('-date_from')
