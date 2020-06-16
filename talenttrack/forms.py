@@ -325,7 +325,7 @@ class WorkCollaboratorSelectForm(forms.ModelForm):
         fields = ('collaborator_name', 'designation', 'company', 'branch', )
         widgets={
             'company': CompanySelect2Widget(),
-            'superior_name': UserSelect2Widget(),
+            'collaborator_name': UserSelect2Widget(),
             'designation': DesignationSelect2Widget(),
             'branch': BranchSelect2Widget(),
             }
