@@ -43,6 +43,11 @@ from marketplace.models import Branch
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+import sendgrid
+import os
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import (Mail, Subject, To, ReplyTo, SendAt, Content, From, CustomArg, Header)
+
 
 @login_required()
 @subscription(2)
@@ -2428,15 +2433,33 @@ def AddToInterviewListView(request, vac, tlt):
         job.save()#3
 
         #>>>email
-        subject = f"WeXlog - {job.title} ({job.ref_no}): Interview request"
+        subject = f"MyWeXlog - {job.title} ({job.ref_no}): Interview request"
 
         context = {'job': job, 'talent': talent}
 
-        html_message = render_to_string('marketplace/email_interview_request.html', context)
+        html_message = render_to_string('marketplace/email_interview_request.html', context).strip()
         plain_message = strip_tags(html_message)
 
-        send_to = job.requested_by.email
-        send_mail(subject, html_message, 'no-reply@wexlog.io', [send_to,])
+        send_to = talent.email
+
+        message = Mail(
+            from_email = settings.SENDGRID_FROM_EMAIL,
+            to_emails = send_to,
+            subject = subject,
+            plain_text_content = strip_tags(html_message),
+            html_content = html_message)
+
+        try:
+            sg = sendgrid.SendGridAPIClient(settings.SENDGRID_API_KEY)
+            response = sg.send(message)
+            print(response.status_code)
+            print(response.body)
+            print(response.headers)
+
+        except Exception as e:
+            print(e)
+
+#        send_mail(subject, html_message, 'no-reply@mywexlog.com', [send_to,])
         #template = 'marketplace/email_interview_request.html'
         #return render(request, template, context)
         #<<<email
@@ -2474,15 +2497,33 @@ def TalentAssign(request, tlt, vac):
                 bids.update(bidreview='P')#1
 
             #>>>email
-            subject = f"WeXlog - Job assigned: {job.title} ({job.ref_no})"
+            subject = f"MyWeXlog - Job assigned: {job.title} ({job.ref_no})"
 
             context = {'job': job, 'talent': talent, }
 
-            html_message = render_to_string('marketplace/email_vacancy_assign.html', context)
+            html_message = render_to_string('marketplace/email_vacancy_assign.html', context).strip()
             plain_message = strip_tags(html_message)
 
-            send_to = job.requested_by.email
-            send_mail(subject, html_message, 'no-reply@mywexlog.com', [send_to,])
+            send_to = talent.email
+
+            message = Mail(
+                from_email = settings.SENDGRID_FROM_EMAIL,
+                to_emails = send_to,
+                subject = subject,
+                plain_text_content = strip_tags(html_message),
+                html_content = html_message)
+
+            try:
+                sg = sendgrid.SendGridAPIClient(settings.SENDGRID_API_KEY)
+                response = sg.send(message)
+                print(response.status_code)
+                print(response.body)
+                print(response.headers)
+
+            except Exception as e:
+                print(e)
+
+            #send_mail(subject, html_message, 'no-reply@mywexlog.com', [send_to,])
             #template = 'marketplace/email_vacancy_assign.html'
             #return render(request, template, context)
             #<<<email
