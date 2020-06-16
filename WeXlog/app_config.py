@@ -10,10 +10,10 @@ rating_quant = 5
 #>>>Skills pass score
 client_score = 2.5
 lecturer_score = 2
-classmate_score = 1
+classmate_score = 1.5
 colleague_score = 1.5
 pre_colleague_score = 3
-collaborator_score = 1
+collaborator_score = 1.5
 superior_score = 2
 
 #the score required to show the experience in a persons profile

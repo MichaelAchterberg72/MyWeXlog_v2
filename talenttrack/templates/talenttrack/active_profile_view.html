@@ -95,12 +95,12 @@
                     <td colspan="2">This is where skills speficially required in the vancany are shown together with the time you have spent training on those skills.</td>
                   </tr>
                 {% else %}
-                {% for key in vacst_set.items %}
-                  <tr>
-                    <td>{{ key.0 }}</td>
-                    <td>{{ key.1|intcomma }}</td>
-                  </tr>
-                {% endfor %}
+                  {% for key in vacst_set.items %}
+                    <tr>
+                      <td>{{ key.0 }}</td>
+                      <td>{{ key.1|intcomma }}</td>
+                    </tr>
+                  {% endfor %}
                 {% endif %}
               </tbody>
             </table>
