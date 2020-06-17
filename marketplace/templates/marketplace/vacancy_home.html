@@ -28,48 +28,45 @@
             <div class="modal-header">
               <h4 class="modal-title" id="exampleModalLabel">My Availability</h4>
               <div class="float-right">
-              <a href="{% url 'MarketPlace:Availabillity' %}" class="badge badge-primary" style="width: 8rem;">Add</a>
-              <a href="{% url 'MarketPlace:HelpAvailability' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
-              <i class="icon icon-question-circle"></i></a>
+                <a href="{% url 'MarketPlace:Availabillity' %}" class="badge badge-primary" style="width: 8rem;">Add</a>
+                <a href="{% url 'MarketPlace:HelpAvailability' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
+                <i class="icon icon-question-circle"></i></a>
+              </div>
             </div>
-          </div>
             <div class="modal-body">
               <div class="row">
-              <div class="col-sm-12">
-                <div class="border-0">
-
-
-                    <table class="table table-hover table-sm">
-                      <thead>
-                        <col width="30%">
-                        <col width="30%">
-                        <col width="30%">
-                        <col width="10%">
-                        <tr>
-                          <th class="align-middle text-center">Date From</th>
-                          <th class="align-middle text-center">Date to</th>
-                          <th class="align-middle text-center">Time Available</th>
-                        </tr>
-                      </thead>
-                      {% for a in capacity %}
-                      <tbody>
-                        <tr>
-                          <td class="align-middle text-center">{{ a.date_from|date:'d M Y' }}</td>
-                          <td class="align-middle text-center">{{ a.date_to|date:'d M Y' }}</td>
-                          <td class="align-middle text-center">{{ a.hours_available }} hrs {{ a.get_unit_display }}</td>
-                          <td class="align-middle float-right">
-                            <form  action="{% url 'MarketPlace:NotAvailable' a.id %}" method="post">
-                              {% csrf_token %}
-                              <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
-                            </form>
-                          </td>
-                        </tr>
-                      </tbody>
-                      {% endfor %}
-                    </table>
-
+                <div class="col-sm-12">
+                  <div class="border-0">
+                      <table class="table table-hover table-sm">
+                        <thead>
+                          <col width="30%">
+                          <col width="30%">
+                          <col width="30%">
+                          <col width="10%">
+                          <tr>
+                            <th class="align-middle text-center">Date From</th>
+                            <th class="align-middle text-center">Date to</th>
+                            <th class="align-middle text-center">Time Available</th>
+                          </tr>
+                        </thead>
+                        {% for a in capacity %}
+                          <tbody>
+                            <tr>
+                              <td class="align-middle text-center">{{ a.date_from|date:'d M Y' }}</td>
+                              <td class="align-middle text-center">{{ a.date_to|date:'d M Y' }}</td>
+                              <td class="align-middle text-center">{{ a.hours_available }} hrs {{ a.get_unit_display }}</td>
+                              <td class="align-middle float-right">
+                                <form  action="{% url 'MarketPlace:NotAvailable' a.id %}" method="post">
+                                  {% csrf_token %}
+                                  <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
+                                </form>
+                              </td>
+                            </tr>
+                          </tbody>
+                        {% endfor %}
+                      </table>
+                  </div>
                 </div>
-              </div>
               </div>
             </div>
             <div class="modal-footer">
@@ -78,8 +75,6 @@
           </div>
         </div>
       </div>
-
-
     {% endif %}
     <h4 class="card-title">Vacancies Suited for Me </h4>
     <p>There are currently a total of <strong>{{ tot_vac }}</strong> vacancies suitable to you.<br>{% if request.user.subscription >= 2 %}You have already applied for <strong>{{ wbt_c }}</strong>.{% endif %}You have been shortlisted for
@@ -151,7 +146,9 @@
         <a href="{% url 'MarketPlace:VacanciesList' %}" class="btn btn-primary"style="width: 10rem">View All Vacancies</a>
       {% endif %}
     </div>
-
+    <p>
+      <strong>Only skills with a score of 3 or more are used in matching with required skills in vacancies.</strong>
+    </p>
   </div>
 </div>
 

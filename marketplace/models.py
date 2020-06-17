@@ -16,7 +16,7 @@ from locations.models import Currency, City
 from db_flatten.models import SkillTag, LanguageList
 from talenttrack.models import Result
 
-#This is the table that specifies the work configeration (Freelance, Remote Freelence, Consultant, Contractor, Employee, FIFO)
+#This is the table that specifies the work configuration (Freelance, Remote Freelence, Consultant, Contractor, Employee, FIFO)
 class WorkLocation(models.Model):
     WTPE = (
         ('Remote freelance','Remote freelance'),
@@ -106,7 +106,7 @@ class TalentRequired(models.Model):
     unit = models.CharField(max_length=1, choices=UNIT)
     experience_level = models.ForeignKey(SkillLevel, on_delete=models.PROTECT)
     language = models.ManyToManyField(LanguageList)
-    worklocation = models.ForeignKey(WorkLocation, on_delete=models.PROTECT)#Job configeration
+    worklocation = models.ForeignKey(WorkLocation, on_delete=models.PROTECT)#Job configuration
     rate_offered = models.DecimalField(max_digits=6, decimal_places=2)
     currency = models.ForeignKey(Currency, on_delete=models.PROTECT)
     rate_unit = models.CharField(max_length=1, choices=RATE_UNIT, default='H')
