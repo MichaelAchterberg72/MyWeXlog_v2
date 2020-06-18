@@ -110,7 +110,7 @@ def UpgradeRefunds():
 
     subject = f"Refunds for MyWeXlog Upgrades"
     context = {'item': item }
-    html_message = render_to_string('payments/email_subscription_subscription_refund.html', context)
+    html_message = render_to_string('payments/email_subscription_subscription_refund.html', context).strip()
     plain_message = strip_tags(html_message)
 
     message = Mail(
