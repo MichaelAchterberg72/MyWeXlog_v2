@@ -6,7 +6,7 @@ app_name = 'Profile'
 
 urlpatterns = [
         path('', views.ProfileHome, name="ProfileHome"),
-        path('view/<slug:tlt>/', views.ProfileView, name="ProfileView"),
+        path('view/', views.ProfileView, name="ProfileView"),
         path('edit/<slug:tlt>/', views.ProfileEditView, name="ProfileEdit"),
         path('email/<slug:tlt>/', views.EmailEditView, name='EmailEdit'),
         path('email/<slug:tlt>/<slug:eml>/', views.EmailStatusView, name='EmailStatus'),

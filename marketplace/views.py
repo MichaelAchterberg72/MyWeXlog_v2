@@ -1193,8 +1193,8 @@ def MarketHome(request):
     #Code for stacked lookup for talent's skills
 
     #>>>Create a set of all skills
-    e_skill = we.filter(edt=True).only('pk').values_list('pk', flat=True)
-    l_skill = we.filter(edt=False).only('pk').values_list('pk', flat=True)
+    e_skill = we.filter(edt=True, score__gte=skill_pass_score).only('pk').values_list('pk', flat=True)
+    l_skill = we.filter(edt=False, score__gte= skill_pass_score).only('pk').values_list('pk', flat=True)
 
     skill_set = SkillTag.objects.none()
 
@@ -2375,11 +2375,7 @@ def AddToShortListView(request, vac, tlt):
     if request.method == 'POST':
         b = BidShortList.objects.create(talent=talent, scope=job, status = 'S')#1
 
-        bidded = WorkBid.objects.filter(Q(talent=talent) & Q(work=job)).exists()
-        if bidded:
-            upd = WorkBid.objects.get(Q(talent=talent) & Q(work=job))
-            upd.bidreview = 'S'#2
-            upd.save()
+        WorkBid.objects.filter(Q(talent=talent) & Q(work=job)).update(bidreview="S")#2
 
         return redirect(reverse('MarketPlace:VacancyPost', kwargs={'vac':vac})+'#suited')
 
@@ -2425,9 +2421,7 @@ def AddToInterviewListView(request, vac, tlt):
         BidInterviewList.objects.create(talent=talent, scope=job, outcome='I', tlt_response='P')#1
         BidShortList.objects.filter(Q(talent=talent) & Q(scope=job)).update(status='I')#4
 
-        wb_qs = WorkBid.objects.filter(Q(talent=talent) & Q(work=job))
-        if wb_qs:
-            wb_qs.update(bidreview='I')#2
+        WorkBid.objects.filter(Q(talent=talent) & Q(work=job)).update(bidreview='I')#2
 
         job.vac_wkfl == 'I'
         job.save()#3
@@ -2493,7 +2487,7 @@ def TalentAssign(request, tlt, vac):
 
             BidInterviewList.objects.filter(Q(talent=talent) & Q(scope=job)).update(outcome='P')#5
 
-            if bids is not None:
+            if bids:
                 bids.update(bidreview='P')#1
 
             #>>>email
@@ -2565,7 +2559,7 @@ def SuitableTalentAssign(request, tlt, vac):
 
             BidInterviewList.objects.filter(Q(talent=talent) & Q(scope=job)).update(outcome='P')#5
 
-            if bids is not None:
+            if bids:
                 bids.update(bidreview='P')#1
 
             #>>>email

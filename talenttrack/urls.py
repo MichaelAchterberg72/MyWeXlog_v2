@@ -34,7 +34,7 @@ urlpatterns = [
     path('experience/pre-experience-full-list/', views.PreExperienceListView, name="PreExperienceList"),
     path('experience/experience-full-list/', views.WorkExperienceListView, name="ExperienceList"),
 
-    path('colleague/select/', views.ColleagueSelectView, name='ColleagueSelect'),
+    path('colleague/select/<int:pk>/', views.ColleagueSelectView, name='ColleagueSelect'),
 
     path('colleague/<slug:tex>/add/', views.ColleagueAddView, name='ColleagueAdd'),
     path('colleague/detail/<slug:clg>/', views.ColleagueResponseView, name='ColleagueResponse'),

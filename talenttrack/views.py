@@ -612,6 +612,7 @@ def ActiveProfileView(request, tlt, vac):
         }
     return render(request, template, context)
 
+
 @login_required()
 def profile_view(request, tlt):
     '''View for profile without reference to a vacancy. Used for the seach feature'''
@@ -884,7 +885,7 @@ def PreLoggedExperienceCaptureView(request):
             new.prelog = True
             new.save()
             form.save_m2m()
-            response = redirect('Talent:ColleagueSelect')
+            response = redirect(reverse('Talent:ColleagueSelect', kwargs={'pk': new.id}))
             response.delete_cookie("confirm")
             return response
         else:
@@ -1265,9 +1266,9 @@ def SuperiorResponseView(request, spr):
 
 @login_required()
 @csp_exempt
-def ColleagueSelectView(request):
+def ColleagueSelectView(request, pk):
     score = colleague_score
-    instance = WorkExperience.objects.filter(talent=request.user).latest('date_captured')
+    instance = WorkExperience.objects.get(pk=pk)
     tex = instance.slug
 
     colleague_excl = set(WorkColleague.objects.filter(experience__slug=tex).values_list('colleague_name', flat=True))
@@ -1285,7 +1286,7 @@ def ColleagueSelectView(request):
             new.experience = instance
             new.save()
             if 'another' in request.POST:
-                response = redirect('Talent:ColleagueSelect')
+                response = redirect(reverse('Talent:ColleagueSelect', kwargs={'pk':pk}))
                 return response
             elif 'done' in request.POST:
                 response = redirect(reverse('Talent:SuperiorSelect', kwargs={'pk':instance.id}))
@@ -1400,7 +1401,7 @@ def WorkExperienceCaptureView(request):
             new.wexp = True
             new.save()
             form.save_m2m()
-            return redirect('Talent:ColleagueSelect')
+            return redirect(reverse('Talent:ColleagueSelect', kwargs={'pk': new.id}))
         else:
             template = 'talenttrack/experience_capture.html'
             context = {'form': form}

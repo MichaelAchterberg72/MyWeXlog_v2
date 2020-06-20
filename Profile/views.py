@@ -432,7 +432,7 @@ def AssignmentAcceptView(request, slug):
 
     BidInterviewList.objects.filter(Q(talent=tlt) & Q(scope=vac)).update(outcome='A')#7
 
-    wb_qs = WorkBid.objects.filter(Q(work__ref_no=vac))
+    wb_qs = WorkBid.objects.filter(Q(work=vac))
     if wb_qs:
         wb_qs.filter(Q(talent=tlt)).update(bidreview='A')#1
         wb_qs.filter(~Q(talent=tlt)).update(bidreview='R')#2
@@ -1261,7 +1261,7 @@ def FileDelete(request, pk):
     if detail.talent == request.user:
         if request.method =='POST':
             detail.delete()
-            return redirect(reverse('Profile:ProfileView', kwargs={'tlt': tlt})+'#Upload')
+            return redirect(reverse('Profile:ProfileView')+'#Upload')
     else:
         raise PermissionDenied
 
@@ -1272,13 +1272,14 @@ def EmailDelete(request, pk, tlt):
     if detail.talent == request.user:
         if request.method =='POST':
             detail.delete()
-            return redirect(reverse('Profile:ProfileView', kwargs={'tlt': tlt})+'#email')
+            return redirect(reverse('Profile:ProfileView')+'#email')
     else:
         raise PermissionDenied
 
 
 @login_required()
-def ProfileView(request, tlt):
+def ProfileView(request):
+    tlt = request.user.alias
     detail = Profile.objects.get(alias=tlt)
     tlt_id = request.user.id
     if detail.talent == request.user:
@@ -1379,7 +1380,7 @@ def EmailStatusView(request, tlt, eml):
             if form.is_valid():
                 new=form.save(commit=False)
                 new.save()
-                return redirect(reverse('Profile:ProfileView', kwargs={'tlt':tlt}))
+                return redirect(reverse('Profile:ProfileView'))
 
         else:
             template = 'Profile/email_status.html'
@@ -1402,7 +1403,7 @@ def PhysicalAddressView(request):
                 new=form.save(commit=False)
                 new.talent = request.user
                 new.save()
-                return redirect(reverse('Profile:ProfileView', kwargs={'tlt':tlt})+'#phone')
+                return redirect(reverse('Profile:ProfileView')+'#phone')
         else:
             template = 'Profile/physical_address_add.html'
             context = {'form': form}
@@ -1424,7 +1425,7 @@ def PostalAddressView(request):
                 new=form.save(commit=False)
                 new.talent = request.user
                 new.save()
-                return redirect(reverse('Profile:ProfileView', kwargs={'tlt':tlt})+'#phone')
+                return redirect(reverse('Profile:ProfileView')+'#phone')
         else:
             template = 'Profile/postal_address_add.html'
             context = {'form': form}
@@ -1445,7 +1446,7 @@ def PhoneNumberAdd(request):
                 new=form.save(commit=False)
                 new.talent = request.user
                 new.save()
-                return redirect(reverse('Profile:ProfileView', kwargs={'tlt':tlt})+'#phone')
+                return redirect(reverse('Profile:ProfileView')+'#phone')
             else:
                 template = 'Profile/phone_number_add.html'
                 context = {'form': form}
@@ -1465,7 +1466,7 @@ def PhoneNumberDelete(request, pk):
     if detail.talent == request.user:
         if request.method =='POST':
             detail.delete()
-            return redirect(reverse('Profile:ProfileView', kwargs={'tlt':tlt})+'#phone')
+            return redirect(reverse('Profile:ProfileView')+'#phone')
     else:
         raise PermissionDenied
 
@@ -1481,7 +1482,7 @@ def OnlineProfileAdd(request, tlt):
                 new=form.save(commit=False)
                 new.talent = request.user
                 new.save()
-                return redirect(reverse('Profile:ProfileView', kwargs={'tlt':tlt})+'#online')
+                return redirect(reverse('Profile:ProfileView')+'#online')
         else:
             template = 'Profile/online_profile_add.html'
             context = {'form': form}

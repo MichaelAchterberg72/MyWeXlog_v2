@@ -1,5 +1,5 @@
 #to turn the confirmation filter per user on. If off, all open confirmations will be shown.
-switch_confirmation = 'on'
+switch_confirmation = 'off'
 
 #Paypal switch. If 'sandbox' will use the sandbox. If 'live' will use the live site.
 paypal_switch = 'sandbox'

@@ -183,7 +183,7 @@
           <img src="{% static 'images/user-unisex-512.png' %}" height="45" width="45" class="avatar">
       </button>
         <div class="dropdown-menu dropdown-menu-right">
-          <a class="dropdown-item"  href="{% url 'Profile:ProfileView' request.user.alias %}">View Profile</a>
+          <a class="dropdown-item"  href="{% url 'Profile:ProfileView' %}">View Profile</a>
 
           <a class="dropdown-item"  href="{% url 'Invitation:FlatInvite' %}" target="_blank">Invite Someone</a>
 
