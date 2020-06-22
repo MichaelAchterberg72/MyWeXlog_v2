@@ -23,6 +23,11 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from core.decorators import subscription
 
+import sendgrid
+import os
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import (Mail, Subject, To, ReplyTo, SendAt, Content, From, CustomArg, Header)
+
 from treebeard.mp_tree import MP_Node
 from pinax.referrals.models import Referral
 
@@ -497,7 +502,7 @@ def AssignmentClarifyView(request, wit):
 
             #>>>email
             context = {'form': form, 'instance': instance, 'user_email': instance.work.requested_by.email }
-            html_message = render_to_string('Profile/email_vac_clarification_text.html', context)
+            html_message = render_to_string('Profile/email_vac_clarification_text.html', context).strip()
 
             message = Mail(
                 from_email = settings.SENDGRID_FROM_EMAIL,
