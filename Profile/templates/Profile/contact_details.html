@@ -28,7 +28,7 @@
           <td>{{ pfl_qs.talent.first_name }} {{ pfl_qs.talent.last_name }}</td>
           <td><a href="emailto:{{ pfl_qs.talent.email }}">{{ pfl_qs.talent.email }}</a></td>
           <td class="align-middle text-center">
-                <a href="{% url 'Talent:APV' tlt=pfl_qs.talent.alias vac=vac_qs.ref_no %}?next={{ request.path|urlencode }}" target="_blank"><i class="fa fa-id-badge" aria-hidden="true"style="font-size:30px;color:black" data-toggle="tooltip" data-placement="top" title="Profile"></i></a>
+                <a href="{% url 'Talent:APV_L' tlt=pfl_qs.talent.alias %}?next={{ request.path|urlencode }}" target="_blank"><i class="fa fa-id-badge" aria-hidden="true"style="font-size:30px;color:black" data-toggle="tooltip" data-placement="top" title="Profile"></i></a>
           </td>
         </tr>
       </tbody>

@@ -42,7 +42,7 @@ class BriefCareerHistory(models.Model):
         if self.date_to:
             return f'{self.talent}, {self.work_configeration}: {self.companybranch}, from: {self.date_from}, to: {self.date_to}'
         else:
-            return f'{self.talent}, {self.work_configeration}: {self.companybranch}, from: {self.date_from} (Currently Employed Here)'
+            return f'{self.talent}, {self.work_configeration}: {self.compnybranch}, from: {self.date_from} (Currently Employed Here)'
 
     def save(self, *args, **kwargs):
         if self.date_to:

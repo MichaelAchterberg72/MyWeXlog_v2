@@ -215,7 +215,7 @@ def BranchAddPopView(request):
         if form.is_valid():
             instance=form.save(commit=False)
             instance.save()
-            response = HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_branch");</script>' % (instance.pk, instance))
+            response = HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_companybranch");</script>' % (instance.pk, instance))
             return response
         else:
             context = {'form': form}
@@ -229,7 +229,6 @@ def BranchAddPopView(request):
         response = render(request, template, context)
         return response
 
-
 @csrf_exempt
 def get_branch_id(request):
     if request.is_ajax():
@@ -238,6 +237,7 @@ def get_branch_id(request):
         data = {'branch_id':branch_id,}
         return HttpResponse(json.dumps(data), content_type='application/json')
     return HttpResponse("/")
+
 #Branch Popup <<<
 
 

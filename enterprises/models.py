@@ -115,7 +115,7 @@ class Branch(models.Model):
 
     def save(self, *args, **kwargs):
         if self.slug is None or self.slug == "":
-            self.slug = f'{self.company.slug}{self.id}{self.city.id}'
+            self.slug = create_code9(self)
 
         super(Branch, self).save(*args, **kwargs)
 
