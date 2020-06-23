@@ -218,7 +218,7 @@ class WorkExperience(models.Model):
     comment = models.TextField(blank=True, null=True)
     #Work Experience Fields (Captured & Pre-Experience)
     company = models.ForeignKey(Enterprise, on_delete=models.PROTECT, verbose_name='Company', null=True)
-    branch = models.ForeignKey(Branch, on_delete=models.PROTECT, verbose_name='Company Branch', null=True)
+    companybranch = models.ForeignKey(Branch, on_delete=models.PROTECT, verbose_name='Company Branch', null=True)
     estimated = models.BooleanField(default=False)
     prelog = models.BooleanField(default=False)
     wexp = models.BooleanField(default=False)
@@ -326,7 +326,7 @@ class WorkCollaborator(models.Model):
     experience = models.ForeignKey(WorkExperience, on_delete=models.CASCADE)
     collaborator_name = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     company = models.ForeignKey(Enterprise, on_delete=models.PROTECT)
-    branch = models.ForeignKey(Branch, on_delete=models.PROTECT)
+    companybranch = models.ForeignKey(Branch, on_delete=models.PROTECT)
     designation = models.ForeignKey(Designation, on_delete=models.PROTECT, null=True)
         #AutoCaptured
     date_captured = models.DateField(auto_now_add=True)
@@ -359,7 +359,7 @@ class WorkClient(models.Model):
     client_name = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     designation = models.ForeignKey(Designation, on_delete=models.PROTECT, null=True)
     company = models.ForeignKey(Enterprise, on_delete=models.PROTECT)
-    branch = models.ForeignKey(Branch, on_delete=models.PROTECT)
+    companybranch = models.ForeignKey(Branch, on_delete=models.PROTECT)
         #AutoCaptured
     date_captured = models.DateField(auto_now_add=True)
     date_confirmed = models.DateField(auto_now=True)

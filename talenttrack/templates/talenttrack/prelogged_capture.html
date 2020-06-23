@@ -15,7 +15,7 @@
 <div class="card-body">
 <div class="container">
 <h3>Capture Logged Experience<span><p class="float-right">
-<a href="{% url 'Talent:HelpCaptureExperience' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px" data-toggle="tooltip title="Click here for help on this page!">
+<a href="{% url 'Talent:HelpCaptureExperience' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px">
 <i class="icon icon-question-circle"></i></a>
 </p></span></h3>
 <form method="post" id="BranchForm" enctype="multipart/form-data">
@@ -24,7 +24,7 @@
     <div class="form-group col-md-6 mb-0">
       {{ form.company|as_crispy_field }}
         <p><a href="{% url 'Enterprise:EnterpriseAddPop' %}" id='add_company' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a Company</a></p>
-      {{ form.branch|as_crispy_field }}
+      {{ form.companybranch|as_crispy_field }}
       <p><a href="{% url 'Enterprise:BranchAddPop' %}" id='add_branch' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a Branch</a></p>
       {{ form.project|as_crispy_field }}
         <p><a href="{% url 'Project:ProjectAddPop' %}" id='add_project' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a Project</a></p>

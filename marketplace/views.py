@@ -985,7 +985,7 @@ def VacancyDetailView(request, vac):
     vacancy = TalentRequired.objects.filter(ref_no=vac)
     skills = SkillRequired.objects.filter(scope__ref_no=vac)
     deliver = Deliverables.objects.filter(scope__ref_no=vac)
-    bch = vacancy[0].enterprise.slug
+    bch = vacancy[0].companybranch.slug
     rate_b = Branch.objects.get(slug=bch)
     int = BidInterviewList.objects.filter(Q(scope__ref_no=vac)).count()
     bid_qs = WorkBid.objects.filter(work__ref_no=vac).order_by('rate_bid')
@@ -1024,7 +1024,7 @@ def VacancyDetailView_Profile(request, vac):
     vacancy = TalentRequired.objects.filter(ref_no=vac)
     skills = SkillRequired.objects.filter(scope__ref_no=vac)
     deliver = Deliverables.objects.filter(scope__ref_no=vac)
-    bch = vacancy[0].enterprise.slug
+    bch = vacancy[0].companybranch.slug
     bch_r = Branch.objects.get(slug=bch)
 
     template = 'marketplace/vacancy_detail_profile.html'

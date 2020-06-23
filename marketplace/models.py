@@ -99,7 +99,7 @@ class TalentRequired(models.Model):
     title = models.CharField(max_length=250)
     ref_no = models.CharField(max_length=10, unique=True, null=True, blank=True)#SlugField
     own_ref_no = models.CharField(max_length=100, unique=True, null=True, blank=True)
-    enterprise = models.ForeignKey(Branch, on_delete=models.CASCADE, verbose_name="Company Branch")
+    companybranch = models.ForeignKey(Branch, on_delete=models.CASCADE, verbose_name="Company Branch")
     requested_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     date_deadline = models.DateField('Work completed by')
     hours_required = models.IntegerField()
@@ -122,10 +122,10 @@ class TalentRequired(models.Model):
     vac_wkfl = models.CharField(max_length=1, choices=WKFLOW, default='P')
 
     class Meta:
-        unique_together = (('enterprise','title', 'requested_by'),('enterprise', 'own_ref_no'),)
+        unique_together = (('companybranch','title', 'requested_by'),('companybranch', 'own_ref_no'),)
 
     def __str__(self):
-        return f'{self.title}, {self.enterprise}'
+        return f'{self.title}, {self.companybranch}'
 
     def save(self, *args, **kwargs):
         if self.ref_no is None or self.ref_no == "":

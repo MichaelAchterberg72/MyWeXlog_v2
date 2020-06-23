@@ -25,7 +25,7 @@
           <a href="{% url 'Talent:DesignationAddPop' %}" id='add_designation' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add Designation</a>
           {{ form.company|as_crispy_field }}
           <a href="{% url 'Enterprise:EnterpriseAddPop' %}" id='add_enterprise' onclick='return showAddPopup(this);'><img src="{% static '/images/icon-addlink.svg' %}">Add a new Enterprise</a>
-          {{ form.branch|as_crispy_field }}
+          {{ form.companybranch|as_crispy_field }}
           <a href="{% url 'Enterprise:BranchAddPop' %}" id='add_branch' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a Branch</a>
           <div class="">
             <br>

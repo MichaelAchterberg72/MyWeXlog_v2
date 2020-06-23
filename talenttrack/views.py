@@ -547,7 +547,7 @@ def ActiveProfileView(request, tlt, vac):
             pass
         else:
             prj_count +=1
-            project_q = prj_qs.filter(pk=p).values_list('name', 'company__name', 'branch__name', 'industry__industry')
+            project_q = prj_qs.filter(pk=p).values_list('name', 'company__name', 'companybranch__name', 'industry__industry')
             info_list=[project_q[0][1], project_q[0][2], project_q[0][3]]
             prj_set[project_q[0][0]] = info_list
 
@@ -640,7 +640,7 @@ def profile_view(request, tlt):
             pass
         else:
             prj_count +=1
-            project_q = prj_qs.filter(pk=p).values_list('name', 'company__name', 'branch__name', 'industry__industry')
+            project_q = prj_qs.filter(pk=p).values_list('name', 'company__name', 'companybranch__name', 'industry__industry')
             info_list=[project_q[0][1], project_q[0][2], project_q[0][3]]
             prj_set[project_q[0][0]] = info_list
 
@@ -830,7 +830,7 @@ def DPC_SummaryView(request, tlt):
 
 
     #Company Summary - Listed Per Branch
-    cmp = exp.values_list('branch', flat=True).distinct('branch')
+    cmp = exp.values_list('companybranch', flat=True).distinct('companybranch')
     cmp_set = {}
     for c in cmp:
         if c == None:
@@ -863,7 +863,7 @@ def DPC_SummaryView(request, tlt):
             info_set = {}
             info_set['count']=cnt
             info_set['sum']=sum_float
-            project_q = project_qs.filter(pk=p).values_list('name', 'company__name', 'branch__name')
+            project_q = project_qs.filter(pk=p).values_list('name', 'company__name', 'companybranch__name')
             project_f = f'{project_q[0][0]}: {project_q[0][1]} ({project_q[0][2]})'
             prj_set[project_f] = info_set
 

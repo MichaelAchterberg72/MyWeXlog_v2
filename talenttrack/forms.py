@@ -227,10 +227,10 @@ class PreLoggedExperienceForm(forms.ModelForm):
     '''Form to capture experience earned and captured on previously approved timesheets'''
     class Meta:
         model = WorkExperience
-        fields = ('date_from', 'date_to', 'company', 'branch', 'project', 'industry', 'hours_worked', 'comment', 'designation', 'upload', 'skills',)
+        fields = ('date_from', 'date_to', 'company', 'companybranch', 'project', 'industry', 'hours_worked', 'comment', 'designation', 'upload', 'skills',)
         widgets={
             'company': CompanySelect2Widget(),
-            'branch': BranchSelect2Widget(),
+            'companybranch': BranchSelect2Widget(),
             'designation': DesignationSelect2Widget(),
             'project': ProjectSelect2Widget(),
             'date_from': DateInput(),
@@ -285,12 +285,12 @@ class WorkClientSelectForm(forms.ModelForm):
 
     class Meta:
         model = WorkClient
-        fields = ('client_name', 'designation', 'company', 'branch', )
+        fields = ('client_name', 'designation', 'company', 'companybranch', )
         widgets={
             'company': CompanySelect2Widget(),
             'client_name': UserSelect2Widget(),
             'designation': DesignationSelect2Widget(),
-            'branch': BranchSelect2Widget(),
+            'companybranch': BranchSelect2Widget(),
             }
     def clean_client_name(self):
         client_passed = self.cleaned_data.get("client_name")
@@ -322,12 +322,12 @@ class WorkCollaboratorSelectForm(forms.ModelForm):
 
     class Meta:
         model = WorkCollaborator
-        fields = ('collaborator_name', 'designation', 'company', 'branch', )
+        fields = ('collaborator_name', 'designation', 'company', 'companybranch', )
         widgets={
             'company': CompanySelect2Widget(),
             'collaborator_name': UserSelect2Widget(),
             'designation': DesignationSelect2Widget(),
-            'branch': BranchSelect2Widget(),
+            'companybranch': BranchSelect2Widget(),
             }
     def clean_collaborator_name(self):
         collaborator_passed = self.cleaned_data.get("collaborator_name")
@@ -410,7 +410,7 @@ class WorkExperienceForm(forms.ModelForm):
     class Meta:
         model = WorkExperience
         fields = (
-            'date_from', 'date_to', 'company', 'branch', 'estimated', 'project', 'industry', 'hours_worked', 'comment', 'designation', 'upload', 'skills'
+            'date_from', 'date_to', 'company', 'companybranch', 'estimated', 'project', 'industry', 'hours_worked', 'comment', 'designation', 'upload', 'skills'
             )
         widgets={
             'company': CompanySelect2Widget(),
@@ -420,14 +420,14 @@ class WorkExperienceForm(forms.ModelForm):
             'date_to': DateInput(),
             'skills': SkillModelSelect2MultipleWidget(),
             'industry': IndSelect2Widget(),
-            'branch': BranchSelect2Widget(),
+            'companybranch': BranchSelect2Widget(),
             }
         labels = {
             'hours_worked': 'Hours',
         }
         help_texts = {
             'company': 'Please complete the Company field before the Branch Field',
-            'branch': 'This field is dependant on the Company Field - fill Company Field first',
+            'companybranch': 'This field is dependant on the Company Field - fill Company Field first',
         }
 
     def clean_date_to(self):

@@ -24,7 +24,7 @@
     <div class="form-group col-md-5 mb-0">
       {{ form.company|as_crispy_field }}
         <p><a href="{% url 'Enterprise:EnterpriseAddPop' %}" id='add_company' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add Company</a></p>
-      {{ form.branch|as_crispy_field }}
+      {{ form.companybranch|as_crispy_field }}
         <p><a href="{% url 'Enterprise:BranchAddPop' %}" id='add_branch' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add Branch</a></p>
       {{ form.project|as_crispy_field }}
         <p><a href="{% url 'Project:ProjectAddPop' %}" id='add_project' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add Project</a></p>

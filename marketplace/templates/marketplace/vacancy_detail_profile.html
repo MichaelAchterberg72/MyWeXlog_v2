@@ -32,9 +32,9 @@
       <td class="align-middle text-center">{{ v.experience_level }}</td>
       <td class="align-middle text-center">
         {% if bch_r.rate_count > 4 %}
-          {{ v.enterprise.company }}<br>{{ v.enterprise.name }}<br><strong>{{ bch_r.avg_rate }} ({{ bch_r.rate_count }} votes)</strong>
+          {{ v.companybranch.company }}<br>{{ v.companybranch.name }}<br><strong>{{ bch_r.avg_rate }} ({{ bch_r.rate_count }} votes)</strong>
         {% else %}
-          {{ v.enterprise.company }}<br>{{ v.enterprise.name }}<br><strong>No Rating (Votes < 5)</strong>
+          {{ v.companybranch.company }}<br>{{ v.companybranch.name }}<br><strong>No Rating (Votes < 5)</strong>
         {% endif %}
       </td>
     </tr>
