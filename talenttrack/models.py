@@ -142,7 +142,8 @@ class Lecturer(models.Model):
     topic = models.ForeignKey(Topic, on_delete=models.PROTECT, blank=True, null=True, verbose_name="Subject")
         #AutoCaptured
     date_captured = models.DateField(auto_now_add=True)
-    date_confirmed = models.DateField(auto_now=True)
+    date_confirmed = models.DateField(auto_now_add=True)
+    locked = models.BooleanField(default=False)
         #Captured by lecturer
     confirm = models.CharField(max_length=1, choices=CONFIRM, default='S', null=True)
     comments = models.TextField(blank=True, null=True)
@@ -170,7 +171,7 @@ class ClassMates(models.Model):
     topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True, verbose_name="Subject")
         #AutoCaptured
     date_captured = models.DateField(auto_now_add=True)
-    date_confirmed = models.DateField(auto_now=True)
+    date_confirmed = models.DateField(auto_now_add=True)
         #Captured by colleague
     confirm = models.CharField(max_length=1, choices=CONFIRM, default='S')
     comments = models.TextField(blank=True, null=True)
@@ -269,7 +270,7 @@ class WorkColleague(models.Model):
     designation = models.ForeignKey(Designation, on_delete=models.PROTECT, null=True)
         #AutoCaptured
     date_captured = models.DateField(auto_now_add=True)
-    date_confirmed = models.DateField(auto_now=True)
+    date_confirmed = models.DateField(auto_now_add=True)
         #Captured by colleague
     confirm = models.CharField(max_length=1, choices=CONFIRM, default='S')
     comments = models.TextField(blank=True, null=True)
@@ -299,7 +300,7 @@ class Superior(models.Model):
     designation = models.ForeignKey(Designation, on_delete=models.PROTECT, null=True)
         #AutoCaptured
     date_captured = models.DateField(auto_now_add=True)
-    date_confirmed = models.DateField(auto_now=True)
+    date_confirmed = models.DateField(auto_now_add=True)
         #Captured by superior
     confirm = models.CharField(max_length=1, choices=CONFIRM, default='S')
     comments = models.TextField(blank=True, null=True)
@@ -330,7 +331,7 @@ class WorkCollaborator(models.Model):
     designation = models.ForeignKey(Designation, on_delete=models.PROTECT, null=True)
         #AutoCaptured
     date_captured = models.DateField(auto_now_add=True)
-    date_confirmed = models.DateField(auto_now=True)
+    date_confirmed = models.DateField(auto_now_add=True)
         #Captured by collaborator
     confirm = models.CharField(max_length=1, choices=CONFIRM, default='S')
     comments = models.TextField(blank=True, null=True)
@@ -362,7 +363,7 @@ class WorkClient(models.Model):
     companybranch = models.ForeignKey(Branch, on_delete=models.PROTECT)
         #AutoCaptured
     date_captured = models.DateField(auto_now_add=True)
-    date_confirmed = models.DateField(auto_now=True)
+    date_confirmed = models.DateField(auto_now_add=True)
         #Captured by collaborator
     confirm = models.CharField(max_length=1, choices=CONFIRM, default='S')
     comments = models.TextField(blank=True, null=True)

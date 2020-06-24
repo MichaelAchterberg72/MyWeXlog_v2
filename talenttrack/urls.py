@@ -33,31 +33,19 @@ urlpatterns = [
     path('experience/training-full-list/', views.TrainingListView, name="TrainingList"),
     path('experience/pre-experience-full-list/', views.PreExperienceListView, name="PreExperienceList"),
     path('experience/experience-full-list/', views.WorkExperienceListView, name="ExperienceList"),
-
     path('colleague/select/<int:pk>/', views.ColleagueSelectView, name='ColleagueSelect'),
-
     path('colleague/<slug:tex>/add/', views.ColleagueAddView, name='ColleagueAdd'),
     path('colleague/detail/<slug:clg>/', views.ColleagueResponseView, name='ColleagueResponse'),
-
     path('superior/select/<slug:pk>/', views.SuperiorSelectView, name='SuperiorSelect'),
     path('superior/add/<slug:tex>/', views.SuperiorAddView, name='SuperiorAdd'),
     path('superior/detail/<slug:spr>/', views.SuperiorResponseView, name='SuperiorResponse'),
-
     path('collaborator/select/<int:pk>/', views.CollaboratorSelectView, name='CollaboratorSelect'),
     path('collaborator/add/<slug:tex>/', views.CollaboratorAddView, name='CollaboratorAdd'),
     path('collaborator/detail/<slug:clb>/', views.CollaboratorResponseView, name='CollaboratorResponse'),
-
     path('client/select/<slug:pk>/', views.ClientSelectView, name='ClientSelect'),
     path('client/add/<slug:tex>/', views.ClientAddView, name='ClientAdd'),
     path('client/detail/<slug:wkc>/', views.ClientResponseView, name='ClientResponse'),
-
-#    path('client/select/<int:pk>/', views.ClientSelectView, name='ClientSelect'),
-#    path('client/add/<int:pk>/', views.ClientAddView, name='ClientAdd'),
-#    path('client/detail/<int:pk>/', views.ClientResponseView, name='ClientResponse'),
-
     path('experience/detail/<slug:tex>/', views.ExperienceDetailView, name='ExperienceDetail'),
-
-
     path('prelogged/capture/', views.PreLoggedExperienceCaptureView, name="PreloggedCapture"),
     path('prelogged/<slug:tex>/detail/', views.PreLogDetailView, name='PreLogDetail'),
     path('experience-detail/<slug:tlt>/', views.SumAllExperienceView, name='ExperienceSum'),
@@ -66,10 +54,8 @@ urlpatterns = [
     path('apv/<slug:tlt>/<slug:vac>/', views.ActiveProfileView, name='APV'),
     path('apv/<slug:tlt>/', views.profile_view, name='APV_L'),
     path('achievement-capture/', views.CaptureAchievementView, name='AchieveCap'),
-
     path('achievement-edit/<slug:ach>/', views.EditAchievementView, name='AchieveEdit'),
     path('achievement-del/<int:ach_i>/<slug:tlt>/', views.DeleteAchievementView, name='AchieveDelete'),
-
     path('lcm-capture/', views.LicenseCertificationCaptureView, name='LCMCap'),
     path('lcm-edit/<slug:lcm>/', views.LicenseCertificationEditView, name='LCMEdit'),
     path('lcm-del/<int:pk>/<slug:tlt>/', views.LicenseCertificationDeleteView, name='LCMDelete'),
@@ -90,4 +76,6 @@ urlpatterns = [
     path('help/how-to-capture-skills/', views.HelpHowCaptrueSkillsView, name='HelpHowCaptureSkills'),
     #Talent Rating Details
     path('<slug:tlt>/rating/', views.TltRatingDetailView, name="TltRatingDetail"),
+    #Confirmation review urlpatterns
+    path('alect-list/', views.lecturer_summary_list, name='AsLectList'),
 ]

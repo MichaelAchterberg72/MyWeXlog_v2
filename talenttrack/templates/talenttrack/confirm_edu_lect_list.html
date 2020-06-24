@@ -1,0 +1,62 @@
+{% extends 'base_home.html' %}
+{% load staticfiles %}
+
+{% block title %}Confirmation List{% endblock title %}
+
+{% block content %}
+
+<div class="card">
+  <div class="card-body">
+    <div class="float-right">
+      <form  action="{% url 'BookList:BLB' %}" method="post">
+      <input type="hidden" name="next" value="{{ request.GET.next }}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-secondary">Back</button>
+    </form>
+    </div>
+    <h3>Confirmation as Lecturer</h3>
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th class="align-middle text-center">Date<br>Captured</th>
+          <th class="align-middle text-center">Requested<br>By</th>
+          <th class="align-middle text-center">1-Course<br>2-Topic</th>
+          <th class="align-middle text-center">My<br>Response</th>
+          <th class="align-middle text-center">Edit</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in lect_qs %}
+          <tr>
+            <td rowspan="2" class="align-middle text-center">{{ item.date_captured|date:'j M Y' }}</td>
+            <td class="align-middle text-center">{{ item.education.talent.get_full_name }}</td>
+            <td>1-{{ item.education.course }}<br>2-{{ item.education.topic }}</td>
+            <td class="align-middle text-center">{{ item.get_confirm_display }}</td>
+            <td rowspan="2"  class="align-middle text-center">
+              {% if item.locked == False %}
+                <a href="{% url 'Profile:LecturerEdit' item.slug %}?next={{ request.path|urlencode }}">
+                  <i class="fa fa-pencil-square-o" aria-hidden="true"style="font-size:30px;color:black" data-toggle="tooltip" data-placement="top" title="Edit"></i>
+                </a>
+              {% else %}
+                <a href="#"><i class="fa fa-lock" aria-hidden="true"style="font-size:30px;color:black" data-toggle="tooltip" data-placement="top" title="Locked: cannot edit"></i></a>
+              {% endif %}
+            </td>
+          </tr>
+          <tr>
+            <td colspan="3">
+              <strong>
+                {% if item.comments %}
+                  {{ item.comments }}
+                {% else %}
+                  No Comment made.
+                {% endif %}
+              </strong>
+              </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock content %}

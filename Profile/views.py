@@ -651,6 +651,7 @@ def LecturerConfirmView(request, pk):
     if request.method == 'POST':
         info = Lecturer.objects.get(pk=pk)
         info.confirm = 'C'
+        info.date_confirmed = timezone.now().date()
         info.save()
         edu = WorkExperience.objects.get(pk=info.education.id)
         edu.score += lecturer_score
@@ -663,6 +664,7 @@ def LecturerRejectView(request, pk):
     if request.method == 'POST':
         info = Lecturer.objects.get(pk=pk)
         info.confirm = 'R'
+        info.date_confirmed = timezone.now().date()
         info.save()
     return redirect(reverse('Profile:Confirm')+'#Lecturer')
 
@@ -671,6 +673,7 @@ def LecturerRejectView(request, pk):
 def LecturerWrongPersonView(request, pk):
     if request.method == 'POST':
         info = Lecturer.objects.get(pk=pk)
+        info.date_confirmed = timezone.now().date()
         info.confirm = 'Y'
         info.save()
     return redirect(reverse('Profile:Confirm')+'#Lecturer')
@@ -684,6 +687,7 @@ def LecturerCommentView(request, lct):
     if request.method == 'POST':
         if form.is_valid():
             new = form.save(commit=False)
+            new.date_confirmed = timezone.now().date()
             new.save()
             if new.confirm == 'C':
                 edu = WorkExperience.objects.get(pk=info.education.id)
@@ -693,6 +697,44 @@ def LecturerCommentView(request, lct):
                 pass
 
             return redirect(reverse('Profile:Confirm')+'#Lecturer')
+
+    else:
+        template ='talenttrack/confirm_comments.html'
+        context = {'form': form, 'info': info}
+        return render(request, template, context)
+
+@login_required()
+def LecturerEditView(request, lct):
+    info = get_object_or_404(Lecturer, slug=lct)
+    form = LecturerCommentForm(request.POST or None, instance=info)
+
+    original = info.confirm
+
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.date_confirmed = timezone.now().date()
+            new.save()
+            if new.confirm == original:
+                pass
+            elif original =='S':
+                if new.confirm == "R":
+                    pass
+                else:
+                    edu = WorkExperience.objects.get(pk=info.education.id)
+                    edu.score += lecturer_score
+                    edu.save()
+            elif original != 'S':
+                if new.confirm == 'C':
+                    edu = WorkExperience.objects.get(pk=info.education.id)
+                    edu.score += lecturer_score*2
+                    edu.save()
+                else:
+                    edu = WorkExperience.objects.get(pk=info.education.id)
+                    edu.score -= lecturer_score
+                    edu.save()
+
+            return redirect(reverse('Talent:AsLectList'))
 
     else:
         template ='talenttrack/confirm_comments.html'

@@ -275,6 +275,13 @@ class WorkClientConfirmForm(forms.ModelForm):
         model = WorkClient
         fields = ('confirm', 'comments', )
 
+    def clean_confirm(self):
+        confirm_entry = self.cleaned_data.get("confirm")
+
+        if confirm_entry == 'S':
+            raise forms.ValidationError("Please Confirm or Reject this claim")
+        return confirm_entry
+
 
 class WorkClientSelectForm(forms.ModelForm):
     pwd = None
@@ -312,6 +319,12 @@ class WorkCollaboratorConfirmForm(forms.ModelForm):
         model = WorkCollaborator
         fields = ('confirm', 'comments', )
 
+    def clean_confirm(self):
+        confirm_entry = self.cleaned_data.get("confirm")
+
+        if confirm_entry == 'S':
+            raise forms.ValidationError("Please Confirm or Reject this claim")
+        return confirm_entry
 
 class WorkCollaboratorSelectForm(forms.ModelForm):
     pwd = None
@@ -348,6 +361,12 @@ class SuperiorConfirmForm(forms.ModelForm):
         model = Superior
         fields = ('confirm', 'comments', )
 
+    def clean_confirm(self):
+        confirm_entry = self.cleaned_data.get("confirm")
+
+        if confirm_entry == 'S':
+            raise forms.ValidationError("Please Confirm or Reject this claim")
+        return confirm_entry
 
 class SuperiorSelectForm(forms.ModelForm):
     pwd = None
@@ -382,6 +401,13 @@ class WorkColleagueConfirmForm(forms.ModelForm):
     class Meta:
         model = WorkColleague
         fields = ('confirm', 'comments')
+
+    def clean_confirm(self):
+        confirm_entry = self.cleaned_data.get("confirm")
+
+        if confirm_entry == 'S':
+            raise forms.ValidationError("Please Confirm or Reject this claim")
+        return confirm_entry
 
 
 class WorkColleagueSelectForm(forms.ModelForm):
@@ -468,6 +494,12 @@ class ClassMatesCommentForm(forms.ModelForm):
         model = ClassMates
         fields = ('comments', 'confirm',)
 
+    def clean_confirm(self):
+        confirm_entry = self.cleaned_data.get("confirm")
+
+        if confirm_entry == 'S':
+            raise forms.ValidationError("Please Confirm or Reject this claim")
+        return confirm_entry
 
 class ClassMatesResponseForm(forms.ModelForm):
     class Meta:
@@ -504,11 +536,25 @@ class ClassMatesConfirmForm(forms.ModelForm):
         model = ClassMates
         fields = ('confirm', 'comments')
 
+    def clean_confirm(self):
+        confirm_entry = self.cleaned_data.get("confirm")
+
+        if confirm_entry == 'S':
+            raise forms.ValidationError("Please Confirm or Reject this claim")
+        return confirm_entry
+
 
 class LecturerCommentForm(forms.ModelForm):
     class Meta:
         model = Lecturer
         fields = ('comments', 'confirm',)
+
+    def clean_confirm(self):
+        confirm_entry = self.cleaned_data.get("confirm")
+
+        if confirm_entry == 'S':
+            raise forms.ValidationError("Please Confirm or Reject this claim")
+        return confirm_entry
 
 
 class LecturerResponseForm(forms.ModelForm):
@@ -551,6 +597,12 @@ class LecturerConfirmForm(forms.ModelForm):
         model = Lecturer
         fields = ('confirm', 'comments')
 
+    def clean_confirm(self):
+        confirm_entry = self.cleaned_data.get("confirm")
+
+        if confirm_entry == 'S':
+            raise forms.ValidationError("Please Confirm or Reject this claim")
+        return confirm_entry
 
 class LecturerRespondForm(forms.ModelForm):
     class Meta:

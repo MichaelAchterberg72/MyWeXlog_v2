@@ -7,6 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.http import is_safe_url
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
+from django.utils import timezone
 from django.core.exceptions import PermissionDenied
 import json
 from django.db.models import Count, Sum, Q, F
@@ -43,7 +44,7 @@ from booklist.models import ReadBy
 from users.models import CustomUser
 
 from WeXlog.app_config import (
-    skill_pass_score,
+    skill_pass_score, locked_age,
 )
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -229,6 +230,28 @@ def profile_search(request):
 
     template = 'talenttrack/profile_search_results.html'
     context = {'form': form, 'query': query, 'results': results,}
+    return render(request, template, context)
+
+
+@login_required()
+def lecturer_summary_list(request):
+    tlt = request.user
+    lect_qs = Lecturer.objects.filter(lecturer=tlt).order_by('-date_confirmed')
+    lect_qs_unlocked = lect_qs.filter(locked=False)
+
+    today = timezone.now().date()
+
+    for item in lect_qs_unlocked:
+        age = (today - item.date_confirmed).days
+        if age > locked_age:
+            item.locked = True
+            item.save()
+        else:
+            pass
+    lect_qs = Lecturer.objects.filter(lecturer=tlt).order_by('-date_confirmed')
+
+    template = 'talenttrack/confirm_edu_lect_list.html'
+    context = {'lect_qs': lect_qs,}
     return render(request, template, context)
 
 
