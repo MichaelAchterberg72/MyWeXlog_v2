@@ -201,7 +201,7 @@ X_FRAME_OPTIONS = 'DENY'
 REFERRER_POLICY='same-origin'
     ## Content-Security-policy (3rd party app)
 CSP_DEFAULT_SRC = (
-    "'self'", "'unsafe-inline'", 'SameSite', 'maxcdn.bootstrapcdn.com', 'code.jquery.com', 'cdnjs.cloudflare.com', 'youtube.com', 'fonts.googleapis.com', 'maps.googleapis.com', 'use.typekit.net', 'netdna.bootstrapcdn.com', 'w3.org', '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'kit.fontawesome.com', 'mywexlog.dev', 'bookstrapcdn.com', 'cdn.jsdelivr.net', 'ajax.googleapis.com',
+    "'self'", "'unsafe-inline'", 'SameSite', 'maxcdn.bootstrapcdn.com', 'code.jquery.com', 'cdnjs.cloudflare.com', 'fonts.googleapis.com', 'maps.googleapis.com', 'use.typekit.net', 'netdna.bootstrapcdn.com', 'w3.org', '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'kit.fontawesome.com', 'mywexlog.dev', 'bookstrapcdn.com', 'cdn.jsdelivr.net', 'ajax.googleapis.com', 'https://www.youtube.com/',
     )#app_config
 
 CSP_SCRIPT_SRC = (
@@ -212,9 +212,11 @@ CSP_IMG_SRC = (
     )#app_config
 CSP_OBJECT_SRC = None
 CSP_MEDIA_SRC = (
-    "'self'", '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev',
+    "'self'", '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev', 'youtube.com',
     )
-CSP_FRAME_SRC = None
+CSP_FRAME_SRC = (
+    'https://www.youtube.com/',
+    )
 CSP_FONT_SRC = (
     "'self'", 'fonts.googleapis.com', '*', 'w3.org', '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev',
     )#app_config

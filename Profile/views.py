@@ -81,6 +81,9 @@ def ProfileViewedReport(request):
     pvr_count = pvr.count()
     pvr_s = pvr[:5]
 
+    referral_code = Referral.objects.get(user=tlt)
+    alias = tlt.alias
+
     date = timezone.now()
     d1 = date - timedelta(days=7)
     d2 = d1 - timedelta(days=7)
@@ -161,12 +164,23 @@ def ProfileViewedReport(request):
             'pvr_p': pvr_p,
             'pvr_p_count': pvr_p_count,
             'tlt': tlt,
+            'alias': alias,
+            'referral_code': referral_code,
             'report_views_data': report_views_data,
             'user_views_data': user_views_data,
             'report_views_labels': report_views_labels,
             'pageitems': pageitems,
             'page_range': page_range
     }
+    return render(request, template, context)
+
+
+@login_required()
+@subscription(1)
+def CaptureSkillsView(request):
+
+    template = 'Profile/capture_skills.html'
+    context = {}
     return render(request, template, context)
 
 

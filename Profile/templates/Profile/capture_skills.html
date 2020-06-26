@@ -1,0 +1,45 @@
+{% extends 'base_home.html' %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Help{% endblock title %}
+
+{% block Style %}
+
+{% endblock Style %}
+{% block content %}
+<div class="card">
+  <div class="card-body">
+    <div class="btn-toolbar float-right">
+    <a href="{% url 'Profile:ProfileViewed' %}?next={{ request.path|urlencode }}"  class="btn btn-primary">Back</a>
+    </div>
+    <h5 class="card-title">How to Capture Skills</h5>
+    <br>
+    <div class="embed-responsive embed-responsive-16by9">
+      <iframe class="embed-responsive-item align-middle center" src="https://www.youtube.com/embed/zpOULjyy-n8?rel=0"></iframe>
+    </div>
+    <p>When capturing skills you need to capture all the categories of skills
+      that are appropriate.</p>
+    <p>Tags must be broken into their base forms. What is meant by this?
+      Lets use cars as an example. If you are a mechanic working on a car
+      and want to tag the experience, how would you do it?</p>
+    <p>Say you are working on a Toyota Corolla 1.6i GLE.  To tag it as
+      "Toyota-Corrolla-1.6i-GLE" is not ideal as it would sterilise the
+      experience from people looking for talent with experience in Toyota's.
+      A better way would be to split the tag up: "Toyota", "Corolla", "1.6i",
+      "GLE".</p>
+    <p>For example when you are capturing skills for creating the front end
+      of a website you need to include the overriding skill catagories such
+      as ‘Vendor’,  'Project Manager", ‘Project Management, ‘Web Developer’,
+      "Web Development", 'Front End Development', ‘User Team’, 'Programming',
+      ‘Python’, ‘Java Script’, ‘Django’, ‘CSS’, ‘HTML’, ‘Web Sockets’ and
+      ‘WeXlog’, so that when your skills are searched they include the
+      umbrella catagories.</p>
+    <p>Pilots would be able to capture airstrips / airports / runways they
+      flew into, local rules they dealt with, Planes they have flown,
+      airline companies, positions they have flown as such as pilot, co pilot
+      or flight engineer.</p>
+</div>
+</div>
+{% endblock content %}

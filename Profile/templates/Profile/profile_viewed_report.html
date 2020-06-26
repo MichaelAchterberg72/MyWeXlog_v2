@@ -23,6 +23,68 @@
       </div>
     </div>
   </div>
+  <br>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Increase Your Profile Views</h5>
+      <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="10000">
+        <ol class="carousel-indicators">
+          <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
+        </ol>
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <div class="container" style="width:80%; height:165px">
+            <p><strong>1. Apply for more vacancies</strong></p>
+            <p>By applying for more vacancies you increase your chances of securing the opportunities that you are available to you with your skills base.</p>
+            <br>
+            <p>{% if request.user.subscription >= 2 %}
+            <a href="{% url 'MarketPlace:VacanciesList' %}" class="btn btn-primary float-right" style="width:300px">Apply for More Positions</a>
+            {% else %}
+            <a href="{% url 'Payments:PassiveUpgradeSubscription' %}" class="btn btn-primary float-right" style="width:300px">Apply for More Positions</a>
+            {% endif %}</p>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <div class="container" style="width:80%; height:165px">
+            <p><strong>2. Request more validations on your experience items and not only increase your score but increase your network and profile views.</strong></p>
+            <p>The more you capture the better you look.</p>
+            <br>
+            <p><a href="{% url 'Talent:ExperienceList' %}" class="btn btn-primary float-right" style="width:300px">View Experience</a></p>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <div class="container" style="width:80%; height:165px">
+            <p><strong>3. Apply more skills when capturing experience (better skills application).</strong></p>
+            <p>The more skills you add to you experience profile when capturing experience the better your chances are of being visible to recruiters to select you for a vacancy.</p>
+            <br>
+            <p><a href="{% url 'Profile:CaptureSkills' %}" class="btn btn-primary float-right" style="width:300px">Learn</a></p>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <div class="container" style="width:80%; height:165px">
+            <p><strong>4. Market your Public Profile link on your CV, Marketing Material and other social media profiles and request to view profile "{{ alias }}".</strong></p>
+            <input type="text" class="form-control" value="{{ referral_code.url }}" id="myInput">
+            <br>
+            <p><button class="btn btn-primary float-right" id="myButton" style="width:300px">Copy Link</button></p>
+            </div>
+          </div>
+        </div>
+        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
+        </div>
+    </div>
+  </div>
+
+
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
 
