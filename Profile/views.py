@@ -17,6 +17,10 @@ from django.core.mail import send_mail, EmailMultiAlternatives
 from django.template.loader import get_template, render_to_string
 from django.utils.html import strip_tags
 
+import datetime as dt
+from datetime import datetime, timedelta
+from django.utils import timezone, dateformat
+import pytz
 
 from csp.decorators import csp_exempt
 from django.contrib.auth.decorators import login_required
@@ -72,8 +76,62 @@ def ProfileViewedReport(request):
     tlt_id = tlt.id
     qs = ObjectViewed.objects.filter(object_id=tlt_id)
     pvr = qs.filter(content_type__app_label="Profile").order_by('-timestamp')
+    pvr_p = pvr.values_list('user__alias', flat=True).distinct()
+    pvr_p_count = pvr_p.count()
     pvr_count = pvr.count()
     pvr_s = pvr[:5]
+
+    date = timezone.now()
+    d1 = date - timedelta(days=7)
+    d2 = d1 - timedelta(days=7)
+    d3 = d2 - timedelta(days=7)
+    d4 = d3 - timedelta(days=7)
+    d5 = d4 - timedelta(days=7)
+    d6 = d5 - timedelta(days=7)
+    d7 = d6 - timedelta(days=7)
+    d8 = d7 - timedelta(days=7)
+    d9 = d8 - timedelta(days=7)
+
+    monday1 = (d1 - timedelta(days=d1.weekday()))
+    monday2 = (d2 - timedelta(days=d2.weekday()))
+    monday3 = (d3 - timedelta(days=d3.weekday()))
+    monday4 = (d4 - timedelta(days=d4.weekday()))
+    monday5 = (d5 - timedelta(days=d5.weekday()))
+    monday6 = (d6 - timedelta(days=d6.weekday()))
+    monday7 = (d7 - timedelta(days=d7.weekday()))
+    monday8 = (d8 - timedelta(days=d8.weekday()))
+    monday9 = (d9 - timedelta(days=d9.weekday()))
+
+    week3_date = dateformat.format(monday2, "d-M")
+    week4_date = dateformat.format(monday3, "d-M")
+    week5_date = dateformat.format(monday4, "d-M")
+    week6_date = dateformat.format(monday5, "d-M")
+    week7_date = dateformat.format(monday6, "d-M")
+    week8_date = dateformat.format(monday7, "d-M")
+
+    week1 = pvr.filter(timestamp__range=(monday1, date)).count()
+    week2 = pvr.filter(timestamp__range=(monday2, monday1)).count()
+    week3 = pvr.filter(timestamp__range=(monday3, monday2)).count()
+    week4 = pvr.filter(timestamp__range=(monday4, monday3)).count()
+    week5 = pvr.filter(timestamp__range=(monday5, monday4)).count()
+    week6 = pvr.filter(timestamp__range=(monday6, monday5)).count()
+    week7 = pvr.filter(timestamp__range=(monday7, monday6)).count()
+    week8 = pvr.filter(timestamp__range=(monday8, monday7)).count()
+
+    week1_u = pvr_p.filter(timestamp__range=(monday1, date)).count()
+    week2_u = pvr_p.filter(timestamp__range=(monday2, monday1)).count()
+    week3_u = pvr_p.filter(timestamp__range=(monday3, monday2)).count()
+    week4_u = pvr_p.filter(timestamp__range=(monday4, monday3)).count()
+    week5_u = pvr_p.filter(timestamp__range=(monday5, monday4)).count()
+    week6_u = pvr_p.filter(timestamp__range=(monday6, monday5)).count()
+    week7_u = pvr_p.filter(timestamp__range=(monday7, monday6)).count()
+    week8_u = pvr_p.filter(timestamp__range=(monday8, monday7)).count()
+
+    report_views_labels = [week8_date, week7_date, week6_date, week5_date, week4_date, week3_date, 'Last Week', 'This Week']
+
+    report_views_data = [week8, week7, week6, week5, week4, week3, week2, week1]
+#    user_views_data = [week8_u, week7_u, week6_u, week5_u, week4_u, week3_u, week2_u, week1_u,]
+    user_views_data = [week8_u, week7_u, week6_u, week5_u, week4_u, week3_u, week2_u, week1_u,]
 
     try:
         page = int(request.GET.get('page', 1))
@@ -96,7 +154,19 @@ def ProfileViewedReport(request):
     page_range = list(paginator.page_range)[start_index:end_index]
 
     template = 'Profile/profile_viewed_report.html'
-    context = {'pvr': pvr, 'pvr_s': pvr_s, 'pvr_count': pvr_count, 'tlt': tlt, 'pageitems': pageitems, 'page_range': page_range}
+    context = {
+            'pvr': pvr,
+            'pvr_s': pvr_s,
+            'pvr_count': pvr_count,
+            'pvr_p': pvr_p,
+            'pvr_p_count': pvr_p_count,
+            'tlt': tlt,
+            'report_views_data': report_views_data,
+            'user_views_data': user_views_data,
+            'report_views_labels': report_views_labels,
+            'pageitems': pageitems,
+            'page_range': page_range
+    }
     return render(request, template, context)
 
 
