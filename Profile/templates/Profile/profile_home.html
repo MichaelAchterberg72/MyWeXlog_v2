@@ -221,7 +221,64 @@
     </p>
     </div>
     <hr>
-    <a href="{% url 'Talent:AsLectList' %}?next={{ request.path|urlencode }}">TEWS</a>
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th class="align-middle text-center">AS</th>
+          <th class="align-middle text-center">Confirmed</th>
+          <th class="align-middle text-center">Rejected</th>
+          <th class="align-middle text-center">Waiting</th>
+          <th class="align-middle text-center">More</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if edu_lect %}
+          <tr>
+            <td class="align-middle text-center">Lecturer</td>
+            <td class="align-middle text-center">{{ edu_lect_c }}</td>
+            <td class="align-middle text-center">{{ edu_lect_r }}</td>
+            <td class="align-middle text-center">{{ edu_lect_s }}</td>
+            <td class="align-middle text-center">
+              <a href="{% url 'Talent:AsLectList' %}?next={{ request.path|urlencode }}">Det</a>
+            </td>
+          </tr>
+        {% endif %}
+        {% if edu_cm %}
+          <tr>
+            <td class="align-middle text-center">ClassMate</td>
+            <td class="align-middle text-center">{{ edu_cm_c }}</td>
+            <td class="align-middle text-center">{{ edu_cm_r }}</td>
+            <td class="align-middle text-center">{{ edu_cm_s }}</td>
+            <td class="align-middle text-center">
+              <a href="{% url 'Talent:AsLectList' %}?next={{ request.path|urlencode }}">Det</a>
+            </td>
+          </tr>
+        {% endif %}
+        {% if exp_clg %}
+          <tr>
+            <td class="align-middle text-center">ClassMate</td>
+            <td class="align-middle text-center">{{ exp_clg_c }}</td>
+            <td class="align-middle text-center">{{ exp_clg_r }}</td>
+            <td class="align-middle text-center">{{ exp_clg_s }}</td>
+            <td class="align-middle text-center">
+              <a href="{% url 'Talent:AsLectList' %}?next={{ request.path|urlencode }}">Det</a>
+            </td>
+          </tr>
+        {% endif %}
+        {% if exp_sup %}
+          <tr>
+            <td class="align-middle text-center">ClassMate</td>
+            <td class="align-middle text-center">{{ exp_sup_c }}</td>
+            <td class="align-middle text-center">{{ exp_sup_r }}</td>
+            <td class="align-middle text-center">{{ exp_sup_s }}</td>
+            <td class="align-middle text-center">
+              <a href="{% url 'Talent:AsLectList' %}?next={{ request.path|urlencode }}">Det</a>
+            </td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+
  {% endblock TBA %}
 
 {% block Center_Content %}

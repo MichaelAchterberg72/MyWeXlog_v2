@@ -412,9 +412,29 @@ def ProfileHome(request):
     pfl = Profile.objects.get(talent=talent)
     referral_code = Referral.objects.get(user=talent)
 
+    edu_lect = Lecturer.objects.filter(lecturer=talent)
+    edu_lect_r = edu_lect.filter(confirm="R").count
+    edu_lect_c = edu_lect.filter(confirm="C").count
+    edu_lect_s = edu_lect.filter(confirm="S").count
+
+    edu_cm = ClassMates.objects.filter(colleague=talent)
+    edu_cm_r = edu_cm.filter(confirm="R").count
+    edu_cm_c = edu_cm.filter(confirm="C").count
+    edu_cm_s = edu_cm.filter(confirm="S").count
+
+    exp_clg = WorkColleague.objects.filter(colleague_name=talent)
+    exp_clg_r = exp_clg.filter(confirm="R").count
+    exp_clg_c = exp_clg.filter(confirm="C").count
+    exp_clg_s = exp_clg.filter(confirm="S").count
+
+    exp_sup = Superior.objects.filter(superior_name=talent)
+    exp_sup_r = exp_sup.filter(confirm="R").count
+    exp_sup_c = exp_sup.filter(confirm="C").count
+    exp_sup_s = exp_sup.filter(confirm="S").count
+
     template = 'Profile/profile_home.html'
     context = {
-        'wf1': wf1, 'tlt': tlt, 'pvr_count': pvr_count, 'total': total, 'interviews_tlt': interviews_tlt, 'interviews_emp': interviews_emp, 'interviews_empc': interviews_empc, 'interviews_tltc': interviews_tltc, 'assigned_tlt': assigned_tlt, 'assigned_emp': assigned_emp, 'assigned_tltc': assigned_empc, 'assigned_empc': assigned_tltc, 'open_assignments_tltc': open_assignments_tltc, 'open_assignments_empc': open_assignments_empc, 'lvl_1': lvl_1, 'lvl_2': lvl_2, 'lvl_3': lvl_3, 'lvl_4': lvl_4,'lvl_5': lvl_5, 'tot': tot, 'pfl': pfl, 'referral_code': referral_code,
+        'wf1': wf1, 'tlt': tlt, 'pvr_count': pvr_count, 'total': total, 'interviews_tlt': interviews_tlt, 'interviews_emp': interviews_emp, 'interviews_empc': interviews_empc, 'interviews_tltc': interviews_tltc, 'assigned_tlt': assigned_tlt, 'assigned_emp': assigned_emp, 'assigned_tltc': assigned_empc, 'assigned_empc': assigned_tltc, 'open_assignments_tltc': open_assignments_tltc, 'open_assignments_empc': open_assignments_empc, 'lvl_1': lvl_1, 'lvl_2': lvl_2, 'lvl_3': lvl_3, 'lvl_4': lvl_4,'lvl_5': lvl_5, 'tot': tot, 'pfl': pfl, 'referral_code': referral_code, 'edu_lect': edu_lect, 'edu_lect_r': edu_lect_r, 'edu_lect_c': edu_lect_c, 'edu_lect_s': edu_lect_s, 'edu_cm': edu_cm, 'edu_cm_r': edu_cm_r, 'edu_cm_c': edu_cm_c, 'edu_cm_s': edu_cm_s, 'exp_clg': exp_clg, 'exp_clg_c': exp_clg_c, 'exp_clg_r': exp_clg_r, 'exp_clg_s': exp_clg_s, 'exp_sup': exp_sup, 'exp_sup_c': exp_sup_c, 'exp_sup_r': exp_sup_r, 'exp_sup_s': exp_sup_s,
         }
 
     return render(request, template, context)
@@ -594,7 +614,7 @@ def BriefCareerHistoryView(request):
                 response = redirect('Profile:History')
                 return response
             elif 'done' in request.POST:
-                response = redirect(reverse('Profile:ProfileView', kwargs={'profile_id': talent.id}))
+                response = redirect(reverse('Profile:ProfileView'))
                 return response
 
     else:
@@ -611,7 +631,7 @@ def ResignedView(request, bch, tlt):
     if request.method == 'POST':
         new = form.save(commit=False)
         new.save()
-        return redirect(reverse('Profile:ProfileView', kwargs={'tlt': tlt})+'#History')
+        return redirect(reverse('Profile:ProfileView')+'#History')
 
     else:
         template = 'Profile/brief_career_resigned.html'
@@ -1088,7 +1108,7 @@ def OnlineDelete(request, pk, tlt):
     if request.method == 'POST':
         site = OnlineRegistrations.objects.get(pk=pk)
         site.delete()
-    return redirect(reverse('Profile:ProfileView', kwargs={'tlt': tlt})+'#online')
+    return redirect(reverse('Profile:ProfileView')+'#online')
 
 
 @login_required()
@@ -1102,7 +1122,7 @@ def PassportAddView(request):
                 new = form.save(commit=False)
                 new.talent = request.user
                 new.save()
-                return redirect(reverse('Profile:ProfileView', kwargs={'tlt':tlt})+'#passport')
+                return redirect(reverse('Profile:ProfileView')+'#passport')
         else:
             template = 'Profile/passport_add.html'
             context = {'form': form}
@@ -1117,7 +1137,7 @@ def PassportDeleteView(request, pk, tlt):
     if info.talent == request.user:
         if request.method =='POST':
             info.delete()
-            return redirect(reverse('Profile:ProfileView', kwargs={'tlt':tlt})+'#passport')
+            return redirect(reverse('Profile:ProfileView')+'#passport')
     else:
         raise PermissionDenied
 
@@ -1132,7 +1152,7 @@ def PassportEditView(request, psp, tlt):
                 new = form.save(commit=False)
                 new.talent = request.user
                 new.save()
-                return redirect(reverse('Profile:ProfileView', kwargs={'tlt':tlt})+'#passport')
+                return redirect(reverse('Profile:ProfileView')+'#passport')
         else:
             template = 'Profile/passport_add.html'
             context = {'form': form}
@@ -1153,7 +1173,7 @@ def LanguageAddView(request, tlt):
                 new = form.save(commit=False)
                 new.talent = request.user
                 new.save()
-                return redirect(reverse('Profile:ProfileView', kwargs={'tlt':tlt}))
+                return redirect(reverse('Profile:ProfileView'))
             else:
                 template = 'Profile/language_add.html'
                 context = {'form': form}
@@ -1178,7 +1198,7 @@ def LanguageEditView(request, tlt, lang):
                 new = form.save(commit=False)
                 new.talent = request.user
                 new.save()
-                return redirect(reverse('Profile:ProfileView', kwargs={'tlt':tlt}))
+                return redirect(reverse('Profile:ProfileView'))
         else:
             template = 'Profile/language_add.html'
             context = {'form': form}
@@ -1193,7 +1213,7 @@ def LanguageDeleteView(request, lang_id, tlt):
     if info.talent == request.user:
         if request.method =='POST':
             info.delete()
-            return redirect(reverse('Profile:ProfileView', kwargs={'tlt': tlt})+'#language')
+            return redirect(reverse('Profile:ProfileView')+'#language')
     else:
         raise PermissionDenied
 
@@ -1241,7 +1261,7 @@ def IdentificationView(request):
                 new = form.save(commit=False)
                 new.talent = request.user
                 new.save()
-                return redirect(reverse('Profile:ProfileView', kwargs={'tlt':tlt}))
+                return redirect(reverse('Profile:ProfileView'))
         else:
             template = 'Profile/id_edit.html'
             context = {'form': form}
@@ -1288,7 +1308,7 @@ def FileUploadView(request):
                 new = form.save(commit=False)
                 new.talent = request.user
                 new.save()
-                return redirect(reverse('Profile:ProfileView', kwargs={'tlt':tlt})+'#Upload')
+                return redirect(reverse('Profile:ProfileView')+'#Upload')
             else:
                 template = 'Profile/file_upload.html'
                 context = {'form': form}

@@ -251,7 +251,29 @@ def lecturer_summary_list(request):
     lect_qs = Lecturer.objects.filter(lecturer=tlt).order_by('-date_confirmed')
 
     template = 'talenttrack/confirm_edu_lect_list.html'
-    context = {'lect_qs': lect_qs,}
+    context = {'lect_qs': lect_qs, 'age': locked_age,}
+    return render(request, template, context)
+
+
+@login_required()
+def classmate_summary_list(request):
+    tlt = request.user
+    cm_qs = Lecturer.objects.filter(colleague=tlt).order_by('-date_confirmed')
+    cm_qs_unlocked = lect_qs.filter(locked=False)
+
+    today = timezone.now().date()
+
+    for item in cm_qs_unlocked:
+        age = (today - item.date_confirmed).days
+        if age > locked_age:
+            item.locked = True
+            item.save()
+        else:
+            pass
+    cm_qs = Lecturer.objects.filter(colleague=tlt).order_by('-date_confirmed')
+
+    template = 'talenttrack/confirm_edu_cm_list.html'
+    context = {'cm_qs': cm_qs,}
     return render(request, template, context)
 
 

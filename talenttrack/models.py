@@ -172,6 +172,7 @@ class ClassMates(models.Model):
         #AutoCaptured
     date_captured = models.DateField(auto_now_add=True)
     date_confirmed = models.DateField(auto_now_add=True)
+    locked = models.BooleanField(default=False)
         #Captured by colleague
     confirm = models.CharField(max_length=1, choices=CONFIRM, default='S')
     comments = models.TextField(blank=True, null=True)
