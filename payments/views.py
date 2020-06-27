@@ -46,6 +46,11 @@ class PayPalActiveSubscriptionCancelReturnView(TemplateView):
     template_name = 'subscription_payments/active_subscription_cancel_return.html'
 
 
+@method_decorator(csrf_exempt, name='dispatch')
+class PayPalPackageBennefitsView(TemplateView):
+    template_name = 'subscription_payments/package_bennefits.html'
+
+
 @login_required
 def GeneralPassiveSubscriptionView(request):
 
