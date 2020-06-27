@@ -272,6 +272,7 @@ class WorkColleague(models.Model):
         #AutoCaptured
     date_captured = models.DateField(auto_now_add=True)
     date_confirmed = models.DateField(auto_now_add=True)
+    locked = models.BooleanField(default=False)
         #Captured by colleague
     confirm = models.CharField(max_length=1, choices=CONFIRM, default='S')
     comments = models.TextField(blank=True, null=True)
@@ -283,9 +284,7 @@ class WorkColleague(models.Model):
         unique_together = (('experience','colleague_name','date_captured'),)
 
     def __str__(self):
-        return "WorkColleague for {} on {}".format(
-            self.experience.talent, self.experience
-        )
+        return f'{self.colleague_name} on {self.experience.talent}, captured {self.date_captured} - responded {self.date_confirmed}'
 
     def save(self, *args, **kwargs):
         if self.slug is None or self.slug == "":
@@ -302,6 +301,7 @@ class Superior(models.Model):
         #AutoCaptured
     date_captured = models.DateField(auto_now_add=True)
     date_confirmed = models.DateField(auto_now_add=True)
+    locked = models.BooleanField(default=False)
         #Captured by superior
     confirm = models.CharField(max_length=1, choices=CONFIRM, default='S')
     comments = models.TextField(blank=True, null=True)
@@ -333,6 +333,7 @@ class WorkCollaborator(models.Model):
         #AutoCaptured
     date_captured = models.DateField(auto_now_add=True)
     date_confirmed = models.DateField(auto_now_add=True)
+    locked = models.BooleanField(default=False)
         #Captured by collaborator
     confirm = models.CharField(max_length=1, choices=CONFIRM, default='S')
     comments = models.TextField(blank=True, null=True)
@@ -365,6 +366,7 @@ class WorkClient(models.Model):
         #AutoCaptured
     date_captured = models.DateField(auto_now_add=True)
     date_confirmed = models.DateField(auto_now_add=True)
+    locked = models.BooleanField(default=False)
         #Captured by collaborator
     confirm = models.CharField(max_length=1, choices=CONFIRM, default='S')
     comments = models.TextField(blank=True, null=True)

@@ -77,5 +77,7 @@ urlpatterns = [
     #Talent Rating Details
     path('<slug:tlt>/rating/', views.TltRatingDetailView, name="TltRatingDetail"),
     #Confirmation review urlpatterns
-    path('alect-list/', views.lecturer_summary_list, name='AsLectList'),
+    path('calect-list/', views.lecturer_conf_summary_list, name='CAsLectList'),
+    path('cacm-list/', views.classmate_conf_summary_list, name='CAsCmList'),
+    path('caclg-list/', views.colleague_conf_summary_list, name='CAsClgList'),
 ]

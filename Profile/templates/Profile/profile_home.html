@@ -41,79 +41,75 @@
 {% endblock network %}
 
 {% block workflow %}
-
-<table class="table table-sm">
-  <thead>
-    <tr>
-      <th></th>
-      <th class="align-middle text-center">As Employer</th>
-      <th class="align-middle text-center">As Talent</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td class="align-middle text-center">Interviews Pending</td>
-      <td class="align-middle text-center">
-        <a href="{% url 'MarketPlace:EmployerInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 10rem">Interview History</a>
-        <br>
-        {% if interviews_emp %}
-          {{ interviews_empc }}
-        {% else %}
-          None
-        {% endif %}
-      </td>
-      <td class="align-middle text-center">
-        <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary 8rem" style="width: 10rem">Interview History</a>
-        <br>
-        {% if interviews_tlt %}
-          {{ interviews_tltc }}
-        {% else %}
-          None
-        {% endif %}
-      </td>
-    </tr>
-  </tbody>
-</table>
-<br>
-<p>Experience confirmations: <a href="{% url 'Profile:Confirm' %}" class="btn btn-info float-right" style="width: 8rem">{{ total }} Requests</a></p>
-
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th></th>
+        <th class="align-middle text-center">As Employer</th>
+        <th class="align-middle text-center">As Talent</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="align-middle text-center">Interviews Pending</td>
+        <td class="align-middle text-center">
+          <a href="{% url 'MarketPlace:EmployerInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 10rem">Interview History</a>
+          <br>
+          {% if interviews_emp %}
+            {{ interviews_empc }}
+          {% else %}
+            None
+          {% endif %}
+        </td>
+        <td class="align-middle text-center">
+          <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary 8rem" style="width: 10rem">Interview History</a>
+          <br>
+          {% if interviews_tlt %}
+            {{ interviews_tltc }}
+          {% else %}
+            None
+          {% endif %}
+        </td>
+      </tr>
+    </tbody>
+  </table>
 {% endblock workflow %}
 
 {% block score %}
-<table class="table table-sm">
-  <thead>
-    <tr>
-      <th class="align-middle text-center">Detail</th>
-      <th class="align-middle text-center">As Employer</th>
-      <th class="align-middle text-center">As Talent</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td class="align-middle text-center">Open Assignments</td>
-      <td class="align-middle text-center">
-        <a href="{% url 'Profile:WorkshopEmp' %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 10rem">Enter Office</a>
-        <br>
-        {% if open_assignments_empc  %}
-          {{ open_assignments_empc }}
-        {% else %}
-          None
-        {% endif %}
-      </td>
-      <td class="align-middle text-center">
-        <a href="{% url 'Profile:WorkshopTlt' %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 10rem">Enter Workshop</a>
-        <br>
-        {% if open_assignments_tltc  %}
-          {{ open_assignments_tltc }}
-        {% else %}
-          None
-        {% endif %}
-      </td>
-    </tr>
-  </tbody>
-</table>
-<br>
-<p>Your Profile has been viewed: {% if request.user.subscription >= 1 %}<a href="{% url 'Profile:ProfileViewed' %}" class="btn btn-info float-right">Profile Viewed Report: {{ pvr_count }} times</a>{% else %}<span class="float-right"><strong>{{ pvr_count }}</strong> times.</span>{% endif %}</p>
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th class="align-middle text-center">Detail</th>
+        <th class="align-middle text-center">As Employer</th>
+        <th class="align-middle text-center">As Talent</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="align-middle text-center">Open Assignments</td>
+        <td class="align-middle text-center">
+          <a href="{% url 'Profile:WorkshopEmp' %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 10rem">Enter Office</a>
+          <br>
+          {% if open_assignments_empc  %}
+            {{ open_assignments_empc }}
+          {% else %}
+            None
+          {% endif %}
+        </td>
+        <td class="align-middle text-center">
+          <a href="{% url 'Profile:WorkshopTlt' %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 10rem">Enter Workshop</a>
+          <br>
+          {% if open_assignments_tltc  %}
+            {{ open_assignments_tltc }}
+          {% else %}
+            None
+          {% endif %}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <br>
+  <p>Your Profile has been viewed: {% if request.user.subscription >= 1 %}<a href="{% url 'Profile:ProfileViewed' %}" class="btn btn-info float-right">Profile Viewed Report: {{ pvr_count }} times</a>{% else %}<span class="float-right"><strong>{{ pvr_count }}</strong> times.</span>{% endif %}</p>
 
 {% endblock score %}
 
@@ -141,143 +137,119 @@
     &nbsp &nbsp
     <a href="{% url 'Talent:PflSearch' %}" class=""><i class="fa fa-users" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Profile Search"></i></a>
   </div>
-    <hr>
-    <div class="text-center">
-      {% if pfl.rate_count >= 5 %}
-        <p style="font-size:20px;color:black">
-          Your Rating:
-          {% if pfl.avg_rate >= 0 and pfl.avg_rate < 0.5 %}
-            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
-          {% elif pfl.avg_rate >= 0.5 and pfl.avg_rate < 1 %}
-            <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
-          {% elif pfl.avg_rate >= 1 and pfl.avg_rate < 1.5 %}
-            <span><i class="fa fa-star" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
-          {% elif pfl.avg_rate >= 1.5 and pfl.avg_rate < 2 %}
-            <span><i class="fa fa-star" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
-          {% elif pfl.avg_rate >= 2 and pfl.avg_rate < 2.5 %}
-            <span><i class="fa fa-star" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
-          {% elif pfl.avg_rate >= 2.5 and pfl.avg_rate < 3 %}
-            <span><i class="fa fa-star" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
-          {% elif pfl.avg_rate >= 3 and pfl.avg_rate < 3.5 %}
-            <span><i class="fa fa-star" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
-          {% elif pfl.avg_rate >= 3.5 and pfl.avg_rate < 4 %}
-            <span><i class="fa fa-star" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
-          {% elif pfl.avg_rate >= 4 and pfl.avg_rate < 4.5 %}
-            <span><i class="fa fa-star" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
-          {% elif pfl.avg_rate >= 4.5 and pfl.avg_rate < 4.95 %}
-            <span><i class="fa fa-star" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
-          {% elif pfl.avg_rate >= 4.95 %}
-            <span><i class="fa fa-star" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star" aria-hidden="true"></i></span>
-            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+  <hr>
+  <br>
+  <div class="text-center">
+    {% if pfl.rate_count >= 5 %}
+      <p style="font-size:20px;color:black">
+        Your Rating:
+        {% if pfl.avg_rate >= 0 and pfl.avg_rate < 0.5 %}
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+        {% elif pfl.avg_rate >= 0.5 and pfl.avg_rate < 1 %}
+          <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+        {% elif pfl.avg_rate >= 1 and pfl.avg_rate < 1.5 %}
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+        {% elif pfl.avg_rate >= 1.5 and pfl.avg_rate < 2 %}
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+        {% elif pfl.avg_rate >= 2 and pfl.avg_rate < 2.5 %}
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+        {% elif pfl.avg_rate >= 2.5 and pfl.avg_rate < 3 %}
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+        {% elif pfl.avg_rate >= 3 and pfl.avg_rate < 3.5 %}
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+        {% elif pfl.avg_rate >= 3.5 and pfl.avg_rate < 4 %}
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+        {% elif pfl.avg_rate >= 4 and pfl.avg_rate < 4.5 %}
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+        {% elif pfl.avg_rate >= 4.5 and pfl.avg_rate < 4.95 %}
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+        {% elif pfl.avg_rate >= 4.95 %}
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+        {% endif %}
+        {{ pfl.avg_rate|floatformat:2 }} from {{ pfl.rate_count|intcomma }} votes
+        <a href="{% url 'Talent:TltRatingDetail' pfl.alias %}" style="font-size:20px;color:black" target="_blank" data-toggle="tooltip" title="Ratings Breakdown"><i class="fa fa-pie-chart" aria-hidden="true"></i></a>
+    {% else %}
+      Ratings calculated over 5 or more votes, you currently have {{ pfl.rate_count|intcomma }}.
+    {% endif %}
+  </p>
+  </div>
+  <hr>
+  <br>
+  <h4 class="text-left">Reviews Summary</h4>
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th class="align-middle text-center">As</th>
+        <th class="align-middle text-center">Confirmed</th>
+        <th class="align-middle text-center">Rejected</th>
+        <th class="align-middle text-center">Waiting</th>
+        <th class="align-middle text-center">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th class="align-middle text-center" data-toggle="tooltip" title="You have been asked to confirm">Confirmer</th>
+        <td class="align-middle text-center">{{ conf_tot_c|intcomma }}</td>
+        <td class="align-middle text-center">{{ conf_tot_r|intcomma }}</td>
+        <td class="align-middle text-center">{{ conf_tot_s|intcomma }}</td>
+        <td class="align-middle text-center">
+          {% if conf_tot_r > 0 %}
+            <a href="{% url 'Profile:Confirm' %}" style="font-size:20px;color:black" target="_blank" data-toggle="tooltip" title="Review Waiting Requests"><i class="fa fa-paint-brush" aria-hidden="true"></i></a>
           {% endif %}
-          {{ pfl.avg_rate|floatformat:2 }} from {{ pfl.rate_count|intcomma }} votes
-          <a href="{% url 'Talent:TltRatingDetail' pfl.alias %}" style="font-size:20px;color:black" target="_blank" data-toggle="tooltip" title="Ratings Breakdown"><i class="fa fa-pie-chart" aria-hidden="true"></i></a>
-      {% else %}
-        Ratings calculated over 5 or more votes, you currently have {{ pfl.rate_count|intcomma }}.
-      {% endif %}
-    </p>
-    </div>
-    <hr>
-    <table class="table table-sm">
-      <thead>
-        <tr>
-          <th class="align-middle text-center">AS</th>
-          <th class="align-middle text-center">Confirmed</th>
-          <th class="align-middle text-center">Rejected</th>
-          <th class="align-middle text-center">Waiting</th>
-          <th class="align-middle text-center">More</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% if edu_lect %}
-          <tr>
-            <td class="align-middle text-center">Lecturer</td>
-            <td class="align-middle text-center">{{ edu_lect_c }}</td>
-            <td class="align-middle text-center">{{ edu_lect_r }}</td>
-            <td class="align-middle text-center">{{ edu_lect_s }}</td>
-            <td class="align-middle text-center">
-              <a href="{% url 'Talent:AsLectList' %}?next={{ request.path|urlencode }}">Det</a>
-            </td>
-          </tr>
-        {% endif %}
-        {% if edu_cm %}
-          <tr>
-            <td class="align-middle text-center">ClassMate</td>
-            <td class="align-middle text-center">{{ edu_cm_c }}</td>
-            <td class="align-middle text-center">{{ edu_cm_r }}</td>
-            <td class="align-middle text-center">{{ edu_cm_s }}</td>
-            <td class="align-middle text-center">
-              <a href="{% url 'Talent:AsLectList' %}?next={{ request.path|urlencode }}">Det</a>
-            </td>
-          </tr>
-        {% endif %}
-        {% if exp_clg %}
-          <tr>
-            <td class="align-middle text-center">ClassMate</td>
-            <td class="align-middle text-center">{{ exp_clg_c }}</td>
-            <td class="align-middle text-center">{{ exp_clg_r }}</td>
-            <td class="align-middle text-center">{{ exp_clg_s }}</td>
-            <td class="align-middle text-center">
-              <a href="{% url 'Talent:AsLectList' %}?next={{ request.path|urlencode }}">Det</a>
-            </td>
-          </tr>
-        {% endif %}
-        {% if exp_sup %}
-          <tr>
-            <td class="align-middle text-center">ClassMate</td>
-            <td class="align-middle text-center">{{ exp_sup_c }}</td>
-            <td class="align-middle text-center">{{ exp_sup_r }}</td>
-            <td class="align-middle text-center">{{ exp_sup_s }}</td>
-            <td class="align-middle text-center">
-              <a href="{% url 'Talent:AsLectList' %}?next={{ request.path|urlencode }}">Det</a>
-            </td>
-          </tr>
-        {% endif %}
-      </tbody>
-    </table>
+        </td>
+      </tr>
+      <tr>
+        <th class="align-middle text-center" data-toggle="tooltip" title="You have requested a confirmation">Requestioner</th>
+        <td class="align-middle text-center">{{ req_tot_c|intcomma }}</td>
+        <td class="align-middle text-center">{{ req_tot_r|intcomma }}</td>
+        <td class="align-middle text-center">{{ req_tot_s|intcomma }}</td>
+      </tr>
+    </tbody>
+  </table>
 
  {% endblock TBA %}
 

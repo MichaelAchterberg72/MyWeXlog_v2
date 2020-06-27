@@ -47,7 +47,7 @@ from talenttrack.models import (
 )
 
 from talenttrack.forms import (
-        LecturerCommentForm, ClassMatesCommentForm
+        LecturerCommentForm, ClassMatesCommentForm, WorkColleagueConfirmForm, WorkClientConfirmForm, WorkCollaboratorConfirmForm, SuperiorConfirmForm
 )
 
 from enterprises.models import Branch, Enterprise
@@ -412,30 +412,189 @@ def ProfileHome(request):
     pfl = Profile.objects.get(talent=talent)
     referral_code = Referral.objects.get(user=talent)
 
+    #>>> Confirmation Summary
+    #>>>As Confirmer
+    conf_tot_c = int(0)
+    conf_tot_r = int(0)
+    conf_tot_s = int(0)
+
     edu_lect = Lecturer.objects.filter(lecturer=talent)
-    edu_lect_r = edu_lect.filter(confirm="R").count
-    edu_lect_c = edu_lect.filter(confirm="C").count
-    edu_lect_s = edu_lect.filter(confirm="S").count
+
+    edu_lect_r = edu_lect.filter(confirm="R").count()
+    if edu_lect_r is not None:
+        conf_tot_r += edu_lect_r
+
+    edu_lect_c = edu_lect.filter(confirm="C").count()
+    if edu_lect_c is not None:
+        conf_tot_c += edu_lect_c
+
+    edu_lect_s = edu_lect.filter(confirm="S").count()
+    if edu_lect_s is not None:
+        edu_lect_s = edu_lect_s
+        conf_tot_s += edu_lect_s
 
     edu_cm = ClassMates.objects.filter(colleague=talent)
-    edu_cm_r = edu_cm.filter(confirm="R").count
-    edu_cm_c = edu_cm.filter(confirm="C").count
-    edu_cm_s = edu_cm.filter(confirm="S").count
+    edu_cm_r = edu_cm.filter(confirm="R").count()
+    if edu_cm_r is not None:
+        conf_tot_r += edu_cm_r
+
+    edu_cm_c = edu_cm.filter(confirm="C").count()
+    if edu_cm_c is not None:
+        conf_tot_c += edu_cm_c
+
+    edu_cm_s = edu_cm.filter(confirm="S").count()
+    if edu_cm_s is not None:
+        conf_tot_s += edu_cm_s
 
     exp_clg = WorkColleague.objects.filter(colleague_name=talent)
-    exp_clg_r = exp_clg.filter(confirm="R").count
-    exp_clg_c = exp_clg.filter(confirm="C").count
-    exp_clg_s = exp_clg.filter(confirm="S").count
+    exp_clg_r = exp_clg.filter(confirm="R").count()
+    if exp_clg_r is not None:
+        conf_tot_r += exp_clg_r
+
+    exp_clg_c = exp_clg.filter(confirm="C").count()
+    if exp_clg_c is not None:
+        conf_tot_c += exp_clg_c
+
+    exp_clg_s = exp_clg.filter(confirm="S").count()
+    if exp_clg_s is not None:
+        conf_tot_s += exp_clg_s
 
     exp_sup = Superior.objects.filter(superior_name=talent)
-    exp_sup_r = exp_sup.filter(confirm="R").count
-    exp_sup_c = exp_sup.filter(confirm="C").count
-    exp_sup_s = exp_sup.filter(confirm="S").count
+
+    exp_sup_r = exp_sup.filter(confirm="R").count()
+    if exp_sup_r is not None:
+        conf_tot_r += exp_sup_r
+
+    exp_sup_c = exp_sup.filter(confirm="C").count()
+    if exp_sup_c is not None:
+        conf_tot_c += exp_sup_c
+
+    exp_sup_s = exp_sup.filter(confirm="S").count()
+    if exp_sup_s is not None:
+        conf_tot_s += exp_sup_s
+
+    exp_clt = WorkClient.objects.filter(client_name=talent)
+
+    exp_clt_r = exp_clt.filter(confirm="R").count()
+    if exp_clt_r is not None:
+        conf_tot_r += exp_clt_r
+
+    exp_clt_c = exp_clt.filter(confirm="C").count()
+    if exp_clt_c is not None:
+        conf_tot_c += exp_clt_c
+
+    exp_clt_s = exp_clt.filter(confirm="S").count()
+    if exp_clt_s is not None:
+        conf_tot_s += exp_clt_s
+
+    exp_cbr = WorkCollaborator.objects.filter(collaborator_name=talent)
+
+    exp_cbr_r = exp_cbr.filter(confirm="R").count()
+    if exp_cbr_r is not None:
+        conf_tot_r += exp_cbr_r
+
+    exp_cbr_c = exp_cbr.filter(confirm="C").count()
+    if exp_cbr_c is not None:
+        conf_tot_c += exp_cbr_c
+
+    exp_cbr_s = exp_cbr.filter(confirm="S").count()
+    if exp_cbr_s is not None:
+        conf_tot_s += exp_cbr_s
+    #As Confirmer<<<
+
+    #>>>As Requestioner
+    req_tot_c = int(0)
+    req_tot_r = int(0)
+    req_tot_s = int(0)
+
+    edu_req_lect = Lecturer.objects.filter(education__talent=talent)
+
+    edu_req_lect_r = edu_req_lect.filter(confirm="R").count()
+    if edu_req_lect_r is not None:
+        req_tot_r += edu_req_lect_r
+
+    edu_req_lect_c = edu_req_lect.filter(confirm="C").count()
+    if edu_req_lect_c is not None:
+        req_tot_c += edu_req_lect_c
+
+    edu_req_lect_s = edu_req_lect.filter(confirm="S").count()
+    if edu_req_lect_s is not None:
+        req_tot_s += edu_req_lect_s
+
+    edu_req_cm = ClassMates.objects.filter(education__talent=talent)
+    edu_req_cm_r = edu_req_cm.filter(confirm="R").count()
+    if edu_req_cm_r is not None:
+        req_tot_r += edu_req_cm_r
+
+    edu_req_cm_c = edu_req_cm.filter(confirm="C").count()
+    if edu_req_cm_c is not None:
+        req_tot_c += edu_req_cm_c
+
+    edu_req_cm_s = edu_req_cm.filter(confirm="S").count()
+    if edu_req_cm_s is not None:
+        req_tot_s += edu_req_cm_s
+
+    exp_req_clg = WorkColleague.objects.filter(experience__talent=talent)
+    exp_req_clg_r = exp_req_clg.filter(confirm="R").count()
+    if exp_req_clg_r is not None:
+        req_tot_r += exp_req_clg_r
+
+    exp_req_clg_c = exp_req_clg.filter(confirm="C").count()
+    if exp_req_clg_c is not None:
+        req_tot_c += exp_req_clg_c
+
+    exp_req_clg_s = exp_req_clg.filter(confirm="S").count()
+    if exp_req_clg_s is not None:
+        req_tot_s += exp_req_clg_s
+
+    exp_req_sup = Superior.objects.filter(experience__talent=talent)
+
+    exp_req_sup_r = exp_req_sup.filter(confirm="R").count()
+    if exp_req_sup_r is not None:
+        req_tot_r += exp_req_sup_r
+
+    exp_req_sup_c = exp_req_sup.filter(confirm="C").count()
+    if exp_req_sup_c is not None:
+        req_tot_c += exp_req_sup_c
+
+    exp_req_sup_s = exp_req_sup.filter(confirm="S").count()
+    if exp_req_sup_s is not None:
+        req_tot_s += exp_req_sup_s
+
+    exp_req_clt = WorkClient.objects.filter(experience__talent=talent)
+
+    exp_req_clt_r = exp_req_clt.filter(confirm="R").count()
+    if exp_req_clt_r is not None:
+        req_tot_r += exp_req_clt_r
+
+    exp_req_clt_c = exp_req_clt.filter(confirm="C").count()
+    if exp_req_clt_c is not None:
+        req_tot_c += exp_req_clt_c
+
+    exp_req_clt_s = exp_req_clt.filter(confirm="S").count()
+    if exp_req_clt_s is not None:
+        req_tot_s += exp_req_clt_s
+
+    exp_req_cbr = WorkCollaborator.objects.filter(experience__talent=talent)
+
+    exp_req_cbr_r = exp_req_cbr.filter(confirm="R").count()
+    if exp_req_cbr_r is not None:
+        req_tot_r += exp_req_cbr_r
+
+    exp_req_cbr_c = exp_req_cbr.filter(confirm="C").count()
+    if exp_req_cbr_c is not None:
+        req_tot_c += exp_req_cbr_c
+
+    exp_req_cbr_s = exp_req_cbr.filter(confirm="S").count()
+    if exp_req_cbr_s is not None:
+        req_tot_s += exp_req_cbr_s
+    #As Requestioner<<<
+    #Confirmation Summary<<<
 
     template = 'Profile/profile_home.html'
     context = {
-        'wf1': wf1, 'tlt': tlt, 'pvr_count': pvr_count, 'total': total, 'interviews_tlt': interviews_tlt, 'interviews_emp': interviews_emp, 'interviews_empc': interviews_empc, 'interviews_tltc': interviews_tltc, 'assigned_tlt': assigned_tlt, 'assigned_emp': assigned_emp, 'assigned_tltc': assigned_empc, 'assigned_empc': assigned_tltc, 'open_assignments_tltc': open_assignments_tltc, 'open_assignments_empc': open_assignments_empc, 'lvl_1': lvl_1, 'lvl_2': lvl_2, 'lvl_3': lvl_3, 'lvl_4': lvl_4,'lvl_5': lvl_5, 'tot': tot, 'pfl': pfl, 'referral_code': referral_code, 'edu_lect': edu_lect, 'edu_lect_r': edu_lect_r, 'edu_lect_c': edu_lect_c, 'edu_lect_s': edu_lect_s, 'edu_cm': edu_cm, 'edu_cm_r': edu_cm_r, 'edu_cm_c': edu_cm_c, 'edu_cm_s': edu_cm_s, 'exp_clg': exp_clg, 'exp_clg_c': exp_clg_c, 'exp_clg_r': exp_clg_r, 'exp_clg_s': exp_clg_s, 'exp_sup': exp_sup, 'exp_sup_c': exp_sup_c, 'exp_sup_r': exp_sup_r, 'exp_sup_s': exp_sup_s,
-        }
+    'wf1': wf1, 'tlt': tlt, 'pvr_count': pvr_count, 'total': total, 'interviews_tlt': interviews_tlt, 'interviews_emp': interviews_emp, 'interviews_empc': interviews_empc, 'interviews_tltc': interviews_tltc, 'assigned_tlt': assigned_tlt, 'assigned_emp': assigned_emp, 'assigned_tltc': assigned_empc, 'assigned_empc': assigned_tltc, 'open_assignments_tltc': open_assignments_tltc, 'open_assignments_empc': open_assignments_empc, 'lvl_1': lvl_1, 'lvl_2': lvl_2, 'lvl_3': lvl_3, 'lvl_4': lvl_4,'lvl_5': lvl_5, 'tot': tot, 'pfl': pfl, 'referral_code': referral_code, 'conf_tot_c': conf_tot_c, 'conf_tot_r': conf_tot_r, 'conf_tot_s': conf_tot_s, 'req_tot_c': req_tot_c, 'req_tot_r': req_tot_r, 'req_tot_s': req_tot_s,
+    }
 
     return render(request, template, context)
 
@@ -715,9 +874,11 @@ def LecturerCommentView(request, lct):
                 edu.save()
             else:
                 pass
-
             return redirect(reverse('Profile:Confirm')+'#Lecturer')
-
+        else:
+            template ='talenttrack/confirm_comments.html'
+            context = {'form': form, 'info': info}
+            return render(request, template, context)
     else:
         template ='talenttrack/confirm_comments.html'
         context = {'form': form, 'info': info}
@@ -747,15 +908,17 @@ def LecturerEditView(request, lct):
             elif original != 'S':
                 if new.confirm == 'C':
                     edu = WorkExperience.objects.get(pk=info.education.id)
-                    edu.score += lecturer_score*2
+                    edu.score += lecturer_score
                     edu.save()
                 else:
                     edu = WorkExperience.objects.get(pk=info.education.id)
                     edu.score -= lecturer_score
                     edu.save()
-
-            return redirect(reverse('Talent:AsLectList'))
-
+            return redirect(reverse('Talent:CAsLectList'))
+        else:
+            template ='talenttrack/confirm_comments.html'
+            context = {'form': form, 'info': info}
+            return render(request, template, context)
     else:
         template ='talenttrack/confirm_comments.html'
         context = {'form': form, 'info': info}
@@ -801,7 +964,51 @@ def ClassMatesCommentView(request, cmt):
             else:
                 pass
             return redirect(reverse('Profile:Confirm')+'#ClassMates')
+        else:
+            template ='talenttrack/confirm_comments.html'
+            context = {'form': form, 'info': info}
+            return render(request, template, context)
+    else:
+        template ='talenttrack/confirm_comments.html'
+        context = {'form': form, 'info': info}
+        return render(request, template, context)
 
+
+@login_required()
+def ClassMatesEditView(request, cmt):
+    info = get_object_or_404(ClassMates, slug=cmt)
+    form = ClassMatesCommentForm(request.POST or None, instance=info)
+
+    original = info.confirm
+
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.date_confirmed = timezone.now().date()
+            new.save()
+            if new.confirm == original:
+                pass
+            elif original =='S':
+                if new.confirm == "R":
+                    pass
+                else:
+                    edu = WorkExperience.objects.get(pk=info.education.id)
+                    edu.score += classmate_score
+                    edu.save()
+            elif original != 'S':
+                if new.confirm == 'C':
+                    edu = WorkExperience.objects.get(pk=info.education.id)
+                    edu.score += classmate_score
+                    edu.save()
+                else:
+                    edu = WorkExperience.objects.get(pk=info.education.id)
+                    edu.score -= classmate_score
+                    edu.save()
+            return redirect(reverse('Talent:CAsCmList'))
+        else:
+            template ='talenttrack/confirm_comments.html'
+            context = {'form': form, 'info': info}
+            return render(request, template, context)
     else:
         template ='talenttrack/confirm_comments.html'
         context = {'form': form, 'info': info}
@@ -853,7 +1060,7 @@ def ColleagueWrongPersonView(request, pk):
 @login_required()
 def ColleagueCommentView(request, clg):
     info = get_object_or_404(WorkColleague, slug=clg)
-    form = LecturerCommentForm(request.POST or None, instance=info)
+    form = WorkColleagueConfirmForm(request.POST or None, instance=info)
 
     if request.method == 'POST':
         if form.is_valid():
@@ -865,9 +1072,52 @@ def ColleagueCommentView(request, clg):
                 exp.save()
             else:
                 pass
-
             return redirect(reverse('Profile:Confirm')+'#Colleague')
+        else:
+            template ='talenttrack/confirm_exp_comments.html'
+            context = {'form': form, 'info': info}
+            return render(request, template, context)
+    else:
+        template ='talenttrack/confirm_exp_comments.html'
+        context = {'form': form, 'info': info}
+        return render(request, template, context)
 
+
+@login_required()
+def ColleagueEditView(request, clg):
+    info = get_object_or_404(WorkColleague, slug=clg)
+    form = WorkColleagueConfirmForm(request.POST or None, instance=info)
+
+    original = info.confirm
+
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.date_confirmed = timezone.now().date()
+            new.save()
+            if new.confirm == original:
+                pass
+            elif original =='S':
+                if new.confirm == "R":
+                    pass
+                else:
+                    edu = WorkExperience.objects.get(pk=info.experience.id)
+                    edu.score += classmate_score
+                    edu.save()
+            elif original != 'S':
+                if new.confirm == 'C':
+                    edu = WorkExperience.objects.get(pk=info.experience.id)
+                    edu.score += classmate_score
+                    edu.save()
+                else:
+                    edu = WorkExperience.objects.get(pk=info.experience.id)
+                    edu.score -= classmate_score
+                    edu.save()
+            return redirect(reverse('Talent:CAsClgList'))
+        else:
+            template ='talenttrack/confirm_exp_comments.html'
+            context = {'form': form, 'info': info}
+            return render(request, template, context)
     else:
         template ='talenttrack/confirm_exp_comments.html'
         context = {'form': form, 'info': info}
@@ -901,7 +1151,7 @@ def SuperiorRejectView(request, pk):
 @login_required()
 def SuperiorCommentView(request, spr):
     info = get_object_or_404(Superior, slug=spr)
-    form = ClassMatesCommentForm(request.POST or None, instance=info)
+    form = SuperiorConfirmForm(request.POST or None, instance=info)
 
     if request.method == 'POST':
         if form.is_valid():
@@ -913,9 +1163,52 @@ def SuperiorCommentView(request, spr):
                 exp.save()
             else:
                 pass
-
             return redirect(reverse('Profile:Confirm')+'#Superior')
+        else:
+            template ='talenttrack/confirm_exp_comments.html'
+            context = {'form': form, 'info': info}
+            return render(request, template, context)
+    else:
+        template ='talenttrack/confirm_exp_comments.html'
+        context = {'form': form, 'info': info}
+        return render(request, template, context)
 
+
+@login_required()
+def SuperiorEditView(request, spr):
+    info = get_object_or_404(Superior, slug=spr)
+    form = SuperiorConfirmForm(request.POST or None, instance=info)
+
+    original = info.confirm
+
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.date_confirmed = timezone.now().date()
+            new.save()
+            if new.confirm == original:
+                pass
+            elif original =='S':
+                if new.confirm == "R":
+                    pass
+                else:
+                    edu = WorkExperience.objects.get(pk=info.experience.id)
+                    edu.score += superior_score
+                    edu.save()
+            elif original != 'S':
+                if new.confirm == 'C':
+                    edu = WorkExperience.objects.get(pk=info.experience.id)
+                    edu.score += superior_score
+                    edu.save()
+                else:
+                    edu = WorkExperience.objects.get(pk=info.experience.id)
+                    edu.score -= superior_score
+                    edu.save()
+            return redirect(reverse('Talent:CAsSupList'))
+        else:
+            template ='talenttrack/confirm_exp_comments.html'
+            context = {'form': form, 'info': info}
+            return render(request, template, context)
     else:
         template ='talenttrack/confirm_exp_comments.html'
         context = {'form': form, 'info': info}
@@ -958,7 +1251,7 @@ def CollaboratorRejectView(request, pk):
 @login_required()
 def CollaboratorCommentView(request, clb):
     info = get_object_or_404(WorkCollaborator, slug=clb)
-    form = ClassMatesCommentForm(request.POST or None, instance=info)
+    form = WorkCollaboratorConfirmForm(request.POST or None, instance=info)
 
     if request.method == 'POST':
         if form.is_valid():
@@ -970,9 +1263,52 @@ def CollaboratorCommentView(request, clb):
                 exp.save()
             else:
                 pass
-
             return redirect(reverse('Profile:Confirm')+'#Collaborator')
+        else:
+            template ='talenttrack/confirm_exp_comments.html'
+            context = {'form': form, 'info': info}
+            return render(request, template, context)
+    else:
+        template ='talenttrack/confirm_exp_comments.html'
+        context = {'form': form, 'info': info}
+        return render(request, template, context)
 
+
+@login_required()
+def CollaboratorEditView(request, clb):
+    info = get_object_or_404(WorkCollaborator, slug=clb)
+    form = WorkCollaboratorConfirmForm(request.POST or None, instance=info)
+
+    original = info.confirm
+
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.date_confirmed = timezone.now().date()
+            new.save()
+            if new.confirm == original:
+                pass
+            elif original =='S':
+                if new.confirm == "R":
+                    pass
+                else:
+                    edu = WorkExperience.objects.get(pk=info.experience.id)
+                    edu.score += collaborator_score
+                    edu.save()
+            elif original != 'S':
+                if new.confirm == 'C':
+                    edu = WorkExperience.objects.get(pk=info.experience.id)
+                    edu.score += collaborator_score
+                    edu.save()
+                else:
+                    edu = WorkExperience.objects.get(pk=info.experience.id)
+                    edu.score -= collaborator_score
+                    edu.save()
+            return redirect(reverse('Talent:CAsCbrList'))
+        else:
+            template ='talenttrack/confirm_exp_comments.html'
+            context = {'form': form, 'info': info}
+            return render(request, template, context)
     else:
         template ='talenttrack/confirm_exp_comments.html'
         context = {'form': form, 'info': info}
@@ -1015,7 +1351,7 @@ def ClientRejectView(request, pk):
 @login_required()
 def ClientCommentView(request, wkc):
     info = get_object_or_404(WorkClient, slug=wkc)
-    form = ClassMatesCommentForm(request.POST or None, instance=info)
+    form = WorkClientConfirmForm(request.POST or None, instance=info)
 
     if request.method == 'POST':
         if form.is_valid():
@@ -1027,9 +1363,52 @@ def ClientCommentView(request, wkc):
                 exp.save()
             else:
                 pass
-
             return redirect(reverse('Profile:Confirm')+'#Client')
+        else:
+            template ='talenttrack/confirm_exp_comments.html'
+            context = {'form': form, 'info': info}
+            return render(request, template, context)
+    else:
+        template ='talenttrack/confirm_exp_comments.html'
+        context = {'form': form, 'info': info}
+        return render(request, template, context)
 
+
+@login_required()
+def ClientEditView(request, wkc):
+    info = get_object_or_404(WorkClient, slug=wkc)
+    form = WorkClientConfirmForm(request.POST or None, instance=info)
+
+    original = info.confirm
+
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.date_confirmed = timezone.now().date()
+            new.save()
+            if new.confirm == original:
+                pass
+            elif original =='S':
+                if new.confirm == "R":
+                    pass
+                else:
+                    edu = WorkExperience.objects.get(pk=info.experience.id)
+                    edu.score += client_score
+                    edu.save()
+            elif original != 'S':
+                if new.confirm == 'C':
+                    edu = WorkExperience.objects.get(pk=info.experience.id)
+                    edu.score += client_score
+                    edu.save()
+                else:
+                    edu = WorkExperience.objects.get(pk=info.experience.id)
+                    edu.score -= client_score
+                    edu.save()
+            return redirect(reverse('Talent:CAsCltList'))
+        else:
+            template ='talenttrack/confirm_exp_comments.html'
+            context = {'form': form, 'info': info}
+            return render(request, template, context)
     else:
         template ='talenttrack/confirm_exp_comments.html'
         context = {'form': form, 'info': info}

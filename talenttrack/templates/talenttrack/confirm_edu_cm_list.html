@@ -14,7 +14,7 @@
       <button type="submit" class="btn btn-secondary">Back</button>
     </form>
     </div>
-    <h3>Confirmation as Lecturer</h3>
+    <h3>Confirmation as a Classmate</h3>
     <table class="table table-sm">
       <thead>
         <tr>
@@ -27,7 +27,7 @@
         </tr>
       </thead>
       <tbody>
-        {% for item in lect_qs %}
+        {% for item in cm_qs %}
           <tr>
             <td rowspan="2" class="align-middle text-center">{{ item.date_captured|date:'j M Y' }}</td>
             <td class="align-middle text-center">{{ item.education.talent.get_full_name }}</td>

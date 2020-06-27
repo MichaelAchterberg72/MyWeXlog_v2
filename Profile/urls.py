@@ -41,27 +41,32 @@ urlpatterns = [
         path('classmates-confirm/<int:pk>/', views.ClassMatesConfirmView, name='ClassMatesConfirm'),
         path('classmates-reject/<int:pk>/', views.ClassMatesRejectView, name='ClassMatesReject'),
         path('classmates-comment/<slug:cmt>/', views.ClassMatesCommentView, name='ClassMatesComment'),
+        path('classmates-edit/<slug:cmt>/', views.ClassMatesEditView, name='ClassMatesEdit'),
         path('classmates-wrongperson/<int:pk>/', views.ClassMatesWrongPersonView, name='ClassMatesWrongPerson'),
         #Colleague Confirm
         path('colleague-confirm/<int:pk>/', views.ColleagueConfirmView, name='ColleagueConfirm'),
         path('colleague-reject/<int:pk>/', views.ColleagueRejectView, name='ColleagueReject'),
         path('colleague-wrongperson/<int:pk>/', views.ColleagueWrongPersonView, name='ColleagueWrongPerson'),
         path('colleague-comment/<slug:clg>/', views.ColleagueCommentView, name='ColleagueComment'),
+        path('colleague-edit/<slug:clg>/', views.ColleagueEditView, name='ColleagueEdit'),
         #Superior Confirm
         path('superior-confirm/<int:pk>/', views.SuperiorConfirmView, name='SuperiorConfirm'),
         path('superior-reject/<int:pk>/', views.SuperiorRejectView, name='SuperiorReject'),
         path('superior-wrongperson/<int:pk>/', views.SuperiorWrongPersonView, name='SuperiorWrongPerson'),
         path('superior-comment/<slug:spr>/', views.SuperiorCommentView, name='SuperiorComment'),
+        path('superior-edit/<slug:spr>/', views.SuperiorEditView, name='SuperiorEdit'),
         #Collaborator confirm
         path('collaborator-confirm/<int:pk>/', views.CollaboratorConfirmView, name='CollaboratorConfirm'),
         path('collaborator-reject/<int:pk>/', views.CollaboratorRejectView, name='CollaboratorReject'),
         path('collaborator-wrongperson/<int:pk>/', views.CollaboratorWrongPersonView, name='CollaboratorWrongPerson'),
         path('collaborator-comment/<slug:clb>/', views.CollaboratorCommentView, name='CollaboratorComment'),
+        path('collaborator-edit/<slug:clb>/', views.CollaboratorEditView, name='CollaboratorEdit'),
         #Client Confirm
         path('client-confirm/<int:pk>/', views.ClientConfirmView, name='ClientConfirm'),
         path('client-reject/<int:pk>/', views.ClientRejectView, name='ClientReject'),
         path('client-wrongperson/<int:pk>/', views.ClientWrongPersonView, name='ClientWrongPerson'),
         path('client-comment/<slug:wkc>/', views.ClientCommentView, name='ClientComment'),
+        path('client-edit/<slug:wkc>/', views.ClientEditView, name='ClientEdit'),
         #PreColleague Confirm
         path('precolleague-confirm/<int:pk>/', views.PreColleagueConfirmView, name='PreColleagueConfirm'),
         path('precolleague-reject/<int:pk>/', views.PreColleagueRejectView, name='PreColleagueReject'),

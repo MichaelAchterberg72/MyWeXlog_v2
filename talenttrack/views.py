@@ -60,7 +60,10 @@ def ExperienceHome(request):
     sl = SkillLevel.objects.all()
     we_c = basequery.filter(score__gte=skill_pass_score)
     #<<<Step 1
-    tlt = request.user.alias
+
+    talent = request.user
+    tlt = talent.alias
+
     #>>>Step 2
     #unconfirmed
     train_base = basequery.filter(Q(edt=True)).order_by('-date_from')
@@ -185,6 +188,73 @@ def ExperienceHome(request):
         skill_name = skill_name | b
     #<<< Step 3
 
+    #>>> Summary of confirmation activity
+    #>>> As Confirmer
+    edu_lect = Lecturer.objects.filter(lecturer=talent)
+    edu_lect_r = edu_lect.filter(confirm="R").count()
+    edu_lect_c = edu_lect.filter(confirm="C").count()
+    edu_lect_s = edu_lect.filter(confirm="S").count()
+
+    edu_cm = ClassMates.objects.filter(colleague=talent)
+    edu_cm_r = edu_cm.filter(confirm="R").count()
+    edu_cm_c = edu_cm.filter(confirm="C").count()
+    edu_cm_s = edu_cm.filter(confirm="S").count()
+
+    exp_clg = WorkColleague.objects.filter(colleague_name=talent)
+    exp_clg_r = exp_clg.filter(confirm="R").count()
+    exp_clg_c = exp_clg.filter(confirm="C").count()
+    exp_clg_s = exp_clg.filter(confirm="S").count()
+
+    exp_sup = Superior.objects.filter(superior_name=talent)
+    exp_sup_r = exp_sup.filter(confirm="R").count()
+    exp_sup_c = exp_sup.filter(confirm="C").count()
+    exp_sup_s = exp_sup.filter(confirm="S").count()
+
+    exp_clt = WorkClient.objects.filter(client_name=talent)
+    exp_clt_r = exp_clt.filter(confirm="R").count()
+    exp_clt_c = exp_clt.filter(confirm="C").count()
+    exp_clt_s = exp_clt.filter(confirm="S").count()
+
+    exp_cbr = WorkCollaborator.objects.filter(collaborator_name=talent)
+    exp_cbr_r = exp_cbr.filter(confirm="R").count()
+    exp_cbr_c = exp_cbr.filter(confirm="C").count()
+    exp_cbr_s = exp_cbr.filter(confirm="S").count()
+    #As Confirmer<<<
+
+    #>>>As Requestioner
+    edu_req_lect = Lecturer.objects.filter(education__talent=talent)
+    edu_req_lect_r = edu_req_lect.filter(confirm="R").count()
+    edu_req_lect_c = edu_req_lect.filter(confirm="C").count()
+    edu_req_lect_s = edu_req_lect.filter(confirm="S").count()
+
+    edu_req_cm = ClassMates.objects.filter(education__talent=talent)
+    edu_req_cm_r = edu_req_cm.filter(confirm="R").count()
+    edu_req_cm_c = edu_req_cm.filter(confirm="C").count()
+    edu_req_cm_s = edu_req_cm.filter(confirm="S").count()
+
+    exp_req_clg = WorkColleague.objects.filter(experience__talent=talent)
+    exp_req_clg_r = exp_req_clg.filter(confirm="R").count()
+    exp_req_clg_c = exp_req_clg.filter(confirm="C").count()
+    exp_req_clg_s = exp_req_clg.filter(confirm="S").count()
+
+    exp_req_sup = Superior.objects.filter(experience__talent=talent)
+    exp_req_sup_r = exp_req_sup.filter(confirm="R").count()
+    exp_req_sup_c = exp_req_sup.filter(confirm="C").count()
+    exp_req_sup_s = exp_req_sup.filter(confirm="S").count()
+
+    exp_req_clt = WorkClient.objects.filter(experience__talent=talent)
+    exp_req_clt_r = exp_req_clt.filter(confirm="R").count()
+    exp_req_clt_c = exp_req_clt.filter(confirm="C").count()
+    exp_req_clt_s = exp_req_clt.filter(confirm="S").count()
+
+    exp_req_cbr = WorkCollaborator.objects.filter(experience__talent=talent)
+    exp_req_cbr_r = exp_req_cbr.filter(confirm="R").count()
+    exp_req_cbr_c = exp_req_cbr.filter(confirm="C").count()
+    exp_req_cbr_s = exp_req_cbr.filter(confirm="S").count()
+    #As Requestioner<<<
+    #Summary of confirmation activity<<<
+
+
     template = 'talenttrack/track_home.html'
     context = {
         'tlt': tlt,
@@ -208,6 +278,18 @@ def ExperienceHome(request):
         'skill_name': skill_name,
         'skill_count': skill_count,
         'level': level,
+        'edu_lect': edu_lect, 'edu_lect_r': edu_lect_r, 'edu_lect_c': edu_lect_c, 'edu_lect_s': edu_lect_s,
+        'edu_cm': edu_cm, 'edu_cm_r': edu_cm_r, 'edu_cm_c': edu_cm_c, 'edu_cm_s': edu_cm_s,
+        'exp_clg': exp_clg, 'exp_clg_c': exp_clg_c, 'exp_clg_r': exp_clg_r, 'exp_clg_s': exp_clg_s,
+        'exp_sup': exp_sup, 'exp_sup_c': exp_sup_c, 'exp_sup_r': exp_sup_r, 'exp_sup_s': exp_sup_s,
+        'exp_clt': exp_clt, 'exp_clt_c': exp_clt_c, 'exp_clt_r': exp_clt_r, 'exp_clt_s': exp_clt_s,
+        'exp_cbr': exp_cbr, 'exp_cbr_c': exp_cbr_c, 'exp_cbr_r': exp_cbr_r, 'exp_cbr_s': exp_cbr_s,
+        'edu_req_lect': edu_req_lect, 'edu_req_lect_r': edu_req_lect_r, 'edu_req_lect_c': edu_req_lect_c, 'edu_req_lect_s': edu_req_lect_s,
+        'edu_req_cm': edu_req_cm, 'edu_req_cm_r': edu_req_cm_r, 'edu_req_cm_c': edu_req_cm_c, 'edu_req_cm_s': edu_req_cm_s,
+        'exp_req_clg': exp_req_clg, 'exp_req_clg_c': exp_req_clg_c, 'exp_req_clg_r': exp_req_clg_r, 'exp_req_clg_s': exp_req_clg_s,
+        'exp_req_sup': exp_req_sup, 'exp_req_sup_c': exp_req_sup_c, 'exp_req_sup_r': exp_req_sup_r, 'exp_req_sup_s': exp_req_sup_s,
+        'exp_req_clt': exp_req_clt, 'exp_req_clt_c': exp_req_clt_c, 'exp_req_clt_r': exp_req_clt_r, 'exp_req_clt_s': exp_req_clt_s,
+        'exp_req_cbr': exp_req_cbr, 'exp_req_cbr_c': exp_req_cbr_c, 'exp_req_cbr_r': exp_req_cbr_r, 'exp_req_cbr_s': exp_req_cbr_s,
     }
     return render(request, template, context)
 
@@ -234,10 +316,11 @@ def profile_search(request):
 
 
 @login_required()
-def lecturer_summary_list(request):
+def lecturer_conf_summary_list(request):
+    '''Confirmations the logged-in user has received'''
     tlt = request.user
     lect_qs = Lecturer.objects.filter(lecturer=tlt).order_by('-date_confirmed')
-    lect_qs_unlocked = lect_qs.filter(locked=False)
+    lect_qs_unlocked = lect_qs.filter(Q(locked=False) & ~Q(confirm="S"))
 
     today = timezone.now().date()
 
@@ -256,10 +339,11 @@ def lecturer_summary_list(request):
 
 
 @login_required()
-def classmate_summary_list(request):
+def classmate_conf_summary_list(request):
+    '''Confirmations the logged-in user has received'''
     tlt = request.user
-    cm_qs = Lecturer.objects.filter(colleague=tlt).order_by('-date_confirmed')
-    cm_qs_unlocked = lect_qs.filter(locked=False)
+    cm_qs = ClassMates.objects.filter(colleague=tlt).order_by('-date_confirmed')
+    cm_qs_unlocked = cm_qs.filter(Q(locked=False) & ~Q(confirm="S"))
 
     today = timezone.now().date()
 
@@ -270,10 +354,35 @@ def classmate_summary_list(request):
             item.save()
         else:
             pass
-    cm_qs = Lecturer.objects.filter(colleague=tlt).order_by('-date_confirmed')
+
+    cm_qs = ClassMates.objects.filter(colleague=tlt).order_by('-date_confirmed')
 
     template = 'talenttrack/confirm_edu_cm_list.html'
-    context = {'cm_qs': cm_qs,}
+    context = {'cm_qs': cm_qs, 'age': locked_age,}
+    return render(request, template, context)
+
+
+@login_required()
+def colleague_conf_summary_list(request):
+    '''Confirmations the logged-in user has received'''
+    tlt = request.user
+    clg_c_qs = WorkColleague.objects.filter(colleague_name=tlt).order_by('-date_confirmed')
+    clg_c_qs_unlocked = clg_c_qs.filter(Q(locked=False) & ~Q(confirm="S"))
+
+    today = timezone.now().date()
+
+    for item in clg_c_qs_unlocked:
+        age = (today - item.date_confirmed).days
+        if age > locked_age:
+            item.locked = True
+            item.save()
+        else:
+            pass
+
+    clg_c_qs = WorkColleague.objects.filter(colleague_name=tlt).order_by('-date_confirmed')
+
+    template = 'talenttrack/confirm_exp_clg_list.html'
+    context = {'clg_c_qs': clg_c_qs, 'age': locked_age,}
     return render(request, template, context)
 
 
