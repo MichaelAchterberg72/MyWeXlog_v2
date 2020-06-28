@@ -72,7 +72,6 @@
             </tr>
           </thead>
           <tbody>
-            {% if edu_req_lect %}
               <tr>
                 <td class="align-middle text-center">Lecturer</td>
                 <td class="align-middle text-center">{{ edu_req_lect_c }}</td>
@@ -82,8 +81,6 @@
                   <a href="{% url 'Talent:CAsLectList' %}?next={{ request.path|urlencode }}">Det</a>
                 </td>
               </tr>
-            {% endif %}
-            {% if edu_req_cm %}
               <tr>
                 <td class="align-middle text-center">ClassMate</td>
                 <td class="align-middle text-center">{{ edu_req_cm_c }}</td>
@@ -93,8 +90,6 @@
                   <a href="{% url 'Talent:CAsLectList' %}?next={{ request.path|urlencode }}">Det</a>
                 </td>
               </tr>
-            {% endif %}
-            {% if exp_req_clg %}
               <tr>
                 <td class="align-middle text-center">Colleague</td>
                 <td class="align-middle text-center">{{ exp_req_clg_c }}</td>
@@ -104,19 +99,15 @@
                   <a href="{% url 'Talent:CAsLectList' %}?next={{ request.path|urlencode }}">Det</a>
                 </td>
               </tr>
-            {% endif %}
-            {% if exp_req_sup %}
               <tr>
                 <td class="align-middle text-center">Superior</td>
                 <td class="align-middle text-center">{{ exp_req_sup_c }}</td>
                 <td class="align-middle text-center">{{ exp_req_sup_r }}</td>
                 <td class="align-middle text-center">{{ exp_req_sup_s }}</td>
                 <td class="align-middle text-center">
-                  <a href="{% url 'Talent:CAsLectList' %}?next={{ request.path|urlencode }}">Det</a>
+                  <a href="{% url 'Talent:CAsSupList' %}?next={{ request.path|urlencode }}">Det</a>
                 </td>
               </tr>
-            {% endif %}
-            {% if exp_req_clt %}
               <tr>
                 <td class="align-middle text-center">Client</td>
                 <td class="align-middle text-center">{{ exp_req_clt_c }}</td>
@@ -126,8 +117,6 @@
                   <a href="{% url 'Talent:CAsLectList' %}?next={{ request.path|urlencode }}">Det</a>
                 </td>
               </tr>
-            {% endif %}
-            {% if exp_req_cbr %}
               <tr>
                 <td class="align-middle text-center">Collaborator</td>
                 <td class="align-middle text-center">{{ exp_req_cbr_c }}</td>
@@ -137,7 +126,6 @@
                   <a href="{% url 'Talent:CAsLectList' %}?next={{ request.path|urlencode }}">Det</a>
                 </td>
               </tr>
-            {% endif %}
           </tbody>
         </table>
       </div>
@@ -158,72 +146,72 @@
             </tr>
           </thead>
           <tbody>
-            {% if edu_lect %}
               <tr>
                 <td class="align-middle text-center">Lecturer</td>
                 <td class="align-middle text-center">{{ edu_lect_c }}</td>
                 <td class="align-middle text-center">{{ edu_lect_r }}</td>
                 <td class="align-middle text-center">{{ edu_lect_s }}</td>
                 <td class="align-middle text-center">
-                  <a href="{% url 'Talent:CAsLectList' %}?next={{ request.path|urlencode }}">Det</a>
+                  <a href="{% url 'Talent:CAsLectList' %}?next={{ request.path|urlencode }}">
+                    <i class="fa fa-binoculars" aria-hidden="true" style="font-size:25px;color:black" data-toggle="tooltip" data-placement="top" title="See Expanded List"></i>
+                  </a>
                 </td>
               </tr>
-            {% endif %}
-            {% if edu_cm %}
               <tr>
                 <td class="align-middle text-center">ClassMate</td>
                 <td class="align-middle text-center">{{ edu_cm_c }}</td>
                 <td class="align-middle text-center">{{ edu_cm_r }}</td>
                 <td class="align-middle text-center">{{ edu_cm_s }}</td>
                 <td class="align-middle text-center">
-                  <a href="{% url 'Talent:CAsCmList' %}?next={{ request.path|urlencode }}">Det</a>
+                  <a href="{% url 'Talent:CAsCmList' %}?next={{ request.path|urlencode }}">
+                    <i class="fa fa-binoculars" aria-hidden="true"style="font-size:25px;color:black" data-toggle="tooltip" data-placement="top" title="See Expanded List"></i>
+                  </a>
                 </td>
               </tr>
-            {% endif %}
-            {% if exp_clg %}
               <tr>
                 <td class="align-middle text-center">Colleague</td>
                 <td class="align-middle text-center">{{ exp_clg_c }}</td>
                 <td class="align-middle text-center">{{ exp_clg_r }}</td>
                 <td class="align-middle text-center">{{ exp_clg_s }}</td>
                 <td class="align-middle text-center">
-                  <a href="{% url 'Talent:CAsClgList' %}?next={{ request.path|urlencode }}">Det</a>
+                  <a href="{% url 'Talent:CAsClgList' %}?next={{ request.path|urlencode }}">
+                    <i class="fa fa-binoculars" aria-hidden="true"style="font-size:25px;color:black" data-toggle="tooltip" data-placement="top" title="See Expanded List"></i>
+                  </a>
                 </td>
               </tr>
-            {% endif %}
-            {% if exp_sup %}
               <tr>
                 <td class="align-middle text-center">Superior</td>
                 <td class="align-middle text-center">{{ exp_sup_c }}</td>
                 <td class="align-middle text-center">{{ exp_sup_r }}</td>
                 <td class="align-middle text-center">{{ exp_sup_s }}</td>
                 <td class="align-middle text-center">
-                  <a href="{% url 'Talent:CAsLectList' %}?next={{ request.path|urlencode }}">Det</a>
+                  <a href="{% url 'Talent:CAsSupList' %}?next={{ request.path|urlencode }}">
+                    <i class="fa fa-binoculars" aria-hidden="true"style="font-size:25px;color:black" data-toggle="tooltip" data-placement="top" title="See Expanded List"></i>
+                  </a>
                 </td>
               </tr>
-            {% endif %}
-            {% if exp_clt %}
               <tr>
                 <td class="align-middle text-center">Client</td>
                 <td class="align-middle text-center">{{ exp_clt_c }}</td>
                 <td class="align-middle text-center">{{ exp_clt_r }}</td>
                 <td class="align-middle text-center">{{ exp_clt_s }}</td>
                 <td class="align-middle text-center">
-                  <a href="{% url 'Talent:CAsLectList' %}?next={{ request.path|urlencode }}">Det</a>
+                  <a href="{% url 'Talent:CAsCltList' %}?next={{ request.path|urlencode }}">
+                    <i class="fa fa-binoculars" aria-hidden="true"style="font-size:25px;color:black" data-toggle="tooltip" data-placement="top" title="See Expanded List"></i>
+                  </a>
                 </td>
               </tr>
-            {% endif %}
-            {% if exp_cbr %}
               <tr>
                 <td class="align-middle text-center">Collaborator</td>
                 <td class="align-middle text-center">{{ exp_cbr_c }}</td>
                 <td class="align-middle text-center">{{ exp_cbr_r }}</td>
                 <td class="align-middle text-center">{{ exp_cbr_s }}</td>
                 <td class="align-middle text-center">
-                  <a href="{% url 'Talent:CAsLectList' %}?next={{ request.path|urlencode }}">Det</a>
+                  <a href="{% url 'Talent:CAsClbList' %}?next={{ request.path|urlencode }}">
+                    <i class="fa fa-binoculars" aria-hidden="true"style="font-size:25px;color:black" data-toggle="tooltip" data-placement="top" title="See Expanded List"></i>
+                  </a>
                 </td>
               </tr>
-            {% endif %}
           </tbody>
         </table>
       </div>

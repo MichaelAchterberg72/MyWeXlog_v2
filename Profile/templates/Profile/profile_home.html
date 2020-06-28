@@ -240,6 +240,9 @@
           {% if conf_tot_r > 0 %}
             <a href="{% url 'Profile:Confirm' %}" style="font-size:20px;color:black" target="_blank" data-toggle="tooltip" title="Review Waiting Requests"><i class="fa fa-paint-brush" aria-hidden="true"></i></a>
           {% endif %}
+          <a href="{% url 'Talent:Home' %}?next={{ request.path|urlencode }} #confirm">
+            <i class="fa fa-binoculars" aria-hidden="true"style="font-size:25px;color:black" data-toggle="tooltip" data-placement="top" title="See more detail"></i>
+          </a>
         </td>
       </tr>
       <tr>
@@ -247,6 +250,10 @@
         <td class="align-middle text-center">{{ req_tot_c|intcomma }}</td>
         <td class="align-middle text-center">{{ req_tot_r|intcomma }}</td>
         <td class="align-middle text-center">{{ req_tot_s|intcomma }}</td>
+        <td class="align-middle text-center">
+          <a href="{% url 'Talent:Home' %}?next={{ request.path|urlencode }} #request">
+            <i class="fa fa-binoculars" aria-hidden="true"style="font-size:25px;color:black" data-toggle="tooltip" data-placement="top" title="See more detail"></i>
+        </td>
       </tr>
     </tbody>
   </table>

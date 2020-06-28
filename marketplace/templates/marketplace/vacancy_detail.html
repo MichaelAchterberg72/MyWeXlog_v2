@@ -49,8 +49,8 @@
       <td class="align-middle text-center">{{ v.experience_level }}</td>
       <td class="align-middle text-center">
         {% if request.user.subscription >= 2 %}
-          {{ v.enterprise.company }} ({{ v.enterprise.name }})<br>
-          {{ v.enterprise.type }}<br>
+          {{ v.companybranch.company }} ({{ v.companybranch.name }})<br>
+          {{ v.companybranch.type }}<br>
         {% else %}
           <p data-toggle="tooltip" title="Company information for Active Subscriptions only"><i class="fa fa-eye-slash" aria-hidden="true" style="font-size: 27px"></i></p>
         {% endif %}
@@ -126,7 +126,7 @@
             {% endif %}
 
             {{ rate_b.avg_rate }} ({{ rate_b.rate_count }} ratings)
-            <a href="{% url 'Enterprise:EmpRatingDetail' v.enterprise.slug %}" style="font-size:20px;color:black" target="_blank" data-toggle="tooltip" title="Ratings Breakdown"><i class="fa fa-pie-chart" aria-hidden="true"></i></a>
+            <a href="{% url 'Enterprise:EmpRatingDetail' v.companybranch.slug %}" style="font-size:20px;color:black" target="_blank" data-toggle="tooltip" title="Ratings Breakdown"><i class="fa fa-pie-chart" aria-hidden="true"></i></a>
           {% else %}
             Ratings are calculated from 5 <br>or more votes. There are currently {{ rate_b.rate_count }}.
           {% endif %}

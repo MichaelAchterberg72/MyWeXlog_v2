@@ -387,6 +387,78 @@ def colleague_conf_summary_list(request):
 
 
 @login_required()
+def superior_conf_summary_list(request):
+    '''Confirmations the logged-in user has received'''
+    tlt = request.user
+    sup_c_qs = Superior.objects.filter(superior_name=tlt).order_by('-date_confirmed')
+    sup_c_qs_unlocked = sup_c_qs.filter(Q(locked=False) & ~Q(confirm="S"))
+
+    today = timezone.now().date()
+
+    for item in sup_c_qs_unlocked:
+        age = (today - item.date_confirmed).days
+        if age > locked_age:
+            item.locked = True
+            item.save()
+        else:
+            pass
+
+    sup_c_qs = Superior.objects.filter(superior_name=tlt).order_by('-date_confirmed')
+
+    template = 'talenttrack/confirm_exp_sup_list.html'
+    context = {'sup_c_qs': sup_c_qs, 'age': locked_age,}
+    return render(request, template, context)
+
+
+@login_required()
+def collaborator_conf_summary_list(request):
+    '''Confirmations the logged-in user has received'''
+    tlt = request.user
+    clb_c_qs = WorkCollaborator.objects.filter(collaborator_name=tlt).order_by('-date_confirmed')
+    clb_c_qs_unlocked = clb_c_qs.filter(Q(locked=False) & ~Q(confirm="S"))
+
+    today = timezone.now().date()
+
+    for item in clb_c_qs_unlocked:
+        age = (today - item.date_confirmed).days
+        if age > locked_age:
+            item.locked = True
+            item.save()
+        else:
+            pass
+
+    clb_c_qs = WorkCollaborator.objects.filter(collaborator_name=tlt).order_by('-date_confirmed')
+
+    template = 'talenttrack/confirm_exp_clb_list.html'
+    context = {'clb_c_qs': clb_c_qs, 'age': locked_age,}
+    return render(request, template, context)
+
+
+@login_required()
+def client_conf_summary_list(request):
+    '''Confirmations the logged-in user has received'''
+    tlt = request.user
+    clt_c_qs = WorkClient.objects.filter(client_name=tlt).order_by('-date_confirmed')
+    clt_c_qs_unlocked = clt_c_qs.filter(Q(locked=False) & ~Q(confirm="S"))
+
+    today = timezone.now().date()
+
+    for item in clt_c_qs_unlocked:
+        age = (today - item.date_confirmed).days
+        if age > locked_age:
+            item.locked = True
+            item.save()
+        else:
+            pass
+
+    clt_c_qs = WorkClient.objects.filter(client_name=tlt).order_by('-date_confirmed')
+
+    template = 'talenttrack/confirm_exp_clt_list.html'
+    context = {'clt_c_qs': clt_c_qs, 'age': locked_age,}
+    return render(request, template, context)
+
+
+@login_required()
 def HelpExperienceHomeView(request):
     template_name = 'talenttrack/help_experience_home.html'
     context = {}

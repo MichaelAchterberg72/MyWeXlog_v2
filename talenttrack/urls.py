@@ -80,4 +80,7 @@ urlpatterns = [
     path('calect-list/', views.lecturer_conf_summary_list, name='CAsLectList'),
     path('cacm-list/', views.classmate_conf_summary_list, name='CAsCmList'),
     path('caclg-list/', views.colleague_conf_summary_list, name='CAsClgList'),
+    path('casup-list/', views.superior_conf_summary_list, name='CAsSupList'),
+    path('caclb-list/', views.collaborator_conf_summary_list, name='CAsClbList'),
+    path('caclt-list/', views.client_conf_summary_list, name='CAsCltList'),
 ]

@@ -61,6 +61,10 @@
               </strong>
               </td>
           </tr>
+        {% empty %}
+          <tr>
+            <th colspan="6" class="align-middle text-center">No Request received</th>
+          </tr>
         {% endfor %}
       </tbody>
     </table>

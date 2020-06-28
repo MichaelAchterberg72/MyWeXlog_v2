@@ -14,23 +14,23 @@
       <button type="submit" class="btn btn-secondary">Back</button>
     </form>
     </div>
-    <h3>Confirmation as Lecturer</h3>
+    <h3>Confirmation as Superior</h3>
     <table class="table table-sm">
       <thead>
         <tr>
           <th class="align-middle text-center">Date<br>Captured</th>
           <th class="align-middle text-center">Requested<br>By</th>
           <th class="align-middle text-center">Date<br>Reviewed</th>
-          <th class="align-middle text-center">1-Course<br>2-Topic</th>
+          <th class="align-middle text-center">Company<br>Branch</th>
           <th class="align-middle text-center">My<br>Response</th>
           <th class="align-middle text-center" data-toggle="tooltip" data-placement="top" title="You can edit if entry is less than {{ age }} days old">Edit</th>
         </tr>
       </thead>
       <tbody>
-        {% for item in lect_qs %}
+        {% for item in sup_c_qs %}
           <tr>
             <td rowspan="2" class="align-middle text-center">{{ item.date_captured|date:'j M Y' }}</td>
-            <td class="align-middle text-center">{{ item.education.talent.get_full_name }}</td>
+            <td class="align-middle text-center">{{ item.experience.talent.get_full_name }}</td>
             <td class="align-middle text-center">
               {% if item.confirm == 'S' %}
                 Pending
@@ -38,11 +38,11 @@
                 {{ item.date_confirmed|date:'j M Y' }}
               {% endif %}
             </td>
-            <td>1-{{ item.education.course }}<br>2-{{ item.education.topic }}</td>
+            <td>1-{{ item.experience.company.name }}<br>2-{{ item.experience.companybranch.name }}</td>
             <td class="align-middle text-center">{{ item.get_confirm_display }}</td>
             <td rowspan="2"  class="align-middle text-center">
               {% if item.locked == False %}
-                <a href="{% url 'Profile:LecturerEdit' item.slug %}?next={{ request.path|urlencode }}">
+                <a href="{% url 'Profile:SuperiorEdit' item.slug %}?next={{ request.path|urlencode }}">
                   <i class="fa fa-pencil-square-o" aria-hidden="true"style="font-size:30px;color:black" data-toggle="tooltip" data-placement="top" title="Edit"></i>
                 </a>
               {% else %}
@@ -61,7 +61,7 @@
               </strong>
               </td>
           </tr>
-        {% empty %}
+        {% empty %}        
           <tr>
             <th colspan="6" class="align-middle text-center">No Request received</th>
           </tr>
