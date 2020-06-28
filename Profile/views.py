@@ -76,7 +76,6 @@ def ProfileViewedReport(request):
     tlt_id = tlt.id
     qs = ObjectViewed.objects.filter(object_id=tlt_id)
     pvr = qs.filter(content_type__app_label="Profile").order_by('-timestamp')
-    vvr = qs.filter(content_type__app_label="TalentRequired").order_by('-timestamp')
     vbm = WorkBid.objects.filter(talent=tlt).order_by('-date_applied')
     pvr_p = pvr.values_list('user__alias', flat=True).distinct()
     pvr_p_count = pvr_p.count()
