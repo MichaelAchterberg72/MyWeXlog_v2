@@ -76,6 +76,10 @@ class BriefCareerHistoryForm(forms.ModelForm):
             'date_to': DateInput(),
             'designation': DesignationSelect2Widget(),
         }
+        labels = {
+            'work_configeration': 'Work Configuration',
+            'companybranch': 'Home Base',
+        }
 
 
 class ResignedForm(forms.ModelForm):

@@ -20,7 +20,7 @@
 <br>
   <div class="row">
     <div class="col-sm-6">
-     <div class="card">
+     <div class="card h-100">
        <div class="card-body">
          <p class="float-right"><a href="{% url 'Talent:LecturerAdd' check.slug %}"  class="badge badge-pill badge-primary" style="width: 8rem">Add Lecturer</a></p>
          <h5 class="card-title">Lecturers</h5>
@@ -40,13 +40,12 @@
              </tr>
           {% endfor %}
            </tbody>
-
          </table>
        </div>
      </div>
     </div>
     <div class="col-sm-6">
-     <div class="card">
+     <div class="card h-100">
        <div class="card-body">
          <p class="float-right"><a href="{% url 'Talent:ClassMatesAdd' check.slug %}"  class="badge badge-pill badge-primary" style="width: 8rem">Add Class Mate</a></p>
          <h5 class="card-title">Class Mates</h5>
@@ -67,7 +66,6 @@
           {% endfor %}
            </tbody>
          </table>
-
        </div>
      </div>
     </div>
