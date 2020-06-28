@@ -201,20 +201,22 @@ X_FRAME_OPTIONS = 'DENY'
 REFERRER_POLICY='same-origin'
     ## Content-Security-policy (3rd party app)
 CSP_DEFAULT_SRC = (
-    "'self'", "'unsafe-inline'", 'SameSite', 'maxcdn.bootstrapcdn.com', 'code.jquery.com', 'cdnjs.cloudflare.com', 'youtube.com', 'fonts.googleapis.com', 'maps.googleapis.com', 'use.typekit.net', 'netdna.bootstrapcdn.com', 'w3.org', '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'kit.fontawesome.com', 'mywexlog.dev',
+    "'self'", "'unsafe-inline'", 'SameSite', 'maxcdn.bootstrapcdn.com', 'code.jquery.com', 'cdnjs.cloudflare.com', 'fonts.googleapis.com', 'maps.googleapis.com', 'use.typekit.net', 'netdna.bootstrapcdn.com', 'w3.org', '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'kit.fontawesome.com', 'mywexlog.dev', 'bookstrapcdn.com', 'cdn.jsdelivr.net', 'ajax.googleapis.com', 'https://www.youtube.com/',
     )#app_config
 
 CSP_SCRIPT_SRC = (
-    "'self'", '127.0.0.1', '107.191.57.249', 'code.jquery.com', 'maxcdn.bootstrapcdn.com', 'kit.fontawesome.com', 'app.mywexlog.dev', 'mywexlog.dev', 'cdnjs.cloudflare.com', 'maps.googleapis.com',
+    "'self'", "'unsafe-inline'", '127.0.0.1', '107.191.57.249', 'code.jquery.com', 'maxcdn.bootstrapcdn.com', 'kit.fontawesome.com', 'app.mywexlog.dev', 'mywexlog.dev', 'cdnjs.cloudflare.com', 'maps.googleapis.com', 'bookstrapcdn.com', 'cdn.jsdelivr.net', 'ajax.googleapis.com', 'cdnjs.cloudflare.com',
     )#app_config
 CSP_IMG_SRC = (
     "'self'", '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev',
     )#app_config
 CSP_OBJECT_SRC = None
 CSP_MEDIA_SRC = (
-    "'self'", '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev',
+    "'self'", '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev', 'youtube.com',
     )
-CSP_FRAME_SRC = None
+CSP_FRAME_SRC = (
+    'https://www.youtube.com/',
+    )
 CSP_FONT_SRC = (
     "'self'", 'fonts.googleapis.com', '*', 'w3.org', '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev',
     )#app_config
@@ -335,16 +337,13 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 #  os.environ["PATH"] += os.pathsep + BASE_DIR + '\\venv\\Lib\\site-packages\\osgeo'
 
-#Django Messages settings
-DJANGO_MESSAGES_NOTIFY = False
-
 # PayPal settings
-PAYPAL_RECEIVER_EMAIL = "sb-wynfk1244760@business.example.com"
-
 if app_config.paypal_switch == 'sandbox':
     PAYPAL_TEST = True              # set to False for production
+    PAYPAL_RECEIVER_EMAIL = "sb-wynfk1244760@business.example.com"
 else:
     PAYPAL_TEST = False
+    PAYPAL_RECEIVER_EMAIL = "machterberg@tkgm.co.za"
 
 # Follow instructions to create new certs for server from https://re.readthedocs.io/es/stable/standard/encrypted_buttons.html to create certs
 PAYPAL_PRIVATE_CERT = 'paypal/cert/paypal_private.pem'  #'/path/to/paypal_private.pem'  $ openssl genrsa -out paypal_private.pem 1024

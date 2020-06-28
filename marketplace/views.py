@@ -43,6 +43,8 @@ from marketplace.models import Branch
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+from analytics.signals import object_viewed_signal
+
 import sendgrid
 import os
 from sendgrid import SendGridAPIClient
@@ -1000,6 +1002,8 @@ def VacancyDetailView(request, vac):
 
     if date1 < date2:
         vacancy.update(offer_status = 'C')
+
+    object_viewed_signal.send(vacancy.__class__, instance=vacancy, request=request)
 
     template = 'marketplace/vacancy_detail.html'
     context = {

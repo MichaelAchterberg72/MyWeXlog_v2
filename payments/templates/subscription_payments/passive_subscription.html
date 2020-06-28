@@ -65,13 +65,16 @@
       </div>
     </div>
     <div class="text-center ftco-animate">
-    <p><small>We use PayPal as our billing partner<br>
-      Prices displayed are in USD.</small></p>
-     </div>
-    <div class="row d-flex">
-      <p>&nbsp</p>
-    </div>
-  </div>
-</section>
+          <p><small>We use PayPal as our billing partner<br>
+            Prices displayed are in USD.</small></p>
+           </div>
+          <div class="row d-flex">
+            <p>&nbsp</p>
+          </div>
+
+          {% include "subscription_payments/package_bennefits.html" %}
+
+        </div>
+      </section>
 
 {% endblock content %}

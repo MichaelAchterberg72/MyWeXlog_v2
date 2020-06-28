@@ -107,4 +107,5 @@ urlpatterns = [
         path('help/experience-review/co-worker/', views.HelpCoworkerConfirmView, name='HelpConfirmCoworker'),
         path('help/experience-review/coonsultant-contractor/', views.HelpContractorConfirmView, name='HelpConfirmContractor'),
         path('contact-detail/<slug:tlt>/<slug:vac>/', views.ContactDetailView, name="ContactDetail"),
+        path('capture-skills/', views.CaptureSkillsView, name="CaptureSkills"),
 ]

@@ -64,7 +64,7 @@
               <tr>
                 <td class="align-middle text-center">{{ l.language }}</td>
                 <td class="align-middle text-center">{{ l.get_level_display }}</td>
-                <td class="align-middle text-center">
+                <td class="align-middle text-center float-right">
                   <a href="{% url 'Profile:LanguageEdit' tlt=request.user.alias lang=l.slug %}" class="badge badge-secondary badge-pill" style="width: 5rem;">Edit</a>
                   <form  action="{% url 'Profile:LanguageDelete' lang_id=l.id tlt=l.talent.alias %}" method="post">
                     {% csrf_token %}
@@ -292,6 +292,7 @@
   <div class="card">
     <div class="card-body">
       <h5 class="card-title" id="Upload">Uploaded Files <a href="{% url 'Profile:FileUploadView' %}" class="badge badge-primary float-right">Add File</a></h5>
+      <p>(Only <strong>PDF</strong> files are allowed to be uploaded)</p>
       <table class="table table-sm">
         <thead>
         </thead>
@@ -302,7 +303,7 @@
             <td>
               <form  action="{% url 'Profile:FileDelete' f.id %}" method="post">
                 {% csrf_token %}
-                <button type="submit" class="badge badge-danger badge-pill">Delete</button>
+                <button type="submit" class="badge badge-danger badge-pill float-right">Delete</button>
               </form>
             </td>
           </tr>

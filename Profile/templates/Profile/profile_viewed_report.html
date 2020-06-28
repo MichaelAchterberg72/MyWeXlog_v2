@@ -2,24 +2,167 @@
 
 {% block title %}My {{block.super}} Profile View{% endblock title %}
 
-
 {% block content %}
+
 <div class="card">
   <div class="card-body">
-  <h5>Profile</h5>
-  <a href="{% url 'Talent:APV' tlt=tlt.alias vac='1ad9t2' %}" target="_blank" class="btn btn-success float-right">View Your Public Profile</a>
+        <h5 class="card-title">Weekly Profile Views</h5>
+
+        <div class="align-right">
+          <canvas id="views-chart" height="60px"></canvas>
+          {% if request.user.subscription >= 2 %}
+          <a href="{% url 'MarketPlace:VacanciesList' %}" class="btn btn-primary float-left">Apply for More Positions</a>
+          {% else %}
+          <a href="{% url 'Payments:PassiveUpgradeSubscription' %}" class="btn btn-primary float-left">Apply for More Positions</a>
+          {% endif %}
+          <a href="{% url 'Talent:APV' tlt=tlt.alias vac='1ad9t2' %}" target="_blank" class="btn btn-success float-right">View Your Public Profile</a>
+          <div>
+          <br>
+        </div>
+
+      </div>
+    </div>
   </div>
-</div>
   <br>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Increase Your Profile Views</h5>
+      <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="10000">
+        <ol class="carousel-indicators">
+          <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
+        </ol>
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <div class="container" style="width:80%; height:165px">
+            <p><strong>1. Apply for more vacancies</strong></p>
+            <p>By applying for more vacancies you increase your chances of securing the opportunities that you are available to you with your skills base.</p>
+            <br>
+            <p>{% if request.user.subscription >= 2 %}
+            <a href="{% url 'MarketPlace:VacanciesList' %}" class="btn btn-primary float-right" style="width:300px">Apply for More Positions</a>
+            {% else %}
+            <a href="{% url 'Payments:PassiveUpgradeSubscription' %}" class="btn btn-primary float-right" style="width:300px">Apply for More Positions</a>
+            {% endif %}</p>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <div class="container" style="width:80%; height:165px">
+            <p><strong>2. Request more validations on your experience items and not only increase your score but increase your network and profile views.</strong></p>
+            <p>The more you capture the better you look.</p>
+            <br>
+            <p><a href="{% url 'Talent:ExperienceList' %}" class="btn btn-primary float-right" style="width:300px">View Experience</a></p>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <div class="container" style="width:80%; height:165px">
+            <p><strong>3. Apply more skills when capturing experience (better skills application).</strong></p>
+            <p>The more skills you add to you experience profile when capturing experience the better your chances are of being visible to recruiters to select you for a vacancy.</p>
+            <br>
+            <p><a href="{% url 'Profile:CaptureSkills' %}" class="btn btn-primary float-right" style="width:300px">Learn</a></p>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <div class="container" style="width:80%; height:165px">
+            <p><strong>4. Market your Public Profile link on your CV, Marketing Material and other social media profiles and request to view profile "{{ alias }}".</strong></p>
+            <input type="text" class="form-control" value="{{ referral_code.url }}" id="myInput">
+            <br>
+            <p><button class="btn btn-primary float-right" id="myButton" style="width:300px">Copy Link</button></p>
+            </div>
+          </div>
+        </div>
+        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
+        </div>
+    </div>
+  </div>
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+
+
+  <script>
+
+    var config = {
+      type: 'line',
+      data: {
+        datasets: [{
+          label: 'Weekly Profile Views',
+          data: {{ report_views_data|safe }},
+          order: 1,
+          fill: false,
+          borderColor: '#0000ff',
+          borderWidth: 5,
+          pointBorderWidth: 5,
+          pointStyle: 'circle',
+          pointHitRadius: 20,
+          backgroundColor: [
+            '#0000ff', '#ffff00', '#D3D3D3'
+          ],
+        }, {
+          label: 'Number People Viewed',
+          data: {{ user_views_data|safe }},
+          type: 'bar',
+          order: 2
+        },  {
+          label: 'Number Vacancies Applied For',
+          data: {{ vacancy_bids_views_data|safe }},
+          type: 'line',
+          order: 3,
+          fill: false,
+          borderDash: [5, 5],
+          borderColor: '#808000',
+          borderWidth: 5,
+          pointBorderWidth: 5,
+          pointStyle: 'circle',
+          pointHitRadius: 20,
+        }],
+        labels: {{ report_views_labels|safe }}
+      },
+      options: {
+        responsive: true,
+        tooltips:{
+          bodyFontSize: 14,
+          titleFontSize: 0,
+          displayColors: false,
+        },
+        legend: {
+            display: false,
+            position: 'left',
+            labels: {
+                fontColor: '#0000ff',
+        },
+
+        }
+      }
+    };
+
+    window.onload = function() {
+      var ctx = document.getElementById('views-chart').getContext('2d');
+      window.myPie = new Chart(ctx, config);
+    };
+
+  </script>
+
+<br>
+
   <div class="">
     <div class="card">
       <div class="card-body">
 
           <h5 class="card-title">Profile Viewed Report</h5>
           {% if request.user.subscription >= 2 %}
-          <p>Your profile has been viewed by the following <strong>{{ pvr_count }}</strong> people on the dates indicated.</p>
+          <p>Your profile has been viewed <strong>{{ pvr_count }}</strong> times by <strong>{{ pvr_p_count }}</strong> people on the dates indicated.</p>
           <br>
-          <table class="table table-sm" id="pvr">
+          <table class="table table-hover table-sm" id="pvr">
             <col width="35%">
             <col width="30%">
             <col width="30%">
@@ -35,7 +178,7 @@
               <tr>
                 <td class="align-middle text-center">{{ p.user.alias }}</td>
                 <td class="align-middle text-center">{{ p.timestamp }}</td>
-                <td class="text-center">{% if request.user.subscription >= 2 %}<a href="{% url 'Talent:APV' tlt=p.user.alias vac='1ad9t2' %}" class="badge badge-success badge-pill align-middle text-center" target="new">View Profile</a>{% else %}<button class="badge badge-success badge-pill align-middle">Active Subscription Required</button>{% endif %}</td>
+                <td class="text-center">{% if request.user.subscription >= 2 %}<a href="{% url 'Talent:APV_L' tlt=p.user.alias %}" class="align-middle text-center" target="new"><i class="fa fa-users" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="View Profile"></a>{% else %}<button class="badge badge-success badge-pill align-middle">Active Subscription Required</button>{% endif %}</td>
 
 
               </tr>
@@ -90,7 +233,7 @@
             <a href="{% url 'Payments:PassiveUpgradeSubscription' %}" class="btn btn-primary" style="width: 7rem">Upgrade</a>
           </p>
           <br>
-          <table class="table table-sm" id="pvr_s">
+          <table class="table table-hover table-sm" id="pvr_s">
             <col width="35%">
             <col width="30%">
             <col width="30%">
@@ -106,7 +249,7 @@
               <tr>
                 <td class="align-middle text-center">{{ p.user.alias }}</td>
                 <td class="align-middle text-center">{{ p.timestamp }}</td>
-                <td class="text-center">{% if request.user.subscription >= 2 %}<a href="{% url 'Talent:APV' tlt=p.user.alias vac='1ad9t2' %}" class="badge badge-success badge-pill align-middle text-center" target="new">View Profile</a>{% else %}<button class="badge badge-success badge-pill align-middle">Active Subscription Required</button>{% endif %}</td>
+                <td class="text-center">{% if request.user.subscription >= 2 %}<a href="{% url 'Talent:APV_L' tlt=p.user.alias %}" class="align-middle text-center" target="new"><i class="fa fa-users" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="View Profile"></a>{% else %}<button class="badge badge-success badge-pill align-middle">Active Subscription Required</button>{% endif %}</td>
 
 
               </tr>
