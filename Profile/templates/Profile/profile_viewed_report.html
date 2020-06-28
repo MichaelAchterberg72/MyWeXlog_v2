@@ -112,6 +112,18 @@
           data: {{ user_views_data|safe }},
           type: 'bar',
           order: 2
+        },  {
+          label: 'Number Vacancies Applied For',
+          data: {{ vacancy_bids_views_data|safe }},
+          type: 'line',
+          order: 3,
+          fill: false,
+          borderDash: [5, 5],
+          borderColor: '#808000',
+          borderWidth: 5,
+          pointBorderWidth: 5,
+          pointStyle: 'circle',
+          pointHitRadius: 20,
         }],
         labels: {{ report_views_labels|safe }}
       },

@@ -337,16 +337,13 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 #  os.environ["PATH"] += os.pathsep + BASE_DIR + '\\venv\\Lib\\site-packages\\osgeo'
 
-#Django Messages settings
-DJANGO_MESSAGES_NOTIFY = False
-
 # PayPal settings
-PAYPAL_RECEIVER_EMAIL = "sb-wynfk1244760@business.example.com"
-
 if app_config.paypal_switch == 'sandbox':
     PAYPAL_TEST = True              # set to False for production
+    PAYPAL_RECEIVER_EMAIL = "sb-wynfk1244760@business.example.com"
 else:
     PAYPAL_TEST = False
+    PAYPAL_RECEIVER_EMAIL = "machterberg@tkgm.co.za"
 
 # Follow instructions to create new certs for server from https://re.readthedocs.io/es/stable/standard/encrypted_buttons.html to create certs
 PAYPAL_PRIVATE_CERT = 'paypal/cert/paypal_private.pem'  #'/path/to/paypal_private.pem'  $ openssl genrsa -out paypal_private.pem 1024

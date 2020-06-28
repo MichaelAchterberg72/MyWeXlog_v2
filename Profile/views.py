@@ -76,6 +76,8 @@ def ProfileViewedReport(request):
     tlt_id = tlt.id
     qs = ObjectViewed.objects.filter(object_id=tlt_id)
     pvr = qs.filter(content_type__app_label="Profile").order_by('-timestamp')
+    vvr = qs.filter(content_type__app_label="TalentRequired").order_by('-timestamp')
+    vbm = WorkBid.objects.filter(talent=tlt).order_by('-date_applied')
     pvr_p = pvr.values_list('user__alias', flat=True).distinct()
     pvr_p_count = pvr_p.count()
     pvr_count = pvr.count()
@@ -130,11 +132,22 @@ def ProfileViewedReport(request):
     week7_u = pvr_p.filter(timestamp__range=(monday7, monday6)).count()
     week8_u = pvr_p.filter(timestamp__range=(monday8, monday7)).count()
 
+    week1_b = vbm.filter(date_applied__range=(monday1, date)).count()
+    week2_b = vbm.filter(date_applied__range=(monday2, monday1)).count()
+    week3_b = vbm.filter(date_applied__range=(monday3, monday2)).count()
+    week4_b = vbm.filter(date_applied__range=(monday4, monday3)).count()
+    week5_b = vbm.filter(date_applied__range=(monday5, monday4)).count()
+    week6_b = vbm.filter(date_applied__range=(monday6, monday5)).count()
+    week7_b = vbm.filter(date_applied__range=(monday7, monday6)).count()
+    week8_b = vbm.filter(date_applied__range=(monday8, monday7)).count()
+
     report_views_labels = [week8_date, week7_date, week6_date, week5_date, week4_date, week3_date, 'Last Week', 'This Week']
 
     report_views_data = [week8, week7, week6, week5, week4, week3, week2, week1]
-#    user_views_data = [week8_u, week7_u, week6_u, week5_u, week4_u, week3_u, week2_u, week1_u,]
+
     user_views_data = [week8_u, week7_u, week6_u, week5_u, week4_u, week3_u, week2_u, week1_u,]
+
+    vacancy_bids_views_data = [week8_b, week7_b, week6_b, week5_b, week4_b, week3_b, week2_b, week1_b,]
 
     try:
         page = int(request.GET.get('page', 1))
@@ -168,6 +181,7 @@ def ProfileViewedReport(request):
             'referral_code': referral_code,
             'report_views_data': report_views_data,
             'user_views_data': user_views_data,
+            'vacancy_bids_views_data': vacancy_bids_views_data,
             'report_views_labels': report_views_labels,
             'pageitems': pageitems,
             'page_range': page_range
