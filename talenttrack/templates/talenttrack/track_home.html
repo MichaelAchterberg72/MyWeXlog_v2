@@ -78,7 +78,9 @@
                 <td class="align-middle text-center">{{ edu_req_lect_r }}</td>
                 <td class="align-middle text-center">{{ edu_req_lect_s }}</td>
                 <td class="align-middle text-center">
-                  <a href="{% url 'Talent:CAsLectList' %}?next={{ request.path|urlencode }}">Det</a>
+                  <a href="{% url 'Talent:ReqLectList' %}?next={{ request.path|urlencode }}">
+                    <i class="fa fa-binoculars" aria-hidden="true"style="font-size:25px;color:black" data-toggle="tooltip" data-placement="top" title="View Detail"></i>
+                  </a>
                 </td>
               </tr>
               <tr>
@@ -87,7 +89,9 @@
                 <td class="align-middle text-center">{{ edu_req_cm_r }}</td>
                 <td class="align-middle text-center">{{ edu_req_cm_s }}</td>
                 <td class="align-middle text-center">
-                  <a href="{% url 'Talent:CAsLectList' %}?next={{ request.path|urlencode }}">Det</a>
+                  <a href="{% url 'Talent:ReqCmList' %}?next={{ request.path|urlencode }}">
+                    <i class="fa fa-binoculars" aria-hidden="true"style="font-size:25px;color:black" data-toggle="tooltip" data-placement="top" title="View Detail"></i>
+                  </a>
                 </td>
               </tr>
               <tr>
@@ -96,7 +100,9 @@
                 <td class="align-middle text-center">{{ exp_req_clg_r }}</td>
                 <td class="align-middle text-center">{{ exp_req_clg_s }}</td>
                 <td class="align-middle text-center">
-                  <a href="{% url 'Talent:CAsLectList' %}?next={{ request.path|urlencode }}">Det</a>
+                  <a href="{% url 'Talent:ReqClgList' %}?next={{ request.path|urlencode }}">
+                    <i class="fa fa-binoculars" aria-hidden="true"style="font-size:25px;color:black" data-toggle="tooltip" data-placement="top" title="View Detail"></i>
+                  </a>
                 </td>
               </tr>
               <tr>
@@ -105,7 +111,9 @@
                 <td class="align-middle text-center">{{ exp_req_sup_r }}</td>
                 <td class="align-middle text-center">{{ exp_req_sup_s }}</td>
                 <td class="align-middle text-center">
-                  <a href="{% url 'Talent:CAsSupList' %}?next={{ request.path|urlencode }}">Det</a>
+                  <a href="{% url 'Talent:ReqSupList' %}?next={{ request.path|urlencode }}">
+                    <i class="fa fa-binoculars" aria-hidden="true"style="font-size:25px;color:black" data-toggle="tooltip" data-placement="top" title="View Detail"></i>
+                  </a>
                 </td>
               </tr>
               <tr>
@@ -114,7 +122,9 @@
                 <td class="align-middle text-center">{{ exp_req_clt_r }}</td>
                 <td class="align-middle text-center">{{ exp_req_clt_s }}</td>
                 <td class="align-middle text-center">
-                  <a href="{% url 'Talent:CAsLectList' %}?next={{ request.path|urlencode }}">Det</a>
+                  <a href="{% url 'Talent:ReqCltList' %}?next={{ request.path|urlencode }}">
+                    <i class="fa fa-binoculars" aria-hidden="true"style="font-size:25px;color:black" data-toggle="tooltip" data-placement="top" title="View Detail"></i>
+                  </a>
                 </td>
               </tr>
               <tr>
@@ -123,7 +133,9 @@
                 <td class="align-middle text-center">{{ exp_req_cbr_r }}</td>
                 <td class="align-middle text-center">{{ exp_req_cbr_s }}</td>
                 <td class="align-middle text-center">
-                  <a href="{% url 'Talent:CAsLectList' %}?next={{ request.path|urlencode }}">Det</a>
+                  <a href="{% url 'Talent:ReqClbList' %}?next={{ request.path|urlencode }}">
+                    <i class="fa fa-binoculars" aria-hidden="true"style="font-size:25px;color:black" data-toggle="tooltip" data-placement="top" title="View Detail"></i>
+                  </a>
                 </td>
               </tr>
           </tbody>
@@ -152,6 +164,11 @@
                 <td class="align-middle text-center">{{ edu_lect_r }}</td>
                 <td class="align-middle text-center">{{ edu_lect_s }}</td>
                 <td class="align-middle text-center">
+                  {% if edu_lect_s > 0 %}
+                    <a href="{% url 'Profile:Confirm' %}#Lect">
+                      <i class="fa fa-paint-brush" aria-hidden="true" style="font-size:20px;color:black" target="_blank" data-toggle="tooltip" title="Review Waiting Requests"></i>
+                    </a>
+                  {% endif %}
                   <a href="{% url 'Talent:CAsLectList' %}?next={{ request.path|urlencode }}">
                     <i class="fa fa-binoculars" aria-hidden="true" style="font-size:25px;color:black" data-toggle="tooltip" data-placement="top" title="See Expanded List"></i>
                   </a>
@@ -163,6 +180,11 @@
                 <td class="align-middle text-center">{{ edu_cm_r }}</td>
                 <td class="align-middle text-center">{{ edu_cm_s }}</td>
                 <td class="align-middle text-center">
+                  {% if edu_cm_s > 0 %}
+                    <a href="{% url 'Profile:Confirm' %}#Cm">
+                      <i class="fa fa-paint-brush" aria-hidden="true" style="font-size:20px;color:black" target="_blank" data-toggle="tooltip" title="Review Waiting Requests"></i>
+                    </a>
+                  {% endif %}
                   <a href="{% url 'Talent:CAsCmList' %}?next={{ request.path|urlencode }}">
                     <i class="fa fa-binoculars" aria-hidden="true"style="font-size:25px;color:black" data-toggle="tooltip" data-placement="top" title="See Expanded List"></i>
                   </a>
@@ -174,6 +196,11 @@
                 <td class="align-middle text-center">{{ exp_clg_r }}</td>
                 <td class="align-middle text-center">{{ exp_clg_s }}</td>
                 <td class="align-middle text-center">
+                  {% if exp_clg_s > 0 %}
+                    <a href="{% url 'Profile:Confirm' %}#Clg">
+                      <i class="fa fa-paint-brush" aria-hidden="true" style="font-size:20px;color:black" target="_blank" data-toggle="tooltip" title="Review Waiting Requests"></i>
+                    </a>
+                  {% endif %}
                   <a href="{% url 'Talent:CAsClgList' %}?next={{ request.path|urlencode }}">
                     <i class="fa fa-binoculars" aria-hidden="true"style="font-size:25px;color:black" data-toggle="tooltip" data-placement="top" title="See Expanded List"></i>
                   </a>
@@ -185,6 +212,11 @@
                 <td class="align-middle text-center">{{ exp_sup_r }}</td>
                 <td class="align-middle text-center">{{ exp_sup_s }}</td>
                 <td class="align-middle text-center">
+                  {% if exp_sup_s > 0 %}
+                    <a href="{% url 'Profile:Confirm' %}#Sup">
+                      <i class="fa fa-paint-brush" aria-hidden="true" style="font-size:20px;color:black" target="_blank" data-toggle="tooltip" title="Review Waiting Requests"></i>
+                    </a>
+                  {% endif %}
                   <a href="{% url 'Talent:CAsSupList' %}?next={{ request.path|urlencode }}">
                     <i class="fa fa-binoculars" aria-hidden="true"style="font-size:25px;color:black" data-toggle="tooltip" data-placement="top" title="See Expanded List"></i>
                   </a>
@@ -196,6 +228,11 @@
                 <td class="align-middle text-center">{{ exp_clt_r }}</td>
                 <td class="align-middle text-center">{{ exp_clt_s }}</td>
                 <td class="align-middle text-center">
+                  {% if exp_clt_s > 0 %}
+                    <a href="{% url 'Profile:Confirm' %}#Clt">
+                      <i class="fa fa-paint-brush" aria-hidden="true" style="font-size:20px;color:black" target="_blank" data-toggle="tooltip" title="Review Waiting Requests"></i>
+                    </a>
+                  {% endif %}
                   <a href="{% url 'Talent:CAsCltList' %}?next={{ request.path|urlencode }}">
                     <i class="fa fa-binoculars" aria-hidden="true"style="font-size:25px;color:black" data-toggle="tooltip" data-placement="top" title="See Expanded List"></i>
                   </a>
@@ -207,6 +244,11 @@
                 <td class="align-middle text-center">{{ exp_cbr_r }}</td>
                 <td class="align-middle text-center">{{ exp_cbr_s }}</td>
                 <td class="align-middle text-center">
+                  {% if exp_cbr_s > 0 %}
+                    <a href="{% url 'Profile:Confirm' %}#Clb">
+                      <i class="fa fa-paint-brush" aria-hidden="true" style="font-size:20px;color:black" target="_blank" data-toggle="tooltip" title="Review Waiting Requests"></i>
+                    </a>
+                  {% endif %}
                   <a href="{% url 'Talent:CAsClbList' %}?next={{ request.path|urlencode }}">
                     <i class="fa fa-binoculars" aria-hidden="true"style="font-size:25px;color:black" data-toggle="tooltip" data-placement="top" title="See Expanded List"></i>
                   </a>

@@ -83,4 +83,10 @@ urlpatterns = [
     path('casup-list/', views.superior_conf_summary_list, name='CAsSupList'),
     path('caclb-list/', views.collaborator_conf_summary_list, name='CAsClbList'),
     path('caclt-list/', views.client_conf_summary_list, name='CAsCltList'),
+    path('reqlect-list/', views.lect_req_list, name='ReqLectList'),
+    path('reqcm-list/', views.cm_req_list, name='ReqCmList'),
+    path('reqclg-list/', views.clg_req_list, name='ReqClgList'),
+    path('reqsup-list/', views.sup_req_list, name='ReqSupList'),
+    path('reqclt-list/', views.clt_req_list, name='ReqCltList'),
+    path('reqclb-list/', views.clb_req_list, name='ReqClbList'),
 ]

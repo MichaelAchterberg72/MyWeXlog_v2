@@ -319,7 +319,7 @@ def profile_search(request):
 def lecturer_conf_summary_list(request):
     '''Confirmations the logged-in user has received'''
     tlt = request.user
-    lect_qs = Lecturer.objects.filter(lecturer=tlt).order_by('-date_confirmed')
+    lect_qs = Lecturer.objects.filter(lecturer=tlt)
     lect_qs_unlocked = lect_qs.filter(Q(locked=False) & ~Q(confirm="S"))
 
     today = timezone.now().date()
@@ -331,7 +331,7 @@ def lecturer_conf_summary_list(request):
             item.save()
         else:
             pass
-    lect_qs = Lecturer.objects.filter(lecturer=tlt).order_by('-date_confirmed')
+    lect_qs = Lecturer.objects.filter(lecturer=tlt).order_by('-date_confirmed').order_by('-confirm')
 
     template = 'talenttrack/confirm_edu_lect_list.html'
     context = {'lect_qs': lect_qs, 'age': locked_age,}
@@ -342,7 +342,7 @@ def lecturer_conf_summary_list(request):
 def classmate_conf_summary_list(request):
     '''Confirmations the logged-in user has received'''
     tlt = request.user
-    cm_qs = ClassMates.objects.filter(colleague=tlt).order_by('-date_confirmed')
+    cm_qs = ClassMates.objects.filter(colleague=tlt)
     cm_qs_unlocked = cm_qs.filter(Q(locked=False) & ~Q(confirm="S"))
 
     today = timezone.now().date()
@@ -355,7 +355,7 @@ def classmate_conf_summary_list(request):
         else:
             pass
 
-    cm_qs = ClassMates.objects.filter(colleague=tlt).order_by('-date_confirmed')
+    cm_qs = ClassMates.objects.filter(colleague=tlt).order_by('-date_confirmed').order_by('-confirm')
 
     template = 'talenttrack/confirm_edu_cm_list.html'
     context = {'cm_qs': cm_qs, 'age': locked_age,}
@@ -366,7 +366,7 @@ def classmate_conf_summary_list(request):
 def colleague_conf_summary_list(request):
     '''Confirmations the logged-in user has received'''
     tlt = request.user
-    clg_c_qs = WorkColleague.objects.filter(colleague_name=tlt).order_by('-date_confirmed')
+    clg_c_qs = WorkColleague.objects.filter(colleague_name=tlt)
     clg_c_qs_unlocked = clg_c_qs.filter(Q(locked=False) & ~Q(confirm="S"))
 
     today = timezone.now().date()
@@ -379,7 +379,7 @@ def colleague_conf_summary_list(request):
         else:
             pass
 
-    clg_c_qs = WorkColleague.objects.filter(colleague_name=tlt).order_by('-date_confirmed')
+    clg_c_qs = WorkColleague.objects.filter(colleague_name=tlt).order_by('-date_confirmed').order_by('-confirm')
 
     template = 'talenttrack/confirm_exp_clg_list.html'
     context = {'clg_c_qs': clg_c_qs, 'age': locked_age,}
@@ -390,7 +390,7 @@ def colleague_conf_summary_list(request):
 def superior_conf_summary_list(request):
     '''Confirmations the logged-in user has received'''
     tlt = request.user
-    sup_c_qs = Superior.objects.filter(superior_name=tlt).order_by('-date_confirmed')
+    sup_c_qs = Superior.objects.filter(superior_name=tlt)
     sup_c_qs_unlocked = sup_c_qs.filter(Q(locked=False) & ~Q(confirm="S"))
 
     today = timezone.now().date()
@@ -403,7 +403,7 @@ def superior_conf_summary_list(request):
         else:
             pass
 
-    sup_c_qs = Superior.objects.filter(superior_name=tlt).order_by('-date_confirmed')
+    sup_c_qs = Superior.objects.filter(superior_name=tlt).order_by('-date_confirmed').order_by('-confirm')
 
     template = 'talenttrack/confirm_exp_sup_list.html'
     context = {'sup_c_qs': sup_c_qs, 'age': locked_age,}
@@ -414,7 +414,7 @@ def superior_conf_summary_list(request):
 def collaborator_conf_summary_list(request):
     '''Confirmations the logged-in user has received'''
     tlt = request.user
-    clb_c_qs = WorkCollaborator.objects.filter(collaborator_name=tlt).order_by('-date_confirmed')
+    clb_c_qs = WorkCollaborator.objects.filter(collaborator_name=tlt)
     clb_c_qs_unlocked = clb_c_qs.filter(Q(locked=False) & ~Q(confirm="S"))
 
     today = timezone.now().date()
@@ -427,7 +427,7 @@ def collaborator_conf_summary_list(request):
         else:
             pass
 
-    clb_c_qs = WorkCollaborator.objects.filter(collaborator_name=tlt).order_by('-date_confirmed')
+    clb_c_qs = WorkCollaborator.objects.filter(collaborator_name=tlt).order_by('-date_confirmed').order_by('-confirm')
 
     template = 'talenttrack/confirm_exp_clb_list.html'
     context = {'clb_c_qs': clb_c_qs, 'age': locked_age,}
@@ -438,7 +438,7 @@ def collaborator_conf_summary_list(request):
 def client_conf_summary_list(request):
     '''Confirmations the logged-in user has received'''
     tlt = request.user
-    clt_c_qs = WorkClient.objects.filter(client_name=tlt).order_by('-date_confirmed')
+    clt_c_qs = WorkClient.objects.filter(client_name=tlt)
     clt_c_qs_unlocked = clt_c_qs.filter(Q(locked=False) & ~Q(confirm="S"))
 
     today = timezone.now().date()
@@ -451,10 +451,76 @@ def client_conf_summary_list(request):
         else:
             pass
 
-    clt_c_qs = WorkClient.objects.filter(client_name=tlt).order_by('-date_confirmed')
+    clt_c_qs = WorkClient.objects.filter(client_name=tlt).order_by('-date_confirmed').order_by('-confirm')
 
     template = 'talenttrack/confirm_exp_clt_list.html'
     context = {'clt_c_qs': clt_c_qs, 'age': locked_age,}
+    return render(request, template, context)
+
+
+@login_required()
+def lect_req_list(request):
+    '''Filters for the view where all requests for lecturer are listed'''
+    talent = request.user
+    edu_req_lect = Lecturer.objects.filter(education__talent=talent).order_by('-date_confirmed').order_by('-confirm')
+
+    template = 'talenttrack/request_lect_list.html'
+    context = {'edu_req_lect': edu_req_lect,}
+    return render(request, template, context)
+
+
+@login_required()
+def cm_req_list(request):
+    '''Filters for the view where all requests for classmate are listed'''
+    talent = request.user
+    edu_req_cm = ClassMates.objects.filter(education__talent=talent).order_by('-date_confirmed').order_by('-confirm')
+
+    template = 'talenttrack/request_cm_list.html'
+    context = {'edu_req_cm': edu_req_cm,}
+    return render(request, template, context)
+
+
+@login_required()
+def clg_req_list(request):
+    '''Filters for the view where all requests to colleagues are listed'''
+    talent = request.user
+    exp_req_clg = WorkColleague.objects.filter(experience__talent=talent).order_by('-date_confirmed').order_by('-confirm')
+
+    template = 'talenttrack/request_clg_list.html'
+    context = {'exp_req_clg': exp_req_clg,}
+    return render(request, template, context)
+
+
+@login_required()
+def sup_req_list(request):
+    '''Filters for the view where all requests to superiors are listed'''
+    talent = request.user
+    exp_req_sup = Superior.objects.filter(experience__talent=talent).order_by('-date_confirmed').order_by('-confirm')
+
+    template = 'talenttrack/request_sup_list.html'
+    context = {'exp_req_sup': exp_req_sup,}
+    return render(request, template, context)
+
+
+@login_required()
+def clt_req_list(request):
+    '''Filters for the view where all requests to clients are listed'''
+    talent = request.user
+    exp_req_clt = WorkClient.objects.filter(experience__talent=talent).order_by('-date_confirmed').order_by('-confirm')
+
+    template = 'talenttrack/request_clt_list.html'
+    context = {'exp_req_clt': exp_req_clt,}
+    return render(request, template, context)
+
+
+@login_required()
+def clb_req_list(request):
+    '''Filters for the view where all requests to collaborators are listed'''
+    talent = request.user
+    exp_req_clb = WorkCollaborator.objects.filter(experience__talent=talent).order_by('-date_confirmed').order_by('-confirm')
+
+    template = 'talenttrack/request_clb_list.html'
+    context = {'exp_req_clb': exp_req_clb,}
     return render(request, template, context)
 
 
