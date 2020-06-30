@@ -149,12 +149,8 @@ def FlatInviteview(request):
 
             except Exception as e:
                 print(e)
-
-#            send_mail(subject, html_message, 'no-reply@mywexlog.com', [invitee,])
             template = 'invitations/flat_invitation.html'
             return render(request, template, context)
-            #return render(request, template, context)
-
     else:
         form = InvitationLiteForm()
         template = 'invitations/invite_lite_form.html'
