@@ -8,7 +8,7 @@ class PhoneNumberType(models.Model):
         return self.type
 
     def clean(self):
-        self.skill = self.type.proper()
+        self.skill = self.type.capitalize()
 
 
 class SkillTag(models.Model):
@@ -22,7 +22,7 @@ class SkillTag(models.Model):
         #ordering = ['skill',]
 
     def clean(self):
-        self.skill = self.skill.proper()
+        self.skill = self.skill.capitalize()
 
     def __str__(self):
         return self.skill
@@ -32,7 +32,7 @@ class LanguageList(models.Model):
     language = models.CharField(max_length=30, unique=True, null=True)
 
     def clean(self):
-        self.language = self.language.proper()
+        self.language = self.language.capitalize()
 
     def __str__(self):
         return self.language
