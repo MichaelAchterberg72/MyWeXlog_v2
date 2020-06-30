@@ -159,6 +159,58 @@ def FlatInviteview(request):
 
 
 @login_required()
+def InviteGoogleContactsView(gd_client):
+
+    invitor = request.user
+    feed = gd_client.GetContacts()
+    for i, entry in enumerate(feed.entry):
+        print '\n%s %s' % (i+1, entry.name.full_name.text)
+        g_full_name = entry.name.full_name.text
+        g_name = entry.name.first_name.text
+        g_surname = entry.name.last_name.text
+        if entry.content:
+          print '    %s' % (entry.content.text)
+        # Display the primary email address for the contact.
+        for email in entry.email:
+          if email.primary and email.primary == 'true':
+            print '    %s' % (email.address)
+            g_email = email.address
+
+        data = {
+            'invited_by': request.user,
+            'relationship': 'AF',
+            'name': g_name,
+            'surname': g_surname,
+            'email': g_email,
+            }
+
+        Invitation.objects.append(data)
+
+        subject = f"{invitor.first_name} {invitor.last_name} invites you to join MyWeXlog"
+        context = {'referral_code': referral_code, 'user_email': g_email}
+        html_message = render_to_string('invitations/flat_invitation.html', context).strip()
+        plain_message = strip_tags(html_message)
+
+        message = Mail(
+            from_email = settings.SENDGRID_FROM_EMAIL,
+            to_emails = g_email,
+            subject = subject,
+            plain_text_content = strip_tags(html_message),
+            html_content = html_message)
+
+        try:
+            sg = sendgrid.SendGridAPIClient(settings.SENDGRID_API_KEY)
+            response = sg.send(message)
+            print(response.status_code)
+            print(response.body)
+            print(response.headers)
+
+        except Exception as e:
+            print(e)
+
+
+
+@login_required()
 def profile_2_pdf(request):
     tlt = request.user
     tdy = timezone.now()

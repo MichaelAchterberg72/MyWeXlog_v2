@@ -261,6 +261,18 @@
   </div>
 </div>
 <br>
+<div class="card">
+  <div class="card-body">
+    <h3 class="text-center">Do you think this information was useful?</h3>
+    <p class="text-center">In order to make sure your friends are already invited to the MyWeXlog experience for validations, Click here ..</p>
+    <div class="float-right">
+      <!--
+    <a class="btn btn-primary"  href="https://oauth2provider.com/auth?response_type=code&client_id=CLIENT_KEY&redirect_uri=CALLBACK_URI&scope=profile&scope=email">Invite Goole Contacts</a>  -->
+    <a class="btn btn-primary"  href="{% url 'Invitation:FlatInvite' %}">Email Friend Invite</a>
+    </div>
+  </div>
+</div>
+<br>
 <div class="card border-0" style="width: 100%;">
   <div class="card-body">
     <table class="table table-sm">
