@@ -164,17 +164,13 @@ def InviteGoogleContactsView(gd_client):
     invitor = request.user
     feed = gd_client.GetContacts()
     for i, entry in enumerate(feed.entry):
-        print '\n%s %s' % (i+1, entry.name.full_name.text)
         g_full_name = entry.name.full_name.text
         g_name = entry.name.first_name.text
         g_surname = entry.name.last_name.text
-        if entry.content:
-          print '    %s' % (entry.content.text)
         # Display the primary email address for the contact.
         for email in entry.email:
-          if email.primary and email.primary == 'true':
-            print '    %s' % (email.address)
-            g_email = email.address
+            if email.primary and email.primary == 'true':
+                g_email = email.address
 
         data = {
             'invited_by': request.user,
