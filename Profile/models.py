@@ -186,7 +186,7 @@ class IdType(models.Model):
     type = models.CharField(max_length=50, unique=True)
 
     def clean(self):
-        self.type = self.type.capitalize()
+        self.type = self.type.title()
 
     def __str__(self):
         return self.type

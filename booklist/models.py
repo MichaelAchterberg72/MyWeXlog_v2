@@ -11,10 +11,16 @@ class Author(models.Model):
     def __str__(self):
         return self.name
 
+    def clean(self):
+        self.name = self.name.title()
+
 
 class Publisher(models.Model):
     publisher = models.CharField(max_length=150, unique=True)
     link = models.URLField('Publisher URL', blank=True, null=True)
+
+    def clean(self):
+        self.publisher = self.publisher.title()
 
     def __str__(self):
         return self.publisher
@@ -24,7 +30,7 @@ class Genre(models.Model):
     name = models.CharField(max_length=100)
 
     def clean(self):
-        self.name = self.name.capitalize()
+        self.name = self.name.title()
 
     def __str__(self):
         return f'{self.name}'
@@ -62,7 +68,7 @@ class Format(models.Model):
     format = models.CharField(max_length=60, unique=True)
 
     def clean(self):
-        self.format = self.format.capitalize()
+        self.format = self.format.title()
 
     def __str__(self):
         return self.format
