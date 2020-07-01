@@ -3,6 +3,7 @@ from django.utils.http import is_safe_url
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
+from django.http import HttpResponseRedirect
 
 #html to pdf
 from django.utils import timezone
@@ -23,6 +24,7 @@ from talenttrack.models import (
 )
 from booklist.models import ReadBy
 from .models import Invitation
+from users.models import CustomUser
 
 #email
 from django.core.mail import send_mail, EmailMultiAlternatives
@@ -112,9 +114,15 @@ def InvitationView(request, tex):
 def FlatInviteview(request):
 
     invitor = request.user
+    invite_excl = set(Invitation.objects.filter().values_list('email', flat=True))
+    myself = set(CustomUser.objects.filter(pk=request.user.id).values_list('email', flat=True))
+
+    filt = invite_excl | myself
+
+    form = InvitationLiteForm(request.POST or None, pwd=filt)
     if request.method == 'POST':
         next_url=request.POST.get('next', '/')
-        form = InvitationLiteForm(request.POST or None)
+
         if form.is_valid():
             new = form.save(commit=False)
             new.invited_by = request.user
@@ -149,10 +157,19 @@ def FlatInviteview(request):
 
             except Exception as e:
                 print(e)
-            template = 'invitations/flat_invitation.html'
+
+            template = 'invitations/invited.html'
             return render(request, template, context)
+
+        else:
+            template = 'invitations/invite_lite_form.html'
+            context = {'form': form}
+            return render(request, template, context)
+#            template = 'invitations/already_invited.html'
+#            context = {}
+#            return render(request, template, context)
+
     else:
-        form = InvitationLiteForm()
         template = 'invitations/invite_lite_form.html'
         context = {'form': form}
         return render(request, template, context)
@@ -171,39 +188,41 @@ def InviteGoogleContactsView(gd_client):
         for email in entry.email:
             if email.primary and email.primary == 'true':
                 g_email = email.address
-
-        data = {
-            'invited_by': request.user,
-            'relationship': 'AF',
-            'name': g_name,
-            'surname': g_surname,
-            'email': g_email,
-            }
-
-        Invitation.objects.append(data)
-
-        subject = f"{invitor.first_name} {invitor.last_name} invites you to join MyWeXlog"
-        context = {'referral_code': referral_code, 'user_email': g_email}
-        html_message = render_to_string('invitations/flat_invitation.html', context).strip()
-        plain_message = strip_tags(html_message)
-
-        message = Mail(
-            from_email = settings.SENDGRID_FROM_EMAIL,
-            to_emails = g_email,
-            subject = subject,
-            plain_text_content = strip_tags(html_message),
-            html_content = html_message)
-
         try:
-            sg = sendgrid.SendGridAPIClient(settings.SENDGRID_API_KEY)
-            response = sg.send(message)
-            print(response.status_code)
-            print(response.body)
-            print(response.headers)
+            data = {
+                'invited_by': request.user,
+                'relationship': 'AF',
+                'name': g_name,
+                'surname': g_surname,
+                'email': g_email,
+                }
 
-        except Exception as e:
-            print(e)
+            Invitation.objects.append(data)
 
+            subject = f"{invitor.first_name} {invitor.last_name} invites you to join MyWeXlog"
+            context = {'referral_code': referral_code, 'user_email': g_email}
+            html_message = render_to_string('invitations/flat_invitation.html', context).strip()
+            plain_message = strip_tags(html_message)
+
+            message = Mail(
+                from_email = settings.SENDGRID_FROM_EMAIL,
+                to_emails = g_email,
+                subject = subject,
+                plain_text_content = strip_tags(html_message),
+                html_content = html_message)
+
+            try:
+                sg = sendgrid.SendGridAPIClient(settings.SENDGRID_API_KEY)
+                response = sg.send(message)
+                print(response.status_code)
+                print(response.body)
+                print(response.headers)
+
+            except Exception as e:
+                print(e)
+
+        except:
+            print("This person has already been invited")
 
 
 @login_required()

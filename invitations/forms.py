@@ -31,6 +31,20 @@ class InvitationForm(forms.ModelForm):
         }
 
 class InvitationLiteForm(forms.ModelForm):
+    pwd = None
+    def __init__(self, *args, **kwargs):
+        global pwd
+        pwd = kwargs.pop('pwd')
+        super().__init__(*args, **kwargs)
+
     class Meta:
         model = Invitation
         fields = ('name', 'surname', 'email')
+
+    def clean_email(self):
+        email_passed = self.cleaned_data.get("email")
+        als = email_passed
+
+        if als in pwd:
+            raise forms.ValidationError("A person with this email address has already been invited! Please Choose another email.")
+        return email_passed

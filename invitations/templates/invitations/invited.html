@@ -1,0 +1,16 @@
+{% extends 'base_home.html' %}
+
+{% block title %}My {{block.super}} Friend Invites{% endblock title %}
+
+{% block content %}
+
+<div class="card">
+  <div class="card-body">
+        <h5 class="card-title">{{ form.instance.name }} {{ form.instance.surname }} invited</h5>
+        <p>Thank you for inviting {{ form.instance.name }} {{ form.instance.surname }} at email address {{ form.instance.email }}.</p>
+        <p>An invite email has been sent to {{ form.instance.name }} inviting them to join MyWeXlog.com. Please feel free to contact them directly to remind them to look out for the email and click on the referral link to register as this invite is only able to be sent once due to anti-spam laws.</p>
+        <br>
+        <p><a href="{% url 'Invitation:FlatInvite' %}" class="btn btn-primary float-right">Invite Another</a><a href="{% url 'Talent:Home' %}" class="btn btn-secondary float-left">Return To Experience Page</a>
+  </div>
+</div>
+{% endblock content %}
