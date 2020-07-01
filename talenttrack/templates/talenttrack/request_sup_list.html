@@ -30,7 +30,7 @@
         {% for item in exp_req_sup %}
           <tr>
             <td rowspan="3" class="align-middle text-center">{{ item.date_captured|date:'j M Y' }}</td>
-            <td rowspan="2" class="align-middle text-center">{{ item.colleague_name.get_full_name }}</td>
+            <td rowspan="2" class="align-middle text-center">{{ item.superior_name.get_full_name }}</td>
             <td class="align-middle text-center">
               {% if item.confirm == 'S' %}
                 Pending
