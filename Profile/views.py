@@ -257,11 +257,11 @@ def TltUpdateStatusRate(request, wit):
             new.save()
 
             #average for company as a whole
-            cmp_id = wit_qs.work.enterprise.company.id
+            cmp_id = wit_qs.work.companybranch.company.id
             cmp = Enterprise.objects.get(id=cmp_id)
             cmpu = Enterprise.objects.filter(id=cmp_id)
 
-            tctr = TalentRate.objects.filter(vacancy__enterprise__company=cmp)
+            tctr = TalentRate.objects.filter(vacancy__companybranch__company=cmp)
 
             avg_1 = tctr.aggregate(c1=Avg('rate_1'))
             c1 = avg_1.get('c1')*100
@@ -280,11 +280,11 @@ def TltUpdateStatusRate(request, wit):
             cmpu.update(rate_1=c1, rate_2=c2, rate_3=c3, rate_4=c4, rate_count=cnt)
 
             #average branch rating
-            bch_id = wit_qs.work.enterprise.id
+            bch_id = wit_qs.work.companybranch.id
             bch = Branch.objects.get(id=bch_id)
             bchu = Branch.objects.filter(id=bch_id)
 
-            trt = TalentRate.objects.filter(vacancy__enterprise=bch)
+            trt = TalentRate.objects.filter(vacancy__companybranch=bch)
 
             avg_1 = trt.aggregate(a1=Avg('rate_1'))
             a1 = avg_1.get('a1')*100

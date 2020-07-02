@@ -156,19 +156,19 @@ class Profile(models.Model):
                     cm = ClassMates(education = eml_i.experience, colleague=self.talent, topic=eml_i.experience.topic)
                     cm.save()
                 if rel == 'WC':
-                    wc = WorkColleague(experience = eml_i.experience, colleague=self.talent)
+                    wc = WorkColleague(experience = eml_i.experience, colleague_name=self.talent)
                     wc.save()
                 if rel == 'PC':
-                    wc = WorkColleague(experience = eml_i.experience, colleague=self.talent)
+                    wc = WorkColleague(experience = eml_i.experience, colleague_name=self.talent)
                     wc.save()
                 if rel == 'WS':
                     ws = Superior(experience = eml_i.experience, superior_name=self.talent)
                     ws.save()
                 if rel == 'WL':
-                    wl = WorkCollaborator(experience = eml_i.experience, collaborator_name=self.talent)
+                    wl = WorkCollaborator(experience = eml_i.experience, collaborator_name=self.talent, company=eml_i.worked_for.company, companybranch=eml_i.worked_for)
                     wl.save()
                 if rel == 'WT':
-                    wt = WorkClient(experience = eml_i.experience, client_name=self.talent)
+                    wt = WorkClient(experience = eml_i.experience, client_name=self.talent, company=eml_i.worked_for.company, companybranch=eml_i.worked_for)
                     wt.save()
             else:
                 pass

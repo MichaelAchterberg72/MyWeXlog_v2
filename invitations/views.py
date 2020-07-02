@@ -102,7 +102,11 @@ def InvitationView(request, tex):
             response = HttpResponseRedirect(next_url)
             response.delete_cookie("confirm")
             return response
-
+        else:
+            form = InvitationForm()
+            template = 'invitations/invite_form.html'
+            context = {'form': form}
+            return render(request, template, context)
     else:
         form = InvitationForm()
         template = 'invitations/invite_form.html'
