@@ -53,7 +53,7 @@ class Result(models.Model):#What you receive when completing the course
     type = models.CharField(max_length=100, unique=True)
 
     def clean(self):
-        self.type = self.type.capitalize()
+        self.type = self.type.title()
 
     def __str__(self):
         return self.type
@@ -63,7 +63,7 @@ class CourseType(models.Model):#What type of course (online, Attend lectures, et
     type = models.CharField(max_length=60, unique=True)
 
     def clean(self):
-        self.type = self.type.capitalize()
+        self.type = self.type.title()
 
     def __str__(self):
         return self.type
@@ -114,7 +114,7 @@ class Course(models.Model):
     certification = models.ForeignKey(Result, on_delete=models.PROTECT, verbose_name = 'Result')
 
     def clean(self):
-        self.name = self.name.capitalize()
+        self.name = self.name.title()
 
     class Meta:
         unique_together = (('name','company'),)
@@ -129,7 +129,7 @@ class Topic(models.Model):
     hours = models.DecimalField(max_digits=5, decimal_places=2)
 
     def clean(self):
-        self.topic = self.topic.capitalize()
+        self.topic = self.topic.title()
 
     def __str__(self):
         return '{}'.format(self.topic)
@@ -197,7 +197,7 @@ class Designation(models.Model):
     name = models.CharField('Designation', max_length=60, unique=True)
 
     def clean(self):
-        self.name = self.name.capitalize()
+        self.name = self.name.title()
 
     def __str__(self):
         return self.name

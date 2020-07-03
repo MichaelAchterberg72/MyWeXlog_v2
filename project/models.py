@@ -22,6 +22,9 @@ class ProjectData(models.Model):
     def __str__(self):
         return '{} - {}'.format(self.company, self.name)
 
+    def clean(self):
+        self.name = self.name.title()
+
     def save(self, *args, **kwargs):
         if self.slug is None or self.slug == "":
             self.slug = create_code9(self)
