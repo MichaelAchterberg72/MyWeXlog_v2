@@ -220,11 +220,18 @@
   <br>
   <h4 class="text-left">Reviews Summary</h4>
   <table class="table table-sm">
+    <col width="25%">
+    <col width="15%">
+    <col width="15%">
+    <col width="15%">
+    <col width="15%">
+    <col width="15%">
     <thead>
       <tr>
         <th class="align-middle text-center">As</th>
         <th class="align-middle text-center">Confirmed</th>
         <th class="align-middle text-center">Rejected</th>
+        <th class="align-middle text-center">Wrong</th>
         <th class="align-middle text-center">Waiting</th>
         <th class="align-middle text-center">Actions</th>
       </tr>
@@ -234,6 +241,7 @@
         <th class="align-middle text-center" data-toggle="tooltip" title="You have been asked to confirm">Confirmer</th>
         <td class="align-middle text-center">{{ conf_tot_c|intcomma }}</td>
         <td class="align-middle text-center">{{ conf_tot_r|intcomma }}</td>
+        <td class="align-middle text-center">{{ conf_tot_y|intcomma }}</td>
         <td class="align-middle text-center">{{ conf_tot_s|intcomma }}</td>
         <td class="align-middle text-center">
           {% if conf_tot_r > 0 %}
@@ -248,6 +256,7 @@
         <th class="align-middle text-center" data-toggle="tooltip" title="You have requested a confirmation">Requestioner</th>
         <td class="align-middle text-center">{{ req_tot_c|intcomma }}</td>
         <td class="align-middle text-center">{{ req_tot_r|intcomma }}</td>
+        <td class="align-middle text-center">{{ req_tot_y|intcomma }}</td>
         <td class="align-middle text-center">{{ req_tot_s|intcomma }}</td>
         <td class="align-middle text-center">
           <a href="{% url 'Talent:Home' %}?next={{ request.path|urlencode }} #request">
