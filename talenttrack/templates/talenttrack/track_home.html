@@ -299,7 +299,7 @@
       <i class="icon icon-question-circle"></i></a>
     </div>
     <h4 class="card-title">Education & Training</h4>
-    <p>There are a total of {{ train_count }} Training & Education experience items that have been captured{% if train_count >= 5 %}, we only list the most recent 5 here.{% else %}.{% endif %}</p>
+    <p>There are a total of <strong>{{ train_count }}</strong> Training & Education experience items that have been captured{% if train_count >= 5 %}, we only list the most recent 5 here.{% else %}.{% endif %}</p>
     <br>
     <div class="float-right">
       <p><a href="{% url 'Talent:Capture' %}" class="badge badge-pill badge-primary float-right">Add Education</a></p>
@@ -353,7 +353,7 @@
       <i class="icon icon-question-circle"></i></a>
     </div>
     <h4 class="card-title">Work Experience</h4>
-    <p>There are a total of {{ exp_count }} Experience items that have been captured{% if exp_count >= 5 %}, we only list the most recent 5 here.{% else %}.{% endif %}</p>
+    <p>There are a total of <strong>{{ exp_count }}</strong> Experience items that have been captured{% if exp_count >= 5 %}, we only list the most recent 5 here.{% else %}.{% endif %}</p>
     <br>
       <div class="float-right">
         <p><a href="{% url 'Talent:ExperienceCapture' %}" class="badge badge-pill badge-primary float-right">Add Experience</a></p>
@@ -407,7 +407,7 @@
       <i class="icon icon-question-circle"></i></a>
     </div>
     <h4 class="card-title">Previously Logged Experience</h4>
-    <p>There are a total of {{ pre_count }} Previously Logged experience items that have been captured{% if pre_count >= 5 %}, we only list the most recent 5 here.{% else %}.{% endif %}</p>
+    <p>There are a total of <strong>{{ pre_count }}</strong> Previously Logged experience items that have been captured{% if pre_count >= 5 %}, we only list the most recent 5 here.{% else %}.{% endif %}</p>
     <br>
       <div class="float-right">
         <p><a href="{% url 'Talent:PreloggedCapture' %}" class="badge badge-pill badge-primary float-right">Add Logged Experience</a></p>
