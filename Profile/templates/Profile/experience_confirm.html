@@ -6,7 +6,10 @@
 {% if not wf1 or cm1 or wk1 or spr1 or wclr1 or wc1 %}
 <div class="card border-0">
   <div class="card-body">
-    <p>You currently do not have any experience to confirm.</p>
+    <div class="float-right">
+      <a href="{% url 'Talent:Home' %}?next={{ request.path|urlencode }}" class="btn btn-secondary">Back</a>
+    </div>
+      <p>You currently do not have any experience to confirm.</p>
   </div>
 </div>
 <br>
