@@ -1788,6 +1788,8 @@ def LecturerSelectView(request):
         if form.is_valid():
             new = form.save(commit=False)
             new.education = instance
+            new.topic = instance.topic
+            new.topic = instance.topic
             new.save()
             if 'another' in request.POST:
                 response = redirect('Talent:LecturerSelect')
@@ -1829,6 +1831,8 @@ def LecturerAddView(request, tex):
         if form.is_valid():
             new = form.save(commit=False)
             new.education = instance
+            new.course = instance.course
+            new.topic = instance.topic
             new.save()
             response = redirect(reverse('Talent:EducationDetail', kwargs={'tex': tex}))
             response.delete_cookie("confirm")
@@ -1865,6 +1869,8 @@ def ClassMateSelectView(request):
         if form.is_valid():
             new = form.save(commit=False)
             new.education = instance
+            new.course = instance.course
+            new.topic = instance.topic
             new.save()
             if 'another' in request.POST:
                 reponse = redirect('Talent:ClassMatesSelect')
@@ -1905,6 +1911,8 @@ def ClassMateAddView(request, tex):
         if form.is_valid():
             new = form.save(commit=False)
             new.education = instance
+            new.course = instance.course
+            new.topic = instance.topic
             new.save()
             response = redirect(reverse('Talent:EducationDetail', kwargs={'tex': tex}))
             response.delete_cookie("confirm")

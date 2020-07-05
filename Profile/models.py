@@ -146,6 +146,9 @@ class Profile(models.Model):
             tlt = self.talent.email
             eml_i = Invitation.objects.filter(email=tlt)
             self.confirm_check = True
+            eml_i.accepted = True
+            eml_i.save()
+            
             if eml_i:
                 eml_i = eml_i.get(email=tlt)
                 rel = eml_i.relationship

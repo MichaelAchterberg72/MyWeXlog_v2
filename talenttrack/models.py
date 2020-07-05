@@ -327,7 +327,7 @@ class WorkCollaborator(models.Model):
         #Captured by talent
     experience = models.ForeignKey(WorkExperience, on_delete=models.CASCADE)
     collaborator_name = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
-    company = models.ForeignKey(Enterprise, on_delete=models.PROTECT)
+    company = models.ForeignKey(Enterprise, on_delete=models.PROTECT, null=True)
     companybranch = models.ForeignKey(Branch, on_delete=models.PROTECT)
     designation = models.ForeignKey(Designation, on_delete=models.PROTECT, null=True)
         #AutoCaptured
@@ -361,7 +361,7 @@ class WorkClient(models.Model):
     experience = models.ForeignKey(WorkExperience, on_delete=models.CASCADE)
     client_name = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     designation = models.ForeignKey(Designation, on_delete=models.PROTECT, null=True)
-    company = models.ForeignKey(Enterprise, on_delete=models.PROTECT)
+    company = models.ForeignKey(Enterprise, on_delete=models.PROTECT, null=True)
     companybranch = models.ForeignKey(Branch, on_delete=models.PROTECT)
         #AutoCaptured
     date_captured = models.DateField(auto_now_add=True)

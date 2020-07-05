@@ -64,10 +64,11 @@ class ResultWidget(ResultSearchFieldMixin, ModelSelect2Widget):
 
 
 class BranchSearchFieldMixin:
-    search_fields = [
-        'name__icontains', 'pk__startswith',
-        ]
     dependent_fields = {'company': 'company'}
+    search_fields = [
+        'name__icontains', 'pk__startswith'
+        ]
+
 
 class BranchSelect2Widget(BranchSearchFieldMixin, ModelSelect2Widget):
     model = Branch
@@ -237,6 +238,9 @@ class PreLoggedExperienceForm(forms.ModelForm):
             'date_to': DateInput(),
             'skills': SkillModelSelect2MultipleWidget(),
             }
+        lables = {
+            'companybranch': 'Branch',
+        }
 
     def clean_date_to(self):
         '''Ensures the end date is after the begin date and before current date'''
@@ -299,6 +303,9 @@ class WorkClientSelectForm(forms.ModelForm):
             'designation': DesignationSelect2Widget(),
             'companybranch': BranchSelect2Widget(),
             }
+        labels = {
+            'companybranch': 'Branch'
+        }
     def clean_client_name(self):
         client_passed = self.cleaned_data.get("client_name")
         als = client_passed.id
@@ -342,6 +349,10 @@ class WorkCollaboratorSelectForm(forms.ModelForm):
             'designation': DesignationSelect2Widget(),
             'companybranch': BranchSelect2Widget(),
             }
+        labels = {
+            'companybranch': 'Branch'
+        }
+
     def clean_collaborator_name(self):
         collaborator_passed = self.cleaned_data.get("collaborator_name")
         als = collaborator_passed.id
@@ -450,6 +461,7 @@ class WorkExperienceForm(forms.ModelForm):
             }
         labels = {
             'hours_worked': 'Hours',
+            'companybranch': 'Branch',
         }
         help_texts = {
             'company': 'Please complete the Company field before the Branch Field',
@@ -464,8 +476,8 @@ class WorkExperienceForm(forms.ModelForm):
 
         if date_to < date_from:
             raise forms.ValidationError("You can't finish a period before it starts!, please ensure End date is after Start date.")
-        elif date_to > today:
-            raise forms.ValidationError("You can't claim experience in the future! End date must be  equal to, or less than today")
+        if date_to > today:
+            raise forms.ValidationError("You can't claim experience in the future! End date must be equal to, or less than today")
 
         return date_to
 
@@ -516,9 +528,8 @@ class ClassMatesSelectForm(forms.ModelForm):
 
     class Meta:
         model = ClassMates
-        fields = ('colleague', 'topic',)
+        fields = ('colleague',)
         widgets={
-            'topic': TopicSelect2Widget(),
             'colleague': UserSelect2Widget(),
             }
 
@@ -578,9 +589,8 @@ class LecturerSelectForm(forms.ModelForm):
 
     class Meta:
         model = Lecturer
-        fields = ('lecturer', 'topic',)
+        fields = ('lecturer',)
         widgets={
-            'topic': TopicSelect2Widget(),
             'lecturer': UserSelect2Widget(),
             }
 
