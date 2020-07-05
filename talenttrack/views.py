@@ -194,31 +194,37 @@ def ExperienceHome(request):
     edu_lect_r = edu_lect.filter(confirm="R").count()
     edu_lect_c = edu_lect.filter(confirm="C").count()
     edu_lect_s = edu_lect.filter(confirm="S").count()
+    edu_lect_y = edu_lect.filter(confirm="Y").count()
 
     edu_cm = ClassMates.objects.filter(colleague=talent)
     edu_cm_r = edu_cm.filter(confirm="R").count()
     edu_cm_c = edu_cm.filter(confirm="C").count()
     edu_cm_s = edu_cm.filter(confirm="S").count()
+    edu_cm_y = edu_cm.filter(confirm="Y").count()
 
     exp_clg = WorkColleague.objects.filter(colleague_name=talent)
     exp_clg_r = exp_clg.filter(confirm="R").count()
     exp_clg_c = exp_clg.filter(confirm="C").count()
     exp_clg_s = exp_clg.filter(confirm="S").count()
+    exp_clg_y = exp_clg.filter(confirm="Y").count()
 
     exp_sup = Superior.objects.filter(superior_name=talent)
     exp_sup_r = exp_sup.filter(confirm="R").count()
     exp_sup_c = exp_sup.filter(confirm="C").count()
     exp_sup_s = exp_sup.filter(confirm="S").count()
+    exp_sup_y = exp_sup.filter(confirm="Y").count()
 
     exp_clt = WorkClient.objects.filter(client_name=talent)
     exp_clt_r = exp_clt.filter(confirm="R").count()
     exp_clt_c = exp_clt.filter(confirm="C").count()
     exp_clt_s = exp_clt.filter(confirm="S").count()
+    exp_clt_y = exp_clt.filter(confirm="Y").count()
 
     exp_cbr = WorkCollaborator.objects.filter(collaborator_name=talent)
     exp_cbr_r = exp_cbr.filter(confirm="R").count()
     exp_cbr_c = exp_cbr.filter(confirm="C").count()
     exp_cbr_s = exp_cbr.filter(confirm="S").count()
+    exp_cbr_y = exp_cbr.filter(confirm="Y").count()
     #As Confirmer<<<
 
     #>>>As Requestioner
@@ -226,31 +232,37 @@ def ExperienceHome(request):
     edu_req_lect_r = edu_req_lect.filter(confirm="R").count()
     edu_req_lect_c = edu_req_lect.filter(confirm="C").count()
     edu_req_lect_s = edu_req_lect.filter(confirm="S").count()
+    edu_req_lect_y = edu_req_lect.filter(confirm="Y").count()
 
     edu_req_cm = ClassMates.objects.filter(education__talent=talent)
     edu_req_cm_r = edu_req_cm.filter(confirm="R").count()
     edu_req_cm_c = edu_req_cm.filter(confirm="C").count()
     edu_req_cm_s = edu_req_cm.filter(confirm="S").count()
+    edu_req_cm_y = edu_req_cm.filter(confirm="Y").count()
 
     exp_req_clg = WorkColleague.objects.filter(experience__talent=talent)
     exp_req_clg_r = exp_req_clg.filter(confirm="R").count()
     exp_req_clg_c = exp_req_clg.filter(confirm="C").count()
     exp_req_clg_s = exp_req_clg.filter(confirm="S").count()
+    exp_req_clg_y = exp_req_clg.filter(confirm="Y").count()
 
     exp_req_sup = Superior.objects.filter(experience__talent=talent)
     exp_req_sup_r = exp_req_sup.filter(confirm="R").count()
     exp_req_sup_c = exp_req_sup.filter(confirm="C").count()
     exp_req_sup_s = exp_req_sup.filter(confirm="S").count()
+    exp_req_sup_y = exp_req_sup.filter(confirm="Y").count()
 
     exp_req_clt = WorkClient.objects.filter(experience__talent=talent)
     exp_req_clt_r = exp_req_clt.filter(confirm="R").count()
     exp_req_clt_c = exp_req_clt.filter(confirm="C").count()
     exp_req_clt_s = exp_req_clt.filter(confirm="S").count()
+    exp_req_clt_y = exp_req_clt.filter(confirm="Y").count()
 
     exp_req_cbr = WorkCollaborator.objects.filter(experience__talent=talent)
     exp_req_cbr_r = exp_req_cbr.filter(confirm="R").count()
     exp_req_cbr_c = exp_req_cbr.filter(confirm="C").count()
     exp_req_cbr_s = exp_req_cbr.filter(confirm="S").count()
+    exp_req_cbr_y = exp_req_cbr.filter(confirm="Y").count()
     #As Requestioner<<<
     #Summary of confirmation activity<<<
 
@@ -278,18 +290,18 @@ def ExperienceHome(request):
         'skill_name': skill_name,
         'skill_count': skill_count,
         'level': level,
-        'edu_lect': edu_lect, 'edu_lect_r': edu_lect_r, 'edu_lect_c': edu_lect_c, 'edu_lect_s': edu_lect_s,
-        'edu_cm': edu_cm, 'edu_cm_r': edu_cm_r, 'edu_cm_c': edu_cm_c, 'edu_cm_s': edu_cm_s,
-        'exp_clg': exp_clg, 'exp_clg_c': exp_clg_c, 'exp_clg_r': exp_clg_r, 'exp_clg_s': exp_clg_s,
-        'exp_sup': exp_sup, 'exp_sup_c': exp_sup_c, 'exp_sup_r': exp_sup_r, 'exp_sup_s': exp_sup_s,
-        'exp_clt': exp_clt, 'exp_clt_c': exp_clt_c, 'exp_clt_r': exp_clt_r, 'exp_clt_s': exp_clt_s,
-        'exp_cbr': exp_cbr, 'exp_cbr_c': exp_cbr_c, 'exp_cbr_r': exp_cbr_r, 'exp_cbr_s': exp_cbr_s,
-        'edu_req_lect': edu_req_lect, 'edu_req_lect_r': edu_req_lect_r, 'edu_req_lect_c': edu_req_lect_c, 'edu_req_lect_s': edu_req_lect_s,
-        'edu_req_cm': edu_req_cm, 'edu_req_cm_r': edu_req_cm_r, 'edu_req_cm_c': edu_req_cm_c, 'edu_req_cm_s': edu_req_cm_s,
-        'exp_req_clg': exp_req_clg, 'exp_req_clg_c': exp_req_clg_c, 'exp_req_clg_r': exp_req_clg_r, 'exp_req_clg_s': exp_req_clg_s,
-        'exp_req_sup': exp_req_sup, 'exp_req_sup_c': exp_req_sup_c, 'exp_req_sup_r': exp_req_sup_r, 'exp_req_sup_s': exp_req_sup_s,
-        'exp_req_clt': exp_req_clt, 'exp_req_clt_c': exp_req_clt_c, 'exp_req_clt_r': exp_req_clt_r, 'exp_req_clt_s': exp_req_clt_s,
-        'exp_req_cbr': exp_req_cbr, 'exp_req_cbr_c': exp_req_cbr_c, 'exp_req_cbr_r': exp_req_cbr_r, 'exp_req_cbr_s': exp_req_cbr_s,
+        'edu_lect': edu_lect, 'edu_lect_r': edu_lect_r, 'edu_lect_c': edu_lect_c, 'edu_lect_s': edu_lect_s, 'edu_lect_y': edu_lect_y,
+        'edu_cm': edu_cm, 'edu_cm_r': edu_cm_r, 'edu_cm_c': edu_cm_c, 'edu_cm_s': edu_cm_s, 'edu_cm_y': edu_cm_y,
+        'exp_clg': exp_clg, 'exp_clg_c': exp_clg_c, 'exp_clg_r': exp_clg_r, 'exp_clg_s': exp_clg_s, 'exp_clg_y': exp_clg_y,
+        'exp_sup': exp_sup, 'exp_sup_c': exp_sup_c, 'exp_sup_r': exp_sup_r, 'exp_sup_s': exp_sup_s, 'exp_sup_y': exp_sup_y,
+        'exp_clt': exp_clt, 'exp_clt_c': exp_clt_c, 'exp_clt_r': exp_clt_r, 'exp_clt_s': exp_clt_s, 'exp_clt_y': exp_clt_y,
+        'exp_cbr': exp_cbr, 'exp_cbr_c': exp_cbr_c, 'exp_cbr_r': exp_cbr_r, 'exp_cbr_s': exp_cbr_s, 'exp_cbr_y': exp_cbr_y,
+        'edu_req_lect': edu_req_lect, 'edu_req_lect_r': edu_req_lect_r, 'edu_req_lect_c': edu_req_lect_c, 'edu_req_lect_s': edu_req_lect_s, 'edu_req_lect_y': edu_req_lect_y,
+        'edu_req_cm': edu_req_cm, 'edu_req_cm_r': edu_req_cm_r, 'edu_req_cm_c': edu_req_cm_c, 'edu_req_cm_s': edu_req_cm_s, 'edu_req_cm_y': edu_req_cm_y,
+        'exp_req_clg': exp_req_clg, 'exp_req_clg_c': exp_req_clg_c, 'exp_req_clg_r': exp_req_clg_r, 'exp_req_clg_s': exp_req_clg_s, 'exp_req_clg_y': exp_req_clg_y,
+        'exp_req_sup': exp_req_sup, 'exp_req_sup_c': exp_req_sup_c, 'exp_req_sup_r': exp_req_sup_r, 'exp_req_sup_s': exp_req_sup_s, 'exp_req_sup_y': exp_req_sup_y,
+        'exp_req_clt': exp_req_clt, 'exp_req_clt_c': exp_req_clt_c, 'exp_req_clt_r': exp_req_clt_r, 'exp_req_clt_s': exp_req_clt_s, 'exp_req_clt_y': exp_req_clt_y,
+        'exp_req_cbr': exp_req_cbr, 'exp_req_cbr_c': exp_req_cbr_c, 'exp_req_cbr_r': exp_req_cbr_r, 'exp_req_cbr_s': exp_req_cbr_s, 'exp_req_cbr_y': exp_req_cbr_y,
     }
     return render(request, template, context)
 
@@ -717,7 +729,7 @@ def CaptureAchievementView(request):
         new = form.save(commit=False)
         new.talent = pfl
         new.save()
-        return redirect(reverse('Profile:ProfileView', kwargs={'tlt':pfl.alias})+'#achievements')
+        return redirect(reverse('Profile:ProfileView')+'#achievements')
     else:
         template = 'talenttrack/achievement_capture.html'
         context = {'form': form,}
@@ -733,7 +745,7 @@ def EditAchievementView(request, ach):
     if request.method == 'POST':
         new = form.save(commit=False)
         new.save()
-        return redirect(reverse('Profile:ProfileView', kwargs={'tlt': instance.talent.alias})+'#achievements')
+        return redirect(reverse('Profile:ProfileView')+'#achievements')
     else:
         template = 'talenttrack/achievement_capture.html'
         context = {'form': form,}
@@ -746,7 +758,7 @@ def DeleteAchievementView(request, ach_i, tlt):
     if info.talent == request.user:
         if request.method =='POST':
             info.delete()
-            return redirect(reverse('Profile:ProfileView', kwargs={'tlt': tlt})+'#achievements')
+            return redirect(reverse('Profile:ProfileView')+'#achievements')
     else:
         raise PermissionDenied
 
@@ -761,7 +773,7 @@ def LicenseCertificationCaptureView(request):
         new = form.save(commit=False)
         new.talent = tlt_i
         new.save()
-        return redirect(reverse ('Profile:ProfileView', kwargs={'tlt':tlt_i.alias})+'#memberships')
+        return redirect(reverse ('Profile:ProfileView')+'#memberships')
     else:
         template = 'talenttrack/membership_view.html'
         context = {'form': form,}
@@ -777,7 +789,7 @@ def LicenseCertificationEditView(request, lcm):
     if form.is_valid():
         edit = form.save(commit=False)
         edit.save()
-        return redirect(reverse ('Profile:ProfileView', kwargs={'tlt':lcm_i.talent.alias})+'#memberships')
+        return redirect(reverse ('Profile:ProfileView')+'#memberships')
     else:
         template = 'talenttrack/membership_view.html'
         context = {'form': form,}
@@ -790,7 +802,7 @@ def LicenseCertificationDeleteView(request, pk, tlt):
     if lcm.talent == request.user:
         if request.method =='POST':
             lcm.delete()
-            return redirect(reverse('Profile:ProfileView', kwargs={'tlt':tlt})+'#memberships')
+            return redirect(reverse('Profile:ProfileView')+'#memberships')
     else:
         raise PermissionDenied
 
@@ -1301,15 +1313,9 @@ def ClientAddView(request, tex):
             new = form.save(commit=False)
             new.experience = instance
             new.save()
-            if 'another' in request.POST:
-                response = redirect(reverse('Talent:ClientAdd', kwargs={'tex':tex}))
-                response.delete_cookie("confirm")
-                return response
-
-            elif 'done' in request.POST:
-                response = redirect(reverse('Talent:ExperienceDetail', kwargs={'tex': tex}))
-                response.delete_cookie("confirm")
-                return response
+            response = redirect(reverse('Talent:ExperienceDetail', kwargs={'tex': tex}))
+            response.delete_cookie("confirm")
+            return response
         else:
             template = 'talenttrack/experience_client_add.html'
             context = {'instance': instance, 'form': form, 'tex': tex, 'score': score,}
@@ -1409,15 +1415,9 @@ def CollaboratorAddView(request, tex):
             new = form.save(commit=False)
             new.experience = instance
             new.save()
-            if 'another' in request.POST:
-                response = redirect(reverse('Talent:CollaboratorAdd', kwargs={'tex':tex}))
-                response.delete_cookie("confirm")
-                return response
-
-            elif 'done' in request.POST:
-                response = redirect(reverse('Talent:ExperienceDetail', kwargs={'tex': tex}))
-                response.delete_cookie("confirm")
-                return response
+            response = redirect(reverse('Talent:ExperienceDetail', kwargs={'tex': tex}))
+            response.delete_cookie("confirm")
+            return response
         else:
             template = 'talenttrack/experience_collaborator_add.html'
             context = {'instance': instance, 'form': form, 'tex': tex, 'score': score,}
@@ -1514,14 +1514,9 @@ def SuperiorAddView(request, tex):
             new = form.save(commit=False)
             new.experience = instance
             new.save()
-            if 'another' in request.POST:
-                response = redirect('Talent:SuperiorAdd', kwargs={'tex':tex})
-                response.delete_cookie("confirm")
-                return response
-            elif 'done' in request.POST:
-                response = redirect(reverse('Talent:ExperienceDetail', kwargs={'tex': tex}))
-                response.delete_cookie("confirm")
-                return response
+            response = redirect(reverse('Talent:ExperienceDetail', kwargs={'tex': tex}))
+            response.delete_cookie("confirm")
+            return response
         else:
             template = 'talenttrack/experience_superior_add.html'
             context = {'instance': instance, 'form': form, 'tex': tex, 'score': score,}
@@ -1618,15 +1613,9 @@ def ColleagueAddView(request, tex):
             new = form.save(commit=False)
             new.experience = instance
             new.save()
-            if 'another' in request.POST:
-                response = redirect(reverse('Talent:ColleagueAdd', kwargs={'tex':tex}))
-                response.delete_cookie("confirm")
-                return response
-
-            elif 'done' in request.POST:
-                response = redirect(reverse('Talent:ExperienceDetail', kwargs={'tex':tex}))
-                response.delete_cookie("confirm")
-                return response
+            response = redirect(reverse('Talent:ExperienceDetail', kwargs={'tex':tex}))
+            response.delete_cookie("confirm")
+            return response
         else:
             template = 'talenttrack/experience_colleague_add.html'
             context = {'instance': instance, 'form': form, 'tex': tex, 'score': score,}
@@ -1841,14 +1830,9 @@ def LecturerAddView(request, tex):
             new = form.save(commit=False)
             new.education = instance
             new.save()
-            if 'another' in request.POST:
-                response = redirect(reverse('Talent:LecturerAdd', kwargs={'tex': tex}))
-                response.delete_cookie("confirm")
-                return response
-            elif 'done' in request.POST:
-                response = redirect(reverse('Talent:EducationDetail', kwargs={'tex': tex}))
-                response.delete_cookie("confirm")
-                return response
+            response = redirect(reverse('Talent:EducationDetail', kwargs={'tex': tex}))
+            response.delete_cookie("confirm")
+            return response
         else:
             template = 'talenttrack/education_lecturer_add.html'
             context = {'instance': instance, 'form': form, 'tex': tex, 'score': score,}
@@ -1884,11 +1868,10 @@ def ClassMateSelectView(request):
             new.save()
             if 'another' in request.POST:
                 reponse = redirect('Talent:ClassMatesSelect')
-                return response
             elif 'done' in request.POST:
                 response = redirect(reverse('Talent:Home'))
                 response.delete_cookie("confirm")
-                return response
+            return response
         else:
             template = 'talenttrack/education_classmate_select.html'
             context = {'instance': instance, 'form': form, 'score': score,}
@@ -1923,14 +1906,9 @@ def ClassMateAddView(request, tex):
             new = form.save(commit=False)
             new.education = instance
             new.save()
-            if 'another' in request.POST:
-                response = redirect(reverse('Talent:ClassMatesAdd', kwargs={'tex': tex}))
-                response.delete_cookie("confirm")
-                return response
-            elif 'done' in request.POST:
-                response = redirect(reverse('Talent:EducationDetail', kwargs={'tex': tex}))
-                response.delete_cookie("confirm")
-                return response
+            response = redirect(reverse('Talent:EducationDetail', kwargs={'tex': tex}))
+            response.delete_cookie("confirm")
+            return response
         else:
             template = 'talenttrack/education_classmate_add.html'
             context = {'instance': instance, 'form': form, 'tex': tex, 'score': score,}

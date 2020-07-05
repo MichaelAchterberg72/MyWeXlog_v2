@@ -65,8 +65,9 @@
           <thead>
             <tr>
               <th class="align-middle text-center">As</th>
-              <th class="align-middle text-center">Confirmed</th>
-              <th class="align-middle text-center">Rejected</th>
+              <th class="align-middle text-center">Confirm</th>
+              <th class="align-middle text-center">Reject</th>
+              <th class="align-middle text-center">Wrong<br>Person</th>
               <th class="align-middle text-center">Waiting</th>
               <th class="align-middle text-center">Actions</th>
             </tr>
@@ -76,6 +77,7 @@
                 <td class="align-middle text-center">Lecturer</td>
                 <td class="align-middle text-center">{{ edu_req_lect_c }}</td>
                 <td class="align-middle text-center">{{ edu_req_lect_r }}</td>
+                <td class="align-middle text-center">{{ edu_req_lect_y }}</td>
                 <td class="align-middle text-center">{{ edu_req_lect_s }}</td>
                 <td class="align-middle text-center">
                   <a href="{% url 'Talent:ReqLectList' %}?next={{ request.path|urlencode }}">
@@ -87,6 +89,7 @@
                 <td class="align-middle text-center">ClassMate</td>
                 <td class="align-middle text-center">{{ edu_req_cm_c }}</td>
                 <td class="align-middle text-center">{{ edu_req_cm_r }}</td>
+                <td class="align-middle text-center">{{ edu_req_cm_y }}</td>
                 <td class="align-middle text-center">{{ edu_req_cm_s }}</td>
                 <td class="align-middle text-center">
                   <a href="{% url 'Talent:ReqCmList' %}?next={{ request.path|urlencode }}">
@@ -98,6 +101,7 @@
                 <td class="align-middle text-center">Colleague</td>
                 <td class="align-middle text-center">{{ exp_req_clg_c }}</td>
                 <td class="align-middle text-center">{{ exp_req_clg_r }}</td>
+                <td class="align-middle text-center">{{ exp_req_clg_y }}</td>
                 <td class="align-middle text-center">{{ exp_req_clg_s }}</td>
                 <td class="align-middle text-center">
                   <a href="{% url 'Talent:ReqClgList' %}?next={{ request.path|urlencode }}">
@@ -109,6 +113,7 @@
                 <td class="align-middle text-center">Superior</td>
                 <td class="align-middle text-center">{{ exp_req_sup_c }}</td>
                 <td class="align-middle text-center">{{ exp_req_sup_r }}</td>
+                <td class="align-middle text-center">{{ exp_req_sup_y }}</td>
                 <td class="align-middle text-center">{{ exp_req_sup_s }}</td>
                 <td class="align-middle text-center">
                   <a href="{% url 'Talent:ReqSupList' %}?next={{ request.path|urlencode }}">
@@ -120,6 +125,7 @@
                 <td class="align-middle text-center">Client</td>
                 <td class="align-middle text-center">{{ exp_req_clt_c }}</td>
                 <td class="align-middle text-center">{{ exp_req_clt_r }}</td>
+                <td class="align-middle text-center">{{ exp_req_clt_y }}</td>
                 <td class="align-middle text-center">{{ exp_req_clt_s }}</td>
                 <td class="align-middle text-center">
                   <a href="{% url 'Talent:ReqCltList' %}?next={{ request.path|urlencode }}">
@@ -131,6 +137,7 @@
                 <td class="align-middle text-center">Collaborator</td>
                 <td class="align-middle text-center">{{ exp_req_cbr_c }}</td>
                 <td class="align-middle text-center">{{ exp_req_cbr_r }}</td>
+                <td class="align-middle text-center">{{ exp_req_cbr_y }}</td>
                 <td class="align-middle text-center">{{ exp_req_cbr_s }}</td>
                 <td class="align-middle text-center">
                   <a href="{% url 'Talent:ReqClbList' %}?next={{ request.path|urlencode }}">
@@ -151,8 +158,9 @@
           <thead>
             <tr>
               <th class="align-middle text-center">As</th>
-              <th class="align-middle text-center">Confirmed</th>
-              <th class="align-middle text-center">Rejected</th>
+              <th class="align-middle text-center">Confirm</th>
+              <th class="align-middle text-center">Reject</th>
+              <th class="align-middle text-center">Wrong<br>Person</th>
               <th class="align-middle text-center">Waiting</th>
               <th class="align-middle text-center">Actions</th>
             </tr>
@@ -162,6 +170,7 @@
                 <td class="align-middle text-center">Lecturer</td>
                 <td class="align-middle text-center">{{ edu_lect_c }}</td>
                 <td class="align-middle text-center">{{ edu_lect_r }}</td>
+                <td class="align-middle text-center">{{ edu_lect_y }}</td>
                 <td class="align-middle text-center">{{ edu_lect_s }}</td>
                 <td class="align-middle text-center">
                   {% if edu_lect_s > 0 %}
@@ -178,6 +187,7 @@
                 <td class="align-middle text-center">ClassMate</td>
                 <td class="align-middle text-center">{{ edu_cm_c }}</td>
                 <td class="align-middle text-center">{{ edu_cm_r }}</td>
+                <td class="align-middle text-center">{{ edu_cm_y }}</td>
                 <td class="align-middle text-center">{{ edu_cm_s }}</td>
                 <td class="align-middle text-center">
                   {% if edu_cm_s > 0 %}
@@ -194,6 +204,7 @@
                 <td class="align-middle text-center">Colleague</td>
                 <td class="align-middle text-center">{{ exp_clg_c }}</td>
                 <td class="align-middle text-center">{{ exp_clg_r }}</td>
+                <td class="align-middle text-center">{{ exp_clg_y }}</td>
                 <td class="align-middle text-center">{{ exp_clg_s }}</td>
                 <td class="align-middle text-center">
                   {% if exp_clg_s > 0 %}
@@ -210,6 +221,7 @@
                 <td class="align-middle text-center">Superior</td>
                 <td class="align-middle text-center">{{ exp_sup_c }}</td>
                 <td class="align-middle text-center">{{ exp_sup_r }}</td>
+                <td class="align-middle text-center">{{ exp_sup_y }}</td>
                 <td class="align-middle text-center">{{ exp_sup_s }}</td>
                 <td class="align-middle text-center">
                   {% if exp_sup_s > 0 %}
@@ -226,6 +238,7 @@
                 <td class="align-middle text-center">Client</td>
                 <td class="align-middle text-center">{{ exp_clt_c }}</td>
                 <td class="align-middle text-center">{{ exp_clt_r }}</td>
+                <td class="align-middle text-center">{{ exp_clt_y }}</td>
                 <td class="align-middle text-center">{{ exp_clt_s }}</td>
                 <td class="align-middle text-center">
                   {% if exp_clt_s > 0 %}
@@ -242,6 +255,7 @@
                 <td class="align-middle text-center">Collaborator</td>
                 <td class="align-middle text-center">{{ exp_cbr_c }}</td>
                 <td class="align-middle text-center">{{ exp_cbr_r }}</td>
+                <td class="align-middle text-center">{{ exp_cbr_y }}</td>
                 <td class="align-middle text-center">{{ exp_cbr_s }}</td>
                 <td class="align-middle text-center">
                   {% if exp_cbr_s > 0 %}

@@ -13,7 +13,11 @@
       <button type="submit" class="btn btn-secondary">Back</button>
     </form>&nbsp
     {% if v.offer_status == 'O' %}
-      <a href="{% url 'MarketPlace:WorkBid' v.ref_no %}" class="btn btn-warning">Apply for this role</a>
+      {% if applied %}
+        <button type="button" name="button" class="btn btn-danger">Already Applied</button>
+      {% else %}
+        <a href="{% url 'MarketPlace:WorkBid' v.ref_no %}" class="btn btn-warning">Apply for this role</a>
+      {% endif %}
     {% else %}
       <a href="#" class="btn btn-danger">Closed</a>
     {% endif %}

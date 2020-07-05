@@ -223,8 +223,9 @@
     <thead>
       <tr>
         <th class="align-middle text-center">As</th>
-        <th class="align-middle text-center">Confirmed</th>
-        <th class="align-middle text-center">Rejected</th>
+        <th class="align-middle text-center">Confirm</th>
+        <th class="align-middle text-center">Reject</th>
+        <th class="align-middle text-center">Wrong<br>Person</th>
         <th class="align-middle text-center">Waiting</th>
         <th class="align-middle text-center">Actions</th>
       </tr>
@@ -234,9 +235,10 @@
         <th class="align-middle text-center" data-toggle="tooltip" title="You have been asked to confirm">Confirmer</th>
         <td class="align-middle text-center">{{ conf_tot_c|intcomma }}</td>
         <td class="align-middle text-center">{{ conf_tot_r|intcomma }}</td>
+        <td class="align-middle text-center">{{ conf_tot_y|intcomma }}</td>
         <td class="align-middle text-center">{{ conf_tot_s|intcomma }}</td>
         <td class="align-middle text-center">
-          {% if conf_tot_r > 0 %}
+          {% if conf_tot_s > 0 %}
             <a href="{% url 'Profile:Confirm' %}" style="font-size:20px;color:black" target="_blank" data-toggle="tooltip" title="Review Waiting Requests"><i class="fa fa-paint-brush" aria-hidden="true"></i></a>
           {% endif %}
           <a href="{% url 'Talent:Home' %}?next={{ request.path|urlencode }} #confirm">
@@ -248,6 +250,7 @@
         <th class="align-middle text-center" data-toggle="tooltip" title="You have requested a confirmation">Requestioner</th>
         <td class="align-middle text-center">{{ req_tot_c|intcomma }}</td>
         <td class="align-middle text-center">{{ req_tot_r|intcomma }}</td>
+        <td class="align-middle text-center">{{ req_tot_y|intcomma }}</td>
         <td class="align-middle text-center">{{ req_tot_s|intcomma }}</td>
         <td class="align-middle text-center">
           <a href="{% url 'Talent:Home' %}?next={{ request.path|urlencode }} #request">
@@ -303,7 +306,7 @@
             <a href="{% url 'Profile:IntDecline' tlt_i.id %}?next={{ request.path|urlencode }}" class="badge badge-danger badge-pill" style="width: 7rem">Decline<br>Invitation</a></td>
           {% endif %}
           {% if tlt_i.tlt_response == 'A' %}
-            <a href="{% url 'Profile:IntComplete' tlt_i.id %}?next={{ request.path|urlencode }}" class="badge badge-success badge-pill" style="width: 7rem">Interview<br>Completed</a>
+            <a href="{% url 'Profile:IntComplete' tlt_i.id %}?next={{ request.path|urlencode }}" class="badge badge-success badge-pill" style="width: 7rem">Mark as<br>Completed</a>
           {% endif %}
         {% endif %}
       </tr>

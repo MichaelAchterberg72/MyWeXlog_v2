@@ -965,6 +965,7 @@ def DeclinedAssignmentInterviewListView(request, vac):
 @subscription(2)
 def WorkBidView(request, vac):
     detail = TalentRequired.objects.get(ref_no=vac)
+    bid_qs = WorkBid.objects.filter(Q(work__ref_no=vac) & Q(talent=request.user))
 
     form = WorkBidForm(request.POST or None)
     if request.method == 'POST':
@@ -977,7 +978,7 @@ def WorkBidView(request, vac):
     else:
 
         template = 'marketplace/vacancy_apply.html'
-        context={'form': form, 'detail': detail}
+        context={'form': form, 'detail': detail, 'bid_qs': bid_qs,}
         return render(request, template, context)
 
 #This is the detail view for talent and where active users can apply for the role
@@ -994,6 +995,7 @@ def VacancyDetailView(request, vac):
     bid = bid_qs.count()
     slist = BidShortList.objects.filter(scope__ref_no=vac).count()
     wit = WorkIssuedTo.objects.filter(Q(tlt_response='A') & Q(work__ref_no=vac))
+    applied = bid_qs.filter(talent=request.user)
 
     date1 = vacancy[0].bid_closes
     date2 = timezone.now()
@@ -1017,6 +1019,7 @@ def VacancyDetailView(request, vac):
         'bid_qs': bid_qs,
         'date2': date2,
         'date4': date4,
+        'applied': applied,
         }
     return render(request, template, context)
 

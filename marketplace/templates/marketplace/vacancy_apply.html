@@ -8,25 +8,50 @@
 {% block content %}
 <div class="card">
   <div class="card-body">
-    <h4>Apply for  {{ detail.title }}</h4>
-    <form method="post" enctype="multipart/form-data">
-      {% csrf_token %}
-      <div class="form-row">
-        <div class="form-group col-md-8 mb-0">
-          {{ form.rate_bid|as_crispy_field }}
-          {{ form.currency|as_crispy_field }}
-          {{ form.rate_unit|as_crispy_field }}
+    {% if bid_qs %}
+      You have already applied for this role!
+      <table class="table table-sm">
+        <thead>
+          <tr>
+            <th>Role</th>
+            <th>Date<br>Applied</th>
+            <th>Rate Bid</th>
+            <th>Motiviation</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for x in bid_qs %}
+          <tr>
+            <td>{{ detail.title }}</td>
+            <td>{{ x.date_applied }}</td>
+            <td>{{ x.currency.currency_abv }}<br><strong>{{ x.rate_bid }}</strong><br>{{ x.get_rate_unit_display }}</td>
+            <td>{{ x.motivation }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <a href="{% url 'MarketPlace:MarketHome' %}" class="btn btn-secondary">Back</a>
+    {% else %}
+      <h4>Apply for  {{ detail.title }}</h4>
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-row">
+          <div class="form-group col-md-8 mb-0">
+            {{ form.rate_bid|as_crispy_field }}
+            {{ form.currency|as_crispy_field }}
+            {{ form.rate_unit|as_crispy_field }}
+          </div>
         </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group col-md-12 mb-0">
-          {{ form.motivation|as_crispy_field }}
+        <div class="form-row">
+          <div class="form-group col-md-12 mb-0">
+            {{ form.motivation|as_crispy_field }}
+          </div>
         </div>
-      </div>
-      <div class="">
-        <p><button type="submit" name="another" class="btn btn-primary">Apply</button></p>
-      </div>
-    </form>
+        <div class="">
+          <p><button type="submit" name="another" class="btn btn-primary">Apply</button></p>
+        </div>
+      </form>
+    {% endif %}
   </div>
 </div>
 {% endblock content %}

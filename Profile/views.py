@@ -514,6 +514,7 @@ def ProfileHome(request):
     conf_tot_c = int(0)
     conf_tot_r = int(0)
     conf_tot_s = int(0)
+    conf_tot_y = int(0)
 
     edu_lect = Lecturer.objects.filter(lecturer=talent)
 
@@ -527,8 +528,11 @@ def ProfileHome(request):
 
     edu_lect_s = edu_lect.filter(confirm="S").count()
     if edu_lect_s is not None:
-        edu_lect_s = edu_lect_s
         conf_tot_s += edu_lect_s
+
+    edu_lect_y = edu_lect.filter(confirm="Y").count()
+    if edu_lect_y is not None:
+        conf_tot_y += edu_lect_y
 
     edu_cm = ClassMates.objects.filter(colleague=talent)
     edu_cm_r = edu_cm.filter(confirm="R").count()
@@ -543,6 +547,10 @@ def ProfileHome(request):
     if edu_cm_s is not None:
         conf_tot_s += edu_cm_s
 
+    edu_cm_y = edu_cm.filter(confirm="Y").count()
+    if edu_cm_y is not None:
+        conf_tot_y += edu_cm_y
+
     exp_clg = WorkColleague.objects.filter(colleague_name=talent)
     exp_clg_r = exp_clg.filter(confirm="R").count()
     if exp_clg_r is not None:
@@ -555,6 +563,10 @@ def ProfileHome(request):
     exp_clg_s = exp_clg.filter(confirm="S").count()
     if exp_clg_s is not None:
         conf_tot_s += exp_clg_s
+
+    exp_clg_y = exp_clg.filter(confirm="Y").count()
+    if exp_clg_y is not None:
+        conf_tot_y += exp_clg_y
 
     exp_sup = Superior.objects.filter(superior_name=talent)
 
@@ -570,6 +582,11 @@ def ProfileHome(request):
     if exp_sup_s is not None:
         conf_tot_s += exp_sup_s
 
+    exp_sup_y = exp_sup.filter(confirm="Y").count()
+    if exp_sup_y is not None:
+        conf_tot_y += exp_sup_y
+
+
     exp_clt = WorkClient.objects.filter(client_name=talent)
 
     exp_clt_r = exp_clt.filter(confirm="R").count()
@@ -584,6 +601,10 @@ def ProfileHome(request):
     if exp_clt_s is not None:
         conf_tot_s += exp_clt_s
 
+    exp_clt_y = exp_clt.filter(confirm="Y").count()
+    if exp_clt_y is not None:
+        conf_tot_y += exp_clt_y
+
     exp_cbr = WorkCollaborator.objects.filter(collaborator_name=talent)
 
     exp_cbr_r = exp_cbr.filter(confirm="R").count()
@@ -597,12 +618,17 @@ def ProfileHome(request):
     exp_cbr_s = exp_cbr.filter(confirm="S").count()
     if exp_cbr_s is not None:
         conf_tot_s += exp_cbr_s
+
+    exp_cbr_y = exp_cbr.filter(confirm="Y").count()
+    if exp_cbr_y is not None:
+        conf_tot_y += exp_cbr_y
     #As Confirmer<<<
 
     #>>>As Requestioner
     req_tot_c = int(0)
     req_tot_r = int(0)
     req_tot_s = int(0)
+    req_tot_y = int(0)
 
     edu_req_lect = Lecturer.objects.filter(education__talent=talent)
 
@@ -618,6 +644,11 @@ def ProfileHome(request):
     if edu_req_lect_s is not None:
         req_tot_s += edu_req_lect_s
 
+    edu_req_lect_y = edu_req_lect.filter(confirm="Y").count()
+    if edu_req_lect_y is not None:
+        req_tot_y += edu_req_lect_y
+
+
     edu_req_cm = ClassMates.objects.filter(education__talent=talent)
     edu_req_cm_r = edu_req_cm.filter(confirm="R").count()
     if edu_req_cm_r is not None:
@@ -630,6 +661,11 @@ def ProfileHome(request):
     edu_req_cm_s = edu_req_cm.filter(confirm="S").count()
     if edu_req_cm_s is not None:
         req_tot_s += edu_req_cm_s
+
+    edu_req_cm_y = edu_req_cm.filter(confirm="Y").count()
+    if edu_req_cm_y is not None:
+        req_tot_y += edu_req_cm_y
+
 
     exp_req_clg = WorkColleague.objects.filter(experience__talent=talent)
     exp_req_clg_r = exp_req_clg.filter(confirm="R").count()
@@ -644,8 +680,12 @@ def ProfileHome(request):
     if exp_req_clg_s is not None:
         req_tot_s += exp_req_clg_s
 
-    exp_req_sup = Superior.objects.filter(experience__talent=talent)
+    exp_req_clg_y = exp_req_clg.filter(confirm="Y").count()
+    if exp_req_clg_y is not None:
+        req_tot_y += exp_req_clg_y
 
+
+    exp_req_sup = Superior.objects.filter(experience__talent=talent)
     exp_req_sup_r = exp_req_sup.filter(confirm="R").count()
     if exp_req_sup_r is not None:
         req_tot_r += exp_req_sup_r
@@ -657,6 +697,11 @@ def ProfileHome(request):
     exp_req_sup_s = exp_req_sup.filter(confirm="S").count()
     if exp_req_sup_s is not None:
         req_tot_s += exp_req_sup_s
+
+    exp_req_sup_y = exp_req_sup.filter(confirm="Y").count()
+    if exp_req_sup_y is not None:
+        req_tot_y += exp_req_sup_y
+
 
     exp_req_clt = WorkClient.objects.filter(experience__talent=talent)
 
@@ -672,8 +717,12 @@ def ProfileHome(request):
     if exp_req_clt_s is not None:
         req_tot_s += exp_req_clt_s
 
-    exp_req_cbr = WorkCollaborator.objects.filter(experience__talent=talent)
+    exp_req_clt_y = exp_req_clt.filter(confirm="Y").count()
+    if exp_req_clt_y is not None:
+        req_tot_y += exp_req_clt_y
 
+
+    exp_req_cbr = WorkCollaborator.objects.filter(experience__talent=talent)
     exp_req_cbr_r = exp_req_cbr.filter(confirm="R").count()
     if exp_req_cbr_r is not None:
         req_tot_r += exp_req_cbr_r
@@ -685,12 +734,16 @@ def ProfileHome(request):
     exp_req_cbr_s = exp_req_cbr.filter(confirm="S").count()
     if exp_req_cbr_s is not None:
         req_tot_s += exp_req_cbr_s
+
+    exp_req_cbr_y = exp_req_cbr.filter(confirm="Y").count()
+    if exp_req_cbr_y is not None:
+        req_tot_y += exp_req_cbr_y
     #As Requestioner<<<
     #Confirmation Summary<<<
 
     template = 'Profile/profile_home.html'
     context = {
-    'wf1': wf1, 'tlt': tlt, 'pvr_count': pvr_count, 'total': total, 'interviews_tlt': interviews_tlt, 'interviews_emp': interviews_emp, 'interviews_empc': interviews_empc, 'interviews_tltc': interviews_tltc, 'assigned_tlt': assigned_tlt, 'assigned_emp': assigned_emp, 'assigned_tltc': assigned_empc, 'assigned_empc': assigned_tltc, 'open_assignments_tltc': open_assignments_tltc, 'open_assignments_empc': open_assignments_empc, 'lvl_1': lvl_1, 'lvl_2': lvl_2, 'lvl_3': lvl_3, 'lvl_4': lvl_4,'lvl_5': lvl_5, 'tot': tot, 'pfl': pfl, 'referral_code': referral_code, 'conf_tot_c': conf_tot_c, 'conf_tot_r': conf_tot_r, 'conf_tot_s': conf_tot_s, 'req_tot_c': req_tot_c, 'req_tot_r': req_tot_r, 'req_tot_s': req_tot_s,
+    'wf1': wf1, 'tlt': tlt, 'pvr_count': pvr_count, 'total': total, 'interviews_tlt': interviews_tlt, 'interviews_emp': interviews_emp, 'interviews_empc': interviews_empc, 'interviews_tltc': interviews_tltc, 'assigned_tlt': assigned_tlt, 'assigned_emp': assigned_emp, 'assigned_tltc': assigned_empc, 'assigned_empc': assigned_tltc, 'open_assignments_tltc': open_assignments_tltc, 'open_assignments_empc': open_assignments_empc, 'lvl_1': lvl_1, 'lvl_2': lvl_2, 'lvl_3': lvl_3, 'lvl_4': lvl_4,'lvl_5': lvl_5, 'tot': tot, 'pfl': pfl, 'referral_code': referral_code, 'conf_tot_c': conf_tot_c, 'conf_tot_r': conf_tot_r, 'conf_tot_s': conf_tot_s, 'req_tot_c': req_tot_c, 'req_tot_r': req_tot_r, 'req_tot_s': req_tot_s, 'req_tot_y': req_tot_y, 'conf_tot_y': conf_tot_y,
     }
 
     return render(request, template, context)

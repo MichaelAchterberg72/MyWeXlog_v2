@@ -39,7 +39,13 @@
               {% endif %}
             </td>
             <td>1-{{ item.education.course }}<br>2-{{ item.education.topic }}</td>
-            <td class="align-middle text-center">{{ item.get_confirm_display }}</td>
+            <td class="align-middle text-center">
+              {% if item.confirm == 'S' %}
+                Pending
+              {% else %}
+                {{ item.get_confirm_display }}
+              {% endif %}
+            </td>
             <td rowspan="3"  class="align-middle text-center">
               <a href="{% url 'Talent:EducationDetail' item.education.slug %}?next={{ request.path|urlencode }}">
                 <i class="fa fa-binoculars" aria-hidden="true"style="font-size:25px;color:black" data-toggle="tooltip" data-placement="top" title="View Detail"></i>
