@@ -5,7 +5,9 @@
 
 {% block content %}
 <div class="card-header">
-  <a href="{% url 'Talent:APV' tlt=user_info.alias vac='1ad9t2' %}" target="_blank" class="btn btn-success float-right">View Your Public Profile</a>
+  <div class="float-right">
+  <a href="{% url 'Talent:APV' tlt=user_info.alias vac='1ad9t2' %}" target="_blank" class="btn btn-success">View Your Public Profile</a> <a href="{% url 'Profile:ProfileView' %}" class="btn btn-secondary">Back</a>
+  </div>
   <h5>Review Your Profile</h5>
 </div>
   <div class="card-group">
@@ -498,4 +500,5 @@
     </div>
   </div>
 </div>
+<br>
 {% endblock content %}
