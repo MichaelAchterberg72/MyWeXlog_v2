@@ -345,8 +345,28 @@ def lecturer_conf_summary_list(request):
             pass
     lect_qs = Lecturer.objects.filter(lecturer=tlt).order_by('-date_confirmed').order_by('-confirm')
 
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(lect_qs, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
     template = 'talenttrack/confirm_edu_lect_list.html'
-    context = {'lect_qs': lect_qs, 'age': locked_age,}
+    context = {'lect_qs': lect_qs, 'age': locked_age, 'pageitems': pageitems,  'page_range': page_range}
     return render(request, template, context)
 
 
@@ -369,8 +389,28 @@ def classmate_conf_summary_list(request):
 
     cm_qs = ClassMates.objects.filter(colleague=tlt).order_by('-date_confirmed').order_by('-confirm')
 
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(cm_qs, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
     template = 'talenttrack/confirm_edu_cm_list.html'
-    context = {'cm_qs': cm_qs, 'age': locked_age,}
+    context = {'cm_qs': cm_qs, 'age': locked_age, 'pageitems': pageitems,  'page_range': page_range}
     return render(request, template, context)
 
 
@@ -393,8 +433,28 @@ def colleague_conf_summary_list(request):
 
     clg_c_qs = WorkColleague.objects.filter(colleague_name=tlt).order_by('-date_confirmed').order_by('-confirm')
 
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(clg_c_qs, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
     template = 'talenttrack/confirm_exp_clg_list.html'
-    context = {'clg_c_qs': clg_c_qs, 'age': locked_age,}
+    context = {'clg_c_qs': clg_c_qs, 'age': locked_age, 'pageitems': pageitems,  'page_range': page_range}
     return render(request, template, context)
 
 
@@ -417,8 +477,28 @@ def superior_conf_summary_list(request):
 
     sup_c_qs = Superior.objects.filter(superior_name=tlt).order_by('-date_confirmed').order_by('-confirm')
 
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(sup_c_qs, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
     template = 'talenttrack/confirm_exp_sup_list.html'
-    context = {'sup_c_qs': sup_c_qs, 'age': locked_age,}
+    context = {'sup_c_qs': sup_c_qs, 'age': locked_age, 'pageitems': pageitems,  'page_range': page_range}
     return render(request, template, context)
 
 
@@ -441,8 +521,28 @@ def collaborator_conf_summary_list(request):
 
     clb_c_qs = WorkCollaborator.objects.filter(collaborator_name=tlt).order_by('-date_confirmed').order_by('-confirm')
 
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(clb_c_qs, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
     template = 'talenttrack/confirm_exp_clb_list.html'
-    context = {'clb_c_qs': clb_c_qs, 'age': locked_age,}
+    context = {'clb_c_qs': clb_c_qs, 'age': locked_age, 'pageitems': pageitems,  'page_range': page_range}
     return render(request, template, context)
 
 
@@ -465,8 +565,28 @@ def client_conf_summary_list(request):
 
     clt_c_qs = WorkClient.objects.filter(client_name=tlt).order_by('-date_confirmed').order_by('-confirm')
 
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(clt_c_qs, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
     template = 'talenttrack/confirm_exp_clt_list.html'
-    context = {'clt_c_qs': clt_c_qs, 'age': locked_age,}
+    context = {'clt_c_qs': clt_c_qs, 'age': locked_age, 'pageitems': pageitems,  'page_range': page_range}
     return render(request, template, context)
 
 
@@ -476,8 +596,28 @@ def lect_req_list(request):
     talent = request.user
     edu_req_lect = Lecturer.objects.filter(education__talent=talent).order_by('-date_confirmed').order_by('-confirm')
 
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(edu_req_lect, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
     template = 'talenttrack/request_lect_list.html'
-    context = {'edu_req_lect': edu_req_lect,}
+    context = {'edu_req_lect': edu_req_lect, 'pageitems': pageitems,  'page_range': page_range}
     return render(request, template, context)
 
 
@@ -487,8 +627,28 @@ def cm_req_list(request):
     talent = request.user
     edu_req_cm = ClassMates.objects.filter(education__talent=talent).order_by('-date_confirmed').order_by('-confirm')
 
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(edu_req_cm, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
     template = 'talenttrack/request_cm_list.html'
-    context = {'edu_req_cm': edu_req_cm,}
+    context = {'edu_req_cm': edu_req_cm, 'pageitems': pageitems,  'page_range': page_range}
     return render(request, template, context)
 
 
@@ -498,8 +658,28 @@ def clg_req_list(request):
     talent = request.user
     exp_req_clg = WorkColleague.objects.filter(experience__talent=talent).order_by('-date_confirmed').order_by('-confirm')
 
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(exp_req_clg, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
     template = 'talenttrack/request_clg_list.html'
-    context = {'exp_req_clg': exp_req_clg,}
+    context = {'exp_req_clg': exp_req_clg, 'pageitems': pageitems,  'page_range': page_range}
     return render(request, template, context)
 
 
@@ -509,8 +689,28 @@ def sup_req_list(request):
     talent = request.user
     exp_req_sup = Superior.objects.filter(experience__talent=talent).order_by('-date_confirmed').order_by('-confirm')
 
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(exp_req_sup, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
     template = 'talenttrack/request_sup_list.html'
-    context = {'exp_req_sup': exp_req_sup,}
+    context = {'exp_req_sup': exp_req_sup, 'pageitems': pageitems,  'page_range': page_range}
     return render(request, template, context)
 
 
@@ -520,8 +720,28 @@ def clt_req_list(request):
     talent = request.user
     exp_req_clt = WorkClient.objects.filter(experience__talent=talent).order_by('-date_confirmed').order_by('-confirm')
 
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(exp_req_clt, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
     template = 'talenttrack/request_clt_list.html'
-    context = {'exp_req_clt': exp_req_clt,}
+    context = {'exp_req_clt': exp_req_clt, 'pageitems': pageitems,  'page_range': page_range}
     return render(request, template, context)
 
 
@@ -531,8 +751,28 @@ def clb_req_list(request):
     talent = request.user
     exp_req_clb = WorkCollaborator.objects.filter(experience__talent=talent).order_by('-date_confirmed').order_by('-confirm')
 
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(exp_req_clb, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
     template = 'talenttrack/request_clb_list.html'
-    context = {'exp_req_clb': exp_req_clb,}
+    context = {'exp_req_clb': exp_req_clb, 'pageitems': pageitems,  'page_range': page_range}
     return render(request, template, context)
 
 
