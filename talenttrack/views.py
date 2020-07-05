@@ -767,7 +767,7 @@ def DeleteAchievementView(request, ach_i, tlt):
 @csp_exempt
 def LicenseCertificationCaptureView(request):
     tlt_i = get_object_or_404(CustomUser, pk=request.user.id)
-    form = LicenseCertificationForm(request.POST or None)
+    form = LicenseCertificationForm(request.POST or None, request.FILES)
 
     if form.is_valid():
         new = form.save(commit=False)

@@ -204,7 +204,7 @@ class AchievementsForm(forms.ModelForm):
 class LicenseCertificationForm(forms.ModelForm):
     class Meta:
         model = LicenseCertification
-        fields = ('certification', 'cm_no', 'companybranch', 'issue_date', 'expiry_date', 'current', 'country', 'region',)
+        fields = ('certification', 'cm_no', 'companybranch', 'issue_date', 'expiry_date', 'current', 'country', 'region', 'upload')
         widgets = {
             'issue_date': DateInput(),
             'expiry_date': DateInput(),

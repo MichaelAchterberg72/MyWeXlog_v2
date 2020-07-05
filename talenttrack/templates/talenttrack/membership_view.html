@@ -28,6 +28,7 @@
       {{ form.cm_no|as_crispy_field }}
       {{ form.companybranch|as_crispy_field }}
       <p><a href="{% url 'Enterprise:BranchAddPop' %}" id='add_branch' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add Managing Organisation</a></p>
+      {{ form.upload|as_crispy_field }}
     </div>
     <div class="form-group col-md-6 mb-0">
     <div class="form-row">

@@ -69,6 +69,11 @@ class CourseType(models.Model):#What type of course (online, Attend lectures, et
         return self.type
 
 
+#Function to randomise filename for Profile Upload
+def CertFilename(instance, filename):
+	ext = filename.split('.')[-1]
+	return "%s/cert\%s_%s.%s" % (instance.talent.id, str(time()).replace('.','_'), random(), ext)
+
 class LicenseCertification(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     certification = models.ForeignKey(Result, on_delete=models.PROTECT, verbose_name='Proffessional Memberships / Certification name')
@@ -76,6 +81,7 @@ class LicenseCertification(models.Model):
     region = models.ForeignKey(Region, on_delete=models.PROTECT, blank=True, null=True)
     cm_no = models.CharField('Membership / Credential Number', max_length=40)
     companybranch = models.ForeignKey(Enterprise, on_delete=models.PROTECT, verbose_name='Issued By')
+    upload = models.FileField(upload_to=CertFilename, blank=True, null=True, validators=[FileExtensionValidator(['pdf'])])
     issue_date = models.DateField()
     expiry_date = models.DateField(null=True, blank=True)
     current = models.BooleanField('Is this current?', default = True)
