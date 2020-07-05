@@ -273,6 +273,7 @@ CACHES = {
     "select2": {
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": "redis://127.0.0.1:6379/2",
+        "TIMEOUT": 600,     # 10 minutes
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
@@ -338,16 +339,12 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 #  os.environ["PATH"] += os.pathsep + BASE_DIR + '\\venv\\Lib\\site-packages\\osgeo'
 
 # PayPal settings
-
-# PayPal settings
-PAYPAL_RECEIVER_EMAIL = "sb-wynfk1244760@business.example.com"  # Sandbox Account
-# PAYPAL_RECEIVER_EMAIL = "machterberg@tkgm.co.za"              # Production Account
-
-if DEBUG == True:
+if app_config.paypal_switch == 'sandbox':
     PAYPAL_TEST = True              # set to False for production
+    PAYPAL_RECEIVER_EMAIL = "sb-wynfk1244760@business.example.com"
 else:
     PAYPAL_TEST = False
-
+    PAYPAL_RECEIVER_EMAIL = "machterberg@tkgm.co.za"
 
 # Follow instructions to create new certs for server from https://re.readthedocs.io/es/stable/standard/encrypted_buttons.html to create certs
 PAYPAL_PRIVATE_CERT = 'paypal/cert/paypal_private.pem'  #'/path/to/paypal_private.pem'  $ openssl genrsa -out paypal_private.pem 1024

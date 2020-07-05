@@ -20,11 +20,12 @@
       <div class="btn-toolbar float-right">
         <a href="{% url 'Talent:APV' tlt=request.user.alias vac='1ad9t2' %}" class="btn btn-success float-right">Public Profile</a>
         &nbsp
+        <!--
         <form  action="{% url 'BookList:BLB' %}?next={{ request.path|urlencode }}" method="post">
           <input type="hidden" name="next" value="{{ request.GET.next }}">
           {% csrf_token %}
           <button type="submit" class="btn btn-secondary float-right">Back</button>
-        </form>
+        </form>   -->
       </div>
       <div class="btn-toolbar">
         <a href="{% url 'Talent:DPCSum' tlt %}" class="btn btn-primary">Designation, Project & Company Summary</a>

@@ -118,10 +118,11 @@ def InvitationView(request, tex):
 def FlatInviteview(request):
 
     invitor = request.user
+    mem_excl = set(CustomUser.objects.all().values_list('email', flat=True))
     invite_excl = set(Invitation.objects.filter().values_list('email', flat=True))
-    myself = set(CustomUser.objects.filter(pk=request.user.id).values_list('email', flat=True))
+#    myself = set(CustomUser.objects.filter(pk=request.user.id).values_list('email', flat=True))
 
-    filt = invite_excl | myself
+    filt = mem_excl | invite_excl
 
     form = InvitationLiteForm(request.POST or None, pwd=filt)
     if request.method == 'POST':

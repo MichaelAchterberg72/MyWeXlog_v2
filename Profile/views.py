@@ -513,6 +513,7 @@ def ProfileHome(request):
     #>>>As Confirmer
     conf_tot_c = int(0)
     conf_tot_r = int(0)
+    conf_tot_y = int(0)
     conf_tot_s = int(0)
     conf_tot_y = int(0)
 
@@ -521,6 +522,10 @@ def ProfileHome(request):
     edu_lect_r = edu_lect.filter(confirm="R").count()
     if edu_lect_r is not None:
         conf_tot_r += edu_lect_r
+
+    edu_lect_y = edu_lect.filter(confirm="Y").count()
+    if edu_lect_y is not None:
+        conf_tot_y += edu_lect_y
 
     edu_lect_c = edu_lect.filter(confirm="C").count()
     if edu_lect_c is not None:
@@ -539,6 +544,10 @@ def ProfileHome(request):
     if edu_cm_r is not None:
         conf_tot_r += edu_cm_r
 
+    edu_cm_y = edu_cm.filter(confirm="Y").count()
+    if edu_cm_y is not None:
+        conf_tot_y += edu_cm_y
+
     edu_cm_c = edu_cm.filter(confirm="C").count()
     if edu_cm_c is not None:
         conf_tot_c += edu_cm_c
@@ -555,6 +564,10 @@ def ProfileHome(request):
     exp_clg_r = exp_clg.filter(confirm="R").count()
     if exp_clg_r is not None:
         conf_tot_r += exp_clg_r
+
+    exp_clg_y = exp_clg.filter(confirm="Y").count()
+    if exp_clg_y is not None:
+        conf_tot_y += exp_clg_y
 
     exp_clg_c = exp_clg.filter(confirm="C").count()
     if exp_clg_c is not None:
@@ -573,6 +586,10 @@ def ProfileHome(request):
     exp_sup_r = exp_sup.filter(confirm="R").count()
     if exp_sup_r is not None:
         conf_tot_r += exp_sup_r
+
+    exp_sup_y = exp_sup.filter(confirm="Y").count()
+    if exp_sup_y is not None:
+        conf_tot_y += exp_sup_y
 
     exp_sup_c = exp_sup.filter(confirm="C").count()
     if exp_sup_c is not None:
@@ -593,6 +610,10 @@ def ProfileHome(request):
     if exp_clt_r is not None:
         conf_tot_r += exp_clt_r
 
+    exp_clt_y = exp_clt.filter(confirm="Y").count()
+    if exp_clt_y is not None:
+        conf_tot_y += exp_clt_y
+
     exp_clt_c = exp_clt.filter(confirm="C").count()
     if exp_clt_c is not None:
         conf_tot_c += exp_clt_c
@@ -611,6 +632,10 @@ def ProfileHome(request):
     if exp_cbr_r is not None:
         conf_tot_r += exp_cbr_r
 
+    exp_cbr_y = exp_cbr.filter(confirm="Y").count()
+    if exp_cbr_y is not None:
+        conf_tot_y += exp_cbr_y
+
     exp_cbr_c = exp_cbr.filter(confirm="C").count()
     if exp_cbr_c is not None:
         conf_tot_c += exp_cbr_c
@@ -627,6 +652,7 @@ def ProfileHome(request):
     #>>>As Requestioner
     req_tot_c = int(0)
     req_tot_r = int(0)
+    req_tot_y = int(0)
     req_tot_s = int(0)
     req_tot_y = int(0)
 
@@ -635,6 +661,10 @@ def ProfileHome(request):
     edu_req_lect_r = edu_req_lect.filter(confirm="R").count()
     if edu_req_lect_r is not None:
         req_tot_r += edu_req_lect_r
+
+    edu_req_lect_y = edu_req_lect.filter(confirm="Y").count()
+    if edu_req_lect_y is not None:
+        req_tot_y += edu_req_lect_y
 
     edu_req_lect_c = edu_req_lect.filter(confirm="C").count()
     if edu_req_lect_c is not None:
@@ -654,6 +684,10 @@ def ProfileHome(request):
     if edu_req_cm_r is not None:
         req_tot_r += edu_req_cm_r
 
+    edu_req_cm_y = edu_req_cm.filter(confirm="Y").count()
+    if edu_req_cm_y is not None:
+        req_tot_y += edu_req_cm_y
+
     edu_req_cm_c = edu_req_cm.filter(confirm="C").count()
     if edu_req_cm_c is not None:
         req_tot_c += edu_req_cm_c
@@ -671,6 +705,10 @@ def ProfileHome(request):
     exp_req_clg_r = exp_req_clg.filter(confirm="R").count()
     if exp_req_clg_r is not None:
         req_tot_r += exp_req_clg_r
+
+    exp_req_clg_y = exp_req_clg.filter(confirm="Y").count()
+    if exp_req_clg_y is not None:
+        req_tot_y += exp_req_clg_y
 
     exp_req_clg_c = exp_req_clg.filter(confirm="C").count()
     if exp_req_clg_c is not None:
@@ -690,6 +728,10 @@ def ProfileHome(request):
     if exp_req_sup_r is not None:
         req_tot_r += exp_req_sup_r
 
+    exp_req_sup_y = exp_req_sup.filter(confirm="Y").count()
+    if exp_req_sup_y is not None:
+        req_tot_y += exp_req_sup_y
+
     exp_req_sup_c = exp_req_sup.filter(confirm="C").count()
     if exp_req_sup_c is not None:
         req_tot_c += exp_req_sup_c
@@ -705,7 +747,11 @@ def ProfileHome(request):
 
     exp_req_clt = WorkClient.objects.filter(experience__talent=talent)
 
-    exp_req_clt_r = exp_req_clt.filter(confirm="R").count()
+    exp_req_clt_y = exp_req_clt.filter(confirm="R").count()
+    if exp_req_clt_y is not None:
+        req_tot_y += exp_req_clt_y
+
+    exp_req_clt_r = exp_req_clt.filter(confirm="Y").count()
     if exp_req_clt_r is not None:
         req_tot_r += exp_req_clt_r
 
@@ -726,6 +772,10 @@ def ProfileHome(request):
     exp_req_cbr_r = exp_req_cbr.filter(confirm="R").count()
     if exp_req_cbr_r is not None:
         req_tot_r += exp_req_cbr_r
+
+    exp_req_cbr_y = exp_req_cbr.filter(confirm="Y").count()
+    if exp_req_cbr_y is not None:
+        req_tot_y += exp_req_cbr_y
 
     exp_req_cbr_c = exp_req_cbr.filter(confirm="C").count()
     if exp_req_cbr_c is not None:
