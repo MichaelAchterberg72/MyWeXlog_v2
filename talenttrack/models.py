@@ -238,7 +238,7 @@ class WorkExperience(models.Model):
     slug = models.SlugField(max_length=10, blank=True, null=True, unique=True)
 
     class Meta:
-        unique_together = (('talent','hours_worked','date_from', 'date_to'),)
+        unique_together = (('talent','hours_worked','date_from', 'date_to', 'course','topic', 'company'),)
 
     def __str__(self):
         return f'{self.talent} between {self.date_from} & {self.date_to}'
