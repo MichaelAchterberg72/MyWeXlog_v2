@@ -38,7 +38,7 @@
           {{ form.city|as_crispy_field }}
           <a href="{% url 'Location:CityAddPop' %}" id='add_city' onclick='return showAddPopup(this);'><img src="{% static '/images/icon-addlink.svg' %}"> Add a new City</a>
         </div>
-        <p><button type="submit" class="btn btn-primary" name="button">Save</button></p>
+        <p><a href="{% url 'Project:ProjectHome' %}" class="btn btn-danger">Cancel</a> <button type="submit" class="btn btn-primary" name="button">Save</button></p>
 
     </form>
   </div>

@@ -67,7 +67,7 @@
     <p><a href="{% url 'Flatten:SkillAddPop' %}" id='add_skill' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add Skill</a></p>
     {{ form.comment|as_crispy_field }}
   <div class="">
-    <p><button type="submit" name="Done" class="btn btn-primary">Add Validators</button></p>
+    <p><a href="{% url 'Talent:Home' %}" class="btn btn-danger">Cancel</a> <button type="submit" name="Done" class="btn btn-primary">Add Validators</button></p>
   </div>
 </form>
 </div>
