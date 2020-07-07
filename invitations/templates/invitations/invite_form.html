@@ -25,6 +25,7 @@
   {{ form.worked_for|as_crispy_field }}
   <a href="{% url 'Enterprise:BranchAddPop' %}" id='add_worked_for' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a Company Branch</a>
   {{ form.email|as_crispy_field }}
+  <a href="{% url 'Talent:Home' %}" class="btn btn-danger">Cancel</a>
   <button type="submit" class="btn btn-primary" name="Invite">Invite</button>
 </form>
 </div>

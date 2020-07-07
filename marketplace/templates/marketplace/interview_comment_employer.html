@@ -13,6 +13,7 @@
     {% csrf_token %}
     {{ form.comments_emp|as_crispy_field }}
     <div class="">
+      <a href="{% url 'MarketPlace:VacancyIntDetail' instance.scope.ref_no %}" class="btn btn-danger">Cancel</a>
       <button type="submit" name="done" class="btn btn-primary">Save</button>
     </div>
   </form>

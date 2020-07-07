@@ -111,9 +111,10 @@ def TltInterviewClose(request, bil, tlt):
 @subscription(1)
 def TltIntFullDetail(request, bil, tlt):
     bil_qs = BidInterviewList.objects.filter(slug=bil)
+    user = request.user
 
     template = 'marketplace/talent_interview_detail.html'
-    context = {'bil_qs': bil_qs}
+    context = {'bil_qs': bil_qs, 'user': user}
     return render(request, template, context)
 
 
@@ -169,6 +170,7 @@ def EmpIntFullDetail(request, bil, tlt):
 @login_required()
 def TltIntCommentView(request, bil, tlt):
     instance = BidInterviewList.objects.get(slug=bil)
+
     form = TltIntCommentForm(request.POST or None, instance=instance)
 
     if request.method == 'POST':
@@ -1186,6 +1188,7 @@ def MarketHome(request):
     bsl = BidShortList.objects.filter(Q(talent=talent) & Q(scope__offer_status='O'))
     #Queryset caching<<<
 
+    tr_emp_count = tr_emp.count()
     ipost = tr_emp.filter(offer_status='O').order_by('-bid_open')
     ipost_list = ipost[:5]
     ipost_count = ipost.count()
@@ -1315,6 +1318,7 @@ def MarketHome(request):
     template = 'marketplace/vacancy_home.html'
     context ={
         'capacity': capacity,
+        'tr_emp_count': tr_emp_count,
         'ipost': ipost,
         'ipost_list': ipost_list,
         'ipost_count': ipost_count,
@@ -2435,7 +2439,7 @@ def AddToInterviewListView(request, vac, tlt):
         #>>>email
         subject = f"MyWeXlog - {job.title} ({job.ref_no}): Interview request"
 
-        context = {'job': job, 'talent': talent}
+        context = {'job': job, 'talent': talent, 'user': talent}
 
         html_message = render_to_string('marketplace/email_interview_request.html', context).strip()
         plain_message = strip_tags(html_message)
@@ -2499,7 +2503,7 @@ def TalentAssign(request, tlt, vac):
             #>>>email
             subject = f"MyWeXlog - Job assigned: {job.title} ({job.ref_no})"
 
-            context = {'job': job, 'talent': talent, }
+            context = {'job': job, 'talent': talent, 'user': talent}
 
             html_message = render_to_string('marketplace/email_vacancy_assign.html', context).strip()
             plain_message = strip_tags(html_message)
@@ -2571,15 +2575,28 @@ def SuitableTalentAssign(request, tlt, vac):
             #>>>email
             subject = f"WeXlog - Job assigned: {job.title} ({job.ref_no})"
 
-            context = {'job': job, 'talent': talent, }
+            context = {'job': job, 'talent': talent, 'user': talent}
 
-            html_message = render_to_string('marketplace/email_vacancy_assign.html', context)
-            plain_message = strip_tags(html_message)
+            html_message = render_to_string('marketplace/email_vacancy_assign.html', context).strip()
 
             send_to = job.requested_by.email
-            send_mail(subject, html_message, 'no-reply@wexlog.io', [send_to,])
-            #template = 'marketplace/email_vacancy_assign.html'
-            #return render(request, template, context)
+            #send_mail(subject, html_message, 'no-reply@wexlog.io', [send_to,])
+            message = Mail(
+                from_email = settings.SENDGRID_FROM_EMAIL,
+                to_emails = send_to,
+                subject = subject,
+                plain_text_content = strip_tags(html_message),
+                html_content = html_message)
+
+            try:
+                sg = sendgrid.SendGridAPIClient(settings.SENDGRID_API_KEY)
+                response = sg.send(message)
+                print(response.status_code)
+                print(response.body)
+                print(response.headers)
+
+            except Exception as e:
+                print(e)
             #<<<email
 
             return redirect(reverse('MarketPlace:SuitableInterviewList', kwargs={'vac': vac,}))
@@ -2707,7 +2724,7 @@ def DeliverablesEditView(request, vac):
             new.save()
             return redirect(reverse('MarketPlace:VacancyPost', kwargs={'vac': instance.scope.ref_no})+'#deliverables')
     else:
-        template = 'marketplace/vacancy_deliverables_edit.html'
+        template = 'marketplace/vacancy_deliverables_edit_2.html'
         context = {'form': form, 'instance': instance}
         return render(request, template, context)
 

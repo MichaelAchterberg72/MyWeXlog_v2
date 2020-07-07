@@ -7,7 +7,7 @@
 <div class="card border-0" style="width: 100%;">
   <div class="card-body">
     <div class="float-right">
-      <form  action="{% url 'BookList:BLB' %}" method="post">
+      <form  action="{% url 'MarketPlace:InterviewList' info.ref_no %}" method="post">
     <input type="hidden" name="next" value="{{ request.GET.next }}">
     {% csrf_token %}
     <button type="submit" class="btn btn-secondary">Back</button>

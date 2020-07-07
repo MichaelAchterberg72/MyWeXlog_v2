@@ -12,8 +12,9 @@
     width: 200px;
   }
   </style>
-<div class="container">
-<h3>Skills for {{ detail.title }}</h3>
+<div class="card">
+  <div class="card-body">
+<h3>Skills for {{ instance.title }}</h3>
 <form method="post" enctype="multipart/form-data">
   {% csrf_token %}
   <div class="form-row">
@@ -23,17 +24,25 @@
     </div>
   </div>
   <div class="">
-    <p><button type="submit" name="done" class="btn btn-primary">Add</button></p>
+    <p><a href="{% url 'MarketPlace:VacancyPost' instance.ref_no %}#skills" class="btn btn-danger">Cancel</a> <button type="submit" name="done" class="btn btn-primary">Add</button></p>
   </div>
 </form>
+</div>
+</div>
+<br>
+<div class="card">
+  <div class="card-body">
 {% if skill_list %}
-<p>Skills already listed:</p>
+<h4>Skills already listed:</h4>
+<div class="container" style="width:95%">
 <ul class="list-group">
   {% for s in skill_list %}
     <li>{{ s.skills }}</li>
   {% endfor %}
   </ul>
 {% endif %}
+</div>
+</div>
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 {{ form.media.js }}
