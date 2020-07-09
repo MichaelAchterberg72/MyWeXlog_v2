@@ -2012,31 +2012,27 @@ def ClassMatesResponse(request, cmt):
 
 @login_required()
 @csp_exempt
-def LecturerSelectView(request):
+def LecturerSelectView(request, tex):
     score = lecturer_score
-    instance = WorkExperience.objects.filter(talent=request.user, edt=True).latest('date_captured')
-    tex = instance.slug
+    instance = WorkExperience.objects.get(slug=tex)
 
     lecturer_excl = set(Lecturer.objects.filter(education__slug=tex).values_list('lecturer', flat=True))
     colleague_excl = set(ClassMates.objects.filter(education__slug=tex).values_list('colleague', flat=True))
     myself = set(Profile.objects.filter(talent=request.user).values_list('talent', flat=True))
 
     filt = lecturer_excl | colleague_excl | myself
-    print('view: ', filt)
+
     form = LecturerSelectForm(request.POST or None, pwd=filt)
     if request.method == 'POST':
         if form.is_valid():
             new = form.save(commit=False)
             new.education = instance
             new.topic = instance.topic
-            new.topic = instance.topic
             new.save()
             if 'another' in request.POST:
-                response = redirect('Talent:LecturerSelect')
-                response.delete_cookie("confirm")
-                return response
+                return redirect(reverse('Talent:LecturerSelect', kwargs={'tex': tex}))
             elif 'done' in request.POST:
-                response = redirect('Talent:ClassMatesSelect')
+                response = redirect(reverse('Talent:ClassMatesSelect', kwargs={'tex': tex}))
                 response.delete_cookie("confirm")
                 return response
         else:
@@ -2093,10 +2089,9 @@ def LecturerAddView(request, tex):
 
 @login_required()
 @csp_exempt
-def ClassMateSelectView(request):
+def ClassMateSelectView(request, tex):
     score = classmate_score
-    instance = WorkExperience.objects.filter(talent=request.user, edt=True).latest('date_captured')
-    tex = instance.slug
+    instance = WorkExperience.objects.get(slug=tex)
 
     lecturer_excl = set(Lecturer.objects.filter(education__slug=tex).values_list('lecturer', flat=True))
     colleague_excl = set(ClassMates.objects.filter(education__slug=tex).values_list('colleague', flat=True))
@@ -2113,11 +2108,11 @@ def ClassMateSelectView(request):
             new.topic = instance.topic
             new.save()
             if 'another' in request.POST:
-                reponse = redirect('Talent:ClassMatesSelect')
+                return redirect(reverse('Talent:ClassMatesSelect', kwargs={'tex': tex}))
             elif 'done' in request.POST:
                 response = redirect(reverse('Talent:Home'))
                 response.delete_cookie("confirm")
-            return response
+                return response
         else:
             template = 'talenttrack/education_classmate_select.html'
             context = {'instance': instance, 'form': form, 'score': score,}
@@ -2182,7 +2177,7 @@ def EducationCaptureView(request):
             new.edt = True
             new.save()
             form.save_m2m()
-            return redirect(reverse('Talent:LecturerSelect'))
+            return redirect(reverse('Talent:LecturerSelect', kwargs={'tex': new.slug}))
         else:
             template = 'talenttrack/education_capture.html'
             context = {'form': form}

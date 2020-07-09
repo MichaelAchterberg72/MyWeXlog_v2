@@ -238,7 +238,7 @@ class DeliverablesForm(forms.ModelForm):
 class TalentRequiredForm(forms.ModelForm):
     class Meta:
         model = TalentRequired
-        fields = ('title', 'companybranch', 'date_deadline', 'hours_required', 'unit', 'worklocation', 'rate_offered', 'rate_unit', 'currency', 'rate_unit', 'offer_status', 'certification', 'scope', 'expectations', 'terms', 'city', 'experience_level', 'bid_closes', 'own_ref_no', 'language',)
+        fields = ('title', 'companybranch', 'date_deadline', 'hours_required', 'unit', 'worklocation', 'rate_offered', 'rate_unit', 'currency', 'rate_unit', 'certification', 'scope', 'expectations', 'terms', 'city', 'experience_level', 'bid_closes', 'own_ref_no', 'language',)
         widgets={
             'city': CitySelect2Widget(),
             'currency': CurrencySelect2Widget(),
@@ -250,13 +250,14 @@ class TalentRequiredForm(forms.ModelForm):
         }
         labels = {
             'title': 'Vacancy Title',
-            'bid_closes': 'Vacancy Closes',
+            'bid_closes': 'Applications Close',
             'offer_status': 'Vacancy Status',
             'worklocation': 'Configuration',
             'language': 'Language Required',
-            'date_deadline': 'To be Completed By',
+            'date_deadline': 'Work Completed By',
             'hours_required': 'Hours',
-            'own_ref_no': 'Own Internal Vacancy Reference Number'
+            'own_ref_no': 'Own Internal Vacancy Reference Number',
+            'companybranch': 'Company & Branch',
         }
         help_texts = {
             'own_ref_no': 'Maximum length: 7 Alpha-numeric characters'
