@@ -36,10 +36,37 @@
       <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="form-row">
-          <div class="form-group col-md-8 mb-0">
+          <div class="form-group col-md-7 mb-0">
             {{ form.rate_bid|as_crispy_field }}
             {{ form.currency|as_crispy_field }}
             {{ form.rate_unit|as_crispy_field }}
+          </div>
+          <div class="form-group col-md-1 mb-0">
+          </div>
+          <div class="form-group col-md-4 mb-0">
+            <table class="table table-sm">
+              <thead>
+                <tr>
+                  <th colspan="2" class="align-middle text-center">Offered Rate</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th class="align-middle text-center">Date<br>Captured</th>
+                  <td class="align-middle text-center">{{ detail.date_entered|date:"j M Y" }}</td>
+                </tr>
+                <tr>
+                  <th class="align-middle text-center">Reference<br>Number</th>
+                  <td class="align-middle text-center">{{ detail.ref_no }}</td>
+                </tr>
+                <tr>
+                  <th class="align-middle text-center">Rate<br>Offered</th>
+                  <td class="align-middle text-center">{{ detail.currency }}<br><strong>{{ detail.rate_offered }}</strong><br>{{ detail.get_rate_unit_display }}</td>
+                </tr>
+                <th class="align-middle text-center">Applications<br>Closing</th>
+                <td class="align-middle text-center">{{ detail.bid_closes|date:"j M Y" }}</td>
+              </tbody>
+            </table>
           </div>
         </div>
         <div class="form-row">
@@ -48,7 +75,11 @@
           </div>
         </div>
         <div class="">
-          <p><button type="submit" name="another" class="btn btn-primary">Apply</button></p>
+          <p>
+            <button type="submit" name="another" class="btn btn-primary">
+              Apply
+            </button>
+          </p>
         </div>
       </form>
     {% endif %}
