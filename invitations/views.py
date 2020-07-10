@@ -48,10 +48,16 @@ from .forms import InvitationForm, InvitationLiteForm
 #in the app, add information relating to the job
 def InvitationView(request, tex):
     qset = get_object_or_404(WorkExperience, slug=tex)
+    invitor = request.user
+    mem_excl = set(CustomUser.objects.all().values_list('email', flat=True))
+    invite_excl = set(Invitation.objects.filter().values_list('email', flat=True))
+
+    filt = mem_excl | invite_excl
+
+    form = InvitationForm(request.POST, pwd=filt)
 
     if request.method == 'POST':
         next_url=request.POST.get('next', '/')
-        form = InvitationForm(request.POST)
         if form.is_valid():
             new = form.save(commit=False)
             new.invited_by = request.user
@@ -103,12 +109,10 @@ def InvitationView(request, tex):
             response.delete_cookie("confirm")
             return response
         else:
-            form = InvitationForm()
             template = 'invitations/invite_form.html'
             context = {'form': form}
             return render(request, template, context)
     else:
-        form = InvitationForm()
         template = 'invitations/invite_form.html'
         context = {'form': form}
         return render(request, template, context)
@@ -120,7 +124,6 @@ def FlatInviteview(request):
     invitor = request.user
     mem_excl = set(CustomUser.objects.all().values_list('email', flat=True))
     invite_excl = set(Invitation.objects.filter().values_list('email', flat=True))
-#    myself = set(CustomUser.objects.filter(pk=request.user.id).values_list('email', flat=True))
 
     filt = mem_excl | invite_excl
 
