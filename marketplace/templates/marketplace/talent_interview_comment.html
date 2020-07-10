@@ -13,6 +13,7 @@
     {% csrf_token %}
     {{ form.comments_tlt|as_crispy_field }}
     <div class="">
+    <a href="{% url 'MarketPlace:TalentIntDetail' bil=instance.slug tlt=instance.talent.alias %}?next={{ request.path|urlencode }}" class="btn btn-danger">Cancel</a>
       <button type="submit" name="done" class="btn btn-primary">Save</button>
     </div>
   </form>

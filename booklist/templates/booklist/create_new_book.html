@@ -50,7 +50,8 @@ function closePopup(win, newID, newRepr, id) {
   <a href="{% url 'BookList:TagCreatePopup' %}" id='add_tag' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}"> Add a new Skill Tag</a>
 </div>
 <p><p>
-  <button type="submit" class="btn btn-primary" name="button">Add</button>
+  <a href="{% url 'BookList:BookListHome' %}" class="btn btn-danger">Cancel</a>
+  <button type="submit" class="btn btn-primary" name="button">Save</button>
 
 </form>
 </div>

@@ -54,7 +54,8 @@ function closePopup(win, newID, newRepr, id) {
   {{ form.date|as_crispy_field }}
 
 </div></div>
-  <button type="submit" class="btn btn-primary" name="button">Add</button>
+  <a href="{% url 'BookList:BookListHome' %}" class="btn btn-danger">Cancel</a>
+  <button type="submit" class="btn btn-primary" name="button">Save</button>
 
 </form>
 </div>

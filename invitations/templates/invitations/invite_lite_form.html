@@ -26,6 +26,7 @@
   {{ form.surname|as_crispy_field }}
   {{ form.email|as_crispy_field }}
 <div class="text-center">
+  <a href="{% url 'Talent:Home' %}" class="btn btn-danger">Cancel</a>
   <button type="submit" class="btn btn-primary" name="Invite">Invite</button>
 </div>
 </form>

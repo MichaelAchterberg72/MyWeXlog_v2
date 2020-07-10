@@ -20,6 +20,30 @@ body {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
+.select2-container {
+  height: 38px !important;
+}
+
+.select2-selection {
+  padding-top: .25rem;
+  padding-bottom: .75rem;
+  line-height: 1.5;
+  height: 38px !important;
+}
+
+.select2-selection__arrow {
+  height: 38px !important;
+}
+
+.select2-selection__rendered {
+  line-height: 24px;
+  padding-left: 10px !important;
+}
+
+.badge:not(:disabled):not(.disabled) {
+cursor: pointer !important;
+}
+
 .pagination .active {
   position: relative;
 }

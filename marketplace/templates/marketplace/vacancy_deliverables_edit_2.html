@@ -17,7 +17,7 @@
   {% csrf_token %}
   {{ form.deliverable|as_crispy_field }}
   <div class="">
-    <p><a href="{% url 'MarketPlace:VacancyPost' instance.ref_no %}" class="btn btn-danger">Cancel</a> <button type="submit" name="another" class="btn btn-primary">Save</button></p>
+    <p><a href="{% url 'MarketPlace:VacancyPost' instance.scope.ref_no %}#deliverables" class="btn btn-danger">Cancel</a> <button type="submit" name="another" class="btn btn-primary">Save</button></p>
   </div>
 </form>
 </div>

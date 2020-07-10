@@ -205,7 +205,7 @@ CSP_DEFAULT_SRC = (
     )#app_config
 
 CSP_SCRIPT_SRC = (
-    "'self'", "'unsafe-inline'", '127.0.0.1', '107.191.57.249', 'code.jquery.com', 'maxcdn.bootstrapcdn.com', 'kit.fontawesome.com', 'app.mywexlog.dev', 'mywexlog.dev', 'cdnjs.cloudflare.com', 'maps.googleapis.com', 'bookstrapcdn.com', 'cdn.jsdelivr.net', 'ajax.googleapis.com', 'cdnjs.cloudflare.com',
+    "'self'", "'unsafe-inline'", '127.0.0.1', '107.191.57.249', 'code.jquery.com', 'maxcdn.bootstrapcdn.com', 'kit.fontawesome.com', 'app.mywexlog.dev', 'mywexlog.dev', 'cdnjs.cloudflare.com', 'maps.googleapis.com', 'bookstrapcdn.com', 'cdn.jsdelivr.net', 'ajax.googleapis.com', 'cdnjs.cloudflare.com', 'apis.google.com',
     )#app_config
 CSP_IMG_SRC = (
     "'self'", '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev',
@@ -215,7 +215,7 @@ CSP_MEDIA_SRC = (
     "'self'", '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev', 'youtube.com',
     )
 CSP_FRAME_SRC = (
-    'https://www.youtube.com/',
+    'https://www.youtube.com/', 'https://content.googleapis.com/', 'https://accounts.google.com/', 
     )
 CSP_FONT_SRC = (
     "'self'", 'fonts.googleapis.com', '*', 'w3.org', '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev',

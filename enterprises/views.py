@@ -106,7 +106,6 @@ def BranchListView(request, cmp):
     branches = Branch.objects.filter(company__slug=cmp).order_by('name')
     detail = get_object_or_404(Enterprise, slug=cmp)
 
-
     try:
         page = int(request.GET.get('page', 1))
     except:
@@ -179,6 +178,7 @@ def BranchEditView(request, bch):
 #this view autopopulated the ebterprise field with the id in e_id
 def BranchAddView(request, cmp):
     form = BranchForm(request.POST or None)
+    cmp = cmp
     if request.method == 'POST':
 
         info = get_object_or_404(Enterprise, slug=cmp)
@@ -192,13 +192,13 @@ def BranchAddView(request, cmp):
             response = HttpResponseRedirect(next_url)
             return response
         else:
-            context = {'form': form}
+            context = {'form': form, 'cmp': cmp}
             template = 'enterprises/branch_add.html'
             response =  render(request, template, context)
             return response
 
     else:
-        context = {'form': form}
+        context = {'form': form, 'cmp': cmp}
         template = 'enterprises/branch_add.html'
         response =  render(request, template, context)
 

@@ -18,8 +18,9 @@
     <div class="col-sm-12">
     <div class="border-0">
       <div class="btn-toolbar float-right">
-        <a href="{% url 'Talent:APV' tlt=request.user.alias vac='1ad9t2' %}" class="btn btn-success float-right">Public Profile</a>
+        <a href="{% url 'Talent:APV' tlt=request.user.alias vac='1ad9t2' %}" class="btn btn-success">Public Profile</a>
         &nbsp
+        <a href="{% url 'Talent:Home' %}" class="btn btn-secondary">Experience Home</a>
         <!--
         <form  action="{% url 'BookList:BLB' %}?next={{ request.path|urlencode }}" method="post">
           <input type="hidden" name="next" value="{{ request.GET.next }}">
