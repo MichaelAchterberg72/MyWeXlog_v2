@@ -3,6 +3,35 @@
 
 {% block title %}My {{block.super}}{% endblock title %}
 
+{% block intro %}
+{% if not list_view %}
+
+<div class="row">
+  <div class="col-sm-12">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Introduction Walkthrough</h5>
+        <form class="float-right" action="" method="POST" id="ExpandedIntroWalkthroughForm">
+
+          {% csrf_token %}
+        {% if not list_view %}
+        <div>
+          <button type="submit" class="btn btn-secondary float-left" id='check_all' name="button">Dont view this again!</button>
+        {% else %}
+          <button type="submit" class="btn btn-primary float-left" id='check_all' name="button">View Intro Walkthrough View</button>
+        {% endif %}
+        <a href="{% url 'Profile:IntroIntroduction' %}" class="btn btn-primary float-right">Intoduction Wizard</a>.
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+  <br>
+<div>
+{% else %}
+{% endif %}
+{% endblock intro %}
 
 {% block network %}
 <p>Summary of people within 5 levels of your network</p>

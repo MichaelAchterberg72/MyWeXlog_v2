@@ -12,7 +12,7 @@ from django.http import JsonResponse
 from csp.decorators import csp_exempt
 
 from django.contrib.auth import get_user_model
-User = get_user_model()
+#User = get_user_model()
 
 
 from db_flatten.models import SkillTag

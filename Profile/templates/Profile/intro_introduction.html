@@ -1,0 +1,57 @@
+{% extends 'base_home.html' %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Introduction Walkthrough{% endblock title %}
+
+{% block Style %}
+
+{% endblock Style %}
+{% block content %}
+<div class="card">
+  <div class="card-body">
+    <div class="btn-toolbar float-right">
+    <a href="{% url 'Profile:ProfileHome' %}?next={{ request.path|urlencode }}"  class="btn btn-primary">Back</a>
+    </div>
+    <h3 class="card-title">Introduction to MyWeXlog</h3>
+    <br>
+    <div class="col-sm-7 mx-auto">
+      <div class="embed-responsive embed-responsive-16by9">
+      <iframe class="embed-responsive-item align-middle center" src="https://www.youtube.com/embed/zpOULjyy-n8?rel=0" allowfullscreen></iframe>
+      </div>
+    </div>
+    <br>
+    <div>
+      <a href="{% url 'Profile:IntroCaptureExperience' %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right" style="width:7rem">Next</a>
+    </div>
+    <br>
+    <br>
+    <br>
+    <h3 class="card-title">An Introduction</h3>
+    <p>MyWeXlog is designed around its central feature, the experience log, and the features that are derived from the its compilation. The first freely accessible feature is the public profile, which is a confirmed log of your work history, your experience and skills gained from your working life over time, projects you were involved with, your weekly achievements and accolades gained including the confirmations of how you succeeded in the development of your career as it happened. We have attempted to remove all bias, such as gender, race, age, etc. out of the system by anonymizing the presentation of the information on MyWeXlog as much as we can.</p>
+<p>By compiling a confirmed log of your experience and skills you create an authentic and trustworthy record of your career. This promotes your unique talents which can then be found by people and companies that require them.</p>
+<p>MyWeXlog then builds on your confirmed experience and public profile and provides a marketplace in which you are able to find employment based on your experience.</p>
+
+<h3 class="card-title">How MyWeXlog Works</h3>
+<p>MyWeXlog works by capturing your skills and experience to make a verified log and then making it available to the people and companies requiring those skills.</p>
+
+<h3 class="card-title">The Workflow</h3>
+<p>Capture Experience</p>
+<ol>
+  <li>Capture weekly experience detailing your skills used and developed</li>
+  <li>Request your co-workers to validate the experience</li>
+  <li>Market your public profile on your CV, social media and other marketing media</li>
+</ol>
+<p>Vacancies</p>
+<ol>
+  <li>Mark yourself as available for vacancies</li>
+  <li>Apply for or be selected for vacancies based on your skills and experience</li>
+  <li>Get shortlisted</li>
+  <li>Be invited for an interview</li>
+  <li>If successful be assigned the advertised vacancy</li>
+</ol>
+
+</div>
+</div>
+{% endblock content %}

@@ -43,7 +43,7 @@ from .models import (
         )
 
 from .forms import (
-    ProfileForm, EmailForm, EmailStatusForm, PhysicalAddressForm, PostalAddressForm, PhoneNumberForm, OnlineProfileForm, ProfileTypeForm, FileUploadForm, IdTypeForm, LanguageTrackForm, LanguageListForm, PassportDetailForm, IdentificationDetailForm, BriefCareerHistoryForm, ResignedForm, UserUpdateForm, CustomUserUpdateForm
+    ProfileForm, EmailForm, EmailStatusForm, PhysicalAddressForm, PostalAddressForm, PhoneNumberForm, OnlineProfileForm, ProfileTypeForm, FileUploadForm, IdTypeForm, LanguageTrackForm, LanguageListForm, PassportDetailForm, IdentificationDetailForm, BriefCareerHistoryForm, ResignedForm, UserUpdateForm, CustomUserUpdateForm, ExpandedIntroWalkthroughForm,
 )
 
 from talenttrack.models import (
@@ -56,7 +56,7 @@ from talenttrack.forms import (
 
 from enterprises.models import Branch, Enterprise
 from locations.models import Region
-from users.models import CustomUser
+from users.models import CustomUser, ExpandedView
 
 from nestedsettree.models import NtWk
 
@@ -189,10 +189,25 @@ def ProfileViewedReport(request):
 
 
 @login_required()
-@subscription(1)
-def CaptureSkillsView(request):
+def IntroIntroductionView(request):
 
-    template = 'Profile/capture_skills.html'
+    template = 'Profile/intro_introduction.html'
+    context = {}
+    return render(request, template, context)
+
+
+@login_required()
+def IntroCaptureExpreienceView(request):
+
+    template = 'Profile/intro_capture_experience.html'
+    context = {}
+    return render(request, template, context)
+
+
+@login_required()
+def IntroCaptureSkillsView(request):
+
+    template = 'Profile/intro_capture_skills.html'
     context = {}
     return render(request, template, context)
 
@@ -791,13 +806,39 @@ def ProfileHome(request):
     #As Requestioner<<<
     #Confirmation Summary<<<
 
-    template = 'Profile/profile_home.html'
-    context = {
-    'wf1': wf1, 'tlt': tlt, 'pvr_count': pvr_count, 'total': total, 'interviews_tlt': interviews_tlt, 'interviews_emp': interviews_emp, 'interviews_empc': interviews_empc, 'interviews_tltc': interviews_tltc, 'assigned_tlt': assigned_tlt, 'assigned_emp': assigned_emp, 'assigned_tltc': assigned_empc, 'assigned_empc': assigned_tltc, 'open_assignments_tltc': open_assignments_tltc, 'open_assignments_empc': open_assignments_empc, 'lvl_1': lvl_1, 'lvl_2': lvl_2, 'lvl_3': lvl_3, 'lvl_4': lvl_4,'lvl_5': lvl_5, 'tot': tot, 'pfl': pfl, 'referral_code': referral_code, 'conf_tot_c': conf_tot_c, 'conf_tot_r': conf_tot_r, 'conf_tot_s': conf_tot_s, 'req_tot_c': req_tot_c, 'req_tot_r': req_tot_r, 'req_tot_s': req_tot_s, 'req_tot_y': req_tot_y, 'conf_tot_y': conf_tot_y,
-    }
+    from users.models import ExpandedView
+    from .forms import ExpandedIntroWalkthroughForm
 
-    return render(request, template, context)
 
+    instance2 = ExpandedView.objects.get(talent=request.user)
+    list_view = instance2.intro_walkthrough
+
+
+    form = ExpandedIntroWalkthroughForm(request.POST or None, instance=instance2)
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.talent = request.user
+            if list_view == True:
+                new.intro_walkthrough = False
+            elif list_view == False:
+                new.intro_walkthrough = True
+            new.save()
+
+            return redirect(reverse('Profile:ProfileHome')+'#dashboard')
+        else:
+            template = 'Profile/profile_home.html'
+            context = {
+            'wf1': wf1, 'tlt': tlt, 'pvr_count': pvr_count, 'total': total, 'interviews_tlt': interviews_tlt, 'interviews_emp': interviews_emp, 'interviews_empc': interviews_empc, 'interviews_tltc': interviews_tltc, 'assigned_tlt': assigned_tlt, 'assigned_emp': assigned_emp, 'assigned_tltc': assigned_empc, 'assigned_empc': assigned_tltc, 'open_assignments_tltc': open_assignments_tltc, 'open_assignments_empc': open_assignments_empc, 'lvl_1': lvl_1, 'lvl_2': lvl_2, 'lvl_3': lvl_3, 'lvl_4': lvl_4,'lvl_5': lvl_5, 'tot': tot, 'pfl': pfl, 'referral_code': referral_code, 'conf_tot_c': conf_tot_c, 'conf_tot_r': conf_tot_r, 'conf_tot_s': conf_tot_s, 'req_tot_c': req_tot_c, 'req_tot_r': req_tot_r, 'req_tot_s': req_tot_s, 'req_tot_y': req_tot_y, 'conf_tot_y': conf_tot_y, 'list_view': list_view, 'form': form,
+            }
+            return render(request, template, context)
+    else:
+
+        template = 'Profile/profile_home.html'
+        context = {
+        'wf1': wf1, 'tlt': tlt, 'pvr_count': pvr_count, 'total': total, 'interviews_tlt': interviews_tlt, 'interviews_emp': interviews_emp, 'interviews_empc': interviews_empc, 'interviews_tltc': interviews_tltc, 'assigned_tlt': assigned_tlt, 'assigned_emp': assigned_emp, 'assigned_tltc': assigned_empc, 'assigned_empc': assigned_tltc, 'open_assignments_tltc': open_assignments_tltc, 'open_assignments_empc': open_assignments_empc, 'lvl_1': lvl_1, 'lvl_2': lvl_2, 'lvl_3': lvl_3, 'lvl_4': lvl_4,'lvl_5': lvl_5, 'tot': tot, 'pfl': pfl, 'referral_code': referral_code, 'conf_tot_c': conf_tot_c, 'conf_tot_r': conf_tot_r, 'conf_tot_s': conf_tot_s, 'req_tot_c': req_tot_c, 'req_tot_r': req_tot_r, 'req_tot_s': req_tot_s, 'req_tot_y': req_tot_y, 'conf_tot_y': conf_tot_y, 'list_view': list_view, 'form': form,
+        }
+        return render(request, template, context)
 
 @login_required()
 @subscription(1)

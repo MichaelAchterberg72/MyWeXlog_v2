@@ -21,7 +21,13 @@ from locations.models import Region, City, Suburb
 from talenttrack.models import Designation
 from users.models import CustomUser
 from db_flatten.models import LanguageList
+from users.models import CustomUser, ExpandedView
 
+
+class ExpandedIntroWalkthroughForm(forms.ModelForm):
+    class Meta:
+        model = ExpandedView
+        fields = ('intro_walkthrough',)
 
 #>>> Select 2
 class LanguageSearchFieldMixin:

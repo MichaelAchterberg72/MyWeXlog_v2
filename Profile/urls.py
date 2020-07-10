@@ -107,5 +107,7 @@ urlpatterns = [
         path('help/experience-review/co-worker/', views.HelpCoworkerConfirmView, name='HelpConfirmCoworker'),
         path('help/experience-review/coonsultant-contractor/', views.HelpContractorConfirmView, name='HelpConfirmContractor'),
         path('contact-detail/<slug:tlt>/<slug:vac>/', views.ContactDetailView, name="ContactDetail"),
-        path('capture-skills/', views.CaptureSkillsView, name="CaptureSkills"),
+        path('intro-MyWeXlog-introduction/', views.IntroIntroductionView, name="IntroIntroduction"),
+        path('intro-capture-experience/', views.IntroCaptureExpreienceView, name="IntroCaptureExperience"),
+        path('intro-capture-skills/', views.IntroCaptureSkillsView, name="IntroCaptureSkills"),
 ]
