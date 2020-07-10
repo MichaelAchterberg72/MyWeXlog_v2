@@ -5,8 +5,7 @@
 {% block content %}
 <div class="card border-0">
   <div class="card-body">
-    <form  action="{% url 'BookList:BLB' %}?next={{ request.path|urlencode }}" method="post">
-  <h4 class="">Experience - Education & Training <span><p class="float-right"><a href="{% url 'Talent:Home' %}"  class="btn btn-primary">Back</a></p></span></h4>
+    <h4 class="">Experience - Education & Training <span><p class="float-right"><a href="{% url 'Talent:Home' %}"  class="btn btn-primary">Back</a></p></span></h4>
 
 
   <h6 class="card-subtitle mb-2">{{ check.course }}</h6>
@@ -15,6 +14,10 @@
     <p class="card-text float-right"><strong>Hours: </strong>{{ check.topic.hours }}</p>
     <p class="card-text"><strong>Topic: </strong>{{ check.topic.topic }}</p>
     <p class="card-text"><strong>Skills: </strong>{{ check.topic.skills.all|join:" || " }}</p>
+    <form  action="{% url 'Talent:EducationDetailDelete' check.pk %}" method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger float-right" style="width:7rem">Delete</button>
+    </form>
   </div>
 </div>
 <br>

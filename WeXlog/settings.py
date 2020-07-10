@@ -66,7 +66,6 @@ INSTALLED_APPS = [
     'feedback.apps.FeedbackConfig',
     'tasks',
     'analytics',
-#    'users',
     #Django internal applications
     'django.contrib.staticfiles',
     'django.contrib.humanize',
