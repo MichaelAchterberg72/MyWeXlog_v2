@@ -87,7 +87,9 @@
       <tr>
         <td class="align-middle text-center">Open Assignments</td>
         <td class="align-middle text-center">
-          <a href="{% url 'Profile:WorkshopEmp' %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 10rem">Enter Office</a>
+          <a href="{% url 'Profile:WorkshopEmp' %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 10rem">
+            Enter Office
+          </a>
           <br>
           {% if open_assignments_empc  %}
             {{ open_assignments_empc }}

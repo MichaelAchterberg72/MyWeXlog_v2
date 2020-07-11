@@ -8,13 +8,17 @@
 
 <div class="container">
   <div class="float-right">
-  <a href="{% url 'MarketPlace:VacancyPost' scope.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-secondary">Back to {{scope.ref_no}}</a>
-  <a href="{% url 'MarketPlace:VacancyIntDetail' scope.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-info">Interview list</a>
-  <a href="{% url 'MarketPlace:ShortListView' scope.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-info">Short-list</a>
+    <a href="{% url 'MarketPlace:VacancyPost' scope.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-secondary">
+      Back to {{scope.ref_no}}
+    </a>
+    <a href="{% url 'MarketPlace:ShortListView' scope.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-info">
+      Short-list
+    </a>
   </div>
 
-
-    <h3 class="card-title">Talent Dashboard for {{ scope.title }} ({{ scope.ref_no }})</h3>
+  <h3 class="card-title">
+    Vacancy Dashboard for {{ scope.title }} ({{ scope.ref_no }})
+  </h3>
     {% if wit_qs %}
     <div class="card border-0">
       <div class="card-body">
@@ -36,10 +40,16 @@
               <td class="align-middle text-center">{{ a.talent.alias }}</td>
               <td class="align-middle text-center">{{ a.get_tlt_response_display }}</td>
               <td class="align-middle text-center">
-                <a href="{% url 'Talent:APV' tlt=a.talent.alias  vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill" style="width: 7rem">View Profile</a>
-                <a href="{% url 'Profile:WorkshopTlt' %}?next={{ request.path|urlencode }}" class="badge badge-primary badge-pill" style="width: 7rem">Enter Workshop</a
+                <a href="{% url 'Talent:APV' tlt=a.talent.alias  vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill" style="width: 7rem">
+                  View Profile
+                </a>
+                <a href="{% url 'Profile:WorkshopEmp' %}?next={{ request.path|urlencode }}" class="badge badge-primary badge-pill" style="width: 7rem">
+                  Enter Office
+                </a>
                 {% if a.tlt_response == 'C' %}
-                  <a href="{% url 'MarketPlace:RFIView' a.slug %}?next={{ request.path|urlencode }}" class="badge badge-warning badge-pill" style="width: 7rem">Clarification<br>Requested</a>
+                  <a href="{% url 'MarketPlace:RFIView' a.slug %}?next={{ request.path|urlencode }}" class="badge badge-warning badge-pill" style="width: 7rem">
+                    Clarification<br>Requested
+                  </a>
                 {% endif %}
               </td>
             </tr>
@@ -71,14 +81,61 @@
               <td class="align-middle text-center">{{ a.talent.alias }}</td>
               <td class="align-middle text-center">{{ a.get_tlt_response_display }}</td>
               <td class="align-middle text-center">
-                <a href="{% url 'Talent:APV' tlt=a.talent.alias  vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill" style="width: 7rem">View Profile</a>
-                <a href="{% url 'Profile:WorkshopTlt' %}?next={{ request.path|urlencode }}" class="badge badge-primary badge-pill" style="width: 7rem">Enter Workshop</a
+                <a href="{% url 'Talent:APV' tlt=a.talent.alias  vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill" style="width: 7rem">
+                  View Profile
+                </a>
+                {% if a.tlt_response == 'A' %}
+                <a href="{% url 'Profile:WorkshopEmp' %}?next={{ request.path|urlencode }}" class="badge badge-primary badge-pill" style="width: 7rem">
+                  Enter Office
+                </a>
+                {% endif %}
                 {% if a.tlt_response == 'C' %}
-                  <a href="{% url 'MarketPlace:RFIView' a.slug %}?next={{ request.path|urlencode }}" class="badge badge-warning badge-pill" style="width: 7rem">Clarification<br>Requested</a>
+                  <a href="{% url 'MarketPlace:RFIView' a.slug %}?next={{ request.path|urlencode }}" class="badge badge-warning badge-pill" style="width: 7rem">
+                    Clarification<br>Requested
+                  </a>
                 {% endif %}
               </td>
             </tr>
             {% endfor %}
+          </tbody>
+        </table>
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th class="align-middle text-center">Stage</th>
+              <th class="align-middle text-center">Rate</th>
+              <th class="align-middle text-center">Complete Date</th>
+              <th class="align-middle text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th class="align-middle text-center">Original Offer</th>
+              <td class="align-middle text-center">{{ scope.currency }} <strong>{{ scope.rate_offered|intcomma }}</strong> {{ scope.get_rate_unit_display }}</td>
+              <td class="align-middle text-center">{{ scope.date_deadline|date:'j M Y' }}</td>
+              <td></td>
+            </tr>
+            <tr>
+              {% for i in wit_qs_p %}
+              <th class="align-middle text-center">
+                {% if i.tlt_response == 'A' %}
+                  Accepted Offer
+                {% else %}
+                  Current Offer
+                {% endif %}
+              </th>
+                <td class="align-middle text-center">{{ i.currency }} <strong>{{ i.rate_offered|intcomma  }}</strong> {{ i.get_rate_unit_display }}</td>
+                <td class="align-middle text-center">{{ i.date_deliverable|date:'j M Y' }}</td>
+                <td class="align-middle text-center">
+                  {% if i.tlt_response != 'A' %}
+                    <a href="{% url 'MarketPlace:VacAssignEdit' i.slug %}">
+                      <i class="fa fa-paint-brush" aria-hidden="true" style="font-size:20px;color:black" target="_blank" data-toggle="tooltip" title="Edit Offer">
+                      </i>
+                    </a>
+                  {% endif %}
+                </td>
+              {% endfor %}
+            </tr>
           </tbody>
         </table>
       </div>
@@ -87,6 +144,11 @@
     {% endif %}
     <div class="card border-0">
       <div class="card-body">
+        <div class="float-right">
+          <a href="{% url 'MarketPlace:VacancyIntDetail' scope.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-info">
+            Interview list
+          </a>
+        </div>
         <h4>Pending Interviews</h4>
         <p>There are a total of {{ interview_p_count }} pending interviews{% if interview_p_count >= 5 %}, we only list the top 5 here.{% else %}.{% endif %}</p>
         <table class="table table-hover table-sm">

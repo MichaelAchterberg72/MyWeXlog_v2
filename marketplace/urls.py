@@ -31,6 +31,7 @@ urlpatterns = [
     path('vac-close/<slug:vac>/', views.VacancyCloseSwitch, name='VacClose'),
 
     path('vac-assign/<slug:vac>/<slug:tlt>/', views.TalentAssign, name='VacAssign'),
+    path('vac-assign-edit/<slug:wit>/', views.talent_assign_edit, name='VacAssignEdit'),
     path('suitable-vac-assign/<slug:vac>/<slug:tlt>/', views.SuitableTalentAssign, name='SuitableVacAssign'),
 
 

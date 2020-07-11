@@ -198,7 +198,10 @@ class EmployerInterViewComments(forms.ModelForm):
 class WorkBidForm(forms.ModelForm):
     class Meta:
         model = WorkBid
-        fields = ('rate_bid', 'motivation', 'currency', 'rate_unit')
+        fields = ('rate_bid', 'motivation',)
+        labels = {
+            'rate_bid': 'My Required Rate'
+        }
 
 
 class TalentAvailabillityForm(forms.ModelForm):

@@ -48,7 +48,10 @@
         <a href="{% url 'Talent:ExperienceSum' tlt %}" class="badge badge-pill badge-primary">Skills Summary</a>
       </p>
     </div>
-    <p>Experience Level: <strong><span data-toggle="tooltip" data-placement="top" title="Logged + Pre-logged hours">{{ level }}</span></strong></p>
+    <p>Experience Level: <strong><span data-toggle="tooltip" data-placement="top" title="Logged + Pre-logged hours">{{ level }}</span></strong>
+    <a href="{% url 'MarketPlace:HelpExperienceLevel' %}" target="_blank">
+      <i class="fa fa-flag" aria-hidden="true" style="font-size:20px;color:black" data-toggle="tooltip" title="Breakdown of Experience levels"></i>
+    </a></p>
     <p class="text-center">
       <strong>Confirmed Experience has been approved by more than 2 people and has a score greater than 3.</strong><br>
       Only confirmed experience is used in matching experience to vacancies.

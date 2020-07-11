@@ -111,7 +111,7 @@ class TalentRequired(models.Model):
     currency = models.ForeignKey(Currency, on_delete=models.PROTECT)
     rate_unit = models.CharField(max_length=1, choices=RATE_UNIT, default='H')
     bid_open = models.DateTimeField(auto_now_add=True, null=True)
-    bid_closes = models.DateTimeField('Vacancy Closes', null=True)
+    bid_closes = models.DateTimeField('Applications Close', null=True)
     offer_status = models.CharField(max_length=1, choices=STATUS, default='O')
     certification = models.ManyToManyField(Result, verbose_name='Certifications Required', blank=True)
     scope = models.TextField()

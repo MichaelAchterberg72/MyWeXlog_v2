@@ -40,7 +40,7 @@
           </div>
         </div>
         <div class="">
-          <a href="{% url 'MarketPlace:InterviewList' job.ref_no %}" class="btn btn-danger">Cancel</a> 
+          <a href="{% url 'MarketPlace:InterviewList' job.ref_no %}" class="btn btn-danger">Cancel</a>
           <button type="submit" name="done" class="btn btn-primary">Assign</button>
         </div>
     </form>
@@ -51,12 +51,13 @@
 <div class="card border-0">
   <div class="card-body">
     <div class="container">
-      <h4>Proposed Rates</h4>
+      <h4>Proposed Rates & Dates</h4>
       <table class="table table-sm">
         <thead>
           <tr>
-            <th class="align-middle text-center">Original rate proposed for the vacancy</th>
+            <th class="align-middle text-center">Original Rate Rroposed</th>
             <th class="align-middle text-center">Applicant Proposed Rate</th>
+            <th class="align-middle text-center">Original Deadline</th>
           </tr>
         </thead>
         <tbody>
@@ -76,6 +77,9 @@
                   No bid submitted.<br>Their standard rate is<br>{{ pfl_qs.currency }} {{ pfl_qs.std_rate }} {{ pfl_qs.get_rate_unit_display }}
                 {% endif %}
               {% endif %}
+            </td>
+            <td class="align-middle text-center">
+              {{ job.date_deadline|date:'j M Y' }}
             </td>
           </tr>
         </tbody>

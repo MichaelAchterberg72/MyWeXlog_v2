@@ -975,6 +975,8 @@ def WorkBidView(request, vac):
             new = form.save(commit=False)
             new.talent = request.user
             new.work = detail
+            new.currency = detail.currency
+            new.rate_unit = detail.rate_unit
             new.save()
             return redirect(reverse('MarketPlace:Entrance'))
     else:
@@ -2541,6 +2543,37 @@ def TalentAssign(request, tlt, vac):
     else:
         template = 'marketplace/vacancy_assign.html'
         context = {'form': form, 'job': job, 'talent': talent, 'bids': bids,}
+        return render(request, template, context)
+
+
+@login_required()
+@subscription(2)
+def talent_assign_edit(request, wit):
+    instance = get_object_or_404(WorkIssuedTo, slug=wit)
+    vac=instance.work.ref_no
+    tlt=instance.talent.alias
+
+    job = get_object_or_404(TalentRequired, ref_no=vac)
+    talent = get_object_or_404(CustomUser, alias=tlt)
+    pfl_qs = Profile.objects.get(alias=tlt)
+    bids = WorkBid.objects.filter(Q(work__ref_no=vac) & Q(talent__alias=tlt))
+    s_list = BidShortList.objects.filter(scope__ref_no=vac)
+
+    form = AssignWorkForm(request.POST or None, instance=instance)
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.save()
+
+            return redirect(reverse('MarketPlace:InterviewList', kwargs={'vac': vac,}))
+        else:
+            template = 'marketplace/vacancy_assign.html'
+            context = {'form': form, 'job': job, 'talent': talent, 'bids': bids, 'pfl_qs': pfl_qs,}
+            return render(request, template, context)
+
+    else:
+        template = 'marketplace/vacancy_assign.html'
+        context = context = {'form': form, 'job': job, 'talent': talent, 'bids': bids, 'pfl_qs': pfl_qs,}
         return render(request, template, context)
 
 
