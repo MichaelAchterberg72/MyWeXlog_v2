@@ -21,10 +21,17 @@
             <form  action="{% url 'BookList:BLB' %}" method="post">
               <input type="hidden" name="next" value="{{ request.GET.next }}">
               {% csrf_token %}
-              <button type="submit" class="btn btn-secondary">Back to {{vacancy.ref_no}}</button>
-            </form>&nbsp <a href="{% url 'MarketPlace:InterviewList' vacancy.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-info">Vacancy Dashboard</a>
+              <button type="submit" class="btn btn-secondary">
+                Back to {{vacancy.ref_no}}
+              </button>
+            </form>
+            &nbsp <a href="{% url 'MarketPlace:InterviewList' vacancy.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-info">
+              Vacancy Dashboard
+            </a>
           </div>
-          <h4 class="card-title">Short list for {{ vacancy.title }} ({{ vacancy.ref_no }})</h4>
+          <h4 class="card-title">
+            Short list for {{ vacancy.title }} ({{ vacancy.ref_no }})
+          </h4>
           {% if closed == True %}
             <p>This vacancy has been awarded and is closed.</p>
           {% else %}
@@ -51,17 +58,27 @@
                 {% for sl in pageitems %}
                 <tr>
                   <td class="align-middle text-center">
-                    {% if sl.1.count > 5 %}
+                    {% if sl.1.count > 4 %}
                       {{ sl.1.ro.0.4 }}<br><strong>{{ sl.1.score }}</strong><br>(by {{ sl.1.count }} people)
                     {% else %}
                       {{ sl.1.ro.0.4 }}<br><strong>Not Rated</strong><br>(by < 5 people)
                     {% endif %}
                   </td>
-                  <td class="align-middle text-center">{{ sl.1.we|intcomma }}<br>(<strong>{{ sl.1.s_no }}</strong> skills)</td>
-                  <td class="align-middle text-center">{{ sl.1.te|intcomma }}</td>
-                  <td class="align-middle text-center">{{ sl.1.rb }}</td>
-                  <td class="align-middle text-center">{{ sl.1.ro.0.1 }}<br><strong>{{ sl.1.ro.0.0|intcomma }}</strong><br>{{ sl.1.ro.0.2 }}</td>
-                  <td class="align-middle text-left">{{ sl.1.ro.0.3|truncatechars:200 }}</td>
+                  <td class="align-middle text-center">
+                    {{ sl.1.we|intcomma }}<br>(<strong>{{ sl.1.s_no }}</strong> skills)
+                  </td>
+                  <td class="align-middle text-center">
+                    {{ sl.1.te|intcomma }}
+                  </td>
+                  <td class="align-middle text-center">
+                    {{ sl.1.rb }}
+                  </td>
+                  <td class="align-middle text-center">
+                    {{ sl.1.ro.0.1 }}<br><strong>{{ sl.1.ro.0.0|intcomma }}</strong><br>{{ sl.1.ro.0.2 }}
+                  </td>
+                  <td class="align-middle text-left">
+                    {{ sl.1.ro.0.3|truncatechars:200 }}
+                  </td>
                   <td class="align-middle text-center">
                     <p>
                       {{s1.0}}
