@@ -462,6 +462,8 @@ class WorkExperienceForm(forms.ModelForm):
         labels = {
             'hours_worked': 'Hours',
             'companybranch': 'Branch',
+            'upload': 'Upload File (Optional)',
+            'comment': 'Comment (Optional)',
         }
         help_texts = {
             'company': 'Please complete the Company field before the Branch Field',
@@ -634,6 +636,8 @@ class EducationForm(forms.ModelForm):
         labels = {
             'course': 'Course Name',
             'topic' : 'Course Subject',
+            'comment': 'Comment (Optional)',
+            'upload': 'File Upload (Optional)',
         }
 
     def clean_date_to(self):

@@ -10,46 +10,69 @@
   select {
     width: 100px;
   }
-  </style>
+</style>
 <div class="card border-0">
   <div class="card-body">
-<div class="container">
-<h3>Capture Education / Training<span><p class="float-right">
-<a href="{% url 'Talent:HelpCaptureEducation' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px">
-<i class="icon icon-question-circle"></i></a>
-</p></span></h3>
-<form method="post" id="BranchForm" enctype="multipart/form-data">
-  {% csrf_token %}
-  <div class="form-row">
-    <div class="form-group col-md-6 mb-0">
-      {{ form.course|as_crispy_field }}
-      <p><a href="{% url 'Talent:CourseAddPop' %}" id='add_course' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a Course</a></p>
+    <div class="container">
+      <h3>Capture Education / Training
+        <span>
+          <p class="float-right">
+            <a href="{% url 'Talent:HelpCaptureEducation' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px">
+              <i class="icon icon-question-circle"></i>
+            </a>
+          </p>
+        </span>
+    </h3>
+    <form method="post" id="BranchForm" enctype="multipart/form-data">
+      {% csrf_token %}
       <div class="form-row">
         <div class="form-group col-md-6 mb-0">
-          {{ form.date_from|as_crispy_field }}
+          {{ form.course|as_crispy_field }}
+          <p><a href="{% url 'Talent:CourseAddPop' %}" id='add_course' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add Course</a></p>
+          <div class="form-row">
+            <div class="form-group col-md-6 mb-0">
+              {{ form.date_from|as_crispy_field }}
+            </div>
+            <div class="form-group col-md-6 mb-0">
+              {{ form.date_to|as_crispy_field }}
+            </div>
+          </div>
         </div>
         <div class="form-group col-md-6 mb-0">
-          {{ form.date_to|as_crispy_field }}
+          {{ form.topic|as_crispy_field }}
+          <p>
+            <a href="{% url 'Talent:TopicAddPop' %}" id='add_topic' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">
+            Add Subject
+            </a>
+           </p>
+          {{ form.upload|as_crispy_field }}
         </div>
       </div>
-    </div>
-    <div class="form-group col-md-6 mb-0">
-      {{ form.topic|as_crispy_field }}
-      <p><a href="{% url 'Talent:TopicAddPop' %}" id='add_topic' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a Topic</a></p>
-      {{ form.upload|as_crispy_field }}
+      <div class="form-row">
+        <div class="form-group col-md-8 mb-0">
+          {{ form.comment|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-4 mb-0">
+            <p>
+              <br>
+              The comments made here are visible to the person confirming your experience.<br><br>
+              Write a short summary to describe the experience you are claiming, both for the reviewer and for your own use when you look back on this entry.
+            </p>
+        </div>
+      </div>
+      <div class="">
+        <p>
+          <a href="{% url 'Talent:Home' %}" class="btn btn-danger">
+            Cancel
+          </a>
+          <button type="submit" name="Done" class="btn btn-primary">
+            Add Reviewer
+          </button>
+        </p>
+      </div>
+    </form>
     </div>
   </div>
-  <div class="form-row">
-    <div class="form-group col-md-12 mb-0">
-      {{ form.comment|as_crispy_field }}
-    </div>
-  </div>
-  <div class="">
-    <p><a href="{% url 'Talent:Home' %}" class="btn btn-danger">Cancel</a> <button type="submit" name="Done" class="btn btn-primary">Add Validators</button> </p>
-  </div>
-</form>
-</div>
-</div>
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 {{ form.media.js }}
