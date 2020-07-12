@@ -1912,6 +1912,32 @@ def ExperienceDetailView(request, tex):
 
 
 @login_required()
+def ExperienceDeleteView(request, pk):
+    info = WorkExperience.objects.get(pk=pk)
+    if info.talent == request.user:
+        if request.method =='POST':
+            info.delete()
+            return redirect(reverse('Talent:Home')+'#experience')
+        else:
+            return redirect(reverse('Talent:Home')+'#experience')
+    else:
+        raise PermissionDenied
+
+
+@login_required()
+def EducationDetailDeleteView(request, pk):
+    info = WorkExperience.objects.get(pk=pk)
+    if info.talent == request.user:
+        if request.method =='POST':
+            info.delete()
+            return redirect(reverse('Talent:Home')+'#education')
+        else:
+            return redirect(reverse('Talent:Home')+'#education')
+    else:
+        raise PermissionDenied
+
+
+@login_required()
 @csp_exempt
 def WorkExperienceCaptureView(request):
     form = WorkExperienceForm(request.POST or None, request.FILES)
@@ -2194,7 +2220,7 @@ def EducationDeleteView(request, edt_pk):
     if info.talent == request.user:
         if request.method =='POST':
             info.delete()
-            return redirect(reverse('Talent:Home')+'#headingOne')
+            return redirect(reverse('Talent:Home')+'#heading1')
     else:
         raise PermissionDenied
 

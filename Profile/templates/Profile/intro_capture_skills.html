@@ -23,13 +23,17 @@
     </div>
     <br>
     <div>
-      <a href="{% url 'Profile:ProfileViewed' %}?next={{ request.path|urlencode }}"  class="btn btn-primary float-left">Back</a>
-      <a href="{% url 'Profile:ProfileViewed' %}?next={{ request.path|urlencode }}"  class="btn btn-primary float-right">Next</a>
+      <a href="{% url 'Profile:IntroCaptureExperience' %}?next={{ request.path|urlencode }}"  class="btn btn-primary float-left" style="width:7rem">Previous</a>
+      <a href="{% url 'Profile:IntroCaptureSkills' %}?next={{ request.path|urlencode }}"  class="btn btn-primary float-right" style="width:7rem">Next</a>
     </div>
     <br>
     <br>
     <br>
     <h3 class="card-title">The Art of Capturing Skills Correctly</h3>
+    <h3 class="card-title">Introduction</h3>
+      <p>Skills are important to the MyWeXlog system in that they define the abilities you have developed in your experience over the years. Skills need to be broken down, and captured, into the basic building blocks of the categories that we are all used to. This means that by writing a document you would utilise basic pc, microsoft word, writing, english, as well as the topics that you are writing about. The more in detail you define the skills you utilise the better your portfolio will be.</p>
+
+    <h3 class="card-title">Capturing Skills</h3>
     <p>When capturing skills you need to capture all the categories of skills
       that are appropriate.</p>
     <p>Tags must be broken into their base forms. What is meant by this?

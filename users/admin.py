@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 
 from .forms import CustomUserCreationForm, CustomUserChangeForm
-from .models import CustomUser, CustomUserSettings
+from .models import CustomUser, CustomUserSettings, ExpandedView
 
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
@@ -14,7 +14,10 @@ class CustomUserAdmin(UserAdmin):
 class CustomUserAdmin(admin.ModelAdmin):
     pass
 
-
 @admin.register(CustomUserSettings)
 class CustomUserSettingsAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(ExpandedView)
+class ExpandedViewAdmin(admin.ModelAdmin):
     pass

@@ -100,3 +100,17 @@ class CustomUserSettings(models.Model):
             create_settings = CustomUserSettings.objects.create(talent=kwargs['instance'])
 
     post_save.connect(create_settings, sender=CustomUser)
+
+
+class ExpandedView(models.Model):
+    talent = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    intro_walkthrough = models.BooleanField('Don\'t view this again', default=False)
+
+    def __str__(self):
+        return f"Expanded view for {self.talent}"
+
+    def create_settings(sender, **kwargs):
+        if kwargs['created']:
+            create_settings = ExpandedView.objects.create(talent=kwargs['instance'])
+
+    post_save.connect(create_settings, sender=CustomUser)

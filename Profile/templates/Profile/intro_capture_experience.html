@@ -1,0 +1,72 @@
+{% extends 'base_home.html' %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Introduction Walkthrough{% endblock title %}
+
+{% block Style %}
+
+{% endblock Style %}
+{% block content %}
+<div class="card">
+  <div class="card-body">
+    <div class="btn-toolbar float-right">
+    </div>
+    <h3 class="card-title">How to Capture Experience</h3>
+    <br>
+    <div class="col-sm-7 mx-auto">
+      <div class="embed-responsive embed-responsive-16by9">
+      <iframe class="embed-responsive-item align-middle center" src="https://www.youtube.com/embed/zpOULjyy-n8?rel=0" allowfullscreen></iframe>
+      </div>
+    </div>
+    <br>
+    <div>
+      <a href="{% url 'Profile:IntroIntroduction' %}?next={{ request.path|urlencode }}"  class="btn btn-primary float-left" style="width:7rem">Previous</a>
+      <a href="{% url 'Profile:IntroCaptureSkills' %}?next={{ request.path|urlencode }}"  class="btn btn-primary float-right" style="width:7rem">Next</a>
+    </div>
+    <br>
+    <br>
+    <br>
+    <h3 class="card-title">Introduction</h3>
+<p>There are three types of experience we can capture on MyWeXlog:</p>
+<ol>
+  <li>Training and Education,</li>
+  <li>historical,</li>
+  <li>Current, and</li>
+  <li>Pre-captured.</li>
+</ol>
+<p>In this guide, we will focus on the capture of historical, current, and pre-captured experience.
+
+<h3 class="card-title">Why we use Hours</h3>
+<p>As a measure of time, the hour is the most versatile. You can break it down into fractions, and you can multiply it out without the numbers getting too small or conversely too large. Based on 8 hours a day, there are roughly 52×5×8 = 2 080 working hours in a calendar year with an average of 173 hours per month. Similarly, we regularly talk of a quarter of an hour or half an hour.</p>
+<p>For this reason, all experience is captured in hours to ensure everyone captures their experience using the same unit of measurement.</p>
+<p>People that do not regularly think of their work in this way can reasonably easily convert into hours. As an example, a car mechanic works on 1 car a day - hence can claim 8 hours for that job. Tradesmen can claim the time on site as experience, writing it down on their invoice for their client to sign.</p>
+<p>The maximum working hours possible for a day is 12. One needs to rest! And in many countries, it is legislated that one person cannot work more than 12 continuous hours per day without a rest.</p>
+
+<h3 class="card-title">Experience Score</h3>
+<p>The experience you capture is displayed against vacancies once it has received a score of 3 or more. To increase the experience score, you must ask people to confirm that you did indeed perform the work as you claimed.</p>
+<p>A minimum of 2 people, depending on their work relationship with you need to confirm your experience.</p>
+<p>Lecturers, clients, and superiors increase your score by 2 points when they approve your claim, while colleagues, classmates, and collaborators increase your score by 1. We recommend asking more than the minimum number of people to confirm your experience as everyone you ask may not action your request.</p>
+<p>You should, as good practice, have your experience validated by at least two people depending on their relationship to you.</p>
+<p>The system will allow you to invite as many of your colleagues, superiors, or clients as you would like, registering them against your experience once they have registered on the site. Due to anti-spam laws, MyWeXlog is only allowed to invite each person once, so if they are notified as having already been invited, you will have to contact them independently and request they register with MyWeXlog and then allow you to request them as validators through the experience details page. You can however email them your referral link separately.</p>
+
+<h3 class="card-title">Historical Experience Capture</h3>
+<p>When we refer to historical experience we are referring to the experience you gained before registering on MyWeXlog. This experience could be from a few months to a few years ago. </p>
+<p>To capture prior experience and catch up on your historical experience, one option is to capture the experience in periods of, at a minimum, each project period on a project by project basis. However, this is not how MyWeXlog was intended to be used.</p>
+<p>The system is designed to have experience captured one week at a time or at worst every fortnight. In this way, you will recall more experience items. The more items you capture in any given period of time, the better the system works for you. For historical experience we do however realise that this may become a little tedious, thus for experience from over a year ago, we suggest using periods of no more than 3 months.</p>
+
+<h3 class="card-title">Capturing Education and Training Experience</h3>
+<p>To capture education and training you simply enter the institution and then select the course and topic. Each module must be captured separately so that, for instance, a BCom would have the course name being Bachelor of Commerce at Institution University of Stanford, and then individually for each module or course subject being individually for Economics 101, Economics 102, Accounting 101, Accounting 102, Accounting 201, etc, the whole of which would make up your degree, which would be added to the Achievements section in your profile, requesting you lecturer and classmates to validate that you did that course subject.</p>
+
+<h3 class="card-title">Capturing Current Experience</h3>
+<p>Capturing current experience works the same as past experience where the system is designed to have as many experience items captured as are comfortable to have validated for a block experience. This should be, at a minimum, every week at least or once every two weeks remembering that your intention is to qualify your experience, not to become a pest to your validators, keeping in mind that the system is designed to be as efficient to confirm experience as possible and to limit time cost.</p>
+
+<h3 class="card-title">Pre-Captured Experience</h3>
+<p>In many industries, timesheets or logs are already used extensively. Should you have copies of these timesheets, you can re-capture them onto MyWeXlog and upload the copies onto the system.</p>
+<p>These timesheets will confirm your time, but not your experience. As such to score the experience, it would still need to be confirmed.</p>
+<p>The same periods as mentioned above should be used with claiming pre-captured experience.</p>
+
+</div>
+</div>
+{% endblock content %}

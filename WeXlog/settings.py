@@ -215,7 +215,7 @@ CSP_MEDIA_SRC = (
     "'self'", '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev', 'youtube.com',
     )
 CSP_FRAME_SRC = (
-    'https://www.youtube.com/', 'https://content.googleapis.com/', 'https://accounts.google.com/', 
+    'https://www.youtube.com/', 'https://content.googleapis.com/', 'https://accounts.google.com/',
     )
 CSP_FONT_SRC = (
     "'self'", 'fonts.googleapis.com', '*', 'w3.org', '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev',
