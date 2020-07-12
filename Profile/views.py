@@ -518,6 +518,39 @@ def ProfileHome(request):
     open_assignments_tltc = assigned_tlt_qs.filter(Q(tlt_response='A') & Q(assignment_complete_tlt=False)).count()
 
     open_assignments_empc = assigned_emp.filter(Q(tlt_response='A')).count()
+
+
+    #talent interview information
+    tlt_bil_qs = BidInterviewList.objects.filter(talent=talent)
+    tlt_bil_qs_p = tlt_bil_qs.filter(Q(tlt_response='P') & Q(outcome='I')).count()
+    tlt_bil_qs_a = tlt_bil_qs.filter(Q(tlt_response='A') &  Q(tlt_intcomplete=False)).count()
+    tlt_bil_qs_d = tlt_bil_qs.filter(tlt_response='D').count()
+    tlt_bil_qs_i = tlt_bil_qs.filter(tlt_intcomplete=True).count()
+
+    #employer interview information
+    emp_bil_qs = BidInterviewList.objects.filter(scope__requested_by=talent)
+    emp_bil_qs_p = emp_bil_qs.filter(Q(tlt_response='P') & Q(outcome='I')).count()
+    emp_bil_qs_a = emp_bil_qs.filter(Q(tlt_response='A') & Q(emp_intcomplete=False)).count()
+    emp_bil_qs_d = emp_bil_qs.filter(tlt_response='D').count()
+    emp_bil_qs_i = emp_bil_qs.filter(emp_intcomplete=True).count()
+
+    #Employer assignments
+    emp_wit = WorkIssuedTo.objects.filter(work__requested_by=talent)
+    emp_wit_p = emp_wit.filter(tlt_response='P').count()
+    emp_wit_a = emp_wit.filter(Q(tlt_response='A')).filter(Q(assignment_complete_emp=False)|Q(assignment_complete_emp=True)).filter(Q(assignment_complete_tlt=False)|Q(assignment_complete_tlt=True)).count()
+    emp_wit_d = emp_wit.filter(tlt_response='D').count()
+    emp_wit_c = emp_wit.filter(tlt_response='C').count()
+    emp_wit_s = emp_wit.filter(Q(tlt_response='A') & Q(assignment_complete_emp=True) & Q(assignment_complete_tlt=True)).count()
+
+    #Talent assignments
+    tlt_wit = WorkIssuedTo.objects.filter(talent=talent)
+    tlt_wit_p = tlt_wit.filter(tlt_response='P').count()
+    tlt_wit_a = tlt_wit.filter(Q(tlt_response='A')).filter(Q(assignment_complete_emp=False)|Q(assignment_complete_emp=True)).filter(Q(assignment_complete_tlt=False)|Q(assignment_complete_tlt=True)).count()
+    tlt_wit_d = tlt_wit.filter(tlt_response='D').count()
+    tlt_wit_c = tlt_wit.filter(tlt_response='C').count()
+    tlt_wit_s = tlt_wit.filter(Q(tlt_response='A') & Q(assignment_complete_tlt=True) & Q(assignment_complete_emp=True)).count()
+
+
     #WorkFlow Card<<<
 
     #>>>QuickAccess card
@@ -813,7 +846,6 @@ def ProfileHome(request):
     instance2 = ExpandedView.objects.get(talent=request.user)
     list_view = instance2.intro_walkthrough
 
-
     form = ExpandedIntroWalkthroughForm(request.POST or None, instance=instance2)
     if request.method == 'POST':
         if form.is_valid():
@@ -829,14 +861,18 @@ def ProfileHome(request):
         else:
             template = 'Profile/profile_home.html'
             context = {
-            'wf1': wf1, 'tlt': tlt, 'pvr_count': pvr_count, 'total': total, 'interviews_tlt': interviews_tlt, 'interviews_emp': interviews_emp, 'interviews_empc': interviews_empc, 'interviews_tltc': interviews_tltc, 'assigned_tlt': assigned_tlt, 'assigned_emp': assigned_emp, 'assigned_tltc': assigned_empc, 'assigned_empc': assigned_tltc, 'open_assignments_tltc': open_assignments_tltc, 'open_assignments_empc': open_assignments_empc, 'lvl_1': lvl_1, 'lvl_2': lvl_2, 'lvl_3': lvl_3, 'lvl_4': lvl_4,'lvl_5': lvl_5, 'tot': tot, 'pfl': pfl, 'referral_code': referral_code, 'conf_tot_c': conf_tot_c, 'conf_tot_r': conf_tot_r, 'conf_tot_s': conf_tot_s, 'req_tot_c': req_tot_c, 'req_tot_r': req_tot_r, 'req_tot_s': req_tot_s, 'req_tot_y': req_tot_y, 'conf_tot_y': conf_tot_y, 'list_view': list_view, 'form': form,
+            'wf1': wf1, 'tlt': tlt, 'pvr_count': pvr_count, 'total': total, 'interviews_tlt': interviews_tlt, 'interviews_emp': interviews_emp, 'interviews_empc': interviews_empc, 'interviews_tltc': interviews_tltc, 'assigned_tlt': assigned_tlt, 'assigned_emp': assigned_emp, 'assigned_tltc': assigned_empc, 'assigned_empc': assigned_tltc, 'open_assignments_tltc': open_assignments_tltc, 'open_assignments_empc': open_assignments_empc, 'lvl_1': lvl_1, 'lvl_2': lvl_2, 'lvl_3': lvl_3, 'lvl_4': lvl_4,'lvl_5': lvl_5, 'tot': tot, 'pfl': pfl, 'referral_code': referral_code, 'conf_tot_c': conf_tot_c, 'conf_tot_r': conf_tot_r, 'conf_tot_s': conf_tot_s, 'req_tot_c': req_tot_c, 'req_tot_r': req_tot_r, 'req_tot_s': req_tot_s, 'req_tot_y': req_tot_y, 'conf_tot_y': conf_tot_y, 'list_view': list_view, 'form': form, 'tlt_bil_qs_p': tlt_bil_qs_p, 'tlt_bil_qs_a': tlt_bil_qs_a, 'tlt_bil_qs_d': tlt_bil_qs_d, 'tlt_bil_qs_i': tlt_bil_qs_i, 'emp_bil_qs_p': emp_bil_qs_p, 'emp_bil_qs_a': emp_bil_qs_a, 'emp_bil_qs_d': emp_bil_qs_d, 'emp_bil_qs_i': emp_bil_qs_i,
+            'emp_wit_p': emp_wit_p, 'emp_wit_a': emp_wit_a, 'emp_wit_d': emp_wit_d, 'emp_wit_c': emp_wit_c, 'emp_wit_s': emp_wit_s,
+            'tlt_wit_p': tlt_wit_p, 'tlt_wit_a': tlt_wit_a, 'tlt_wit_d': tlt_wit_d, 'tlt_wit_c': tlt_wit_c, 'tlt_wit_s': tlt_wit_s,
             }
             return render(request, template, context)
     else:
-
+        #this should work!
         template = 'Profile/profile_home.html'
         context = {
-        'wf1': wf1, 'tlt': tlt, 'pvr_count': pvr_count, 'total': total, 'interviews_tlt': interviews_tlt, 'interviews_emp': interviews_emp, 'interviews_empc': interviews_empc, 'interviews_tltc': interviews_tltc, 'assigned_tlt': assigned_tlt, 'assigned_emp': assigned_emp, 'assigned_tltc': assigned_empc, 'assigned_empc': assigned_tltc, 'open_assignments_tltc': open_assignments_tltc, 'open_assignments_empc': open_assignments_empc, 'lvl_1': lvl_1, 'lvl_2': lvl_2, 'lvl_3': lvl_3, 'lvl_4': lvl_4,'lvl_5': lvl_5, 'tot': tot, 'pfl': pfl, 'referral_code': referral_code, 'conf_tot_c': conf_tot_c, 'conf_tot_r': conf_tot_r, 'conf_tot_s': conf_tot_s, 'req_tot_c': req_tot_c, 'req_tot_r': req_tot_r, 'req_tot_s': req_tot_s, 'req_tot_y': req_tot_y, 'conf_tot_y': conf_tot_y, 'list_view': list_view, 'form': form,
+        'wf1': wf1, 'tlt': tlt, 'pvr_count': pvr_count, 'total': total, 'interviews_tlt': interviews_tlt, 'interviews_emp': interviews_emp, 'interviews_empc': interviews_empc, 'interviews_tltc': interviews_tltc, 'assigned_tlt': assigned_tlt, 'assigned_emp': assigned_emp, 'assigned_tltc': assigned_empc, 'assigned_empc': assigned_tltc, 'open_assignments_tltc': open_assignments_tltc, 'open_assignments_empc': open_assignments_empc, 'lvl_1': lvl_1, 'lvl_2': lvl_2, 'lvl_3': lvl_3, 'lvl_4': lvl_4,'lvl_5': lvl_5, 'tot': tot, 'pfl': pfl, 'referral_code': referral_code, 'conf_tot_c': conf_tot_c, 'conf_tot_r': conf_tot_r, 'conf_tot_s': conf_tot_s, 'req_tot_c': req_tot_c, 'req_tot_r': req_tot_r, 'req_tot_s': req_tot_s, 'req_tot_y': req_tot_y, 'conf_tot_y': conf_tot_y, 'list_view': list_view, 'form': form, 'tlt_bil_qs_p': tlt_bil_qs_p, 'tlt_bil_qs_a': tlt_bil_qs_a, 'tlt_bil_qs_d': tlt_bil_qs_d, 'tlt_bil_qs_i': tlt_bil_qs_i, 'emp_bil_qs_p': emp_bil_qs_p, 'emp_bil_qs_a': emp_bil_qs_a, 'emp_bil_qs_d': emp_bil_qs_d, 'emp_bil_qs_i': emp_bil_qs_i,
+        'emp_wit_p': emp_wit_p, 'emp_wit_a': emp_wit_a, 'emp_wit_d': emp_wit_d, 'emp_wit_c': emp_wit_c, 'emp_wit_s': emp_wit_s,
+        'tlt_wit_p': tlt_wit_p, 'tlt_wit_a': tlt_wit_a, 'tlt_wit_d': tlt_wit_d, 'tlt_wit_c': tlt_wit_c, 'tlt_wit_s': tlt_wit_s,
         }
         return render(request, template, context)
 

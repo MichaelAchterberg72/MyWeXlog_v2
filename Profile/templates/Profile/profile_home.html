@@ -4,137 +4,174 @@
 {% block title %}My {{block.super}}{% endblock title %}
 
 {% block intro %}
-{% if not list_view %}
-
-<div class="row">
-  <div class="col-sm-12">
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Introduction Walkthrough</h5>
-        <form class="float-right" action="" method="POST" id="ExpandedIntroWalkthroughForm">
-
-          {% csrf_token %}
-        {% if not list_view %}
-        <div>
-          <button type="submit" class="btn btn-secondary float-left" id='check_all' name="button">Dont view this again!</button>
-        {% else %}
-          <button type="submit" class="btn btn-primary float-left" id='check_all' name="button">View Intro Walkthrough View</button>
-        {% endif %}
-        <a href="{% url 'Profile:IntroIntroduction' %}" class="btn btn-primary float-right">Intoduction Wizard</a>.
+  {% if not list_view %}
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Introduction Walkthrough</h5>
+            <form class="float-right" action="" method="POST" id="ExpandedIntroWalkthroughForm">
+              {% csrf_token %}
+              <div>
+                {% if not list_view %}
+                  <button type="submit" class="btn btn-secondary float-left" id='check_all' name="button">
+                    Dont view this again!
+                  </button>&nbsp&nbsp
+                {% else %}
+                  <button type="submit" class="btn btn-primary float-left" id='check_all' name="button">
+                    View Intro Walkthrough View
+                  </button>&nbsp&nbsp
+                {% endif %}
+                  <a href="{% url 'Profile:IntroIntroduction' %}" class="btn btn-primary float-right">
+                    Intoduction Wizard
+                  </a>
+              </div>
+            </form>
+          </div>
         </div>
-        </form>
       </div>
     </div>
-  </div>
-</div>
-  <br>
-<div>
-{% else %}
-{% endif %}
+    <br>
+    <div>
+  {% endif %}
 {% endblock intro %}
 
 {% block network %}
-<p>Summary of people within 5 levels of your network</p>
-<h6>There are {{ tot }} people in your network tree</h6>
-<table class="table table-sm">
-  <thead>
-    <tr>
-      <th class="align-middle text-center">Level 1</th>
-      <th class="align-middle text-center">Level 2</th>
-      <th class="align-middle text-center">Level 3</th>
-      <th class="align-middle text-center">Level 4</th>
-      <th class="align-middle text-center">Level 5</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td class="align-middle text-center">{{ lvl_1 }}</td>
-      <td class="align-middle text-center">{{ lvl_2 }}</td>
-      <td class="align-middle text-center">{{ lvl_3 }}</td>
-      <td class="align-middle text-center">{{ lvl_4 }}</td>
-      <td class="align-middle text-center">{{ lvl_5 }}</td>
-    </tr>
-  </tbody>
-</table>
-<div class="">
-  <p>
-    Referral link:
-    <hr>
-    <input type="text" class="form-control" value="{{ referral_code.url }}" id="myInput"><button class="btn btn-secondary float-right" id="myButton">Copy Link</button>
-    <hr>
-    Copy and past the above url address into an email or a Social Netowrk Post for your firends to join MyWeXlog in your network.
-  </p>
-</div>
-
-{% endblock network %}
-
-{% block workflow %}
+  <p>Summary of people within 5 levels of your network</p>
+  <h6>There are {{ tot }} people in your network tree</h6>
   <table class="table table-sm">
     <thead>
       <tr>
-        <th></th>
-        <th class="align-middle text-center">As Employer</th>
-        <th class="align-middle text-center">As Talent</th>
+        <th class="align-middle text-center">Level 1</th>
+        <th class="align-middle text-center">Level 2</th>
+        <th class="align-middle text-center">Level 3</th>
+        <th class="align-middle text-center">Level 4</th>
+        <th class="align-middle text-center">Level 5</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td class="align-middle text-center">Interviews Pending</td>
-        <td class="align-middle text-center">
-          <a href="{% url 'MarketPlace:EmployerInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 10rem">Interview History</a>
-          <br>
-          {% if interviews_emp %}
-            {{ interviews_empc }}
-          {% else %}
-            None
-          {% endif %}
-        </td>
-        <td class="align-middle text-center">
-          <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary 8rem" style="width: 10rem">Interview History</a>
-          <br>
-          {% if interviews_tlt %}
-            {{ interviews_tltc }}
-          {% else %}
-            None
-          {% endif %}
-        </td>
+        <td class="align-middle text-center">{{ lvl_1 }}</td>
+        <td class="align-middle text-center">{{ lvl_2 }}</td>
+        <td class="align-middle text-center">{{ lvl_3 }}</td>
+        <td class="align-middle text-center">{{ lvl_4 }}</td>
+        <td class="align-middle text-center">{{ lvl_5 }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="">
+    <p>
+      Referral link:
+      <hr>
+      <input type="text" class="form-control" value="{{ referral_code.url }}" id="myInput"><button class="btn btn-secondary float-right" id="myButton">Copy Link</button>
+      <hr>
+      Copy and past the above url address into an email or a Social Netowrk Post for your firends to join MyWeXlog in your network.
+    </p>
+  </div>
+
+{% endblock network %}
+
+{% block workflow %}
+<div class="float-right">
+  <a href="{% url 'MarketPlace:EmployerInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 10rem">
+    Employer History
+  </a>
+  &nbsp
+  <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary 8rem" style="width: 10rem">
+    Candidate History
+  </a>
+</div>
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th class="align-middle text-center" rowspan="2">As</th>
+        <th class="align-middle text-center" colspan="4">Interviews</th>
+      </tr>
+      <tr>
+        <th class="align-middle text-center" data-toggle="tooltip" title="Invitation sent, awaiting Candidate response">
+          Pending
+        </th>
+        <th class="align-middle text-center" data-toggle="tooltip" title="Candidate accpeted, awaiting interview">
+          Open
+        </th>
+        <th class="align-middle text-center" data-toggle="tooltip" title="Invitation sent, Candidate declined">
+          Decline
+        </th>
+        <th class="align-middle text-center" data-toggle="tooltip" title="Interview completed">
+          Closed
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th class="align-middle text-center">Employer</th>
+        <td class="align-middle text-center">{{ emp_bil_qs_p }}</td>
+        <td class="align-middle text-center">{{ emp_bil_qs_a }}</td>
+        <td class="align-middle text-center">{{ emp_bil_qs_d }}</td>
+        <td class="align-middle text-center">{{ emp_bil_qs_i }}</td>
+      </tr>
+      <tr>
+        <th class="align-middle text-center">Candidate</th>
+        <td class="align-middle text-center">{{ tlt_bil_qs_p }}</td>
+        <td class="align-middle text-center">{{ tlt_bil_qs_a }}</td>
+        <td class="align-middle text-center">{{ tlt_bil_qs_d }}</td>
+        <td class="align-middle text-center">{{ tlt_bil_qs_i }}</td>
       </tr>
     </tbody>
   </table>
 {% endblock workflow %}
 
 {% block score %}
+  <div class="float-right">
+    <a href="{% url 'Profile:WorkshopEmp' %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 10rem">
+      Employer Office
+    </a> &nbsp
+    <a href="{% url 'Profile:WorkshopTlt' %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 10rem">
+      Talent Workshop
+    </a>
+  </div>
   <table class="table table-sm">
     <thead>
       <tr>
-        <th class="align-middle text-center">Detail</th>
-        <th class="align-middle text-center">As Employer</th>
-        <th class="align-middle text-center">As Talent</th>
+        <th class="align-middle text-center" rowspan="2">As</th>
+        <th class="align-middle text-center" colspan="5">Assignments</th>
+      </tr>
+      <tr>
+        <th class="align-middle text-center" data-toggle="tooltip" title="Issued, not accepted">
+          Pending
+        </th>
+        <th class="align-middle text-center" data-toggle="tooltip" title="Accepted, assignment not complete">
+          Accepted
+        </th>
+        <th class="align-middle text-center" data-toggle="tooltip" title="Issued, Candidate waiting for requested information">
+          Info
+        </th>
+        <th class="align-middle text-center" data-toggle="tooltip" title="Issued, Candidate rejected">
+          Rejected
+        </th>
+        <th class="align-middle text-center" data-toggle="tooltip" title="Work completed">
+          Closed
+        </th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td class="align-middle text-center">Open Assignments</td>
-        <td class="align-middle text-center">
-          <a href="{% url 'Profile:WorkshopEmp' %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 10rem">
-            Enter Office
-          </a>
-          <br>
-          {% if open_assignments_empc  %}
-            {{ open_assignments_empc }}
-          {% else %}
-            None
-          {% endif %}
-        </td>
-        <td class="align-middle text-center">
-          <a href="{% url 'Profile:WorkshopTlt' %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 10rem">Enter Workshop</a>
-          <br>
-          {% if open_assignments_tltc  %}
-            {{ open_assignments_tltc }}
-          {% else %}
-            None
-          {% endif %}
-        </td>
+        <th class="align-middle text-center">Employer</th>
+        <td class="align-middle text-center">{{ emp_wit_p }}</td>
+        <td class="align-middle text-center">{{ emp_wit_a }}</td>
+        <td class="align-middle text-center">{{ emp_wit_c }}</td>
+        <td class="align-middle text-center">{{ emp_wit_d }}</td>
+        <td class="align-middle text-center">{{ emp_wit_s }}</td>
+
+      </tr>
+      <tr>
+        <th class="align-middle text-center">Candidate</th>
+        <td class="align-middle text-center">{{ tlt_wit_p }}</td>
+        <td class="align-middle text-center">{{ tlt_wit_a }}</td>
+        <td class="align-middle text-center">{{ tlt_wit_c }}</td>
+        <td class="align-middle text-center">{{ tlt_wit_d }}</td>
+        <td class="align-middle text-center">{{ tlt_wit_s }}</td>
+
       </tr>
     </tbody>
   </table>
