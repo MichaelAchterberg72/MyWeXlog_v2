@@ -20,7 +20,7 @@ class Invitation(models.Model):
     name = models.CharField('First Name', max_length=45)
     surname = models.CharField('Surname', max_length=45)
     experience = models.ForeignKey(WorkExperience, on_delete=models.PROTECT, null=True)
-    worked_for = models.ForeignKey(Branch, on_delete=models.PROTECT, verbose_name='Who did they work for at the time', null=True)
+    companybranch = models.ForeignKey(Branch, on_delete=models.PROTECT, verbose_name='Who did they work for at the time', null=True)
     relationship = models.CharField(max_length=2, choices=WREL, null=True)
     invited_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     email = models.EmailField(unique=True)

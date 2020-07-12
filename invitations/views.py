@@ -66,7 +66,7 @@ def InvitationView(request, tex):
 
             name = cd['name']
             surname = cd['surname']
-            worked_for = cd['worked_for']
+            companybranch = cd['companybranch']
             invitee = cd['email']
 
             subject = f"Invitation to MyWeXlog"

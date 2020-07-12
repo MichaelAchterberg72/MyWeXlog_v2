@@ -50,10 +50,10 @@ class DesignationSelect2Widget(DesignationSearchFieldMixin, ModelSelect2Widget):
 
 class BranchSearchFieldMixin:
     search_fields = [
-        'name__icontains', 'pk__startswith'
+        'pk__startswith', 'company__name__icontains', 'type__type__icontains', 'city__city__icontains', 'region__region__icontains'
     ]
 
-class BranchSelect2Widget(BranchSearchFieldMixin, ModelSelect2Widget):
+class BranchWidget(BranchSearchFieldMixin, ModelSelect2Widget):
     model = Branch
 
     def create_value(self, value):
@@ -71,7 +71,7 @@ class BriefCareerHistoryForm(forms.ModelForm):
         model = BriefCareerHistory
         fields = ('work_configeration', 'companybranch', 'date_from', 'date_to', 'designation',)
         widgets = {
-            'companybranch': BranchSelect2Widget(),
+            'companybranch': BranchWidget(),
             'date_from': DateInput(),
             'date_to': DateInput(),
             'designation': DesignationSelect2Widget(),
@@ -147,8 +147,8 @@ class ProfileForm(forms.ModelForm):
     def clean_birth_date(self):
         birth_date = self.cleaned_data.get("birth_date")
         age = int((timezone.now().date() - birth_date).days/365.25)
-        if age < 16:
-            raise forms.ValidationError("You need to be older than 16 to use MyWeXlog")
+        if age < 18:
+            raise forms.ValidationError("You need to be older than 18 to use MyWeXlog")
         else:
             return birth_date
 
@@ -173,13 +173,13 @@ class CompanySearchFieldMixin:
 
 class CitySearchFieldMixin:
     search_fields = [
-        'city__icontains', 'pk__startswith'
+        'city__icontains', 'pk__startswith', 'region__region__icontains',
     ]
     dependent_fields={'region': 'region'}
 
 class SuburbSearchFieldMixin:
     search_fields = [
-        'suburb__icontains', 'pk__startswith'
+        'suburb__icontains', 'pk__startswith', 'city__city__icontains',
     ]
     dependent_fields={'city': 'city'}
 

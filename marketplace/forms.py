@@ -27,7 +27,7 @@ from db_flatten.models import SkillTag, LanguageList
 #>>> Select 2
 class BranchSearchFieldMixin:
     search_fields = [
-        'name__icontains', 'pk__startswith'
+        'name__icontains', 'pk__startswith', 'company__name__icontains', 'city__city__icontains', 'region__region__icontains',
     ]
 
 class BranchSelect2Widget(BranchSearchFieldMixin, ModelSelect2Widget):
@@ -62,7 +62,7 @@ class VacancySkillSelect2Widget(VacancySkillSearchFieldMixin, ModelSelect2Widget
 
 class CurrencySearchFieldMixin:
     search_fields = [
-        'currency_name__icontains', 'pk__startswith'
+        'currency_name__icontains', 'pk__startswith', 'currency_abv__icontains',
     ]
 
 class CurrencySelect2Widget(CurrencySearchFieldMixin, ModelSelect2Widget):
@@ -73,7 +73,7 @@ class CurrencySelect2Widget(CurrencySearchFieldMixin, ModelSelect2Widget):
 
 class CitySearchFieldMixin:
     search_fields = [
-        'city__icontains', 'pk__startswith'
+        'city__icontains', 'pk__startswith', 'region__region__icontains',
     ]
 
 class CitySelect2Widget(CitySearchFieldMixin, ModelSelect2Widget):
@@ -85,7 +85,7 @@ class CitySelect2Widget(CitySearchFieldMixin, ModelSelect2Widget):
 
 class CertSearchFieldMixin:
     search_fields = [
-        'type__icontains', 'pk__startswith'
+        'certification__type__icontains', 'pk__startswith','region__region__icontains', 'companybranch__company__name__icontains',
     ]
 
 class CertModelSelect2MultipleWidget(CertSearchFieldMixin, ModelSelect2MultipleWidget):

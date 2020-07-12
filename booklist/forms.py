@@ -66,7 +66,7 @@ class GenreWidget(GenreSearchFieldMixin, ModelSelect2MultipleWidget):
 
 class BookSearchFieldMixin:
     search_fields = [
-        'title__icontains', 'pk__startswith'
+        'title__icontains', 'pk__startswith', 'author__name__icontains',
     ]
 
 

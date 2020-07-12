@@ -12,7 +12,7 @@ from django_select2.forms import (
 
 class BranchSearchFieldMixin:
     search_fields = [
-        'name__icontains', 'pk__startswith'
+        'name__icontains', 'pk__startswith', 'company__name__icontains',
     ]
 
 class BranchSelect2Widget(BranchSearchFieldMixin, ModelSelect2Widget):
@@ -25,9 +25,9 @@ class BranchSelect2Widget(BranchSearchFieldMixin, ModelSelect2Widget):
 class InvitationForm(forms.ModelForm):
     class Meta:
         model = Invitation
-        fields = ('name', 'surname', 'worked_for', 'email')
+        fields = ('name', 'surname', 'companybranch', 'email')
         widgets = {
-            'worked_for':  BranchSelect2Widget(),
+            'companybranch':  BranchSelect2Widget(),
         }
 
 class InvitationLiteForm(forms.ModelForm):
