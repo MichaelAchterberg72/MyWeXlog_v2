@@ -37,7 +37,7 @@ from WeXlog.app_config import (
 from talenttrack.models import WorkExperience, LicenseCertification
 from db_flatten.models import SkillTag
 from users.models import CustomUser
-from Profile.models import Profile, LanguageTrack, PhysicalAddress
+from Profile.models import Profile, LanguageTrack, PhysicalAddress, BriefCareerHistory
 from booklist.models import ReadBy
 from marketplace.models import Branch
 
@@ -2815,7 +2815,12 @@ def DeliverablesAddView(request, vac):
 @csp_exempt
 @subscription(2)
 def VacancyView(request):
-    form = TalentRequiredForm(request.POST or None, request.FILES)
+    '''The view used to capture vacancies #capture #vacancies'''
+    #query to limit only companies to which user is currently working
+    company_qs = BriefCareerHistory.objects.filter(Q(current=True) & Q(talent=request.user)).values_list('companybranch__id', flat=True)
+
+    form = TalentRequiredForm(request.POST or None, request.FILES, company_qs=company_qs)
+
     if request.method == 'POST':
         if form.is_valid():
             new = form.save(commit=False)

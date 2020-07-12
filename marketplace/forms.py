@@ -239,13 +239,19 @@ class DeliverablesForm(forms.ModelForm):
 
 
 class TalentRequiredForm(forms.ModelForm):
+    companybranch = forms.ModelChoiceField(queryset=None)
+    def __init__(self, *args, **kwargs):
+        self.company_qs = kwargs.pop('company_qs', None)
+
+        super().__init__(*args, **kwargs)
+        self.fields['companybranch'].queryset = Branch.objects.filter(id__in=self.company_qs)
+
     class Meta:
         model = TalentRequired
         fields = ('title', 'companybranch', 'date_deadline', 'hours_required', 'unit', 'worklocation', 'rate_offered', 'rate_unit', 'currency', 'rate_unit', 'certification', 'scope', 'expectations', 'terms', 'city', 'experience_level', 'bid_closes', 'own_ref_no', 'language',)
         widgets={
             'city': CitySelect2Widget(),
             'currency': CurrencySelect2Widget(),
-            'companybranch': BranchSelect2Widget(),
             'language': LanguageWidget(),
             'date_deadline': DateInput(),
             'bid_closes': DateInput(),
