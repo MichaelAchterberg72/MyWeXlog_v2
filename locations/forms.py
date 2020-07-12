@@ -30,7 +30,7 @@ class RegionSelect2Widget(RegionSearchFieldMixin, ModelSelect2Widget):
 
 class SuburbSearchFieldMixin:
     search_fields = [
-        'suburb__icontains', 'pk__startswith'
+        'suburb__icontains', 'pk__startswith',
     ]
     dependent_fields={'city': 'city'}
 

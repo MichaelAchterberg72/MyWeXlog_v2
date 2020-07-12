@@ -66,7 +66,7 @@ class ResultWidget(ResultSearchFieldMixin, ModelSelect2Widget):
 class BranchSearchFieldMixin:
     dependent_fields = {'company': 'company'}
     search_fields = [
-        'name__icontains', 'pk__startswith'
+        'name__icontains', 'pk__startswith', 'company__name__icontains', 'city__city__icontains', 'region__region__icontains',
         ]
 
 
@@ -124,8 +124,9 @@ class DesignationSelect2Widget(DesignationSearchFieldMixin, ModelSelect2Widget):
 
 class ProjectSearchFieldMixin:
     search_fields = [
-        'name__icontains', 'pk__startswith'
+        'name__icontains', 'pk__startswith', 'company__name__icontains', 'region__region__icontains', 'city__city__icontains',
     ]
+    
 
 class ProjectSelect2Widget(ProjectSearchFieldMixin, ModelSelect2Widget):
     model = ProjectData

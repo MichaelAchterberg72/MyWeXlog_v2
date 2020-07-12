@@ -111,7 +111,7 @@ class Branch(models.Model):
         self.name = self.name.title()
 
     def __str__(self):
-        return f'{self.company}, {self.name}, {self.type}'
+        return f'{self.company}, {self.name}, {self.city}: {self.type}'
 
     def save(self, *args, **kwargs):
         if self.slug is None or self.slug == "":
