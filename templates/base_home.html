@@ -17,6 +17,8 @@
 
       <link rel="stylesheet" href="{% static 'css/wexlog_navbar_css.css' %}">
       <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="{% static 'css/dark-mode.css' %}">
+
 
       <title>{% block title %}MyWeXlog Dashboard{% endblock title %}</title>
   {% block Style %}
@@ -159,7 +161,10 @@
 
   <main>
     <div class="container pt-3">
-      <p>&nbsp</p>
+      <p><div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="darkSwitch">
+            <label class="custom-control-label" for="darkSwitch">Dark Mode</label>
+      </div></p>
       <br>
     {% block content %}
     {% endblock content %}
@@ -173,11 +178,10 @@
       <a class="navbar-brand" href="{% url 'Feedback:FeedBack' %}?next={{ request.path|urlencode }}"><i class="fa fa-bullhorn" aria-hidden="true" style="font-size:30px;color:black" data-toggle="tooltip" title="We love to hear your feedback!"></i></a>
 
       <div class="btn-group">
-      <a class="navbar-brand" href="{% url 'Feedback:NoticesList' %}?next={{ request.path|urlencode }}"><i class="fa fa-bell" aria-hidden="true" style="font-size:30px;color:black" data-toggle="tooltip" title="Please click here to view MyWeXlog Notices!"></i></a>
+      <a class="navbar-brand" href="{% url 'Feedback:NoticesList' %}?next={{ request.path|urlencode }}"><i class="fa fa-bell" aria-hidden="true" style="font-size:30px;" data-toggle="tooltip" title="Please click here to view MyWeXlog Notices!"></i></a>
+
       <a class="navbar-brand" href="{% url 'Users:UserAgreement' %}">User Agreement</a>
       <a class="navbar-brand" href="{% url 'Users:PrivacyPolicy' %}">Privacy Policy</a>
-
-
 
       <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <img src="{% static 'images/user-unisex-512.png' %}" height="45" width="45" class="avatar">
@@ -213,6 +217,7 @@
     <!-- Local JS -->
       <script src="{% static 'js/tooltip.js' %}"></script>
       <script src="{% static 'js/copy_text.js' %}"></script>
+      <script src="{% static 'js/dark-mode-switch.min.js' %}"></script>
     {% block Script %}
     {% endblock Script %}
   </body>
