@@ -96,3 +96,13 @@
   background-color: #303030 !important;
   color: #ffffff !important;
 }
+
+[data-theme="dark"] .page-link {
+  background-color: #303030 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .modal-content {
+  background-color: #303030 !important;
+  color: #ffffff !important;
+}
