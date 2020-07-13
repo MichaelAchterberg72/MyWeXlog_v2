@@ -172,7 +172,7 @@
   </main>
 
   {% if request.user.is_authenticated %}
-  <nav class="sticky-top navbar-light bg-light top-right-navbar right" style="height: 5rem;">
+  <nav class="sticky-top navbar-light dark top-right-navbar right" style="height: 5rem;">
     <div class="">
 
       <a class="navbar-brand" href="{% url 'Feedback:FeedBack' %}?next={{ request.path|urlencode }}"><i class="fa fa-bullhorn" aria-hidden="true" style="font-size:30px;color:black" data-toggle="tooltip" title="We love to hear your feedback!"></i></a>
