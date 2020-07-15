@@ -4,7 +4,7 @@
 }
 
 [data-theme="dark"] .bg-light {
-  background-color: #111 !important;
+  background-color: #333 !important;
 }
 
 [data-theme="dark"] .bg-white {
@@ -105,5 +105,10 @@
 
 [data-theme="dark"] .modal-content {
   background-color: #303030 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .table-hover tbody tr:hover td {
+  background-color: 	#808080 !important;
   color: #ffffff !important;
 }
