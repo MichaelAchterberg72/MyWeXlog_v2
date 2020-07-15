@@ -2366,7 +2366,11 @@ def get_topic_id(request):
 @login_required()
 @csp_exempt
 def DesignationAddPopup(request):
-    form = DesignationForm(request.POST or None)
+    cap_des = set(Designation.objects.all().values_list('name', flat=True))
+    filt = cap_des
+
+    form = DesignationForm(request.POST or None, pwd=filt)
+
     if request.method == 'POST':
         if form.is_valid():
             instance=form.save(commit=False)
