@@ -163,13 +163,13 @@ def BranchEditView(request, bch):
                 next_url = redirect(reverse('Profile:ProfileView', kwargs={'tlt':request.user.alias}))
             return HttpResponseRedirect(next_url)
         else:
-            context = {'form': form}
-            template = 'enterprises/branch_add.html'
+            context = {'form': form, 'info2': info2}
+            template = 'enterprises/branch_edit.html'
             return render(request, template, context)
 
     else:
-        context = {'form': form}
-        template = 'enterprises/branch_add.html'
+        context = {'form': form, 'info2': info2}
+        template = 'enterprises/branch_edit.html'
         return render(request, template, context)
 
 
@@ -178,7 +178,6 @@ def BranchEditView(request, bch):
 #this view autopopulated the ebterprise field with the id in e_id
 def BranchAddView(request, cmp):
     form = BranchForm(request.POST or None)
-    cmp = cmp
     if request.method == 'POST':
 
         info = get_object_or_404(Enterprise, slug=cmp)
