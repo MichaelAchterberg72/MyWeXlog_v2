@@ -135,3 +135,16 @@ class EnterprisePopupForm(forms.ModelForm):
     class Meta:
         model = Enterprise
         fields = ('name', 'description', 'website')
+
+
+class EnterpriseBranchPopupForm(forms.ModelForm):
+    class Meta:
+        model = Branch
+        fields = ('company', 'name', 'type', 'size', 'phy_address_line1', 'phy_address_line2', 'country', 'region', 'city', 'suburb', 'code', 'industry',)
+        widgets={
+            'region': RegionSelect2Widget(),
+            'city': CitySelect2Widget(),
+            'suburb': SuburbSelect2Widget(),
+            'company': CompanySelect2Widget(),
+            'industry': IndSelect2Widget(),
+        }

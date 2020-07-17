@@ -15,6 +15,7 @@ urlpatterns = [
     path('help/add-enterprise/', views.HelpAddEnterpriseView, name='HelpAddEnterprise'),
     #pop-ups
     path('popup/add/', views.EnterpriseAddPopup, name="EnterpriseAddPop"),
+    path('popup/branch/add/', views.EnterpriseBranchAddPopup, name="EnterpriseBranchAddPop"),
     path('add/', views.EnterpriseAddView, name="EnterpriseAdd"),
     path('popup/ajax/get_enterprise_id/', views.get_enterprise_id, name="AJAX_GetEnterpriseID"),
     path('popup/industry/add/', views.IndustryAddPopup, name="IndustryAddPop"),

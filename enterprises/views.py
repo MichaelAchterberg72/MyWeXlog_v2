@@ -20,7 +20,7 @@ from .models import (
 
 
 from .forms import (
-    EnterprisePopupForm, BranchForm, PhoneNumberForm, IndustryPopUpForm, BranchTypePopUpForm, FullBranchForm
+    EnterprisePopupForm, BranchForm, PhoneNumberForm, IndustryPopUpForm, BranchTypePopUpForm, FullBranchForm, EnterpriseBranchPopupForm
 )
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -296,6 +296,26 @@ def EnterpriseAddPopup(request):
     else:
         context = {'form':form,}
         template = 'enterprises/enterprise_popup.html'
+        return render(request, template, context)
+
+
+@login_required()
+@csp_exempt
+def EnterpriseBranchAddPopup(request):
+    form = EnterpriseBranchPopupForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            instance=form.save(commit=False)
+            instance.save()
+            return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_company");</script>' % (instance.pk, instance))
+        else:
+            context = {'form':form,}
+            template = 'enterprises/enterprise_branch_popup.html'
+            return render(request, template, context)
+
+    else:
+        context = {'form':form,}
+        template = 'enterprises/enterprise_branch_popup.html'
         return render(request, template, context)
 
 
