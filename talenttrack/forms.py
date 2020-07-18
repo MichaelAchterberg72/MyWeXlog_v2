@@ -126,7 +126,7 @@ class ProjectSearchFieldMixin:
     search_fields = [
         'name__icontains', 'pk__startswith', 'company__name__icontains', 'region__region__icontains', 'city__city__icontains',
     ]
-    
+
 
 class ProjectSelect2Widget(ProjectSearchFieldMixin, ModelSelect2Widget):
     model = ProjectData
@@ -499,9 +499,23 @@ class WorkExperienceForm(forms.ModelForm):
 
 
 class DesignationForm(forms.ModelForm):
+    pwd = None
+    def __init__(self, *args, **kwargs):
+        global pwd
+        pwd = kwargs.pop('pwd')
+        super().__init__(*args, **kwargs)
+
     class Meta:
         model = Designation
         fields = ('name', )
+
+    def clean_designation(self):
+        designation_passed = self.cleaned_data.get("name")
+        als = designation_passed
+
+        if als in pwd:
+            raise forms.ValidationError("An entry with this designation type has already been captured! Please enter another designation.")
+        return designation_passed
 
 
 class ClassMatesCommentForm(forms.ModelForm):

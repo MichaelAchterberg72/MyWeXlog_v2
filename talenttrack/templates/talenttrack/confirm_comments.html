@@ -39,7 +39,7 @@
         {{ form.confirm|as_crispy_field }}
         {{ form.comments|as_crispy_field }}
       <div class="">
-        <p><button type="submit" name="Done" class="btn btn-primary">Save</button></p>
+        <p><a href="{% url 'Profile:Confirm' %}" class="btn btn-danger">Cancel</a> <button type="submit" name="Done" class="btn btn-primary">Save</button></p>
       </div>
     </form>
 </div>

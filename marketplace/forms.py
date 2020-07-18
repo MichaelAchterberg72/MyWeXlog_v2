@@ -268,9 +268,9 @@ class TalentRequiredForm(forms.ModelForm):
             'own_ref_no': 'Own Internal Vacancy Reference Number',
             'companybranch': 'Company & Branch',
         }
-        help_texts = {
-            'own_ref_no': 'Maximum length: 7 Alpha-numeric characters'
-        }
+#Help_texts = {
+#            'own_ref_no': 'Maximum length: 7 Alpha-numeric characters'
+#        }
 
 
 class TalentRequiredEditForm(forms.ModelForm):

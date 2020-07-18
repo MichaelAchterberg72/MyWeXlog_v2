@@ -9,7 +9,8 @@
       <div class="col-sm-12">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">Introduction Walkthrough</h5>
+            <h3 class="card-title">Introduction Walkthrough</h3>
+            <p>We have created an introduction walkthrough to assist you in your first days using MyWeXlog and to provide you with an overview of how  MyWeXlog has been designed with the best way to use the system.
             <form class="float-right" action="" method="POST" id="ExpandedIntroWalkthroughForm">
               {% csrf_token %}
               <div>
@@ -208,7 +209,7 @@
   <br>
   <div class="text-center">
     {% if pfl.rate_count >= 5 %}
-      <p style="font-size:20px;color:black">
+      <p style="font-size:20px;">
         Your Rating:
         {% if pfl.avg_rate >= 0 and pfl.avg_rate < 0.5 %}
           <span><i class="fa fa-star-o" aria-hidden="true"></i></span>

@@ -20,7 +20,7 @@ from .models import (
 
 
 from .forms import (
-    EnterprisePopupForm, BranchForm, PhoneNumberForm, IndustryPopUpForm, BranchTypePopUpForm, FullBranchForm
+    EnterprisePopupForm, BranchForm, PhoneNumberForm, IndustryPopUpForm, BranchTypePopUpForm, FullBranchForm, EnterpriseBranchPopupForm
 )
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -163,13 +163,13 @@ def BranchEditView(request, bch):
                 next_url = redirect(reverse('Profile:ProfileView', kwargs={'tlt':request.user.alias}))
             return HttpResponseRedirect(next_url)
         else:
-            context = {'form': form}
-            template = 'enterprises/branch_add.html'
+            context = {'form': form, 'info2': info2}
+            template = 'enterprises/branch_edit.html'
             return render(request, template, context)
 
     else:
-        context = {'form': form}
-        template = 'enterprises/branch_add.html'
+        context = {'form': form, 'info2': info2}
+        template = 'enterprises/branch_edit.html'
         return render(request, template, context)
 
 
@@ -178,7 +178,6 @@ def BranchEditView(request, bch):
 #this view autopopulated the ebterprise field with the id in e_id
 def BranchAddView(request, cmp):
     form = BranchForm(request.POST or None)
-    cmp = cmp
     if request.method == 'POST':
 
         info = get_object_or_404(Enterprise, slug=cmp)
@@ -297,6 +296,26 @@ def EnterpriseAddPopup(request):
     else:
         context = {'form':form,}
         template = 'enterprises/enterprise_popup.html'
+        return render(request, template, context)
+
+
+@login_required()
+@csp_exempt
+def EnterpriseBranchAddPopup(request):
+    form = EnterpriseBranchPopupForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            instance=form.save(commit=False)
+            instance.save()
+            return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_company");</script>' % (instance.pk, instance))
+        else:
+            context = {'form':form,}
+            template = 'enterprises/enterprise_branch_popup.html'
+            return render(request, template, context)
+
+    else:
+        context = {'form':form,}
+        template = 'enterprises/enterprise_branch_popup.html'
         return render(request, template, context)
 
 
