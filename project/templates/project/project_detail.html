@@ -75,7 +75,7 @@
                 <p class="text-right"><a href="{% url 'Project:HoursOnProject' info.slug %}?next={{ request.path|urlencode }}" class="btn btn-primary">MyWeXlog Hours</a>
                   &nbsp
                 {% else %}
-                  <a href="#" class="btn btn-primary">Active Subscription Required</a></p>
+                  <a href="{% url 'Payments:ActiveSubscription' %}" class="btn btn-primary">Active Subscription Required</a></p>
                 {% endif %}
 
               </div>
