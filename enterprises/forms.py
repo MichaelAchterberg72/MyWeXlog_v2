@@ -131,10 +131,23 @@ class BranchTypePopUpForm(forms.ModelForm):
 
 
 class EnterprisePopupForm(forms.ModelForm):
+    pwd = None
+    def __init__(self, *args, **kwargs):
+        global pwd
+        pwd = kwargs.pop('pwd')
+        super().__init__(*args, **kwargs)
 
     class Meta:
         model = Enterprise
         fields = ('name', 'description', 'website')
+
+    def clean_company(self):
+        company_passed = self.cleaned_data.get("email")
+        als = company_passed
+
+        if als in pwd:
+            raise forms.ValidationError("A company with this name already exists! Please enter another name.")
+        return company_passed
 
 
 class EnterpriseBranchPopupForm(forms.ModelForm):

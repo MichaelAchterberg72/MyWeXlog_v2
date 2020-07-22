@@ -235,12 +235,20 @@ def on_backbutton_clicked(self, widget):
 @login_required()
 @csp_exempt
 def ProjectAddPopup(request):
-    form = ProjectAddForm(request.POST or None)
+    exist_project = set(ProjectData.objects.filter().values_list('name', flat=True))
+
+    filt = exist_project
+
+    form = ProjectAddForm(request.POST or None, pwd=filt)
     if request.method == 'POST':
         if form.is_valid():
             instance=form.save(commit=False)
             instance.save()
             return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_project");</script>' % (instance.pk, instance))
+        else:
+            context = {'form':form,}
+            template = 'project/project_add_popup.html'
+            return render(request, template, context)
     else:
         context = {'form':form,}
         template = 'project/project_add_popup.html'
