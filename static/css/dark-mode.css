@@ -24,7 +24,7 @@
 }
 
 [data-theme="dark"] .navbar-brand {
-  background-color: #111 !important;
+  background-color: #transparent !important;
   color: #ffffff !important;
 }
 
@@ -53,7 +53,7 @@
   color: #ffffff !important;
 }
 
-[data-theme="dark"] .form-control {
+[data-theme="dark"] .textinput {
   background-color: #303030 !important;
   color: #ffffff !important;
 }
@@ -81,6 +81,10 @@
 [data-theme="dark"] .select2-container {
   background-color: #303030 !important;
   color: #ffffff !important;
+}
+
+[data-theme="dark"] .select2-container--default .select2-selection--multiple .select2-selection__choice {
+  color: #000000 !important;
 }
 
 [data-theme="dark"] .select2-search {
