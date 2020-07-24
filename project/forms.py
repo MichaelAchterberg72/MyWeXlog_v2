@@ -93,7 +93,7 @@ class ProjectAddForm(forms.ModelForm):
         }
 
     def clean_project(self):
-        project_passed = self.cleaned_data.get("email")
+        project_passed = self.cleaned_data.get("name")
         als = project_passed
 
         if als in pwd:

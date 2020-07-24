@@ -22,6 +22,7 @@ from locations.models import Currency, City
 from enterprises.models import Branch
 from talenttrack.models import Result
 from db_flatten.models import SkillTag, LanguageList
+from talenttrack.forms import DesignationSelect2Widget
 
 
 #>>> Select 2
@@ -248,10 +249,11 @@ class TalentRequiredForm(forms.ModelForm):
 
     class Meta:
         model = TalentRequired
-        fields = ('title', 'companybranch', 'date_deadline', 'hours_required', 'unit', 'worklocation', 'rate_offered', 'rate_unit', 'currency', 'rate_unit', 'certification', 'scope', 'expectations', 'terms', 'city', 'experience_level', 'bid_closes', 'own_ref_no', 'language',)
+        fields = ('title', 'companybranch', 'designation', 'date_deadline', 'hours_required', 'unit', 'worklocation', 'rate_offered', 'rate_unit', 'currency', 'rate_unit', 'certification', 'scope', 'expectations', 'terms', 'city', 'experience_level', 'bid_closes', 'own_ref_no', 'language',)
         widgets={
             'city': CitySelect2Widget(),
             'currency': CurrencySelect2Widget(),
+            'designation': DesignationSelect2Widget(),
             'language': LanguageWidget(),
             'date_deadline': DateInput(),
             'bid_closes': DateInput(),
@@ -276,9 +278,10 @@ class TalentRequiredForm(forms.ModelForm):
 class TalentRequiredEditForm(forms.ModelForm):
     class Meta:
         model = TalentRequired
-        fields = ('title', 'companybranch', 'date_deadline', 'hours_required', 'unit', 'worklocation', 'rate_offered', 'rate_unit', 'currency', 'rate_unit', 'offer_status', 'certification', 'scope', 'expectations', 'terms', 'city', 'experience_level', 'bid_closes', 'own_ref_no', 'language')
+        fields = ('title', 'designation', 'companybranch', 'date_deadline', 'hours_required', 'unit', 'worklocation', 'rate_offered', 'rate_unit', 'currency', 'rate_unit', 'offer_status', 'certification', 'scope', 'expectations', 'terms', 'city', 'experience_level', 'bid_closes', 'own_ref_no', 'language')
         widgets={
             'city': CitySelect2Widget(),
+            'designation': DesignationSelect2Widget(),
             'currency': CurrencySelect2Widget(),
             'companybranch': BranchSelect2Widget(),
             'language': LanguageWidget(),

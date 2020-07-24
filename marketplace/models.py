@@ -14,7 +14,7 @@ from users.models import CustomUser
 from enterprises.models import Branch
 from locations.models import Currency, City
 from db_flatten.models import SkillTag, LanguageList
-from talenttrack.models import Result
+from talenttrack.models import Result, Designation
 
 #This is the table that specifies the work configuration (Freelance, Remote Freelence, Consultant, Contractor, Employee, FIFO)
 class WorkLocation(models.Model):
@@ -99,6 +99,7 @@ class TalentRequired(models.Model):
     title = models.CharField(max_length=250)
     ref_no = models.CharField(max_length=10, unique=True, null=True, blank=True)#SlugField
     own_ref_no = models.CharField(max_length=100, unique=True, null=True, blank=True)
+    designation = models.ForeignKey(Designation, on_delete=models.PROTECT, null=True)
     companybranch = models.ForeignKey(Branch, on_delete=models.CASCADE, verbose_name="Company Branch")
     requested_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     date_deadline = models.DateField('Work completed by')

@@ -142,7 +142,7 @@ class EnterprisePopupForm(forms.ModelForm):
         fields = ('name', 'description', 'website')
 
     def clean_company(self):
-        company_passed = self.cleaned_data.get("email")
+        company_passed = self.cleaned_data.get("name")
         als = company_passed
 
         if als in pwd:

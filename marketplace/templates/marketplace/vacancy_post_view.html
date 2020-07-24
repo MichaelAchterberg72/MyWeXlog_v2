@@ -28,28 +28,40 @@
       </div>
       <h3>Vacancy Review</h3>
       <h5 class="card-title">Vacancy: {{ instance.title }} ({{ instance.ref_no }})</h5>
-
       <table class="table table-sm">
         <thead>
           <tr>
             <th class="align-middle text-center">Own Ref No.</th>
-            <th class="align-middle text-center">Hours Required</th>
-            <th class="align-middle text-center">Work Format</th>
-            <th class="align-middle text-center">Office Location</th>
-            <th class="align-middle text-center">Experience Level</th>
             <th class="align-middle text-center">Company</th>
+            <th class="align-middle text-center">Designation</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td class="align-middle text-center">{{ instance.own_ref_no }}</td>
+            <td class="align-middle text-center">{{ instance.companybranch.company }}</td>
+            <td class="align-middle text-center">{{ instance.designation }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <br>
+      <table class="table table-sm">
+        <thead>
+          <tr>
+            <th class="align-middle text-center">Hours Required</th>
+            <th class="align-middle text-center">Work Format</th>
+            <th class="align-middle text-center">Office Location</th>
+            <th class="align-middle text-center">Experience Level</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
             <td class="align-middle text-center">
               {{ instance.hours_required|intcomma }} ({{ instance.get_unit_display }})
             </td>
             <td class="align-middle text-center">{{ instance.worklocation }}</td>
             <td class="align-middle text-center">{{ instance.city.city }}</td>
             <td class="align-middle text-center">{{ instance.experience_level }}</td>
-            <td class="align-middle text-center">{{ instance.companybranch.company }}</td>
           </tr>
         </tbody>
       </table>

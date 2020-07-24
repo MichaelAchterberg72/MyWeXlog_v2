@@ -33,6 +33,12 @@
             <div class="form-group col-md-6 mb-0">
               {{ form.title|as_crispy_field }}
               {{ form.own_ref_no|as_crispy_field }}
+              {{ form.designation|as_crispy_field }}
+              <p>
+                <a href="{% url 'Talent:DesignationAddPop' %}" id='add_designation' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">
+                  Add Designation
+                </a>
+              </p>
               {{ form.companybranch|as_crispy_field }}
               <p><a href="{% url 'Enterprise:BranchAddPop' %}" id='add_branch' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a Company Branch</a></p>
               <div class="form-row">
