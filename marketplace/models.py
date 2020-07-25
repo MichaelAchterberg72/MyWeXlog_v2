@@ -201,6 +201,7 @@ class BidInterviewList(models.Model):
         ('A','Accept Interview'),
         ('D','Decline Interview'),
         ('N','Not Interviewed'),
+        ('Z', 'Offered Vacancy without Interview')
     )
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='Interviewed')
     scope = models.ForeignKey(TalentRequired, on_delete=models.CASCADE)

@@ -2495,6 +2495,12 @@ def TalentAssign(request, tlt, vac):
             new.tlt_response = 'P'#4
             new.save()
 
+            #clearing interview table
+            if iview_list:
+                iview_list.update(outcome='P')
+                if iview_list[0].tlt_response == 'P':
+                    iview_list.update(tlt_response = 'Z', tlt_intcomplete=True, emp_intcomplete=True)
+
             s_list.filter(talent=talent).update(status='P')#2
 
             job.vac_wkfl = 'S'

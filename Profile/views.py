@@ -891,7 +891,11 @@ def AssignmentAcceptView(request, slug):
     bsl_qs.filter(talent=tlt).update(status='A')#3
     bsl_qs.filter(~Q(talent=tlt)).update(status='R')#4
 
-    BidInterviewList.objects.filter(Q(talent=tlt) & Q(scope=vac)).update(outcome='A')#7
+    bil = BidInterviewList.objects.filter(Q(talent=tlt) & Q(scope=vac))
+    if bil:
+        bil.update(outcome='A', tlt_intcomplete=True, emp_intcomplete=True)#7
+        if bil[0].tlt_response == 'P':
+            bil.update(tlt_response = 'Z')
 
     wb_qs = WorkBid.objects.filter(Q(work=vac))
     if wb_qs:
