@@ -14,31 +14,32 @@
     <form method="post" enctype="multipart/form-data">
       <input type="hidden" name="next" value="{{ request.GET.next }}">
       {% csrf_token %}
-      <div class="form-row">
-          <div class="form-group col-md-6 mb-0">
-            <div class="form-row">
-              <div class="form-group col-md-4 mb-0">
-                {{ form.currency|as_crispy_field }}
-              </div>
-              <div class="form-group col-md-4 mb-0">
-                {{ form.rate_offered|as_crispy_field }}
-              </div>
-              <div class="form-group col-md-4 mb-0">
-                {{ form.rate_unit|as_crispy_field }}
-              </div>
-            </div>
-          </div>
-          <div class="form-group col-md-6 mb-0">
-            <div class="form-row">
-              <div class="form-group col-md-5 mb-0">
-                {{ form.date_begin|as_crispy_field }}
-              </div>
-              <div class="form-group col-md-5 mb-0">
-                {{ form.date_deliverable|as_crispy_field }}
-              </div>
-            </div>
-          </div>
-        </div>
+      <table class="table table-sm">
+        <thead>
+
+        </thead>
+        <tbody>
+          <tr>
+            <td class="align-middle text-center">
+              <h5>
+                <strong>
+                  {{ job.currency }}
+                </strong>
+              </h5>
+            </td>
+            <td>{{ form.rate_offered|as_crispy_field }}</td>
+            <td class="align-middle text-center">
+              <h5>
+                <strong>
+                  {{ job.get_rate_unit_display }}
+                </strong>
+              </h5>
+            </td>
+            <td>{{ form.date_begin|as_crispy_field }}</td>
+            <td>{{ form.date_deliverable|as_crispy_field }}</td>
+          </tr>
+        </tbody>
+      </table>
         <div class="">
           <a href="{% url 'MarketPlace:InterviewList' job.ref_no %}" class="btn btn-danger">Cancel</a>
           <button type="submit" name="done" class="btn btn-primary">Assign</button>
@@ -63,18 +64,18 @@
         <tbody>
           <tr>
             <td class="align-middle text-center">
-              {{ job.currency }}<br><strong>{{ job.rate_offered }}</strong><br>{{ job.get_unit_display }}
+              {{ job.currency }}<br><strong>{{ job.rate_offered|intcomma }}</strong><br>{{ job.get_unit_display }}
             </td>
             <td class="align-middle text-center">
               {% if bids %}
                 {% for b in bids %}
-                  {{ b.currency }}<br><strong>{{ b.rate_bid }}</strong><br>{{ b.get_rate_unit_display }}
+                  {{ b.currency }}<br><strong>{{ b.rate_bid|intcomma }}</strong><br>{{ b.get_rate_unit_display }}
                 {% endfor %}
               {% else %}
                 {% if talent.subscription == 1 %}
-                  Could not bid (Passive Subscriber), their standard rate is<br>{{ pfl_qs.currency }} {{ pfl_qs.std_rate }} {{ pfl_qs.get_rate_unit_display }}
+                  Could not bid (Passive Subscriber), their standard rate is<br>{{ pfl_qs.currency }} {{ pfl_qs.std_rate|intcomma }} {{ pfl_qs.get_rate_unit_display }}
                 {% else %}
-                  No bid submitted.<br>Their standard rate is<br>{{ pfl_qs.currency }} {{ pfl_qs.std_rate }} {{ pfl_qs.get_rate_unit_display }}
+                  No bid submitted.<br>Their standard rate is<br>{{ pfl_qs.currency }} {{ pfl_qs.std_rate|intcomma }} {{ pfl_qs.get_rate_unit_display }}
                 {% endif %}
               {% endif %}
             </td>

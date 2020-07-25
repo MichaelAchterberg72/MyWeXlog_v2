@@ -2482,6 +2482,7 @@ def TalentAssign(request, tlt, vac):
     pfl_qs = Profile.objects.get(alias=tlt)
     bids = WorkBid.objects.filter(Q(work__ref_no=vac) & Q(talent__alias=tlt))
     s_list = BidShortList.objects.filter(scope__ref_no=vac)
+    iview_list = BidInterviewList.objects.filter(talent=talent, scope=job)
 
     form = AssignWorkForm(request.POST or None)
     if request.method == 'POST':
@@ -2489,6 +2490,8 @@ def TalentAssign(request, tlt, vac):
             new = form.save(commit=False)
             new.talent = talent
             new.work = job
+            new.currency = job.currency
+            new.rate_unit = job.rate_unit
             new.tlt_response = 'P'#4
             new.save()
 

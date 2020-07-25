@@ -157,7 +157,7 @@ class TalentInterViewComments(forms.ModelForm):
 class AssignWorkForm(forms.ModelForm):
     class Meta:
         model = WorkIssuedTo
-        fields = ('rate_offered', 'currency', 'rate_unit', 'date_begin', 'date_deliverable')
+        fields = ('rate_offered', 'date_begin', 'date_deliverable')
         labels = {
             'date_begin': 'Work Start Date',
             'date_deliverable': 'Work Completion Date',
