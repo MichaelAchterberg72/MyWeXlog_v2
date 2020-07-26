@@ -22,6 +22,7 @@
 
       <title>{% block title %}MyWeXlog Dashboard{% endblock title %}</title>
   {% block Style %}
+
   {% endblock Style %}
   </head>
   <body class="bg-light">
@@ -161,12 +162,17 @@
 
   <main>
     <div class="container pt-3">
-      <p><div class="custom-control custom-switch">
+      <p>
+        <div class="custom-control custom-switch">
             <input type="checkbox" class="custom-control-input" id="darkSwitch">
-            <label class="custom-control-label" for="darkSwitch">Dark Mode</label>
-      </div></p>
+            <label class="custom-control-label" for="darkSwitch">
+              Dark Mode
+            </label>
+        </div>
+      </p>
       <br>
     {% block content %}
+
     {% endblock content %}
     </div>
   </main>

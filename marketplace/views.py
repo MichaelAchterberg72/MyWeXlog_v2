@@ -39,7 +39,7 @@ from db_flatten.models import SkillTag
 from users.models import CustomUser
 from Profile.models import Profile, LanguageTrack, PhysicalAddress, BriefCareerHistory
 from booklist.models import ReadBy
-from marketplace.models import Branch
+from enterprises.models import Branch
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
@@ -2832,8 +2832,11 @@ def VacancyView(request):
     '''The view used to capture vacancies #capture #vacancies'''
     #query to limit only companies to which user is currently working
     company_qs = BriefCareerHistory.objects.filter(Q(current=True) & Q(talent=request.user)).values_list('companybranch__id', flat=True)
+    p_cap_qs = Branch.objects.filter(company__filter_class='S').values_list('id', flat=True)
 
-    form = TalentRequiredForm(request.POST or None, request.FILES, company_qs=company_qs)
+    qs = company_qs.union(p_cap_qs)
+
+    form = TalentRequiredForm(request.POST or None, request.FILES, company_qs=qs)
 
     if request.method == 'POST':
         if form.is_valid():
