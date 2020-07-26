@@ -19,10 +19,9 @@ from .models import (
     Topic, Result, CourseType, Course, Lecturer, ClassMates, WorkClient, WorkExperience, WorkColleague, Superior, WorkCollaborator, Designation, Achievements, LicenseCertification
     )
 
-from enterprises.models import Enterprise, Branch
+from enterprises.models import Enterprise, Branch, Industry
 from project.models import ProjectData
 from db_flatten.models import SkillTag
-from enterprises.models import Industry
 from users.models import CustomUser
 from locations.models import Region
 
@@ -41,14 +40,14 @@ class UserSelect2Widget(UserSearchFieldMixin, ModelSelect2Widget):
 
 class CompanySearchFieldMixin:
     search_fields = [
-        'name__icontains', 'pk__startswith'
+        'ename__icontains', 'pk__startswith'
         ]
 
 class CompanySelect2Widget(CompanySearchFieldMixin, ModelSelect2Widget):
     model = Enterprise
 
     def create_value(self, value):
-        self.get_queryset().create(name=value)
+        self.get_queryset().create(ename=value)
 
 
 class ResultSearchFieldMixin:
@@ -66,7 +65,7 @@ class ResultWidget(ResultSearchFieldMixin, ModelSelect2Widget):
 class BranchSearchFieldMixin:
     dependent_fields = {'company': 'company'}
     search_fields = [
-        'name__icontains', 'pk__startswith', 'company__name__icontains', 'city__city__icontains', 'region__region__icontains',
+        'name__icontains', 'pk__startswith', 'company__ename__icontains', 'city__city__icontains', 'region__region__icontains',
         ]
 
 
@@ -124,7 +123,7 @@ class DesignationSelect2Widget(DesignationSearchFieldMixin, ModelSelect2Widget):
 
 class ProjectSearchFieldMixin:
     search_fields = [
-        'name__icontains', 'pk__startswith', 'company__name__icontains', 'region__region__icontains', 'city__city__icontains',
+        'name__icontains', 'pk__startswith', 'company__ename__icontains', 'region__region__icontains', 'city__city__icontains',
     ]
 
 
@@ -307,7 +306,7 @@ class WorkClientSelectForm(forms.ModelForm):
         labels = {
             'companybranch': 'Branch'
         }
-        
+
     def clean_client_name(self):
         client_passed = self.cleaned_data.get("client_name")
         als = client_passed.id

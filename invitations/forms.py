@@ -12,7 +12,7 @@ from django_select2.forms import (
 
 class BranchSearchFieldMixin:
     search_fields = [
-        'name__icontains', 'pk__startswith', 'company__name__icontains',
+        'name__icontains', 'pk__startswith', 'company__ename__icontains',
     ]
 
 class BranchSelect2Widget(BranchSearchFieldMixin, ModelSelect2Widget):

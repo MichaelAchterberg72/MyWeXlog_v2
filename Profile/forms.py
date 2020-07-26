@@ -56,7 +56,7 @@ class DesignationSelect2Widget(DesignationSearchFieldMixin, ModelSelect2Widget):
 
 class BranchSearchFieldMixin:
     search_fields = [
-        'pk__startswith', 'company__name__icontains', 'type__type__icontains', 'city__city__icontains', 'region__region__icontains'
+        'pk__startswith', 'company__ename__icontains', 'type__type__icontains', 'city__city__icontains', 'region__region__icontains'
     ]
 
 class BranchWidget(BranchSearchFieldMixin, ModelSelect2Widget):

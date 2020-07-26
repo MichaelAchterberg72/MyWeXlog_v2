@@ -18,7 +18,7 @@ from locations.models import Region, City, Suburb
 
 class BranchSearchFieldMixin:
     search_fields = [
-        'name__icontains', 'pk__startswith', 'company__name__icontains', 'city__city__icontains', 'region__region__icontains',
+        'name__icontains', 'pk__startswith', 'company__ename__icontains', 'city__city__icontains', 'region__region__icontains',
         ]
     dependent_fields = {'company': 'company'}
 
