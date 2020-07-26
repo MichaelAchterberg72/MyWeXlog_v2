@@ -33,7 +33,7 @@ class RegionSearchFieldMixin:
     search_fields = [
         'region__icontains', 'pk__startswith'
     ]
-    dependent_fields = {'country': 'country'}
+    #dependent_fields = {'country': 'country'}
 
 
 class RegionSelect2Widget(RegionSearchFieldMixin, ModelSelect2Widget):
@@ -47,7 +47,7 @@ class SuburbSearchFieldMixin:
     search_fields = [
         'suburb__icontains', 'pk__startswith'
     ]
-    dependent_fields = {'city': 'city'}
+    #dependent_fields = {'city': 'city'}
 
 
 class SuburbSelect2Widget(SuburbSearchFieldMixin, ModelSelect2Widget):
@@ -61,7 +61,7 @@ class CitySearchFieldMixin:
     search_fields = [
         'city__icontains', 'pk__startswith'
     ]
-    dependent_fields = {'region': 'region'}
+    #dependent_fields = {'region': 'region'}
 
 class CitySelect2Widget(CitySearchFieldMixin, ModelSelect2Widget):
     model = City
@@ -72,14 +72,14 @@ class CitySelect2Widget(CitySearchFieldMixin, ModelSelect2Widget):
 
 class CompanySearchFieldMixin:
     search_fields = [
-        'name__icontains', 'pk__startswith'
+        'ename__icontains', 'pk__startswith'
     ]
 
 class CompanySelect2Widget(CompanySearchFieldMixin, ModelSelect2Widget):
     model = Enterprise
 
     def create_value(self, value):
-        self.get_queryset().create(name=value)
+        self.get_queryset().create(ename=value)
 
 class IndSearchFieldMixin:
     search_fields = [
@@ -97,6 +97,7 @@ class BranchForm(forms.ModelForm):
     class Meta:
         model = Branch
         fields = ('name', 'type', 'size', 'phy_address_line1', 'phy_address_line2', 'country', 'region', 'city', 'suburb', 'code', 'industry',)
+
         widgets={
             'region': RegionSelect2Widget(),
             'city': CitySelect2Widget(),
@@ -134,7 +135,7 @@ class EnterprisePopupForm(forms.ModelForm):
 
     class Meta:
         model = Enterprise
-        fields = ('name', 'description', 'website')
+        fields = ('ename', 'description', 'website')
 
 
 class EnterpriseBranchPopupForm(forms.ModelForm):

@@ -1,26 +1,95 @@
 {% extends 'base_home.html' %}
 {% load crispy_forms_tags %}
+{% load staticfiles %}
 
-{% block title %}My {{block.super}} Profile{% endblock title %}
+{% block title %}{{block.super}} Company{% endblock title %}
 
 
 {% block content %}
+{{ form.media.css }}
+<style type="text/css">
+  select {
+    width: 100px;
+  }
+</style>
+
 <div class="card border-0">
   <div class="card-body">
-<h4>Add a Company / Enterprise<span><p class="float-right">
-<a href="{% url 'Enterprise:HelpAddEnterprise' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
-<i class="icon icon-question-circle"></i></a>
-</p></span></h4>
-
-<form method="post" novalidate>
+    <h4>Add a Company / Enterprise
+      <span>
+        <p class="float-right">
+          <a href="{% url 'Enterprise:HelpAddEnterprise' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
+            <i class="icon icon-question-circle"></i>
+          </a>
+        </p>
+      </span>
+    </h4>
+  <form method="post" novalidate>
+    <input type="hidden" name="next" value="{{ request.GET.next }}">
   {% csrf_token %}
+    <div class="form-row">
+      <div class="form-group col-md-6 mb-0">
+        {{ form_e.ename|as_crispy_field }}
+        {{ form_e.website|as_crispy_field }}
+        <p>
+          Capture the company and then a branch. If there is only 1 branch name it "Head Office" with "Head Office" as the type, then complete the reamining fields.
+        </p>
+      </div>
+    <div class="form-group col-md-6 mb-0">
+      {{ form_e.description|as_crispy_field }}
+    </div>
+  </div>
   <div class="form-row">
     <div class="form-group col-md-6 mb-0">
-      {{ form.name|as_crispy_field }}
-      {{ form.website|as_crispy_field }}
+      {{ form_b.name|as_crispy_field }}
+      <div class="form-row">
+        <div class="form-group col-md-6 mb-0">
+          {{ form_b.type|as_crispy_field }}
+          <p>
+            <a href="{% url 'Enterprise:BranchTypeAddPop' %}" id='add_branch_type' onclick='return showAddPopup(this);'>
+              <img src = "{% static '/images/icon-addlink.svg' %}">
+                Add a new Branch Type
+            </a>
+          </p>
+        </div>
+        <div class="form-group col-md-6 mb-0" data-toggle="tooltip" data-placement="top" title="The number of people in the branch">
+          {{ form_b.size|as_crispy_field }}
+        </div>
+      </div>
+      {{ form_b.phy_address_line1|as_crispy_field }}
+      {{ form_b.phy_address_line2|as_crispy_field }}
+      {{ form_b.industry|as_crispy_field }}
+      <p>
+        <a href="{% url 'Enterprise:IndustryAddPop' %}" id='add_branch_industry' onclick='return showAddPopup(this);'>
+          <img src = "{% static '/images/icon-addlink.svg' %}">
+          Add a new Industry Type
+        </a>
+      </p>
     </div>
     <div class="form-group col-md-6 mb-0">
-      {{ form.description|as_crispy_field }}
+      {{ form_b.country|as_crispy_field }}
+      {{ form_b.region|as_crispy_field }}
+      <p>
+        <a href="{% url 'Location:RegionAddPop' %}" id='add_region' onclick='return showAddPopup(this);'>
+          <img src = "{% static '/images/icon-addlink.svg' %}">
+            Add a Region
+        </a>
+      </p>
+      {{ form_b.city|as_crispy_field }}
+      <p>
+        <a href="{% url 'Location:CityAddPop' %}" id='add_city' onclick='return showAddPopup(this);'>
+          <img src = "{% static '/images/icon-addlink.svg' %}">
+          Add a City
+        </a>
+      </p>
+      {{ form_b.suburb|as_crispy_field }}
+      <p>
+        <a href="{% url 'Location:SuburbAddPop' %}" id='add_suburb' onclick='return showAddPopup(this);'>
+          <img src = "{% static '/images/icon-addlink.svg' %}">
+          Add a Suburb
+        </a>
+      </p>
+      {{ form_b.code|as_crispy_field }}
     </div>
   </div>
   <div class="">
@@ -29,4 +98,29 @@
 </form>
 </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{{ form.media.js }}
 {% endblock content %}
+
+{% block Script %}
+<!-- code for popups -->
+<script type="text/javascript">
+function showAddPopup(triggeringLink) {
+    var name = triggeringLink.id.replace(/^add_/, '');
+    href = triggeringLink.href;
+    var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes');
+    win.focus();
+    return false;
+}
+
+function closePopup(win, newID, newRepr, id) {
+    $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
+    win.close();
+}
+
+window.onerror = function (msg) {
+  $("body").attr("JSError", msg);
+}
+</script>
+{% endblock Script %}

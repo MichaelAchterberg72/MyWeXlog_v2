@@ -6,7 +6,7 @@
 
 <div class="card border-0">
   <div class="card-body">
-  <h4 class="">Detail for {{ info.company.name }}'s {{ info.name }} branch</h4>
+  <h4 class="">Detail for {{ info.company.ename }}'s {{ info.name }} branch</h4>
 
     {% if request.user.is_authenticated %}
     <p><a href="{% url 'Enterprise:EditBranch' info.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Edit Branch</a>

@@ -28,9 +28,9 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 @login_required()
 def EnterpriseHome(request):
-    bcount = Branch.objects.all().aggregate(sum_b=Count('name'))
-    company = Enterprise.objects.all().order_by('name')
-    ecount = company.aggregate(sum_e=Count('name'))
+    bcount = Branch.objects.filter(company__filter_class='P').aggregate(sum_b=Count('name'))
+    company = Enterprise.objects.filter(filter_class='P').order_by('ename')
+    ecount = company.aggregate(sum_e=Count('ename'))
 
     try:
         page = int(request.GET.get('page', 1))
@@ -266,14 +266,25 @@ def FullBranchAddView(request):
 @login_required()
 @csp_exempt
 def EnterpriseAddView(request):
-    form = EnterprisePopupForm(request.POST or None)
+    form_e = EnterprisePopupForm(request.POST or None)
+    form_b = BranchForm(request.POST or None)
+
     if request.method == 'POST':
-        if form.is_valid():
-            instance=form.save(commit=False)
-            instance.save()
+        if form_e.is_valid() and form_b.is_valid():
+            instance_e = form_e.save(commit=False)
+            instance_b = form_b.save(commit=False)
+            instance_e.save()
+
+            instance_b.company = instance_e
+            instance_b.save()
+
             return redirect('Enterprise:EnterpriseHome')
+        else:
+            context = {'form_e':form_e, 'form_b':form_b,}
+            template = 'enterprises/enterprise_add.html'
+            return render(request, template, context)
     else:
-        context = {'form':form,}
+        context = {'form_e':form_e, 'form_b':form_b,}
         template = 'enterprises/enterprise_add.html'
         return render(request, template, context)
 
@@ -282,19 +293,20 @@ def EnterpriseAddView(request):
 @login_required()
 @csp_exempt
 def EnterpriseAddPopup(request):
-    form = EnterprisePopupForm(request.POST or None)
+    form_e = EnterprisePopupForm(request.POST or None)
+    #form_b = BranchForm(request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
-            instance=form.save(commit=False)
+            instance=form_e.save(commit=False)
             instance.save()
             return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_company");</script>' % (instance.pk, instance))
         else:
-            context = {'form':form,}
+            context = {'form_e':form_e,}
             template = 'enterprises/enterprise_popup.html'
             return render(request, template, context)
 
     else:
-        context = {'form':form,}
+        context = {'form_e':form_e,}
         template = 'enterprises/enterprise_popup.html'
         return render(request, template, context)
 
@@ -323,7 +335,7 @@ def EnterpriseBranchAddPopup(request):
 def get_enterprise_id(request):
     if request.is_ajax():
         company = request.Get['company']
-        company_id = Enterprise.objects.get(name = enterprise).id
+        company_id = Enterprise.objects.get(ename = enterprise).id
         data = {'company_id':company_id,}
         return HttpResponse(json.dumps(data), content_type='application/json')
     return HttpResponse("/")

@@ -307,6 +307,7 @@ class WorkClientSelectForm(forms.ModelForm):
         labels = {
             'companybranch': 'Branch'
         }
+        
     def clean_client_name(self):
         client_passed = self.cleaned_data.get("client_name")
         als = client_passed.id

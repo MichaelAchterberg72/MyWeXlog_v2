@@ -11,38 +11,53 @@
   select {
     width: 200px;
   }
-  </style>
-<div class="card">
-  <div class="card-body">
-<h3>Skills for {{ instance.title }}</h3>
-<form method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-  <div class="form-row">
-    <div class="form-group col-md-6 mb-0">
-      {{ form.skills|as_crispy_field }}
-      <p><a href="{% url 'Flatten:SkillAddPop' %}" id='add_skill' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a Required Skill</a></p>
+</style>
+<div class="row">
+  <div class="group col-md-6 mb-0">
+    <div class="card h-100">
+      <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+            <h4>Skills required for {{ instance.title }}</h4>
+              {{ form.skills|as_crispy_field }}
+            <p>
+              <a href="{% url 'Flatten:SkillAddPop' %}" id='add_skill' onclick='return showAddPopup(this);'>
+                <img src = "{% static '/images/icon-addlink.svg' %}">
+                  Add a Required Skill
+              </a>
+            </p>
+            <div class="">
+              <p>
+                <a href="{% url 'MarketPlace:VacancyPost' instance.ref_no %}#skills" class="btn btn-danger">
+                  Cancel
+                </a>
+                <button type="submit" name="done" class="btn btn-primary">
+                  Add
+                </button>
+              </p>
+            </div>
+        </form>
+      </div>
     </div>
   </div>
-  <div class="">
-    <p><a href="{% url 'MarketPlace:VacancyPost' instance.ref_no %}#skills" class="btn btn-danger">Cancel</a> <button type="submit" name="done" class="btn btn-primary">Add</button></p>
+  <div class="group col-md-6 mb-0">
+    <div class="card h-100">
+      <div class="card-body">
+        <h4>Skills already captured</h4>
+          <div class="list-group">
+            {% for s in skill_list %}
+              <ul>
+                <li>{{ s.skills }}</li>
+              </ul>
+            {% empty %}
+              <p>
+                No Skills Captured!
+              </p>
+            {% endfor %}
+          </div>
+        </div>
+    </div>
   </div>
-</form>
-</div>
-</div>
-<br>
-<div class="card">
-  <div class="card-body">
-{% if skill_list %}
-<h4>Skills already listed:</h4>
-<div class="container" style="width:95%">
-<ul class="list-group">
-  {% for s in skill_list %}
-    <li>{{ s.skills }}</li>
-  {% endfor %}
-  </ul>
-{% endif %}
-</div>
-</div>
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 {{ form.media.js }}

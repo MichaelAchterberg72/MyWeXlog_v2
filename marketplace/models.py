@@ -150,9 +150,8 @@ class SkillRequired(models.Model):
     skills = models.ForeignKey(SkillTag, on_delete=models.PROTECT)
     date_modified = models.DateField(auto_now=True)
 
-    class Meta:
-        unique_together = (('skills','scope'),)
-        pass
+    #class Meta:
+        #unique_together = (('skills','scope'),)
 
     def __str__(self):
         return f'{self.scope.title}'

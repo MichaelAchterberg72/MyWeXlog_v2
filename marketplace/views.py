@@ -2328,8 +2328,10 @@ def ApplicantsForVacancyListView(request, vac):
 @login_required()
 def VacancySkillsAddView(request, vac):
     instance = get_object_or_404(TalentRequired, ref_no=vac)
-    skill_list = SkillRequired.objects.filter(scope__ref_no=vac)
-    form = SkillRequiredForm(request.POST or None)
+    skill_list = SkillRequired.objects.filter(scope__ref_no=vac).order_by('skills')
+    skill_kwa = skill_list.values_list('skills', flat=True)
+
+    form = SkillRequiredForm(request.POST or None, dup = skill_kwa)
     if request.method == 'POST':
         if form.is_valid():
             new = form.save(commit=False)
@@ -2354,7 +2356,10 @@ def VacancySkillsAddView(request, vac):
 def VacancySkillsAdd2View(request, vac):
     instance = get_object_or_404(TalentRequired, ref_no=vac)
     skill_list = SkillRequired.objects.filter(scope__ref_no=vac)
-    form = SkillRequiredForm(request.POST or None)
+    skill_kwa = skill_list.values_list('skills', flat=True)
+
+    form = SkillRequiredForm(request.POST or None, dup = skill_kwa)
+
     if request.method == 'POST':
         if form.is_valid():
             new = form.save(commit=False)

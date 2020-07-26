@@ -25,10 +25,15 @@ class Industry(models.Model):
 
 
 class Enterprise(models.Model):
-    name = models.CharField('Enterprise name', max_length=250, unique=True)
+    FC = (
+        ('P','Public'),
+        ('S','System'),
+    )
+    ename = models.CharField('Enterprise name', max_length=250, unique=True)
     slug = models.SlugField(max_length=60, blank=True, null=True, unique=True)
     description = models.TextField('Enterprise description')
     website = models.URLField(blank=True, null=True)
+    filter_class = models.CharField(max_length=1, choices=FC, default='P')
     rate_1 = models.FloatField(null=True, default=0)#Average score from marketplace.models.TalentRate (rate_1)
     rate_2 = models.FloatField(null=True, default=0)#Average score from marketplace.models.TalentRate (rate_2)
     rate_3 = models.FloatField(null=True, default=0)#Average score from marketplace.models.TalentRate (rate_3)
@@ -45,10 +50,10 @@ class Enterprise(models.Model):
     average = property(avg_rate)
 
     def clean(self):
-        self.name = self.name.title()
+        self.ename = self.ename.title()
 
     def __str__(self):
-        return self.name
+        return self.ename
 
     def save(self, *args, **kwargs):
         if self.slug is None or self.slug == "":

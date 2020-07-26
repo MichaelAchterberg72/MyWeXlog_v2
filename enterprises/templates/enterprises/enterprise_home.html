@@ -12,9 +12,15 @@
     <i class="icon icon-question-circle"></i></a>
   </p></span></h4>
   <div class="card-body">
-    <p>There are currently {{ ecount.sum_e }} Enterprises and {{ bcount.sum_b }} Branches listed in MyWeXlog!</p>
+    <p>
+      There are currently {{ ecount.sum_e }} Enterprises and {{ bcount.sum_b }} Branches listed in MyWeXlog!
+    </p>
     {% if user.is_authenticated %}
-    <p><a href="{% url 'Enterprise:FullBranchAdd' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Add New Enterprise</a></p>
+    <p>
+      <a href="{% url 'Enterprise:FullBranchAdd' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">
+        Add New Enterprise
+      </a>
+    </p>
     {% endif %}
     <table class="table table-hover table-sm">
       <col width="30%">
@@ -34,7 +40,7 @@
       {% for c in pageitems %}
       <tbody>
         <tr onclick="window.location='{% url 'Enterprise:BranchList' c.slug %}?next={{ request.path|urlencode }}'">
-          <td class="align-middle text-left">{{ c.name }}</td>
+          <td class="align-middle text-left">{{ c.ename }}</td>
           <td class="align-middle text-left"><a href="{{ c.website }}" target="_blank">{{ c.website }}</a></td>
           {% if request.user.subscription >= 2 %}
             <td class="align-middle text-center">

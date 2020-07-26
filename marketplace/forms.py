@@ -215,12 +215,30 @@ class TalentAvailabillityForm(forms.ModelForm):
 
 
 class SkillRequiredForm(forms.ModelForm):
+    dup = None
+    def __init__(self, *args, **kwargs):
+        global dup
+        dup = kwargs.pop('dup')
+        super().__init__(*args, **kwargs)
+
     class Meta:
         model = SkillRequired
         fields = ('skills', )
         widgets = {
             'skills': VacancySkillSelect2Widget(),
         }
+
+        labels = {
+            'skills':'Add Skill',
+        }
+
+    def clean_skills(self):
+        skill_passed = self.cleaned_data.get("skills")
+        als = skill_passed.id
+
+        if als in dup:
+            raise forms.ValidationError("The above skill has already been added! Please choose another skill.")
+        return skill_passed
 
 
 class SkillLevelForm(forms.ModelForm):
