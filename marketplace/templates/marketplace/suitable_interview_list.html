@@ -8,9 +8,15 @@
 
 <div class="container">
   <div class="float-right">
-    <a href="{% url 'MarketPlace:InterviewList' vac %}?next={{ request.path|urlencode }}" class="btn btn-secondary" style="width:6rem;">Back</a>
-    <a href="{% url 'MarketPlace:VacancyIntDetail' scope.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-secondary">Interview list</a>
-    <a href="{% url 'MarketPlace:ShortListView' scope.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-secondary">Short-list</a>
+    <a href="{% url 'MarketPlace:InterviewList' vac %}?next={{ request.path|urlencode }}" class="btn btn-secondary" style="width:6rem;">
+      Back
+    </a>
+    <a href="{% url 'MarketPlace:VacancyIntDetail' scope.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-secondary">
+      Interview list
+    </a>
+    <a href="{% url 'MarketPlace:ShortListView' scope.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-secondary">
+      Short-list
+    </a>
   </div>
     <h3 class="card-title">Talent Dashboard for {{ scope.title }} ({{ scope.ref_no }})</h3>
     <br>

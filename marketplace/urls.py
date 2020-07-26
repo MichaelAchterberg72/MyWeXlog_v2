@@ -49,7 +49,7 @@ urlpatterns = [
     path('sl-notsuitable/<slug:bil>/<slug:tlt>/', views.EmpSlDeclineComment, name='SlNotSuitable'),
 
     #Interview URLs
-    path('interviewlist/<slug:vac>/<slug:tlt>/', views.AddToInterviewListView, name='InterviewList'),
+    #path('interviewlist/<slug:vac>/<slug:tlt>/', views.AddToInterviewListView, name='InterviewList'),
     path('interviewlist/<slug:vac>/', views.InterviewListView, name='InterviewList'),
     path('pending-interviewlist/<slug:vac>/', views.PendingInterviewListView, name='PendingInterviewList'),
     path('suitable-interviewlist/<slug:vac>/', views.SuitableInterviewListView, name='SuitableInterviewList'),
@@ -74,6 +74,7 @@ urlpatterns = [
     path('tlt-int-comment/<slug:bil>/<slug:tlt>/', views.TltIntCommentView, name='TalentIntComment'),
         #emp int close URLs
     path('emp-int-close/<slug:bil>/<slug:tlt>/', views.EmpInterviewClose, name='EmployerIntClose'),
+    path('emp-dash-close/<slug:bil>/<slug:tlt>/', views.emp_dashint_close, name='Emp_DashIntClose'),
     path('emp-int-detail/<slug:bil>/<slug:tlt>/', views.EmpIntFullDetail, name='EmployerIntDetail'),
     path('emp-int-detail/<slug:vac>/', views.EmpIntDetailVacancy, name='VacancyIntDetail'),
     path('emp-int-comment/<slug:bil>/<slug:tlt>/', views.EmpIntCommentView, name='VacancyIntComment'),

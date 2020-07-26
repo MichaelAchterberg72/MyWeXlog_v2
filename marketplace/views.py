@@ -121,7 +121,7 @@ def TltIntFullDetail(request, bil, tlt):
 @login_required()
 @subscription(2)
 def EmployerInterviewHistoryView(request, tlt):
-    interviews = BidInterviewList.objects.filter(scope__requested_by__alias=tlt).order_by('-scope__ref_no')
+    interviews = BidInterviewList.objects.filter(scope__requested_by__alias=tlt).order_by('-date_listed')
 
     try:
         page = int(request.GET.get('page', 1))
@@ -149,12 +149,25 @@ def EmployerInterviewHistoryView(request, tlt):
 
 
 @login_required()
+@subscription(2)
 def EmpInterviewClose(request, bil, tlt):
     bil_qs = BidInterviewList.objects.filter(slug=bil)
 
     bil_qs.update(emp_intcomplete=True)
 
     return redirect(reverse('MarketPlace:EmployerInterviewHistory', kwargs={'tlt': tlt}))
+
+
+@login_required()
+@subscription(2)
+def emp_dashint_close(request, bil, tlt):
+    '''Closes an interview and return to the Vacancy Dashboard'''
+    bil_qs = BidInterviewList.objects.filter(slug=bil)
+    vac = bil_qs[0].scope.ref_no
+
+    bil_qs.update(emp_intcomplete=True)
+
+    return redirect(reverse('MarketPlace:InterviewList', kwargs={'vac': vac}))
 
 
 @login_required()

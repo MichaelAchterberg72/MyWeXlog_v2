@@ -8,16 +8,17 @@
   <div class="card-body">
     <div class="float-right">
       <form  action="{% url 'MarketPlace:InterviewList' info.ref_no %}" method="post">
-    <input type="hidden" name="next" value="{{ request.GET.next }}">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-secondary">Back</button>
-    <a href="{% url 'MarketPlace:HelpInterviewDetail' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
-    <i class="icon icon-question-circle"></i></a>
-  </form>
+        <input type="hidden" name="next" value="{{ request.GET.next }}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-secondary">
+          Back
+        </button>
+        <a href="{% url 'MarketPlace:HelpInterviewDetail' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
+          <i class="icon icon-question-circle"></i>
+        </a>
+      </form>
     </div>
-
     <h4 class="card-title">Interview Detail</h4>
-
     <table class="table table-sm">
       <thead>
         <tr>
@@ -50,14 +51,25 @@
             <td rowspan="2" class="align-middle text-center">{{ d.talent.alias }}</td>
             <td class="align-middle text-center">{{ d.get_tlt_response_display }}</td>
             <td class="align-middle text-center">{{ d.get_outcome_display }}</td>
-            {% if d.emp_intcomplete == True %}
-              <td class="align-middle text-center">Closed</td>
-            {% else %}
-              <td class="align-middle text-center">Open <a href="{% url 'MarketPlace:EmployerIntClose' bil=d.slug tlt=d.talent.alias %}" data-toggle="tooltip" title="Close Interview"><i class="fa fa-close" style="font-size:24px;color:red"></i></a> </td>
-            {% endif %}
+            <td class="align-middle text-center">
+              {% if d.emp_intcomplete == True %}
+                Closed
+              {% else %}
+                Open
+                <a href="{% url 'MarketPlace:Emp_DashIntClose' bil=d.slug tlt=d.talent.alias %}" data-toggle="tooltip" title="Close Interview">
+                  <i class="fa fa-close" style="font-size:24px;color:red"></i>
+                </a>
+                WHY NOT WORKING
+              {% endif %}
+            </td>
             {% if request.user.subscription == 2 %}
               <td class="align-middle text-center">
-                <a href="{% url 'MarketPlace:VacancyPost' d.scope.ref_no %}?next={{ request.path|urlencode }}" class="" data-toggle="tooltip" title="See Vacancy Detail"><i class="fa fa-industry" style="font-size:24px;color:black"></i></a>
+                <a href="{% url 'Profile:ContactDetail' vac=d.scope.ref_no tlt=d.talent.alias %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Contact Detail">
+                  <i class="fa fa-tty" aria-hidden="true" style="font-size:24px;color:black"></i>
+                </a>&nbsp
+                <a href="{% url 'MarketPlace:VacancyPost' d.scope.ref_no %}?next={{ request.path|urlencode }}" class="" data-toggle="tooltip" title="See Vacancy Detail">
+                  <i class="fa fa-industry" style="font-size:24px;color:black"></i>
+                </a>
               </td>
             {% endif %}
           </tr>
