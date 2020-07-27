@@ -116,3 +116,8 @@
   background-color: 	#808080 !important;
   color: #ffffff !important;
 }
+
+[data-theme="dark"] .no-hover tr:hover td:hover {
+  background-color: 	#303030 !important;
+  color: #ffffff !important;
+}
