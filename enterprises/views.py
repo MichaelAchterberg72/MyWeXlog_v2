@@ -293,8 +293,11 @@ def EnterpriseAddView(request):
 @login_required()
 @csp_exempt
 def EnterpriseAddPopup(request):
-    form_e = EnterprisePopupForm(request.POST or None)
-    #form_b = BranchForm(request.POST or None)
+    exist_comp = set(Enterprise.objects.filter().values_list('ename', flat=True))
+
+    filt = exist_comp
+
+    form = EnterprisePopupForm(request.POST or None, pwd=filt)
     if request.method == 'POST':
         if form.is_valid():
             instance=form_e.save(commit=False)

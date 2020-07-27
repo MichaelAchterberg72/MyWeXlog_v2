@@ -75,6 +75,12 @@ class RegionSelect2Widget(RegionSearchFieldMixin, ModelSelect2Widget):
 
 
 class ProjectAddForm(forms.ModelForm):
+    pwd = None
+    def __init__(self, *args, **kwargs):
+        global pwd
+        pwd = kwargs.pop('pwd')
+        super().__init__(*args, **kwargs)
+
     class Meta:
         model = ProjectData
         fields = ('name', 'company', 'country', 'companybranch', 'region', 'city', 'industry')
@@ -86,6 +92,13 @@ class ProjectAddForm(forms.ModelForm):
             'companybranch': BranchSelect2Widget(),
         }
 
+    def clean_project(self):
+        project_passed = self.cleaned_data.get("name")
+        als = project_passed
+
+        if als in pwd:
+            raise forms.ValidationError("A project with this name already exists! Please enter another name.")
+        return project_passed
 
 
 class ProjectSearchForm(forms.Form):

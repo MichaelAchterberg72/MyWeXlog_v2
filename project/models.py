@@ -10,7 +10,7 @@ from Profile.utils import create_code9
 
 
 class ProjectData(models.Model):
-    name = models.CharField('Project name', max_length=250, unique=True)
+    name = models.CharField('Project name', max_length=250)
     company = models.ForeignKey(Enterprise, on_delete=models.PROTECT, verbose_name="Owner", null=True)
     companybranch = models.ForeignKey(Branch, on_delete=models.PROTECT, verbose_name='Branch Managing the Project', null=True)
     country = CountryField()
@@ -18,6 +18,9 @@ class ProjectData(models.Model):
     city = models.ForeignKey(City, on_delete=models.PROTECT)
     industry = models.ForeignKey(Industry, on_delete=models.PROTECT)
     slug = models.SlugField(max_length=50, unique=True, null=True, blank=True)
+
+    class Meta:
+        unique_together = (('name','companybranch'),)
 
     def __str__(self):
         return '{} - {}'.format(self.company, self.name)

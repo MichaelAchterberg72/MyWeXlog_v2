@@ -24,7 +24,7 @@
 }
 
 [data-theme="dark"] .navbar-brand {
-  background-color: #111 !important;
+  background-color: #transparent !important;
   color: #ffffff !important;
 }
 
@@ -53,7 +53,7 @@
   color: #ffffff !important;
 }
 
-[data-theme="dark"] .form-control {
+[data-theme="dark"] .textinput {
   background-color: #303030 !important;
   color: #ffffff !important;
 }
@@ -83,6 +83,10 @@
   color: #ffffff !important;
 }
 
+[data-theme="dark"] .select2-container--default .select2-selection--multiple .select2-selection__choice {
+  color: #000000 !important;
+}
+
 [data-theme="dark"] .select2-search {
   background-color: #303030 !important;
   color: #ffffff !important;
@@ -110,5 +114,10 @@
 
 [data-theme="dark"] .table-hover tbody tr:hover td {
   background-color: 	#808080 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .no-hover tr:hover td:hover {
+  background-color: 	#303030 !important;
   color: #ffffff !important;
 }
