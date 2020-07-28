@@ -1091,7 +1091,7 @@ def ActiveProfileView(request, tlt, vac):
             pass
         else:
             prj_count +=1
-            project_q = prj_qs.filter(pk=p).values_list('name', 'company__name', 'companybranch__name', 'industry__industry')
+            project_q = prj_qs.filter(pk=p).values_list('name', 'company__ename', 'companybranch__name', 'industry__industry')
             info_list=[project_q[0][1], project_q[0][2], project_q[0][3]]
             prj_set[project_q[0][0]] = info_list
 
@@ -1184,7 +1184,7 @@ def profile_view(request, tlt):
             pass
         else:
             prj_count +=1
-            project_q = prj_qs.filter(pk=p).values_list('name', 'company__name', 'companybranch__name', 'industry__industry')
+            project_q = prj_qs.filter(pk=p).values_list('name', 'company__ename', 'companybranch__name', 'industry__industry')
             info_list=[project_q[0][1], project_q[0][2], project_q[0][3]]
             prj_set[project_q[0][0]] = info_list
 
@@ -1388,7 +1388,7 @@ def DPC_SummaryView(request, tlt):
             info_set = {}
             info_set['count']=cnt
             info_set['sum']=sum_float
-            companybranch_q = companybranch_qs.filter(pk=c).values_list('company__name', 'name', 'city__city')
+            companybranch_q = companybranch_qs.filter(pk=c).values_list('company__ename', 'name', 'city__city')
             companybranch_f = f'{companybranch_q[0][0]}: {companybranch_q[0][1]} ({companybranch_q[0][2]})'
             cmp_set[companybranch_f] = info_set
 
@@ -1407,7 +1407,7 @@ def DPC_SummaryView(request, tlt):
             info_set = {}
             info_set['count']=cnt
             info_set['sum']=sum_float
-            project_q = project_qs.filter(pk=p).values_list('name', 'company__name', 'companybranch__name')
+            project_q = project_qs.filter(pk=p).values_list('name', 'company__ename', 'companybranch__name')
             project_f = f'{project_q[0][0]}: {project_q[0][1]} ({project_q[0][2]})'
             prj_set[project_f] = info_set
 
