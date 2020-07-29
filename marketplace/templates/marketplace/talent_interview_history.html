@@ -31,26 +31,35 @@
       <tbody>
         {% for l in pageitems %}
           <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' l.scope.ref_no %}?next={{ request.path|urlencode }}'">
-            <td>{{ l.scope.title }}</td>
+            <td class="align-middle text-left">{{ l.scope.title }}</td>
             <td class="align-middle text-center">{{ l.scope.ref_no }}</td>
             <td class="align-middle text-center">
               {{ l.get_tlt_response_display }}
               <br>
-              <span>
-              <a href="{% url 'Profile:IntAccept' l.id %}?next={{ request.path|urlencode }}" class="">
-                <i class="fa fa-check-circle-o" aria-hidden="true" style="font-size:25px;color:green" data-toggle="tooltip" title="Accept"></i>
-              </a>
-              &nbsp &nbsp &nbsp &nbsp
-              <a href="{% url 'Profile:IntDecline' l.id %}?next={{ request.path|urlencode }}" class="">
-                <i class="fa fa-ban" aria-hidden="true" style="font-size: 25px;color:red" data-toggle="tooltip" title="Decline"></i>
-              </a>
-            </span>
+              {% if l.tlt_response == 'P' %}
+                <span>
+                <a href="{% url 'Profile:IntAccept' l.id %}?next={{ request.path|urlencode }}" class="">
+                  <i class="fa fa-check-circle-o" aria-hidden="true" style="font-size:25px;color:green" data-toggle="tooltip" title="Accept"></i>
+                </a>
+                &nbsp &nbsp &nbsp &nbsp
+                <a href="{% url 'Profile:IntDecline' l.id %}?next={{ request.path|urlencode }}" class="">
+                  <i class="fa fa-ban" aria-hidden="true" style="font-size: 25px;color:red" data-toggle="tooltip" title="Decline"></i>
+                </a>
+              </span>
+            {% endif %}
             </td>
             <td class="align-middle text-center">{{ l.get_outcome_display }}</td>
             {% if l.tlt_intcomplete == True %}
             <td class="align-middle text-center">Closed</td>
             {% else %}
-            <td class="align-middle text-center">Open <a href="{% url 'MarketPlace:TalentIntClose' bil=l.slug tlt=l.talent.alias %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Close Interview"><i class="fa fa-close" style="font-size:24px;color:red"></i></a> </td>
+            <td class="align-middle text-center">
+              Open
+              <br>
+              {% if l.tlt_response != 'P' %}
+                <a href="{% url 'MarketPlace:TalentIntClose' bil=l.slug tlt=l.talent.alias %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Close Interview"><i class="fa fa-close" style="font-size:24px;color:red"></i>
+                </a>
+              {% endif %}
+          </td>
             {% endif %}
 
               {% if request.user.subscription == 2 %}
