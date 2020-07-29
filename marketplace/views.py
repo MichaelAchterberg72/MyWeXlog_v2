@@ -1194,7 +1194,7 @@ def MarketHome(request):
     pfl = Profile.objects.filter(talent=talent)
     tr = TalentRequired.objects.filter(offer_status='O')
     tr_emp = TalentRequired.objects.filter(requested_by=talent)
-    wb = WorkBid.objects.filter(work__requested_by=talent, work__offer_status='O')
+    wb = WorkBid.objects.filter(work__requested_by=talent)
     ta = TalentAvailabillity.objects.filter(talent=talent)
     we = WorkExperience.objects.filter(Q(talent=talent) & Q(score__gte=skill_pass_score)).prefetch_related('topic')
     sr = SkillRequired.objects.filter(scope__offer_status='O')
@@ -1210,7 +1210,7 @@ def MarketHome(request):
     ipost_closed = tr_emp.filter(offer_status='C').order_by('-bid_open')
     ipost_closed_list = ipost_closed[:5]
     ipost_closed_count = ipost_closed.count()
-    ipost_bid = wb.filter(Q(bidreview__exact='R') | Q(bidreview__exact='P') | Q(bidreview__exact='A'))
+    ipost_bid = wb.filter(~Q(bidreview='D'))
     ipost_bid_flat = ipost_bid.values_list('work', flat=True).distinct()
     capacity = ta.filter(date_to__gte=timezone.now()).order_by('-date_to')[:5]
 
