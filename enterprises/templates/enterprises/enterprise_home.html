@@ -39,9 +39,9 @@
       </thead>
       {% for c in pageitems %}
       <tbody>
-        <tr onclick="window.location='{% url 'Enterprise:BranchList' c.slug %}?next={{ request.path|urlencode }}'">
+        <tr>
           <td class="align-middle text-left">{{ c.ename }}</td>
-          <td class="align-middle text-left"><a href="{{ c.website }}" target="_blank">{{ c.website }}</a></td>
+          <td class="align-middle text-left"><a href="{{ c.website }}" target="_blank">{{ c.website|truncatechars:37 }}</a></td>
           {% if request.user.subscription >= 2 %}
             <td class="align-middle text-center">
               {% if c.rate_count > 4 %}
@@ -54,15 +54,15 @@
               {{ c.rate_count }}
             </td>
           {% else %}
-            <td class="align-middle text-center">
+            <td class="align-middle text-center"><a href="{% url 'Payments:ActiveSubscription' %}">
               <span class="badge badge-info text-wrap" style="width: 8rem;">
                 Active Subscription<br>required
-              </span>
+              </span></a>
             </td>
-            <td class="align-middle text-center">
+            <td class="align-middle text-center"><a href="{% url 'Payments:ActiveSubscription' %}">
               <span class="badge badge-info text-wrap" style="width: 8rem;">
                 Active Subscription<br>required
-              </span>
+              </span></a>
             </td>
           {% endif %}
           <td class="align-middle text-center"><a href="{% url 'Enterprise:BranchList' c.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 6rem;">List<br>Branches</a></td>
