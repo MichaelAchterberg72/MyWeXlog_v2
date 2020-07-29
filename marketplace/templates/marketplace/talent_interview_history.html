@@ -38,11 +38,11 @@
               <br>
               {% if l.tlt_response == 'P' %}
                 <span>
-                <a href="{% url 'Profile:IntAccept' l.id %}?next={{ request.path|urlencode }}" class="">
+                <a href="{% url 'Profile:IntAccept2' l.id %}?next={{ request.path|urlencode }}" class="">
                   <i class="fa fa-check-circle-o" aria-hidden="true" style="font-size:25px;color:green" data-toggle="tooltip" title="Accept"></i>
                 </a>
                 &nbsp &nbsp &nbsp &nbsp
-                <a href="{% url 'Profile:IntDecline' l.id %}?next={{ request.path|urlencode }}" class="">
+                <a href="{% url 'Profile:IntDecline2' l.id %}?next={{ request.path|urlencode }}" class="">
                   <i class="fa fa-ban" aria-hidden="true" style="font-size: 25px;color:red" data-toggle="tooltip" title="Decline"></i>
                 </a>
               </span>

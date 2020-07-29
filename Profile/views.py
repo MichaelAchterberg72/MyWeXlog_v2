@@ -1008,6 +1008,23 @@ def InterviewAcceptView(request, int_id):
 
 @login_required()
 @subscription(1)
+def int_accept(request, int_id):
+    '''View for button in the candidate history template'''
+    bil_qs = BidInterviewList.objects.filter(pk=int_id)
+    bil_qs.update(tlt_response='A', tlt_reponded=timezone.now())#1
+
+    tlt = bil_qs[0].talent
+    vac = bil_qs[0].scope
+    als = tlt.alias
+
+    wb_qs = WorkBid.objects.filter(Q(talent=tlt) & Q(work=vac))
+    if wb_qs:
+        wb_qs.update(bidreview='I')#2
+
+    return redirect(reverse('MarketPlace:TalentInterviewHistory', kwargs={'tlt':als}))
+
+@login_required()
+@subscription(1)
 def InterviewDeclineView(request, int_id):
     bil_qs = BidInterviewList.objects.filter(pk=int_id)
     bil_qs.update(tlt_response='D', tlt_intcomplete=True, tlt_reponded=timezone.now(), outcome='D')#1
@@ -1021,6 +1038,25 @@ def InterviewDeclineView(request, int_id):
         wb_qs.update(bidreview='D')#2
 
     return redirect(reverse('MarketPlace:InterviewDecline', kwargs={'int_id':int_id}))
+
+
+@login_required()
+@subscription(1)
+def int_decline(request, int_id):
+    '''Button in the Candidate History to Decline an Interview'''
+    bil_qs = BidInterviewList.objects.filter(pk=int_id)
+    bil_qs.update(tlt_response='D', tlt_intcomplete=True, tlt_reponded=timezone.now(), outcome='D')#1
+
+    tlt = bil_qs[0].talent
+    als = tlt.alias
+    vac = bil_qs[0].scope
+    wb_qs = WorkBid.objects.filter(Q(talent=tlt) & Q(work=vac))#3
+    BidShortList.objects.filter(Q(talent=tlt) & Q(scope=vac)).update(status='D')
+
+    if wb_qs:
+        wb_qs.update(bidreview='D')#2
+
+    return redirect(reverse('MarketPlace:TalentInterviewHistory', kwargs={'tlt':als}))
 
 
 @login_required()
