@@ -75,13 +75,21 @@
                 Pending
                 <br>
                 <span>
-                <a href="{% url 'Profile:AssignmentAccept' o.slug %}?next={{ request.path|urlencode }}" class=""><i class="fa fa-check-circle-o" aria-hidden="true" style="font-size:25px;color:green" data-toggle="tooltip" title="Accept Vacancy"></i></a>
+                <a href="{% url 'Profile:AssignmentAccept' o.slug %}?next={{ request.path|urlencode }}" class="">
+                  <i class="fa fa-check-circle-o" aria-hidden="true" style="font-size:25px;color:green" data-toggle="tooltip" title="Accept Vacancy"></i>
+                </a>
                 {% if o.tlt_response == 'C' %}
-                  <a href="#" class=""><i class="fa fa-refresh" aria-hidden="true"style="font-size:25px;color:black" data-toggle="tooltip" title="Waiting for Reponse"></i></a>
+                  <a href="#" class="">
+                    <i class="fa fa-refresh" aria-hidden="true"style="font-size:25px;color:black" data-toggle="tooltip" title="Waiting for Reponse"></i>
+                  </a>
                 {% else %}
-                  <a href="{% url 'Profile:AssignmentClarify' o.slug %}?next={{ request.path|urlencode }}" class=""><i class="fa fa-plus-square-o" aria-hidden="true" style="font-size:25px;color:black" data-toggle="tooltip" title="Request additional Information"></i></a>
+                  <a href="{% url 'Profile:AssignmentClarify' o.slug %}?next={{ request.path|urlencode }}" class="">
+                    <i class="fa fa-plus-square-o" aria-hidden="true" style="font-size:25px;color:black" data-toggle="tooltip" title="Request additional Information"></i>
+                  </a>
                 {% endif %}
-                <a href="{% url 'Profile:AssignmentDecline' o.slug %}?next={{ request.path|urlencode }}" class=""><i class="fa fa-ban" aria-hidden="true" style="font-size:25px;color:red" data-toggle="tooltip" title="Decline Vacancy"></i></a>
+                <a href="{% url 'Profile:AssignmentDecline' o.slug %}?next={{ request.path|urlencode }}" class="">
+                  <i class="fa fa-ban" aria-hidden="true" style="font-size:25px; color:red" data-toggle="tooltip" title="Decline Vacancy"></i>
+                </a>
               </span>
               </td>
             {% else %}
