@@ -100,7 +100,7 @@ class TalentRequired(models.Model):
     ref_no = models.CharField(max_length=10, unique=True, null=True, blank=True)#SlugField
     own_ref_no = models.CharField(max_length=100, unique=True, null=True, blank=True)
     designation = models.ForeignKey(Designation, on_delete=models.PROTECT, null=True)
-    companybranch = models.ForeignKey(Branch, on_delete=models.CASCADE, verbose_name="Company Branch")
+    companybranch = models.ForeignKey(Branch, on_delete=models.CASCADE, verbose_name="Company", related_name="Test")
     requested_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     date_deadline = models.DateField('Work completed by')
     hours_required = models.IntegerField()
