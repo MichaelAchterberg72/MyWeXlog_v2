@@ -414,7 +414,7 @@
               <a href="{% url 'MarketPlace:InterviewList' tlt_e.scope.ref_no   %}" class="badge badge-success badge-pill" style="width: 7rem">Interview Page</a>
             {% elif tlt_e.tlt_response == 'D' %}
               <p class="badge badge-danger badge-pill" style="width: 7rem">Interview<br>Declined</p>
-              <a href="{% url 'Profile:IntRemove' tlt_e.alias %}?next={{ request.path|urlencode }}" class="badge badge-info badge-pill" style="width: 7rem">Remove</a>
+              <a href="{% url 'Profile:IntRemove' tlt_e.talent.alias %}?next={{ request.path|urlencode }}" class="badge badge-info badge-pill" style="width: 7rem" data-toggle="tooltip" title="Remove this interview from your workflow">Remove</a>
             {% endif %}
           </td>
         </tr>

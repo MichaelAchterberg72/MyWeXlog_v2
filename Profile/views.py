@@ -504,7 +504,7 @@ def ProfileHome(request):
 
     interviews_tltc = interviews_tlt.count()
 
-    interviews_emp = interview_qs.filter(Q(scope__requested_by=talent) & Q(emp_intcomplete=False) & ~Q(tlt_response='R'))
+    interviews_emp = interview_qs.filter(Q(scope__requested_by=talent) & Q(emp_intcomplete=False))
 
     interviews_empc = interviews_emp.count()
 
@@ -1061,8 +1061,8 @@ def int_decline(request, int_id):
 
 @login_required()
 @subscription(2)
-def InterviewTltRemove(request, int_id):
-    interview = BidInterviewList.objects.filter(pk=int_id).update(emp_intcomplete=True, outcome='D')
+def InterviewTltRemove(request, tlt):
+    interview = BidInterviewList.objects.filter(talent__alias=tlt).update(emp_intcomplete=True, outcome='D')
 
     return redirect(reverse('Profile:ProfileHome')+ '#Interview')
 
