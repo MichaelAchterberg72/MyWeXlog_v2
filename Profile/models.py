@@ -108,7 +108,7 @@ class Profile(models.Model):
     currency = models.ForeignKey(Currency, on_delete=models.PROTECT, null=True)
     rate_unit = models.CharField(max_length=1, choices=RATE_UNIT, default='H')
     motivation = models.TextField(blank=True, null=True)
-    exp_lvl = models.ForeignKey(SkillLevel, on_delete=models.PROTECT, related_name='profile_tenure', null=True)
+    exp_lvl = models.ForeignKey(SkillLevel, on_delete=models.PROTECT, related_name='profile_tenure', null=True, default=0)
     rate_1 = models.FloatField(null=True, default=0)#average for marketplace.models.VacancyRate
     rate_2 = models.FloatField(null=True, default=0)#average for marketplace.models.VacancyRate
     rate_3 = models.FloatField(null=True, default=0)#average for marketplace.models.VacancyRate
