@@ -6,6 +6,8 @@
 {% block title %}{{block.super}}-Reasons{% endblock title %}
 
 {% block content %}
+<div class="card">
+  <div class="card-body">
 <div class="container">
   <h3>Reason for declining {{ instance.work }}</h3>
   <form method="post" enctype="multipart/form-data">
@@ -18,7 +20,8 @@
     </div>
   </form>
   </div>
-
+</div>
+</div>
 {% endblock content %}
 {% block Script %}
 

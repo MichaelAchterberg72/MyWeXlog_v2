@@ -235,7 +235,7 @@ def on_backbutton_clicked(self, widget):
 @login_required()
 @csp_exempt
 def ProjectAddPopup(request):
-    exist_project = set(ProjectData.objects.filter().values_list('name', 'companybranch', flat=True))
+    exist_project = set(ProjectData.objects.filter().values_list('name', flat=True))
 
     filt = exist_project
 
