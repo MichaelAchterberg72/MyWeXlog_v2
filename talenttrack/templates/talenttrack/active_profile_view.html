@@ -4,43 +4,7 @@
 
 {% block content %}
 <h3>Profile for {{ als.alias }}</h3>
-<div class="row">
-  <div class="col-sm-12">
-    <div class="">
-      {% if als.pk == request.user.id %}
-      {% else %}
-          <div class="">
-          {% if int_list %}
-            <button type="button" name="button"class="btn btn-success ">Already on Interview List</button>
-          {% else %}
-            <div class="btn-toolbar float-right">
-              {% for v in vacancy %}
-                <form  action="{% url 'MarketPlace:InterviewList' tlt=als.alias  vac=v.ref_no %}" method="post">
-                  {% csrf_token %}
-                  <button type="submit" class="" style="width: 4rem"><i class="fa fa-group" style="font-size:36px;color:green" data-toggle="tooltip" title="Add to Interview List" style="font-size:30px;color:black"></i></button>&nbsp
-                </form>
-                <form  action="{% url 'MarketPlace:VacDecline' tlt=als.alias  vac=v.ref_no %}" method="post">
-                  {% csrf_token %}
-                  <button type="submit" class="" style="width: 4rem" data-toggle="tooltip" title="Decline Candidate" style="font-size:30px;color:black"><i class="fa fa-eject" style="font-size:36px;color:red"></i></button>
-                </form>
-              {% endfor %}
-            </div>
-          {% endif %}
-          {% if bslist_qs %}
-            <button type="button" name="button"class="btn btn-secondary ">Already Shortlisted</button>
-          {% else %}
-          {% for v in vacancy %}
-            <form  action="{% url 'MarketPlace:ShortList' tlt=als.alias  vac=v.ref_no %}" method="post">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-info ">Short-list</button>
-            </form>
-          {% endfor %}
-          {% endif %}
-        </div>
-        {% endif %}
-    </div>
-  </div>
-</div>
+
 <div class="">
   <div class="card-header">
     <a href="{% url 'Talent:SPDView' als.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right" >View All Skills</a>
