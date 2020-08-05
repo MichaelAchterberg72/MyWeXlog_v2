@@ -11,6 +11,11 @@
     <input type="hidden" name="next" value="{{ request.GET.next }}">
     {% csrf_token %}
     <div class="form-row">
+      <div>
+        <p>
+          <strong>Please note:</strong> Only <strong>pdf</strong> files can be uploaded
+        </p>
+      </div>
       <div class="form-group col-md-6 mb-0">
         {{ form.file|as_crispy_field }}
         {{ form.title|as_crispy_field }}
