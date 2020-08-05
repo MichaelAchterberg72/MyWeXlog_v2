@@ -75,11 +75,15 @@ class RegionSelect2Widget(RegionSearchFieldMixin, ModelSelect2Widget):
 
 
 class ProjectAddForm(forms.ModelForm):
+
+    '''
+    #removed this validation for now.
     pwd = None
     def __init__(self, *args, **kwargs):
         global pwd
         pwd = kwargs.pop('pwd')
         super().__init__(*args, **kwargs)
+    '''
 
     class Meta:
         model = ProjectData
@@ -91,7 +95,7 @@ class ProjectAddForm(forms.ModelForm):
             'city': CitySelect2Widget(),
             'companybranch': BranchSelect2Widget(),
         }
-
+    '''
     def clean_project(self):
         project_passed = self.cleaned_data.get("name")
         als = project_passed
@@ -99,7 +103,7 @@ class ProjectAddForm(forms.ModelForm):
         if als in pwd:
             raise forms.ValidationError("A project with this name already exists! Please enter another name.")
         return project_passed
-
+    '''
 
 class ProjectSearchForm(forms.Form):
     query = forms.CharField()
