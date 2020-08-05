@@ -266,25 +266,25 @@ def FullBranchAddView(request):
 @login_required()
 @csp_exempt
 def EnterpriseAddView(request):
-    form_e = EnterprisePopupForm(request.POST or None)
-    form_b = BranchForm(request.POST or None)
+    form = EnterprisePopupForm(request.POST or None)
+    #form_b = BranchForm(request.POST or None)
 
     if request.method == 'POST':
-        if form_e.is_valid() and form_b.is_valid():
-            instance_e = form_e.save(commit=False)
-            instance_b = form_b.save(commit=False)
-            instance_e.save()
+        if form.is_valid():
+            instance = form.save(commit=False)
+            #instance_b = form_b.save(commit=False)
+            instance.save()
 
-            instance_b.company = instance_e
-            instance_b.save()
+            #instance_b.company = instance_e
+            #instance_b.save()
 
             return redirect('Enterprise:EnterpriseHome')
         else:
-            context = {'form_e':form_e, 'form_b':form_b,}
+            context = {'form':form,}
             template = 'enterprises/enterprise_add.html'
             return render(request, template, context)
     else:
-        context = {'form_e':form_e, 'form_b':form_b,}
+        context = {'form':form,}
         template = 'enterprises/enterprise_add.html'
         return render(request, template, context)
 
@@ -300,16 +300,16 @@ def EnterpriseAddPopup(request):
     form = EnterprisePopupForm(request.POST or None, pwd=filt)
     if request.method == 'POST':
         if form.is_valid():
-            instance=form_e.save(commit=False)
+            instance=form.save(commit=False)
             instance.save()
             return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_company");</script>' % (instance.pk, instance))
         else:
-            context = {'form_e':form_e,}
+            context = {'form':form,}
             template = 'enterprises/enterprise_popup.html'
             return render(request, template, context)
 
     else:
-        context = {'form_e':form_e,}
+        context = {'form':form,}
         template = 'enterprises/enterprise_popup.html'
         return render(request, template, context)
 
