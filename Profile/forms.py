@@ -119,6 +119,9 @@ class PassportDetailForm(forms.ModelForm):
         widgets = {
             'expiry_date': DateInput(),
         }
+        labels = {
+            'issue':'date issued',
+        }
 
 
 class IdentificationDetailForm(forms.ModelForm):
@@ -271,6 +274,11 @@ class OnlineProfileForm(forms.ModelForm):
     class Meta:
         model = OnlineRegistrations
         fields = ('profileurl', 'sitename', )
+
+        labels = {
+            'profileurl':'Site address (url)',
+            
+        }
 
 
 class ProfileTypeForm(forms.ModelForm):
