@@ -152,6 +152,7 @@ class ProfileForm(forms.ModelForm):
         labels = {
             'f_name': 'First Name',
             'l_name': 'Last Name / Surname',
+            'std_rate':'Standard Rate (per Hour)',
         }
     def clean_birth_date(self):
         birth_date = self.cleaned_data.get("birth_date")
@@ -277,7 +278,7 @@ class OnlineProfileForm(forms.ModelForm):
 
         labels = {
             'profileurl':'Site address (url)',
-            
+
         }
 
 
