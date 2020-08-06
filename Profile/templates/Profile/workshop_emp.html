@@ -32,7 +32,7 @@
           <th colspan="7">Open Assignments</th>
         </tr>
         {% for o in wit_qsao %}
-          <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' o.work.ref_no %}?next={{ request.path|urlencode }}'">
+          <tr>
             <td class="align-middle text-center">{{ o.work.title|truncatechars:37 }}<br>{{ o.work.ref_no }}</td>
             <td class="align-middle text-center">{{ o.talent.alias }}</td>
             {% if o.assignment_complete_tlt == False %}
@@ -43,7 +43,7 @@
             {% if o.assignment_complete_emp == False %}
               <td class="align-middle text-center">
                 Incomplete<br>
-                <a href="{% url 'Profile:EmpMarkComp' o.slug %}" data-toggle="tooltip" title="Mark Complete"><i class="fa fa-check-square-o" aria-hidden="true" style="font-size:24px;color:green"></i></a>
+                <a href="{% url 'Profile:EmpMarkComp' o.slug %}" data-toggle="tooltip" title="Mark Complete"><i class="fa fa-check-square-o" aria-hidden="true" style="font-size:24px;color:green !important"></i></a>
               </td>
             {% else %}
               <td class="align-middle text-center">Complete</td>
@@ -68,7 +68,7 @@
           <th colspan="7">Pending Assignments</th>
         </tr>
         {% for o in wit_qsp %}
-          <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' o.work.ref_no %}?next={{ request.path|urlencode }}'">
+          <tr>
             <td class="align-middle text-center">{{ o.work.title|truncatechars:37 }}<br>{{ o.work.ref_no }}</td>
             <td class="align-middle text-center">{{ o.talent.alias }}</td>
             {% if o.assignment_complete_tlt == False %}
@@ -80,7 +80,7 @@
                 {% elif o.tlt_response == 'P' %}
                   Pending
                   <br>
-                  <a href="#" class=""><i class="fa fa-spinner" aria-hidden="true" style="font-size:24px;color:green" data-toggle="tooltip" title="Response Pending"></i></a>
+                  <a href="#" class=""><i class="fa fa-spinner" aria-hidden="true" style="font-size:24px;color:green !important" data-toggle="tooltip" title="Response Pending"></i></a>
                 {% endif %}
               </td>
             {% else %}
@@ -106,7 +106,7 @@
           <th colspan="7">Completed Assignments</th>
         </tr>
         {% for o in wit_qsac %}
-          <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' o.work.ref_no %}?next={{ request.path|urlencode }}'">
+          <tr>
             <td class="align-middle text-center">{{ o.work.title|truncatechars:37 }}<br>{{ o.work.ref_no }}</td>
             <td class="align-middle text-center">{{ o.talent.alias }}</td>
             {% if o.assignment_complete_tlt == False %}

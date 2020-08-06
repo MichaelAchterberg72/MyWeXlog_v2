@@ -39,11 +39,11 @@
               {% if l.tlt_response == 'P' %}
                 <span>
                 <a href="{% url 'Profile:IntAccept2' l.id %}?next={{ request.path|urlencode }}" class="">
-                  <i class="fa fa-check-circle-o" aria-hidden="true" style="font-size:25px;color:green" data-toggle="tooltip" title="Accept"></i>
+                  <i class="fa fa-check-circle-o" aria-hidden="true" style="font-size:25px;color:green !important" data-toggle="tooltip" title="Accept"></i>
                 </a>
                 &nbsp &nbsp &nbsp &nbsp
                 <a href="{% url 'Profile:IntDecline2' l.id %}?next={{ request.path|urlencode }}" class="">
-                  <i class="fa fa-ban" aria-hidden="true" style="font-size: 25px;color:red" data-toggle="tooltip" title="Decline"></i>
+                  <i class="fa fa-ban" aria-hidden="true" style="font-size: 25px;color:red !important" data-toggle="tooltip" title="Decline"></i>
                 </a>
               </span>
             {% endif %}
@@ -56,7 +56,7 @@
               Open
               <br>
               {% if l.tlt_response != 'P' %}
-                <a href="{% url 'MarketPlace:TalentIntClose' bil=l.slug tlt=l.talent.alias %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Close Interview"><i class="fa fa-close" style="font-size:24px;color:red"></i>
+                <a href="{% url 'MarketPlace:TalentIntClose' bil=l.slug tlt=l.talent.alias %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Close Interview"><i class="fa fa-close" style="font-size:24px;color:red !important"></i>
                 </a>
               {% endif %}
           </td>

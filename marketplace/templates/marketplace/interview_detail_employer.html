@@ -37,7 +37,7 @@
             {% if d.emp_intcomplete == True %}
               <td class="align-middle text-center">Closed</td>
             {% else %}
-              <td class="align-middle text-center">Open &nbsp&nbsp<a href="{% url 'MarketPlace:EmployerIntClose' bil=d.slug tlt=d.talent.alias %}" data-toggle="tooltip" title="Close Interview"><i class="fa fa-close" style="font-size:24px;color:red"></i></a> </td>
+              <td class="align-middle text-center">Open <br><a href="{% url 'MarketPlace:EmployerIntClose' bil=d.slug tlt=d.talent.alias %}" data-toggle="tooltip" title="Close Interview"><i class="fa fa-close" style="font-size:24px;color:red !important"></i></a> </td>
             {% endif %}
             {% if request.user.subscription == 2 %}
               <td class="align-middle text-center">
