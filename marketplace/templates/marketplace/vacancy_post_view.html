@@ -107,7 +107,8 @@
             <td class="align-middle text-center">
               {% if instance.offer_status == 'O' %}
                 {{ instance.get_offer_status_display }}
-                <a href="{% url 'MarketPlace:VacClose' instance.ref_no %}" style="font-size: 25px;color:red" data-toggle="tooltip" title="Close Vacancy"><i class="fa fa-times" aria-hidden="true"></i></a>
+                <br>
+                <a href="{% url 'MarketPlace:VacClose' instance.ref_no %}" style="font-size: 25px;color:red !important" data-toggle="tooltip" title="Close Vacancy"><i class="fa fa-times" aria-hidden="true"></i></a>
               {% else %}
                 {{ instance.get_offer_status_display }}
               {% endif %}

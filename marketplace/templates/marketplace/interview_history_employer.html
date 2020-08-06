@@ -33,7 +33,7 @@
       </thead>
       <tbody>
         {% for l in pageitems %}
-          <tr onclick="window.location='{% url 'MarketPlace:VacancyPost' l.scope.ref_no %}?next={{ request.path|urlencode }}'">
+          <tr>
             <td class="align-middle text-center">{{ l.talent.alias }}</td>
             <td class="align-middle text-center">{{ l.scope.title }}</td>
             <td class="align-middle text-center">{{ l.scope.ref_no }}</td>
@@ -43,9 +43,9 @@
               {% if l.emp_intcomplete == True %}
                 Closed
               {% else %}
-                Open
+                Open<br>
                   <a href="{% url 'MarketPlace:EmployerIntClose' bil=l.slug tlt=l.talent.alias %}" data-toggle="tooltip" title="Close Interview">
-                    <i class="fa fa-close" style="font-size:24px;color:red"></i>
+                    <i class="fa fa-close" style="font-size:24px;color:red !important"></i>
                   </a>
               {% endif %}
             </td>
