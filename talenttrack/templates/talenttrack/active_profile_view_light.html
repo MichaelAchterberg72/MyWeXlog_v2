@@ -56,37 +56,7 @@
       <div class="col-sm-6">
         <div class="card h-100">
           <div class="card-body">
-            <h5 class="card-title">Career in Summary</h5>
-            <table class="table table-sm">
-              <col width="20%">
-              <col width="20%">
-              <col width="60%">
-              <thead>
-                <tr>
-                  <th>Date from</th>
-                  <th>Date to</th>
-                  <th>Company</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for h in bch %}
-                  <tr>
-                    <td>{{ h.date_from|date:"j M Y" }}</td>
-                    {% if h.date_to %}
-                      <td>{{ h.date_to|date:"j M Y" }}</td>
-                    {% else %}
-                      <td>Present</td>
-                    {% endif %}
-                    <td>{{ h.companybranch }}</td>
-                    {% empty %}
-                      <td colspan="3">Nothing Captured.</td>
-                  </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-            <hr>
-            <br>
-            <div class="class="card-title"">
+            <div class="card-title">
               {% if membership_qs %}
                 <a href="{% url 'Talent:LCM_FV' als.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">All Detail</a>
               {% else %}
@@ -148,6 +118,39 @@
         </div>
       </div>
     </div>
+  <br>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Career in Summary</h5>
+      <table class="table table-sm">
+        <col width="20%">
+        <col width="20%">
+        <col width="60%">
+        <thead>
+          <tr>
+            <th>Date from</th>
+            <th>Date to</th>
+            <th>Company</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for h in bch %}
+            <tr>
+              <td>{{ h.date_from|date:"j M Y" }}</td>
+              {% if h.date_to %}
+                <td>{{ h.date_to|date:"j M Y" }}</td>
+              {% else %}
+                <td>Present</td>
+              {% endif %}
+              <td>{{ h.companybranch }}</td>
+              {% empty %}
+                <td colspan="3">Nothing Captured.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
   <br>
   <div class="row">
     <div class="col-sm-12">
