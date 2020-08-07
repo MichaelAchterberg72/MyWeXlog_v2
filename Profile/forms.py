@@ -145,7 +145,7 @@ class FileUploadForm(forms.ModelForm):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ('birth_date', 'background', 'mentor', 'std_rate', 'currency', 'alias', 'motivation', 'f_name', 'l_name')
+        fields = ('birth_date', 'mentor', 'std_rate', 'currency', 'alias', 'f_name', 'l_name')
         widgets = {
             'birth_date': DateInput(),
             }
@@ -161,6 +161,18 @@ class ProfileForm(forms.ModelForm):
             raise forms.ValidationError("You need to be older than 18 to use MyWeXlog")
         else:
             return birth_date
+
+
+class ProfileBackgroundForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ('background',)
+
+
+class ProfileMotivationForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ('motivation',)
 
 
 class UserUpdateForm(forms.ModelForm):
