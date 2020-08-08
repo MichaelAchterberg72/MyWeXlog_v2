@@ -71,7 +71,17 @@
            <tbody>
              <tr>
                <td>{{ c.colleague_name.first_name}} {{ c.colleague_name.last_name }}</td>
-               <td>{{c.get_confirm_display}}</td>
+               <td>
+                 {% if c.get_confirm_display == 'Select' %}
+                   <i class="fa fa-spinner" aria-hidden="true" style="font-size:24px;color:green !important" data-toggle="tooltip" title="Response Pending"></i>
+                 {% elif c.get_confirm_display == 'Confirm' %}
+                   <i class="fa fa-check-square-o" aria-hidden="true" style="font-size:24px;color:green !important" data-toggle="tooltip" title="Response Confirmed"></i>
+                 {% elif c.get_confirm_display == 'Reject' %}
+                   <i class="fa fa-ban" aria-hidden="true" style="font-size: 24px;color:red !important" data-toggle="tooltip" title="Response Rejected"></i>
+                 {% elif c.get_confirm_display == 'Wrong Person' %}
+                   <i class="fa fa-times-rectangle-o" style="font-size:24px;color:red !important" data-toggle="tooltip" title="Wrong Person"></i>
+                 {% endif %}
+                 {{c.get_confirm_display}}</td>
                <td><a href="{% url 'Talent:ColleaguePreResponse' c.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 5rem">Detail</a></td>
              </tr>
             {% endfor %}
@@ -96,7 +106,17 @@
            <tbody>
              <tr>
                <td>{{ cm.superior_name.first_name}} {{ cm.superior_name.last_name }}</td>
-               <td>{{cm.get_confirm_display}}</td>
+               <td>
+                 {% if cm.get_confirm_display == 'Select' %}
+                   <i class="fa fa-spinner" aria-hidden="true" style="font-size:24px;color:green !important" data-toggle="tooltip" title="Response Pending"></i>
+                 {% elif cm.get_confirm_display == 'Confirm' %}
+                   <i class="fa fa-check-square-o" aria-hidden="true" style="font-size:24px;color:green !important" data-toggle="tooltip" title="Response Confirmed"></i>
+                 {% elif cm.get_confirm_display == 'Reject' %}
+                   <i class="fa fa-ban" aria-hidden="true" style="font-size: 24px;color:red !important" data-toggle="tooltip" title="Response Rejected"></i>
+                 {% elif cm.get_confirm_display == 'Wrong Person' %}
+                   <i class="fa fa-times-rectangle-o" style="font-size:24px;color:red !important" data-toggle="tooltip" title="Wrong Person"></i>
+                 {% endif %}
+                 {{cm.get_confirm_display}}</td>
                <td><a href="{% url 'Talent:SuperiorPreResponse' cm.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 5rem">Detail</a></td>
              </tr>
           {% endfor %}
@@ -124,7 +144,17 @@
            <tbody>
              <tr>
                <td>{{ wc.collaborator_name.first_name}} {{ wc.collaborator_name.last_name }}</td>
-               <td>{{wc.get_confirm_display}}</td>
+               <td>
+                 {% if wc.get_confirm_display == 'Select' %}
+                   <i class="fa fa-spinner" aria-hidden="true" style="font-size:24px;color:green !important" data-toggle="tooltip" title="Response Pending"></i>
+                 {% elif wc.get_confirm_display == 'Confirm' %}
+                   <i class="fa fa-check-square-o" aria-hidden="true" style="font-size:24px;color:green !important" data-toggle="tooltip" title="Response Confirmed"></i>
+                 {% elif wc.get_confirm_display == 'Reject' %}
+                   <i class="fa fa-ban" aria-hidden="true" style="font-size: 24px;color:red !important" data-toggle="tooltip" title="Response Rejected"></i>
+                 {% elif wc.get_confirm_display == 'Wrong Person' %}
+                   <i class="fa fa-times-rectangle-o" style="font-size:24px;color:red !important" data-toggle="tooltip" title="Wrong Person"></i>
+                 {% endif %}
+                 {{wc.get_confirm_display}}</td>
                <td><a href="{% url 'Talent:CollaboratorPreResponse' wc.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 5rem">Detail</a></td>
              </tr>
             {% endfor %}
@@ -149,7 +179,17 @@
            <tbody>
              <tr>
                <td>{{ cnt.client_name.first_name}} {{ cnt.client_name.last_name }}</td>
-               <td>{{cnt.get_confirm_display}}</td>
+               <td>
+                 {% if cnt.get_confirm_display == 'Select' %}
+                   <i class="fa fa-spinner" aria-hidden="true" style="font-size:24px;color:green !important" data-toggle="tooltip" title="Response Pending"></i>
+                 {% elif cnt.get_confirm_display == 'Confirm' %}
+                   <i class="fa fa-check-square-o" aria-hidden="true" style="font-size:24px;color:green !important" data-toggle="tooltip" title="Response Confirmed"></i>
+                 {% elif cnt.get_confirm_display == 'Reject' %}
+                   <i class="fa fa-ban" aria-hidden="true" style="font-size: 24px;color:red !important" data-toggle="tooltip" title="Response Rejected"></i>
+                 {% elif cnt.get_confirm_display == 'Wrong Person' %}
+                   <i class="fa fa-times-rectangle-o" style="font-size:24px;color:red !important" data-toggle="tooltip" title="Wrong Person"></i>
+                 {% endif %}
+                 {{cnt.get_confirm_display}}</td>
                <td><a href="{% url 'Talent:ClientPreResponse' cnt.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 5rem">Detail</a></td>
              </tr>
           {% endfor %}
