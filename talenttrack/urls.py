@@ -62,7 +62,13 @@ urlpatterns = [
     path('apv-ach/<slug:tlt>/<slug:vac>/', views.AchievementsView, name='ACH_FV'),
     path('apv-projects/<slug:tlt>/<slug:vac>/', views.ProjectsFVView, name='Projects_FV'),
     path('apv-edu/<slug:tlt>/<slug:vac>/', views.EduFVView, name='EDU_FV'),
+
     path('apv/<slug:tlt>/', views.profile_view, name='APV_L'),
+    path('apv-bch/<slug:tlt>/', views.BCHLView, name='BCH_L_FV'),
+    path('apv-ach/<slug:tlt>/', views.AchievementsLView, name='ACH_L_FV'),
+    path('apv-projects/<slug:tlt>/', views.ProjectsLFVView, name='Projects_L_FV'),
+    path('apv-edu/<slug:tlt>/', views.EduLFVView, name='EDU_L_FV'),
+
     path('achievement-capture/', views.CaptureAchievementView, name='AchieveCap'),
     path('achievement-edit/<slug:ach>/', views.EditAchievementView, name='AchieveEdit'),
     path('achievement-del/<int:ach_i>/<slug:tlt>/', views.DeleteAchievementView, name='AchieveDelete'),

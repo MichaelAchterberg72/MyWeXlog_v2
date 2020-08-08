@@ -12,24 +12,24 @@
     <table class="table table-bordered">
       <thead>
         <tr>
-          <th>Employer</th>
-          <th>Designation</th>
-          <th>Date from</th>
-          <th>Date to</th>
-          <th>Project</th>
-          <th>Industry</th>
-          <th>Hours logged</th>
+          <th class ="text-center">Employer</th>
+          <th class ="text-center">Designation</th>
+          <th class ="text-center">Date from</th>
+          <th class ="text-center">Date to</th>
+          <th class ="text-center">Project</th>
+          <th class ="text-center">Industry</th>
+          <th class ="text-center">Hours logged</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>{{ check.company }}<br>({{ sum_company.co_sum|intcomma }})*</td>
-          <td>{{ check.designation }}</td>
-          <td>{{ check.date_from }}</td>
-          <td>{{ check.date_to }}</td>
-          <td>{{ check.project }}<br>({{ sum_project.p_sum|intcomma }})*</td>
-          <td>{{ check.industry }}</td>
-          <td>{{ check.hours_worked }}</td>
+          <td class ="text-center">{{ check.company }}<br>({{ sum_company.co_sum|intcomma }})*</td>
+          <td class ="text-center">{{ check.designation }}</td>
+          <td class ="text-center">{{ check.date_from }}</td>
+          <td class ="text-center">{{ check.date_to }}</td>
+          <td class ="text-center">{{ check.project }}<br>({{ sum_project.p_sum|intcomma }})*</td>
+          <td class ="text-center">{{ check.industry }}</td>
+          <td class ="text-center">{{ check.hours_worked }}</td>
         </tr>
         <tr>
           <th>Skills</th>
