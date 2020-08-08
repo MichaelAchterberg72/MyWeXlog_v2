@@ -1621,7 +1621,7 @@ def PreLogDetailView(request, tex):
         confirmed_clr = WorkCollaborator.objects.filter(experience__slug=tex)
         confirmed_cnt = WorkClient.objects.filter(experience__slug=tex)
 
-        template = 'talenttrack/experience_detail.html'
+        template = 'talenttrack/prelogged_experience_detail.html'
         context = {
             'check': check, 'confirmed_clg': confirmed_clg, 'confirmed_sup': confirmed_sup, 'confirmed_clr': confirmed_clr, 'confirmed_cnt': confirmed_cnt, 'list': list, 'sum_company': sum_company, 'sum_project': sum_project
             }
@@ -1732,6 +1732,27 @@ def ClientResponseView(request, wkc):
 
 
 @login_required()
+def ClientPreResponseView(request, wkc):
+    check = WorkClient.objects.get(slug=wkc)
+    if check.experience.talent == request.user:
+        form = WorkClientResponseForm(request.POST or None, instance=check)
+        if request.method =='POST':
+            next_url=request.POST.get('next', '/')
+            if form.is_valid():
+                new=form.save(commit=False)
+                new.save()
+                if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
+                    next_url = reverse('Talent:Home')
+                return HttpResponseRedirect(next_url)
+        else:
+            template = 'talenttrack/prelogged_experience_client_respond.html'
+            context = {'check': check, 'form': form}
+            return render(request, template, context)
+    else:
+        raise PermissionDenied
+
+
+@login_required()
 @csp_exempt
 def CollaboratorSelectView(request, pk):
     score = collaborator_score
@@ -1827,6 +1848,27 @@ def CollaboratorResponseView(request, clb):
                 return HttpResponseRedirect(next_url)
         else:
             template = 'talenttrack/experience_collaborator_respond.html'
+            context = {'check': check, 'form': form}
+            return render(request, template, context)
+    else:
+        raise PermissionDenied
+
+
+@login_required()
+def CollaboratorPreResponseView(request, clb):
+    check = WorkCollaborator.objects.get(slug=clb)
+    if check.experience.talent == request.user:
+        form = WorkCollaboratorResponseForm(request.POST or None, instance=check)
+        if request.method =='POST':
+            next_url=request.POST.get('next', '/')
+            if form.is_valid():
+                new=form.save(commit=False)
+                new.save()
+                if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
+                    next_url = reverse('Talent:Home')
+                return HttpResponseRedirect(next_url)
+        else:
+            template = 'talenttrack/prelogged_experience_collaborator_respond.html'
             context = {'check': check, 'form': form}
             return render(request, template, context)
     else:
@@ -1933,6 +1975,27 @@ def SuperiorResponseView(request, spr):
 
 
 @login_required()
+def SuperiorPreResponseView(request, spr):
+    check = Superior.objects.get(slug=spr)
+    if check.experience.talent == request.user:
+        form = WorkColleagueResponseForm(request.POST or None, instance=check)
+        if request.method =='POST':
+            next_url=request.POST.get('next', '/')
+            if form.is_valid():
+                new=form.save(commit=False)
+                new.save()
+                if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
+                    next_url = reverse('Talent:Home')
+                return HttpResponseRedirect(next_url)
+        else:
+            template = 'talenttrack/prelogged_experience_superior_respond.html'
+            context = {'check': check, 'form': form}
+            return render(request, template, context)
+    else:
+        raise PermissionDenied
+
+
+@login_required()
 @csp_exempt
 def ColleagueSelectView(request, pk):
     score = colleague_score
@@ -2026,6 +2089,27 @@ def ColleagueResponseView(request, clg):
                 return HttpResponseRedirect(next_url)
         else:
             template = 'talenttrack/experience_colleague_respond.html'
+            context = {'check': check, 'form': form}
+            return render(request, template, context)
+    else:
+        raise PermissionDenied
+
+
+@login_required()
+def ColleaguePreResponseView(request, clg):
+    check = WorkColleague.objects.get(slug=clg)
+    if check.experience.talent == request.user:
+        form = WorkColleagueResponseForm(request.POST or None, instance=check)
+        if request.method =='POST':
+            next_url=request.POST.get('next', '/')
+            if form.is_valid():
+                new=form.save(commit=False)
+                new.save()
+                if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
+                    next_url = reverse('Talent:Home')
+                return HttpResponseRedirect(next_url)
+        else:
+            template = 'talenttrack/prelogged_experience_colleague_respond.html'
             context = {'check': check, 'form': form}
             return render(request, template, context)
     else:

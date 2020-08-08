@@ -1,0 +1,164 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+
+{% block title %}{{block.super}}-Experience{% endblock title %}
+
+{% block content %}
+<div class="card border-0">
+  <div class="card-body">
+  <h4 class="">Experience - Pre-Logged Hours<span><p class="float-right"><a href="{% url 'Talent:Home' %}"  class="badge badge-pill badge-primary">Back</a></p></span></h4>
+
+
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Employer</th>
+          <th>Designation</th>
+          <th>Date from</th>
+          <th>Date to</th>
+          <th>Project</th>
+          <th>Industry</th>
+          <th>Hours logged</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ check.company }}<br>({{ sum_company.co_sum|intcomma }})*</td>
+          <td>{{ check.designation }}</td>
+          <td>{{ check.date_from }}</td>
+          <td>{{ check.date_to }}</td>
+          <td>{{ check.project }}<br>({{ sum_project.p_sum|intcomma }})*</td>
+          <td>{{ check.industry }}</td>
+          <td>{{ check.hours_worked }}</td>
+        </tr>
+        <tr>
+          <th>Skills</th>
+          {% for s in list %}
+            <td colspan="6">{{ s.skills.all|join:", " }}</td>
+          {% endfor %}
+        </tr>
+        <tr>
+          <th>Comment</th>
+          <td colspan="6">{{ check.comment|linebreaks }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>*Numbers in brackets below Employer and Project are the total hours logged with the employer or on that project.</p>
+    {% if check.upload %}
+      <p>Attached File: <a href="{{ check.upload.url }}" target="_blank" class="badge badge-pill badge-success">Open</a></p>
+    {% endif %}
+    <form  action="{% url 'Talent:ExperienceDelete' check.pk %}" method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger float-right" style="width:7rem">Delete</button>
+    </form>
+  </div>
+</div>
+<br>
+  <div class="row">
+    <div class="col-sm-6">
+     <div class="card h-100">
+       <div class="card-body">
+         <p class="float-right"><a href="{% url 'Talent:ColleagueAdd' check.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 8rem">Add Colleague</a></p>
+         <h5 class="card-title">Colleagues</h5>
+         <table class="table table-sm">
+           <thead>
+             <tr>
+               <th>Name</th>
+               <th>Confirmation</th>
+             </tr>
+           </thead>
+           {% for c in confirmed_clg %}
+           <tbody>
+             <tr>
+               <td>{{ c.colleague_name.first_name}} {{ c.colleague_name.last_name }}</td>
+               <td>{{c.get_confirm_display}}</td>
+               <td><a href="{% url 'Talent:ColleaguePreResponse' c.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 5rem">Detail</a></td>
+             </tr>
+            {% endfor %}
+           </tbody>
+         </table>
+       </div>
+     </div>
+    </div>
+    <div class="col-sm-6">
+     <div class="card h-100">
+       <div class="card-body">
+         <p class="float-right"><a href="{% url 'Talent:SuperiorAdd' check.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 8rem">Add Superior</a></p>
+         <h5 class="card-title">Superiors</h5>
+         <table class="table table-sm">
+           <thead>
+             <tr>
+               <th>Name</th>
+               <th>Confirmation</th>
+             </tr>
+           </thead>
+           {% for cm in confirmed_sup %}
+           <tbody>
+             <tr>
+               <td>{{ cm.superior_name.first_name}} {{ cm.superior_name.last_name }}</td>
+               <td>{{cm.get_confirm_display}}</td>
+               <td><a href="{% url 'Talent:SuperiorPreResponse' cm.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 5rem">Detail</a></td>
+             </tr>
+          {% endfor %}
+           </tbody>
+         </table>
+       </div>
+     </div>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-sm-6">
+     <div class="card h-100">
+       <div class="card-body">
+         <p class="float-right"><a href="{% url 'Talent:CollaboratorAdd' check.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 8rem">Add Collaborator</a></p>
+         <h5 class="card-title">Collaborators</h5>
+         <table class="table table-sm">
+           <thead>
+             <tr>
+               <th>Name</th>
+               <th>Confirmation</th>
+             </tr>
+           </thead>
+           {% for wc in confirmed_clr %}
+           <tbody>
+             <tr>
+               <td>{{ wc.collaborator_name.first_name}} {{ wc.collaborator_name.last_name }}</td>
+               <td>{{wc.get_confirm_display}}</td>
+               <td><a href="{% url 'Talent:CollaboratorPreResponse' wc.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 5rem">Detail</a></td>
+             </tr>
+            {% endfor %}
+           </tbody>
+         </table>
+       </div>
+     </div>
+    </div>
+    <div class="col-sm-6">
+     <div class="card h-100">
+       <div class="card-body">
+         <p class="float-right"><a href="{% url 'Talent:ClientAdd' check.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 8rem">Add Client</a></p>
+         <h5 class="card-title">Clients</h5>
+         <table class="table table-sm">
+           <thead>
+             <tr>
+               <th>Name</th>
+               <th>Confirmation</th>
+             </tr>
+           </thead>
+           {% for cnt in confirmed_cnt %}
+           <tbody>
+             <tr>
+               <td>{{ cnt.client_name.first_name}} {{ cnt.client_name.last_name }}</td>
+               <td>{{cnt.get_confirm_display}}</td>
+               <td><a href="{% url 'Talent:ClientPreResponse' cnt.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 5rem">Detail</a></td>
+             </tr>
+          {% endfor %}
+           </tbody>
+         </table>
+       </div>
+     </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
