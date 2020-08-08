@@ -1373,7 +1373,7 @@ def profile_view(request, tlt):
 
     template = 'talenttrack/active_profile_view_light.html'
     context = {
-        'tlt': tlt, 'bch': bch, 'bch_count': bch_count, 'pfl': pfl, 'padd': padd, 'exp': exp, 'bkl': bkl, 'edtexp': edtexp, 'edtexp_count': edtexp_count, 'bkl_count': bkl_count, 'prj_set': prj_set, 'prj_count': prj_count, 'achievement_qs': achievement_qs, 'achievement_qs_count': achievement_qs_count, 'language_qs': language_qs, 'membership_qs': membership_qs, membership_qs_count': membership_qs_count, 'als': als, 'vac': vac,
+        'tlt': tlt, 'bch': bch, 'bch_count': bch_count, 'pfl': pfl, 'padd': padd, 'exp': exp, 'bkl': bkl, 'edtexp': edtexp, 'edtexp_count': edtexp_count, 'bkl_count': bkl_count, 'prj_set': prj_set, 'prj_count': prj_count, 'achievement_qs': achievement_qs, 'achievement_qs_count': achievement_qs_count, 'language_qs': language_qs, 'membership_qs': membership_qs, 'membership_qs_count': membership_qs_count, 'als': als, 'vac': vac,
         }
     return render(request, template, context)
 
