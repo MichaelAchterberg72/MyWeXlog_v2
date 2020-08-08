@@ -120,7 +120,7 @@ class PassportDetailForm(forms.ModelForm):
             'expiry_date': DateInput(),
         }
         labels = {
-            'issue':'date issued',
+            'issue':'Country of issue',
         }
 
 

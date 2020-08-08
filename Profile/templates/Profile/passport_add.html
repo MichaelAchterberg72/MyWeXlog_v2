@@ -23,6 +23,10 @@
       {{ form.issue|as_crispy_field }}
       {{ form.expiry_date|as_crispy_field }}
     </div>
+    <div class="form-group col-md-6 mb-0">
+      <br>
+      Your passport number is only required in the event you wish specify it. To identify the loacation the Country of issue is sufficient with the Expiry date.
+    </div>
   </div>
   <div class="">
     <p><a href="{% url 'Profile:ProfileView' %}" class="btn btn-danger">Cancel</a> <button type="submit" name="Done" class="btn btn-primary">Save</button></p>
