@@ -25,10 +25,7 @@ body {
 }
 
 .select2-selection {
-  padding-top: .25rem;
-  padding-bottom: .75rem;
-  line-height: 1.5;
-  height: 38px !important;
+  min-height: 38px !important;
 }
 
 .select2-selection__arrow {
