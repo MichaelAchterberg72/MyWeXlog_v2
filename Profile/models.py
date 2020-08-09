@@ -296,7 +296,7 @@ class PhysicalAddress(models.Model):
     line3 = models.CharField('Address Line 3', max_length=100, blank=True, null=True)
     country = CountryField(null=True)
     region = models.ForeignKey(Region, on_delete=models.PROTECT, null=True)
-    city = models.ForeignKey(City, on_delete=models.PROTECT, null=True, blank=True)
+    city = models.ForeignKey(City, on_delete=models.PROTECT, null=True)
     suburb = models.ForeignKey(Suburb, on_delete=models.PROTECT, null=True, blank=True)
     code = models.CharField('Postal Code', max_length=12, null=True)
 

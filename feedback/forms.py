@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import FeedBack, Notices, NoticeRead
+from .models import FeedBack, Notices, NoticeRead, FeedBackActions
 
 
 class FeedBackForm(forms.ModelForm):
@@ -19,3 +19,9 @@ class NoticeReadForm(forms.ModelForm):
     class Meta:
         model = NoticeRead
         fields = ('notice_read',)
+
+
+class FeedBackRespondForm(forms.ModelForm):
+    class Meta:
+        model = FeedBackActions
+        fields = ('actions',)

@@ -1,0 +1,58 @@
+{% extends "base_home.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Member Feedback{% endblock title %}
+
+{% block content %}
+<div class="card border-0" style="width: 100%;">
+  <div class="card-body">
+    <h4 class="card-title">Member Feedback</h4>
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th>Captured By</th>
+          <th>Date Captured</th>
+          <th>Details</th>
+          <th>Like?</th>
+          <th>Dislike?</th>
+          <th>Responded?</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for i in actions_qs %}
+        <tr>
+          <td>{{ i.talent.alias }}</td>
+          <td>{{ i.date_captured|date:'j M y' }}</td>
+          <td>{{ i.details }}</td>
+          <td>
+            {% if i.optional_1 %}
+              Yes
+            {% else %}
+              No
+            {% endif %}
+          </td>
+          <td>
+            {% if i.optional_2 %}
+              Yes
+            {% else %}
+              No
+            {% endif %}
+          </td>
+          <td>
+            {% if i.responded == True %}
+              Yes
+            {% else %}
+              None
+            {% endif %}
+          </td>
+          <td><a href="{% url 'Feedback:FeedbackDetail' i.slug %}">Details</a></td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock content %}

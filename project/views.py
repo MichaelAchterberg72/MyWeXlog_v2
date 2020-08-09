@@ -158,6 +158,7 @@ def ProjectListView(request):
     return render(request, template_name, context)
 
 
+@login_required()
 def ProjectSearch(request):
     form = ProjectSearchForm()
     query = None
@@ -266,6 +267,7 @@ def get_project_id(request):
 #<<< Project Popup
 
 
+@login_required()
 def AutofillMessage(request, pk):
     from django.contrib.auth import get_user_model
     from users.models import CustomUser

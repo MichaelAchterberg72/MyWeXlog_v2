@@ -21,6 +21,7 @@ class CustomUser(AbstractUser):
         (0,'Free'),
         (1,'Passive'),
         (2,'Active'),
+        (3,'MyWeXlog Management'),
     )
     COMPANY = (
         (0,'Company Representative'),

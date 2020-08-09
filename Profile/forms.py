@@ -120,7 +120,7 @@ class PassportDetailForm(forms.ModelForm):
             'expiry_date': DateInput(),
         }
         labels = {
-            'issue':'date issued',
+            'issue':'Issuing Country',
         }
 
 
@@ -246,6 +246,9 @@ class PhysicalAddressForm(forms.ModelForm):
             'city': CitySelect2Widget(),
             'suburb': SuburbSelect2Widget(),
         }
+        labels = {
+            'city': 'City / Town / Village',
+        }
 
 
 class PostalAddressForm(forms.ModelForm):
@@ -257,7 +260,10 @@ class PostalAddressForm(forms.ModelForm):
             'city': CitySelect2Widget(),
             'suburb': SuburbSelect2Widget(),
         }
-
+        
+        labels = {
+            'city': 'City / Town / Village',
+        }
 
 class PhoneNumberForm(forms.ModelForm):
     class Meta:

@@ -1,0 +1,78 @@
+{% extends "base_home.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Feedback Detail{% endblock title %}
+
+{% block content %}
+<div class="card border-0" style="width: 100%;">
+  <div class="card-body">
+    <h4 class="card-title">Member Feedback Detail</h4>
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th>Captured By</th>
+          <th>Date Captured</th>
+          <th>Type</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ feedback.talent.alias }}</td>
+          <td>{{ feedback.date_captured|date:'j M y' }}</td>
+          <td>{{ feedback.get_type_display }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <table class="table table-sm">
+      <col width = 20%>
+      <col width = 80%>
+      <thead>
+        <tr>
+          <th>Response</th>
+          <th>Comments Made</th>
+        </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <th>Details</th>
+        <td>{{ feedback.details }}</td>
+      </tr>
+      <tr>
+        <th>Like</th>
+        <td>{{ feedback.optional_1 }}</td>
+      </tr>
+      <tr>
+        <th>Dislike</th>
+        <td>{{ feedback.optional_2 }}</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+<br>
+<div class="card border-0" style="width: 100%;">
+  <div class="card-body">
+    <h4 class="card-title">Response Notes</h4>
+    <form method="post" id="BranchForm" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="form-row">
+        <div class="form-group col-md-12 mb-0">
+          {{ form.actions|as_crispy_field }}
+        </div>
+        <div class="">
+          <p>
+            <a href="{% url 'Feedback:FeedbackDetail' feedback.slug %}" class="btn btn-danger">
+              Cancel
+            </a>
+            <button type="submit" name="Done" class="btn btn-primary">
+              Add
+            </button>
+          </p>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock content %}

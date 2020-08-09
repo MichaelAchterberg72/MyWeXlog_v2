@@ -121,6 +121,17 @@
           </a>
         </li>
 
+        {% if request.user.subscription > 2 %}
+          <li class="nav-item">
+            <a href="{% url 'Feedback:FeedbackAll' %}" class="nav-link">
+              <div class="fa-primary">
+                <i style="font-size: 27px" class="icon icon-black-tie"></i>
+              </div>
+              <span class="link-text">Feedback Form</span>
+            </a>
+          </li>
+        {% endif %}
+
         <li class="nav-item" id="themeButton">
           <a href="{% url 'Users:CustomUserSettings' %}" class="nav-link">
             <div class="fa-primary">

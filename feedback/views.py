@@ -11,8 +11,8 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from csp.decorators import csp_exempt
 
-from .models import FeedBack, Notices, NoticeRead
-from .forms import FeedBackForm, NoticeForm, NoticeReadForm
+from .models import FeedBack, Notices, NoticeRead, FeedBackActions
+from .forms import FeedBackForm, NoticeForm, NoticeReadForm, FeedBackRespondForm
 
 from users.models import CustomUser
 
@@ -101,3 +101,50 @@ def NoticeReadView(request, nt):
         template = 'feedback/notice_read_form.html'
         context = {'form': form, 'qs': qs, 'qs2': qs2}
         return render(request, template, context)
+
+@login_required()
+@subscription(3)
+def feedback_list(request):
+    actions_qs = FeedBack.objects.all().order_by('-date_captured')
+
+    template = 'feedback/feedback_list.html'
+    context = {'actions_qs': actions_qs, }
+    return render(request, template, context)
+
+
+@login_required()
+@subscription(3)
+def feedback_detail(request, fbd):
+    detail_qs = FeedBack.objects.get(slug=fbd)
+    response_qs = FeedBackActions.objects.filter(item__slug=fbd).order_by('-date_reviewed')
+
+    template = 'feedback/feedback_detail.html'
+    context = {'detail_qs': detail_qs, 'response_qs': response_qs, }
+    return render(request, template, context)
+
+
+@login_required()
+@subscription(3)
+def feedback_respond(request, fbd):
+    feedback = get_object_or_404(FeedBack, slug=fbd)
+
+    form = FeedBackRespondForm(request.POST or None)
+
+    if request.method =='POST':
+        if form.is_valid():
+            new=form.save(commit=False)
+            new.item = feedback
+            new.review_by = request.user
+            new.save()
+
+            feedback.responded = True
+            feedback.save()
+
+            return redirect(reverse('Feedback:FeedbackDetail', kwargs={'fbd':fbd}))
+        template = 'feedback/feedback_respond.html'
+        context = {'form': form, 'feedback': feedback,}
+        return render(request, template, context)
+
+    template = 'feedback/feedback_respond.html'
+    context = {'form': form, 'feedback': feedback,}
+    return render(request, template, context)

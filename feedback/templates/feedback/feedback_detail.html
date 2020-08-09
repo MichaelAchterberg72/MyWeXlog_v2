@@ -1,0 +1,87 @@
+{% extends "base_home.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Feedback Detail{% endblock title %}
+
+{% block content %}
+<div class="card border-0" style="width: 100%;">
+  <div class="card-body">
+    <h4 class="card-title">Member Feedback Detail</h4>
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th>Captured By</th>
+          <th>Date Captured</th>
+          <th>Type</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ detail_qs.talent.alias }}</td>
+          <td>{{ detail_qs.date_captured|date:'j M y' }}</td>
+          <td>{{ detail_qs.get_type_display }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <table class="table table-sm">
+      <col width = 20%>
+      <col width = 80%>
+      <thead>
+        <tr>
+          <th>Response</th>
+          <th>Comments Made</th>
+        </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <th>Details</th>
+        <td>{{ detail_qs.details }}</td>
+      </tr>
+      <tr>
+        <th>Like</th>
+        <td>{{ detail_qs.optional_1 }}</td>
+      </tr>
+      <tr>
+        <th>Dislike</th>
+        <td>{{ detail_qs.optional_2 }}</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+<br>
+<div class="card border-0" style="width: 100%;">
+  <div class="card-body">
+    <div class="float-right">
+      <a href="{% url 'Feedback:FeedbackRespond' detail_qs.slug %}" class="btn btn-primary">
+        Respond
+      </a>
+    </div>
+    <h4 class="card-title">Responses</h4>
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>By</th>
+          <th>Comments</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in response_qs %}
+        <tr>
+          <td>{{ r.date_reviewed|date:'j M Y' }}</td>
+          <td>{{ r.review_by.first_name }} {{ r.review_by.last_name }}</td>
+          <td>{{ r.actions }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="3"> "No Responses to date"</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock content %}
