@@ -2097,6 +2097,10 @@ def ProfileEditView(request, tlt):
                 if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
                     next_url = reverse('Profile:ProfileView')
                 return HttpResponseRedirect(next_url)
+            else:
+                template = 'Profile/profile_edit.html'
+                context = {'form': form,}
+                return render(request, template, context)
         else:
             template = 'Profile/profile_edit.html'
             context = {'form': form,}
