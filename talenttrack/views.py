@@ -1068,7 +1068,8 @@ def TltRatingDetailView(request, tlt):
 def ActiveProfileView(request, tlt, vac):
     '''View for profile and skills for specified vacancy'''
     #caching
-    bch = BriefCareerHistory.objects.filter(talent__alias=tlt).order_by('-date_from')
+    bch = BriefCareerHistory.objects.filter(talent__alias=tlt).order_by('-date_from')[:6]
+    bch_count = bch.count()
     pfl = Profile.objects.filter(alias=tlt).first()
     als = get_object_or_404(Profile, alias=tlt)
     padd = PhysicalAddress.objects.only('country', 'region', 'city').get(talent__alias=tlt)
@@ -1077,13 +1078,16 @@ def ActiveProfileView(request, tlt, vac):
     skill_qs = SkillTag.objects.all()
     exp = WorkExperience.objects.filter(talent__alias=tlt).select_related('topic', 'course', 'project')
     edtexp = exp.filter(edt=True).order_by('-date_from')
+    edtexp_count = edtexp.count()
     bkl = ReadBy.objects.filter(talent__alias=tlt).select_related('book', 'type')[:6]
     bkl_count = bkl.count()
     prj_qs = ProjectData.objects.all()
     bid_qs = WorkBid.objects.filter(Q(talent__alias=tlt) & Q(work__ref_no=vac))
-    achievement_qs = Achievements.objects.filter(talent__alias=tlt).order_by('-date_achieved')
+    achievement_qs = Achievements.objects.filter(talent__alias=tlt).order_by('-date_achieved')[:6]
+    achievement_qs_count = achievement_qs.count()
     language_qs = LanguageTrack.objects.filter(talent__alias=tlt).order_by('-language')
-    membership_qs = LicenseCertification.objects.filter(talent__alias=tlt).order_by('-issue_date')[:5]
+    membership_qs = LicenseCertification.objects.filter(talent__alias=tlt).order_by('-issue_date')[:6]
+    membership_qs_count = membership_qs.count()
     bslist_qs = BidShortList.objects.filter(Q(talent__alias=tlt) & Q(scope__ref_no=vac))
     int_list = BidInterviewList.objects.filter(Q(talent__alias=tlt) & Q(scope__ref_no=vac))
 
@@ -1157,28 +1161,199 @@ def ActiveProfileView(request, tlt, vac):
 
     template = 'talenttrack/active_profile_view.html'
     context = {
-        'bch': bch, 'pfl': pfl, 'padd': padd,'vacse_set': vacse_set, 'vacst_set': vacst_set, 'exp': exp, 'bkl': bkl, 'edtexp': edtexp, 'bkl_count': bkl_count, 'prj_set': prj_set, 'prj_count': prj_count, 'bid_qs': bid_qs, 'achievement_qs': achievement_qs, 'language_qs': language_qs, 'membership_qs': membership_qs, 'bslist_qs': bslist_qs, 'vacancy': vacancy, 'int_list': int_list, 'als': als,
+        'tlt': tlt, 'bch': bch, 'bch_count': bch_count, 'pfl': pfl, 'padd': padd,'vacse_set': vacse_set, 'vacst_set': vacst_set, 'exp': exp, 'bkl': bkl, 'edtexp': edtexp, 'edtexp_count': edtexp_count, 'bkl_count': bkl_count, 'prj_set': prj_set, 'prj_count': prj_count, 'bid_qs': bid_qs, 'achievement_qs': achievement_qs, 'achievement_qs_count': achievement_qs_count, 'language_qs': language_qs, 'membership_qs': membership_qs, 'membership_qs_count': membership_qs_count, 'bslist_qs': bslist_qs, 'vacancy': vacancy, 'int_list': int_list, 'als': als, 'vac': vac,
+        }
+    return render(request, template, context)
+
+
+def BCHView(request, tlt, vac):
+
+    bch = BriefCareerHistory.objects.filter(talent__alias=tlt).order_by('-date_from')
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(bch, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+    template = 'talenttrack/apv_bch.html'
+    context = {'tlt': tlt, 'vac': vac, 'pageitems': pageitems, 'page_range': page_range}
+    return render(request, template, context)
+
+
+def AchievementsView(request, tlt, vac):
+
+    achievement_qs = Achievements.objects.filter(talent__alias=tlt).order_by('-date_achieved')
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(achievement_qs, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+    template = 'talenttrack/apv_ach.html'
+    context = {'tlt': tlt, 'vac': vac, 'pageitems': pageitems, 'page_range': page_range}
+    return render(request, template, context)
+
+
+def ProjectsFVView(request, tlt, vac):
+
+    exp = WorkExperience.objects.filter(talent__alias=tlt).select_related('topic', 'course', 'project')
+    prj_qs = ProjectData.objects.all()
+    #Project Summary
+    prj = exp.values_list('project', flat=True).distinct('project')
+    prj_set = {}
+    prj_count = 0
+    for p in prj:
+        if p == None:
+            pass
+        else:
+            prj_count +=1
+            project_q = prj_qs.filter(pk=p).values_list('name', 'company__ename', 'companybranch__name', 'industry__industry')
+            info_list=[project_q[0][1], project_q[0][2], project_q[0][3]]
+            prj_set[project_q[0][0]] = info_list
+
+    t = tuple(prj_set.items())
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(t, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+    template = 'talenttrack/apv_projects.html'
+    context = {'tlt': tlt, 'vac': vac, 'prj_count': prj_count, 'pageitems': pageitems, 'page_range': page_range}
+    return render(request, template, context)
+
+
+def EduFVView(request, tlt, vac):
+
+    exp = WorkExperience.objects.filter(talent__alias=tlt).select_related('topic', 'course', 'project')
+    edtexp = exp.filter(edt=True).order_by('-date_from')
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(edtexp, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+    template = 'talenttrack/apv_edu.html'
+    context = {'tlt': tlt, 'vac': vac, 'pageitems': pageitems, 'page_range': page_range}
+    return render(request, template, context)
+
+
+def LCMFullView(request, tlt):
+    '''View to show all licenses and certifications for a person.'''
+    #tlt = Profile.objects.get(alias=tlt)
+    lcm_qs = LicenseCertification.objects.filter(talent__alias=tlt).order_by('-issue_date')
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(lcm_qs, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+    template = 'talenttrack/lcm_full_view.html'
+    context = {
+        'tlt': tlt, 'pageitems': pageitems, 'page_range': page_range
         }
     return render(request, template, context)
 
 
 @login_required()
 def profile_view(request, tlt):
-    '''View for profile without reference to a vacancy. Used for the seach feature'''
+    '''View for profile without reference to a vacancy. Used for the search feature'''
     #caching
-    bch = BriefCareerHistory.objects.filter(talent__alias=tlt).order_by('-date_from')
+    bch = BriefCareerHistory.objects.filter(talent__alias=tlt).order_by('-date_from')[:6]
+    bch_count = bch.count()
     pfl = Profile.objects.filter(alias=tlt).first()
     als = get_object_or_404(Profile, alias=tlt)
     padd = PhysicalAddress.objects.only('country', 'region', 'city').get(talent__alias=tlt)
+    vacancy = TalentRequired.objects.filter(ref_no=vac)
+    skr = SkillRequired.objects.filter(scope__ref_no=vac).values_list('skills', flat=True).distinct('skills')
     skill_qs = SkillTag.objects.all()
     exp = WorkExperience.objects.filter(talent__alias=tlt).select_related('topic', 'course', 'project')
     edtexp = exp.filter(edt=True).order_by('-date_from')
+    edtexp_count = edtexp.count()
     bkl = ReadBy.objects.filter(talent__alias=tlt).select_related('book', 'type')[:6]
     bkl_count = bkl.count()
     prj_qs = ProjectData.objects.all()
-    achievement_qs = Achievements.objects.filter(talent__alias=tlt).order_by('-date_achieved')
+    bid_qs = WorkBid.objects.filter(Q(talent__alias=tlt) & Q(work__ref_no=vac))
+    achievement_qs = Achievements.objects.filter(talent__alias=tlt).order_by('-date_achieved')[:6]
+    achievement_qs_count = achievement_qs.count()
     language_qs = LanguageTrack.objects.filter(talent__alias=tlt).order_by('-language')
-    membership_qs = LicenseCertification.objects.filter(talent__alias=tlt).order_by('-issue_date')
+    membership_qs = LicenseCertification.objects.filter(talent__alias=tlt).order_by('-issue_date')[:6]
+    membership_qs_count = membership_qs.count()
 
     #Project Summary
     prj = exp.values_list('project', flat=True).distinct('project')
@@ -1198,10 +1373,141 @@ def profile_view(request, tlt):
 
     template = 'talenttrack/active_profile_view_light.html'
     context = {
-        'bch': bch, 'pfl': pfl, 'padd': padd, 'exp': exp, 'bkl': bkl, 'edtexp': edtexp, 'bkl_count': bkl_count, 'prj_set': prj_set, 'prj_count': prj_count, 'achievement_qs': achievement_qs, 'language_qs': language_qs, 'membership_qs': membership_qs, 'als': als
+        'tlt': tlt, 'bch': bch, 'bch_count': bch_count, 'pfl': pfl, 'padd': padd, 'exp': exp, 'bkl': bkl, 'edtexp': edtexp, 'edtexp_count': edtexp_count, 'bkl_count': bkl_count, 'prj_set': prj_set, 'prj_count': prj_count, 'achievement_qs': achievement_qs, 'achievement_qs_count': achievement_qs_count, 'language_qs': language_qs, 'membership_qs': membership_qs, 'membership_qs_count': membership_qs_count, 'als': als, 'vac': vac,
         }
     return render(request, template, context)
 
+
+def BCHLView(request, tlt):
+
+    bch = BriefCareerHistory.objects.filter(talent__alias=tlt).order_by('-date_from')
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(bch, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+    template = 'talenttrack/apv_l_bch.html'
+    context = {'tlt': tlt, 'vac': vac, 'pageitems': pageitems, 'page_range': page_range}
+    return render(request, template, context)
+
+
+def AchievementsLView(request, tlt):
+
+    achievement_qs = Achievements.objects.filter(talent__alias=tlt).order_by('-date_achieved')
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(achievement_qs, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+    template = 'talenttrack/apv_l_ach.html'
+    context = {'tlt': tlt, 'vac': vac, 'pageitems': pageitems, 'page_range': page_range}
+    return render(request, template, context)
+
+
+def ProjectsLFVView(request, tlt):
+
+    exp = WorkExperience.objects.filter(talent__alias=tlt).select_related('topic', 'course', 'project')
+    prj_qs = ProjectData.objects.all()
+    #Project Summary
+    prj = exp.values_list('project', flat=True).distinct('project')
+    prj_set = {}
+    prj_count = 0
+    for p in prj:
+        if p == None:
+            pass
+        else:
+            prj_count +=1
+            project_q = prj_qs.filter(pk=p).values_list('name', 'company__ename', 'companybranch__name', 'industry__industry')
+            info_list=[project_q[0][1], project_q[0][2], project_q[0][3]]
+            prj_set[project_q[0][0]] = info_list
+
+    t = tuple(prj_set.items())
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(t, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+    template = 'talenttrack/apv_l_projects.html'
+    context = {'tlt': tlt, 'vac': vac, 'prj_count': prj_count, 'pageitems': pageitems, 'page_range': page_range}
+    return render(request, template, context)
+
+
+def EduLFVView(request, tlt):
+
+    exp = WorkExperience.objects.filter(talent__alias=tlt).select_related('topic', 'course', 'project')
+    edtexp = exp.filter(edt=True).order_by('-date_from')
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(edtexp, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+    template = 'talenttrack/apv_l_edu.html'
+    context = {'tlt': tlt, 'vac': vac, 'pageitems': pageitems, 'page_range': page_range}
+    return render(request, template, context)
 
 
 def LCMFullView(request, tlt):
@@ -1209,9 +1515,29 @@ def LCMFullView(request, tlt):
     #tlt = Profile.objects.get(alias=tlt)
     lcm_qs = LicenseCertification.objects.filter(talent__alias=tlt).order_by('-issue_date')
 
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(lcm_qs, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
     template = 'talenttrack/lcm_full_view.html'
     context = {
-        'lcm_qs': lcm_qs, 'tlt': tlt,
+        'tlt': tlt, 'pageitems': pageitems, 'page_range': page_range
         }
     return render(request, template, context)
 
@@ -1485,7 +1811,7 @@ def PreLogDetailView(request, tex):
         confirmed_clr = WorkCollaborator.objects.filter(experience__slug=tex)
         confirmed_cnt = WorkClient.objects.filter(experience__slug=tex)
 
-        template = 'talenttrack/experience_detail.html'
+        template = 'talenttrack/prelogged_experience_detail.html'
         context = {
             'check': check, 'confirmed_clg': confirmed_clg, 'confirmed_sup': confirmed_sup, 'confirmed_clr': confirmed_clr, 'confirmed_cnt': confirmed_cnt, 'list': list, 'sum_company': sum_company, 'sum_project': sum_project
             }
@@ -1596,6 +1922,27 @@ def ClientResponseView(request, wkc):
 
 
 @login_required()
+def ClientPreResponseView(request, wkc):
+    check = WorkClient.objects.get(slug=wkc)
+    if check.experience.talent == request.user:
+        form = WorkClientResponseForm(request.POST or None, instance=check)
+        if request.method =='POST':
+            next_url=request.POST.get('next', '/')
+            if form.is_valid():
+                new=form.save(commit=False)
+                new.save()
+                if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
+                    next_url = reverse('Talent:Home')
+                return HttpResponseRedirect(next_url)
+        else:
+            template = 'talenttrack/prelogged_experience_client_respond.html'
+            context = {'check': check, 'form': form}
+            return render(request, template, context)
+    else:
+        raise PermissionDenied
+
+
+@login_required()
 @csp_exempt
 def CollaboratorSelectView(request, pk):
     score = collaborator_score
@@ -1691,6 +2038,27 @@ def CollaboratorResponseView(request, clb):
                 return HttpResponseRedirect(next_url)
         else:
             template = 'talenttrack/experience_collaborator_respond.html'
+            context = {'check': check, 'form': form}
+            return render(request, template, context)
+    else:
+        raise PermissionDenied
+
+
+@login_required()
+def CollaboratorPreResponseView(request, clb):
+    check = WorkCollaborator.objects.get(slug=clb)
+    if check.experience.talent == request.user:
+        form = WorkCollaboratorResponseForm(request.POST or None, instance=check)
+        if request.method =='POST':
+            next_url=request.POST.get('next', '/')
+            if form.is_valid():
+                new=form.save(commit=False)
+                new.save()
+                if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
+                    next_url = reverse('Talent:Home')
+                return HttpResponseRedirect(next_url)
+        else:
+            template = 'talenttrack/prelogged_experience_collaborator_respond.html'
             context = {'check': check, 'form': form}
             return render(request, template, context)
     else:
@@ -1797,6 +2165,27 @@ def SuperiorResponseView(request, spr):
 
 
 @login_required()
+def SuperiorPreResponseView(request, spr):
+    check = Superior.objects.get(slug=spr)
+    if check.experience.talent == request.user:
+        form = WorkColleagueResponseForm(request.POST or None, instance=check)
+        if request.method =='POST':
+            next_url=request.POST.get('next', '/')
+            if form.is_valid():
+                new=form.save(commit=False)
+                new.save()
+                if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
+                    next_url = reverse('Talent:Home')
+                return HttpResponseRedirect(next_url)
+        else:
+            template = 'talenttrack/prelogged_experience_superior_respond.html'
+            context = {'check': check, 'form': form}
+            return render(request, template, context)
+    else:
+        raise PermissionDenied
+
+
+@login_required()
 @csp_exempt
 def ColleagueSelectView(request, pk):
     score = colleague_score
@@ -1890,6 +2279,27 @@ def ColleagueResponseView(request, clg):
                 return HttpResponseRedirect(next_url)
         else:
             template = 'talenttrack/experience_colleague_respond.html'
+            context = {'check': check, 'form': form}
+            return render(request, template, context)
+    else:
+        raise PermissionDenied
+
+
+@login_required()
+def ColleaguePreResponseView(request, clg):
+    check = WorkColleague.objects.get(slug=clg)
+    if check.experience.talent == request.user:
+        form = WorkColleagueResponseForm(request.POST or None, instance=check)
+        if request.method =='POST':
+            next_url=request.POST.get('next', '/')
+            if form.is_valid():
+                new=form.save(commit=False)
+                new.save()
+                if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
+                    next_url = reverse('Talent:Home')
+                return HttpResponseRedirect(next_url)
+        else:
+            template = 'talenttrack/prelogged_experience_colleague_respond.html'
             context = {'check': check, 'form': form}
             return render(request, template, context)
     else:

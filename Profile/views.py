@@ -43,7 +43,7 @@ from .models import (
         )
 
 from .forms import (
-    ProfileForm, EmailForm, EmailStatusForm, PhysicalAddressForm, PostalAddressForm, PhoneNumberForm, OnlineProfileForm, ProfileTypeForm, FileUploadForm, IdTypeForm, LanguageTrackForm, LanguageListForm, PassportDetailForm, IdentificationDetailForm, BriefCareerHistoryForm, ResignedForm, UserUpdateForm, CustomUserUpdateForm, ExpandedIntroWalkthroughForm,
+    ProfileForm, EmailForm, EmailStatusForm, PhysicalAddressForm, PostalAddressForm, PhoneNumberForm, OnlineProfileForm, ProfileTypeForm, FileUploadForm, IdTypeForm, LanguageTrackForm, LanguageListForm, PassportDetailForm, IdentificationDetailForm, BriefCareerHistoryForm, ResignedForm, UserUpdateForm, CustomUserUpdateForm, ExpandedIntroWalkthroughForm, ProfileBackgroundForm, ProfileMotivationForm
 )
 
 from talenttrack.models import (
@@ -2063,7 +2063,7 @@ def ProfileView(request):
 
         template = 'Profile/profile_view.html'
         context = {
-            'info':info, 'email':email, 'physical':physical, 'postal': postal, 'pnumbers': pnumbers, 'online': online, 'upload': upload, 'id': id, 'passport': passport, 'speak': speak, 'history': history, 'user_info': user_info, 'achievement': achievement, 'lcm_qs': lcm_qs,
+            'info':info, 'email':email, 'physical':physical, 'postal': postal, 'pnumbers': pnumbers, 'online': online, 'upload': upload, 'id': id, 'passport': passport, 'speak': speak, 'history': history, 'user_info': user_info, 'achievement': achievement, 'lcm_qs': lcm_qs, 'tlt': tlt,
             }
 
         return render(request, template, context)
@@ -2099,6 +2099,60 @@ def ProfileEditView(request, tlt):
                 return HttpResponseRedirect(next_url)
         else:
             template = 'Profile/profile_edit.html'
+            context = {'form': form,}
+            return render(request, template, context)
+    else:
+        raise PermissionDenied
+
+
+@login_required()
+def ProfileBackgroundEditView(request, tlt):
+    talent = request.user.id
+    detail = Profile.objects.get(alias=tlt)
+
+    if detail.talent == request.user:
+        form = ProfileBackgroundForm(request.POST or None, instance=detail)
+
+        if request.method =='POST':
+            next_url=request.POST.get('next','/')
+
+            if form.is_valid():
+                new = form.save(commit=False)
+                new.talent = request.user
+                new.save()
+
+                if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
+                    next_url = reverse('Profile:ProfileView')+'#background'
+                return HttpResponseRedirect(next_url)
+        else:
+            template = 'Profile/profile_background_edit.html'
+            context = {'form': form,}
+            return render(request, template, context)
+    else:
+        raise PermissionDenied
+
+
+@login_required()
+def ProfileMotivationEditView(request, tlt):
+    talent = request.user.id
+    detail = Profile.objects.get(alias=tlt)
+
+    if detail.talent == request.user:
+        form = ProfileMotivationForm(request.POST or None, instance=detail)
+
+        if request.method =='POST':
+            next_url=request.POST.get('next','/')
+
+            if form.is_valid():
+                new = form.save(commit=False)
+                new.talent = request.user
+                new.save()
+
+                if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
+                    next_url = reverse('Profile:ProfileView')+'#motivation'
+                return HttpResponseRedirect(next_url)
+        else:
+            template = 'Profile/profile_motivation_edit.html'
             context = {'form': form,}
             return render(request, template, context)
     else:

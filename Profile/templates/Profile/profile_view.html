@@ -127,11 +127,23 @@
 <div class="card-group">
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title">Background</h5>
+      <div class="float-right">
+        <a href="{% url 'Profile:BackgroundEdit' tlt %}" class="btn btn-secondary">Edit</a>
+      </div>
+      <h5 class="card-title" id="background">Background</h5>
       <p class="card-text text-justify">
         {{ d.background|linebreaks }}</p>
-      <br>
-      <h5 class="card-title">Motivation:</h5>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="card-group">
+    <div class="card">
+      <div class="card-body">
+      <div class="float-right">
+        <a href="{% url 'Profile:MotivationEdit' tlt %}" class="btn btn-secondary">Edit</a>
+      </div>
+      <h5 class="card-title" id="motivation">Motivation:</h5>
       <p class="card-text text-justify">
         {{ d.motivation|linebreaks }}</p>
     </div>

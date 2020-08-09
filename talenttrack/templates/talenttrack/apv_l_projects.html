@@ -1,0 +1,84 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+{% block title %}{{block.super}}- {{ tlt }} Profile{% endblock title %}
+
+{% block content %}
+<h3>Profile for {{ tlt }}</h3>
+<div class="card">
+  <div class="card-body">
+    <div class="float-right">
+      <a href="{% url 'Talent:APV_L' tlt %}?next={{ request.path|urlencode }}#projects" class="btn btn-secondary" style="width: 5rem;">Back</a>
+    </div>
+    <h4 class="card-title">Project History</h4>
+  </div>
+    <div class="col-sm-12">
+      <p>Total Projects: <strong>{{ prj_count }}</strong> </p>
+
+          <table class="table table-sm">
+            <col width="45%">
+            <col width="20%">
+            <col width="15%">
+            <col width="20%">
+            <thead>
+              <tr>
+                <th>Project Name</th>
+                <th>Project Owner</th>
+                <th>Project Site</th>
+                <th>Industry</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for b in pageitems %}
+                <tr>
+                  <td>{{ b.0 }}</td>
+                  <td>{{ b.1.0 }}</td>
+                  <td>{{ b.1.1 }}</td>
+                  <td>{{ b.1.2 }}</td>
+                {% empty %}
+                  <td colspan="4">No projects listed.</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+    <p>&nbsp</p>
+
+    <nav aria-label="Page navigation">
+        {% if pageitems.has_other_pages %}
+          <ul class="pagination">
+            {% if pageitems.has_previous %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ pageitems.previous_page_number }}" aria-label="Previous">
+                  <span aria-hidden="true">Previous</span>
+                  <span class="sr-only disabled">Previous</span>
+                </a></li>
+            {% else %}
+              <li class="page-link disabled" tabindex="-1"><span>Previous</span></li>
+            {% endif %}
+
+            {% if pageitems.number|add:'-4' > 1 %}
+              <li class="page-link"><a href="?page={{ pageitems.number|add:'-5' }}">&hellip;</a></li>
+            {% endif %}
+
+            {% for i in pageitems.paginator.page_range %}
+              {% if pageitems.number == i %}
+                <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
+              {% elif i > pageitems.number|add:'-5' and i < pageitems.number|add:'5' %}
+                <li class="page-link"><a class="page-item" href="?page={{ i }}">{{ i }}</a></li>
+              {% endif %}
+            {% endfor %}
+
+            {% if pageitems.paginator.num_pages > pageitems.number|add:'4' %}
+              <li class="page-link"><a href="?page={{ pageitems.number|add:'5' }}">&hellip;</a></li>
+            {% endif %}
+
+            {% if pageitems.has_next %}
+              <li class="page-link"><a href="?page={{ pageitems.next_page_number }}">Next</a></li>
+            {% else %}
+              <li class="page-link disabled"><span>Next</span></li>
+            {% endif %}
+          </ul>
+        {% endif %}
+    </nav>
+  </div>
+</div>
+{% endblock content %}

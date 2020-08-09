@@ -6,30 +6,30 @@
 {% block content %}
 <div class="card border-0">
   <div class="card-body">
-  <h4 class="">Experience - Logged Hours<span><p class="float-right"><a href="{% url 'Talent:Home' %}"  class="badge badge-pill badge-primary">Back</a></p></span></h4>
+  <h4 class="">Experience - Pre-Logged Hours<span><p class="float-right"><a href="{% url 'Talent:Home' %}"  class="badge badge-pill badge-primary">Back</a></p></span></h4>
 
 
     <table class="table table-bordered">
       <thead>
         <tr>
-          <th class ="text-center">Employer</th>
-          <th class ="text-center">Designation</th>
-          <th class ="text-center">Date from</th>
-          <th class ="text-center">Date to</th>
-          <th class ="text-center">Project</th>
-          <th class ="text-center">Industry</th>
-          <th class ="text-center">Hours logged</th>
+          <th>Employer</th>
+          <th>Designation</th>
+          <th>Date from</th>
+          <th>Date to</th>
+          <th>Project</th>
+          <th>Industry</th>
+          <th>Hours logged</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td class ="text-center">{{ check.company }}<br>({{ sum_company.co_sum|intcomma }})*</td>
-          <td class ="text-center">{{ check.designation }}</td>
-          <td class ="text-center">{{ check.date_from }}</td>
-          <td class ="text-center">{{ check.date_to }}</td>
-          <td class ="text-center">{{ check.project }}<br>({{ sum_project.p_sum|intcomma }})*</td>
-          <td class ="text-center">{{ check.industry }}</td>
-          <td class ="text-center">{{ check.hours_worked }}</td>
+          <td>{{ check.company }}<br>({{ sum_company.co_sum|intcomma }})*</td>
+          <td>{{ check.designation }}</td>
+          <td>{{ check.date_from }}</td>
+          <td>{{ check.date_to }}</td>
+          <td>{{ check.project }}<br>({{ sum_project.p_sum|intcomma }})*</td>
+          <td>{{ check.industry }}</td>
+          <td>{{ check.hours_worked }}</td>
         </tr>
         <tr>
           <th>Skills</th>
@@ -82,7 +82,7 @@
                    <i class="fa fa-times-rectangle-o" style="font-size:24px;color:red !important" data-toggle="tooltip" title="Wrong Person"></i>
                  {% endif %}
                  {{c.get_confirm_display}}</td>
-               <td><a href="{% url 'Talent:ColleagueResponse' c.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 5rem">Detail</a></td>
+               <td><a href="{% url 'Talent:ColleaguePreResponse' c.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 5rem">Detail</a></td>
              </tr>
             {% endfor %}
            </tbody>
@@ -117,7 +117,7 @@
                    <i class="fa fa-times-rectangle-o" style="font-size:24px;color:red !important" data-toggle="tooltip" title="Wrong Person"></i>
                  {% endif %}
                  {{cm.get_confirm_display}}</td>
-               <td><a href="{% url 'Talent:SuperiorResponse' cm.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 5rem">Detail</a></td>
+               <td><a href="{% url 'Talent:SuperiorPreResponse' cm.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 5rem">Detail</a></td>
              </tr>
           {% endfor %}
            </tbody>
@@ -155,7 +155,7 @@
                    <i class="fa fa-times-rectangle-o" style="font-size:24px;color:red !important" data-toggle="tooltip" title="Wrong Person"></i>
                  {% endif %}
                  {{wc.get_confirm_display}}</td>
-               <td><a href="{% url 'Talent:CollaboratorResponse' wc.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 5rem">Detail</a></td>
+               <td><a href="{% url 'Talent:CollaboratorPreResponse' wc.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 5rem">Detail</a></td>
              </tr>
             {% endfor %}
            </tbody>
@@ -190,7 +190,7 @@
                    <i class="fa fa-times-rectangle-o" style="font-size:24px;color:red !important" data-toggle="tooltip" title="Wrong Person"></i>
                  {% endif %}
                  {{cnt.get_confirm_display}}</td>
-               <td><a href="{% url 'Talent:ClientResponse' cnt.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 5rem">Detail</a></td>
+               <td><a href="{% url 'Talent:ClientPreResponse' cnt.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 5rem">Detail</a></td>
              </tr>
           {% endfor %}
            </tbody>
