@@ -1083,7 +1083,7 @@ def ActiveProfileView(request, tlt, vac):
     bid_qs = WorkBid.objects.filter(Q(talent__alias=tlt) & Q(work__ref_no=vac))
     achievement_qs = Achievements.objects.filter(talent__alias=tlt).order_by('-date_achieved')
     language_qs = LanguageTrack.objects.filter(talent__alias=tlt).order_by('-language')
-    membership_qs = LicenseCertification.objects.filter(talent__alias=tlt).order_by('-issue_date')
+    membership_qs = LicenseCertification.objects.filter(talent__alias=tlt).order_by('-issue_date')[:5]
     bslist_qs = BidShortList.objects.filter(Q(talent__alias=tlt) & Q(scope__ref_no=vac))
     int_list = BidInterviewList.objects.filter(Q(talent__alias=tlt) & Q(scope__ref_no=vac))
 

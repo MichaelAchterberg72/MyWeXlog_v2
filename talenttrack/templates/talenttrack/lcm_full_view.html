@@ -13,7 +13,7 @@
       <form  action="{% url 'BookList:BLB' %}" method="post">
         <input type="hidden" name="next" value="{{ request.GET.next }}">
         {% csrf_token %}
-        <button type="submit" class="btn btn-secondary float-right">Back to {{tlt.alias}}'s Profile</button>
+        <button type="submit" class="btn btn-secondary float-right">Back to {{ tlt }}'s Profile</button>
       </form>
       <h5>Licences, Certifications and Memberships</h5>
     </div>
