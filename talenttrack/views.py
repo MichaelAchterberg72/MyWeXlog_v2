@@ -1218,7 +1218,7 @@ def LCMFullView(request, tlt):
 
 def SkillProfileDetailView(request, tlt):
     '''A list of all hours logged against a skill for experience and training'''
-    tlt_p = Profile.objects.get(alias=tlt)
+    tlt_p = Profile.objects.get(talent__alias=tlt)
     skill_qs = SkillTag.objects.all()
     exp = WorkExperience.objects.filter(talent__alias = tlt).select_related('topic')
 
@@ -1343,7 +1343,7 @@ def SumAllExperienceView(request, tlt):
 
     template = 'talenttrack/talent_detail_summary.html'
     context = {
-        'edt_set': edt_set, 'tlt': tlt, 'exp_set': exp_set, 'tlt_p': tlt_p
+        'edt_set': edt_set, 'tlt': tlt, 'exp_set': exp_set, 'tlt_p': tlt_p, 'talent': talent,
     }
     return render(request, template, context)
 

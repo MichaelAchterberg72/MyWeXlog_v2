@@ -2,10 +2,10 @@
 {% load humanize %}
 
 {% block title %}
-{% if request.user.id == pfl.id %}
+{% if request.user.id == talent %}
   {{block.super}}-Experience Overview
 {% else %}
-  {{block.super}}-{{pfl.alias}} Skill Summary
+  {{block.super}}-Skill Summary
 {% endif %}
 {% endblock title %}
 
@@ -13,6 +13,12 @@
 <div class="border-0">
   <div class="card-body">
   <h4 class="">Designation, Project & Company Summary</h4>
+  {% if request.user.alias == tlt %}
+
+  {% else %}
+    for {{ tlt }}
+  {% endif %}
+  <h5></h5>
   <div class="row">
     <div class="col-sm-12">
     <div class="border-0">
@@ -55,8 +61,8 @@
     <div class="col-sm-6">
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title">Company Summary</h5>
-          <p>This is a list of the time spent at a company.</p>
+          <h5 class="card-title" id="Company">Company Summary</h5>
+          <p>This is a list of the time spent by  {% if request.user.alias == tlt %} you {% else %} <strong>{{ tlt }}</strong> {% endif%}at various companies.</p>
           <table class="table table-sm">
             <thead>
               <tr>
@@ -84,8 +90,8 @@
     <div class="col-sm-12">
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title">Project Summary</h5>
-          <p>This is a list of the time spent on a Project.</p>
+          <h5 class="card-title" id="Project">Project Summary</h5>
+          <p>This is a list of the time spent by {% if request.user.alias == tlt %} you {% else %} <strong>{{ tlt }}</strong> {% endif%}on various Projects.</p>
           <table class="table table-sm">
             <thead>
               <tr>
