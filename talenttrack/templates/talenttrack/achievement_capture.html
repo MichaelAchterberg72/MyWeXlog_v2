@@ -13,9 +13,11 @@
   <div class="form-row">
     <div class="form-group col-md-6 mb-0">
       {{ form.achievement|as_crispy_field }}
-
       {{ form.date_achieved|as_crispy_field }}
-
+      {{ form.upload|as_crispy_field }}
+      <p>
+        <strong>Please note:</strong> Only <strong>pdf</strong> files can be uploaded.
+      </p>
     </div>
     <div class="form-group col-md-6 mb-0">
       {{ form.description|as_crispy_field }}

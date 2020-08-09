@@ -28,11 +28,18 @@ CONFIRM = (
 )
 
 
+#Function to randomise filename for Profile Upload
+def AchFilename(instance, filename):
+	ext = filename.split('.')[-1]
+	return "%s/ach\%s_%s.%s" % (instance.talent.id, str(time()).replace('.','_'), random(), ext)
+
+
 class Achievements(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     achievement = models.CharField(max_length=500)
     date_achieved = models.DateField()
     description = models.TextField('Describe the Achievement')
+    upload = models.FileField(upload_to=AchFilename, blank=True, null=True, validators=[FileExtensionValidator(['pdf'])])
     slug = models.SlugField(max_length=15, unique=True, null=True, blank=True)
 
     class Meta:

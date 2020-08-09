@@ -187,7 +187,7 @@ class ProfileSearchForm(forms.Form):
 class AchievementsForm(forms.ModelForm):
     class Meta:
         model = Achievements
-        fields = ('achievement', 'date_achieved', 'description')
+        fields = ('achievement', 'date_achieved', 'description', 'upload',)
         widgets = {
             'date_achieved': DateInput(),
             'achievement': forms.TextInput(),

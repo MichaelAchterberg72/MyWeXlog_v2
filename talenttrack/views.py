@@ -963,9 +963,9 @@ def WorkExperienceListView(request):
 @login_required()
 def CaptureAchievementView(request):
     pfl = get_object_or_404(CustomUser, pk=request.user.id)
-    form = AchievementsForm(request.POST or None)
 
     if request.method == 'POST':
+        form = AchievementsForm(request.POST, request.FILES)
         if form.is_valid():
             new = form.save(commit=False)
             new.talent = pfl
@@ -976,6 +976,7 @@ def CaptureAchievementView(request):
             context = {'form': form,}
             return render(request, template, context)
     else:
+        form = AchievementsForm()
         template = 'talenttrack/achievement_capture.html'
         context = {'form': form,}
         return render(request, template, context)
@@ -985,13 +986,18 @@ def CaptureAchievementView(request):
 def EditAchievementView(request, ach):
     instance = get_object_or_404(Achievements, slug=ach)
 
-    form = AchievementsForm(request.POST or None, instance=instance)
-
     if request.method == 'POST':
-        new = form.save(commit=False)
-        new.save()
-        return redirect(reverse('Profile:ProfileView')+'#achievements')
+        form = AchievementsForm(request.POST, request.FILES, instance=instance)
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.save()
+            return redirect(reverse('Profile:ProfileView')+'#achievements')
+        else:
+            template = 'talenttrack/achievement_capture.html'
+            context = {'form': form,}
+            return render(request, template, context)
     else:
+        form = AchievementsForm(instance=instance)
         template = 'talenttrack/achievement_capture.html'
         context = {'form': form,}
         return render(request, template, context)
@@ -1014,11 +1020,12 @@ def LicenseCertificationCaptureView(request):
     tlt_i = get_object_or_404(CustomUser, pk=request.user.id)
     form = LicenseCertificationForm(request.POST or None, request.FILES)
 
-    if form.is_valid():
-        new = form.save(commit=False)
-        new.talent = tlt_i
-        new.save()
-        return redirect(reverse ('Profile:ProfileView')+'#memberships')
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.talent = tlt_i
+            new.save()
+            return redirect(reverse ('Profile:ProfileView')+'#memberships')
     else:
         template = 'talenttrack/membership_view.html'
         context = {'form': form,}
@@ -1029,13 +1036,21 @@ def LicenseCertificationCaptureView(request):
 @csp_exempt
 def LicenseCertificationEditView(request, lcm):
     lcm_i = LicenseCertification.objects.get(slug=lcm)
-    form = LicenseCertificationForm(request.POST or None, instance=lcm_i)
 
-    if form.is_valid():
-        edit = form.save(commit=False)
-        edit.save()
-        return redirect(reverse ('Profile:ProfileView')+'#memberships')
+
+    if request.method == 'POST':
+        form = LicenseCertificationForm(request.POST, request.FILES, instance=lcm_i)
+        if form.is_valid():
+            edit = form.save(commit=False)
+            edit.save()
+            return redirect(reverse ('Profile:ProfileView')+'#memberships')
+        else:
+            form = LicenseCertificationForm(instance=lcm_i)
+            template = 'talenttrack/membership_view.html'
+            context = {'form': form,}
+            return render(request, template, context)
     else:
+        form = LicenseCertificationForm(instance=lcm_i)
         template = 'talenttrack/membership_view.html'
         context = {'form': form,}
         return render(request, template, context)
