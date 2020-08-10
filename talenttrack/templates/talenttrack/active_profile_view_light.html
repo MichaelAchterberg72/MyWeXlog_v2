@@ -57,10 +57,8 @@
         <div class="card h-100">
           <div class="card-body">
             <div class="class="card-title"">
-              {% if membership_qs %}
-                <a href="{% url 'Talent:LCM_FV' als.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">All Detail</a>
-              {% else %}
-
+              {% if membership_qs_count >= 6 %}
+                <a href="{% url 'Talent:LCM_FV' als.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Detail</a>
               {% endif %}
             <div class="card-title">
               <h5>Licenses, Certifications & Memberships</h5>
@@ -91,9 +89,6 @@
                 {% endfor %}
               </tbody>
             </table>
-            {% if membership_qs_count >= 6 %}
-              <a href="{% url 'Talent:LCM_FV' als.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Detail</a>
-            {% endif %}
           </div>
         </div>
       </div>
@@ -126,7 +121,9 @@
   <div class="card">
     <div class="card-body">
       <div class="float-right">
+        {% if bch_count >= 6 %}
         <a href="{% url 'Talent:DPCSum' als.alias %}#Company" class="btn btn-primary">All Companies</a>
+        {% endif %}
       </div>
       <h4 class="card-title" id="career">Career in Summary</h4>
       <table class="table table-sm">
@@ -156,9 +153,6 @@
           {% endfor %}
         </tbody>
       </table>
-      {% if bch_count >= 6 %}
-        <a href="{% url 'Talent:BCH_L_FV' tlt %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Detail</a>
-      {% endif %}
     </div>
   </div>
   <br>
@@ -166,6 +160,9 @@
     <div class="col-sm-12">
       <div class="card">
         <div class="card-body">
+          {% if achievement_qs_count >= 6 %}
+            <a href="{% url 'Talent:ACH_L_FV' tlt %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Detail</a>
+          {% endif %}
         <h4 class="card-title" id="achievements">Achievements</h4>
         <table class="table table-sm">
           <col width="30%">
@@ -192,9 +189,7 @@
             {% endfor %}
           </tbody>
         </table>
-        {% if achievement_qs_count >= 6 %}
-          <a href="{% url 'Talent:ACH_L_FV' tlt %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Detail</a>
-        {% endif %}
+
         </div>
       </div>
     </div>
@@ -203,7 +198,9 @@
   <div class="card">
     <div class="card-body">
       <div class="float-right">
+        {% if prj_count >= 6 %}
         <a href="{% url 'Talent:DPCSum' als.alias %}#Project" class="btn btn-primary">All Projects</a>
+        {% endif %}
       </div>
       <h4 class="card-title" id="projects">Project History</h4>
     </div>
@@ -237,15 +234,20 @@
                 {% endfor %}
               </tbody>
             </table>
-            {% if prj_count >= 6 %}
-              <a href="{% url 'Talent:Projects_L_FV' tlt %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Projects</a>
-            {% endif %}
+
       </div>
     </div>
   </div>
   <br>
   <div class="card">
     <div class="card-body">
+      <div class="float-right">
+      {% if bkl %}
+        <a href="{% url 'BookList:VPBL' als.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary">View All Books</a>
+      {% else %}
+
+      {% endif %}
+      </div>
       <h4 class="card-title">Books Read</h4>
       <div class="col-sm-12">
         <p>Total Books Read: <strong>{{ bkl_count }}</strong> </p>
@@ -276,17 +278,16 @@
                 {% endfor %}
               </tbody>
             </table>
-            {% if bkl %}
-              <a href="{% url 'BookList:VPBL' als.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Books</a>
-            {% else %}
 
-            {% endif %}
       </div>
     </div>
   </div>
   <br>
   <div class="card">
     <div class="card-body">
+      {% if edtexp_count >= 6 %}
+        <a href="{% url 'Talent:EDU_L_FV' tlt %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Details</a>
+      {% endif %}
       <h4 class="card-title" id="education">Education & Training</h4>
         <table class="table table-sm">
           <col width="10%">
@@ -320,9 +321,7 @@
             {% endfor %}
           </tbody>
         </table>
-        {% if edtexp_count >= 6 %}
-          <a href="{% url 'Talent:EDU_L_FV' tlt %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Details</a>
-        {% endif %}
+
     </div>
   </div>
 {% endblock content %}
