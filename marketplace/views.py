@@ -1220,6 +1220,10 @@ def MarketHome(request):
     e_skill = we.filter(edt=True, score__gte=skill_pass_score).only('pk').values_list('pk', flat=True)
     l_skill = we.filter(edt=False, score__gte= skill_pass_score).only('pk').values_list('pk', flat=True)
 
+    e_len = e_skill.count()
+    l_len = l_skill.count()
+
+
     skill_set = SkillTag.objects.none()
 
     for ls in l_skill:
@@ -1329,6 +1333,10 @@ def MarketHome(request):
     dsd = suitable[:5]
 
     #Experience Level check & list skills required in vacancies<<<
+    if e_len > 0 and l_len > 0:
+        dsd = dsd
+    else:
+        dsd = set()
 
     template = 'marketplace/vacancy_home.html'
     context ={
@@ -1375,6 +1383,10 @@ def VacanciesListView(request):
     #>>>Create a set of all skills
     e_skill = we.filter(edt=True).only('pk').values_list('pk', flat=True)
     l_skill = we.filter(edt=False).only('pk').values_list('pk', flat=True)
+
+    e_len = e_skill.count()
+    l_len = l_skill.count()
+
 
     skill_set = SkillTag.objects.none()
 
@@ -1506,6 +1518,11 @@ def VacanciesListView(request):
     end_index = index + 3 if index <= max_index - 3 else max_index
     page_range = list(paginator.page_range)[start_index:end_index]
 
+    if e_len > 0 and l_len > 0:
+        dsd=dsd
+    else:
+        dsd = set()
+        
     template = 'marketplace/vacancy_list.html'
     context ={
         'dsd': dsd,
