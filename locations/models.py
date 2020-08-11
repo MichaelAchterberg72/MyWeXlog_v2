@@ -8,6 +8,7 @@ class Region(models.Model):
 
     class Meta:
         unique_together = (('country','region'),)
+        ordering = ['region',]
 
     def clean(self):
         self.region = self.region.title()
@@ -21,6 +22,7 @@ class City(models.Model):
 
     class Meta:
         unique_together = (('region','city'),)
+        ordering = ['city',]
 
     def clean(self):
         self.city = self.city.title()
@@ -34,6 +36,7 @@ class Suburb(models.Model):
 
     class Meta:
         unique_together = (('suburb','city'),)
+        ordering = ['suburb',]
 
     def clean(self):
         self.suburb = self.suburb.title()

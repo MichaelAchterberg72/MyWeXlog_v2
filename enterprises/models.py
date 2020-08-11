@@ -23,6 +23,9 @@ class Industry(models.Model):
     def __str__(self):
         return self.industry
 
+    class Meta:
+        ordering = ['industry',]
+
 
 class Enterprise(models.Model):
     FC = (
@@ -61,6 +64,9 @@ class Enterprise(models.Model):
 
         super(Enterprise, self).save(*args, **kwargs)
 
+    class Meta:
+        ordering = ['ename',]
+
 
 class BranchType(models.Model):
     type = models.CharField(max_length=70, unique=True)
@@ -70,6 +76,9 @@ class BranchType(models.Model):
 
     def __str__(self):
         return self.type
+
+    class Meta:
+        ordering = ['type',]
 
 
 class Branch(models.Model):
@@ -103,6 +112,7 @@ class Branch(models.Model):
 
     class Meta:
         unique_together = (('company','name', 'city'),)
+        ordering = ['name',]
 
     def avg_rate(self):
         if self.rate_count is not None:

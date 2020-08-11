@@ -77,7 +77,7 @@ class Format(models.Model):
 class ReadBy(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     book = models.ForeignKey(BookList, on_delete=models.PROTECT)
-    type = models.ForeignKey(Format, on_delete=models.PROTECT, verbose_name='Book_format')
+    type = models.ForeignKey(Format, on_delete=models.PROTECT, verbose_name='Book Format')
     date = models.DateField('Date Finished')
 
     class Meta:

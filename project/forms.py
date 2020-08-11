@@ -96,7 +96,7 @@ class ProjectAddForm(forms.ModelForm):
             'companybranch': BranchSelect2Widget(),
         }
         labels = {
-            'city':'Closest City / Town / Village',
+            'city' : 'Closest City / Town / Village',
         }
     '''
     def clean_project(self):
