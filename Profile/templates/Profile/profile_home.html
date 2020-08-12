@@ -515,7 +515,7 @@
       </td>
       {% elif psn.tlt_response == 'A' %}
       <td>
-          <a href="{% url 'MarketPlace:InterviewList' psn.work.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-success badge-pill" style="width: 7rem">Vacancy<br>Accpeted</a>
+          <a href="{% url 'MarketPlace:InterviewList' psn.work.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-success badge-pill" style="width: 7rem">Vacancy<br>Accepted</a>
       </td>
       {% endif %}
       {% if psn.tlt_response == 'D' %}
