@@ -15,7 +15,7 @@
     <p>There are currently {{ bcount.sum_b|intcomma }} books listed in MyWeXlog!</p>
     <p><a href="{% url 'BookList:AddBook' %}" class="badge badge-pill badge-primary">Add Book</a>
       <a href="{% url 'BookList:BookListHome' %}" class="badge badge-pill badge-primary">View Books Read</a>
-      <a href="{% url 'BookList:book-search' %}" class="badge badge-pill badge-primary">Search All Books</a>
+      <a href="{% url 'BookList:book-search' %}" class="badge badge-pill badge-primary">Search all Books</a>
       <a href="{% url 'BookList:BookListHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
     {% endif %}
           <table class="table table-hover table-sm">
