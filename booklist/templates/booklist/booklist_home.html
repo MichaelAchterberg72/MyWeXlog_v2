@@ -17,8 +17,8 @@
       {% if request.user.is_authenticated %}
       <p>You currently have {{ ecount.sum_e|intcomma }} books that you have read listed in MyWeXlog!</p>
       <p><a href="{% url 'BookList:books-read-new' %}" class="badge badge-pill badge-primary">Add Book</a>
-        <a href="{% url 'BookList:books-list' %}" class="badge badge-pill badge-primary">View All Book</a>
-        <a href="{% url 'BookList:book-search' %}" class="badge badge-pill badge-primary">Search All Books</a>
+        <a href="{% url 'BookList:books-list' %}" class="badge badge-pill badge-primary">View all Books</a>
+        <a href="{% url 'BookList:book-search' %}" class="badge badge-pill badge-primary">Search all Books</a>
 
       {% endif %}
     <table class="table table-hover table-sm">
