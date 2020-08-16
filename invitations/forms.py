@@ -31,7 +31,7 @@ class InvitationForm(forms.ModelForm):
 
     class Meta:
         model = Invitation
-        fields = ('name', 'surname', 'companybranch', 'email')
+        fields = ('name', 'surname', 'companybranch', 'message', 'email')
         widgets = {
             'companybranch':  BranchSelect2Widget(),
         }
@@ -54,7 +54,7 @@ class InvitationLiteForm(forms.ModelForm):
 
     class Meta:
         model = Invitation
-        fields = ('name', 'surname', 'email')
+        fields = ('name', 'surname', 'message', 'email')
 
     def clean_email(self):
         email_passed = self.cleaned_data.get("email")
