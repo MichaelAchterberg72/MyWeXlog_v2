@@ -11,6 +11,7 @@
       {% if form.instance.message %}
       <p><strong>Message from {{ form.instance.invited_by.first_name }}:</strong></p>
       <p>{{ form.instance.message }}</p>
+      <br>
       {% endif %}
       <p>Please click on this link or copy and paste it into your browser address bar:</p>
       <p><a href="{{ temp.url }}">{{ temp.url }}</a></p>
