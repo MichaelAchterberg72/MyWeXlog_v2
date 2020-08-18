@@ -8,7 +8,10 @@
 
       <p>Hi {{ form.instance.name }},</p>
       <p>{{ form.instance.invited_by }} has indicated that you worked together while you were working at <strong>{{ form.instance.companybranch }}</strong>. {{ form.instance.invited_by }} kindly asks if you could confirm the work experience they have captured.</p>
+      {% if form.instance.message %}
+      <p><strong>Message from {{ form.instance.invited_by.first_name }}:</strong></p>
       <p>{{ form.instance.message }}</p>
+      {% endif %}
       <p>Please click on this link or copy and paste it into your browser address bar:</p>
       <p><a href="{{ temp.url }}">{{ temp.url }}</a></p>
       <p>to confirm their experience.</p>
