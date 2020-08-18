@@ -142,7 +142,7 @@ def FlatInviteview(request):
             invitee = cd['email']
 
             subject = f"{invitor.first_name} {invitor.last_name} invites you to MyWeXlog"
-            context = {'form': form,  'referral_code': referral_code, 'user_email': invitee}
+            context = {'form': form,  'referral_code': referral_code, 'user': invitee}
             html_message = render_to_string('invitations/flat_invitation.html', context)
             plain_message = strip_tags(html_message)
 
