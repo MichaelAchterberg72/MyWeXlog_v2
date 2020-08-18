@@ -2,44 +2,64 @@
 {% load humanize %}
 
 {% block content %}
-  <div class="content-section">
+<div class="content-section">
   <div class="card border-0">
     <div class="card-body">
-  <h4 class="">Books List<span><p class="float-right">
-  <a href="{% url 'BookList:HelpBooklist' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
-  <i class="icon icon-question-circle"></i></a>
-  </p></span></h4>
+      <h4 class="">
+        Books List
+          <span>
+            <p class="float-right">
+              <a href="{% url 'BookList:HelpBooklist' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
+                <i class="icon icon-question-circle"></i>
+              </a>
+            </p>
+          </span>
+        </h4>
 
-  <div class="card-body">
+      <div class="card-body">
     {% if request.user.is_authenticated %}
-    <p>There are currently {{ bcount.sum_b|intcomma }} books listed in MyWeXlog!</p>
-    <p><a href="{% url 'BookList:AddBook' %}" class="badge badge-pill badge-primary">Add Book</a>
-      <a href="{% url 'BookList:BookListHome' %}" class="badge badge-pill badge-primary">View Books Read</a>
-      <a href="{% url 'BookList:book-search' %}" class="badge badge-pill badge-primary">Search All Books</a>
-      <a href="{% url 'BookList:BookListHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
+      <p>
+        There are currently {{ bcount.sum_b|intcomma }} books listed in MyWeXlog
+      </p>
+      <p>
+        <a href="{% url 'BookList:AddBook' %}" class="badge badge-pill badge-primary">
+          Add Book
+        </a>
+        <a href="{% url 'BookList:BookListHome' %}" class="badge badge-pill badge-primary">
+          View Books Read
+        </a>
+        <a href="{% url 'BookList:book-search' %}" class="badge badge-pill badge-primary">
+          Search Books
+        </a>
+        <a href="{% url 'BookList:BookListHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">
+          Back
+        </a>
+      </p>
     {% endif %}
           <table class="table table-hover table-sm">
           <col width="30%">
           <col width="15%">
           <col width="20%">
-          <col width="25%">
-          <col width="10%">
           <thead>
-            <tr height="1px">
-              <th height="1px">Title</th>
-              <th height="1px">Publisher</th>
-              <th height="1px"></th>
-              <th height="1px"></th>
-              <th height="1px"></th>
+            <tr>
+              <th class="align-middle text-center">Title</th>
+              <th class="align-middle text-center">Publisher</th>
+              <th></th>
             </tr>
           </thead>
             {% for item in pageitems %}
           <tbody>
             <tr onclick="window.location='{% url 'BookList:BookDetail' item.slug %}?next={{ request.path|urlencode }}'">
-              <td>{{ item.title }}</td>
-              <td>{{ item.publisher }}</td>
-              <td></td>
-              <td><a href="{% url 'BookList:BookDetail' item.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 5rem;">Book Detail</a> </td>
+              <td class="align-middle text-left">{{ item.title }}</td>
+              <td class="align-middle text-left">{{ item.publisher }}</td>
+              <td class="align-middle text-center">
+                <a href="{% url 'BookList:BookDetail' item.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 7rem;">
+                  Book Detail
+                </a>
+                <a href="{% url 'BookList:BookAddList' item.slug %}?next={{ request.path|urlencode }}" class="badge badge-primary" style="width: 7rem;">
+                  Mark as Read
+                </a>
+              </td>
             </tr>
         {% empty %}
             <td>No books yet.</td>

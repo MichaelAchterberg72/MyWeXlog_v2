@@ -31,9 +31,32 @@ from .forms import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
+#@login_required()
+#class BookListHomeView(TemplateView):
+    #template_name = 'booklist/home.html'
+
+
 @login_required()
-class BookListHomeView(TemplateView):
-    template_name = 'booklist/home.html'
+def add_to_my_list(request, bks):
+    book_qs = get_object_or_404(BookList, slug=bks)
+
+    form = AddFromListForm(request.POST or None)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.book = book_qs
+            new.talent = request.user
+            new.save()
+            return redirect(reverse('BookList:BookListHome'))
+        else:
+            context = {'form': form, 'book_qs': book_qs,}
+            template_name = 'booklist/Book_add_from_list.html'
+            return render(request, template_name, context)
+    else:
+        context = {'form': form, 'book_qs': book_qs,}
+        template_name = 'booklist/Book_add_from_list.html'
+        return render(request, template_name, context)
 
 
 @login_required()
@@ -448,7 +471,6 @@ def AddBookReadView(request):
             new = form.save(commit=False)
             new.talent = request.user
             new.save()
-            form.save_m2m()
             return redirect(reverse('BookList:BookListHome'))
     else:
         form = AddBookReadForm()

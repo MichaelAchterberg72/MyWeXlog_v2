@@ -11,18 +11,34 @@
       </div>
       <h4 class="">Detail for {{ info.title }} book</h4>
     <div class="row">
-      <div class="col-sm-6">
+      <div class="col-sm-12">
         <div class="">
           <div class="card-body">
             <h5 class="card-title">Book Details</h5>
             <table class="table table-sm">
+              <col width="40%">
+              <col width="40%">
+              <col width="20%">
               <thead>
+                <tr>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                </tr>
               </thead>
               <tbody>
                 {% for d in detail %}
                 <tr>
                   <th>Book Title</th>
-                  <td>{{ d.title }}</td>
+                  <td>
+                    {{ d.title }}
+                  </td>
+                  <td>
+                    <a href="{% url 'BookList:BookAddList' d.slug %}?next={{ request.path|urlencode }}" class="badge badge-primary" style="width: 9rem;">
+                      Mark as Read
+                    </a>
+                  </td>
+
                 </tr>
                 <tr>
                   <th>Book Type</th>
@@ -51,11 +67,12 @@
                   </tr>
                   <tr>
                     <th>Book Link</th>
-                    <td>{{ d.link }}</td>
+                    <td><a href="{{ d.link }}">{{ d.link }}</a></td>
                   </tr>
                   {% endfor %}
               </tbody>
             </table>
+
           </div>
         </div>
       </div>

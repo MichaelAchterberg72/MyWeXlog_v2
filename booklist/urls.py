@@ -23,6 +23,7 @@ urlpatterns = [
     path('add/book/', views.AddBookView, name='AddBook'),
     path('popup/add/books/', views.BookAddPopupView, name='booksNewPopup'),
     path('add/books-read/', views.AddBookReadView, name='books-read-new'),
+    path('add/list/<slug:bks>/', views.add_to_my_list, name='BookAddList'),
     path('add/book-type/', views.FormatAddView, name='FormatCreate'),
     path('popup/book-type/', views.FormatCreatePopupView, name='FormatCreatePopup'),
     path('booklist/<slug:tlt>/', views.ProfileBookList, name='VPBL'),

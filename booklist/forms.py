@@ -148,6 +148,17 @@ class AddBookReadForm(forms.ModelForm):
         }
 
 
+class AddFromListForm(forms.ModelForm):
+    class Meta:
+        model = ReadBy
+        fields = ('type','date',)
+        widgets = {
+            'date': DateInput(),
+            'book': BookSelect2Widget(),
+            'type': TypeSelect2Widget(),
+        }
+
+'''
 class DateForm(forms.Form):
     date = forms.DateTimeField(
         input_formats=['%d/%m/%Y %H:%M'],
@@ -156,7 +167,7 @@ class DateForm(forms.Form):
             'data-target': '#datetimepicker1'
         })
     )
-
+'''
 
 class BookSearchForm(forms.Form):
     query = forms.CharField()
