@@ -125,7 +125,7 @@ class DefaultAccountAdapter(object):
                     raise
         if 'txt' in bodies:
             msg = Mail(
-                from_email = settings.SENDGRID_FROM_EMAIL,
+                from_email = (settings.SENDGRID_FROM_EMAIL, 'MyWeXlog Registration'),
                 to_emails = email,
                 subject = subject,
                 plain_text_content = strip_tags(bodies['txt'])
@@ -134,7 +134,7 @@ class DefaultAccountAdapter(object):
             if 'html' in bodies:
 #                msg.attach_alternative(bodies['html'], 'text/html')
                 msg = Mail(
-                    from_email = settings.SENDGRID_FROM_EMAIL,
+                    from_email = (settings.SENDGRID_FROM_EMAIL, 'MyWeXlog Registration'),
                     to_emails = email,
                     subject = subject,
                     html_content = bodies['html']
@@ -142,7 +142,7 @@ class DefaultAccountAdapter(object):
 
         else:
             msg = Mail(
-                from_email = settings.SENDGRID_FROM_EMAIL,
+                from_email = (settings.SENDGRID_FROM_EMAIL, 'MyWeXlog Registration'),
                 to_emails = email,
                 subject = subject,
                 html_content = strip_tags(bodies['html'])
