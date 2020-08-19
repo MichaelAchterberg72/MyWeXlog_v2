@@ -1,6 +1,6 @@
 {% extends 'base_homelite.html' %}
 {% load crispy_forms_tags %}
-{% load staticfiles %}
+{% load static %}
 {% load humanize %}
 
 {% block title %}{{block.super}} Help{% endblock title %}
@@ -12,7 +12,7 @@
 <div class="container">
   <h3>Add a New Book Read Page - Help</h3>
     <p>&nbsp</p>
-    <p>This page displayes the fields that are required to capture a new book read.</p>
+    <p>This page displays the fields that are required to capture a new book read.</p>
     <p>The fields required are:</p>
     <table class="table table-sm">
     <col width="10%">
@@ -20,11 +20,11 @@
     <thead>
         <tr>
           <td>Book</td>
-          <td>This will be selected from the dropdown list and if you add a new book it will
+          <td>This will be selected from the drop-down list and if you add a new book it will
             automatically populate the field.<br>
             The <a href="#"><img src="{% static '/images/icon-addlink.svg' %}"> Add a new Book</a>
             link will open a popup window and request you to add the book title, type, publisher,
-            author, genre, url and skills.</td>
+            author, genre, URL and skills.</td>
         </tr>
         <tr>
           <td>Book Format</td>
@@ -40,7 +40,8 @@
         </tr>
       </table>
     <br>
-    <p>**In the event that one of the dropdown lists is not populated please refreash the page.</p>
+    <p>**In the event that one of the dropdown lists is not populated please refresh the page.</p>
+    <p>A * next to the field name indicates that the field is a required field.</p>
     <p>Click the <button type="submit" class="btn btn-primary" name="button">Add</button> button when complete.</p>
     <p>You have the option to:</p>
       <ul>

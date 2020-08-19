@@ -1,6 +1,6 @@
 {% extends 'base_homelite.html' %}
 {% load crispy_forms_tags %}
-{% load staticfiles %}
+{% load static %}
 {% load humanize %}
 
 {% block title %}{{block.super}} Help{% endblock title %}
@@ -12,7 +12,7 @@
 <div class="container">
   <h3>Add a New Book Page - Help</h3>
     <p>&nbsp</p>
-    <p>This page displayes the fields that are required to capture a new book.</p>
+    <p>This page displays the fields that are required to capture a new book.</p>
     <p>The fields required are:</p>
     <table class="table table-sm">
     <col width="10%">
@@ -24,12 +24,12 @@
         </tr>
         <tr>
           <td>Type</td>
-          <td>Select from the drop down list wither Fiction (describes imaginary
+          <td>Select from the drop-down list wither Fiction (describes imaginary
             events and people) or Non-Fiction (informative or factual).</td>
         </tr>
         <tr>
           <td>Publisher</td>
-          <td>Select from the drop down list the publisher by typing the publisher name into the
+          <td>Select from the drop-down list the publisher by typing the publisher name into the
             search field at the top of the dropdown list.<br>
             The <a href="#"><img src="{% static '/images/icon-addlink.svg' %}"> Add a new Publisher</a>
             link will open a popup window and request you to add the publisher name and the publisher
@@ -37,7 +37,7 @@
         </tr>
         <tr>
           <td>Author</td>
-          <td>Select from the drop down list the author by typing the author name into the
+          <td>Select from the drop-down list the author by typing the author name into the
             search field at the top of the dropdown list. The author names are added in the form of
             tags to allow you to enter multiple names.<br>
             The <a href="#"><img src="{% static '/images/icon-addlink.svg' %}"> Add a new Author</a>
@@ -45,7 +45,7 @@
         </tr>
         <tr>
           <td>Genre</td>
-          <td>Select from the drop down list the genre by typing the enre type into the
+          <td>Select from the drop-down list the genre by typing the enre type into the
             search field at the top of the dropdown list. The genre types are added in the form of
             tags to allow you to enter multiple entries.<br>
             The <a href="#"><img src="{% static '/images/icon-addlink.svg' %}"> Add a Genre</a>
@@ -53,12 +53,12 @@
         </tr>
         <tr>
           <td>Book URL</td>
-          <td>Please enter the url if available for the book should someone wish to link to it.</td>
+          <td>Please enter the URL if available for the book should someone wish to link to it.</td>
         </tr>
         <tr>
           <td>Tag / Associated Skill</td>
           <td>This will allow you to select the skills you have learned or developed whilst reading
-            from or leaerning from the book. Select from the dropdown list and will be listed as tags that you
+            from or learning from the book. Select from the dropdown list and will be listed as tags that you
             can delete is so wished. You are able to capture as many skill tags as are relevant.<br>
             To read a description of how to capture skills please click
             <a href="{% url 'Talent:HelpHowCaptureSkills' %}">here</a>.<br>
@@ -68,9 +68,10 @@
         </tr>
       </table>
     <br>
-    <p>**In the event that one of the dropdown lists is not populated please refreash the page.</p>
+    <p>**In the event that one of the dropdown lists is not populated please refresh the page.</p>
+    <p>A * next to the field name indicates that the field is a required field.</p>
     <p>Click the <button type="submit" class="btn btn-primary" name="button">Add</button> button when complete.</p>
-    
+
 
 </div>
 {% endblock content %}

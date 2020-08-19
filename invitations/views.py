@@ -74,19 +74,15 @@ def InvitationView(request, tex):
             surname = cd['surname']
             companybranch = cd['companybranch']
             invitee = cd['email']
+            message = cd['message']
 
             subject = f"Invitation to MyWeXlog"
             context = {'form': form,  'temp': temp, 'user_email': invitee }
             html_message = render_to_string('invitations/invitation.html', context)
             plain_message = strip_tags(html_message)
 
-            #send_mail(subject, html_message, 'admin@mywexlog.com', [invitee,])
-
-
-            html_message = render_to_string('invitations/invitation.html', context)
-
             message = Mail(
-                from_email = settings.SENDGRID_FROM_EMAIL,
+                from_email = (settings.SENDGRID_FROM_EMAIL, f"{invitor.first_name} {invitor.last_name}"),
                 to_emails = invitee,
                 subject = subject,
                 plain_text_content = strip_tags(html_message),
@@ -142,15 +138,16 @@ def FlatInviteview(request):
 
             name = cd['name']
             surname = cd['surname']
+            message = cd['message']
             invitee = cd['email']
 
             subject = f"{invitor.first_name} {invitor.last_name} invites you to MyWeXlog"
-            context = {'form': form,  'referral_code': referral_code, 'user_email': invitee}
+            context = {'form': form,  'referral_code': referral_code, 'user': invitee}
             html_message = render_to_string('invitations/flat_invitation.html', context)
             plain_message = strip_tags(html_message)
 
             message = Mail(
-                from_email = settings.SENDGRID_FROM_EMAIL,
+                from_email = (settings.SENDGRID_FROM_EMAIL, f"{invitor.first_name} {invitor.last_name}"),
                 to_emails = invitee,
                 subject = subject,
                 plain_text_content = strip_tags(html_message),

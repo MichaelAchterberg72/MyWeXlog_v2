@@ -1,6 +1,6 @@
 {% extends 'base_home.html' %}
 {% load crispy_forms_tags %}
-{% load staticfiles %}
+{% load static %}
 
 {% block title %}My Experience{% endblock title %}
 
@@ -51,7 +51,7 @@
               </div>
               <div class="form-group col-md-8 mb-0">
                 <p>
-                  Enter a project only if appropriate, else leave the field empty.
+                  <small>Enter a project only if appropriate, else leave the field empty.</small>
                 </p>
               </div>
             </div>
@@ -111,6 +111,7 @@
             </div>
             <div class="form-group col-md-4 mb-0">
                 <p>
+                  <br>
                   <br>
                   The comments made here are visible to the person confirming your experience.<br><br>
                   Write a short summary to describe the experience you are claiming, both for the reviewer and for your own use when you look back on this entry.

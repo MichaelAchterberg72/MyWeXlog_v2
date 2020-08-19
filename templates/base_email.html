@@ -66,9 +66,11 @@
           <tr>
             <td></td>
             <td align="center"><small><div class="center"><p>
+              {% if user.email %}
               This email was sent to {{ user.email }}.<br>
               You are receiving this email as you are registered to receive notifications,
               updates, news and/or promotional updates.</p>
+              {% endif %}
               <p>* Please do not reply to this email. You may log into
               your account and utilise the feekback icon for any queries.<br>
               *To change your preference or unsubscribe please <a href="https://mywexlog.com/user/settings/">click here</a>.</div></small></p></td>

@@ -1,6 +1,6 @@
 {% extends 'base_homelite.html' %}
 {% load crispy_forms_tags %}
-{% load staticfiles %}
+{% load static %}
 {% load humanize %}
 
 {% block title %}{{block.super}} Help{% endblock title %}
@@ -12,7 +12,7 @@
 <div class="container">
   <h3>Capture Education / Training - Help</h3>
     <p>&nbsp</p>
-    <p>This page displayes the fields that are required to capture your Education
+    <p>This page displays the fields that are required to capture your Education
       and Training experience.</p>
     <p>The fields required are:</p>
     <table class="table table-sm">
@@ -21,12 +21,12 @@
     <thead>
         <tr>
           <td>Course Name</td>
-          <td>This should be descriptive of the project so it is easily identifyable by
-            people that are in collaboration companies as well. THe drop down items are made up of
+          <td>This should be descriptive of the project so it is easily identifiable by
+            people that are in collaboration companies as well. The drop-down items are made up of
             the course name, the institution name and the form of certification.<br>
             The <a href="#"><img src="{% static '/images/icon-addlink.svg' %}"> Add a Course</a>
-            link will request you to add an the course details such as the course name, the
-            institution, the course type, the website as well as certification type..</td>
+            link will request you to add the course details such as the course name, the
+            institution, the course type, the website as well as certification type.</td>
         </tr>
         <tr>
           <td>Course Subject</td>
@@ -45,7 +45,7 @@
         </tr>
         <tr>
           <td>Date to</td>
-          <td>This qorks in the same way as the date from field but should be the date you have
+          <td>This works in the same way as the date from field but should be the date you have
             completed the course subject.</td>
         </tr>
         <tr>
@@ -60,11 +60,12 @@
         </tr>
       </table>
     <br>
-    <p>**In the event that one of the dropdown lists is not populated please refreash the page.</p>
+    <p>**In the event that one of the dropdown lists is not populated please refresh the page.</p>
+    <p>A * next to the field name indicates that the field is a required field.</p>
     <p>You have the option to:</p>
       <ul>
         <li><a href="#" class="btn btn-primary">Add Validators</a> - allows you to navigate to the
-        page which allows you to capture lecuurers or classmates that will be requested to validate
+        page which allows you to capture lecturers or classmates that will be requested to validate
         your attendance, skills learnt and time spent on the course.</li>
       </ul>
 

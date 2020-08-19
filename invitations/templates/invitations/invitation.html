@@ -2,16 +2,19 @@
 {% load pinax_referrals_tags %}
 {% url 'Talent:Home' as myurl %}
 {% load humanize %}
-{% load staticfiles %}
+{% load static %}
 
 {% block content %}
 
       <p>Hi {{ form.instance.name }},</p>
-      <p>{{ form.instance.invited_by }} has indicated that you worked together while you were working at <strong>{{ form.instance.companybranch }}</strong>. {{ form.instance.invited_by }} kindly asks if you could confirm the work experience they have captured. </p>
-      <p>Please click on this link or copy and paste it into your browser address bar:
+      <p>{{ form.instance.invited_by }} has indicated that you worked together while you were working at <strong>{{ form.instance.companybranch }}</strong>. {{ form.instance.invited_by }} kindly asks if you could confirm the work experience they have captured.</p>
+      {% if form.instance.message %}
+      <p><strong>Message from {{ form.instance.invited_by.first_name }}:</strong></p>
+      <p>{{ form.instance.message }}</p>
       <br>
+      {% endif %}
+      <p>Please click on this link or copy and paste it into your browser address bar:</p>
       <p><a href="{{ temp.url }}">{{ temp.url }}</a></p>
-      <br>
       <p>to confirm their experience.</p>
 
       <p>MyWeXlog is a live experience log on which you can capture your experience and associate skills with that experience. Then, depending on your subscription, you can either search for companies looking for your skills or find people that have skills you require.</p>

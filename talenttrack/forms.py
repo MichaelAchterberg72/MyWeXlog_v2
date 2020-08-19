@@ -241,7 +241,11 @@ class PreLoggedExperienceForm(forms.ModelForm):
         lables = {
             'companybranch': 'Branch',
         }
-
+        help_texts = {
+            'company': 'Please complete the Company field before the Branch Field',
+            'companybranch': 'This field is dependant on the Company Field - fill Company Field first',
+        }
+        
     def clean_date_to(self):
         '''Ensures the end date is after the begin date and before current date'''
         date_to = self.cleaned_data.get("date_to")

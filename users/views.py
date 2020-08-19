@@ -25,18 +25,24 @@ def CustomUserSettingsView(request):
             if form.is_valid():
                 new = form.save(commit=False)
                 new.save()
-                if new.right_to_be_forgotten == True:
-                    u.delete()
-                    messages.success(request, "Your account has been deleted")
-                    return redirect(reverse('Public:WexlogHomeDeleted'))
 
-                return redirect(reverse('Profile:ProfileView', kwargs={'profile_id':user_id.id})+'#online')
+                return redirect(reverse('Profile:ProfileHome'))
         else:
             context = {'form': form}
             template = 'users/custom_user_settings.html'
             return render(request, template, context)
     else:
         raise PermissionDenied
+
+
+@login_required()
+def ProfileDeleteView(request):
+    if request.method == 'POST':
+        user_id = request.user
+        u = CustomUser.objects.get(id=user_id.id)
+        u.delete()
+        messages.success(request, "Your account has been deleted")
+    return redirect(reverse('Public:WexlogHomeDeleted'))
 
 
 @login_required
@@ -99,7 +105,7 @@ def PrivacyPolicyView(request):
                     u.delete()
                     messages.success(request, "Your account has been deleted")
                     return redirect(reverse('Public:WexlogHomeDeleted'))
-                    
+
                 return redirect(reverse('Profile:ProfileHome'))
         else:
             context = {'form': form}

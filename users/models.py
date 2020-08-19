@@ -83,7 +83,7 @@ class CustomUserSettings(models.Model):
     talent = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     right_to_say_no = models.BooleanField('The right to say no to the sale of personal information', default=False)
     unsubscribe = models.BooleanField('Unsubscribe from all newsletters', default=False)
-    receive_newsletter = models.BooleanField('Receive the newslatter', default=True)
+    receive_newsletter = models.BooleanField('Receive the newsletter', default=True)
     validation_requests = models.BooleanField('Receive validation requests', default=True)
     takeout = models.BooleanField('Export data to a csv file', default=False)
     dnt = models.BooleanField('Do Not Track', default=False)

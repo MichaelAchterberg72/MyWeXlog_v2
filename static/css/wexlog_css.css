@@ -1,6 +1,7 @@
 body {
-  font-family: 'Open Sans', cursive;
-  font-size: 16px;
+  font-family: "Open Sans";
+  font-size: 17px;
+  font-weight: 400;
 }
 
 .sidenav {

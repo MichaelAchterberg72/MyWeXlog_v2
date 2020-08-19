@@ -1,6 +1,6 @@
 {% extends 'base_home.html' %}
 {% load crispy_forms_tags %}
-{% load staticfiles %}
+{% load static %}
 
 {% block title %}{{block.super}}-Invite{% endblock title %}
 
@@ -14,22 +14,24 @@
 {% endblock Style %}
 
 {% block content %}
-<div class="card">
+<div class="card border-0 col-sm-5 mx-auto">
   <div class="card-body">
-<h3>Invite Talent</h3>
-<form class="" action="" method="POST">
-  <input type="hidden" name="next" value="{{ request.GET.next }}">
-  {% csrf_token %}
-  {{ form.name|as_crispy_field }}
-  {{ form.surname|as_crispy_field }}
-  {{ form.companybranch|as_crispy_field }}
-  <a href="{% url 'Enterprise:BranchAddPop' %}" id='add_companybranch' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a Company Branch</a>
-  {{ form.email|as_crispy_field }}
-  <a href="{% url 'Talent:Home' %}" class="btn btn-danger">Cancel</a>
-  <button type="submit" class="btn btn-primary" name="Invite">Invite</button>
-</form>
+    <h3>Invite Talent</h3>
+    <form class="" action="" method="POST">
+      <input type="hidden" name="next" value="{{ request.GET.next }}">
+      {% csrf_token %}
+      {{ form.name|as_crispy_field }}
+      {{ form.surname|as_crispy_field }}
+      {{ form.companybranch|as_crispy_field }}
+      <a href="{% url 'Enterprise:BranchAddPop' %}" id='add_companybranch' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a Company Branch</a>
+      {{ form.email|as_crispy_field }}
+      {{ form.message|as_crispy_field }}
+      <a href="{% url 'Talent:Home' %}" class="btn btn-danger">Cancel</a>
+      <button type="submit" class="btn btn-primary" name="Invite">Invite</button>
+    </form>
+  </div>
 </div>
-</div>
+
 <!--
 <button type="submit" class="btn btn-primary" name="Invite" value="Close this window" onclick="windowClose();">Invite</button>
 -->

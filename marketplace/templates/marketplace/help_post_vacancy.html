@@ -1,6 +1,6 @@
 {% extends 'base_homelite.html' %}
 {% load crispy_forms_tags %}
-{% load staticfiles %}
+{% load static %}
 {% load humanize %}
 
 {% block title %}{{block.super}} Help{% endblock title %}
@@ -12,7 +12,7 @@
 <div class="container">
   <h3>Add or Edit a Vacancy - Help</h3>
     <p>&nbsp</p>
-    <p>This page displayes the fields that are required to capture a new or edit vacancy.</p>
+    <p>This page displays the fields that are required to capture a new or edit vacancy.</p>
     <p>The fields required are:</p>
     <table class="table table-sm">
     <col width="10%">
@@ -41,13 +41,13 @@
         <tr>
           <td>Hours</td>
           <td>Enter the number of hours the vacancy is expected to take for completion
-            or alternativly the number of hours the company has budgeted for at the rate
+            or alternatively the number of hours the company has budgeted for at the rate
             offered.</td>
         </tr>
         <tr>
           <td>Unit</td>
-          <td>Enter the unit typ of hours required for the vacancy is expected to take
-            for completion or alternativly the type of contract the company has budgeted
+          <td>Enter the unit type of hours required for the vacancy is expected to take
+            for completion or alternatively the type of contract the company has budgeted
             for at the rate offered. The selection possibilities are once off, per month,
             per day, per week, short term contract and as and when contract.</td>
         </tr>
@@ -72,8 +72,8 @@
             automatically populate the field.<br>
             The <a href="#"><img src="{% static '/images/icon-addlink.svg' %}"> Add a Currency</a>
             link will open a popup window and request you to add the country, currency in full
-            written format with country and currancy name and the internationally recognised
-            currency abbreviation loke USD or AUD.</td>
+            written format with country and currency name and the internationally recognised
+            currency abbreviation like USD or AUD.</td>
         </tr>
         <tr>
           <td>Rate Offered</td>
@@ -90,7 +90,7 @@
             </ul></td>
         </tr>
         <tr>
-          <td>Work Type Congiguration</td>
+          <td>Work Type Configuration</td>
           <td>Enter the expected location limit required. The options are:<br>
           <ul>
             <li>Local</li>
@@ -145,7 +145,8 @@
         </tr>
       </table>
     <br>
-    <p>**In the event that one of the dropdown lists is not populated please refreash the page.</p>
+    <p>**In the event that one of the dropdown lists is not populated please refresh the page.</p>
+    <p>A * next to the field name indicate that it is a required field.</p>
     <p>Click the <button type="submit" class="btn btn-primary" name="button">Add Deliverables</button>
       or <button type="submit" class="btn btn-primary" name="button">Save</button> button when complete.</p>
 

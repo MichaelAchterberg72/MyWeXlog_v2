@@ -24,7 +24,7 @@
                   </button>&nbsp&nbsp
                 {% endif %}
                   <a href="{% url 'Profile:IntroIntroduction' %}" class="btn btn-primary float-right">
-                    Intoduction Wizard
+                    Introduction Wizard
                   </a>
               </div>
             </form>
@@ -73,7 +73,7 @@
       </div>
 
       <hr>
-      Copy and past the above url address into an email or a Social Netowrk Post for your firends to join MyWeXlog in your network.
+      Copy and paste the above url address into an email or a Social Netowrk Post for your firends to join MyWeXlog in your network.
     </p>
   </div>
 
@@ -515,7 +515,7 @@
       </td>
       {% elif psn.tlt_response == 'A' %}
       <td>
-          <a href="{% url 'MarketPlace:InterviewList' psn.work.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-success badge-pill" style="width: 7rem">Vacancy<br>Accpeted</a>
+          <a href="{% url 'MarketPlace:InterviewList' psn.work.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-success badge-pill" style="width: 7rem">Vacancy<br>Accepted</a>
       </td>
       {% endif %}
       {% if psn.tlt_response == 'D' %}
