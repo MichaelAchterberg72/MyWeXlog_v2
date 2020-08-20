@@ -965,7 +965,7 @@ def AssignmentClarifyView(request, wit):
             html_message = render_to_string('Profile/email_vac_clarification_text.html', context).strip()
 
             message = Mail(
-                from_email = settings.SENDGRID_FROM_EMAIL,
+                from_email = (settings.SENDGRID_FROM_EMAIL, 'MyWeXlog Clarification Required'),
                 to_emails = instance.work.requested_by.email,
                 subject = f"{instance.work.title}: Clarification Requested from {instance.talent.alias}",
                 plain_text_content = strip_tags(html_message),
