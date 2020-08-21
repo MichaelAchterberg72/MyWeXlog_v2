@@ -321,25 +321,59 @@ def TalentRFIView(request, wit):
 def InterviewSuitable(request, vac, tlt):
     instance = BidInterviewList.objects.get(Q(talent__alias=tlt) & Q(scope__ref_no=vac))
 
-    form = EmployerInterViewComments(request.POST or None, instance=instance)
     if request.method == 'POST':
+        form = EmployerInterViewComments(request.POST, instance=instance)
         if form.is_valid():
             new = form.save(commit=False)
+            new.outcome = 'S'#3
+            new.emp_intcomplete=True#3
             new.save()
 
-        instance.outcome = 'S'#3
-        instance.emp_intcomplete=True#3
-        instance.save()
+            BidShortList.objects.filter(Q(scope__ref_no = vac) & Q(talent__alias = tlt)).update(status='P')#1
 
-        BidShortList.objects.filter(Q(scope__ref_no = vac) & Q(talent__alias = tlt)).update(status='P')#1
+            bid_qs = WorkBid.objects.filter(Q(work__ref_no = vac) & Q(talent__alias = tlt))
 
-        bid_qs = WorkBid.objects.filter(Q(work__ref_no = vac) & Q(talent__alias = tlt))
+            if bid_qs:
+                bid_qs.update(bidreview = 'P')#2
 
-        if bid_qs:
-            bid_qs.update(bidreview = 'P')#2
+            return redirect(reverse('MarketPlace:InterviewList', kwargs={'vac': vac,}))
 
-    return redirect(reverse('MarketPlace:InterviewList', kwargs={'vac': vac,}))
+    form = EmployerInterViewComments(instance=instance)
+    template = 'marketplace/interview_comment_employer.html'
+    context = {'form': form, 'instance': instance,}
+    return render(request, template, context)
 
+@login_required()
+@subscription(2)
+def dash_int_suitable(request, vac, tlt):
+    '''The button on the Interview detail view from the dashboard to comment page'''
+    instance = BidInterviewList.objects.get(Q(talent__alias=tlt) & Q(scope__ref_no=vac))
+
+    if request.method == 'POST':
+        form = EmployerInterViewComments(request.POST, instance=instance)
+        next_url=request.POST.get('next', '/')
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.outcome = 'S'#3
+            new.emp_intcomplete=True#3
+            BidShortList.objects.filter(Q(scope__ref_no = vac) & Q(talent__alias = tlt)).update(status='P')#1
+
+            bid_qs = WorkBid.objects.filter(Q(work__ref_no = vac) & Q(talent__alias = tlt))
+
+            if bid_qs:
+                bid_qs.update(bidreview = 'P')#2
+            new.save()
+
+            if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
+                next_url = reverse('MarketPlace:Home')
+            return HttpResponseRedirect(next_url)
+
+            #return redirect(reverse('MarketPlace:EmployerIntDetail', kwargs={'bil': instance.slug, 'tlt': tlt,}))
+
+    form = EmployerInterViewComments(instance=instance)
+    template = 'marketplace/interview_comment_employer.html'
+    context = {'form': form, 'instance': instance,}
+    return render(request, template, context)
 
 @login_required()
 @subscription(2)
@@ -412,6 +446,37 @@ def InterviewNotSuitable(request, vac, tlt):
                 bid_qs.update(bidreview = 'R')#2
 
         return redirect(reverse('MarketPlace:InterviewList', kwargs={'vac': vac,}))
+
+    template = 'marketplace/interview_comment_employer.html'
+    context = {'form': form, 'instance': instance,}
+    return render(request, template, context)
+
+
+@login_required()
+@subscription(2)
+def dash_notsuitable(request, vac, tlt):
+    '''The button on the Interview detail view from the dashboard'''
+    instance = BidInterviewList.objects.get(Q(talent__alias=tlt) & Q(scope__ref_no=vac))
+
+    form = EmployerInterViewComments(request.POST or None, instance=instance)
+    if request.method == 'POST':
+        next_url=request.POST.get('next', '/')
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.outcome = 'N'#3
+            new.emp_intcomplete = True#3
+            BidShortList.objects.filter(Q(scope__ref_no = vac) & Q(talent__alias = tlt)).update(status='R')#1
+
+            bid_qs = WorkBid.objects.filter(Q(work__ref_no = vac) & Q(talent__alias = tlt))
+
+            if bid_qs:
+                bid_qs.update(bidreview = 'R')#2
+
+            new.save()
+
+            if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
+                next_url = reverse('MarketPlace:Home')
+            return HttpResponseRedirect(next_url)
 
     template = 'marketplace/interview_comment_employer.html'
     context = {'form': form, 'instance': instance,}
@@ -1522,7 +1587,7 @@ def VacanciesListView(request):
         dsd=dsd
     else:
         dsd = set()
-        
+
     template = 'marketplace/vacancy_list.html'
     context ={
         'dsd': dsd,

@@ -49,8 +49,30 @@
         {% for d in pageitems %}
           <tr>
             <td rowspan="2" class="align-middle text-center">{{ d.talent.alias }}</td>
-            <td class="align-middle text-center">{{ d.get_tlt_response_display }}</td>
-            <td class="align-middle text-center">{{ d.get_outcome_display }}</td>
+            <td class="align-middle text-center">
+              {{ d.get_tlt_response_display }}
+            </td>
+            <td class="align-middle text-center">
+              {{ d.get_outcome_display }}
+              <br>
+              {% if d.outcome == 'I' %}
+              <a href="{% url 'MarketPlace:DashSuitable' tlt=d.talent.alias vac=d.scope.ref_no %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Mark {{ d.talent.alias }} 'Suitable' ">
+                <i class="fa fa-thumbs-o-up" aria-hidden="true" style="font-size:24px;color:green !important"></i>
+              </a>
+              &nbsp&nbsp
+                <a href="{% url 'MarketPlace:DashNotSuitable' tlt=d.talent.alias vac=d.scope.ref_no %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Mark {{ d.talent.alias }} 'Not Suitable' ">
+                  <i class="fa fa-thumbs-o-down" aria-hidden="true" style="font-size:24px;color:red !important"></i>
+                </a>
+              {% elif d.outcome == 'S' %}
+                <a href="{% url 'MarketPlace:DashNotSuitable' tlt=d.talent.alias vac=d.scope.ref_no %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Change {{ d.talent.alias }} to 'Not Suitable' ">
+                  <i class="fa fa-thumbs-o-down" aria-hidden="true" style="font-size:24px;color:red !important"></i>
+                </a>
+              {% elif d.outcome == 'N' %}
+                <a href="{% url 'MarketPlace:DashSuitable' tlt=d.talent.alias vac=d.scope.ref_no %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Change {{ d.talent.alias }} 'Suitable' ">
+                  <i class="fa fa-thumbs-o-up" aria-hidden="true" style="font-size:24px;color:green !important"></i>
+                </a>
+              {% endif %}
+            </td>
             <td class="align-middle text-center">
               {% if d.emp_intcomplete == True %}
                 Closed
@@ -61,7 +83,7 @@
                 </a>
               {% endif %}
             </td>
-            {% if request.user.subscription == 2 %}
+            {% if request.user.subscription > 0 %}
               <td class="align-middle text-center">
                 <a href="{% url 'Profile:ContactDetail' vac=d.scope.ref_no tlt=d.talent.alias %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Contact Detail">
                   <i class="fa fa-tty" aria-hidden="true" style="font-size:24px;color:black"></i>

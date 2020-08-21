@@ -60,9 +60,11 @@ urlpatterns = [
     path('int-decline/<int:int_id>/', views.InterviewDeclineView, name='InterviewDecline'),
         #InterviewList Views
     path('suitable/<slug:vac>/<slug:tlt>/', views.InterviewSuitable, name='Suitable'),
+    path('suitable-dsh/<slug:vac>/<slug:tlt>/', views.dash_int_suitable, name='DashSuitable'),
     path('unsuitable-suitable/<slug:vac>/<slug:tlt>/', views.UnsuitableInterviewSuitable, name='UnsuitableSuitable'),
     path('pending-suitable/<slug:vac>/<slug:tlt>/', views.PendingInterviewSuitable, name='PendingSuitable'),
     path('not-suitable/<slug:vac>/<slug:tlt>/', views.InterviewNotSuitable, name='NotSuitable'),
+    path('dash-not-suitable/<slug:vac>/<slug:tlt>/', views.dash_notsuitable, name='DashNotSuitable'),
     path('pending-not-suitable/<slug:vac>/<slug:tlt>/', views.PendingInterviewNotSuitable, name='PendingNotSuitable'),
     path('suitable-not-suitable/<slug:vac>/<slug:tlt>/', views.SuitableInterviewNotSuitable, name='SuitableNotSuitable'),
         #InterView History

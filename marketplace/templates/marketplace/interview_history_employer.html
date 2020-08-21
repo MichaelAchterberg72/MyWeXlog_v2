@@ -20,11 +20,16 @@
     </div>
     <h4 class="card-title">Interview History (All Interviews)</h4>
     <table class="table table-hover table-sm">
+      <col width = "15%">
+      <col width = "43%">
+      <col width = "12%">
+      <col width = "10%">
+      <col width = "10%">
+      <col width = "10%">
       <thead>
         <tr>
           <th class="align-middle text-center">Talent</th>
-          <th class="align-middle text-center">Vacancy</th>
-          <th class="align-middle text-center">Reference Number</th>
+          <th class="align-middle text-center">Vacancy<br>( Reference Number )</th>
           <th class="align-middle text-center">Talent's Response</th>
           <th class="align-middle text-center">My Response</th>
           <th class="align-middle text-center">Interview Status</th>
@@ -35,8 +40,9 @@
         {% for l in pageitems %}
           <tr>
             <td class="align-middle text-center">{{ l.talent.alias }}</td>
-            <td class="align-middle text-center">{{ l.scope.title }}</td>
-            <td class="align-middle text-center">{{ l.scope.ref_no }}</td>
+            <td class="align-middle text-center">
+              {{ l.scope.title }}<br>( {{ l.scope.ref_no }} )
+            </td>
             <td class="align-middle text-center">{{ l.get_tlt_response_display }}</td>
             <td class="align-middle text-center">{{ l.get_outcome_display }}</td>
             <td class="align-middle text-center">
@@ -49,7 +55,7 @@
                   </a>
               {% endif %}
             </td>
-            {% if request.user.subscription == 2 %}
+            {% if request.user.subscription > 1 %}
               <td class="align-middle text-center">
                 <a href="{% url 'Profile:ContactDetail' vac=l.scope.ref_no tlt=l.talent.alias %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Contact Detail">
                   <i class="fa fa-tty" aria-hidden="true" style="font-size:24px;color:black"></i>

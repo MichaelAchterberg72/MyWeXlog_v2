@@ -6,40 +6,74 @@
 
 <div class="card border-0">
   <div class="card-body">
-    <p class="float-right">
-      <form  action="{% url 'BookList:BLB' %}" method="post">
-    <input type="hidden" name="next" value="{{ request.GET.next }}">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-secondary float-right">Back</button>
-  </form>
-    </p>
+    <div class="btn-toolbar float-right">
+      {% for d in bil_qs %}
+        <div class="btn-group mr-2">
+          <a href="{% url 'Talent:APV' tlt=d.talent.alias  vac=d.scope.ref_no %}" target="_blank" class="btn btn-secondary" style="width: 8rem">
+            View Profile
+          </a>
+        </div>
+        <div class="btn-group mr-2">
+          {% if d.outcome == 'I' %}
+          <a href="{% url 'MarketPlace:DashSuitable' tlt=d.talent.alias vac=d.scope.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-danger" style="width: 8rem" data-toggle="tooltip" title="Mark {{ d.talent.alias }} 'Not Suitable' ">
+            Not Suitable
+          </a>
+          &nbsp
+            <a href="{% url 'MarketPlace:DashNotSuitable' tlt=d.talent.alias vac=d.scope.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-danger" style="width: 8rem" data-toggle="tooltip" title="Mark {{ d.talent.alias }} 'Not Suitable' ">
+              Not Suitable
+            </a>
+          {% elif d.outcome == 'S' %}
+            <a href="{% url 'MarketPlace:DashNotSuitable' tlt=d.talent.alias vac=d.scope.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-danger" style="width: 8rem" data-toggle="tooltip" title="Change {{ d.talent.alias }} to 'Not Suitable' ">
+              Not Suitable
+            </a>
+          {% elif d.outcome == 'N' %}
+            <form  action="{% url 'MarketPlace:DashSuitable' tlt=d.talent.alias vac=d.scope.ref_no %}?next={{ request.path|urlencode }}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-success" style="width: 8rem" data-toggle="tooltip" title="Change {{ d.talent.alias }} to 'Suitable' ">
+                Suitable
+              </button>
+            </form>
+          {% endif %}
+        </div>
+      {% endfor %}
+      <div class="btn-group mr-2">
+        <a href="{% url 'MarketPlace:EmployerInterviewHistory' request.user.alias %}" class="btn btn-secondary">
+          Back
+        </a>
+      </div>
+    </div>
     {% for d in bil_qs %}
     <h4 class="card-title">Interview Detail</h4>
     <table class="table table-hover table-sm">
+      <col width = "15%">
+      <col width = "12%">
+      <col width = "43%">
+      <col width = "10%">
+      <col width = "10%">
+      <col width = "10%">
       <thead>
         <tr>
           <th class="align-middle text-center">Talent</th>
-          <th class="align-middle text-center">Vacancy</th>
-          <th class="align-middle text-center">Reference Number</th>
           <th class="align-middle text-center">Talent's Response</th>
+          <th class="align-middle text-center">Vacancy<br>( Reference Number )</th>
           <th class="align-middle text-center">My Response</th>
           <th class="align-middle text-center">Interview Status</th>
           <th class="align-middle text-center">Detail</th>
         </tr>
-      </thead>
       <tbody>
           <tr onclick="window.location='{% url 'MarketPlace:VacancyPost' d.scope.ref_no %}?next={{ request.path|urlencode }}'">
             <td rowspan="2" class="align-middle text-center">{{ d.talent.alias }}</td>
-            <td class="align-middle text-center">{{ d.scope.title }}</td>
-            <td class="align-middle text-center">{{ d.scope.ref_no }}</td>
             <td class="align-middle text-center">{{ d.get_tlt_response_display }}</td>
+            <td class="align-middle text-center">
+              {{ d.scope.title }}<br>( {{ d.scope.ref_no }} )
+            </td>
             <td class="align-middle text-center">{{ d.get_outcome_display }}</td>
             {% if d.emp_intcomplete == True %}
               <td class="align-middle text-center">Closed</td>
             {% else %}
               <td class="align-middle text-center">Open <br><a href="{% url 'MarketPlace:EmployerIntClose' bil=d.slug tlt=d.talent.alias %}" data-toggle="tooltip" title="Close Interview"><i class="fa fa-close" style="font-size:24px;color:red !important"></i></a> </td>
             {% endif %}
-            {% if request.user.subscription == 2 %}
+            {% if request.user.subscription > 1 %}
               <td class="align-middle text-center">
                 <a href="{% url 'MarketPlace:VacancyPost' d.scope.ref_no %}?next={{ request.path|urlencode }}" class="" data-toggle="tooltip" title="See Vacancy Detail"><i class="fa fa-industry" style="font-size:24px;color:black"></i></a>
               </td>
@@ -48,9 +82,9 @@
           <tr onclick="window.location='{% url 'MarketPlace:VacancyIntComment' bil=d.slug tlt=d.talent.alias %}?next={{ request.path|urlencode }}'">
             <th class="align-middle text-center">My Comments</th>
             {% if d.comments_emp %}
-              <td colspan="5"  class="align-middle">{{ d.comments_emp }}</td>
+              <td colspan="3"  class="align-middle">{{ d.comments_emp }}</td>
             {% else %}
-              <td colspan="4"  class="align-middle"> - </td>
+              <td colspan="3"  class="align-middle"> - </td>
               <td class="align-middle text-center">
                 <a href="{% url 'MarketPlace:VacancyIntComment' bil=d.slug tlt=d.talent.alias %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Post Comment"><i class="fa fa-pencil-square-o" style="font-size:30px;color:black"></i></a>
               </td>

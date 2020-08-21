@@ -37,9 +37,9 @@
             {% else %}
               <td class="align-middle text-center">Open <a href="{% url 'MarketPlace:TalentIntClose' bil=d.slug tlt=d.talent.alias %}" data-toggle="tooltip" title="Close Interview"><i class="fa fa-close" style="font-size:24px;color:red"></i></a> </td>
             {% endif %}
-            {% if request.user.subscription == 2 %}
+            {% if request.user.subscription > 0 %}
               <td class="align-middle text-center">
-                <a href="{% url 'MarketPlace:VacancyDetail' d.scope.ref_no %}?next={{ request.path|urlencode }}" class="" data-toggle="tooltip" title="See Vacancy Detail"><i class="fa fa-industry" style="font-size:24px;color:black"></i></a>
+                <a href="{% url 'MarketPlace:VacancyDetail' d.scope.ref_no %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="See Vacancy Detail"><i class="fa fa-industry" style="font-size:24px;color:black"></i></a>
               </td>
             {% endif %}
           </tr>
