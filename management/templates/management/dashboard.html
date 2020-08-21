@@ -91,6 +91,7 @@
     <div class="card border">
       <div class="card-body">
         <h4 class="card-title">View Feedback</h4>
+        <p>View the feedback comments that the site members have made!</p>
         <div class="float-center">
           <center>
           <a href="{% url 'Feedback:FeedbackAll' %}" class="btn btn-primary">View Feedback</a>
@@ -124,7 +125,7 @@
       type: 'line',
       data: {
         datasets: [{
-          label: 'Total Free Members',
+          label: 'Weekly Free Members',
           data: {{ free_members_weekly_data|safe }},
           type: 'line',
           order: 1,
@@ -136,24 +137,22 @@
           pointStyle: 'circle',
           pointHitRadius: 20,
         },   {
-          label: 'Total Passive Members',
+          label: 'Weekly Passive Members',
           data: {{ passive_members_weekly_data|safe }},
           type: 'line',
           order: 2,
           fill: false,
-          borderDash: [5, 5],
           borderColor: '#0000FF',
           borderWidth: 5,
           pointBorderWidth: 5,
           pointStyle: 'circle',
           pointHitRadius: 20,
         },  {
-          label: 'Total Active Members',
+          label: 'Weekly Active Members',
           data: {{ active_members_weekly_data|safe }},
           type: 'line',
           order: 3,
           fill: false,
-          borderDash: [5, 5],
           borderColor: '#FF0000',
           borderWidth: 5,
           pointBorderWidth: 5,
