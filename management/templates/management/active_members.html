@@ -1,0 +1,261 @@
+{% extends 'base_home.html' %}
+
+{% block title %}My {{block.super}} Profile View{% endblock title %}
+
+{% block content %}
+
+<div class="row">
+
+  <div class="col-sm-8">
+    <div class="card border">
+      <center>
+      <div class="card-body">
+
+        <div class="align-center" style="font-size:120px;color:black">
+          {{ mfcount }}
+
+        </div>
+      </div>
+      <h5 class="card-title">Total Free Members</h5>
+      </center>
+    </div>
+  </div>
+
+  <div class="col-sm-4">
+    <div class="card border">
+      <center>
+      <div class="card-body">
+
+        <div class="align-center" style="font-size:120px;color:black">
+          {{ mfcount }}
+
+        </div>
+      </div>
+      <h5 class="card-title">New Free Members</h5>
+      </center>
+    </div>
+  </div>
+
+</div>
+
+<br>
+
+<div class="row">
+
+  <div class="col-sm-8">
+    <div class="card border">
+      <center>
+      <div class="card-body">
+
+        <div class="align-center" style="font-size:120px;color:black">
+          {{ mpcount }}
+
+        </div>
+      </div>
+      <h5 class="card-title">Total Passive Members</h5>
+      </center>
+    </div>
+  </div>
+
+  <div class="col-sm-4">
+    <div class="card border">
+      <center>
+      <div class="card-body">
+
+        <div class="align-center" style="font-size:120px;color:black">
+          {{ mpcount }}
+
+        </div>
+      </div>
+      <h5 class="card-title">New Passive Members</h5>
+      </center>
+    </div>
+  </div>
+
+</div>
+
+<br>
+
+<div class="row">
+
+  <div class="col-sm-8">
+    <div class="card border">
+      <center>
+      <div class="card-body">
+
+        <div class="align-center" style="font-size:120px;color:black">
+          {{ macount }}
+
+        </div>
+      </div>
+      <h5 class="card-title">Total Active Members</h5>
+      </center>
+    </div>
+  </div>
+
+  <div class="col-sm-4">
+    <div class="card border">
+      <center>
+      <div class="card-body">
+
+        <div class="align-center" style="font-size:120px;color:black">
+          {{ am_month1 }}
+
+        </div>
+      </div>
+      <h5 class="card-title">New Active Members</h5>
+      </center>
+    </div>
+  </div>
+
+</div>
+
+<br>
+
+<div class="row">
+
+  <div class="col-sm-8">
+    <div class="card border">
+      <center>
+      <div class="card-body">
+
+        <div class="align-center" style="font-size:120px;color:black">
+          {{ mcount }}
+
+        </div>
+      </div>
+      <h5 class="card-title">Total Members</h5>
+      </center>
+    </div>
+  </div>
+
+  <div class="col-sm-4">
+    <div class="card border">
+      <center>
+      <div class="card-body">
+
+          <div class="align-center" style="font-size:120px;color:black">
+            {{ mcount }}
+
+          </div>
+      </div>
+      <h5 class="card-title">New Total Members</h5>
+      </center>
+    </div>
+  </div>
+
+</div>
+
+<br>
+
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">Management Dashboard</h5>
+
+    <div class="align-right">
+      <canvas id="members-chart" height="60px"></canvas>
+
+      <div>
+      <br>
+      </div>
+
+    </div>
+  </div>
+</div>
+<br>
+
+
+
+
+  <script>
+
+    var config = {
+      type: 'line',
+      data: {
+        datasets: [{
+          label: 'Total Membership',
+          data: {{ report_views_data|safe }},
+          order: 1,
+          fill: false,
+          borderColor: '#0000ff',
+          borderWidth: 5,
+          pointBorderWidth: 5,
+          pointStyle: 'circle',
+          pointHitRadius: 20,
+          backgroundColor: [
+            '#0000ff', '#ffff00', '#D3D3D3'
+          ],
+        }, {
+          label: 'Total Members',
+          data: {{ total_members_data|safe }},
+          type: 'bar',
+          order: 2
+        },  {
+          label: 'Total Free Members',
+          data: {{ free_members_monthly_data|safe }},
+          type: 'line',
+          order: 3,
+          fill: false,
+          borderDash: [5, 5],
+          borderColor: '#808000',
+          borderWidth: 5,
+          pointBorderWidth: 5,
+          pointStyle: 'circle',
+          pointHitRadius: 20,
+        },   {
+          label: 'Total Passive Members',
+          data: {{ passive_members_monthly_data|safe }},
+          type: 'line',
+          order: 3,
+          fill: false,
+          borderDash: [5, 5],
+          borderColor: '#808000',
+          borderWidth: 5,
+          pointBorderWidth: 5,
+          pointStyle: 'circle',
+          pointHitRadius: 20,
+        },  {
+          label: 'Total Active Members',
+          data: {{ active_members_monthly_data|safe }},
+          type: 'line',
+          order: 3,
+          fill: false,
+          borderDash: [5, 5],
+          borderColor: '#808000',
+          borderWidth: 5,
+          pointBorderWidth: 5,
+          pointStyle: 'circle',
+          pointHitRadius: 20,
+        }],
+        labels: {{ report_views_labels|safe }}
+      },
+      options: {
+        responsive: true,
+        tooltips:{
+          bodyFontSize: 14,
+          titleFontSize: 0,
+          displayColors: false,
+        },
+        legend: {
+            display: false,
+            position: 'left',
+            labels: {
+                fontColor: '#0000ff',
+        },
+
+        }
+      }
+    };
+
+    window.onload = function() {
+      var ctx = document.getElementById('members-chart').getContext('2d');
+      window.myPie = new Chart(ctx, config);
+    };
+
+  </script>
+
+<br>
+
+
+
+{% endblock content %}

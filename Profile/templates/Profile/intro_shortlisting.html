@@ -1,0 +1,74 @@
+{% extends 'base_home.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Help{% endblock title %}
+
+{% block Style %}
+
+{% endblock Style %}
+{% block content %}
+<div class="card">
+  <div class="card-body">
+    <div class="btn-toolbar float-right">
+      <a href="{% url 'Profile:ProfileHome' %}?next={{ request.path|urlencode }}"  class="btn btn-primary">Back</a>
+    </div>
+    <h3 class="card-title">Shortlisting and Interviewing Members</h3>
+    <br>
+    <div class="col-sm-7 mx-auto">
+      <div class="embed-responsive embed-responsive-16by9">
+      <iframe class="embed-responsive-item align-middle center" src="https://www.youtube.com/embed/zpOULjyy-n8?rel=0" allowfullscreen></iframe>
+      </div>
+    </div>
+    <br>
+    <div>
+      <a href="{% url 'Profile:IntroVacancy' %}?next={{ request.path|urlencode }}"  class="btn btn-primary float-left" style="width:7rem">Previous</a>
+      <a href="{% url 'Profile:IntroAssign' %}?next={{ request.path|urlencode }}"  class="btn btn-primary float-right" style="width:7rem">Next</a>
+    </div>
+    <br>
+    <br>
+    <br>
+    <hr>
+    <div>
+      <center>
+      <a href="{% url 'Profile:IntroIntroduction' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Introduction</a>
+      <a href="{% url 'Profile:IntroValidating' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Validate Experience</a>
+      <a href="{% url 'Profile:IntroProfile' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Creating Your Profile</a>
+      <a href="{% url 'Profile:IntroCaptureExperience' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Capture Experience</a>
+      <br>
+      <br>
+      <a href="{% url 'Profile:IntroCaptureSkills' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Capturing Skills</a>
+      <a href="{% url 'Profile:IntroVacancy' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Creating a Vacancy</a>
+      <a href="{% url 'Profile:IntroShortlisting' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Shortlisting & Interviewing</a>
+      <a href="{% url 'Profile:IntroAssign' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Assigning</a>
+      </center>
+    </div>
+    <hr>
+    <br>
+    <br>
+    <h3 class="card-title">Shortlisting and Interviewing Members</h3>
+<p>The shortlisting process is the first step in selecting the talent that you want for the vacancy that you have posted. Once you have opened the detail view of the vacancy, scroll down to the bottom of the page for the ‘Applicants’ or ‘Talent suited to vacancy’ cards.  Here you will see the list of the talent that have applied for the vacancy or is available in the  MyWeXlog as talent that matches your criteria for the vacancy. </p>
+<p>You will be able to select either the ‘View Profile’ button in order to view the candidate's profile, skills and talents, or else you can select the ‘Short-list’ button if you are happy with their introduction and have already looked over their profile. This will remove the talent from the list and place them within the short list profile.
+If you want to view your shortlisted candidates click on the view shortlist button below the Vacancy Details card. Here you are able to again view the selected candidates profile, select them for an interview, assign the position or mark them as not suitable.</p>
+<h3 class="card-title">The Interview Process</h3>
+<p>When you select the interview button then from the short list the system will automatically send an email to the Talent in order to advise them that you wish to interview them. This action will place the interview request in the ‘Pending Interviews’ list at the bottom of the main ‘Dashboard’ page. </p>
+<h4 class="card-title">Accepting an interview request</h4>
+<p>In the event that you have been selected for an interview for a vacancy you will have been emailed to notify you of the vacancy and you should log-in to MyWeXlog to respond to the interview request. At the bottom of the main ‘Dashboard’ page you will find the ‘Pending Interviews’ card that details the interview, configuration and invitation date of the interview request. You can view details of the vacancy by clicking ‘See Detail’, accept the invitation by clicking ‘Accept Invitation’ which will notify the potential employer by email and provide your contact details in the way of your email address to the potential employer to allow them to contact you directly to arrange the interview. This is the first time that your personal information is disclosed on the site.</p>
+<h4 class="card-title">Pending Interviews for Employer</h4>
+<p>At the bottom of the main Dashboard page the Pending Interviews card will list all talent that have been sent interview requests and will identify them as ‘Response Pending’.</p>
+<h3 class="card-title">Once the Interview is complete</h3>
+<p>When you have completed the interview you will need to navigate to the main ‘Dashboard’ where you will find the ‘Interviews’ card and then select the ‘Employer History’ or ‘Candidate History’ depending on the one that reflects your requirements. You will find a summary detail listing the number of interviews that are pending, open, declined or closed.</p>
+<h4 class="card-title">Candidate</h4>
+<p>By clicking on the ‘Candidate History’ you will be navigated to the Interview history page listing all the interviews you have accepted. You will be able to ‘Accept’ or ‘Decline’ pending interviews by clicking on the appropriate icon in the ‘My Response’ column as well as to close the interview status.</p>
+<p>You will also have access to the ‘Contact Details’ of the interviewer in the way of their name and email address, which will also allow you to view their profile for background information purposes, view the ‘Vacancy Detail’ and provide ‘Comments’ as to how the interview went by clicking on the appropriate icon in the detail column.</p>
+
+<h4 class="card-title">Employer</h4>
+<p>As the employer you will have access to view the history of all interviews by clicking on the ‘Employer History’ button on the main ‘Dashboard’ page in the interviews card or alternatively the interview specific to the vacancy by selecting the ‘Interviews’ button just under the details card in the ‘Vacancy Detail’ view. In both of these lists you will be able to ‘Close’ the interview status to reflect that it is completed as well as to view the talent contact details being their name and contact email address, view the vacancy details, and capture your comments on the interview.</p>
+<p>Don't forget to open the ‘Vacancy Dashboard’ page and mark the talent as being ‘Suitable’ or ‘Not Suitable’ once you have completed the interview process.</p>
+
+
+
+</div>
+</div>
+{% endblock content %}

@@ -197,6 +197,22 @@ def IntroIntroductionView(request):
 
 
 @login_required()
+def IntroValidatingView(request):
+
+    template = 'Profile/intro_validating.html'
+    context = {}
+    return render(request, template, context)
+
+
+@login_required()
+def IntroProfileView(request):
+
+    template = 'Profile/intro_profile.html'
+    context = {}
+    return render(request, template, context)
+
+
+@login_required()
 def IntroCaptureExpreienceView(request):
 
     template = 'Profile/intro_capture_experience.html'
@@ -210,6 +226,30 @@ def IntroCaptureSkillsView(request):
     template = 'Profile/intro_capture_skills.html'
     context = {}
     return render(request, template, context)
+
+
+@login_required()
+def IntroVacancyView(request):
+
+    template = 'Profile/intro_vacancy.html'
+    context = {}
+    return render(request, template, context)
+
+
+@login_required()
+def IntroShortlistingView(request):
+
+    template = 'Profile/intro_shortlisting.html'
+    context = {}
+    return render(request, template, context)
+
+
+@login_required()
+def IntroAssigningView(request):
+
+    template = 'Profile/intro_assigning.html'
+    context = {}
+    return render(request, template, context)\
 
 
 #>>>Contact details view for Assigned vacancies and interviews
@@ -965,7 +1005,7 @@ def AssignmentClarifyView(request, wit):
             html_message = render_to_string('Profile/email_vac_clarification_text.html', context).strip()
 
             message = Mail(
-                from_email = settings.SENDGRID_FROM_EMAIL,
+                from_email = (settings.SENDGRID_FROM_EMAIL, 'MyWeXlog Clarification Required'),
                 to_emails = instance.work.requested_by.email,
                 subject = f"{instance.work.title}: Clarification Requested from {instance.talent.alias}",
                 plain_text_content = strip_tags(html_message),

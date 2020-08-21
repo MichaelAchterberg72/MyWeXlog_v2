@@ -1,0 +1,63 @@
+{% extends 'base_home.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Help{% endblock title %}
+
+{% block Style %}
+
+{% endblock Style %}
+{% block content %}
+<div class="card">
+  <div class="card-body">
+    <div class="btn-toolbar float-right">
+      <a href="{% url 'Profile:ProfileHome' %}?next={{ request.path|urlencode }}"  class="btn btn-primary">Back</a>
+    </div>
+    <h3 class="card-title">Creating a Vacancy</h3>
+    <br>
+    <div class="col-sm-7 mx-auto">
+      <div class="embed-responsive embed-responsive-16by9">
+      <iframe class="embed-responsive-item align-middle center" src="https://www.youtube.com/embed/zpOULjyy-n8?rel=0" allowfullscreen></iframe>
+      </div>
+    </div>
+    <br>
+    <div>
+      <a href="{% url 'Profile:IntroCaptureSkills' %}?next={{ request.path|urlencode }}"  class="btn btn-primary float-left" style="width:7rem">Previous</a>
+      <a href="{% url 'Profile:IntroShortlisting' %}?next={{ request.path|urlencode }}"  class="btn btn-primary float-right" style="width:7rem">Next</a>
+    </div>
+    <br>
+    <br>
+    <br>
+    <hr>
+    <div>
+      <center>
+      <a href="{% url 'Profile:IntroIntroduction' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Introduction</a>
+      <a href="{% url 'Profile:IntroValidating' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Validate Experience</a>
+      <a href="{% url 'Profile:IntroProfile' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Creating Your Profile</a>
+      <a href="{% url 'Profile:IntroCaptureExperience' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Capture Experience</a>
+      <br>
+      <br>
+      <a href="{% url 'Profile:IntroCaptureSkills' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Capturing Skills</a>
+      <a href="{% url 'Profile:IntroVacancy' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Creating a Vacancy</a>
+      <a href="{% url 'Profile:IntroShortlisting' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Shortlisting & Interviewing</a>
+      <a href="{% url 'Profile:IntroAssign' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Assigning</a>
+      </center>
+    </div>
+    <hr>
+    <br>
+    <br>
+    <h3 class="card-title">Creating a Vacancy</h3>
+    <p>To create a vacancy we have created a single capture form form that has been designed for ease-of-use allowing you to capture the details such as, the vacancy title, the hours, units, experience level, your own internal vacancy reference number, the currency, rate offered and the rate per unit, etc. We have specifically designed the company branch to be automatically configured to only accept your current companies of employment, these are captured in the your profile under Career history.</p>
+    <p>The areas of concern that you need to capture carefully would be the configuration, City town or place, language required, the application closing date and certificates required, these are required as the system will automatically filter the information based on those these fields. When selecting an experience level you should take notel you will only get members that have that number of hours experience available, for example, if you select an intermediate level, members that have a higher level of experience will be able to see the vacancy but members on lower levels will not. You need to keep in mind the fact that experience levels are only configured on skills they have been logged and validated with a minimum of three points each. </p>
+    <p>When capturing configuration, if you select ‘Remote freelance’ that will be open to all persons from all areas or regions internationally, by capturing the position required configuration as a consultant, project or freelance, the City town or place, will be configured to only source members that have registered their residential location in the region of that town or city is registered in.</p>
+    <p>The Scope and the Expectations are both required in order to define the vacancy requirements in more detail.  Once you have recorded the base information on the vacancy you need to click the add deliverables button at the bottom of the of the page. deliverable should be added one by one in the single sentence format clicking on Add another for add skills required. You will notice that as you add deliverables they will be listed on the bottom of the form for you. click on add skills required. </p>
+    <p>The enter the skills required that you are looking, type them into the search box that opens up in the drop-down list and select as many skills as you desire by clicking the add another button. You need to be careful that when you add the last skill that you are looking for, you select complete in order to move to close the vacancy capture wizard. You will notice that the skills that you are capturing will be listed in the card below the capture form for you. </p>
+    <h3 class="card-title">Viewing Skills Suitable for the Vacancy</h3>
+    <p>In order to view the details of the suitable members to the vacancy you need to click on the vacancy detail icon in the vacancies list. Once you have the vacancy review page open scroll to the bottom of the of the page and you'll see two cards, one for applicants, and one for Talent suited to the vacancy. The members that are suited to the vacancy will be listed in the talent suited to the vacancy dialogue box, you need to keep in mind that these members have not applied for the position but only selected according to the criteria that you have captured in the vacancy as suited to the vacancy and secured from the full database on my MyWeXlog. Applicants will detail only the members that have applied specifically to the vacancy. You can shortlist  with suitable members or members that you would still like to investigate further by inviting them to an interview by clicking on the short list button once you have reviewed their profiles. </p>
+
+
+
+</div>
+</div>
+{% endblock content %}

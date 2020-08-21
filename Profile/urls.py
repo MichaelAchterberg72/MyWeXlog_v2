@@ -111,7 +111,13 @@ urlpatterns = [
         path('help/experience-review/co-worker/', views.HelpCoworkerConfirmView, name='HelpConfirmCoworker'),
         path('help/experience-review/coonsultant-contractor/', views.HelpContractorConfirmView, name='HelpConfirmContractor'),
         path('contact-detail/<slug:tlt>/<slug:vac>/', views.ContactDetailView, name="ContactDetail"),
+        # Introduction Wizard
         path('intro-MyWeXlog-introduction/', views.IntroIntroductionView, name="IntroIntroduction"),
+        path('intro-validating', views.IntroValidatingView, name="IntroValidating"),
+        path('intro-profile', views.IntroProfileView, name="IntroProfile"),
         path('intro-capture-experience/', views.IntroCaptureExpreienceView, name="IntroCaptureExperience"),
         path('intro-capture-skills/', views.IntroCaptureSkillsView, name="IntroCaptureSkills"),
+        path('intro-vacancy', views.IntroVacancyView, name="IntroVacancy"),
+        path('intro-shortlisting', views.IntroShortlistingView, name="IntroShortlisting"),
+        path('intro-assign', views.IntroAssigningView, name="IntroAssign"),
 ]

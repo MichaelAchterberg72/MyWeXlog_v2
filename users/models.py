@@ -43,6 +43,7 @@ class CustomUser(AbstractUser):
     subscription = models.IntegerField(choices=PKG, default=0)
     permission = models.IntegerField(choices=COMPANY, default=1)
     role = models.IntegerField(choices=ROLE, default=0)
+    registered_date = models.DateTimeField(auto_now_add=True)
     paid = models.BooleanField(default=False, blank=True)
     paid_date = models.DateTimeField(null=True, blank=True)
     paid_type = models.IntegerField(choices=PAID_TYPE, default=0)

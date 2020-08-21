@@ -2549,7 +2549,7 @@ def AddToInterviewListView(request, vac, tlt):
         send_to = talent.email
 
         message = Mail(
-            from_email = settings.SENDGRID_FROM_EMAIL,
+            from_email = (settings.SENDGRID_FROM_EMAIL, 'MyWeXlog Interview Request'),
             to_emails = send_to,
             subject = subject,
             plain_text_content = strip_tags(html_message),
@@ -2622,7 +2622,7 @@ def TalentAssign(request, tlt, vac):
             send_to = talent.email
 
             message = Mail(
-                from_email = settings.SENDGRID_FROM_EMAIL,
+                from_email = (settings.SENDGRID_FROM_EMAIL, 'MyWeXlog Vacancy Assigned'),
                 to_emails = send_to,
                 subject = subject,
                 plain_text_content = strip_tags(html_message),
@@ -2715,7 +2715,7 @@ def SuitableTalentAssign(request, tlt, vac):
                 bids.update(bidreview='P')#1
 
             #>>>email
-            subject = f"WeXlog - Job assigned: {job.title} ({job.ref_no})"
+            subject = f"MyWeXlog - Job assigned: {job.title} ({job.ref_no})"
 
             context = {'job': job, 'talent': talent, 'user': talent}
 
@@ -2724,7 +2724,7 @@ def SuitableTalentAssign(request, tlt, vac):
             send_to = job.requested_by.email
             #send_mail(subject, html_message, 'no-reply@wexlog.io', [send_to,])
             message = Mail(
-                from_email = settings.SENDGRID_FROM_EMAIL,
+                from_email = (settings.SENDGRID_FROM_EMAIL, 'MyWeXlog Vacancy Assigned'),
                 to_emails = send_to,
                 subject = subject,
                 plain_text_content = strip_tags(html_message),
