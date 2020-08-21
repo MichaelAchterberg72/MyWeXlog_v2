@@ -31,6 +31,7 @@ urlpatterns = [
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     path('referrals/', include("pinax.referrals.urls", namespace='pinax_referrals')),
     path('invitations/', include('invitations.urls', namespace='Invitation')),
+    path('management/', include('management.urls', namespace='Management')),
     path('notifications/', include("pinax.notifications.urls", namespace='pinax_notifications')),
     path('treeMP/', include('nestedsettree.urls', namespace='Structure')),
     #path('chat/', include('intmessages.urls', namespace='Chat')),

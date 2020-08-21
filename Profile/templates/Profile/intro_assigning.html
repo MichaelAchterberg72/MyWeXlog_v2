@@ -1,0 +1,57 @@
+{% extends 'base_home.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Help{% endblock title %}
+
+{% block Style %}
+
+{% endblock Style %}
+{% block content %}
+<div class="card">
+  <div class="card-body">
+    <div class="btn-toolbar float-right">
+      <a href="{% url 'Profile:ProfileHome' %}?next={{ request.path|urlencode }}"  class="btn btn-primary">Back</a>
+    </div>
+    <h3 class="card-title">Assigning a Vacancy</h3>
+    <br>
+    <div class="col-sm-7 mx-auto">
+      <div class="embed-responsive embed-responsive-16by9">
+      <iframe class="embed-responsive-item align-middle center" src="https://www.youtube.com/embed/zpOULjyy-n8?rel=0" allowfullscreen></iframe>
+      </div>
+    </div>
+    <br>
+    <div>
+      <a href="{% url 'Profile:IntroShortlisting' %}?next={{ request.path|urlencode }}"  class="btn btn-primary float-left" style="width:7rem">Previous</a>
+
+    </div>
+    <br>
+    <br>
+    <br>
+    <hr>
+    <div>
+      <center>
+      <a href="{% url 'Profile:IntroIntroduction' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Introduction</a>
+      <a href="{% url 'Profile:IntroValidating' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Validate Experience</a>
+      <a href="{% url 'Profile:IntroProfile' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Creating Your Profile</a>
+      <a href="{% url 'Profile:IntroCaptureExperience' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Capture Experience</a>
+      <br>
+      <br>
+      <a href="{% url 'Profile:IntroCaptureSkills' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Capturing Skills</a>
+      <a href="{% url 'Profile:IntroVacancy' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Creating a Vacancy</a>
+      <a href="{% url 'Profile:IntroShortlisting' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Shortlisting & Interviewing</a>
+      <a href="{% url 'Profile:IntroAssign' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Assigning</a>
+      </center>
+    </div>
+    <hr>
+    <br>
+    <br>
+    <h3 class="card-title">Assigning a Vacancy</h3>
+    <p>As the Employer, once the interview process has been completed you need to navigate to the ‘Vacancy Dashboard’ page and select from the ‘Suitable Applicants’ which one you wish to assign the vacancy to by clicking on ‘Assign’.</p>
+    <p>This will open a page that allows you to capture the currency Rate offered as well as the anticipated start and end dates required.</p>
+
+
+</div>
+</div>
+{% endblock content %}

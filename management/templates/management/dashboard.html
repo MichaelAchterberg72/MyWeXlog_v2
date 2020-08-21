@@ -1,0 +1,194 @@
+{% extends 'base_home.html' %}
+
+{% block title %}My {{block.super}} Profile View{% endblock title %}
+
+{% block content %}
+<h3 class="card-title">MyWeXlog Management Console</h3>
+<div class="row">
+
+  <div class="col-sm-3">
+    <div class="card border">
+      <center>
+      <div class="card-body">
+
+        <div class="align-center" style="font-size:70px;color:black">
+          {{ mfcount }}
+
+        </div>
+      </div>
+      <h5 class="card-title">Total Free Members</h5>
+      </center>
+    </div>
+  </div>
+
+  <div class="col-sm-3">
+    <div class="card border">
+      <center>
+      <div class="card-body">
+
+        <div class="align-center" style="font-size:70px;color:black">
+          {{ mpcount }}
+
+        </div>
+      </div>
+      <h5 class="card-title">Total Passive Members</h5>
+      </center>
+    </div>
+  </div>
+
+  <div class="col-sm-3">
+    <div class="card border">
+      <center>
+      <div class="card-body">
+
+        <div class="align-center" style="font-size:70px;color:black">
+          {{ macount }}
+
+        </div>
+      </div>
+      <h5 class="card-title">Total Active Members</h5>
+      </center>
+    </div>
+  </div>
+
+  <div class="col-sm-3">
+    <div class="card border">
+      <center>
+      <div class="card-body">
+
+        <div class="align-center" style="font-size:70px;color:black">
+          {{ mcount }}
+
+        </div>
+      </div>
+      <h5 class="card-title">Total Members</h5>
+      </center>
+    </div>
+  </div>
+
+</div>
+
+<br>
+
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">New Members Weekly</h5>
+
+    <div class="align-right">
+      <canvas id="members-chart" height="60px"></canvas>
+
+      <div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+<br>
+<div class="row">
+
+  <div class="col-sm-6">
+    <div class="card border">
+      <div class="card-body">
+        <h4 class="card-title">View Feedback</h4>
+        <div class="float-center">
+          <center>
+          <a href="{% url 'Feedback:FeedbackAll' %}" class="btn btn-primary">View Feedback</a>
+          </center>
+        </div>
+      </div>
+
+    </div>
+  </div>
+<!--
+  <div class="col-sm-6">
+    <div class="card border">
+      <center>
+      <div class="card-body">
+        <h4 class="card-title"> </h4>
+        <div class="align-center" style="font-size:70px;color:black">
+
+        </div>
+      </div>
+
+      </center>
+    </div>
+  </div>
+-->
+</div>
+
+
+  <script>
+
+    var config = {
+      type: 'line',
+      data: {
+        datasets: [{
+          label: 'Total Free Members',
+          data: {{ free_members_weekly_data|safe }},
+          type: 'line',
+          order: 1,
+          fill: false,
+          borderDash: [5, 5],
+          borderColor: '#808000',
+          borderWidth: 5,
+          pointBorderWidth: 5,
+          pointStyle: 'circle',
+          pointHitRadius: 20,
+        },   {
+          label: 'Total Passive Members',
+          data: {{ passive_members_weekly_data|safe }},
+          type: 'line',
+          order: 2,
+          fill: false,
+          borderDash: [5, 5],
+          borderColor: '#0000FF',
+          borderWidth: 5,
+          pointBorderWidth: 5,
+          pointStyle: 'circle',
+          pointHitRadius: 20,
+        },  {
+          label: 'Total Active Members',
+          data: {{ active_members_weekly_data|safe }},
+          type: 'line',
+          order: 3,
+          fill: false,
+          borderDash: [5, 5],
+          borderColor: '#FF0000',
+          borderWidth: 5,
+          pointBorderWidth: 5,
+          pointStyle: 'circle',
+          pointHitRadius: 20,
+        }],
+        labels: {{ report_members_labels|safe }}
+      },
+      options: {
+        responsive: true,
+        tooltips:{
+          bodyFontSize: 14,
+          titleFontSize: 0,
+          displayColors: false,
+        },
+        legend: {
+            display: false,
+            position: 'left',
+            labels: {
+                fontColor: '#0000ff',
+        },
+
+        }
+      }
+    };
+
+    window.onload = function() {
+      var ctx = document.getElementById('members-chart').getContext('2d');
+      window.myPie = new Chart(ctx, config);
+    };
+
+  </script>
+
+<br>
+
+
+
+{% endblock content %}

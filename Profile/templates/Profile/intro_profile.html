@@ -1,0 +1,71 @@
+{% extends 'base_home.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Help{% endblock title %}
+
+{% block Style %}
+
+{% endblock Style %}
+{% block content %}
+<div class="card">
+  <div class="card-body">
+    <div class="btn-toolbar float-right">
+      <a href="{% url 'Profile:ProfileHome' %}?next={{ request.path|urlencode }}"  class="btn btn-primary">Back</a>
+    </div>
+    <h3 class="card-title">Capturing and Creating Your Profile</h3>
+    <br>
+    <div class="col-sm-7 mx-auto">
+      <div class="embed-responsive embed-responsive-16by9">
+      <iframe class="embed-responsive-item align-middle center" src="https://www.youtube.com/embed/zpOULjyy-n8?rel=0" allowfullscreen></iframe>
+      </div>
+    </div>
+    <br>
+    <div>
+      <a href="{% url 'Profile:IntroValidating' %}?next={{ request.path|urlencode }}"  class="btn btn-primary float-left" style="width:7rem">Previous</a>
+      <a href="{% url 'Profile:IntroCaptureExperience' %}?next={{ request.path|urlencode }}"  class="btn btn-primary float-right" style="width:7rem">Next</a>
+    </div>
+    <br>
+    <br>
+    <br>
+    <hr>
+    <div>
+      <center>
+      <a href="{% url 'Profile:IntroIntroduction' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Introduction</a>
+      <a href="{% url 'Profile:IntroValidating' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Validate Experience</a>
+      <a href="{% url 'Profile:IntroProfile' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Creating Your Profile</a>
+      <a href="{% url 'Profile:IntroCaptureExperience' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Capture Experience</a>
+      <br>
+      <br>
+      <a href="{% url 'Profile:IntroCaptureSkills' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Capturing Skills</a>
+      <a href="{% url 'Profile:IntroVacancy' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Creating a Vacancy</a>
+      <a href="{% url 'Profile:IntroShortlisting' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Shortlisting & Interviewing</a>
+      <a href="{% url 'Profile:IntroAssign' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Assigning</a>
+      </center>
+    </div>
+    <hr>
+    <br>
+    <br>
+    <h3 class="card-title">Capturing and Creating Your Profile</h3>
+    <p>Capturing your profile information is very important as some fields are used in the proper functioning of other areas in the site as well as it forms the basis of your public profile information. Your public profile is the information that is viewed when you  market your profile link or to apply for vacancies within the site. In order to edit the information on your public profile you need to navigate to the drop down icon menu at the top right hand corner of the screen and select ‘View Profile’ this will open the profile capturing information screen.</p>
+    <p>On the ‘View Your Profile’ page you will see a number of cards. Each card will have information relative to the specific heading.  Click either ‘Edit’ or ‘Add’ at the top of each card heading to change or update the information in your public profile.</p>
+    <h3 class="card-title">Information Required to be Captured</h3>
+    <h4 class="card-title">Basic Information</h4>
+    <p>You will need to capture your date of birth, you can change your display name, and a standard rate per hour.</p>
+    <p>You will need to capture your ‘Background’ and ‘Motivation’. Your Background should reflect a full overview of your experiences and capabilities. The Motivation will be used as the default entry for vacancies that your skills and experience match when potential employers search for skills available.</p>
+    <h4 class="card-title">Email Addresses</h4>
+    <p>The system will allow members to find you based on your previous email addresses and automatically redirect to your current email address.</p>
+    <h4 class="card-title">Career History</h4>
+    <p>The Career history will detail companies that you are currently employed at by omitting the ‘Date to’ entry. These entries will be required for the list of companies that the vacancies are posted for when you create a new vacancy.</p>
+    <h4 class="card-title">Physical Address</h4>
+    <p>You will be required to capture your Physical Address as vacancies that are listed as Freelance, Consultant, Contractor, Employee or FIFO (Fly In Fly Out) will be sorted according to the Region of the city that you capture. </p>
+    <h4 class="card-title">Other</h4>
+    <p>Information such as your ‘Identification Document’ are required should you be entitled to receive a payment from MyWeXlog.</p>
+    <p>‘Books Read’ are used in the event that you have the same experience as another individual, on the balance of probabilities, a person that is well read would be a better choice based on the fact that their knowledge based would be wider.</p>
+
+
+
+</div>
+</div>
+{% endblock content %}

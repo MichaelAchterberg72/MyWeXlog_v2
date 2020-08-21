@@ -197,6 +197,22 @@ def IntroIntroductionView(request):
 
 
 @login_required()
+def IntroValidatingView(request):
+
+    template = 'Profile/intro_validating.html'
+    context = {}
+    return render(request, template, context)
+
+
+@login_required()
+def IntroProfileView(request):
+
+    template = 'Profile/intro_profile.html'
+    context = {}
+    return render(request, template, context)
+
+
+@login_required()
 def IntroCaptureExpreienceView(request):
 
     template = 'Profile/intro_capture_experience.html'
@@ -210,6 +226,30 @@ def IntroCaptureSkillsView(request):
     template = 'Profile/intro_capture_skills.html'
     context = {}
     return render(request, template, context)
+
+
+@login_required()
+def IntroVacancyView(request):
+
+    template = 'Profile/intro_vacancy.html'
+    context = {}
+    return render(request, template, context)
+
+
+@login_required()
+def IntroShortlistingView(request):
+
+    template = 'Profile/intro_shortlisting.html'
+    context = {}
+    return render(request, template, context)
+
+
+@login_required()
+def IntroAssigningView(request):
+
+    template = 'Profile/intro_assigning.html'
+    context = {}
+    return render(request, template, context)\
 
 
 #>>>Contact details view for Assigned vacancies and interviews
