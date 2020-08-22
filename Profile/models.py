@@ -137,7 +137,7 @@ class Profile(models.Model):
         inject_al = f'{self.alias}'
         target = CustomUser.objects.filter(pk=self.talent.id)
         if self.f_name is None or self.f_name =="":
-            target.update(alias=inject_al, alphanum=inject_al)
+            target.update(alias=inject_al, alphanum=inject_al, display_text=inject_al)
         else:
             target.update(alias=inject_al, first_name=inject_fn, last_name=inject_ln)
 
@@ -181,6 +181,7 @@ class Profile(models.Model):
     def create_profile(sender, **kwargs):
         if kwargs['created']:
             create_profile = Profile.objects.create(talent=kwargs['instance'], accepted_terms=True, age_accept=True)
+
 
     post_save.connect(create_profile, sender=CustomUser)
 
