@@ -249,8 +249,15 @@ def IntroAssigningView(request):
 
     template = 'Profile/intro_assigning.html'
     context = {}
-    return render(request, template, context)\
+    return render(request, template, context)
 
+
+@login_required()
+def IntroBEPView(request):
+
+    template = 'Profile/intro_bep.html'
+    context = {}
+    return render(request, template, context)
 
 #>>>Contact details view for Assigned vacancies and interviews
 @login_required()

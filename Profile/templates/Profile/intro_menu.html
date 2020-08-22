@@ -1,0 +1,19 @@
+<hr>
+<div>
+  <center>
+  <a href="{% url 'Profile:IntroIntroduction' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Introduction</a>
+  <a href="{% url 'Profile:IntroValidating' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Validate Experience</a>
+  <a href="{% url 'Profile:IntroProfile' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Creating Your Profile</a>
+  <a href="{% url 'Profile:IntroCaptureExperience' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Capture Experience</a>
+  <br>
+  <br>
+  <a href="{% url 'Profile:IntroCaptureSkills' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Capturing Skills</a>
+  <a href="{% url 'Profile:IntroVacancy' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Creating a Vacancy</a>
+  <a href="{% url 'Profile:IntroShortlisting' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Shortlisting & Interviewing</a>
+  <a href="{% url 'Profile:IntroAssign' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Assigning</a>
+  <br>
+  <br>
+  <a href="{% url 'Profile:IntroBEP' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:16rem">Books, Enterprises & Projects</a>
+  </center>
+</div>
+<hr>

@@ -28,24 +28,16 @@
     <br>
     <br>
     <br>
-    <hr>
-    <div>
-      <center>
-      <a href="{% url 'Profile:IntroIntroduction' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Introduction</a>
-      <a href="{% url 'Profile:IntroValidating' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Validate Experience</a>
-      <a href="{% url 'Profile:IntroProfile' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Creating Your Profile</a>
-      <a href="{% url 'Profile:IntroCaptureExperience' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Capture Experience</a>
-      <br>
-      <br>
-      <a href="{% url 'Profile:IntroCaptureSkills' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Capturing Skills</a>
-      <a href="{% url 'Profile:IntroVacancy' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Creating a Vacancy</a>
-      <a href="{% url 'Profile:IntroShortlisting' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Shortlisting & Interviewing</a>
-      <a href="{% url 'Profile:IntroAssign' %}?next={{ request.path|urlencode }}"  class="btn btn-outline-success" style="width:14rem">Assigning</a>
-      </center>
-    </div>
-    <hr>
+    {% include 'Profile/intro_menu.html' %}
     <br>
     <br>
+    <h3 class="card-title">MyWeXlog Reason for Being</h3>
+    <center>
+    <p>"To advance humanity through the measurement of skills and knowledge and its effective application to solve the challenges that plague us."</p>
+    </center>
+    <br>
+    <p>MyWeXlog is a live experience log on which you can capture your experience and associate skills with that experience. Then, depending on your subscription, you can either search for companies looking for your skills or find people that have skills you require.</p>
+
     <h3 class="card-title">An Introduction</h3>
     <p>MyWeXlog is designed around its central feature, the experience log, and the features that are derived from its compilation. The first freely accessible feature is the public profile, which is a confirmed log of your work history, your experience and skills gained from your working life over time, projects you were involved with, your weekly achievements and accolades gained including the confirmations of how you succeeded in the development of your career as it happened. We have attempted to remove all bias, such as gender, race, age, etc. out of the system by anonymizing the presentation of the information on MyWeXlog as much as we can.</p>
 <p>By compiling a confirmed log of your experience and skills you create an authentic and trustworthy record of your career. This promotes your unique talents which can then be found by people and companies that require them.</p>

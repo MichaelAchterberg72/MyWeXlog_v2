@@ -120,4 +120,5 @@ urlpatterns = [
         path('intro-vacancy', views.IntroVacancyView, name="IntroVacancy"),
         path('intro-shortlisting', views.IntroShortlistingView, name="IntroShortlisting"),
         path('intro-assign', views.IntroAssigningView, name="IntroAssign"),
+        path('intro-books-emterprises-projects', views.IntroBEPView, name="IntroBEP"),
 ]
