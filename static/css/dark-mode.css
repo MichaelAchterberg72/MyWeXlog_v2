@@ -17,6 +17,7 @@
 
 [data-theme="dark"] .card {
   background-color: #303030 !important;
+  opacity: 0.8;
 }
 
 [data-theme="dark"] .fa {

@@ -1,0 +1,49 @@
+{% extends 'base_home.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Introduction Walkthrough{% endblock title %}
+
+{% block Style %}
+
+{% endblock Style %}
+{% block content %}
+<div class="card">
+  <div class="card-body">
+    <div class="btn-toolbar float-right">
+    <a href="{% url 'Profile:ProfileHome' %}?next={{ request.path|urlencode }}"  class="btn btn-primary">Back</a>
+    </div>
+    <h3 class="card-title">Books, Enterprises & Projects</h3>
+    <br>
+    <div class="col-sm-7 mx-auto">
+      <div class="embed-responsive embed-responsive-16by9">
+      <iframe class="embed-responsive-item align-middle center" src="https://www.youtube.com/embed/zpOULjyy-n8?rel=0" allowfullscreen></iframe>
+      </div>
+    </div>
+    <br>
+    <div>
+      <a href="{% url 'Profile:IntroAssign' %}?next={{ request.path|urlencode }}" class="btn btn-primary float-left" style="width:7rem">Previous</a>
+    </div>
+    <br>
+    <br>
+    <br>
+    {% include 'Profile/intro_menu.html' %}
+    <br>
+    <br>
+    <h3 class="card-title">Books, Enterprises & Projects</h3>
+    <p>The balance of the application is the Books, the Enterprises and the Projects applications. These are designed as supporting applications to the main Experience and Vacancies applications.</p>
+    <h3 class="card-title">Books</h3>
+    <p>The books app may be selected by clicking on ‘Books’ in the main menu on the left-hand side of the screen. The reason for a books app is that, on a case-by-case comparison basis, the person that is more well read, will have a better chance in successfully applying for a vacancy.</p>
+    <p>The books list home page opens up with a list of the books that you have read. You can view a list of all the books captured within MyWeXlog or search through the list of books for a particular title, author or publisher. To add a book to your books read list, click on ‘Add Book’, type the name of the book you wish to add into the dialogue filter field and select it from the list. If it is not in the list, simply click on ‘Add a New Book’ and fill out the details for the book. you will then be required to add the book format you had access to the book in as well as the date that you completed reading the book</p>.
+    <h3 class="card-title">Enterprises</h3>
+    <p>The Enterprises home page opens up with a listing of all the captured Enterprises within the MyWeXlog application. Each Enterprise will list the main Enterprise name and then have a link button to list the branches applicable to that Enterprise.</p>
+    <p>When capturing a new enterprise, always capture the branch, if there is no branch for the Enterprise, capture the branch as the Head Office branch as MyWeXlog is configured to work from the branch rather than the main enterprise name.</p>
+    <p>If the enterprise has been rated by MyWeXlog members for the suitability in providing work at the completion of a vacancy the rating will appear with the details of the branch. MyWeXlog requires a minimum of 5 ratings before the details are made available.</p>
+    <h3 class="card-title">Projects</h3>
+    <p>The project page will list all the projects captured in MyWeXlog. You will be able to see the detail of the work of the project as well as a listing of all the hours captured into MyWeXlog relating to that Project.</p>
+
+
+</div>
+</div>
+{% endblock content %}

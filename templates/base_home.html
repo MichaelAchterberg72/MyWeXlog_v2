@@ -131,7 +131,7 @@
               <div class="fa-primary">
                 <i style="font-size: 27px" class="fa fa-bug"></i>
               </div>
-              <span class="link-text">Feedback Form</span>
+              <span class="link-text">Management</span>
             </a>
           </li>
         {% endif %}
@@ -176,6 +176,7 @@
     </nav>
 
   <main>
+    <div class="main-top">
     <div class="container pt-3">
       <p>
         <div class="custom-control custom-switch">
@@ -190,6 +191,7 @@
 
     {% endblock content %}
     </div>
+  </div>
   </main>
 
   {% if request.user.is_authenticated %}
@@ -224,6 +226,12 @@
         </div>
       </div>
 
+    </div>
+  </nav>
+
+  <nav class="sticky-bottom bottom-right-navbar" style="height: 5rem;">
+    <div class="">
+      <img src="{% static 'images/mywexlog-logo.png' %}" class="avatar" style="height: 10rem;opacity:0.2;">
     </div>
   </nav>
   {% endif %}
