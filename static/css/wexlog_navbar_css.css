@@ -49,17 +49,17 @@ main {
 }
 
 .top-right-navbar {
-  position: absolute;
-  align-items: center;
+  position: -webkit-sticky;
+  position: fixed;
+  align-items: flex-end;
   top: 0rem;
   right: 0rem;
   padding: 1rem;
   text-align: justify;
   justify-content: space-between;
-  width: 34rem;
+  width: auto;
   height: 5rem;
   display: flex;
-  align-items: flex-end;
   flex-direction: row;
   text-align: right;
 }
@@ -71,7 +71,6 @@ main {
   bottom: 0;
   float: right;
   z-index: -1;
-  align-items: center;
   right: 0rem;
   padding: 1rem;
   text-align: justify;
