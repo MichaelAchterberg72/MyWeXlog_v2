@@ -30,11 +30,17 @@ body::-webkit-scrollbar-thumb {
 main {
   margin-left: 5rem;
   padding: 1rem;
+  top:0;
+}
+
+.main-top {
+  position:sticky;
+  top:0;
 }
 
 .navbar {
   position: -webkit-sticky;
-  position: absolute;
+  position: fixed;
   top: 0;
   float: top;
   background-color: var(--bg-primary);
