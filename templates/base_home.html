@@ -27,149 +27,7 @@
   </head>
   <body class="bg-light">
 
-    <nav class="navbar">
-      <ul class="navbar-nav">
-        <li class="logo">
-          <a href="https://mywexlog.dev/public/index/" class="nav-link">
-            <span class="link-text logo-text">MyWeXlog</span>
-            <svg
-              aria-hidden="true"
-              focusable="false"
-              data-prefix="fad"
-              data-icon="angle-double-right"
-              role="img"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 448 512"
-              class="svg-inline--fa fa-angle-double-right fa-w-14 fa-5x"
-            >
-              <g class="fa-group">
-                <path
-                  fill="currentColor"
-                  d="M224 273L88.37 409a23.78 23.78 0 0 1-33.8 0L32 386.36a23.94 23.94 0 0 1 0-33.89l96.13-96.37L32 159.73a23.94 23.94 0 0 1 0-33.89l22.44-22.79a23.78 23.78 0 0 1 33.8 0L223.88 239a23.94 23.94 0 0 1 .1 34z"
-                  class="fa-secondary"
-                ></path>
-                <path
-                  fill="currentColor"
-                  d="M415.89 273L280.34 409a23.77 23.77 0 0 1-33.79 0L224 386.26a23.94 23.94 0 0 1 0-33.89L320.11 256l-96-96.47a23.94 23.94 0 0 1 0-33.89l22.52-22.59a23.77 23.77 0 0 1 33.79 0L416 239a24 24 0 0 1-.11 34z"
-                  class="fa-primary"
-                ></path>
-              </g>
-            </svg>
-          </a>
-        </li>
-        {% if request.user.is_authenticated %}
-        <li class="nav-item">
-          <a href="{% url 'Profile:ProfileHome' %}" class="nav-link">
-            <div class="fa-primary">
-              <i style="font-size: 27px" class="icon icon-address-card"></i>
-            </div>
-            <span class="link-text">Dashboard</span>
-          </a>
-        </li>
 
-        <li class="nav-item">
-          <a href="{% url 'Talent:Home' %}" class="nav-link">
-            <div class="fa-primary">
-              <i style="font-size: 27px" class="icon icon-address-book"></i>
-            </div>
-            <span class="link-text">Experience</span>
-          </a>
-        </li>
-
-        <li class="nav-item">
-          <a href="{% url 'MarketPlace:Entrance' %}" class="nav-link">
-            <div class="fa-primary">
-              <i style="font-size: 27px" class="icon icon-archive"></i>
-            </div>
-            <span class="link-text">Vacancies</span>
-          </a>
-        </li>
-
-        <li class="nav-item">
-          <a href="{% url 'Flatten:ListTags' %}" class="nav-link">
-            <div class="fa-primary">
-              <i style="font-size: 27px" class="icon icon-certificate"></i>
-            </div>
-            <span class="link-text">Skill Tags</span>
-          </a>
-        </li>
-
-        <li class="nav-item">
-          <a href="{% url 'BookList:BookListHome' %}" class="nav-link">
-            <div class="fa-primary">
-              <i style="font-size: 27px" class="icon icon-book"></i>
-            </div>
-            <span class="link-text">Books</span>
-          </a>
-        </li>
-
-        <li class="nav-item">
-          <a href="{% url 'Enterprise:EnterpriseHome' %}" class="nav-link">
-            <div class="fa-primary">
-              <i style="font-size: 27px" class="icon icon-building"></i>
-            </div>
-            <span class="link-text">Enterprises</span>
-          </a>
-        </li>
-
-        <li class="nav-item">
-          <a href="{% url 'Project:ProjectHome' %}" class="nav-link">
-            <div class="fa-primary">
-              <i style="font-size: 27px" class="icon icon-black-tie"></i>
-            </div>
-            <span class="link-text">Projects</span>
-          </a>
-        </li>
-
-        {% if request.user.subscription > 2 %}
-          <li class="nav-item">
-            <a href="{% url 'Management:ManagementDashboard' %}" class="nav-link">
-              <div class="fa-primary">
-                <i style="font-size: 27px" class="fa fa-bug"></i>
-              </div>
-              <span class="link-text">Feedback Form</span>
-            </a>
-          </li>
-        {% endif %}
-
-        <li class="nav-item" id="themeButton">
-          <a href="{% url 'Users:CustomUserSettings' %}" class="nav-link">
-            <div class="fa-primary">
-              <i style="font-size: 27px" class="icon icon-settings"></i>
-            </div>
-            <span class="link-text">Settings</span>
-          </a>
-        </li>
-        {% else %}
-        <li class="nav-item">
-          <a href="{% url 'account_signup' %}" class="nav-link">
-            <div class="fa-primary">
-              <i style="font-size: 27px" class="icon icon-bookmark"></i>
-            </div>
-            <span class="link-text">Register</span>
-          </a>
-        </li>
-
-        <li class="nav-item">
-          <a href="{% url 'account_login' %}" class="nav-link">
-            <div class="fa-primary">
-              <i style="font-size: 27px" class="icon icon-bars"></i>
-            </div>
-            <span class="link-text">Sign-In</span>
-          </a>
-        </li>
-
-        <li class="nav-item">
-          <a href="" class="nav-link">
-            <div class="fa-primary">
-              <i style="font-size: 27px" class=""></i>
-            </div>
-            <span class="link-text"></span>
-          </a>
-        </li>
-        {% endif %}
-      </ul>
-    </nav>
 
   <main>
     <div class="container pt-3">
@@ -187,6 +45,152 @@
     {% endblock content %}
     </div>
   </main>
+
+
+  <nav class="navbar">
+    <ul class="navbar-nav">
+      <li class="logo">
+        <a href="https://mywexlog.dev/public/index/" class="nav-link">
+          <span class="link-text logo-text">MyWeXlog</span>
+          <svg
+            aria-hidden="true"
+            focusable="false"
+            data-prefix="fad"
+            data-icon="angle-double-right"
+            role="img"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 448 512"
+            class="svg-inline--fa fa-angle-double-right fa-w-14 fa-5x"
+          >
+            <g class="fa-group">
+              <path
+                fill="currentColor"
+                d="M224 273L88.37 409a23.78 23.78 0 0 1-33.8 0L32 386.36a23.94 23.94 0 0 1 0-33.89l96.13-96.37L32 159.73a23.94 23.94 0 0 1 0-33.89l22.44-22.79a23.78 23.78 0 0 1 33.8 0L223.88 239a23.94 23.94 0 0 1 .1 34z"
+                class="fa-secondary"
+              ></path>
+              <path
+                fill="currentColor"
+                d="M415.89 273L280.34 409a23.77 23.77 0 0 1-33.79 0L224 386.26a23.94 23.94 0 0 1 0-33.89L320.11 256l-96-96.47a23.94 23.94 0 0 1 0-33.89l22.52-22.59a23.77 23.77 0 0 1 33.79 0L416 239a24 24 0 0 1-.11 34z"
+                class="fa-primary"
+              ></path>
+            </g>
+          </svg>
+        </a>
+      </li>
+      {% if request.user.is_authenticated %}
+      <li class="nav-item">
+        <a href="{% url 'Profile:ProfileHome' %}" class="nav-link">
+          <div class="fa-primary">
+            <i style="font-size: 27px" class="icon icon-address-card"></i>
+          </div>
+          <span class="link-text">Dashboard</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a href="{% url 'Talent:Home' %}" class="nav-link">
+          <div class="fa-primary">
+            <i style="font-size: 27px" class="icon icon-address-book"></i>
+          </div>
+          <span class="link-text">Experience</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a href="{% url 'MarketPlace:Entrance' %}" class="nav-link">
+          <div class="fa-primary">
+            <i style="font-size: 27px" class="icon icon-archive"></i>
+          </div>
+          <span class="link-text">Vacancies</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a href="{% url 'Flatten:ListTags' %}" class="nav-link">
+          <div class="fa-primary">
+            <i style="font-size: 27px" class="icon icon-certificate"></i>
+          </div>
+          <span class="link-text">Skill Tags</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a href="{% url 'BookList:BookListHome' %}" class="nav-link">
+          <div class="fa-primary">
+            <i style="font-size: 27px" class="icon icon-book"></i>
+          </div>
+          <span class="link-text">Books</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a href="{% url 'Enterprise:EnterpriseHome' %}" class="nav-link">
+          <div class="fa-primary">
+            <i style="font-size: 27px" class="icon icon-building"></i>
+          </div>
+          <span class="link-text">Enterprises</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a href="{% url 'Project:ProjectHome' %}" class="nav-link">
+          <div class="fa-primary">
+            <i style="font-size: 27px" class="icon icon-black-tie"></i>
+          </div>
+          <span class="link-text">Projects</span>
+        </a>
+      </li>
+
+      {% if request.user.subscription > 2 %}
+        <li class="nav-item">
+          <a href="{% url 'Management:ManagementDashboard' %}" class="nav-link">
+            <div class="fa-primary">
+              <i style="font-size: 27px" class="fa fa-bug"></i>
+            </div>
+            <span class="link-text">Feedback Form</span>
+          </a>
+        </li>
+      {% endif %}
+
+      <li class="nav-item" id="themeButton">
+        <a href="{% url 'Users:CustomUserSettings' %}" class="nav-link">
+          <div class="fa-primary">
+            <i style="font-size: 27px" class="icon icon-settings"></i>
+          </div>
+          <span class="link-text">Settings</span>
+        </a>
+      </li>
+      {% else %}
+      <li class="nav-item">
+        <a href="{% url 'account_signup' %}" class="nav-link">
+          <div class="fa-primary">
+            <i style="font-size: 27px" class="icon icon-bookmark"></i>
+          </div>
+          <span class="link-text">Register</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a href="{% url 'account_login' %}" class="nav-link">
+          <div class="fa-primary">
+            <i style="font-size: 27px" class="icon icon-bars"></i>
+          </div>
+          <span class="link-text">Sign-In</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a href="" class="nav-link">
+          <div class="fa-primary">
+            <i style="font-size: 27px" class=""></i>
+          </div>
+          <span class="link-text"></span>
+        </a>
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+
 
   {% if request.user.is_authenticated %}
   <nav class="sticky-top navbar-light dark top-right-navbar right" style="height: 5rem;">
@@ -220,6 +224,12 @@
         </div>
       </div>
 
+    </div>
+  </nav>
+
+  <nav class="sticky-bottom bottom-right-navbar" style="height: 5rem;">
+    <div class="">
+      <img src="{% static 'images/mywexlog-logo.png' %}" class="avatar" style="height: 10rem;opacity:0.2;">
     </div>
   </nav>
   {% endif %}

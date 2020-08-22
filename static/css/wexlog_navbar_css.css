@@ -33,7 +33,10 @@ main {
 }
 
 .navbar {
+  position: -webkit-sticky;
   position: absolute;
+  top: 0;
+  float: top;
   background-color: var(--bg-primary);
   transition: width 600ms ease;
   z-index:1;
@@ -48,6 +51,26 @@ main {
   text-align: justify;
   justify-content: space-between;
   width: 34rem;
+  height: 5rem;
+  display: flex;
+  align-items: flex-end;
+  flex-direction: row;
+  text-align: right;
+}
+
+.bottom-right-navbar {
+  padding-bottom: 0em;
+  position: -webkit-sticky;
+  position: sticky;
+  bottom: 0;
+  float: right;
+  z-index: -1;
+  align-items: center;
+  right: 0rem;
+  padding: 1rem;
+  text-align: justify;
+  justify-content: space-between;
+  width: 15rem;
   height: 5rem;
   display: flex;
   align-items: flex-end;
