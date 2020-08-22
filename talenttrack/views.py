@@ -1850,6 +1850,13 @@ def ClientSelectView(request, pk):
 
     filt = colleague_excl | superior_excl | collab_excl | client_excl | myself
 
+    if request.is_ajax():
+        qry = request.GET.get('term')
+        people = CustomUser.objects.filter(~Q(id__in=filt)).filter(Q(first_name__icontains=qry) | Q(last_name__icontains=qry) | Q(email__icontains=qry) | Q(display_text__icontains=qry)).order_by('last_name')
+        response_content = list(people.values('id','display_text'))
+
+        return JsonResponse(response_content, safe=False)
+        
     form = WorkClientSelectForm(request.POST or None, pwd=filt)
 
     if request.method == 'POST':
@@ -1893,7 +1900,15 @@ def ClientAddView(request, tex):
 
     filt = colleague_excl | superior_excl | collab_excl | client_excl | myself
 
+    if request.is_ajax():
+        qry = request.GET.get('term')
+        people = CustomUser.objects.filter(~Q(id__in=filt)).filter(Q(first_name__icontains=qry) | Q(last_name__icontains=qry) | Q(email__icontains=qry) | Q(display_text__icontains=qry)).order_by('last_name')
+        response_content = list(people.values('id','display_text'))
+
+        return JsonResponse(response_content, safe=False)
+
     form = WorkClientSelectForm(request.POST or None, pwd=filt)
+
     if request.method == 'POST':
         if form.is_valid():
             new = form.save(commit=False)
@@ -1971,6 +1986,13 @@ def CollaboratorSelectView(request, pk):
 
     filt = colleague_excl | superior_excl | collab_excl | client_excl | myself
 
+    if request.is_ajax():
+        qry = request.GET.get('term')
+        people = CustomUser.objects.filter(~Q(id__in=filt)).filter(Q(first_name__icontains=qry) | Q(last_name__icontains=qry) | Q(email__icontains=qry) | Q(display_text__icontains=qry)).order_by('last_name')
+        response_content = list(people.values('id','display_text'))
+
+        return JsonResponse(response_content, safe=False)
+
     form = WorkCollaboratorSelectForm(request.POST or None, pwd=filt)
 
     if request.method == 'POST':
@@ -2014,6 +2036,13 @@ def CollaboratorAddView(request, tex):
     myself = set(Profile.objects.filter(talent=request.user).values_list('talent', flat=True))
 
     filt = colleague_excl | superior_excl | collab_excl | client_excl | myself
+
+    if request.is_ajax():
+        qry = request.GET.get('term')
+        people = CustomUser.objects.filter(~Q(id__in=filt)).filter(Q(first_name__icontains=qry) | Q(last_name__icontains=qry) | Q(email__icontains=qry) | Q(display_text__icontains=qry)).order_by('last_name')
+        response_content = list(people.values('id','display_text'))
+
+        return JsonResponse(response_content, safe=False)
 
     form = WorkCollaboratorSelectForm(request.POST or None, pwd=filt)
 
@@ -2094,7 +2123,15 @@ def SuperiorSelectView(request, pk):
 
     filt = colleague_excl | superior_excl | collab_excl | client_excl | myself
 
+    if request.is_ajax():
+        qry = request.GET.get('term')
+        people = CustomUser.objects.filter(~Q(id__in=filt)).filter(Q(first_name__icontains=qry) | Q(last_name__icontains=qry) | Q(email__icontains=qry) | Q(display_text__icontains=qry)).order_by('last_name')
+        response_content = list(people.values('id','display_text'))
+
+        return JsonResponse(response_content, safe=False)
+
     form = SuperiorSelectForm(request.POST or None, pwd=filt)
+
     if request.method == 'POST':
         if form.is_valid():
             new = form.save(commit=False)
@@ -2136,7 +2173,15 @@ def SuperiorAddView(request, tex):
 
     filt = colleague_excl | superior_excl | collab_excl | client_excl | myself
 
+    if request.is_ajax():
+        qry = request.GET.get('term')
+        people = CustomUser.objects.all().filter(~Q(id__in=filt)).filter(Q(first_name__icontains=qry) | Q(last_name__icontains=qry) | Q(email__icontains=qry) | Q(display_text__icontains=qry)).order_by('last_name')
+        response_content = list(people.values('id','display_text'))
+
+        return JsonResponse(response_content, safe=False)
+
     form = SuperiorSelectForm(request.POST or None, pwd=filt)
+
     if request.method == 'POST':
         if form.is_valid():
             new = form.save(commit=False)
@@ -2215,6 +2260,13 @@ def ColleagueSelectView(request, pk):
 
     filt = colleague_excl | superior_excl | collab_excl | client_excl | myself
 
+    if request.is_ajax():
+        qry = request.GET.get('term')
+        people = CustomUser.objects.all().filter(~Q(id__in=filt)).filter(Q(first_name__icontains=qry) | Q(last_name__icontains=qry) | Q(email__icontains=qry) | Q(display_text__icontains=qry)).order_by('last_name')
+        response_content = list(people.values('id','display_text'))
+
+        return JsonResponse(response_content, safe=False)
+
     form = WorkColleagueSelectForm(request.POST or None, pwd=filt)
     if request.method == 'POST':
         if form.is_valid():
@@ -2254,6 +2306,13 @@ def ColleagueAddView(request, tex):
     myself = set(Profile.objects.filter(talent=request.user).values_list('talent', flat=True))
 
     filt = colleague_excl | superior_excl | collab_excl | client_excl | myself
+
+    if request.is_ajax():
+        qry = request.GET.get('term')
+        people = CustomUser.objects.all().filter(~Q(id__in=filt)).filter(Q(first_name__icontains=qry) | Q(last_name__icontains=qry) | Q(email__icontains=qry) | Q(display_text__icontains=qry)).order_by('last_name')
+        response_content = list(people.values('id','display_text'))
+
+        return JsonResponse(response_content, safe=False)
 
     form = WorkColleagueSelectForm(request.POST or None, pwd=filt)
 
@@ -2323,7 +2382,7 @@ def ColleaguePreResponseView(request, clg):
 
 @login_required()
 def ExperienceDetailView(request, tex):
-    check = WorkExperience.objects.get(slug=tex, wexp=True)
+    check = WorkExperience.objects.get(slug=tex)
     if check.talent == request.user:
         sum = WorkExperience.objects.filter(talent=request.user, wexp=True)
         sum_company = sum.filter(company=check.company).aggregate(co_sum=Sum('hours_worked'))
@@ -2478,6 +2537,13 @@ def LecturerSelectView(request, tex):
 
     filt = lecturer_excl | colleague_excl | myself
 
+    if request.is_ajax():
+        qry = request.GET.get('term')
+        people = CustomUser.objects.all().filter(~Q(id__in=filt)).filter(Q(first_name__icontains=qry) | Q(last_name__icontains=qry) | Q(email__icontains=qry) | Q(display_text__icontains=qry)).order_by('last_name')
+        response_content = list(people.values('id','display_text'))
+
+        return JsonResponse(response_content, safe=False)
+
     form = LecturerSelectForm(request.POST or None, pwd=filt)
     if request.method == 'POST':
         if form.is_valid():
@@ -2518,6 +2584,13 @@ def LecturerAddView(request, tex):
 
     filt = lecturer_excl | colleague_excl | myself
 
+    if request.is_ajax():
+        qry = request.GET.get('term')
+        people = CustomUser.objects.all().filter(~Q(id__in=filt)).filter(Q(first_name__icontains=qry) | Q(last_name__icontains=qry) | Q(email__icontains=qry) | Q(display_text__icontains=qry)).order_by('last_name')
+        response_content = list(people.values('id','display_text'))
+
+        return JsonResponse(response_content, safe=False)
+
     form = LecturerSelectForm(request.POST or None, pwd=filt)
     if request.method == 'POST':
         if form.is_valid():
@@ -2554,6 +2627,12 @@ def ClassMateSelectView(request, tex):
     myself = set(Profile.objects.filter(talent=request.user).values_list('talent', flat=True))
 
     filt = lecturer_excl | colleague_excl | myself
+
+    if request.is_ajax():
+        qry = request.GET.get('term')
+        people = CustomUser.objects.all().filter(~Q(id__in=filt)).filter(Q(first_name__icontains=qry) | Q(last_name__icontains=qry) | Q(email__icontains=qry) | Q(display_text__icontains=qry)).order_by('last_name')
+        response_content = list(people.values('id','display_text'))
+        return JsonResponse(response_content, safe=False)
 
     form = ClassMatesSelectForm(request.POST or None, pwd=filt)
     if request.method == 'POST':
@@ -2596,6 +2675,13 @@ def ClassMateAddView(request, tex):
     myself = set(Profile.objects.filter(talent=request.user).values_list('talent', flat=True))
 
     filt = lecturer_excl | colleague_excl | myself
+
+    if request.is_ajax():
+        qry = request.GET.get('term')
+        people = CustomUser.objects.all().filter(~Q(id__in=filt)).filter(Q(first_name__icontains=qry) | Q(last_name__icontains=qry) | Q(email__icontains=qry) | Q(display_text__icontains=qry)).order_by('last_name')
+        response_content = list(people.values('id','display_text'))
+
+        return JsonResponse(response_content, safe=False)
 
     form = ClassMatesSelectForm(request.POST or None, pwd=filt)
     if request.method == 'POST':

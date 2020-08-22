@@ -3,14 +3,10 @@
 {% load static %}
 
 {% block title %}My Education{% endblock title %}
+{% block Style %}
 
+{% endblock Style %}
 {% block content %}
-{{ form.media.css }}
-<style type="text/css">
-  select {
-    width: 100px;
-  }
-  </style>
 <div class="card">
   <div class="card-body">
     <h3>List a ClassMate to Confirm your course attendance</h3>
@@ -20,6 +16,25 @@
       <div class="form-row">
         <div class="form-group col-md-7 mb-0">
           {{ form.colleague|as_crispy_field }}
+        <div class="">
+          <p>
+            <button type="submit" name="another" class="btn btn-secondary">
+              Save & Add Another
+            </button>
+            <button type="submit" name="done" class="btn btn-primary">
+              Save & Next
+            </button>
+            <a href="{% url 'Invitation:Invite2' instance.slug %}?next={{ request.path|urlencode }}" class="btn btn-info" target="_blank">
+              Invite
+            </a>
+          </p>
+          <p>
+            <a href="{% url 'Talent:Home' %}" class="btn btn-danger">
+              Skip
+            </a>
+          </p>
+        </div>
+      </form>
         </div>
         <div class="form-group col-md-5 mb-0">
           <p>
@@ -36,31 +51,29 @@
           </p>
         </div>
       </div>
-      <div class="">
-        <p>
-          <button type="submit" name="another" class="btn btn-secondary">
-            Save & Add Another
-          </button>
-          <button type="submit" name="done" class="btn btn-primary">
-            Save & Next
-          </button>
-          <a href="{% url 'Invitation:Invite2' instance.slug %}?next={{ request.path|urlencode }}" class="btn btn-info" target="_blank">
-            Invite
-          </a>
-        </p>
-        <p>
-          <a href="{% url 'Talent:Home' %}" class="btn btn-danger">
-            Skip
-          </a>
-        </p>
-      </div>
-    </form>
   </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-{{ form.media.js }}
 {% endblock content %}
 {% block Script %}
-
+  <script>
+    $(document).ready(function () {
+       $('#id_colleague').select2({
+           ajax: {
+               url: '{% url 'Talent:ClassMatesSelect' instance.slug %}',
+               dataType: 'json',
+               processResults: function (data) {
+                   return {
+                       results: $.map(data, function (item) {
+                           return {id: item.id, text: item.display_text};
+                       })
+                   };
+               }
+           },
+           minimumInputLength: 3,
+           placeholder: "Type a name (Results sorted by last name)",
+           allowClear: true
+       });
+   });
+  </script>
 {% endblock Script %}

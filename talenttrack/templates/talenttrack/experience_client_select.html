@@ -55,27 +55,48 @@
     </p>
   </div>
 </div>
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-{{ form.media.js }}
 {% endblock content %}
 {% block Script %}
-<!-- code for popups -->
-<script type="text/javascript">
-function showAddPopup(triggeringLink) {
-    var name = triggeringLink.id.replace(/^add_/, '');
-    href = triggeringLink.href;
-    var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes');
-    win.focus();
-    return false;
-}
+  {{ form.media.js }}
 
-function closePopup(win, newID, newRepr, id) {
-    $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
-    win.close();
-}
+  <script>
+    $(document).ready(function () {
+       $('#id_client_name').select2({
+           ajax: {
+               url: '{% url 'Talent:ClientSelect' instance.id %}',
+               dataType: 'json',
+               processResults: function (data) {
+                   return {
+                       results: $.map(data, function (item) {
+                           return {id: item.id, text: item.display_text};
+                       })
+                   };
+               }
+           },
+           minimumInputLength: 3,
+           placeholder: "Type a name (Results sorted by last name)",
+           allowClear: true
+       });
+   });
+  </script>
 
-window.onerror = function (msg) {
-  $("body").attr("JSError", msg);
-}
-</script>
+  <!-- code for popups -->
+  <script type="text/javascript">
+  function showAddPopup(triggeringLink) {
+      var name = triggeringLink.id.replace(/^add_/, '');
+      href = triggeringLink.href;
+      var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes');
+      win.focus();
+      return false;
+  }
+
+  function closePopup(win, newID, newRepr, id) {
+      $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
+      win.close();
+  }
+
+  window.onerror = function (msg) {
+    $("body").attr("JSError", msg);
+  }
+  </script>
 {% endblock Script %}

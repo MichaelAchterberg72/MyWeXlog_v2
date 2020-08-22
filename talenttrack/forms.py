@@ -12,7 +12,7 @@ from crispy_forms.layout import Layout, Submit, Row, Column
 
 from django_select2.forms import (
     ModelSelect2TagWidget, ModelSelect2Widget, ModelSelect2MultipleWidget,
-    Select2Widget, Select2MultipleWidget
+    Select2Widget, Select2MultipleWidget, HeavySelect2MultipleWidget
 )
 
 from .models import (
@@ -292,24 +292,34 @@ class WorkClientConfirmForm(forms.ModelForm):
 
 
 class WorkClientSelectForm(forms.ModelForm):
-    pwd = None
-    def __init__(self, *args, **kwargs):
-        global pwd
-        pwd = kwargs.pop('pwd')
-        super().__init__(*args, **kwargs)
-
     class Meta:
         model = WorkClient
         fields = ('client_name', 'designation', 'company', 'companybranch', )
         widgets={
             'company': CompanySelect2Widget(),
-            'client_name': UserSelect2Widget(),
             'designation': DesignationSelect2Widget(),
             'companybranch': BranchSelect2Widget(),
             }
+
         labels = {
             'companybranch': 'Branch'
         }
+
+    pwd = None
+    def __init__(self, *args, **kwargs):
+        global pwd
+        pwd = kwargs.pop('pwd')
+        super().__init__(*args, **kwargs)
+        self.fields['client_name'].queryset = CustomUser.objects.none()
+
+        if 'client_name' in self.data:
+            self.fields['client_name'].queryset = CustomUser.objects.all()
+
+        '''
+        #if the form needs to be edited, use this to pupolate the field.
+        elif self.instance:
+            self.fields['client_name'].queryset = CustomUser.objects.filter(pk=self.instance.[field].id)
+        '''
 
     def clean_client_name(self):
         client_passed = self.cleaned_data.get("client_name")
@@ -339,24 +349,34 @@ class WorkCollaboratorConfirmForm(forms.ModelForm):
         return confirm_entry
 
 class WorkCollaboratorSelectForm(forms.ModelForm):
-    pwd = None
-    def __init__(self, *args, **kwargs):
-        global pwd
-        pwd = kwargs.pop('pwd')
-        super().__init__(*args, **kwargs)
-
     class Meta:
         model = WorkCollaborator
         fields = ('collaborator_name', 'designation', 'company', 'companybranch', )
         widgets={
             'company': CompanySelect2Widget(),
-            'collaborator_name': UserSelect2Widget(),
             'designation': DesignationSelect2Widget(),
             'companybranch': BranchSelect2Widget(),
             }
+
         labels = {
             'companybranch': 'Branch'
         }
+
+    pwd = None
+    def __init__(self, *args, **kwargs):
+        global pwd
+        pwd = kwargs.pop('pwd')
+        super().__init__(*args, **kwargs)
+        self.fields['collaborator_name'].queryset = CustomUser.objects.none()
+
+        if 'collaborator_name' in self.data:
+            self.fields['collaborator_name'].queryset = CustomUser.objects.all()
+
+        '''
+        #if the form needs to be edited, use this to pupolate the field.
+        elif self.instance:
+            self.fields['collaborator_name'].queryset = CustomUser.objects.filter(pk=self.instance.[field].id)
+        '''
 
     def clean_collaborator_name(self):
         collaborator_passed = self.cleaned_data.get("collaborator_name")
@@ -385,19 +405,29 @@ class SuperiorConfirmForm(forms.ModelForm):
         return confirm_entry
 
 class SuperiorSelectForm(forms.ModelForm):
+    class Meta:
+        model = Superior
+        fields = ('superior_name', 'designation', )
+        widgets={
+            'designation': DesignationSelect2Widget(),
+            }
+
     pwd = None
     def __init__(self, *args, **kwargs):
         global pwd
         pwd = kwargs.pop('pwd')
         super().__init__(*args, **kwargs)
+        self.fields['superior_name'].queryset = CustomUser.objects.none()
 
-    class Meta:
-        model = Superior
-        fields = ('superior_name', 'designation', )
-        widgets={
-            'superior_name': UserSelect2Widget(),
-            'designation': DesignationSelect2Widget(),
-            }
+        if 'superior_name' in self.data:
+            self.fields['superior_name'].queryset = CustomUser.objects.all()
+
+        '''
+        #if the form needs to be edited, use this to pupolate the field.
+        elif self.instance:
+            self.fields['superior_name'].queryset = CustomUser.objects.filter(pk=self.instance.[field].id)
+        '''
+
     def clean_superior_name(self):
         superior_passed = self.cleaned_data.get("superior_name")
         als = superior_passed.id
@@ -428,18 +458,28 @@ class WorkColleagueConfirmForm(forms.ModelForm):
 
 class WorkColleagueSelectForm(forms.ModelForm):
     pwd = None
-    def __init__(self, *args, **kwargs):
-        global pwd
-        pwd = kwargs.pop('pwd')
-        super().__init__(*args, **kwargs)
 
     class Meta:
         model = WorkColleague
         fields = ('colleague_name', 'designation')
         widgets={
-            'colleague_name': UserSelect2Widget(),
             'designation': DesignationSelect2Widget(),
             }
+    def __init__(self, *args, **kwargs):
+        global pwd
+        pwd = kwargs.pop('pwd')
+        super().__init__(*args, **kwargs)
+        self.fields['colleague_name'].queryset = CustomUser.objects.none()
+
+        if 'colleague_name' in self.data:
+            self.fields['colleague_name'].queryset = CustomUser.objects.all()
+
+        '''
+        #if the form needs to be edited, use this to pupolate the field.
+        elif self.instance:
+            self.fields['colleague_name'].queryset = CustomUser.objects.filter(pk=self.instance.[field].id)
+        '''
+
     def clean_colleague_name(self):
         colleague_passed = self.cleaned_data.get("colleague_name")
         als = colleague_passed.id
@@ -541,22 +581,28 @@ class ClassMatesResponseForm(forms.ModelForm):
 
 
 class ClassMatesSelectForm(forms.ModelForm):
+    class Meta:
+        model = ClassMates
+        fields = ('colleague',)
+        labels = {
+            'colleague': 'Classmate',
+            }
+
     pwd = None
     def __init__(self, *args, **kwargs):
         global pwd
         pwd = kwargs.pop('pwd')
         super().__init__(*args, **kwargs)
+        self.fields['colleague'].queryset = CustomUser.objects.none()
 
+        if 'colleague' in self.data:
+            self.fields['colleague'].queryset = CustomUser.objects.all()
 
-    class Meta:
-        model = ClassMates
-        fields = ('colleague',)
-        widgets={
-            'colleague': UserSelect2Widget(),
-            }
-        labels = {
-            'colleague': 'Classmate',
-        }
+        '''
+        #if the form needs to be edited, use this to pupolate the field.
+        elif self.instance:
+            self.fields['colleague'].queryset = CustomUser.objects.filter(pk=self.instance.[field].id)
+        '''
 
     def clean_colleague(self):
         colleague_passed = self.cleaned_data.get("colleague")
@@ -606,18 +652,26 @@ class ClassMatesRespondForm(forms.ModelForm):
 
 
 class LecturerSelectForm(forms.ModelForm):
+    class Meta:
+        model = Lecturer
+        fields = ('lecturer',)
+
     pwd = None
     def __init__(self, *args, **kwargs):
         global pwd
         pwd = kwargs.pop('pwd')
         super().__init__(*args, **kwargs)
 
-    class Meta:
-        model = Lecturer
-        fields = ('lecturer',)
-        widgets={
-            'lecturer': UserSelect2Widget(),
-            }
+        self.fields['lecturer'].queryset = CustomUser.objects.none()
+
+        if 'lecturer' in self.data:
+            self.fields['lecturer'].queryset = CustomUser.objects.all()
+
+        '''
+        #if the form needs to be edited, use this to pupolate the field.
+        elif self.instance:
+            self.fields['lecturer'].queryset = CustomUser.objects.filter(pk=self.instance.[field].id)
+        '''
 
     def clean_lecturer(self):
         lecturer_passed = self.cleaned_data.get("lecturer")

@@ -50,7 +50,7 @@ class BriefCareerHistory(models.Model):
 
         else:
             self.current = True
-            inject = f'{self.companybranch} ({self.designation})'
+            inject = f'{self.talent.first_name} {self.talent.last_name}: {self.companybranch} ({self.designation})'
             CustomUser.objects.filter(pk=self.talent.id).update(display_text=inject)
 
         if self.slug is None or self.slug == "":
