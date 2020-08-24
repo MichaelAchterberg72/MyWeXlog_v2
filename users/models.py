@@ -55,6 +55,16 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return f'{self.first_name} {self.last_name}, {self.display_text}'
 
+    def free_month(sender, **kwargs):
+        if kwargs['created']:
+            create_free_month = CustomUser.objects.get(pk=kwargs['instance'])
+            create_free_month.paid_type = 1
+            create_free_month.subscription = 2
+            create_free_month.paid = True
+            create_free_month.paid_date = timezone.now()
+
+    post_save.connect(free_month, sender=CustomUser)
+
 
 @receiver(user_signed_up)
 def after_signup(request, user, **kwargs):
