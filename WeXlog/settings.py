@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'invitations.apps.InvitationsConfig',
     'nestedsettree.apps.NestedsettreeConfig',
     'feedback.apps.FeedbackConfig',
+    'AppControl.apps.AppcontrolConfig',
     'tasks',
     'analytics',
     'management',

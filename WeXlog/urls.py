@@ -34,7 +34,7 @@ urlpatterns = [
     path('management/', include('management.urls', namespace='Management')),
     path('notifications/', include("pinax.notifications.urls", namespace='pinax_notifications')),
     path('treeMP/', include('nestedsettree.urls', namespace='Structure')),
-    #path('chat/', include('intmessages.urls', namespace='Chat')),
+    path('appcontrol/', include('AppControl.urls', namespace='AppControl')),
     ]
 
 if settings.DEBUG:
