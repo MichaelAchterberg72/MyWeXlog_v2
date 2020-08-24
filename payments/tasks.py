@@ -27,6 +27,31 @@ from datetime import datetime
 from datetime import date
 
 
+@celery_app.task(name="payments.FreeMonthExpiredTask")
+@shared_task
+def FreeMonthExpiredTask(username):
+    talent = CustomUser.objects.get(pk=username)
+    context = {'user': username.first_name, 'user_email': username.email }
+    html_message = render_to_string('email_templates/email_free_trial_expired.html', context)
+
+    message = Mail(
+        from_email = (settings.SENDGRID_FROM_EMAIL, 'MyWeXlog Notification'),
+        to_emails = username.email,
+        subject = 'Your Free Month Trial Subscription has Expired',
+        plain_text_content = strip_tags(html_message),
+        html_content = html_message)
+
+    try:
+        sg = sendgrid.SendGridAPIClient(settings.SENDGRID_API_KEY)
+        response = sg.send(message)
+        print(response.status_code)
+        print(response.body)
+        print(response.headers)
+
+    except Exception as e:
+        print(e)
+
+
 @celery_app.task(name="payments.SubscriptionExpiredTask")
 @shared_task
 def SubscriptionExpiredTask(tlt):

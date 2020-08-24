@@ -58,6 +58,7 @@ from enterprises.models import Branch, Enterprise
 from locations.models import Region
 from users.models import CustomUser, ExpandedView
 
+
 from nestedsettree.models import NtWk
 
 from marketplace.models import (
@@ -886,10 +887,6 @@ def ProfileHome(request):
     #As Requestioner<<<
     #Confirmation Summary<<<
 
-    from users.models import ExpandedView
-    from .forms import ExpandedIntroWalkthroughForm
-
-
     instance2 = ExpandedView.objects.get(talent=request.user)
     list_view = instance2.intro_walkthrough
 
@@ -922,6 +919,15 @@ def ProfileHome(request):
         'tlt_wit_p': tlt_wit_p, 'tlt_wit_a': tlt_wit_a, 'tlt_wit_d': tlt_wit_d, 'tlt_wit_c': tlt_wit_c, 'tlt_wit_s': tlt_wit_s,
         }
         return render(request, template, context)
+
+
+@login_required()
+def FreeMonthExpiredView(request, id):
+    if request.method == 'POST':
+        request.user.free_month_expired == False
+
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
 
 @login_required()
 @subscription(1)

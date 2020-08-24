@@ -45,6 +45,8 @@ class CustomUser(AbstractUser):
     role = models.IntegerField(choices=ROLE, default=0)
     registered_date = models.DateTimeField(auto_now_add=True)
     paid = models.BooleanField(default=False, blank=True)
+    free_month = models.BooleanField(default=True, blank=True)
+    free_month_expired = models.BooleanField(default=False, blank=True)
     paid_date = models.DateTimeField(null=True, blank=True)
     paid_type = models.IntegerField(choices=PAID_TYPE, default=0)
     invite_code = models.CharField(max_length=42, null=True, blank=True)
@@ -54,16 +56,6 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return f'{self.first_name} {self.last_name}, {self.display_text}'
-
-    def free_month(sender, **kwargs):
-        if kwargs['created']:
-            create_free_month = CustomUser.objects.get(pk=kwargs['instance'])
-            create_free_month.paid_type = 1
-            create_free_month.subscription = 2
-            create_free_month.paid = True
-            create_free_month.paid_date = timezone.now()
-
-    post_save.connect(free_month, sender=CustomUser)
 
 
 @receiver(user_signed_up)
@@ -88,6 +80,17 @@ def after_signup(request, user, **kwargs):
     else:
         get = lambda node_id: NtWk.objects.get(pk=node_id)
         root = NtWk.add_root(talent=user)
+
+    def free_month(sender, **kwargs):
+        if kwargs['created']:
+            create_free_month = CustomUser.objects.get(pk=kwargs['instance'])
+            create_free_month.paid_type = 1
+            create_free_month.subscription = 2
+            create_free_month.paid = True
+            create_free_month.free_month = True
+            create_free_month.paid_date = timezone.now()
+
+    post_save.connect(free_month, sender=CustomUser)
 
 
 class CustomUserSettings(models.Model):

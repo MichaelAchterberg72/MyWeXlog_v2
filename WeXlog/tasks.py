@@ -24,7 +24,7 @@ from sendgrid.helpers.mail import (Mail, Subject, To, ReplyTo, SendAt, Content, 
 import datetime
 from datetime import timedelta
 
-#from payments.tasks import SubscriptionExpiredTask
+from payments.tasks import FreeMonthExpiredTask
 
 from users.models import CustomUser
 
@@ -46,6 +46,10 @@ def UpdateSubscriptionPaidDate():
                 if username.paid_date <= timezone.now() - monthly:
                     username.paid = False
                     username.subscription = 0
+                    if username.free_month == True:
+                        FreeMonthExpiredTask.delay(username)
+                        username.free_month = False
+                        username.free_month_expired = True
                     username.save()
                     # send user an email to let them know the subscription has expired
     #                SubscriptionExpiredTask.delay(username)
