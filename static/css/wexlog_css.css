@@ -16,6 +16,25 @@ body {
   padding-top: 20px;
 }
 
+.bottom-right-navbar {
+  padding-bottom: 0em;
+  position: -webkit-sticky;
+  position: sticky;
+  bottom: 0;
+  float: right;
+  z-index: -1;
+  right: 0rem;
+  padding: 1rem;
+  text-align: justify;
+  justify-content: space-between;
+  width: 15rem;
+  height: 5rem;
+  display: flex;
+  align-items: flex-end;
+  flex-direction: row;
+  text-align: right;
+}
+
 .card {
   border-radius: 10px;
   background: transparent !important;

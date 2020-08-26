@@ -46,7 +46,6 @@ class CustomUser(AbstractUser):
     registered_date = models.DateTimeField(auto_now_add=True)
     paid = models.BooleanField(default=False, blank=True)
     free_month = models.BooleanField(default=True, blank=True)
-    free_month_expired = models.BooleanField(default=False, blank=True)
     paid_date = models.DateTimeField(null=True, blank=True)
     paid_type = models.IntegerField(choices=PAID_TYPE, default=0)
     invite_code = models.CharField(max_length=42, null=True, blank=True)
@@ -119,7 +118,8 @@ class CustomUserSettings(models.Model):
 
 class ExpandedView(models.Model):
     talent = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    intro_walkthrough = models.BooleanField('Don\'t view this again', default=False)
+    intro_walkthrough = models.BooleanField('Don\'t view intro again', default=False)
+    trial_expired = models.BooleanField('Don\'t view trial again', default=False)
 
     def __str__(self):
         return f"Expanded view for {self.talent}"
