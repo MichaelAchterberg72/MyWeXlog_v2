@@ -927,7 +927,6 @@ def FreeMonthExpiredView(request):
             instance2.trial_expired = True
         instance2.save()
 
-
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
