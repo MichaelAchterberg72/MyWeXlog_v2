@@ -45,6 +45,7 @@ class CustomUser(AbstractUser):
     role = models.IntegerField(choices=ROLE, default=0)
     registered_date = models.DateTimeField(auto_now_add=True)
     paid = models.BooleanField(default=False, blank=True)
+    free_month = models.BooleanField(default=True, blank=True)
     paid_date = models.DateTimeField(null=True, blank=True)
     paid_type = models.IntegerField(choices=PAID_TYPE, default=0)
     invite_code = models.CharField(max_length=42, null=True, blank=True)
@@ -79,6 +80,17 @@ def after_signup(request, user, **kwargs):
         get = lambda node_id: NtWk.objects.get(pk=node_id)
         root = NtWk.add_root(talent=user)
 
+    def free_month(sender, **kwargs):
+        if kwargs['created']:
+            create_free_month = CustomUser.objects.get(pk=kwargs['instance'])
+            create_free_month.paid_type = 1
+            create_free_month.subscription = 2
+            create_free_month.paid = True
+            create_free_month.free_month = True
+            create_free_month.paid_date = timezone.now()
+
+    post_save.connect(free_month, sender=CustomUser)
+
 
 class CustomUserSettings(models.Model):
     talent = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -106,7 +118,8 @@ class CustomUserSettings(models.Model):
 
 class ExpandedView(models.Model):
     talent = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    intro_walkthrough = models.BooleanField('Don\'t view this again', default=False)
+    intro_walkthrough = models.BooleanField('Don\'t view intro again', default=False)
+    trial_expired = models.BooleanField('Don\'t view trial again', default=False)
 
     def __str__(self):
         return f"Expanded view for {self.talent}"

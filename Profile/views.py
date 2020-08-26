@@ -58,6 +58,7 @@ from enterprises.models import Branch, Enterprise
 from locations.models import Region
 from users.models import CustomUser, ExpandedView
 
+
 from nestedsettree.models import NtWk
 
 from marketplace.models import (
@@ -886,42 +887,49 @@ def ProfileHome(request):
     #As Requestioner<<<
     #Confirmation Summary<<<
 
-    from users.models import ExpandedView
-    from .forms import ExpandedIntroWalkthroughForm
-
+    fm = request.user.free_month
 
     instance2 = ExpandedView.objects.get(talent=request.user)
     list_view = instance2.intro_walkthrough
+    fse = instance2.trial_expired
 
-    form = ExpandedIntroWalkthroughForm(request.POST or None, instance=instance2)
+
+    template = 'Profile/profile_home.html'
+    context = {
+    'wf1': wf1, 'tlt': tlt, 'pvr_count': pvr_count, 'total': total, 'interviews_tlt': interviews_tlt, 'interviews_emp': interviews_emp, 'interviews_empc': interviews_empc, 'interviews_tltc': interviews_tltc, 'assigned_tlt': assigned_tlt, 'assigned_emp': assigned_emp, 'assigned_tltc': assigned_empc, 'assigned_empc': assigned_tltc, 'open_assignments_tltc': open_assignments_tltc, 'open_assignments_empc': open_assignments_empc, 'lvl_1': lvl_1, 'lvl_2': lvl_2, 'lvl_3': lvl_3, 'lvl_4': lvl_4,'lvl_5': lvl_5, 'tot': tot, 'pfl': pfl, 'referral_code': referral_code, 'conf_tot_c': conf_tot_c, 'conf_tot_r': conf_tot_r, 'conf_tot_s': conf_tot_s, 'req_tot_c': req_tot_c, 'req_tot_r': req_tot_r, 'req_tot_s': req_tot_s, 'req_tot_y': req_tot_y, 'conf_tot_y': conf_tot_y, 'list_view': list_view, 'tlt_bil_qs_p': tlt_bil_qs_p, 'tlt_bil_qs_a': tlt_bil_qs_a, 'tlt_bil_qs_d': tlt_bil_qs_d, 'tlt_bil_qs_i': tlt_bil_qs_i, 'emp_bil_qs_p': emp_bil_qs_p, 'emp_bil_qs_a': emp_bil_qs_a, 'emp_bil_qs_d': emp_bil_qs_d, 'emp_bil_qs_i': emp_bil_qs_i,
+    'emp_wit_p': emp_wit_p, 'emp_wit_a': emp_wit_a, 'emp_wit_d': emp_wit_d, 'emp_wit_c': emp_wit_c, 'emp_wit_s': emp_wit_s,
+    'tlt_wit_p': tlt_wit_p, 'tlt_wit_a': tlt_wit_a, 'tlt_wit_d': tlt_wit_d, 'tlt_wit_c': tlt_wit_c, 'tlt_wit_s': tlt_wit_s,
+    'fse': fse, "fm": fm,
+    }
+    return render(request, template, context)
+
+
+@login_required()
+def IntroCloseView(request):
     if request.method == 'POST':
-        if form.is_valid():
-            new = form.save(commit=False)
-            new.talent = request.user
-            if list_view == True:
-                new.intro_walkthrough = False
-            elif list_view == False:
-                new.intro_walkthrough = True
-            new.save()
+        instance2 = ExpandedView.objects.get(talent=request.user)
+        list_view = instance2.intro_walkthrough
+        if list_view == True:
+            instance2.intro_walkthrough = False
+        elif list_view == False:
+            instance2.intro_walkthrough = True
+        instance2.save()
 
-            return redirect(reverse('Profile:ProfileHome')+'#dashboard')
-        else:
-            template = 'Profile/profile_home.html'
-            context = {
-            'wf1': wf1, 'tlt': tlt, 'pvr_count': pvr_count, 'total': total, 'interviews_tlt': interviews_tlt, 'interviews_emp': interviews_emp, 'interviews_empc': interviews_empc, 'interviews_tltc': interviews_tltc, 'assigned_tlt': assigned_tlt, 'assigned_emp': assigned_emp, 'assigned_tltc': assigned_empc, 'assigned_empc': assigned_tltc, 'open_assignments_tltc': open_assignments_tltc, 'open_assignments_empc': open_assignments_empc, 'lvl_1': lvl_1, 'lvl_2': lvl_2, 'lvl_3': lvl_3, 'lvl_4': lvl_4,'lvl_5': lvl_5, 'tot': tot, 'pfl': pfl, 'referral_code': referral_code, 'conf_tot_c': conf_tot_c, 'conf_tot_r': conf_tot_r, 'conf_tot_s': conf_tot_s, 'req_tot_c': req_tot_c, 'req_tot_r': req_tot_r, 'req_tot_s': req_tot_s, 'req_tot_y': req_tot_y, 'conf_tot_y': conf_tot_y, 'list_view': list_view, 'form': form, 'tlt_bil_qs_p': tlt_bil_qs_p, 'tlt_bil_qs_a': tlt_bil_qs_a, 'tlt_bil_qs_d': tlt_bil_qs_d, 'tlt_bil_qs_i': tlt_bil_qs_i, 'emp_bil_qs_p': emp_bil_qs_p, 'emp_bil_qs_a': emp_bil_qs_a, 'emp_bil_qs_d': emp_bil_qs_d, 'emp_bil_qs_i': emp_bil_qs_i,
-            'emp_wit_p': emp_wit_p, 'emp_wit_a': emp_wit_a, 'emp_wit_d': emp_wit_d, 'emp_wit_c': emp_wit_c, 'emp_wit_s': emp_wit_s,
-            'tlt_wit_p': tlt_wit_p, 'tlt_wit_a': tlt_wit_a, 'tlt_wit_d': tlt_wit_d, 'tlt_wit_c': tlt_wit_c, 'tlt_wit_s': tlt_wit_s,
-            }
-            return render(request, template, context)
-    else:
-        #this should work!
-        template = 'Profile/profile_home.html'
-        context = {
-        'wf1': wf1, 'tlt': tlt, 'pvr_count': pvr_count, 'total': total, 'interviews_tlt': interviews_tlt, 'interviews_emp': interviews_emp, 'interviews_empc': interviews_empc, 'interviews_tltc': interviews_tltc, 'assigned_tlt': assigned_tlt, 'assigned_emp': assigned_emp, 'assigned_tltc': assigned_empc, 'assigned_empc': assigned_tltc, 'open_assignments_tltc': open_assignments_tltc, 'open_assignments_empc': open_assignments_empc, 'lvl_1': lvl_1, 'lvl_2': lvl_2, 'lvl_3': lvl_3, 'lvl_4': lvl_4,'lvl_5': lvl_5, 'tot': tot, 'pfl': pfl, 'referral_code': referral_code, 'conf_tot_c': conf_tot_c, 'conf_tot_r': conf_tot_r, 'conf_tot_s': conf_tot_s, 'req_tot_c': req_tot_c, 'req_tot_r': req_tot_r, 'req_tot_s': req_tot_s, 'req_tot_y': req_tot_y, 'conf_tot_y': conf_tot_y, 'list_view': list_view, 'form': form, 'tlt_bil_qs_p': tlt_bil_qs_p, 'tlt_bil_qs_a': tlt_bil_qs_a, 'tlt_bil_qs_d': tlt_bil_qs_d, 'tlt_bil_qs_i': tlt_bil_qs_i, 'emp_bil_qs_p': emp_bil_qs_p, 'emp_bil_qs_a': emp_bil_qs_a, 'emp_bil_qs_d': emp_bil_qs_d, 'emp_bil_qs_i': emp_bil_qs_i,
-        'emp_wit_p': emp_wit_p, 'emp_wit_a': emp_wit_a, 'emp_wit_d': emp_wit_d, 'emp_wit_c': emp_wit_c, 'emp_wit_s': emp_wit_s,
-        'tlt_wit_p': tlt_wit_p, 'tlt_wit_a': tlt_wit_a, 'tlt_wit_d': tlt_wit_d, 'tlt_wit_c': tlt_wit_c, 'tlt_wit_s': tlt_wit_s,
-        }
-        return render(request, template, context)
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+@login_required()
+def FreeMonthExpiredView(request):
+    if request.method == 'POST':
+        instance2 = ExpandedView.objects.get(talent=request.user)
+        list_view = instance2.trial_expired
+        if list_view == False:
+            instance2.trial_expired = True
+        instance2.save()
+
+
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
 
 @login_required()
 @subscription(1)
