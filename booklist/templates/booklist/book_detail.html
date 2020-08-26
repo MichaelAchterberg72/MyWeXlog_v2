@@ -33,10 +33,12 @@
                   <td>
                     {{ d.title }}
                   </td>
-                  <td>
+                  <td>{% if rbk %}
+                    {% else %}
                     <a href="{% url 'BookList:BookAddList' d.slug %}?next={{ request.path|urlencode }}" class="badge badge-primary" style="width: 9rem;">
                       Mark as Read
                     </a>
+                    {% endif %}
                   </td>
 
                 </tr>

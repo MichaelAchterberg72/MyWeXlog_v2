@@ -177,9 +177,12 @@ def ProfileBackView(request):
 def BookDetailView(request, book):
     info = get_object_or_404(BookList, slug=book)
     detail = BookList.objects.filter(slug=book)
+    b_id = detail[:1]
+    bk = ReadBy.objects.filter(talent=request.user)
+    rbk = bk.filter(book=b_id)
 
     template_name = 'booklist/book_detail.html'
-    context = {'detail': detail, 'info': info}
+    context = {'detail': detail, 'info': info, 'rbk': rbk,}
     return render(request, template_name, context)
 
 
