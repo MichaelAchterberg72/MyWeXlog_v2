@@ -40,7 +40,16 @@ body {
   background: transparent !important;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
-
+.table-hover tr:hover {
+  z-index: 1;
+  transition: all .4s ease;
+  transform: translate3D(0,-1px,0) scale(1.02);
+}
+.table-hover tr.no-hover:hover {
+  z-index: 1;
+  transition: all .4s ease;
+  transform: translate3D(0,0,0) scale(1);
+}
 .select2-container {
   height: 38px !important;
 }

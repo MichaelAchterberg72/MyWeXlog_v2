@@ -16,7 +16,7 @@
     <p>{% if sl_accepted_c == 0 %}You have not been shortlisted for any positions yet.{% elif sl_accepted_c < 5 %}Showing <strong>{{ sl_accepted_c }}</strong> out of <strong>{{ sl_qs_c }}</strong> positions that you have been shortlisted for.{% else %}You currently have a total of <strong>{{ sl_accepted_c }}</strong> successful roles that you have been shortlisted for out of <strong>{{sl_qs_c}}</strong> shortlistings.{% endif %}</p>
     <table class="table table-hover table-sm">
       <thead>
-        <tr>
+        <tr class="no-hover">
           <th class="align-middle text-center">Date Listed</th>
           <th class="align-middle text-center">Vacancy Title</th>
           <th class="align-middle text-center">Ref. No.</th>

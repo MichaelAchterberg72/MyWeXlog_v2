@@ -16,7 +16,7 @@
     <p>{% if rejected_c == 0 %}You have not been successful in any applications yet.{% elif accepted_c < 5 %}Showing <strong>{{ rejected_c }}</strong> out of <strong>{{ role_c }}</strong> applications.{% else %}You currently have a total of <strong>{{ rejected_c }}</strong> unsuccessful applications out of <strong>{{role_c}}</strong> applications.{% endif %}</p>
     <table class="table table-hover table-sm">
       <thead>
-        <tr>
+        <tr class="no-hover">
           <th class="align-middle text-center">Date Applied</th>
           <th class="align-middle text-center">Vacancy Title</th>
           <th class="align-middle text-center">Ref. No.</th>
