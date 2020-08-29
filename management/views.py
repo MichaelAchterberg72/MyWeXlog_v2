@@ -29,7 +29,7 @@ def ManagementDashboardView(request):
     vcount = TalentRequired.objects.all().count()
 
     free_members = User.objects.filter(subscription='0')
-    paid_members = PayPalIPN.objects.filter(txn_type="subscr_signup").values_list('payer_email', flat=True)
+    paid_members = PayPalIPN.objects.filter(txn_type="subscr_signup").values_list('custom', flat=True).distinct()
     passive_members = paid_members.filter(item_name__icontains='Passive Subscription')
     active_members = paid_members.filter(item_name__icontains='Active Subscription')
 
