@@ -16,7 +16,7 @@
     <p>{% if int_qs_c == 0 %}You have not been sheduled for any interviews in positions that you have applied for yet.{% elif applied_sl_c < 5 %}Showing <strong>{{ int_qs_c }}</strong> out of <strong>{{ role_c }}</strong> open interviews for positions that you have applied for.{% else %}You currently have a total of <strong>{{ int_qs_c }}</strong> open interviews for positions that you have been shortlisted for out of <strong>{{role_c}}</strong> applications.{% endif %}</p>
     <table class="table table-hover table-sm">
       <thead>
-        <tr>
+        <tr class="no-hover">
           <th class="align-middle text-center">Date Applied</th>
           <th class="align-middle text-center">Vacancy Title</th>
           <th class="align-middle text-center">Ref. No.</th>

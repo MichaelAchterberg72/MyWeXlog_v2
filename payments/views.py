@@ -58,7 +58,7 @@ def GeneralPassiveSubscriptionView(request):
             "cmd": "_xclick-subscriptions",
             "business": settings.PAYPAL_RECEIVER_EMAIL,
             "currency_code": "USD",
-            "a3": "4.00",                      # monthly price
+            "a3": "3.99",                      # monthly price
             "p3": "1",                         # duration of each unit (depends on unit)
             "t3": "M",                         # duration unit ("M for Month")
             "src": "1",                        # make payments recur
@@ -201,7 +201,7 @@ def BetaGeneralPassiveSubscriptionView(request):
             "a1": "0.00",                      # trial period monthly price
             "p1": "12",                        # number months trial period
             "t1": "M",                         # duration of unit ('M' for months)
-            "a3": "4.00",                      # monthly price
+            "a3": "3.99",                      # monthly price
             "p3": "1",                         # duration of each unit (depends on unit)
             "t3": "M",                         # duration unit ("M for Month")
             "src": "1",                        # make payments recur

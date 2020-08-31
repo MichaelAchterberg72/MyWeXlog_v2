@@ -30,7 +30,7 @@ def show_me_the_money(sender, instance, **kwargs):
     instance2 = ExpandedView.objects.get(talent=ipn_username.pk)
 
     if ipn_obj.item_name == "MyWeXlog Passive Subscription":
-        price = "4.00"
+        price = "3.99"
 
     elif ipn_obj.item_name == "MyWeXlog 6 Month Passive Subscription":
         price = "22.00"
@@ -48,7 +48,7 @@ def show_me_the_money(sender, instance, **kwargs):
         price = "57.96"
 
     elif ipn_obj.item_name == "MyWeXlog Passive Subscription - Beta":
-        price = "4.00" or "0.00"
+        price = "3.99" or "0.00"
 
     elif ipn_obj.item_name == "MyWeXlog 6 Month Passive Subscription - Beta":
         price = "22.00" or "0.00"
