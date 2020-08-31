@@ -1287,7 +1287,7 @@ def MarketHome(request):
 
     e_len = e_skill.count()
     l_len = l_skill.count()
-
+    tot_len = e_len+l_len
 
     skill_set = SkillTag.objects.none()
 
@@ -1347,9 +1347,9 @@ def MarketHome(request):
     tlt_loc = PhysicalAddress.objects.filter(talent=talent).values_list('region', flat=True)
     tlt_loc=tlt_loc[0]
 
-    vac_loc_rm = set(tr.filter(worklocation__type__icontains='Remote freelance').values_list('id', flat=True))
+    vac_loc_rm = set(tr.filter(worklocation__id=1).values_list('id', flat=True))
 
-    vac_loc_reg = set(tr.filter(~Q(worklocation__type__icontains='Remote freelance')& Q(city__region=tlt_loc)).values_list('id', flat=True))
+    vac_loc_reg = set(tr.filter(~Q(worklocation__id=1)& Q(city__region=tlt_loc)).values_list('id', flat=True))
 
     vac_loc = vac_loc_rm | vac_loc_reg
 
@@ -1398,7 +1398,7 @@ def MarketHome(request):
     dsd = suitable[:5]
 
     #Experience Level check & list skills required in vacancies<<<
-    if e_len > 0 and l_len > 0:
+    if tot_len > 0:
         dsd = dsd
     else:
         dsd = set()
