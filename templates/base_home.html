@@ -211,9 +211,9 @@
       </button>
         <div class="dropdown-menu dropdown-menu-right">
           <a class="dropdown-item"  href="{% url 'Profile:ProfileView' %}">View Profile</a>
-
           <a class="dropdown-item"  href="{% url 'Invitation:FlatInvite' %}" target="_blank">Invite Someone</a>
-
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item"  href="{% url 'Profile:IntroIntroduction' %}">Introduction Walkthrough</a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item"  href="{% url 'account_email' %}">Manage email</a>
           <a class="dropdown-item"  href="{% url 'account_change_password' %}">Change Password</a>
