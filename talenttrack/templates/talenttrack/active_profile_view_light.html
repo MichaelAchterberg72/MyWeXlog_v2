@@ -104,14 +104,6 @@
             <hr>
             <p><strong>Background</strong><br>
                {{ als.background|linebreaks }}</p>
-            <hr>
-          {% if bid_qs %}
-            <p><strong>Expected Rate: </strong>{{ bid_qs.currency }} {{ bid_qs.rate_bid }} {{ bid_qs.get_rate_unit_display }}</p>
-            <p><strong>Motivation for position:<br></strong>{{ bid_qs.motivation }}</p>
-          {% else %}
-            <p><strong>Expected Rate: </strong>{{ als.currency }} {{ als.std_rate }} per hour</p>
-            <p><strong>Motivation for position:<br></strong>{{ als.motivation }}</p>
-          {% endif %}
             </div>
           </div>
         </div>
