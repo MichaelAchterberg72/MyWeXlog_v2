@@ -177,12 +177,13 @@ def ProfileBackView(request):
 def BookDetailView(request, book):
     info = get_object_or_404(BookList, slug=book)
     detail = BookList.objects.filter(slug=book)
+    b_read = ReadBy.objects.filter(talent=request.user).values_list('book__id', flat=True)
     b_id = detail[:1]
     bk = ReadBy.objects.filter(talent=request.user)
     rbk = bk.filter(book=b_id)
 
     template_name = 'booklist/book_detail.html'
-    context = {'detail': detail, 'info': info, 'rbk': rbk,}
+    context = {'detail': detail, 'info': info, 'rbk': rbk,'b_read': b_read,}
     return render(request, template_name, context)
 
 
@@ -190,7 +191,7 @@ def BookDetailView(request, book):
 def BookListView(request):
     bk_obj = BookList.objects.all().order_by('title')
     bcount = bk_obj.aggregate(sum_b=Count('title'))
-    b_read = ReadBy.objects.filter(talent=request.user).values_list('id', flat=True)
+    b_read = ReadBy.objects.filter(talent=request.user).values_list('book__id', flat=True)
 
     try:
         page = int(request.GET.get('page', 1))
@@ -224,7 +225,7 @@ def BookListView(request):
 
 def BookSearch(request):
     form = BookSearchForm()
-    b_read = ReadBy.objects.filter(talent=request.user).values_list('id', flat=True)
+    b_read = ReadBy.objects.filter(talent=request.user).values_list('book__id', flat=True)
     query = None
     results = []
     count = 0
