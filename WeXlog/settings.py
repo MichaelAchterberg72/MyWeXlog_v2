@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     'tasks',
     'analytics',
     'management',
+    'storages',
     #Django internal applications
     'django.contrib.staticfiles',
     'django.contrib.humanize',
