@@ -40,7 +40,7 @@
           <td>{{ b.book }}</td>
           <td>{{ b.type }}</td>
           <td>{{ b.date }}</td>
-          <td><a href="{% url 'BookList:BookDetail' b.book.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary float-right" style="width: 5rem;">Book Detail</a> </td>
+          <td><a href="{% url 'BookList:BookDetail' b.book.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary float-right" style="width: 6rem;">Book Detail</a> </td>
         </tr>
       </tbody>
       {% endfor %}
