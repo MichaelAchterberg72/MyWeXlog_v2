@@ -56,9 +56,15 @@
                 <a href="{% url 'BookList:BookDetail' item.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 7rem;">
                   Book Detail
                 </a>
-                <a href="{% url 'BookList:BookAddList' item.slug %}?next={{ request.path|urlencode }}" class="badge badge-primary" style="width: 7rem;">
-                  Mark as Read
-                </a>
+                {% if item.id in b_read %}
+                  <button class="badge badge-success" style="width: 7rem;">
+                    Read
+                  </button>
+                {% else %}
+                  <a href="{% url 'BookList:BookAddList' item.slug %}?next={{ request.path|urlencode }}" class="badge badge-primary" style="width: 7rem;">
+                    Mark as Read
+                  </a>
+                {% endif %}
               </td>
             </tr>
         {% empty %}

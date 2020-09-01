@@ -44,7 +44,20 @@
         <tr onclick="window.location='{% url 'BookList:BookDetail' BookList.slug %}?next={{ request.path|urlencode }}'">
           <td>{{ BookList.title }}</td>
           <td>{{ BookList.publisher }}</td>
-          <td><a href="{% url 'BookList:BookDetail' BookList.id %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 5rem;">Book Detail</a> </td>
+          <td>
+            <a href="{% url 'BookList:BookDetail' BookList.id %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 7rem;">
+              Book Detail
+            </a>
+            {% if BookList.id in b_read %}
+              <button class="badge badge-success" style="width: 7rem;">
+                Read
+              </button>
+            {% else %}
+              <a href="{% url 'BookList:BookAddList' BookList.slug %}?next={{ request.path|urlencode }}" class="badge badge-primary" style="width: 7rem;">
+                Mark as Read
+              </a>
+            {% endif %}
+          </td>
         </tr>
       </tbody>
 

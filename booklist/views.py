@@ -190,6 +190,7 @@ def BookDetailView(request, book):
 def BookListView(request):
     bk_obj = BookList.objects.all().order_by('title')
     bcount = bk_obj.aggregate(sum_b=Count('title'))
+    b_read = ReadBy.objects.filter(talent=request.user).values_list('id', flat=True)
 
     try:
         page = int(request.GET.get('page', 1))
@@ -215,13 +216,15 @@ def BookListView(request):
     context = {
              'bcount': bcount,
              'pageitems': pageitems,
-             'page_range': page_range
+             'page_range': page_range,
+             'b_read': b_read,
     }
     return render(request, template_name, context)
 
 
 def BookSearch(request):
     form = BookSearchForm()
+    b_read = ReadBy.objects.filter(talent=request.user).values_list('id', flat=True)
     query = None
     results = []
     count = 0
@@ -246,6 +249,7 @@ def BookSearch(request):
             'query': query,
             'results': results,
             'count': count,
+            'b_read': b_read,
     }
     return render(request, template_name, context)
 
