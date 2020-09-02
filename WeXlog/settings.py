@@ -336,6 +336,10 @@ MEDIA_URL = '/library/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'filelibrary')
 '''
 #files for Amazon S3
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'MyWeXlog/static'),
+]
+
 AWS_ACCESS_KEY_ID = ''
 AWS_SECRET_ACCESS_KEY = ''
 AWS_STORAGE_BUCKET_NAME = ''
