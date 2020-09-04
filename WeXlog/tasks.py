@@ -41,7 +41,7 @@ def UpdateSubscriptionPaidDate():
 
     for u in users:
         username = CustomUser.objects.get(pk=u.id)
-        instance2 = ExpandedView.objects.get(talent=u)
+        instance2 = ExpandedView.objects.get(talent=u.id)
         if username.paid == True:
             if username.paid_type == 1:
                 if username.paid_date <= timezone.now() - monthly:

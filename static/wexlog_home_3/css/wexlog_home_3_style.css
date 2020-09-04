@@ -1,0 +1,329 @@
+
+/*@import url(https://fonts.googleapis.com/css?family=Roboto)*/
+@font-face {
+  font-family: 'Montserrat';
+  src: local('Abc'),
+       url('../static/fonts/Montserrat-Regular.ttf') format("truetype");
+}
+
+/*Just the background stuff*/
+span.s1 {
+	position : absolute;
+	top : 0;
+	font-size : 15rem;
+	font-weight : 800;
+	text-transform : uppercase;
+	color : #3C4447;
+}
+span.s2 {
+	font-weight : 800;
+	position : absolute;
+	bottom : 0;
+	right : 0;
+	font-size : 12rem;
+	text-transform : uppercase;
+	color : #3C4447;
+}
+/*My hum... body.. yeah..*/
+body {
+	font-family: 'Roboto', sans-serif;
+}
+
+.header-font h1 {
+  font-weight: 600;
+}
+
+.phrase-font {
+  font-size: 1.8rem;
+  font-weight: 500;
+}
+
+.phrase-font sup {
+    top: -0.7em;
+}
+
+.flip-card-black {
+  background-color: #23232e;
+  color: #fff;
+  border-radius: 0.5rem;
+}
+
+.flip-card-white {
+  background-color: #fff;
+  color: #23232e;
+  border-radius: 0.5rem;
+}
+
+.post-wrap {
+   width: 100%;
+   height: 100%;
+   margin: 0;
+   padding: 0;
+   box-sizing: border-box;
+   perspective: 1000px;
+}
+
+.post {
+   position: relative; /* Required to absolutely position the child faces */
+   width: 100%;
+   height: 100%;
+   transition: transform 1s;
+   transform-style: preserve-3d;
+}
+
+.post-front, .post-back {
+   position: absolute;
+   width: 100%;
+   height: 100%;
+   background-color: white;
+   -webkit-backface-visibility: hidden;
+   backface-visibility: hidden;
+   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.post-back {
+   transform: rotateY(180deg);
+   border-radius: 0.85rem;
+}
+
+.post-wrap:hover .post {
+   transform: rotateY(180deg);
+}
+
+.shadow {
+ -webkit-box-shadow: 10px 10px 40px 0px rgba(0,0,0,0.55);
+ -moz-box-shadow: 10px 10px 40px 0px rgba(0,0,0,0.55);
+ box-shadow: 10px 10px 40px 0px rgba(0,0,0,0.55);
+}
+
+/* The card */
+.card_1 {
+	position : relative;
+  left : -60px;
+	height: 450px;
+	width: 100px;
+	margin : 200px auto;
+	background-color : #FFF;
+	-webkit-box-shadow: 10px 10px 93px 0px rgba(0,0,0,0.75);
+	-moz-box-shadow: 10px 10px 93px 0px rgba(0,0,0,0.75);
+	box-shadow: 10px 10px 93px 0px rgba(0,0,0,0.75);
+}
+.card-address {
+  background-color: transparent;
+  border-radius: 0.5rem;
+  border: 0;
+}
+.image1 {
+  float : left;
+	position : relative;
+	left : -30px;
+	top : -100px;
+	-webkit-box-shadow: 10px 10px 60px 0px rgba(0,0,0,0.75);
+	-moz-box-shadow: 10px 10px 60px 0px rgba(0,0,0,0.75);
+	box-shadow: 10px 10px 60px 0px rgba(0,0,0,0.75);
+	overflow: hidden;
+}
+
+.image2 {
+  float : left;
+	position : relative;
+	left : 30px;
+	top : -100px;
+	-webkit-box-shadow: 10px 10px 60px 0px rgba(0,0,0,0.75);
+	-moz-box-shadow: 10px 10px 60px 0px rgba(0,0,0,0.75);
+	box-shadow: 10px 10px 60px 0px rgba(0,0,0,0.75);
+	overflow: hidden;
+}
+/* Image on the left side */
+.thumbnail {
+	float : left;
+	position : relative;
+	left : 30px;
+	top : -100px;
+  height: 100%;
+  width: 100%;
+/*object-fit: cover;*/
+/*object-position: center;*/
+}
+
+.font-black {
+    color: #000;
+}
+
+.author {
+	background-color : #9ECAFF;
+	height : 30px;
+	width : 110px;
+	border-radius : 20px;
+}
+.author img {
+	padding-top : 5px;
+	margin-left : 10px;
+	float : left;
+	height : 20px;
+	width : 20px;
+	border-radius : 50%;
+}
+
+.separator{
+	margin-top : 10px;
+  border-radius: 27px;
+	border : 1px solid #C3C3C3;
+}
+
+.title1 h1, .title1 h2, .title1 h3, .title1 h4, .title1 h5, .title1 h6 {
+    font-family: "Montserrat", sans-serif;
+    font-weight: bold;
+    padding-top: 5px;
+    margin-top: 0;
+    margin-bottom: 18px;
+    line-height: 1.7;
+}
+
+.title2 h1, .title2 h2, .title2 h3, .title2 h4, .title2 h5, .title2 h6 {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 600;
+    padding-top: 5px;
+    margin-top: 0;
+    margin-bottom: 8px;
+    line-height: 1.2;
+}
+
+.title3 h1, .title3 h2, .title3 h3, .title3 h4, .title3 h5, .title3 h6 {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 800;
+    padding-top: 5px;
+    margin-top: 0;
+    margin-bottom: 8px;
+    line-height: 1.7;
+}
+
+.price {
+  margin: 0;
+  padding: 0;
+  display: block;
+}
+
+.price sup {
+  font-size: 20px;
+  top: -1em;
+  color: #000;
+}
+
+.price .number {
+  font-size: 50px;
+  font-weight: 700;
+  color: #000;
+}
+
+.price .number small {
+  font-size: 12px;
+}
+
+.excerpt {
+  margin-bottom: 20px;
+  color: #b3b3b3;
+}
+
+.d-block {
+  display: block !important;
+}
+
+.expand:hover {
+  -webkit-box-shadow: -1px 9px 40px -12px rgba(0,0,0,0.50);
+  -moz-box-shadow: -1px 9px 40px -12px rgba(0,0,0,0.50);
+  box-shadow: -1px 9px 40px -12px rgba(0,0,0,0.50);
+  background-color: #FFFFFF;
+  border-radius: 0.85rem;
+  z-index: 1;
+  transition: all .4s ease;
+  transform: translate3D(0,-1px,0) scale(1.15);
+}
+
+.expand {
+  transition: all .4s ease;
+}
+
+.italic {
+  font-style: italic;
+}
+
+.name {
+  font-weight: 700;
+  font-size: 18px;
+  margin-bottom: 0;
+  color: #000;
+}
+
+.position {
+  font-size: 13px;
+  color: #b3b3b3;
+}
+
+.user-img {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  border: 1px solid #ddd;	/* thickness and color of border */
+  border-radius: 60px;		/* edge rounding of border */
+  width: 120px;				/* width of image (px or % or auto) */
+  height: 120px;
+  object-fit: cover;
+  object-position: 100% 0;
+  position: relative;
+}
+
+.user-img-icon .quote {
+  position: relative;
+  bottom: 25px;
+  right: -30px;
+  width: 40px;
+  height: 40px;
+  background: #38d39f;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  border-radius: 50%;
+}
+
+.user-img-icon .quote i {
+  color: #fff;
+  font-size: 25px;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+#accordion .card {
+  margin-bottom: 5px;
+  border: 1px solid #f0f0f0;
+}
+
+#accordion .card-header {
+  padding: 0;
+  background: transparent;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+#accordion .card-header a {
+  padding: 12px 20px;
+  display: block;
+  font-size: 20px;
+  font-weight: 550;
+  color: #000;
+}
+
+#accordion .card-header a span {
+  float: right;
+}
+
+#accordion .card-header a span i {
+  color: #38d39f;
+}
+
+#accordion [aria-expanded="false"] > .expanded, #accordion [aria-expanded="true"] > .collapsed {
+  display: none;
+}

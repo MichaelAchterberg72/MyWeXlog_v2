@@ -43,7 +43,7 @@ body {
 .table-hover tr:hover {
   z-index: 1;
   transition: all .4s ease;
-  transform: translate3D(0,-1px,0) scale(1.02);
+  transform: translate3D(0,-1px,0) scale(1.01);
 }
 .table-hover tr.no-hover:hover {
   z-index: 1;
@@ -86,21 +86,92 @@ td.top {
 }
 
 td.bottom {
-  padding-top: 2.8rem;
+  padding-top: 0rem;
   padding-bottom: 1rem;
   margin-left: 0rem;
   margin-right: 38rem;
   border-left: -100px;
+  border-top: none;
   width: 58rem;
   display: flex;
   text-align: left;
   position: inherit;
 }
 
+td.bottom_header {
+  padding-top: 3.5rem;
+  padding-bottom: 0rem;
+  margin-left: 11%;
+  margin-right: 38rem;
+  border-left: -100px;
+  border-color: none;
+  width: 80%;
+  display: flex;
+  text-align: left;
+  position: inherit;
+  border:none;
+  font-family: 'Raleway', sans-serif;
+}
+
 td.detail {
   padding-top: 3rem;
   padding-bottom: 3rem;
   margin-top: 3rem;
+}
+
+.title3 h1, .title3 h2, .title3 h3, .title3 h4, .title3 h5, .title3 h6 {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 800;
+    padding-top: 5px;
+    margin-top: 0;
+    margin-bottom: 8px;
+    line-height: 1.7;
+}
+
+.price {
+  margin: 0;
+  padding: 0;
+  display: block;
+}
+
+.price sup {
+  font-size: 20px;
+  top: -1em;
+  color: #000;
+}
+
+.price .number {
+  font-size: 50px;
+  font-weight: 700;
+  color: #000;
+}
+
+.price .number small {
+  font-size: 12px;
+}
+
+.excerpt {
+  margin-bottom: 20px;
+  color: #b3b3b3;
+}
+
+.d-block {
+  display: block !important;
+}
+
+.expand:hover {
+  -webkit-box-shadow: -1px 9px 40px -12px rgba(0,0,0,0.50);
+  -moz-box-shadow: -1px 9px 40px -12px rgba(0,0,0,0.50);
+  box-shadow: -1px 9px 40px -12px rgba(0,0,0,0.50);
+  background-color: #FFFFFF;
+  border-radius: 0.85rem;
+  z-index: 1;
+  transition: all .4s ease;
+  transform: translate3D(0,-1px,0) scale(1.15);
+}
+
+.expand {
+  transition: all .4s ease;
 }
 
 td.no-wrap{
