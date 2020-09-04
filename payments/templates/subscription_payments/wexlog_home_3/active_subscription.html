@@ -1,0 +1,214 @@
+{% extends "wexlog_home_3/base_wexlog_home_3.html" %}
+{% load humanize %}
+{% load static %}
+
+{% block content %}
+
+<section id="header-block" class="">
+  <div class="jumbotron jumbotron-fluid">
+    <div class="container">
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="jumbotron-fluid">
+    <div class="container">
+      <p>&nbsp</p>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="card border-0 bg-transparent">
+            <div class="card border-0 bg-transparent">
+              <div class="card-clear">
+                <div class="card-body">
+                  <div class="title3">
+                    <h5>CHOOSE YOUR ACTIVE SUBSCRIPTION!</h5>
+                  </div>
+                <p class="card-text">Get a discount by paying 6-monthly or yearly.</p>
+      <p>&nbsp<p>
+
+
+            <div class="row">
+              <div class="col-sm-4">
+                <div class="card expand">
+                  <div class="card-body">
+                    <center>
+                    <div class="title3 text-center">
+                      <h5>MONTHLY<br>MEMBERSHIP</h5>
+                    </div>
+                    <hr>
+                    <div class="card-body">
+                      <span class="price"><sup>$</sup> <span class="number">5<sup>,20</sup><small class="per">/mo</small></span></span>
+                      <span class="excerpt d-block">Billed Monthly</span>
+                      <p class="text-center">Features Included Listed Below</p>
+
+                      {{ active_form.render }}
+                    </div>
+                    </center>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="card expand">
+                  <div class="card-body">
+                    <center>
+                    <div class="title3 text-center">
+                      <h5>SIX MONTHLY<br>MEMBERSHIP</h5>
+                    </div>
+                    <hr>
+                    <div class="card-body">
+                      <span class="price"><sup>$</sup> <span class="number">29<sup>,20</sup><small class="per">/6-mo</small></span></span>
+                      <span class="excerpt d-block">Billed 6-Monthly</span>
+                      <p class="text-center">Enjoy Selected Features</p>
+                      {{ six_active_form.render }}
+                    </div>
+                    </center>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="card expand">
+                  <div class="card-body">
+                    <center>
+                    <div class="title3 text-center">
+                      <h5>YEARLY<br>MEMBERSHIP</h5>
+                    </div>
+                    <hr>
+                    <div class="card-body">
+                      <span class="price"><sup>$</sup> <span class="number">57<sup>,96</sup><small class="per">/year</small></span></span>
+                      <span class="excerpt d-block">All features are listed below</span>
+                      <p class="text-center">Billed Yearly</p>
+                      {{ twelve_active_form.render }}
+                    </div>
+                    </center>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+<div class="row">
+  <div class="col-sm-12">
+    <div class="card border-0">
+      <div class="card-body">
+        <p class="text-center">We use PayPal as our billing partner<br>Prices displayed are in USD.</p>
+        {% include "subscription_payments/wexlog_home_3/package_benefits.html" %}
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<p>&nbsp</p>
+<p>&nbsp</p>
+<div class="container">
+<div class="row">
+  <div class="col-sm-6">
+    <div class="card border-0 bg-transparent">
+        <div class="card border-0 bg-transparent">
+        </div>
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <div class="card border-0 bg-transparent">
+      <div class="card border-0 bg-transparent">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="card border-0 bg-transparent">
+              <a href="https://mywexlog.dev/public/index/" class="btn btn-outline-primary btn-block">Back to Home Page ..</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<p>&nbsp</p>
+<p>&nbsp</p>
+</div>
+</section>
+
+<section id="questions">
+  <div class="jumbotron jumbotron-fluid">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div id="accordion">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="card">
+                  <div class="card-header">
+                    <a class="card-link" data-toggle="collapse"  href="#menuone" aria-expanded="true" aria-controls="menuone">What is the payment method? <span class="collapsed"><i class="fa fa-angle-up"></i></span><span class="expanded"><i class="fa fa-angle-down"></i></span></a>
+                  </div>
+                  <div id="menuone" class="collapse show">
+                    <div class="card-body">
+                      <p>We utilise PayPal as our payments partner so all accounts and payments are secured by their tried and tested methodologies and payments are easily managed through the PayPal accounts manager allowing you to amend or delete your debit order at your own requirement.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-header">
+                    <a class="card-link" data-toggle="collapse"  href="#menutwo" aria-expanded="false" aria-controls="menutwo">How do I know my payment info is secure? <span class="collapsed"><i class="fa fa-angle-up"></i></span><span class="expanded"><i class="fa fa-angle-down"></i></span></a>
+                  </div>
+                  <div id="menutwo" class="collapse">
+                    <div class="card-body">
+                      <p>PayPal has developed a secure world class payment solution that is trusted and used by more than 7 million businesses and 200 million individuals worldwide.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-header">
+                    <a class="card-link" data-toggle="collapse"  href="#menu3" aria-expanded="false" aria-controls="menu3">How do I know you wont charge more than agreed? <span class="collapsed"><i class="fa fa-angle-up"></i></span><span class="expanded"><i class="fa fa-angle-down"></i></span></a>
+                  </div>
+                  <div id="menu3" class="collapse">
+                    <div class="card-body">
+                      <p>We only charge for the monthy, six monthly or yearly debit orders. Any additional services will be charged on an ad hoc basis as you use them.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="card">
+                  <div class="card-header">
+                    <a class="card-link" data-toggle="collapse"  href="#menu4" aria-expanded="false" aria-controls="menu4">How do I cancel my subscription? <span class="collapsed"><i class="fa fa-angle-up"></i></span><span class="expanded"><i class="fa fa-angle-down"></i></span></a>
+                  </div>
+                  <div id="menu4" class="collapse">
+                    <div class="card-body">
+                      <p>We make use of PayPal as our billing partner so to cancel your subscription you will need to log-in to your PayPal account and navigate to the payments section. Once you found the correct item simply click on it and cancel the recurring payment.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-header">
+                    <a class="card-link" data-toggle="collapse"  href="#menu5" aria-expanded="false" aria-controls="menu5">Can I re-subscribe if I cancel my subscription? <span class="collapsed"><i class="fa fa-angle-up"></i></span><span class="expanded"><i class="fa fa-angle-down"></i></span></a>
+                  </div>
+                  <div id="menu5" class="collapse">
+                    <div class="card-body">
+                      <p>MyWeXlog allows you to cancel your subscription if you are not using it, continue capturing your experience in the free subscription and then re-subscribe as either an active or a passive subscriber.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-header">
+                    <a class="card-link" data-toggle="collapse"  href="#menu6" aria-expanded="false" aria-controls="menu6">What if I delete my account? <span class="collapsed"><i class="fa fa-angle-up"></i></span><span class="expanded"><i class="fa fa-angle-down"></i></span></a>
+                  </div>
+                  <div id="menu6" class="collapse">
+                    <div class="card-body">
+                      <p>In the event that you choose to delete your account all your data will be deleted from the MyWeXlog system. We recommend you save your data before you delete your account.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock content %}

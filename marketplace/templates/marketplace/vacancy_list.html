@@ -25,7 +25,7 @@
         <col width="250px">
         <col width="140px">
         <col width="120px">
-        <col width="60px">
+        <col width="80px">
         <thead>
           <tr class="no-hover">
             <th class="align-middle text-center"></th>
@@ -40,8 +40,9 @@
         {% if request.user.subscription >= 2 %}
         {% for i in pageitems %}
         <tbody>
-        <tr class="align-middle text-center divide" onclick="window.location='{% url 'MarketPlace:VacancyDetail' i.ref_no %}'">
-          <td class="bottom">{{ i.scope|truncatechars:345 }}</td>
+        <tr class="align-middle text-center divide">
+          <td class="bottom_header"><strong>Scope</strong></td>
+          <td class="bottom">{{ i.scope|truncatechars:340 }}</td>
           <td class="text-left top">{{ i.ref_no }}</td>
           <td class="text-left top">{{ i.title|truncatechars:47 }}</td>
           <td class="no-wrap top">
@@ -65,7 +66,8 @@
       {% for i in pageitems %}
       <tbody>
       <tr class="align-middle text-center divide">
-        <td class="bottom">{{ i.scope|truncatechars:345 }}</td>
+        <td class="bottom_header"><strong>Scope</strong></td>
+        <td class="bottom">{{ i.scope|truncatechars:340 }}</td>
         <td class="text-left top">{{ i.ref_no }}</td>
         <td class="text-left top">{{ i.title|truncatechars:47 }}</td>
         <td class="no-wrap top">

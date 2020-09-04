@@ -28,22 +28,22 @@ from paypal.standard.ipn.signals import valid_ipn_received, invalid_ipn_received
 
 @method_decorator(csrf_exempt, name='dispatch')
 class PayPalSubscriptionReturnView(TemplateView):
-    template_name = 'subscription_payments/subscription_successful_return.html'
+    template_name = 'subscription_payments/wexlog_home_3/subscription_successful_return.html'
 
 
 @method_decorator(csrf_exempt, name='dispatch')
 class PayPalSubscriptionCancelReturnView(TemplateView):
-    template_name = 'subscription_payments/subscription_cancel_return.html'
+    template_name = 'subscription_payments/wexlog_home_3/subscription_cancel_return.html'
 
 
 @method_decorator(csrf_exempt, name='dispatch')
 class PayPalPassiveSubscriptionCancelReturnView(TemplateView):
-    template_name = 'subscription_payments/passive_subscription_cancel_return.html'
+    template_name = 'subscription_payments/wexlog_home_3/passive_subscription_cancel_return.html'
 
 
 @method_decorator(csrf_exempt, name='dispatch')
 class PayPalActiveSubscriptionCancelReturnView(TemplateView):
-    template_name = 'subscription_payments/active_subscription_cancel_return.html'
+    template_name = 'subscription_payments/wexlog_home_3/active_subscription_cancel_return.html'
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -117,7 +117,7 @@ def GeneralPassiveSubscriptionView(request):
             "six_passive_form": six_passive_form,
             "twelve_passive_form": twelve_passive_form,
     }
-    template = 'subscription_payments/passive_subscription.html'
+    template = 'subscription_payments/wexlog_home_3/passive_subscription.html'
     return render(request, template, context)
 
 
@@ -187,7 +187,7 @@ def GeneralActiveSubscriptionView(request):
             "six_active_form": six_active_form,
             "twelve_active_form": twelve_active_form,
     }
-    template = 'subscription_payments/active_subscription.html'
+    template = 'subscription_payments/wexlog_home_3/active_subscription.html'
     return render(request, template, context)
 
 
@@ -414,5 +414,5 @@ def PassiveUpgradeActiveSubscriptionView(request):
             "six_active_form": six_active_form,
             "twelve_active_form": twelve_active_form,
     }
-    template = 'subscription_payments/active_subscription_upgrade.html'
+    template = 'subscription_payments/wexlog_home_3/active_subscription_upgrade.html'
     return render(request, template, context)
