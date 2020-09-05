@@ -1,4 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+
 
 from csp.decorators import csp_exempt
 
@@ -10,13 +12,23 @@ from datetime import datetime, timedelta
 from django.utils import timezone, dateformat
 import pytz
 
+
+from core.decorators import subscription
+
+
+
 from db_flatten.models import SkillTag
 from enterprises.models import Enterprise
-from marketplace.models import TalentRequired
+from marketplace.models import (
+    TalentRequired, BidShortList, BidInterviewList, WorkBid, WorkIssuedTo
+    )
 from paypal.standard.ipn.models import PayPalIPN
 
 from django.urls import reverse
-# Create your views here.
+
+
+@login_required()
+@subscription(3)
 def ManagementDashboardView(request):
 
     mcount = User.objects.all().count()
@@ -208,6 +220,8 @@ def ManagementDashboardView(request):
     return render(request, template_name, context)
 
 
+@login_required()
+@subscription(3)
 def ManagementActiveMembersView(request):
 
     mcount = User.objects.all().count()
@@ -240,3 +254,61 @@ def ManagementActiveMembersView(request):
         'vcount': vcount
     }
     return render(request, template_name, context)
+
+
+@login_required()
+@subscription(3)
+def all_open_vacancies(request):
+    '''Management view to see all vacancies'''
+    qs = TalentRequired.objects.all()
+
+    qs_o = qs.filter(offer_status='O').order_by('-bid_open')
+    qs_oc = qs_o.count()
+
+    qs_c = qs.filter(offer_status='C').order_by('-bid_open')
+    qs_cc = qs_c.count()
+
+    template = 'management/vacancies_status.html'
+    context = {
+        'qs_o': qs_o,
+        'qs_oc': qs_oc,
+        'qs_c': qs_c,
+        'qs_cc': qs_cc,
+    }
+    return render(request, template, context)
+
+@login_required()
+@subscription(3)
+def all_bids(request):
+    '''Management view to see all bids'''
+    qs = WorkBid.objects.all()
+
+    qs_o = qs.filter(work__offer_status='O').order_by('-date_applied')
+    qs_oc = qs_o.count()
+
+    qs_c = qs.filter(work__offer_status='C').order_by('-date_applied')
+    qs_cc = qs_c.count()
+
+    template = 'management/vacancies_bids.html'
+    context = {
+        'qs_o': qs_o,
+        'qs_oc': qs_oc,
+        'qs_c': qs_c,
+        'qs_cc': qs_cc,
+    }
+    return render(request, template, context)
+
+
+@login_required()
+@subscription(3)
+def work_issued(request):
+    '''Management view to see all vacancy placements'''
+    qs = WorkIssuedTo.objects.all().order_by('-date_complete')
+    qs_c = qs.count()
+
+    template = 'management/vacancies_issued.html'
+    context = {
+        'qs': qs,
+        'qs_c': qs_c,
+    }
+    return render(request, template, context)

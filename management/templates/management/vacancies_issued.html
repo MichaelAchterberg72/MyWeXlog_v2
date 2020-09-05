@@ -1,0 +1,60 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+
+{% block title %}{{block.super}}-Mngt Placements{% endblock title %}
+
+{% block content %}
+  <div class="card border-0">
+    <div class="card-body">
+      <h4 class="">All PLacements Made</h4>
+
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-sm-12">
+     <div class="card h-100">
+       <div class="card-body">
+         <h5 class="card-title">Placements  ({{qs_c|intcomma}})</h5>
+         <table class="table table-sm">
+           <col width ="10%">
+           <col width ="25%">
+           <col width ="25%">
+           <col width ="15%">
+           <col width ="10%">
+           <thead>
+             <tr>
+               <th class="align-middle text-center">Date Placed</th>
+               <th class="align-middle text-center">Employer</th>
+               <th class="align-middle text-center">Candidate</th>
+               <th class="align-middle text-center">Rate</th>
+               <th class="align-middle text-center">Ref. No.</th>
+             </tr>
+           </thead>
+           <tbody>
+             {% for v in qs %}
+              <tr>
+                <td class="align-middle text-center">{{ v.date_complete|date:"j M Y" }}</td>
+                <td class="align-middle text-center">{{ v.work.companybranch }}</td>
+                <td class="align-middle text-center">{{ v.talent.display_text }}</td>
+                <td class="align-middle text-center">
+                  {{ v.currency }}<br>{{ v.rate_offered|intcomma }}<br>{{ v.get_rate_unit_display }}
+                </td>
+                <td class="align-middle text-center">
+                  {{ v.work.ref_no }}
+                  <br>
+                  <a href="{% url 'MarketPlace:VacancyDetail' v.work.ref_no %}" class="badge badge-secondary" style="width: 5rem;">View</a>
+                </td>
+              </tr>
+             {% empty %}
+              <tr>
+                <td colspan="4">No bids made yet!</td>
+              </tr>
+             {% endfor %}
+           </tbody>
+         </table>
+       </div>
+     </div>
+    </div>
+  </div>
+{% endblock content %}

@@ -1,6 +1,6 @@
 {% extends 'base_home.html' %}
 
-{% block title %}My {{block.super}} Profile View{% endblock title %}
+{% block title %}{{block.super}} MnGt Console{% endblock title %}
 
 {% block content %}
 <h3 class="card-title">MyWeXlog Management Console</h3>
@@ -87,7 +87,7 @@
 <br>
 <div class="row">
 
-  <div class="col-sm-6">
+  <div class="col-sm-3">
     <div class="card border">
       <div class="card-body">
         <h4 class="card-title">View Feedback</h4>
@@ -98,7 +98,45 @@
           </center>
         </div>
       </div>
-
+    </div>
+  </div>
+  <div class="col-sm-3">
+    <div class="card border h-100">
+      <div class="card-body">
+        <h4 class="card-title">Vacancies</h4>
+        <p>See all vacancies on the site</p>
+        <div class="float-center">
+          <center>
+          <a href="{% url 'Management:AllVacancies' %}" class="btn btn-primary">View</a>
+          </center>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-3">
+    <div class="card border h-100">
+      <div class="card-body">
+        <h4 class="card-title">Bids</h4>
+        <p>See all bids made</p>
+        <div class="float-center">
+          <center>
+          <a href="{% url 'Management:AllBids' %}" class="btn btn-primary">View</a>
+          </center>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-3">
+    <div class="card border h-100">
+      <div class="card-body">
+        <h4 class="card-title">Placements</h4>
+        <p>See all vacancy placement</p>
+        <div class="float-center">
+          <center>
+          <a href="{% url 'Management:WorkIssued' %}" class="btn btn-primary">View</a>
+          </center>
+        </div>
+      </div>
     </div>
   </div>
 <!--

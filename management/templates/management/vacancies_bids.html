@@ -1,0 +1,84 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+
+{% block title %}{{block.super}}-Mngt Bids{% endblock title %}
+
+{% block content %}
+  <div class="card border-0">
+    <div class="card-body">
+      <h4 class="">All Bids Made</h4>
+
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-sm-6">
+     <div class="card h-100">
+       <div class="card-body">
+         <h5 class="card-title">Open Bids  ({{qs_oc|intcomma}})</h5>
+         <table class="table table-sm">
+           <thead>
+             <tr>
+               <th class="align-middle text-center">Captured</th>
+               <th class="align-middle text-center">Employer</th>
+               <th class="align-middle text-center">Bid By</th>
+               <th class="align-middle text-center">Ref. No.</th>
+             </tr>
+           </thead>
+           <tbody>
+             {% for v in qs_o %}
+              <tr>
+                <td class="align-middle text-center">{{ v.date_applied|date:"j M Y" }}</td>
+                <td class="align-middle text-center">{{ v.work.companybranch }}</td>
+                <td class="align-middle text-center">{{ v.talent.display_text }}</td>
+                <td class="align-middle text-center">
+                  {{ v.work.ref_no }}
+                  <a href="{% url 'MarketPlace:VacancyDetail' v.work.ref_no %}" class="badge badge-secondary" style="width: 5rem;">View</a>
+                </td>
+              </tr>
+             {% empty %}
+              <tr>
+                <td colspan="4">No bids made yet!</td>
+              </tr>
+             {% endfor %}
+           </tbody>
+         </table>
+       </div>
+     </div>
+    </div>
+    <div class="col-sm-6">
+     <div class="card h-100">
+       <div class="card-body">
+         <h5 class="card-title">Closed Bids  ({{qs_cc|intcomma}})</h5>
+         <table class="table table-sm">
+           <thead>
+             <tr>
+               <th class="align-middle text-center">Applied</th>
+               <th class="align-middle text-center">Employer</th>
+               <th class="align-middle text-center">Bid By</th>
+               <th class="align-middle text-center">Ref. No.</th>
+             </tr>
+           </thead>
+           <tbody>
+             {% for v in qs_c %}
+              <tr>
+                <td class="align-middle text-center">{{ v.date_applied|date:"j M Y" }}</td>
+                <td class="align-middle text-center">{{ v.work.companybranch }}</td>
+                <td class="align-middle text-center">{{ v.talent.display_text }}</td>
+                <td class="align-middle text-center">
+                  {{ v.work.ref_no }}
+                  <a href="{% url 'MarketPlace:VacancyDetail' v.work.ref_no %}" class="badge badge-secondary" style="width: 5rem;">View</a>
+                </td>
+              </tr>
+             {% empty %}
+              <tr>
+                <td colspan="4">No bids made yet!</td>
+              </tr>
+             {% endfor %}
+           </tbody>
+         </table>
+       </div>
+     </div>
+    </div>
+  </div>
+{% endblock content %}
