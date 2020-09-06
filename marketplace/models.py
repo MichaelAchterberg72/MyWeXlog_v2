@@ -134,6 +134,20 @@ class TalentRequired(models.Model):
         super(TalentRequired, self).save(*args, **kwargs)
 
 
+class VacancyViewed(models.Model):
+    talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    vacancy = models.ForeignKey(TalentRequired, on_delete=models.CASCADE)
+    viewed = models.BooleanField(default=False)
+    date_viewed = models.DateField(auto_now_add=True, null=True, blank=True)
+    read = models.BooleanField(default=False)
+    date_read = models.DateField(auto_now_add=True, null=True, blank=True)
+    closed = models.BooleanField(default=False)
+    date_closed = models.DateField(auto_now_add=True, null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.vacancy}'
+
+
 class Deliverables(models.Model):
     scope = models.ForeignKey(TalentRequired, on_delete=models.CASCADE)
     deliverable = models.TextField()

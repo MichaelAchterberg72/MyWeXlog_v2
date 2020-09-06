@@ -8,6 +8,7 @@ app_name = 'MarketPlace'
 
 urlpatterns = [
     path('entrance/', views.MarketHome, name='Entrance'),
+    path('entrance-1/', views.MarketHome_test1, name='Entrance1'),
     path('vacancy/', views.VacancyView, name='Vacancy'),
     path('popup/worklocation/add/', views.WorkLocationAddPopup, name="WorkLocationAddPop"),
     path('popup/ajax/get_worklocation_id/', views.get_worklocation_id, name="AJAX_GetWorklocationID"),

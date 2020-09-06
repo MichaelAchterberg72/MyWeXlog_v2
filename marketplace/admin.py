@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from .models import (
-    WorkLocation, TalentRequired, Deliverables, SkillLevel, SkillRequired, WorkBid, TalentAvailabillity, WorkIssuedTo, BidShortList, BidInterviewList, DeclineAssignment, VacancyRate, TalentRate
+    WorkLocation, TalentRequired, Deliverables, SkillLevel, SkillRequired, WorkBid, TalentAvailabillity, WorkIssuedTo, BidShortList, BidInterviewList, DeclineAssignment, VacancyRate, TalentRate, VacancyViewed
     )
 
 
@@ -55,6 +55,10 @@ class DeliverablesAdmin(admin.ModelAdmin):
 
 @admin.register(WorkLocation)
 class WorkLocationAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(VacancyViewed)
+class VacancyViewedAdmin(admin.ModelAdmin):
     pass
 
 @admin.register(TalentRequired)
