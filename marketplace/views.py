@@ -28,7 +28,7 @@ from .forms import (
 )
 
 from .models import(
-    TalentRequired, SkillRequired, Deliverables, TalentAvailabillity, WorkBid, SkillLevel, BidShortList, WorkIssuedTo, BidInterviewList, WorkLocation, VacancyViewed
+    TalentRequired, SkillRequired, Deliverables, TalentAvailabillity, WorkBid, SkillLevel, BidShortList, WorkIssuedTo, BidInterviewList, WorkLocation, VacancyViewed, VacancyViewed
 )
 
 from WeXlog.app_config import (
@@ -1266,6 +1266,7 @@ def MarketHome(request):
     sl = SkillLevel.objects.all()
     wbt = WorkBid.objects.filter(Q(talent=talent) & Q(work__offer_status='O'))
     bsl = BidShortList.objects.filter(Q(talent=talent) & Q(scope__offer_status='O'))
+    vv = VacancyViewed.objects.filter(talent=talent).values_list('vacancy__id', flat=True)
     #Queryset caching<<<
 
     tr_emp_count = tr_emp.count()
@@ -1390,6 +1391,9 @@ def MarketHome(request):
     dsi = dsi - wbt_s
 
     dsi = dsi - bsl_s
+
+    #Removing vacancies that have been rejected by the user
+    dsi = dsi.intersection(vv)
 
     #Recreating the QuerySet
     suitable = tr.filter(id__in=dsi)
