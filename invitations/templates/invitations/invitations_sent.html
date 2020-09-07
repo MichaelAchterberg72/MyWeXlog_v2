@@ -1,0 +1,88 @@
+{% extends 'base_home.html' %}
+
+{% block title %}My {{block.super}} Friend Invites{% endblock title %}
+
+{% block content %}
+
+<div class="card">
+  <div class="card-body">
+        <h3 class="card-title">Invitations Already Sent</h3>
+        <p>Below is a list of people that you have sent invites to join MyWeXlog that have not yet accepted the invitation. Perhaps you would like to contact them directly to ask them to register.</p>
+        <br>
+        <table class="table table-hover table-sm">
+          <col width="10%">
+          <col width="20%">
+          <col width="20%">
+          <col width="20%">
+          <col width="20%">
+          <col width="10%">
+          <thead>
+            <tr class="no-hover">
+              <th class="align-middle text-center">Date Invited</th>
+              <th class="align-middle text-center">Name</th>
+              <th class="align-middle text-center">Company</th>
+              <th class="align-middle text-center">Relationship</th>
+              <th class="align-middle text-center">email</th>
+              <th class="align-middle text-center"></th>
+            </tr>
+          </thead>
+          {% for i in pageitems %}
+          <tbody>
+          <tr class="align-middle text-center divide">
+            <td class="align-middle text-center">{{ i.date_invited|date:"j M Y" }}</td>
+            <td class="align-middle text-center">{{ i.name }} {{ i.surname }}</td>
+            <td class="align-middle text-center">{{ i.companybranch }}</td>
+            <td class="align-middle text-center">{{ i.get_relationship_display }}</td>
+            <td class="align-middle text-center">{{ i.email }}</td>
+            <td class="align-middle text-center"><a href="mailto:{{ i.email }}" class="badge badge-primary badge-pill" style="width:7rem;">Send<br>E-Mail</a></td>
+            </tr>
+          </tbody>
+          {% empty %}
+          <tr>
+            <td colspan="6">You do not have any sent invitations that have not been accepted at the moment</td>
+          </tr>
+          {% endfor %}
+
+        </table>
+      <p>&nbsp</p>
+
+      <nav aria-label="Page navigation">
+          {% if pageitems.has_other_pages %}
+            <ul class="pagination">
+              {% if pageitems.has_previous %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ pageitems.previous_page_number }}" aria-label="Previous">
+                    <span aria-hidden="true">Previous</span>
+                    <span class="sr-only disabled">Previous</span>
+                  </a></li>
+              {% else %}
+                <li class="page-link disabled" tabindex="-1"><span>Previous</span></li>
+              {% endif %}
+
+              {% if pageitems.number|add:'-4' > 1 %}
+                <li class="page-link"><a href="?page={{ pageitems.number|add:'-5' }}">&hellip;</a></li>
+              {% endif %}
+
+              {% for i in pageitems.paginator.page_range %}
+                {% if pageitems.number == i %}
+                  <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
+                {% elif i > pageitems.number|add:'-5' and i < pageitems.number|add:'5' %}
+                  <li class="page-link"><a class="page-item" href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+              {% endfor %}
+
+              {% if pageitems.paginator.num_pages > pageitems.number|add:'4' %}
+                <li class="page-link"><a href="?page={{ pageitems.number|add:'5' }}">&hellip;</a></li>
+              {% endif %}
+
+              {% if pageitems.has_next %}
+                <li class="page-link"><a href="?page={{ pageitems.next_page_number }}">Next</a></li>
+              {% else %}
+                <li class="page-link disabled"><span>Next</span></li>
+              {% endif %}
+            </ul>
+          {% endif %}
+      </nav>
+  </div>
+</div>
+{% endblock content %}
