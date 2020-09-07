@@ -8,7 +8,7 @@
   {% if not list_view %}
     <div class="row">
       <div class="col-sm-12">
-        <div class="card">
+        <div class="card card-shadow">
           <div class="card-body">
             <h3 class="card-title">Introduction Walkthrough</h3>
             <p>We have created an introduction walkthrough to assist you in your first days using MyWeXlog and to provide you with an overview of how  MyWeXlog has been designed with the best way to use the system.
@@ -31,7 +31,7 @@
   {% if not fse %}
     <div class="row">
       <div class="col-sm-12">
-        <div class="card">
+        <div class="card card-shadow">
           <div class="card-body">
             <h3 class="card-title text-center">Your Trial Active Subscription Has Expired!</h3>
             Your one month free Active Subscription has expired. To contine enjoying the full benefits of MyWeXlog please select one of the subscriptions to upgrade to:<br><br>
@@ -369,7 +369,7 @@
 
 {% block Center_Content %}
 {% if interviews_tlt or interviews_emp %}
-<div class="card border-0">
+<div class="card card-shadow">
   <div class="card-body">
     <div class="float-right">
       <a href="{% url 'Profile:HelpDesktopPendingInterviews' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
@@ -377,186 +377,291 @@
     </div>
     <h4 class="card-title" id="Interview">Pending Interviews</h4>
 
-<table class="table table-hover table-sm">
-  <col width="50%">
-  <col width="15%">
-  <col width="15%">
-  <col width="10%">
-  <col width="10%">
-  <thead>
-    <tr class="no-hover">
-      <th class="align-middle text-left">Vacancy</th>
-      <th class="align-middle text-center">Configeration</th>
-      <th class="align-middle text-center">Reference</th>
-      <th class="align-middle text-center">Invitation Date</th>
-      <th class="align-middle text-center"></th>
-    </tr>
-  </thead>
-  <tbody>
-    {% if interviews_tlt %}
-      <tr class="no-hover">
-        <td colspan="3" class="no-hover"><h5><strong>As a Candidate</strong></h5></td>
-      </tr>
-      {% for tlt_i in interviews_tlt %}
-      <tr>
-        <td class="align-middle text-left">{{ tlt_i.scope }}</td>
-        <td class="align-middle text-center">{{ tlt_i.scope.worklocation }}</td>
-        <td class="align-middle text-center">{{ tlt_i.scope.ref_no }}</td>
-        <td class="align-middle text-center">{{ tlt_i.date_listed|date:"j M Y" }}</td>
-        {% if request.user.subscription >= 1 %}
-          <td>
-            <a href="{% url 'MarketPlace:VacancyDetail_Profile' tlt_i.scope.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-info badge-pill" style="width: 7rem">
-              See Detail
-            </a>
-          {% if tlt_i.tlt_response == 'P' %}
-            <a href="{% url 'Profile:IntAccept' tlt_i.id %}?next={{ request.path|urlencode }}" class="badge badge-success badge-pill" style="width: 7rem">
-              Accept<br>Invitation
-            </a>
-            <a href="{% url 'Profile:IntDecline' tlt_i.id %}?next={{ request.path|urlencode }}" class="badge badge-danger badge-pill" style="width: 7rem">Decline<br>Invitation</a></td>
-          {% endif %}
-          {% if tlt_i.tlt_response == 'A' %}
-            <a href="{% url 'Profile:IntComplete' tlt_i.id %}?next={{ request.path|urlencode }}" class="badge badge-success badge-pill" style="width: 7rem">Mark as<br>Completed</a>
-          {% endif %}
-        {% endif %}
-      </tr>
+    <div class="container">
+
+      {% if interviews_tlt %}
+        <p><h5><strong>As a Candidate</strong></h5></p>
+        <div class="row my-auto">
+          <div class="col-md-4 h-100 text-center my-auto">
+            <strong>Vacancy</strong>
+          </div>
+          <div class="col-md-2 h-100 text-center my-auto">
+            <strong>Configuration</strong>
+          </div>
+          <div class="col-md-2 h-100 text-center my-auto">
+            <strong>Reference</strong>
+          </div>
+          <div class="col-md-2 h-100 text-center my-auto">
+            <strong>Invitation Date</strong>
+          </div>
+          <div class="col-md-2 h-100 text-center my-auto">
+            <strong>Options</strong>
+          </div>
+        </div>
+        {% for tlt_i in interviews_tlt %}
+      <div class="row">
+        <div class="card mt-2 card-hover" style="width: 100%;">
+          <div class="card-body">
+            <div class="row my-auto">
+            <div class="col-md-4 h-100 text-center my-auto">
+              {{ tlt_i.scope }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ tlt_i.scope.worklocation }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+                {{ tlt_i.scope.ref_no }}
+              </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ tlt_i.date_listed|date:"j M Y" }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {% if request.user.subscription >= 1 %}
+                <td>
+                  <a href="{% url 'MarketPlace:VacancyDetail_Profile' tlt_i.scope.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-info badge-pill" style="width: 7rem">
+                    See Detail
+                  </a>
+                {% if tlt_i.tlt_response == 'P' %}
+                  <a href="{% url 'Profile:IntAccept' tlt_i.id %}?next={{ request.path|urlencode }}" class="badge badge-success badge-pill" style="width: 7rem">
+                    Accept<br>Invitation
+                  </a>
+                  <a href="{% url 'Profile:IntDecline' tlt_i.id %}?next={{ request.path|urlencode }}" class="badge badge-danger badge-pill" style="width: 7rem">Decline<br>Invitation</a></td>
+                {% endif %}
+                {% if tlt_i.tlt_response == 'A' %}
+                  <a href="{% url 'Profile:IntComplete' tlt_i.id %}?next={{ request.path|urlencode }}" class="badge badge-success badge-pill" style="width: 7rem">Mark as<br>Completed</a>
+                {% endif %}
+              {% endif %}
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
       {% empty %}
-        <tr>
-          <td colspan="5">You currently don't have any interviews.</td>
-        </tr>
+        <p>You currently don't have any interviews.</p>
       {% endfor %}
     {% endif %}
 
     {% if interviews_emp %}
-      <tr class="no-hover">
-        <td colspan="3"><h5><strong>As an Employer</strong></h5></td>
-      </tr>
-      {% for tlt_e in interviews_emp %}
-        <tr>
-          <td class="align-middle text-left">{{ tlt_e.scope }}</td>
-          <td class="align-middle text-center">{{ tlt_e.scope.worklocation }}</td>
-          <td class="align-middle text-center">{{ tlt_e.scope.ref_no }}</td>
-          <td class="align-middle text-center">{{ tlt_e.date_listed|date:"j M Y" }}</td>
-          <td class="align-middle">
-            {% if tlt_e.tlt_response == 'P' %}
-              <p class="badge badge-info badge-pill" style="width: 7rem">Response<br>Pending</p>
-            {% elif tlt_e.tlt_response == 'A' %}
-              <p class="badge badge-info badge-pill" style="width: 7rem">Interview<br>Accepted</p>
-              <a href="{% url 'MarketPlace:InterviewList' tlt_e.scope.ref_no   %}" class="badge badge-success badge-pill" style="width: 7rem">Interview Page</a>
-            {% elif tlt_e.tlt_response == 'D' %}
-              <p class="badge badge-danger badge-pill" style="width: 7rem">Interview<br>Declined</p>
-              <a href="{% url 'Profile:IntRemove' tlt_e.talent.alias %}?next={{ request.path|urlencode }}" class="badge badge-info badge-pill" style="width: 7rem" data-toggle="tooltip" title="Remove this interview from your workflow">Remove</a>
-            {% endif %}
-          </td>
-        </tr>
+      <p><h5><strong>As an Employer</strong></h5></p>
+      <div class="row my-auto">
+        <div class="col-md-4 h-100 text-center my-auto">
+          <strong>Vacancy</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Configuration</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Reference</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Invitation Date</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Options</strong>
+        </div>
+      </div>
+    {% for tlt_e in interviews_emp %}
+      <div class="row">
+        <div class="card mt-2 card-hover" style="width: 100%;">
+          <div class="card-body">
+            <div class="row my-auto">
+            <div class="col-md-4 h-100 text-center my-auto">
+              {{ tlt_e.scope }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ tlt_e.scope.worklocation }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+                {{ tlt_e.scope.ref_no }}
+              </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ tlt_e.date_listed|date:"j M Y" }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {% if tlt_e.tlt_response == 'P' %}
+                <p class="badge badge-info badge-pill" style="width: 7rem">Response<br>Pending</p>
+              {% elif tlt_e.tlt_response == 'A' %}
+                <p class="badge badge-info badge-pill" style="width: 7rem">Interview<br>Accepted</p>
+                <a href="{% url 'MarketPlace:InterviewList' tlt_e.scope.ref_no   %}" class="badge badge-success badge-pill" style="width: 7rem">Interview Page</a>
+              {% elif tlt_e.tlt_response == 'D' %}
+                <p class="badge badge-danger badge-pill" style="width: 7rem">Interview<br>Declined</p>
+                <a href="{% url 'Profile:IntRemove' tlt_e.talent.alias %}?next={{ request.path|urlencode }}" class="badge badge-info badge-pill" style="width: 7rem" data-toggle="tooltip" title="Remove this interview from your workflow">Remove</a>
+              {% endif %}
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
       {% empty %}
-        <tr>
-          <td colspan="5">None at the moment.</td>
-        </tr>
+        <p>None at the moment.</p>
       {% endfor %}
     {% endif %}
-  </tbody>
-</table>
-</div>
+
+    </div>
+    <br>
+    {% endif %}
+
+    <div class="float-right">
+      <a href="{% url 'MarketPlace:EmployerInterviewHistory' request.user.alias %}" class="btn btn-primary" style="width: 10rem">Interview History</a>
+      {% if ipost_count > 5 %}
+      <a href="{% url 'MarketPlace:AllPostedVacOpen' %}" class="btn btn-primary"style="width: 12rem">All Open Vacancies</a>
+      {% endif %}
+    </div>
+  </div>
 </div>
 <br>
-{% endif %}
 
 {% if assigned_tlt or assigned_emp %}
-<div class="card border-0">
+<div class="card card-shadow">
   <div class="card-body">
     <h4 class="card-title" id="Assignment">Assignments<span><p class="float-right">
     <a href="{% url 'Profile:HelpDesktopAssignments' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
     <i class="icon icon-question-circle"></i></a>
   </p></span></h4>
 
-<table class="table table-hover table-sm">
-  <col width="45%">
-  <col width="10%">
-  <col width="15%">
-  <col width="10%">
-  <col width="10%">
-  <col width="4%">
-  <thead>
-    <tr class="no-hover">
-      <th class="align-middle text-center">Vacancy<br>(Reference)</th>
-      <th class="align-middle text-center">Date Assigned</th>
-      <th class="align-middle text-center">Offered Rate</th>
-      <th class="align-middle text-center">Assignment Start</th>
-      <th class="align-middle text-center">Assignment Completed</th>
-      <th class="align-middle text-center"></th>
-    </tr>
-  </thead>
-  <tbody>
-    {% if assigned_tlt %}
-    <tr class="no-hover">
-      <td colspan="6"><h5><strong>As Talent ({{ assigned_tltc }} in Workflow)</strong></h5></td>
-    </tr>
-    {% for psn in assigned_tlt %}
-    <tr>
-      <td class="align-middle text-left">{{ psn.work }}<br>({{ psn.work.ref_no }})</td>
-      <td class="align-middle text-left">{{ psn.date_create|date:"j M Y" }}</td>
-      <td class="align-middle text-center">{{ psn.currency.currency_abv }} {{ psn.rate_offered }}<br>{{psn.get_rate_unit_display}}</td>
-      <td class="align-middle text-center">{{ psn.date_begin|date:"j M Y" }}</td>
-      <td class="align-middle text-center">{{ psn.date_deliverable|date:"j M Y" }}</td>
-        <td>
-          <a href="{% url 'MarketPlace:VacancyDetail_Profile' psn.work.ref_no %}?next={{ request.path|urlencode }}" target="_blank" class="badge badge-info badge-pill" style="width: 7rem;">See Detail</a>
-          <a href="{% url 'Profile:AssignmentAccept' psn.slug %}?next={{ request.path|urlencode }}" class="badge badge-success badge-pill" style="width: 7rem">Accept<br>Assignment</a>
-          {% if psn.tlt_response == 'C' %}
-            <a href="#" class="badge badge-warning badge-pill" style="width: 7rem">Await<br>Information</a>
-          {% else %}
-            <a href="{% url 'Profile:AssignmentClarify' psn.slug %}?next={{ request.path|urlencode }}" class="badge badge-info badge-pill" style="width: 7rem">Request<br>Information</a>
-          {% endif %}
-          <a href="{% url 'Profile:AssignmentDecline' psn.slug %}?next={{ request.path|urlencode }}" class="badge badge-danger badge-pill" style="width: 7rem">Decline<br>Assignment</a>
-      </td>
-    </tr>
-    {% endfor %}
+    <div class="container">
+
+      {% if assigned_tlt %}
+        <p><h5><strong>As Talent ({{ assigned_tltc }} in Workflow)</strong></h5></p>
+        <div class="row my-auto">
+          <div class="col-5 col-no-pad h-100 text-center my-auto">
+            <strong>Vacancy<br>(Reference)</strong>
+          </div>
+          <div class="col-1 col-no-pad h-100 text-center my-auto">
+            <strong>Date Assigned</strong>
+          </div>
+          <div class="col-2 col-no-pad h-100 text-center my-auto">
+            <strong>Offered Rate</strong>
+          </div>
+          <div class="col-1 col-no-pad h-100 text-center my-auto">
+            <strong>Start<br>Date</strong>
+          </div>
+          <div class="col-1 col-no-pad h-100 text-center my-auto">
+            <strong>Complete<br>Date</strong>
+          </div>
+          <div class="col-2 col-no-pad h-100 text-center my-auto">
+            <strong>Options</strong>
+          </div>
+        </div>
+        {% for psn in assigned_tlt %}
+      <div class="row">
+        <div class="card mt-2 card-hover" style="width: 100%;">
+          <div class="card-body">
+            <div class="row my-auto">
+            <div class="col-5 h-100 text-center my-auto">
+              {{ psn.work }}<br><span class="font-grey">({{ psn.work.ref_no }})</span>
+            </div>
+            <div class="col-1 h-100 text-center my-auto">
+              {{ psn.date_create|date:"j M Y" }}
+            </div>
+            <div class="col-2 h-100 text-center my-auto">
+                {{ psn.currency.currency_abv }} {{ psn.rate_offered }}<br>{{psn.get_rate_unit_display}}
+              </div>
+            <div class="col-1 h-100 text-center my-auto">
+              {{ psn.date_begin|date:"j M Y" }}
+            </div>
+            <div class="col-1 h-100 text-center my-auto">
+              {{ psn.date_deliverable|date:"j M Y" }}
+            </div>
+            <div class="col-2 h-100 text-center my-auto">
+              <a href="{% url 'MarketPlace:VacancyDetail_Profile' psn.work.ref_no %}?next={{ request.path|urlencode }}" target="_blank" class="badge badge-info badge-pill" style="width: 7rem;">See Detail</a>
+              <a href="{% url 'Profile:AssignmentAccept' psn.slug %}?next={{ request.path|urlencode }}" class="badge badge-success badge-pill" style="width: 7rem">Accept<br>Assignment</a>
+              {% if psn.tlt_response == 'C' %}
+                <a href="#" class="badge badge-warning badge-pill" style="width: 7rem">Await<br>Information</a>
+              {% else %}
+                <a href="{% url 'Profile:AssignmentClarify' psn.slug %}?next={{ request.path|urlencode }}" class="badge badge-info badge-pill" style="width: 7rem">Request<br>Information</a>
+              {% endif %}
+              <a href="{% url 'Profile:AssignmentDecline' psn.slug %}?next={{ request.path|urlencode }}" class="badge badge-danger badge-pill" style="width: 7rem">Decline<br>Assignment</a>
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
     {% endif %}
+
     {% if assigned_emp %}
-    <tr class="no-hover">
-      <td colspan="6"><h5><strong>As an Employer ({{ assigned_empc }} in Workflow)</strong></h5></td>
-    </tr>
+      <p><h5><strong>As an Employer ({{ assigned_empc }} in Workflow)</strong></h5></p>
+      <div class="row my-auto">
+        <div class="col-5 col-no-pad h-100 text-center my-auto">
+          <strong>Vacancy<br>(Reference)</strong>
+        </div>
+        <div class="col-1 col-no-pad h-100 text-center my-auto">
+          <strong>Date Assigned</strong>
+        </div>
+        <div class="col-2 col-no-pad h-100 text-center my-auto">
+          <strong>Offered Rate</strong>
+        </div>
+        <div class="col-1 col-no-pad h-100 text-center my-auto">
+          <strong>Start<br>Date</strong>
+        </div>
+        <div class="col-1 col-no-pad h-100 text-center my-auto">
+          <strong>Complete<br>Date</strong>
+        </div>
+        <div class="col-2 col-no-pad h-100 text-center my-auto">
+          <strong>Options</strong>
+        </div>
+      </div>
     {% for psn in assigned_emp %}
-    <tr>
-      <td class="align-middle text-left">{{ psn.work }}<br>({{ psn.work.ref_no }})</td>
-      <td class="align-middle text-left">{{ psn.date_create|date:"j M Y" }}</td>
-      <td class="align-middle text-center">{{ psn.currency.currency_abv }} {{ psn.rate_offered }}<br>{{psn.get_rate_unit_display}}</td>
-      <td class="align-middle text-center">{{ psn.date_begin|date:"j M Y" }}</td>
-      <td class="align-middle text-center">{{ psn.date_deliverable|date:"j M Y" }}</td>
-      {% if psn.tlt_response == 'C' %}
-        <td>
-            <a href="{% url 'MarketPlace:RFIView' psn.slug %}?next={{ request.path|urlencode }}" class="badge badge-warning badge-pill" style="width: 7rem">Clarification<br>Requested</a>
-        </td>
-      {% elif psn.tlt_response == 'P' %}
-      <td>
-          <a href="#" class="badge badge-info badge-pill" style="width: 7rem">Response<br>Pending</a>
-      </td>
-      {% elif psn.tlt_response == 'D' %}
-      <td>
-          <a href="#" class="badge badge-danger badge-pill" style="width: 7rem">Vacancy<br>Declined</a>
-          <a href="{% url 'Profile:AssignmentReassign' psn.slug %}?next={{ request.path|urlencode }}" class="badge badge-warning badge-pill" style="width: 7rem; height: 3rem">ReAssign<br>Vacancy</a>
-      </td>
-      {% elif psn.tlt_response == 'A' %}
-      <td>
-          <a href="{% url 'MarketPlace:InterviewList' psn.work.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-success badge-pill" style="width: 7rem">Vacancy<br>Accepted</a>
-      </td>
-      {% endif %}
-      {% if psn.tlt_response == 'D' %}
-      <tr>
-        <td colspan="4">{{ psn.comments }}</td>
-        <th>Reason:</th>
-        <td>{{ psn.tlt_decline_reason }}</td>
-      </tr>
-      {% elif psn.tlt_response == 'A' %}
-      <tr>
-        <td colspan="5">Please contact the Talent directly at <a href="mailto:{{ psn.talent.email }}">{{ psn.talent.email }}</a></td>
-      </tr>
-      {% endif %}
-    {% endfor %}
+      <div class="row">
+        <div class="card mt-2 card-hover" style="width: 100%;">
+          <div class="card-body">
+            <div class="row my-auto">
+            <div class="col-5 h-100 text-center my-auto">
+              {{ psn.work|truncatechars:75 }}<br><span class="font-grey">({{ psn.work.ref_no }})</span>
+            </div>
+            <div class="col-1 h-100 text-center my-auto">
+              {{ psn.date_create|date:"j M Y" }}
+            </div>
+            <div class="col-2 h-100 text-center my-auto">
+                {{ psn.currency.currency_abv }} {{ psn.rate_offered }}<br>{{psn.get_rate_unit_display}}
+              </div>
+            <div class="col-1 h-100 text-center my-auto">
+              {{ psn.date_begin|date:"j M Y" }}
+            </div>
+            <div class="col-1 h-100 text-center my-auto">
+              {{ psn.date_deliverable|date:"j M Y" }}
+            </div>
+            <div class="col-2 h-100 text-center my-auto">
+              {% if psn.tlt_response == 'C' %}
+                <a href="{% url 'MarketPlace:RFIView' psn.slug %}?next={{ request.path|urlencode }}" class="badge badge-warning badge-pill" style="width: 7rem">Clarification<br>Requested</a>
+
+              {% elif psn.tlt_response == 'P' %}
+                <a href="#" class="badge badge-info badge-pill" style="width: 7rem">Response<br>Pending</a>
+
+              {% elif psn.tlt_response == 'D' %}
+                <a href="#" class="badge badge-danger badge-pill" style="width: 7rem">Vacancy<br>Declined</a>
+                <a href="{% url 'Profile:AssignmentReassign' psn.slug %}?next={{ request.path|urlencode }}" class="badge badge-warning badge-pill" style="width: 7rem; height: 3rem">ReAssign<br>Vacancy</a>
+
+              {% elif psn.tlt_response == 'A' %}
+                <a href="{% url 'MarketPlace:InterviewList' psn.work.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-success badge-pill" style="width: 7rem">Vacancy<br>Accepted</a>
+
+              {% endif %}
+            </div>
+            </div>
+            <div class="row">
+              {% if psn.tlt_response == 'D' %}
+              <div class="card-body">
+                <p>{{ psn.comments }}</p>
+                <p class="short-paragraph"><strong>Reason:</strong></p>
+                <p>{{ psn.tlt_decline_reason }}</p>
+              </div>
+              {% elif psn.tlt_response == 'A' %}
+              <div class="card-body">
+                <p>Please contact the Talent directly at <a href="mailto:{{ psn.talent.email }}">{{ psn.talent.email }}</a></p>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
     {% endif %}
-  </tr>
-  </tbody>
-</table>
-</div>
+
+    </div>
+    <br>
+
+  </div>
 </div>
 {% endif %}
 

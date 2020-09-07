@@ -10,7 +10,7 @@
   {% if request.user.subscription == 0 %}
     <div class="row">
       <div class="col-sm-12">
-        <div class="card">
+        <div class="card card-shadow">
           <div class="card-body">
             <h3 class="card-title">Complete Your Registration</h3>
             <p class="card-text">Thank you for registering your account with MyWeXlog.</p>
@@ -30,7 +30,7 @@
   {% if request.user.subscription == 1 %}
     <div class="row">
       <div class="col-sm-12">
-        <div class="card">
+        <div class="card card-shadow">
           <div class="card-body">
             <h3 class="card-title">Registration Upgrade</h3>
             <p class="card-text">You are currently registered with a Passive Account.</p>
@@ -51,7 +51,7 @@
     <div class="row">
 
       <div class="col-sm-6">
-        <div class="card h-100">
+        <div class="card card-shadow h-100">
           <div class="card-body">
             <h4 class="card-title">My Network<span><p class="float-right">
             <a href="{% url 'Profile:HelpDesktopNetwork' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px" data-toggle="tooltip title="Click here for help on this page!">
@@ -67,7 +67,7 @@
       </div>
 
       <div class="col-sm-6 ">
-        <div class="card h-100">
+        <div class="card card-shadow h-100">
           <div class="card-body">
             <h4 class="card-title">Quick Access<span><p class="float-right">
             <a href="{% url 'Profile:HelpDesktopInformation' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px" data-toggle="tooltip title="Click here for help on this page!">
@@ -86,7 +86,7 @@
     <div class="row">
 
       <div class="col-sm-6 pt-3">
-        <div class="card h-100">
+        <div class="card card-shadow h-100">
           <div class="card-body">
             <h4 class="card-title">The Workshop<span><p class="float-right">
             <a href="{% url 'Profile:HelpDesktopWorkshop' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px" data-toggle="tooltip title="Click here for help on this page!">
@@ -101,7 +101,7 @@
       </div>
 
       <div class="col-sm-6 pt-3">
-        <div class="card h-100">
+        <div class="card card-shadow h-100">
           <div class="card-body">
             <h4 class="card-title">Interviews<span><p class="float-right">
             <a href="{% url 'Profile:HelpDesktopWorkflow' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px" data-toggle="tooltip title="Click here for help on this page!">

@@ -1439,6 +1439,7 @@ def MarketHome_test1(request):
     sl = SkillLevel.objects.all()
     wbt = WorkBid.objects.filter(Q(talent=talent) & Q(work__offer_status='O'))
     bsl = BidShortList.objects.filter(Q(talent=talent) & Q(scope__offer_status='O'))
+    vv = set(VacancyViewed.objects.filter(Q(talent=talent) & Q(closed=True)).values_list('vacancy__id', flat=True))
 #    vo = VacancyViewed.objects.filter(closed=False)
 
     #Queryset caching<<<
@@ -1565,6 +1566,9 @@ def MarketHome_test1(request):
     dsi = dsi - wbt_s
 
     dsi = dsi - bsl_s
+
+    #Removing vacancies that have been rejected by the user
+    dsi = dsi - vv
 
     #Recreating the QuerySet
     suitable = tr.filter(id__in=dsi)
