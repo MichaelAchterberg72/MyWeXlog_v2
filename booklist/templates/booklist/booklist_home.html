@@ -5,7 +5,7 @@
 
 {% block content %}
 
-<div class="card border-0">
+<div class="card card-shadow">
   <div class="card-body">
   <h4 class="">Welcome to the Booklist home page!
     <span><p class="float-right">
@@ -21,30 +21,47 @@
         <a href="{% url 'BookList:book-search' %}" class="badge badge-pill badge-primary">Search all Books</a>
 
       {% endif %}
-    <table class="table table-hover table-sm">
-      <col width="55%">
-      <col width="20%">
-      <col width="15%">
-      <col width="10%">
-      <thead>
-        <tr class="no-hover">
-          <th>Book Name</th>
-          <th>Book Type</th>
-          <th>Date Read</th>
-          <th> </th>
-        </tr>
-      </thead>
+      <div class="container">
+        <div class="row my-auto">
+          <div class="col-md-4 h-100 text-center my-auto">
+            <strong>Book Name</strong>
+          </div>
+          <div class="col-md-3 h-100 text-center my-auto">
+            <strong>Book Type</strong>
+          </div>
+          <div class="col-md-3 h-100 text-center my-auto">
+            <strong>Date Read</strong>
+          </div>
+          <div class="col-md-2 h-100 text-center my-auto">
+            <strong></strong>
+          </div>
+        </div>
+      </div>
       {% for b in pageitems %}
-      <tbody>
-        <tr onclick="window.location='{% url 'BookList:BookDetail' b.book.slug %}?next={{ request.path|urlencode }}'">
-          <td>{{ b.book }}</td>
-          <td>{{ b.type }}</td>
-          <td>{{ b.date }}</td>
-          <td><a href="{% url 'BookList:BookDetail' b.book.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary float-right" style="width: 6rem;">Book Detail</a> </td>
-        </tr>
-      </tbody>
+      <div class="row">
+        <div class="card mt-2 card-hover" style="width: 100%;">
+          <div class="card-body">
+            <div class="row my-auto">
+              <div class="col-md-4 h-100 text-center my-auto">
+                {{ b.book }}
+              </div>
+              <div class="col-md-3 h-100 text-center my-auto">
+                {{ b.type }}
+              </div>
+              <div class="col-md-3 h-100 text-center my-auto">
+                {{ b.date }}
+              </div>
+              <div class="col-md-2 h-100 text-center my-auto">
+                <a href="{% url 'BookList:BookDetail' b.book.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary float-right" style="width: 6rem;">Book Detail</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+        <p>You do not have any bookes read listed.</p>
       {% endfor %}
-    </table>
+
     <p>&nbsp</p>
 
     <nav aria-label="Page navigation">

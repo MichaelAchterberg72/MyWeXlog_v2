@@ -4,37 +4,43 @@
 
 {% block content %}
 <h3>Profile for {{ tlt }}</h3>
-<div class="card">
+<div class="card card-shadow">
   <div class="card-body">
     <div class="float-right">
       <a href="{% url 'Talent:APV' tlt vac %}?next={{ request.path|urlencode }}#achievements" class="btn btn-secondary" style="width: 5rem;">Back</a>
     </div>
     <h4 class="card-title">Achievements</h4>
-    <table class="table table-sm">
-      <col width="30%">
-      <col width="10%">
-      <col width="55%">
-      <thead>
-        <tr>
-          <th class="align-middle text-center">Achievement</th>
-          <th class="align-middle text-center">Date Achieved</th>
-          <th class="align-middle text-left">Details</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for a in pageitems %}
-        <tr>
-          <td class="align-middle text-left">{{ a.achievement}}</td>
-          <td class="align-middle text-center">{{ a.date_achieved|date:"j M Y"}}</td>
-          <td class="align-middle text-left">{{ a.description|linebreaks}}</td>
-        </tr>
-        {% empty %}
-        <tr>
-          <td colspan="3">No achievements captured.</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+
+    {% for a in pageitems %}
+    <div class="container">
+    <div class="row">
+      <div class="card mt-2 card-hover" style="width: 100%;">
+        <div class="card-body">
+          <div class="row my-auto">
+            <div class="col-md-4 h-100 text-left my-auto">
+              <p class="short-paragraph"><strong>Achievement:</strong></p>
+              {{ a.achievement}}
+            </div>
+            <div class="col-md-3 h-100 text-left my-auto">
+              <p class="short-paragraph"><strong>Date Achieved:</strong></p>
+              {{ a.date_achieved|date:"j M Y"}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 h-100 text-left my-auto">
+              <br>
+              <p class="short-paragraph"><strong>Description:</strong></p>
+              {{ a.description|linebreaks}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+    {% empty %}
+    <p>No achievements captured.</p>
+    {% endfor %}
+
     <p>&nbsp</p>
 
     <nav aria-label="Page navigation">

@@ -14,32 +14,47 @@
     <div class="col-sm-12">
       <p>Total Projects: <strong>{{ prj_count }}</strong> </p>
 
-          <table class="table table-sm">
-            <col width="45%">
-            <col width="20%">
-            <col width="15%">
-            <col width="20%">
-            <thead>
-              <tr>
-                <th>Project Name</th>
-                <th>Project Owner</th>
-                <th>Project Site</th>
-                <th>Industry</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for b in pageitems %}
-                <tr>
-                  <td>{{ b.0 }}</td>
-                  <td>{{ b.1.0 }}</td>
-                  <td>{{ b.1.1 }}</td>
-                  <td>{{ b.1.2 }}</td>
-                {% empty %}
-                  <td colspan="4">No projects listed.</td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+      <div class="container">
+        <div class="row my-auto">
+          <div class="col-md-4 h-100 text-center my-auto">
+            <strong>Project Name</strong>
+          </div>
+          <div class="col-md-3 h-100 text-center my-auto">
+            <strong>Project Owner</strong>
+          </div>
+          <div class="col-md-3 h-100 text-center my-auto">
+            <strong>Project Site</strong>
+          </div>
+          <div class="col-md-2 h-100 text-center my-auto">
+            <strong>Industry</strong>
+          </div>
+        </div>
+      </div>
+      {% for b in pageitems %}
+      <div class="row">
+        <div class="card mt-2 card-hover" style="width: 100%;">
+          <div class="card-body">
+            <div class="row my-auto">
+              <div class="col-md-4 h-100 text-center my-auto">
+                {{ b.0 }}
+              </div>
+              <div class="col-md-3 h-100 text-center my-auto">
+                {{ b.1.0 }}
+              </div>
+              <div class="col-md-3 h-100 text-center my-auto">
+                {{ b.1.1 }}
+              </div>
+              <div class="col-md-2 h-100 text-center my-auto">
+                {{ b.1.2 }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+        <p>You do not have any projects listed yet.</p>
+      {% endfor %}
+
     <p>&nbsp</p>
 
     <nav aria-label="Page navigation">

@@ -90,10 +90,21 @@
     <div class="post-wrap">
     <div class="post">
       {% with id=s.id %}
-      <div class="post-front" style="display:block;" id="oldCard{{id}}">
+
+      <div class="post-front" {% for vac in s.vacancyviewed_set.all %}
+        {% if vac.viewed == False %} style="display:block;" {% else %}  style="display:none;" {% endif %} {% empty %} style="display:block;" {% endfor %} id="oldCard{{id}}">
+
       <div class="card-body">
-        <div class="row" style="height: 0px;">
+        <div class="row" style="height: 20px;">
           <div class="col-md-12 h-100 my-auto">
+            <form action="{% url 'MarketPlace:MinimiseVacancy' tlt s.id %}" method="post">
+              {% csrf_token %}
+              <button type="submit" name="maximise" class="btn btn-secondary">Maximise!</button>
+            </form>
+            <form action="{% url 'MarketPlace:CloseVacancy' tlt s.id %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-secondary">Close!</button>
+            </form>
             <div class="card-maximise float-right" id="clickMe{{id}}">
               <i class="fa fa-window-maximize"></i>&nbsp
               <span class="close" aria-hidden="true">&times;</span>
@@ -115,7 +126,6 @@
           </div>
         <div class="col-md-2 h-100 text-center my-auto">
           <div class="float-right">
-
         </div>
         {% if request.user.subscription >= 2 %}
         <a href="{% url 'MarketPlace:VacancyDetail' s.ref_no %}" class="badge badge-secondary float-right" style="width: 5rem;">See Detail</a>
@@ -127,10 +137,30 @@
       </div>
       </div>
 
-      <div class="post-back" style="display:none;" id="newCard{{id}}">
+      <div class="post-back" {% for vac in s.vacancyviewed_set.all %}
+        {% if vac.viewed == True %} style="display:block;" {% else %}  style="display:none;" {% endif %} {% empty %} style="display:none;" {% endfor %} id="newCard{{id}}">
+
+
         <div class="card-body">
+          {% for vac in s.vacancyviewed_set.all %}
+            {% if vac.viewed == True %}
+            {{ vac.viewed }}
+            {% else %}
+            This is False
+            {% endif %}
+            {% empty %}
+              This is empty tag
+          {% endfor %}
           <div class="row" style="height: 0px;">
             <div class="col-md-12 h-100 my-auto">
+              <form action="{% url 'MarketPlace:MinimiseVacancy' tlt s.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-secondary">Minimise!</button>
+              </form>
+              <form action="{% url 'MarketPlace:CloseVacancy' tlt s.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-secondary">Close!</button>
+              </form>
             <div class="card-close float-right" id="un-clickMe{{id}}">
               <i class="fa fa-window-minimize"></i>&nbsp
               <span class="close" aria-hidden="true">&times;</span>

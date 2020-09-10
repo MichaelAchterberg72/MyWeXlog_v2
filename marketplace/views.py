@@ -1067,7 +1067,9 @@ def WorkBidView(request, vac):
 @login_required()
 @subscription(2)
 def VacancyDetailView(request, vac):
+    tlt = request.user.id
     vacancy = TalentRequired.objects.filter(ref_no=vac)
+    vac_id = vacancy[0]
     skills = SkillRequired.objects.filter(scope__ref_no=vac)
     deliver = Deliverables.objects.filter(scope__ref_no=vac)
     bch = vacancy[0].companybranch.slug
@@ -1087,6 +1089,8 @@ def VacancyDetailView(request, vac):
     if date1 < date2:
         vacancy.update(offer_status = 'C')
 
+    cu = CustomUser.objects.get(id=tlt)
+    VacancyViewed.objects.create(talent=cu, vacancy=vac_id, read=True,  date_read=timezone.now()).save()
 
     template = 'marketplace/vacancy_detail.html'
     context = {
@@ -1427,6 +1431,7 @@ def MarketHome(request):
 def MarketHome_test1(request):
     #>>>Queryset caching
     talent=request.user
+    tlt = talent.id
     pfl = Profile.objects.filter(talent=talent)
     TalentRequired.objects.filter()
 #    tr = TalentRequired.objects.filter(offer_status='O')
@@ -1440,6 +1445,7 @@ def MarketHome_test1(request):
     wbt = WorkBid.objects.filter(Q(talent=talent) & Q(work__offer_status='O'))
     bsl = BidShortList.objects.filter(Q(talent=talent) & Q(scope__offer_status='O'))
     vv = set(VacancyViewed.objects.filter(Q(talent=talent) & Q(closed=True)).values_list('vacancy__id', flat=True))
+
 #    vo = VacancyViewed.objects.filter(closed=False)
 
     #Queryset caching<<<
@@ -1582,10 +1588,12 @@ def MarketHome_test1(request):
     else:
         dsd = set()
 
-
+#    vvv = VacancyViewed.objects.filter(talent=request.user, vacancy=dsd, viewed=True)
+#    print(vvv)
 
     template = 'marketplace/vacancy_home_test_1.html'
     context ={
+        'tlt': tlt,
         'capacity': capacity,
         'tr_emp_count': tr_emp_count,
         'ipost': ipost,
@@ -1602,6 +1610,45 @@ def MarketHome_test1(request):
         'tot_vac': tot_vac,
     }
     return render(request, template, context)
+
+
+def CloseVacancyAvailableCard(request, tlt, vac):
+    cu = CustomUser.objects.get(id=tlt)
+    tr = TalentRequired.objects.get(id=vac)
+    if request.method == 'POST':
+        VacancyViewed.objects.create(talent=cu, vacancy=tr, closed=True,  date_closed=timezone.now()).save()
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def MinimiseVacancyAvailableCard(request, tlt, vac):
+#    tr = TalentRequired.objects.filter(offer_status='O')
+#    vv = VacancyViewed.objects.filter(Q(talent=tlt) & Q(vacancy=vac))
+#    print(vv)
+#    talent = tlt,
+#    vacancy = vac,
+#    viewed = True,
+#    date_viewed = timezone.now())
+#    vc = vv.viewed
+#    if request.POST['maximise']:
+#        VacancyViewed.objects.create(talent=tlt, vacancy=vac, viewed=True,  date_viewed=timezone.now()).save()
+    cu = CustomUser.objects.get(id=tlt)
+    tr = TalentRequired.objects.get(id=vac)
+#    if request.method == 'POST':
+#        if vc == False:
+#            vv.viewed = True
+#            vv.date_viewed = timezone.now()
+#        else:
+    VacancyViewed.objects.create(talent=cu, vacancy=tr, viewed=True,  date_viewed=timezone.now()).save()
+#        if vc == False:
+#            vv.viewed = True
+#            vv.date_viewed = timezone.now()
+#        elif vc == True:
+#            vv.viewed = False
+#            vv.date_viewed = timezone.now()
+#        vv.save()
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 @login_required()
@@ -1743,6 +1790,10 @@ def VacanciesListView(request):
     dsd = suitable
 
     #Experience Level check & list skills required in vacancies<<<
+    if e_len > 0 and l_len > 0:
+        dsd=dsd
+    else:
+        dsd = set()
 
     try:
         page = int(request.GET.get('page', 1))
@@ -1763,11 +1814,6 @@ def VacanciesListView(request):
     start_index = index - 3 if index >= 3 else 0
     end_index = index + 3 if index <= max_index - 3 else max_index
     page_range = list(paginator.page_range)[start_index:end_index]
-
-    if e_len > 0 and l_len > 0:
-        dsd=dsd
-    else:
-        dsd = set()
 
     template = 'marketplace/vacancy_list.html'
     context ={

@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<div class="card border-0">
+<div class="card card-shadow">
   <div class="card-body">
   <h4 class="">Branches for {{ detail.ename }}
     <span><p class="float-right">
@@ -15,69 +15,83 @@
     {% if request.user.is_authenticated %}
     <p><a href="{% url 'Enterprise:AddBranch' detail.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Add Branch</a><a href="{% url 'Enterprise:EnterpriseHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
     {% endif %}
-    <table class="table table-hover table-sm">
-      <col width="30%">
-      <col width="15%">
-      <col width="15%">
-      <col width="20%">
-      <col width="10%">
-      <col width="10%">
-      <thead>
-        <tr class="no-hover">
-          <th class="align-middle text-center">Branch Name</th>
-          <th class="align-middle text-center">Type</th>
-          <th class="align-middle text-center">Size</th>
-          <th class="align-middle text-center">Rating</th>
-          <th class="align-middle text-center">Number of votes</th>
-          <th class="align-middle text-center"></th>
-        </tr>
-      </thead>
-      {% for b in pageitems %}
-      <tbody>
-        <tr>
-          <td class="align-middle text-center">{{ b.name }}</td>
-          <td class="align-middle text-center">{{ b.type }}</td>
-          <td class="align-middle text-center">{{ b.get_size_display }}</td>
-          {% if request.user.subscription >= 2 %}
-            <td class="align-middle text-center">
-            {% if request.user.subscription >= 1 %}
-              {% if b.rate_count > 4 %}
-                {{ b.average }}
-                <a href="{% url 'Enterprise:EmpRatingDetail' b.slug %}" style="font-size:20px;color:black" target="_blank" data-toggle="tooltip" title="Ratings Breakdown"><i class="fa fa-pie-chart" aria-hidden="true"></i></a>
+    <div class="container">
+      <div class="row my-auto">
+        <div class="col-3 col-no-pad h-100 text-center my-auto">
+          <strong>Branch Name</strong>
+        </div>
+        <div class="col-2 col-no-pad h-100 text-center my-auto">
+          <strong>Type</strong>
+        </div>
+        <div class="col-1 col-no-pad h-100 text-center my-auto">
+          <strong>Size</strong>
+        </div>
+        <div class="col-3 col-no-pad h-100 text-center my-auto">
+          <strong>Rating</strong>
+        </div>
+        <div class="col-2 col-no-pad h-100 text-center my-auto">
+          <strong>Number of votes</strong>
+        </div>
+        <div class="col-1 col-no-pad h-100 text-center my-auto">
+          <strong></strong>
+        </div>
+      </div>
+    </div>
+    {% for b in pageitems %}
+    <div class="row">
+      <div class="card mt-2 card-hover" style="width: 100%;">
+        <div class="card-body">
+          <div class="row my-auto">
+            <div class="col-3 col-no-pad h-100 text-center my-auto">
+              {{ b.name }}
+            </div>
+            <div class="col-2 col-no-pad h-100 text-center my-auto">
+              {{ b.type }}
+            </div>
+            <div class="col-1 col-no-pad h-100 text-center my-auto">
+              {{ b.get_size_display }}
+            </div>
+            {% if request.user.subscription >= 2 %}
+              <div class="col-3 col-no-pad h-100 text-center my-auto">
+              {% if request.user.subscription >= 1 %}
+                {% if b.rate_count > 4 %}
+                  {{ b.average }}
+                  <a href="{% url 'Enterprise:EmpRatingDetail' b.slug %}" style="font-size:20px;color:black" target="_blank" data-toggle="tooltip" title="Ratings Breakdown"><i class="fa fa-pie-chart" aria-hidden="true"></i></a>
+                {% else %}
+                  A minimum of 5 votes<br>is required for a rating.
+                {% endif %}
               {% else %}
-                A minimum of 5 votes<br>is required for a rating.
+                Paid Subscription Required.
               {% endif %}
+              </div>
+              <div class="col-2 col-no-pad h-100 text-center my-auto">
+                {{ b.rate_count }}
+              </div>
             {% else %}
-              Paid Subscription Required.
+              <div class="col-3 col-no-pad h-100 text-center my-auto">
+                <a href="{% url 'Payments:ActiveSubscription' %}" class="badge badge-info text-wrap" style="width: 10rem;">
+                  Active<br>Subscription<br>required
+                </a>
+              </div>
+              <div class="col-2 col-no-pad h-100 text-center my-auto">
+                <a href="{% url 'Payments:ActiveSubscription' %}" class="badge badge-info text-wrap" style="width: 10rem;">
+                  Active<br>Subscription<br>required
+                </a>
+              </div>
             {% endif %}
-            </td>
-            <td class="align-middle text-center">{{ b.rate_count }}</td>
-          {% else %}
-            <td>
-              <span class="badge badge-info text-wrap" style="width: 12rem;">
-                Active Subscription required
-              </span>
-            </td>
-            <td>
-              <span class="badge badge-info text-wrap" style="width: 12rem;">
-                Active Subscription required
-              </span>
-            </td>
-          {% endif %}
-          <td class="align-middle text-center">
-            {% if request.user.is_authenticated %}
-              <a href="{% url 'Enterprise:BranchDetail' b.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary float-right" style="width: 5rem;">Detail</a>
-            {% endif %}
-          </td>
-        </tr>
-      {% empty %}
-      <tr>
-        <td colspan="6">No branches listed - Please add one.</td>
-      </tr>
-      </tbody>
+            <div class="col-1 col-no-pad h-100 text-center my-auto">
+              {% if request.user.is_authenticated %}
+                <a href="{% url 'Enterprise:BranchDetail' b.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary float-right" style="width: 5rem;">Detail</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+      <p>No branches listed - Please add one.</p>
+    {% endfor %}
 
-      {% endfor %}
-    </table>
     <p>&nbsp</p>
 
     <nav aria-label="Page navigation">

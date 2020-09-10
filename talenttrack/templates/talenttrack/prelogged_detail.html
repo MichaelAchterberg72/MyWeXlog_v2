@@ -4,7 +4,7 @@
 {% block title %}{{block.super}}-Experience{% endblock title %}
 
 {% block content %}
-<div class="card">
+<div class="card card-shadow">
   <h5 class="card-header">Experience - Pre-logged Hours<span><p class="float-right"><a href="{% url 'Talent:Home' %}"  class="badge badge-pill badge-primary">Back</a></p></span></h5>
 
   <div class="card-body">
@@ -48,7 +48,7 @@
   </div>
   <div class="row">
     <div class="col-sm-6">
-     <div class="card">
+     <div class="card card-shadow">
        <div class="card-body">
          <p class="float-right"><a href="{% url 'Talent:ColleagueAdd' check.slug %}}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Add Colleague</a></p>
          <h5 class="card-title">Colleagues</h5>

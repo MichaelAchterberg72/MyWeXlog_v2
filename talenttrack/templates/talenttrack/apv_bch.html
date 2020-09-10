@@ -10,33 +10,45 @@
       <a href="{% url 'Talent:APV' tlt vac %}?next={{ request.path|urlencode }}#career" class="btn btn-secondary" style="width: 5rem;">Back</a>
     </div>
     <h4 class="card-title">Career in Summary</h4>
-    <table class="table table-sm">
-      <col width="20%">
-      <col width="20%">
-      <col width="60%">
-      <thead>
-        <tr>
-          <th>Date from</th>
-          <th>Date to</th>
-          <th>Company</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for h in pageitems %}
-          <tr>
-            <td>{{ h.date_from|date:"j M Y" }}</td>
-            {% if h.date_to %}
-              <td>{{ h.date_to|date:"j M Y" }}</td>
-            {% else %}
-              <td>Present</td>
-            {% endif %}
-            <td>{{ h.companybranch }}</td>
-            {% empty %}
-              <td colspan="3">Nothing Captured.</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+    <div class="container">
+      <div class="row my-auto">
+        <div class="col-md-3 h-100 text-center my-auto">
+          <strong>Date from</strong>
+        </div>
+        <div class="col-md-3 h-100 text-center my-auto">
+          <strong>Date to</strong>
+        </div>
+        <div class="col-md-6 h-100 text-center my-auto">
+          <strong>Company</strong>
+        </div>
+      </div>
+    </div>
+    {% for h in pageitems %}
+    <div class="row">
+      <div class="card mt-2 card-hover" style="width: 100%;">
+        <div class="card-body">
+          <div class="row my-auto">
+            <div class="col-md-3 h-100 text-center my-auto">
+              {{ h.date_from|date:"j M Y" }}
+            </div>
+            <div class="col-md-3 h-100 text-center my-auto">
+              {% if h.date_to %}
+                {{ h.date_to|date:"j M Y" }}
+              {% else %}
+                Present
+              {% endif %}
+            </div>
+            <div class="col-md-6 h-100 text-center my-auto">
+              {{ h.companybranch }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+      <p>Nothing captured as yet.</p>
+    {% endfor %}
+
     <p>&nbsp</p>
 
     <nav aria-label="Page navigation">

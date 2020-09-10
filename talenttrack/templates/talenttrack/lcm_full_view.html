@@ -8,112 +8,127 @@
 {% block content %}
 
 <div class="container">
-  <div class="card">
+  <div class="card card-shadow">
     <div class="card-body">
       <form  action="{% url 'BookList:BLB' %}" method="post">
         <input type="hidden" name="next" value="{{ request.GET.next }}">
         {% csrf_token %}
         <button type="submit" class="btn btn-secondary float-right">Back to {{ tlt }}'s Profile</button>
       </form>
-      <h5>Licences, Certifications and Memberships</h5>
+      <h4>Licences, Certifications and Memberships</h4>
     </div>
+    <div class="container">
+      <div class="row my-auto">
+        <div class="col-1 col-no-pad h-100 text-center my-auto">
+          <strong>Type</strong>
+        </div>
+        <div class="col-1 col-no-pad h-100 text-center my-auto">
+          <strong>Register Number</strong>
+        </div>
+        <div class="col-3 col-no-pad h-100 text-center my-auto">
+          <strong>Managing Organisation</strong>
+        </div>
+        <div class="col-2 col-no-pad h-100 text-center my-auto">
+          <strong>Country</strong>
+        </div>
+        <div class="col-2 col-no-pad h-100 text-center my-auto">
+          <strong>Region / State</strong>
+        </div>
+        <div class="col-1 col-no-pad h-100 text-center my-auto">
+          <strong>Date First Issued</strong>
+        </div>
+        <div class="col-1 col-no-pad h-100 text-center my-auto">
+          <strong>Expiry Date</strong>
+        </div>
+        <div class="col-1 col-no-pad h-100 text-center my-auto">
+          <strong>Status</strong>
+        </div>
+      </div>
+    </div>
+    {% for lcm in pageitems %}
     <div class="row">
-      <div class="col-sm-12">
-        <div class="">
-          <div class="">
-            <table class="table table-sm">
-              <col width="10%">
-              <col width="10%">
-              <col width="30%">
-              <col width="20%">
-              <col width="14%">
-              <col width="10%">
-              <col width="10%">
-              <col width="10%">
-              <thead>
-                <tr>
-                  <th class="align-middle text-center">Type</th>
-                  <th class="align-middle text-center">Registered Number</th>
-                  <th class="align-middle text-center">Managing Organisation</th>
-                  <th class="align-middle text-center">Country</th>
-                  <th class="align-middle text-center">Region / State</th>
-                  <th class="align-middle text-center">Date First Issued</th>
-                  <th class="align-middle text-center">Exipry Date</th>
-                  <th class="align-middle text-center">Status</th>
-
-                </tr>
-              </thead>
-              <tbody>
-                {% for lcm in pageitems %}
-                <tr>
-                  <td class="align-middle text-center">{{ lcm.certification }}</td>
-                  <td class="align-middle text-center">{{ lcm.cm_no }}</td>
-                  <td class="align-middle text-center">{{ lcm.companybranch }}</td>
-                  <td class="align-middle text-center">{{ lcm.country.name }}</td>
-                  <td class="align-middle text-center">{{ lcm.region }}</td>
-                  <td class="align-middle text-center">{{ lcm.issue_date|date:"j M Y" }}</td>
-                  {% if lcm.expiry_date %}
-                    <td class="align-middle text-center">{{ lcm.expiry_date|date:"j M Y" }}</td>
-                  {% else %}
-                    <td class="align-middle text-center">None</td>
-                  {% endif %}
-                  {% if lcm.current == True %}
-                    <td class="align-middle text-center">Valid</td>
-                  {% else %}
-                    <td class="align-middle text-center">Expired</td>
-                  {% endif %}
-                </tr>
-                {% empty %}
-                <tr>
-                  <td colspan="5">None captured.</td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-            <p>&nbsp</p>
-
-            <nav aria-label="Page navigation">
-                {% if pageitems.has_other_pages %}
-                  <ul class="pagination">
-                    {% if pageitems.has_previous %}
-                      <li class="page-item">
-                        <a class="page-link" href="?page={{ pageitems.previous_page_number }}" aria-label="Previous">
-                          <span aria-hidden="true">Previous</span>
-                          <span class="sr-only disabled">Previous</span>
-                        </a></li>
-                    {% else %}
-                      <li class="page-link disabled" tabindex="-1"><span>Previous</span></li>
-                    {% endif %}
-
-                    {% if pageitems.number|add:'-4' > 1 %}
-                      <li class="page-link"><a href="?page={{ pageitems.number|add:'-5' }}">&hellip;</a></li>
-                    {% endif %}
-
-                    {% for i in pageitems.paginator.page_range %}
-                      {% if pageitems.number == i %}
-                        <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
-                      {% elif i > pageitems.number|add:'-5' and i < pageitems.number|add:'5' %}
-                        <li class="page-link"><a class="page-item" href="?page={{ i }}">{{ i }}</a></li>
-                      {% endif %}
-                    {% endfor %}
-
-                    {% if pageitems.paginator.num_pages > pageitems.number|add:'4' %}
-                      <li class="page-link"><a href="?page={{ pageitems.number|add:'5' }}">&hellip;</a></li>
-                    {% endif %}
-
-                    {% if pageitems.has_next %}
-                      <li class="page-link"><a href="?page={{ pageitems.next_page_number }}">Next</a></li>
-                    {% else %}
-                      <li class="page-link disabled"><span>Next</span></li>
-                    {% endif %}
-                  </ul>
-                {% endif %}
-            </nav>
+      <div class="card mt-2 card-hover" style="width: 100%;">
+        <div class="card-body">
+          <div class="row my-auto">
+            <div class="col-1 col-no-pad h-100 text-center my-auto">
+              {{ lcm.certification }}
+            </div>
+            <div class="col-1 col-no-pad h-100 text-center my-auto">
+              {{ lcm.cm_no }}
+            </div>
+            <div class="col-3 col-no-pad h-100 text-center my-auto">
+              {{ lcm.companybranch }}
+            </div>
+            <div class="col-2 col-no-pad h-100 text-center my-auto">
+              {{ lcm.country.name }}
+            </div>
+            <div class="col-2 col-no-pad h-100 text-center my-auto">
+              {{ lcm.region }}
+            </div>
+            <div class="col-1 col-no-pad h-100 text-center my-auto">
+              {{ lcm.issue_date|date:"j M Y" }}
+            </div>
+            <div class="col-1 col-no-pad h-100 text-center my-auto">
+              {% if lcm.expiry_date %}
+                {{ lcm.expiry_date|date:"j M Y" }}
+              {% else %}
+                None
+              {% endif %}
+            </div>
+            <div class="col-1 col-no-pad h-100 text-center my-auto">
+              {% if lcm.current == True %}
+                Valid
+              {% else %}
+                Expired
+              {% endif %}
+            </div>
           </div>
         </div>
       </div>
     </div>
+    {% empty %}
+      <p>You do not have any licences, certifications and memberships listed.</p>
+    {% endfor %}
+
+    <p>&nbsp</p>
+
+    <nav aria-label="Page navigation">
+        {% if pageitems.has_other_pages %}
+          <ul class="pagination">
+            {% if pageitems.has_previous %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ pageitems.previous_page_number }}" aria-label="Previous">
+                  <span aria-hidden="true">Previous</span>
+                  <span class="sr-only disabled">Previous</span>
+                </a></li>
+            {% else %}
+              <li class="page-link disabled" tabindex="-1"><span>Previous</span></li>
+            {% endif %}
+
+            {% if pageitems.number|add:'-4' > 1 %}
+              <li class="page-link"><a href="?page={{ pageitems.number|add:'-5' }}">&hellip;</a></li>
+            {% endif %}
+
+            {% for i in pageitems.paginator.page_range %}
+              {% if pageitems.number == i %}
+                <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
+              {% elif i > pageitems.number|add:'-5' and i < pageitems.number|add:'5' %}
+                <li class="page-link"><a class="page-item" href="?page={{ i }}">{{ i }}</a></li>
+              {% endif %}
+            {% endfor %}
+
+            {% if pageitems.paginator.num_pages > pageitems.number|add:'4' %}
+              <li class="page-link"><a href="?page={{ pageitems.number|add:'5' }}">&hellip;</a></li>
+            {% endif %}
+
+            {% if pageitems.has_next %}
+              <li class="page-link"><a href="?page={{ pageitems.next_page_number }}">Next</a></li>
+            {% else %}
+              <li class="page-link disabled"><span>Next</span></li>
+            {% endif %}
+          </ul>
+        {% endif %}
+    </nav>
   </div>
-</div>
 
 {% endblock content %}

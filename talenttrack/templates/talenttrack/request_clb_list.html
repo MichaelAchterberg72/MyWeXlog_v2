@@ -15,6 +15,37 @@
     </form>
     </div>
     <h3>Collaborator Requisitions</h3>
+
+    {% for item in pageitems %}
+    <div class="container">
+    <div class="row">
+      <div class="card mt-2 card-hover" style="width: 100%;">
+        <div class="card-body">
+          <div class="row my-auto">
+            <div class="col-md-4 h-100 text-left my-auto">
+              <p class="short-paragraph"><strong>Achievement:</strong></p>
+              {{ a.achievement}}
+            </div>
+            <div class="col-md-3 h-100 text-left my-auto">
+              <p class="short-paragraph"><strong>Date Achieved:</strong></p>
+              {{ a.date_achieved|date:"j M Y"}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 h-100 text-left my-auto">
+              <br>
+              <p class="short-paragraph"><strong>Description:</strong></p>
+              {{ a.description|linebreaks}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+    {% empty %}
+    <p>No achievements captured.</p>
+    {% endfor %}
+
     <table class="table table-sm">
       <thead>
         <tr>
