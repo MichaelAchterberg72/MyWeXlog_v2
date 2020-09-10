@@ -30,6 +30,7 @@ from users.models import CustomUser
 from django.core.mail import send_mail, EmailMultiAlternatives
 from django.template.loader import get_template, render_to_string
 from django.utils.html import strip_tags
+from django.db.models import Count, Sum, F, Q
 import sendgrid
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import (Mail, Subject, To, ReplyTo, SendAt, Content, From, CustomArg, Header)
@@ -41,7 +42,41 @@ from pinax.notifications.models import send, send_now
 from pinax.referrals.models import Referral
 from django.contrib.contenttypes.models import ContentType
 
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 from .forms import InvitationForm, InvitationLiteForm
+
+
+@login_required()
+def InvitationsSentView(request):
+
+    tlt = request.user
+    invitation_sent = Invitation.objects.filter(Q(invited_by=tlt) & Q(accpeted=False)).order_by('-date_invited')
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(invitation_sent, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+    template = 'invitations/invitations_sent.html'
+    context = {'pageitems': pageitems, 'page_range': page_range}
+    return render(request, template, context)
+
 
 @login_required()
 @csp_exempt

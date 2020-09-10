@@ -97,7 +97,11 @@
 
       <hr>
       Copy and paste the above url address into an email or a Social Network Post for your friends to join MyWeXlog in your network.
-    </p>
+    <hr>
+    <p>View a listing of associates that have not yet accepted:</p>
+    <div class="float-right">
+      <a href="{% url 'Invitation:InvitationsSent' %}" class="btn btn-primary">Invitations</a>
+    </div>
   </div>
 
 {% endblock network %}
