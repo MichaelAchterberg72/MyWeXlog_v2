@@ -147,7 +147,7 @@
                     <a href="{% url 'MarketPlace:DeliverablesEdit' d.scope.ref_no %}" class="badge badge-secondary badge-pill float-right" style="width: 5rem;">Edit</a>
                     <form  action="{% url 'MarketPlace:DeliverablesDelete' d.id %}" method="post">
                       {% csrf_token %}
-                    <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
+                    <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;" onclick="return confirm('Remove deliverable - Are you sure?');">Remove</button>
                     </form>
                   </td>
                 </tr>
@@ -179,7 +179,7 @@
                     <td>{{ s.skills }}</td>
                     <td><form  action="{% url 'MarketPlace:SkillDelete' s.id %}" method="post">
                       {% csrf_token %}
-                      <button type="submit" class="badge badge-danger badge-pill float-right" style="width: 5rem;">Remove</button>
+                      <button type="submit" class="badge badge-danger badge-pill float-right" style="width: 5rem;" onclick="return confirm('Remove skill - Are you sure?');">Remove</button>
                     </form></td>
                   </tr>
                   {% endfor %}

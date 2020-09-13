@@ -5,68 +5,167 @@
     {{block.super}}-Skill List
 {% endblock title %}
 
+{% block Style %}
+  <style>
+    .format_chkbox{
+    height: 1.25em;
+    width: 1.25em;
+    }
+  </style>
+{% endblock Style %}
+
 {% block content %}
+
 <div class="border-0">
   <div class="card-body">
-  <h4 class="">MyWeXlog Skills</h4>
-  <p>There are {{ count }} skills currently listed.</p>
-  <div class="row">
-    <div class="col-sm-6">
-      <div class="card">
-        <div class="card-body">
-        <h5 class="card-title">Demanded Skills</h5>
-        <p>This is a count of the times a skill has been listed as being needed in a vacancy.</p>
-        <table class="table table-hover table-sm">
-          <thead>
-            <tr class="no-hover">
-              <th class="align-middle text-center">Skill</th>
-              <th class="align-middle text-center">Demand Occurrence</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for dd in demand_set.items %}
-              <tr>
-                <td class="align-middle text-center">{{ dd.0 }}</td>
-                <td class="align-middle text-center">{{ dd.1 }}</td>
-            {% empty %}
-                <td colspan="3">No skills currently in the environment.</td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+    <div class="card text-center">
+      <h4 class="">MyWeXlog Skills</h4>
+      <p>There are {{ count }} skills currently listed.</p>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Demanded Skills</h5>
+            <p>This is a count of the times a skill has been listed as being needed in a vacancy.</p>
+            <div class="float-right">
+              <input type="text" id="searchD" placeholder="Search..." data-toggle="tooltip" title="Search this list for a skill. Select the checkbox to the right to synchronise the demand list.">
+              <input type="checkbox" id="linkD" class="format_chkbox" data-toggle="tooltip" title="Synchronise the lists">
+            </div>
+            <br>
+              <h5 class="text-center"><strong>Skill ( Occurrence )</strong></h5>
+              <ul id="demand" class="list-group">
+                {% for dd in demand_set.items %}
+                  <li class="list-group-item"><strong>{{ dd.0 }}</strong>  ( {{ dd.1 }} )</li>
+                {% endfor %}
+              </ul>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="col-sm-6">
-      <div class="card">
-        <div class="card-body">
-        <h5 class="card-title">Listed Skills</h5>
-        <p>These are the skills that are currently listed in the MyWeXlog environment.</p>
-        <table class="table table-hover table-sm">
-          <thead>
-            <tr class="no-hover">
-              <th class="align-middle text-center">Skill</th>
-              <th class="align-middle text-center">Occurrence</th>
-              <th class="align-middle text-center">Hours Logged</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for ss in skill_set.items %}
-              <tr>
-                <td class="align-middle text-center">{{ ss.0 }}</td>
-                <td class="align-middle text-center">{{ ss.1.0|intcomma }}</td>
-                <td class="align-middle text-center">{{ ss.1.1|intcomma }}</td>
-            {% empty %}
-                <td colspan="3">No skills currently in the environment.</td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+      <div class="col-sm-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Listed Skills</h5>
+            <p>These are the skills that are currently listed in the MyWeXlog environment.</p>
+            <div class="float-right">
+              <input type="text" id="searchE" placeholder="Search..." data-toggle="tooltip" title="Search this list for a skill. Select the checkbox to the right to synchronise the demand list.">
+              <input type="checkbox" id="linkE"  class="format_chkbox" data-toggle="tooltip" title="Synchronise the lists">
+            </div>
+            <br>
+              <h5 class="text-center"><strong>Skill ( Hours )</strong></h5>
+              <ul class="list-group" id="exists">
+                {% for ss in skill_set.items %}
+                  <li class="list-group-item"><strong>{{ ss.0 }}</strong>  ( {{ ss.1.1 }} )</li>
+                {% endfor %}
+              </ul>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-</div>
 
 {% endblock content %}
+
+{% block Script %}
+<script type="text/javascript">
+  var boxD = document.getElementById('linkD');
+  var boxE = document.getElementById('linkE');
+
+  boxD.addEventListener('click', syncBoxD)
+  boxE.addEventListener('click', syncBoxE)
+
+  function syncBoxD(e){
+    if(boxD.checked == true){
+      boxE.checked = true;
+    }else{
+      boxE.checked = false;
+    }
+  }
+
+  function syncBoxE(e){
+    if(boxE.checked == true){
+      boxD.checked = true;
+    }else{
+      boxD.checked = false;
+    }
+  }
+
+  var demList = document.getElementById('demand');
+  var exeList = document.getElementById('exists');
+
+
+  var filterDemand = document.getElementById('searchD');
+  var filterExists = document.getElementById('searchE');
+
+  filterDemand.addEventListener('keyup', filterDemandItems);
+  filterExists.addEventListener('keyup', filterExistsItems);
+
+  function filterDemandItems(e){
+    // convert text to lowercase
+   var text = e.target.value.toLowerCase();
+
+   var demitems = demList.getElementsByTagName('li');
+
+   // Convert to an array
+   Array.from(demitems).forEach(function(demitem){
+
+     var demitemName = demitem.firstChild.textContent;
+
+     if(demitemName.toLowerCase().indexOf(text) != -1){
+       demitem.style.display = 'block';
+     } else {
+       demitem.style.display = 'none';
+     }
+ });
+   if(boxD.checked == true){
+     var exeitems = exeList.getElementsByTagName('li');
+
+     // Convert to an array
+     Array.from(exeitems).forEach(function(exeitem){
+
+       var exeitemName = exeitem.firstChild.textContent;
+
+       if(exeitemName.toLowerCase().indexOf(text) != -1){
+         exeitem.style.display = 'block';
+       } else {
+         exeitem.style.display = 'none';
+       }
+   });
+ }
+}
+
+function filterExistsItems(e){
+
+ var text = e.target.value.toLowerCase();
+
+ var exeitems = exeList.getElementsByTagName('li');
+
+ Array.from(exeitems).forEach(function(exeitem){
+
+   var exeitemName = exeitem.firstChild.textContent;
+
+   if(exeitemName.toLowerCase().indexOf(text) != -1){
+     exeitem.style.display = 'block';
+   } else {
+     exeitem.style.display = 'none';
+   }
+});
+ if(boxD.checked == true){
+   var demitems = demList.getElementsByTagName('li');
+   // Convert to an array
+   Array.from(demitems).forEach(function(demitem){
+
+     var demitemName = demitem.firstChild.textContent;
+
+     if(demitemName.toLowerCase().indexOf(text) != -1){
+       demitem.style.display = 'block';
+     } else {
+       demitem.style.display = 'none';
+     }
+  });
+}
+}
+</script>
+{% endblock Script %}
