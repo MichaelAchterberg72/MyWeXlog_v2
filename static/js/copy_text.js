@@ -1,6 +1,6 @@
 document.getElementById("myButton").addEventListener("click", myFunction);
 
-function myFunction() {
+function myFunction(e) {
   var copyText = document.getElementById("myInput");
   copyText.select();
   copyText.setSelectionRange(0, 99999)

@@ -38,7 +38,7 @@
                 <td>
                   <form  action="{% url 'Profile:OnlineDelete' pk=s.id tlt=s.talent.alias %}" method="post">
                     {% csrf_token %}
-                    <button type="submit" class="badge badge-danger badge-pill">Remove</button>
+                    <button type="submit" class="badge badge-danger badge-pill" onclick="return confirm('Remove {{ s.profileurl }} - Are you sure?');">Remove</button>
                   </form>
                 </td>
               </tr>
@@ -70,7 +70,7 @@
                   <a href="{% url 'Profile:LanguageEdit' tlt=request.user.alias lang=l.slug %}" class="badge badge-secondary badge-pill" style="width: 5rem;">Edit</a>
                   <form  action="{% url 'Profile:LanguageDelete' lang_id=l.id tlt=l.talent.alias %}" method="post">
                     {% csrf_token %}
-                    <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
+                    <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;" onclick="return confirm('Remove {{ l.language }} - Are you sure?');">Remove</button>
                   </form>
                 </td>
               </tr>
@@ -96,7 +96,7 @@
             <a href="{% url 'Profile:EmailStatus' tlt=e.talent.alias eml=e.slug %}" class="badge badge-primary badge-pill">Change Status</a>
             <form  action="{% url 'Profile:EmailDelete' pk=e.id tlt=e.talent.alias %}" method="post">
               {% csrf_token %}
-              <button type="submit" class="badge badge-danger badge-pill">Remove</button>
+              <button type="submit" class="badge badge-danger badge-pill" onclick="return confirm('Remove {{ e.email }} - Are you sure?');">Remove</button>
             </form>
           </span>
         </li>
@@ -113,7 +113,7 @@
             <a href="{% url 'Profile:EmailStatus' tlt=e.talent.alias eml=e.slug %}" class="badge badge-primary badge-pill">Change Status</a>
             <form  action="{% url 'Profile:EmailDelete' pk=e.id tlt=e.talent.alias %}" method="post">
               {% csrf_token %}
-              <button type="submit" class="badge badge-danger badge-pill">Remove</button>
+              <button type="submit" class="badge badge-danger badge-pill" onclick="return confirm('Remove {{ e.email }} - Are you sure?');">Remove</button>
             </form>
           </span>
         </li>
@@ -210,7 +210,7 @@
               <a href="{% url 'Talent:LCMEdit' lcm.slug %}" class="badge badge-secondary" style="width: 4rem;">Update</a>
               <form  action="{% url 'Talent:LCMDelete' pk=lcm.id tlt=lcm.talent.alias %}" method="post">
                 {% csrf_token %}
-                <button type="submit" class="badge badge-danger" style="width: 4rem;">Remove</button>
+                <button type="submit" class="badge badge-danger" style="width: 4rem;" onclick="return confirm('Remove {{ lcm.certification }} - Are you sure?');">Remove</button>
               </form>
             </td>
           </tr>
@@ -262,7 +262,7 @@
               <a href="{% url 'Talent:AchieveEdit' a.slug %}" class="badge badge-secondary" style="width: 4rem;">Edit</a>
               <form  action="{% url 'Talent:AchieveDelete' ach_i=a.id tlt=a.talent.alias %}" method="post">
                 {% csrf_token %}
-                <button type="submit" class="badge badge-danger" style="width: 4rem;">Remove</button>
+                <button type="submit" class="badge badge-danger" style="width: 4rem;" onclick="return confirm('Remove {{ a.achievement }} - Are you sure?');">Remove</button>
               </form>
             </td>
           </tr>
@@ -335,7 +335,7 @@
             <td>
               <form  action="{% url 'Profile:FileDelete' f.id %}" method="post">
                 {% csrf_token %}
-                <button type="submit" class="badge badge-danger badge-pill float-right">Delete</button>
+                <button type="submit" class="badge badge-danger badge-pill float-right" onclick="return confirm('Delete {{ f.title }} - Are you sure?');">Delete</button>
               </form>
             </td>
           </tr>
@@ -392,7 +392,7 @@
                 <a href="{% url 'Profile:PassportEditView' psp=p.slug tlt=p.talent.alias %}" class="badge badge-secondary badge-pill" style="width: 4rem;">Edit</a>
                 <form  action="{% url 'Profile:PassportDelete' pk=p.id tlt=p.talent.alias %}" method="post">
                   {% csrf_token %}
-                  <button type="submit" class="badge badge-danger badge-pill" style="width: 4rem;">Remove</button>
+                  <button type="submit" class="badge badge-danger badge-pill" style="width: 4rem;" onclick="return confirm('Remove passport {{ p.passport_number }} - Are you sure?');">Remove</button>
                 </form>
             </td>
           </tr>
@@ -516,7 +516,7 @@
               <td>
                 <form  action="{% url 'Profile:PhoneDelete' phone.id %}" method="post">
                   {% csrf_token %}
-                  <button type="submit" class="badge badge-danger badge-pill">Remove</button>
+                  <button type="submit" class="badge badge-danger badge-pill" onclick="return confirm('Remove {{ phone.number }} - Are you sure?');">Remove</button>
                 </form>
               </td>
             </tr>
