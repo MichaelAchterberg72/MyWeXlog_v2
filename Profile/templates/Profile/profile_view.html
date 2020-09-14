@@ -408,8 +408,21 @@
 <div class="card-group">
   <div class="card">
     <div class="card-body">
-
-      <h5 class="card-title">Physical Address <a href="{% url 'Profile:PhysicalAddress' %}" class="badge badge-secondary float-right">Edit</a></h5>
+      <div class="btn-group float-right">
+        <div class="btn-group mr-2">
+          <a href="{% url 'Profile:PhysicalAddress' %}" class="badge badge-secondary">
+            Edit
+          </a>
+        </div>
+        <div class="btn-group mr-2">
+          <a href="{% url 'Profile:CopyPhyAdd' %}" class="badge badge-dark" data-toggle="tooltip" title="Copy Physical Address to Postal Address" onclick="return confirm('This will over write all information currently in your postal address - Are you sure?');">
+            Copy
+          </a>
+        </div>
+      </div>
+      <h5 class="card-title">
+        Physical Address
+      </h5>
       <table class="table table-sm">
         <thead>
         </thead>
@@ -453,7 +466,21 @@
   </div>
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title">Postal Address <a href="{% url 'Profile:PostalAddress' %}" class="badge badge-secondary float-right">Edit</a></h5>
+      <div class="btn-group float-right">
+        <div class="btn-group mr-2">
+          <a href="{% url 'Profile:PostalAddress' %}" class="badge badge-secondary float-right">
+            Edit
+          </a>
+        </div>
+        <div class="btn-group mr-2">
+          <a href="{% url 'Profile:CopyPhyAdd' %}" class="badge badge-dark" data-toggle="tooltip" title="Copy Physical Address" onclick="return confirm('This will over write all information currently in your postal address - Are you sure?');">
+            Copy
+          </a>
+        </div>
+      </div>
+      <h5 class="card-title">
+        Postal Address
+      </h5>
       <table class="table table-sm">
         <thead>
         </thead>
