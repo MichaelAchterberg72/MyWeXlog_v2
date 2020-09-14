@@ -17,6 +17,7 @@ urlpatterns = [
         path('email/delete/<int:pk>/<slug:tlt>/', views.EmailDelete, name='EmailDelete'),
         path('address/physical/', views.PhysicalAddressView, name='PhysicalAddress'),
         path('address/postal/', views.PostalAddressView, name='PostalAddress'),
+        path('physical-addy-copy/', views.copy_phy_address, name='CopyPhyAdd'),
         path('phone/add/', views.PhoneNumberAdd, name='PhoneNumberAdd'),
         path('online/add/<slug:tlt>/', views.OnlineProfileAdd, name='OnlineProfileAdd'),
         path('online/delete/<int:pk>/<slug:tlt>/', views.OnlineDelete, name='OnlineDelete'),

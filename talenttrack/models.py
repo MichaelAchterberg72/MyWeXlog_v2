@@ -83,7 +83,8 @@ def CertFilename(instance, filename):
 
 class LicenseCertification(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    certification = models.ForeignKey(Result, on_delete=models.PROTECT, verbose_name='Proffessional Memberships / Certification name')
+    certification = models.ForeignKey(Result, on_delete=models.PROTECT, verbose_name='Proffessional Memberships / Certification type')
+    cert_name = models.CharField(max_length=150, null=True)
     country = CountryField()
     region = models.ForeignKey(Region, on_delete=models.PROTECT, blank=True, null=True)
     cm_no = models.CharField('Membership / Credential Number', max_length=40)

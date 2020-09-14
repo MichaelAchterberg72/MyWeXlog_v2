@@ -71,6 +71,24 @@ from analytics.models import ObjectViewed
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+#we back to theis isssd
+def copy_phy_address(request):
+    talent = request.user
+    qs_addr = PhysicalAddress.objects.get(talent=talent)
+    qs_post = PostalAddress.objects.filter(talent=talent)
+    qs_post.update(
+        line1=qs_addr.line1,
+        line2=qs_addr.line2,
+        line3=qs_addr.line3,
+        country=qs_addr.country,
+        region=qs_addr.region,
+        city=qs_addr.city,
+        suburb=qs_addr.suburb,
+        code=qs_addr.code,
+        )
+
+    return redirect(reverse('Profile:ProfileView')+'#phone')
+
 
 def ProfileViewedReport(request):
     tlt = request.user

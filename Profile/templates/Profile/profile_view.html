@@ -157,10 +157,11 @@
       <h5 class="card-title" >Licenses, Certifications and Memberships <a href="{% url 'Talent:LCMCap'  %}?next={{ request.path|urlencode }}" class="badge badge-primary float-right">Add</a></h5>
       <table class="table table-sm">
         <col width="8%">
-        <col width="8%">
-        <col width="30%">
-        <col width="20%">
         <col width="14%">
+        <col width="8%">
+        <col width="20%">
+        <col width="20%">
+        <col width="10%">
         <col width="10%">
         <col width="10%">
         <col width="10%">
@@ -168,6 +169,7 @@
         <thead>
           <tr>
             <th class="align-middle text-center">Type</th>
+            <th class="align-middle text-center">Name</th>
             <th class="align-middle text-center">Registered Number</th>
             <th class="align-middle text-center">Managing Organisation</th>
             <th class="align-middle text-center">Country</th>
@@ -182,6 +184,7 @@
           {% for lcm in lcm_qs %}
           <tr>
             <td class="align-middle text-center">{{ lcm.certification }}</td>
+            <td class="align-middle text-center">{{ lcm.cert_name }}</td>
             <td class="align-middle text-center">{{ lcm.cm_no }}</td>
             <td class="align-middle text-center">{{ lcm.companybranch }}</td>
             <td class="align-middle text-center">{{ lcm.country.name }}</td>
@@ -408,8 +411,21 @@
 <div class="card-group">
   <div class="card">
     <div class="card-body">
-
-      <h5 class="card-title">Physical Address <a href="{% url 'Profile:PhysicalAddress' %}" class="badge badge-secondary float-right">Edit</a></h5>
+      <div class="btn-group float-right">
+        <div class="btn-group mr-2">
+          <a href="{% url 'Profile:PhysicalAddress' %}" class="badge badge-secondary">
+            Edit
+          </a>
+        </div>
+        <div class="btn-group mr-2">
+          <a href="{% url 'Profile:CopyPhyAdd' %}" class="badge badge-dark" data-toggle="tooltip" title="Copy Physical Address to Postal Address" onclick="return confirm('This will over write all information currently in your postal address - Are you sure?');">
+            Copy
+          </a>
+        </div>
+      </div>
+      <h5 class="card-title">
+        Physical Address
+      </h5>
       <table class="table table-sm">
         <thead>
         </thead>
@@ -453,7 +469,21 @@
   </div>
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title">Postal Address <a href="{% url 'Profile:PostalAddress' %}" class="badge badge-secondary float-right">Edit</a></h5>
+      <div class="btn-group float-right">
+        <div class="btn-group mr-2">
+          <a href="{% url 'Profile:PostalAddress' %}" class="badge badge-secondary float-right">
+            Edit
+          </a>
+        </div>
+        <div class="btn-group mr-2">
+          <a href="{% url 'Profile:CopyPhyAdd' %}" class="badge badge-dark" data-toggle="tooltip" title="Copy Physical Address" onclick="return confirm('This will over write all information currently in your postal address - Are you sure?');">
+            Copy
+          </a>
+        </div>
+      </div>
+      <h5 class="card-title">
+        Postal Address
+      </h5>
       <table class="table table-sm">
         <thead>
         </thead>
