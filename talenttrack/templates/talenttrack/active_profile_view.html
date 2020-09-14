@@ -129,13 +129,15 @@
               <h5>Licenses, Certifications & Memberships</h5>
             </div>
             <table class="table table-sm">
-              <col width="25%">
+              <col width="15%">
+              <col width="20%">
               <col width="35%">
-              <col width="20%">
-              <col width="20%">
+              <col width="15%">
+              <col width="15%">
               <thead>
                 <tr>
                   <th class="align-middle text-center">Type</th>
+                  <th class="align-middle text-center">Name</th>
                   <th class="align-middle text-center">Managing Institution</th>
                   <th class="align-middle text-center">Country</th>
                   <th class="align-middle text-center">Region</th>
@@ -145,6 +147,7 @@
                 {% for lcm in membership_qs %}
                   <tr>
                     <td class="align-middle text-center">{{ lcm.certification }}</td>
+                    <td class="align-middle text-center">{{ lcm.cert_name }}</td>
                     <td class="align-middle text-center">{{ lcm.companybranch }}</td>
                     <td class="align-middle text-center">{{ lcm.country.name }}</td>
                     <td class="align-middle text-center">{{ lcm.region }}</td>

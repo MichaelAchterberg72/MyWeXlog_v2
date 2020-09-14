@@ -157,10 +157,11 @@
       <h5 class="card-title" >Licenses, Certifications and Memberships <a href="{% url 'Talent:LCMCap'  %}?next={{ request.path|urlencode }}" class="badge badge-primary float-right">Add</a></h5>
       <table class="table table-sm">
         <col width="8%">
-        <col width="8%">
-        <col width="30%">
-        <col width="20%">
         <col width="14%">
+        <col width="8%">
+        <col width="20%">
+        <col width="20%">
+        <col width="10%">
         <col width="10%">
         <col width="10%">
         <col width="10%">
@@ -168,6 +169,7 @@
         <thead>
           <tr>
             <th class="align-middle text-center">Type</th>
+            <th class="align-middle text-center">Name</th>
             <th class="align-middle text-center">Registered Number</th>
             <th class="align-middle text-center">Managing Organisation</th>
             <th class="align-middle text-center">Country</th>
@@ -182,6 +184,7 @@
           {% for lcm in lcm_qs %}
           <tr>
             <td class="align-middle text-center">{{ lcm.certification }}</td>
+            <td class="align-middle text-center">{{ lcm.cert_name }}</td>
             <td class="align-middle text-center">{{ lcm.cm_no }}</td>
             <td class="align-middle text-center">{{ lcm.companybranch }}</td>
             <td class="align-middle text-center">{{ lcm.country.name }}</td>
