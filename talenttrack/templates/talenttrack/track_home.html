@@ -402,7 +402,7 @@
         </thead>
         {% for e in experience %}
         <tbody>
-          <tr onclick="window.location='{% url 'Talent:ExperienceDetail' e.slug %}'">
+          <tr>
             <td class="align-middle text-center">{{ e.company }}</td>
             <td class="align-middle text-center">{{ e.date_from|date:"j M Y" }}</td>
             <td class="align-middle text-center">{{ e.date_to|date:"j M Y" }}</td>
@@ -456,7 +456,7 @@
       </thead>
       {% for p in prelog %}
       <tbody>
-        <tr onclick="window.location='{% url 'Talent:PreLogDetail' p.slug %}'">
+        <tr>
           <td class="align-middle text-center">{{ p.company }}</td>
           <td class="align-middle text-center">{{ p.date_from|date:"j M Y" }}</td>
           <td class="align-middle text-center">{{ p.date_to|date:"j M Y" }}</td>
