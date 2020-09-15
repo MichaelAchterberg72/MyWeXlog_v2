@@ -16,18 +16,18 @@
 
     <div class="card card-shadow">
       <div class="card-body">
-        <h4>Unsuitable Applicants</h4>
-        <p>There are a total of {{ interview_n_count }} unsuitable applicants listed.</p>
+        <h4>Rejected Applicants</h4>
+        <p>There are a total of {{ rej_bid_n_count }} rejected applicants{% if rej_bid_n_count >= 5 %}, we only list the first 5 here.{% else %}.{% endif %}</p>
 
         <div class="row">
           <div class="col-12">
-          {% if unsuitable_applicants_list_view %}
-            <form  action="{% url 'MarketPlace:UnSuitableApplicanctExpand' %}" method="post">
+          {% if rejected_applicants_list_view %}
+            <form  action="{% url 'MarketPlace:RejectedApplicanctExpand' %}" method="post">
               {% csrf_token %}
               <button type="submit" class="btn btn-primary float-right" style="width:8rem;">Expanded</button>
             </form>
           {% else %}
-            <form  action="{% url 'MarketPlace:UnSuitableApplicanctExpand' %}" method="post">
+            <form  action="{% url 'MarketPlace:RejectedApplicanctExpand' %}" method="post">
               {% csrf_token %}
               <button type="submit" class="btn btn-primary float-right" style="width:8rem;">List</button>
             </form>
@@ -35,7 +35,7 @@
           </div>
         </div>
 
-          {% if unsuitable_applicants_list_view %}
+          {% if rejected_applicants_list_view %}
             {% include 'marketplace/list_view_headings.html' %}
             {% for key in pageitems %}
             <div class="row">
@@ -44,9 +44,9 @@
                   <div class="row my-auto">
                     {% include 'marketplace/list_view_fields.html' %}
                     <div class="col-1 col-no-pad h-100 text-center my-auto">
-                      <form  action="{% url 'MarketPlace:UnsuitableSuitable' tlt=key.1.ro.0.4  vac=scope.ref_no %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit" class="badge badge-success badge-pill float-right" style="width: 6rem">Suitable</button>
+                      <form  action="{% url 'MarketPlace:ApplicantsBidShortList' tlt=key.1.ro.0.4  vac=scope.ref_no %}" method="post" name="active">
+                      {% csrf_token %}
+                      <button type="submit"  class="badge badge-success badge-pill float-right" style="width: 6rem;">Short-list</button>
                       </form>
                       <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill float-right" style="width: 6rem">View Profile</a>
                     </div>
@@ -55,7 +55,7 @@
               </div>
             </div>
             {% empty %}
-              <p>No talent identified as unsuitbale for this scope.</p>
+              <p>No talent has been rejected for this scope.</p>
             {% endfor %}
             {% else %}
             {% for key in pageitems %}
@@ -66,9 +66,9 @@
                   <div class="row my-auto">
                     <div class="col-md-12 h-100">
                       <div class="row my-auto float-right">
-                        <form  action="{% url 'MarketPlace:UnsuitableSuitable' tlt=key.1.ro.0.4  vac=scope.ref_no %}" method="post">
-                          {% csrf_token %}
-                          <button type="submit" class="btn btn-success-outline" style="width: 10rem">Suitable</button>
+                        <form  action="{% url 'MarketPlace:ApplicantsBidShortList' tlt=key.1.ro.0.4  vac=scope.ref_no %}" method="post" name="active">
+                        {% csrf_token %}
+                        <button type="submit"  class="btn btn-success-outline" style="width: 10rem;">Short-list</button>
                         </form>&nbsp
                         <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="btn btn-secondary-outline" style="width: 10rem">View Profile</a>
                       </div>
@@ -78,49 +78,12 @@
               </div>
             </div>
             {% empty %}
-              <p>No talent identified as unsuitbale for this scope.</p>
+              <p>No talent has been rejected for this scope.</p>
             {% endfor %}
             {% endif %}
 
-      <nav aria-label="Page navigation">
-          {% if pageitems.has_other_pages %}
-            <ul class="pagination">
-              {% if pageitems.has_previous %}
-                <li class="page-item">
-                  <a class="page-link" href="?page={{ pageitems.previous_page_number }}" aria-label="Previous">
-                    <span aria-hidden="true">Previous</span>
-                    <span class="sr-only disabled">Previous</span>
-                  </a></li>
-              {% else %}
-                <li class="page-link disabled" tabindex="-1"><span>Previous</span></li>
-              {% endif %}
-
-              {% if pageitems.number|add:'-4' > 1 %}
-                <li class="page-link"><a href="?page={{ pageitems.number|add:'-5' }}">&hellip;</a></li>
-              {% endif %}
-
-              {% for i in pageitems.paginator.page_range %}
-                {% if pageitems.number == i %}
-                  <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
-                {% elif i > pageitems.number|add:'-5' and i < pageitems.number|add:'5' %}
-                  <li class="page-link"><a class="page-item" href="?page={{ i }}">{{ i }}</a></li>
-                {% endif %}
-              {% endfor %}
-
-              {% if pageitems.paginator.num_pages > pageitems.number|add:'4' %}
-                <li class="page-link"><a href="?page={{ pageitems.number|add:'5' }}">&hellip;</a></li>
-              {% endif %}
-
-              {% if pageitems.has_next %}
-                <li class="page-link"><a href="?page={{ pageitems.next_page_number }}">Next</a></li>
-              {% else %}
-                <li class="page-link disabled"><span>Next</span></li>
-              {% endif %}
-            </ul>
-          {% endif %}
-      </nav>
-
     </div>
+  </div>
   </div>
 </div>
 

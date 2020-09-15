@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<div class="card border-0" style="width: 100%;">
+<div class="card card-shadow" style="width: 100%;">
   <div class="card-body">
     <div class="float-right">
       <form  action="{% url 'BookList:BLB' %}" method="post">
@@ -14,43 +14,63 @@
     </form>
     </div>
     <h4 class="card-title">My Workshop</h4>
-    <table class="table table-hover table-sm">
-      <thead>
-        <tr class="no-hover">
-          <th class="align-middle text-center">Vacancy<br>Ref No.</th>
-          <th class="align-middle text-center">Task Complete<br>(Me)</th>
-          <th class="align-middle text-center">Task Complete<br>(Employer)</th>
-          <th class="align-middle text-center">Pay Rate</th>
-          <th class="align-middle text-center">Due Date</th>
-          <th class="align-middle text-center">Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="no-hover">
-          <th colspan="6">Open Assignments</th>
-        </tr>
-        {% for o in wit_qsao %}
-          <tr>
-            <td class="align-middle text-center">{{ o.work.title|truncatechars:37 }}<br>{{ o.work.ref_no }}</td>
-            {% if o.assignment_complete_tlt == False %}
-              <td class="align-middle text-center">
+    <div class="container">
+      <div class="row my-auto">
+        <div class="col-4 col-no-pad h-100 text-center my-auto">
+          <strong>Vacancy<br>Ref No.</strong>
+        </div>
+        <div class="col-2 col-no-pad h-100 text-center my-auto">
+          <strong>Task Complete (Talent)</strong>
+        </div>
+        <div class="col-2 col-no-pad h-100 text-center my-auto">
+          <strong>Task Complete<br>(Me)</strong>
+        </div>
+        <div class="col-2 col-no-pad h-100 text-center my-auto">
+          <strong>Pay Rate</strong>
+        </div>
+        <div class="col-1 h-100 text-center my-auto">
+          <strong>Due Date</strong>
+        </div>
+        <div class="col-1 col-no-pad h-100 text-center my-auto">
+          <strong>Action</strong>
+        </div>
+      </div>
+    </div>
+    <br>
+    <div class="row my-auto">
+      <p><strong>Open Assignments</strong></p>
+    </div>
+    {% for o in wit_qsao %}
+    <div class="row">
+      <div class="card mt-2 card-hover" style="width: 100%;">
+        <div class="card-body">
+          <div class="row my-auto">
+            <div class="col-4 col-no-pad h-100 text-center my-auto">
+              {{ o.work.title|truncatechars:37 }}<br>{{ o.work.ref_no }}
+            </div>
+            <div class="col-2 col-no-pad h-100 text-center my-auto">
+              {% if o.assignment_complete_tlt == False %}
+                  Incomplete
+                  <br>
+                  <a href="{% url 'Profile:TltMarkComp' o.slug %}" data-toggle="tooltip" title="Mark Complete"><i class="fa fa-check-square-o" aria-hidden="true" style="font-size:24px;color:green !important"></i></a>
+              {% else %}
+                Complete
+              {% endif %}
+            </div>
+            <div class="col-2 col-no-pad h-100 text-center my-auto">
+              {% if o.assignment_complete_emp == False %}
                 Incomplete
-                <br>
-                <a href="{% url 'Profile:TltMarkComp' o.slug %}" data-toggle="tooltip" title="Mark Complete"><i class="fa fa-check-square-o" aria-hidden="true" style="font-size:24px;color:green !important"></i></a>
-              </td>
-            {% else %}
-              <td class="align-middle text-center">Complete</td>
-            {% endif %}
-            {% if o.assignment_complete_emp == False %}
-              <td class="align-middle text-center">
-                Incomplete
-              </td>
-            {% else %}
-              <td class="align-middle text-center">Complete</td>
-            {% endif %}
-            <td class="align-middle text-center">{{ o.currency }}<br>{{ o.rate_offered|intcomma }}<br>{{ o.get_rate_unit_display }}</td>
-            <td class="align-middle text-center">{{ o.date_deliverable|date:"j M Y" }}</td>
-            <td class="align-middle text-center">
+              {% else %}
+                Complete
+              {% endif %}
+            </div>
+            <div class="col-2 col-no-pad h-100 text-center my-auto">
+              {{ o.currency }}<br>{{ o.rate_offered|intcomma }}<br> {{ o.get_rate_unit_display }}
+            </div>
+            <div class="col-1 h-100 text-center my-auto">
+              {{ o.date_deliverable|date:"j M Y" }}
+            </div>
+            <div class="col-1 col-no-pad h-100 text-center my-auto">
               <a href="{% url 'Profile:ContactDetail' vac=o.work.ref_no tlt=o.work.requested_by.alias %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Contact Detail"><i class="fa fa-tty" aria-hidden="true" style="font-size:24px;color:black"></i></a>&nbsp
               <a href="{% url 'MarketPlace:VacancyDetail' o.work.ref_no %}?next={{ request.path|urlencode }}" class="" data-toggle="tooltip" title="See Vacancy Detail"><i class="fa fa-industry" style="font-size:24px;color:black"></i></a>&nbsp
               {% if o.tlt_rated == False %}
@@ -58,78 +78,110 @@
               {% else %}
                 <a href="{% url 'Profile:TltRateView' o.slug %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Rating View"><i class="fa fa-star" aria-hidden="true" style="font-size:24px;color:black"></i></a>
               {% endif %}
-            </td>
-        {% empty %}
-          <tr>
-            <td colspan="6">No open assignments</td>
-          </tr>
-        {% endfor %}
-        <tr class="no-hover">
-          <th colspan="6">Pending Assignments</th>
-        </tr>
-        {% for o in wit_qsp %}
-          <tr>
-            <td class="align-middle text-center">{{ o.work.title|truncatechars:37 }}<br>{{ o.work.ref_no }}</td>
-            {% if o.assignment_complete_tlt == False %}
-              <td class="align-middle text-center">
-                Pending
-                <br>
-                <span>
-                <a href="{% url 'Profile:AssignmentAccept' o.slug %}?next={{ request.path|urlencode }}" class="">
-                  <i class="fa fa-check-circle-o" aria-hidden="true" style="font-size:25px;color:green !important" data-toggle="tooltip" title="Accept Vacancy"></i>
-                </a>
-                {% if o.tlt_response == 'C' %}
-                  <a href="#" class="">
-                    <i class="fa fa-refresh" aria-hidden="true"style="font-size:25px;color:black" data-toggle="tooltip" title="Waiting for Reponse"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+      <p>No open assignments.</p>
+    {% endfor %}
+    <br>
+
+    <div class="row my-auto">
+      <p><strong>Pending Assignments</strong></p>
+    </div>
+    {% for o in wit_qsp %}
+    <div class="row">
+      <div class="card mt-2 card-hover" style="width: 100%;">
+        <div class="card-body">
+          <div class="row my-auto">
+            <div class="col-4 col-no-pad h-100 text-center my-auto">
+              {{ o.work.title|truncatechars:37 }}<br>{{ o.work.ref_no }}
+            </div>
+            <div class="col-2 col-no-pad h-100 text-center my-auto">
+              {% if o.assignment_complete_tlt == False %}
+                  Pending
+                  <br>
+                  <span>
+                  <a href="{% url 'Profile:AssignmentAccept' o.slug %}?next={{ request.path|urlencode }}" class="">
+                    <i class="fa fa-check-circle-o" aria-hidden="true" style="font-size:25px;color:green !important" data-toggle="tooltip" title="Accept Vacancy"></i>
                   </a>
-                {% else %}
-                  <a href="{% url 'Profile:AssignmentClarify' o.slug %}?next={{ request.path|urlencode }}" class="">
-                    <i class="fa fa-plus-square-o" aria-hidden="true" style="font-size:25px;color:black" data-toggle="tooltip" title="Request additional Information"></i>
+                  {% if o.tlt_response == 'C' %}
+                    <a href="#" class="">
+                      <i class="fa fa-refresh" aria-hidden="true"style="font-size:25px;color:black" data-toggle="tooltip" title="Waiting for Reponse"></i>
+                    </a>
+                  {% else %}
+                    <a href="{% url 'Profile:AssignmentClarify' o.slug %}?next={{ request.path|urlencode }}" class="">
+                      <i class="fa fa-plus-square-o" aria-hidden="true" style="font-size:25px;color:black" data-toggle="tooltip" title="Request additional Information"></i>
+                    </a>
+                  {% endif %}
+                  <a href="{% url 'Profile:AssignmentDecline' o.slug %}?next={{ request.path|urlencode }}" class="">
+                    <i class="fa fa-ban" aria-hidden="true" style="font-size:25px; color:red !important" data-toggle="tooltip" title="Decline Vacancy"></i>
                   </a>
-                {% endif %}
-                <a href="{% url 'Profile:AssignmentDecline' o.slug %}?next={{ request.path|urlencode }}" class="">
-                  <i class="fa fa-ban" aria-hidden="true" style="font-size:25px; color:red !important" data-toggle="tooltip" title="Decline Vacancy"></i>
-                </a>
-              </span>
-              </td>
-            {% else %}
-              <td class="align-middle text-center">Complete</td>
-            {% endif %}
-            {% if o.assignment_complete_emp == False %}
-              <td class="align-middle text-center">Incomplete</td>
-            {% else %}
-              <td class="align-middle text-center">Complete</td>
-            {% endif %}
-            <td class="align-middle text-center">{{ o.currency }}<br>{{ o.rate_offered|intcomma }}<br>{{ o.get_rate_unit_display }}</td>
-            <td class="align-middle text-center">{{ o.date_deliverable|date:"j M Y" }}</td>
-            <td class="align-middle text-center">
+                </span>
+              {% else %}
+                Complete
+              {% endif %}
+            </div>
+            <div class="col-2 col-no-pad h-100 text-center my-auto">
+              {% if o.assignment_complete_emp == False %}
+                Incomplete
+              {% else %}
+                Complete
+              {% endif %}
+            </div>
+            <div class="col-2 col-no-pad h-100 text-center my-auto">
+              {{ o.currency }}<br>{{ o.rate_offered|intcomma }}<br> {{ o.get_rate_unit_display }}
+            </div>
+            <div class="col-1 h-100 text-center my-auto">
+              {{ o.date_deliverable|date:"j M Y" }}
+            </div>
+            <div class="col-1 col-no-pad h-100 text-center my-auto">
               <a href="{% url 'Profile:ContactDetail' vac=o.work.ref_no tlt=o.work.requested_by.alias %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Contact Detail"><i class="fa fa-tty" aria-hidden="true" style="font-size:24px;color:black"></i></a>&nbsp
               <a href="{% url 'MarketPlace:VacancyDetail' o.work.ref_no %}?next={{ request.path|urlencode }}" class="" data-toggle="tooltip" title="See Vacancy Detail"><i class="fa fa-industry" style="font-size:24px;color:black"></i></a>
-            </td>
-        {% empty %}
-          <tr>
-            <td colspan="6">No Pending Assignments</td>
-          </tr>
-        {% endfor %}
-        <tr class="no-hover">
-          <th colspan="6">Completed Assignments</th>
-        </tr>
-        {% for o in wit_qsac %}
-          <tr>
-            <td class="align-middle text-center">{{ o.work.title|truncatechars:37 }}<br>{{ o.work.ref_no }}</td>
-            {% if o.assignment_complete_tlt == False %}
-              <td class="align-middle text-center">Incomplete</td>
-            {% else %}
-              <td class="align-middle text-center">Complete</td>
-            {% endif %}
-            {% if o.assignment_complete_emp == False %}
-              <td class="align-middle text-center">Incomplete</td>
-            {% else %}
-              <td class="align-middle text-center">Complete</td>
-            {% endif %}
-            <td class="align-middle text-center">{{ o.currency }}<br>{{ o.rate_offered|intcomma }}<br>{{ o.get_rate_unit_display }}</td>
-            <td class="align-middle text-center">{{ o.date_deliverable|date:"j M Y" }}</td>
-            <td class="align-middle text-center">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+      <p>No pending assignments.</p>
+    {% endfor %}
+    <br>
+
+    <div class="row my-auto">
+      <p><strong>Completed Assignments</strong></p>
+    </div>
+    {% for o in wit_qsac %}
+    <div class="row">
+      <div class="card mt-2 card-hover" style="width: 100%;">
+        <div class="card-body">
+          <div class="row my-auto">
+            <div class="col-4 col-no-pad h-100 text-center my-auto">
+              {{ o.work.title|truncatechars:37 }}<br>{{ o.work.ref_no }}
+            </div>
+            <div class="col-2 col-no-pad h-100 text-center my-auto">
+              {% if o.assignment_complete_tlt == False %}
+                Incomplete
+              {% else %}
+                Complete
+              {% endif %}
+            </div>
+            <div class="col-2 col-no-pad h-100 text-center my-auto">
+              {% if o.assignment_complete_emp == False %}
+                Incomplete
+              {% else %}
+                Complete
+              {% endif %}
+            </div>
+            <div class="col-2 col-no-pad h-100 text-center my-auto">
+              {{ o.currency }}<br>{{ o.rate_offered|intcomma }}<br> {{ o.get_rate_unit_display }}
+            </div>
+            <div class="col-1 h-100 text-center my-auto">
+              {{ o.date_deliverable|date:"j M Y" }}
+            </div>
+            <div class="col-1 col-no-pad h-100 text-center my-auto">
               <a href="{% url 'Profile:ContactDetail' vac=o.work.ref_no tlt=o.work.requested_by.alias %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Contact Detail"><i class="fa fa-tty" aria-hidden="true" style="font-size:24px;color:black"></i></a>&nbsp
               <a href="{% url 'MarketPlace:VacancyDetail' o.work.ref_no %}?next={{ request.path|urlencode }}" class="" data-toggle="tooltip" title="See Vacancy Detail"><i class="fa fa-industry" style="font-size:24px;color:black"></i></a>&nbsp
               {% if o.tlt_rated == False %}
@@ -137,40 +189,58 @@
               {% else %}
                 <a href="{% url 'Profile:TltRateView' o.slug %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Rating View"><i class="fa fa-star" aria-hidden="true" style="font-size:24px;color:black"></i></a>
               {% endif %}
-            </td>
-        {% empty %}
-          <tr>
-            <td colspan="6">No Complete Assignments</td>
-          </tr>
-        {% endfor %}
-        <tr class="no-hover">
-          <th colspan="6">Declined Assignments</th>
-        </tr>
-        {% for o in wit_qsd %}
-          <tr>
-            <td class="align-middle text-center">{{ o.work.title|truncatechars:37 }}<br>{{ o.work.ref_no }}</td>
-            {% if o.assignment_complete_tlt == False %}
-              <td class="align-middle text-center">Declined<br>by Talent</td>
-            {% else %}
-              <td class="align-middle text-center">Declined<br>by Talent</td>
-            {% endif %}
-            {% if o.assignment_complete_emp == False %}
-              <td class="align-middle text-center">Declined<br>by Talent</td>
-            {% else %}
-              <td class="align-middle text-center">Declined<br>by Talent</td>
-            {% endif %}
-            <td class="align-middle text-center">{{ o.currency }}<br>{{ o.rate_offered|intcomma }}<br>{{ o.get_rate_unit_display }}</td>
-            <td class="align-middle text-center">{{ o.date_deliverable|date:"j M Y" }}</td>
-            <td class="align-middle text-center">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+      <p>No complete assignments.</p>
+    {% endfor %}
+    <br>
+
+    <div class="row my-auto">
+      <p><strong>Declined Assignments</strong></p>
+    </div>
+    {% for o in wit_qsd %}
+    <div class="row">
+      <div class="card mt-2 card-hover" style="width: 100%;">
+        <div class="card-body">
+          <div class="row my-auto">
+            <div class="col-4 col-no-pad h-100 text-center my-auto">
+              {{ o.work.title|truncatechars:37 }}<br>{{ o.work.ref_no }}
+            </div>
+            <div class="col-2 col-no-pad h-100 text-center my-auto">
+              {% if o.assignment_complete_tlt == False %}
+                Declined<br>by Talent
+              {% else %}
+                Declined<br>by Talent
+              {% endif %}
+            </div>
+            <div class="col-2 col-no-pad h-100 text-center my-auto">
+              {% if o.assignment_complete_emp == False %}
+                Declined<br>by Talent
+              {% else %}
+                Declined<br>by Talent
+              {% endif %}
+            </div>
+            <div class="col-2 col-no-pad h-100 text-center my-auto">
+              {{ o.currency }}<br>{{ o.rate_offered|intcomma }}<br> {{ o.get_rate_unit_display }}
+            </div>
+            <div class="col-1 h-100 text-center my-auto">
+              {{ o.date_deliverable|date:"j M Y" }}
+            </div>
+            <div class="col-1 col-no-pad h-100 text-center my-auto">
               <a href="{% url 'MarketPlace:VacancyDetail' o.work.ref_no %}?next={{ request.path|urlencode }}" class="" data-toggle="tooltip" title="See Vacancy Detail"><i class="fa fa-industry" style="font-size:24px;color:black"></i></a>
-            </td>
-        {% empty %}
-          <tr>
-            <td colspan="6">No Declined Assignments</td>
-          </tr>
-        {% endfor %}
-    </tbody>
-    </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+      <p>No declined assignments.</p>
+    {% endfor %}
+
   </div>
 </div>
 {% endblock content %}

@@ -101,12 +101,23 @@ table {
 .font-blue {
   color: var(--font-blue);
 }
+.auto {
+  cursor: auto !important;
+}
+@media screen {
+  .flex { display: flex; flex-wrap: wrap; }
+  .flex > .col-sm-2 { flex: 1; width: auto; }
+}
+.name-paragraph {
+  height: 0.8rem;
+  display: flex;
+  position: inherit;
+}
 .short-paragraph {
   height: 0.5rem;
   display: flex;
   position: inherit;
 }
-
 .table-hover tr:hover {
   z-index: 1;
   transition: all .4s ease;

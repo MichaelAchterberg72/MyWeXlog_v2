@@ -36,7 +36,7 @@ from WeXlog.app_config import (
 )
 from talenttrack.models import WorkExperience, LicenseCertification
 from db_flatten.models import SkillTag
-from users.models import CustomUser
+from users.models import CustomUser, ExpandedView
 from Profile.models import Profile, LanguageTrack, PhysicalAddress, BriefCareerHistory
 from booklist.models import ReadBy
 from enterprises.models import Branch
@@ -542,11 +542,13 @@ def SuitableInterviewNotSuitable(request, vac, tlt):
 def InterviewListView(request, vac):
     scope = TalentRequired.objects.get(ref_no=vac)
     intv_qs = BidInterviewList.objects.filter(scope__ref_no=vac)
+    bid_qs = BidShortList.objects.filter(scope__ref_no=vac)
 
     intv_pending = intv_qs.filter(Q(outcome='I')).filter(Q(tlt_response='A') | Q(tlt_response='P'))
 
     intv_suitable = intv_qs.filter(Q(outcome = 'S') & ~Q(tlt_response='D'))
     intv_notsuitable = intv_qs.filter(Q(outcome = 'N') & ~Q(tlt_response='D'))
+    bid_rejected = bid_qs.filter(status = 'Z')
     intv_declined = intv_qs.filter(tlt_response = 'D')[:5]
     intv_accepted = intv_qs.filter(tlt_response = 'A')[:5]
     vacancy_declined = WorkIssuedTo.objects.filter(work__ref_no=vac, tlt_response='D')[:5]
@@ -566,6 +568,17 @@ def InterviewListView(request, vac):
     we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
     applicants = WorkBid.objects.filter(work__ref_no=vac)
     book = ReadBy.objects.all()
+    vac_exp = ExpandedView.objects.get(talent=request.user)
+    pending_interviews_list_view = vac_exp.pending_interviews_list
+    suitable_applicants_list_view = vac_exp.suitable_applicants_list
+    unsuitable_applicants_list_view = vac_exp.unsuitable_applicants_list
+    rejected_applicants_list_view = vac_exp.rejected_applicants_list
+    sk_st = SkillLevel.objects.get(level=0).min_hours
+    sk_bg = SkillLevel.objects.get(level=1).min_hours
+    sk_jn = SkillLevel.objects.get(level=2).min_hours
+    sk_in = SkillLevel.objects.get(level=3).min_hours
+    sk_sn = SkillLevel.objects.get(level=4).min_hours
+    sk_ld = SkillLevel.objects.get(level=5).min_hours
 
     #Information for all suitable applicants
     suitable_list = list(intv_suitable.values_list('talent', flat=True))
@@ -584,6 +597,7 @@ def InterviewListView(request, vac):
         pfl = Profile.objects.get(talent=app)
         avg = pfl.avg_rate
         cnt = pfl.rate_count
+        bg = pfl.background
 
         applied = applicants.filter(talent=app)
 
@@ -598,7 +612,7 @@ def InterviewListView(request, vac):
         askill_count = len(askillset)
 
         interview_s[app]={
-            'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate, 'score':avg, 'count': cnt
+            'we':awetv, 'te':atetv,'s_no':askill_count, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score':avg, 'count': cnt, 'background': bg,
             }
 
     interview_s_slice = dict(itertools.islice(interview_s.items(), 5))
@@ -622,6 +636,7 @@ def InterviewListView(request, vac):
         pfl = Profile.objects.get(talent=app)
         avg = pfl.avg_rate
         cnt = pfl.rate_count
+        bg = pfl.background
 
         if applied:
             rate = applied.values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation','talent__alias')
@@ -632,7 +647,7 @@ def InterviewListView(request, vac):
         askillset = set(aslist)
         askill_count = len(askillset)
 
-        interview_p[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate, 'score':avg, 'count':cnt}
+        interview_p[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score':avg, 'count':cnt, 'background': bg,}
 
     interview_p_slice = dict(itertools.islice(interview_p.items(), 5))
     interview_p_count = len(interview_p)
@@ -654,6 +669,7 @@ def InterviewListView(request, vac):
         pfl = Profile.objects.get(talent=app)
         avg = pfl.avg_rate
         cnt = pfl.rate_count
+        bg = pfl.background
 
         applied = applicants.filter(talent=app)
 
@@ -666,19 +682,64 @@ def InterviewListView(request, vac):
         askillset = set(aslist)
         askill_count = len(askillset)
 
-        interview_n[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate, 'score':avg, 'count': cnt}
+        interview_n[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score':avg, 'count': cnt, 'background': bg,}
 
     interview_n_slice = dict(itertools.islice(interview_n.items(), 5))
     interview_n_count = len(interview_n)
 
+    #Information for all not rejected applicants
+    rej_list = list(bid_rejected.values_list('talent', flat=True))
+
+    rej_bid_n ={}
+    for app in rej_list:
+
+        aw_exp = we.filter(talent=app, edt=False).aggregate(awet=Sum('hours_worked'))
+        awetv = aw_exp.get('awet')
+        at_exp = we.filter(talent=app, edt=True).aggregate(tet=Sum('topic__hours'))
+        atetv = at_exp.get('tet')
+        atalent_skill = list(we.filter(talent=app, edt=False).values_list('skills', flat=True))
+        rb = book.filter(talent=app).count()
+        atalent_skillt = list(we.filter(talent=app, edt=True).values_list('topic__skills', flat=True))
+
+        pfl = Profile.objects.get(talent=app)
+        avg = pfl.avg_rate
+        cnt = pfl.rate_count
+        bg = pfl.background
+
+        applied = applicants.filter(talent=app)
+
+        if applied:
+            rate = applied.values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation','talent__alias')
+        else:
+            rate = Profile.objects.filter(talent=app).values_list('std_rate', 'currency__currency_abv', 'rate_unit', 'motivation', 'alias')
+
+        aslist = atalent_skill + atalent_skillt
+        askillset = set(aslist)
+        askill_count = len(askillset)
+
+        rej_bid_n[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score':avg, 'count': cnt, 'background': bg,}
+
+    rej_bid_n_slice = dict(itertools.islice(rej_bid_n.items(), 5))
+    rej_bid_n_count = len(rej_bid_n)
+
     template = 'marketplace/interview_list.html'
     context = {
+        'vac': vac,
+        'sk_st': sk_st,
+        'sk_bg': sk_bg,
+        'sk_jn': sk_jn,
+        'sk_in': sk_in,
+        'sk_sn': sk_sn,
+        'sk_ld': sk_ld,
         'interview_p': interview_p,
         'interview_p_slice': interview_p_slice,
         'interview_p_count': interview_p_count,
         'interview_n': interview_n,
         'interview_n_slice': interview_n_slice,
         'interview_n_count': interview_n_count,
+        'rej_bid_n': rej_bid_n,
+        'rej_bid_n_slice': rej_bid_n_slice,
+        'rej_bid_n_count': rej_bid_n_count,
         'interview_s': interview_s,
         'interview_s_slice': interview_s_slice,
         'interview_s_count': interview_s_count,
@@ -689,6 +750,10 @@ def InterviewListView(request, vac):
         'intv_declined_count': intv_declined_count,
         'vacancy_declined': vacancy_declined,
         'vacancy_declined_count': vacancy_declined_count,
+        'pending_interviews_list_view': pending_interviews_list_view,
+        'suitable_applicants_list_view': suitable_applicants_list_view,
+        'unsuitable_applicants_list_view': unsuitable_applicants_list_view,
+        'rejected_applicants_list_view': rejected_applicants_list_view,
         'wit_qs': wit_qs,
         'wit_qs_p': wit_qs_p,
         'active': active,
@@ -708,6 +773,14 @@ def PendingInterviewListView(request, vac):
     we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
     applicants = WorkBid.objects.filter(work__ref_no=vac)
     book = ReadBy.objects.all()
+    vac_exp = ExpandedView.objects.get(talent=request.user)
+    pending_interviews_list_view = vac_exp.pending_interviews_list
+    sk_st = SkillLevel.objects.get(level=0).min_hours
+    sk_bg = SkillLevel.objects.get(level=1).min_hours
+    sk_jn = SkillLevel.objects.get(level=2).min_hours
+    sk_in = SkillLevel.objects.get(level=3).min_hours
+    sk_sn = SkillLevel.objects.get(level=4).min_hours
+    sk_ld = SkillLevel.objects.get(level=5).min_hours
     vac = vac
 
     #Information for all pending applicants
@@ -728,6 +801,7 @@ def PendingInterviewListView(request, vac):
         pfl = Profile.objects.get(talent=app)
         avg = pfl.avg_rate
         cnt = pfl.rate_count
+        bg = pfl.background
 
         if applied:
             rate = applied.values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation','talent__alias')
@@ -738,7 +812,7 @@ def PendingInterviewListView(request, vac):
         askillset = set(aslist)
         askill_count = len(askillset)
 
-        interview_p[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate, 'score':avg, 'count':cnt}
+        interview_p[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score': avg, 'count': cnt, 'background': bg,}
 
     interview_p_count = len(interview_p)
 
@@ -767,10 +841,17 @@ def PendingInterviewListView(request, vac):
 
     template = 'marketplace/pending_interview_list.html'
     context = {
+        'sk_st': sk_st,
+        'sk_bg': sk_bg,
+        'sk_jn': sk_jn,
+        'sk_in': sk_in,
+        'sk_sn': sk_sn,
+        'sk_ld': sk_ld,
         'interview_p': interview_p,
         'interview_p_count': interview_p_count,
         'scope': scope,
         'vac': vac,
+        'pending_interviews_list_view': pending_interviews_list_view,
         'pageitems': pageitems,
         'page_range': page_range
         }
@@ -799,7 +880,14 @@ def SuitableInterviewListView(request, vac):
     we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
     applicants = WorkBid.objects.filter(work__ref_no=vac)
     book = ReadBy.objects.all()
-
+    vac_exp = ExpandedView.objects.get(talent=request.user)
+    suitable_applicants_list_view = vac_exp.suitable_applicants_list
+    sk_st = SkillLevel.objects.get(level=0).min_hours
+    sk_bg = SkillLevel.objects.get(level=1).min_hours
+    sk_jn = SkillLevel.objects.get(level=2).min_hours
+    sk_in = SkillLevel.objects.get(level=3).min_hours
+    sk_sn = SkillLevel.objects.get(level=4).min_hours
+    sk_ld = SkillLevel.objects.get(level=5).min_hours
     #Information for all suitable applicants
     suitable_list = list(intv_suitable.values_list('talent', flat=True))
 
@@ -817,6 +905,7 @@ def SuitableInterviewListView(request, vac):
         pfl = Profile.objects.get(talent=app)
         avg = pfl.avg_rate
         cnt = pfl.rate_count
+        bg = pfl.background
 
         applied = applicants.filter(talent=app)
 
@@ -831,7 +920,7 @@ def SuitableInterviewListView(request, vac):
         askill_count = len(askillset)
 
         interview_s[app]={
-            'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate, 'score':avg, 'count': cnt
+            'we':awetv, 'te':atetv,'s_no':askill_count, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score': avg, 'count': cnt, 'background': bg,
             }
 
     interview_s_count = len(interview_s)
@@ -861,12 +950,19 @@ def SuitableInterviewListView(request, vac):
 
     template = 'marketplace/suitable_interview_list.html'
     context = {
+        'vac': vac,
+        'sk_st': sk_st,
+        'sk_bg': sk_bg,
+        'sk_jn': sk_jn,
+        'sk_in': sk_in,
+        'sk_sn': sk_sn,
+        'sk_ld': sk_ld,
         'interview_s': interview_s,
         'interview_s_count': interview_s_count,
         'scope': scope,
         'wit_qs': wit_qs,
         'active': active,
-        'vac': vac,
+        'suitable_applicants_list_view': suitable_applicants_list_view,
         'pageitems': pageitems,
         'page_range': page_range
         }
@@ -886,7 +982,14 @@ def UnsuitableInterviewListView(request, vac):
     we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
     applicants = WorkBid.objects.filter(work__ref_no=vac)
     book = ReadBy.objects.all()
-
+    vac_exp = ExpandedView.objects.get(talent=request.user)
+    unsuitable_applicants_list_view = vac_exp.unsuitable_applicants_list
+    sk_st = SkillLevel.objects.get(level=0).min_hours
+    sk_bg = SkillLevel.objects.get(level=1).min_hours
+    sk_jn = SkillLevel.objects.get(level=2).min_hours
+    sk_in = SkillLevel.objects.get(level=3).min_hours
+    sk_sn = SkillLevel.objects.get(level=4).min_hours
+    sk_ld = SkillLevel.objects.get(level=5).min_hours
     #Information for all not suitable applicants
     nots_list = list(intv_notsuitable.values_list('talent', flat=True))
 
@@ -904,6 +1007,7 @@ def UnsuitableInterviewListView(request, vac):
         pfl = Profile.objects.get(talent=app)
         avg = pfl.avg_rate
         cnt = pfl.rate_count
+        bg = pfl.background
 
         applied = applicants.filter(talent=app)
 
@@ -916,7 +1020,9 @@ def UnsuitableInterviewListView(request, vac):
         askillset = set(aslist)
         askill_count = len(askillset)
 
-        interview_n[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate, 'score':avg, 'count': cnt}
+        interview_n[app]={
+            'we':awetv, 'te':atetv,'s_no':askill_count, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score': avg, 'count': cnt, 'background': bg,
+            }
 
     interview_n_count = len(interview_n)
 
@@ -945,10 +1051,116 @@ def UnsuitableInterviewListView(request, vac):
 
     template = 'marketplace/unsuitable_interview_list.html'
     context = {
+        'vac': vac,
+        'sk_st': sk_st,
+        'sk_bg': sk_bg,
+        'sk_jn': sk_jn,
+        'sk_in': sk_in,
+        'sk_sn': sk_sn,
+        'sk_ld': sk_ld,
         'interview_n': interview_n,
         'interview_n_count': interview_n_count,
+        'unsuitable_applicants_list_view': unsuitable_applicants_list_view,
         'scope': scope,
+        'pageitems': pageitems,
+        'page_range': page_range
+        }
+    return render(request, template, context)
+
+
+@login_required()
+@subscription(2)
+def BidRejectedListView(request, vac):
+    scope = TalentRequired.objects.get(ref_no=vac)
+    bid_qs = BidShortList.objects.filter(scope__ref_no=vac)
+
+    bid_rejected = bid_qs.filter(status = 'Z')
+
+    vacancy_declined = WorkIssuedTo.objects.filter(work__ref_no=vac, tlt_response='D')
+
+    we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
+    applicants = WorkBid.objects.filter(work__ref_no=vac)
+    book = ReadBy.objects.all()
+    vac_exp = ExpandedView.objects.get(talent=request.user)
+    rejected_applicants_list_view = vac_exp.rejected_applicants_list
+    sk_st = SkillLevel.objects.get(level=0).min_hours
+    sk_bg = SkillLevel.objects.get(level=1).min_hours
+    sk_jn = SkillLevel.objects.get(level=2).min_hours
+    sk_in = SkillLevel.objects.get(level=3).min_hours
+    sk_sn = SkillLevel.objects.get(level=4).min_hours
+    sk_ld = SkillLevel.objects.get(level=5).min_hours
+    #Information for all not suitable applicants
+    rej_list = list(bid_rejected.values_list('talent', flat=True))
+
+    rej_bid_n ={}
+    for app in rej_list:
+
+        aw_exp = we.filter(talent=app, edt=False).aggregate(awet=Sum('hours_worked'))
+        awetv = aw_exp.get('awet')
+        at_exp = we.filter(talent=app, edt=True).aggregate(tet=Sum('topic__hours'))
+        atetv = at_exp.get('tet')
+        atalent_skill = list(we.filter(talent=app, edt=False).values_list('skills', flat=True))
+        rb = book.filter(talent=app).count()
+        atalent_skillt = list(we.filter(talent=app, edt=True).values_list('topic__skills', flat=True))
+
+        pfl = Profile.objects.get(talent=app)
+        avg = pfl.avg_rate
+        cnt = pfl.rate_count
+        bg = pfl.background
+
+        applied = applicants.filter(talent=app)
+
+        if applied:
+            rate = applied.values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation','talent__alias')
+        else:
+            rate = Profile.objects.filter(talent=app).values_list('std_rate', 'currency__currency_abv', 'rate_unit', 'motivation', 'alias')
+
+        aslist = atalent_skill + atalent_skillt
+        askillset = set(aslist)
+        askill_count = len(askillset)
+
+        rej_bid_n[app]={
+            'we':awetv, 'te':atetv,'s_no':askill_count, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score': avg, 'count': cnt, 'background': bg,
+            }
+
+    rej_bid_n_count = len(rej_bid_n)
+
+    t = tuple(rej_bid_n.items())
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(t, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+
+    template = 'marketplace/bids_rejected_list.html'
+    context = {
         'vac': vac,
+        'sk_st': sk_st,
+        'sk_bg': sk_bg,
+        'sk_jn': sk_jn,
+        'sk_in': sk_in,
+        'sk_sn': sk_sn,
+        'sk_ld': sk_ld,
+        'rej_bid_n': rej_bid_n,
+        'rej_bid_n_count': rej_bid_n_count,
+        'rejected_applicants_list_view': rejected_applicants_list_view,
+        'scope': scope,
         'pageitems': pageitems,
         'page_range': page_range
         }
@@ -2290,6 +2502,15 @@ def VacancyPostView(request, vac):
     we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
     s_list = BidShortList.objects.filter(scope__ref_no=vac)
     book = ReadBy.objects.all()
+    vac_exp = ExpandedView.objects.get(talent=request.user)
+    applicants_list_view = vac_exp.applicants_list
+    suited_list_view = vac_exp.talent_suited_list
+    sk_st = SkillLevel.objects.get(level=0).min_hours
+    sk_bg = SkillLevel.objects.get(level=1).min_hours
+    sk_jn = SkillLevel.objects.get(level=2).min_hours
+    sk_in = SkillLevel.objects.get(level=3).min_hours
+    sk_sn = SkillLevel.objects.get(level=4).min_hours
+    sk_ld = SkillLevel.objects.get(level=5).min_hours
     tr_qs = TalentRequired.objects.filter(ref_no=vac)
     tlt = Profile.objects.filter(talent__subscription__gte=1)
     #Queryset Cache<<<
@@ -2357,13 +2578,14 @@ def VacancyPostView(request, vac):
         pfl = Profile.objects.get(talent=item)
         avg = pfl.avg_rate
         cnt = pfl.rate_count
+        bg = pfl.background
 
         slist = talent_skill + talent_skillt
         skillset = set(slist)
         skill_count = len(skillset)
 
         suitable[item]={
-            'we':wetv, 'te':tetv,'s_no':skill_count, 'rb':rb, 'ro':rate, 'score':avg, 'count':cnt
+            'we':awetv, 'te':atetv,'s_no':askill_count, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score': avg, 'count': cnt, 'background': bg,
             }
 
         #Extracting information for the applicants
@@ -2380,13 +2602,14 @@ def VacancyPostView(request, vac):
             pfl = Profile.objects.get(talent=app)
             avg = pfl.avg_rate
             cnt = pfl.rate_count
+            bg = pfl.background
 
             aslist = atalent_skill + atalent_skillt
             askillset = set(aslist)
             askill_count = len(askillset)
 
             applied[app]={
-                'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate, 'score': avg, 'count': cnt
+                'we':awetv, 'te':atetv,'s_no':askill_count, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score': avg, 'count': cnt, 'background': bg,
                 }
 
     suitable_slice = dict(itertools.islice(suitable.items(), 5))
@@ -2397,6 +2620,13 @@ def VacancyPostView(request, vac):
 
     template = 'marketplace/vacancy_post_view.html'
     context = {
+            'vac': vac,
+            'sk_st': sk_st,
+            'sk_bg': sk_bg,
+            'sk_jn': sk_jn,
+            'sk_in': sk_in,
+            'sk_sn': sk_sn,
+            'sk_ld': sk_ld,
             'instance': instance,
             'skille': skille,
             'delivere': delivere,
@@ -2407,6 +2637,8 @@ def VacancyPostView(request, vac):
             'applied': applied,
             'applied_slice': applied_slice,
             'applied_count': applied_count,
+            'applicants_list_view': applicants_list_view,
+            'suited_list_view': suited_list_view,
             's_list': s_list
     }
 
@@ -2434,6 +2666,14 @@ def TalentSuitedVacancyListView(request, vac):
     book = ReadBy.objects.all()
     tr_qs = TalentRequired.objects.filter(ref_no=vac)
     tlt = Profile.objects.filter(talent__subscription__gte=1)
+    vac_exp = ExpandedView.objects.get(talent=request.user)
+    list_view = vac_exp.talent_suited_list
+    sk_st = SkillLevel.objects.get(level=0).min_hours
+    sk_bg = SkillLevel.objects.get(level=1).min_hours
+    sk_jn = SkillLevel.objects.get(level=2).min_hours
+    sk_in = SkillLevel.objects.get(level=3).min_hours
+    sk_sn = SkillLevel.objects.get(level=4).min_hours
+    sk_ld = SkillLevel.objects.get(level=5).min_hours
     #Queryset Cache<<<
 
     #>>> List all skills required
@@ -2499,13 +2739,14 @@ def TalentSuitedVacancyListView(request, vac):
         pfl = Profile.objects.get(talent=item)
         avg = pfl.avg_rate
         cnt = pfl.rate_count
+        bg = pfl.background
 
         slist = talent_skill + talent_skillt
         skillset = set(slist)
         skill_count = len(skillset)
 
         suitable[item]={
-            'we':wetv, 'te':tetv,'s_no':skill_count, 'rb':rb, 'ro':rate, 'score':avg, 'count':cnt
+            'we':wetv, 'te':tetv,'s_no':skill_count, 'skillset': skillset, 'rb':rb, 'ro':rate, 'score':avg, 'count':cnt, 'background': bg,
             }
 
 
@@ -2538,11 +2779,19 @@ def TalentSuitedVacancyListView(request, vac):
 
     template = 'marketplace/talent_suited_vacancy_list_view.html'
     context = {
+            'vac': vac,
+            'sk_st': sk_st,
+            'sk_bg': sk_bg,
+            'sk_jn': sk_jn,
+            'sk_in': sk_in,
+            'sk_sn': sk_sn,
+            'sk_ld': sk_ld,
             'instance': instance,
             'skille': skille,
             'delivere': delivere,
             'suitable': suitable,
             'suitable_count': suitable_count,
+            'list_view': list_view,
             's_list': s_list,
             'pageitems': pageitems,
             'page_range': page_range
@@ -2562,6 +2811,14 @@ def ApplicantsForVacancyListView(request, vac):
     we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
     s_list = BidShortList.objects.filter(scope__ref_no=vac)
     book = ReadBy.objects.all()
+    vac_exp = ExpandedView.objects.get(talent=request.user)
+    list_view = vac_exp.applicants_list
+    sk_st = SkillLevel.objects.get(level=0).min_hours
+    sk_bg = SkillLevel.objects.get(level=1).min_hours
+    sk_jn = SkillLevel.objects.get(level=2).min_hours
+    sk_in = SkillLevel.objects.get(level=3).min_hours
+    sk_sn = SkillLevel.objects.get(level=4).min_hours
+    sk_ld = SkillLevel.objects.get(level=5).min_hours
     #Queryset Cache<<<
 
     #>>> List all skills required
@@ -2594,16 +2851,20 @@ def ApplicantsForVacancyListView(request, vac):
             awetv = aw_exp.get('awet')
             at_exp = we.filter(talent=app, edt=True).aggregate(tet=Sum('topic__hours'))
             atetv = at_exp.get('tet')
-            atalent_skill = list(we.filter(talent=app, edt=False).values_list('skills', flat=True))
-            atalent_skillt = list(we.filter(talent=app, edt=True).values_list('topic__skills', flat=True))
+            atalent_skill = list(we.filter(talent=app, edt=False).values_list('skills__skill', flat=True))
+            atalent_skillt = list(we.filter(talent=app, edt=True).values_list('topic__skills__skill', flat=True))
             rb = book.filter(talent=app).count()
             rate = applicants.filter(talent=app).values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation', 'talent__alias')
+            pfl = Profile.objects.get(talent=app)
+            avg = pfl.avg_rate
+            cnt = pfl.rate_count
+            bg = pfl.background
 
             aslist = atalent_skill + atalent_skillt
             askillset = set(aslist)
             askill_count = len(askillset)
 
-            applied[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'rb':rb, 'ro':rate}
+            applied[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score': avg, 'count': cnt, 'background': bg,}
 
     applied_count = len(applied)
 
@@ -2632,18 +2893,114 @@ def ApplicantsForVacancyListView(request, vac):
 
     template = 'marketplace/applicants_applied_vacancy_list_view.html'
     context = {
+            'vac': vac,
+            'sk_st': sk_st,
+            'sk_bg': sk_bg,
+            'sk_jn': sk_jn,
+            'sk_in': sk_in,
+            'sk_sn': sk_sn,
+            'sk_ld': sk_ld,
             'instance': instance,
             'skille': skille,
             'delivere': delivere,
             'applicants': applicants,
             'applied': applied,
             'applied_count': applied_count,
+            'list_view': list_view,
             's_list': s_list,
             'pageitems': pageitems,
             'page_range': page_range
     }
 
     return render(request, template, context)
+
+
+@login_required()
+@subscription(2)
+def AppliedListRejectedView(request, vac, tlt):
+    instance = BidInterviewList.objects.get(Q(talent__alias=tlt) & Q(scope__ref_no=vac))
+
+    if request.method == 'POST':
+        BidShortList.objects.filter(Q(scope__ref_no = vac) & Q(talent__alias = tlt)).create(scope__ref_no=vac, talent__alias=tlt, status='Z').save()#1
+
+        bid_qs = WorkBid.objects.filter(Q(work__ref_no = vac) & Q(talent__alias = tlt))
+
+        if bid_qs:
+            bid_qs.update(bidreview = 'R')#2
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def ExpandApplicantsView(request):
+    instance = ExpandedView.objects.get(talent=request.user)
+    list_view = instance.applicants_list
+    if list_view == True:
+        instance.applicants_list = False
+    elif list_view == False:
+        instance.applicants_list = True
+    instance.save()
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def ExpandTalentSuitedView(request):
+    instance = ExpandedView.objects.get(talent=request.user)
+    list_view = instance.talent_suited_list
+    if list_view == True:
+        instance.talent_suited_list = False
+    elif list_view == False:
+        instance.talent_suited_list = True
+    instance.save()
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def ExpandPendingInterviewsView(request):
+    instance = ExpandedView.objects.get(talent=request.user)
+    list_view = instance.pending_interviews_list
+    if list_view == True:
+        instance.pending_interviews_list = False
+    elif list_view == False:
+        instance.pending_interviews_list = True
+    instance.save()
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def ExpandSuitableApplicantsView(request):
+    instance = ExpandedView.objects.get(talent=request.user)
+    list_view = instance.suitable_applicants_list
+    if list_view == True:
+        instance.suitable_applicants_list = False
+    elif list_view == False:
+        instance.suitable_applicants_list = True
+    instance.save()
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def ExpandUnSuitableApplicantsView(request):
+    instance = ExpandedView.objects.get(talent=request.user)
+    list_view = instance.unsuitable_applicants_list
+    if list_view == True:
+        instance.unsuitable_applicants_list = False
+    elif list_view == False:
+        instance.unsuitable_applicants_list = True
+    instance.save()
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def ExpandRejectedApplicantsView(request):
+    instance = ExpandedView.objects.get(talent=request.user)
+    list_view = instance.rejected_applicants_list
+    if list_view == True:
+        instance.rejected_applicants_list = False
+    elif list_view == False:
+        instance.rejected_applicants_list = True
+    instance.save()
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 @csp_exempt
@@ -2749,6 +3106,22 @@ def AddToShortListApplicantsView(request, vac, tlt):
             upd.save()
 
         return redirect(reverse('MarketPlace:ApplicantsForVacancy', kwargs={'vac':vac})+'#suited')
+
+
+@login_required()
+@subscription(2)
+def AddShortListApplicantsView(request, vac, tlt):
+    job = get_object_or_404(TalentRequired, ref_no=vac)
+    talent = get_object_or_404(CustomUser, alias=tlt)
+    if request.method == 'POST':
+        b = BidShortList.objects.create(talent=talent, scope=job, status = 'S')#1
+
+        if 'active' in request.POST:
+            upd = WorkBid.objects.get(Q(talent=talent) & Q(work=job))
+            upd.bidreview = 'S'#2
+            upd.save()
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 @login_required()

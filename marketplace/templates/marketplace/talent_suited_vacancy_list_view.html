@@ -4,61 +4,101 @@
 {% block title %}{{block.super}}-Talent Suited to the Vacancy Full List{% endblock title %}
 
 {% block content %}
-<div class="card border-0">
+<div class="card card-shadow">
   <div class="card-body">
     <div class="float-right">
 
-      <a href="{% url 'MarketPlace:ShortListView' instance.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-info">View Short-list</a>
-      <a href="{% url 'MarketPlace:VacancyIntDetail' instance.ref_no %}" class="btn btn-info">Interview List</a>
-      <a href="{% url 'MarketPlace:InterviewList' instance.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-info">Vacancy Dashboard</a>
+      <a href="{% url 'MarketPlace:ShortListView' instance.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-primary">View Short-list</a>
+      <a href="{% url 'MarketPlace:VacancyIntDetail' instance.ref_no %}" class="btn btn-primary">Interview List</a>
+      <a href="{% url 'MarketPlace:InterviewList' instance.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-primary">Vacancy Dashboard</a>
       <a href="{% url 'MarketPlace:VacancyPost' instance.ref_no %}?next={{ request.path|urlencode }}"  class="btn btn-secondary">Back</a>
       <a href="{% url 'MarketPlace:HelpTalentSuitedVacancyFull' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
       <i class="icon icon-question-circle"></i></a>
     </div>
-      <h4 id='suited'>Talent suited to the Vacancy Full List</h4>
+      <h4 id='suited'>Talent suited to the Vacancy: <br>{{ instance.title }}</h4>
       <p>There is a total of {{ suitable_count }} talent suited to the vacancy listed here.</p>
-      <table class="table table-hover table-sm">
-        <thead>
-          <tr class="no-hover">
-            <th class="text-center">Alias</th>
-            <th class="text-center">Experience</th>
-            <th class="text-center">Training</th>
-            <th class="text-center">Captured Skills</th>
-            <th class="text-center">Books Read</th>
-            <th class="text-center">Rate</th>
-            <th class="text-left">Motivation</th>
-          </tr>
-        </thead>
-        <tbody>
+
+      <div class="row">
+        <div class="col-12">
+        {% if list_view %}
+          <form  action="{% url 'MarketPlace:SuitedExpand' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary float-right" style="width:8rem;">Expanded</button>
+          </form>
+        {% else %}
+          <form  action="{% url 'MarketPlace:SuitedExpand' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary float-right" style="width:8rem;">List</button>
+          </form>
+        {% endif %}
+        </div>
+      </div>
+
+        {% if list_view %}
+          {% include 'marketplace/list_view_headings.html' %}
           {% for key in pageitems %}
-          <tr>
-            <td class="align-middle">{{ key.1.ro.0.4 }}</td>
-            <td class="align-middle">{{ key.1.we }}</td>
-            <td class="align-middle">{{ key.1.te }}</td>
-            <td class="align-middle">{{ key.1.s_no }}</td>
-            <td class="align-middle">{{ key.1.rb }}</td>
-            <td class="align-middle">{{ key.1.ro.0.1 }} <strong>{{ key.1.ro.0.0 }}</strong> {{ key.1.ro.0.2 }}</td>
-            <td class="align-middle">{{ key.1.ro.0.3|truncatechars:200 }}</td>
-            <td class="align-middle"><p>
-            <form  action="{% url 'MarketPlace:FullListShortList' tlt=key.1.ro.0.4  vac=instance.ref_no %}" method="post">
-              {% csrf_token %}
-              <button type="submit" class="badge badge-info badge-pill float-right" style="width: 5rem;">Short-list</button>
-            </form><br>
-            <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=instance.ref_no %}" class="badge badge-success badge-pill float-right" style="width: 5rem;" target="new">View Profile</a></p>
-            </td>
-            {% empty %}
-              {% if s_list %}
-                  <td colspan="6">All suitable talent has been short-listed.</td>
-                  <td>
-                    <a href="{% url 'MarketPlace:ShortListView' instance.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-info">Goto Short-list</a>
-                  </td>
-              {% else %}
-                    <td colspan="7">There is no talent currently in MyWexLog suited to this vacancy.</td>
-              {% endif %}
-          </tr>
+          <div class="row">
+            <div class="card mt-2 card-hover" style="width: 100%;">
+              <div class="card-body">
+                <div class="row my-auto">
+                  {% include 'marketplace/list_view_fields.html' %}
+                  <div class="col-1 col-no-pad h-100 text-center my-auto">
+                    <form  action="{% url 'MarketPlace:RejectBidFromAppliedList' vac=instance.ref_no tlt=key.1.ro.0.4 %}" method="post" name="active">
+                    {% csrf_token %}
+                    <button type="submit"  class="badge badge-danger badge-pill float-right" style="width: 6rem;">Rejected</button>
+                    </form>
+                    <form  action="{% url 'MarketPlace:FullListShortList' tlt=key.1.ro.0.4  vac=instance.ref_no %}" method="post">
+                      {% csrf_token %}
+                      <button type="submit" class="badge badge-info badge-pill float-right" style="width: 6rem;">Short-list</button>
+                    </form><br>
+                    <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=instance.ref_no %}" class="badge badge-success badge-pill float-right" style="width: 5rem;" target="new">View Profile</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% empty %}
+            {% if s_list %}
+              <p>All suitable talent has been short-listed.</p>
+              <p><a href="{% url 'MarketPlace:ShortListView' instance.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-info">Goto Short-list</a></p>
+            {% else %}
+              <p>There is no talent currently in MyWexLog suited to this vacancy.</p>
+            {% endif %}
           {% endfor %}
-        </tbody>
-      </table>
+          {% else %}'
+          {% for key in pageitems %}
+          <div class="row">
+            <div class="card mt-2 card-hover" style="width: 100%;">
+              <div class="card-body">
+                {% include 'marketplace/expanded_view_fields.html' %}
+                <div class="row my-auto">
+                  <div class="col-md-12 h-100">
+                    <div class="row my-auto float-right">
+                      <form  action="{% url 'MarketPlace:RejectBidFromAppliedList' vac=instance.ref_no tlt=key.1.ro.0.4 %}" method="post" name="active">
+                      {% csrf_token %}
+                      <button type="submit"  class="btn btn-outline-danger" style="width: 10rem;">Rejected</button>
+                      </form>&nbsp
+                      <form  action="{% url 'MarketPlace:FullListShortList' tlt=key.1.ro.0.4  vac=instance.ref_no %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-info" style="width: 10rem;">Short-list</button>
+                      </form>&nbsp
+                      <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=instance.ref_no %}" class="btn btn-outline-success" style="width: 10rem;" target="new">View Profile</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% empty %}
+            {% if s_list %}
+              <p>All suitable talent has been short-listed.</p>
+              <p><a href="{% url 'MarketPlace:ShortListView' instance.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-info">Goto Short-list</a></p>
+            {% else %}
+              <p>There is no talent currently in MyWexLog suited to this vacancy.</p>
+            {% endif %}
+          {% endfor %}
+          {% endif %}
+
 
       <nav aria-label="Page navigation">
           {% if pageitems.has_other_pages %}

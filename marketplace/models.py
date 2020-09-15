@@ -179,6 +179,7 @@ BID = (
         ('S','Short-listed'),
         ('D','Talent Declined'),
         ('I','Interview'),
+        ('Z','Declined'),
     )
 
 class BidShortList(models.Model):
