@@ -405,55 +405,6 @@
             {% endfor %}
             {% endif %}
 
-        <table class="table table-hover table-sm">
-          <col width="15%">
-          <col width="5%">
-          <col width="5%">
-          <col width="1%">
-          <col width="8%">
-          <col width="45%">
-          <col width="10%">
-          <thead>
-            <tr class="no-hover">
-              <th class="align-middle text-center">Alias</th>
-              <th class="align-middle text-center">Experience</th>
-              <th class="align-middle text-center">Training</th>
-              <th class="align-middle text-center">Books Read</th>
-              <th class="align-middle text-center">Rate</th>
-              <th class="align-middle text-left">Motivation</th>
-              <th class="align-middle text-center">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for key in suitable_slice.items %}
-            <tr>
-              <td class="align-middle text-center">{{ key.1.ro.0.4 }}</td>
-              <td class="align-middle text-center">{{ key.1.we|intcomma }}<br>(<strong>{{ key.1.s_no }}</strong> skills)</td>
-              <td class="align-middle text-center">{{ key.1.te|intcomma }}</td>
-              <td class="align-middle text-center">{{ key.1.rb }}</td>
-              <td class="align-middle text-center">{{ key.1.ro.0.1 }}<br><strong>{{ key.1.ro.0.0|intcomma }}</strong><br>{{ key.1.ro.0.2 }}</td>
-              <td class="align-middle text-left">{{ key.1.ro.0.3|truncatechars:190 }}</td>
-              <td class="align-middle text-center">
-                <p>
-              <form  action="{% url 'MarketPlace:ShortList' tlt=key.1.ro.0.4  vac=instance.ref_no %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="badge badge-info badge-pill float-right" style="width: 5rem;">Short-list</button>
-              </form><br>
-              <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=instance.ref_no %}" class="badge badge-success badge-pill float-right" style="width: 5rem;" target="new">View Profile</a></p>
-              </td>
-            {% empty %}
-              {% if s_list %}
-                  <td colspan="6">All suitable talent has been short-listed.</td>
-                  <td>
-                    <a href="{% url 'MarketPlace:ShortListView' instance.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-info">Goto Short-list</a>
-                  </td>
-              {% else %}
-                    <td colspan="7">There is no talent currently in MyWexLog suited to this vacancy.</td>
-              {% endif %}
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
       </div>
       {% if suitable_count > 5 %}
         <div class="float-right">
