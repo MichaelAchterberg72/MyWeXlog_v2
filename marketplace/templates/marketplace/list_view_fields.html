@@ -8,7 +8,7 @@
   {% endif %}
 </div>
 <div class="col-1 col-no-pad h-100 text-center my-auto">
-  {{ key.1.we }}
+  {{ key.1.we|intcomma }}<br>(<strong>{{ key.1.s_no }}</strong> skills)
 </div>
 <div class="col-1 col-no-pad h-100 text-center my-auto">
   {{ key.1.te }}
@@ -17,8 +17,8 @@
   {{ key.1.rb }}
 </div>
 <div class="col-1 col-no-pad h-100 text-center my-auto">
-  {{ key.1.ro.0.1 }} <strong>{{ key.1.ro.0.0 }}</strong> {{ key.1.ro.0.2 }}
+  {{ key.1.ro.0.1 }}<br><strong>{{ key.1.ro.0.0 }}</strong><br>{{ key.1.ro.0.2 }}
 </div>
 <div class="col-5 h-100 text-left my-auto">
-  {{ key.1.ro.0.3|truncatechars:200 }}
+  {{ key.1.ro.0.3|truncatechars:190 }}
 </div>

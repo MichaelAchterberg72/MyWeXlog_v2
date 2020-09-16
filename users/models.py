@@ -122,6 +122,7 @@ class ExpandedView(models.Model):
     trial_expired = models.BooleanField('Don\'t view trial again', default=False)
     applicants_list = models.BooleanField(default=True)
     talent_suited_list = models.BooleanField(default=True)
+    shortlist_list = models.BooleanField(default=True)
     pending_interviews_list = models.BooleanField(default=True)
     suitable_applicants_list = models.BooleanField(default=True)
     unsuitable_applicants_list = models.BooleanField(default=True)

@@ -19,33 +19,46 @@
       </form>
     </div>
     <h4 class="card-title">Interview History (All Interviews)</h4>
-    <table class="table table-hover table-sm">
-      <col width = "15%">
-      <col width = "43%">
-      <col width = "12%">
-      <col width = "10%">
-      <col width = "10%">
-      <col width = "10%">
-      <thead>
-        <tr class="no-hover">
-          <th class="align-middle text-center">Talent</th>
-          <th class="align-middle text-center">Vacancy<br>( Reference Number )</th>
-          <th class="align-middle text-center">Talent's Response</th>
-          <th class="align-middle text-center">My Response</th>
-          <th class="align-middle text-center">Interview Status</th>
-          <th class="align-middle text-center">Detail</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for l in pageitems %}
-          <tr>
-            <td class="align-middle text-center">{{ l.talent.alias }}</td>
-            <td class="align-middle text-center">
+    <div class="container">
+      <div class="row my-auto">
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Talent</strong>
+        </div>
+        <div class="col-md-4 h-100 text-center my-auto">
+          <strong>Vacancy<br>( Reference Number )</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Talent's Response</strong>
+        </div>
+        <div class="col-md-1 h-100 text-center my-auto">
+          <strong>My Response</strong>
+        </div>
+        <div class="col-md-1 h-100 text-center my-auto">
+          <strong>Interview Status</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Detail</strong>
+        </div>
+      </div>
+    </div>
+    {% for l in pageitems %}
+    <div class="row">
+      <div class="card mt-2 card-hover" style="width: 100%;">
+        <div class="card-body">
+          <div class="row my-auto">
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ l.talent.alias }}
+            </div>
+            <div class="col-md-4 h-100 text-center my-auto">
               {{ l.scope.title }}<br>( {{ l.scope.ref_no }} )
-            </td>
-            <td class="align-middle text-center">{{ l.get_tlt_response_display }}</td>
-            <td class="align-middle text-center">{{ l.get_outcome_display }}</td>
-            <td class="align-middle text-center">
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ l.get_tlt_response_display }}
+            </div>
+            <div class="col-md-1 h-100 text-center my-auto">
+              {{ l.get_outcome_display }}
+            </div>
+            <div class="col-md-1 h-100 text-center my-auto">
               {% if l.emp_intcomplete == True %}
                 Closed
               {% else %}
@@ -54,32 +67,30 @@
                     <i class="fa fa-close" style="font-size:24px;color:red !important"></i>
                   </a>
               {% endif %}
-            </td>
-            {% if request.user.subscription > 1 %}
-              <td class="align-middle text-center">
-                <a href="{% url 'Profile:ContactDetail' vac=l.scope.ref_no tlt=l.talent.alias %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Contact Detail">
-                  <i class="fa fa-tty" aria-hidden="true" style="font-size:24px;color:black"></i>
-                </a>&nbsp
-                <a href="{% url 'MarketPlace:VacancyPost' l.scope.ref_no %}?next={{ request.path|urlencode }}" class="" data-toggle="tooltip" title="See Vacancy Detail">
-                  <i class="fa fa-industry" style="font-size:24px;color:black"></i>
-                </a>&nbsp
-                <a href="{% url 'MarketPlace:EmployerIntDetail' bil=l.slug tlt=l.talent.alias %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="See Interview Comments">
-                  <i class="fa fa-commenting-o" style="font-size:30px;color:black"></i>
-                </a>
-              </td>
-            {% elif request.user.subscription < 2 %}
-              <td>
-                <a href="#" class="badge badge-primary 8rem" style="width: 6rem">See Detail</a>
-              </td>
-            {% endif %}
-          </tr>
-        {% empty %}
-          <tr>
-            <td colspan="4">No interviews listed.</td>
-          </tr>
-        {% endfor %}
-    </tbody>
-    </table>
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {% if request.user.subscription > 1 %}
+                  <a href="{% url 'Profile:ContactDetail' vac=l.scope.ref_no tlt=l.talent.alias %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Contact Detail">
+                    <i class="fa fa-tty" aria-hidden="true" style="font-size:24px;color:black"></i>
+                  </a>&nbsp
+                  <a href="{% url 'MarketPlace:VacancyPost' l.scope.ref_no %}?next={{ request.path|urlencode }}" class="" data-toggle="tooltip" title="See Vacancy Detail">
+                    <i class="fa fa-industry" style="font-size:24px;color:black"></i>
+                  </a>&nbsp
+                  <a href="{% url 'MarketPlace:EmployerIntDetail' bil=l.slug tlt=l.talent.alias %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="See Interview Comments">
+                    <i class="fa fa-commenting-o" style="font-size:30px;color:black"></i>
+                  </a>
+              {% elif request.user.subscription < 2 %}
+                  <a href="#" class="badge badge-primary 8rem" style="width: 6rem">See Detail</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+      <p>No interviews listed.</p>
+    {% endfor %}
+
     <p>&nbsp</p>
 
     <nav aria-label="Page navigation">

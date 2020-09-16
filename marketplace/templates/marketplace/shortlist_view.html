@@ -15,7 +15,7 @@
 <div class="container">
   <div class="row">
     <div class="col-sm-12">
-      <div class="card h-100">
+      <div class="card card-shadow h-100">
         <div class="card-body">
           <div class="btn-toolbar float-right">
             <form  action="{% url 'BookList:BLB' %}" method="post">
@@ -35,84 +35,103 @@
           {% if closed == True %}
             <p>This vacancy has been awarded and is closed.</p>
           {% else %}
-            <table class="table table-hover table-sm">
-              <col width="15%">
-              <col width="6%">
-              <col width="6%">
-              <col width="1%">
-              <col width="8%">
-              <col width="45%">
-              <col width="8%">
-              <thead>
-                <tr class="no-hover">
-                  <th class="align-middle text-center">Alias<br>& Rating</th>
-                  <th class="align-middle text-center">Experience</th>
-                  <th class="align-middle text-center">Training</th>
-                  <th class="align-middle text-center">Books Read</th>
-                  <th class="align-middle text-center">Rate</th>
-                  <th class="align-middle text-left">Motivation</th>
-                  <th class="align-middle text-center">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for sl in pageitems %}
-                <tr>
-                  <td class="align-middle text-center">
-                    {% if sl.1.count > 4 %}
-                      {{ sl.1.ro.0.4 }}<br><strong>{{ sl.1.score }}</strong><br>(by {{ sl.1.count }} people)
-                    {% else %}
-                      {{ sl.1.ro.0.4 }}<br><strong>Not Rated</strong><br>(by < 5 people)
-                    {% endif %}
-                  </td>
-                  <td class="align-middle text-center">
-                    {{ sl.1.we|intcomma }}<br>(<strong>{{ sl.1.s_no }}</strong> skills)
-                  </td>
-                  <td class="align-middle text-center">
-                    {{ sl.1.te|intcomma }}
-                  </td>
-                  <td class="align-middle text-center">
-                    {{ sl.1.rb }}
-                  </td>
-                  <td class="align-middle text-center">
-                    {{ sl.1.ro.0.1 }}<br><strong>{{ sl.1.ro.0.0|intcomma }}</strong><br>{{ sl.1.ro.0.2 }}
-                  </td>
-                  <td class="align-middle text-left">
-                    {{ sl.1.ro.0.3|truncatechars:200 }}
-                  </td>
-                  <td class="align-middle text-center">
-                    <p>
-                      {{s1.0}}
-                      {% if sl.0 in declined %}
-                        <button type="submit" class="badge badge-danger badge-pill float-right" style="width: 6rem">Talent<br>Declined</button>
-                      {% else %}
-                        <a href="{% url 'Talent:APV' tlt=sl.1.ro.0.4 vac=vacancy.ref_no %}" target="_blank" class="badge badge-success badge-pill float-right" style="width: 6rem">View Profile</a>
-                        <form  action="{% url 'MarketPlace:VacInterview' tlt=sl.1.ro.0.4 vac=vacancy.ref_no %}" method="post">
-                          {% csrf_token %}
-                          <button type="submit" class="badge badge-info badge-pill float-right" style="width: 6rem">Interview</button>
-                        </form>
-                        {% if active == False %}
-                        <form  action="{% url 'MarketPlace:VacAssign' tlt=sl.1.ro.0.4 vac=vacancy.ref_no %}?next={{ request.path|urlencode }}" method="post">
-                          {% csrf_token %}
-                          <button type="submit" class="badge badge-success badge-pill float-right" style="width: 6rem">Assign</button>
-                        </form>
+          <div class="row">
+            <div class="col-12">
+            {% if list_view %}
+              <form  action="{% url 'MarketPlace:ShortlistExpand' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary float-right" style="width:8rem;">Expanded</button>
+              </form>
+            {% else %}
+              <form  action="{% url 'MarketPlace:ShortlistExpand' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary float-right" style="width:8rem;">List</button>
+              </form>
+            {% endif %}
+            </div>
+          </div>
+
+            {% if list_view %}
+              {% include 'marketplace/list_view_headings.html' %}
+              {% for key in pageitems %}
+              <div class="row">
+                <div class="card mt-2 card-hover" style="width: 100%;">
+                  <div class="card-body">
+                    <div class="row my-auto">
+                      {% include 'marketplace/list_view_fields.html' %}
+                      <div class="col-1 col-no-pad h-100 text-center my-auto">
+                        {% if key.0 in declined %}
+                          <button type="submit" class="badge badge-danger badge-pill float-right" style="width: 6rem">Talent<br>Declined</button>
                         {% else %}
-                          <button type="submit" class="badge badge-success badge-pill float-right" style="width: 6rem">Pending</button>
+
+                          <form  action="{% url 'MarketPlace:VacInterview' tlt=key.1.ro.0.4 vac=vacancy.ref_no %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="badge badge-info badge-pill float-right" style="width: 6rem">Interview</button>
+                          </form>
+                          {% if active == False %}
+                          <form  action="{% url 'MarketPlace:VacAssign' tlt=key.1.ro.0.4 vac=vacancy.ref_no %}?next={{ request.path|urlencode }}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="badge badge-success badge-pill float-right" style="width: 6rem">Assign</button>
+                          </form>
+                          {% else %}
+                            <button type="submit" class="badge badge-success badge-pill float-right" style="width: 6rem">Pending</button>
+                          {% endif %}
+                          <form  action="{% url 'MarketPlace:VacDecline' tlt=key.1.ro.0.4 vac=vacancy.ref_no %}?next={{ request.path|urlencode }}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="badge badge-danger badge-pill float-right" style="width: 6rem">Not Suitable</button>
+                          </form>
                         {% endif %}
-                        <form  action="{% url 'MarketPlace:VacDecline' tlt=sl.1.ro.0.4 vac=vacancy.ref_no %}?next={{ request.path|urlencode }}" method="post">
-                          {% csrf_token %}
-                          <button type="submit" class="badge badge-danger badge-pill float-right" style="width: 6rem">Not Suitable</button>
-                        </form>
-                      {% endif %}
-                    </p>
-                  </td>
-                </tr>
-                {% empty %}
-                <tr>
-                  <td colspan="8">Nobody is currently shortlisted for this vacancy.</td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
+                        <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=vacancy.ref_no %}" target="_blank" class="badge badge-success badge-pill float-right" style="width: 6rem">View Profile</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% empty %}
+                <p>Nobody is currently shortlisted for this vacancy.</p>
+              {% endfor %}
+              {% else %}
+              {% for key in pageitems %}
+              <div class="row">
+                <div class="card mt-2 card-hover" style="width: 100%;">
+                  <div class="card-body">
+                    {% include 'marketplace/expanded_view_fields.html' %}
+                    <div class="row my-auto">
+                      <div class="col-md-12 h-100">
+                        <div class="row my-auto float-right">
+                          {% if key.0 in declined %}
+                            <button type="submit" class="btn btn-outline-danger" style="width: 10rem">Talent<br>Declined</button>&nbsp
+                          {% else %}
+
+                            <form  action="{% url 'MarketPlace:VacInterview' tlt=key.1.ro.0.4 vac=vacancy.ref_no %}" method="post">
+                              {% csrf_token %}
+                              <button type="submit" class="btn btn-outline-info" style="width: 10rem">Interview</button>
+                            </form>&nbsp
+                            {% if active == False %}
+                            <form  action="{% url 'MarketPlace:VacAssign' tlt=key.1.ro.0.4 vac=vacancy.ref_no %}?next={{ request.path|urlencode }}" method="post">
+                              {% csrf_token %}
+                              <button type="submit" class="btn btn-outline-success" style="width: 10rem">Assign</button>
+                            </form>&nbsp
+                            {% else %}
+                              <button type="submit" class="btn btn-outline-success" style="width: 10rem">Pending</button>
+                            {% endif %}
+                            <form  action="{% url 'MarketPlace:VacDecline' tlt=key.1.ro.0.4 vac=vacancy.ref_no %}?next={{ request.path|urlencode }}" method="post">
+                              {% csrf_token %}
+                              <button type="submit" class="btn btn-outline-danger" style="width: 10rem">Not Suitable</button>
+                            </form>&nbsp
+                          {% endif %}
+                          <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=vacancy.ref_no %}" target="_blank" class="btn btn-outline-success" style="width: 10rem">View Profile</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% empty %}
+                <p>Nobody is currently shortlisted for this vacancy.</p>
+              {% endfor %}
+              {% endif %}
+
           {% endif %}
 
           <nav aria-label="Page navigation">

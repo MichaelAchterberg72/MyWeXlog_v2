@@ -14,45 +14,70 @@
     <h4 class="card-title">Vacancy Application History</h4>
     <h4 class="card-title">Roles Applied for - Pending Positions</h4>
     <p>{% if applied_c == 0 %}You have not applied for any positions yet.{% elif applied_c < 5 %}Showing <strong>{{ applied_c }}</strong> out of <strong>{{ role_c }}</strong> applications.{% else %}You currently have a total of <strong>{{ applied_c }}</strong> applications pending out of <strong>{{role_c}}</strong> applications{% endif %}</p>
-    <table class="table table-hover table-sm">
-      <thead>
-        <tr class="no-hover">
-          <th class="align-middle text-center">Date Applied</th>
-          <th class="align-middle text-center">Vacancy Title</th>
-          <th class="align-middle text-center">Ref. No.</th>
-          <th class="align-middle text-center">Hours Required</th>
-          <th class="align-middle text-center">Work Configeration</th>
-          <th class="align-middle text-center">Country</th>
-          <th class="align-middle text-center">Status</th>
-        </tr>
-      </thead>
-      <tbody>
-
-        {% for i in pageitems %}
-          <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' i.work.ref_no %}?next={{ request.path|urlencode }}'">
-            <td class="align-middle text-center">{{ i.date_applied|date:"d N Y" }}</td>
-            <td class="align-middle text-center">{{ i.work.title|truncatechars:37 }}</td>
-            <td class="align-middle text-center">{{ i.work.ref_no }}</td>
-            <td class="align-middle text-center">
+    <div class="container">
+      <div class="row my-auto">
+        <div class="col-md-1 h-100 text-center my-auto">
+          <strong>Date Applied</strong>
+        </div>
+        <div class="col-md-3 h-100 text-center my-auto">
+          <strong>Vacancy Title</strong>
+        </div>
+        <div class="col-md-1 h-100 text-center my-auto">
+          <strong>Hours Required</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Work Configeration</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Country</strong>
+        </div>
+        <div class="col-md-1 h-100 text-center my-auto">
+          <strong>Status</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong></strong>
+        </div>
+      </div>
+    </div>
+    {% for i in pageitems %}
+    <div class="row">
+      <div class="card mt-2 card-hover" style="width: 100%;">
+        <div class="card-body">
+          <div class="row my-auto">
+            <div class="col-md-1 h-100 text-center my-auto">
+              {{ i.date_applied|date:"d N Y" }}
+            </div>
+            <div class="col-md-3 h-100 text-center my-auto">
+              {{ i.work.title|truncatechars:37 }}
+              <br>
+              <div class="font-grey">({{ i.work.ref_no }})</div>
+            </div>
+            <div class="col-md-1 h-100 text-center my-auto">
               {{ i.work.hours_required|intcomma }} ({{ i.work.get_unit_display }})
-            </td>
-            <td class="align-middle text-center">{{ i.work.worklocation }}</td>
-            <td class="align-middle text-center">{{ i.work.city }}</td>
-            <td class="align-middle text-center">{{ i.get_bidreview_display }}</td>
-            {% if request.user.subscription == 2 %}
-              <td><a href="{% url 'MarketPlace:VacancyDetail' i.work.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-secondary 8rem" style="width: 6rem">See Detail</a></td>
-            {% elif request.user.subscription < 2 %}
-              <td><a href="#" class="badge badge-primary 8rem" style="width: 6rem">See Detail</a></td>
-            {% endif %}
-          </tr>
-          {% empty %}
-          <tr>
-            <td colspan="8">No applications are currently pending - go and apply for more vacancies!</td>
-          </tr>
-          {% endfor %}
-
-    </tbody>
-    </table>
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ i.work.worklocation }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ i.work.city }}
+            </div>
+            <div class="col-md-1 h-100 text-center my-auto">
+              {{ i.get_bidreview_display }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {% if request.user.subscription == 2 %}
+                <a href="{% url 'MarketPlace:VacancyDetail' i.work.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-secondary 6rem" style="width: 6rem">See Detail</a>
+              {% elif request.user.subscription < 2 %}
+                <a href="#" class="badge badge-primary 6rem" style="width: 6rem">See Detail</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+      <p>No applications are currently pending - go and apply for more vacancies!.</p>
+    {% endfor %}
 
     <p>&nbsp</p>
 

@@ -94,6 +94,7 @@ urlpatterns = [
     path('vacancy/applicants-for-vacancy/<slug:vac>/', views.ApplicantsForVacancyListView, name='ApplicantsForVacancy'),
     path('vacancy/applicants/expanded-list/', views.ExpandApplicantsView, name='AppFLExpand'),
     path('vacancy/talent-suited/expanded-list/', views.ExpandTalentSuitedView, name='SuitedExpand'),
+    path('vacancy/short-list/expanded-list/', views.ExpandShortListView, name='ShortlistExpand'),
     path('vacancy-dashboard/pending-interviews/expanded-list/', views.ExpandPendingInterviewsView, name='PendingInterviewsExpand'),
     path('vacancy-dashboard/suitable-applicants/expanded-list/', views.ExpandSuitableApplicantsView, name='SuitableApplicanctExpand'),
     path('vacancy-dashboard/unsuitable-applicants/expanded-list/', views.ExpandUnSuitableApplicantsView, name='UnSuitableApplicanctExpand'),

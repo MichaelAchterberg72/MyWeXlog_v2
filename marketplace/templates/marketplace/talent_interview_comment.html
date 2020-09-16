@@ -6,7 +6,8 @@
 {% block title %}{{block.super}}-Comment{% endblock title %}
 
 {% block content %}
-<div class="container">
+<div class="card card-shadow">
+  <div class="card-body">
   <h3>Comments for {{ instance.scope.title }} Interview</h3>
   <form method="post" enctype="multipart/form-data">
     <input type="hidden" name="next" value="{{ request.GET.next }}">
@@ -18,7 +19,7 @@
     </div>
   </form>
   </div>
-
+</div>
 {% endblock content %}
 {% block Script %}
 

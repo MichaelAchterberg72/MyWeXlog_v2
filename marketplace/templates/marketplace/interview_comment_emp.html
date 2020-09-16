@@ -6,7 +6,8 @@
 {% block title %}{{block.super}}-Comments{% endblock title %}
 
 {% block content %}
-<div class="container">
+<div class="card card-shadow">
+  <div class="card-body">
 {% for t in bidshortlist_qs %}
   <h3>Comments for {{ t.talent.alias }} on {{ t.scope }}</h3>
 {% endfor %}
@@ -19,7 +20,7 @@
     </div>
   </form>
   </div>
-
+</div>
 {% endblock content %}
 {% block Script %}
 
