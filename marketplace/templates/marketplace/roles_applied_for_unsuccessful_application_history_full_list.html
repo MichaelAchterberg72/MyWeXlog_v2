@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<div class="card border-0">
+<div class="card card-shadow">
   <div class="card-body">
     <div class="float-right">
       <a href="{% url 'MarketPlace:History' %}" class="btn btn-secondary">Back</a>
@@ -19,23 +19,23 @@
         <div class="col-md-1 h-100 text-center my-auto">
           <strong>Date Listed</strong>
         </div>
-        <div class="col-md-3 h-100 text-center my-auto">
+        <div class="col-3 col-no-pad h-100 text-center my-auto">
           <strong>Vacancy Title</strong>
         </div>
-        <div class="col-md-1 h-100 text-center my-auto">
+        <div class="col-1 col-no-pad h-100 text-center my-auto">
           <strong>Hours Required</strong>
         </div>
-        <div class="col-md-2 h-100 text-center my-auto">
-          <strong>Scope Configeration</strong>
+        <div class="col-2 col-no-pad h-100 text-center my-auto">
+          <strong>Scope<br>Configeration</strong>
         </div>
-        <div class="col-md-2 h-100 text-center my-auto">
+        <div class="col-2 col-no-pad h-100 text-center my-auto">
           <strong>Country</strong>
         </div>
-        <div class="col-md-1 h-100 text-center my-auto">
+        <div class="col-2 col-no-pad h-100 text-center my-auto">
           <strong>Status</strong>
         </div>
-        <div class="col-md-2 h-100 text-center my-auto">
-          <strong></strong>
+        <div class="col-1 col-no-pad h-100 text-center my-auto">
+          <strong>Action</strong>
         </div>
       </div>
     </div>
@@ -44,27 +44,27 @@
       <div class="card mt-2 card-hover" style="width: 100%;">
         <div class="card-body">
           <div class="row my-auto">
-            <div class="col-md-1 h-100 text-center my-auto">
+            <div class="col-1 col-no-pad h-100 text-center my-auto">
               {{ i.date_listed|date:"d N Y" }}
             </div>
-            <div class="col-md-3 h-100 text-center my-auto">
-              {{ i.work.title|truncatechars:37 }}
+            <div class="col-3 col-no-pad h-100 text-center my-auto">
+              {{ i.scope.title|truncatechars:37 }}
               <br>
-              <div class="font-grey">({{ i.work.ref_no }})</div>
+              <div class="font-grey">({{ i.scope.ref_no }})</div>
             </div>
-            <div class="col-md-1 h-100 text-center my-auto">
-              {{ i.work.hours_required|intcomma }} ({{ i.work.get_unit_display }})
+            <div class="col-1 col-no-pad h-100 text-center my-auto">
+              {{ i.scope.hours_required|intcomma }}<br>({{ i.scope.get_unit_display }})
             </div>
-            <div class="col-md-2 h-100 text-center my-auto">
-              {{ i.work.worklocation }}
+            <div class="col-2 col-no-pad h-100 text-center my-auto">
+              {{ i.scope.worklocation }}
             </div>
-            <div class="col-md-2 h-100 text-center my-auto">
-              {{ i.work.city }}
+            <div class="col-2 col-no-pad h-100 text-center my-auto">
+              {{ i.scope.city }}
             </div>
-            <div class="col-md-1 h-100 text-center my-auto">
-              {{ i.get_bidreview_display }}
+            <div class="col-2 col-no-pad h-100 text-center my-auto">
+              {{ i.get_status_display }}
             </div>
-            <div class="col-md-2 h-100 text-center my-auto">
+            <div class="col-1 col-no-pad h-100 text-center my-auto">
               {% if request.user.subscription == 2 %}
                 <a href="{% url 'MarketPlace:VacancyDetail' i.scope.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-secondary 6rem" style="width: 6rem">See Detail</a>
               {% elif request.user.subscription < 2 %}

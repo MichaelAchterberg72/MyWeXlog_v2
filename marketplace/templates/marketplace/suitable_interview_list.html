@@ -22,7 +22,7 @@
     <br>
 </div>
     <div class="card card-shadow">
-      <div class="card-body">
+      <div id='suitable' class="card-body">
         {% if wit_qs %}
           {% for a in wit_qs %}
             {% if a.tlt_response == 'A' or a.tlt_response == 'P' or a.tlt_response == 'C' %}
@@ -38,12 +38,12 @@
         <div class="row">
           <div class="col-12">
           {% if suitable_applicants_list_view %}
-            <form  action="{% url 'MarketPlace:SuitableApplicanctExpand' %}" method="post">
+            <form  action="{% url 'MarketPlace:SuitableApplicanctFLExpand' vac=scope.ref_no %}" method="post">
               {% csrf_token %}
               <button type="submit" class="btn btn-primary float-right" style="width:8rem;">Expanded</button>
             </form>
           {% else %}
-            <form  action="{% url 'MarketPlace:SuitableApplicanctExpand' %}" method="post">
+            <form  action="{% url 'MarketPlace:SuitableApplicanctFLExpand' vac=scope.ref_no %}" method="post">
               {% csrf_token %}
               <button type="submit" class="btn btn-primary float-right" style="width:8rem;">List</button>
             </form>
@@ -90,13 +90,13 @@
                         {% if active == 'False' %}
                           <form  action="{% url 'MarketPlace:SuitableVacAssign' tlt=key.1.ro.0.4 vac=scope.ref_no %}" method="post">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-success-outline" style="width: 10rem">Assign</button>
-                            <a href="{% url 'MarketPlace:SuitableNotSuitable' tlt=key.1.ro.0.4 vac=scope.ref_no %}" class="btn btn-danger-outline" style="width: 10rem">Not Suitable</a>
+                            <button type="submit" class="btn btn-outline-success" style="width: 10rem">Assign</button>
+                            <a href="{% url 'MarketPlace:SuitableNotSuitable' tlt=key.1.ro.0.4 vac=scope.ref_no %}" class="btn btn-outline-danger" style="width: 10rem">Not Suitable</a>
                           </form>&nbsp
                         {% else %}
-                          <button type="submit" class="btn btn-success-outline" style="width: 10rem">Pending</button>
+                          <button type="submit" class="btn btn-outline-success" style="width: 10rem">Pending</button>
                         {% endif %}&nbsp
-                        <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="btn btn-secondary-outline" style="width: 10rem">View Profile</a>
+                        <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="btn btn-outline-secondary" style="width: 10rem">View Profile</a>
                       </div>
                     </div>
                   </div>

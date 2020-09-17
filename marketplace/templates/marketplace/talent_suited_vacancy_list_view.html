@@ -21,12 +21,12 @@
       <div class="row">
         <div class="col-12">
         {% if list_view %}
-          <form  action="{% url 'MarketPlace:SuitedExpand' %}" method="post">
+          <form  action="{% url 'MarketPlace:SuitedFLExpand' %}" method="post">
             {% csrf_token %}
             <button type="submit" class="btn btn-primary float-right" style="width:8rem;">Expanded</button>
           </form>
         {% else %}
-          <form  action="{% url 'MarketPlace:SuitedExpand' %}" method="post">
+          <form  action="{% url 'MarketPlace:SuitedFLExpand' %}" method="post">
             {% csrf_token %}
             <button type="submit" class="btn btn-primary float-right" style="width:8rem;">List</button>
           </form>

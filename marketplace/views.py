@@ -2933,7 +2933,7 @@ def AppliedListRejectedView(request, vac, tlt):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-def ExpandApplicantsView(request):
+def ExpandApplicantsView(request, vac):
     instance = ExpandedView.objects.get(talent=request.user)
     list_view = instance.applicants_list
     if list_view == True:
@@ -2942,10 +2942,22 @@ def ExpandApplicantsView(request):
         instance.applicants_list = True
     instance.save()
 
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return redirect(reverse('MarketPlace:VacancyPost', kwargs={'vac':vac})+'#applicants')
 
 
-def ExpandTalentSuitedView(request):
+def ExpandApplicantsFLView(request, vac):
+    instance = ExpandedView.objects.get(talent=request.user)
+    list_view = instance.applicants_fl_list
+    if list_view == True:
+        instance.applicants_fl_list = False
+    elif list_view == False:
+        instance.applicants_fl_list = True
+    instance.save()
+
+    return redirect(reverse('MarketPlace:ApplicantsForVacancy', kwargs={'vac':vac})+'#applicants')
+
+
+def ExpandTalentSuitedView(request, vac):
     instance = ExpandedView.objects.get(talent=request.user)
     list_view = instance.talent_suited_list
     if list_view == True:
@@ -2954,7 +2966,19 @@ def ExpandTalentSuitedView(request):
         instance.talent_suited_list = True
     instance.save()
 
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return redirect(reverse('MarketPlace:VacancyPost', kwargs={'vac':vac})+'#suited')
+
+
+def ExpandTalentSuitedFLView(request, vac):
+    instance = ExpandedView.objects.get(talent=request.user)
+    list_view = instance.talent_fl_suited_list
+    if list_view == True:
+        instance.talent_fl_suited_list = False
+    elif list_view == False:
+        instance.talent_fl_suited_list = True
+    instance.save()
+
+    return redirect(reverse('MarketPlace:TalentSuitedToVacancy', kwargs={'vac':vac})+'#suited')
 
 
 def ExpandShortListView(request):
@@ -2969,7 +2993,7 @@ def ExpandShortListView(request):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-def ExpandPendingInterviewsView(request):
+def ExpandPendingInterviewsView(request, vac):
     instance = ExpandedView.objects.get(talent=request.user)
     list_view = instance.pending_interviews_list
     if list_view == True:
@@ -2978,10 +3002,22 @@ def ExpandPendingInterviewsView(request):
         instance.pending_interviews_list = True
     instance.save()
 
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return redirect(reverse('MarketPlace:InterviewList', kwargs={'vac':vac})+'#pending')
 
 
-def ExpandSuitableApplicantsView(request):
+def ExpandPendingInterviewsFLView(request, vac):
+    instance = ExpandedView.objects.get(talent=request.user)
+    list_view = instance.pending_fl_interviews_list
+    if list_view == True:
+        instance.pending_fl_interviews_list = False
+    elif list_view == False:
+        instance.pending_fl_interviews_list = True
+    instance.save()
+
+    return redirect(reverse('MarketPlace:PendingInterviewList', kwargs={'vac':vac})+'#pending')
+
+
+def ExpandSuitableApplicantsView(request, vac):
     instance = ExpandedView.objects.get(talent=request.user)
     list_view = instance.suitable_applicants_list
     if list_view == True:
@@ -2990,10 +3026,22 @@ def ExpandSuitableApplicantsView(request):
         instance.suitable_applicants_list = True
     instance.save()
 
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return redirect(reverse('MarketPlace:InterviewList', kwargs={'vac':vac})+'#suitable')
 
 
-def ExpandUnSuitableApplicantsView(request):
+def ExpandSuitableApplicantsFLView(request, vac):
+    instance = ExpandedView.objects.get(talent=request.user)
+    list_view = instance.suitable_fl_applicants_list
+    if list_view == True:
+        instance.suitable_fl_applicants_list = False
+    elif list_view == False:
+        instance.suitable_fl_applicants_list = True
+    instance.save()
+
+    return redirect(reverse('MarketPlace:SuitableInterviewList', kwargs={'vac':vac})+'#suitable')
+
+
+def ExpandUnSuitableApplicantsView(request, vac):
     instance = ExpandedView.objects.get(talent=request.user)
     list_view = instance.unsuitable_applicants_list
     if list_view == True:
@@ -3002,10 +3050,22 @@ def ExpandUnSuitableApplicantsView(request):
         instance.unsuitable_applicants_list = True
     instance.save()
 
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return redirect(reverse('MarketPlace:InterviewList', kwargs={'vac':vac})+'#unsuitable')
 
 
-def ExpandRejectedApplicantsView(request):
+def ExpandUnSuitableApplicantsFLView(request, vac):
+    instance = ExpandedView.objects.get(talent=request.user)
+    list_view = instance.unsuitable_fl_applicants_list
+    if list_view == True:
+        instance.unsuitable_fl_applicants_list = False
+    elif list_view == False:
+        instance.unsuitable_fl_applicants_list = True
+    instance.save()
+
+    return redirect(reverse('MarketPlace:UnsuitableInterviewList', kwargs={'vac':vac})+'#unsuitable')
+
+
+def ExpandRejectedApplicantsView(request, vac):
     instance = ExpandedView.objects.get(talent=request.user)
     list_view = instance.rejected_applicants_list
     if list_view == True:
@@ -3014,7 +3074,19 @@ def ExpandRejectedApplicantsView(request):
         instance.rejected_applicants_list = True
     instance.save()
 
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return redirect(reverse('MarketPlace:InterviewList', kwargs={'vac':vac})+'#rejected')
+
+
+def ExpandRejectedApplicantsFLView(request, vac):
+    instance = ExpandedView.objects.get(talent=request.user)
+    list_view = instance.rejected_fl_applicants_list
+    if list_view == True:
+        instance.rejected_fl_applicants_list = False
+    elif list_view == False:
+        instance.rejected_fl_applicants_list = True
+    instance.save()
+
+    return redirect(reverse('MarketPlace:BidRejectedList', kwargs={'vac':vac})+'#rejected')
 
 
 @csp_exempt

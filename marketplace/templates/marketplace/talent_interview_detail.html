@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<div class="card border-0" style="width: 100%;">
+<div class="card card-shadow" style="width: 100%;">
   <div class="card-body">
     <div class="">
       <form  action="{% url 'MarketPlace:TalentInterviewHistory' user.alias %}" method="post">
@@ -13,50 +13,81 @@
         <button type="submit" class="btn btn-secondary float-right">Back</button>
       </form>
     </div>
-    {% for d in bil_qs %}
+
     <h4 class="card-title">Interview Detail</h4>
-    <table class="table table-sm">
-      <thead>
-        <tr>
-          <th class="align-middle text-center">Vacancy</th>
-          <th class="align-middle text-center">Reference Number</th>
-          <th class="align-middle text-center">Talent Response</th>
-          <th class="align-middle text-center">Outcome</th>
-          <th class="align-middle text-center">Interview Status</th>
-          <th class="align-middle text-center">Detail</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' d.scope.ref_no %}?next={{ request.path|urlencode }}'">
-            <td>{{ d.scope.title }}</td>
-            <td class="align-middle text-center">{{ d.scope.ref_no }}</td>
-            <td class="align-middle text-center">{{ d.get_tlt_response_display }}</td>
-            <td class="align-middle text-center">{{ d.get_outcome_display }}</td>
-            {% if d.tlt_intcomplete == True %}
-              <td class="align-middle text-center">Closed</td>
-            {% else %}
-              <td class="align-middle text-center">Open <a href="{% url 'MarketPlace:TalentIntClose' bil=d.slug tlt=d.talent.alias %}" data-toggle="tooltip" title="Close Interview"><i class="fa fa-close" style="font-size:24px;color:red"></i></a> </td>
-            {% endif %}
-            {% if request.user.subscription > 0 %}
-              <td class="align-middle text-center">
+    <div class="container">
+      <div class="row my-auto">
+        <div class="col-md-3 h-100 text-center my-auto">
+          <strong>Vacancy</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Reference Number</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Talent Response</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Outcome</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Interview Status</strong>
+        </div>
+        <div class="col-md-1 h-100 text-center my-auto">
+          <strong>Detail</strong>
+        </div>
+      </div>
+    </div>
+    {% for d in bil_qs %}
+    <div class="row">
+      <div class="card mt-2 card-hover" style="width: 100%;">
+        <div class="card-body">
+          <div class="row my-auto">
+            <div class="col-md-3 h-100 text-center my-auto">
+              {{ d.scope.title }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ d.scope.ref_no }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ d.get_tlt_response_display }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ d.get_outcome_display }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {% if d.tlt_intcomplete == True %}
+                Closed
+              {% else %}
+                <a href="{% url 'MarketPlace:TalentIntClose' bil=d.slug tlt=d.talent.alias %}" data-toggle="tooltip" title="Close Interview"><i class="fa fa-close" style="font-size:24px;color:red"></i></a><br>Open
+              {% endif %}
+            </div>
+            <div class="col-md-1 h-100 text-center my-auto">
+              {% if request.user.subscription > 0 %}
                 <a href="{% url 'MarketPlace:VacancyDetail' d.scope.ref_no %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="See Vacancy Detail"><i class="fa fa-industry" style="font-size:24px;color:black"></i></a>
-              </td>
-            {% endif %}
-          </tr>
-          <tr onclick="window.location='{% url 'MarketPlace:TalentIntComment' bil=d.slug tlt=d.talent.alias %}?next={{ request.path|urlencode }}'">
-            <th class="align-middle text-center">My Comments</th>
-            {% if d.comments_tlt %}
-              <td colspan="5"  class="align-middle">{{ d.comments_tlt }}</td>
-            {% else %}
-              <td colspan="4"  class="align-middle"> - </td>
-              <td class="align-middle text-center">
-                <a href="{% url 'MarketPlace:TalentIntComment' bil=d.slug tlt=d.talent.alias %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Post Comment"><i class="fa fa-pencil-square-o" style="font-size:30px;color:black"></i></a>
-              </td>
-            {% endif %}
-          </tr>
-        {% endfor %}
-    </tbody>
-    </table>
+              {% endif %}
+            </div>
+          </div>
+          <div class="row my-auto">
+            <div class="col-md-12 h-100 text-left my-auto">
+              <br>
+              {% if d.comments_tlt %}
+                <p class="short-paragraph"><strong>My Comments:</strong></p>
+                <p onclick="window.location='{% url 'MarketPlace:TalentIntComment' bil=d.slug tlt=d.talent.alias %}?next={{ request.path|urlencode }}'">{{ d.comments_tlt }}</p>
+              {% else %}
+              <div class="row my-auto">
+                <div class="col-md-11 h-100 text-left my-auto">
+                  <p class="short-paragraph"><strong>My Comments:</strong></p>
+                </div>
+                <div class="col-md-1 h-100 text-center my-auto">
+                  <a href="{% url 'MarketPlace:TalentIntComment' bil=d.slug tlt=d.talent.alias %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Post Comment"><i class="fa fa-pencil-square-o" style="font-size:30px;color:black"></i></a>
+                </div>
+              </div>
+              {% endif %}
+            </div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
   </div>
 </div>
 

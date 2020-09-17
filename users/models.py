@@ -121,12 +121,18 @@ class ExpandedView(models.Model):
     intro_walkthrough = models.BooleanField('Don\'t view intro again', default=False)
     trial_expired = models.BooleanField('Don\'t view trial again', default=False)
     applicants_list = models.BooleanField(default=True)
+    applicants_fl_list = models.BooleanField(default=True)
     talent_suited_list = models.BooleanField(default=True)
+    talent_fl_suited_list = models.BooleanField(default=True)
     shortlist_list = models.BooleanField(default=True)
     pending_interviews_list = models.BooleanField(default=True)
+    pending_fl_interviews_list = models.BooleanField(default=True)
     suitable_applicants_list = models.BooleanField(default=True)
+    suitable_fl_applicants_list = models.BooleanField(default=True)
     unsuitable_applicants_list = models.BooleanField(default=True)
+    unsuitable_fl_applicants_list = models.BooleanField(default=True)
     rejected_applicants_list = models.BooleanField(default=True)
+    rejected_fl_applicants_list = models.BooleanField(default=True)
 
     def __str__(self):
         return f"Expanded view for {self.talent}"

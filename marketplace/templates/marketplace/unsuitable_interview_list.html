@@ -16,18 +16,18 @@
 
     <div class="card card-shadow">
       <div class="card-body">
-        <h4>Unsuitable Applicants</h4>
+        <h4 id='unsuitable'>Unsuitable Applicants</h4>
         <p>There are a total of {{ interview_n_count }} unsuitable applicants listed.</p>
 
         <div class="row">
           <div class="col-12">
           {% if unsuitable_applicants_list_view %}
-            <form  action="{% url 'MarketPlace:UnSuitableApplicanctExpand' %}" method="post">
+            <form  action="{% url 'MarketPlace:UnSuitableApplicanctFLExpand' vac=scope.ref_no %}" method="post">
               {% csrf_token %}
               <button type="submit" class="btn btn-primary float-right" style="width:8rem;">Expanded</button>
             </form>
           {% else %}
-            <form  action="{% url 'MarketPlace:UnSuitableApplicanctExpand' %}" method="post">
+            <form  action="{% url 'MarketPlace:UnSuitableApplicanctFLExpand' vac=scope.ref_no %}" method="post">
               {% csrf_token %}
               <button type="submit" class="btn btn-primary float-right" style="width:8rem;">List</button>
             </form>
@@ -68,9 +68,9 @@
                       <div class="row my-auto float-right">
                         <form  action="{% url 'MarketPlace:UnsuitableSuitable' tlt=key.1.ro.0.4  vac=scope.ref_no %}" method="post">
                           {% csrf_token %}
-                          <button type="submit" class="btn btn-success-outline" style="width: 10rem">Suitable</button>
+                          <button type="submit" class="btn btn-outline-success" style="width: 10rem">Suitable</button>
                         </form>&nbsp
-                        <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="btn btn-secondary-outline" style="width: 10rem">View Profile</a>
+                        <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="btn btn-outline-secondary" style="width: 10rem">View Profile</a>
                       </div>
                     </div>
                   </div>

@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<div class="card border-0" style="width: 100%;">
+<div class="card card-shadow" style="width: 100%;">
   <div class="card-body">
     <div class="float-right">
       <form  action="{% url 'BookList:BLB' %}" method="post">
@@ -17,30 +17,34 @@
 
     </div>
     <h4 class="card-title">Interview History</h4>
-    <table class="table table-hover table-sm">
-      <col width = "43%">
-      <col width = "10%">
-      <col width = "12%">
-      <col width = "10%">
-      <col width = "10%">
-      <thead>
-        <tr class="no-hover">
-          <th class="align-middle text-center">
-            Vacancy<br>( Reference Number )
-          </th>
-          <th class="align-middle text-center">My Response</th>
-          <th class="align-middle text-center">Outcome</th>
-          <th class="align-middle text-center">Interview Status</th>
-          <th class="align-middle text-center">Detail</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for l in pageitems %}
-          <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' l.scope.ref_no %}?next={{ request.path|urlencode }}'">
-            <td class="align-middle text-left">
-              {{ l.scope.title }}<br>( {{ l.scope.ref_no }} )
-            </td>
-            <td class="align-middle text-center">
+    <div class="container">
+      <div class="row my-auto">
+        <div class="col-md-4 h-100 text-center my-auto">
+          <strong>Vacancy<br>( Reference Number )</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>My Response</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Outcome</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Interview Status</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Detail</strong>
+        </div>
+      </div>
+    </div>
+    {% for l in pageitems %}
+    <div class="row">
+      <div class="card mt-2 card-hover" style="width: 100%;">
+        <div class="card-body">
+          <div class="row my-auto">
+            <div class="col-md-4 h-100 text-center my-auto">
+              {{ l.scope.title|truncatechars:37 }}<br><div class="font-grey">( {{ l.scope.ref_no }} )</div>
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
               {{ l.get_tlt_response_display }}
               <br>
               {% if l.tlt_response == 'P' %}
@@ -54,40 +58,39 @@
                 </a>
               </span>
             {% endif %}
-            </td>
-            <td class="align-middle text-center">{{ l.get_outcome_display }}</td>
-            {% if l.tlt_intcomplete == True %}
-            <td class="align-middle text-center">Closed</td>
-            {% else %}
-            <td class="align-middle text-center">
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ l.get_outcome_display }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {% if l.tlt_intcomplete == True %}
+              Closed
+              {% else %}
               Open
-              <br>
-              {% if l.tlt_response != 'P' %}
-                <a href="{% url 'MarketPlace:TalentIntClose' bil=l.slug tlt=l.talent.alias %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Close Interview"><i class="fa fa-close" style="font-size:24px;color:red !important"></i>
-                </a>
+                <br>
+                {% if l.tlt_response != 'P' %}
+                  <a href="{% url 'MarketPlace:TalentIntClose' bil=l.slug tlt=l.talent.alias %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Close Interview"><i class="fa fa-close" style="font-size:24px;color:red !important"></i>
+                  </a>
+                {% endif %}
               {% endif %}
-          </td>
-            {% endif %}
-
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
               {% if request.user.subscription > 0 %}
-                <td class="align-middle text-center">
                   <a href="{% url 'Profile:ContactDetail' vac=l.scope.ref_no tlt=l.scope.requested_by.alias %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Contact Detail"><i class="fa fa-tty" aria-hidden="true" style="font-size:24px;color:black"></i></a>&nbsp
                   <a href="{% url 'MarketPlace:VacancyDetail' l.scope.ref_no %}?next={{ request.path|urlencode }}" class="" data-toggle="tooltip" title="See Vacancy Detail"><i class="fa fa-industry" style="font-size:24px;color:black"></i></a>&nbsp
                   <a href="{% url 'MarketPlace:TalentIntDetail' bil=l.slug tlt=l.talent.alias %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="See Interview Comments"><i class="fa fa-commenting-o" style="font-size:30px;color:black"></i></a>
-                </td>
               {% elif request.user.subscription < 2 %}
-                <td>
                   <a href="#" class="badge badge-primary 8rem" style="width: 6rem">See Detail</a>
-                </td>
               {% endif %}
-          </tr>
-        {% empty %}
-          <tr>
-            <td colspan="4">"No interviews listed."</td>
-          </tr>
-        {% endfor %}
-    </tbody>
-    </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+      <p>No interviews listed."</p>
+    {% endfor %}
+
     <p>&nbsp</p>
 
     <nav aria-label="Page navigation">

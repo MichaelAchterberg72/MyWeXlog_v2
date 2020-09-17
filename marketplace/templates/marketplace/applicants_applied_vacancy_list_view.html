@@ -14,7 +14,7 @@
       <a href="{% url 'MarketPlace:HelpApplicantsVacancyFull' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
       <i class="icon icon-question-circle"></i></a>
     </div>
-  <h4 class="">Applications Received for Vacancy: <br>{{ instance.title }}</h4>
+  <h4 id="applicants">Applications Received for Vacancy: <br>{{ instance.title }}</h4>
   <p>There is a total of {{ applied_count }} talent that have applied for the vacancy listed here.</p>
 
   <div class="row">

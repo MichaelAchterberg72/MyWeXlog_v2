@@ -211,18 +211,18 @@
         <a href="{% url 'MarketPlace:HelpApplicantsVacancy' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
         <i class="icon icon-question-circle"></i></a>
       </div>
-    <h3>Applicants</h3>
+    <h3 id="applicants">Applicants</h3>
     <p>There are a total of {{ applied_count }} bids that talent have applied for the vacancy{% if applied_count >= 5 %}, we only list the top 5 here.{% else %}.{% endif %}</p>
     <div class="">
       <div class="row">
         <div class="col-12">
         {% if applicants_list_view %}
-          <form  action="{% url 'MarketPlace:AppFLExpand' %}" method="post">
+          <form  action="{% url 'MarketPlace:AppExpand' vac=instance.ref_no %}" method="post">
             {% csrf_token %}
             <button type="submit" class="btn btn-primary float-right" style="width:8rem;">Expanded</button>
           </form>
         {% else %}
-          <form  action="{% url 'MarketPlace:AppFLExpand' %}" method="post">
+          <form  action="{% url 'MarketPlace:AppExpand' vac=instance.ref_no %}" method="post">
             {% csrf_token %}
             <button type="submit" class="btn btn-primary float-right" style="width:8rem;">List</button>
           </form>
@@ -323,12 +323,12 @@
         <div class="row">
           <div class="col-12">
           {% if suited_list_view %}
-            <form  action="{% url 'MarketPlace:SuitedExpand' %}" method="post">
+            <form  action="{% url 'MarketPlace:SuitedExpand' vac=instance.ref_no %}" method="post">
               {% csrf_token %}
               <button type="submit" class="btn btn-primary float-right" style="width:8rem;">Expanded</button>
             </form>
           {% else %}
-            <form  action="{% url 'MarketPlace:SuitedExpand' %}" method="post">
+            <form  action="{% url 'MarketPlace:SuitedExpand' vac=instance.ref_no %}" method="post">
               {% csrf_token %}
               <button type="submit" class="btn btn-primary float-right" style="width:8rem;">List</button>
             </form>
