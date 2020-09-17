@@ -73,11 +73,12 @@ class CityForm(forms.ModelForm):
 class SuburbForm(forms.ModelForm):
     class Meta:
         model = Suburb
-        fields = ('city', 'suburb',)
+        fields = ('suburb',)
+        '''
         widgets={
             'city': CitySelect2Widget(),
         }
-
+        '''
 
 class CurrencyForm(forms.ModelForm):
     class Meta:

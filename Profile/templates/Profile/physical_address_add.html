@@ -23,14 +23,37 @@
       {{ form.line2|as_crispy_field }}
       {{ form.line3|as_crispy_field }}
       {{ form.country|as_crispy_field }}
+      <div id="region_error" class="d-none">
+        <p>Please enter a country before adding a region</p>
+      </div>
     </div>
     <div class="form-group col-md-6 mb-0">
       {{ form.region|as_crispy_field }}
-      <p><a href="{% url 'Location:RegionAddPop' %}" id='add_region' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a Region</a></p>
+      <div id="city_error" class="d-none">
+        <p>Please enter a region before adding a city</p>
+      </div>
+      <p>
+        <a href="{% url 'Location:RegionAddPop' %}" id='add_region' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">
+          Add a Region
+        </a>
+      </p>
       {{ form.city|as_crispy_field }}
-      <p><a href="{% url 'Location:CityAddPop' %}" id='add_city' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a City / Town / Village</a></p>
+        <div id="suburb_error" class="d-none">
+          <button class="btn btn-danger btn-block" type="button" name="button">Please enter a city before adding a suburb</button>
+        </div>
+        <p>
+          <a href="{% url 'Location:CityAddPop' %}" id='add_city' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">
+            Add a City / Town / Village
+          </a>
+        </p>
       {{ form.suburb|as_crispy_field }}
-      <p><a href="{% url 'Location:SuburbAddPop' %}" id='add_suburb' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a Suburb</a></p>
+        <p>
+          <a href="#" id='add_sub'><img src = "{% static '/images/icon-addlink.svg' %}">
+            Add a Suburb
+          </a>
+          <a href="{% url 'Location:SuburbAddPop' %}" id='add_suburb' onclick='return showAddPopup(this);' >
+          </a>
+        </p>
       {{ form.code|as_crispy_field }}
     </div>
   </div>
@@ -40,14 +63,15 @@
 </form>
 </div>
 </div>
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 {{ form.media.js }}
 {% endblock content %}
 {% block Script %}
 <script type="text/javascript">
 <!-- code for popups -->
 function showAddPopup(triggeringLink) {
+
     var name = triggeringLink.id.replace(/^add_/, '');
     href = triggeringLink.href;
     var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes');
@@ -63,5 +87,20 @@ function closePopup(win, newID, newRepr, id) {
 window.onerror = function (msg) {
   $("body").attr("JSError", msg);
 }
+
+var form = document.getElementById('AddressForm')
+var suburb = document.getElementById('suburb_error')
+
+document.getElementById('add_sub').addEventListener('click', function(e){
+  e.preventDefault();
+  if(form.city.value == ''){
+    suburb.classList.remove('d-none')
+  }else{
+    document.cookie = 'city=' + JSON.stringify(form.city.value) + ";domain=;path=/"
+    suburb.classList.add('d-none')
+    document.getElementById('add_suburb').click();
+  }
+})
+
 </script>
 {% endblock Script %}

@@ -2296,11 +2296,14 @@ def PhysicalAddressView(request):
                 new=form.save(commit=False)
                 new.talent = request.user
                 new.save()
-                return redirect(reverse('Profile:ProfileView')+'#phone')
+                response = redirect(reverse('Profile:ProfileView')+'#phone')
+
+                return response
         else:
             template = 'Profile/physical_address_add.html'
             context = {'form': form}
-            return render(request, template, context)
+            response = render(request, template, context)
+            return response
     else:
         raise PermissionDenied
 

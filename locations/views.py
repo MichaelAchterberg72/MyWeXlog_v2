@@ -88,12 +88,19 @@ def get_city_id(request):
 @login_required()
 @csp_exempt
 def SuburbAddPopup(request):
+
+    data=json.loads(request.COOKIES['city'])
+    qs = City.objects.get(id=data)
+
     form = SuburbForm(request.POST or None)
     if request.method =='POST':
         if form.is_valid():
             new = form.save(commit=False)
+            new.city=qs
             new.save()
-            return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_suburb");</script>' % (new.pk, new))
+            response = HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_suburb");</script>' % (new.pk, new))
+            response.delete_cookie("city")
+            return response
         else:
             context = {'form': form}
             template = 'locations/suburb_popup.html'

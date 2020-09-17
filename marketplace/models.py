@@ -70,7 +70,7 @@ class SkillLevel(models.Model):
     )
 
     level = models.IntegerField(choices=LEVEL, default=0)
-    min_hours = models.IntegerField()#Read max_hours
+    min_hours = models.IntegerField()#Read hours (typically max hours, but for lead its greater than the amount of hours shown.)
     description = models.TextField()
 
     class Meta:
