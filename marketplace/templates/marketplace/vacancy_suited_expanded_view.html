@@ -1,0 +1,29 @@
+{% load humanize %}
+
+<div class="row">
+<div class="col-md-12 h-100 my-auto">
+
+    <p class="name-paragraph"><strong><span class="font-blue" style="font-size:22px;">{{ s.title|truncatechars:37 }}</span> <span class="font-light">({{ s.ref_no }})</span></strong></p>
+    {% if request.user.subscription >= 2 %}
+    <p class="short-paragraph">{{ s.companybranch }}</p>
+    {% else %}
+    <p class="short-paragraph">Company Name</p>
+    {% endif %}
+    <p><span class="font-grey">{{ s.rate_offered|intcomma }} {{ s.currency }} ({{ s.get_rate_unit_display }})</span></p>
+    <p class="short-paragraph"><strong>Scope:</strong></p>
+    <p>{{ s.scope|truncatechars:650 }}</p>
+    <p class="short-paragraph"><strong>Expectations:</strong></p>
+    <p>{{ s.expectations|truncatechars:650 }}</p>
+    <p class="short-paragraph"><span class="font-grey">{{ s.hours_required|intcomma }} Hours ({{ s.get_unit_display }})</span></p>
+    <p class="short-paragraph"><span class="font-grey">{{ s.worklocation }} in {{ s.city }}</span></p>
+    </div>
+  </div>
+  <div class="row">
+  <div class="col-md-12 h-100 my-auto">
+    {% if request.user.subscription >= 2 %}
+    <a href="{% url 'MarketPlace:VacancyDetail' s.ref_no %}" class="btn btn-outline-secondary float-right" target="_blank" style="width:10rem;">See Detail</a>
+    {% else %}
+    <p><a href="{% url 'Payments:ActiveSubscription' %}" class="btn btn-outline-secondary float-right" style="width:10rem;" data-toggle="tooltip" data-placement="top" title="Active subscription required to see vacancy detail">See Detail</a></p>
+    {% endif %}
+  </div>
+</div>

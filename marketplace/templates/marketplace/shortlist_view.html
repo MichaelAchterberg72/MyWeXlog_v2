@@ -35,17 +35,18 @@
           {% if closed == True %}
             <p>This vacancy has been awarded and is closed.</p>
           {% else %}
+          <br>
           <div class="row">
             <div class="col-12">
             {% if list_view %}
               <form  action="{% url 'MarketPlace:ShortlistExpand' %}" method="post">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-primary float-right" style="width:8rem;">Expanded</button>
+                <button type="submit" class="badge badge-primary float-right" style="width:8rem;">Expanded</button>
               </form>
             {% else %}
               <form  action="{% url 'MarketPlace:ShortlistExpand' %}" method="post">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-primary float-right" style="width:8rem;">List</button>
+                <button type="submit" class="badge badge-primary float-right" style="width:8rem;">List View</button>
               </form>
             {% endif %}
             </div>

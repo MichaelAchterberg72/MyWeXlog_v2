@@ -176,12 +176,12 @@
           {% if pending_interviews_list_view %}
             <form  action="{% url 'MarketPlace:PendingInterviewsExpand' vac=scope.ref_no %}" method="post">
               {% csrf_token %}
-              <button type="submit" class="btn btn-primary float-right" style="width:8rem;">Expanded</button>
+              <button type="submit" class="badge badge-primary float-right" style="width:8rem;">Expanded</button>
             </form>
           {% else %}
             <form  action="{% url 'MarketPlace:PendingInterviewsExpand' vac=scope.ref_no %}" method="post">
               {% csrf_token %}
-              <button type="submit" class="btn btn-primary float-right" style="width:8rem;">List</button>
+              <button type="submit" class="badge badge-primary float-right" style="width:8rem;">List View</button>
             </form>
           {% endif %}
           </div>
@@ -264,12 +264,12 @@
           {% if suitable_applicants_list_view %}
             <form  action="{% url 'MarketPlace:SuitableApplicanctExpand' vac=scope.ref_no %}" method="post">
               {% csrf_token %}
-              <button type="submit" class="btn btn-primary float-right" style="width:8rem;">Expanded</button>
+              <button type="submit" class="badge badge-primary float-right" style="width:8rem;">Expanded</button>
             </form>
           {% else %}
             <form  action="{% url 'MarketPlace:SuitableApplicanctExpand' vac=scope.ref_no %}" method="post">
               {% csrf_token %}
-              <button type="submit" class="btn btn-primary float-right" style="width:8rem;">List</button>
+              <button type="submit" class="badge badge-primary float-right" style="width:8rem;">List View</button>
             </form>
           {% endif %}
           </div>
@@ -351,12 +351,12 @@
           {% if unsuitable_applicants_list_view %}
             <form  action="{% url 'MarketPlace:UnSuitableApplicanctExpand' vac=scope.ref_no %}" method="post">
               {% csrf_token %}
-              <button type="submit" class="btn btn-primary float-right" style="width:8rem;">Expanded</button>
+              <button type="submit" class="badge badge-primary float-right" style="width:8rem;">Expanded</button>
             </form>
           {% else %}
             <form  action="{% url 'MarketPlace:UnSuitableApplicanctExpand' vac=scope.ref_no %}" method="post">
               {% csrf_token %}
-              <button type="submit" class="btn btn-primary float-right" style="width:8rem;">List</button>
+              <button type="submit" class="badge badge-primary float-right" style="width:8rem;">List View</button>
             </form>
           {% endif %}
           </div>
@@ -427,12 +427,12 @@
         {% if rejected_applicants_list_view %}
           <form  action="{% url 'MarketPlace:RejectedApplicanctExpand' vac=scope.ref_no %}" method="post">
             {% csrf_token %}
-            <button type="submit" class="btn btn-primary float-right" style="width:8rem;">Expanded</button>
+            <button type="submit" class="badge badge-primary float-right" style="width:8rem;">Expanded</button>
           </form>
         {% else %}
           <form  action="{% url 'MarketPlace:RejectedApplicanctExpand' vac=scope.ref_no %}" method="post">
             {% csrf_token %}
-            <button type="submit" class="btn btn-primary float-right" style="width:8rem;">List</button>
+            <button type="submit" class="badge badge-primary float-right" style="width:8rem;">List View</button>
           </form>
         {% endif %}
         </div>

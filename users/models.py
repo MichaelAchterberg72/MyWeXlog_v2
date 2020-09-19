@@ -133,6 +133,8 @@ class ExpandedView(models.Model):
     unsuitable_fl_applicants_list = models.BooleanField(default=True)
     rejected_applicants_list = models.BooleanField(default=True)
     rejected_fl_applicants_list = models.BooleanField(default=True)
+    vacancies_suited_list = models.BooleanField(default=True)
+    vacancies_fl_suited_list = models.BooleanField(default=True)
 
     def __str__(self):
         return f"Expanded view for {self.talent}"

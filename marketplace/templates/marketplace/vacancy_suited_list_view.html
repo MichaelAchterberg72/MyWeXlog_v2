@@ -1,0 +1,25 @@
+{% load humanize %}
+
+<div class="row my-auto">
+  <div class="col-md-4 h-100 text-center my-auto">
+    <strong><span class="font-blue">{{ s.title|truncatechars:37 }}</span><br><span class="font-light">({{ s.ref_no }})</span></strong>
+  </div>
+  <div class="col-md-2 h-100 text-center my-auto">
+    <span class="font-grey">{{ s.hours_required|intcomma }} Hours<br>({{ s.get_unit_display }})</span>
+  </div>
+  <div class="col-md-2 h-100 text-center my-auto">
+      {{ s.worklocation }}
+    </div>
+  <div class="col-md-2 h-100 text-center my-auto">
+    {{ s.city }}
+    </div>
+  <div class="col-md-2 h-100 text-center my-auto">
+    <div class="float-right">
+  </div>
+  {% if request.user.subscription >= 2 %}
+  <a href="{% url 'MarketPlace:VacancyDetail' s.ref_no %}" class="badge badge-secondary float-right" target="_blank" style="width: 5rem;">See Detail</a>
+  {% else %}
+  <p><a href="{% url 'Payments:ActiveSubscription' %}" class="badge badge-secondary float-right" style="width: 5rem;" data-toggle="tooltip" data-placement="top" title="Active subscription required to see vacancy detail">See Detail</a></p>
+  {% endif %}
+  </div>
+</div>

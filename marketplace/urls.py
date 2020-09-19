@@ -11,6 +11,8 @@ urlpatterns = [
     path('entrance-1/', views.MarketHome_test1, name='Entrance1'),
     path('close-vacancy/<int:tlt>/<int:vac>/', views.CloseVacancyAvailableCard, name='CloseVacancy'),
     path('minimise-vacancy/<int:tlt>/<int:vac>/', views.MinimiseVacancyAvailableCard, name='MinimiseVacancy'),
+    path('maximise-vacancy/<int:tlt>/<int:vac>/', views.MaximiseVacancyAvailableCard, name='MaximiseVacancy'),
+
     path('vacancy/', views.VacancyView, name='Vacancy'),
     path('popup/worklocation/add/', views.WorkLocationAddPopup, name="WorkLocationAddPop"),
     path('popup/ajax/get_worklocation_id/', views.get_worklocation_id, name="AJAX_GetWorklocationID"),
@@ -92,6 +94,10 @@ urlpatterns = [
     path('vacancy/vacancies-full-list/', views.VacanciesListView, name="VacanciesList"),
     path('vacancy/talent-suited-to-vacancy/<slug:vac>/', views.TalentSuitedVacancyListView, name='TalentSuitedToVacancy'),
     path('vacancy/applicants-for-vacancy/<slug:vac>/', views.ApplicantsForVacancyListView, name='ApplicantsForVacancy'),
+
+    path('vacancy/suited/expanded-list/', views.ExpandVacanciesSuitedView, name='VacanciesExpand'),
+    path('vacancy/suited/fl-expanded-list/', views.ExpandVacanciesSuitedFLView, name='VacanciesFLExpand'),
+
     path('vacancy/applicants/expanded-list/<slug:vac>/', views.ExpandApplicantsView, name='AppExpand'),
     path('vacancy/applicants/fl-expanded-list/<slug:vac>/', views.ExpandApplicantsFLView, name='AppFLExpand'),
     path('vacancy/talent-suited/expanded-list/<slug:vac>/', views.ExpandTalentSuitedView, name='SuitedExpand'),

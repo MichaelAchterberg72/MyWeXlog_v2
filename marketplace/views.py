@@ -1657,7 +1657,9 @@ def MarketHome_test1(request):
     wbt = WorkBid.objects.filter(Q(talent=talent) & Q(work__offer_status='O'))
     bsl = BidShortList.objects.filter(Q(talent=talent) & Q(scope__offer_status='O'))
     vv = set(VacancyViewed.objects.filter(Q(talent=talent) & Q(closed=True)).values_list('vacancy__id', flat=True))
-
+    vvv = VacancyViewed.objects.filter(Q(talent=talent) & Q(viewed=True))
+    vac_exp = ExpandedView.objects.get(talent=request.user)
+    vacancies_suited_list_view = vac_exp.vacancies_suited_list
 #    vo = VacancyViewed.objects.filter(closed=False)
 
     #Queryset caching<<<
@@ -1800,11 +1802,11 @@ def MarketHome_test1(request):
     else:
         dsd = set()
 
-#    vvv = VacancyViewed.objects.filter(talent=request.user, vacancy=dsd, viewed=True)
-#    print(vvv)
 
     template = 'marketplace/vacancy_home_test_1.html'
     context ={
+        'vvv': vvv,
+        'vacancies_suited_list_view': vacancies_suited_list_view,
         'tlt': tlt,
         'capacity': capacity,
         'tr_emp_count': tr_emp_count,
@@ -1834,33 +1836,23 @@ def CloseVacancyAvailableCard(request, tlt, vac):
 
 
 def MinimiseVacancyAvailableCard(request, tlt, vac):
-#    tr = TalentRequired.objects.filter(offer_status='O')
-#    vv = VacancyViewed.objects.filter(Q(talent=tlt) & Q(vacancy=vac))
-#    print(vv)
-#    talent = tlt,
-#    vacancy = vac,
-#    viewed = True,
-#    date_viewed = timezone.now())
-#    vc = vv.viewed
-#    if request.POST['maximise']:
-#        VacancyViewed.objects.create(talent=tlt, vacancy=vac, viewed=True,  date_viewed=timezone.now()).save()
+
     cu = CustomUser.objects.get(id=tlt)
     tr = TalentRequired.objects.get(id=vac)
-#    if request.method == 'POST':
-#        if vc == False:
-#            vv.viewed = True
-#            vv.date_viewed = timezone.now()
-#        else:
-    VacancyViewed.objects.create(talent=cu, vacancy=tr, viewed=True,  date_viewed=timezone.now()).save()
-#        if vc == False:
-#            vv.viewed = True
-#            vv.date_viewed = timezone.now()
-#        elif vc == True:
-#            vv.viewed = False
-#            vv.date_viewed = timezone.now()
-#        vv.save()
 
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    VacancyViewed.objects.create(talent=cu, vacancy=tr, viewed=False,  date_viewed=timezone.now()).save()
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER')+f'#{ vac }')
+
+
+def MaximiseVacancyAvailableCard(request, tlt, vac):
+
+    cu = CustomUser.objects.get(id=tlt)
+    tr = TalentRequired.objects.get(id=vac)
+
+    VacancyViewed.objects.create(talent=cu, vacancy=tr, viewed=True,  date_viewed=timezone.now()).save()
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER')+f'#{ vac }')
 
 
 @login_required()
@@ -2931,6 +2923,30 @@ def AppliedListRejectedView(request, vac, tlt):
             bid_qs.update(bidreview = 'R')#2
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def ExpandVacanciesSuitedView(request):
+    instance = ExpandedView.objects.get(talent=request.user)
+    list_view = instance.vacancies_suited_list
+    if list_view == True:
+        instance.vacancies_suited_list = False
+    elif list_view == False:
+        instance.vacancies_suited_list = True
+    instance.save()
+
+    return redirect(reverse('MarketPlace:Entrance'))
+
+
+def ExpandVacanciesSuitedFLView(request):
+    instance = ExpandedView.objects.get(talent=request.user)
+    list_view = instance.vacancies_fl_suited_list
+    if list_view == True:
+        instance.vacancies_fl_suited_list = False
+    elif list_view == False:
+        instance.vacancies_fl_suited_list = True
+    instance.save()
+
+    return redirect(reverse('MarketPlace:VacanciesList'))
 
 
 def ExpandApplicantsView(request, vac):
