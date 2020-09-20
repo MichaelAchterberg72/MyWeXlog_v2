@@ -85,7 +85,7 @@
         </div>
         <div class="form-group col-md-4 mb-0">
           {{ form.city|as_crispy_field }}
-          <p><a href="{% url 'Location:CityAddPop' %}" id='add_city' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add City or Town</a></p>
+          <p><a href="{% url 'Location:CityVacPop' %}" id='add_city' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add City or Town</a></p>
         </div>
         <div class="form-group col-md-4 mb-0">
           {{ form.language|as_crispy_field }}

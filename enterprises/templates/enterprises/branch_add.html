@@ -55,6 +55,11 @@
         <div class="form-group col-md-6 mb-0">
           {{ form.country|as_crispy_field }}
           {{ form.region|as_crispy_field }}
+          <div id="city_error" class="d-none float-right">
+            <button class="btn btn-danger btn-block" type="button" name="button">
+              Please enter a region
+            </button>
+          </div>
           <p>
             <a href="{% url 'Location:RegionAddPop' %}" id='add_region' onclick='return showAddPopup(this);'>
               <img src = "{% static '/images/icon-addlink.svg' %}">
@@ -62,17 +67,26 @@
             </a>
           </p>
           {{ form.city|as_crispy_field }}
+          <div id="suburb_error" class="d-none float-right">
+            <button class="btn btn-danger btn-block" type="button" name="button">
+              Please enter a city or town
+            </button>
+          </div>
           <p>
-            <a href="{% url 'Location:CityAddPop' %}" id='add_city' onclick='return showAddPopup(this);'>
+            <a href="#" id='ad_cty'>
               <img src = "{% static '/images/icon-addlink.svg' %}">
               Add a City
+            </a>
+            <a href="{% url 'Location:CityAddPop' %}" id='add_city' onclick='return showAddPopup(this);'>
             </a>
           </p>
           {{ form.suburb|as_crispy_field }}
           <p>
-            <a href="{% url 'Location:SuburbAddPop' %}" id='add_suburb' onclick='return showAddPopup(this);'>
+            <a href="#" id='add_sub'>
               <img src = "{% static '/images/icon-addlink.svg' %}">
               Add a Suburb
+            </a>
+            <a href="{% url 'Location:SuburbAddPop' %}" id='add_suburb' onclick='return showAddPopup(this);'>
             </a>
           </p>
           {{ form.code|as_crispy_field }}
@@ -115,5 +129,30 @@ function closePopup(win, newID, newRepr, id) {
 window.onerror = function (msg) {
   $("body").attr("JSError", msg);
 }
+
+var form = document.getElementById('BranchForm')
+var suburb = document.getElementById('suburb_error')
+var city = document.getElementById('city_error')
+
+document.getElementById('add_sub').addEventListener('click', function(e){
+  if(form.city.value == ''){
+    suburb.classList.remove('d-none')
+  }else{
+    document.cookie = 'city=' + JSON.stringify(form.city.value) + ";domain=;path=/"
+    suburb.classList.add('d-none')
+    document.getElementById('add_suburb').click();
+  }
+})
+
+document.getElementById('ad_cty').addEventListener('click', function(e){
+  if(form.region.value == ''){
+    city.classList.remove('d-none')
+  }else{
+    document.cookie = 'region=' + JSON.stringify(form.region.value) + ";domain=;path=/"
+    city.classList.add('d-none')
+    document.getElementById('add_city').click();
+  }
+})
+
 </script>
 {% endblock Script %}
