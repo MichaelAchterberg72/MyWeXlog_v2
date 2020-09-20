@@ -18,75 +18,136 @@
       </div>
       <h4 class="card-title">Vacancies Suited for Me - Full List</h4>
       <p>You currently have <strong>{{ rem_vac }}</strong> vacancies that match your skillset experience.</p>
-      <table class="table table-hover table-sm w-50rem">
-        <col width="0rem">
-        <col width="100px">
-        <col width="343px">
-        <col width="250px">
-        <col width="140px">
-        <col width="120px">
-        <col width="80px">
-        <thead>
-          <tr class="no-hover">
-            <th class="align-middle text-center"></th>
-            <th class="align-middle text-center">Reference Number</th>
-            <th class="align-middle text-center">Vacancy Title</th>
-            <th class="align-middle text-center">Hours Required</th>
-            <th class="align-middle text-center">Work Format</th>
-            <th class="align-middle text-center">City</th>
-            <th class="align-middle text-center">Full Detail</th>
-          </tr>
-        </thead>
-        {% if request.user.subscription >= 2 %}
-        {% for i in pageitems %}
-        <tbody>
-        <tr class="align-middle text-center divide">
-          <td class="bottom_header"><strong>Scope</strong></td>
-          <td class="bottom">{{ i.scope|truncatechars:340 }}</td>
-          <td class="text-left top">{{ i.ref_no }}</td>
-          <td class="text-left top">{{ i.title|truncatechars:47 }}</td>
-          <td class="no-wrap top">
-            {{ i.hours_required|intcomma }} Hrs ({{ i.get_unit_display }})
-          </td>
-          <td class="no-wrap top">{{ i.worklocation }}</td>
-          <td class="no-wrap top">{{ i.city }}</td>
+      <div class="row">
+          <div class="col-md-12 h-100 my-auto">
+      {% if vacancies_suited_list_view %}
+        <form  action="{% url 'MarketPlace:VacanciesFLExpand' %}" method="post">
+          {% csrf_token %}
+          <button type="submit" class="badge badge-primary float-right" style="width:8rem;">Expanded</button>
+        </form>
+      {% else %}
+        <form  action="{% url 'MarketPlace:VacanciesFLExpand' %}" method="post">
+          {% csrf_token %}
+          <button type="submit" class="badge badge-primary float-right" style="width:8rem;">List View</button>
+        </form>
+      {% endif %}
+      </div>
+    </div>
+      {% if vacancies_suited_list_view %}
+      {% for s in pageitems %}
+      <div class="container">
+<div class="row">
+  <div class="card mt-2 card-hover" style="width: 100%;" id="{{ s.id }}">
+    <div class="post-wrap">
+    <div class="post">
 
-          <td class="align-middle text-center"><a href="{% url 'MarketPlace:VacancyDetail' i.ref_no %}" class="badge badge-secondary" style="width: 6rem;">See Detail</a></td>
+      <div class="post-front" {% for vac in s.vacancyviewed_set.all %}{% if forloop.last %} {% if vac.viewed == True %} style="display:none;" {% else %}  style="display:block;" {% endif %} {% endif %} {% empty %} style="display:block;" {% endfor %} id="oldCard{{id}}">
 
-          </tr>
-        </tbody>
-        {% empty %}
-        <tr>
-          <td colspan="6">No vacancies matching your skills at the moment</td>
-        </tr>
-        {% endfor %}
+      <div class="card-body">
+        <div class="row" style="height: 20px;">
+          <div class="col-md-12 h-100 my-auto">
+            <div class="card-maximise float-right">
+              <div class="row">
+              <form action="{% url 'MarketPlace:MaximiseVacancy' tlt s.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="pointer" data-toggle="tooltip" title="Maximise"><i class="fa fa-window-maximize"></i></button>
+              </form>&nbsp
+              <form action="{% url 'MarketPlace:CloseVacancy' tlt s.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="pointer" data-toggle="tooltip" title="Close" name="close"><i class="fa fa-times" aria-hidden="true"></i></button>
+              </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% include 'marketplace/vacancy_suited_list_view.html' %}
+      </div>
+      </div>
+
+      <div class="post-back" {% for vac in s.vacancyviewed_set.all %}{% if forloop.last %} {% if vac.viewed == True %} style="display:block;" {% else %}  style="display:none;" {% endif %} {% endif %} {% empty %} style="display:none;" {% endfor %} id="newCard{{id}}">
+
+
+        <div class="card-body">
+          <div class="row" style="height: 20px;">
+            <div class="col-md-12 h-100 my-auto">
+              <div class="card-maximise float-right">
+              <div class="row">
+              <form action="{% url 'MarketPlace:MinimiseVacancy' tlt s.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="pointer" data-toggle="tooltip" title="Minimise"><i class="fa fa-window-minimize"></i></button>
+              </form>&nbsp
+              <form action="{% url 'MarketPlace:CloseVacancy' tlt s.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="pointer" data-toggle="tooltip" title="Close" name="close"><i class="fa fa-times" aria-hidden="true"></i></button>
+              </form>
+              </div>
+            </div>
+
+
+          </div>
+          </div>
+            {% include 'marketplace/vacancy_suited_expanded_view.html' %}
+        </div>
+      </div>
+    </div>
+    </div>
+    </div>
+
+  </div>
+  </div>
+
+      {% empty %}
+      <p>No vacancies matching your skills at the moment</p>
+      {% endfor %}
 
       {% else %}
+      {% for s in pageitems %}
+<div class="container">
+<div class="row">
+  <div class="card mt-2 card-hover" style="width: 100%;" id="{{ s.id }}">
+      <div class="card-body">
+        <div class="row" style="height: 20px;">
+          <div class="col-md-12 h-100 my-auto">
 
-      {% for i in pageitems %}
-      <tbody>
-      <tr class="align-middle text-center divide">
-        <td class="bottom_header"><strong>Scope</strong></td>
-        <td class="bottom">{{ i.scope|truncatechars:340 }}</td>
-        <td class="text-left top">{{ i.ref_no }}</td>
-        <td class="text-left top">{{ i.title|truncatechars:47 }}</td>
-        <td class="no-wrap top">
-          {{ i.hours_required|intcomma }} Hrs ({{ i.get_unit_display }})
-        </td>
-        <td class="no-wrap top">{{ i.worklocation }}</td>
-        <td class="no-wrap top">{{ i.city }}</td>
+            <div class="card-maximise float-right">
+            <div class="row">
 
-        <td class="align-middle text-center"><a href="{% url 'Payments:ActiveSubscription' %}" class="badge badge-secondary" style="width: 5rem;" data-toggle="tooltip" data-placement="top" title="Active subscription required to see vacancy detail">See Detail</a></td>
+            <form action="{% url 'MarketPlace:CloseVacancy' tlt s.id %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="pointer" data-toggle="tooltip" title="Close" name="close"><i class="fa fa-times" aria-hidden="true"></i></button>
+            </form>
+            </div>
+          </div>
 
-        </tr>
-      </tbody>
+        </div>
+        </div>
+          {% include 'marketplace/vacancy_suited_expanded_view.html' %}
+      </div>
+    </div>
+  </div>
+</div>
       {% empty %}
-      <tr>
-        <td colspan="6">No vacancies matching your skills at the moment</td>
-      </tr>
+      <p>No vacancies matching your skills at the moment</p>
       {% endfor %}
-    {% endif %}
-      </table>
+
+      {% endif %}
+
+      <br>
+      <p>
+        <strong>Only skills with a score of 3 or more are used in matching with required skills in vacancies.</strong>
+      </p>
+      <div class="float-right">
+        <a href="{% url 'MarketPlace:VacSearch' %}" class="btn btn-secondary 8rem" style="width: 8rem">Search</a>&nbsp
+        {% if rem_vac > 5 %}
+          <a href="{% url 'MarketPlace:VacanciesList' %}" class="btn btn-primary"style="width: 10rem">View All Vacancies</a>
+        {% endif %}
+      </div>
+
+    </div>
+
+
+<br>
+
     <p>&nbsp</p>
 
     <nav aria-label="Page navigation">

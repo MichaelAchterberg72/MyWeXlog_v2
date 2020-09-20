@@ -1859,31 +1859,47 @@ def MaximiseVacancyAvailableCard(request, tlt, vac):
 def VacanciesListView(request):
     #>>>Queryset caching
     talent=request.user
+    tlt = talent.id
     pfl = Profile.objects.filter(talent=talent)
+    TalentRequired.objects.filter()
+#    tr = TalentRequired.objects.filter(offer_status='O')
     tr = TalentRequired.objects.filter(offer_status='O')
     tr_emp = TalentRequired.objects.filter(requested_by=talent)
-    wb = WorkBid.objects.filter(work__requested_by=talent, work__offer_status='O')
+    wb = WorkBid.objects.filter(work__requested_by=talent)
     ta = TalentAvailabillity.objects.filter(talent=talent)
     we = WorkExperience.objects.filter(Q(talent=talent) & Q(score__gte=skill_pass_score)).prefetch_related('topic')
     sr = SkillRequired.objects.filter(scope__offer_status='O')
     sl = SkillLevel.objects.all()
     wbt = WorkBid.objects.filter(Q(talent=talent) & Q(work__offer_status='O'))
     bsl = BidShortList.objects.filter(Q(talent=talent) & Q(scope__offer_status='O'))
+    vv = set(VacancyViewed.objects.filter(Q(talent=talent) & Q(closed=True)).values_list('vacancy__id', flat=True))
+    vvv = VacancyViewed.objects.filter(Q(talent=talent) & Q(viewed=True))
+    vac_exp = ExpandedView.objects.get(talent=request.user)
+    vacancies_suited_list_view = vac_exp.vacancies_fl_suited_list
+#    vo = VacancyViewed.objects.filter(closed=False)
+
     #Queryset caching<<<
 
-    ipost_bid = wb.filter(Q(bidreview__exact='R') | Q(bidreview__exact='P') | Q(bidreview__exact='A'))
+    tr_emp_count = tr_emp.count()
+    ipost = tr_emp.filter(offer_status='O').order_by('-bid_open')
+    ipost_list = ipost[:5]
+    ipost_count = ipost.count()
+    ipost_closed = tr_emp.filter(offer_status='C').order_by('-bid_open')
+    ipost_closed_list = ipost_closed[:5]
+    ipost_closed_count = ipost_closed.count()
+    ipost_bid = wb.filter(~Q(bidreview='D'))
     ipost_bid_flat = ipost_bid.values_list('work', flat=True).distinct()
     capacity = ta.filter(date_to__gte=timezone.now()).order_by('-date_to')[:5]
 
     #Code for stacked lookup for talent's skills
 
     #>>>Create a set of all skills
-    e_skill = we.filter(edt=True).only('pk').values_list('pk', flat=True)
-    l_skill = we.filter(edt=False).only('pk').values_list('pk', flat=True)
+    e_skill = we.filter(edt=True, score__gte=skill_pass_score).only('pk').values_list('pk', flat=True)
+    l_skill = we.filter(edt=False, score__gte= skill_pass_score).only('pk').values_list('pk', flat=True)
 
     e_len = e_skill.count()
     l_len = l_skill.count()
-
+    tot_len = e_len+l_len
 
     skill_set = SkillTag.objects.none()
 
@@ -1923,7 +1939,7 @@ def VacanciesListView(request):
     cert_null_s = set(vac_exp.filter(certification__isnull=True).values_list('id', flat=True))
     vac_cert_s = set(vac_exp.filter(certification__isnull=False).values_list('certification', flat=True))
 
-    if vac_cert_s is None: #if not certifications required, pass
+    if vac_cert_s is None: #if no certifications required, pass
         if vac_lang is None:
             req_experience = set(vac_exp.values_list('id',flat=True))
         else:
@@ -1943,9 +1959,9 @@ def VacanciesListView(request):
     tlt_loc = PhysicalAddress.objects.filter(talent=talent).values_list('region', flat=True)
     tlt_loc=tlt_loc[0]
 
-    vac_loc_rm = set(tr.filter(worklocation__type__icontains='Remote freelance').values_list('id', flat=True))
+    vac_loc_rm = set(tr.filter(worklocation__id=1).values_list('id', flat=True))
 
-    vac_loc_reg = set(tr.filter(~Q(worklocation__type__icontains='Remote Freelance')& Q(city__region=tlt_loc)).values_list('id', flat=True))
+    vac_loc_reg = set(tr.filter(~Q(worklocation__id=1)& Q(city__region=tlt_loc)).values_list('id', flat=True))
 
     vac_loc = vac_loc_rm | vac_loc_reg
 
@@ -1987,6 +2003,9 @@ def VacanciesListView(request):
 
     dsi = dsi - bsl_s
 
+    #Removing vacancies that have been rejected by the user
+    dsi = dsi - vv
+
     #Recreating the QuerySet
     suitable = tr.filter(id__in=dsi)
 
@@ -1994,8 +2013,8 @@ def VacanciesListView(request):
     dsd = suitable
 
     #Experience Level check & list skills required in vacancies<<<
-    if e_len > 0 and l_len > 0:
-        dsd=dsd
+    if tot_len > 0:
+        dsd = dsd
     else:
         dsd = set()
 
@@ -2021,11 +2040,25 @@ def VacanciesListView(request):
 
     template = 'marketplace/vacancy_list.html'
     context ={
-        'dsd': dsd,
-        'pageitems': pageitems,
+        'vvv': vvv,
+        'vacancies_suited_list_view': vacancies_suited_list_view,
+        'tlt': tlt,
+        'capacity': capacity,
+        'tr_emp_count': tr_emp_count,
+        'ipost': ipost,
+        'ipost_list': ipost_list,
+        'ipost_count': ipost_count,
+        'ipost_closed_list': ipost_closed_list,
         'ipost_bid_flat': ipost_bid_flat,
-        'page_range': page_range,
+        'ipost_closed_count': ipost_closed_count,
+        'dsd': dsd,
+        'ipost_closed': ipost_closed,
         'rem_vac': rem_vac,
+        'bsl_c': bsl_c,
+        'wbt_c': wbt_c,
+        'tot_vac': tot_vac,
+        'pageitems': pageitems,
+        'page_range': page_range,
     }
     return render(request, template, context)
 

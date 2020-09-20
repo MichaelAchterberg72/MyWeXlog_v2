@@ -104,7 +104,6 @@
   <div class="card mt-2 card-hover" style="width: 100%;" id="{{ s.id }}">
     <div class="post-wrap">
     <div class="post">
-      {% with id=s.id %}
 
       <div class="post-front" {% for vac in s.vacancyviewed_set.all %}{% if forloop.last %} {% if vac.viewed == True %} style="display:none;" {% else %}  style="display:block;" {% endif %} {% endif %} {% empty %} style="display:block;" {% endfor %} id="oldCard{{id}}">
 
@@ -161,21 +160,6 @@
   </div>
   </div>
 
-  <script>
-    var button = document.getElementById('clickMe{{id}}');  // 1
-    var newCard = document.getElementById("newCard{{id}}"); // 2
-    button.addEventListener('click', function() {     // 3
-       newCard{{ s.id }}.style.display = 'block';
-       oldCard{{ s.id }}.style.display = 'none';               // 4
-    });
-    var button = document.getElementById('un-clickMe{{id}}');  // 1
-    var newCard = document.getElementById("oldCard{{id}}"); // 2
-    button.addEventListener('click', function() {     // 3
-       newCard{{ s.id }}.style.display = 'none';
-       oldCard{{ s.id }}.style.display = 'block';               // 4
-    });
-  </script>
-  {% endwith %}
       {% empty %}
       <p>No vacancies matching your skills at the moment</p>
       {% endfor %}
