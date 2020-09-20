@@ -9,13 +9,104 @@
     {% else %}
     <p class="short-paragraph">Company Name</p>
     {% endif %}
-    <p><span class="font-grey">{{ s.rate_offered|intcomma }} {{ s.currency }} ({{ s.get_rate_unit_display }})</span></p>
+    <p class="name-paragraph" style="font-size: 1.1rem;">
+    {% if request.user.subscription >= 1 %}
+      {% if s.companybranch.rate_count >= 5 %}
+        {% if s.companybranch.avg_rate >= 0 and s.companybranch.avg_rate < 0.5 %}
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+        {% elif s.companybranch.avg_rate >= 0.5 and s.companybranch.avg_rate < 1 %}
+          <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+        {% elif s.companybranch.avg_rate >= 1 and s.companybranch.avg_rate < 1.5 %}
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+        {% elif s.companybranch.avg_rate >= 1.5 and s.companybranch.avg_rate < 2 %}
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+        {% elif s.companybranch.avg_rate >= 2 and s.companybranch.avg_rate < 2.5 %}
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+        {% elif s.companybranch.avg_rate >= 2.5 and s.companybranch.avg_rate < 3 %}
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+        {% elif s.companybranch.avg_rate >= 3 and s.companybranch.avg_rate < 3.5 %}
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+        {% elif s.companybranch.avg_rate >= 3.5 and s.companybranch.avg_rate < 4 %}
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+        {% elif s.companybranch.avg_rate >= 4 and s.companybranch.avg_rate < 4.5 %}
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+        {% elif s.companybranch.avg_rate >= 4.5 and s.companybranch.avg_rate < 4.95 %}
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+        {% elif s.companybranch.avg_rate >= 4.95 %}
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span><i class="fa fa-star" aria-hidden="true"></i></span>
+        {% endif %}
+
+        &nbsp{{ s.companybranch.avg_rate }} ({{ s.companybranch.rate_count }} ratings)&nbsp
+        <a href="{% url 'Enterprise:EmpRatingDetail' s.companybranch.slug %}" style="font-size:20px;color:black" target="_blank" data-toggle="tooltip" title="Ratings Breakdown"><i class="fa fa-pie-chart" aria-hidden="true"></i></a>
+      {% else %}
+        <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+        <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+        <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+        <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+        <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+        &nbsp<strong>(Not Rated)</strong>
+      {% endif %}
+    {% else %}
+      Upgrade your subscription to<br>view company & company score
+    {% endif %}
+    </p>
+
+    <p class="short-paragraph"><span class="font-grey">{{ s.rate_offered|intcomma }} {{ s.currency }} ({{ s.get_rate_unit_display }})</span></p>
+    <p class="short-paragraph"><span class="font-grey">{{ s.hours_required|intcomma }} Hours ({{ s.get_unit_display }})</span></p>
+    <p><span class="font-grey">{{ s.worklocation }} in {{ s.city }}</span></p>
+    <p class="short-paragraph"><strong>Skills Required:</strong></p>
+    <p>{% for vac in s.skillrequired_set.all %}
+      <button class="btn btn-outline-secondary auto">{{ vac.skills.skill }}</button>
+    {% endfor %}</p>
     <p class="short-paragraph"><strong>Scope:</strong></p>
     <p>{{ s.scope|truncatechars:650 }}</p>
     <p class="short-paragraph"><strong>Expectations:</strong></p>
     <p>{{ s.expectations|truncatechars:650 }}</p>
-    <p class="short-paragraph"><span class="font-grey">{{ s.hours_required|intcomma }} Hours ({{ s.get_unit_display }})</span></p>
-    <p class="short-paragraph"><span class="font-grey">{{ s.worklocation }} in {{ s.city }}</span></p>
+
     </div>
   </div>
   <div class="row">

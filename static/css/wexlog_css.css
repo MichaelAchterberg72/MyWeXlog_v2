@@ -19,7 +19,7 @@
   --dark: #343a40;
   --hover: #f7f7f7;
   --font-light: #D3D3D3;
-  --font-grey: #C4C2C2;
+  --font-grey: #ADABAB;
   --font-blue: #0000FF;
 }
 
@@ -101,7 +101,9 @@ table {
 }
 */
 .no-border {
-  border: 0px;
+  border-width: 1px;
+  border-color: var(--font-grey);
+  background-color: transparent;
 }
 .font-light {
   color: var(--font-light);

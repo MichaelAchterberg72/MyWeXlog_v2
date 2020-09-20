@@ -50,11 +50,11 @@
               <div class="row">
               <form action="{% url 'MarketPlace:MaximiseVacancy' tlt s.id %}" method="post">
                 {% csrf_token %}
-                <button type="submit" class="pointer" data-toggle="tooltip" title="Maximise"><i class="fa fa-window-maximize"></i></button>
+                <button type="submit" class="pointer no-border" data-toggle="tooltip" title="Maximise"><i class="fa fa-window-maximize"></i></button>
               </form>&nbsp
               <form action="{% url 'MarketPlace:CloseVacancy' tlt s.id %}" method="post">
                 {% csrf_token %}
-                <button type="submit" class="pointer" data-toggle="tooltip" title="Close" name="close"><i class="fa fa-times" aria-hidden="true"></i></button>
+                <button type="submit" class="pointer no-border" data-toggle="tooltip" title="Close" name="close"><i class="fa fa-times" aria-hidden="true"></i></button>
               </form>
               </div>
             </div>
@@ -74,11 +74,11 @@
               <div class="row">
               <form action="{% url 'MarketPlace:MinimiseVacancy' tlt s.id %}" method="post">
                 {% csrf_token %}
-                <button type="submit" class="pointer" data-toggle="tooltip" title="Minimise"><i class="fa fa-window-minimize"></i></button>
+                <button type="submit" class="pointer no-border" data-toggle="tooltip" title="Minimise"><i class="fa fa-window-minimize"></i></button>
               </form>&nbsp
               <form action="{% url 'MarketPlace:CloseVacancy' tlt s.id %}" method="post">
                 {% csrf_token %}
-                <button type="submit" class="pointer" data-toggle="tooltip" title="Close" name="close"><i class="fa fa-times" aria-hidden="true"></i></button>
+                <button type="submit" class="pointer no-border" data-toggle="tooltip" title="Close" name="close"><i class="fa fa-times" aria-hidden="true"></i></button>
               </form>
               </div>
             </div>
@@ -114,7 +114,7 @@
 
             <form action="{% url 'MarketPlace:CloseVacancy' tlt s.id %}" method="post">
               {% csrf_token %}
-              <button type="submit" class="pointer" data-toggle="tooltip" title="Close" name="close"><i class="fa fa-times" aria-hidden="true"></i></button>
+              <button type="submit" class="pointer no-border" data-toggle="tooltip" title="Close" name="close"><i class="fa fa-times" aria-hidden="true"></i></button>
             </form>
             </div>
           </div>
@@ -136,12 +136,6 @@
       <p>
         <strong>Only skills with a score of 3 or more are used in matching with required skills in vacancies.</strong>
       </p>
-      <div class="float-right">
-        <a href="{% url 'MarketPlace:VacSearch' %}" class="btn btn-secondary 8rem" style="width: 8rem">Search</a>&nbsp
-        {% if rem_vac > 5 %}
-          <a href="{% url 'MarketPlace:VacanciesList' %}" class="btn btn-primary"style="width: 10rem">View All Vacancies</a>
-        {% endif %}
-      </div>
 
     </div>
 
