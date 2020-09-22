@@ -1,8 +1,13 @@
 from django.contrib import admin
 
 from .models import (
-    Email, SiteName, OnlineRegistrations, Profile, PhysicalAddress, PostalAddress, FileUpload, PhoneNumber, IdentificationDetail, IdType, PassportDetail, LanguageTrack, BriefCareerHistory
+    Email, SiteName, OnlineRegistrations, Profile, PhysicalAddress, PostalAddress, FileUpload, PhoneNumber, IdentificationDetail, IdType, PassportDetail, LanguageTrack, BriefCareerHistory, WillingToRelocate
     )
+
+
+@admin.register(WillingToRelocate)
+class  WillingToRelocateAdmin(admin.ModelAdmin):
+    pass
 
 
 @admin.register(BriefCareerHistory)

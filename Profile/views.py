@@ -39,11 +39,11 @@ from WeXlog.app_config import (
     client_score, colleague_score, collaborator_score, superior_score, lecturer_score, classmate_score, pre_colleague_score
 )
 from .models import (
-        Profile, Email, PhysicalAddress, PostalAddress, PhoneNumber, SiteName, OnlineRegistrations, FileUpload, IdentificationDetail, IdType, PassportDetail, LanguageTrack, BriefCareerHistory,
+        Profile, Email, PhysicalAddress, PostalAddress, PhoneNumber, SiteName, OnlineRegistrations, FileUpload, IdentificationDetail, IdType, PassportDetail, LanguageTrack, BriefCareerHistory, WillingToRelocate
         )
 
 from .forms import (
-    ProfileForm, EmailForm, EmailStatusForm, PhysicalAddressForm, PostalAddressForm, PhoneNumberForm, OnlineProfileForm, ProfileTypeForm, FileUploadForm, IdTypeForm, LanguageTrackForm, LanguageListForm, PassportDetailForm, IdentificationDetailForm, BriefCareerHistoryForm, ResignedForm, UserUpdateForm, CustomUserUpdateForm, ExpandedIntroWalkthroughForm, ProfileBackgroundForm, ProfileMotivationForm
+    ProfileForm, EmailForm, EmailStatusForm, PhysicalAddressForm, PostalAddressForm, PhoneNumberForm, OnlineProfileForm, ProfileTypeForm, FileUploadForm, IdTypeForm, LanguageTrackForm, LanguageListForm, PassportDetailForm, IdentificationDetailForm, BriefCareerHistoryForm, ResignedForm, UserUpdateForm, CustomUserUpdateForm, ExpandedIntroWalkthroughForm, ProfileBackgroundForm, ProfileMotivationForm, WillingToRelocateForm
 )
 
 from talenttrack.models import (
@@ -71,7 +71,29 @@ from analytics.models import ObjectViewed
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-#we back to theis isssd
+
+def willing_to_relocate(request):
+    talent = request.user
+
+    form = WillingToRelocateForm(request.POST or None)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.talent = talent
+            new.save()
+
+            return redirect(reverse('Profile:ProfileView')+'#WTR')
+        else:
+            template = 'Profile/willing_to_relocate.html'
+            context = {'form': form}
+            return render(request, template, context)
+    else:
+        template = 'Profile/willing_to_relocate.html'
+        context = {'form': form}
+        return render(request, template, context)
+
+
 def copy_phy_address(request):
     talent = request.user
     qs_addr = PhysicalAddress.objects.get(talent=talent)
@@ -2132,10 +2154,11 @@ def ProfileView(request):
         user_info = CustomUser.objects.get(pk=tlt_id)
         achievement = Achievements.objects.filter(talent=tlt_id).order_by('-date_achieved')
         lcm_qs = LicenseCertification.objects.filter(talent=tlt_id).order_by('-issue_date')
+        relocate = WillingToRelocate.objects.filter(talent__alias=tlt)
 
         template = 'Profile/profile_view.html'
         context = {
-            'info':info, 'email':email, 'physical':physical, 'postal': postal, 'pnumbers': pnumbers, 'online': online, 'upload': upload, 'id': id, 'passport': passport, 'speak': speak, 'history': history, 'user_info': user_info, 'achievement': achievement, 'lcm_qs': lcm_qs, 'tlt': tlt,
+            'info':info, 'email':email, 'physical':physical, 'postal': postal, 'pnumbers': pnumbers, 'online': online, 'upload': upload, 'id': id, 'passport': passport, 'speak': speak, 'history': history, 'user_info': user_info, 'achievement': achievement, 'lcm_qs': lcm_qs, 'tlt': tlt, 'relocate': relocate,
             }
 
         return render(request, template, context)
