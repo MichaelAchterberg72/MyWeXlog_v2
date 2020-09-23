@@ -101,25 +101,25 @@
       {% for s in dsd %}
       <div class="container">
 <div class="row">
-  <div class="card mt-2 card-hover" style="width: 100%;" id="{{ s.id }}">
+  <div class="card mt-1 card-hover" style="width: 100%;" id="{{ s.id }}">
     <div class="post-wrap">
     <div class="post">
+      {% with id=s.id %}
 
-      <div class="post-front" {% for vac in s.vacancyviewed_set.all %}{% if forloop.last %} {% if vac.viewed == True %} style="display:none;" {% else %}  style="display:block;" {% endif %} {% endif %} {% empty %} style="display:block;" {% endfor %} id="oldCard{{id}}">
+      <div class="post-front" style="display:block;" id="oldCard{{id}}">
 
-      <div class="card-body">
+      <div class="card-body small-pad">
         <div class="row" style="height: 20px;">
           <div class="col-md-12 h-100 my-auto">
             <div class="card-maximise float-right">
+              
               <div class="row">
-              <form action="{% url 'MarketPlace:MaximiseVacancy' tlt s.id %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="pointer no-border" data-toggle="tooltip" title="Maximise"><i class="fa fa-window-maximize"></i></button>
-              </form>&nbsp
-              <form action="{% url 'MarketPlace:CloseVacancy' tlt s.id %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="pointer no-border" data-toggle="tooltip" title="Close" name="close"><i class="fa fa-times" aria-hidden="true"></i></button>
-              </form>
+                  <button type="submit" class="pointer no-border max-btn" data-vac={{s.ref_no}} data-tlt={{tlt}} data-toggle="tooltip" title="Maximise" id="clickMe{{id}}"><i class="fa fa-window-maximize"></i></button>
+                &nbsp
+                <form action="{% url 'MarketPlace:CloseVacancy' tlt s.id %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="pointer no-border" data-toggle="tooltip" title="Close" name="close"><i class="fa fa-times" aria-hidden="true"></i></button>
+                </form>
               </div>
             </div>
           </div>
@@ -128,27 +128,22 @@
       </div>
       </div>
 
-      <div class="post-back" {% for vac in s.vacancyviewed_set.all %}{% if forloop.last %} {% if vac.viewed == True %} style="display:block;" {% else %}  style="display:none;" {% endif %} {% endif %} {% empty %} style="display:none;" {% endfor %} id="newCard{{id}}">
-
+      <div class="post-back" style="display:none;" id="newCard{{id}}">
 
         <div class="card-body">
           <div class="row" style="height: 20px;">
             <div class="col-md-12 h-100 my-auto">
               <div class="card-maximise float-right">
-              <div class="row">
-              <form action="{% url 'MarketPlace:MinimiseVacancy' tlt s.id %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="pointer no-border" data-toggle="tooltip" title="Minimise"><i class="fa fa-window-minimize"></i></button>
-              </form>&nbsp
-              <form action="{% url 'MarketPlace:CloseVacancy' tlt s.id %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="pointer no-border" data-toggle="tooltip" title="Close" name="close"><i class="fa fa-times" aria-hidden="true"></i></button>
-              </form>
+                <div class="row">
+                  <button type="submit" class="pointer no-border" data-toggle="tooltip" title="Minimise" id="un-clickMe{{id}}"><i class="fa fa-window-minimize"></i></button>
+                  &nbsp
+                  <form action="{% url 'MarketPlace:CloseVacancy' tlt s.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="pointer no-border" data-toggle="tooltip" title="Close" name="close"><i class="fa fa-times" aria-hidden="true"></i></button>
+                  </form>
+                </div>
               </div>
             </div>
-
-
-          </div>
           </div>
             {% include 'marketplace/vacancy_suited_expanded_view.html' %}
         </div>
@@ -156,7 +151,26 @@
     </div>
     </div>
     </div>
+    <script>
+      var maxbutton = document.getElementById('clickMe{{id}}');  // 1
 
+      maxbutton.addEventListener('click', function() {     // 3
+         newCard{{ s.id }}.style.display = 'block';
+         oldCard{{ s.id }}.style.display = 'none';               // 4
+         var vac = this.dataset.vac
+         var tlt = this.dataset.tlt
+         console.log('vac:', vac, "tlt:", tlt);
+      });
+      var minbutton = document.getElementById('un-clickMe{{id}}');  // 1
+
+      minbutton.addEventListener('click', function() {     // 3
+         newCard{{ s.id }}.style.display = 'none';
+         oldCard{{ s.id }}.style.display = 'block';               // 4
+      });
+    </script>
+
+
+    {% endwith %}
   </div>
   </div>
 
@@ -168,8 +182,8 @@
       {% for s in dsd %}
 <div class="container">
 <div class="row">
-  <div class="card mt-2 card-hover" style="width: 100%;" id="{{ s.id }}">
-      <div class="card-body">
+  <div class="card mt-1 card-hover" style="width: 100%;" id="{{ s.id }}">
+      <div class="card-body small-pad">
         <div class="row" style="height: 20px;">
           <div class="col-md-12 h-100 my-auto">
 
@@ -245,8 +259,8 @@
   </div>
 {% for p in ipost_list %}
   <div class="row">
-    <div class="card mt-2 card-hover" style="width: 100%;">
-      <div class="card-body">
+    <div class="card mt-1 card-hover" style="width: 100%;">
+      <div class="card-body small-pad">
         <div class="row my-auto">
         <div class="col-md-2 h-100 text-center my-auto">
           {{ p.bid_open|date:'j M Y' }}
@@ -332,8 +346,8 @@
         </div>
       {% for c in ipost_closed_list %}
         <div class="row">
-          <div class="card mt-2 card-hover" style="width: 100%;">
-            <div class="card-body">
+          <div class="card mt-1 card-hover" style="width: 100%;">
+            <div class="card-body small-pad">
               <div class="row my-auto">
               <div class="col-md-2 h-100 text-center my-auto">
                 {{ c.bid_open|date:'j M Y' }}

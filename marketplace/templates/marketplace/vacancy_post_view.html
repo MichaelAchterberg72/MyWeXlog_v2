@@ -219,7 +219,7 @@
         {% if applicants_list_view %}
           <form  action="{% url 'MarketPlace:AppExpand' vac=instance.ref_no %}" method="post">
             {% csrf_token %}
-            <button type="submit" class="badge badge-primary float-right" style="width:8rem;">Expanded</button>
+            <button type="submit" class="badge badge-primary float-right" style="width:8rem;">Expand All</button>
           </form>
         {% else %}
           <form  action="{% url 'MarketPlace:AppExpand' vac=instance.ref_no %}" method="post">
@@ -234,8 +234,8 @@
           {% include 'marketplace/list_view_headings.html' %}
           {% for key in applied_slice.items %}
           <div class="row">
-            <div class="card mt-2 card-hover" style="width: 100%;">
-              <div class="card-body">
+            <div class="card mt-1 card-hover" style="width: 100%;">
+              <div class="card-body small-pad">
                 <div class="row my-auto">
                   {% include 'marketplace/list_view_fields.html' %}
                   <div class="col-1 col-no-pad h-100 text-center my-auto">
@@ -266,8 +266,8 @@
           {% else %}
           {% for key in applied_slice.items %}
           <div class="row">
-            <div class="card mt-2 card-hover" style="width: 100%;">
-              <div class="card-body">
+            <div class="card mt-1 card-hover" style="width: 100%;">
+              <div class="card-body small-pad">
                 {% include 'marketplace/expanded_view_fields.html' %}
                 <div class="row my-auto">
                   <div class="col-md-12 h-100">
@@ -325,7 +325,7 @@
           {% if suited_list_view %}
             <form  action="{% url 'MarketPlace:SuitedExpand' vac=instance.ref_no %}" method="post">
               {% csrf_token %}
-              <button type="submit" class="badge badge-primary float-right" style="width:8rem;">Expanded</button>
+              <button type="submit" class="badge badge-primary float-right" style="width:8rem;">Expand All</button>
             </form>
           {% else %}
             <form  action="{% url 'MarketPlace:SuitedExpand' vac=instance.ref_no %}" method="post">
@@ -340,8 +340,8 @@
             {% include 'marketplace/list_view_headings.html' %}
             {% for key in suitable_slice.items %}
             <div class="row">
-              <div class="card mt-2 card-hover" style="width: 100%;">
-                <div class="card-body">
+              <div class="card mt-1 card-hover" style="width: 100%;">
+                <div class="card-body small-pad">
                   <div class="row my-auto">
                     {% include 'marketplace/list_view_fields.html' %}
                     <div class="col-1 col-no-pad h-100 text-center my-auto">
@@ -372,8 +372,8 @@
             {% else %}
             {% for key in suitable_slice.items %}
             <div class="row">
-              <div class="card mt-2 card-hover" style="width: 100%;">
-                <div class="card-body">
+              <div class="card mt-1 card-hover" style="width: 100%;">
+                <div class="card-body small-pad">
                   {% include 'marketplace/expanded_view_fields.html' %}
                   <div class="row my-auto">
                     <div class="col-md-12 h-100">

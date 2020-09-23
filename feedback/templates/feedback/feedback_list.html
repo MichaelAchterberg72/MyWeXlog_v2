@@ -9,50 +9,76 @@
 <div class="card card-shadow" style="width: 100%;">
   <div class="card-body">
     <h4 class="card-title">Member Feedback</h4>
-    <table class="table table-sm">
-      <thead>
-        <tr>
-          <th>Captured By</th>
-          <th>Date Captured</th>
-          <th>Details</th>
-          <th>Like?</th>
-          <th>Dislike?</th>
-          <th>Responded?</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for i in actions_qs %}
-        <tr>
-          <td>{{ i.talent.alias }}</td>
-          <td>{{ i.date_captured|date:'j M y' }}</td>
-          <td>{{ i.details }}</td>
-          <td>
-            {% if i.optional_1 %}
-              Yes
-            {% else %}
-              No
-            {% endif %}
-          </td>
-          <td>
-            {% if i.optional_2 %}
-              Yes
-            {% else %}
-              No
-            {% endif %}
-          </td>
-          <td>
-            {% if i.responded == True %}
-              Yes
-            {% else %}
-              None
-            {% endif %}
-          </td>
-          <td><a href="{% url 'Feedback:FeedbackDetail' i.slug %}">Details</a></td>
-        </tr>
-      {% endfor %}
-      </tbody>
-    </table>
+    <div class="container">
+      <div class="row my-auto">
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Captured By</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Date Captured</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Like?</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Dislike?</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Responded?</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Actions</strong>
+        </div>
+      </div>
+    </div>
+    {% for i in actions_qs %}
+    <div class="row">
+      <div class="card mt-1 card-hover" style="width: 100%;">
+        <div class="card-body small-pad">
+          <div class="row my-auto">
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ i.talent.alias }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ i.date_captured|date:'j M y' }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {% if i.optional_1 %}
+                Yes
+              {% else %}
+                No
+              {% endif %}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {% if i.optional_2 %}
+                Yes
+              {% else %}
+                No
+              {% endif %}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {% if i.responded == True %}
+                Yes
+              {% else %}
+                None
+              {% endif %}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              <a href="{% url 'Feedback:FeedbackDetail' i.slug %}">Details</a>
+            </div>
+          </div>
+          <div class="row my-auto">
+            <div class="col-md-12 h-100 text-center my-auto">
+              <p class="short-paragraph"><strong>Details:</strong></p>
+              <p>{{ i.details }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+        <p>There is no feedback yet.</p>
+    {% endfor %}
   </div>
 </div>
 {% endblock content %}

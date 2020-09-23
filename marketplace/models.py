@@ -133,16 +133,18 @@ class TalentRequired(models.Model):
             self.ref_no = create_code8(self)
         super(TalentRequired, self).save(*args, **kwargs)
 
+#    def get_current_user_views(self):
+#        return self.vacancyviewed_set.filter(talent=self.request.user)
 
 class VacancyViewed(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     vacancy = models.ForeignKey(TalentRequired, on_delete=models.CASCADE)
     viewed = models.BooleanField(default=False)
-    date_viewed = models.DateField(auto_now_add=True, null=True, blank=True)
+    date_viewed = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     read = models.BooleanField(default=False)
-    date_read = models.DateField(auto_now_add=True, null=True, blank=True)
+    date_read = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     closed = models.BooleanField(default=False)
-    date_closed = models.DateField(auto_now_add=True, null=True, blank=True)
+    date_closed = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
     def __str__(self):
         return f'{self.vacancy}'

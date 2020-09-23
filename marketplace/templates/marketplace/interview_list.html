@@ -38,8 +38,8 @@
           </div>
           {% for a in wit_qs %}
           <div class="row">
-            <div class="card mt-2 card-hover" style="width: 100%;">
-              <div class="card-body">
+            <div class="card mt-1 card-hover" style="width: 100%;">
+              <div class="card-body small-pad">
                 <div class="row my-auto">
                   <div class="col-md-5 h-100 text-center my-auto">
                     {{ a.talent.alias }}
@@ -88,8 +88,8 @@
           </div>
           {% for a in wit_qs_p %}
           <div class="row">
-            <div class="card mt-2 card-hover" style="width: 100%;">
-              <div class="card-body">
+            <div class="card mt-1 card-hover" style="width: 100%;">
+              <div class="card-body small-pad">
                 <div class="row my-auto">
                   <div class="col-md-5 h-100 text-center my-auto">
                     {{ a.talent.alias }}
@@ -176,7 +176,7 @@
           {% if pending_interviews_list_view %}
             <form  action="{% url 'MarketPlace:PendingInterviewsExpand' vac=scope.ref_no %}" method="post">
               {% csrf_token %}
-              <button type="submit" class="badge badge-primary float-right" style="width:8rem;">Expanded</button>
+              <button type="submit" class="badge badge-primary float-right" style="width:8rem;">Expand All</button>
             </form>
           {% else %}
             <form  action="{% url 'MarketPlace:PendingInterviewsExpand' vac=scope.ref_no %}" method="post">
@@ -191,8 +191,8 @@
             {% include 'marketplace/list_view_headings.html' %}
             {% for key in interview_p_slice.items %}
             <div class="row">
-              <div class="card mt-2 card-hover" style="width: 100%;">
-                <div class="card-body">
+              <div class="card mt-1 card-hover" style="width: 100%;">
+                <div class="card-body small-pad">
                   <div class="row my-auto">
                     {% include 'marketplace/list_view_fields.html' %}
                     <div class="col-1 col-no-pad h-100 text-center my-auto">
@@ -213,8 +213,8 @@
             {% else %}'
             {% for key in interview_p_slice.items %}
             <div class="row">
-              <div class="card mt-2 card-hover" style="width: 100%;">
-                <div class="card-body">
+              <div class="card mt-1 card-hover" style="width: 100%;">
+                <div class="card-body small-pad">
                   {% include 'marketplace/expanded_view_fields.html' %}
                   <div class="row my-auto">
                     <div class="col-md-12 h-100">
@@ -264,7 +264,7 @@
           {% if suitable_applicants_list_view %}
             <form  action="{% url 'MarketPlace:SuitableApplicanctExpand' vac=scope.ref_no %}" method="post">
               {% csrf_token %}
-              <button type="submit" class="badge badge-primary float-right" style="width:8rem;">Expanded</button>
+              <button type="submit" class="badge badge-primary float-right" style="width:8rem;">Expand All</button>
             </form>
           {% else %}
             <form  action="{% url 'MarketPlace:SuitableApplicanctExpand' vac=scope.ref_no %}" method="post">
@@ -279,8 +279,8 @@
             {% include 'marketplace/list_view_headings.html' %}
             {% for key in interview_s_slice.items %}
             <div class="row">
-              <div class="card mt-2 card-hover" style="width: 100%;">
-                <div class="card-body">
+              <div class="card mt-1 card-hover" style="width: 100%;">
+                <div class="card-body small-pad">
                   <div class="row my-auto">
                     {% include 'marketplace/list_view_fields.html' %}
                     <div class="col-1 col-no-pad h-100 text-center my-auto">
@@ -306,8 +306,8 @@
             {% else %}'
             {% for key in interview_s_slice.items %}
             <div class="row">
-              <div class="card mt-2 card-hover" style="width: 100%;">
-                <div class="card-body">
+              <div class="card mt-1 card-hover" style="width: 100%;">
+                <div class="card-body small-pad">
                   {% include 'marketplace/expanded_view_fields.html' %}
                   <div class="row my-auto">
                     <div class="col-md-12 h-100">
@@ -351,7 +351,7 @@
           {% if unsuitable_applicants_list_view %}
             <form  action="{% url 'MarketPlace:UnSuitableApplicanctExpand' vac=scope.ref_no %}" method="post">
               {% csrf_token %}
-              <button type="submit" class="badge badge-primary float-right" style="width:8rem;">Expanded</button>
+              <button type="submit" class="badge badge-primary float-right" style="width:8rem;">Expand All</button>
             </form>
           {% else %}
             <form  action="{% url 'MarketPlace:UnSuitableApplicanctExpand' vac=scope.ref_no %}" method="post">
@@ -366,8 +366,8 @@
             {% include 'marketplace/list_view_headings.html' %}
             {% for key in interview_n_slice.items %}
             <div class="row">
-              <div class="card mt-2 card-hover" style="width: 100%;">
-                <div class="card-body">
+              <div class="card mt-1 card-hover" style="width: 100%;">
+                <div class="card-body small-pad">
                   <div class="row my-auto">
                     {% include 'marketplace/list_view_fields.html' %}
                     <div class="col-1 col-no-pad h-100 text-center my-auto">
@@ -387,8 +387,8 @@
             {% else %}
             {% for key in interview_n_slice.items %}
             <div class="row">
-              <div class="card mt-2 card-hover" style="width: 100%;">
-                <div class="card-body">
+              <div class="card mt-1 card-hover" style="width: 100%;">
+                <div class="card-body small-pad">
                   {% include 'marketplace/expanded_view_fields.html' %}
                   <div class="row my-auto">
                     <div class="col-md-12 h-100">
@@ -427,7 +427,7 @@
         {% if rejected_applicants_list_view %}
           <form  action="{% url 'MarketPlace:RejectedApplicanctExpand' vac=scope.ref_no %}" method="post">
             {% csrf_token %}
-            <button type="submit" class="badge badge-primary float-right" style="width:8rem;">Expanded</button>
+            <button type="submit" class="badge badge-primary float-right" style="width:8rem;">Expand All</button>
           </form>
         {% else %}
           <form  action="{% url 'MarketPlace:RejectedApplicanctExpand' vac=scope.ref_no %}" method="post">
@@ -442,8 +442,8 @@
           {% include 'marketplace/list_view_headings.html' %}
           {% for key in rej_bid_n_slice.items %}
           <div class="row">
-            <div class="card mt-2 card-hover" style="width: 100%;">
-              <div class="card-body">
+            <div class="card mt-1 card-hover" style="width: 100%;">
+              <div class="card-body small-pad">
                 <div class="row my-auto">
                   {% include 'marketplace/list_view_fields.html' %}
                   <div class="col-1 col-no-pad h-100 text-center my-auto">
@@ -462,8 +462,8 @@
           {% else %}'
           {% for key in rej_bid_n_slice.items %}
           <div class="row">
-            <div class="card mt-2 card-hover" style="width: 100%;">
-              <div class="card-body">
+            <div class="card mt-1 card-hover" style="width: 100%;">
+              <div class="card-body small-pad">
                 {% include 'marketplace/expanded_view_fields.html' %}
                 <div class="row my-auto">
                   <div class="col-md-12 h-100">
@@ -507,8 +507,8 @@
       </div>
       {% for intd in intv_declined %}
       <div class="row">
-        <div class="card mt-2 card-hover" style="width: 100%;">
-          <div class="card-body">
+        <div class="card mt-1 card-hover" style="width: 100%;">
+          <div class="card-body small-pad">
             <div class="row my-auto">
               <div class="col-md-6 h-100 text-center my-auto">
                 {{ intd.talent.alias }}
@@ -554,8 +554,8 @@
       </div>
       {% for intd in vacancy_declined %}
       <div class="row">
-        <div class="card mt-2 card-hover" style="width: 100%;">
-          <div class="card-body">
+        <div class="card mt-1 card-hover" style="width: 100%;">
+          <div class="card-body small-pad">
             <div class="row my-auto">
               <div class="col-md-6 h-100 text-center my-auto">
                 {{ intd.talent.alias }}

@@ -17,7 +17,7 @@
   --danger: #dc3545;
   --light: #f8f9fa;
   --dark: #343a40;
-  --hover: #f7f7f7;
+  --hover: #EAE9E9;
   --font-light: #D3D3D3;
   --font-grey: #ADABAB;
   --font-blue: #0000FF;
@@ -68,12 +68,18 @@ table {
   background: transparent !important;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
+
 .card-hover:hover {
   background-color: var(--hover);
   z-index: 1;
   transition: all .4s ease;
   transform: translate3D(0,-1px,0) scale(1.01);
 }
+
+.card-no-hover {
+  background-color: #fff;
+}
+
 .card-close {
   float : top;
 	position : relative;
@@ -84,11 +90,14 @@ table {
   float : top;
 	position : relative;
 	left : 0px;
-	top : -20px;
+	top : -12px;
 }
 .col-no-pad {
   padding-left: 0rem;
   padding-right: 0rem;
+}
+.small-pad {
+  padding: 0.75rem;
 }
 /*
 .row .card .card-body {

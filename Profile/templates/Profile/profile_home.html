@@ -404,8 +404,8 @@
         </div>
         {% for tlt_i in interviews_tlt %}
       <div class="row">
-        <div class="card mt-2 card-hover" style="width: 100%;">
-          <div class="card-body">
+        <div class="card mt-1 card-hover" style="width: 100%;">
+          <div class="card-body small-pad">
             <div class="row my-auto">
             <div class="col-md-4 h-100 text-center my-auto">
               {{ tlt_i.scope }}
@@ -466,8 +466,8 @@
       </div>
     {% for tlt_e in interviews_emp %}
       <div class="row">
-        <div class="card mt-2 card-hover" style="width: 100%;">
-          <div class="card-body">
+        <div class="card mt-1 card-hover" style="width: 100%;">
+          <div class="card-body small-pad">
             <div class="row my-auto">
             <div class="col-md-4 h-100 text-center my-auto">
               {{ tlt_e.scope }}
@@ -549,8 +549,8 @@
         </div>
         {% for psn in assigned_tlt %}
       <div class="row">
-        <div class="card mt-2 card-hover" style="width: 100%;">
-          <div class="card-body">
+        <div class="card mt-1 card-hover" style="width: 100%;">
+          <div class="card-body small-pad">
             <div class="row my-auto">
             <div class="col-5 h-100 text-center my-auto">
               {{ psn.work }}<br><span class="font-grey">({{ psn.work.ref_no }})</span>
@@ -608,8 +608,8 @@
       </div>
     {% for psn in assigned_emp %}
       <div class="row">
-        <div class="card mt-2 card-hover" style="width: 100%;">
-          <div class="card-body">
+        <div class="card mt-1 card-hover" style="width: 100%;">
+          <div class="card-body small-pad">
             <div class="row my-auto">
             <div class="col-5 h-100 text-center my-auto">
               {{ psn.work|truncatechars:75 }}<br><span class="font-grey">({{ psn.work.ref_no }})</span>
@@ -645,13 +645,13 @@
             </div>
             <div class="row">
               {% if psn.tlt_response == 'D' %}
-              <div class="card-body">
+              <div class="card-body small-pad">
                 <p>{{ psn.comments }}</p>
                 <p class="short-paragraph"><strong>Reason:</strong></p>
                 <p>{{ psn.tlt_decline_reason }}</p>
               </div>
               {% elif psn.tlt_response == 'A' %}
-              <div class="card-body">
+              <div class="card-body small-pad" style="padding-bottom:0rem;">
                 <p>Please contact the Talent directly at <a href="mailto:{{ psn.talent.email }}">{{ psn.talent.email }}</a></p>
               </div>
               {% endif %}

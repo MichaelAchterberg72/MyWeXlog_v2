@@ -38,8 +38,8 @@
           </div>
           {% for s in online %}
           <div class="row">
-            <div class="card mt-2 card-hover" style="width: 100%;">
-              <div class="card-body">
+            <div class="card mt-1 card-hover" style="width: 100%;">
+              <div class="card-body small-pad">
                 <div class="row my-auto">
                   <div class="col-md-4 h-100 text-center my-auto">
                     {{ s.sitename }}
@@ -78,8 +78,8 @@
           </div>
           {% for l in speak %}
           <div class="row">
-            <div class="card mt-2 card-hover" style="width: 100%;">
-              <div class="card-body">
+            <div class="card mt-1 card-hover" style="width: 100%;">
+              <div class="card-body small-pad">
                 <div class="row my-auto">
                   <div class="col-md-4 h-100 text-center my-auto">
                     {{ l.language }}
@@ -210,8 +210,8 @@
       </div>
       {% for lcm in lcm_qs %}
       <div class="row">
-        <div class="card mt-2 card-hover" style="width: 100%;">
-          <div class="card-body">
+        <div class="card mt-1 card-hover" style="width: 100%;">
+          <div class="card-body small-pad">
             <div class="row my-auto">
               <div class="col-1 col-no-pad h-100 text-center my-auto">
                 {{ lcm.certification }}
@@ -289,8 +289,8 @@
       </div>
       {% for a in achievement %}
       <div class="row">
-        <div class="card mt-2 card-hover" style="width: 100%;">
-          <div class="card-body">
+        <div class="card mt-1 card-hover" style="width: 100%;">
+          <div class="card-body small-pad">
             <div class="row my-auto">
               <div class="col-md-11 h-100 text-center my-auto">
                 <div class="row my-auto">
@@ -366,8 +366,8 @@
         </div>
         {% for h in history %}
         <div class="row">
-          <div class="card mt-2 card-hover" style="width: 100%;">
-            <div class="card-body">
+          <div class="card mt-1 card-hover" style="width: 100%;">
+            <div class="card-body small-pad">
               <div class="row my-auto">
                 <div class="col-md-1 h-100 text-center my-auto">
                   {{ h.date_from }}
@@ -416,8 +416,8 @@
 
       {% for f in upload %}
       <div class="row">
-        <div class="card mt-2 card-hover" style="width: 100%;">
-          <div class="card-body">
+        <div class="card mt-1 card-hover" style="width: 100%;">
+          <div class="card-body small-pad">
             <div class="row my-auto">
               <div class="col-md-10 h-100 text-left my-auto">
                 <a href="{{ f.file.url }}" target="_blank">{{ f.title }}</a>
@@ -457,8 +457,8 @@
       </div>
       {% for i in id %}
       <div class="row">
-        <div class="card mt-2 card-hover" style="width: 100%;">
-          <div class="card-body">
+        <div class="card mt-1 card-hover" style="width: 100%;">
+          <div class="card-body small-pad">
             <div class="row my-auto">
               <div class="col-md-6 h-100 text-center my-auto">
                 {{ i.identification }}
@@ -497,8 +497,8 @@
         </div>
         {% for p in passport  %}
         <div class="row">
-          <div class="card mt-2 card-hover" style="width: 100%;">
-            <div class="card-body">
+          <div class="card mt-1 card-hover" style="width: 100%;">
+            <div class="card-body small-pad">
               <div class="row my-auto">
                 <div class="col-md-3 h-100 text-center my-auto">
                   {{ p.passport_number }}
@@ -523,7 +523,7 @@
         {% empty %}
           <p>You do not have any identification documkent loaded yet.</p>
         {% endfor %}
-        
+
       </div>
     </div>
   </div>

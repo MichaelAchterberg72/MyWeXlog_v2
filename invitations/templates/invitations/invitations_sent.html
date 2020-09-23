@@ -33,8 +33,8 @@
         </div>
         {% for i in pageitems %}
         <div class="row">
-          <div class="card mt-2 card-hover" style="width: 100%;">
-            <div class="card-body">
+          <<div class="card mt-1 card-hover" style="width: 100%;">
+            <div class="card-body small-pad">
               <div class="row my-auto">
                 <div class="col-1 col-no-pad h-100 text-center my-auto">
                   {{ i.date_invited|date:"j M Y" }}
@@ -61,7 +61,7 @@
         {% empty %}
         <p>You do not have any sent invitations that have not been accepted at the moment</p>
         {% endfor %}
-        
+
       <p>&nbsp</p>
 
       <nav aria-label="Page navigation">

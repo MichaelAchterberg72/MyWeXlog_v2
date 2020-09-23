@@ -155,7 +155,7 @@ ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 360
 #ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 ACCOUNT_ADAPTER = 'users.adapter.AccountAdapter'
-ACCOUNT_LOGOUT_REDIRECT_URL = '/public/home/'
+ACCOUNT_LOGOUT_REDIRECT_URL = 'https://mywexlog.com/'
 #ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL =
 
 
@@ -308,7 +308,7 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTH_USER_MODEL = 'users.CustomUser'
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/Profile/'
-LOGOUT_REDIRECT_URL = 'http://mywexlog.dev/public/index/'
+LOGOUT_REDIRECT_URL = 'https://mywexlog.com/'
 
 
 # Internationalization

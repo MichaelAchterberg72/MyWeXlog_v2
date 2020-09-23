@@ -36,8 +36,8 @@
       </div>
       {% for p in pageitems %}
       <div class="row">
-        <div class="card mt-2 card-hover" style="width: 100%;">
-          <div class="card-body">
+        <div class="card mt-1 card-hover" style="width: 100%;">
+          <div class="card-body small-pad">
             <div class="row my-auto">
               <div class="col-md-5 h-100 text-center my-auto">
                 {{ p.company }}<br>({{ p.name }})
@@ -58,7 +58,7 @@
       {% empty %}
       <p>There are currently no projects listed!</p>
       {% endfor %}
-      
+
     <p>&nbsp</p>
 
     <nav aria-label="Page navigation">
