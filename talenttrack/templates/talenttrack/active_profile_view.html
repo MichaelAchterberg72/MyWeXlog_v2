@@ -90,7 +90,7 @@
             {% endif %}
             <p><strong>Alias:</strong> {{ als.alias }}</p>
             <hr>
-            <p><strong>Languages</strong></p>
+            <p class="text-center"><strong>Languages</strong></p>
             <table class="table table-sm">
               <thead>
                 <tr>
@@ -113,6 +113,31 @@
             </table>
             <hr>
             <p><strong>Current location:</strong> {{ padd.get_country_display }}, {{ padd.region }}, {{ padd.city }}</p>
+            {% if wtr_qs %}
+              <p class="text-center"><strong>Willing to Relocate</strong></p>
+              <table class="table table-sm">
+                <thead>
+                  <tr>
+                    <th>Country</th>
+                    <th>Permits</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for wtr in wtr_qs %}
+                    <tr>
+                      <td>{{ wtr.country.name }}</td>
+                      <td>
+                      {% if wtr.documents == True %}
+                        I can legally work in {{ wtr.country.name }}
+                      {% else %}
+                        I need to apply for work permits, etc.
+                      {% endif %}
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            {% endif %}
             <hr>
 
           </div>
