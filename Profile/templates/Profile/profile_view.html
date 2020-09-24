@@ -187,78 +187,7 @@
   <div class="card card-shadow">
     <div class="card-body">
       <h5 class="card-title" >Licenses, Certifications and Memberships <a href="{% url 'Talent:LCMCap'  %}?next={{ request.path|urlencode }}" class="badge badge-primary float-right">Add</a></h5>
-<<<<<<< HEAD
-      <table class="table table-sm">
-        <col width="8%">
-        <col width="14%">
-        <col width="8%">
-        <col width="20%">
-        <col width="20%">
-        <col width="10%">
-        <col width="10%">
-        <col width="10%">
-        <col width="10%">
-        <col width="10%">
-        <thead>
-          <tr>
-            <th class="align-middle text-center">Type</th>
-            <th class="align-middle text-center">Name</th>
-            <th class="align-middle text-center">Registered Number</th>
-            <th class="align-middle text-center">Managing Organisation</th>
-            <th class="align-middle text-center">Country</th>
-            <th class="align-middle text-center">Region / State</th>
-            <th class="align-middle text-center">Date First Issued</th>
-            <th class="align-middle text-center">Exipry Date</th>
-            <th class="align-middle text-center">Status</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for lcm in lcm_qs %}
-          <tr>
-            <td class="align-middle text-center">{{ lcm.certification }}</td>
-            <td class="align-middle text-center">{{ lcm.cert_name }}</td>
-            <td class="align-middle text-center">{{ lcm.cm_no }}</td>
-            <td class="align-middle text-center">{{ lcm.companybranch }}</td>
-            <td class="align-middle text-center">{{ lcm.country.name }}</td>
-            <td class="align-middle text-center">{{ lcm.region }}</td>
-            <td class="align-middle text-center">{{ lcm.issue_date|date:"j M Y" }}</td>
-            {% if lcm.expiry_date %}
-              <td class="align-middle text-center">{{ lcm.expiry_date|date:"j M Y" }}</td>
-            {% else %}
-              <td class="align-middle text-center">None</td>
-            {% endif %}
-            {% if lcm.current == True %}
-              <td class="align-middle text-center">Valid</td>
-            {% else %}
-              <td class="align-middle text-center">Expired</td>
-            {% endif %}
-            <td class="card-text text-justify">
-              {% if lcm.upload %}
-                <a href="{{ lcm.upload.url }}" target="_blank" class="badge badge-success" style="width: 4rem;">
-                  View File
-                </a>
-              {% else %}
-                <a href="#" target="_blank" class="badge badge-primary" style="width: 4rem;">
-                  No File
-                </a>
-              {% endif %}
-              <a href="{% url 'Talent:LCMEdit' lcm.slug %}" class="badge badge-secondary" style="width: 4rem;">Update</a>
-              <form  action="{% url 'Talent:LCMDelete' pk=lcm.id tlt=lcm.talent.alias %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="badge badge-danger" style="width: 4rem;" onclick="return confirm('Remove {{ lcm.certification }} - Are you sure?');">Remove</button>
-              </form>
-            </td>
-          </tr>
-          {% empty %}
-          <tr>
-            <td colspan="5">None captured.</td>
-            <td><a href="{% url 'Talent:LCMCap'  %}?next={{ request.path|urlencode }}" class="badge badge-primary float-right">Add License, Certification or Membership</a></td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-=======
+
       <div class="container">
         <div class="row my-auto">
           <div class="col-1 col-no-pad h-100 text-center my-auto">
@@ -340,7 +269,7 @@
                 <a href="{% url 'Talent:LCMEdit' lcm.slug %}" class="badge badge-secondary" style="width: 4rem;">Update</a>
                 <form  action="{% url 'Talent:LCMDelete' pk=lcm.id tlt=lcm.talent.alias %}" method="post">
                   {% csrf_token %}
-                  <button type="submit" class="badge badge-danger" style="width: 4rem;">Remove</button>
+                  <button type="submit" class="badge badge-danger" style="width: 4rem;" onclick="return confirm('Remove {{ lcm.certification }} - Are you sure?');">Remove</button>
                 </form>
               </div>
             </div>
@@ -350,8 +279,6 @@
       {% empty %}
         <p>You do not have any bookes read lilicenses, certifications or memberships listed.</p>
       {% endfor %}
-
->>>>>>> 2020-09-Mike_MYW-246
     </div>
   </div>
 </div>
@@ -360,52 +287,7 @@
   <div class="card card-shadow">
     <div class="card-body" >
       <h5 class="card-title" id="achievements">Achievements<a href="{% url 'Talent:AchieveCap' %}" class="badge badge-primary float-right">Add</a></h5>
-<<<<<<< HEAD
-      <table class="table table-sm">
-        <col width="30%">
-        <col width="10%">
-        <col width="55%">
-        <col width="5%">
-        <thead>
-          <tr>
-            <th class="align-middle text-center">Achievement</th>
-            <th class="align-middle text-center">Date Achieved</th>
-            <th class="align-middle text-left">Details</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for a in achievement %}
-          <tr>
-            <td class="align-middle text-left">{{ a.achievement }}</td>
-            <td class="align-middle text-center">{{ a.date_achieved|date:"j M Y" }}</td>
-            <td class="align-middle text-left">{{ a.description|linebreaks|truncatechars:190 }}</td>
-            <td class="align-middle text-justify">
-              {% if a.upload %}
-                <a href="{{ a.upload.url }}" target="_blank" class="badge badge-success" style="width: 4rem;">
-                  View File
-                </a>
-              {% else %}
-                <a href="#" target="_blank" class="badge badge-primary" style="width: 4rem;">
-                  No File
-                </a>
-              {% endif %}
-              <a href="{% url 'Talent:AchieveEdit' a.slug %}" class="badge badge-secondary" style="width: 4rem;">Edit</a>
-              <form  action="{% url 'Talent:AchieveDelete' ach_i=a.id tlt=a.talent.alias %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="badge badge-danger" style="width: 4rem;" onclick="return confirm('Remove {{ a.achievement }} - Are you sure?');">Remove</button>
-              </form>
-            </td>
-          </tr>
-          {% empty %}
-          <tr>
-            <td colspan="3">No achievements captured.</td>
-            <td><a href="{% url 'Talent:AchieveCap' %}" class="badge badge-primary float-right">Add an Achievement</a></td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-=======
+
       <div class="container">
         <div class="row my-auto">
           <div class="col-md-4 h-100 text-center my-auto">
@@ -433,7 +315,8 @@
                 <div class="row my-auto">
                   <div class="col-md-12 h-100 text-left my-auto">
                     <br>
-                    {{ a.description|linebreaks|truncatechars:465 }}
+                    <p class="short-paragraph"><strong>Details:</strong></p>
+                    <p>{{ a.description|linebreaks|truncatechars:465 }}</p>
                   </div>
                 </div>
               </div>
@@ -450,7 +333,7 @@
                 <a href="{% url 'Talent:AchieveEdit' a.slug %}" class="badge badge-secondary" style="width: 4rem;">Edit</a>
                 <form  action="{% url 'Talent:AchieveDelete' ach_i=a.id tlt=a.talent.alias %}" method="post">
                   {% csrf_token %}
-                  <button type="submit" class="badge badge-danger" style="width: 4rem;">Remove</button>
+                  <button type="submit" class="badge badge-danger" style="width: 4rem;" onclick="return confirm('Remove {{ a.achievement }} - Are you sure?');">Remove</button>
                 </form>
               </div>
             </div>
@@ -461,7 +344,6 @@
         <p>No achievements captured.</p>
       {% endfor %}
 
->>>>>>> 2020-09-Mike_MYW-246
     </div>
   </div>
 </div>
@@ -543,25 +425,6 @@
     <div class="card-body">
       <h5 class="card-title" id="Upload">Uploaded Files <a href="{% url 'Profile:FileUploadView' %}" class="badge badge-primary float-right">Add File</a></h5>
       <p>(Only <strong>PDF</strong> files are allowed to be uploaded)</p>
-<<<<<<< HEAD
-      <table class="table table-sm">
-        <thead>
-        </thead>
-        {% for f in upload %}
-        <tbody>
-          <tr>
-            <td><a href="{{ f.file.url }}" target="_blank">{{ f.title }}</a></td>
-            <td>
-              <form  action="{% url 'Profile:FileDelete' f.id %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="badge badge-danger badge-pill float-right" onclick="return confirm('Delete {{ f.title }} - Are you sure?');">Delete</button>
-              </form>
-            </td>
-          </tr>
-        {% endfor %}
-        </tbody>
-      </table>
-=======
 
       {% for f in upload %}
       <div class="row">
@@ -574,7 +437,7 @@
               <div class="col-md-2 h-100 text-center my-auto">
                 <form  action="{% url 'Profile:FileDelete' f.id %}" method="post">
                   {% csrf_token %}
-                  <button type="submit" class="badge badge-danger badge-pill float-right">Delete</button>
+                  <button type="submit" class="badge badge-danger badge-pill float-right" onclick="return confirm('Delete {{ f.title }} - Are you sure?');">Delete</button>
                 </form>
               </div>
             </div>
@@ -585,7 +448,6 @@
         <p>You do not have any files loaded yet.</p>
       {% endfor %}
 
->>>>>>> 2020-09-Mike_MYW-246
     </div>
   </div>
 </div>
@@ -629,34 +491,7 @@
     <div class="card card-shadow">
       <div class="card-body">
         <h5 class="card-title">Passport Information <a href="{% url 'Profile:PassportAddView' %}" class="badge badge-primary float-right">Add</a></h5>
-<<<<<<< HEAD
-        <table class="table table-sm" id="passport">
-        <thead>
-          <tr>
-            <th class="align-middle text-center">Passport Number</th>
-            <th class="align-middle text-center">Issuing Country</th>
-            <th class="align-middle text-center">Expiry Date</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for p in passport  %}
-          <tr>
-            <td class="align-middle text-center">{{ p.passport_number }}</td>
-            <td class="align-middle text-center">{{ p.get_issue_display }}</td>
-            <td class="align-middle text-center">{{ p.expiry_date|date:"j M Y" }}</td>
-            <td class="align-middle text-center">
-                <a href="{% url 'Profile:PassportEditView' psp=p.slug tlt=p.talent.alias %}" class="badge badge-secondary badge-pill" style="width: 4rem;">Edit</a>
-                <form  action="{% url 'Profile:PassportDelete' pk=p.id tlt=p.talent.alias %}" method="post">
-                  {% csrf_token %}
-                  <button type="submit" class="badge badge-danger badge-pill" style="width: 4rem;" onclick="return confirm('Remove passport {{ p.passport_number }} - Are you sure?');">Remove</button>
-                </form>
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-=======
+
         <div class="container">
           <div class="row my-auto">
             <div class="col-md-3 h-100 text-center my-auto">
@@ -691,7 +526,7 @@
                   <a href="{% url 'Profile:PassportEditView' psp=p.slug tlt=p.talent.alias %}" class="badge badge-secondary badge-pill" style="width: 4rem;">Edit</a>
                   <form  action="{% url 'Profile:PassportDelete' pk=p.id tlt=p.talent.alias %}" method="post">
                     {% csrf_token %}
-                    <button type="submit" class="badge badge-danger badge-pill" style="width: 4rem;">Remove</button>
+                    <button type="submit" class="badge badge-danger badge-pill" style="width: 4rem;" onclick="return confirm('Remove passport {{ p.passport_number }} - Are you sure?');">Remove</button>
                   </form>
                 </div>
               </div>
@@ -702,14 +537,17 @@
           <p>You do not have any identification documkent loaded yet.</p>
         {% endfor %}
 
->>>>>>> 2020-09-Mike_MYW-246
       </div>
     </div>
   </div>
 <br>
 <div class="card-header">Contact Information</div>
-<<<<<<< HEAD
+
   <div class="card-group">
+    <div class="card card-shadow">
+      <div class="container">
+      <div class="row">
+        <div class="col-4 col-no-pad">
     <div class="card">
       <div class="card-body">
         <div class="btn-group float-right">
@@ -727,102 +565,7 @@
         <h5 class="card-title">
           Physical Address
         </h5>
-=======
 
-<div class="card-group">
-  <div class="card card-shadow">
-    <div class="card-body">
-
-      <h5 class="card-title">Physical Address <a href="{% url 'Profile:PhysicalAddress' %}" class="badge badge-secondary float-right">Edit</a></h5>
-      <table class="table table-sm">
-        <thead>
-        </thead>
-        <tbody>
-          <tr>
-            <th>Line 1</th>
-            <td>{{ physical.line1 }}</td>
-          </tr>
-          <tr>
-            <th>Line 2</th>
-            <td>{{ physical.line2 }}</td>
-          </tr>
-          <tr>
-            <th>Line 3</th>
-            <td>{{ physical.line3 }}</td>
-          </tr>
-          <tr>
-            <th>Country</th>
-            <td>{{ physical.get_country_display }}</td>
-          </tr>
-          <tr>
-            <th>Region</th>
-            <td>{{ physical.region.region }}</td>
-          </tr>
-          <tr>
-            <th>City</th>
-            <td>{{ physical.city.city }}</td>
-          </tr>
-          <tr>
-            <th>Suburb</th>
-            <td>{{ physical.suburb.suburb }}</td>
-          </tr>
-          <tr>
-            <th>Postal Code</th>
-            <td>{{ physical.code }}</td>
-          </tr>
-        </tbody>
-      </table>
-
-    </div>
-  </div>
-  <div class="card card-shadow">
-    <div class="card-body">
-      <h5 class="card-title">Postal Address <a href="{% url 'Profile:PostalAddress' %}" class="badge badge-secondary float-right">Edit</a></h5>
-      <table class="table table-sm">
-        <thead>
-        </thead>
-        <tbody>
-          <tr>
-            <th>Line 1</th>
-            <td>{{ postal.line1 }}</td>
-          </tr>
-          <tr>
-            <th>Line 2</th>
-            <td>{{ postal.line2 }}</td>
-          </tr>
-          <tr>
-            <th>Line 3</th>
-            <td>{{ postal.line3 }}</td>
-          </tr>
-          <tr>
-            <th>Country</th>
-            <td>{{ postal.get_country_display }}</td>
-          </tr>
-          <tr>
-            <th>Region</th>
-            <td>{{ postal.region.region }}</td>
-          </tr>
-          <tr>
-            <th>City</th>
-            <td>{{ postal.city.city }}</td>
-          </tr>
-          <tr>
-            <th>Suburb</th>
-            <td>{{ postal.suburb.suburb }}</td>
-          </tr>
-          <tr>
-            <th>Postal Code</th>
-            <td>{{ postal.code }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-  <div class="card card-shadow">
-    <div class="card-body">
-      <h5 class="card-title">Phone Numbers <a href="{% url 'Profile:PhoneNumberAdd' %}" class="badge badge-primary float-right">Add</a></h5>
-      <div id="phone">
->>>>>>> 2020-09-Mike_MYW-246
         <table class="table table-sm">
           <thead>
           </thead>
@@ -862,7 +605,9 @@
           </tbody>
         </table>
       </div>
+      </div>
     </div>
+    <div class="col-4 col-no-pad">
     <div class="card">
       <div class="card-body">
         <div class="btn-group float-right">
@@ -920,6 +665,8 @@
         </table>
       </div>
     </div>
+    </div>
+    <div class="col-4 col-no-pad">
     <div class="card">
       <div class="card-body">
         <h5 class="card-title">Phone Numbers <a href="{% url 'Profile:PhoneNumberAdd' %}" class="badge badge-primary float-right">Add</a></h5>
@@ -954,10 +701,14 @@
         </div>
       </div>
     </div>
+    </div>
+  </div>
+  </div>
+  </div>
   </div>
   <br>
     <div class="card-group">
-      <div class="card">
+      <div class="card card-shadow">
         <div class="card-body">
           <div class="btn-group float-right">
             <div class="btn-group mr-2">
