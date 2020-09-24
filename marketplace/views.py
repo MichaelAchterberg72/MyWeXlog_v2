@@ -35,9 +35,12 @@ from WeXlog.app_config import (
     skill_pass_score,
 )
 from talenttrack.models import WorkExperience, LicenseCertification
+from locations.models import Region
 from db_flatten.models import SkillTag
 from users.models import CustomUser, ExpandedView
-from Profile.models import Profile, LanguageTrack, PhysicalAddress, BriefCareerHistory
+from Profile.models import (
+    Profile, LanguageTrack, PhysicalAddress, BriefCareerHistory, WillingToRelocate
+    )
 from booklist.models import ReadBy
 from enterprises.models import Branch
 
@@ -1475,7 +1478,7 @@ def MarketHome(request):
     tlt = talent.id
     pfl = Profile.objects.filter(talent=talent)
     TalentRequired.objects.filter()
-#    tr = TalentRequired.objects.filter(offer_status='O')
+    # tr = TalentRequired.objects.filter(offer_status='O')
     tr = TalentRequired.objects.filter(offer_status='O')
     tr_emp = TalentRequired.objects.filter(requested_by=talent)
     wb = WorkBid.objects.filter(work__requested_by=talent)
@@ -1489,7 +1492,7 @@ def MarketHome(request):
     vvv = VacancyViewed.objects.filter(Q(talent=request.user) & Q(viewed=True)).values_list('vacancy__id', flat=True).distinct()
     vac_exp = ExpandedView.objects.get(talent=request.user)
     vacancies_suited_list_view = vac_exp.vacancies_suited_list
-#    vo = VacancyViewed.objects.filter(closed=False)
+    #  vo = VacancyViewed.objects.filter(closed=False)
 
     #Queryset caching<<<
 
@@ -1568,13 +1571,23 @@ def MarketHome(request):
     req_experience = req_experience | cert_null_s
 
     #Checking for locations
-    #Remote Freelance open to all talent, other vacanciesTypes only for region (to be updated to distances in later revisions) this will require gEOdJANGO
-    tlt_loc = PhysicalAddress.objects.filter(talent=talent).values_list('region', flat=True)
-    tlt_loc=tlt_loc[0]
+    #Remote Freelance, Consultants open to all talent, other vacanciesTypes only for region (to be updated to distances in later revisions) this will require gEOdJANGO
+    #gathering all countries where willing to work
+    wtr_qs = WillingToRelocate.objects.filter(talent=talent).values_list('country', flat=True)
 
-    vac_loc_rm = set(tr.filter(worklocation__id=1).values_list('id', flat=True))
+    reg_set = set()
+    for item in wtr_qs:
+        reg = set(Region.objects.filter(country=item).values_list('id', flat=True))
 
-    vac_loc_reg = set(tr.filter(~Q(worklocation__id=1)& Q(city__region=tlt_loc)).values_list('id', flat=True))
+        reg_set = reg_set|reg
+
+    tlt_loc = set(PhysicalAddress.objects.filter(talent=talent).values_list('region', flat=True))
+
+    tlt_loc=tlt_loc|reg_set
+
+    vac_loc_rm = set(tr.filter(Q(worklocation__id=1) | Q(worklocation__id=4)).values_list('id', flat=True))
+
+    vac_loc_reg = set(tr.filter(~Q(worklocation__id=1) | ~Q(worklocation__id=4)).filter(city__region__in=tlt_loc).values_list('id', flat=True))
 
     vac_loc = vac_loc_rm | vac_loc_reg
 
@@ -1878,7 +1891,7 @@ def MaximiseVacancyAvailableCard(request, tlt, vac):
 def VacancyViewedJsonView(request):
     data = json.loads(request.body)
     vac = data['vac']
-#    tlt = data['tlt']
+    # tlt = data['tlt']
     tlt = data['tlt']
 
     cu = CustomUser.objects.get(id=tlt)
@@ -2593,10 +2606,16 @@ def VacancyPostView(request, vac):
     #>>> Find all talent that are in the correct geographic location
     vac_type = instance.worklocation.type
 
-    if vac_type == 'Remote freelance':
+    if vac_type == 'Remote freelance' or vac_type == 'Consultant':
         wel_i=wee
     else:
         wel = set(PhysicalAddress.objects.filter(region=instance.city.region).values_list('talent', flat=True))
+        #Willing to Relocate
+        
+        ctry = Region.objects.get(region=instance.city.region)
+        wtr = set(WillingToRelocate.objects.filter(country=ctry.country).values_list('talent', flat=True))
+        wel = wel|wtr
+
         wel_i = wel.intersection(wee)
     #Find all talent that are in the correct geographic location<<<
 
