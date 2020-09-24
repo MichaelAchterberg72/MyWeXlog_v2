@@ -28,7 +28,7 @@ from .forms import (
 )
 
 from .models import(
-    TalentRequired, SkillRequired, Deliverables, TalentAvailabillity, WorkBid, SkillLevel, BidShortList, WorkIssuedTo, BidInterviewList, WorkLocation
+    TalentRequired, SkillRequired, Deliverables, TalentAvailabillity, WorkBid, SkillLevel, BidShortList, WorkIssuedTo, BidInterviewList, WorkLocation, VacancyViewed, VacancyViewed
 )
 
 from WeXlog.app_config import (
@@ -1266,6 +1266,185 @@ def MarketHome(request):
     sl = SkillLevel.objects.all()
     wbt = WorkBid.objects.filter(Q(talent=talent) & Q(work__offer_status='O'))
     bsl = BidShortList.objects.filter(Q(talent=talent) & Q(scope__offer_status='O'))
+    vv = VacancyViewed.objects.filter(talent=talent).values_list('vacancy__id', flat=True)
+    #Queryset caching<<<
+
+    tr_emp_count = tr_emp.count()
+    ipost = tr_emp.filter(offer_status='O').order_by('-bid_open')
+    ipost_list = ipost[:5]
+    ipost_count = ipost.count()
+    ipost_closed = tr_emp.filter(offer_status='C').order_by('-bid_open')
+    ipost_closed_list = ipost_closed[:5]
+    ipost_closed_count = ipost_closed.count()
+    ipost_bid = wb.filter(~Q(bidreview='D'))
+    ipost_bid_flat = ipost_bid.values_list('work', flat=True).distinct()
+    capacity = ta.filter(date_to__gte=timezone.now()).order_by('-date_to')[:5]
+
+    #Code for stacked lookup for talent's skills
+
+    #>>>Create a set of all skills
+    e_skill = we.filter(edt=True, score__gte=skill_pass_score).only('pk').values_list('pk', flat=True)
+    l_skill = we.filter(edt=False, score__gte= skill_pass_score).only('pk').values_list('pk', flat=True)
+
+    e_len = e_skill.count()
+    l_len = l_skill.count()
+    tot_len = e_len+l_len
+
+    skill_set = SkillTag.objects.none()
+
+    for ls in l_skill:
+        a = we.get(pk=ls)
+        b = a.skills.all().values_list('skill', flat=True)
+
+        skill_set = skill_set | b
+
+    for es in e_skill:
+        c = we.get(pk=es)
+        d = c.topic.skills.all().values_list('skill', flat=True)
+
+        skill_set = skill_set | d
+
+    skill_set = skill_set.distinct().order_by('skill')
+    #Create a set of all skills<<<
+
+    #>>>Experience Level check & list skills required in vacancies
+    tlt_lvl = pfl.values_list('exp_lvl__level', flat=True)
+    tlt_lvl = tlt_lvl[0]
+
+    #finds all vacancies that require talent's experience level and below
+    vac_exp = tr.filter(experience_level__level__lte=tlt_lvl)
+
+    #>>> Check for language
+    lang_req = tr.values_list('language')
+
+    if lang_req is not None:
+        tlt_lang = set(LanguageTrack.objects.filter(talent=talent).values_list('language', flat=True))
+        vac_lang=set(vac_exp.filter(language__in=tlt_lang).values_list('id', flat=True))
+    else:
+        pass
+
+    #Certifications Matching
+    #identifies the vacancies that do not required certification
+    cert_null_s = set(vac_exp.filter(certification__isnull=True).values_list('id', flat=True))
+    vac_cert_s = set(vac_exp.filter(certification__isnull=False).values_list('certification', flat=True))
+
+    if vac_cert_s is None: #if no certifications required, pass
+        if vac_lang is None:
+            req_experience = set(vac_exp.values_list('id',flat=True))
+        else:
+            req_experience = set(vac_exp.values_list('id',flat=True)).intersection(vac_lang)
+    else:
+        tlt_cert = set(LicenseCertification.objects.filter(talent=talent).values_list('certification', flat=True))
+        vac_cert = set(vac_exp.filter(certification__in=tlt_cert).values_list('id',flat=True))
+        if vac_lang is not None:
+            req_experience = vac_cert.intersection(vac_lang)
+        else:
+            req_experience = vac_cert
+
+    req_experience = req_experience | cert_null_s
+
+    #Checking for locations
+    #Remote Freelance open to all talent, other vacanciesTypes only for region (to be updated to distances in later revisions) this will require gEOdJANGO
+    tlt_loc = PhysicalAddress.objects.filter(talent=talent).values_list('region', flat=True)
+    tlt_loc=tlt_loc[0]
+
+    vac_loc_rm = set(tr.filter(worklocation__id=1).values_list('id', flat=True))
+
+    vac_loc_reg = set(tr.filter(~Q(worklocation__id=1)& Q(city__region=tlt_loc)).values_list('id', flat=True))
+
+    vac_loc = vac_loc_rm | vac_loc_reg
+
+    req_experience = req_experience.intersection(vac_loc)
+
+    #>>>Skill Matching
+    skl_lst = []
+    #listing the skills the vacancies already found contain.
+    for key in req_experience:
+        skill_required = sr.filter(scope=key).values_list('skills', flat=True).distinct()
+        #combining the skills from various vacancies into one list
+        for sk in skill_required:
+            skl_lst.append(sk)
+
+    ds = set()
+    matchd = set(skl_lst) #remove duplicates
+
+    for item in matchd:
+        display = set(sr.filter(
+                Q(skills__in=skl_lst)
+                & Q(scope__bid_closes__gte=timezone.now())).values_list('scope__id', flat=True))
+
+        ds = ds | display
+
+    dsi = ds.intersection(req_experience)
+
+    tot_vac = len(dsi)
+    #remove the vacancies that have already been applied for
+    wbt_s = set(wbt.values_list('work__id', flat=True))
+    wbt_c = len(wbt_s)
+
+    #remove the vacancies to which talent has been shortlisted
+    bsl_s = set(bsl.values_list('scope__id', flat=True))
+    bsl_c = len(bsl_s)
+
+    #finding the difference (suitable vacancies minus x)
+
+    dsi = dsi - wbt_s
+
+    dsi = dsi - bsl_s
+
+    #Removing vacancies that have been rejected by the user
+    dsi = dsi.intersection(vv)
+
+    #Recreating the QuerySet
+    suitable = tr.filter(id__in=dsi)
+
+    rem_vac = suitable.count()
+    dsd = suitable[:5]
+
+    #Experience Level check & list skills required in vacancies<<<
+    if tot_len > 0:
+        dsd = dsd
+    else:
+        dsd = set()
+
+    template = 'marketplace/vacancy_home.html'
+    context ={
+        'capacity': capacity,
+        'tr_emp_count': tr_emp_count,
+        'ipost': ipost,
+        'ipost_list': ipost_list,
+        'ipost_count': ipost_count,
+        'ipost_closed_list': ipost_closed_list,
+        'ipost_bid_flat': ipost_bid_flat,
+        'ipost_closed_count': ipost_closed_count,
+        'dsd': dsd,
+        'ipost_closed': ipost_closed,
+        'rem_vac': rem_vac,
+        'bsl_c': bsl_c,
+        'wbt_c': wbt_c,
+        'tot_vac': tot_vac,
+    }
+    return render(request, template, context)
+
+
+@login_required()
+def MarketHome_test1(request):
+    #>>>Queryset caching
+    talent=request.user
+    pfl = Profile.objects.filter(talent=talent)
+    TalentRequired.objects.filter()
+#    tr = TalentRequired.objects.filter(offer_status='O')
+    tr = TalentRequired.objects.filter(offer_status='O')
+    tr_emp = TalentRequired.objects.filter(requested_by=talent)
+    wb = WorkBid.objects.filter(work__requested_by=talent)
+    ta = TalentAvailabillity.objects.filter(talent=talent)
+    we = WorkExperience.objects.filter(Q(talent=talent) & Q(score__gte=skill_pass_score)).prefetch_related('topic')
+    sr = SkillRequired.objects.filter(scope__offer_status='O')
+    sl = SkillLevel.objects.all()
+    wbt = WorkBid.objects.filter(Q(talent=talent) & Q(work__offer_status='O'))
+    bsl = BidShortList.objects.filter(Q(talent=talent) & Q(scope__offer_status='O'))
+#    vo = VacancyViewed.objects.filter(closed=False)
+
     #Queryset caching<<<
 
     tr_emp_count = tr_emp.count()
@@ -1403,7 +1582,9 @@ def MarketHome(request):
     else:
         dsd = set()
 
-    template = 'marketplace/vacancy_home.html'
+
+
+    template = 'marketplace/vacancy_home_test_1.html'
     context ={
         'capacity': capacity,
         'tr_emp_count': tr_emp_count,
