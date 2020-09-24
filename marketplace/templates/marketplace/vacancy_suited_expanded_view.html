@@ -3,7 +3,7 @@
 <div class="row">
 <div class="col-md-12 h-100 my-auto">
 
-    <p class="name-paragraph"><strong><span class="font-blue" style="font-size:22px;">{{ s.title|truncatechars:37 }}</span> <span class="font-light">({{ s.ref_no }})</span></strong></p>
+    <p class="name-paragraph"><span class="font-blue font-bold" style="font-size:22px;">{{ s.title|truncatechars:37 }}</span> <span class="font-light">({{ s.ref_no }})</span></p>
     {% if request.user.subscription >= 2 %}
     <p class="short-paragraph">{{ s.companybranch }}</p>
     {% else %}
