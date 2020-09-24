@@ -4,7 +4,7 @@
 {% block title %}{{block.super}}-Experience List{% endblock title %}
 
 {% block content %}
-<div class="card border-0">
+<div class="card card-shadow">
   <div class="card-body">
   <h4 class="">Pre-Logged Experience - Full List<span><p class="float-right"><a href="{% url 'Talent:Home' %}"  class="badge badge-pill badge-primary">Back</a></p></span></h4>
   <p>There are a total of {{ pre_count }} Previously Logged experience items that have been captured.</p>
@@ -14,38 +14,69 @@
       <p><a href="{% url 'Talent:PreloggedCapture' %}" class="badge badge-pill badge-primary float-right">Add Logged Experience</a></p>
     </div>
     <p><strong>Total hours of Previously Logged Experience: </strong>{{ pre_sum.p_sum|intcomma }}</p>
-  <table class="table table-hover table-sm">
-    <thead>
-      <tr class="no-hover">
-        <th class="align-middle text-center">Employer</th>
-        <th class="align-middle text-center">Date from</th>
-        <th class="align-middle text-center">Date to</th>
-        <th class="align-middle text-center">Hours</th>
-        <th class="align-middle text-center">Project</th>
-        <th class="align-middle text-center" data-toggle="tooltip" data-placement="top" title="A score > 3 is required to achieve a 'confirmed' status">Score</th>
-        <th class="align-middle text-center">Actions</th>
-      </tr>
-    </thead>
+
+    <div class="container">
+      <div class="row my-auto">
+        <div class="col-md-3 h-100 text-center my-auto">
+          <strong>Employer</strong>
+        </div>
+        <div class="col-md-1 h-100 text-center my-auto">
+          <strong>Date from</strong>
+        </div>
+        <div class="col-md-1 h-100 text-center my-auto">
+          <strong>Date to</strong>
+        </div>
+        <div class="col-md-1 h-100 text-center my-auto">
+          <strong>Hours</strong>
+        </div>
+        <div class="col-md-4 h-100 text-center my-auto">
+          <strong>Project</strong>
+        </div>
+        <div class="col-md-1 h-100 text-center my-auto">
+          <strong>Score</strong>
+        </div>
+        <div class="col-1 col-no-pad h-100 text-center my-auto">
+          <strong>Actions</strong>
+        </div>
+      </div>
+    </div>
     {% for p in pageitems %}
-    <tbody>
-      <tr onclick="window.location='{% url 'Talent:PreLogDetail' p.slug %}'">
-        <td class="align-middle text-center">{{ p.company }}</td>
-        <td class="align-middle text-center">{{ p.date_from|date:"j M Y" }}</td>
-        <td class="align-middle text-center">{{ p.date_to|date:"j M Y" }}</td>
-        <td class="align-middle text-center">{{ p.hours_worked|intcomma }}</td>
-        <td class="align-middle text-center">{{ p.project }}</td>
-        <td class="align-middle text-center" data-toggle="tooltip" data-placement="top" title="A score > 3 is required to achieve a 'confirmed' status">{{ p.score }}</td>
-        <td><div class="float-right">
-          <a href="{% url 'Talent:PreLogDetail' p.slug %}" class="badge badge-pill badge-secondary" style="width: 5rem;">Detail</a>
-          <form  action="{% url 'Talent:PLEFDelete' p.id %}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
-          </form></div>
-        </td>
-      </tr>
+    <div class="row">
+      <div class="card mt-1 card-hover" style="width: 100%;">
+        <div class="card-body small-pad">
+          <div class="row my-auto">
+            <div class="col-md-3 h-100 text-center my-auto">
+              {{ p.company }}
+            </div>
+            <div class="col-md-1 h-100 text-center my-auto">
+              {{ p.date_from|date:"j M Y" }}
+            </div>
+            <div class="col-md-1 h-100 text-center my-auto">
+              {{ p.date_to|date:"j M Y" }}
+            </div>
+            <div class="col-md-1 h-100 text-center my-auto">
+              {{ p.hours_worked|intcomma }}
+            </div>
+            <div class="col-md-4 h-100 text-center my-auto">
+              {{ p.project }}
+            </div>
+            <div class="col-md-1 h-100 text-center my-auto">
+              <span data-toggle="tooltip" data-placement="top" title="A score > 3 is required to achieve a 'confirmed' status">{{ p.score }}</span>
+            </div>
+            <div class="col-1 col-no-pad h-100 text-left my-auto">
+              <a href="{% url 'Talent:PreLogDetail' p.slug %}" class="badge badge-pill badge-secondary" style="width: 5rem;">Detail</a>
+              <form  action="{% url 'Talent:PLEFDelete' p.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+      <p>You have not captured any experience as yet.</p>
     {% endfor %}
-    </tbody>
-  </table>
 
     <p>&nbsp</p>
 

@@ -5,7 +5,7 @@
 
 {% block content %}
 
-<div class="card border-0">
+<div class="card card-shadow">
   <div class="card-body">
   <h4 class="">Welcome to the Project home page!
     <span><p class="float-right">
@@ -17,30 +17,48 @@
       <p>There are currently <strong>{{ pcount.sum_p|intcomma }}</strong> projects listed in MyWeXlog!</p>
       <p><a href="{% url 'Project:ProjectAdd' %}" class="badge badge-pill badge-primary">Add Project</a><a href="{% url 'Project:Project-Search' %}" class="badge badge-pill badge-primary">Search Projects</a><a href="{% url 'Enterprise:EnterpriseHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
       {% endif %}
-      <table class="table table-hover table-sm">
-      <col width="40%">
-      <col width="20%">
-      <col width="20%">
-      <col width="10%">
-      <thead>
-        <tr class="no-hover">
-          <th>Project Name</th>
-          <th>Project Industry</th>
-          <th>Project Country</th>
-          <th></th>
-        </tr>
-      </thead>
+
+      <div class="container">
+        <div class="row my-auto">
+          <div class="col-md-5 h-100 text-center my-auto">
+            <strong>Project Name</strong>
+          </div>
+          <div class="col-md-3 h-100 text-center my-auto">
+            <strong>Project Industry</strong>
+          </div>
+          <div class="col-md-2 h-100 text-center my-auto">
+            <strong>Project Country</strong>
+          </div>
+          <div class="col-md-2 h-100 text-center my-auto">
+            <strong></strong>
+          </div>
+        </div>
+      </div>
       {% for p in pageitems %}
-      <tbody>
-        <tr onclick="window.location='{% url 'Project:ProjectDetail' p.slug %}?next={{ request.path|urlencode }}'">
-          <td>{{ p.company }} ({{ p.name }})</td>
-          <td>{{ p.industry }}</td>
-          <td>{{ p.city }}</td>
-          <td><a href="{% url 'Project:ProjectDetail' p.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary float-right" style="width: 5rem;">See Detail</a> </td>
-        </tr>
-      </tbody>
+      <div class="row">
+        <div class="card mt-1 card-hover" style="width: 100%;">
+          <div class="card-body small-pad">
+            <div class="row my-auto">
+              <div class="col-md-5 h-100 text-center my-auto">
+                {{ p.company }}<br>({{ p.name }})
+              </div>
+              <div class="col-md-3 h-100 text-center my-auto">
+                {{ p.industry }}
+              </div>
+              <div class="col-md-2 h-100 text-center my-auto">
+                {{ p.city }}
+              </div>
+              <div class="col-md-2 h-100 text-center my-auto">
+                <a href="{% url 'Project:ProjectDetail' p.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary float-right" style="width: 5rem;">See Detail</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <p>There are currently no projects listed!</p>
       {% endfor %}
-    </table>
+
     <p>&nbsp</p>
 
     <nav aria-label="Page navigation">

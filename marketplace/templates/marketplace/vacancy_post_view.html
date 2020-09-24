@@ -14,7 +14,7 @@
   </style>
 
 <div class="container">
-  <div class="card">
+  <div class="card card-shadow">
     <div class="card-body">
       <div class="btn-toolbar float-right">
         <form  action="{% url 'BookList:BLB' %}" method="post">
@@ -205,66 +205,100 @@
   <br>
 
 
-  <div class="card">
+  <div class="card card-shadow">
     <div class="card-body">
       <div class="float-right">
         <a href="{% url 'MarketPlace:HelpApplicantsVacancy' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
         <i class="icon icon-question-circle"></i></a>
       </div>
-    <h3>Applicants</h3>
+    <h3 id="applicants">Applicants</h3>
     <p>There are a total of {{ applied_count }} bids that talent have applied for the vacancy{% if applied_count >= 5 %}, we only list the top 5 here.{% else %}.{% endif %}</p>
     <div class="">
-    <table class="table table-hover table-sm">
-      <col width="15%">
-      <col width="5%">
-      <col width="5%">
-      <col width="1%">
-      <col width="8%">
-      <col width="45%">
-      <col width="10%">
-      <thead>
-        <tr class="no-hover">
-          <th class="align-middle text-center">Alias</th>
-          <th class="align-middle text-center">Experience</th>
-          <th class="align-middle text-center">Training</th>
-          <th class="align-middle text-center">Books Read</th>
-          <th class="align-middle text-center">Bid Rate</th>
-          <th class="align-middle text-left">Motivation</th>
-          <th class="align-middle text-center">Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for key in applied_slice.items %}
-        <tr>
-          <td class="align-middle text-center">{{ key.1.ro.0.4 }}</td>
-          <td class="align-middle text-center">{{ key.1.we|intcomma }}<br>(<strong>{{ key.1.s_no }}</strong> skills)</td>
-          <td class="align-middle text-center">{{ key.1.te|intcomma }}</td>
-          <td class="align-middle text-center">{{ key.1.rb }}</td>
-          <td class="align-middle text-center">{{ key.1.ro.0.1 }}<br><strong>{{ key.1.ro.0.0|intcomma }}</strong><br>{{ key.1.ro.0.2 }}</td>
-          <td class="align-middle text-left">{{ key.1.ro.0.3|truncatechars:190 }}</td>
-          <td class="align-middle text-center">
-            <p>
-              <form  action="{% url 'MarketPlace:ShortList' tlt=key.1.ro.0.4  vac=instance.ref_no %}" method="post" name="active">
-              {% csrf_token %}
-              <button type="submit"  class="badge badge-info badge-pill float-right" style="width: 5rem;">Short-list</button>
-            </form><br>
-            <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=instance.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-success badge-pill float-right" style="width: 5rem;" target="new">View Profile</a>
-          </p>
-        </td>
+      <div class="row">
+        <div class="col-12">
+        {% if applicants_list_view %}
+          <form  action="{% url 'MarketPlace:AppExpand' vac=instance.ref_no %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="badge badge-primary float-right" style="width:8rem;">Expand All</button>
+          </form>
+        {% else %}
+          <form  action="{% url 'MarketPlace:AppExpand' vac=instance.ref_no %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="badge badge-primary float-right" style="width:8rem;">List View</button>
+          </form>
+        {% endif %}
+        </div>
+      </div>
+
+        {% if applicants_list_view %}
+          {% include 'marketplace/list_view_headings.html' %}
+          {% for key in applied_slice.items %}
+          <div class="row">
+            <div class="card mt-1 card-hover" style="width: 100%;">
+              <div class="card-body small-pad">
+                <div class="row my-auto">
+                  {% include 'marketplace/list_view_fields.html' %}
+                  <div class="col-1 col-no-pad h-100 text-center my-auto">
+                    <form  action="{% url 'MarketPlace:RejectBidFromAppliedList' vac=instance.ref_no tlt=key.1.ro.0.4 %}" method="post" name="active">
+                    {% csrf_token %}
+                    <button type="submit"  class="badge badge-danger badge-pill float-right" style="width: 6rem;">Rejected</button>
+                    </form>
+                    <form  action="{% url 'MarketPlace:ShortList' tlt=key.1.ro.0.4  vac=instance.ref_no %}" method="post" name="active">
+                    {% csrf_token %}
+                    <button type="submit"  class="badge badge-info badge-pill float-right" style="width: 6rem;">Short-list</button>
+                  </form><br>
+                  <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=instance.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-success badge-pill float-right" style="width: 6rem;" target="new">View Profile</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
           {% empty %}
-            {% if s_list %}
-              <td colspan="6">All applicants have been short-listed.</td>
-              <td>
-                <a href="{% url 'MarketPlace:ShortListView' instance.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-info">Goto Short-list</a>
-              </td>
+          {% if s_list %}
+            <p>All applicants have been short-listed.</p>
+            <p>
+              <a href="{% url 'MarketPlace:ShortListView' instance.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-info">Goto Short-list</a>
+            </p>
+          {% else %}
+          <p>No applications for this vacancy.</p>
+          {% endif %}
+          {% endfor %}
+          {% else %}
+          {% for key in applied_slice.items %}
+          <div class="row">
+            <div class="card mt-1 card-hover" style="width: 100%;">
+              <div class="card-body small-pad">
+                {% include 'marketplace/expanded_view_fields.html' %}
+                <div class="row my-auto">
+                  <div class="col-md-12 h-100">
+                    <div class="row my-auto float-right">
+                      <form  action="{% url 'MarketPlace:RejectBidFromAppliedList' vac=instance.ref_no tlt=key.1.ro.0.4 %}" method="post" name="active">
+                      {% csrf_token %}
+                      <button type="submit"  class="btn btn-outline-danger" style="width: 10rem;">Rejected</button>
+                      </form>&nbsp
+                      <form  action="{% url 'MarketPlace:ShortList' tlt=key.1.ro.0.4  vac=instance.ref_no %}" method="post" name="active">
+                      {% csrf_token %}
+                      <button type="submit"  class="btn btn-outline-info" style="width: 10rem;">Short-list</button>
+                    </form>&nbsp
+                    <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=instance.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-outline-success" style="width: 10rem;" target="new">View Profile</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% empty %}
+          {% if s_list %}
+            <p>All applicants have been short-listed.</p>
+            <p>
+              <a href="{% url 'MarketPlace:ShortListView' instance.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-info">Goto Short-list</a>
+            </p>
             {% else %}
-            <td colspan="7">No applications for this vacancy.</td>
-            {% endif %}
-          </td>
-        </tr>
-      </tbody>
-      {% endfor %}
-    </table>
+          <p>No applications for this vacancy.</p>
+          {% endif %}
+          {% endfor %}
+          {% endif %}
+
     {% if applied_count > 5 %}
       <p>&nbsp</p>
       <div class="float-right">
@@ -277,7 +311,7 @@
 
 <br>
 
-  <div class="card">
+  <div class="card card-shadow">
     <div class="card-body">
       <div class="float-right">
         <a href="{% url 'MarketPlace:HelpTalentSuitedVacancy' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
@@ -286,55 +320,91 @@
       <h3 id='suited'>Talent suited to the Vacancy</h3>
       <p>There are a total of {{ suitable_count }} talent suited to the vacancy{% if suitable_count >= 5 %}, we only list the top 5 here.{% else %}.{% endif %}</p>
       <div class="">
-        <table class="table table-hover table-sm">
-          <col width="15%">
-          <col width="5%">
-          <col width="5%">
-          <col width="1%">
-          <col width="8%">
-          <col width="45%">
-          <col width="10%">
-          <thead>
-            <tr class="no-hover">
-              <th class="align-middle text-center">Alias</th>
-              <th class="align-middle text-center">Experience</th>
-              <th class="align-middle text-center">Training</th>
-              <th class="align-middle text-center">Books Read</th>
-              <th class="align-middle text-center">Rate</th>
-              <th class="align-middle text-left">Motivation</th>
-              <th class="align-middle text-center">Action</th>
-            </tr>
-          </thead>
-          <tbody>
+        <div class="row">
+          <div class="col-12">
+          {% if suited_list_view %}
+            <form  action="{% url 'MarketPlace:SuitedExpand' vac=instance.ref_no %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="badge badge-primary float-right" style="width:8rem;">Expand All</button>
+            </form>
+          {% else %}
+            <form  action="{% url 'MarketPlace:SuitedExpand' vac=instance.ref_no %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="badge badge-primary float-right" style="width:8rem;">List View</button>
+            </form>
+          {% endif %}
+          </div>
+        </div>
+
+          {% if suited_list_view %}
+            {% include 'marketplace/list_view_headings.html' %}
             {% for key in suitable_slice.items %}
-            <tr>
-              <td class="align-middle text-center">{{ key.1.ro.0.4 }}</td>
-              <td class="align-middle text-center">{{ key.1.we|intcomma }}<br>(<strong>{{ key.1.s_no }}</strong> skills)</td>
-              <td class="align-middle text-center">{{ key.1.te|intcomma }}</td>
-              <td class="align-middle text-center">{{ key.1.rb }}</td>
-              <td class="align-middle text-center">{{ key.1.ro.0.1 }}<br><strong>{{ key.1.ro.0.0|intcomma }}</strong><br>{{ key.1.ro.0.2 }}</td>
-              <td class="align-middle text-left">{{ key.1.ro.0.3|truncatechars:190 }}</td>
-              <td class="align-middle text-center">
-                <p>
-              <form  action="{% url 'MarketPlace:ShortList' tlt=key.1.ro.0.4  vac=instance.ref_no %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="badge badge-info badge-pill float-right" style="width: 5rem;">Short-list</button>
-              </form><br>
-              <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=instance.ref_no %}" class="badge badge-success badge-pill float-right" style="width: 5rem;" target="new">View Profile</a></p>
-              </td>
+            <div class="row">
+              <div class="card mt-1 card-hover" style="width: 100%;">
+                <div class="card-body small-pad">
+                  <div class="row my-auto">
+                    {% include 'marketplace/list_view_fields.html' %}
+                    <div class="col-1 col-no-pad h-100 text-center my-auto">
+                      <form  action="{% url 'MarketPlace:RejectBidFromAppliedList' vac=instance.ref_no tlt=key.1.ro.0.4 %}" method="post" name="active">
+                      {% csrf_token %}
+                      <button type="submit"  class="badge badge-danger badge-pill float-right" style="width: 6rem;">Rejected</button>
+                      </form>
+                      <form  action="{% url 'MarketPlace:ShortList' tlt=key.1.ro.0.4  vac=instance.ref_no %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="badge badge-info badge-pill float-right" style="width: 6rem;">Short-list</button>
+                      </form><br>
+                      <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=instance.ref_no %}" class="badge badge-success badge-pill float-right" style="width: 6rem;" target="new">View Profile</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
             {% empty %}
-              {% if s_list %}
-                  <td colspan="6">All suitable talent has been short-listed.</td>
-                  <td>
-                    <a href="{% url 'MarketPlace:ShortListView' instance.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-info">Goto Short-list</a>
-                  </td>
-              {% else %}
-                    <td colspan="7">There is no talent currently in MyWexLog suited to this vacancy.</td>
-              {% endif %}
-            </tr>
+            {% if s_list %}
+                <p>All suitable talent has been short-listed.</p>
+                <p>
+                  <a href="{% url 'MarketPlace:ShortListView' instance.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-info">Goto Short-list</a>
+                </p>
+            {% else %}
+                  <p>There is no talent currently in MyWexLog suited to this vacancy.</p>
+            {% endif %}
             {% endfor %}
-          </tbody>
-        </table>
+            {% else %}
+            {% for key in suitable_slice.items %}
+            <div class="row">
+              <div class="card mt-1 card-hover" style="width: 100%;">
+                <div class="card-body small-pad">
+                  {% include 'marketplace/expanded_view_fields.html' %}
+                  <div class="row my-auto">
+                    <div class="col-md-12 h-100">
+                      <div class="row my-auto float-right">
+                        <form  action="{% url 'MarketPlace:RejectBidFromAppliedList' vac=instance.ref_no tlt=key.1.ro.0.4 %}" method="post" name="active">
+                        {% csrf_token %}
+                        <button type="submit"  class="btn btn-outline-danger" style="width: 10rem;">Rejected</button>
+                        </form>&nbsp
+                        <form  action="{% url 'MarketPlace:ShortList' tlt=key.1.ro.0.4  vac=instance.ref_no %}" method="post">
+                          {% csrf_token %}
+                          <button type="submit" class="btn btn-outline-info" style="width: 10rem;">Short-list</button>
+                        </form>&nbsp
+                        <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=instance.ref_no %}" class="btn btn-outline-success" style="width: 10rem;" target="new">View Profile</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% empty %}
+            {% if s_list %}
+                <p>All suitable talent has been short-listed.</p>
+                <p>
+                  <a href="{% url 'MarketPlace:ShortListView' instance.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-info">Goto Short-list</a>
+                </p>
+            {% else %}
+                  <p>There is no talent currently in MyWexLog suited to this vacancy.</p>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+
       </div>
       {% if suitable_count > 5 %}
         <div class="float-right">

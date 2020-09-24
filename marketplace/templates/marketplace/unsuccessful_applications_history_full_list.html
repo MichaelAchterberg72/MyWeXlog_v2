@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<div class="card border-0" style="width: 100%;">
+<div class="card card-shadow" style="width: 100%;">
   <div class="card-body">
     <div class="float-right">
       <a href="{% url 'MarketPlace:History' %}" class="btn btn-secondary">Back</a>
@@ -14,45 +14,70 @@
     <h4 class="card-title">Vacancy Application History</h4>
     <h5 class="card-title">Unsuccessful Applications</h5>
     <p>{% if rejected_c == 0 %}You have not been successful in any applications yet.{% elif accepted_c < 5 %}Showing <strong>{{ rejected_c }}</strong> out of <strong>{{ role_c }}</strong> applications.{% else %}You currently have a total of <strong>{{ rejected_c }}</strong> unsuccessful applications out of <strong>{{role_c}}</strong> applications.{% endif %}</p>
-    <table class="table table-hover table-sm">
-      <thead>
-        <tr class="no-hover">
-          <th class="align-middle text-center">Date Applied</th>
-          <th class="align-middle text-center">Vacancy Title</th>
-          <th class="align-middle text-center">Ref. No.</th>
-          <th class="align-middle text-center">Hours Required</th>
-          <th class="align-middle text-center">Work Configeration</th>
-          <th class="align-middle text-center">Country</th>
-          <th class="align-middle text-center">Status</th>
-        </tr>
-      </thead>
-      <tbody>
-
-        {% for r in pageitems %}
-          <tr onclick="window.location='{% url 'MarketPlace:VacancyDetail' r.work.ref_no %}?next={{ request.path|urlencode }}'">
-            <td class="align-middle text-center">{{ r.date_applied|date:"d N Y" }}</td>
-            <td class="align-middle text-center">{{ r.work.title|truncatechars:37 }}</td>
-            <td class="align-middle text-center">{{ r.work.ref_no }}</td>
-            <td class="align-middle text-center">
-              {{ r.work.hours_required|intcomma }} ({{ r.work.get_unit_display }})
-            </td>
-            <td class="align-middle text-center">{{ r.work.worklocation }}</td>
-            <td class="align-middle text-center">{{ r.work.city }}</td>
-            <td class="align-middle text-center">{{ r.get_bidreview_display }}</td>
-            {% if request.user.subscription == 2 %}
-              <td><a href="{% url 'MarketPlace:VacancyDetail' r.work.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-primary 8rem" style="width: 6rem">See Detail</a></td>
-            {% elif request.user.subscription < 2 %}
-              <td><a href="#" class="badge badge-primary 8rem" style="width: 6rem">See Detail</a></td>
-            {% endif %}
-          </tr>
-        {% empty %}
-          <tr colspan="7">
-            None of your applications have been unsuccessful - Nice going!
-          </tr>
-        {% endfor %}
-
-    </tbody>
-    </table>
+    <div class="container">
+      <div class="row my-auto">
+        <div class="col-1 col-no-pad h-100 text-center my-auto">
+          <strong>Date Applied</strong>
+        </div>
+        <div class="col-3 col-no-pad h-100 text-center my-auto">
+          <strong>Vacancy Title</strong>
+        </div>
+        <div class="col-1 col-no-pad h-100 text-center my-auto">
+          <strong>Hours Required</strong>
+        </div>
+        <div class="col-2 col-no-pad h-100 text-center my-auto">
+          <strong>Work<br>Configeration</strong>
+        </div>
+        <div class="col-2 col-no-pad h-100 text-center my-auto">
+          <strong>Country</strong>
+        </div>
+        <div class="col-2 col-no-pad h-100 text-center my-auto">
+          <strong>Status</strong>
+        </div>
+        <div class="col-1 col-no-pad h-100 text-center my-auto">
+          <strong>Action</strong>
+        </div>
+      </div>
+    </div>
+    {% for i in pageitems %}
+    <div class="row">
+      <div class="card mt-1 card-hover" style="width: 100%;">
+        <div class="card-body small-pad">
+          <div class="row my-auto">
+            <div class="col-1 col-no-pad h-100 text-center my-auto">
+              {{ i.date_applied|date:"d N Y" }}
+            </div>
+            <div class="col-3 col-no-pad h-100 text-center my-auto">
+              {{ i.work.title|truncatechars:37 }}
+              <br>
+              <div class="font-grey">({{ i.work.ref_no }})</div>
+            </div>
+            <div class="col-1 col-no-pad h-100 text-center my-auto">
+              {{ i.work.hours_required|intcomma }} ({{ i.work.get_unit_display }})
+            </div>
+            <div class="col-2 col-no-pad h-100 text-center my-auto">
+              {{ i.work.worklocation }}
+            </div>
+            <div class="col-2 col-no-pad h-100 text-center my-auto">
+              {{ i.work.city }}
+            </div>
+            <div class="col-2 col-no-pad h-100 text-center my-auto">
+              {{ i.get_bidreview_display }}
+            </div>
+            <div class="col-1 col-no-pad h-100 text-center my-auto">
+              {% if request.user.subscription == 2 %}
+                <a href="{% url 'MarketPlace:VacancyDetail' i.work.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-primary" style="width: 6rem">See Detail</a>
+              {% elif request.user.subscription < 2 %}
+                <a href="#" class="badge badge-primary" style="width: 6rem">See Detail</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+      <p>None of your applications have been unsuccessful - Nice going!</p>
+    {% endfor %}
 
     <p>&nbsp</p>
 

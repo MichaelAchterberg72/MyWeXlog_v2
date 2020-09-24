@@ -1,0 +1,97 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+{% load static %}
+
+{% block title %}{{block.super}}-Dashboard{{ scope.ref_no }}{% endblock title %}
+
+{% block content %}
+
+<div class="container">
+  <div class="float-right">
+    <a href="{% url 'MarketPlace:InterviewList' vac %}?next={{ request.path|urlencode }}" class="btn btn-secondary" style="width:6rem;">Back</a>
+    <a href="{% url 'MarketPlace:VacancyIntDetail' scope.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-secondary">Interview list</a>
+    <a href="{% url 'MarketPlace:ShortListView' scope.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-secondary">Short-list</a>
+  </div>
+    <h3 class="card-title">Talent Dashboard for {{ scope.title }} ({{ scope.ref_no }})</h3>
+
+    <div class="card card-shadow">
+      <div class="card-body">
+        <h4 id='rejected'>Rejected Applicants</h4>
+        <p>There are a total of {{ rej_bid_n_count }} rejected applicants{% if rej_bid_n_count >= 5 %}, we only list the first 5 here.{% else %}.{% endif %}</p>
+
+        <div class="row">
+          <div class="col-12">
+          {% if rejected_applicants_list_view %}
+            <form  action="{% url 'MarketPlace:RejectedApplicanctFLExpand' vac=scope.ref_no %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-primary float-right" style="width:8rem;">Expanded</button>
+            </form>
+          {% else %}
+            <form  action="{% url 'MarketPlace:RejectedApplicanctFLExpand' vac=scope.ref_no %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-primary float-right" style="width:8rem;">List</button>
+            </form>
+          {% endif %}
+          </div>
+        </div>
+
+          {% if rejected_applicants_list_view %}
+            {% include 'marketplace/list_view_headings.html' %}
+            {% for key in pageitems %}
+            <div class="row">
+              <div class="card mt-1 card-hover" style="width: 100%;">
+                <div class="card-body small-pad">
+                  <div class="row my-auto">
+                    {% include 'marketplace/list_view_fields.html' %}
+                    <div class="col-1 col-no-pad h-100 text-center my-auto">
+                      <form  action="{% url 'MarketPlace:ApplicantsBidShortList' tlt=key.1.ro.0.4  vac=scope.ref_no %}" method="post" name="active">
+                      {% csrf_token %}
+                      <button type="submit"  class="badge badge-success badge-pill float-right" style="width: 6rem;">Short-list</button>
+                      </form>
+                      <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill float-right" style="width: 6rem">View Profile</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% empty %}
+              <p>No talent has been rejected for this scope.</p>
+            {% endfor %}
+            {% else %}
+            {% for key in pageitems %}
+            <div class="row">
+              <div class="card mt-1 card-hover" style="width: 100%;">
+                <div class="card-body small-pad">
+                  {% include 'marketplace/expanded_view_fields.html' %}
+                  <div class="row my-auto">
+                    <div class="col-md-12 h-100">
+                      <div class="row my-auto float-right">
+                        <form  action="{% url 'MarketPlace:ApplicantsBidShortList' tlt=key.1.ro.0.4  vac=scope.ref_no %}" method="post" name="active">
+                        {% csrf_token %}
+                        <button type="submit"  class="btn btn-outline-success" style="width: 10rem;">Short-list</button>
+                        </form>&nbsp
+                        <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="btn btn-outline-secondary" style="width: 10rem">View Profile</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% empty %}
+              <p>No talent has been rejected for this scope.</p>
+            {% endfor %}
+            {% endif %}
+
+    </div>
+  </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{{ form.media.js }}
+
+{% endblock content %}
+
+{% block Script %}
+
+{% endblock Script %}

@@ -14,35 +14,45 @@
   </div>
     <h3 class="card-title">Talent Dashboard for {{ scope.title }} ({{ scope.ref_no }})</h3>
 
-  <div class="card border-0">
+  <div class="card card-body">
     <div class="card-body">
       <h4>Declined Invitation for Interview</h4>
       <p>There are a total of {{ intv_declined_count }} interview invitations declined listed.</p>
-      <table class="table table-hover table-sm">
-        <col width="15%">
-        <col width="15%">
-        <col width="70%">
-        <thead>
-          <tr class="no-hover">
-            <th class="align-middle text-center">Alias</th>
-            <th class="align-middle text-center">Reason</th>
-            <th class="align-middle text-left">Details</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for intd in pageitems %}
-            <tr>
-              <td class="align-middle text-center">{{ intd.talent.alias }}</td>
-              <td class="align-middle text-center">{{ intd.tlt_decline_reason }}</td>
-              <td class="align-middle text-left">{{ intd.comments_tlt|linebreaks }}</td>
-            </tr>
-          {% empty %}
-            <tr>
-              <td colspan="7">Nobody has Declined the Interview Invitation</td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+      <div class="container">
+        <div class="row my-auto">
+          <div class="col-md-6 h-100 text-center my-auto">
+            <strong>Alias</strong>
+          </div>
+          <div class="col-md-6 h-100 text-center my-auto">
+            <strong>Reason</strong>
+          </div>
+        </div>
+      </div>
+      {% for intd in pageitems %}
+      <div class="row">
+        <div class="card mt-1 card-hover" style="width: 100%;">
+          <div class="card-body small-pad">
+            <div class="row my-auto">
+              <div class="col-md-6 h-100 text-center my-auto">
+                {{ intd.talent.alias }}
+              </div>
+              <div class="col-md-6 h-100 text-center my-auto">
+                {{ intd.tlt_decline_reason }}
+              </div>
+            </div>
+            <div class="row my-auto">
+              <div class="col-md-12 h-100 text-center my-auto">
+                <br>
+                <p class="short-paragraph"><strong>Details:</strong></p>
+                <p>{{ intd.comments_tlt|linebreaks }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+        <p>Nobody has Declined the Interview Invitation.</p>
+      {% endfor %}
 
       <nav aria-label="Page navigation">
         {% if pageitems.has_other_pages %}

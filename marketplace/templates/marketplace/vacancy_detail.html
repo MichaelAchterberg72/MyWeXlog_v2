@@ -4,7 +4,7 @@
 
 {% block content %}
 {% for v in vacancy %}
-<div class="card border-0">
+<div class="card card-shadow">
   <div class="card-body">
   <div class="btn-toolbar float-right">
     <form  action="{% url 'BookList:BLB' %}" method="post">
@@ -251,33 +251,46 @@
 </div>
 </div>
 <br>
-<div class="card border-0">
+<div class="card card-shadow">
   {% if request.user.subscription >= 2 %}
     <div class="card-body">
       <h5 class="card-title">Bids Received</h5>
-      <table class="table table-hover table-sm">
-        <col width="15%">
-        <col width="65%">
-        <col width="20%">
-        <thead>
-          <tr class="no-hover">
-            <th class="align-middle text-center">Date Applied</th>
-            <th class="align-middle text-center">Motivation</th>
-            <th class="align-middle text-center">Rate Offered</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            {% for app in bid_qs %}
-              <td class="align-middle text-center">{{ app.date_applied|date:"j M Y" }}</td>
-              <td class="align-middle text-left">{{ app.motivation|linebreaks }}</td>
-              <td class="align-middle text-center">{{ app.currency }}<br>{{ app.rate_bid }}<br>{{ app.get_rate_unit_display }}</td>
-            {% empty %}
-              <td colspan="3">There are currently no applications for this vacancy</td>
-            {% endfor %}
-          </tr>
-        </tbody>
-      </table>
+      <div class="container">
+        <div class="row my-auto">
+          <div class="col-md-6 h-100 text-center my-auto">
+            <strong>Date Applied</strong>
+          </div>
+          <div class="col-md-6 h-100 text-center my-auto">
+            <strong>Rate Offered</strong>
+          </div>
+        </div>
+      </div>
+      {% for app in bid_qs %}
+      <div class="row">
+        <div class="card mt-1 card-hover" style="width: 100%;">
+          <div class="card-body small-pad">
+            <div class="row my-auto">
+              <div class="col-md-6 h-100 text-center my-auto">
+                {{ app.date_applied|date:"j M Y" }}
+              </div>
+              <div class="col-md-6 h-100 text-center my-auto">
+                {{ app.currency }}<br>{{ app.rate_bid }}<br>{{ app.get_rate_unit_display }}
+              </div>
+            </div>
+            <div class="row my-auto">
+              <div class="col-md-12 h-100 text-center my-auto">
+                <p class="shrot-paragraph"><strong>Motivation:</strong></p>
+                <p>
+                {{ app.motivation|linebreaks }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+        <p>There are currently no applications for this vacancy.</p>
+      {% endfor %}
     </div>
   {% endif %}
 </div>

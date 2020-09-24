@@ -9,6 +9,11 @@ app_name = 'MarketPlace'
 urlpatterns = [
     path('entrance/', views.MarketHome, name='Entrance'),
     path('entrance-1/', views.MarketHome_test1, name='Entrance1'),
+    path('vacancy-viewed-updated/', views.VacancyViewedJsonView, name='VacancyViewedJson'),
+    path('close-vacancy/<int:tlt>/<int:vac>/', views.CloseVacancyAvailableCard, name='CloseVacancy'),
+    path('minimise-vacancy/<int:tlt>/<int:vac>/', views.MinimiseVacancyAvailableCard, name='MinimiseVacancy'),
+    path('maximise-vacancy/<int:tlt>/<int:vac>/', views.MaximiseVacancyAvailableCard, name='MaximiseVacancy'),
+
     path('vacancy/', views.VacancyView, name='Vacancy'),
     path('popup/worklocation/add/', views.WorkLocationAddPopup, name="WorkLocationAddPop"),
     path('popup/ajax/get_worklocation_id/', views.get_worklocation_id, name="AJAX_GetWorklocationID"),
@@ -41,11 +46,13 @@ urlpatterns = [
     path('all-vac/closed/', views.AllPostedVacanciesClosedView, name='AllPostedVacClosed'),
     path('availabillity-remove/<int:avl_id>/', views.AvailabillityRemoveView, name='NotAvailable'),
 
+    path('reject-bid-from-list/<slug:vac>/<slug:tlt>/', views.AppliedListRejectedView, name='RejectBidFromAppliedList'),
     #ShortList URLs
     path('shortlist-review/<slug:vac>/', views.ShortListView, name='ShortListView'),
     path('shortlist/<slug:vac>/<slug:tlt>/', views.AddToShortListView, name='ShortList'),
     path('full-list/shortlist/<slug:vac>/<slug:tlt>/', views.AddToShortListFullListView, name='FullListShortList'),
     path('applicants/shortlist/<slug:vac>/<slug:tlt>/', views.AddToShortListApplicantsView, name='ApplicantsShortList'),
+    path('applicants/bid-shortlist/<slug:vac>/<slug:tlt>/', views.AddShortListApplicantsView, name='ApplicantsBidShortList'),
     path('vac-decline/<slug:vac>/<slug:tlt>/', views.TalentDecline, name='VacDecline'),
     path('sl-notsuitable/<slug:bil>/<slug:tlt>/', views.EmpSlDeclineComment, name='SlNotSuitable'),
 
@@ -55,6 +62,7 @@ urlpatterns = [
     path('pending-interviewlist/<slug:vac>/', views.PendingInterviewListView, name='PendingInterviewList'),
     path('suitable-interviewlist/<slug:vac>/', views.SuitableInterviewListView, name='SuitableInterviewList'),
     path('unsuitable-interviewlist/<slug:vac>/', views.UnsuitableInterviewListView, name='UnsuitableInterviewList'),
+    path('bid-rejected-list/<slug:vac>/', views.BidRejectedListView, name='BidRejectedList'),
     path('declined-invitation-interviewlist/<slug:vac>/', views.DeclinedInvInterviewListView, name='DeclinedInvInterviewList'),
     path('declined-assignment-interviewlist/<slug:vac>/', views.DeclinedAssignmentInterviewListView, name='DeclinedAssignmentInterviewList'),
     path('vac-interview/<slug:vac>/<slug:tlt>/', views.AddToInterviewListView, name='VacInterview'),
@@ -87,6 +95,23 @@ urlpatterns = [
     path('vacancy/vacancies-full-list/', views.VacanciesListView, name="VacanciesList"),
     path('vacancy/talent-suited-to-vacancy/<slug:vac>/', views.TalentSuitedVacancyListView, name='TalentSuitedToVacancy'),
     path('vacancy/applicants-for-vacancy/<slug:vac>/', views.ApplicantsForVacancyListView, name='ApplicantsForVacancy'),
+
+    path('vacancy/suited/expanded-list/', views.ExpandVacanciesSuitedView, name='VacanciesExpand'),
+    path('vacancy/suited/fl-expanded-list/', views.ExpandVacanciesSuitedFLView, name='VacanciesFLExpand'),
+
+    path('vacancy/applicants/expanded-list/<slug:vac>/', views.ExpandApplicantsView, name='AppExpand'),
+    path('vacancy/applicants/fl-expanded-list/<slug:vac>/', views.ExpandApplicantsFLView, name='AppFLExpand'),
+    path('vacancy/talent-suited/expanded-list/<slug:vac>/', views.ExpandTalentSuitedView, name='SuitedExpand'),
+    path('vacancy/talent-suited/fl-expanded-list/<slug:vac>/', views.ExpandTalentSuitedFLView, name='SuitedFLExpand'),
+    path('vacancy/short-list/expanded-list/', views.ExpandShortListView, name='ShortlistExpand'),
+    path('vacancy-dashboard/pending-interviews/expanded-list/<slug:vac>/', views.ExpandPendingInterviewsView, name='PendingInterviewsExpand'),
+    path('vacancy-dashboard/pending-interviews/fl-expanded-list/<slug:vac>/', views.ExpandPendingInterviewsFLView, name='PendingInterviewsFLExpand'),
+    path('vacancy-dashboard/suitable-applicants/expanded-list/<slug:vac>/', views.ExpandSuitableApplicantsView, name='SuitableApplicanctExpand'),
+    path('vacancy-dashboard/suitable-applicants/fl-expanded-list/<slug:vac>/', views.ExpandSuitableApplicantsFLView, name='SuitableApplicanctFLExpand'),
+    path('vacancy-dashboard/unsuitable-applicants/expanded-list/<slug:vac>/', views.ExpandUnSuitableApplicantsView, name='UnSuitableApplicanctExpand'),
+    path('vacancy-dashboard/unsuitable-applicants/fl-expanded-list/<slug:vac>/', views.ExpandUnSuitableApplicantsFLView, name='UnSuitableApplicanctFLExpand'),
+    path('vacancy-dashboard/rejected-applicants/expanded-list/<slug:vac>/', views.ExpandRejectedApplicantsView, name='RejectedApplicanctExpand'),
+    path('vacancy-dashboard/rejected-applicants/fl-expanded-list/<slug:vac>/', views.ExpandRejectedApplicantsFLView, name='RejectedApplicanctFLExpand'),
     path('vacancy/application-history-full-list/', views.RolesAppliedForApplicationHistoryView, name='RolesAppliedForFullList'),
     path('vacancy/shortlisted-history-full-list/', views.RolesShortlistedForApplicationHistoryView, name='RolesShortlistedFullList'),
     path('vacancy/open-interviews-full-list/', views.RolesOpenInterviewsApplicationHistoryView, name='RolesOpenInterviewsFullList'),

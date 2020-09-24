@@ -20,85 +20,104 @@
     Vacancy Dashboard for {{ scope.title }} ({{ scope.ref_no }})
   </h3>
     {% if wit_qs %}
-    <div class="card border-0">
+    <div class="card card-shadow">
       <div class="card-body">
           <h4>Vacancy Accepted By</h4>
-        <table class="table table-hover table-sm">
-          <col width="45%">
-          <col width="45%">
-          <col width="10%">
-          <thead>
-            <tr>
-              <th class="align-middle text-center">Alias</th>
-              <th class="align-middle text-center">Response</th>
-              <th class="align-middle text-center">Action</th>
-            </tr>
-          </thead>
+          <div class="container">
+            <div class="row my-auto">
+              <div class="col-md-5 h-100 text-center my-auto">
+                <strong>Alias</strong>
+              </div>
+              <div class="col-md-4 h-100 text-center my-auto">
+                <strong>Response</strong>
+              </div>
+              <div class="col-md-3 h-100 text-center my-auto">
+                <strong>Action</strong>
+              </div>
+            </div>
+          </div>
           {% for a in wit_qs %}
-          <tbody>
-            <tr>
-              <td class="align-middle text-center">{{ a.talent.alias }}</td>
-              <td class="align-middle text-center">{{ a.get_tlt_response_display }}</td>
-              <td class="align-middle text-center">
-                <a href="{% url 'Talent:APV' tlt=a.talent.alias  vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill" style="width: 7rem">
-                  View Profile
-                </a>
-                <a href="{% url 'Profile:WorkshopEmp' %}?next={{ request.path|urlencode }}" class="badge badge-primary badge-pill" style="width: 7rem">
-                  Enter Office
-                </a>
-                {% if a.tlt_response == 'C' %}
-                  <a href="{% url 'MarketPlace:RFIView' a.slug %}?next={{ request.path|urlencode }}" class="badge badge-warning badge-pill" style="width: 7rem">
-                    Clarification<br>Requested
-                  </a>
-                {% endif %}
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+          <div class="row">
+            <div class="card mt-1 card-hover" style="width: 100%;">
+              <div class="card-body small-pad">
+                <div class="row my-auto">
+                  <div class="col-md-5 h-100 text-center my-auto">
+                    {{ a.talent.alias }}
+                  </div>
+                  <div class="col-md-4 h-100 text-center my-auto">
+                    {{ a.get_tlt_response_display }}
+                  </div>
+                  <div class="col-md-3 h-100 text-center my-auto">
+                    <a href="{% url 'Talent:APV' tlt=a.talent.alias  vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill" style="width: 7rem">
+                      View Profile
+                    </a>
+                    <a href="{% url 'Profile:WorkshopEmp' %}?next={{ request.path|urlencode }}" class="badge badge-primary badge-pill" style="width: 7rem">
+                      Enter Office
+                    </a>
+                    {% if a.tlt_response == 'C' %}
+                      <a href="{% url 'MarketPlace:RFIView' a.slug %}?next={{ request.path|urlencode }}" class="badge badge-warning badge-pill" style="width: 7rem">
+                        Clarification<br>Requested
+                      </a>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
       </div>
     </div>
     <br>
     {% endif %}
     {% if wit_qs_p %}
-    <div class="card border-0">
+    <div class="card card-shadow">
       <div class="card-body">
           <h4>Pending Vacancy Acceptance</h4>
-        <table class="table table-hover table-sm">
-          <col width="45%">
-          <col width="45%">
-          <col width="10%">
-          <thead>
-            <tr class="no-hover">
-              <th class="align-middle text-center">Alias</th>
-              <th class="align-middle text-center">Response</th>
-              <th class="align-middle text-center">Action</th>
-            </tr>
-          </thead>
+          <div class="container">
+            <div class="row my-auto">
+              <div class="col-md-5 h-100 text-center my-auto">
+                <strong>Alias</strong>
+              </div>
+              <div class="col-md-4 h-100 text-center my-auto">
+                <strong>Response</strong>
+              </div>
+              <div class="col-md-3 h-100 text-center my-auto">
+                <strong>Action</strong>
+              </div>
+            </div>
+          </div>
           {% for a in wit_qs_p %}
-          <tbody>
-            <tr>
-              <td class="align-middle text-center">{{ a.talent.alias }}</td>
-              <td class="align-middle text-center">{{ a.get_tlt_response_display }}</td>
-              <td class="align-middle text-center">
-                <a href="{% url 'Talent:APV' tlt=a.talent.alias  vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill" style="width: 7rem">
-                  View Profile
-                </a>
-                {% if a.tlt_response == 'A' %}
-                <a href="{% url 'Profile:WorkshopEmp' %}?next={{ request.path|urlencode }}" class="badge badge-primary badge-pill" style="width: 7rem">
-                  Enter Office
-                </a>
-                {% endif %}
-                {% if a.tlt_response == 'C' %}
-                  <a href="{% url 'MarketPlace:RFIView' a.slug %}?next={{ request.path|urlencode }}" class="badge badge-warning badge-pill" style="width: 7rem">
-                    Clarification<br>Requested
-                  </a>
-                {% endif %}
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+          <div class="row">
+            <div class="card mt-1 card-hover" style="width: 100%;">
+              <div class="card-body small-pad">
+                <div class="row my-auto">
+                  <div class="col-md-5 h-100 text-center my-auto">
+                    {{ a.talent.alias }}
+                  </div>
+                  <div class="col-md-4 h-100 text-center my-auto">
+                    {{ a.get_tlt_response_display }}
+                  </div>
+                  <div class="col-md-3 h-100 text-center my-auto">
+                    <a href="{% url 'Talent:APV' tlt=a.talent.alias  vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill" style="width: 7rem">
+                      View Profile
+                    </a>
+                    {% if a.tlt_response == 'A' %}
+                    <a href="{% url 'Profile:WorkshopEmp' %}?next={{ request.path|urlencode }}" class="badge badge-primary badge-pill" style="width: 7rem">
+                      Enter Office
+                    </a>
+                    {% endif %}
+                    {% if a.tlt_response == 'C' %}
+                      <a href="{% url 'MarketPlace:RFIView' a.slug %}?next={{ request.path|urlencode }}" class="badge badge-warning badge-pill" style="width: 7rem">
+                        Clarification<br>Requested
+                      </a>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+
         <table class="table table-sm">
           <thead>
             <tr class="no-hover">
@@ -142,67 +161,81 @@
     </div>
     <br>
     {% endif %}
-    <div class="card border-0">
+    <div class="card card-shadow">
       <div class="card-body">
         <div class="float-right">
           <a href="{% url 'MarketPlace:VacancyIntDetail' scope.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-info">
             Interview list
           </a>
         </div>
-        <h4>Pending Interviews</h4>
+        <h4 id='pending'>Pending Interviews</h4>
         <p>There are a total of {{ interview_p_count }} pending interviews{% if interview_p_count >= 5 %}, we only list the top 5 here.{% else %}.{% endif %}</p>
-        <table class="table table-hover table-sm">
-          <col width="15%">
-          <col width="6%">
-          <col width="6%">
-          <col width="1%">
-          <col width="8%">
-          <col width="45%">
-          <col width="8%">
-          <thead>
-            <tr class="no-hover">
-              <th class="align-middle text-center">Alias</th>
-              <th class="align-middle text-center">Experience</th>
-              <th class="align-middle text-center">Training</th>
-              <th class="align-middle text-center">Books Read</th>
-              <th class="align-middle text-center">Rate</th>
-              <th class="align-middle text-left">Motivation</th>
-              <th class="align-middle text-center">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for sl in interview_p_slice.items %}
-            <tr>
-              <td class="align-middle text-center">
-                {% if sl.1.count > 1 %}
-                  {{ sl.1.ro.0.4 }}<br><strong>{{ sl.1.score }}</strong><br>(by {{ sl.1.count }} people)
-                {% else %}
-                  {{ sl.1.ro.0.4 }}<br><strong>Not Rated</strong><br>(by < 5 people)
-                {% endif %}
-              </td>
-              <td class="align-middle text-center">{{ sl.1.we|intcomma }}<br>(<strong>{{ sl.1.s_no }}</strong> skills)</td>
-              <td class="align-middle text-center">{{ sl.1.te|intcomma }}</td>
-              <td class="align-middle text-center">{{ sl.1.rb }}</td>
-              <td class="align-middle text-center">{{ sl.1.ro.0.1 }} <strong>{{ sl.1.ro.0.0|intcomma }}</strong> {{ sl.1.ro.0.2 }}</td>
-              <td class="align-middle">{{ sl.1.ro.0.3|truncatechars:200 }}</td>
-              <td class="align-middle">
-                <p>
-                  <a href="{% url 'Talent:APV' tlt=sl.1.ro.0.4  vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill float-right" style="width: 6rem">View Profile</a>
-                  <form  action="{% url 'MarketPlace:Suitable' tlt=sl.1.ro.0.4 vac=scope.ref_no %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit" class="badge badge-success badge-pill float-right" style="width: 6rem">Suitable</button>
-                  </form>
-                    <a href="{% url 'MarketPlace:NotSuitable' tlt=sl.1.ro.0.4 vac=scope.ref_no %}" class="badge badge-danger badge-pill float-right" style="width: 6rem">Not Suitable</a>
-                </p>
-              </td>
-            </tr>
+
+        <div class="row">
+          <div class="col-12">
+          {% if pending_interviews_list_view %}
+            <form  action="{% url 'MarketPlace:PendingInterviewsExpand' vac=scope.ref_no %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="badge badge-primary float-right" style="width:8rem;">Expand All</button>
+            </form>
+          {% else %}
+            <form  action="{% url 'MarketPlace:PendingInterviewsExpand' vac=scope.ref_no %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="badge badge-primary float-right" style="width:8rem;">List View</button>
+            </form>
+          {% endif %}
+          </div>
+        </div>
+
+          {% if pending_interviews_list_view %}
+            {% include 'marketplace/list_view_headings.html' %}
+            {% for key in interview_p_slice.items %}
+            <div class="row">
+              <div class="card mt-1 card-hover" style="width: 100%;">
+                <div class="card-body small-pad">
+                  <div class="row my-auto">
+                    {% include 'marketplace/list_view_fields.html' %}
+                    <div class="col-1 col-no-pad h-100 text-center my-auto">
+                      <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4  vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill float-right" style="width: 6rem">View Profile</a>
+                      <form  action="{% url 'MarketPlace:Suitable' tlt=key.1.ro.0.4 vac=scope.ref_no %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="badge badge-success badge-pill float-right" style="width: 6rem">Suitable</button>
+                      </form>
+                        <a href="{% url 'MarketPlace:NotSuitable' tlt=key.1.ro.0.4 vac=scope.ref_no %}" class="badge badge-danger badge-pill float-right" style="width: 6rem">Not Suitable</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
             {% empty %}
-            <tr>
-              <td colspan="7">There are no people pending review.</td>
-            </tr>
+              <p>There are no people pending review.</p>
             {% endfor %}
-          </tbody>
-        </table>
+            {% else %}'
+            {% for key in interview_p_slice.items %}
+            <div class="row">
+              <div class="card mt-1 card-hover" style="width: 100%;">
+                <div class="card-body small-pad">
+                  {% include 'marketplace/expanded_view_fields.html' %}
+                  <div class="row my-auto">
+                    <div class="col-md-12 h-100">
+                      <div class="row my-auto float-right">
+                        <form  action="{% url 'MarketPlace:Suitable' tlt=key.1.ro.0.4 vac=scope.ref_no %}" method="post">
+                          {% csrf_token %}
+                          <button type="submit" class="btn btn-outline-success" style="width: 10rem">Suitable</button>
+                        </form>&nbsp
+                        <a href="{% url 'MarketPlace:NotSuitable' tlt=key.1.ro.0.4 vac=scope.ref_no %}" class="btn btn-outline-danger" style="width: 10rem">Not Suitable</a>&nbsp
+                        <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4  vac=scope.ref_no %}" target="_blank" class="btn btn-outline-secondary" style="width: 10rem">View Profile</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% empty %}
+              <p>There are no people pending review.</p>
+            {% endfor %}
+            {% endif %}
+
         {% if interview_p_count > 5 %}
           <div class="float-right">
             <a href="{% url 'MarketPlace:PendingInterviewList' vac %}" class="btn btn-primary">View All Pending Interviews</a>
@@ -211,8 +244,8 @@
       </div>
     </div>
     <br>
-    <div class="card border-0">
-      <div class="card-body">
+    <div class="card card-shadow">
+      <div  id='suitable' class="card-body">
         {% if wit_qs %}
           {% for a in wit_qs %}
             {% if a.tlt_response == 'A' or a.tlt_response == 'P' or a.tlt_response == 'C' %}
@@ -225,62 +258,81 @@
           <h4>Suitable Applicants</h4>
         {% endif %}
         <p>There are a total of {{ interview_s_count }} applicants{% if interview_s_count >= 5 %}, we only list the first 5 here.{% else %}.{% endif %}</p>
-        <table class="table table-hover table-sm">
-           <col width="15%">
-           <col width="5%">
-           <col width="5%">
-           <col width="1%">
-           <col width="8%">
-           <col width="45%">
-           <col width="10%">
-           <thead>
-             <tr class="no-hover">
-               <th class="align-middle text-center">Alias</th>
-               <th class="align-middle text-center">Experience</th>
-               <th class="align-middle text-center">Training</th>
-               <th class="align-middle text-center">Books Read</th>
-               <th class="align-middle text-center">Rate</th>
-               <th class="align-middle text-left">Motivation</th>
-               <th class="align-middle text-center">Action</th>
-             </tr>
-           </thead>
-           <tbody>
-             {% for sl in interview_s_slice.items %}
-               <tr>
-                 <td class="align-middle text-center">
-                   {% if sl.1.count > 1 %}
-                     {{ sl.1.ro.0.4 }}<br><strong>{{ sl.1.score }}</strong><br>(by {{ sl.1.count }} people)
-                   {% else %}
-                     {{ sl.1.ro.0.4 }}<br><strong>Not Rated</strong><br>(by < 5 people)
-                   {% endif %}
-                 </td>
-                 <td class="align-middle text-center">{{ sl.1.we|intcomma }}<br>(<strong>{{ sl.1.s_no }}</strong> skills)</td>
-                 <td class="align-middle text-center">{{ sl.1.te|intcomma }}</td>
-                 <td class="align-middle text-center">{{ sl.1.rb }}</td>
-                 <td class="align-middle text-center">{{ sl.1.ro.0.1 }} <strong>{{ sl.1.ro.0.0|intcomma }}</strong> {{ sl.1.ro.0.2 }}</td>
-                 <td class="align-middle">{{ sl.1.ro.0.3|truncatechars:200 }}</td>
-                 <td class="align-middle text-center">
-                   <p>
-                     <a href="{% url 'Talent:APV' tlt=sl.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill float-right" style="width: 6rem">View Profile</a>
-                     {% if active == 'False' %}
-                       <form  action="{% url 'MarketPlace:VacAssign' tlt=sl.1.ro.0.4 vac=scope.ref_no %}" method="post">
-                         {% csrf_token %}
-                         <button type="submit" class="badge badge-success badge-pill float-right" style="width: 6rem">Assign</button>
-                         <a href="{% url 'MarketPlace:NotSuitable' tlt=sl.1.ro.0.4 vac=scope.ref_no %}" class="badge badge-danger badge-pill float-right" style="width: 6rem">Not Suitable</a>
-                       </form>
-                     {% else %}
-                       <button type="submit" class="badge badge-success badge-pill float-right" style="width: 6rem">Pending</button>
-                     {% endif %}
-                   </p>
-                 </td>
-               </tr>
-             {% empty %}
-               <tr>
-                 <td colspan="7">No talent identified or selected at the moment.</td>
-               </tr>
-             {% endfor %}
-           </tbody>
-         </table>
+
+        <div class="row">
+          <div class="col-12">
+          {% if suitable_applicants_list_view %}
+            <form  action="{% url 'MarketPlace:SuitableApplicanctExpand' vac=scope.ref_no %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="badge badge-primary float-right" style="width:8rem;">Expand All</button>
+            </form>
+          {% else %}
+            <form  action="{% url 'MarketPlace:SuitableApplicanctExpand' vac=scope.ref_no %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="badge badge-primary float-right" style="width:8rem;">List View</button>
+            </form>
+          {% endif %}
+          </div>
+        </div>
+
+          {% if suitable_applicants_list_view %}
+            {% include 'marketplace/list_view_headings.html' %}
+            {% for key in interview_s_slice.items %}
+            <div class="row">
+              <div class="card mt-1 card-hover" style="width: 100%;">
+                <div class="card-body small-pad">
+                  <div class="row my-auto">
+                    {% include 'marketplace/list_view_fields.html' %}
+                    <div class="col-1 col-no-pad h-100 text-center my-auto">
+
+                      {% if active == 'False' %}
+                        <form  action="{% url 'MarketPlace:VacAssign' tlt=key.1.ro.0.4 vac=scope.ref_no %}" method="post">
+                          {% csrf_token %}
+                          <button type="submit" class="badge badge-success badge-pill float-right" style="width: 6rem">Assign</button>
+                          <a href="{% url 'MarketPlace:NotSuitable' tlt=key.1.ro.0.4 vac=scope.ref_no %}" class="badge badge-danger badge-pill float-right" style="width: 6rem">Not Suitable</a>
+                        </form>
+                      {% else %}
+                        <button type="submit" class="badge badge-success badge-pill float-right" style="width: 6rem">Pending</button>
+                      {% endif %}
+                        <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill float-right" style="width: 6rem">View Profile</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% empty %}
+              <p>No talent identified or selected at the moment.</p>
+            {% endfor %}
+            {% else %}'
+            {% for key in interview_s_slice.items %}
+            <div class="row">
+              <div class="card mt-1 card-hover" style="width: 100%;">
+                <div class="card-body small-pad">
+                  {% include 'marketplace/expanded_view_fields.html' %}
+                  <div class="row my-auto">
+                    <div class="col-md-12 h-100">
+                      <div class="row my-auto float-right">
+                        {% if active == 'False' %}
+                          <form  action="{% url 'MarketPlace:VacAssign' tlt=key.1.ro.0.4 vac=scope.ref_no %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-success" style="width: 6rem">Assign</button>&nbsp
+                            <a href="{% url 'MarketPlace:NotSuitable' tlt=key.1.ro.0.4 vac=scope.ref_no %}" class="btn btn-outline-danger" style="width: 6rem">Not Suitable</a>
+                          </form>&nbsp
+                        {% else %}
+                          <button type="submit" class="btn btn-outline-success" style="width: 6rem">Pending</button>&nbsp
+                        {% endif %}
+                          <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="btn btn-outline-secondary" style="width: 6rem">View Profile</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% empty %}
+              <p>No talent identified or selected at the moment.</p>
+            {% endfor %}
+            {% endif %}
+
          {% if interview_s_count > 5 %}
            <div class="float-right">
              <a href="{% url 'MarketPlace:SuitableInterviewList' vac %}" class="btn btn-primary">View All Applicants</a>
@@ -289,61 +341,74 @@
        </div>
      </div>
     <br>
-    <div class="card border-0">
+    <div class="card card-shadow">
       <div class="card-body">
-        <h4>Unsuitable Applicants</h4>
+        <h4 id='unsuitable'>Unsuitable Applicants</h4>
         <p>There are a total of {{ interview_n_count }} unsuitable applicants{% if interview_n_count >= 5 %}, we only list the first 5 here.{% else %}.{% endif %}</p>
-        <table class="table table-hover table-sm">
-          <col width="15%">
-          <col width="5%">
-          <col width="5%">
-          <col width="1%">
-          <col width="8%">
-          <col width="45%">
-          <col width="10%">
-          <thead>
-            <tr class="no-hover">
-              <th class="align-middle text-center">Alias</th>
-              <th class="align-middle text-center">Experience</th>
-              <th class="align-middle text-center">Training</th>
-              <th class="align-middle text-center">Books Read</th>
-              <th class="align-middle text-center">Rate</th>
-              <th class="align-middle text-left">Motivation</th>
-              <th class="align-middle text-center">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for sl in interview_n_slice.items %}
-            <tr>
-              <td class="align-middle text-center">
-                {% if sl.1.count > 1 %}
-                  {{ sl.1.ro.0.4 }}<br><strong>{{ sl.1.score }}</strong><br>(by {{ sl.1.count }} people)
-                {% else %}
-                  {{ sl.1.ro.0.4 }}<br><strong>Not Rated</strong><br>(by < 5 people)
-                {% endif %}
-              </td>
-              <td class="align-middle text-center">{{ sl.1.we|intcomma }}<br>(<strong>{{ sl.1.s_no }}</strong> skills)</td>
-              <td class="align-middle text-center">{{ sl.1.te|intcomma }}</td>
-              <td class="align-middle text-center">{{ sl.1.rb }}</td>
-              <td class="align-middle text-center">{{ sl.1.ro.0.1 }} <strong>{{ sl.1.ro.0.0|intcomma }}</strong> {{ sl.1.ro.0.2 }}</td>
-              <td class="align-middle">{{ sl.1.ro.0.3|truncatechars:200 }}</td>
-              <td class="align-middle text-center">
-                <p>
-                  <a href="{% url 'Talent:APV' tlt=sl.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill float-right" style="width: 5rem">View Profile</a>
-                  <form  action="{% url 'MarketPlace:Suitable' tlt=sl.1.ro.0.4  vac=scope.ref_no %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit" class="badge badge-success badge-pill float-right" style="width: 5rem">Suitable</button>
-                  </form>
-                </p>
-              </td>
-            </tr>
-          {% empty %}
-            <tr>
-              <td colspan="7">No talent identified as unsuitbale for this scope.</td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+
+        <div class="row">
+          <div class="col-12">
+          {% if unsuitable_applicants_list_view %}
+            <form  action="{% url 'MarketPlace:UnSuitableApplicanctExpand' vac=scope.ref_no %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="badge badge-primary float-right" style="width:8rem;">Expand All</button>
+            </form>
+          {% else %}
+            <form  action="{% url 'MarketPlace:UnSuitableApplicanctExpand' vac=scope.ref_no %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="badge badge-primary float-right" style="width:8rem;">List View</button>
+            </form>
+          {% endif %}
+          </div>
+        </div>
+
+          {% if unsuitable_applicants_list_view %}
+            {% include 'marketplace/list_view_headings.html' %}
+            {% for key in interview_n_slice.items %}
+            <div class="row">
+              <div class="card mt-1 card-hover" style="width: 100%;">
+                <div class="card-body small-pad">
+                  <div class="row my-auto">
+                    {% include 'marketplace/list_view_fields.html' %}
+                    <div class="col-1 col-no-pad h-100 text-center my-auto">
+                      <form  action="{% url 'MarketPlace:Suitable' tlt=key.1.ro.0.4  vac=scope.ref_no %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="badge badge-success badge-pill float-right" style="width: 6rem">Suitable</button>
+                      </form>
+                      <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill float-right" style="width: 6rem">View Profile</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% empty %}
+              <p>No talent identified as unsuitbale for this scope.</p>
+            {% endfor %}
+            {% else %}
+            {% for key in interview_n_slice.items %}
+            <div class="row">
+              <div class="card mt-1 card-hover" style="width: 100%;">
+                <div class="card-body small-pad">
+                  {% include 'marketplace/expanded_view_fields.html' %}
+                  <div class="row my-auto">
+                    <div class="col-md-12 h-100">
+                      <div class="row my-auto float-right">
+                        <form  action="{% url 'MarketPlace:Suitable' tlt=key.1.ro.0.4  vac=scope.ref_no %}" method="post">
+                          {% csrf_token %}
+                          <button type="submit" class="btn btn-outline-success" style="width: 10rem">Suitable</button>
+                        </form>&nbsp
+                        <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="btn btn-outline-secondary" style="width: 10rem">View Profile</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% empty %}
+              <p>No talent identified as unsuitbale for this scope.</p>
+            {% endfor %}
+            {% endif %}
+
       {% if interview_n_count > 5 %}
         <div class="float-right">
           <a href="{% url 'MarketPlace:UnsuitableInterviewList' vac %}" class="btn btn-primary">View All Unsuitable Applicants</a>
@@ -352,35 +417,119 @@
     </div>
   </div>
   <br>
-  <div class="card border-0">
+  <div class="card card-shadow">
+    <div class="card-body">
+      <h4 id='rejected'>Rejected Applicants</h4>
+      <p>There are a total of {{ rej_bid_n_count }} rejected applicants{% if rej_bid_n_count >= 5 %}, we only list the first 5 here.{% else %}.{% endif %}</p>
+
+      <div class="row">
+        <div class="col-12">
+        {% if rejected_applicants_list_view %}
+          <form  action="{% url 'MarketPlace:RejectedApplicanctExpand' vac=scope.ref_no %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="badge badge-primary float-right" style="width:8rem;">Expand All</button>
+          </form>
+        {% else %}
+          <form  action="{% url 'MarketPlace:RejectedApplicanctExpand' vac=scope.ref_no %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="badge badge-primary float-right" style="width:8rem;">List View</button>
+          </form>
+        {% endif %}
+        </div>
+      </div>
+
+        {% if rejected_applicants_list_view %}
+          {% include 'marketplace/list_view_headings.html' %}
+          {% for key in rej_bid_n_slice.items %}
+          <div class="row">
+            <div class="card mt-1 card-hover" style="width: 100%;">
+              <div class="card-body small-pad">
+                <div class="row my-auto">
+                  {% include 'marketplace/list_view_fields.html' %}
+                  <div class="col-1 col-no-pad h-100 text-center my-auto">
+                    <form  action="{% url 'MarketPlace:ApplicantsBidShortList' tlt=key.1.ro.0.4  vac=scope.ref_no %}" method="post" name="active">
+                    {% csrf_token %}
+                    <button type="submit"  class="badge badge-success badge-pill float-right" style="width: 6rem;">Short-list</button>
+                    <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill float-right" style="width: 6rem">View Profile</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% empty %}
+            <p>No talent has been rejected for this scope.</p>
+          {% endfor %}
+          {% else %}'
+          {% for key in rej_bid_n_slice.items %}
+          <div class="row">
+            <div class="card mt-1 card-hover" style="width: 100%;">
+              <div class="card-body small-pad">
+                {% include 'marketplace/expanded_view_fields.html' %}
+                <div class="row my-auto">
+                  <div class="col-md-12 h-100">
+                    <div class="row my-auto float-right">
+                      <form  action="{% url 'MarketPlace:ApplicantsBidShortList' tlt=key.1.ro.0.4  vac=scope.ref_no %}" method="post" name="active">
+                      {% csrf_token %}
+                      <button type="submit"  class="btn btn-outline-success" style="width: 10rem;">Short-list</button>&nbsp
+                      <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="btn btn-outline-secondary" style="width: 10rem">View Profile</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% empty %}
+            <p>No talent has been rejected for this scope.</p>
+          {% endfor %}
+          {% endif %}
+
+    {% if rej_bid_n_count > 5 %}
+      <div class="float-right">
+        <a href="{% url 'MarketPlace:BidRejectedList' vac %}" class="btn btn-primary">View All Rejected Applicants</a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+  <br>
+  <div class="card card-shadow">
     <div class="card-body">
       <h4>Declined Invitation for Interview</h4>
       <p>There are a total of {{ intv_declined_count }} interview invitations declined{% if intv_declined_count >= 5 %}, we only list the first 5 here.{% else %}.{% endif %}</p>
-      <table class="table table-hover table-sm">
-        <col width="15%">
-        <col width="15%">
-        <col width="70%">
-        <thead>
-          <tr class="no-hover">
-            <th class="align-middle text-center">Alias</th>
-            <th class="align-middle text-center">Reason</th>
-            <th class="align-middle text-left">Details</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for intd in intv_declined %}
-            <tr>
-              <td class="align-middle text-center">{{ intd.talent.alias }}</td>
-              <td class="align-middle text-center">{{ intd.tlt_decline_reason }}</td>
-              <td class="align-middle text-left">{{ intd.comments_tlt|linebreaks }}</td>
-            </tr>
-          {% empty %}
-            <tr>
-              <td colspan="7">Nobody has Declined the Interview Invitation</td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+      <div class="container">
+        <div class="row my-auto">
+          <div class="col-md-6 h-100 text-center my-auto">
+            <strong>Alias</strong>
+          </div>
+          <div class="col-md-6 h-100 text-center my-auto">
+            <strong>Reason</strong>
+          </div>
+        </div>
+      </div>
+      {% for intd in intv_declined %}
+      <div class="row">
+        <div class="card mt-1 card-hover" style="width: 100%;">
+          <div class="card-body small-pad">
+            <div class="row my-auto">
+              <div class="col-md-6 h-100 text-center my-auto">
+                {{ intd.talent.alias }}
+              </div>
+              <div class="col-md-6 h-100 text-center my-auto">
+                {{ intd.tlt_decline_reason }}
+              </div>
+            </div>
+            <div class="row my-auto">
+              <div class="col-md-12 h-100 text-left my-auto">
+                <br>
+                <p class="short-paragraph"><strong>Details:</strong></p>
+                <p>{{ intd.comments_tlt|linebreaks }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+        <p>Nobody has Declined the Interview Invitation.</p>
+      {% endfor %}
       {% if intv_declined_count > 5 %}
         <div class="float-right">
           <a href="{% url 'MarketPlace:DeclinedInvInterviewList' vac %}" class="btn btn-primary">View All Unsuitable Applicants</a>
@@ -389,35 +538,45 @@
     </div>
   </div>
   <br>
-  <div class="card border-0">
+  <div class="card card-shadow">
     <div class="card-body">
       <h4>Declined Assignment</h4>
       <p>There are a total of {{ vacancy_declined_count }} assignments declined{% if vacancy_declined_count >= 5 %}, we only list the first 5 here.{% else %}.{% endif %}</p>
-      <table class="table table-hover table-sm">
-        <col width="15%">
-        <col width="15%">
-        <col width="70%">
-        <thead>
-          <tr class="no-hover">
-            <th class="align-middle text-center">Alias</th>
-            <th class="align-middle text-center">Reason</th>
-            <th class="align-middle text-left">Details</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for intd in vacancy_declined %}
-          <tr>
-            <td class="align-middle text-center">{{ intd.talent.alias }}</td>
-            <td class="align-middle text-center">{{ intd.tlt_decline_reason }}</td>
-            <td class="align-middle text-left">{{ intd.comments|linebreaks }}</td>
-          </tr>
-          {% empty %}
-            <tr>
-              <td colspan="7">Nobody has declined an assignment.</td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+      <div class="container">
+        <div class="row my-auto">
+          <div class="col-md-6 h-100 text-center my-auto">
+            <strong>Alias</strong>
+          </div>
+          <div class="col-md-6 h-100 text-center my-auto">
+            <strong>Reason</strong>
+          </div>
+        </div>
+      </div>
+      {% for intd in vacancy_declined %}
+      <div class="row">
+        <div class="card mt-1 card-hover" style="width: 100%;">
+          <div class="card-body small-pad">
+            <div class="row my-auto">
+              <div class="col-md-6 h-100 text-center my-auto">
+                {{ intd.talent.alias }}
+              </div>
+              <div class="col-md-6 h-100 text-center my-auto">
+                {{ intd.tlt_decline_reason }}
+              </div>
+            </div>
+            <div class="row my-auto">
+              <div class="col-md-12 h-100 text-left my-auto">
+                <br>
+                <p class="short-paragraph"><strong>Details:</strong></p>
+                <p>{{ intd.comments_tlt|linebreaks }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+        <p>Nobody has declined an assignment.</p>
+      {% endfor %}
       {% if intv_declined_count > 5 %}
         <div class="float-right">
           <a href="{% url 'MarketPlace:DeclinedAssignmentInterviewList' vac %}" class="btn btn-primary">View All Assignments Declined</a>

@@ -5,34 +5,46 @@
 
 {% block content %}
 
-<div class="card border-0">
+<div class="card card-shadow">
   <div class="card-body">
   <h4 class="">Notices from MyWeXlog!</h4>
   <div class="card-body">
 
-    <table class="table table-hover table-sm">
-      <col width="20%">
-      <col width="70%">
-      <col width="10%">
-      <thead>
-        <tr class="no-hover">
-          <th>Date</th>
-          <th>Notice Subject</th>
-          <th>View Detail</th>
-        </tr>
-      </thead>
-      {% for n in pageitems %}
-      <tbody>
-        <tr onclick="window.location='{% url 'Feedback:NoticeRead' n.slug %}?next={{ request.path|urlencode }}'">
-          <td>{{ n.notice_date|date:"j M Y" }}</td>
-          <td>{{ n.subject }}</td>
-          <td><a href="{% url 'Feedback:NoticeRead' n.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary float-right">Notice Detail</a> </td>
-        </tr>
-      </tbody>
-      {% empty %}
-      <td colspan="3">There are currently no notices!</td>
-      {% endfor %}
-    </table>
+    <div class="container">
+      <div class="row my-auto">
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Date</strong>
+        </div>
+        <div class="col-md-8 h-100 text-left my-auto">
+          <strong>Notice Subject</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>View Detail</strong>
+        </div>
+      </div>
+    </div>
+    {% for n in pageitems %}
+    <div class="row">
+      <div class="card mt-1 card-hover" style="width: 100%;">
+        <div class="card-body small-pad">
+          <div class="row my-auto">
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ n.notice_date|date:"j M Y" }}
+            </div>
+            <div class="col-md-8 h-100 text-left my-auto">
+              {{ n.subject }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              <a href="{% url 'Feedback:NoticeRead' n.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary">Notice Detail</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <p>There are currently no notices!</p>
+    {% endfor %}
+
     <p>&nbsp</p>
 
     <nav aria-label="Page navigation">

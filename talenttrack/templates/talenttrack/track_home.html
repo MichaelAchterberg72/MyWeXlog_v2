@@ -3,7 +3,7 @@
 {% block title %}{{block.super}}-Experience{% endblock title %}
 
 {% block content %}
-<div class="card border-0" style="width: 100%;">
+<div class="card card-shadow" style="width: 100%;">
   <div class="card-body">
     <div class="float-right">
       <a href="{% url 'Talent:HelpExperienceHome' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
@@ -61,7 +61,7 @@
 <br>
 <div class="row">
   <div class="group col-md-6 mb-0">
-    <div class="card h-100">
+    <div class="card card-shadow h-100">
       <div class="card-body">
         <h3 id="request" class="text-center" data-toggle="tooltip" title="Requests you have made">Requisitions</h3>
         <table class="table table-sm">
@@ -160,7 +160,7 @@
     </div>
   </div>
   <div class="group col-md-6 mb-0">
-    <div class="card h-100">
+    <div class="card card-shadow h-100">
       <div class="card-body">
         <h3 id="confirm" class="text-center" data-toggle="tooltip" title="Requests you have confirmed">Confirmations</h3>
         <table class="table table-sm">
@@ -290,7 +290,7 @@
   </div>
 </div>
 <br>
-<div class="card">
+<div class="card card-shadow">
   <div class="card-body">
     <h3 class="text-center">Do you think this information was useful?</h3>
     <p class="text-center">In order to make sure your friends are already invited to the MyWeXlog experience for validations, Click here ..</p>
@@ -303,7 +303,7 @@
   </div>
 </div>
 <br>
-<div class="card border-0" style="width: 100%;">
+<div class="card card-shadow" style="width: 100%;">
   <div class="card-body">
     <table class="table table-sm">
       <thead>
@@ -322,7 +322,7 @@
   </div>
 </div>
 <br>
-<div class="card border-0" style="width: 100%;">
+<div class="card card-shadow" style="width: 100%;">
   <div class="card-body">
     <div class="float-right">
       <a href="{% url 'Talent:HelpExperienceEducation' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
@@ -336,35 +336,63 @@
     </div>
       <p><strong>Total hours in training: </strong>{{ train_sum.Edu_sum|intcomma }}</p>
     <div>
-    <table class="table table-hover table-sm">
-      <thead>
-        <tr class="no-hover">
-          <th class="align-middle text-center">Start Date</th>
-          <th class="align-middle text-center">Completion Date</th>
-          <th class="align-middle text-center">Course</th>
-          <th class="align-middle text-center">Time Logged</th>
-          <th class="align-middle text-center" data-toggle="tooltip" data-placement="top" title="A score > 3 is required to achieve a 'confirmed' status">Score</th>
-          <th class="align-middle text-center">Options</th>
-        </tr>
-      </thead>
+      <div class="container">
+        <div class="row my-auto">
+          <div class="col-md-2 h-100 text-center my-auto">
+            <strong>Start Date</strong>
+          </div>
+          <div class="col-md-2 h-100 text-center my-auto">
+            <strong>Completion date</strong>
+          </div>
+          <div class="col-md-5 h-100 text-center my-auto">
+            <strong>Course</strong>
+          </div>
+          <div class="col-1 col-no-pad h-100 text-center my-auto">
+            <strong>Time Logged</strong>
+          </div>
+          <div class="col-md-1 h-100 text-center my-auto">
+            <strong><span data-toggle="tooltip" data-placement="top" title="A score > 3 is required to achieve a 'confirmed' status">Score</span></strong>
+          </div>
+          <div class="col-1 col-no-pad h-100 text-center my-auto">
+            <strong>Actions</strong>
+          </div>
+        </div>
+      </div>
       {% for t in train %}
-      <tbody>
-          <td class="align-middle text-center">{{ t.date_from|date:"j M Y" }}</td>
-          <td class="align-middle text-center">{{ t.date_to|date:"j M Y" }}</td>
-          <td class="align-middle text-center">{{ t.course }}</td>
-          <td class="align-middle text-center">{{ t.topic.hours|intcomma }}</td>
-          <td class="align-middle text-center" data-toggle="tooltip" data-placement="top" title="A score > 3 is required to achieve a 'confirmed' status">{{ t.score }}</td>
-          <td class="align-middle text-center"><div class="float-right">
-            <a href="{% url 'Talent:EducationDetail' t.slug %}" class="badge badge-pill badge-secondary" style="width: 5rem;">Detail</a>
-            <form  action="{% url 'Talent:EDTDelete' t.id %}" method="post">
-              {% csrf_token %}
-              <button type="submit" onclick="return confirm('Remove item - Are you sure?');" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
-            </form></div>
-          </td>
-        </tr>
-      </tbody>
-    {% endfor %}
-    </table>
+      <div class="row">
+        <div class="card mt-1 card-hover" style="width: 100%;">
+          <div class="card-body small-pad">
+            <div class="row my-auto">
+              <div class="col-md-2 h-100 text-center my-auto">
+                {{ t.date_from|date:"j M Y" }}
+              </div>
+              <div class="col-md-2 h-100 text-center my-auto">
+                {{ t.date_to|date:"j M Y" }}
+              </div>
+              <div class="col-md-5 h-100 text-center my-auto">
+                {{ t.course }}
+              </div>
+              <div class="col-1 col-no-pad h-100 text-center my-auto">
+                {{ t.topic.hours|intcomma }}
+              </div>
+              <div class="col-md-1 h-100 text-center my-auto">
+                <span data-toggle="tooltip" data-placement="top" title="A score > 3 is required to achieve a 'confirmed' status">{{ t.score }}</span>
+              </div>
+              <div class="col-1 col-no-pad h-100 text-left my-auto">
+                <a href="{% url 'Talent:EducationDetail' t.slug %}" class="badge badge-pill badge-secondary" style="width: 5rem;">Detail</a>
+                <form  action="{% url 'Talent:EDTDelete' t.id %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+        <p>You have not captured any education as yet.</p>
+      {% endfor %}
+    <br>
     {% if train_count > 5 %}
     <div class="float-right">
       <p><a href="{% url 'Talent:TrainingList' %}" class="btn btn-primary float-right">View All Education</a></p>
@@ -375,7 +403,7 @@
   </div>
 </div>
 <br>
-<div class="card border-0" style="width: 100%;">
+<div class="card card-shadow" style="width: 100%;">
   <div class="card-body">
     <div class="float-right">
       <a href="{% url 'Talent:HelpExperienceExperience' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
@@ -388,38 +416,69 @@
         <p><a href="{% url 'Talent:ExperienceCapture' %}" class="badge badge-pill badge-primary float-right">Add Experience</a></p>
       </div>
         <p><strong>Total hours of Experience: </strong>{{ exp_sum.we_sum|intcomma }}</p>
-      <table class="table table-hover table-sm">
-        <thead>
-          <tr class="no-hover">
-            <th class="align-middle text-center">Employer</th>
-            <th class="align-middle text-center">Date from</th>
-            <th class="align-middle text-center">Date to</th>
-            <th class="align-middle text-center">Hours</th>
-            <th class="align-middle text-center">Project</th>
-            <th class="align-middle text-center" data-toggle="tooltip" data-placement="top" title="A score > 3 is required to achieve a 'confirmed' status">Score</th>
-            <th class="align-middle text-center">Actions</th>
-          </tr>
-        </thead>
+        <div class="container">
+          <div class="row my-auto">
+            <div class="col-md-3 h-100 text-center my-auto">
+              <strong>Employer</strong>
+            </div>
+            <div class="col-md-1 h-100 text-center my-auto">
+              <strong>Date from</strong>
+            </div>
+            <div class="col-md-1 h-100 text-center my-auto">
+              <strong>Date to</strong>
+            </div>
+            <div class="col-md-1 h-100 text-center my-auto">
+              <strong>Hours</strong>
+            </div>
+            <div class="col-md-4 h-100 text-center my-auto">
+              <strong>Project</strong>
+            </div>
+            <div class="col-md-1 h-100 text-center my-auto">
+              <strong>Score</strong>
+            </div>
+            <div class="col-1 col-no-pad h-100 text-center my-auto">
+              <strong>Actions</strong>
+            </div>
+          </div>
+        </div>
         {% for e in experience %}
-        <tbody>
-          <tr>
-            <td class="align-middle text-center">{{ e.company }}</td>
-            <td class="align-middle text-center">{{ e.date_from|date:"j M Y" }}</td>
-            <td class="align-middle text-center">{{ e.date_to|date:"j M Y" }}</td>
-            <td class="align-middle text-center">{{ e.hours_worked|intcomma }}</td>
-            <td class="align-middle text-center">{{ e.project }}</td>
-            <td class="align-middle text-center" data-toggle="tooltip" data-placement="top" title="A score > 3 is required to achieve a 'confirmed' status">{{ e.score }}</td>
-            <td class="align-middle text-center"><div class="float-right">
-              <a href="{% url 'Talent:ExperienceDetail' e.slug %}" class="badge badge-pill badge-secondary"  style="width: 5rem;">Detail</a>
-              <form  action="{% url 'Talent:WEDelete' e.id %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;" onclick="return confirm('Remove item - Are you sure?');">Remove</button>
-              </form></div>
-            </td>
-          </tr>
+        <div class="row">
+          <div class="card mt-1 card-hover" style="width: 100%;">
+            <div class="card-body small-pad">
+              <div class="row my-auto">
+                <div class="col-md-3 h-100 text-center my-auto">
+                  {{ e.company }}
+                </div>
+                <div class="col-md-1 h-100 text-center my-auto">
+                  {{ e.date_from|date:"j M Y" }}
+                </div>
+                <div class="col-md-1 h-100 text-center my-auto">
+                  {{ e.date_to|date:"j M Y" }}
+                </div>
+                <div class="col-md-1 h-100 text-center my-auto">
+                  {{ e.hours_worked|intcomma }}
+                </div>
+                <div class="col-md-4 h-100 text-center my-auto">
+                  {{ e.project }}
+                </div>
+                <div class="col-md-1 h-100 text-center my-auto">
+                  <span data-toggle="tooltip" data-placement="top" title="A score > 3 is required to achieve a 'confirmed' status">{{ e.score }}</span>
+                </div>
+                <div class="col-1 col-no-pad h-100 text-left my-auto">
+                  <a href="{% url 'Talent:ExperienceDetail' e.slug %}" class="badge badge-pill badge-secondary"  style="width: 5rem;">Detail</a>
+                  <form  action="{% url 'Talent:WEDelete' e.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+          <p>You have not captured any experience as yet.</p>
         {% endfor %}
-        </tbody>
-      </table>
+        <br>
       {% if exp_count > 5 %}
       <div class="float-right">
         <p><a href="{% url 'Talent:ExperienceList' %}" class="btn btn-primary float-right">View All Experience</a></p>
@@ -429,7 +488,7 @@
     </div>
   </div>
 <br>
-<div class="card border-0" style="width: 100%;">
+<div class="card card-shadow" style="width: 100%;">
   <div class="card-body">
     <div class="float-right">
       <a href="{% url 'Talent:HelpExperiencePreExperience' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
@@ -442,38 +501,70 @@
         <p><a href="{% url 'Talent:PreloggedCapture' %}" class="badge badge-pill badge-primary float-right">Add Logged Experience</a></p>
       </div>
       <p><strong>Total hours of Previously Logged Experience: </strong>{{ pre_sum.p_sum|intcomma }}</p>
-    <table class="table table-hover table-sm">
-      <thead>
-        <tr class="no-hover">
-          <th class="align-middle text-center">Employer</th>
-          <th class="align-middle text-center">Date from</th>
-          <th class="align-middle text-center">Date to</th>
-          <th class="align-middle text-center">Hours</th>
-          <th class="align-middle text-center">Project</th>
-          <th class="align-middle text-center" data-toggle="tooltip" data-placement="top" title="A score > 3 is required to achieve a 'confirmed' status">Score</th>
-          <th class="align-middle text-center">Actions</th>
-        </tr>
-      </thead>
+      <div class="container">
+        <div class="row my-auto">
+          <div class="col-md-3 h-100 text-center my-auto">
+            <strong>Employer</strong>
+          </div>
+          <div class="col-md-1 h-100 text-center my-auto">
+            <strong>Date from</strong>
+          </div>
+          <div class="col-md-1 h-100 text-center my-auto">
+            <strong>Date to</strong>
+          </div>
+          <div class="col-md-1 h-100 text-center my-auto">
+            <strong>Hours</strong>
+          </div>
+          <div class="col-md-4 h-100 text-center my-auto">
+            <strong>Project</strong>
+          </div>
+          <div class="col-md-1 h-100 text-center my-auto">
+            <strong>Score</strong>
+          </div>
+          <div class="col-1 col-no-pad h-100 text-center my-auto">
+            <strong>Actions</strong>
+          </div>
+        </div>
+      </div>
       {% for p in prelog %}
-      <tbody>
-        <tr>
-          <td class="align-middle text-center">{{ p.company }}</td>
-          <td class="align-middle text-center">{{ p.date_from|date:"j M Y" }}</td>
-          <td class="align-middle text-center">{{ p.date_to|date:"j M Y" }}</td>
-          <td class="align-middle text-center">{{ p.hours_worked|intcomma }}</td>
-          <td class="align-middle text-center">{{ p.project }}</td>
-          <td class="align-middle text-center" data-toggle="tooltip" data-placement="top" title="A score > 3 is required to achieve a 'confirmed' status">{{ p.score }}</td>
-          <td class="align-middle text-center"><div class="float-right">
-            <a href="{% url 'Talent:PreLogDetail' p.slug %}" class="badge badge-pill badge-secondary" style="width: 5rem;">Detail</a>
-            <form  action="{% url 'Talent:PLEDelete' p.id %}" method="post">
-              {% csrf_token %}
-              <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;" onclick="return confirm('Remove item - Are you sure?');">Remove</button>
-            </form></div>
-          </td>
-        </tr>
+      <div class="row">
+        <div class="card mt-1 card-hover" style="width: 100%;">
+          <div class="card-body small-pad">
+            <div class="row my-auto">
+              <div class="col-md-3 h-100 text-center my-auto">
+                {{ p.company }}
+              </div>
+              <div class="col-md-1 h-100 text-center my-auto">
+                {{ p.date_from|date:"j M Y" }}
+              </div>
+              <div class="col-md-1 h-100 text-center my-auto">
+                {{ p.date_to|date:"j M Y" }}
+              </div>
+              <div class="col-md-1 h-100 text-center my-auto">
+                {{ p.hours_worked|intcomma }}
+              </div>
+              <div class="col-md-4 h-100 text-center my-auto">
+                {{ p.project }}
+              </div>
+              <div class="col-md-1 h-100 text-center my-auto">
+                <span data-toggle="tooltip" data-placement="top" title="A score > 3 is required to achieve a 'confirmed' status">{{ p.score }}</span>
+              </div>
+              <div class="col-1 col-no-pad h-100 text-left my-auto">
+                <a href="{% url 'Talent:PreLogDetail' p.slug %}" class="badge badge-pill badge-secondary" style="width: 5rem;">Detail</a>
+                <form  action="{% url 'Talent:PLEDelete' p.id %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+        <p>You have not captured any experience as yet.</p>
       {% endfor %}
-      </tbody>
-    </table>
+
+    <br>
     {% if pre_count > 5 %}
     <div class="float-right">
       <p><a href="{% url 'Talent:PreExperienceList' %}" class="btn btn-primary float-right">View All Experience</a></p>

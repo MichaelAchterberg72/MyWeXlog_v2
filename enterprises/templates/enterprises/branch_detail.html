@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<div class="card border-0">
+<div class="card card-shadow">
   <div class="card-body">
   <h4 class="">Detail for {{ info.company.ename }}'s {{ info.name }} branch</h4>
 
@@ -88,7 +88,7 @@
 </div>
 {% if request.user.subscription >= 2 %}
 <br>
-<div class="card border-0">
+<div class="card card-shadow">
   <div class="card-body">
     <h4 class="">Branch Rating</h4>
     <div class="container">

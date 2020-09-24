@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<div class="card border-0" style="width: 100%;">
+<div class="card card-shadow" style="width: 100%;">
   <div class="card-body">
 {% if request.user.subscription >= 2 %}
       <div class="card-body">
@@ -19,38 +19,61 @@
         </div>
       <h4 class="card-title">My Vacancies Advertised (Closed)</h4>
       <p>You currently have {{ ipost_count }} closed vacancies listed.</p>
-      <table class="table table-hover table-sm">
-        <thead>
-          <tr class="no-hover">
-            <th>Date Posted</th>
-            <th>Vacancy Title</th>
-            <th>Status</th>
-            <th>Closing Date</th>
-            <th>Response</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for c in pageitems %}
-            <tr onclick="window.location='{% url 'MarketPlace:VacancyPost' c.ref_no %}'">
-              <td>{{ c.bid_open|date:'j M Y' }}</td>
-              <td>{{ c.title|truncatechars:37 }}</td>
-              <td>{{ c.get_offer_status_display }}</td>
-              <td>{{ c.bid_closes|date:'j M Y' }}</td>
-              <td>
-              {% if c.id in ipost_bid_flat %}
-                <strong>Yes</strong>
-              {% else %}
-                None
-              {% endif %}
-              </td>
-              <td class="align-middle text-center">
-                <a href="{% url 'MarketPlace:VacancyPost' c.ref_no %}" class="" data-toggle="tooltip" title="Vacancy Detail"><i class="fa fa-industry" style="font-size:24px;color:black"></i></a>
-                <a href="{% url 'MarketPlace:VacancyIntDetail' c.ref_no %}" class="" data-toggle="tooltip" title="Interview List"><i class="fa fa-gg" style="font-size:30px;color:black"></i></a>
-              </td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+      <div class="container">
+        <div class="row my-auto">
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Date Posted</strong>
+        </div>
+        <div class="col-md-4 h-100 text-center my-auto">
+          <strong>Vacancy Title</strong>
+        </div>
+        <div class="col-md-1 h-100 text-center my-auto">
+          <strong>Status</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Closing Date</strong>
+        </div>
+        <div class="col-1 col-no-pad h-100 text-center my-auto">
+          <strong>Response</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Options</strong>
+        </div>
+        </div>
+      {% for p in pageitems %}
+        <div class="row">
+          <div class="card mt-1 card-hover" style="width: 100%;">
+            <div class="card-body small-pad">
+              <div class="row my-auto">
+              <div class="col-md-2 h-100 text-center my-auto">
+                {{ p.bid_open|date:'j M Y' }}
+              </div>
+              <div class="col-md-4 h-100 text-center my-auto">
+                <span class="font-blue">{{ p.title|truncatechars:37 }}</span>
+              </div>
+              <div class="col-md-1 h-100 text-center my-auto">
+                {{ p.get_offer_status_display }}
+              </div>
+              <div class="col-md-2 h-100 text-center my-auto">
+                  {{ p.bid_closes|date:'j M Y' }}
+                </div>
+              <div class="col-md-1 h-100 text-center my-auto">
+                {% if p.id in ipost_bid_flat %}
+                  <strong>Yes</strong>
+                {% else %}
+                  None
+                {% endif %}
+              </div>
+              <div class="col-md-2 h-100 text-center my-auto">
+                <a href="{% url 'MarketPlace:VacancyPost' p.ref_no %}" class="" data-toggle="tooltip" title="Vacancy Detail"><i class="fa fa-industry" style="font-size:24px;color:black"></i></a>
+                <a href="{% url 'MarketPlace:VacancyIntDetail' p.ref_no %}" class="" data-toggle="tooltip" title="Interview List"><i class="fa fa-gg" style="font-size:30px;color:black"></i></a>
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+
       <p>&nbsp</p>
 
       <nav aria-label="Page navigation">

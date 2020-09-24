@@ -4,46 +4,64 @@
 
 {% block content %}
 
-<div class="card">
+<div class="card card-shadow">
   <div class="card-body">
         <h3 class="card-title">Invitations Already Sent</h3>
         <p>Below is a list of people that you have sent invites to join MyWeXlog that have not yet accepted the invitation. Perhaps you would like to contact them directly to ask them to register.</p>
         <br>
-        <table class="table table-hover table-sm">
-          <col width="10%">
-          <col width="20%">
-          <col width="20%">
-          <col width="20%">
-          <col width="20%">
-          <col width="10%">
-          <thead>
-            <tr class="no-hover">
-              <th class="align-middle text-center">Date Invited</th>
-              <th class="align-middle text-center">Name</th>
-              <th class="align-middle text-center">Company</th>
-              <th class="align-middle text-center">Relationship</th>
-              <th class="align-middle text-center">email</th>
-              <th class="align-middle text-center"></th>
-            </tr>
-          </thead>
-          {% for i in pageitems %}
-          <tbody>
-          <tr class="align-middle text-center divide">
-            <td class="align-middle text-center">{{ i.date_invited|date:"j M Y" }}</td>
-            <td class="align-middle text-center">{{ i.name }} {{ i.surname }}</td>
-            <td class="align-middle text-center">{{ i.companybranch }}</td>
-            <td class="align-middle text-center">{{ i.get_relationship_display }}</td>
-            <td class="align-middle text-center">{{ i.email }}</td>
-            <td class="align-middle text-center"><a href="mailto:{{ i.email }}" class="badge badge-primary badge-pill" style="width:7rem;">Send<br>E-Mail</a></td>
-            </tr>
-          </tbody>
-          {% empty %}
-          <tr>
-            <td colspan="6">You do not have any sent invitations that have not been accepted at the moment</td>
-          </tr>
-          {% endfor %}
+        <div class="container">
+          <div class="row my-auto">
+            <div class="col-1 col-no-pad h-100 text-center my-auto">
+              <strong>Date Invited</strong>
+            </div>
+            <div class="col-2 col-no-pad h-100 text-center my-auto">
+              <strong>Name</strong>
+            </div>
+            <div class="col-3 col-no-pad h-100 text-center my-auto">
+              <strong>Company</strong>
+            </div>
+            <div class="col-2 col-no-pad h-100 text-center my-auto">
+              <strong>Relationship</strong>
+            </div>
+            <div class="col-3 col-no-pad h-100 text-center my-auto">
+              <strong>email</strong>
+            </div>
+            <div class="col-1 col-no-pad h-100 text-center my-auto">
+              <strong></strong>
+            </div>
+          </div>
+        </div>
+        {% for i in pageitems %}
+        <div class="row">
+          <<div class="card mt-1 card-hover" style="width: 100%;">
+            <div class="card-body small-pad">
+              <div class="row my-auto">
+                <div class="col-1 col-no-pad h-100 text-center my-auto">
+                  {{ i.date_invited|date:"j M Y" }}
+                </div>
+                <div class="col-2 col-no-pad h-100 text-center my-auto">
+                  {{ i.name }} {{ i.surname }}
+                </div>
+                <div class="col-3 col-no-pad h-100 text-center my-auto">
+                  {{ i.companybranch }}
+                </div>
+                <div class="col-2 col-no-pad h-100 text-center my-auto">
+                  {{ i.get_relationship_display }}
+                </div>
+                <div class="col-3 col-no-pad h-100 text-center my-auto">
+                  {{ i.email }}
+                </div>
+                <div class="col-1 col-no-pad h-100 text-center my-auto">
+                  <a href="mailto:{{ i.email }}" class="badge badge-primary" style="width:5rem;">Send<br>E-Mail</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+        <p>You do not have any sent invitations that have not been accepted at the moment</p>
+        {% endfor %}
 
-        </table>
       <p>&nbsp</p>
 
       <nav aria-label="Page navigation">

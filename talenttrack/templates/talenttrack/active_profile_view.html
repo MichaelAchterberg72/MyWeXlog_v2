@@ -12,7 +12,7 @@
   </div>
     <div class="row">
       <div class="col-sm-6">
-        <div class="card">
+        <div class="card card-shadow">
           <div class="card-body">
             <h5 class="card-title">Experience skills</h5>
             <p>Experience for skills listed in the Vacancy.</p>
@@ -42,7 +42,7 @@
         </div>
       </div>
       <div class="col-sm-6">
-        <div class="card">
+        <div class="card card-shadow">
           <div class="card-body">
             <h5 class="card-title">Training Skills</h5>
             <p>Training time for the skills listed on the vacancy.</p>
@@ -80,7 +80,7 @@
     </div>
     <div class="row">
       <div class="col-sm-6">
-        <div class="card h-100">
+        <div class="card card-shadow h-100">
           <div class="card-body">
           <h5 class="card-title">General Information</h5>
             {% if als.rate_count >= 5 %}
@@ -144,7 +144,7 @@
         </div>
       </div>
       <div class="col-sm-6">
-        <div class="card h-100">
+        <div class="card card-shadow h-100">
           <div class="card-body">
             <div class="class="card-title"">
               {% if membership_qs_count >= 6 %}
@@ -189,7 +189,7 @@
     </div>
   </div>
   <br>
-  <div class="card">
+  <div class="card card-shadow">
     <div class="row">
       <div class="col-sm-12">
         <div class="">
@@ -212,7 +212,7 @@
       </div>
     </div>
     <br>
-    <div class="card">
+    <div class="card card-shadow">
       <div class="row">
         <div class="col-sm-12">
           <div class="">
@@ -258,7 +258,7 @@
   <br>
   <div class="row">
     <div class="col-sm-12">
-      <div class="card">
+      <div class="card card-shadow">
         <div class="card-body">
           {% if achievement_qs_count >= 6 %}
             <a href="{% url 'Talent:ACH_FV' tlt vac %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Detail</a>
@@ -294,7 +294,7 @@
     </div>
   </div>
   <br>
-  <div class="card">
+  <div class="card card-shadow">
     <div class="card-body">
       <div class="float-right">
         {% if prj_count >= 6 %}
@@ -336,7 +336,7 @@
     </div>
   </div>
   <br>
-  <div class="card">
+  <div class="card card-shadow">
     <div class="card-body">
       <div class="float-right">
       {% if bkl %}
@@ -379,7 +379,7 @@
     </div>
   </div>
   <br>
-  <div class="card">
+  <div class="card card-shadow">
     <div class="card-body">
       {% if edtexp_count >= 6 %}
         <a href="{% url 'Talent:EDU_FV' tlt vac %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Details</a>
