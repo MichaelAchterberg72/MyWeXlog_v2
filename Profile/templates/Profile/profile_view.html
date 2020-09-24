@@ -584,32 +584,63 @@
           <h5 class="card-title" id="WTR">
             Willingness to Relocate
           </h5>
+          <p>
+            Note: Relocation applies to positions that required you to be at a particular location. They do not apply for Freelancing or Consulting where you can take a short trip.
+          </p>
           <table class="table table-sm">
             <thead>
               <tr>
                 <th class="text-center">to Country</th>
-                <th>Documents to Legally Work in Country</th>
+                <th class="text-center">Documents to Legally Work in Country</th>
+                <th class="text-left">Actions</th>
               </tr>
             </thead>
             {% for wtr in relocate %}
             <tbody>
               <tr>
-                <td class="text-center">{{ wtr.country.name }}</td>
-                <td>
+                <td class="align-middle text-center">{{ wtr.country.name }}</td>
+                <td class="align-middle text-center">
                   {% if wtr.documents == True %}
                     I have all required documents and permits to legally work in {{ wtr.country.name }}.
                   {% else %}
                     I do not have all required documents or permits to work in {{ wtr.country.name }}.
                   {% endif %}
                 </td>
-                <td>
-                  -Delete-
-                  -Doc Switch-
-
+                <td class="align-middle text-center">
+                  <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                    <div class="btn-group mr-2" role="group" aria-label="First group">
+                      <form  action="{% url 'Profile:NotWTR' wtr.slug %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="badge badge-danger badge-pill" onclick="return confirm('I am NO LONGER willing to relocate to {{  wtr.country.name}}');" data-toggle="tooltip" title="I am NO LONGER willing to relocate to {{  wtr.country.name }}">
+                          <i class="fa fa-thumbs-o-down" aria-hidden="true" style="font-size:20px;"></i>
+                        </button>
+                      </form>
+                    </div>
+                  {% if wtr.documents == False %}
+                    <div class="btn-group mr-2" role="group" aria-label="First group">
+                      <form  action="{% url 'Profile:WTRDoc' wtr.slug %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="badge badge-success badge-pill" name="yes" onclick="return confirm('I confirm no longer have the required permits, visas and all other documents required to be employed in {{ wtr.country.name }}');" data-toggle="tooltip" title="Change document status to 'I do have the required documents'">
+                          <i class="fa fa-toggle-on" aria-hidden="true" style="font-size:20px;"></i>
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                  {% elif wtr.documents == True %}
+                    <div class="btn-group mr-2" role="group" aria-label="First group">
+                      <form  action="{% url 'Profile:WTRDoc' wtr.slug %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="badge badge-danger badge-pill" name="no" onclick="return confirm('I confirm that I have all required permits, visas and all other documents required to be employed in {{ wtr.country.name }}');" data-toggle="tooltip" title="Change document status to 'I no longer have the required documents'">
+                          <i class="fa fa-toggle-off" aria-hidden="true" style="font-size:20px;"></i>
+                        </button>
+                      </form>
+                    </div>
+                  {% endif %}
+                </div>
                 </td>
               </tr>
             {% empty %}
-              <tr>
+              <tr class="align-middle text-center">
                 <td colspan="2">
                   No locations other than your local area selected for seeking vacancies.
                 </td>

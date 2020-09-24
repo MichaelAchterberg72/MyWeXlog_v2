@@ -125,4 +125,7 @@ urlpatterns = [
         path('intro-assign', views.IntroAssigningView, name="IntroAssign"),
         path('intro-books-emterprises-projects', views.IntroBEPView, name="IntroBEP"),
         path('wtr', views.willing_to_relocate, name="WTR"),
+        path('wtr-doc/<slug:wtr>/', views.wtr_doc_status, name="WTRDoc"),
+        path('wtr-delete/<slug:wtr>/', views.not_wtr, name="NotWTR"),
+
 ]

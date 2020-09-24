@@ -2134,6 +2134,34 @@ def EmailDelete(request, pk, tlt):
         raise PermissionDenied
 
 
+login_required()
+def not_wtr(request, wtr):
+    '''Function to remove the country if talent no longer wishes to go there'''
+    wtr_qs = WillingToRelocate.objects.get(slug=wtr)
+    if wtr_qs.talent == request.user:
+        if request.method =='POST':
+            wtr_qs.delete()
+            return redirect(reverse('Profile:ProfileView')+'#WTR')
+    else:
+        raise PermissionDenied
+
+
+login_required()
+def wtr_doc_status(request, wtr):
+    '''Changes the status of the possetion of documents needed to work in a country'''
+    wtr_qs = WillingToRelocate.objects.filter(slug=wtr)
+
+    if request.method =='POST':
+        if 'yes' in request.POST:
+            print(True)
+            wtr_qs.update(documents=True)
+        elif 'no' in request.POST:
+            print(False)
+            wtr_qs.update(documents=False)
+
+        return redirect(reverse('Profile:ProfileView')+'#WTR')
+
+
 @login_required()
 def ProfileView(request):
     tlt = request.user.alias

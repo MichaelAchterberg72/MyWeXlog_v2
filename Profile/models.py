@@ -369,7 +369,7 @@ class WillingToRelocate(models.Model):
         unique_together = (('talent', 'country'),)
 
     def __str__(self):
-        return f'{self.talnet.alias} - {self.country}'
+        return f'{self.talent.alias} - {self.country}'
 
     def save(self, *args, **kwargs):
         if self.slug is None or self.slug == "":
