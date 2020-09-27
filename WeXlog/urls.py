@@ -35,6 +35,7 @@ urlpatterns = [
     path('notifications/', include("pinax.notifications.urls", namespace='pinax_notifications')),
     path('treeMP/', include('nestedsettree.urls', namespace='Structure')),
     path('appcontrol/', include('AppControl.urls', namespace='AppControl')),
+    path('corporate/', include('mod_corporate.urls', namespace='Corporate')),
     ]
 
 if settings.DEBUG:

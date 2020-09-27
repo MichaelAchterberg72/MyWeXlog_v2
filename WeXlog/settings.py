@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     'nestedsettree.apps.NestedsettreeConfig',
     'feedback.apps.FeedbackConfig',
     'AppControl.apps.AppcontrolConfig',
+    'mod_corporate.apps.ModCorporateConfig',
     'tasks',
     'analytics',
     'management',
