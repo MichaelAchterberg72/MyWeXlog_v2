@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     'tasks',
     'analytics',
     'management',
+    'storages',
     #Django internal applications
     'django.contrib.staticfiles',
     'django.contrib.humanize',
@@ -155,7 +156,7 @@ ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 360
 #ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 ACCOUNT_ADAPTER = 'users.adapter.AccountAdapter'
-ACCOUNT_LOGOUT_REDIRECT_URL = '/public/home/'
+ACCOUNT_LOGOUT_REDIRECT_URL = 'https://mywexlog.com/'
 #ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL =
 
 
@@ -207,7 +208,7 @@ CSP_DEFAULT_SRC = (
     )#app_config
 
 CSP_SCRIPT_SRC = (
-    "'self'", "'unsafe-inline'", '127.0.0.1', '107.191.57.249', 'code.jquery.com', 'maxcdn.bootstrapcdn.com', 'kit.fontawesome.com', 'app.mywexlog.dev', 'mywexlog.dev', 'cdnjs.cloudflare.com', 'maps.googleapis.com', 'bookstrapcdn.com', 'cdn.jsdelivr.net', 'ajax.googleapis.com', 'cdnjs.cloudflare.com', 'apis.google.com',
+    "'self'", "'unsafe-inline'", '127.0.0.1', '107.191.57.249', 'code.jquery.com', 'maxcdn.bootstrapcdn.com', 'kit.fontawesome.com', 'app.mywexlog.dev', 'mywexlog.dev', 'cdnjs.cloudflare.com', 'maps.googleapis.com', 'bookstrapcdn.com', 'cdn.jsdelivr.net', 'cdn.jsdelivr.net', 'ajax.googleapis.com', 'cdnjs.cloudflare.com', 'apis.google.com',
     )#app_config
 CSP_IMG_SRC = (
     "'self'", '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev',
@@ -224,7 +225,7 @@ CSP_FONT_SRC = (
     )#app_config
 CSP_CONNECT_SRC = None
 CSP_STYLE_SRC = (
-    "'self'", 'maxcdn.bootstrapcdn.com', 'app.mywexlog.dev', 'cdnjs.cloudflare.com', 'w3.org', '127.0.0.1', '107.191.57.249', 'fonts.googleapis.com', 'stackpath.bookstrapcdn.com', "'unsafe-inline'", 'mywexlog.dev',
+    "'self'", 'maxcdn.bootstrapcdn.com', 'app.mywexlog.dev', 'cdnjs.cloudflare.com', 'w3.org', '127.0.0.1', '107.191.57.249', 'fonts.googleapis.com', 'cdn.jsdelivr.net',  'stackpath.bookstrapcdn.com', "'unsafe-inline'", 'mywexlog.dev',
     )#app_config
 CSP_BASE_URI = None
 CSP_CHILD_SRC = None
@@ -308,7 +309,7 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTH_USER_MODEL = 'users.CustomUser'
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/Profile/'
-LOGOUT_REDIRECT_URL = 'http://mywexlog.dev/public/index/'
+LOGOUT_REDIRECT_URL = 'https://mywexlog.com/'
 
 
 # Internationalization
@@ -334,7 +335,27 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'prod_static')
 
 MEDIA_URL = '/library/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'filelibrary')
+'''
+#files for Amazon S3
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'MyWeXlog/static'),
+]
 
+AWS_ACCESS_KEY_ID = ''
+AWS_SECRET_ACCESS_KEY = ''
+AWS_STORAGE_BUCKET_NAME = ''
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+
+AWS_LOCATION = 'static'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+
+DEFAULT_FILE_STORAGE = 'WeXlog.storage_backends.MediaStorage'
+'''
 #Crispy Forms
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 

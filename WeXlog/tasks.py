@@ -24,9 +24,9 @@ from sendgrid.helpers.mail import (Mail, Subject, To, ReplyTo, SendAt, Content, 
 import datetime
 from datetime import timedelta
 
-#from payments.tasks import SubscriptionExpiredTask
+from payments.tasks import FreeMonthExpiredTask
 
-from users.models import CustomUser
+from users.models import CustomUser, ExpandedView
 
 
 @celery_app.task(name="UpdateSubscriptionPaidDate")
@@ -41,12 +41,18 @@ def UpdateSubscriptionPaidDate():
 
     for u in users:
         username = CustomUser.objects.get(pk=u.id)
+        instance2 = ExpandedView.objects.get(talent=u.id)
         if username.paid == True:
             if username.paid_type == 1:
                 if username.paid_date <= timezone.now() - monthly:
                     username.paid = False
                     username.subscription = 0
+                    if username.free_month == True:
+                        FreeMonthExpiredTask.delay(username)
+                        username.free_month = False
+                        instance2.trial_expired = False
                     username.save()
+                    instance2.save()
                     # send user an email to let them know the subscription has expired
     #                SubscriptionExpiredTask.delay(username)
 
@@ -66,6 +72,7 @@ def UpdateSubscriptionPaidDate():
                     # send user an email to let them know the subscription has expired
     #                SubscriptionExpiredTask.delay(username)
         username.save()
+        instance2.save()
 
 
 def UpgradeRefunds():

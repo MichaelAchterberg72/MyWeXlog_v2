@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<div class="card border-0">
+<div class="card card-shadow">
   <div class="card-body">
 <div class="container">
   {% if query %}
@@ -26,42 +26,55 @@
       {% endwith %}
     </h5>
 
-
-
+    <div class="container">
+      <div class="row my-auto">
+        <div class="col-md-3 h-100 text-center my-auto">
+          <strong>Project Name</strong>
+        </div>
+        <div class="col-md-3 h-100 text-center my-auto">
+          <strong>Project Owner</strong>
+        </div>
+        <div class="col-md-3 h-100 text-center my-auto">
+          <strong>Project Industry</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Project Country</strong>
+        </div>
+        <div class="col-md-1 h-100 text-center my-auto">
+          <strong></strong>
+        </div>
+      </div>
+    </div>
     {% for ProjectData in results %}
-    <table class="table table-hover table-sm">
-      <col width="30%">
-      <col width="20%">
-      <col width="20%">
-      <col width="15%">
-      <col width="15%">
-      <thead>
-        <tr height="1px">
-          <th height="1px">Project Name</th>
-          <th height="1px">Project Owner</th>
-          <th height="1px">Project Industry</th>
-          <th height="1px">Project Country</th>
-          <th height="1px"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr onclick="window.location='{% url 'Project:ProjectDetail' ProjectData.slug %}?next={{ request.path|urlencode }}'">
-          <td>{{ ProjectData.name }}</td>
-          <td>{{ ProjectData.company }}</td>
-          <td>{{ ProjectData.industry }}</td>
-          <td>{{ ProjectData.get_country_display }}</td>
-          <td><a href="{% url 'Project:ProjectDetail' ProjectData.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary float-right" style="width: 5rem;">Detail</a> </td>
-        </tr>
-
-<!--      <h5 class="card-title">><a href="{{ ProjectData.name }}">{{ProjectData.name }}</a></h5>
-      <p class="card-text">
-      {{ ProjectData.owner }} - {{ ProjectData.industry }} - {{ ProjectData.country }}
-      -->
+    <div class="container">
+    <div class="row">
+      <div class="card mt-1 card-hover" style="width: 100%;">
+        <div class="card-body small-pad">
+          <div class="row my-auto">
+            <div class="col-md-3 h-100 text-center my-auto">
+              {{ ProjectData.name }}
+            </div>
+            <div class="col-md-3 h-100 text-center my-auto">
+              {{ ProjectData.company }}
+            </div>
+            <div class="col-md-3 h-100 text-center my-auto">
+              {{ ProjectData.industry }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ ProjectData.get_country_display }}
+            </div>
+            <div class="col-md-1 h-100 text-center my-auto">
+              <a href="{% url 'Project:ProjectDetail' ProjectData.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary float-right" style="width: 5rem;">Detail</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
     {% empty %}
       <p>There are no results for your query.</p>
     {% endfor %}
-  </tbody>
-</table>
+
     <p> </p>
     <p><a href="{% url 'Project:Project-Search' %}" class="btn btn-primary">Search Again</a></p>
   {% else %}
@@ -72,7 +85,7 @@
     </p></span></h4>
     <form action="." method="get">
         {{ form.as_p }}
-        <a href="{% url 'Project:ProjectHome' %}" class="btn btn-danger">Cancel</a> 
+        <a href="{% url 'Project:ProjectHome' %}" class="btn btn-danger">Cancel</a>
         <input type="submit" class="btn btn-primary" value="Search">
       </form>
     {% endif %}

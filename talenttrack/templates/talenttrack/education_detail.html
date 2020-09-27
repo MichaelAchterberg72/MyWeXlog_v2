@@ -3,7 +3,7 @@
 {% block title %}{{block.super}}-Experience{% endblock title %}
 
 {% block content %}
-<div class="card border-0">
+<div class="card card-shadow">
   <div class="card-body">
     <h4 class="">Experience - Education & Training <span><p class="float-right"><a href="{% url 'Talent:Home' %}"  class="btn btn-primary">Back</a></p></span></h4>
 
@@ -23,7 +23,7 @@
 <br>
   <div class="row">
     <div class="col-sm-6">
-     <div class="card h-100">
+     <div class="card card-shadow h-100">
        <div class="card-body">
          <p class="float-right"><a href="{% url 'Talent:LecturerAdd' check.slug %}"  class="badge badge-pill badge-primary" style="width: 8rem">Add Lecturer</a></p>
          <h5 class="card-title">Lecturers</h5>
@@ -58,7 +58,7 @@
      </div>
     </div>
     <div class="col-sm-6">
-     <div class="card h-100">
+     <div class="card card-shadow h-100">
        <div class="card-body">
          <p class="float-right"><a href="{% url 'Talent:ClassMatesAdd' check.slug %}"  class="badge badge-pill badge-primary" style="width: 8rem">Add Class Mate</a></p>
          <h5 class="card-title">Class Mates</h5>

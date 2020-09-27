@@ -39,11 +39,11 @@ from WeXlog.app_config import (
     client_score, colleague_score, collaborator_score, superior_score, lecturer_score, classmate_score, pre_colleague_score
 )
 from .models import (
-        Profile, Email, PhysicalAddress, PostalAddress, PhoneNumber, SiteName, OnlineRegistrations, FileUpload, IdentificationDetail, IdType, PassportDetail, LanguageTrack, BriefCareerHistory,
+        Profile, Email, PhysicalAddress, PostalAddress, PhoneNumber, SiteName, OnlineRegistrations, FileUpload, IdentificationDetail, IdType, PassportDetail, LanguageTrack, BriefCareerHistory, WillingToRelocate
         )
 
 from .forms import (
-    ProfileForm, EmailForm, EmailStatusForm, PhysicalAddressForm, PostalAddressForm, PhoneNumberForm, OnlineProfileForm, ProfileTypeForm, FileUploadForm, IdTypeForm, LanguageTrackForm, LanguageListForm, PassportDetailForm, IdentificationDetailForm, BriefCareerHistoryForm, ResignedForm, UserUpdateForm, CustomUserUpdateForm, ExpandedIntroWalkthroughForm, ProfileBackgroundForm, ProfileMotivationForm
+    ProfileForm, EmailForm, EmailStatusForm, PhysicalAddressForm, PostalAddressForm, PhoneNumberForm, OnlineProfileForm, ProfileTypeForm, FileUploadForm, IdTypeForm, LanguageTrackForm, LanguageListForm, PassportDetailForm, IdentificationDetailForm, BriefCareerHistoryForm, ResignedForm, UserUpdateForm, CustomUserUpdateForm, ExpandedIntroWalkthroughForm, ProfileBackgroundForm, ProfileMotivationForm, WillingToRelocateForm
 )
 
 from talenttrack.models import (
@@ -58,6 +58,7 @@ from enterprises.models import Branch, Enterprise
 from locations.models import Region
 from users.models import CustomUser, ExpandedView
 
+
 from nestedsettree.models import NtWk
 
 from marketplace.models import (
@@ -69,6 +70,46 @@ from marketplace.forms import(
 from analytics.models import ObjectViewed
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+
+def willing_to_relocate(request):
+    talent = request.user
+
+    form = WillingToRelocateForm(request.POST or None)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.talent = talent
+            new.save()
+
+            return redirect(reverse('Profile:ProfileView')+'#WTR')
+        else:
+            template = 'Profile/willing_to_relocate.html'
+            context = {'form': form}
+            return render(request, template, context)
+    else:
+        template = 'Profile/willing_to_relocate.html'
+        context = {'form': form}
+        return render(request, template, context)
+
+
+def copy_phy_address(request):
+    talent = request.user
+    qs_addr = PhysicalAddress.objects.get(talent=talent)
+    qs_post = PostalAddress.objects.filter(talent=talent)
+    qs_post.update(
+        line1=qs_addr.line1,
+        line2=qs_addr.line2,
+        line3=qs_addr.line3,
+        country=qs_addr.country,
+        region=qs_addr.region,
+        city=qs_addr.city,
+        suburb=qs_addr.suburb,
+        code=qs_addr.code,
+        )
+
+    return redirect(reverse('Profile:ProfileView')+'#phone')
 
 
 def ProfileViewedReport(request):
@@ -886,42 +927,48 @@ def ProfileHome(request):
     #As Requestioner<<<
     #Confirmation Summary<<<
 
-    from users.models import ExpandedView
-    from .forms import ExpandedIntroWalkthroughForm
-
+    fm = request.user.free_month
 
     instance2 = ExpandedView.objects.get(talent=request.user)
     list_view = instance2.intro_walkthrough
+    fse = instance2.trial_expired
 
-    form = ExpandedIntroWalkthroughForm(request.POST or None, instance=instance2)
+
+    template = 'Profile/profile_home.html'
+    context = {
+    'wf1': wf1, 'tlt': tlt, 'pvr_count': pvr_count, 'total': total, 'interviews_tlt': interviews_tlt, 'interviews_emp': interviews_emp, 'interviews_empc': interviews_empc, 'interviews_tltc': interviews_tltc, 'assigned_tlt': assigned_tlt, 'assigned_emp': assigned_emp, 'assigned_tltc': assigned_empc, 'assigned_empc': assigned_tltc, 'open_assignments_tltc': open_assignments_tltc, 'open_assignments_empc': open_assignments_empc, 'lvl_1': lvl_1, 'lvl_2': lvl_2, 'lvl_3': lvl_3, 'lvl_4': lvl_4,'lvl_5': lvl_5, 'tot': tot, 'pfl': pfl, 'referral_code': referral_code, 'conf_tot_c': conf_tot_c, 'conf_tot_r': conf_tot_r, 'conf_tot_s': conf_tot_s, 'req_tot_c': req_tot_c, 'req_tot_r': req_tot_r, 'req_tot_s': req_tot_s, 'req_tot_y': req_tot_y, 'conf_tot_y': conf_tot_y, 'list_view': list_view, 'tlt_bil_qs_p': tlt_bil_qs_p, 'tlt_bil_qs_a': tlt_bil_qs_a, 'tlt_bil_qs_d': tlt_bil_qs_d, 'tlt_bil_qs_i': tlt_bil_qs_i, 'emp_bil_qs_p': emp_bil_qs_p, 'emp_bil_qs_a': emp_bil_qs_a, 'emp_bil_qs_d': emp_bil_qs_d, 'emp_bil_qs_i': emp_bil_qs_i,
+    'emp_wit_p': emp_wit_p, 'emp_wit_a': emp_wit_a, 'emp_wit_d': emp_wit_d, 'emp_wit_c': emp_wit_c, 'emp_wit_s': emp_wit_s,
+    'tlt_wit_p': tlt_wit_p, 'tlt_wit_a': tlt_wit_a, 'tlt_wit_d': tlt_wit_d, 'tlt_wit_c': tlt_wit_c, 'tlt_wit_s': tlt_wit_s,
+    'fse': fse, "fm": fm,
+    }
+    return render(request, template, context)
+
+
+@login_required()
+def IntroCloseView(request):
     if request.method == 'POST':
-        if form.is_valid():
-            new = form.save(commit=False)
-            new.talent = request.user
-            if list_view == True:
-                new.intro_walkthrough = False
-            elif list_view == False:
-                new.intro_walkthrough = True
-            new.save()
+        instance2 = ExpandedView.objects.get(talent=request.user)
+        list_view = instance2.intro_walkthrough
+        if list_view == True:
+            instance2.intro_walkthrough = False
+        elif list_view == False:
+            instance2.intro_walkthrough = True
+        instance2.save()
 
-            return redirect(reverse('Profile:ProfileHome')+'#dashboard')
-        else:
-            template = 'Profile/profile_home.html'
-            context = {
-            'wf1': wf1, 'tlt': tlt, 'pvr_count': pvr_count, 'total': total, 'interviews_tlt': interviews_tlt, 'interviews_emp': interviews_emp, 'interviews_empc': interviews_empc, 'interviews_tltc': interviews_tltc, 'assigned_tlt': assigned_tlt, 'assigned_emp': assigned_emp, 'assigned_tltc': assigned_empc, 'assigned_empc': assigned_tltc, 'open_assignments_tltc': open_assignments_tltc, 'open_assignments_empc': open_assignments_empc, 'lvl_1': lvl_1, 'lvl_2': lvl_2, 'lvl_3': lvl_3, 'lvl_4': lvl_4,'lvl_5': lvl_5, 'tot': tot, 'pfl': pfl, 'referral_code': referral_code, 'conf_tot_c': conf_tot_c, 'conf_tot_r': conf_tot_r, 'conf_tot_s': conf_tot_s, 'req_tot_c': req_tot_c, 'req_tot_r': req_tot_r, 'req_tot_s': req_tot_s, 'req_tot_y': req_tot_y, 'conf_tot_y': conf_tot_y, 'list_view': list_view, 'form': form, 'tlt_bil_qs_p': tlt_bil_qs_p, 'tlt_bil_qs_a': tlt_bil_qs_a, 'tlt_bil_qs_d': tlt_bil_qs_d, 'tlt_bil_qs_i': tlt_bil_qs_i, 'emp_bil_qs_p': emp_bil_qs_p, 'emp_bil_qs_a': emp_bil_qs_a, 'emp_bil_qs_d': emp_bil_qs_d, 'emp_bil_qs_i': emp_bil_qs_i,
-            'emp_wit_p': emp_wit_p, 'emp_wit_a': emp_wit_a, 'emp_wit_d': emp_wit_d, 'emp_wit_c': emp_wit_c, 'emp_wit_s': emp_wit_s,
-            'tlt_wit_p': tlt_wit_p, 'tlt_wit_a': tlt_wit_a, 'tlt_wit_d': tlt_wit_d, 'tlt_wit_c': tlt_wit_c, 'tlt_wit_s': tlt_wit_s,
-            }
-            return render(request, template, context)
-    else:
-        #this should work!
-        template = 'Profile/profile_home.html'
-        context = {
-        'wf1': wf1, 'tlt': tlt, 'pvr_count': pvr_count, 'total': total, 'interviews_tlt': interviews_tlt, 'interviews_emp': interviews_emp, 'interviews_empc': interviews_empc, 'interviews_tltc': interviews_tltc, 'assigned_tlt': assigned_tlt, 'assigned_emp': assigned_emp, 'assigned_tltc': assigned_empc, 'assigned_empc': assigned_tltc, 'open_assignments_tltc': open_assignments_tltc, 'open_assignments_empc': open_assignments_empc, 'lvl_1': lvl_1, 'lvl_2': lvl_2, 'lvl_3': lvl_3, 'lvl_4': lvl_4,'lvl_5': lvl_5, 'tot': tot, 'pfl': pfl, 'referral_code': referral_code, 'conf_tot_c': conf_tot_c, 'conf_tot_r': conf_tot_r, 'conf_tot_s': conf_tot_s, 'req_tot_c': req_tot_c, 'req_tot_r': req_tot_r, 'req_tot_s': req_tot_s, 'req_tot_y': req_tot_y, 'conf_tot_y': conf_tot_y, 'list_view': list_view, 'form': form, 'tlt_bil_qs_p': tlt_bil_qs_p, 'tlt_bil_qs_a': tlt_bil_qs_a, 'tlt_bil_qs_d': tlt_bil_qs_d, 'tlt_bil_qs_i': tlt_bil_qs_i, 'emp_bil_qs_p': emp_bil_qs_p, 'emp_bil_qs_a': emp_bil_qs_a, 'emp_bil_qs_d': emp_bil_qs_d, 'emp_bil_qs_i': emp_bil_qs_i,
-        'emp_wit_p': emp_wit_p, 'emp_wit_a': emp_wit_a, 'emp_wit_d': emp_wit_d, 'emp_wit_c': emp_wit_c, 'emp_wit_s': emp_wit_s,
-        'tlt_wit_p': tlt_wit_p, 'tlt_wit_a': tlt_wit_a, 'tlt_wit_d': tlt_wit_d, 'tlt_wit_c': tlt_wit_c, 'tlt_wit_s': tlt_wit_s,
-        }
-        return render(request, template, context)
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+@login_required()
+def FreeMonthExpiredView(request):
+    if request.method == 'POST':
+        instance2 = ExpandedView.objects.get(talent=request.user)
+        list_view = instance2.trial_expired
+        if list_view == False:
+            instance2.trial_expired = True
+        instance2.save()
+
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
 
 @login_required()
 @subscription(1)
@@ -2087,6 +2134,34 @@ def EmailDelete(request, pk, tlt):
         raise PermissionDenied
 
 
+login_required()
+def not_wtr(request, wtr):
+    '''Function to remove the country if talent no longer wishes to go there'''
+    wtr_qs = WillingToRelocate.objects.get(slug=wtr)
+    if wtr_qs.talent == request.user:
+        if request.method =='POST':
+            wtr_qs.delete()
+            return redirect(reverse('Profile:ProfileView')+'#WTR')
+    else:
+        raise PermissionDenied
+
+
+login_required()
+def wtr_doc_status(request, wtr):
+    '''Changes the status of the possetion of documents needed to work in a country'''
+    wtr_qs = WillingToRelocate.objects.filter(slug=wtr)
+
+    if request.method =='POST':
+        if 'yes' in request.POST:
+            print(True)
+            wtr_qs.update(documents=True)
+        elif 'no' in request.POST:
+            print(False)
+            wtr_qs.update(documents=False)
+
+        return redirect(reverse('Profile:ProfileView')+'#WTR')
+
+
 @login_required()
 def ProfileView(request):
     tlt = request.user.alias
@@ -2107,10 +2182,11 @@ def ProfileView(request):
         user_info = CustomUser.objects.get(pk=tlt_id)
         achievement = Achievements.objects.filter(talent=tlt_id).order_by('-date_achieved')
         lcm_qs = LicenseCertification.objects.filter(talent=tlt_id).order_by('-issue_date')
+        relocate = WillingToRelocate.objects.filter(talent__alias=tlt)
 
         template = 'Profile/profile_view.html'
         context = {
-            'info':info, 'email':email, 'physical':physical, 'postal': postal, 'pnumbers': pnumbers, 'online': online, 'upload': upload, 'id': id, 'passport': passport, 'speak': speak, 'history': history, 'user_info': user_info, 'achievement': achievement, 'lcm_qs': lcm_qs, 'tlt': tlt,
+            'info':info, 'email':email, 'physical':physical, 'postal': postal, 'pnumbers': pnumbers, 'online': online, 'upload': upload, 'id': id, 'passport': passport, 'speak': speak, 'history': history, 'user_info': user_info, 'achievement': achievement, 'lcm_qs': lcm_qs, 'tlt': tlt, 'relocate': relocate,
             }
 
         return render(request, template, context)
@@ -2271,11 +2347,14 @@ def PhysicalAddressView(request):
                 new=form.save(commit=False)
                 new.talent = request.user
                 new.save()
-                return redirect(reverse('Profile:ProfileView')+'#phone')
+                response = redirect(reverse('Profile:ProfileView')+'#phone')
+
+                return response
         else:
             template = 'Profile/physical_address_add.html'
             context = {'form': form}
-            return render(request, template, context)
+            response = render(request, template, context)
+            return response
     else:
         raise PermissionDenied
 

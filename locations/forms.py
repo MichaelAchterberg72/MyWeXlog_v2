@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
+from django.core.exceptions import NON_FIELD_ERRORS
 
 
 from crispy_forms.helper import FormHelper
@@ -58,26 +59,27 @@ class CitySelect2Widget(CitySearchFieldMixin, ModelSelect2Widget):
 class RegionForm(forms.ModelForm):
     class Meta:
         model = Region
-        fields = ('country', 'region',)
+        fields = ('region','country')
 
 
 class CityForm(forms.ModelForm):
     class Meta:
         model = City
-        fields = ('city', 'region',)
-        widgets={
-            'region': RegionSelect2Widget(),
-        }
+        fields = ('city', )
 
+
+class VacCityForm(forms.ModelForm):
+    class Meta:
+        model = City
+        fields = ('city', 'region' )
+    widget = {
+        'region': RegionSelect2Widget(),
+    }
 
 class SuburbForm(forms.ModelForm):
     class Meta:
         model = Suburb
-        fields = ('city', 'suburb',)
-        widgets={
-            'city': CitySelect2Widget(),
-        }
-
+        fields = ('suburb',)
 
 class CurrencyForm(forms.ModelForm):
     class Meta:

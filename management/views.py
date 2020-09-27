@@ -1,4 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+
 
 from csp.decorators import csp_exempt
 
@@ -10,13 +12,23 @@ from datetime import datetime, timedelta
 from django.utils import timezone, dateformat
 import pytz
 
+
+from core.decorators import subscription
+
+
+
 from db_flatten.models import SkillTag
 from enterprises.models import Enterprise
-from marketplace.models import TalentRequired
+from marketplace.models import (
+    TalentRequired, BidShortList, BidInterviewList, WorkBid, WorkIssuedTo
+    )
 from paypal.standard.ipn.models import PayPalIPN
 
 from django.urls import reverse
-# Create your views here.
+
+
+@login_required()
+@subscription(3)
 def ManagementDashboardView(request):
 
     mcount = User.objects.all().count()
@@ -29,7 +41,7 @@ def ManagementDashboardView(request):
     vcount = TalentRequired.objects.all().count()
 
     free_members = User.objects.filter(subscription='0')
-    paid_members = PayPalIPN.objects.filter(txn_type="subscr_signup").values_list('payer_email', flat=True)
+    paid_members = PayPalIPN.objects.filter(txn_type="subscr_signup").values_list('custom', flat=True).distinct()
     passive_members = paid_members.filter(item_name__icontains='Passive Subscription')
     active_members = paid_members.filter(item_name__icontains='Active Subscription')
 
@@ -132,55 +144,55 @@ def ManagementDashboardView(request):
     fm_week23 = free_members.filter(registered_date__range=(monday23, monday22)).count()
     fm_week24 = free_members.filter(registered_date__range=(monday24, monday23)).count()
 
-    pm_week1 = passive_members.filter(payment_date__range=(monday1, date)).count()
-    pm_week2 = passive_members.filter(payment_date__range=(monday2, monday1)).count()
-    pm_week3 = passive_members.filter(payment_date__range=(monday3, monday2)).count()
-    pm_week4 = passive_members.filter(payment_date__range=(monday4, monday3)).count()
-    pm_week5 = passive_members.filter(payment_date__range=(monday5, monday4)).count()
-    pm_week6 = passive_members.filter(payment_date__range=(monday6, monday5)).count()
-    pm_week7 = passive_members.filter(payment_date__range=(monday7, monday6)).count()
-    pm_week8 = passive_members.filter(payment_date__range=(monday8, monday7)).count()
-    pm_week9 = passive_members.filter(payment_date__range=(monday9, monday8)).count()
-    pm_week10 = passive_members.filter(payment_date__range=(monday10, monday9)).count()
-    pm_week11 = passive_members.filter(payment_date__range=(monday11, monday10)).count()
-    pm_week12 = passive_members.filter(payment_date__range=(monday12, monday11)).count()
-    pm_week13 = passive_members.filter(payment_date__range=(monday13, monday12)).count()
-    pm_week14 = passive_members.filter(payment_date__range=(monday14, monday13)).count()
-    pm_week15 = passive_members.filter(payment_date__range=(monday15, monday14)).count()
-    pm_week16 = passive_members.filter(payment_date__range=(monday16, monday14)).count()
-    pm_week17 = passive_members.filter(payment_date__range=(monday17, monday16)).count()
-    pm_week18 = passive_members.filter(payment_date__range=(monday18, monday17)).count()
-    pm_week19 = passive_members.filter(payment_date__range=(monday19, monday18)).count()
-    pm_week20 = passive_members.filter(payment_date__range=(monday20, monday19)).count()
-    pm_week21 = passive_members.filter(payment_date__range=(monday21, monday20)).count()
-    pm_week22 = passive_members.filter(payment_date__range=(monday22, monday21)).count()
-    pm_week23 = passive_members.filter(payment_date__range=(monday23, monday22)).count()
-    pm_week24 = passive_members.filter(payment_date__range=(monday24, monday23)).count()
+    pm_week1 = passive_members.filter(subscr_date__range=(monday1, date)).count()
+    pm_week2 = passive_members.filter(subscr_date__range=(monday2, monday1)).count()
+    pm_week3 = passive_members.filter(subscr_date__range=(monday3, monday2)).count()
+    pm_week4 = passive_members.filter(subscr_date__range=(monday4, monday3)).count()
+    pm_week5 = passive_members.filter(subscr_date__range=(monday5, monday4)).count()
+    pm_week6 = passive_members.filter(subscr_date__range=(monday6, monday5)).count()
+    pm_week7 = passive_members.filter(subscr_date__range=(monday7, monday6)).count()
+    pm_week8 = passive_members.filter(subscr_date__range=(monday8, monday7)).count()
+    pm_week9 = passive_members.filter(subscr_date__range=(monday9, monday8)).count()
+    pm_week10 = passive_members.filter(subscr_date__range=(monday10, monday9)).count()
+    pm_week11 = passive_members.filter(subscr_date__range=(monday11, monday10)).count()
+    pm_week12 = passive_members.filter(subscr_date__range=(monday12, monday11)).count()
+    pm_week13 = passive_members.filter(subscr_date__range=(monday13, monday12)).count()
+    pm_week14 = passive_members.filter(subscr_date__range=(monday14, monday13)).count()
+    pm_week15 = passive_members.filter(subscr_date__range=(monday15, monday14)).count()
+    pm_week16 = passive_members.filter(subscr_date__range=(monday16, monday14)).count()
+    pm_week17 = passive_members.filter(subscr_date__range=(monday17, monday16)).count()
+    pm_week18 = passive_members.filter(subscr_date__range=(monday18, monday17)).count()
+    pm_week19 = passive_members.filter(subscr_date__range=(monday19, monday18)).count()
+    pm_week20 = passive_members.filter(subscr_date__range=(monday20, monday19)).count()
+    pm_week21 = passive_members.filter(subscr_date__range=(monday21, monday20)).count()
+    pm_week22 = passive_members.filter(subscr_date__range=(monday22, monday21)).count()
+    pm_week23 = passive_members.filter(subscr_date__range=(monday23, monday22)).count()
+    pm_week24 = passive_members.filter(subscr_date__range=(monday24, monday23)).count()
 
-    am_week1 = active_members.filter(payment_date__range=(monday1, date)).count()
-    am_week2 = active_members.filter(payment_date__range=(monday2, monday1)).count()
-    am_week3 = active_members.filter(payment_date__range=(monday3, monday2)).count()
-    am_week4 = active_members.filter(payment_date__range=(monday4, monday3)).count()
-    am_week5 = active_members.filter(payment_date__range=(monday5, monday4)).count()
-    am_week6 = active_members.filter(payment_date__range=(monday6, monday5)).count()
-    am_week7 = active_members.filter(payment_date__range=(monday7, monday6)).count()
-    am_week8 = active_members.filter(payment_date__range=(monday8, monday7)).count()
-    am_week9 = active_members.filter(payment_date__range=(monday9, monday8)).count()
-    am_week10 = active_members.filter(payment_date__range=(monday10, monday9)).count()
-    am_week11 = active_members.filter(payment_date__range=(monday11, monday10)).count()
-    am_week12 = active_members.filter(payment_date__range=(monday12, monday11)).count()
-    am_week13 = active_members.filter(payment_date__range=(monday13, monday12)).count()
-    am_week14 = active_members.filter(payment_date__range=(monday14, monday13)).count()
-    am_week15 = active_members.filter(payment_date__range=(monday15, monday14)).count()
-    am_week16 = active_members.filter(payment_date__range=(monday16, monday14)).count()
-    am_week17 = active_members.filter(payment_date__range=(monday17, monday16)).count()
-    am_week18 = active_members.filter(payment_date__range=(monday18, monday17)).count()
-    am_week19 = active_members.filter(payment_date__range=(monday19, monday18)).count()
-    am_week20 = active_members.filter(payment_date__range=(monday20, monday19)).count()
-    am_week21 = active_members.filter(payment_date__range=(monday21, monday20)).count()
-    am_week22 = active_members.filter(payment_date__range=(monday22, monday21)).count()
-    am_week23 = active_members.filter(payment_date__range=(monday23, monday22)).count()
-    am_week24 = active_members.filter(payment_date__range=(monday24, monday23)).count()
+    am_week1 = active_members.filter(subscr_date__range=(monday1, date)).count()
+    am_week2 = active_members.filter(subscr_date__range=(monday2, monday1)).count()
+    am_week3 = active_members.filter(subscr_date__range=(monday3, monday2)).count()
+    am_week4 = active_members.filter(subscr_date__range=(monday4, monday3)).count()
+    am_week5 = active_members.filter(subscr_date__range=(monday5, monday4)).count()
+    am_week6 = active_members.filter(subscr_date__range=(monday6, monday5)).count()
+    am_week7 = active_members.filter(subscr_date__range=(monday7, monday6)).count()
+    am_week8 = active_members.filter(subscr_date__range=(monday8, monday7)).count()
+    am_week9 = active_members.filter(subscr_date__range=(monday9, monday8)).count()
+    am_week10 = active_members.filter(subscr_date__range=(monday10, monday9)).count()
+    am_week11 = active_members.filter(subscr_date__range=(monday11, monday10)).count()
+    am_week12 = active_members.filter(subscr_date__range=(monday12, monday11)).count()
+    am_week13 = active_members.filter(subscr_date__range=(monday13, monday12)).count()
+    am_week14 = active_members.filter(subscr_date__range=(monday14, monday13)).count()
+    am_week15 = active_members.filter(subscr_date__range=(monday15, monday14)).count()
+    am_week16 = active_members.filter(subscr_date__range=(monday16, monday14)).count()
+    am_week17 = active_members.filter(subscr_date__range=(monday17, monday16)).count()
+    am_week18 = active_members.filter(subscr_date__range=(monday18, monday17)).count()
+    am_week19 = active_members.filter(subscr_date__range=(monday19, monday18)).count()
+    am_week20 = active_members.filter(subscr_date__range=(monday20, monday19)).count()
+    am_week21 = active_members.filter(subscr_date__range=(monday21, monday20)).count()
+    am_week22 = active_members.filter(subscr_date__range=(monday22, monday21)).count()
+    am_week23 = active_members.filter(subscr_date__range=(monday23, monday22)).count()
+    am_week24 = active_members.filter(subscr_date__range=(monday24, monday23)).count()
 
     report_members_labels = [week24_date, week23_date, week22_date, week21_date, week20_date, week19_date, week18_date, week17_date, week16_date, week15_date, week14_date, week13_date, week12_date, week11_date, week10_date, week9_date, week8_date, week7_date, week6_date, week5_date, week4_date, week3_date, 'Last Week', 'This Week']
 
@@ -208,6 +220,8 @@ def ManagementDashboardView(request):
     return render(request, template_name, context)
 
 
+@login_required()
+@subscription(3)
 def ManagementActiveMembersView(request):
 
     mcount = User.objects.all().count()
@@ -240,3 +254,61 @@ def ManagementActiveMembersView(request):
         'vcount': vcount
     }
     return render(request, template_name, context)
+
+
+@login_required()
+@subscription(3)
+def all_open_vacancies(request):
+    '''Management view to see all vacancies'''
+    qs = TalentRequired.objects.all()
+
+    qs_o = qs.filter(offer_status='O').order_by('-bid_open')
+    qs_oc = qs_o.count()
+
+    qs_c = qs.filter(offer_status='C').order_by('-bid_open')
+    qs_cc = qs_c.count()
+
+    template = 'management/vacancies_status.html'
+    context = {
+        'qs_o': qs_o,
+        'qs_oc': qs_oc,
+        'qs_c': qs_c,
+        'qs_cc': qs_cc,
+    }
+    return render(request, template, context)
+
+@login_required()
+@subscription(3)
+def all_bids(request):
+    '''Management view to see all bids'''
+    qs = WorkBid.objects.all()
+
+    qs_o = qs.filter(work__offer_status='O').order_by('-date_applied')
+    qs_oc = qs_o.count()
+
+    qs_c = qs.filter(work__offer_status='C').order_by('-date_applied')
+    qs_cc = qs_c.count()
+
+    template = 'management/vacancies_bids.html'
+    context = {
+        'qs_o': qs_o,
+        'qs_oc': qs_oc,
+        'qs_c': qs_c,
+        'qs_cc': qs_cc,
+    }
+    return render(request, template, context)
+
+
+@login_required()
+@subscription(3)
+def work_issued(request):
+    '''Management view to see all vacancy placements'''
+    qs = WorkIssuedTo.objects.all().order_by('-date_complete')
+    qs_c = qs.count()
+
+    template = 'management/vacancies_issued.html'
+    context = {
+        'qs': qs,
+        'qs_c': qs_c,
+    }
+    return render(request, template, context)

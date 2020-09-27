@@ -9,7 +9,7 @@
 
 {% endblock Style %}
 {% block content %}
-<div class="card">
+<div class="card card-shadow">
   <div class="card-body">
     <div class="btn-toolbar float-right">
     <a href="{% url 'Profile:ProfileHome' %}?next={{ request.path|urlencode }}"  class="btn btn-primary">Back</a>

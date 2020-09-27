@@ -1,0 +1,44 @@
+{% extends 'base_home.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}My {{block.super}} Passports{% endblock title %}
+
+{% block Style %}
+{{ form.media.css }}
+  <style type="text/css">
+    select {
+      width: 100px;
+    }
+    .checkboxinput{
+    height: 1.25em;
+    width: 1.25em;
+    }
+  </style>
+{% endblock Style %}
+{% block content %}
+
+<div class="card">
+  <div class="card-body">
+    <h3>I am willing to relocate to:</h3>
+    <p>
+      Please note: if you do not have all the required visa's, work permits, or any other documents required to work in the Country of your choosing, do not tick the documents box.
+    </p>
+    <form method="post">
+      {% csrf_token %}
+      <table>
+        <tr>
+          <td>{{ form.country|as_crispy_field }}</td>
+          <td>&nbsp</td>
+          <td class="align-middle">{{ form.documents|as_crispy_field }}</td>
+          <td class="align-middle">&nbsp I have all paperwork and documents necessary to legally work here!
+          </td>
+        </tr>
+      </table>
+      <div class="">
+        <p><a href="{% url 'Profile:ProfileView' %}" class="btn btn-danger">Cancel</a> <button type="submit" name="Done" class="btn btn-primary">Save</button></p>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock content %}

@@ -14,39 +14,61 @@
     <div class="col-sm-12">
       <div class="">
         <div class="">
-          <table class="table table-sm">
-            <col width="10%">
-            <col width="10%">
-            <col width="20%">
-            <col width="30%">
-            <col width="20%">
-            <col width="10%">
-            <thead>
-              <tr>
-                <th class="align-middle">Date from</th>
-                <th class="align-middle">Date to</th>
-                <th class="align-middle">Institution</th>
-                <th class="align-middle">Course</th>
-                <th class="align-middle">Topic</th>
-                <th class="align-middle">Certification</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for e in pageitems %}
-                <tr>
-                  <td class="align-middle">{{ e.date_from|date:"j M Y" }}</td>
-                  <td class="align-middle">{{ e.date_to|date:"j M Y" }}</td>
-                  <td class="align-middle">{{ e.course.company }}</td>
-                  <td class="align-middle">{{ e.course }}</td>
-                  <td class="align-middle">{{ e.topic }}</td>
-                  <td class="align-middle">{{ e.course.certification }}{% if e.upload %}<br>(Uploaded){% else %}{% endif %}</td>
-                  {% empty %}
-                    <td colspan="6">Nothing Captured.</td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-    <p>&nbsp</p>
+
+          <div class="container">
+            <div class="row my-auto">
+              <div class="col-1 col-no-pad h-100 text-center my-auto">
+                <strong>Date from</strong>
+              </div>
+              <div class="col-1 col-no-pad h-100 text-center my-auto">
+                <strong>Date to</strong>
+              </div>
+              <div class="col-3 col-no-pad h-100 text-center my-auto">
+                <strong>Institution</strong>
+              </div>
+              <div class="col-3 col-no-pad h-100 text-center my-auto">
+                <strong>Course</strong>
+              </div>
+              <div class="col-2 col-no-pad h-100 text-center my-auto">
+                <strong>Topic</strong>
+              </div>
+              <div class="col-2 col-no-pad h-100 text-center my-auto">
+                <strong>Certification</strong>
+              </div>
+            </div>
+          </div>
+          {% for e in pageitems %}
+          <div class="row">
+            <div class="card mt-1 card-hover" style="width: 100%;">
+              <div class="card-body small-pad">
+                <div class="row my-auto">
+                  <div class="col-1 col-no-pad h-100 text-center my-auto">
+                    {{ e.date_from|date:"j M Y" }}
+                  </div>
+                  <div class="col-1 col-no-pad h-100 text-center my-auto">
+                    {{ e.date_to|date:"j M Y" }}
+                  </div>
+                  <div class="col-3 col-no-pad h-100 text-center my-auto">
+                    {{ e.course.company }}
+                  </div>
+                  <div class="col-3 col-no-pad h-100 text-center my-auto">
+                    {{ e.course }}
+                  </div>
+                  <div class="col-2 col-no-pad h-100 text-center my-auto">
+                    {{ e.topic }}
+                  </div>
+                  <div class="col-2 col-no-pad h-100 text-center my-auto">
+                    {{ e.course.certification }}{% if e.upload %}<br>(Uploaded){% else %}{% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% empty %}
+            <p>Nothing captured.</p>
+          {% endfor %}
+
+      <p>&nbsp</p>
 
     <nav aria-label="Page navigation">
         {% if pageitems.has_other_pages %}

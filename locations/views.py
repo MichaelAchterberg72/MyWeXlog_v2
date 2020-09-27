@@ -19,19 +19,22 @@ from . models import (
 
 
 from .forms import (
-    RegionForm, CityForm, SuburbForm, CurrencyForm
+    RegionForm, CityForm, SuburbForm, CurrencyForm, VacCityForm,
 )
 
 #>>> Region Popup
 @login_required()
 @csp_exempt
 def RegionAddPopup(request):
+
     form = RegionForm(request.POST or None)
     if request.method =='POST':
         if form.is_valid():
             instance=form.save(commit=False)
             instance.save()
-            return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_region");</script>' % (instance.pk, instance))
+            response = HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_region");</script>' % (instance.pk, instance))
+            response.delete_cookie('dataC')
+            return response
         else:
             context = {'form': form}
             template = 'locations/region_popup.html'
@@ -57,14 +60,21 @@ def get_region_id(request):
 @login_required()
 @csp_exempt
 def CityAddPopup(request):
+
+    data=json.loads(request.COOKIES['region'])
+    qs = Region.objects.get(id=data)
+
     form = CityForm(request.POST or None)
     if request.method =='POST':
         if form.is_valid():
             new = form.save(commit=False)
+            new.region = qs
             new.save()
-            return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_city");</script>' % (new.pk, new))
+            response = HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_city");</script>' % (new.pk, new))
+            response.delete_cookie('region')
+            return response
         else:
-            context = {'form': form}
+            context = {'form': form,}
             template = 'locations/city_popup.html'
             return render(request, template, context)
 
@@ -81,6 +91,28 @@ def get_city_id(request):
         data1 = {'city_id':city_id,}
         return HttpResponse(json.dumps(data1), content_type='application/json')
     return HttpResponse("/")
+
+
+@login_required()
+@csp_exempt
+def CityVacPopup(request):
+    '''view to add a city to the vacancy view - as no region is shown in that page'''
+
+    form = VacCityForm(request.POST or None)
+    if request.method =='POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.save()
+            response = HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_city");</script>' % (new.pk, new))
+            return response
+        else:
+            context = {'form': form,}
+            template = 'locations/city_vac_add_popup.html'
+            return render(request, template, context)
+    else:
+        context = {'form': form}
+        template = 'locations/city_vac_add_popup.html'
+        return render(request, template, context)
 #City Popup <<<
 
 
@@ -88,12 +120,19 @@ def get_city_id(request):
 @login_required()
 @csp_exempt
 def SuburbAddPopup(request):
+
+    data=json.loads(request.COOKIES['city'])
+    qs = City.objects.get(id=data)
+
     form = SuburbForm(request.POST or None)
     if request.method =='POST':
         if form.is_valid():
             new = form.save(commit=False)
+            new.city=qs
             new.save()
-            return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_suburb");</script>' % (new.pk, new))
+            response = HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_suburb");</script>' % (new.pk, new))
+            response.delete_cookie("city")
+            return response
         else:
             context = {'form': form}
             template = 'locations/suburb_popup.html'

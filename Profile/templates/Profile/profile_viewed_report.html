@@ -159,12 +159,13 @@
           {% if request.user.subscription >= 2 %}
           <p>Your profile has been viewed <strong>{{ pvr_count }}</strong> times by <strong>{{ pvr_p_count }}</strong> people on the dates indicated.</p>
           <br>
+
           <table class="table table-hover table-sm" id="pvr">
             <col width="35%">
             <col width="30%">
             <col width="30%">
             <thead>
-              <tr>
+              <tr class="no-hover">
                 <th class="align-middle text-center">User Alias</th>
                 <th class="align-middle text-center">Date</th>
                 <th class="align-middle text-center">View Profile</th>
@@ -175,7 +176,7 @@
               <tr>
                 <td class="align-middle text-center">{{ p.user.alias }}</td>
                 <td class="align-middle text-center">{{ p.timestamp }}</td>
-                <td class="text-center">{% if request.user.subscription >= 2 %}<a href="{% url 'Talent:APV_L' tlt=p.user.alias %}" class="align-middle text-center" target="new"><i class="fa fa-users" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="View Profile"></a>{% else %}<button class="badge badge-success badge-pill align-middle">Active Subscription Required</button>{% endif %}</td>
+                <td class="text-center">{% if request.user.subscription >= 2 %}<a href="{% url 'Talent:APV_L' tlt=p.user.alias %}" class="align-middle text-center" target="new"><i class="fa fa-users" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="View Profile"></a>{% else %}<a href="{% url 'Payments:ActiveSubscription' %}" class="badge badge-success badge-pill align-middle">Active Subscription Required</a>{% endif %}</td>
 
 
               </tr>
@@ -235,7 +236,7 @@
             <col width="30%">
             <col width="30%">
             <thead>
-              <tr>
+              <tr class="no-hover">
                 <th class="align-middle text-center">User Alias</th>
                 <th class="align-middle text-center">Date</th>
                 <th class="align-middle text-center">View Profile</th>

@@ -28,22 +28,22 @@ from paypal.standard.ipn.signals import valid_ipn_received, invalid_ipn_received
 
 @method_decorator(csrf_exempt, name='dispatch')
 class PayPalSubscriptionReturnView(TemplateView):
-    template_name = 'subscription_payments/subscription_successful_return.html'
+    template_name = 'subscription_payments/wexlog_home_3/subscription_successful_return.html'
 
 
 @method_decorator(csrf_exempt, name='dispatch')
 class PayPalSubscriptionCancelReturnView(TemplateView):
-    template_name = 'subscription_payments/subscription_cancel_return.html'
+    template_name = 'subscription_payments/wexlog_home_3/subscription_cancel_return.html'
 
 
 @method_decorator(csrf_exempt, name='dispatch')
 class PayPalPassiveSubscriptionCancelReturnView(TemplateView):
-    template_name = 'subscription_payments/passive_subscription_cancel_return.html'
+    template_name = 'subscription_payments/wexlog_home_3/passive_subscription_cancel_return.html'
 
 
 @method_decorator(csrf_exempt, name='dispatch')
 class PayPalActiveSubscriptionCancelReturnView(TemplateView):
-    template_name = 'subscription_payments/active_subscription_cancel_return.html'
+    template_name = 'subscription_payments/wexlog_home_3/active_subscription_cancel_return.html'
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -58,7 +58,7 @@ def GeneralPassiveSubscriptionView(request):
             "cmd": "_xclick-subscriptions",
             "business": settings.PAYPAL_RECEIVER_EMAIL,
             "currency_code": "USD",
-            "a3": "4.00",                      # monthly price
+            "a3": "3.99",                      # monthly price
             "p3": "1",                         # duration of each unit (depends on unit)
             "t3": "M",                         # duration unit ("M for Month")
             "src": "1",                        # make payments recur
@@ -117,7 +117,7 @@ def GeneralPassiveSubscriptionView(request):
             "six_passive_form": six_passive_form,
             "twelve_passive_form": twelve_passive_form,
     }
-    template = 'subscription_payments/passive_subscription.html'
+    template = 'subscription_payments/wexlog_home_3/passive_subscription.html'
     return render(request, template, context)
 
 
@@ -187,7 +187,7 @@ def GeneralActiveSubscriptionView(request):
             "six_active_form": six_active_form,
             "twelve_active_form": twelve_active_form,
     }
-    template = 'subscription_payments/active_subscription.html'
+    template = 'subscription_payments/wexlog_home_3/active_subscription.html'
     return render(request, template, context)
 
 
@@ -201,7 +201,7 @@ def BetaGeneralPassiveSubscriptionView(request):
             "a1": "0.00",                      # trial period monthly price
             "p1": "12",                        # number months trial period
             "t1": "M",                         # duration of unit ('M' for months)
-            "a3": "4.00",                      # monthly price
+            "a3": "3.99",                      # monthly price
             "p3": "1",                         # duration of each unit (depends on unit)
             "t3": "M",                         # duration unit ("M for Month")
             "src": "1",                        # make payments recur
@@ -414,5 +414,5 @@ def PassiveUpgradeActiveSubscriptionView(request):
             "six_active_form": six_active_form,
             "twelve_active_form": twelve_active_form,
     }
-    template = 'subscription_payments/active_subscription_upgrade.html'
+    template = 'subscription_payments/wexlog_home_3/active_subscription_upgrade.html'
     return render(request, template, context)

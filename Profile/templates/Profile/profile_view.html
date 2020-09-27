@@ -11,79 +11,111 @@
   <h5>Review Your Profile</h5>
 </div>
   <div class="card-group">
-    <div class="card">
+    <div class="card card-shadow">
       <div class="card-body">
         {% for d in info %}
           <h5 class="card-title">Basic Information <a href="{% url 'Profile:ProfileEdit' d.alias %}" class="badge badge-secondary float-right">Edit</a></h5>
           <p class="card-text">Name: {{ user_info.first_name }} {{ user_info.last_name }}</p>
-          <p class="card-text">Display name: {{ user_info.alias }}</p>
-          <p class="card-text">Date of Birth: {{ d.birth_date|date:"j M Y" }}</p>
-          <p class="card-text">Profile email: {{ request.user.email }}</p>
-          <p class="card-text">Standard Rate (per hour): {{ d.currency }} {{ d.std_rate }}</p>
-          <p class="card-text">Do you wish to be a mentor to others? {{ d.get_mentor_display }}</p>
+          <p class="card-text">
+            Display name: {{ user_info.alias }}
+          </p>
+          <p class="card-text">
+            Date of Birth: {{ d.birth_date|date:"j M Y" }}
+          </p>
+          <p class="card-text">
+            Profile email: {{ request.user.email }}
+          </p>
+          <p class="card-text">
+            Standard Rate (per hour): {{ d.currency }} {{ d.std_rate }}
+          </p>
+          <p class="card-text">
+            Do you wish to be a mentor to others? {{ d.get_mentor_display }}
+          </p>
         <div class="card-footer bg-transparent border-success"></div>
           <h5 class="card-title">Online Profiles <a href="{% url 'Profile:OnlineProfileAdd' request.user.alias %}" class="badge badge-primary float-right">Add</a></h5>
-          <table class="table table-sm" id="online">
-            <thead>
-              <tr>
-                <th width="30%">Site</th>
-                <th>Address</th>
-              </tr>
-            </thead>
-            {% for s in online %}
-            <tbody>
-              <tr>
-                <td>{{ s.sitename }}</td>
-                <td><a href="{{ s.profileurl }}">{{ s.profileurl }}</a></td>
-                <td>
-                  <form  action="{% url 'Profile:OnlineDelete' pk=s.id tlt=s.talent.alias %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit" class="badge badge-danger badge-pill">Remove</button>
-                  </form>
-                </td>
-              </tr>
-              {% empty %}
-                <p>No Profiles listed.</p>
-              {% endfor %}
-            </tbody>
-          </table>
+          <div class="container">
+            <div class="row my-auto">
+              <div class="col-md-4 h-100 text-center my-auto">
+                <strong>Site</strong>
+              </div>
+              <div class="col-md-6 h-100 text-center my-auto">
+                <strong>Address</strong>
+              </div>
+              <div class="col-md-2 h-100 text-center my-auto">
+                <strong></strong>
+              </div>
+            </div>
+          </div>
+          {% for s in online %}
+          <div class="row">
+            <div class="card mt-1 card-hover" style="width: 100%;">
+              <div class="card-body small-pad">
+                <div class="row my-auto">
+                  <div class="col-md-4 h-100 text-center my-auto">
+                    {{ s.sitename }}
+                  </div>
+                  <div class="col-md-6 h-100 text-center my-auto">
+                    <a href="{{ s.profileurl }}">{{ s.profileurl }}</a>
+                  </div>
+                  <div class="col-md-2 h-100 text-center my-auto">
+                    <form  action="{% url 'Profile:OnlineDelete' pk=s.id tlt=s.talent.alias %}" method="post">
+                      {% csrf_token %}
+                      <button type="submit" class="badge badge-danger badge-pill" onclick="return confirm('Remove {{ s.profileurl }} - Are you sure?');">Remove</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% empty %}
+            <p>No Profiles listed.</p>
+          {% endfor %}
 
           <div class="card-footer bg-transparent border-success"></div>
           <h5 class="card-title">Languages <a href="{% url 'Profile:LanguageAdd' request.user.alias %}" class="badge badge-primary float-right">Add</a></h5>
-          <table class="table table-sm" id="language">
-            <col width="35%">
-            <col width="30%">
-            <col width="35%">
-            <thead>
-              <tr>
-                <th class="align-middle text-center">Language</th>
-                <th class="align-middle text-center">Level</th>
-                <th></th>
-              </tr>
-            </thead>
-            {% for l in speak %}
-            <tbody>
-              <tr>
-                <td class="align-middle text-center">{{ l.language }}</td>
-                <td class="align-middle text-center">{{ l.get_level_display }}</td>
-                <td class="align-middle text-center float-right">
-                  <a href="{% url 'Profile:LanguageEdit' tlt=request.user.alias lang=l.slug %}" class="badge badge-secondary badge-pill" style="width: 5rem;">Edit</a>
-                  <form  action="{% url 'Profile:LanguageDelete' lang_id=l.id tlt=l.talent.alias %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
-                  </form>
-                </td>
-              </tr>
-              {% empty %}
-                <p>No Languages listed.</p>
-              {% endfor %}
-            </tbody>
-          </table>
+          <div class="container">
+            <div class="row my-auto">
+              <div class="col-md-4 h-100 text-center my-auto">
+                <strong>Language</strong>
+              </div>
+              <div class="col-md-6 h-100 text-center my-auto">
+                <strong>Level</strong>
+              </div>
+              <div class="col-md-2 h-100 text-center my-auto">
+                <strong></strong>
+              </div>
+            </div>
+          </div>
+          {% for l in speak %}
+          <div class="row">
+            <div class="card mt-1 card-hover" style="width: 100%;">
+              <div class="card-body small-pad">
+                <div class="row my-auto">
+                  <div class="col-md-4 h-100 text-center my-auto">
+                    {{ l.language }}
+                  </div>
+                  <div class="col-md-6 h-100 text-center my-auto">
+                    {{ l.get_level_display }}
+                  </div>
+                  <div class="col-md-2 h-100 text-left my-auto">
+                    <a href="{% url 'Profile:LanguageEdit' tlt=request.user.alias lang=l.slug %}" class="badge badge-secondary badge-pill" style="width: 5rem;">Edit</a>
+                    <form  action="{% url 'Profile:LanguageDelete' lang_id=l.id tlt=l.talent.alias %}" method="post">
+                      {% csrf_token %}
+                      <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;" onclick="return confirm('Remove {{ l.language }} - Are you sure?');">Remove</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% empty %}
+            <p>No Languages listed.</p>
+          {% endfor %}
 
       </div>
     </div>
 
-  <div class="card">
+  <div class="card card-shadow">
     <div class="card-body">
       <h5 class="card-title" id="email">Email addresses <a href="{% url 'Profile:EmailEdit' d.alias %}?next={{ request.path|urlencode }}" class="badge badge-primary float-right">Add</a></h5>
       <h6>Past (No longer active)</h6>
@@ -96,7 +128,7 @@
             <a href="{% url 'Profile:EmailStatus' tlt=e.talent.alias eml=e.slug %}" class="badge badge-primary badge-pill">Change Status</a>
             <form  action="{% url 'Profile:EmailDelete' pk=e.id tlt=e.talent.alias %}" method="post">
               {% csrf_token %}
-              <button type="submit" class="badge badge-danger badge-pill">Remove</button>
+              <button type="submit" class="badge badge-danger badge-pill" onclick="return confirm('Remove {{ e.email }} - Are you sure?');">Remove</button>
             </form>
           </span>
         </li>
@@ -113,7 +145,7 @@
             <a href="{% url 'Profile:EmailStatus' tlt=e.talent.alias eml=e.slug %}" class="badge badge-primary badge-pill">Change Status</a>
             <form  action="{% url 'Profile:EmailDelete' pk=e.id tlt=e.talent.alias %}" method="post">
               {% csrf_token %}
-              <button type="submit" class="badge badge-danger badge-pill">Remove</button>
+              <button type="submit" class="badge badge-danger badge-pill" onclick="return confirm('Remove {{ e.email }} - Are you sure?');">Remove</button>
             </form>
           </span>
         </li>
@@ -125,7 +157,7 @@
 </div>
 <br>
 <div class="card-group">
-  <div class="card">
+  <div class="card card-shadow">
     <div class="card-body">
       <div class="float-right">
         <a href="{% url 'Profile:BackgroundEdit' tlt %}" class="btn btn-secondary">Edit</a>
@@ -138,7 +170,7 @@
   </div>
   <br>
   <div class="card-group">
-    <div class="card">
+    <div class="card card-shadow">
       <div class="card-body">
       <div class="float-right">
         <a href="{% url 'Profile:MotivationEdit' tlt %}" class="btn btn-secondary">Edit</a>
@@ -152,383 +184,611 @@
 {% endfor %}
 <br>
 <div class="card-group" id="memberships">
-  <div class="card">
+  <div class="card card-shadow">
     <div class="card-body">
       <h5 class="card-title" >Licenses, Certifications and Memberships <a href="{% url 'Talent:LCMCap'  %}?next={{ request.path|urlencode }}" class="badge badge-primary float-right">Add</a></h5>
-      <table class="table table-sm">
-        <col width="8%">
-        <col width="8%">
-        <col width="30%">
-        <col width="20%">
-        <col width="14%">
-        <col width="10%">
-        <col width="10%">
-        <col width="10%">
-        <col width="10%">
-        <thead>
-          <tr>
-            <th class="align-middle text-center">Type</th>
-            <th class="align-middle text-center">Registered Number</th>
-            <th class="align-middle text-center">Managing Organisation</th>
-            <th class="align-middle text-center">Country</th>
-            <th class="align-middle text-center">Region / State</th>
-            <th class="align-middle text-center">Date First Issued</th>
-            <th class="align-middle text-center">Exipry Date</th>
-            <th class="align-middle text-center">Status</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for lcm in lcm_qs %}
-          <tr>
-            <td class="align-middle text-center">{{ lcm.certification }}</td>
-            <td class="align-middle text-center">{{ lcm.cm_no }}</td>
-            <td class="align-middle text-center">{{ lcm.companybranch }}</td>
-            <td class="align-middle text-center">{{ lcm.country.name }}</td>
-            <td class="align-middle text-center">{{ lcm.region }}</td>
-            <td class="align-middle text-center">{{ lcm.issue_date|date:"j M Y" }}</td>
-            {% if lcm.expiry_date %}
-              <td class="align-middle text-center">{{ lcm.expiry_date|date:"j M Y" }}</td>
-            {% else %}
-              <td class="align-middle text-center">None</td>
-            {% endif %}
-            {% if lcm.current == True %}
-              <td class="align-middle text-center">Valid</td>
-            {% else %}
-              <td class="align-middle text-center">Expired</td>
-            {% endif %}
-            <td class="card-text text-justify">
-              {% if lcm.upload %}
-                <a href="{{ lcm.upload.url }}" target="_blank" class="badge badge-success" style="width: 4rem;">
-                  View File
-                </a>
-              {% else %}
-                <a href="#" target="_blank" class="badge badge-primary" style="width: 4rem;">
-                  No File
-                </a>
-              {% endif %}
-              <a href="{% url 'Talent:LCMEdit' lcm.slug %}" class="badge badge-secondary" style="width: 4rem;">Update</a>
-              <form  action="{% url 'Talent:LCMDelete' pk=lcm.id tlt=lcm.talent.alias %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="badge badge-danger" style="width: 4rem;">Remove</button>
-              </form>
-            </td>
-          </tr>
-          {% empty %}
-          <tr>
-            <td colspan="5">None captured.</td>
-            <td><a href="{% url 'Talent:LCMCap'  %}?next={{ request.path|urlencode }}" class="badge badge-primary float-right">Add License, Certification or Membership</a></td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+
+      <div class="container">
+        <div class="row my-auto">
+          <div class="col-1 col-no-pad h-100 text-center my-auto">
+            <strong>Type</strong>
+          </div>
+          <div class="col-2 col-no-pad h-100 text-center my-auto">
+            <strong>Registered Number</strong>
+          </div>
+          <div class="col-2 col-no-pad h-100 text-center my-auto">
+            <strong>Managing Organisation</strong>
+          </div>
+          <div class="col-2 col-no-pad h-100 text-center my-auto">
+            <strong>Country</strong>
+          </div>
+          <div class="col-1 col-no-pad h-100 text-center my-auto">
+            <strong>Region / State</strong>
+          </div>
+          <div class="col-1 col-no-pad h-100 text-center my-auto">
+            <strong>Date First Issued</strong>
+          </div>
+          <div class="col-1 col-no-pad h-100 text-center my-auto">
+            <strong>Expiry Date</strong>
+          </div>
+          <div class="col-1 col-no-pad h-100 text-center my-auto">
+            <strong>Status</strong>
+          </div>
+          <div class="col-1 col-no-pad h-100 text-center my-auto">
+            <strong></strong>
+          </div>
+        </div>
+      </div>
+      {% for lcm in lcm_qs %}
+      <div class="row">
+        <div class="card mt-1 card-hover" style="width: 100%;">
+          <div class="card-body small-pad">
+            <div class="row my-auto">
+              <div class="col-1 col-no-pad h-100 text-center my-auto">
+                {{ lcm.certification }}
+              </div>
+              <div class="col-2 col-no-pad h-100 text-center my-auto">
+                {{ lcm.cm_no }}
+              </div>
+              <div class="col-2 col-no-pad h-100 text-center my-auto">
+                {{ lcm.companybranch }}
+              </div>
+              <div class="col-2 col-no-pad h-100 text-center my-auto">
+                {{ lcm.country.name }}
+              </div>
+              <div class="col-1 col-no-pad h-100 text-center my-auto">
+                {{ lcm.region }}
+              </div>
+              <div class="col-1 col-no-pad h-100 text-center my-auto">
+                {{ lcm.issue_date|date:"j M Y" }}
+              </div>
+              <div class="col-1 col-no-pad h-100 text-center my-auto">
+                {% if lcm.expiry_date %}
+                  {{ lcm.expiry_date|date:"j M Y" }}
+                {% else %}
+                  None
+                {% endif %}
+              </div>
+              <div class="col-1 col-no-pad h-100 text-center my-auto">
+                {% if lcm.current == True %}
+                  Valid
+                {% else %}
+                  Expired
+                {% endif %}
+              </div>
+              <div class="col-1 col-no-pad h-100 text-center my-auto">
+                {% if lcm.upload %}
+                  <a href="{{ lcm.upload.url }}" target="_blank" class="badge badge-success" style="width: 4rem;">
+                    View File
+                  </a>
+                {% else %}
+                  <a href="#" target="_blank" class="badge badge-primary" style="width: 4rem;">
+                    No File
+                  </a>
+                {% endif %}
+                <a href="{% url 'Talent:LCMEdit' lcm.slug %}" class="badge badge-secondary" style="width: 4rem;">Update</a>
+                <form  action="{% url 'Talent:LCMDelete' pk=lcm.id tlt=lcm.talent.alias %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="badge badge-danger" style="width: 4rem;" onclick="return confirm('Remove {{ lcm.certification }} - Are you sure?');">Remove</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+        <p>You do not have any bookes read lilicenses, certifications or memberships listed.</p>
+      {% endfor %}
     </div>
   </div>
 </div>
 <br>
 <div class="card-group">
-  <div class="card">
+  <div class="card card-shadow">
     <div class="card-body" >
       <h5 class="card-title" id="achievements">Achievements<a href="{% url 'Talent:AchieveCap' %}" class="badge badge-primary float-right">Add</a></h5>
-      <table class="table table-sm">
-        <col width="30%">
-        <col width="10%">
-        <col width="55%">
-        <col width="5%">
-        <thead>
-          <tr>
-            <th class="align-middle text-center">Achievement</th>
-            <th class="align-middle text-center">Date Achieved</th>
-            <th class="align-middle text-left">Details</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for a in achievement %}
-          <tr>
-            <td class="align-middle text-left">{{ a.achievement }}</td>
-            <td class="align-middle text-center">{{ a.date_achieved|date:"j M Y" }}</td>
-            <td class="align-middle text-left">{{ a.description|linebreaks|truncatechars:190 }}</td>
-            <td class="align-middle text-justify">
-              {% if a.upload %}
-                <a href="{{ a.upload.url }}" target="_blank" class="badge badge-success" style="width: 4rem;">
-                  View File
-                </a>
-              {% else %}
-                <a href="#" target="_blank" class="badge badge-primary" style="width: 4rem;">
-                  No File
-                </a>
-              {% endif %}
-              <a href="{% url 'Talent:AchieveEdit' a.slug %}" class="badge badge-secondary" style="width: 4rem;">Edit</a>
-              <form  action="{% url 'Talent:AchieveDelete' ach_i=a.id tlt=a.talent.alias %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="badge badge-danger" style="width: 4rem;">Remove</button>
-              </form>
-            </td>
-          </tr>
-          {% empty %}
-          <tr>
-            <td colspan="3">No achievements captured.</td>
-            <td><a href="{% url 'Talent:AchieveCap' %}" class="badge badge-primary float-right">Add an Achievement</a></td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+
+      <div class="container">
+        <div class="row my-auto">
+          <div class="col-md-4 h-100 text-center my-auto">
+            <strong>Date Achieved</strong>
+          </div>
+          <div class="col-md-7 h-100 text-center my-auto">
+            <strong>Achievement</strong>
+          </div>
+        </div>
+      </div>
+      {% for a in achievement %}
+      <div class="row">
+        <div class="card mt-1 card-hover" style="width: 100%;">
+          <div class="card-body small-pad">
+            <div class="row my-auto">
+              <div class="col-md-11 h-100 text-center my-auto">
+                <div class="row my-auto">
+                  <div class="col-md-4 h-100 text-center my-auto">
+                    {{ a.date_achieved|date:"j M Y" }}
+                  </div>
+                  <div class="col-md-8 h-100 text-center my-auto">
+                    {{ a.achievement }}
+                  </div>
+                </div>
+                <div class="row my-auto">
+                  <div class="col-md-12 h-100 text-left my-auto">
+                    <br>
+                    <p class="short-paragraph"><strong>Details:</strong></p>
+                    <p>{{ a.description|linebreaks|truncatechars:465 }}</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-1 h-100 text-center my-auto">
+                {% if a.upload %}
+                  <a href="{{ a.upload.url }}" target="_blank" class="badge badge-success" style="width: 4rem;">
+                    View File
+                  </a>
+                {% else %}
+                  <a href="#" target="_blank" class="badge badge-primary" style="width: 4rem;">
+                    No File
+                  </a>
+                {% endif %}
+                <a href="{% url 'Talent:AchieveEdit' a.slug %}" class="badge badge-secondary" style="width: 4rem;">Edit</a>
+                <form  action="{% url 'Talent:AchieveDelete' ach_i=a.id tlt=a.talent.alias %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="badge badge-danger" style="width: 4rem;" onclick="return confirm('Remove {{ a.achievement }} - Are you sure?');">Remove</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+        <p>No achievements captured.</p>
+      {% endfor %}
+
     </div>
   </div>
 </div>
 <br>
 <div class="card-group">
-  <div class="card">
+  <div class="card card-shadow">
     <div class="card-body" id="History">
       <h5 class="card-title">Career History <a href="{% url 'Profile:History' %}" class="badge badge-primary float-right">Add</a></h5>
       <p class="card-text">
         {% if history %}
-        <table class="table table-sm">
-          <thead>
-            <tr>
-              <th>From</th>
-              <th>To</th>
-              <th>Employer</th>
-              <th>Designation</th>
-              <th>Work Configeration</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for h in history %}
-            <tr>
-              <td>{{ h.date_from }}</td>
-              {% if h.date_to %}
-                <td>{{ h.date_to }}</td>
-              {% else %}
-                <td>Currently Works Here</td>
-              {% endif %}
-              <td>{{ h.companybranch }}</td>
-              <td>{{ h.designation }}</td>
-              <td>{{ h.work_configeration }}</td>
-              {% if h.date_to %}
+        <div class="container">
+          <div class="row my-auto">
+            <div class="col-md-1 h-100 text-center my-auto">
+              <strong>From</strong>
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              <strong>To</strong>
+            </div>
+            <div class="col-md-3 h-100 text-center my-auto">
+              <strong>Employer</strong>
+            </div>
+            <div class="col-md-3 h-100 text-center my-auto">
+              <strong>Designation</strong>
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              <strong>Work Configuration</strong>
+            </div>
+            <div class="col-md-1 h-100 text-center my-auto">
+              <strong></strong>
+            </div>
+          </div>
+        </div>
+        {% for h in history %}
+        <div class="row">
+          <div class="card mt-1 card-hover" style="width: 100%;">
+            <div class="card-body small-pad">
+              <div class="row my-auto">
+                <div class="col-md-1 h-100 text-center my-auto">
+                  {{ h.date_from }}
+                </div>
+                <div class="col-md-2 h-100 text-center my-auto">
+                  {% if h.date_to %}
+                    {{ h.date_to }}
+                  {% else %}
+                    Currently Works Here
+                  {% endif %}
+                </div>
+                <div class="col-md-3 h-100 text-center my-auto">
+                  {{ h.companybranch }}
+                </div>
+                <div class="col-md-3 h-100 text-center my-auto">
+                  {{ h.designation }}
+                </div>
+                <div class="col-md-2 h-100 text-center my-auto">
+                  {{ h.work_configeration }}
+                </div>
+                <div class="col-md-1 h-100 text-center my-auto">
+                  {% if h.date_to %}
 
-              {% else %}
-                <td><a href="{% url 'Profile:Resigned' bch=h.slug tlt=h.talent.alias %}" class="badge badge-primary">I Resigned</a></td>
-              {% endif %}
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-        {% endif %}
+                  {% else %}
+                    <a href="{% url 'Profile:Resigned' bch=h.slug tlt=h.talent.alias %}" class="badge badge-primary">I Resigned</a>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+          <p>No career history currently loaded.</p>
+        {% endfor %}
+
+      {% endif %}
     </div>
   </div>
 </div>
 <br>
 <div class="card-group">
-  <div class="card">
+  <div class="card card-shadow">
     <div class="card-body">
       <h5 class="card-title" id="Upload">Uploaded Files <a href="{% url 'Profile:FileUploadView' %}" class="badge badge-primary float-right">Add File</a></h5>
       <p>(Only <strong>PDF</strong> files are allowed to be uploaded)</p>
-      <table class="table table-sm">
-        <thead>
-        </thead>
-        {% for f in upload %}
-        <tbody>
-          <tr>
-            <td><a href="{{ f.file.url }}" target="_blank">{{ f.title }}</a></td>
-            <td>
-              <form  action="{% url 'Profile:FileDelete' f.id %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="badge badge-danger badge-pill float-right">Delete</button>
-              </form>
-            </td>
-          </tr>
-        {% endfor %}
-        </tbody>
-      </table>
+
+      {% for f in upload %}
+      <div class="row">
+        <div class="card mt-1 card-hover" style="width: 100%;">
+          <div class="card-body small-pad">
+            <div class="row my-auto">
+              <div class="col-md-10 h-100 text-left my-auto">
+                <a href="{{ f.file.url }}" target="_blank">{{ f.title }}</a>
+              </div>
+              <div class="col-md-2 h-100 text-center my-auto">
+                <form  action="{% url 'Profile:FileDelete' f.id %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="badge badge-danger badge-pill float-right" onclick="return confirm('Delete {{ f.title }} - Are you sure?');">Delete</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+        <p>You do not have any files loaded yet.</p>
+      {% endfor %}
+
     </div>
   </div>
 </div>
 <br>
 <div class="card-header">Identification</div>
 <div class="card-group">
-  <div class="card">
+  <div class="card card-shadow">
     <div class="card-body">
       <h5 class="card-title">Identification Document <a href="{% url 'Profile:IdView' %}" class="badge badge-secondary float-right">Edit</a></h5>
-      <table class="table table-sm">
-        <thead>
-          <tr>
-            <th>ID Number</th>
-            <th>ID Type</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for i in id %}
-          <tr>
-            <td>{{ i.identification }}</td>
-            <td>{{ i.id_type }}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+      <div class="container">
+        <div class="row my-auto">
+          <div class="col-md-6 h-100 text-center my-auto">
+            <strong>ID Number</strong>
+          </div>
+          <div class="col-md-6 h-100 text-center my-auto">
+            <strong>ID Type</strong>
+          </div>
+        </div>
+      </div>
+      {% for i in id %}
+      <div class="row">
+        <div class="card mt-1 card-hover" style="width: 100%;">
+          <div class="card-body small-pad">
+            <div class="row my-auto">
+              <div class="col-md-6 h-100 text-center my-auto">
+                {{ i.identification }}
+              </div>
+              <div class="col-md-6 h-100 text-center my-auto">
+                {{ i.id_type }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+        <p>You do not have any identification documkent loaded yet.</p>
+      {% endfor %}
     </div>
   </div>
 
-    <div class="card">
+    <div class="card card-shadow">
       <div class="card-body">
         <h5 class="card-title">Passport Information <a href="{% url 'Profile:PassportAddView' %}" class="badge badge-primary float-right">Add</a></h5>
-        <table class="table table-sm" id="passport">
-        <thead>
-          <tr>
-            <th class="align-middle text-center">Passport Number</th>
-            <th class="align-middle text-center">Issuing Country</th>
-            <th class="align-middle text-center">Expiry Date</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for p in passport  %}
-          <tr>
-            <td class="align-middle text-center">{{ p.passport_number }}</td>
-            <td class="align-middle text-center">{{ p.get_issue_display }}</td>
-            <td class="align-middle text-center">{{ p.expiry_date|date:"j M Y" }}</td>
-            <td class="align-middle text-center">
-                <a href="{% url 'Profile:PassportEditView' psp=p.slug tlt=p.talent.alias %}" class="badge badge-secondary badge-pill" style="width: 4rem;">Edit</a>
-                <form  action="{% url 'Profile:PassportDelete' pk=p.id tlt=p.talent.alias %}" method="post">
-                  {% csrf_token %}
-                  <button type="submit" class="badge badge-danger badge-pill" style="width: 4rem;">Remove</button>
-                </form>
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+
+        <div class="container">
+          <div class="row my-auto">
+            <div class="col-md-3 h-100 text-center my-auto">
+              <strong>Passport Number</strong>
+            </div>
+            <div class="col-md-4 h-100 text-center my-auto">
+              <strong>Issuing Country</strong>
+            </div>
+            <div class="col-md-3 h-100 text-center my-auto">
+              <strong>Expiry Date</strong>
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              <strong></strong>
+            </div>
+          </div>
+        </div>
+        {% for p in passport  %}
+        <div class="row">
+          <div class="card mt-1 card-hover" style="width: 100%;">
+            <div class="card-body small-pad">
+              <div class="row my-auto">
+                <div class="col-md-3 h-100 text-center my-auto">
+                  {{ p.passport_number }}
+                </div>
+                <div class="col-md-4 h-100 text-center my-auto">
+                  {{ p.get_issue_display }}
+                </div>
+                <div class="col-md-3 h-100 text-center my-auto">
+                  {{ p.expiry_date|date:"j M Y" }}
+                </div>
+                <div class="col-md-2 h-100 text-center my-auto">
+                  <a href="{% url 'Profile:PassportEditView' psp=p.slug tlt=p.talent.alias %}" class="badge badge-secondary badge-pill" style="width: 4rem;">Edit</a>
+                  <form  action="{% url 'Profile:PassportDelete' pk=p.id tlt=p.talent.alias %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="badge badge-danger badge-pill" style="width: 4rem;" onclick="return confirm('Remove passport {{ p.passport_number }} - Are you sure?');">Remove</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+          <p>You do not have any identification documkent loaded yet.</p>
+        {% endfor %}
+
       </div>
     </div>
   </div>
 <br>
 <div class="card-header">Contact Information</div>
 
-<div class="card-group">
-  <div class="card">
-    <div class="card-body">
+  <div class="card-group">
+    <div class="card card-shadow">
+      <div class="container">
+      <div class="row">
+        <div class="col-4 col-no-pad">
+    <div class="card">
+      <div class="card-body">
+        <div class="btn-group float-right">
+          <div class="btn-group mr-2">
+            <a href="{% url 'Profile:PhysicalAddress' %}" class="badge badge-secondary">
+              Edit
+            </a>
+          </div>
+          <div class="btn-group mr-2">
+            <a href="{% url 'Profile:CopyPhyAdd' %}" class="badge badge-dark" data-toggle="tooltip" title="Copy Physical Address to Postal Address" onclick="return confirm('This will over write all information currently in your postal address - Are you sure?');">
+              Copy
+            </a>
+          </div>
+        </div>
+        <h5 class="card-title">
+          Physical Address
+        </h5>
 
-      <h5 class="card-title">Physical Address <a href="{% url 'Profile:PhysicalAddress' %}" class="badge badge-secondary float-right">Edit</a></h5>
-      <table class="table table-sm">
-        <thead>
-        </thead>
-        <tbody>
-          <tr>
-            <th>Line 1</th>
-            <td>{{ physical.line1 }}</td>
-          </tr>
-          <tr>
-            <th>Line 2</th>
-            <td>{{ physical.line2 }}</td>
-          </tr>
-          <tr>
-            <th>Line 3</th>
-            <td>{{ physical.line3 }}</td>
-          </tr>
-          <tr>
-            <th>Country</th>
-            <td>{{ physical.get_country_display }}</td>
-          </tr>
-          <tr>
-            <th>Region</th>
-            <td>{{ physical.region.region }}</td>
-          </tr>
-          <tr>
-            <th>City</th>
-            <td>{{ physical.city.city }}</td>
-          </tr>
-          <tr>
-            <th>Suburb</th>
-            <td>{{ physical.suburb.suburb }}</td>
-          </tr>
-          <tr>
-            <th>Postal Code</th>
-            <td>{{ physical.code }}</td>
-          </tr>
-        </tbody>
-      </table>
-
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-body">
-      <h5 class="card-title">Postal Address <a href="{% url 'Profile:PostalAddress' %}" class="badge badge-secondary float-right">Edit</a></h5>
-      <table class="table table-sm">
-        <thead>
-        </thead>
-        <tbody>
-          <tr>
-            <th>Line 1</th>
-            <td>{{ postal.line1 }}</td>
-          </tr>
-          <tr>
-            <th>Line 2</th>
-            <td>{{ postal.line2 }}</td>
-          </tr>
-          <tr>
-            <th>Line 3</th>
-            <td>{{ postal.line3 }}</td>
-          </tr>
-          <tr>
-            <th>Country</th>
-            <td>{{ postal.get_country_display }}</td>
-          </tr>
-          <tr>
-            <th>Region</th>
-            <td>{{ postal.region.region }}</td>
-          </tr>
-          <tr>
-            <th>City</th>
-            <td>{{ postal.city.city }}</td>
-          </tr>
-          <tr>
-            <th>Suburb</th>
-            <td>{{ postal.suburb.suburb }}</td>
-          </tr>
-          <tr>
-            <th>Postal Code</th>
-            <td>{{ postal.code }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-body">
-      <h5 class="card-title">Phone Numbers <a href="{% url 'Profile:PhoneNumberAdd' %}" class="badge badge-primary float-right">Add</a></h5>
-      <div id="phone">
         <table class="table table-sm">
-          <col width="20%">
-          <col width="40%">
-          <col width="20%">
           <thead>
-            <tr>
-              <th>Type</th>
-              <th>Number</th>
-            </tr>
           </thead>
-          {% for phone in pnumbers %}
           <tbody>
             <tr>
-              <td>{{ phone.type }}</td>
-              <td>{{ phone.number }}</td>
-              <td>
-                <form  action="{% url 'Profile:PhoneDelete' phone.id %}" method="post">
-                  {% csrf_token %}
-                  <button type="submit" class="badge badge-danger badge-pill">Remove</button>
-                </form>
-              </td>
+              <th>Line 1</th>
+              <td>{{ physical.line1 }}</td>
             </tr>
-            {% empty %}
-            <p>No Phone numbers entered.</p>
-            {% endfor %}
+            <tr>
+              <th>Line 2</th>
+              <td>{{ physical.line2 }}</td>
+            </tr>
+            <tr>
+              <th>Line 3</th>
+              <td>{{ physical.line3 }}</td>
+            </tr>
+            <tr>
+              <th>Country</th>
+              <td>{{ physical.get_country_display }}</td>
+            </tr>
+            <tr>
+              <th>Region</th>
+              <td>{{ physical.region.region }}</td>
+            </tr>
+            <tr>
+              <th>City</th>
+              <td>{{ physical.city.city }}</td>
+            </tr>
+            <tr>
+              <th>Suburb</th>
+              <td>{{ physical.suburb.suburb }}</td>
+            </tr>
+            <tr>
+              <th>Postal Code</th>
+              <td>{{ physical.code }}</td>
+            </tr>
           </tbody>
         </table>
       </div>
-
+      </div>
+    </div>
+    <div class="col-4 col-no-pad">
+    <div class="card">
+      <div class="card-body">
+        <div class="btn-group float-right">
+          <div class="btn-group mr-2">
+            <a href="{% url 'Profile:PostalAddress' %}" class="badge badge-secondary float-right">
+              Edit
+            </a>
+          </div>
+          <div class="btn-group mr-2">
+            <a href="{% url 'Profile:CopyPhyAdd' %}" class="badge badge-dark" data-toggle="tooltip" title="Copy Physical Address" onclick="return confirm('This will over write all information currently in your postal address - Are you sure?');">
+              Copy
+            </a>
+          </div>
+        </div>
+        <h5 class="card-title">
+          Postal Address
+        </h5>
+        <table class="table table-sm">
+          <thead>
+          </thead>
+          <tbody>
+            <tr>
+              <th>Line 1</th>
+              <td>{{ postal.line1 }}</td>
+            </tr>
+            <tr>
+              <th>Line 2</th>
+              <td>{{ postal.line2 }}</td>
+            </tr>
+            <tr>
+              <th>Line 3</th>
+              <td>{{ postal.line3 }}</td>
+            </tr>
+            <tr>
+              <th>Country</th>
+              <td>{{ postal.get_country_display }}</td>
+            </tr>
+            <tr>
+              <th>Region</th>
+              <td>{{ postal.region.region }}</td>
+            </tr>
+            <tr>
+              <th>City</th>
+              <td>{{ postal.city.city }}</td>
+            </tr>
+            <tr>
+              <th>Suburb</th>
+              <td>{{ postal.suburb.suburb }}</td>
+            </tr>
+            <tr>
+              <th>Postal Code</th>
+              <td>{{ postal.code }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    </div>
+    <div class="col-4 col-no-pad">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Phone Numbers <a href="{% url 'Profile:PhoneNumberAdd' %}" class="badge badge-primary float-right">Add</a></h5>
+        <div id="phone">
+          <table class="table table-sm">
+            <col width="20%">
+            <col width="40%">
+            <col width="20%">
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Number</th>
+              </tr>
+            </thead>
+            {% for phone in pnumbers %}
+            <tbody>
+              <tr>
+                <td>{{ phone.type }}</td>
+                <td>{{ phone.number }}</td>
+                <td>
+                  <form  action="{% url 'Profile:PhoneDelete' phone.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="badge badge-danger badge-pill" onclick="return confirm('Remove {{ phone.number }} - Are you sure?');">Remove</button>
+                  </form>
+                </td>
+              </tr>
+              {% empty %}
+                <p>No Phone numbers entered.</p>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
     </div>
   </div>
+  </div>
+  </div>
+  </div>
+  <br>
+    <div class="card-group">
+      <div class="card card-shadow">
+        <div class="card-body">
+          <div class="btn-group float-right">
+            <div class="btn-group mr-2">
+              <a href="{% url 'Profile:WTR' %}" class="badge badge-secondary">
+                Add Country
+              </a>
+            </div>
+            <div class="btn-group mr-2">
+
+            </div>
+          </div>
+          <h5 class="card-title" id="WTR">
+            Willingness to Relocate
+          </h5>
+          <p>
+            Note: Relocation applies to positions that required you to be at a particular location. They do not apply for Freelancing or Consulting where you can take a short trip.
+          </p>
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th class="text-center">to Country</th>
+                <th class="text-center">Documents to Legally Work in Country</th>
+                <th class="text-left">Actions</th>
+              </tr>
+            </thead>
+            {% for wtr in relocate %}
+            <tbody>
+              <tr>
+                <td class="align-middle text-center">{{ wtr.country.name }}</td>
+                <td class="align-middle text-center">
+                  {% if wtr.documents == True %}
+                    I have all required documents and permits to legally work in {{ wtr.country.name }}.
+                  {% else %}
+                    I do not have all required documents or permits to work in {{ wtr.country.name }}.
+                  {% endif %}
+                </td>
+                <td class="align-middle text-center">
+                  <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                    <div class="btn-group mr-2" role="group" aria-label="First group">
+                      <form  action="{% url 'Profile:NotWTR' wtr.slug %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="badge badge-danger badge-pill" onclick="return confirm('I am NO LONGER willing to relocate to {{  wtr.country.name}}');" data-toggle="tooltip" title="I am NO LONGER willing to relocate to {{  wtr.country.name }}">
+                          <i class="fa fa-thumbs-o-down" aria-hidden="true" style="font-size:20px;"></i>
+                        </button>
+                      </form>
+                    </div>
+                  {% if wtr.documents == False %}
+                    <div class="btn-group mr-2" role="group" aria-label="First group">
+                      <form  action="{% url 'Profile:WTRDoc' wtr.slug %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="badge badge-success badge-pill" name="yes" onclick="return confirm('I confirm no longer have the required permits, visas and all other documents required to be employed in {{ wtr.country.name }}');" data-toggle="tooltip" title="Change document status to 'I do have the required documents'">
+                          <i class="fa fa-toggle-on" aria-hidden="true" style="font-size:20px;"></i>
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                  {% elif wtr.documents == True %}
+                    <div class="btn-group mr-2" role="group" aria-label="First group">
+                      <form  action="{% url 'Profile:WTRDoc' wtr.slug %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="badge badge-danger badge-pill" name="no" onclick="return confirm('I confirm that I have all required permits, visas and all other documents required to be employed in {{ wtr.country.name }}');" data-toggle="tooltip" title="Change document status to 'I no longer have the required documents'">
+                          <i class="fa fa-toggle-off" aria-hidden="true" style="font-size:20px;"></i>
+                        </button>
+                      </form>
+                    </div>
+                  {% endif %}
+                </div>
+                </td>
+              </tr>
+            {% empty %}
+              <tr class="align-middle text-center">
+                <td colspan="2">
+                  No locations other than your local area selected for seeking vacancies.
+                </td>
+              </tr>
+            </tbody>
+            {% endfor %}
+          </table>
+        </div>
+      </div>
+    </div>
 </div>
-<br>
 {% endblock content %}

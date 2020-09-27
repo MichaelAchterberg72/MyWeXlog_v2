@@ -34,26 +34,26 @@
     <div class="col-sm-6">
       <div class="card h-100">
         <div class="card-body">
-        <h5 class="card-title">Designation Summary</h5>
-        <p>This is a list of the hours you have logged against each designation.</p>
-        <table class="table table-sm">
-          <thead>
-            <tr>
-              <th>Designation</th>
-              <th class="align-middle text-center">Hours</th>
-              <th class="align-middle text-center">Quantity</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for key in dgn_set.items %}
+          <h5 class="card-title">Designation Summary</h5>
+          <p>This is a list of the hours you have logged against each designation.</p>
+          <table class="table table-sm">
+            <thead>
               <tr>
-                <td>{{ key.0 }}</td>
-                <td class="align-middle text-center">{{ key.1.sum }}</td>
-                <td class="align-middle text-center">{{ key.1.count }}</td>
+                <th>Designation</th>
+                <th class="align-middle text-center">Hours</th>
+                <th class="align-middle text-center">Quantity</th>
               </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {% for key in dgn_set.items %}
+                <tr>
+                  <td>{{ key.0 }}</td>
+                  <td class="align-middle text-center">{{ key.1.sum|intcomma }}</td>
+                  <td class="align-middle text-center">{{ key.1.count }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -75,8 +75,8 @@
               {% for key in cmp_set.items %}
                 <tr>
                   <td>{{ key.0 }}</td>
-                  <td class="align-middle text-center">{{ key.1.sum }}</td>
-                  <td class="align-middle text-center">{{ key.1.count }}</td>
+                  <td class="align-middle text-center">{{ key.1.sum|intcomma }}</td>
+                  <td class="align-middle text-center">{{ key.1.count|intcomma }}</td>
                 </tr>
               {% endfor %}
             </tbody>
@@ -104,8 +104,8 @@
               {% for key in prj_set.items %}
                 <tr>
                   <td>{{ key.0 }}</td>
-                  <td class="align-middle text-center">{{ key.1.sum }}</td>
-                  <td class="align-middle text-center">{{ key.1.count }}</td>
+                  <td class="align-middle text-center">{{ key.1.sum|intcomma }}</td>
+                  <td class="align-middle text-center">{{ key.1.count|intcomma }}</td>
                 </tr>
               {% endfor %}
             </tbody>

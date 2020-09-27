@@ -21,12 +21,6 @@
         <a href="{% url 'Talent:APV' tlt=request.user.alias vac='1ad9t2' %}" class="btn btn-success">Public Profile</a>
         &nbsp
         <a href="{% url 'Talent:Home' %}" class="btn btn-secondary">Experience Home</a>
-        <!--
-        <form  action="{% url 'BookList:BLB' %}?next={{ request.path|urlencode }}" method="post">
-          <input type="hidden" name="next" value="{{ request.GET.next }}">
-          {% csrf_token %}
-          <button type="submit" class="btn btn-secondary float-right">Back</button>
-        </form>   -->
       </div>
       <div class="btn-toolbar">
         <a href="{% url 'Talent:DPCSum' tlt %}" class="btn btn-primary">Designation, Project & Company Summary</a>
@@ -57,26 +51,18 @@
         <div class="card-body">
         <h5 class="card-title">Experience skills</h5>
         <p>This is a list of the hours you have logged against each skill.</p>
-        <table class="table table-hover table-sm">
-          <thead>
-            <tr>
-              <th>Skill</th>
-              <th class="align-middle text-center">Hours</th>
-              <th class="align-middle text-center" data-toggle="tooltip" title="The number of times claimed">Quantity</th>
-            </tr>
-          </thead>
-          <tbody>
+        <div class="float-right">
+          <input type="text" id="searchE" placeholder="Search..." data-toggle="tooltip" title="Search this list for a skill.">
+        </div>
+        <br>
+          <h5 class="text-center"><strong>Skill ( Hours )</strong></h5>
+          <ul class="list-group" id="experience">
             {% for key in exp_set.items %}
-              <tr>
-                <td>{{ key.0 }}</td>
-                <td class="align-middle text-center">{{ key.1.sum|intcomma }}</td>
-                <td class="align-middle text-center">{{ key.1.count }}</td>
+              <li class="list-group-item"><strong>{{ key.0 }}</strong>  ( {{ key.1.sum|intcomma }} )</li>
             {% empty %}
-                <td colspan="3">Nothing captured</td>
-              </tr>
+              <li>No experience captured</li>
             {% endfor %}
-          </tbody>
-        </table>
+          </ul>
         </div>
       </div>
     </div>
@@ -86,27 +72,68 @@
         <div class="card-body">
           <h5 class="card-title">Training Skills</h5>
           <p>This is a list of the time spent training on a skill.</p>
-          <table class="table table-hover table-sm">
-            <thead>
-              <tr>
-                <th>Skill</th>
-                <th class="align-middle text-center">Hours</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for key in edt_set.items %}
-                <tr>
-                  <td>{{ key.0 }}</td>
-                  <td class="align-middle text-center">{{ key.1|intcomma }}</td>
-              {% empty %}
-                  <td colspan="3">Nothing captured</td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+          <div class="float-right">
+            <input type="text" id="searchT" placeholder="Search..." data-toggle="tooltip" title="Search this list for a skill.">
+          </div>
+          <br>
+          <h5 class="text-center"><strong>Skill ( Hours )</strong></h5>
+          <ul class="list-group" id="training">
+            {% for key in edt_set.items %}
+              <li class="list-group-item"><strong>{{ key.0 }}</strong>  ( {{ key.1|intcomma }} )</li>
+            {% empty %}
+              <li>No experience captured</li>
+            {% endfor %}
+          </ul>
         </div>
       </div>
     </div>
   </div>
 
 {% endblock content %}
+
+{% block Script %}
+<script type="text/javascript">
+  var expList = document.getElementById('experience');
+  var trnList = document.getElementById('training');
+
+  var filterExp = document.getElementById('searchE');
+  var filterTrn = document.getElementById('searchT');
+
+  filterExp.addEventListener('keyup', filterExpItems);
+  filterTrn.addEventListener('keyup', filterTrnItems);
+
+  function filterExpItems(e){
+
+   var text = e.target.value.toLowerCase();
+
+   var expItems = expList.getElementsByTagName('li');
+
+   Array.from(expItems).forEach(function(expItem){
+     var expItemName = expItem.firstChild.textContent;
+
+     if(expItemName.toLowerCase().indexOf(text) != -1){
+       expItem.style.display = 'block';
+     } else {
+       expItem.style.display = 'none';
+     }
+ });
+}
+
+function filterTrnItems(e){
+
+   var text = e.target.value.toLowerCase();
+
+   var trnItems = trnList.getElementsByTagName('li');
+
+   Array.from(trnItems).forEach(function(trnItem){
+     var trnItemName = trnItem.firstChild.textContent;
+
+     if(trnItemName.toLowerCase().indexOf(text) != -1){
+       trnItem.style.display = 'block';
+     } else {
+       trnItem.style.display = 'none';
+     }
+  });
+}
+</script>
+{% endblock Script %}

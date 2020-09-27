@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<div class="card border-0">
+<div class="card card-shadow">
   <div class="card-body">
   <h4 class="">Welcome to the Enterprises home page!
     <span><p class="float-right">
@@ -22,54 +22,73 @@
       </a>
     </p>
     {% endif %}
-    <table class="table table-hover table-sm">
-      <col width="30%">
-      <col width="30%">
-      <col width="20%">
-      <col width="10%">
-      <col width="10%">
-      <thead>
-        <tr>
-          <th class="align-middle text-center">Name</th>
-          <th class="align-middle text-center">Website</th>
-          <th class="align-middle text-center">Rating</th>
-          <th class="align-middle text-center">Vote Count</th>
-          <th class="align-middle text-center"></th>
-        </tr>
-      </thead>
-      {% for c in pageitems %}
-      <tbody>
-        <tr>
-          <td class="align-middle text-left">{{ c.ename }}</td>
-          <td class="align-middle text-left"><a href="{{ c.website }}" target="_blank">{{ c.website|truncatechars:37 }}</a></td>
-          {% if request.user.subscription >= 2 %}
-            <td class="align-middle text-center">
-              {% if c.rate_count > 4 %}
-                {{ c.avg_rate }}
-              {% else %}
-                Ratings are calculated<br>from 5 or more votes.
-              {% endif %}
-            </td>
-            <td class="align-middle text-center">
-              {{ c.rate_count }}
-            </td>
-          {% else %}
-            <td class="align-middle text-center"><a href="{% url 'Payments:ActiveSubscription' %}">
-              <span class="badge badge-info text-wrap" style="width: 8rem;">
-                Active Subscription<br>required
-              </span></a>
-            </td>
-            <td class="align-middle text-center"><a href="{% url 'Payments:ActiveSubscription' %}">
-              <span class="badge badge-info text-wrap" style="width: 8rem;">
-                Active Subscription<br>required
-              </span></a>
-            </td>
-          {% endif %}
-          <td class="align-middle text-center"><a href="{% url 'Enterprise:BranchList' c.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 6rem;">List<br>Branches</a></td>
-        </tr>
-      </tbody>
-      {% endfor %}
-    </table>
+    <div class="container">
+      <div class="row my-auto">
+        <div class="col-md-3 h-100 text-center my-auto">
+          <strong>Name</strong>
+        </div>
+        <div class="col-md-3 h-100 text-center my-auto">
+          <strong>Website</strong>
+        </div>
+        <div class="col-md-3 h-100 text-center my-auto">
+          <strong>Rating</strong>
+        </div>
+        <div class="col-md-1 h-100 text-center my-auto">
+          <strong>Vote Count</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong></strong>
+        </div>
+      </div>
+    </div>
+    {% for c in pageitems %}
+    <div class="row">
+      <div class="card mt-2 card-hover" style="width: 100%;">
+        <div class="card-body">
+          <div class="row my-auto">
+            <div class="col-3 col-no-pad h-100 text-center my-auto">
+              {{ c.ename }}
+            </div>
+            <div class="col-3 col-no-pad h-100 text-center my-auto">
+              <a href="{{ c.website }}" target="_blank">{{ c.website|truncatechars:37 }}</a>
+            </div>
+            {% if request.user.subscription >= 2 %}
+              <div class="col-3 col-no-pad h-100 text-center my-auto">
+                {% if c.rate_count > 4 %}
+                  {{ c.avg_rate }}
+                {% else %}
+                  Ratings are calculated<br>from 5 or more votes.
+                {% endif %}
+              </div>
+              <div class="col-1 col-no-pad h-100 text-center my-auto">
+                {{ c.rate_count }}
+              </div>
+            {% else %}
+              <div class="col-3 col-no-pad h-100 text-center my-auto">
+                <a href="{% url 'Payments:ActiveSubscription' %}">
+                <span class="badge badge-info text-wrap" style="width: 8rem;">
+                  Active<br>Subscription<br>required
+                </span></a>
+              </div>
+              <div class="col-1 col-no-pad h-100 text-left my-auto">
+                <a href="{% url 'Payments:ActiveSubscription' %}">
+                <span class="badge badge-info text-wrap" style="width: 8rem;">
+                  Active<br>Subscription<br>required
+                </span></a>
+              </div>
+            {% endif %}
+
+            <div class="col-2 col-no-border h-100 text-right my-auto">
+              <a href="{% url 'Enterprise:BranchList' c.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 6rem;">List<br>Branches</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+      <p>There are currently no enterprises listed.</p>
+    {% endfor %}
+
     <p>&nbsp</p>
 
     <nav aria-label="Page navigation">

@@ -9,6 +9,8 @@
       <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700&display=swap" rel="stylesheet">
       <link href="{% static 'css/wexlog_css.css' %}" rel="stylesheet">
       <link rel="stylesheet" href="{% static 'css/dark-mode.css' %}">
+      <!-- Favicon -->
+      <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}"/>
 
     <title>{% block title %}MyWeXlog{% endblock title %}</title>
 
@@ -29,14 +31,11 @@
     {% block content %}
     {% endblock content %}
   </div>
-
-
-  <nav class="navbar fixed-bottom navbar-light bg-light">
-    <div class="container">
-
+  <nav class="sticky-bottom bottom-right-navbar" style="height: 5rem;">
+    <div class="">
+      <img src="{% static 'images/mywexlog-logo.png' %}" class="avatar" style="height: 10rem;opacity:0.2;">
     </div>
   </nav>
-
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

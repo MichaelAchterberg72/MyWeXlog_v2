@@ -14,7 +14,7 @@ from django_select2.forms import (
 
 
 from .models import (
-            Profile, Email, PhysicalAddress, PostalAddress, PhoneNumber, OnlineRegistrations, SiteName, FileUpload, IdentificationDetail, IdType, PassportDetail, LanguageTrack, BriefCareerHistory
+            Profile, Email, PhysicalAddress, PostalAddress, PhoneNumber, OnlineRegistrations, SiteName, FileUpload, IdentificationDetail, IdType, PassportDetail, LanguageTrack, BriefCareerHistory, WillingToRelocate
           )
 from enterprises.models import Enterprise, Branch
 from locations.models import Region, City, Suburb
@@ -22,6 +22,15 @@ from talenttrack.models import Designation
 from users.models import CustomUser
 from db_flatten.models import LanguageList
 from users.models import CustomUser, ExpandedView
+
+
+class WillingToRelocateForm(forms.ModelForm):
+    class Meta:
+        model = WillingToRelocate
+        fields = ('country', 'documents')
+        labels = {
+            'documents': '',
+        }
 
 
 class ExpandedIntroWalkthroughForm(forms.ModelForm):

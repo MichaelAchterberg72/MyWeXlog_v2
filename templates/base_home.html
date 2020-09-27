@@ -20,10 +20,13 @@
       <link rel="stylesheet" href="{% static 'css/wexlog_navbar_css.css' %}">
       <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700&display=swap" rel="stylesheet">
       <link rel="stylesheet" href="{% static 'css/dark-mode.css' %}">
+        <!-- Select2 Stylsheet -->
+      <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet"/>
+      <!-- Favicon -->
+      <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}"/>
 
 
-
-      <title>{% block title %}MyWeXlog Dashboard{% endblock title %}</title>
+      <title>{% block title %}MyWeXlog{% endblock title %}</title>
 
       </style>
   {% block Style %}
@@ -177,7 +180,6 @@
     </nav>
 
   <main>
-    <div class="main-top">
     <div class="container pt-3">
       <p>
         <div class="custom-control custom-switch">
@@ -196,7 +198,7 @@
   </main>
 
   {% if request.user.is_authenticated %}
-  <nav class="sticky-top navbar-light dark top-right-navbar right" style="height: 5rem;">
+  <nav class="sticky-top navbar-light bg-light top-right-navbar" style="height: 5rem;">
     <div class="">
 
       <a class="navbar-brand" href="{% url 'Feedback:FeedBack' %}?next={{ request.path|urlencode }}"><i class="fa fa-bullhorn" aria-hidden="true" style="font-size:30px;color:black" data-toggle="tooltip" title="We love to hear your feedback!"></i></a>
@@ -212,9 +214,9 @@
       </button>
         <div class="dropdown-menu dropdown-menu-right">
           <a class="dropdown-item"  href="{% url 'Profile:ProfileView' %}">View Profile</a>
-
           <a class="dropdown-item"  href="{% url 'Invitation:FlatInvite' %}" target="_blank">Invite Someone</a>
-
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item"  href="{% url 'Profile:IntroIntroduction' %}">Introduction Walkthrough</a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item"  href="{% url 'account_email' %}">Manage email</a>
           <a class="dropdown-item"  href="{% url 'account_change_password' %}">Change Password</a>
@@ -248,6 +250,7 @@
       <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
     <!-- Local JS -->
       <script src="{% static 'js/tooltip.js' %}"></script>
+      <script src="{% static 'js/wexlog-js.js' %}"></script>
       <script src="{% static 'js/copy_text.js' %}"></script>
       <script src="{% static 'js/dark-mode-switch.min.js' %}"></script>
 

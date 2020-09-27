@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<div class="card border-0">
+<div class="card card-shadow">
     <div class="card-body">
       <div class="float-right">
         <a href="{% url 'BookList:BookListHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Back</a>
@@ -34,9 +34,15 @@
                     {{ d.title }}
                   </td>
                   <td>
-                    <a href="{% url 'BookList:BookAddList' d.slug %}?next={{ request.path|urlencode }}" class="badge badge-primary" style="width: 9rem;">
-                      Mark as Read
-                    </a>
+                    {% if rbk %}
+                      <button class="badge badge-success" style="width: 7rem;">
+                        Read
+                      </button>
+                    {% else %}
+                      <a href="{% url 'BookList:BookAddList' d.slug %}?next={{ request.path|urlencode }}" class="badge badge-primary" style="width: 9rem;">
+                        Mark as Read
+                      </a>
+                    {% endif %}
                   </td>
 
                 </tr>

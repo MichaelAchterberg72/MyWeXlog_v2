@@ -1,0 +1,82 @@
+{% extends "wexlog_home_3/base_wexlog_home_3.html" %}
+{% load humanize %}
+{% load static %}
+
+{% block content %}
+
+<section id="header-block" class="">
+  <div class="jumbotron jumbotron-fluid">
+    <div class="container">
+    </div>
+  </div>
+</section>
+
+<section id="find-the-right-person" class="">
+  <div class="jumbotron-fluid">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="card border-0 bg-transparent">
+            <div class="card border-0 bg-transparent">
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="card border-0 bg-transparent">
+            <div class="card border-0 bg-transparent">
+              <div class="card-clear">
+                <div class="card-body">
+                  <div class="title3">
+                    <h5>SOMETHING WENT WRONG!</h5>
+                  </div>
+                <p class="card-text">You were directed here due to your having not accessed PayPal for payment or alternativly you cancelled your subscription payment to MyWeXlog.com.</p>
+                <p>You can retry by clicking <a href="{% url 'Payments:PassiveSubscription' %}">here</a>.</p>
+                <p>Please note that if you elect to not subscribe you will still be able to enjoy the bennefits of a free subscription plan by logging on <a href="{% url 'account_login' %}">here</a>.</p>
+                <p><a href="{% url 'Payments:PassiveSubscription' %}" class="btn btn-primary p-3">Try Again</a></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p>&nbsp</p>
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="card border-0 bg-transparent">
+              <div class="card border-0 bg-transparent">
+              </div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="card border-0 bg-transparent">
+            <div class="card border-0 bg-transparent">
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="card border-0 bg-transparent">
+                    <a href="https://mywexlog.com/" class="btn btn-outline-primary btn-block">Back to Home Page ..</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p>&nbsp</p>
+      <p>&nbsp</p>
+    </div>
+  </div>
+</section>
+
+<section id="questions">
+  <div class="jumbotron jumbotron-fluid">
+    <div class="container">
+      <div class="row">
+        <p>&nbsp</p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock content %}

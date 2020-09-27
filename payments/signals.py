@@ -3,7 +3,7 @@ from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from users.models import CustomUser, CustomUserSettings
+from users.models import CustomUser, CustomUserSettings, ExpandedView
 
 from paypal.standard.ipn.signals import valid_ipn_received
 
@@ -27,9 +27,10 @@ def show_me_the_money(sender, instance, **kwargs):
     username = ipn_username.email
     tlt = ipn_username.pk
     CustomUserSettingsUser = CustomUserSettings.objects.get(talent=ipn_username.pk)
+    instance2 = ExpandedView.objects.get(talent=ipn_username.pk)
 
     if ipn_obj.item_name == "MyWeXlog Passive Subscription":
-        price = "4.00"
+        price = "3.99"
 
     elif ipn_obj.item_name == "MyWeXlog 6 Month Passive Subscription":
         price = "22.00"
@@ -47,7 +48,7 @@ def show_me_the_money(sender, instance, **kwargs):
         price = "57.96"
 
     elif ipn_obj.item_name == "MyWeXlog Passive Subscription - Beta":
-        price = "4.00" or "0.00"
+        price = "3.99" or "0.00"
 
     elif ipn_obj.item_name == "MyWeXlog 6 Month Passive Subscription - Beta":
         price = "22.00" or "0.00"
@@ -98,6 +99,8 @@ def show_me_the_money(sender, instance, **kwargs):
                         if "Active" in ipn_obj.item_name:
                             ipn_username.subscription = 2
                             ipn_username.paid = True
+                            ipn_username.free_month = False
+                            instance2.trial_expired = True
                             ipn_username.paid_date = timezone.now()
 #                            SubscriptionSignupTask.delay(tlt)
 #                            SubscriptionUpgradeRefund(tlt, username)
@@ -120,6 +123,8 @@ def show_me_the_money(sender, instance, **kwargs):
                     elif "Passive" in ipn_obj.item_name:
                         ipn_username.subscription = 1
                         ipn_username.paid = True
+                        ipn_username.free_month = False
+                        instance2.trial_expired = True
                         ipn_username.paid_date = timezone.now()
                         if "Monthly" in ipn_obj.item_name:
                             ipn_username.paid_type = 1
@@ -139,6 +144,8 @@ def show_me_the_money(sender, instance, **kwargs):
                     elif "Active" in ipn_obj.item_name:
                         ipn_username.subscription = 2
                         ipn_username.paid = True
+                        ipn_username.free_month = False
+                        instance2.trial_expired = True
                         ipn_username.paid_date = timezone.now()
 
                         if "Monthly" in ipn_obj.item_name:
@@ -212,6 +219,7 @@ def show_me_the_money(sender, instance, **kwargs):
 
 
     ipn_username.save()
+    instance2.save()
 
 
 valid_ipn_received.connect(show_me_the_money)

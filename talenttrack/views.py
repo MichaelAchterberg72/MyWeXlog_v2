@@ -38,7 +38,7 @@ from marketplace.models import(
 from enterprises.models import Branch
 from project.models import ProjectData
 from Profile.models import (
-        BriefCareerHistory, Profile, LanguageTrack, PhysicalAddress
+        BriefCareerHistory, Profile, LanguageTrack, PhysicalAddress, WillingToRelocate
 )
 from booklist.models import ReadBy
 from users.models import CustomUser
@@ -1105,6 +1105,7 @@ def ActiveProfileView(request, tlt, vac):
     membership_qs_count = membership_qs.count()
     bslist_qs = BidShortList.objects.filter(Q(talent__alias=tlt) & Q(scope__ref_no=vac))
     int_list = BidInterviewList.objects.filter(Q(talent__alias=tlt) & Q(scope__ref_no=vac))
+    wtr_qs = WillingToRelocate.objects.filter(talent__alias=tlt)
 
     #Project Summary
     prj = exp.values_list('project', flat=True).distinct('project')
@@ -1176,7 +1177,7 @@ def ActiveProfileView(request, tlt, vac):
 
     template = 'talenttrack/active_profile_view.html'
     context = {
-        'tlt': tlt, 'bch': bch, 'bch_count': bch_count, 'pfl': pfl, 'padd': padd,'vacse_set': vacse_set, 'vacst_set': vacst_set, 'exp': exp, 'bkl': bkl, 'edtexp': edtexp, 'edtexp_count': edtexp_count, 'bkl_count': bkl_count, 'prj_set': prj_set, 'prj_count': prj_count, 'bid_qs': bid_qs, 'achievement_qs': achievement_qs, 'achievement_qs_count': achievement_qs_count, 'language_qs': language_qs, 'membership_qs': membership_qs, 'membership_qs_count': membership_qs_count, 'bslist_qs': bslist_qs, 'vacancy': vacancy, 'int_list': int_list, 'als': als, 'vac': vac,
+        'tlt': tlt, 'bch': bch, 'bch_count': bch_count, 'pfl': pfl, 'padd': padd,'vacse_set': vacse_set, 'vacst_set': vacst_set, 'exp': exp, 'bkl': bkl, 'edtexp': edtexp, 'edtexp_count': edtexp_count, 'bkl_count': bkl_count, 'prj_set': prj_set, 'prj_count': prj_count, 'bid_qs': bid_qs, 'achievement_qs': achievement_qs, 'achievement_qs_count': achievement_qs_count, 'language_qs': language_qs, 'membership_qs': membership_qs, 'membership_qs_count': membership_qs_count, 'bslist_qs': bslist_qs, 'vacancy': vacancy, 'int_list': int_list, 'als': als, 'vac': vac, 'wtr_qs': wtr_qs,
         }
     return render(request, template, context)
 
@@ -1369,6 +1370,7 @@ def profile_view(request, tlt):
     language_qs = LanguageTrack.objects.filter(talent__alias=tlt).order_by('-language')
     membership_qs = LicenseCertification.objects.filter(talent__alias=tlt).order_by('-issue_date')[:6]
     membership_qs_count = membership_qs.count()
+    wtr_qs = WillingToRelocate.objects.filter(talent__alias=tlt)
 
     #Project Summary
     prj = exp.values_list('project', flat=True).distinct('project')
@@ -1388,7 +1390,7 @@ def profile_view(request, tlt):
 
     template = 'talenttrack/active_profile_view_light.html'
     context = {
-        'tlt': tlt, 'bch': bch, 'bch_count': bch_count, 'pfl': pfl, 'padd': padd, 'exp': exp, 'bkl': bkl, 'edtexp': edtexp, 'edtexp_count': edtexp_count, 'bkl_count': bkl_count, 'prj_set': prj_set, 'prj_count': prj_count, 'achievement_qs': achievement_qs, 'achievement_qs_count': achievement_qs_count, 'language_qs': language_qs, 'membership_qs': membership_qs, 'membership_qs_count': membership_qs_count, 'als': als, 'vac': vac,
+        'tlt': tlt, 'bch': bch, 'bch_count': bch_count, 'pfl': pfl, 'padd': padd, 'exp': exp, 'bkl': bkl, 'edtexp': edtexp, 'edtexp_count': edtexp_count, 'bkl_count': bkl_count, 'prj_set': prj_set, 'prj_count': prj_count, 'achievement_qs': achievement_qs, 'achievement_qs_count': achievement_qs_count, 'language_qs': language_qs, 'membership_qs': membership_qs, 'membership_qs_count': membership_qs_count, 'als': als, 'vac': vac, 'wtr_qs': wtr_qs,
         }
     return render(request, template, context)
 
@@ -1856,7 +1858,7 @@ def ClientSelectView(request, pk):
         response_content = list(people.values('id','display_text'))
 
         return JsonResponse(response_content, safe=False)
-        
+
     form = WorkClientSelectForm(request.POST or None, pwd=filt)
 
     if request.method == 'POST':

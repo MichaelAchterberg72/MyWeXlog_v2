@@ -15,32 +15,72 @@
     </form>
     </div>
     <h3>Confirmation as Client</h3>
-    <table class="table table-sm">
-      <thead>
-        <tr>
-          <th class="align-middle text-center">Date<br>Captured</th>
-          <th class="align-middle text-center">Requested<br>By</th>
-          <th class="align-middle text-center">Date<br>Reviewed</th>
-          <th class="align-middle text-center">Company<br>Branch</th>
-          <th class="align-middle text-center">My<br>Response</th>
-          <th class="align-middle text-center" data-toggle="tooltip" data-placement="top" title="You can edit if entry is less than {{ age }} days old">Edit</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for item in pageitems %}
-          <tr>
-            <td rowspan="2" class="align-middle text-center">{{ item.date_captured|date:'j M Y' }}</td>
-            <td class="align-middle text-center">{{ item.experience.talent.get_full_name }}</td>
-            <td class="align-middle text-center">
-              {% if item.confirm == 'S' %}
-                Pending
-              {% else %}
-                {{ item.date_confirmed|date:'j M Y' }}
-              {% endif %}
-            </td>
-            <td>1-{{ item.experience.company.name }}<br>2-{{ item.experience.companybranch.name }}</td>
-            <td class="align-middle text-center">{{ item.get_confirm_display }}</td>
-            <td rowspan="2"  class="align-middle text-center">
+    <div class="container">
+      <div class="row">
+        <div class="col-1 col-no-pad h-100 text-center my-auto">
+          <strong>Date Captured</strong>
+        </div>
+        <div class="col-10 col-no-pad h-100 text-center my-auto">
+          <div class="row">
+            <div class="col-3 h-100 text-center my-auto">
+              <strong>Requested By</strong>
+            </div>
+            <div class="col-3 col-no-pad h-100 text-center my-auto">
+              <strong>Date Reviewed</strong>
+            </div>
+            <div class="col-4 col-no-pad h-100 text-center my-auto">
+              <strong>1-Course<br>2-Topic</strong>
+            </div>
+            <div class="col-2 col-no-pad h-100 text-right my-auto">
+              <strong>My Response</strong>
+            </div>
+          </div>
+        </div>
+        <div class="col-1 col-no-pad h-100 text-center my-auto">
+          <strong><span data-toggle="tooltip" data-placement="top" title="You can edit if entry is less than {{ age }} days old">Edit</span></strong>
+        </div>
+      </div>
+    </div>
+    {% for item in pageitems %}
+    <div class="row">
+      <div class="card mt-1 card-hover" style="width: 100%;">
+        <div class="card-body small-pad">
+          <div class="row my-auto">
+            <div class="col-md-1 h-100 text-center my-auto">
+              {{ item.date_captured|date:'j M Y' }}
+            </div>
+            <div class="col-md-10 h-100 text-center my-auto">
+              <div class="row my-auto">
+                <div class="col-3 col-no-pad h-100 text-center my-auto">
+                  {{ item.experience.talent.get_full_name }}
+                </div>
+                <div class="col-3 col-no-pad h-100 text-center my-auto">
+                  {% if item.confirm == 'S' %}
+                    Pending
+                  {% else %}
+                    {{ item.date_confirmed|date:'j M Y' }}
+                  {% endif %}
+                </div>
+                <div class="col-5 col-no-pad h-100 text-left my-auto">
+                  1-{{ item.experience.company.ename }}<br>2-{{ item.experience.companybranch.name }}
+                </div>
+                <div class="col-1 col-no-pad h-100 text-center my-auto">
+                  {{ item.get_confirm_display }}
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12 h-100 text-left my-auto">
+                  <br>
+                  <p class="short-paragraph"><strong>Comments:</strong></p>
+                    {% if item.comments %}
+                      {{ item.comments }}
+                    {% else %}
+                      No Comment made
+                    {% endif %}
+                </div>
+              </div>
+            </div>
+            <div class="col-md-1 h-100 text-center my-auto">
               {% if item.locked == False %}
                 <a href="{% url 'Profile:ClientEdit' item.slug %}?next={{ request.path|urlencode }}">
                   <i class="fa fa-pencil-square-o" aria-hidden="true"style="font-size:30px;color:black" data-toggle="tooltip" data-placement="top" title="Edit"></i>
@@ -48,26 +88,16 @@
               {% else %}
                 <a href="#"><i class="fa fa-lock" aria-hidden="true"style="font-size:30px;color:black" data-toggle="tooltip" data-placement="top" title="Locked: cannot edit"></i></a>
               {% endif %}
-            </td>
-          </tr>
-          <tr>
-            <td colspan="4">
-              <strong>
-                {% if item.comments %}
-                  {{ item.comments }}
-                {% else %}
-                  No Comment made
-                {% endif %}
-              </strong>
-              </td>
-          </tr>
-        {% empty %}
-          <tr>
-            <th colspan="6" class="align-middle text-center">No Request received</th>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    {% empty %}
+      <p>No Request received.</p>
+    {% endfor %}
+
     <p>&nbsp</p>
 
     <nav aria-label="Page navigation">

@@ -21,8 +21,8 @@
     <h3 class="card-title">Talent Dashboard for {{ scope.title }} ({{ scope.ref_no }})</h3>
     <br>
 </div>
-    <div class="card border-0">
-      <div class="card-body">
+    <div class="card card-shadow">
+      <div id='suitable' class="card-body">
         {% if wit_qs %}
           {% for a in wit_qs %}
             {% if a.tlt_response == 'A' or a.tlt_response == 'P' or a.tlt_response == 'C' %}
@@ -35,62 +35,78 @@
           <h4>Suitable Applicants</h4>
         {% endif %}
         <p>There are a total of {{ interview_s_count }} pending interviews listed here.</p>
-        <table class="table table-hover table-sm">
-           <col width="15%">
-           <col width="5%">
-           <col width="5%">
-           <col width="1%">
-           <col width="8%">
-           <col width="45%">
-           <col width="10%">
-           <thead>
-             <tr>
-               <th class="align-middle text-center">Alias</th>
-               <th class="align-middle text-center">Experience</th>
-               <th class="align-middle text-center">Training</th>
-               <th class="align-middle text-center">Books Read</th>
-               <th class="align-middle text-center">Rate</th>
-               <th class="align-middle text-left">Motivation</th>
-               <th class="align-middle text-center">Action</th>
-             </tr>
-           </thead>
-           <tbody>
-             {% for sl in pageitems %}
-               <tr>
-                 <td class="align-middle text-center">
-                   {% if sl.1.count > 1 %}
-                     {{ sl.1.ro.0.4 }}<br><strong>{{ sl.1.score }}</strong><br>(by {{ sl.1.count }} people)
-                   {% else %}
-                     {{ sl.1.ro.0.4 }}<br><strong>Not Rated</strong><br>(by < 5 people)
-                   {% endif %}
-                 </td>
-                 <td class="align-middle text-center">{{ sl.1.we|intcomma }}<br>(<strong>{{ sl.1.s_no }}</strong> skills)</td>
-                 <td class="align-middle text-center">{{ sl.1.te|intcomma }}</td>
-                 <td class="align-middle text-center">{{ sl.1.rb }}</td>
-                 <td class="align-middle text-center">{{ sl.1.ro.0.1 }} <strong>{{ sl.1.ro.0.0|intcomma }}</strong> {{ sl.1.ro.0.2 }}</td>
-                 <td class="align-middle">{{ sl.1.ro.0.3|truncatechars:200 }}</td>
-                 <td class="align-middle text-center">
-                   <p>
-                     <a href="{% url 'Talent:APV' tlt=sl.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill float-right" style="width: 6rem">View Profile</a>
-                     {% if active == 'False' %}
-                       <form  action="{% url 'MarketPlace:SuitableVacAssign' tlt=sl.1.ro.0.4 vac=scope.ref_no %}" method="post">
-                         {% csrf_token %}
-                         <button type="submit" class="badge badge-success badge-pill float-right" style="width: 6rem">Assign</button>
-                         <a href="{% url 'MarketPlace:SuitableNotSuitable' tlt=sl.1.ro.0.4 vac=scope.ref_no %}" class="badge badge-danger badge-pill float-right" style="width: 6rem">Not Suitable</a>
-                       </form>
-                     {% else %}
-                       <button type="submit" class="badge badge-success badge-pill float-right" style="width: 6rem">Pending</button>
-                     {% endif %}
-                   </p>
-                 </td>
-               </tr>
-             {% empty %}
-               <tr>
-                 <td colspan="7">No talent identified or selected at the moment.</td>
-               </tr>
-             {% endfor %}
-           </tbody>
-         </table>
+        <div class="row">
+          <div class="col-12">
+          {% if suitable_applicants_list_view %}
+            <form  action="{% url 'MarketPlace:SuitableApplicanctFLExpand' vac=scope.ref_no %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-primary float-right" style="width:8rem;">Expanded</button>
+            </form>
+          {% else %}
+            <form  action="{% url 'MarketPlace:SuitableApplicanctFLExpand' vac=scope.ref_no %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-primary float-right" style="width:8rem;">List</button>
+            </form>
+          {% endif %}
+          </div>
+        </div>
+
+          {% if suitable_applicants_list_view %}
+            {% include 'marketplace/list_view_headings.html' %}
+            {% for key in pageitems %}
+            <div class="row">
+              <div class="card mt-1 card-hover" style="width: 100%;">
+                <div class="card-body small-pad">
+                  <div class="row my-auto">
+                    {% include 'marketplace/list_view_fields.html' %}
+                    <div class="col-1 col-no-pad h-100 text-center my-auto">
+                      {% if active == 'False' %}
+                        <form  action="{% url 'MarketPlace:SuitableVacAssign' tlt=key.1.ro.0.4 vac=scope.ref_no %}" method="post">
+                          {% csrf_token %}
+                          <button type="submit" class="badge badge-success badge-pill float-right" style="width: 6rem">Assign</button>
+                          <a href="{% url 'MarketPlace:SuitableNotSuitable' tlt=key.1.ro.0.4 vac=scope.ref_no %}" class="badge badge-danger badge-pill float-right" style="width: 6rem">Not Suitable</a>
+                        </form>
+                      {% else %}
+                        <button type="submit" class="badge badge-success badge-pill float-right" style="width: 6rem">Pending</button>
+                      {% endif %}
+                      <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill float-right" style="width: 6rem">View Profile</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% empty %}
+              <p>No talent identified or selected at the moment.</p>
+            {% endfor %}
+            {% else %}'
+            {% for key in pageitems %}
+            <div class="row">
+              <div class="card mt-1 card-hover" style="width: 100%;">
+                <div class="card-body small-pad">
+                  {% include 'marketplace/expanded_view_fields.html' %}
+                  <div class="row my-auto">
+                    <div class="col-md-12 h-100">
+                      <div class="row my-auto float-right">
+                        {% if active == 'False' %}
+                          <form  action="{% url 'MarketPlace:SuitableVacAssign' tlt=key.1.ro.0.4 vac=scope.ref_no %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-success" style="width: 10rem">Assign</button>
+                            <a href="{% url 'MarketPlace:SuitableNotSuitable' tlt=key.1.ro.0.4 vac=scope.ref_no %}" class="btn btn-outline-danger" style="width: 10rem">Not Suitable</a>
+                          </form>&nbsp
+                        {% else %}
+                          <button type="submit" class="btn btn-outline-success" style="width: 10rem">Pending</button>
+                        {% endif %}&nbsp
+                        <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="btn btn-outline-secondary" style="width: 10rem">View Profile</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% empty %}
+              <p>No talent identified or selected at the moment.</p>
+            {% endfor %}
+            {% endif %}
 
          <nav aria-label="Page navigation">
           {% if pageitems.has_other_pages %}

@@ -6,8 +6,11 @@
 {% block title %}{{block.super}}-Comment{% endblock title %}
 
 {% block content %}
-<div class="container">
+<div class="card card-shadow">
+  <div class="card-body">
   <h3>Comments for {{ instance.scope.title }} and {{ instance.talent.alias }}</h3>
+  <br>
+  <p><strong>These comments are for your own reference only. Only you will be able to see them.</strong></p>
   <form method="post" enctype="multipart/form-data">
     <input type="hidden" name="next" value="{{ request.GET.next }}">
     {% csrf_token %}
@@ -28,7 +31,6 @@
       </div>
     </div>
   </div>
-
 {% endblock content %}
 {% block Script %}
 

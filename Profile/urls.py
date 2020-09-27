@@ -7,6 +7,8 @@ app_name = 'Profile'
 urlpatterns = [
         path('', views.ProfileHome, name="ProfileHome"),
         path('view/', views.ProfileView, name="ProfileView"),
+        path('close-intro/', views.IntroCloseView, name="CloseIntro"),
+        path('close-end-free-subscription/', views.FreeMonthExpiredView, name="CloseEndFreeSubscription"),
         path('edit/<slug:tlt>/', views.ProfileEditView, name="ProfileEdit"),
         path('background/<slug:tlt>/', views.ProfileBackgroundEditView, name="BackgroundEdit"),
         path('motivation/<slug:tlt>/', views.ProfileMotivationEditView, name="MotivationEdit"),
@@ -15,6 +17,7 @@ urlpatterns = [
         path('email/delete/<int:pk>/<slug:tlt>/', views.EmailDelete, name='EmailDelete'),
         path('address/physical/', views.PhysicalAddressView, name='PhysicalAddress'),
         path('address/postal/', views.PostalAddressView, name='PostalAddress'),
+        path('physical-addy-copy/', views.copy_phy_address, name='CopyPhyAdd'),
         path('phone/add/', views.PhoneNumberAdd, name='PhoneNumberAdd'),
         path('online/add/<slug:tlt>/', views.OnlineProfileAdd, name='OnlineProfileAdd'),
         path('online/delete/<int:pk>/<slug:tlt>/', views.OnlineDelete, name='OnlineDelete'),
@@ -121,4 +124,8 @@ urlpatterns = [
         path('intro-shortlisting', views.IntroShortlistingView, name="IntroShortlisting"),
         path('intro-assign', views.IntroAssigningView, name="IntroAssign"),
         path('intro-books-emterprises-projects', views.IntroBEPView, name="IntroBEP"),
+        path('wtr', views.willing_to_relocate, name="WTR"),
+        path('wtr-doc/<slug:wtr>/', views.wtr_doc_status, name="WTRDoc"),
+        path('wtr-delete/<slug:wtr>/', views.not_wtr, name="NotWTR"),
+
 ]

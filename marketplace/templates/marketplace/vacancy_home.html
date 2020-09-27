@@ -4,158 +4,227 @@
 
 {% block content %}
 
-<div class="card border-0" style="width: 100%;">
-  <div class="card-body">
-    {% if request.user.subscription >= 1 %}
-      <div class="float-right">
-        {% if request.user.subscription >= 2 %}
-        <!-- Button trigger modal -->
+<div class="row">
+<div class="col-md-12">
+  <div class="card card-shadow" style="width: 100%;">
+    <div class="card-body">
+      {% if request.user.subscription >= 1 %}
+        <div class="float-right">
+          {% if request.user.subscription >= 2 %}
+          <!-- Button trigger modal -->
 
-        <a href="{% url 'MarketPlace:History' %}" class="btn btn-primary 8rem">Applications History</a>
-        {% endif %}
-        <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary 8rem">Interview History</a>
-        {% if request.user.subscription >= 1 %}
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Availability</button>
-        {% endif %}
-        <a href="{% url 'MarketPlace:HelpVacanciesSuitedForMeSummary' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
-        <i class="icon icon-question-circle"></i></a>
-      </div>
+          <a href="{% url 'MarketPlace:History' %}" class="btn btn-primary 8rem">Applications History</a>
+          {% endif %}
+          <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary 8rem">Interview History</a>
+          {% if request.user.subscription >= 1 %}
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Availability</button>
+          {% endif %}
+          <a href="{% url 'MarketPlace:HelpVacanciesSuitedForMeSummary' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
+          <i class="icon icon-question-circle"></i></a>
+        </div>
 
-      <!-- Modal -->
-      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title" id="exampleModalLabel">My Availability</h4>
-              <div class="float-right">
-                <a href="{% url 'MarketPlace:Availabillity' %}" class="badge badge-primary" style="width: 8rem;">Add</a>
-                <a href="{% url 'MarketPlace:HelpAvailability' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
-                <i class="icon icon-question-circle"></i></a>
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel">My Availability</h4>
+                <div class="float-right">
+                  <a href="{% url 'MarketPlace:Availabillity' %}" class="badge badge-primary" style="width: 8rem;">Add</a>
+                  <a href="{% url 'MarketPlace:HelpAvailability' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
+                  <i class="icon icon-question-circle"></i></a>
+                </div>
               </div>
-            </div>
-            <div class="modal-body">
-              <div class="row">
-                <div class="col-sm-12">
-                  <div class="border-0">
-                      <table class="table table-hover table-sm">
-                        <thead>
-                          <col width="30%">
-                          <col width="30%">
-                          <col width="30%">
-                          <col width="10%">
-                          <tr>
-                            <th class="align-middle text-center">Date From</th>
-                            <th class="align-middle text-center">Date to</th>
-                            <th class="align-middle text-center">Time Available</th>
-                          </tr>
-                        </thead>
-                        {% for a in capacity %}
-                          <tbody>
-                            <tr>
-                              <td class="align-middle text-center">{{ a.date_from|date:'d M Y' }}</td>
-                              <td class="align-middle text-center">{{ a.date_to|date:'d M Y' }}</td>
-                              <td class="align-middle text-center">{{ a.hours_available }} hrs {{ a.get_unit_display }}</td>
-                              <td class="align-middle float-right">
-                                <form  action="{% url 'MarketPlace:NotAvailable' a.id %}" method="post">
-                                  {% csrf_token %}
-                                  <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
-                                </form>
-                              </td>
+              <div class="modal-body">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="border-0">
+                        <table class="table table-hover table-sm">
+                          <thead>
+                            <col width="30%">
+                            <col width="30%">
+                            <col width="30%">
+                            <col width="10%">
+                            <tr class="no-hover">
+                              <th class="align-middle text-center">Date From</th>
+                              <th class="align-middle text-center">Date to</th>
+                              <th class="align-middle text-center">Time Available</th>
                             </tr>
-                          </tbody>
-                        {% endfor %}
-                      </table>
+                          </thead>
+                          {% for a in capacity %}
+                            <tbody>
+                              <tr>
+                                <td class="align-middle text-center">{{ a.date_from|date:'d M Y' }}</td>
+                                <td class="align-middle text-center">{{ a.date_to|date:'d M Y' }}</td>
+                                <td class="align-middle text-center">{{ a.hours_available }} hrs {{ a.get_unit_display }}</td>
+                                <td class="align-middle float-right">
+                                  <form  action="{% url 'MarketPlace:NotAvailable' a.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
+                                  </form>
+                                </td>
+                              </tr>
+                            </tbody>
+                          {% endfor %}
+                        </table>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    {% endif %}
-    <h4 class="card-title">Vacancies Suited for Me </h4>
-    <p>There are currently a total of <strong>{{ tot_vac }}</strong> vacancies suitable to you.<br>{% if request.user.subscription >= 2 %}You have already applied for <strong>{{ wbt_c }}</strong>.{% endif %}You have been shortlisted for
-    <strong>{{ bsl_c }}</strong>. That leaves <strong>{{ rem_vac }}</strong> for you to review.
-    {% if rem_vac > 5 %}We only list the 5 most recent vacancies here.{% endif %}</p>
-    <table class="table table-hover table-sm">
-      <col width="20%">
-      <col width="6%">
-      <col width="10%">
-      <col width="10%">
-      <col width="10%">
-      <thead>
-        <tr>
-          <th class="align-middle text-center">Vacancy Title<br>Reference Number</th>
-          <th class="align-middle text-center">Hours Required</th>
-          <th class="align-middle text-center">Work Format</th>
-          <th class="align-middle text-center">City</th>
-          <th class="align-middle text-center">Full Detail</th>
-        </tr>
-      </thead>
-      {% if request.user.subscription >= 2 %}
-      {% for s in dsd %}
-      <tbody>
-        <tr class="align-middle text-center" onclick="window.location='{% url 'MarketPlace:VacancyDetail' s.ref_no %}'">
-        <td class="align-middle text-center">{{ s.title|truncatechars:37 }}<br>({{ s.ref_no }})</td>
-        <td class="align-middle text-center">
-          {{ s.hours_required|intcomma }} Hours<br>({{ s.get_unit_display }})
-        </td>
-        <td class="align-middle text-center">{{ s.worklocation }}</td>
-        <td class="align-middle text-center">{{ s.city }}</td>
-
-        <td class="align-middle text-center"><a href="{% url 'MarketPlace:VacancyDetail' s.ref_no %}" class="badge badge-secondary" style="width: 5rem;">See Detail</a></td>
-
-        </tr>
-      </tbody>
-      {% empty %}
-      <tr>
-        <td colspan="6">No vacancies matching your skills at the moment</td>
-      </tr>
-      {% endfor %}
-
-    {% else %}
-
-      {% for s in dsd %}
-      <tbody>
-        <tr class="align-middle text-center">
-        <td class="align-middle text-center">{{ s.title|truncatechars:37 }}<br>({{ s.ref_no }})</td>
-        <td class="align-middle text-center">
-          {{ s.hours_required|intcomma }} Hours<br>({{ s.get_unit_display }})
-        </td>
-        <td class="align-middle text-center">{{ s.worklocation }}</td>
-        <td class="align-middle text-center">{{ s.city }}</td>
-
-        <td class="align-middle text-center"><a href="{% url 'Payments:ActiveSubscription' %}" class="badge badge-secondary" style="width: 5rem;" data-toggle="tooltip" data-placement="top" title="Active subscription required to see vacancy detail">See Detail</a></td>
-
-        </tr>
-      </tbody>
-      {% empty %}
-      <tr>
-        <td colspan="6">No vacancies matching your skills at the moment</td>
-      </tr>
-      {% endfor %}
-    {% endif %}
-    </table>
-
-    <div class="float-right">
-      <a href="{% url 'MarketPlace:VacSearch' %}" class="btn btn-secondary 8rem" style="width: 8rem">Search</a>&nbsp
-      {% if rem_vac > 5 %}
-        <a href="{% url 'MarketPlace:VacanciesList' %}" class="btn btn-primary"style="width: 10rem">View All Vacancies</a>
       {% endif %}
+      <h4 class="card-title">Vacancies Suited for Me </h4>
+      <p>There are currently a total of <strong>{{ tot_vac }}</strong> vacancies suitable to you.<br>{% if request.user.subscription >= 2 %}You have already applied for <strong>{{ wbt_c }}</strong>.{% endif %}You have been shortlisted for
+      <strong>{{ bsl_c }}</strong>. That leaves <strong>{{ rem_vac }}</strong> for you to review.
+      {% if rem_vac > 5 %}We only list the 5 most recent vacancies here.{% endif %}</p>
+      <div class="row">
+          <div class="col-md-12 h-100 my-auto">
+      {% if vacancies_suited_list_view %}
+        <form  action="{% url 'MarketPlace:VacanciesExpand' %}" method="post">
+          {% csrf_token %}
+          <button type="submit" class="badge badge-primary float-right" style="width:8rem;">Expand All</button>
+        </form>
+      {% else %}
+        <form  action="{% url 'MarketPlace:VacanciesExpand' %}" method="post">
+          {% csrf_token %}
+          <button type="submit" class="badge badge-primary float-right" style="width:8rem;">List View</button>
+        </form>
+      {% endif %}
+      </div>
     </div>
-    <p>
-      <strong>Only skills with a score of 3 or more are used in matching with required skills in vacancies.</strong>
-    </p>
+      {% if vacancies_suited_list_view %}
+      {% for s in dsd %}
+      <div class="container">
+<div class="row">
+  <div class="card mt-1 card-hover" style="width: 100%;" id="{{ s.id }}">
+    <div class="post-wrap">
+    <div class="post">
+      {% with id=s.id %}
+
+      <div class="post-front" style="display:block;" id="oldCard{{id}}">
+
+      <div class="card-body small-pad">
+        <div class="row" style="height: 20px;">
+          <div class="col-md-12 h-100 my-auto">
+            <div class="card-maximise float-right">
+              <div class="row">
+                  <button type="submit" class="pointer no-border max-btn" data-vac={{s.ref_no}} data-tlt={{tlt}} data-toggle="tooltip" title="Maximise" data-vac={{s.ref_no}} data-tlt={{tlt}} data-action="maximise" id="clickMe{{id}}"><i class="fa fa-window-maximize"></i></button>
+                &nbsp
+                <form action="{% url 'MarketPlace:CloseVacancy' tlt s.id %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="pointer no-border" data-toggle="tooltip" title="Close" name="close"><i class="fa fa-times" aria-hidden="true"></i></button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% include 'marketplace/vacancy_suited_list_view.html' %}
+      </div>
+      </div>
+
+      <div class="post-back" style="display:none;" id="newCard{{id}}">
+
+        <div class="card-body card-no-hover">
+          <div class="row" style="height: 20px;">
+            <div class="col-md-12 h-100 my-auto">
+              <div class="card-maximise float-right">
+                <div class="row">
+                  <button type="submit" class="pointer no-border" data-toggle="tooltip" title="Minimise" id="un-clickMe{{id}}"><i class="fa fa-window-minimize"></i></button>
+                  &nbsp
+                  <form action="{% url 'MarketPlace:CloseVacancy' tlt s.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="pointer no-border" data-toggle="tooltip" title="Close" name="close"><i class="fa fa-times" aria-hidden="true"></i></button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+            {% include 'marketplace/vacancy_suited_expanded_view.html' %}
+        </div>
+      </div>
+    </div>
+    </div>
+    </div>
+    <script>
+      var maxButton = document.getElementById('clickMe{{id}}');  // 1
+      maxButton.addEventListener('click', function() {    // 3
+         newCard{{ s.id }}.style.display = 'block';
+         oldCard{{ s.id }}.style.display = 'none';          // 4
+      });
+      var minButton = document.getElementById('un-clickMe{{id}}');  // 1
+      minButton.addEventListener('click', function() {  // 3
+         newCard{{ s.id }}.style.display = 'none';
+         oldCard{{ s.id }}.style.display = 'block';               // 4
+      });
+    </script>
+
+
+    {% endwith %}
   </div>
+  </div>
+
+      {% empty %}
+      <p>No vacancies matching your skills at the moment</p>
+      {% endfor %}
+
+      {% else %}
+      {% for s in dsd %}
+<div class="container">
+<div class="row">
+  <div class="card mt-1 card-hover" style="width: 100%;" id="{{ s.id }}">
+      <div class="card-body small-pad">
+        <div class="row" style="height: 20px;">
+          <div class="col-md-12 h-100 my-auto">
+
+            <div class="card-maximise float-right">
+            <div class="row">
+
+            <form action="{% url 'MarketPlace:CloseVacancy' tlt s.id %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="pointer no-border" data-toggle="tooltip" title="Close" name="close"><i class="fa fa-times" aria-hidden="true"></i></button>
+            </form>
+            </div>
+          </div>
+
+        </div>
+        </div>
+          {% include 'marketplace/vacancy_suited_expanded_view.html' %}
+      </div>
+    </div>
+  </div>
+</div>
+      {% empty %}
+      <p>No vacancies matching your skills at the moment</p>
+      {% endfor %}
+
+      {% endif %}
+
+      <br>
+      <p>
+        <strong>Only skills with a score of 3 or more are used in matching with required skills in vacancies.</strong>
+      </p>
+      <div class="float-right">
+        <a href="{% url 'MarketPlace:VacSearch' %}" class="btn btn-secondary 8rem" style="width: 8rem">Search</a>&nbsp
+        {% if rem_vac > 5 %}
+          <a href="{% url 'MarketPlace:VacanciesList' %}" class="btn btn-primary"style="width: 10rem">View All Vacancies</a>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+</div>
 </div>
 
 <br>
+
 {% if request.user.subscription >= 2 %}
 {% if tr_emp_count >= 1 %}
-<div class="card border-0">
+<div class="card card-shadow">
   <div class="card-body">
     <div class="float-right">
     <a href="{% url 'MarketPlace:Vacancy' %}" class="btn btn-primary">Post Vacancy</a>
@@ -164,37 +233,58 @@
     </div>
   <h4 class="card-title">My Vacancies Advertised (Open)</h4>
   <p>You currently have <strong>{{ ipost_count }}</strong> open vacancies listed{% if ipost_count > 5 %}, we only list the 5 most recent vacancies here.{% else %}.{% endif %}</p>
-  <table class="table table-hover table-sm">
-    <thead>
-      <tr>
-        <th class="align-middle text-center">Date Posted</th>
-        <th class="align-middle text-center">Vacancy Title</th>
-        <th class="align-middle text-center">Closing Date</th>
-        <th class="align-middle text-center">Response</th>
-        <th class="align-middle text-center">Options</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for p in ipost_list %}
-        <tr onclick="window.location='{% url 'MarketPlace:VacancyPost' p.ref_no %}'">
-          <td class="align-middle text-center">{{ p.bid_open|date:'j M Y' }}</td>
-          <td class="align-middle text-center">{{ p.title|truncatechars:37 }}</td>
-          <td class="align-middle text-center">{{ p.bid_closes|date:'j M Y' }}</td>
-          <td class="align-middle text-center">
+<div class="container">
+  <div class="row my-auto">
+  <div class="col-md-2 h-100 text-center my-auto">
+    <strong>Date Posted</strong>
+  </div>
+  <div class="col-md-4 h-100 text-center my-auto">
+    <strong>Vacancy Title</strong>
+  </div>
+  <div class="col-md-2 h-100 text-center my-auto">
+    <strong>Closing Date</strong>
+  </div>
+  <div class="col-md-2 h-100 text-center my-auto">
+    <strong>Response</strong>
+  </div>
+  <div class="col-md-2 h-100 text-center my-auto">
+    <strong>Options</strong>
+  </div>
+  </div>
+{% for p in ipost_list %}
+  <div class="row">
+    <div class="card mt-1 card-hover" style="width: 100%;">
+      <div class="card-body small-pad">
+        <div class="row my-auto">
+        <div class="col-md-2 h-100 text-center my-auto">
+          {{ p.bid_open|date:'j M Y' }}
+        </div>
+        <div class="col-md-4 h-100 text-center my-auto">
+          <span class="font-blue">{{ p.title|truncatechars:37 }}</span>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+            {{ p.bid_closes|date:'j M Y' }}
+          </div>
+        <div class="col-md-2 h-100 text-center my-auto">
           {% if p.id in ipost_bid_flat %}
             <strong>Yes</strong>
           {% else %}
             None
           {% endif %}
-          </td>
-          <td class="align-middle text-center">
-            <a href="{% url 'MarketPlace:VacancyPost' p.ref_no %}" class="" data-toggle="tooltip" title="Vacancy Detail"><i class="fa fa-industry" style="font-size:24px;color:black"></i></a>
-            <a href="{% url 'MarketPlace:VacancyIntDetail' p.ref_no %}" class="" data-toggle="tooltip" title="Interview List"><i class="fa fa-gg" style="font-size:30px;color:black"></i></a>
-          </td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <a href="{% url 'MarketPlace:VacancyPost' p.ref_no %}" class="" data-toggle="tooltip" title="Vacancy Detail"><i class="fa fa-industry" style="font-size:24px;color:black"></i></a>
+          <a href="{% url 'MarketPlace:VacancyIntDetail' p.ref_no %}" class="" data-toggle="tooltip" title="Interview List"><i class="fa fa-gg" style="font-size:30px;color:black"></i></a>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+{% endfor %}
+</div>
+<br>
+
+
     <div class="float-right">
       <a href="{% url 'MarketPlace:EmployerInterviewHistory' request.user.alias %}" class="btn btn-primary" style="width: 10rem">Interview History</a>
       {% if ipost_count > 5 %}
@@ -205,7 +295,7 @@
 </div>
 <br>
 {% else %}
-<div class="card border-0">
+<div class="card card-shadow">
   <div class="card-body">
   <h4 class="card-title">My Posted Vacancies Information</h4>
   <p>Information regarding your vacancies with details as to the Talent suited to the Vacancy as well as Applicants for the Vacancy will only be available once you have posted your first vacancy.</p>
@@ -220,7 +310,7 @@
 {% if ipost_closed_count >= 1 %}
 <div class="row">
   <div class="col-sm-12">
-    <div class="card border-0">
+    <div class="card card-shadow">
       <div class="card-body">
         <div class="float-right">
         <a href="{% url 'MarketPlace:AllPostedVac' %}" class="btn btn-primary">All Posted Vacancies</a>
@@ -229,37 +319,58 @@
         </div>
       <h4 class="card-title">My Vacancies Advertised (Closed)</h4>
       <p>You currently have <strong>{{ ipost_closed_count }}</strong> closed vacancies listed{% if ipost_closed_count > 5 %}, we only list the 5 most recent vacancies here.{% else %}.{% endif %}</p>
-      <table class="table table-hover table-sm">
-        <thead>
-          <tr>
-            <th class="align-middle text-center">Date Posted</th>
-            <th class="align-middle text-center">Vacancy Title</th>
-            <th class="align-middle text-center">Date Closed</th>
-            <th class="align-middle text-center">Response</th>
-            <th class="align-middle text-center">Options</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for c in ipost_closed_list %}
-            <tr onclick="window.location='{% url 'MarketPlace:VacancyPost' c.ref_no %}?next={{ request.path|urlencode }}'">
-              <td class="align-middle text-center">{{ c.bid_open|date:'j M Y' }}</td>
-              <td class="align-middle text-center">{{ c.title|truncatechars:37 }}</td>
-              <td class="align-middle text-center">{{ c.bid_closes|date:'j M Y' }}</td>
-              <td class="align-middle text-center">
-              {% if c.id in ipost_bid_flat %}
-                <strong>Yes</strong>
-              {% else %}
-                None
-              {% endif %}
-              </td>
-              <td class="align-middle text-center">
-              <a href="{% url 'MarketPlace:VacancyPost' c.ref_no %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Vacancy Detail"><i class="fa fa-industry" style="font-size:24px;color:black"></i></a>
-              <a href="{% url 'MarketPlace:VacancyIntDetail' c.ref_no %}?next={{ request.path|urlencode }}" class="" data-toggle="tooltip" title="Interview List"><i class="fa fa-gg" style="font-size:30px;color:black"></i></a>
-              </td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+
+      <div class="container">
+        <div class="row my-auto">
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Date Posted</strong>
+        </div>
+        <div class="col-md-4 h-100 text-center my-auto">
+          <strong>Vacancy Title</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Closing Date</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Response</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Options</strong>
+        </div>
+        </div>
+      {% for c in ipost_closed_list %}
+        <div class="row">
+          <div class="card mt-1 card-hover" style="width: 100%;">
+            <div class="card-body small-pad">
+              <div class="row my-auto">
+              <div class="col-md-2 h-100 text-center my-auto">
+                {{ c.bid_open|date:'j M Y' }}
+              </div>
+              <div class="col-md-4 h-100 text-center my-auto">
+                <span class="font-blue">{{ c.title|truncatechars:37 }}</span>
+              </div>
+              <div class="col-md-2 h-100 text-center my-auto">
+                  {{ c.bid_closes|date:'j M Y' }}
+                </div>
+              <div class="col-md-2 h-100 text-center my-auto">
+                {% if c.id in ipost_bid_flat %}
+                  <strong>Yes</strong>
+                {% else %}
+                  None
+                {% endif %}
+              </div>
+              <div class="col-md-2 h-100 text-center my-auto">
+                <a href="{% url 'MarketPlace:VacancyPost' c.ref_no %}?next={{ request.path|urlencode }}" data-toggle="tooltip" title="Vacancy Detail"><i class="fa fa-industry" style="font-size:24px;color:black"></i></a>
+                <a href="{% url 'MarketPlace:VacancyIntDetail' c.ref_no %}?next={{ request.path|urlencode }}" class="" data-toggle="tooltip" title="Interview List"><i class="fa fa-gg" style="font-size:30px;color:black"></i></a>
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+      </div>
+      <br>
+
       <div class="float-right">
         {% if ipost_closed_count > 5 %}
         <a href="{% url 'MarketPlace:AllPostedVacClosed' %}" class="btn btn-primary"style="width: 12rem">All Closed Vacancies</a>

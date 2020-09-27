@@ -6,7 +6,7 @@
 {% block title %}{{block.super}}-Vacancy Search{% endblock title %}
 
 {% block content %}
-<div class="card border-0">
+<div class="card card-shadow0">
   <div class="card-body">
   {% if query %}
   <h4>Vacancies with Reference Number containing "{{ query }}"</h4>
@@ -15,48 +15,65 @@
     Found {{ total_results }} result{{ total_results|pluralize }}
     {% endwith %}
   </h3>
-  <table class="table table-sm">
-    <col width="5%">
-    <col width="15%">
-    <col width="6%">
-    <col width="10%">
-    <col width="10%">
-    <col width="10%">
-    <thead>
-      <tr>
-        <th class="align-middle text-center">Reference Number</th>
-        <th class="align-middle text-center">Vacancy Title</th>
-        <th class="align-middle text-center">Hours Required</th>
-        <th class="align-middle text-center">Work Format</th>
-        <th class="align-middle text-center">Country</th>
-        <th class="align-middle text-center">Full Detail</th>
-      </tr>
-    </thead>
-    {% for i in results %}
-    <tbody>
-    <tr class="align-middle text-center" onclick="window.location='{% url 'MarketPlace:VacancyDetail' i.ref_no %}'">
-      <td>{{ i.ref_no }}</td>
-      <td>{{ i.title }}</td>
-      <td>
-        {{ i.hours_required|intcomma }} ({{ i.get_unit_display }})
-      </td>
-      <td>{{ i.worklocation }}</td>
-      <td>{{ i.city }}</td>
-        {% if request.user.subscription == 2 %}
-          <td><a href="{% url 'MarketPlace:VacancyDetail' i.ref_no %}" class="card-link">See Detail</a></td>
-        {% elif request.user.subscription < 2 %}
-          <td><a href="#" class="card-link">See Detail</a></td>
-        {% endif %}
-      </tr>
-    </tbody>
-    {% empty %}
-    <tr>
-      <td colspan="6">No vacancies matching your query</td>
-    </tr>
-    {% endfor %}
-  </table>
+  <div class="container">
+    <div class="row my-auto">
+      <div class="col-md-1 h-100 text-center my-auto">
+        <strong>Reference Number</strong>
+      </div>
+      <div class="col-md-3 h-100 text-center my-auto">
+        <strong>Vacancy Title</strong>
+      </div>
+      <div class="col-md-1 h-100 text-center my-auto">
+        <strong>Hours Required</strong>
+      </div>
+      <div class="col-md-2 h-100 text-center my-auto">
+        <strong>Work Format</strong>
+      </div>
+      <div class="col-md-2 h-100 text-center my-auto">
+        <strong>Country</strong>
+      </div>
+      <div class="col-md-2 h-100 text-center my-auto">
+        <strong>Full Detail</strong>
+      </div>
+    </div>
+  </div>
+  {% for i in results %}
+  <div class="row">
+    <div class="card mt-1 card-hover" style="width: 100%;">
+      <div class="card-body small-pad">
+        <div class="row my-auto">
+          <div class="col-md-1 h-100 text-center my-auto">
+            {{ i.ref_no }}
+          </div>
+          <div class="col-md-3 h-100 text-center my-auto">
+            {{ i.title }}
+          </div>
+          <div class="col-md-1 h-100 text-center my-auto">
+            {{ i.hours_required|intcomma }}<br>({{ i.get_unit_display }})
+          </div>
+          <div class="col-md-2 h-100 text-center my-auto">
+            {{ i.worklocation }}
+          </div>
+          <div class="col-md-2 h-100 text-center my-auto">
+            {{ i.city }}
+          </div>
+          <div class="col-md-2 h-100 text-center my-auto">
+            {% if request.user.subscription == 2 %}
+              <a href="{% url 'MarketPlace:VacancyDetail' i.ref_no %}" class="card-link">See Detail</a>
+            {% elif request.user.subscription < 2 %}
+              <a href="#" class="card-link">See Detail</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+    <p>No vacancies matching your query.</p>
+  {% endfor %}
   <form action="." method="get">
   {{ form.as_p }}
+  <a href="{% url 'MarketPlace:Entrance' %}" class="btn btn-danger">Cancel</a>
   <input type="submit" class="btn btn-primary 8rem " style="width: 8rem" value="Search Again">
   </form>
   {% else %}
@@ -64,6 +81,7 @@
   <div class="card-body">
     <form action="." method="get">
     {{ form.as_p }}
+    <a href="{% url 'MarketPlace:Entrance' %}" class="btn btn-danger">Cancel</a>
     <input type="submit" value="Search" class="btn btn-primary 8rem " style="width: 8rem">
     </form>
   {% endif %}

@@ -11,7 +11,8 @@
     width: 200px;
   }
   </style>
-
+<div class="card card-shadow">
+  <div class="card-body">
 <div class="container">
 <h3>Update Your Career History (Resigned from Company)</h3>
 
@@ -27,9 +28,11 @@
 
   </div>
   <div class="">
-    <p><button type="submit" name="done" class="btn btn-secondary">Done</button>
+    <p><a href="{% url 'Profile:ProfileView' %}#History" class="btn btn-danger">Cancel</a> <button type="submit" name="done" class="btn btn-secondary">Done</button>
   </div>
 </form>
+</div>
+</div>
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 {{ form.media.js }}

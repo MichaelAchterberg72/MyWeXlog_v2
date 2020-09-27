@@ -14,61 +14,73 @@
   </div>
     <h3 class="card-title">Talent Dashboard for {{ scope.title }} ({{ scope.ref_no }})</h3>
 
-    <div class="card border-0">
+    <div class="card card-shadow">
       <div class="card-body">
-        <h4>Unsuitable Applicants</h4>
+        <h4 id='unsuitable'>Unsuitable Applicants</h4>
         <p>There are a total of {{ interview_n_count }} unsuitable applicants listed.</p>
-        <table class="table table-hover table-sm">
-          <col width="15%">
-          <col width="5%">
-          <col width="5%">
-          <col width="1%">
-          <col width="8%">
-          <col width="45%">
-          <col width="10%">
-          <thead>
-            <tr>
-              <th class="align-middle text-center">Alias</th>
-              <th class="align-middle text-center">Experience</th>
-              <th class="align-middle text-center">Training</th>
-              <th class="align-middle text-center">Books Read</th>
-              <th class="align-middle text-center">Rate</th>
-              <th class="align-middle text-left">Motivation</th>
-              <th class="align-middle text-center">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for sl in pageitems %}
-            <tr>
-              <td class="align-middle text-center">
-                {% if sl.1.count > 1 %}
-                  {{ sl.1.ro.0.4 }}<br><strong>{{ sl.1.score }}</strong><br>(by {{ sl.1.count }} people)
-                {% else %}
-                  {{ sl.1.ro.0.4 }}<br><strong>Not Rated</strong><br>(by < 5 people)
-                {% endif %}
-              </td>
-              <td class="align-middle text-center">{{ sl.1.we|intcomma }}<br>(<strong>{{ sl.1.s_no }}</strong> skills)</td>
-              <td class="align-middle text-center">{{ sl.1.te|intcomma }}</td>
-              <td class="align-middle text-center">{{ sl.1.rb }}</td>
-              <td class="align-middle text-center">{{ sl.1.ro.0.1 }} <strong>{{ sl.1.ro.0.0|intcomma }}</strong> {{ sl.1.ro.0.2 }}</td>
-              <td class="align-middle">{{ sl.1.ro.0.3|truncatechars:200 }}</td>
-              <td class="align-middle text-center">
-                <p>
-                  <a href="{% url 'Talent:APV' tlt=sl.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill float-right" style="width: 5rem">View Profile</a>
-                  <form  action="{% url 'MarketPlace:UnsuitableSuitable' tlt=sl.1.ro.0.4  vac=scope.ref_no %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit" class="badge badge-success badge-pill float-right" style="width: 5rem">Suitable</button>
-                  </form>
-                </p>
-              </td>
-            </tr>
-          {% empty %}
-            <tr>
-              <td colspan="7">No talent identified as unsuitbale for this scope.</td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+
+        <div class="row">
+          <div class="col-12">
+          {% if unsuitable_applicants_list_view %}
+            <form  action="{% url 'MarketPlace:UnSuitableApplicanctFLExpand' vac=scope.ref_no %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-primary float-right" style="width:8rem;">Expanded</button>
+            </form>
+          {% else %}
+            <form  action="{% url 'MarketPlace:UnSuitableApplicanctFLExpand' vac=scope.ref_no %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-primary float-right" style="width:8rem;">List</button>
+            </form>
+          {% endif %}
+          </div>
+        </div>
+
+          {% if unsuitable_applicants_list_view %}
+            {% include 'marketplace/list_view_headings.html' %}
+            {% for key in pageitems %}
+            <div class="row">
+              <div class="card mt-1 card-hover" style="width: 100%;">
+                <div class="card-body small-pad">
+                  <div class="row my-auto">
+                    {% include 'marketplace/list_view_fields.html' %}
+                    <div class="col-1 col-no-pad h-100 text-center my-auto">
+                      <form  action="{% url 'MarketPlace:UnsuitableSuitable' tlt=key.1.ro.0.4  vac=scope.ref_no %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="badge badge-success badge-pill float-right" style="width: 6rem">Suitable</button>
+                      </form>
+                      <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill float-right" style="width: 6rem">View Profile</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% empty %}
+              <p>No talent identified as unsuitbale for this scope.</p>
+            {% endfor %}
+            {% else %}
+            {% for key in pageitems %}
+            <div class="row">
+              <div class="card mt-1 card-hover" style="width: 100%;">
+                <div class="card-body small-pad">
+                  {% include 'marketplace/expanded_view_fields.html' %}
+                  <div class="row my-auto">
+                    <div class="col-md-12 h-100">
+                      <div class="row my-auto float-right">
+                        <form  action="{% url 'MarketPlace:UnsuitableSuitable' tlt=key.1.ro.0.4  vac=scope.ref_no %}" method="post">
+                          {% csrf_token %}
+                          <button type="submit" class="btn btn-outline-success" style="width: 10rem">Suitable</button>
+                        </form>&nbsp
+                        <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="btn btn-outline-secondary" style="width: 10rem">View Profile</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% empty %}
+              <p>No talent identified as unsuitbale for this scope.</p>
+            {% endfor %}
+            {% endif %}
 
       <nav aria-label="Page navigation">
           {% if pageitems.has_other_pages %}

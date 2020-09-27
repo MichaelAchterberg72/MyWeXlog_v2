@@ -271,7 +271,7 @@ class Email(models.Model):
     email = models.EmailField(unique=True)
     active = models.BooleanField(default=False)
     company = models.ForeignKey(Enterprise, on_delete=models.SET_NULL, null=True, blank=True)
-    slug = models.SlugField(max_length=50, null=True, unique=True, blank=True)
+    slug = models.SlugField(max_length=9, null=True, unique=True, blank=True)
 
     class Meta:
         unique_together = (('talent','email'),)
@@ -281,7 +281,6 @@ class Email(models.Model):
 
     def __str__(self):
         return self.email
-
 
     def save(self, *args, **kwargs):
         if self.slug is None or self.slug == "":
@@ -358,3 +357,22 @@ class PhoneNumber(models.Model):
 
     def __str__(self):
         return '{}: {}({})'.format(self.talent, self.number, self.type)
+
+
+class WillingToRelocate(models.Model):
+    talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
+    country = CountryField()
+    documents = models.BooleanField(default=False)#All documents required to work are in place.
+    slug = models.SlugField(max_length=9, null=True, unique=True, blank=True)
+
+    class Meta:
+        unique_together = (('talent', 'country'),)
+
+    def __str__(self):
+        return f'{self.talent.alias} - {self.country}'
+
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
+
+        super(WillingToRelocate, self).save(*args, **kwargs)

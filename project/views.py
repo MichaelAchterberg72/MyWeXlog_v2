@@ -169,12 +169,12 @@ def ProjectSearch(request):
             query = form.cleaned_data['query']
             results = ProjectData.objects.annotate(
                 search=SearchVector('name',
-                                    'company__name',
+                                    'company__branch',
                                     'industry__industry',
                                     'country',
                                     'region__region',
                                     'city__city'),
-            ).filter(search=query).order_by('company__name')
+            ).filter(search=query).order_by('company__ename')
 
     template_name= 'project/project_search.html'
     context = {
@@ -191,11 +191,33 @@ def HoursWorkedOnProject(request, prj):
     info = WorkExperience.objects.filter(project__slug=prj).annotate(sum_hours=Sum('hours_worked')).order_by('date_to')
     hr = WorkExperience.objects.filter(project__slug=prj).aggregate(sum_t=Sum('hours_worked'))
 
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(dsd, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
     template_name = 'project/hours_worked_on_project.html'
     context = {
             'projectdata': projectdata,
             'info': info,
             'hr': hr,
+            'pageitems': pageitems,
+            'page_range': page_range,
     }
     return render(request, template_name, context)
 

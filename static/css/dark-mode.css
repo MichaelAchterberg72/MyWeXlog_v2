@@ -17,7 +17,10 @@
 
 [data-theme="dark"] .card {
   background-color: #303030 !important;
-  opacity: 0.8;
+}
+
+[data-theme="dark"] .row .mt-1 .card-body {
+  background-color: #444444 !important;
 }
 
 [data-theme="dark"] .fa {

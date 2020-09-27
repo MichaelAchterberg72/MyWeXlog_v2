@@ -1,0 +1,118 @@
+{% load humanize %}
+
+<div class="row my-auto">
+  <div class="col-md-1 h-100 text-right"><br>
+    <i class="fa fa-address-book-o" aria-hidden="true" style="font-size:84px;color:black"></i>
+  </div>
+  <div class="col-md-11 h-100 text-left my-auto">
+    <br>
+    <p class="name-paragraph"><span class="font-blue font-bold" style="font-size:22px;">{{ key.1.ro.0.4 }}</span></p>
+    <p class="short-paragraph font-20" style="font-size:20px;color:black">
+
+    {% if key.1.count >= 5 %}
+
+      {% if key.1.score >= 0 and key.1.score < 0.5 %}
+    <span class="font-20"><i class="fa fa-star-o" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star-o" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star-o" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star-o" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star-o" aria-hidden="true"></i></span>
+  {% elif key.1.score >= 0.5 and key.1.score < 1 %}
+    <span class="font-20"><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star-o" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star-o" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star-o" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star-o" aria-hidden="true"></i></span>
+  {% elif key.1.score >= 1 and key.1.score < 1.5 %}
+    <span class="font-20"><i class="fa fa-star" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star-o" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star-o" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star-o" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star-o" aria-hidden="true"></i></span>
+  {% elif key.1.score >= 1.5 and key.1.score < 2 %}
+    <span class="font-20"><i class="fa fa-star" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star-o" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star-o" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star-o" aria-hidden="true"></i></span>
+  {% elif key.1.score >= 2 and key.1.score < 2.5 %}
+    <span class="font-20"><i class="fa fa-star" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star-o" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star-o" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star-o" aria-hidden="true"></i></span>
+  {% elif key.1.score >= 2.5 and key.1.score < 3 %}
+    <span class="font-20"><i class="fa fa-star" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star-o" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star-o" aria-hidden="true"></i></span>
+  {% elif key.1.score >= 3 and key.1.score < 3.5 %}
+    <span class="font-20"><i class="fa fa-star" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star-o" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star-o" aria-hidden="true"></i></span>
+  {% elif key.1.score >= 3.5 and key.1.score < 4 %}
+    <span class="font-20"><i class="fa fa-star" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star" aria-hidden="true"></i></span>
+    < class="font-20"><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star-o" aria-hidden="true"></i></span>
+  {% elif key.1.score >= 4 and key.1.score < 4.5 %}
+    <span class="font-20"><i class="fa fa-star" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star-o" aria-hidden="true"></i></span>
+  {% elif key.1.score >= 4.5 and key.1.score < 4.95 %}
+    <span class="font-20"><i class="fa fa-star" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+  {% elif key.1.score >= 4.95 %}
+    <span class="font-20"><i class="fa fa-star" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star" aria-hidden="true"></i></span>
+  {% endif %}
+    {% else %}
+
+    <span class="font-20"><i class="fa fa-star-o" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star-o" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star-o" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star-o" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star-o" aria-hidden="true"></i></span>
+
+    {% endif %}</p>
+    <p class="shrort-paragraph">
+      {% if key.1.count > 1 %}
+        <strong>{{ key.1.score }} Rating</strong>&nbsp(by {{ key.1.count }} people)
+      {% else %}
+        <strong>Not Rated</strong>&nbsprequires 5 people or more.
+      {% endif %}</p>
+      <p class="short-paragraph"><strong>Skills:</strong></p>
+    <p>The talent has a total of (<strong>{{ key.1.s_no }}</strong> skills) and rated as a <strong>
+      {% if key.1.we >= 0 and key.1.we < sk_st %}Student
+      {% elif key.1.we >= sk_st and key.1.we < sk_bg %}Beginner
+      {% elif key.1.we >= sk_bg and key.1.we < sk_jn %}Junior
+      {% elif key.1.we >= sk_jn and key.1.we < sk_in %}Intermediate
+      {% elif key.1.we >= sk_in and key.1.we < sk_sn %}Senior
+      {% elif key.1.we >= sk_sn and key.1.we < sk_ld %}Lead
+      {% endif %}</strong>
+       with <strong>{{ key.1.we|intcomma }}</strong> hours experience and <strong>{{ key.1.te|intcomma }}</strong> hours training.</p>
+
+    <p class="skills-paragraph">{% for skl in key.1.skillset %}<button class="btn btn-outline-secondary auto">{{ skl }}</button> {% endfor %}</p>
+
+    <p>The talent has read a total of <strong>{{ key.1.rb }}</strong> books.</p>
+
+    <p class="short-paragraph"><strong>Bid Rate:</strong></p>
+    <p>The talents bid rate for the vacancy is <strong>&nbsp{{ key.1.ro.0.1 }} {{ key.1.ro.0.0|intcomma }}</strong>&nbsp per {{ key.1.ro.0.2 }}</p>
+    <p class="short-paragraph"><strong>Background:</strong></p>
+    <p>{{ key.1.background|truncatechars:590 }}</p>
+    <p class="short-paragraph"><strong>Motivation:</strong></p>
+    <p>{{ key.1.ro.0.3|truncatechars:590 }}</p>
+  </div>
+</div>
