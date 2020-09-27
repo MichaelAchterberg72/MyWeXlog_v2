@@ -57,7 +57,7 @@
     <span class="font-20"><i class="fa fa-star" aria-hidden="true"></i></span>
     <span class="font-20"><i class="fa fa-star" aria-hidden="true"></i></span>
     <span class="font-20"><i class="fa fa-star" aria-hidden="true"></i></span>
-    < class="font-20"><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+    <span class="font-20"><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
     <span class="font-20"><i class="fa fa-star-o" aria-hidden="true"></i></span>
   {% elif key.1.score >= 4 and key.1.score < 4.5 %}
     <span class="font-20"><i class="fa fa-star" aria-hidden="true"></i></span>
@@ -93,6 +93,8 @@
       {% else %}
         <strong>Not Rated</strong>&nbsprequires 5 people or more.
       {% endif %}</p>
+      <p class="short-paragraph"><strong>Current Designation:</strong></p>
+      <p>{% for des in key.1.des %}{{ des }}, {% empty %}Not Recorded as yet!{% endfor %}
       <p class="short-paragraph"><strong>Skills:</strong></p>
     <p>The talent has a total of (<strong>{{ key.1.s_no }}</strong> skills) and rated as a <strong>
       {% if key.1.we >= 0 and key.1.we < sk_st %}Student

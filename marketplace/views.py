@@ -593,7 +593,7 @@ def InterviewListView(request, vac):
         atalent_skill = list(we.filter(talent=app, edt=False).values_list('skills__skill', flat=True))
         rb = book.filter(talent=app).count()
         atalent_skillt = list(we.filter(talent=app, edt=True).values_list('topic__skills__skill', flat=True))
-
+        des = list(BriefCareerHistory.objects.filter(talent=app, current=True).values_list('designation__name', flat=True))
         pfl = Profile.objects.get(talent=app)
         avg = pfl.avg_rate
         cnt = pfl.rate_count
@@ -612,7 +612,7 @@ def InterviewListView(request, vac):
         askill_count = len(askillset)
 
         interview_s[app]={
-            'we':awetv, 'te':atetv,'s_no':askill_count, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score':avg, 'count': cnt, 'background': bg,
+            'we':awetv, 'te':atetv,'s_no':askill_count, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score':avg, 'count': cnt, 'background': bg, 'des': des,
             }
 
     interview_s_slice = dict(itertools.islice(interview_s.items(), 5))
@@ -632,7 +632,7 @@ def InterviewListView(request, vac):
         rb = book.filter(talent=app).count()
         atalent_skillt = list(we.filter(talent=app, edt=True).values_list('topic__skills__skill', flat=True))
         applied = applicants.filter(talent=app)
-
+        des = list(BriefCareerHistory.objects.filter(talent=app, current=True).values_list('designation__name', flat=True))
         pfl = Profile.objects.get(talent=app)
         avg = pfl.avg_rate
         cnt = pfl.rate_count
@@ -647,7 +647,7 @@ def InterviewListView(request, vac):
         askillset = set(aslist)
         askill_count = len(askillset)
 
-        interview_p[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score':avg, 'count':cnt, 'background': bg,}
+        interview_p[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score':avg, 'count':cnt, 'background': bg, 'des': des,}
 
     interview_p_slice = dict(itertools.islice(interview_p.items(), 5))
     interview_p_count = len(interview_p)
@@ -665,7 +665,7 @@ def InterviewListView(request, vac):
         atalent_skill = list(we.filter(talent=app, edt=False).values_list('skills__skill', flat=True))
         rb = book.filter(talent=app).count()
         atalent_skillt = list(we.filter(talent=app, edt=True).values_list('topic__skills__skill', flat=True))
-
+        des = list(BriefCareerHistory.objects.filter(talent=app, current=True).values_list('designation__name', flat=True))
         pfl = Profile.objects.get(talent=app)
         avg = pfl.avg_rate
         cnt = pfl.rate_count
@@ -682,7 +682,7 @@ def InterviewListView(request, vac):
         askillset = set(aslist)
         askill_count = len(askillset)
 
-        interview_n[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score':avg, 'count': cnt, 'background': bg,}
+        interview_n[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score':avg, 'count': cnt, 'background': bg, 'des': des,}
 
     interview_n_slice = dict(itertools.islice(interview_n.items(), 5))
     interview_n_count = len(interview_n)
@@ -700,7 +700,7 @@ def InterviewListView(request, vac):
         atalent_skill = list(we.filter(talent=app, edt=False).values_list('skills__skill', flat=True))
         rb = book.filter(talent=app).count()
         atalent_skillt = list(we.filter(talent=app, edt=True).values_list('topic__skills__skill', flat=True))
-
+        des = list(BriefCareerHistory.objects.filter(talent=app, current=True).values_list('designation__name', flat=True))
         pfl = Profile.objects.get(talent=app)
         avg = pfl.avg_rate
         cnt = pfl.rate_count
@@ -717,7 +717,7 @@ def InterviewListView(request, vac):
         askillset = set(aslist)
         askill_count = len(askillset)
 
-        rej_bid_n[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score':avg, 'count': cnt, 'background': bg,}
+        rej_bid_n[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score':avg, 'count': cnt, 'background': bg, 'des': des,}
 
     rej_bid_n_slice = dict(itertools.islice(rej_bid_n.items(), 5))
     rej_bid_n_count = len(rej_bid_n)
@@ -797,7 +797,7 @@ def PendingInterviewListView(request, vac):
         rb = book.filter(talent=app).count()
         atalent_skillt = list(we.filter(talent=app, edt=True).values_list('topic__skills__skill', flat=True))
         applied = applicants.filter(talent=app)
-
+        des = list(BriefCareerHistory.objects.filter(talent=app, current=True).values_list('designation__name', flat=True))
         pfl = Profile.objects.get(talent=app)
         avg = pfl.avg_rate
         cnt = pfl.rate_count
@@ -812,7 +812,7 @@ def PendingInterviewListView(request, vac):
         askillset = set(aslist)
         askill_count = len(askillset)
 
-        interview_p[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score': avg, 'count': cnt, 'background': bg,}
+        interview_p[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score': avg, 'count': cnt, 'background': bg, 'des': des,}
 
     interview_p_count = len(interview_p)
 
@@ -901,7 +901,7 @@ def SuitableInterviewListView(request, vac):
         atalent_skill = list(we.filter(talent=app, edt=False).values_list('skills__skill', flat=True))
         rb = book.filter(talent=app).count()
         atalent_skillt = list(we.filter(talent=app, edt=True).values_list('topic__skills__skill', flat=True))
-
+        des = list(BriefCareerHistory.objects.filter(talent=app, current=True).values_list('designation__name', flat=True))
         pfl = Profile.objects.get(talent=app)
         avg = pfl.avg_rate
         cnt = pfl.rate_count
@@ -920,7 +920,7 @@ def SuitableInterviewListView(request, vac):
         askill_count = len(askillset)
 
         interview_s[app]={
-            'we':awetv, 'te':atetv,'s_no':askill_count, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score': avg, 'count': cnt, 'background': bg,
+            'we':awetv, 'te':atetv,'s_no':askill_count, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score': avg, 'count': cnt, 'background': bg, 'des': des,
             }
 
     interview_s_count = len(interview_s)
@@ -1003,7 +1003,7 @@ def UnsuitableInterviewListView(request, vac):
         atalent_skill = list(we.filter(talent=app, edt=False).values_list('skills__skill', flat=True))
         rb = book.filter(talent=app).count()
         atalent_skillt = list(we.filter(talent=app, edt=True).values_list('topic__skills__skill', flat=True))
-
+        des = list(BriefCareerHistory.objects.filter(talent=app, current=True).values_list('designation__name', flat=True))
         pfl = Profile.objects.get(talent=app)
         avg = pfl.avg_rate
         cnt = pfl.rate_count
@@ -1021,7 +1021,7 @@ def UnsuitableInterviewListView(request, vac):
         askill_count = len(askillset)
 
         interview_n[app]={
-            'we':awetv, 'te':atetv,'s_no':askill_count, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score': avg, 'count': cnt, 'background': bg,
+            'we':awetv, 'te':atetv,'s_no':askill_count, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score': avg, 'count': cnt, 'background': bg, 'des': des,
             }
 
     interview_n_count = len(interview_n)
@@ -1102,7 +1102,7 @@ def BidRejectedListView(request, vac):
         atalent_skill = list(we.filter(talent=app, edt=False).values_list('skills__skill', flat=True))
         rb = book.filter(talent=app).count()
         atalent_skillt = list(we.filter(talent=app, edt=True).values_list('topic__skills__skill', flat=True))
-
+        des = list(BriefCareerHistory.objects.filter(talent=app, current=True).values_list('designation__name', flat=True))
         pfl = Profile.objects.get(talent=app)
         avg = pfl.avg_rate
         cnt = pfl.rate_count
@@ -1120,7 +1120,7 @@ def BidRejectedListView(request, vac):
         askill_count = len(askillset)
 
         rej_bid_n[app]={
-            'we':awetv, 'te':atetv,'s_no':askill_count, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score': avg, 'count': cnt, 'background': bg,
+            'we':awetv, 'te':atetv,'s_no':askill_count, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score': avg, 'count': cnt, 'background': bg, 'des': des,
             }
 
     rej_bid_n_count = len(rej_bid_n)
@@ -2633,7 +2633,7 @@ def VacancyPostView(request, vac):
         rb = book.filter(talent=item).count()
         talent_skillt = list(we.filter(talent=item, edt=True).values_list('topic__skills__skill', flat=True))
         rate = Profile.objects.filter(talent=item).values_list('std_rate', 'currency__currency_abv', 'rate_unit', 'motivation', 'alias',)
-
+        des = list(BriefCareerHistory.objects.filter(talent=item, current=True).values_list('designation__name', flat=True))
         pfl = Profile.objects.get(talent=item)
         avg = pfl.avg_rate
         cnt = pfl.rate_count
@@ -2644,7 +2644,7 @@ def VacancyPostView(request, vac):
         skill_count = len(skillset)
 
         suitable[item]={
-            'we':wetv, 'te':tetv,'s_no':skill_count, 'skillset': skillset, 'rb':rb, 'ro':rate, 'score': avg, 'count': cnt, 'background': bg,
+            'we':wetv, 'te':tetv,'s_no':skill_count, 'skillset': skillset, 'rb':rb, 'ro':rate, 'score': avg, 'count': cnt, 'background': bg, 'des': des,
             }
 
         #Extracting information for the applicants
@@ -2658,6 +2658,7 @@ def VacancyPostView(request, vac):
             atalent_skillt = list(we.filter(talent=app, edt=True).values_list('topic__skills__skill', flat=True))
             rb = book.filter(talent=app).count()
             rate = applicants.filter(talent=app).values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation', 'talent__alias')
+            des = list(BriefCareerHistory.objects.filter(talent=app, current=True).values_list('designation__name', flat=True))
             pfl = Profile.objects.get(talent=app)
             avg = pfl.avg_rate
             cnt = pfl.rate_count
@@ -2668,7 +2669,7 @@ def VacancyPostView(request, vac):
             askill_count = len(askillset)
 
             applied[app]={
-                'we':awetv, 'te':atetv,'s_no':askill_count, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score': avg, 'count': cnt, 'background': bg,
+                'we':awetv, 'te':atetv,'s_no':askill_count, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score': avg, 'count': cnt, 'background': bg, 'des': des,
                 }
 
     suitable_slice = dict(itertools.islice(suitable.items(), 5))
@@ -2794,7 +2795,7 @@ def TalentSuitedVacancyListView(request, vac):
         rb = book.filter(talent=item).count()
         talent_skillt = list(we.filter(talent=item, edt=True).values_list('topic__skills__skill', flat=True))
         rate = Profile.objects.filter(talent=item).values_list('std_rate', 'currency__currency_abv', 'rate_unit', 'motivation', 'alias',)
-
+        des = list(BriefCareerHistory.objects.filter(talent=item, current=True).values_list('designation__name', flat=True))
         pfl = Profile.objects.get(talent=item)
         avg = pfl.avg_rate
         cnt = pfl.rate_count
@@ -2805,7 +2806,7 @@ def TalentSuitedVacancyListView(request, vac):
         skill_count = len(skillset)
 
         suitable[item]={
-            'we':wetv, 'te':tetv,'s_no':skill_count, 'skillset': skillset, 'rb':rb, 'ro':rate, 'score':avg, 'count':cnt, 'background': bg,
+            'we':wetv, 'te':tetv,'s_no':skill_count, 'skillset': skillset, 'rb':rb, 'ro':rate, 'score':avg, 'count':cnt, 'background': bg, 'des': des,
             }
 
 
@@ -2914,6 +2915,7 @@ def ApplicantsForVacancyListView(request, vac):
             atalent_skillt = list(we.filter(talent=app, edt=True).values_list('topic__skills__skill', flat=True))
             rb = book.filter(talent=app).count()
             rate = applicants.filter(talent=app).values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation', 'talent__alias')
+            des = list(BriefCareerHistory.objects.filter(talent=app, current=True).values_list('designation__name', flat=True))
             pfl = Profile.objects.get(talent=app)
             avg = pfl.avg_rate
             cnt = pfl.rate_count
@@ -2923,7 +2925,7 @@ def ApplicantsForVacancyListView(request, vac):
             askillset = set(aslist)
             askill_count = len(askillset)
 
-            applied[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score': avg, 'count': cnt, 'background': bg,}
+            applied[app]={'we':awetv, 'te':atetv,'s_no':askill_count, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score': avg, 'count': cnt, 'background': bg, 'des': des,}
 
     applied_count = len(applied)
 
@@ -3579,7 +3581,7 @@ def ShortListView(request, vac):
         atalent_skill = list(we.filter(talent=app, edt=False).values_list('skills__skill', flat=True))
         rb = book.filter(talent=app).count()
         atalent_skillt = list(we.filter(talent=app, edt=True).values_list('topic__skills__skill', flat=True))
-
+        des = list(BriefCareerHistory.objects.filter(talent=app, current=True).values_list('designation__name', flat=True))
         pfl = Profile.objects.get(talent=app)
         avg = pfl.avg_rate
         cnt = pfl.rate_count
@@ -3597,7 +3599,7 @@ def ShortListView(request, vac):
         askill_count = len(askillset)
 
         short[app]={
-            'we':awetv, 'te':atetv,'s_no':askill_count, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score':avg, 'count': cnt, 'background': bg,
+            'we':awetv, 'te':atetv,'s_no':askill_count, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score':avg, 'count': cnt, 'background': bg, 'des': des,
             }
 
     t = tuple(short.items())
