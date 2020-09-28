@@ -1,0 +1,252 @@
+{% extends 'base_home.html' %}
+
+{% block title %}My {{block.super}} Profile View{% endblock title %}
+
+{% block content %}
+
+<h2 class="text-center">Percentage Lists Viewed in Expanded View</h2>
+<div class="row">
+
+  <div class="col-md-3">
+    <div class="card card-shadow">
+      <center>
+      <div class="card-body">
+
+        <div class="align-center" style="font-size:80px;color:black">
+          {{ sl_pev|floatformat:0 }}%
+
+        </div>
+      </div>
+      <h5 class="card-title">Shortlist</h5>
+      </center>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+
+  </div>
+
+  <div class="col-md-3">
+    <div class="card card-shadow">
+      <center>
+      <div class="card-body">
+
+        <div class="align-center" style="font-size:80px;color:black">
+          {{ vvl_pev|floatformat:0 }}%
+
+        </div>
+      </div>
+      <h5 class="card-title">Vacancies Suited List</h5>
+      </center>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card card-shadow">
+      <center>
+      <div class="card-body">
+
+        <div class="align-center" style="font-size:80px;color:black">
+          {{ vvfl_pev|floatformat:0 }}%
+
+        </div>
+      </div>
+      <h5 class="card-title">Vacancies Suited Full List</h5>
+      </center>
+    </div>
+  </div>
+
+  </div>
+<br>
+  <div class="row">
+
+    <div class="col-md-3">
+      <div class="card card-shadow">
+        <center>
+        <div class="card-body">
+
+          <div class="align-center" style="font-size:80px;color:black">
+            {{ al_pev|floatformat:0 }}%
+
+          </div>
+        </div>
+        <h5 class="card-title">Applicants List</h5>
+        </center>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card card-shadow">
+        <center>
+        <div class="card-body">
+
+          <div class="align-center" style="font-size:80px;color:black">
+            {{ afl_pev|floatformat:0 }}%
+
+          </div>
+        </div>
+        <h5 class="card-title">Applicants Full List</h5>
+        </center>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card card-shadow">
+        <center>
+        <div class="card-body">
+
+          <div class="align-center" style="font-size:80px;color:black">
+            {{ tsl_pev|floatformat:0 }}%
+
+          </div>
+        </div>
+        <h5 class="card-title">Talent Suited List</h5>
+        </center>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card card-shadow">
+        <center>
+        <div class="card-body">
+
+          <div class="align-center" style="font-size:80px;color:black">
+            {{ tsfl_pev|floatformat:0 }}%
+
+          </div>
+        </div>
+        <h5 class="card-title">Talent Suited Full List</h5>
+        </center>
+      </div>
+    </div>
+
+    </div>
+<br>
+    <div class="row">
+
+      <div class="col-md-3">
+        <div class="card card-shadow">
+          <center>
+          <div class="card-body">
+
+            <div class="align-center" style="font-size:80px;color:black">
+              {{ pil_pev|floatformat:0 }}%
+
+            </div>
+          </div>
+          <h5 class="card-title">Pending Interviews List</h5>
+          </center>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="card card-shadow">
+          <center>
+          <div class="card-body">
+
+            <div class="align-center" style="font-size:80px;color:black">
+              {{ pifl_pev|floatformat:0 }}%
+
+            </div>
+          </div>
+          <h5 class="card-title">Pending Interviews Full List</h5>
+          </center>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="card card-shadow">
+          <center>
+          <div class="card-body">
+
+            <div class="align-center" style="font-size:80px;color:black">
+              {{ sal_pev|floatformat:0 }}%
+
+            </div>
+          </div>
+          <h5 class="card-title">Suitable Applicants List</h5>
+          </center>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="card card-shadow">
+          <center>
+          <div class="card-body">
+
+            <div class="align-center" style="font-size:80px;color:black">
+              {{ safl_pev|floatformat:0 }}%
+
+            </div>
+          </div>
+          <h5 class="card-title">Suited Applicants Full List</h5>
+          </center>
+        </div>
+      </div>
+
+      </div>
+<br>
+      <div class="row">
+
+        <div class="col-md-3">
+          <div class="card card-shadow">
+            <center>
+            <div class="card-body">
+
+              <div class="align-center" style="font-size:80px;color:black">
+                {{ usal_pev|floatformat:0 }}%
+
+              </div>
+            </div>
+            <h5 class="card-title">Unsuitable Applicants List</h5>
+            </center>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="card card-shadow">
+            <center>
+            <div class="card-body">
+
+              <div class="align-center" style="font-size:80px;color:black">
+                {{ usafl_pev|floatformat:0 }}%
+
+              </div>
+            </div>
+            <h5 class="card-title">Unsuitable Applicants Full List</h5>
+            </center>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="card card-shadow">
+            <center>
+            <div class="card-body">
+
+              <div class="align-center" style="font-size:80px;color:black">
+                {{ ral_pev|floatformat:0 }}%
+
+              </div>
+            </div>
+            <h5 class="card-title">Rejected List</h5>
+            </center>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="card card-shadow">
+            <center>
+            <div class="card-body">
+
+              <div class="align-center" style="font-size:80px;color:black">
+                {{ rafl_pev|floatformat:0 }}%
+
+              </div>
+            </div>
+            <h5 class="card-title">Rejected Full List</h5>
+            </center>
+          </div>
+        </div>
+
+        </div>
+{% endblock content %}

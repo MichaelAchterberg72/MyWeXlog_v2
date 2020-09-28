@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 
+from django.db.models import Count, Sum, F, Q
 
 from csp.decorators import csp_exempt
 
@@ -16,7 +17,7 @@ import pytz
 from core.decorators import subscription
 
 
-
+from users.models import ExpandedView
 from db_flatten.models import SkillTag
 from enterprises.models import Enterprise
 from marketplace.models import (
@@ -25,6 +26,96 @@ from marketplace.models import (
 from paypal.standard.ipn.models import PayPalIPN
 
 from django.urls import reverse
+
+
+@login_required()
+@subscription(3)
+def ExpandedViewPercentageView(request):
+    '''Management view to see all expanded view percentages'''
+    qs = TalentRequired.objects.all()
+
+    am_count = User.objects.filter(subscription='2').count()
+
+    qs_v = qs.filter(offer_status__in=['O', 'C']).values_list('requested_by', flat=True).distinct()
+
+    qs_vc = qs_v.count()
+
+    tsvvc = am_count - qs_vc
+
+    vsl = ExpandedView.objects.filter(vacancies_suited_list=False).count()
+    vsfl = ExpandedView.objects.filter(vacancies_fl_suited_list=False).count()
+
+    sl = ExpandedView.objects.filter(shortlist_list=False).count()
+
+    al = ExpandedView.objects.filter(applicants_list=False).count()
+    afl = ExpandedView.objects.filter(applicants_fl_list=False).count()
+
+    tsl = ExpandedView.objects.filter(talent_suited_list=False).count()
+    tsfl = ExpandedView.objects.filter(talent_fl_suited_list=False).count()
+
+    pil = ExpandedView.objects.filter(pending_interviews_list=False).count()
+    pifl = ExpandedView.objects.filter(pending_fl_interviews_list=False).count()
+
+    sal = ExpandedView.objects.filter(suitable_applicants_list=False).count()
+    safl = ExpandedView.objects.filter(suitable_fl_applicants_list=False).count()
+
+    usal = ExpandedView.objects.filter(unsuitable_applicants_list=False).count()
+    usafl = ExpandedView.objects.filter(unsuitable_fl_applicants_list=False).count()
+    usall = ExpandedView.objects.filter(unsuitable_applicants_list=False).values_list('talent', flat=True)
+
+    ral = ExpandedView.objects.filter(rejected_applicants_list=False).count()
+    rafl = ExpandedView.objects.filter(rejected_fl_applicants_list=False).count()
+
+    if qs_vc == 0:
+        qs_vc = 1
+    else:
+        qs_vc
+
+    vvl_pev = vsl / tsvvc * 100
+    vvfl_pev = vsfl / tsvvc * 100
+
+    sl_pev = sl / qs_vc * 100
+
+    al_pev = al / qs_vc * 100
+    afl_pev = afl / qs_vc * 100
+
+    tsl_pev = tsl / qs_vc * 100
+    tsfl_pev = tsfl / qs_vc * 100
+
+    pil_pev = pil / qs_vc * 100
+    pifl_pev = pifl / qs_vc * 100
+
+    sal_pev = sal / qs_vc * 100
+    safl_pev = safl / qs_vc * 100
+
+    usal_pev = usal / qs_vc * 100
+    usafl_pev = usafl / qs_vc * 100
+
+    ral_pev = ral / qs_vc * 100
+    rafl_pev = rafl / qs_vc * 100
+
+    template = 'management/percentage_expanded_views.html'
+    context = {
+        'qs_v': qs_v,
+        'qs_vc': qs_vc,
+        'vvl_pev': vvl_pev,
+        'vvfl_pev': vvfl_pev,
+        'sl': sl,
+        'sl_pev': sl_pev,
+        'al_pev': al_pev,
+        'afl_pev': afl_pev,
+        'tsl_pev': tsl_pev,
+        'tsfl_pev': tsfl_pev,
+        'pil_pev': pil_pev,
+        'pifl_pev': pifl_pev,
+        'sal_pev': sal_pev,
+        'safl_pev': safl_pev,
+        'usal_pev': usal_pev,
+        'usafl_pev': usafl_pev,
+        'ral_pev': ral_pev,
+        'rafl_pev': rafl_pev,
+    }
+    return render(request, template, context)
 
 
 @login_required()

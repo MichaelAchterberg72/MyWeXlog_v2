@@ -101,7 +101,7 @@
     </div>
   </div>
   <div class="col-sm-3">
-    <div class="card border h-100">
+    <div class="card card-shadow h-100">
       <div class="card-body">
         <h4 class="card-title">Vacancies</h4>
         <p>See all vacancies on the site</p>
@@ -114,7 +114,7 @@
     </div>
   </div>
   <div class="col-sm-3">
-    <div class="card border h-100">
+    <div class="card card-shadow h-100">
       <div class="card-body">
         <h4 class="card-title">Bids</h4>
         <p>See all bids made</p>
@@ -127,13 +127,26 @@
     </div>
   </div>
   <div class="col-sm-3">
-    <div class="card border h-100">
+    <div class="card card-shadow h-100">
       <div class="card-body">
         <h4 class="card-title">Placements</h4>
         <p>See all vacancy placement</p>
         <div class="float-center">
           <center>
           <a href="{% url 'Management:WorkIssued' %}" class="btn btn-primary">View</a>
+          </center>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-3">
+    <div class="card card-shadow h-100">
+      <div class="card-body">
+        <h4 class="card-title">Expanded Views</h4>
+        <p>See all expanded view percentages</p>
+        <div class="float-center">
+          <center>
+          <a href="{% url 'Management:ExpandedViews' %}" class="btn btn-primary">View</a>
           </center>
         </div>
       </div>
