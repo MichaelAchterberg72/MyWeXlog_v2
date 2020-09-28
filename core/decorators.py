@@ -1,9 +1,15 @@
 from django.core.exceptions import PermissionDenied
 
-def app_role(cr):
+from mod_corporate.models import CorporateStaff
+
+
+def corp_permission(cr):
+    '''Decorator for access to the corporate module'''
     def decorator(func):
         def wrap(request, *args, **kwargs):
-            if request.user.role >= int(cr):
+            talent=request.user
+            role = CorporateStaff.objects.get(talent=talent)
+            if role.corp_access >= int(cr):
                 return func(request, *args, **kwargs)
             else:
                 raise PermissionDenied

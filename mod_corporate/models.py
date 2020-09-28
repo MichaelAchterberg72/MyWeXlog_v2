@@ -17,25 +17,23 @@ from marketplace.models import (
 class OrgStructure(models.Model):
     corporate = models.ForeignKey(CorporateHR, on_delete=models.CASCADE)
     level_name = models.CharField(max_length=100)
-    level_number = models.SmallIntegerField()
-    floor = models.ForeignKey('OrgStructure', on_delete=models.CASCADE, related_name='parent', blank=True, null=True)
+    level = models.ForeignKey('OrgStructure', on_delete=models.CASCADE, related_name='parent', blank=True, null=True)
 
     def __str__(self):
-        return f'{self.corporate}-{self.level_number}: {self.level_name}'
+        return f'{self.corporate}-{self.level_name}'
 
     class Meta:
-        unique_together = (('corporate','level_number'),)
-        ordering = ('level_number',)
+        unique_together = (('corporate','level_name'),)
 
 
 class CorporateStaff(models.Model):
     USER_TYPE = (
-        ('A','Administrator'),
-        ('C','Controller'),
-        ('S','Staff'),
+        (2,'Administrator'),
+        (1,'Controller'),
+        (0,'Staff'),
         )
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    access = models.CharField(max_length=1, choices=USER_TYPE, default='S')
+    corp_access = models.SmallIntegerField(choices=USER_TYPE, default=0)
     type = models.ForeignKey(WorkLocation, on_delete=models.PROTECT)
     corporate = models.ForeignKey(CorporateHR, on_delete=models.CASCADE)
     admin = models.BooleanField('Admin Status', default=False)#admin status
