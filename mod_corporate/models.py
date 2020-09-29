@@ -39,7 +39,9 @@ class CorporateStaff(models.Model):
     admin = models.BooleanField('Admin Status', default=False)#admin status
     status = models.BooleanField('Admin / Staff', default=False)#available for admin duty
     date_add = models.DateField(auto_now_add=True)
+    date_modified = models.DateField(auto_now=True)
     unlocked = models.BooleanField(default=False)
+    resigned = models.BooleanField(default=False)
     slug = models.CharField(max_length=9, blank=True)
 
     class Meta:

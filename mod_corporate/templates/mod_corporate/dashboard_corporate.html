@@ -1,0 +1,36 @@
+{% extends 'mod_corporate/base_corporate.html' %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Corporate{% endblock title %}
+
+{% block subStyle %}{% endblock subStyle %}
+
+{% block TopCenter %}
+
+{% endblock TopCenter %}
+
+{% block MidTopLeft %}
+  <h4>Organisation Structure</h4>
+  <p>Department - Parent - #Staff - #Skills - Experience</p>
+
+{% endblock MidTopLeft %}
+
+{% block MidTopRight %}
+  <h4>Staff</h4>
+  <p>Total Staff - Average Age - graph (age histogram)</p>
+{% endblock MidTopRight %}
+
+{% block MidBotLeft %}
+  <h4>Experience</h4>
+  <p>Total Skills</p>
+  <p>Total Hours</p>
+  <p>skills histogram by 10 year buckets</p>
+{% endblock MidBotLeft %}
+
+{% block MidBotRight %}
+{% endblock MidBotRight %}
+
+{% block BotCenter %}
+{% endblock BotCenter %}
+
+{% block subScript %}{% endblock subScript %}

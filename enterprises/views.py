@@ -10,7 +10,7 @@ import json
 from django.db.models import Count
 from django.contrib import messages
 
-from core.decorators import app_role, subscription
+from core.decorators import subscription
 from csp.decorators import csp_exempt
 
 
