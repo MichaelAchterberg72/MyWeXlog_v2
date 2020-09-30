@@ -6,15 +6,14 @@ from .models import (
 )
 
 class OrgStructureForm(forms.ModelForm):
-    level = forms.ModelChoiceField(queryset=None)
+    parent = forms.ModelChoiceField(queryset=None)
     def __init__(self, *args, **kwargs):
-        self._corp=kwargs.pop('corp', None)
+        self._fil=kwargs.pop('fil', None)
         super().__init__(*args, **kwargs)
-        self.fields['level'].queryset = OrgStructure.objects.filter(corporate=self._corp)
+        self.fields['parent'].queryset = OrgStructure.objects.filter(corporate=self._fil)
     class Meta:
         model = OrgStructure
-        fields = ('level_name', 'level')
+        fields = ('level_name', 'parent',)
         labels = {
-            'level':'Parent Department',
-            'level_name':'Department Name'
+            'level_name':'Department Name',
         }

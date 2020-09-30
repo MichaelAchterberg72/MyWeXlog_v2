@@ -1,0 +1,22 @@
+{% extends 'base_home.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}{{block.super}} Org Structure{% endblock title %}
+
+{% block content %}
+<div class="card card-shadow">
+  <div class="card-body">
+    <div class="float-right">
+      <form  action="{% url 'BookList:BLB' %}" method="post">
+        <input type="hidden" name="next" value="{{ request.GET.next }}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-secondary">Back</button>
+      </form>
+    </div>
+    <h3></h3>
+
+  </div>
+</div>
+
+{% endblock content %}

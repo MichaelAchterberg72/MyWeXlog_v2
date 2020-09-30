@@ -55,7 +55,7 @@ def org_structure_add(request, cor):
             new = form.save(commit=False)
             new.corporate = corp
             new.save()
-            return redirect(reverse('Corporate:OrgView'))
+            return redirect(reverse('Corporate:DashCorp'))
         else:
             template = 'mod_corporate/org_structure_add.html'
             context = {'form': form, 'corp': corp,}

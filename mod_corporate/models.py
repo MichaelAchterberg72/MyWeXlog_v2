@@ -17,7 +17,7 @@ from marketplace.models import (
 class OrgStructure(models.Model):
     corporate = models.ForeignKey(CorporateHR, on_delete=models.CASCADE)
     level_name = models.CharField(max_length=100)
-    level = models.ForeignKey('OrgStructure', on_delete=models.CASCADE, related_name='parent', blank=True, null=True)
+    parent = models.ForeignKey('OrgStructure', on_delete=models.CASCADE, related_name='parentdept', blank=True, null=True)
 
     def __str__(self):
         return f'{self.corporate}-{self.level_name}'

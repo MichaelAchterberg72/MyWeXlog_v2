@@ -10,6 +10,10 @@
 {% endblock TopCenter %}
 
 {% block MidTopLeft %}
+  <div class="btn-group float-right">
+    <a href="{% url 'Corporate:OrgAdd' corp.corporate.slug %}">Add</a>
+
+  </div>
   <h4>Organisation Structure</h4>
   <p>Department - Parent - #Staff - #Skills - Experience</p>
 
