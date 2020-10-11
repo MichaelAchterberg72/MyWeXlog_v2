@@ -1,0 +1,433 @@
+{% extends 'base_home.html' %}
+{% load static %}
+{% block title %}My {{block.super}} Internal Chat{% endblock title %}
+
+{% block content %}
+<!-- Chat -->
+<link rel="stylesheet" href="{% static 'css/chat-css.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<div class="row" style="z-index:-1;">
+  <div class="col-sm-4">
+    <div class="card card-shadow h-100">
+      <div class="side-one">
+        <div class="row heading">
+          <div class="col-sm-8 col-xs-3 heading-avatar">
+            <div class="heading-avatar-icon">
+              <img src="https://bootdey.com/img/Content/avatar/avatar1.png">
+              <span class="user-name-heading">{{ username }}</span>
+            </div>
+          </div>
+          <div class="col-sm-1 col-xs-1  heading-dot  pull-right">
+            <i class="fa fa-ellipsis-v fa-2x  pull-right" aria-hidden="true"></i>
+          </div>
+          <div class="col-sm-2 col-xs-2 heading-compose  pull-right">
+            <i class="fa fa-comments fa-2x  pull-right" aria-hidden="true" data-toggle="tooltip" title="New Chat"></i>
+          </div>
+        </div>
+
+        <div class="row searchBox">
+          <div class="col-sm-12 searchBox-inner">
+            <div class="form-group has-feedback">
+              <input id="searchText" type="text" class="form-control" name="searchText" placeholder="Search">
+              <span class="glyphicon glyphicon-search form-control-feedback"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row sideBar">
+          {% for room in chat_rooms.items %}
+
+          <a href="{% url 'Chat:room' room.1.group.0.2 %}">
+          <div class="row sideBar-body">
+            <div class="col-md-3 sideBar-avatar">
+              <div class="avatar-icon">
+                <img src="https://bootdey.com/img/Content/avatar/avatar1.png">
+              </div>
+            </div>
+            <div class="col-md-9 sideBar-main">
+              <div class="row">
+                <div class="col-7 col-no-pad sideBar-name">
+                  <span class="name-meta">{{ room.1.group.0.0 }}
+                    {% if room.1.notification > 0 %}
+                    <span class="notification">
+                      {{ room.1.notification }}
+                    </span>
+                    {% endif %}
+                </span>
+                </div>
+                <div class="col-4 col-no-pad float-right sideBar-time">
+                  <span class="time-meta float-right">{{ room.1.group.0.1|date:"D, j M" }}
+                </span>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-8 conversation">
+    <div class="card card-shadow">
+      <div class="row heading">
+        <div class="col-sm-2 col-md-1 col-xs-3 heading-avatar">
+          <div class="heading-avatar-icon">
+            <img src="https://bootdey.com/img/Content/avatar/avatar6.png">
+          </div>
+        </div>
+        <div class="col-sm-9 col-xs-7 heading-name">
+          <a class="heading-name-meta">{{ room.0 }}
+          </a>
+          <span class="heading-online">Online</span>
+        </div>
+        <div class="col-sm-1 col-xs-1  heading-dot pull-right">
+          <i class="fa fa-ellipsis-v fa-2x  pull-right" aria-hidden="true"></i>
+        </div>
+      </div>
+
+      <div class="row message" id="chat-log">
+        <div class="row message-previous">
+          <div class="col-sm-12 previous">
+            <a onclick="previous(this)" id={{ username }} name="20">
+            Show Previous Messages!
+            </a>
+          </div>
+        </div>
+
+        <div class="row message-body">
+          <div class="col-sm-12 message-main-receiver">
+            <div class="receiver">
+              <div class="message-text">
+               Hi, what are you doing?!
+              </div>
+              <span class="message-time pull-right">
+                Sun
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row message-body">
+          <div class="col-sm-12 message-main-sender">
+            <div class="sender">
+              <div class="message-text">
+                I am doing nothing man!
+              </div>
+              <span class="message-time pull-right">
+                Sun
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row reply">
+        <div class="col-sm-1 col-xs-1 reply-emojis">
+          <i class="fa fa-smile-o fa-2x"></i>
+        </div>
+        <div class="col-sm-9 col-xs-9 reply-main">
+          <textarea class="form-control" rows="1" id="chat-message-input"></textarea>
+        </div>
+        <div class="col-sm-1 col-xs-1 reply-recording">
+          <i class="fa fa-microphone fa-2x" aria-hidden="true"></i>
+        </div>
+        <div class="col-sm-1 col-xs-1 reply-send">
+          <button id="chat-message-submit">
+            <i class="fa fa-send fa-2x" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--
+<div class="container app">
+  <div class="row app-one">
+    <div class="col-sm-4 side">
+      <div class="side-one">
+        <div class="row heading">
+          <div class="col-sm-8 col-xs-3 heading-avatar">
+            <div class="heading-avatar-icon">
+              <img src="https://bootdey.com/img/Content/avatar/avatar1.png">
+              <span class="user-name-heading">{{ username }}</span>
+            </div>
+          </div>
+          <div class="col-sm-1 col-xs-1  heading-dot  pull-right">
+            <i class="fa fa-ellipsis-v fa-2x  pull-right" aria-hidden="true"></i>
+          </div>
+          <div class="col-sm-2 col-xs-2 heading-compose  pull-right">
+            <i class="fa fa-comments fa-2x  pull-right" aria-hidden="true" data-toggle="tooltip" title="New Chat"></i>
+          </div>
+        </div>
+
+        <div class="row searchBox">
+          <div class="col-sm-12 searchBox-inner">
+            <div class="form-group has-feedback">
+              <input id="searchText" type="text" class="form-control" name="searchText" placeholder="Search">
+              <span class="glyphicon glyphicon-search form-control-feedback"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row sideBar">
+          {% for group in groups %}
+          <a href="{% url 'Chat:room' group.chat_group.slug %}" style="decoration: none;">
+          <div class="row sideBar-body">
+            <div class="col-md-3 sideBar-avatar">
+              <div class="avatar-icon">
+                <img src="https://bootdey.com/img/Content/avatar/avatar1.png">
+              </div>
+            </div>
+            <div class="col-md-9 sideBar-main">
+              <div class="row">
+                <div class="col-md-8 sideBar-name">
+                  <span class="name-meta">{{ group.chat_group.room_name }}
+                </span>
+                </div>
+                <div class="col-md-4 float-right sideBar-time">
+                  <span class="time-meta float-right">{{ group.chat_group.date_modified|date:"D, j M" }}
+                </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="side-two">
+        <div class="row newMessage-heading">
+          <div class="row newMessage-main">
+            <div class="col-sm-2 col-xs-2 newMessage-back">
+              <i class="fa fa-arrow-left" aria-hidden="true"></i>
+            </div>
+            <div class="col-sm-10 col-xs-10 newMessage-title">
+              New Chat
+            </div>
+          </div>
+        </div>
+
+        <div class="row composeBox">
+          <div class="col-sm-12 composeBox-inner">
+            <div class="form-group has-feedback">
+              <input id="composeText" type="text" class="form-control" name="searchText" placeholder="Search People">
+              <span class="glyphicon glyphicon-search form-control-feedback"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row compose-sideBar">
+          <div class="row sideBar-body">
+            <div class="col-sm-3 col-xs-3 sideBar-avatar">
+              <div class="avatar-icon">
+                <img src="https://bootdey.com/img/Content/avatar/avatar1.png">
+              </div>
+            </div>
+            <div class="col-sm-9 col-xs-9 sideBar-main">
+              <div class="row">
+                <div class="col-sm-8 col-xs-8 sideBar-name">
+                  <span class="name-meta">John Doe
+                </span>
+                </div>
+                <div class="col-sm-4 col-xs-4 pull-right sideBar-time">
+                  <span class="time-meta pull-right">18:18
+                </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-8 conversation">
+      <div class="row heading">
+        <div class="col-sm-2 col-md-1 col-xs-3 heading-avatar">
+          <div class="heading-avatar-icon">
+            <img src="https://bootdey.com/img/Content/avatar/avatar6.png">
+          </div>
+        </div>
+        <div class="col-sm-9 col-xs-7 heading-name">
+          <a class="heading-name-meta">{{ room.0 }}
+          </a>
+          <span class="heading-online">Online</span>
+        </div>
+        <div class="col-sm-1 col-xs-1  heading-dot pull-right">
+          <i class="fa fa-ellipsis-v fa-2x  pull-right" aria-hidden="true"></i>
+        </div>
+      </div>
+
+      <div class="row message" id="chat-log">
+        <div class="row message-previous">
+          <div class="col-sm-12 previous">
+            <a onclick="previous(this)" id={{ username }} name="20">
+            Show Previous Message!
+            </a>
+          </div>
+        </div>
+
+        <div class="row message-body">
+          <div class="col-sm-12 message-main-receiver">
+            <div class="receiver">
+              <div class="message-text">
+               Hi, what are you doing?!
+              </div>
+              <span class="message-time pull-right">
+                Sun
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row message-body">
+          <div class="col-sm-12 message-main-sender">
+            <div class="sender">
+              <div class="message-text">
+                I am doing nothing man!
+              </div>
+              <span class="message-time pull-right">
+                Sun
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row reply">
+        <div class="col-sm-1 col-xs-1 reply-emojis">
+          <i class="fa fa-smile-o fa-2x"></i>
+        </div>
+        <div class="col-sm-9 col-xs-9 reply-main">
+          <textarea class="form-control" rows="1" id="chat-message-input"></textarea>
+        </div>
+        <div class="col-sm-1 col-xs-1 reply-recording">
+          <i class="fa fa-microphone fa-2x" aria-hidden="true"></i>
+        </div>
+        <div class="col-sm-1 col-xs-1 reply-send">
+          <button id="chat-message-submit">
+            <i class="fa fa-send fa-2x" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+-->
+
+
+<!--
+<script>
+  $(function(){
+    $(".heading-compose").click(function() {
+      $(".side-two").css({
+        "left": "0"
+      });
+    });
+
+    $(".newMessage-back").click(function() {
+      $(".side-two").css({
+        "left": "-100%"
+      });
+    });
+})
+</script>
+-->
+<script src="{% static 'js/reconnecting-websocket.js' %}"></script>
+<script src= "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+
+  $(document).ready(function(){
+   $('#chat-log').animate({ scrollTop: $(document).height() }, 1000);
+  });
+</script>
+<script>
+  var roomName = {{ room_name_json }};
+  var username = {{ username }};
+
+  var chatSocket = new ReconnectingWebSocket(
+      'ws://' + window.location.host +
+      '/ws/chat/' + roomName + '/');
+
+  chatSocket.onopen = function(e) {
+    fetchMessages();
+  }
+
+  chatSocket.onmessage = function(e) {
+     var data = JSON.parse(e.data);
+     if (data['command'] === 'messages') {
+       for (let i=0; i<data['messages'].length; i++) {
+         createMessage(data['messages'][i]);
+       }
+     } else if (data['command'] === 'new_message'){
+       createMessage(data['message']);
+     }
+ };
+
+  chatSocket.onclose = function(e) {
+      console.error('Chat socket closed unexpectedly');
+  };
+
+  document.querySelector('#chat-message-input').onkeyup = function(e) {
+      if (e.keyCode === 13) {  // enter, return
+          document.querySelector('#chat-message-submit').click();
+      }
+  };
+
+  document.querySelector('#chat-message-submit').onclick = function(e) {
+      var messageInputDom = document.getElementById('chat-message-input');
+      var message = messageInputDom.value;
+      chatSocket.send(JSON.stringify({
+          'command': 'new_message',
+          'message': message,
+          'from': username
+      }));
+
+      messageInputDom.value = '';
+
+      $(document).ready(function(){
+       $('#chat-log').animate({ scrollTop: $(document).height() }, 1000);
+      });
+
+  };
+
+  function fetchMessages() {
+    chatSocket.send(JSON.stringify({'command': 'fetch_messages' }));
+  }
+
+  function createMessage(data) {
+    var author = data['author'];
+    var msgListTag = document.createElement('div');
+    var rowTag = document.createElement('div');
+    rowTag.className = 'row message-body';
+    var colTag = document.createElement('div');
+    var messageTag = document.createElement('div');
+    messageTag.className = 'message-text';
+    var spanTag = document.createElement('span');
+    spanTag.className = 'message-time pull-right';
+    messageTag.textContent = [data.content];
+    spanTag.textContent = [data.timestamp];
+
+    if (author === username) {
+      colTag.className = 'col-sm-12 message-main-sender';
+      msgListTag.className = 'sender';
+      rowTag.className = 'row message-body';
+    } else {
+      colTag.className = 'col-sm-12 message-main-receiver';
+      msgListTag.className = 'receiver';
+      rowTag.className = 'row message-body';
+    }
+    document.querySelector('#chat-log').appendChild(rowTag);
+    rowTag.appendChild(colTag);
+    colTag.appendChild(msgListTag);
+    msgListTag.appendChild(messageTag);
+    messageTag.after(spanTag);
+  }
+</script>
+{% endblock content %}

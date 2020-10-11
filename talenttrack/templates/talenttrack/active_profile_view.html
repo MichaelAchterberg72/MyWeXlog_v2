@@ -7,7 +7,13 @@
 
 <div class="">
   <div class="card-header">
-    <a href="{% url 'Talent:SPDView' als.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right" >View All Skills</a>
+    <div class="row float-right">
+      <form  action="{% url 'Chat:NewChat' tlt=als.alias %}" method="post" name="active" target="_blank">
+      {% csrf_token %}
+      <button type="submit"  class="btn btn-success" style="width: 10rem;">Chat</button>&nbsp
+      </form>
+      <a href="{% url 'Talent:SPDView' als.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width:10rem;">View All Skills</a>
+    </div>
     <h5>Vacancy Skills Match</h5>
   </div>
     <div class="row">

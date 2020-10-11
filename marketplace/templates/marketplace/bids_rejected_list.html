@@ -44,6 +44,10 @@
                   <div class="row my-auto">
                     {% include 'marketplace/list_view_fields.html' %}
                     <div class="col-1 col-no-pad h-100 text-center my-auto">
+                      <form  action="{% url 'Chat:NewChat' tlt=key.1.ro.0.4 %}" method="post" name="active" target="_blank">
+                      {% csrf_token %}
+                      <button type="submit"  class="badge badge-success badge-pill float-right" style="width: 6rem;">Chat</button>
+                      </form>
                       <form  action="{% url 'MarketPlace:ApplicantsBidShortList' tlt=key.1.ro.0.4  vac=scope.ref_no %}" method="post" name="active">
                       {% csrf_token %}
                       <button type="submit"  class="badge badge-success badge-pill float-right" style="width: 6rem;">Short-list</button>
@@ -66,6 +70,10 @@
                   <div class="row my-auto">
                     <div class="col-md-12 h-100">
                       <div class="row my-auto float-right">
+                        <form  action="{% url 'Chat:NewChat' tlt=key.1.ro.0.4 %}" method="post" name="active" target="_blank">
+                        {% csrf_token %}
+                        <button type="submit"  class="btn btn-outline-success" style="width: 10rem;">Chat</button>
+                        </form>&nbsp
                         <form  action="{% url 'MarketPlace:ApplicantsBidShortList' tlt=key.1.ro.0.4  vac=scope.ref_no %}" method="post" name="active">
                         {% csrf_token %}
                         <button type="submit"  class="btn btn-outline-success" style="width: 10rem;">Short-list</button>

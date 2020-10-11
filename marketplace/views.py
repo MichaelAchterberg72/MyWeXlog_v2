@@ -2755,7 +2755,7 @@ def TalentSuitedVacancyListView(request, vac):
     #>>> Find all talent that are in the correct geographic location
     vac_type = instance.worklocation.id
 
-    if vac_type == 0:
+    if vac_type == 'Remote freelance':
         wel_i=wee
     else:
         wel = set(PhysicalAddress.objects.filter(region=instance.city.region).values_list('talent', flat=True))

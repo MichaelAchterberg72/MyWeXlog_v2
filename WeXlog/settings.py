@@ -175,7 +175,7 @@ PASSWORD_HASHERS = [
 WSGI_APPLICATION = 'WeXlog.wsgi.application'
 ASGI_APPLICATION = 'WeXlog.routing.application'
 #>>>Removed as not required for current site
-'''
+
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
@@ -184,7 +184,7 @@ CHANNEL_LAYERS = {
         },
     },
 }
-'''
+
 #Removed as not required for current site<<<
 
 ## Web Security Headers
