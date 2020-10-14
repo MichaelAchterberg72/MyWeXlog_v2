@@ -12,8 +12,8 @@
       <a href="{% url 'MarketPlace:VacancyIntDetail' instance.ref_no %}" class="btn btn-primary">Interview List</a>
       <a href="{% url 'MarketPlace:InterviewList' instance.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-primary">Vacancy Dashboard</a>
       <a href="{% url 'MarketPlace:VacancyPost' instance.ref_no %}?next={{ request.path|urlencode }}"  class="btn btn-secondary">Back</a>
-      <a href="{% url 'MarketPlace:HelpTalentSuitedVacancyFull' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
-      <i class="icon icon-question-circle"></i></a>
+      <a href="{% url 'MarketPlace:HelpTalentSuitedVacancyFull' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="tooltip" title="Click here for help on this page!">
+      <i class="fa fa-question-circle"></i></a>
     </div>
       <h4 id='suited'>Talent suited to the Vacancy: <br>{{ instance.title }}</h4>
       <p>There is a total of {{ suitable_count }} talent suited to the vacancy listed here.</p>
