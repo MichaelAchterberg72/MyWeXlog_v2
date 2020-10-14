@@ -277,7 +277,7 @@ def admin_permission(request):
     action = data['action']
 
     staff = CorporateStaff.objects.get(slug=staffSlug)
-    
+
     if action == 'up':
         if staff.corp_access < 2:
             staff.corp_access += 1

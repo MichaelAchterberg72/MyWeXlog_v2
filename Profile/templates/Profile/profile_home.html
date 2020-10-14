@@ -505,12 +505,6 @@
     <br>
     {% endif %}
 
-    <div class="float-right">
-      <a href="{% url 'MarketPlace:EmployerInterviewHistory' request.user.alias %}" class="btn btn-primary" style="width: 10rem">Interview History</a>
-      {% if ipost_count > 5 %}
-      <a href="{% url 'MarketPlace:AllPostedVacOpen' %}" class="btn btn-primary"style="width: 12rem">All Open Vacancies</a>
-      {% endif %}
-    </div>
   </div>
 </div>
 <br>
