@@ -19,8 +19,8 @@
           {% if request.user.subscription >= 1 %}
           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Availability</button>
           {% endif %}
-          <a href="{% url 'MarketPlace:HelpVacanciesSuitedForMeSummary' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
-          <i class="icon icon-question-circle"></i></a>
+          <a href="{% url 'MarketPlace:HelpVacanciesSuitedForMeSummary' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="tooltip" title="Click here for help on this page!">
+          <i class="fa fa-question-circle"></i></a>
         </div>
 
         <!-- Modal -->
@@ -31,8 +31,8 @@
                 <h4 class="modal-title" id="exampleModalLabel">My Availability</h4>
                 <div class="float-right">
                   <a href="{% url 'MarketPlace:Availabillity' %}" class="badge badge-primary" style="width: 8rem;">Add</a>
-                  <a href="{% url 'MarketPlace:HelpAvailability' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
-                  <i class="icon icon-question-circle"></i></a>
+                  <a href="{% url 'MarketPlace:HelpAvailability' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="tooltip" title="Click here for help on this page!">
+                  <i class="fa fa-question-circle"></i></a>
                 </div>
               </div>
               <div class="modal-body">
@@ -176,7 +176,7 @@
       {% for s in dsd %}
 <div class="container">
 <div class="row">
-  <div class="card mt-1 card-hover" style="width: 100%;" id="{{ s.id }}">
+  <div class="card mt-1 card-no-hover" style="width: 100%;" id="{{ s.id }}">
       <div class="card-body small-pad">
         <div class="row" style="height: 20px;">
           <div class="col-md-12 h-100 my-auto">
@@ -228,8 +228,8 @@
   <div class="card-body">
     <div class="float-right">
     <a href="{% url 'MarketPlace:Vacancy' %}" class="btn btn-primary">Post Vacancy</a>
-    <a href="{% url 'MarketPlace:HelpVacanciesAdvertisedOpenSummary' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
-    <i class="icon icon-question-circle"></i></a>
+    <a href="{% url 'MarketPlace:HelpVacanciesAdvertisedOpenSummary' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="tooltip" title="Click here for help on this page!">
+    <i class="fa fa-question-circle"></i></a>
     </div>
   <h4 class="card-title">My Vacancies Advertised (Open)</h4>
   <p>You currently have <strong>{{ ipost_count }}</strong> open vacancies listed{% if ipost_count > 5 %}, we only list the 5 most recent vacancies here.{% else %}.{% endif %}</p>
@@ -314,8 +314,8 @@
       <div class="card-body">
         <div class="float-right">
         <a href="{% url 'MarketPlace:AllPostedVac' %}" class="btn btn-primary">All Posted Vacancies</a>
-        <a href="{% url 'MarketPlace:HelpVacanciesAdvertisedClosedSummary' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
-        <i class="icon icon-question-circle"></i></a>
+        <a href="{% url 'MarketPlace:HelpVacanciesAdvertisedClosedSummary' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="tooltip" title="Click here for help on this page!">
+        <i class="fa fa-question-circle"></i></a>
         </div>
       <h4 class="card-title">My Vacancies Advertised (Closed)</h4>
       <p>You currently have <strong>{{ ipost_closed_count }}</strong> closed vacancies listed{% if ipost_closed_count > 5 %}, we only list the 5 most recent vacancies here.{% else %}.{% endif %}</p>
