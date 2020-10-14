@@ -17,7 +17,7 @@ from django.contrib.postgres.search import SearchVector, TrigramSimilarity
 
 
 from csp.decorators import csp_exempt
-from core.decorators import subscription
+from core.decorators import subscription, corp_permission
 from WeXlog.app_config import(
         client_score, lecturer_score, classmate_score, colleague_score, pre_colleague_score, collaborator_score, superior_score
         )
@@ -42,6 +42,7 @@ from Profile.models import (
 )
 from booklist.models import ReadBy
 from users.models import CustomUser
+from mod_corporate.models import CorporateStaff
 
 from WeXlog.app_config import (
     skill_pass_score, locked_age,
@@ -1355,8 +1356,8 @@ def profile_view(request, tlt):
     pfl = Profile.objects.filter(alias=tlt).first()
     als = get_object_or_404(Profile, alias=tlt)
     padd = PhysicalAddress.objects.only('country', 'region', 'city').get(talent__alias=tlt)
-    vacancy = TalentRequired.objects.filter(ref_no=vac)
-    skr = SkillRequired.objects.filter(scope__ref_no=vac).values_list('skills', flat=True).distinct('skills')
+    #vacancy = TalentRequired.objects.filter(ref_no=vac)
+    #skr = SkillRequired.objects.filter(scope__ref_no=vac).values_list('skills', flat=True).distinct('skills')
     skill_qs = SkillTag.objects.all()
     exp = WorkExperience.objects.filter(talent__alias=tlt).select_related('topic', 'course', 'project')
     edtexp = exp.filter(edt=True).order_by('-date_from')
@@ -1364,7 +1365,7 @@ def profile_view(request, tlt):
     bkl = ReadBy.objects.filter(talent__alias=tlt).select_related('book', 'type')[:6]
     bkl_count = bkl.count()
     prj_qs = ProjectData.objects.all()
-    bid_qs = WorkBid.objects.filter(Q(talent__alias=tlt) & Q(work__ref_no=vac))
+    #bid_qs = WorkBid.objects.filter(Q(talent__alias=tlt) & Q(work__ref_no=vac))
     achievement_qs = Achievements.objects.filter(talent__alias=tlt).order_by('-date_achieved')[:6]
     achievement_qs_count = achievement_qs.count()
     language_qs = LanguageTrack.objects.filter(talent__alias=tlt).order_by('-language')
@@ -1390,7 +1391,56 @@ def profile_view(request, tlt):
 
     template = 'talenttrack/active_profile_view_light.html'
     context = {
-        'tlt': tlt, 'bch': bch, 'bch_count': bch_count, 'pfl': pfl, 'padd': padd, 'exp': exp, 'bkl': bkl, 'edtexp': edtexp, 'edtexp_count': edtexp_count, 'bkl_count': bkl_count, 'prj_set': prj_set, 'prj_count': prj_count, 'achievement_qs': achievement_qs, 'achievement_qs_count': achievement_qs_count, 'language_qs': language_qs, 'membership_qs': membership_qs, 'membership_qs_count': membership_qs_count, 'als': als, 'vac': vac, 'wtr_qs': wtr_qs,
+        'tlt': tlt, 'bch': bch, 'bch_count': bch_count, 'pfl': pfl, 'padd': padd, 'exp': exp, 'bkl': bkl, 'edtexp': edtexp, 'edtexp_count': edtexp_count, 'bkl_count': bkl_count, 'prj_set': prj_set, 'prj_count': prj_count, 'achievement_qs': achievement_qs, 'achievement_qs_count': achievement_qs_count, 'language_qs': language_qs, 'membership_qs': membership_qs, 'membership_qs_count': membership_qs_count, 'als': als, 'wtr_qs': wtr_qs,
+        }
+    return render(request, template, context)
+
+
+@login_required()
+@corp_permission(1)
+def profile_view_corp(request, tlt):
+    '''View for profile without reference to a vacancy. Used for the corporate feature'''
+    #caching
+    bch = BriefCareerHistory.objects.filter(talent__alias=tlt).order_by('-date_from')[:6]
+    corp_info = CorporateStaff.objects.get(talent__alias=tlt)
+    bch_count = bch.count()
+    pfl = Profile.objects.filter(alias=tlt)
+    als = get_object_or_404(Profile, alias=tlt)
+    padd = PhysicalAddress.objects.only('country', 'region', 'city').get(talent__alias=tlt)
+    skill_qs = SkillTag.objects.all()
+    exp = WorkExperience.objects.filter(talent__alias=tlt).select_related('topic', 'course', 'project')
+    edtexp = exp.filter(edt=True).order_by('-date_from')
+    edtexp_count = edtexp.count()
+    bkl = ReadBy.objects.filter(talent__alias=tlt).select_related('book', 'type')[:6]
+    bkl_count = bkl.count()
+    prj_qs = ProjectData.objects.all()
+    #bid_qs = WorkBid.objects.filter(Q(talent__alias=tlt) & Q(work__ref_no=vac))
+    achievement_qs = Achievements.objects.filter(talent__alias=tlt).order_by('-date_achieved')[:6]
+    achievement_qs_count = achievement_qs.count()
+    language_qs = LanguageTrack.objects.filter(talent__alias=tlt).order_by('-language')
+    membership_qs = LicenseCertification.objects.filter(talent__alias=tlt).order_by('-issue_date')[:6]
+    membership_qs_count = membership_qs.count()
+    wtr_qs = WillingToRelocate.objects.filter(talent__alias=tlt)
+
+    #Project Summary
+    prj = exp.values_list('project', flat=True).distinct('project')
+    prj_set = {}
+    prj_count = 0
+    for p in prj:
+        if p == None:
+            pass
+        else:
+            prj_count +=1
+            project_q = prj_qs.filter(pk=p).values_list('name', 'company__ename', 'companybranch__name', 'industry__industry')
+            info_list=[project_q[0][1], project_q[0][2], project_q[0][3]]
+            prj_set[project_q[0][0]] = info_list
+
+    #object_viewed_signal.send(pfl.__class__, instance=pfl, request=request)
+
+
+    template = 'talenttrack/active_profile_view_corp.html'
+    context = {
+        'tlt': tlt, 'bch': bch, 'bch_count': bch_count, 'pfl': pfl, 'padd': padd, 'exp': exp, 'bkl': bkl, 'edtexp': edtexp, 'edtexp_count': edtexp_count, 'bkl_count': bkl_count, 'prj_set': prj_set, 'prj_count': prj_count, 'achievement_qs': achievement_qs, 'achievement_qs_count': achievement_qs_count, 'language_qs': language_qs, 'membership_qs': membership_qs, 'membership_qs_count': membership_qs_count, 'als': als, 'wtr_qs': wtr_qs, 'corp_info': corp_info
         }
     return render(request, template, context)
 

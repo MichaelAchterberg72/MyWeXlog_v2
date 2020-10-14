@@ -567,3 +567,9 @@ img .btn-image {
 .text-center {
     text-align: center;
 }
+
+/* css for checkboxes */
+.format_chkbox{
+height: 1.3em;
+width: 1.3em;
+}

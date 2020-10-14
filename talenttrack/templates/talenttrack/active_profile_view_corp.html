@@ -1,82 +1,16 @@
 {% extends "base_home.html" %}
 {% load humanize %}
-{% block title %}{{block.super}}- {{ als.alias }} Profile{% endblock title %}
+{% block title %}{{block.super}}- {{ als.talent.first_name }} Profile{% endblock title %}
 
 {% block content %}
-<h3>Profile for {{ als.alias }}</h3>
-
-
-<div class="">
-  <div class="card-header">
-    <a href="{% url 'Talent:SPDView' als.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right" >View All Skills</a>
-    <h5>Vacancy Skills Match</h5>
+<h3>Profile for {{ als.talent.first_name }} {{ als.talent.last_name }}</h3>
+<div class="row">
+  <div class="col-sm-12">
   </div>
-    <div class="row">
-      <div class="col-sm-6">
-        <div class="card card-shadow">
-          <div class="card-body">
-            <h5 class="card-title">Experience skills</h5>
-            <p>Experience for skills listed in the Vacancy.</p>
-            <table class="table table-sm">
-              <thead>
-                <tr>
-                  <th>Skill</th>
-                  <th>Hours</th>
-                </tr>
-              </thead>
-              <tbody>
-              {% if als.pk == request.user.pk %}
-                  <tr>
-                    <td colspan="2">This is where skills speficially required in the vancany are shown together with the time you have logged against those skills.</td>
-                  </tr>
-              {% else %}
-                {% for key in vacse_set.items %}
-                  <tr>
-                    <td>{{ key.0 }}</td>
-                    <td>{{ key.1|intcomma }}</td>
-                  </tr>
-                {% endfor %}
-                {% endif %}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-6">
-        <div class="card card-shadow">
-          <div class="card-body">
-            <h5 class="card-title">Training Skills</h5>
-            <p>Training time for the skills listed on the vacancy.</p>
-            <table class="table table-sm">
-              <thead>
-                <tr>
-                  <th>Skill</th>
-                  <th>Hours</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% if als.pk == request.user.pk %}
-                  <tr>
-                    <td colspan="2">This is where skills speficially required in the vancany are shown together with the time you have spent training on those skills.</td>
-                  </tr>
-                {% else %}
-                  {% for key in vacst_set.items %}
-                    <tr>
-                      <td>{{ key.0 }}</td>
-                      <td>{{ key.1|intcomma }}</td>
-                    </tr>
-                  {% endfor %}
-                {% endif %}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <br>
+</div>
   <div class="">
     <div class="card-header">
+      <a href="{% url 'Talent:SPDView' als.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right" >View All Skills</a>
       <h5>Basic Information</h5>
     </div>
     <div class="row">
@@ -84,13 +18,21 @@
         <div class="card card-shadow h-100">
           <div class="card-body">
           <h5 class="card-title">General Information</h5>
-            {% if als.rate_count >= 5 %}
-              <a href="{% url 'Talent:TltRatingDetail' als.alias %}" class="btn btn-info float-right" style="width: 8rem" target="_blank">{{ als.avg_rate|floatformat:2 }} ({{ als.rate_count }} votes)</a>
-            {% else %}
-              <p class="btn btn-info float-right" style="width: 8rem" data-toggle="tooltip" title="Rating calculated for 5 or more votes">{{ als.rate_count }} votes</p>
-            {% endif %}
-            <p><strong>Alias:</strong> {{ als.alias }}</p>
-            <p><strong>Experience Level:</strong> {{ als.exp_level }}</p>
+
+            <p><strong>Name:</strong>
+              {{ als.talent.first_name }} {{ als.talent.last_name }}
+            </p>
+            <p><strong>Department:</strong>
+              {{ corp_info.department }}
+            </p>
+            <p><strong>Experience Level:</strong>
+              {{ als.exp_lvl }}
+            </p>
+
+            <p><strong>Birthdate:</strong>
+              {{ als.birth_date|date:"j M Y" }} <strong>& Age: </strong>{{ als.age }} (at last birthday)
+            </p>
+
             <hr>
             <p class="text-center"><strong>Languages</strong></p>
             <table class="table table-sm">
@@ -114,7 +56,9 @@
               </tbody>
             </table>
             <hr>
-            <p><strong>Current location:</strong> {{ padd.get_country_display }}, {{ padd.region }}, {{ padd.city }}</p>
+            <p>
+              <strong>Current location:</strong> {{ padd.country.name }}, {{ padd.region }}, {{ padd.city }}
+            </p>
             {% if wtr_qs %}
               <p class="text-center"><strong>Willing to Relocate</strong></p>
               <table class="table table-sm">
@@ -141,7 +85,6 @@
               </table>
             {% endif %}
             <hr>
-
           </div>
         </div>
       </div>
@@ -184,7 +127,6 @@
                 {% endfor %}
               </tbody>
             </table>
-
           </div>
         </div>
       </div>
@@ -200,65 +142,51 @@
             <hr>
             <p><strong>Background</strong><br>
                {{ als.background|linebreaks }}</p>
-            <hr>
-          {% if bid_qs %}
-            <p><strong>Expected Rate: </strong>{{ bid_qs.currency }} {{ bid_qs.rate_bid }} {{ bid_qs.get_rate_unit_display }}</p>
-            <p><strong>Motivation for position:<br></strong>{{ bid_qs.motivation }}</p>
-          {% else %}
-            <p><strong>Expected Rate: </strong>{{ als.currency }} {{ als.std_rate }} per hour</p>
-            <p><strong>Motivation for position:<br></strong>{{ als.motivation }}</p>
-          {% endif %}
             </div>
           </div>
         </div>
       </div>
     </div>
-    <br>
-    <div class="card card-shadow">
-      <div class="row">
-        <div class="col-sm-12">
-          <div class="">
-            <div class="card-body">
-              <div class="float-right">
-                {% if bch_count >= 6 %}
-                <a href="{% url 'Talent:DPCSum' als.alias %}#Company" class="btn btn-primary">All Companies</a>
-                {% endif %}
-              </div>
-              <h5 class="card-title">Career in Summary</h5>
-              <table class="table table-sm">
-                <col width="15%">
-                <col width="15%">
-                <col width="8%">
-                <col width="62%">
-                <thead>
-                  <tr>
-                    <th class="align-middle text-center">Date from</th>
-                    <th class="align-middle text-center">Date to</th>
-                    <th class="align-middle text-center">Tenure<br>(years)</th>
-                    <th class="align-middle">Company</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for h in bch %}
-                    <tr>
-                      <td class="align-middle text-center">{{ h.date_from|date:"j M Y" }}</td>
-                      {% if h.date_to %}
-                        <td class="align-middle text-center">{{ h.date_to|date:"j M Y" }}</td>
-                      {% else %}
-                        <td class="align-middle text-center">Present</td>
-                      {% endif %}
-                      <th class="align-middle text-center">{{ h.tenure|floatformat:1 }}</th>
-                      <td>{{ h.companybranch }}</td>
-                      {% empty %}
-                        <td colspan="3">Nothing Captured.</td>
-                    </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+  <br>
+  <div class="card card-shadow">
+    <div class="card-body">
+      <div class="float-right">
+        {% if bch_count >= 6 %}
+        <a href="{% url 'Talent:DPCSum' als.alias %}#Company" class="btn btn-primary">All Companies</a>
+        {% endif %}
       </div>
+      <h4 class="card-title" id="career">Career in Summary</h4>
+      <table class="table table-sm">
+        <col width="10%">
+        <col width="10%">
+        <col width="8%">
+        <col width="62%">
+        <thead>
+          <tr>
+            <th class="align-middle text-center">Date from</th>
+            <th class="align-middle text-center">Date to</th>
+            <th class="align-middle text-center">Tenure<br>(years)</th>
+            <th class="align-middle">Company</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for h in bch %}
+            <tr>
+              <td class="align-middle text-center">{{ h.date_from|date:"j M Y" }}</td>
+              {% if h.date_to %}
+                <td class="align-middle text-center">{{ h.date_to|date:"j M Y" }}</td>
+              {% else %}
+                <td class="align-middle text-center">Present</td>
+              {% endif %}
+              <td class="align-middle text-center">{{ h.tenure|floatformat:1 }}</td>
+              <td>{{ h.companybranch }}</td>
+              {% empty %}
+                <td colspan="3">Nothing Captured.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </div>
   <br>
   <div class="row">
@@ -266,7 +194,7 @@
       <div class="card card-shadow">
         <div class="card-body">
           {% if achievement_qs_count >= 6 %}
-            <a href="{% url 'Talent:ACH_FV' tlt vac %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Detail</a>
+            <a href="{% url 'Talent:ACH_L_FV' tlt %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Detail</a>
           {% endif %}
         <h4 class="card-title" id="achievements">Achievements</h4>
         <table class="table table-sm">
@@ -294,6 +222,7 @@
             {% endfor %}
           </tbody>
         </table>
+
         </div>
       </div>
     </div>
@@ -309,7 +238,8 @@
       <h4 class="card-title" id="projects">Project History</h4>
     </div>
       <div class="col-sm-12">
-        <p>Total Projects: <strong>{{ prj_count }}</strong></p>
+
+        <p>Total Projects: <strong>{{ prj_count }}</strong> </p>
 
             <table class="table table-sm">
               <col width="45%">
@@ -337,7 +267,8 @@
                 {% endfor %}
               </tbody>
             </table>
-          </div>
+
+      </div>
     </div>
   </div>
   <br>
@@ -351,7 +282,7 @@
       {% endif %}
       </div>
       <h4 class="card-title">Books Read</h4>
-
+      <div class="col-sm-12">
         <p>Total Books Read: <strong>{{ bkl_count }}</strong> </p>
 
             <table class="table table-sm">
@@ -381,13 +312,14 @@
               </tbody>
             </table>
 
+      </div>
     </div>
   </div>
   <br>
   <div class="card card-shadow">
     <div class="card-body">
       {% if edtexp_count >= 6 %}
-        <a href="{% url 'Talent:EDU_FV' tlt vac %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Details</a>
+        <a href="{% url 'Talent:EDU_L_FV' tlt %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Details</a>
       {% endif %}
       <h4 class="card-title" id="education">Education & Training</h4>
         <table class="table table-sm">
@@ -422,6 +354,7 @@
             {% endfor %}
           </tbody>
         </table>
+
     </div>
   </div>
 {% endblock content %}

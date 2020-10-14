@@ -63,7 +63,8 @@ urlpatterns = [
     path('apv-projects/<slug:tlt>/<slug:vac>/', views.ProjectsFVView, name='Projects_FV'),
     path('apv-edu/<slug:tlt>/<slug:vac>/', views.EduFVView, name='EDU_FV'),
 
-    path('apv/<slug:tlt>/', views.profile_view, name='APV_L'),
+    path('apv-l/<slug:tlt>/', views.profile_view, name='APV_L'),
+    path('apv-c/<slug:tlt>/', views.profile_view_corp, name='APV_C'),
     path('apv-bch/<slug:tlt>/', views.BCHLView, name='BCH_L_FV'),
     path('apv-ach/<slug:tlt>/', views.AchievementsLView, name='ACH_L_FV'),
     path('apv-projects/<slug:tlt>/', views.ProjectsLFVView, name='Projects_L_FV'),

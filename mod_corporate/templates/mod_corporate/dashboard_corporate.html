@@ -11,7 +11,9 @@
 
 {% block MidTopLeft %}
   <div class="btn-group float-right">
-    <a href="{% url 'Corporate:OrgAdd' corp.corporate.slug %}">Add</a>
+    <a href="{% url 'Corporate:OrgAdd' corp.corporate.slug %}?next={{ request.path|urlencode }}">
+      Add
+    </a>
 
   </div>
   <h4>Organisation Structure</h4>
@@ -20,6 +22,28 @@
 {% endblock MidTopLeft %}
 
 {% block MidTopRight %}
+<div class="btn-group float-right">
+  <div class="btn-group mr-2">
+    <a href="{% url 'Corporate:StaffManage' corp.corporate.slug %}?next={{ request.path|urlencode }}" class="badge badge-primary">
+      Potential ( {{ potential|intcomma }} )
+    </a>
+  </div>
+  <div class="btn-group mr-2">
+    <a href="{% url 'Corporate:StaffCurrent' corp.corporate.slug %}?next={{ request.path|urlencode }}" class="badge badge-primary align-middle">
+      Current ( {{ current_count|intcomma }} )
+    </a>
+  </div>
+  <div class="btn-group mr-2">
+    <a href="{% url 'Corporate:StaffAdmn' corp.corporate.slug %}?next={{ request.path|urlencode }}" class="badge badge-primary align-middle">
+      Manage
+    </a>
+  </div>
+  <div class="btn-group mr-2">
+    <a href="{% url 'Corporate:CorpAdmin' corp.corporate.slug %}?next={{ request.path|urlencode }}" class="badge badge-primary align-middle">
+      Admin
+    </a>
+  </div>
+</div>
   <h4>Staff</h4>
   <p>Total Staff - Average Age - graph (age histogram)</p>
 {% endblock MidTopRight %}

@@ -1,0 +1,88 @@
+{% extends 'base_home.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}{{block.super}} Staff{% endblock title %}
+{% block Style %}
+  <style>
+
+  </style>
+{% endblock Style %}
+{% block content %}
+  <div class="card card-shadow">
+    <div class="card-body">
+      <div class="float-right">
+        <form  action="{% url 'BookList:BLB' %}" method="post">
+          <input type="hidden" name="next" value="{{ request.GET.next }}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-secondary">Back</button>
+        </form>
+      </div>
+      <h3>{{ corp.company }} Staff</h3>
+    </div>
+  </div>
+  <br>
+  <div class="card card-shadow">
+    <div class="card-body">
+
+      <table class="table table-sm">
+        <thead>
+          <tr>
+            <th class="align-middle text-center">Last name, First name</th>
+            <th class="align-middle text-center">Department</th>
+            <th class="align-middle text-center">Admin Rights</th>
+            <th class="align-middle text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in staff_qs %}
+
+            <tr id="{{ item.id }}">
+              <td class="align-middle text-center">{{ item.talent.last_name }}, {{ item.talent.first_name }}</td>
+              <td class="align-middle text-center">{{ item.department }}</td>
+              <td class="align-middle text-center">
+                {% if item.status == True %}
+                  Administrator
+                {% else %}
+                  Staff
+                {% endif %}
+              </td>
+              <td class="align-middle text-center">
+                {% if item.unlocked == True %}
+                  <form  action="{% url 'Corporate:StaffRemove' item.slug %}" method="post">
+                    <input type="hidden" name="next" value="{{ request.GET.next }}">
+                    {% csrf_token %}
+                    <button type="submit">
+                      <i class="fa fa-user-times" aria-hidden="true"></i>
+                    </button>
+                  </form>
+                {% else %}
+                {% endif %}
+
+                {% if access == 'granted' %}
+                  {% if item.status == False %}
+                    <form  action="{% url 'Corporate:StaffMkAdmn' item.slug %}" method="post">
+                      <input type="hidden" name="next" value="{{ request.GET.next }}+#{{item.id}}">
+                      {% csrf_token %}
+                      <button type="submit">
+                        <i class="fa fa-eye" aria-hidden="true"></i>
+                      </button>
+                    </form>
+                  {% endif %}
+                {% endif %}
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="2">No Staff added at this time</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+{% block Script %}
+
+{% endblock Script %}

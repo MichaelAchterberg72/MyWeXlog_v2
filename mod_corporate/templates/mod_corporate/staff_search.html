@@ -1,0 +1,66 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}{{block.super}}-Staff Search{% endblock title %}
+
+{% block content %}
+<div class="card card-shadow">
+  <div class="card-body">
+  {% if query %}
+    <h4>Staff Names containing "{{ query }}"</h4>
+    <h3>
+      {% with results.count as total_results %}
+      Found {{ total_results }} result{{ total_results|pluralize }}
+      {% endwith %}
+    </h3>
+    <div class="container">
+      <div class="row my-auto">
+        <div class="col-md-5 h-100 text-center my-auto">
+          <strong>Alias</strong>
+        </div>
+        <div class="col-md-3 h-100 text-center my-auto">
+          <strong>Profile</strong>
+        </div>
+      </div>
+    </div>
+    {% for i in results %}
+      <div class="row">
+        <div class="card mt-1 card-hover" style="width: 100%;">
+          <div class="card-body small-pad">
+            <div class="row my-auto">
+              <div class="col-md-5 h-100 text-center my-auto">
+                {{ i.talent.first_name }} {{ i.talent.last_name }}
+              </div>
+              <div class="col-md-3 h-100 text-center my-auto">
+                <a href="{% url 'Talent:APV_C' tlt=i.talent.alias %}?next={{ request.path|urlencode }}" target="_blank">
+                  <i class="fa fa-id-badge" aria-hidden="true"style="font-size:30px;color:black" data-toggle="tooltip" data-placement="top" title="Profile"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <p>No staff matching your query.</p>
+    {% endfor %}
+
+    <form action="." method="get">
+    {{ form.as_p }}
+    <input type="submit" class="btn btn-primary 8rem " style="width: 8rem" value="Search Again">
+    </form>
+    {% else %}
+    <h4>Search for Profile</h4>
+    <div class="card-body">
+      <form action="." method="get">
+      {{ form.as_p }}
+      <input type="submit" value="Search" class="btn btn-primary 8rem " style="width: 8rem">
+      </form>
+    </div>
+  {% endif %}
+</div>
+
+{% endblock content %}
+{% block Script %}
+{% endblock Script %}

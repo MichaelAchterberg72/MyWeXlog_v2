@@ -35,9 +35,11 @@ class CorporateStaff(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     corp_access = models.SmallIntegerField(choices=USER_TYPE, default=0)
     type = models.ForeignKey(WorkLocation, on_delete=models.PROTECT)
+    department = models.ForeignKey(OrgStructure, on_delete=models.PROTECT)
     corporate = models.ForeignKey(CorporateHR, on_delete=models.CASCADE)
-    admin = models.BooleanField('Admin Status', default=False)#admin status
+    #admin = models.BooleanField('Admin Status', default=False)#admin status
     status = models.BooleanField('Admin / Staff', default=False)#available for admin duty
+    hide = models.BooleanField('Ignore', default=False)#hides people from the list if they are not staff - must not count entries that are hidden in the fee.
     date_add = models.DateField(auto_now_add=True)
     date_modified = models.DateField(auto_now=True)
     unlocked = models.BooleanField(default=False)

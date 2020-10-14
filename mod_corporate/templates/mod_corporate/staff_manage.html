@@ -1,0 +1,62 @@
+{% extends 'base_home.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}{{block.super}} Staff{% endblock title %}
+{% block Style %}
+  <style>
+
+  </style>
+{% endblock Style %}
+{% block content %}
+  <div class="card card-shadow">
+    <div class="card-body">
+      <div class="float-right">
+        <form  action="{% url 'BookList:BLB' %}" method="post">
+          <input type="hidden" name="next" value="{{ request.GET.next }}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-secondary">Back</button>
+        </form>
+      </div>
+      <h3>Potential Staff for {{ corp.company }}</h3>
+    </div>
+  </div>
+  <br>
+  <div class="card card-shadow">
+    <div class="card-body">
+
+      <table class="table table-sm">
+        <thead>
+          <tr>
+            <th class="align-middle text-center">Last name, First name</th>
+            <th class="align-middle text-center">Designation</th>
+            <th class="align-middle text-center">Date Joined</th>
+            <th class="align-middle text-center">Add to Staff</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in potential %}
+            {% if item.talent.id not in staff_id %}
+            <tr>
+              <td class="align-middle text-center">{{ item.talent.last_name }}, {{ item.talent.first_name }}</td>
+              <td class="align-middle text-center">{{ item.designation }}</td>
+              <td class="align-middle text-center">{{ item.date_from|date:"j M Y" }}</td>
+              <td class="align-middle text-center">
+                <a href="{% url 'Corporate:StaffInclude' cor=corp.slug tlt=item.talent.alias %}" class="btn btn-primary">Add</a>
+              </td>
+            </tr>
+            {% endif %}
+          {% empty %}
+            <tr>
+              <td colspan="2">All people have been added to your staff</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+{% block Script %}
+
+{% endblock Script %}

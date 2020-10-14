@@ -43,4 +43,35 @@ function getToken(name) {
   }
   return cookieValue;
 }
-const csrftoken = getToken('csrftoken');
+/*const csrftoken = getToken('csrftoken');*/
+
+/* js for mod_corporate */
+
+var updateStatus = document.getElementsByClassName('update-status')
+
+for (var i = 0; i < updateStatus.length; i++){
+  updateStatus[i].addEventListener('click', function(){
+    var staffSlug = this.dataset.slug
+    var action = this.dataset.action
+
+    var url = '/corporate/admin-permission/'
+    var csrftoken = Cookies.get('csrftoken');
+
+    fetch(url, {
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'X-CSRFToken':csrftoken,
+      },
+      body:JSON.stringify({'staffSlug': staffSlug, 'action': action})
+    })
+
+    .then((response) => {
+      return response.json();
+    })
+
+    .then ((data) => {
+      location.reload()
+    });
+  });
+}
