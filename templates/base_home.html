@@ -9,9 +9,6 @@
       <!-- Bootstrap CSS -->
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-      <link rel="stylesheet" href="{% static 'css/flaticon.css' %}">
-      <link rel="stylesheet" href="{% static 'css/icomoon.css' %}">
-
       <link href="{% static 'css/wexlog_css.css' %}" rel="stylesheet" type="text/css">
 
       <link rel="stylesheet" href="{% static 'css/wexlog_navbar_css.css' %}">
@@ -35,7 +32,7 @@
     <nav class="navbar">
       <ul class="navbar-nav">
         <li class="logo">
-          <a href="https://mywexlog.dev/public/index/" class="nav-link">
+          <a href="https://mywexlog.com/" class="nav-link">
             <span class="link-text logo-text">MyWeXlog</span>
             <svg
               aria-hidden="true"
@@ -66,7 +63,7 @@
         <li class="nav-item">
           <a href="{% url 'Profile:ProfileHome' %}" class="nav-link">
             <div class="fa-primary">
-              <i style="font-size: 27px" class="icon icon-address-card"></i>
+              <i style="font-size: 27px" class="fa fa-address-card"></i>
             </div>
             <span class="link-text">Dashboard</span>
           </a>
@@ -75,7 +72,7 @@
         <li class="nav-item">
           <a href="{% url 'Talent:Home' %}" class="nav-link">
             <div class="fa-primary">
-              <i style="font-size: 27px" class="icon icon-address-book"></i>
+              <i style="font-size: 27px" class="fa fa-address-book"></i>
             </div>
             <span class="link-text">Experience</span>
           </a>
@@ -84,7 +81,7 @@
         <li class="nav-item">
           <a href="{% url 'MarketPlace:Entrance' %}" class="nav-link">
             <div class="fa-primary">
-              <i style="font-size: 27px" class="icon icon-archive"></i>
+              <i style="font-size: 27px" class="fa fa-archive"></i>
             </div>
             <span class="link-text">Vacancies</span>
           </a>
@@ -93,7 +90,7 @@
         <li class="nav-item">
           <a href="{% url 'Flatten:ListTags' %}" class="nav-link">
             <div class="fa-primary">
-              <i style="font-size: 27px" class="icon icon-certificate"></i>
+              <i style="font-size: 27px" class="fa fa-certificate"></i>
             </div>
             <span class="link-text">Skill Tags</span>
           </a>
@@ -102,7 +99,7 @@
         <li class="nav-item">
           <a href="{% url 'BookList:BookListHome' %}" class="nav-link">
             <div class="fa-primary">
-              <i style="font-size: 27px" class="icon icon-book"></i>
+              <i style="font-size: 27px" class="fa fa-book"></i>
             </div>
             <span class="link-text">Books</span>
           </a>
@@ -111,7 +108,7 @@
         <li class="nav-item">
           <a href="{% url 'Enterprise:EnterpriseHome' %}" class="nav-link">
             <div class="fa-primary">
-              <i style="font-size: 27px" class="icon icon-building"></i>
+              <i style="font-size: 27px" class="fa fa-building"></i>
             </div>
             <span class="link-text">Enterprises</span>
           </a>
@@ -120,7 +117,7 @@
         <li class="nav-item">
           <a href="{% url 'Project:ProjectHome' %}" class="nav-link">
             <div class="fa-primary">
-              <i style="font-size: 27px" class="icon icon-black-tie"></i>
+              <i style="font-size: 27px" class="fa fa-black-tie"></i>
             </div>
             <span class="link-text">Projects</span>
           </a>
@@ -140,7 +137,7 @@
         <li class="nav-item" id="themeButton">
           <a href="{% url 'Users:CustomUserSettings' %}" class="nav-link">
             <div class="fa-primary">
-              <i style="font-size: 27px" class="icon icon-settings"></i>
+              <i style="font-size: 27px" class="fa fa-cog"></i>
             </div>
             <span class="link-text">Settings</span>
           </a>
@@ -149,7 +146,7 @@
         <li class="nav-item">
           <a href="{% url 'account_signup' %}" class="nav-link">
             <div class="fa-primary">
-              <i style="font-size: 27px" class="icon icon-bookmark"></i>
+              <i style="font-size: 27px" class="fa fa-bookmark"></i>
             </div>
             <span class="link-text">Register</span>
           </a>
@@ -158,7 +155,7 @@
         <li class="nav-item">
           <a href="{% url 'account_login' %}" class="nav-link">
             <div class="fa-primary">
-              <i style="font-size: 27px" class="icon icon-bars"></i>
+              <i style="font-size: 27px" class="fa fa-bars"></i>
             </div>
             <span class="link-text">Sign-In</span>
           </a>
