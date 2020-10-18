@@ -43,6 +43,11 @@
       Admin
     </a>
   </div>
+  <div class="btn-group mr-2">
+    <a href="{% url 'Corporate:Hidden' corp.corporate.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary align-middle">
+      Hidden
+    </a>
+  </div>
 </div>
   <h4>Staff</h4>
   <p>Total Staff - Average Age - graph (age histogram)</p>
@@ -56,6 +61,8 @@
 {% endblock MidBotLeft %}
 
 {% block MidBotRight %}
+<h4>Past Staff</h4>
+<p>where information relating to past staff can be viewed. (when the worked here, when they left etc.)</p>
 {% endblock MidBotRight %}
 
 {% block BotCenter %}

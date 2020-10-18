@@ -40,8 +40,30 @@ from Profile.models import Profile
 def staff_search(request, cor):
     '''Search in the staff_current.html'''
     qs = CorporateStaff.objects.filter(
-        Q(corporate__slug=cor) & Q(hide = False) & Q(resigned = False)
-        )
+        Q(corporate__slug=cor)
+        ).select_related('talent')
+
+    tlt = request.user
+
+    l2 = qs.get(talent = tlt)
+
+    if l2.corp_access >= 2:
+        perm = 'granted'
+    else:
+        perm = 'denied'
+
+    locked = qs.filter(unlocked=False)
+
+    today = timezone.now().date()
+    '''at least 1 month billed for each added user'''
+    for ind in locked:
+        age = (today - ind.date_modified).days
+        if age > 32:
+            ind.unlocked = True
+            ind.save()
+        else:
+            pass
+
     form = StaffSearchForm()
     query = None
     results = []
@@ -55,7 +77,7 @@ def staff_search(request, cor):
                 )).filter(similarity__gt=0.3).order_by('-similarity')
 
     template = 'mod_corporate/staff_search.html'
-    context = {'form': form, 'query': query, 'results': results,}
+    context = {'form': form, 'query': query, 'results': results, 'access': perm,}
     return render(request, template, context)
 
 
@@ -65,10 +87,12 @@ def dashboard_corporate(request):
     usr = request.user
     corp = CorporateStaff.objects.get(talent=usr)
     company = corp.corporate
-    current_staff = CorporateStaff.objects.filter(corporate=company).values_list('talent__id',flat=True)
-    current_count = current_staff.count()
+    staff_qs = CorporateStaff.objects.filter(Q(corporate=company)).select_related('talent')
+    current_count = staff_qs.filter(Q(hide=False) & Q(resigned=False)).count()
 
-    potential = BriefCareerHistory.objects.exclude(talent__id__in=current_staff).filter(Q(companybranch__company=company.company) & Q(date_to__isnull=True)).count()
+    ignore = staff_qs.values_list('talent__id',flat=True)
+
+    potential = BriefCareerHistory.objects.filter(Q(companybranch__company=company.company) & Q(date_to__isnull=True)).exclude(talent__id__in=ignore).count()
 
     template = 'mod_corporate/dashboard_corporate.html'
     context = {
@@ -113,15 +137,15 @@ def org_structure_add(request, cor):
         context = {'form': form, 'corp': corp,}
         return render(request, template, context)
 
+
 @login_required()
 @corp_permission(1)
 def staff_manage(request, cor):
-    '''View the people who have listed to corporate as an employer, but have not been identified as staff'''
+    '''View the people who have listed the company as an employer, but have not been identified as staff'''
     #logit to test if limited to a companybranch
-    staff = CorporateStaff.objects.filter(corporate__slug=cor)
+    staff = CorporateStaff.objects.filter(corporate__slug=cor).select_related('talent')
 
     staff_id = staff.values_list('talent__id', flat=True)
-    print(staff_id)
 
     corp = CorporateHR.objects.get(slug=cor)
     potential = BriefCareerHistory.objects.filter(Q(companybranch__company=corp.company) & Q(date_to__isnull=True)).order_by('talent__last_name')
@@ -136,7 +160,7 @@ def staff_manage(request, cor):
 @login_required()
 @corp_permission(1)
 def staff_include(request, cor, tlt):
-    '''Add people to the comapny staff'''
+    '''Add people to the company staff'''
     corp = get_object_or_404(CorporateHR,slug=cor)
     staff = get_object_or_404(Profile, alias=tlt)
 
@@ -160,18 +184,25 @@ def staff_include(request, cor, tlt):
 
 @login_required()
 @corp_permission(1)
-def staff_remove(request, cstf):
-    '''Remove people from the company staff'''
-    staff_qs = CorporateStaff.objects.get(slug=cstf)
-    cor = staff_qs.corporate.slug
-    if request.method == 'POST':
+def staff_actions(request):
+    '''Actions from the Staff Admin template'''
+    data = json.loads(request.body)
+    staffSlug = data['staffSlug']
+    action = data['action']
 
+    staff_qs = CorporateStaff.objects.get(slug=staffSlug)
+
+    if action == 'remove':
         staff_qs.resigned=True
         staff_qs.hide=True
         staff_qs.status=False
-        staff_qs.save()
 
-        return redirect(reverse('Corporate:StaffAdmn', kwargs={'cor': cor,}))
+    elif action == 'admin':
+        staff_qs.status=True
+
+    staff_qs.save()
+
+    return JsonResponse('Action Processed', safe=False)
 
 
 @login_required()
@@ -179,11 +210,11 @@ def staff_remove(request, cstf):
 def staff_current(request, cor):
     '''Lists the current staff members'''
     corp = get_object_or_404(CorporateHR, slug=cor)
-    staff = CorporateStaff.objects.filter(corporate__slug=cor).filter(Q(hide=False) | Q(resigned=False)).order_by('talent__last_name')
+    staff = CorporateStaff.objects.filter(corporate__slug=cor).filter(Q(hide=False) | Q(resigned=False)).select_related('talent').order_by('talent__last_name')
     staff_id = staff.values_list('talent__id')
     staff_c = staff.count()
 
-    current = BriefCareerHistory.objects.filter(Q(companybranch__company=corp.company) & Q(talent__id__in=staff_id) & Q(date_to__isnull=True)).order_by('talent__last_name')
+    current = BriefCareerHistory.objects.filter(Q(companybranch__company=corp.company) & Q(talent__id__in=staff_id) & Q(date_to__isnull=True)).select_related('talent').order_by('talent__last_name')
 
     template = 'mod_corporate/staff_current.html'
     context = {'current': current, 'corp': corp, 'staff_c': staff_c,}
@@ -191,26 +222,13 @@ def staff_current(request, cor):
 
 
 @login_required()
-@corp_permission(2)
-def staff_makeadmin(request, cstf):
-    staff_qs = CorporateStaff.objects.get(slug=cstf)
-    cor = staff_qs.corporate.slug
-
-    if request.method == 'POST':
-
-        staff_qs.status=True
-        staff_qs.save()
-
-        return redirect(reverse('Corporate:StaffAdmn', kwargs={'cor': cor,}))
-
-
-@login_required()
 @corp_permission(1)
 def staff_admin(request, cor):
     '''Manages the staff (make admin, remove from staff, etc.)'''
     tlt = request.user
+    corp = CorporateHR.objects.get(slug=cor)
 
-    staff_qs = CorporateStaff.objects.filter(corporate__slug=cor).filter(Q(hide=False) | Q(resigned=False)).order_by('talent__last_name')
+    staff_qs = CorporateStaff.objects.filter(corporate__slug=cor).filter(Q(hide=False) | Q(resigned=False)).select_related('talent').order_by('talent__last_name')
 
     l2 = staff_qs.get(talent = tlt)
 
@@ -224,7 +242,7 @@ def staff_admin(request, cor):
     today = timezone.now().date()
     '''at least 1 month billed for each added user'''
     for ind in locked:
-        age = (today - ind.date_add).days
+        age = (today - ind.date_modified).days
         if age > 32:
             ind.unlocked = True
             ind.save()
@@ -232,14 +250,15 @@ def staff_admin(request, cor):
             pass
 
     template = 'mod_corporate/staff_admin.html'
-    context = {'staff_qs':staff_qs, 'access': perm,}
+    context = {'staff_qs':staff_qs, 'access': perm, 'corp': corp,}
     return render(request, template, context)
 
 
 @login_required()
 @corp_permission(1)
 def admin_staff(request, cor):
-    staff_qs = CorporateStaff.objects.filter(Q(corporate__slug=cor) & Q(resigned=False) & Q(hide = False)).order_by('talent__last_name')
+    corp = CorporateHR.objects.get(slug=cor)
+    staff_qs = CorporateStaff.objects.filter(Q(corporate=corp) & Q(resigned=False) & Q(hide = False)).select_related('talent').order_by('talent__last_name')
     staff_c = staff_qs.count()
     usr = request.user
     usr_permission = staff_qs.get(talent=usr).corp_access
@@ -264,12 +283,13 @@ def admin_staff(request, cor):
 
     template = 'mod_corporate/admin_manage.html'
     context = {
-        'admin_qs': admin_qs, 'admin_c': admin_c, 'cont_c': cont_c, 'no_admin': no_admin, 'no_cont': no_cont, 'staff_c': staff_c, 'usr_permission': usr_permission,
+        'admin_qs': admin_qs, 'admin_c': admin_c, 'cont_c': cont_c, 'no_admin': no_admin, 'no_cont': no_cont, 'staff_c': staff_c, 'usr_permission': usr_permission, 'corp': corp,
         }
     return render(request, template, context)
 
 
 @login_required()
+@corp_permission(2)
 def admin_permission(request):
 
     data = json.loads(request.body)
@@ -289,6 +309,43 @@ def admin_permission(request):
     elif action == 'remove':
         staff.corp_access = 0
         staff.status = False
+
+    staff.save()
+
+    return JsonResponse('Action Processed', safe=False)
+
+
+@login_required()
+@corp_permission(1)
+def talent_hidden(request, cor):
+    '''Lists the hidden/ignored users'''
+    corp = get_object_or_404(CorporateHR, slug=cor)
+    user = CorporateStaff.objects.filter(corporate__slug=cor).filter(Q(hide=True) | Q(resigned=True)).select_related('talent')
+    user_id = user.values_list('talent__id')
+    hidden_c = user.count()
+
+    hidden = BriefCareerHistory.objects.filter(Q(companybranch__company=corp.company) & Q(talent__id__in=user_id) & Q(date_to__isnull=True)).select_related('talent').order_by('-date_from')
+
+
+    template = 'mod_corporate/talent_hidden.html'
+    context = {'hidden': hidden, 'corp': corp, 'hidden_c': hidden_c,}
+    return render(request, template, context)
+
+
+@login_required()
+@corp_permission(1)
+def hidden_actions(request):
+
+    data = json.loads(request.body)
+    tltAlias = data['tltAlias']
+    action = data['action']
+
+    staff = CorporateStaff.objects.get(talent__alias=tltAlias)
+
+    if action == 'reinstate':
+        staff.hide = False
+        staff.resigned = False
+        staff.unlicked = False
 
     staff.save()
 

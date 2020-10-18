@@ -18,10 +18,13 @@
     <div class="container">
       <div class="row my-auto">
         <div class="col-md-5 h-100 text-center my-auto">
-          <strong>Alias</strong>
+          <strong>Name</strong>
         </div>
         <div class="col-md-3 h-100 text-center my-auto">
-          <strong>Profile</strong>
+          <strong>Information</strong>
+        </div>
+        <div class="col-md-3 h-100 text-center my-auto">
+          <strong>Options</strong>
         </div>
       </div>
     </div>
@@ -34,9 +37,45 @@
                 {{ i.talent.first_name }} {{ i.talent.last_name }}
               </div>
               <div class="col-md-3 h-100 text-center my-auto">
-                <a href="{% url 'Talent:APV_C' tlt=i.talent.alias %}?next={{ request.path|urlencode }}" target="_blank">
-                  <i class="fa fa-id-badge" aria-hidden="true"style="font-size:30px;color:black" data-toggle="tooltip" data-placement="top" title="Profile"></i>
-                </a>
+                {% if i.hide == True %}
+                 Hidden
+                {% elif i.status == True %}
+                  Administrator
+                {% else %}
+                  Staff
+                {% endif %}
+              </div>
+              <div class="col-md-3 h-100 text-center my-auto">
+                <div class="btn-toolbar">
+                  <div class="btn-group mr-2">
+                    <a href="{% url 'Talent:APV_C' tlt=i.talent.alias %}?next={{ request.path|urlencode }}" target="_blank">
+                      <i class="fa fa-id-badge" aria-hidden="true"style="font-size:30px; color:black" data-toggle="tooltip" data-placement="top" title="Profile"></i>
+                    </a>
+                  </div>
+                  <div class="btn-group mr-2">
+                  {% if access == 'granted' %}
+                    {% if i.status == False and i.hide == False %}
+                      <div class="update-staff" data-slug="{{ i.slug }}" data-action="admin">
+                        <i class="fa fa-eye" aria-hidden="true" style="font-size:25px; color:black" data-toggle="tooltip" data-placement="top" title="Grant administrator permissions"></i>
+                      </div>
+                    {% endif %}
+                  {% endif %}
+                  </div>
+                  <div class="btn-group mr-2">
+                    {% if i.hide == True or i.resigned == True %}
+                    <div class="hide-talent"  data-slug="{{ i.talent.alias }}" data-action="reinstate">
+                      <i class="fa fa-handshake-o" aria-hidden="true"  style="font-size:30px; color:green" data-toggle="tooltip" data-placement="top" title="Re-Instate"></i>
+                    </div>
+                    {% endif %}
+                  </div>
+                  <div class="btn-group mr-2">
+                    {% if i.unlocked == True  and i.hide == False %}
+                      <div class="update-staff" data-slug="{{ i.slug }}">
+                        <i class="fa fa-user-times" aria-hidden="true" style="font-size:25px; color:red" data-toggle="tooltip" data-placement="top" title="Remove {{ i.talent.first_name }} {{ i.talent.last_name }} from Staff?" onclick="return confirm('Remove {{ i.talent.first_name }} {{ i.talent.last_name }} - Are you sure?');"></i>
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
               </div>
             </div>
           </div>

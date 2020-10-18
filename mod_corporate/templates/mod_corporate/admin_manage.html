@@ -13,10 +13,12 @@
   <div class="card card-shadow">
     <div class="card-body">
       <div class="btn-toolbar float-right">
-        <div class="btn-group mr-2" role="group" aria-label="First group">
-
+        <div class="btn-group mr-2">
+          <a href="{% url 'Corporate:StaffSearch' corp.slug %}" class="">
+            <i class="fa fa-search" aria-hidden="true" style="font-size:34px; color:black" data-toggle="tooltip" title="Staff Search"></i>
+          </a>
         </div>
-        <div class="btn-group mr-2" role="group" aria-label="Second group">
+        <div class="btn-group mr-2">
           <form  action="{% url 'BookList:BLB' %}" method="post">
             <input type="hidden" name="next" value="{{ request.GET.next }}">
             {% csrf_token %}
@@ -59,7 +61,7 @@
                 <div class="btn-toolbar">
                   <div class="btn-group mr-2">
                     <a href="{% url 'Talent:APV_C' item.talent.alias %}" target="_blank">
-                      <i class="fa fa-compass " aria-hidden="true" style="font-size:30px;color:black" data-toggle="tooltip" data-placement="top" title="View Profile"></i>
+                      <i class="fa fa-id-badge " aria-hidden="true" style="font-size:30px;color:black" data-toggle="tooltip" data-placement="top" title="View Profile"></i>
                     </a>
                   </div>
                   <div class="btn-group mr-2">

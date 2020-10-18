@@ -75,3 +75,61 @@ for (var i = 0; i < updateStatus.length; i++){
     });
   });
 }
+
+var currentStaff = document.getElementsByClassName('update-staff')
+
+for (var i = 0; i < currentStaff.length; i++){
+  currentStaff[i].addEventListener('click', function(){
+    var staffSlug = this.dataset.slug
+    var action = this.dataset.action
+    console.log(staffSlug)
+    var url = '/corporate/staff-actions/'
+    var csrftoken = Cookies.get('csrftoken');
+
+    fetch(url, {
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'X-CSRFToken':csrftoken,
+      },
+      body:JSON.stringify({'staffSlug': staffSlug, 'action': action})
+    })
+
+    .then((response) => {
+      return response.json();
+    })
+
+    .then ((data) => {
+      location.reload()
+    });
+  });
+}
+
+var hiddenBtn = document.getElementsByClassName('hide-talent')
+
+for (var i = 0; i < hiddenBtn.length; i++){
+  hiddenBtn[i].addEventListener('click', function(){
+    var tltAlias = this.dataset.slug
+    var action = this.dataset.action
+    console.log({tltAlias})
+    var url = '/corporate/hidden-actions/'
+    var csrftoken = Cookies.get('csrftoken');
+
+    fetch(url, {
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'X-CSRFToken':csrftoken,
+      },
+      body:JSON.stringify({'tltAlias': tltAlias, 'action': action})
+    })
+
+    .then((response) => {
+      return response.json();
+    })
+
+    .then ((data) => {
+      location.reload()
+    });
+  });
+}

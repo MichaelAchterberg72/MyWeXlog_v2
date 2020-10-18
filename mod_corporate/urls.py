@@ -15,8 +15,9 @@ urlpatterns = [
     path('<slug:cor>/staff/current/', views.staff_current, name='StaffCurrent'),
     path('<slug:cor>/staff-search/', views.staff_search, name='StaffSearch'),
     path('<slug:cor>/staff/Admin/', views.staff_admin, name='StaffAdmn'),
-    path('<slug:cstf>/staff-mka/', views.staff_makeadmin, name='StaffMkAdmn'),
-    path('<slug:cstf>/staff-rem/', views.staff_remove, name='StaffRemove'),
+    path('staff-actions/', views.staff_actions, name='StaffActions'),
     path('<slug:cor>/admin/', views.admin_staff, name='CorpAdmin'),
     path('admin-permission/', views.admin_permission, name='AdminPerm'),
+    path('<slug:cor>/user-hidden/', views.talent_hidden, name='Hidden'),
+    path('hidden-actions/', views.hidden_actions, name='HiddenActions'),
 ]

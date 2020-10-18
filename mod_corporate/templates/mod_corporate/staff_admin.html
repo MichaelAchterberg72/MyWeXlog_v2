@@ -11,12 +11,19 @@
 {% block content %}
   <div class="card card-shadow">
     <div class="card-body">
-      <div class="float-right">
-        <form  action="{% url 'BookList:BLB' %}" method="post">
-          <input type="hidden" name="next" value="{{ request.GET.next }}">
-          {% csrf_token %}
-          <button type="submit" class="btn btn-secondary">Back</button>
-        </form>
+        <div class="btn-toolbar float-right">
+          <div class="btn-group mr-2">
+            <a href="{% url 'Corporate:StaffSearch' corp.slug %}" class="">
+              <i class="fa fa-search" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Staff Search"></i>
+            </a>
+          </div>
+          <div class="btn-group mr-2">
+            <form  action="{% url 'BookList:BLB' %}" method="post">
+              <input type="hidden" name="next" value="{{ request.GET.next }}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-secondary">Back</button>
+            </form>
+          </div>
       </div>
       <h3>{{ corp.company }} Staff</h3>
     </div>
@@ -48,28 +55,24 @@
                 {% endif %}
               </td>
               <td class="align-middle text-center">
-                {% if item.unlocked == True %}
-                  <form  action="{% url 'Corporate:StaffRemove' item.slug %}" method="post">
-                    <input type="hidden" name="next" value="{{ request.GET.next }}">
-                    {% csrf_token %}
-                    <button type="submit">
-                      <i class="fa fa-user-times" aria-hidden="true"></i>
-                    </button>
-                  </form>
-                {% else %}
-                {% endif %}
-
-                {% if access == 'granted' %}
-                  {% if item.status == False %}
-                    <form  action="{% url 'Corporate:StaffMkAdmn' item.slug %}" method="post">
-                      <input type="hidden" name="next" value="{{ request.GET.next }}+#{{item.id}}">
-                      {% csrf_token %}
-                      <button type="submit">
-                        <i class="fa fa-eye" aria-hidden="true"></i>
-                      </button>
-                    </form>
+                <div class="btn-toolbar">
+                  <div class="btn-group mr-2">
+                    {% if item.unlocked == True %}
+                      <div class="update-staff" data-slug="{{ item.slug }}" data-action="remove">
+                      <i class="fa fa-user-times" aria-hidden="true" style="font-size:25px; color:red" data-toggle="tooltip" data-placement="top" title="Remove {{ item.talent.first_name }} {{ item.talent.last_name }} from Staff?" onclick="return confirm('Remove {{ item.talent.first_name }} {{ item.talent.last_name }} - Are you sure?');"></i>
+                    </div>
+                    {% else %}
+                    {% endif %}
+                  </div>
+                  <div class="btn-group mr-2">
+                  {% if access == 'granted' %}
+                    {% if item.status == False %}
+                      <div class="update-staff" data-slug="{{ item.slug }}" data-action="admin">
+                        <i class="fa fa-eye" aria-hidden="true" style="font-size:25px; color:black" data-toggle="tooltip" data-placement="top" title="Grant administrator permissions"></i>
+                      </div>
+                    {% endif %}
                   {% endif %}
-                {% endif %}
+                </div>
               </td>
             </tr>
           {% empty %}
