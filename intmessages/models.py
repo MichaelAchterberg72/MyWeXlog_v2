@@ -36,6 +36,7 @@ class ChatRoomMembers(models.Model):
 class Message(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='author_messages', on_delete=models.SET_NULL, null=True)
     room_name = models.CharField(max_length=200, null=True)
+    message_read = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="message_read_user", blank=True) # , through=MessageRead
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
 

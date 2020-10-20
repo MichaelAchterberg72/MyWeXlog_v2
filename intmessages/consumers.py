@@ -15,11 +15,11 @@ class ChatConsumer(WebsocketConsumer):
     def fetch_messages(self, data):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         chat_name = self.room_name
-#        messages = Message.objects.filter(room_name=chat_name).order_by('-timestamp')[:20]
-        print(data)
-        author = 'Astronaut'
-        author_user = User.objects.get(alias=author)
-        messages = MessageRead.objects.filter(Q(message__room_name=chat_name) & Q(talent=author_user)).order_by('-message__timestamp')[:20]
+        messages = Message.objects.filter(room_name=chat_name).order_by('-timestamp')[:20]
+
+#        author = 'Astronaut'
+#        author_user = User.objects.get(alias=author)
+#        messages = MessageRead.objects.filter(Q(message__room_name=chat_name) & Q(talent=author_user)).order_by('-message__timestamp')[:20]
         content = {
             'command': 'messages',
             'messages': self.messages_to_json(messages),
@@ -65,9 +65,9 @@ class ChatConsumer(WebsocketConsumer):
 
     def message_to_json(self, message):
         return {
-            'author': message.message.author.alias,
-            'content': message.message.content,
-            'timestamp': str(message.message.timestamp.strftime('%a, %b %d, %H:%M'))
+            'author': message.author.alias,
+            'content': message.content,
+            'timestamp': str(message.timestamp.strftime('%a, %b %d, %H:%M'))
         }
 
     commands = {

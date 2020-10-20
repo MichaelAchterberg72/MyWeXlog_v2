@@ -5,7 +5,9 @@ from .models import Message, ChatGroup, ChatRoomMembers, MessageRead
 
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
-    pass
+    inlines = [MessageReadAdmin]
+    class Meta:
+        model = Message
 
 @admin.register(ChatGroup)
 class ChatGroupAdmin(admin.ModelAdmin):
@@ -16,5 +18,5 @@ class ChatRoomMembersAdmin(admin.ModelAdmin):
     pass
 
 @admin.register(MessageRead)
-class MessageReadAdmin(admin.ModelAdmin):
-    pass
+class MessageReadAdmin(admin.TabularInline):
+    model = MessageRead
