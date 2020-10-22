@@ -33,6 +33,12 @@ from Profile.models import (
 
 from marketplace.models import WorkLocation
 from Profile.models import Profile
+from talenttrack.models import WorkExperience
+
+
+from WeXlog.app_config import (
+    skill_pass_score, locked_age,
+)
 
 
 @login_required()
@@ -350,3 +356,24 @@ def hidden_actions(request):
     staff.save()
 
     return JsonResponse('Action Processed', safe=False)
+
+
+def experience_dashboard(request, cor):
+    staff_qs = CorporateStaff.objects.filter(Q(corporate__slug=cor) & Q(hide=False)).select_related('talent')
+
+    staff_list = staff_qs.values_list('talent__id', flat=True)
+    we_qs = WorkExperience.objects.filter(Q(talent__id__in=staff_list) & Q(score__gte=skill_pass_score))
+
+    #total experience and training hours (confirmed)
+    corp_ehrs = we_qs.filter(edt=False).aggregate(exp_sum = Sum('hours_worked'))
+    corp_thrs = we_qs.filter(edt=True).aggregate(trn_sum = Sum('topic__hours'))
+
+    #count staff at each experience level
+
+    #list all skills
+    #count skills
+    #sum hours for each skill
+    #see skill age (possibly have a barchart with different colours for age)
+
+    #list projects staff members have worked on.
+    #sum the number of hours worked on the project.

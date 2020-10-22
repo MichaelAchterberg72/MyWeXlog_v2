@@ -56,7 +56,7 @@ from analytics.signals import object_viewed_signal
 def ExperienceHome(request):
     '''The view for the main page for Talenttrack app'''
     #>>>Step 1
-    basequery = WorkExperience.objects.select_related('topic').filter(talent=request.user)
+    basequery = WorkExperience.objects.filter(talent=request.user).select_related('topic')
     skills = SkillTag.objects.all()
     sl = SkillLevel.objects.all()
     we_c = basequery.filter(score__gte=skill_pass_score)
