@@ -20,4 +20,6 @@ urlpatterns = [
     path('admin-permission/', views.admin_permission, name='AdminPerm'),
     path('<slug:cor>/user-hidden/', views.talent_hidden, name='Hidden'),
     path('hidden-actions/', views.hidden_actions, name='HiddenActions'),
+    #Departments
+    path('<slug:cor>/<str:dept>/department-dashboard/', views.org_department_dashboard, name='OrgDepartment'),
 ]

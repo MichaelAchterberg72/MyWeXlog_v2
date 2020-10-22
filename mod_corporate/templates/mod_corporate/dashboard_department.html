@@ -1,0 +1,14 @@
+{% extends 'mod_corporate/base_corporate.html' %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Corporate Department Dashboard{% endblock title %}
+
+{% block subStyle %}{% endblock subStyle %}
+
+{% block content %}
+<div class="card card-shadow">
+  <div class="card-body">
+    <h3>{{ dept }} Department</h3>
+  </div>
+</div>
+{% endblock content %}
