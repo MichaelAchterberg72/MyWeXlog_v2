@@ -19,4 +19,6 @@ urlpatterns = [
     path('<slug:cstf>/staff-rem/', views.staff_remove, name='StaffRemove'),
     path('<slug:cor>/admin/', views.admin_staff, name='CorpAdmin'),
     path('admin-permission/', views.admin_permission, name='AdminPerm'),
+    #Departments
+    path('<slug:cor>/<str:dept>/department-dashboard/', views.org_department_dashboard, name='OrgDepartment'),
 ]

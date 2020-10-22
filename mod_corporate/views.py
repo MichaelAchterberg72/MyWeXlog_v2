@@ -2,8 +2,9 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
-from django.utils import timezone
-from django.db.models import Q
+from django.utils import timezone, dateformat
+from django.db.models import Count, Sum, F, Q, Avg
+from dateutil.relativedelta import relativedelta
 from django.utils.http import is_safe_url
 
 import math
@@ -37,6 +38,18 @@ from Profile.models import Profile
 
 @login_required()
 @corp_permission(1)
+def org_department_dashboard(request, cor, dept):
+    usr = request.user
+    corp = CorporateStaff.objects.get(talent=usr)
+    company = corp.corporate
+    structure = OrgStructure.objects.filter(Q(corporate__slug=cor) & Q(level_name=dept))
+
+    template = 'mod_corporate/dashboard_department.html'
+    context = {'dept': dept}
+    return render(request, template, context)
+
+@login_required()
+@corp_permission(1)
 def staff_search(request, cor):
     '''Search in the staff_current.html'''
     qs = CorporateStaff.objects.filter(
@@ -65,14 +78,66 @@ def dashboard_corporate(request):
     usr = request.user
     corp = CorporateStaff.objects.get(talent=usr)
     company = corp.corporate
-    current_staff = CorporateStaff.objects.filter(corporate=company).values_list('talent__id',flat=True)
+    structure = OrgStructure.objects.filter(corporate=company)
+
+    departments_link={}
+    for item in structure:
+        cor = item.corporate.slug
+        dept = item.level_name
+        departments_link[item]={'cor': cor, 'dept': dept}
+
+    department_labels=[]
+    for d in structure:
+        dept = d.level_name
+        department=[f'{dept}']
+        department_labels.append(department)
+
+    dpt_staff_data=[]
+    for d in structure:
+        staff = CorporateStaff.objects.filter(Q(corporate=company) & Q(department=d))
+        current_staff = staff.values_list('talent__id', flat=True)
+        if current_staff.count() >= 1:
+            current_count = current_staff.count()
+        else:
+            current_count = 1
+        staff = Profile.objects.filter(talent__id__in=current_staff)
+        today = timezone.now().date()
+        age={}
+        for i in staff:
+            staff_age=relativedelta(today, i.birth_date).years
+            age={'staff_age': staff_age}
+        total_age = sum(age.values())
+        ave_age = total_age / current_count
+        dpt_staff=ave_age
+        dpt_staff_data.append(dpt_staff)
+
+    staff = CorporateStaff.objects.filter(corporate=company)
+    current_staff = staff.values_list('talent__id', flat=True)
     current_count = current_staff.count()
+
+    staff = Profile.objects.filter(talent__id__in=current_staff)
+    today = timezone.now().date()
+
+    age={}
+    for i in staff:
+        staff_age=relativedelta(today, i.birth_date).years
+        age={'staff_age': staff_age}
+
+    total_age = sum(age.values())
+    ave_age = [total_age / current_count]
+
 
     potential = BriefCareerHistory.objects.exclude(talent__id__in=current_staff).filter(Q(companybranch__company=company.company) & Q(date_to__isnull=True)).count()
 
     template = 'mod_corporate/dashboard_corporate.html'
     context = {
-        'corp': corp, 'potential': potential, 'current_count': current_count,
+        'corp': corp,
+        'potential': potential,
+        'current_count': current_count,
+        'department_labels': department_labels,
+        'dpt_staff_data': dpt_staff_data,
+        'departments_link': departments_link,
+        'ave_age': ave_age,
         }
     return render(request, template, context)
 
@@ -82,11 +147,27 @@ def dashboard_corporate(request):
 def org_structure_view(request):
     '''A view of the levels in the corporate structure'''
     usr = request.user
-    corp = CorporateStaff.objects.get(talent=usr)
-    structure = OrgStructure.objects.filter(corporate=corp).order_by('parent')
+    corp = CorporateStaff.objects.filter(talent=usr)
+
+    corp_charts = {}
+    for item in corp:
+        chart = []
+        pr = item.corporate
+        structure = OrgStructure.objects.filter(corporate=pr).order_by('parent')
+        for d in structure:
+            dept = d.level_name
+            if d.parent == None:
+                parent = ''
+            else:
+                parent = d.parent
+            tp = ''
+            department=[f'{dept}', f'{parent}', f'{tp}']
+            chart.append(department)
+
+        corp_charts[item] = {'co': pr, 'chart': chart}
 
     template = 'mod_corporate/org_structure_view.html'
-    context = {'structure': structure, 'corp': corp,}
+    context = {'structure': structure, 'corp_charts': corp_charts}
     return render(request, template, context)
 
 
