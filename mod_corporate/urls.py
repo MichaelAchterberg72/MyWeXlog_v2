@@ -6,7 +6,7 @@ from .import views
 app_name = 'Corporate'
 
 urlpatterns = [
-    path('dashboard/', views.dashboard_corporate, name='DashCorp'),
+    path('<slug:cor>/dashboard/', views.dashboard_corporate, name='DashCorp'),
     path('org-view/', views.org_structure_view, name='OrgView'),
     path('<slug:cor>/org-add/', views.org_structure_add, name='OrgAdd'),
     #Staff

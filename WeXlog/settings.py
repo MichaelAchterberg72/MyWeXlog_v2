@@ -120,6 +120,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.request',
+                'mod_corporate.context_processors.corp_selection',
             ],
 #            'loaders': [
 #            ('django.template.loaders.cached.Loader', [
