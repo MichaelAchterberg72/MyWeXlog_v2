@@ -6,10 +6,43 @@
 {% block subStyle %}{% endblock subStyle %}
 
 {% block TopCenter %}
-<h4>Select Your Department</h4>
-<div class="btn-group mx-auto">
+<h4>Organisation Structure - {{ company }}</h4>
+<div>
+  <div id="chart_div"></div>
+</div>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+  google.charts.load('current', {packages:["orgchart"]});
+  google.charts.setOnLoadCallback(drawChart);
+
+  function drawChart() {
+    var data = new google.visualization.DataTable();
+    data.addColumn('string', 'Name');
+    data.addColumn('string', 'Manager');
+    data.addColumn('string', 'ToolTip');
+
+    // For each orgchart box, provide the name, manager, and tooltip to show.
+    data.addRows({{ chart|safe }});
+//        [
+//          [{'v':'Mike', 'f':'Mike<div style="color:red; font-style:italic">President</div>'},
+//           '', 'The President'],
+//          [{'v':'Jim', 'f':'Jim<div style="color:red; font-style:italic">Vice President</div>'},
+//           'Mike', 'VP'],
+//          ['Alice', 'Mike', ''],
+//          ['Bob', 'Jim', 'Bob Sponge'],
+//          ['Carol', 'Bob', '']
+//        ]);
+
+    // Create the chart.
+    var chart = new google.visualization.OrgChart(document.getElementById('chart_div'));
+    // Draw the chart, setting the allowHtml option to true for the tooltips.
+    chart.draw(data, {'allowHtml':true});
+  }
+</script>
+
+<div class="row col-12">
   {% for key in departments_link.items %}
-  <div class="btn-group mr-2">
+  <div class="mr-2 mb-2">
     <a href="{% url 'Corporate:OrgDepartment' key.1.cor key.1.dept  %}?next={{ request.path|urlencode }}" class="btn btn-primary align-middle">
       {{ key.1.dept }}
     </a>
@@ -26,7 +59,7 @@
 
   </div>
   <h4>Organisation Structure</h4>
-  <p>Department - Parent - #Staff - #Skills - Experience</p>
+
 
 {% endblock MidTopLeft %}
 
@@ -59,68 +92,52 @@
   </div>
 </div>
   <h4>Staff</h4>
-  <p>Total Staff - Average Age - graph (age histogram)</p>
   <canvas id="members-chart" height="100px"></canvas>
   <script>
-
-    var config = {
-      type: 'line',
-      data: {
+  var config = {
+    type: 'bar',
+    data: {
+        labels: {{ number_age_bracket_labels|safe }},
         datasets: [{
-          label: 'Average Staff Age',
-          data: {{ ave_age|safe }},
-          type: 'line',
-          order: 1,
-          fill: false,
-          borderDash: [5, 5],
-          borderColor: '#808000',
-          borderWidth: 5,
-          pointBorderWidth: 5,
-          pointStyle: 'circle',
-          pointHitRadius: 20,
-        },   {
-          label: 'Average Staff Age by Department',
-          data: {{ dpt_staff_data|safe }},
-          type: 'bar',
-          order: 2,
-          fill: true,
-          borderColor: ['#F7F6CF', '#B6D8F2', '#F4CFDF', '#5784BA'],
-          backgroundColor: ['#F7F6CF', '#B6D8F2', '#F4CFDF', '#5784BA', '#C54B6C', '#F5BFD2', '#E5DB9C', '#D0BCAC', '#BEB4C5', '#E6A57E', '#218B82', '#9AD9DB', '#E5DBD9', '#98D4BB', '#EB96AA', '#C6C9D0', '#C54B6C', '#E5B3BB', '#C47482', '#D5E4C3', '#F9968B', '#F27348', '#26474E', '#76CDCD', '#2CCED2', '#B8E0F6', '#A4CCE3', '#37667E', '#DEC4D6', '#7B92AA', '#B8E0F6', '#A4CCE3', '#37667E', '#DEC4D6', '#7B92AA', '#DDF2F4', '#84A6D6', '#4382BB', '#E4CEE0', '#A15D98', '#DC828F', '#F7CE76', '#E8D6CF', '#8C7386', '#9C9359', '#E9BBB5', '#E7CBA9', '#AAD9CD', '#E8D595', '#8DA47E', '#CAE7E3', '#B2B2B2', '#EEB8C5', '#DCDBD9', '#FEC7BC', '#8EA4C8', '#C3B8AA', '#DEDCE4', '#DB93A5', '#C7CDC5'],
-          borderWidth: 1,
-          pointBorderWidth: 5,
-          pointStyle: 'circle',
-          pointHitRadius: 20,
-          barPercentage: 0.8,
-          options: {scales:{
-            yAxes: [{tricks: {beginAtZero: true}}]
-          }}
-        },],
-        labels: {{ department_labels|safe }}
-      },
-      options: {
-        responsive: true,
-        tooltips:{
-          bodyFontSize: 14,
-          titleFontSize: 0,
-          displayColors: false,
-        },
-        legend: {
-            display: false,
-            position: 'left',
-            labels: {
-                fontColor: '#0000ff',
-        },
-
-        }
+          label: 'Number Staff by Age Bracket',
+          data: {{ number_age_brackets_data|safe }},
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+          },
       }
-    };
+  };
 
-    window.onload = function() {
-      var ctx = document.getElementById('members-chart').getContext('2d');
-      window.myPie = new Chart(ctx, config);
-    };
-
+window.onload = function() {
+  var ctx = document.getElementById('members-chart').getContext('2d');
+  window.myPie = new Chart(ctx, config);
+};
   </script>
+
+
 {% endblock MidTopRight %}
 
 {% block MidBotLeft %}

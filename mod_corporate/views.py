@@ -102,17 +102,28 @@ def staff_search(request, cor):
 
 @login_required()
 @corp_permission(1)
-def dashboard_corporate(request):
+def dashboard_corporate(request, cor):
     usr = request.user
-    corp = CorporateStaff.objects.get(talent=usr)
+    corp = CorporateStaff.objects.get(Q(talent=usr) & Q(corporate__slug=cor))
     company = corp.corporate
-    structure = OrgStructure.objects.filter(corporate=company)
+    structure = OrgStructure.objects.filter(corporate__slug=cor)
 
     departments_link={}
     for item in structure:
         cor = item.corporate.slug
         dept = item.level_name
         departments_link[item]={'cor': cor, 'dept': dept}
+
+    chart = []
+    for d in structure:
+        dept = d.level_name
+        if d.parent == None:
+            parent = ''
+        else:
+            parent = d.parent
+        tp = ''
+        department=[f'{dept}', f'{parent}', f'{tp}']
+        chart.append(department)
 
     department_labels=[]
     for d in structure:
@@ -151,6 +162,41 @@ def dashboard_corporate(request):
         staff_age=relativedelta(today, i.birth_date).years
         age={'staff_age': staff_age}
 
+    age_range_18_25 = {}
+    for i in age:
+        if staff_age in range(18, 25):
+            age_range_18_25={'staff_age': staff_age}
+
+    age_range_26_35 = {}
+    for i in age:
+        if staff_age in range(26, 35):
+            age_range_26_35={'staff_age': staff_age}
+
+    age_range_36_45 = {}
+    for i in age:
+        if staff_age in range(36, 45):
+            age_range_36_45={'staff_age': staff_age}
+
+    age_range_46_55 = {}
+    for i in age:
+        if staff_age in range(46, 55):
+            age_range_46_55={'staff_age': staff_age}\
+
+    age_range_56_65 = {}
+    for i in age:
+        if staff_age in range(56, 65):
+            age_range_56_65={'staff_age': staff_age}
+
+    sum_age_range_18_25 = len(age_range_18_25.values())
+    sum_age_range_26_35 = len(age_range_26_35.values())
+    sum_age_range_36_45 = len(age_range_36_45.values())
+    sum_age_range_46_55 = len(age_range_46_55.values())
+    sum_age_range_56_65 = len(age_range_56_65.values())
+
+    number_age_brackets_data = [sum_age_range_18_25, sum_age_range_26_35, sum_age_range_36_45, sum_age_range_46_55, sum_age_range_56_65]
+
+    number_age_bracket_labels =['18-25', '26-35', '36-45', '46-55', '56-65']
+
     total_age = sum(age.values())
     ave_age = [total_age / current_count]
 
@@ -160,10 +206,14 @@ def dashboard_corporate(request):
     template = 'mod_corporate/dashboard_corporate.html'
     context = {
         'corp': corp,
+        'company': company,
         'potential': potential,
+        'chart': chart,
         'current_count': current_count,
         'department_labels': department_labels,
         'dpt_staff_data': dpt_staff_data,
+        'number_age_brackets_data': number_age_brackets_data,
+        'number_age_bracket_labels': number_age_bracket_labels,
         'departments_link': departments_link,
         'ave_age': ave_age,
         }
