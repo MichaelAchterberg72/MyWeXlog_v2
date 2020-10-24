@@ -54,6 +54,7 @@ def org_department_dashboard(request, cor, dept):
     context = {'dept': dept}
     return render(request, template, context)
 
+
 @login_required()
 @corp_permission(1)
 def staff_search(request, cor):
@@ -97,6 +98,16 @@ def staff_search(request, cor):
 
     template = 'mod_corporate/staff_search.html'
     context = {'form': form, 'query': query, 'results': results, 'access': perm,}
+    return render(request, template, context)
+
+
+@login_required()
+def corporate_select(request):
+    usr = request.user
+    corp = CorporateStaff.objects.filter(Q(talent=usr) & Q(corp_access__gte=1))
+
+    template = 'mod_corporate/corp_select.html'
+    context = {'corp': corp}
     return render(request, template, context)
 
 

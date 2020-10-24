@@ -12,4 +12,5 @@ def corp_selection(request):
         branch = item.corporate.companybranch
         corporates_link[item]={'cor': cor, 'branch': branch}
 
+    print(corporates_link)
     return {'cor': corporates_link}

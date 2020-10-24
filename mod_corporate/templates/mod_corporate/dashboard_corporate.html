@@ -6,6 +6,11 @@
 {% block subStyle %}{% endblock subStyle %}
 
 {% block TopCenter %}
+<div class="btn-group float-right">
+  <a href="{% url 'Corporate:OrgAdd' corp.corporate.slug %}?next={{ request.path|urlencode }}" class="badge badge-primary align-middle">
+    Add
+  </a>
+</div>
 <h4>Organisation Structure - {{ company }}</h4>
 <div>
   <div id="chart_div"></div>
@@ -52,12 +57,7 @@
 {% endblock TopCenter %}
 
 {% block MidTopLeft %}
-  <div class="btn-group float-right">
-    <a href="{% url 'Corporate:OrgAdd' corp.corporate.slug %}?next={{ request.path|urlencode }}">
-      Add
-    </a>
 
-  </div>
   <h4>Organisation Structure</h4>
 
 

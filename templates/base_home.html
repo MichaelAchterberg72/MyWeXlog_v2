@@ -173,25 +173,14 @@
 
 
         {% if request.user.subscription > 2 %}
-        {% if cor|length <= 1 %}
-        {% for key in cor.items %}
-        <li class="nav-item">
-          <a href="{% url 'Corporate:DashCorp' key.1.cor %}" class="nav-link">
-            <div class="fa-primary">
-              <i style="font-size: 27px" class="fa fa-globe"></i>
-            </div>
-            <span class="link-text">Corporate Beta</span>
-          </a>
-        </li>
-        {% endfor %}
-        {% else %}
-        <li class="nav-item">
-          <div class="fa-primary nav-link pointer"data-toggle="modal" data-target="#exampleModalCenter">
-            <i style="font-size: 27px" class="fa fa-globe" aria-hidden="true" data-toggle="modal" data-target="#exampleModalCenter"></i>
-            <span class="link-text">Corporate Beta</span>
-          </div>
-        </li>
-        {% endif %}
+          <li class="nav-item">
+            <a href="{% url 'Corporate:CorpSelect' %}" class="nav-link">
+              <div class="fa-primary">
+                <i style="font-size: 27px" class="fa fa-globe"></i>
+              </div>
+              <span class="link-text">Corporate Beta</span>
+            </a>
+          </li>
         {% endif %}
 
         <li class="nav-item" id="themeButton">

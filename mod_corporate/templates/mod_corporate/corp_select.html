@@ -1,0 +1,28 @@
+{% extends 'mod_corporate/base_corporate.html' %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Select Company{% endblock title %}
+
+{% block subStyle %}{% endblock subStyle %}
+
+{% block content %}
+<div class="card card-shadow">
+  <div class="card-body">
+    {% if corp %}
+      <h3>You have administrator access to the following Companies</h3>
+      <ul class="list-group">
+        {% for company in corp %}
+        <li  class="list-group-item">
+          {{ company.corporate }}
+          <span class="float-right">
+            <a href="{% url 'Corporate:DashCorp' company.corporate.slug %}" class="btn btn-primary setCorp" data-slug="{{company.corporate.slug}}">Select</a>
+          </span>
+        </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>You do not have administrator rights to the Corporate Module!</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock content %}
