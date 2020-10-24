@@ -58,101 +58,100 @@
 
 {% block MidTopLeft %}
 
-  <h4>Organisation Structure</h4>
+  <div class="btn-group float-right">
+    <div class="btn-group mr-2">
+      <a href="{% url 'Corporate:StaffManage' corp.corporate.slug %}?next={{ request.path|urlencode }}" class="badge badge-primary">
+        Potential ( {{ potential|intcomma }} )
+      </a>
+    </div>
+    <div class="btn-group mr-2">
+      <a href="{% url 'Corporate:StaffCurrent' corp.corporate.slug %}?next={{ request.path|urlencode }}" class="badge badge-primary align-middle">
+        Current ( {{ current_count|intcomma }} )
+      </a>
+    </div>
+    <div class="btn-group mr-2">
+      <a href="{% url 'Corporate:StaffAdmn' corp.corporate.slug %}?next={{ request.path|urlencode }}" class="badge badge-primary align-middle">
+        Manage
+      </a>
+    </div>
+    <div class="btn-group mr-2">
+      <a href="{% url 'Corporate:CorpAdmin' corp.corporate.slug %}?next={{ request.path|urlencode }}" class="badge badge-primary align-middle">
+        Admin
+      </a>
+    </div>
+    <div class="btn-group mr-2">
+      <a href="{% url 'Corporate:Hidden' corp.corporate.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary align-middle">
+        Hidden
+      </a>
+    </div>
+  </div>
+    <h4>Staff</h4>
+    <canvas id="members-chart" height="100px"></canvas>
+    <script>
+    var config = {
+      type: 'bar',
+      data: {
+          labels: {{ number_age_bracket_labels|safe }},
+          datasets: [{
+            label: 'Number Staff by Age Bracket',
+            data: {{ number_age_brackets_data|safe }},
+              backgroundColor: [
+                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(54, 162, 235, 0.2)',
+                  'rgba(255, 206, 86, 0.2)',
+                  'rgba(75, 192, 192, 0.2)',
+                  'rgba(153, 102, 255, 0.2)',
+                  'rgba(255, 159, 64, 0.2)'
+              ],
+              borderColor: [
+                  'rgba(255, 99, 132, 1)',
+                  'rgba(54, 162, 235, 1)',
+                  'rgba(255, 206, 86, 1)',
+                  'rgba(75, 192, 192, 1)',
+                  'rgba(153, 102, 255, 1)',
+                  'rgba(255, 159, 64, 1)'
+              ],
+              borderWidth: 1
+          }]
+      },
+      options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero: true
+                  }
+              }]
+            },
+        }
+    };
 
-
+  window.onload = function() {
+    var ctx = document.getElementById('members-chart').getContext('2d');
+    window.myPie = new Chart(ctx, config);
+  };
+    </script>
 {% endblock MidTopLeft %}
 
 {% block MidTopRight %}
-<div class="btn-group float-right">
-  <div class="btn-group mr-2">
-    <a href="{% url 'Corporate:StaffManage' corp.corporate.slug %}?next={{ request.path|urlencode }}" class="badge badge-primary">
-      Potential ( {{ potential|intcomma }} )
-    </a>
-  </div>
-  <div class="btn-group mr-2">
-    <a href="{% url 'Corporate:StaffCurrent' corp.corporate.slug %}?next={{ request.path|urlencode }}" class="badge badge-primary align-middle">
-      Current ( {{ current_count|intcomma }} )
-    </a>
-  </div>
-  <div class="btn-group mr-2">
-    <a href="{% url 'Corporate:StaffAdmn' corp.corporate.slug %}?next={{ request.path|urlencode }}" class="badge badge-primary align-middle">
-      Manage
-    </a>
-  </div>
-  <div class="btn-group mr-2">
-    <a href="{% url 'Corporate:CorpAdmin' corp.corporate.slug %}?next={{ request.path|urlencode }}" class="badge badge-primary align-middle">
-      Admin
-    </a>
-  </div>
-  <div class="btn-group mr-2">
-    <a href="{% url 'Corporate:Hidden' corp.corporate.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary align-middle">
-      Hidden
-    </a>
-  </div>
-</div>
-  <h4>Staff</h4>
-  <canvas id="members-chart" height="100px"></canvas>
-  <script>
-  var config = {
-    type: 'bar',
-    data: {
-        labels: {{ number_age_bracket_labels|safe }},
-        datasets: [{
-          label: 'Number Staff by Age Bracket',
-          data: {{ number_age_brackets_data|safe }},
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true
-                }
-            }]
-          },
-      }
-  };
-
-window.onload = function() {
-  var ctx = document.getElementById('members-chart').getContext('2d');
-  window.myPie = new Chart(ctx, config);
-};
-  </script>
-
+  <h4>Past Staff</h4>
+  <p>where information relating to past staff can be viewed. (when the worked here, when they left etc.)</p>
+  <p>What skills the company no longer have</p>
 
 {% endblock MidTopRight %}
 
 {% block MidBotLeft %}
+
+{% endblock MidBotLeft %}
+
+{% block MidBotRight %}
+
+{% endblock MidBotRight %}
+
+{% block BotCenter %}
   <h4>Experience</h4>
   <p>Total Skills</p>
   <p>Total Hours</p>
   <p>skills histogram by 10 year buckets</p>
-{% endblock MidBotLeft %}
-
-{% block MidBotRight %}
-<h4>Past Staff</h4>
-<p>where information relating to past staff can be viewed. (when the worked here, when they left etc.)</p>
-{% endblock MidBotRight %}
-
-{% block BotCenter %}
 {% endblock BotCenter %}
 
 {% block subScript %}{% endblock subScript %}

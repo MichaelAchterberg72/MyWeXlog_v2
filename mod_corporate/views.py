@@ -45,9 +45,6 @@ from WeXlog.app_config import (
 @login_required()
 @corp_permission(1)
 def org_department_dashboard(request, cor, dept):
-    usr = request.user
-    corp = CorporateStaff.objects.get(talent=usr)
-    company = corp.corporate
     structure = OrgStructure.objects.filter(Q(corporate__slug=cor) & Q(level_name=dept))
 
     template = 'mod_corporate/dashboard_department.html'
@@ -100,15 +97,21 @@ def staff_search(request, cor):
     context = {'form': form, 'query': query, 'results': results, 'access': perm,}
     return render(request, template, context)
 
-
+#why are you dosjkdhflkxcgkjlfdlkgjl
 @login_required()
 def corporate_select(request):
     usr = request.user
     corp = CorporateStaff.objects.filter(Q(talent=usr) & Q(corp_access__gte=1))
-
-    template = 'mod_corporate/corp_select.html'
-    context = {'corp': corp}
-    return render(request, template, context)
+    corp_c = corp.count()
+    if corp_c == 1:
+        cor = corp[0].corporate.slug
+        response = redirect(reverse('Corporate:DashCorp',kwargs={'cor': cor}))
+        response.set_cookie("corp", cor)
+        return response
+    else:
+        template = 'mod_corporate/corp_select.html'
+        context = {'corp': corp}
+        return render(request, template, context)
 
 
 @login_required()
@@ -514,6 +517,7 @@ def experience_dashboard(request, cor):
     #count skills
     #sum hours for each skill
     #see skill age (possibly have a barchart with different colours for age)
+    #at a later stage: skill age, by department, skill last utilised, no longer available (staff left), SKILLS AVAILABLE, BUT NOT UTILISED.
 
     #list projects staff members have worked on.
     #sum the number of hours worked on the project.
