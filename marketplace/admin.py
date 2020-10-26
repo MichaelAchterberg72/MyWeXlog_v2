@@ -55,7 +55,7 @@ class DeliverablesAdmin(admin.ModelAdmin):
 
 @admin.register(WorkLocation)
 class WorkLocationAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['id', 'type']
 
 @admin.register(VacancyViewed)
 class VacancyViewedAdmin(admin.ModelAdmin):

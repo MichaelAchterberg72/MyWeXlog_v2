@@ -11,7 +11,7 @@ import math
 import json
 
 from datetime import datetime
-
+from statistics import mean
 
 from core.decorators import corp_permission, subscription
 from django.contrib.postgres.search import SearchVector, TrigramSimilarity
@@ -97,7 +97,7 @@ def staff_search(request, cor):
     context = {'form': form, 'query': query, 'results': results, 'access': perm,}
     return render(request, template, context)
 
-#why are you dosjkdhflkxcgkjlfdlkgjl
+
 @login_required()
 def corporate_select(request):
     usr = request.user
@@ -121,7 +121,80 @@ def dashboard_corporate(request, cor):
     corp = CorporateStaff.objects.get(Q(talent=usr) & Q(corporate__slug=cor))
     company = corp.corporate
     structure = OrgStructure.objects.filter(corporate__slug=cor)
+    bch_qs = BriefCareerHistory.objects.filter(companybranch__company=company.company)
 
+    #>>> Past Staff window
+    past_staff = bch_qs.filter(date_to__isnull=False)
+
+    #ps means past staff,
+    ps_emp = past_staff.filter(work_configeration=5)
+    ps_ctr = past_staff.filter(work_configeration=3)
+    ps_fifo = past_staff.filter(work_configeration=6)
+    ps_cons = past_staff.filter(work_configeration=4)
+    ps_fl = past_staff.filter(work_configeration=2)
+    ps_rfl = past_staff.filter(work_configeration=1)
+
+    ps_emp_l = []
+    ps_ctr_l = []
+    ps_fifo_l = []
+    ps_cons_l = []
+    ps_fl_l = []
+    ps_rfl_l = []
+
+    if ps_emp:
+        for person in ps_emp:
+            tnr = person.tenure
+            ps_emp_l.append(tnr)
+    ps_emp_c = len(ps_emp_l)
+    ps_emp_m = mean(ps_emp_l)
+
+    if ps_ctr:
+        for person in ps_ctr:
+            tnr = person.tenure
+            ps_ctr_l.append(tnr)
+    else:
+        ps_ctr_l.append(0)
+    ps_ctr_c = len(ps_ctr_l)
+    ps_ctr_m = mean(ps_ctr_l)
+
+    if ps_fifo:
+        for person in ps_fifo:
+            tnr = person.tenure
+            ps_fifo_l.append(tnr)
+    else:
+        ps_fifo_l.append(0)
+    ps_fifo_c = len(ps_fifo_l)
+    ps_fifo_m = mean(ps_fifo_l)
+
+    if ps_cons:
+        for person in ps_cons:
+            tnr = person.tenure
+            ps_cons_l.append(tnr)
+    else:
+        ps_cons_l.append(0)
+    ps_cons_c = len(ps_cons_l)
+    ps_cons_m = mean(ps_cons_l)
+
+    if ps_fl:
+        for person in ps_fl:
+            tnr = person.tenure
+            ps_fl_l.append(tnr)
+    else:
+        ps_fl_l.append(0)
+    ps_fl_c = len(ps_fl_l)
+    ps_fl_m = mean(ps_fl_l)
+
+    if ps_rfl:
+        for person in ps_rfl:
+            tnr = person.tenure
+            ps_rfl_l.append(tnr)
+    else:
+        ps_rfl_l.append(0)
+    ps_rfl_c = len(ps_rfl_l)
+    ps_rfl_m = mean(ps_rfl_l)
+
+
+    #Past Staff window<<<
     departments_link={}
     for item in structure:
         cor = item.corporate.slug
@@ -215,7 +288,7 @@ def dashboard_corporate(request, cor):
     ave_age = [total_age / current_count]
 
 
-    potential = BriefCareerHistory.objects.exclude(talent__id__in=current_staff).filter(Q(companybranch__company=company.company) & Q(date_to__isnull=True)).count()
+    potential = bch_qs.exclude(talent__id__in=current_staff).filter(date_to__isnull=True).count()
 
     template = 'mod_corporate/dashboard_corporate.html'
     context = {
@@ -230,6 +303,7 @@ def dashboard_corporate(request, cor):
         'number_age_bracket_labels': number_age_bracket_labels,
         'departments_link': departments_link,
         'ave_age': ave_age,
+        'ps_emp_c': ps_emp_c, 'ps_emp_m': ps_emp_m, 'ps_ctr_c': ps_ctr_c, 'ps_ctr_m': ps_ctr_m, 'ps_fifo_c': ps_fifo_c, 'ps_fifo_m': ps_fifo_m, 'ps_cons_c': ps_cons_c, 'ps_cons_m': ps_cons_m, 'ps_fl_c': ps_fl_c, 'ps_fl_m': ps_fl_m, 'ps_rfl_c': ps_rfl_c, 'ps_rfl_m': ps_rfl_m,
         }
     return render(request, template, context)
 

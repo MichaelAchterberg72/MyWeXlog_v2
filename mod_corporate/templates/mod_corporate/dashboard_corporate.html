@@ -134,8 +134,75 @@
 
 {% block MidTopRight %}
   <h4>Past Staff</h4>
-  <p>where information relating to past staff can be viewed. (when the worked here, when they left etc.)</p>
-  <p>What skills the company no longer have</p>
+  <table class="table table-sm">
+    <thead>
+      <th></th>
+      <th class="align-middle text-center">Average<br>Tenure</th>
+      <th class="align-middle text-center">Count</th>
+    </thead>
+    <tbody>
+      <tr>
+        <th class="align-middle text-center">Employee</th>
+        {% if ps_emp_m > 0 %}
+          <td class="align-middle text-center">{{ ps_emp_m|floatformat:2 }} years</td>
+          <td class="align-middle text-center">{{ ps_emp_c }}</td>
+        {% else %}
+          <td class="align-middle text-center">-</td>
+          <td class="align-middle text-center">0</td>
+        {% endif %}
+      </tr>
+      <tr>
+        <th class="align-middle text-center">Contractor</th>
+        {% if ps_ctr_m > 0 %}
+          <td class="align-middle text-center">{{ ps_ctr_m|floatformat:2 }} years</td>
+          <td class="align-middle text-center">{{ ps_ctr_c }}</td>
+        {% else %}
+          <td class="align-middle text-center">-</td>
+          <td class="align-middle text-center">0</td>
+        {% endif %}
+      </tr>
+      <tr>
+        <th class="align-middle text-center">Fly-in / Fly-out</th>
+        {% if ps_fifo_m > 0 %}
+          <td class="align-middle text-center">{{ ps_fifo_m|floatformat:2 }} years</td>
+          <td class="align-middle text-center">{{ ps_fifo_c }}</td>
+        {% else %}
+          <td class="align-middle text-center">-</td>
+          <td class="align-middle text-center">0</td>
+        {% endif %}
+      </tr>
+      <tr>
+        <th class="align-middle text-center">Consultant</th>
+        {% if ps_cons_m > 0 %}
+          <td class="align-middle text-center">{{ ps_cons_m|floatformat:2 }} years</td>
+          <td class="align-middle text-center">{{ ps_cons_c }}</td>
+        {% else %}
+          <td class="align-middle text-center">-</td>
+          <td class="align-middle text-center">0</td>
+        {% endif %}
+      </tr>
+      <tr>
+        <th class="align-middle text-center">Freelance</th>
+        {% if ps_fl_m > 0 %}
+          <td class="align-middle text-center">{{ ps_fl_m|floatformat:2 }} years</td>
+          <td class="align-middle text-center">{{ ps_fl_c }}</td>
+        {% else %}
+          <td class="align-middle text-center">-</td>
+          <td class="align-middle text-center">0</td>
+        {% endif %}
+      </tr>
+      <tr>
+        <th class="align-middle text-center">Remote Freelance</th>
+        {% if ps_rfl_m > 0 %}
+          <td class="align-middle text-center">{{ ps_rfl_m|floatformat:2 }} years</td>
+          <td class="align-middle text-center">{{ ps_rfl_c }}</td>
+        {% else %}
+          <td class="align-middle text-center">-</td>
+          <td class="align-middle text-center">0</td>
+        {% endif %}
+      </tr>
+    </tbody>
+  </table>
 
 {% endblock MidTopRight %}
 
