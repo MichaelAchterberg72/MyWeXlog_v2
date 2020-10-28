@@ -48,7 +48,7 @@
 <div class="row col-12">
   {% for key in departments_link.items %}
   <div class="mr-2 mb-2">
-    <a href="{% url 'Corporate:OrgDepartment' key.1.cor key.1.dept  %}?next={{ request.path|urlencode }}" class="btn btn-primary align-middle">
+    <a href="{% url 'Corporate:OrgDepartment' key.1.cor key.1.dept  %}?next={{ request.path|urlencode }}" class="btn btn-primary">
       {{ key.1.dept }}
     </a>
   </div>
@@ -91,7 +91,7 @@
     var config = {
       type: 'bar',
       data: {
-          labels: {{ number_age_bracket_labels|safe }},
+          labels: {{ age_bracket_labels|safe }},
           datasets: [{
             label: 'Number Staff by Age Bracket',
             data: {{ number_age_brackets_data|safe }},
@@ -128,6 +128,12 @@
   window.onload = function() {
     var ctx = document.getElementById('members-chart').getContext('2d');
     window.myPie = new Chart(ctx, config);
+
+    var number_skills_ctx = document.getElementById('skills-by-age-chart').getContext('2d');
+    window.myChart = new Chart(number_skills_ctx, number_skills_config);
+
+    var hours_experience_ctx = document.getElementById('hours-experience-by-age-chart').getContext('2d');
+    window.myChart = new Chart(hours_experience_ctx, hours_experience_skills_config);
   };
     </script>
 {% endblock MidTopLeft %}
@@ -223,8 +229,104 @@
 
 {% block BotCenter %}
   <h4>Experience</h4>
+  <div class="row">
+    <div class="col-md-6">
   <p>Total Skills</p>
+  <canvas id="skills-by-age-chart" height="100px"></canvas>
+  <script>
+  var number_skills_config = {
+    type: 'bar',
+    data: {
+        labels: {{ age_bracket_labels|safe }},
+        datasets: [{
+          label: 'Number Skills by Age Bracket',
+          data: {{ number_skills_age_brackets_data|safe }},
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+          },
+      }
+  };
+
+  </script>
+  </div>
+  <div class="col-md-6"
   <p>Total Hours</p>
+  <canvas id="hours-experience-by-age-chart" height="100px"></canvas>
+  <script>
+  var hours_experience_skills_config = {
+    type: 'bar',
+    data: {
+        labels: {{ age_bracket_labels|safe }},
+        datasets: [{
+          label: 'Hours Experience by Age Bracket',
+          data: {{ hours_experience_age_brackets_data|safe }},
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+      onClick: graphClickEvent,
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+          },
+      }
+  };
+
+  function graphClickEvent(event, array){
+    if(array[0]){
+       var url = "{% url 'Corporate:CorpSelect' %}?next={{ request.path|urlencode }}";
+
+       document.location.href = url;
+    }
+  }
+
+
+  </script>
+  </div>
+  </div>
   <p>skills histogram by 10 year buckets</p>
 {% endblock BotCenter %}
 
