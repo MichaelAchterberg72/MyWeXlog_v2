@@ -35,6 +35,7 @@ from Profile.models import (
 from marketplace.models import WorkLocation
 from Profile.models import Profile
 from talenttrack.models import WorkExperience
+from db_flatten.models import SkillTag
 
 
 from WeXlog.app_config import (
@@ -44,11 +45,293 @@ from WeXlog.app_config import (
 
 @login_required()
 @corp_permission(1)
+def dept_skill_dashboard(request, cor, dept, skl):
+    skill = SkillTag.objects.get(id=skl)
+
+    template = 'mod_corporate/dept_skill_dashboard.html'
+    context = {
+        'dept': dept,
+        'skill': skill,
+    }
+    return render(request, template, context)
+
+
+@login_required()
+@corp_permission(1)
+def dept_skills_current(request, cor, dept):
+
+    template = 'mod_corporate/dept_skills_current.html'
+    context = {}
+    return render(request, template, context)
+
+
+@login_required()
+@corp_permission(1)
+def dept_skills_resigned(request, cor, dept):
+
+    template = 'mod_corporate/dept_skills_resigned.html'
+    context = {}
+    return render(request, template, context)
+
+
+@login_required()
+@corp_permission(1)
+def dept_skills_freelance(request, cor, dept):
+
+    template = 'mod_corporate/dept_skills_freelance.html'
+    context = {}
+    return render(request, template, context)
+
+
+@login_required()
+@corp_permission(1)
+def dept_skills_not_utilised(request, cor, dept):
+
+    template = 'mod_corporate/dept_skills_not_utilised.html'
+    context = {}
+    return render(request, template, context)
+
+
+@login_required()
+@corp_permission(1)
 def org_department_dashboard(request, cor, dept):
     structure = OrgStructure.objects.filter(Q(corporate__slug=cor) & Q(level_name=dept))
 
+    staff = CorporateStaff.objects.filter(Q(corporate__slug=cor) & Q(department__level_name=dept))
+
+    current_staff = staff.values_list('talent__id', flat=True)
+    current_count = current_staff.count()
+
+    staff = Profile.objects.filter(talent__id__in=current_staff)
+    today = timezone.now().date()
+
+    age=[]
+    for i in staff:
+        staff_age=relativedelta(today, i.birth_date).years
+        age.append(staff_age)
+
+    age_range_18_25 = []
+    for i in age:
+        if i in range(18, 25):
+            staff_age = {'staff_age': i}
+            age_range_18_25.append(staff_age)
+
+    age_range_26_35 = []
+    for i in age:
+        if i in range(26, 35):
+            staff_age = {'staff_age': i}
+            age_range_26_35.append(staff_age)
+
+    age_range_36_45 = []
+    for i in age:
+        if i in range(36, 45):
+            staff_age = {'staff_age': i}
+            age_range_36_45.append(staff_age)
+
+    age_range_46_55 = []
+    for i in age:
+        if i in range(46, 55):
+            staff_age = {'staff_age': i}
+            age_range_46_55.append(staff_age)
+
+    age_range_56_65 = []
+    for i in age:
+        if i in range(56, 65):
+            staff_age = {'staff_age': i}
+            age_range_56_65.append(staff_age)
+
+    age_range_66_100 = []
+    for i in age:
+        if i in range(66, 100):
+            staff_age = {'staff_age': i}
+            age_range_66_100.append(staff_age)
+
+    sum_age_range_18_25 = len(age_range_18_25)
+    sum_age_range_26_35 = len(age_range_26_35)
+    sum_age_range_36_45 = len(age_range_36_45)
+    sum_age_range_46_55 = len(age_range_46_55)
+    sum_age_range_56_65 = len(age_range_56_65)
+    sum_age_range_66_100 = len(age_range_66_100)
+
+    number_age_brackets_data = [sum_age_range_18_25, sum_age_range_26_35, sum_age_range_36_45, sum_age_range_46_55, sum_age_range_56_65, sum_age_range_66_100]
+
+    age_bracket_labels = ['18-25', '26-35', '36-45', '46-55', '56-65', '66 & up']
+
+    staff_id = Profile.objects.filter(talent__id__in=current_staff).values_list('id', flat=True)
+
+    we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
+
+    # Number of skills per age bracket
+    skills_age=[]
+    for i in staff_id:
+        tlt = Profile.objects.get(talent=i)
+        staff_age=relativedelta(today, tlt.birth_date).years
+
+        talent_skill_l = we.filter(talent=i, edt=False).values_list('skills__skill', flat=True)
+        talent_skillt_l = we.filter(talent=i, edt=True).values_list('topic__skills__skill', flat=True)
+
+        aw_exp = we.filter(talent=i, edt=False).aggregate(awet=Sum('hours_worked'))
+        awetv = aw_exp.get('awet')
+        if awetv == None:
+            awetv = 0
+        else:
+            awetv = awetv
+
+        at_exp = we.filter(talent=i, edt=True).aggregate(tet=Sum('topic__hours'))
+        atetv = at_exp.get('tet')
+        if atetv == None:
+            atetv = 0
+        else:
+            atetv = atetv
+
+        t_exp = awetv + atetv
+
+        atalent_skill = list(talent_skill_l)
+        atalent_skillt = list(talent_skillt_l)
+        aslist = atalent_skill + atalent_skillt
+        askillset = set(aslist)
+        askill_count = len(askillset)
+
+        result={'staff_age': staff_age, 'askillset': askillset, 'awetv': awetv, 'awetv': awetv, 't_exp': t_exp}
+
+        skills_age.append(result)
+
+    skills_list_age_range_18_25=[list(x['askillset']) for x in skills_age if x['staff_age'] in range(18, 25)]
+    skills_list_age_range_26_35=[list(x['askillset']) for x in skills_age if x['staff_age'] in range(26, 35)]
+    skills_list_age_range_36_45=[list(x['askillset']) for x in skills_age if x['staff_age'] in range(36, 45)]
+    skills_list_age_range_46_55=[list(x['askillset']) for x in skills_age if x['staff_age'] in range(46, 55)]
+    skills_list_age_range_56_65=[list(x['askillset']) for x in skills_age if x['staff_age'] in range(56, 65)]
+    skills_list_age_range_66_100=[list(x['askillset']) for x in skills_age if x['staff_age'] in range(66, 100)]
+
+    global_skills_list_age_range_18_25 =[]
+    for sublist in skills_list_age_range_18_25:
+        for item in sublist:
+            global_skills_list_age_range_18_25.append(item)
+
+    global_skills_list_age_range_26_35 =[]
+    for sublist in skills_list_age_range_26_35:
+        for item in sublist:
+            global_skills_list_age_range_26_35.append(item)
+
+    global_skills_list_age_range_36_45 =[]
+    for sublist in skills_list_age_range_36_45:
+        for item in sublist:
+            global_skills_list_age_range_36_45.append(item)
+
+    global_skills_list_age_range_46_55 =[]
+    for sublist in skills_list_age_range_46_55:
+        for item in sublist:
+            global_skills_list_age_range_46_55.append(item)
+
+    global_skills_list_age_range_56_65 =[]
+    for sublist in skills_list_age_range_56_65:
+        for item in sublist:
+            global_skills_list_age_range_56_65.append(item)
+
+    global_skills_list_age_range_66_100 =[]
+    for sublist in skills_list_age_range_66_100:
+        for item in sublist:
+            global_skills_list_age_range_66_100.append(item)
+
+    skills_list_age_range_18_25 = set(global_skills_list_age_range_18_25)
+    skills_list_age_range_26_35 = set(global_skills_list_age_range_26_35)
+    skills_list_age_range_36_45 = set(global_skills_list_age_range_36_45)
+    skills_list_age_range_46_55 = set(global_skills_list_age_range_46_55)
+    skills_list_age_range_56_65 = set(global_skills_list_age_range_56_65)
+    skills_list_age_range_66_100 = set(global_skills_list_age_range_66_100)
+
+    sum_skills_range_18_25 = len(skills_list_age_range_18_25)
+    sum_skills_range_26_35 = len(skills_list_age_range_26_35)
+    sum_skills_range_36_45 = len(skills_list_age_range_36_45)
+    sum_skills_range_46_55 = len(skills_list_age_range_46_55)
+    sum_skills_range_56_65 = len(skills_list_age_range_56_65)
+    sum_skills_range_66_100 = len(skills_list_age_range_66_100)
+
+    number_skills_age_brackets_data = [sum_skills_range_18_25, sum_skills_range_26_35, sum_skills_range_36_45, sum_skills_range_46_55, sum_skills_range_56_65, sum_skills_range_66_100]
+    # end number skills per age Bracket
+
+    # Total hours experience
+    he_list_age_range_18_25=[float(x['t_exp']) for x in skills_age if x['staff_age'] in range(18, 25)]
+    he_list_age_range_26_35=[float(x['t_exp']) for x in skills_age if x['staff_age'] in range(26, 35)]
+    he_list_age_range_36_45=[float(x['t_exp']) for x in skills_age if x['staff_age'] in range(36, 45)]
+    he_list_age_range_46_55=[float(x['t_exp']) for x in skills_age if x['staff_age'] in range(46, 55)]
+    he_list_age_range_56_65=[float(x['t_exp']) for x in skills_age if x['staff_age'] in range(56, 65)]
+    he_list_age_range_66_100=[float(x['t_exp']) for x in skills_age if x['staff_age'] in range(66, 100)]
+
+
+    sum_he_range_18_25 = sum(he_list_age_range_18_25)
+    sum_he_range_26_35 = sum(he_list_age_range_26_35)
+    sum_he_range_36_45 = sum(he_list_age_range_36_45)
+    sum_he_range_46_55 = sum(he_list_age_range_46_55)
+    sum_he_range_56_65 = sum(he_list_age_range_56_65)
+    sum_he_range_66_100 = sum(he_list_age_range_66_100)
+
+    hours_experience_age_brackets_data = [sum_he_range_18_25, sum_he_range_26_35, sum_he_range_36_45, sum_he_range_46_55, sum_he_range_56_65, sum_he_range_66_100]
+
+    # Lost of skills for buttons
+    skills_list = [list(x['askillset']) for x in skills_age]
+
+    global_skills_list =[]
+    for sublist in skills_list:
+        for item in sublist:
+            global_skills_list.append(item)
+
+    skills_list_set = set(global_skills_list)
+    
+    skills_list_labels = list(skills_list_set)
+
+    dept_skills_link = SkillTag.objects.filter(skill__in=skills_list_set).order_by('skill')
+
+    sum_skills = len(skills_list_set)
+
+    #Hours Experience per skill chart
+    skills_hours_skill_data = []
+    for s in skills_list_set:
+        shwe = we.filter(Q(skills__skill=s, edt=False) | Q(topic__skills__skill=s, edt=True))
+        skills_hours=[]
+        for i in staff_id:
+            tlt = Profile.objects.get(talent=i)
+
+            aw_exp = shwe.filter(talent=i, edt=False).aggregate(awet=Sum('hours_worked'))
+            awetv = aw_exp.get('awet')
+            if awetv == None:
+                awetv = 0
+            else:
+                awetv = awetv
+
+            at_exp = shwe.filter(talent=i, edt=True).aggregate(tet=Sum('topic__hours'))
+            atetv = at_exp.get('tet')
+            if atetv == None:
+                atetv = 0
+            else:
+                atetv = atetv
+
+            t_exp = awetv + atetv
+
+            result={'t_exp': t_exp}
+
+            skills_hours.append(result)
+
+        skills_list=[float(x['t_exp']) for x in skills_hours]
+        sum_shwe = sum(skills_list)
+
+        skills_hours_skill_data.append(sum_shwe)
+
+
     template = 'mod_corporate/dashboard_department.html'
-    context = {'dept': dept}
+    context = {
+            'cor': cor,
+            'dept': dept,
+            'dept_skills_link': dept_skills_link,
+            'number_age_brackets_data': number_age_brackets_data,
+            'age_bracket_labels': age_bracket_labels,
+            'number_skills_age_brackets_data': number_skills_age_brackets_data,
+            'hours_experience_age_brackets_data': hours_experience_age_brackets_data,
+            'skills_list_set': skills_list_set,
+            'skills_list_labels': skills_list_labels,
+            'skills_hours_skill_data': skills_hours_skill_data,
+            'sum_skills': sum_skills,
+    }
     return render(request, template, context)
 
 
@@ -171,49 +454,171 @@ def dashboard_corporate(request, cor):
     staff = Profile.objects.filter(talent__id__in=current_staff)
     today = timezone.now().date()
 
-    age={}
+    age=[]
     for i in staff:
         staff_age=relativedelta(today, i.birth_date).years
-        age={'staff_age': staff_age}
+        age.append(staff_age)
 
-    age_range_18_25 = {}
+    age_range_18_25 = []
     for i in age:
-        if staff_age in range(18, 25):
-            age_range_18_25={'staff_age': staff_age}
+        if i in range(18, 25):
+            staff_age = {'staff_age': i}
+            age_range_18_25.append(staff_age)
 
-    age_range_26_35 = {}
+    age_range_26_35 = []
     for i in age:
-        if staff_age in range(26, 35):
-            age_range_26_35={'staff_age': staff_age}
+        if i in range(26, 35):
+            staff_age = {'staff_age': i}
+            age_range_26_35.append(staff_age)
 
-    age_range_36_45 = {}
+    age_range_36_45 = []
     for i in age:
-        if staff_age in range(36, 45):
-            age_range_36_45={'staff_age': staff_age}
+        if i in range(36, 45):
+            staff_age = {'staff_age': i}
+            age_range_36_45.append(staff_age)
 
-    age_range_46_55 = {}
+    age_range_46_55 = []
     for i in age:
-        if staff_age in range(46, 55):
-            age_range_46_55={'staff_age': staff_age}\
+        if i in range(46, 55):
+            staff_age = {'staff_age': i}
+            age_range_46_55.append(staff_age)
 
-    age_range_56_65 = {}
+    age_range_56_65 = []
     for i in age:
-        if staff_age in range(56, 65):
-            age_range_56_65={'staff_age': staff_age}
+        if i in range(56, 65):
+            staff_age = {'staff_age': i}
+            age_range_56_65.append(staff_age)
 
-    sum_age_range_18_25 = len(age_range_18_25.values())
-    sum_age_range_26_35 = len(age_range_26_35.values())
-    sum_age_range_36_45 = len(age_range_36_45.values())
-    sum_age_range_46_55 = len(age_range_46_55.values())
-    sum_age_range_56_65 = len(age_range_56_65.values())
+    age_range_66_100 = []
+    for i in age:
+        if i in range(66, 100):
+            staff_age = {'staff_age': i}
+            age_range_66_100.append(staff_age)
 
-    number_age_brackets_data = [sum_age_range_18_25, sum_age_range_26_35, sum_age_range_36_45, sum_age_range_46_55, sum_age_range_56_65]
+    sum_age_range_18_25 = len(age_range_18_25)
+    sum_age_range_26_35 = len(age_range_26_35)
+    sum_age_range_36_45 = len(age_range_36_45)
+    sum_age_range_46_55 = len(age_range_46_55)
+    sum_age_range_56_65 = len(age_range_56_65)
+    sum_age_range_66_100 = len(age_range_66_100)
 
-    number_age_bracket_labels =['18-25', '26-35', '36-45', '46-55', '56-65']
+    number_age_brackets_data = [sum_age_range_18_25, sum_age_range_26_35, sum_age_range_36_45, sum_age_range_46_55, sum_age_range_56_65, sum_age_range_66_100]
 
-    total_age = sum(age.values())
-    ave_age = [total_age / current_count]
+    age_bracket_labels = ['18-25', '26-35', '36-45', '46-55', '56-65', '66 & up']
 
+#    total_age = sum(age.values())
+#    ave_age = [total_age / current_count]
+
+    staff_id = Profile.objects.filter(talent__id__in=current_staff).values_list('id', flat=True)
+
+    we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
+
+    # Number of skills per age bracket
+    skills_age=[]
+    for i in staff_id:
+        tlt = Profile.objects.get(talent=i)
+        staff_age=relativedelta(today, tlt.birth_date).years
+
+        talent_skill_l = we.filter(talent=i, edt=False).values_list('skills__skill', flat=True)
+        talent_skillt_l = we.filter(talent=i, edt=True).values_list('topic__skills__skill', flat=True)
+
+        aw_exp = we.filter(talent=i, edt=False).aggregate(awet=Sum('hours_worked'))
+        awetv = aw_exp.get('awet')
+        if awetv == None:
+            awetv = 0
+        else:
+            awetv = awetv
+
+        at_exp = we.filter(talent=i, edt=True).aggregate(tet=Sum('topic__hours'))
+        atetv = at_exp.get('tet')
+        if atetv == None:
+            atetv = 0
+        else:
+            atetv = atetv
+
+        t_exp = awetv + atetv
+
+        atalent_skill = list(talent_skill_l)
+        atalent_skillt = list(talent_skillt_l)
+        aslist = atalent_skill + atalent_skillt
+        askillset = set(aslist)
+        askill_count = len(askillset)
+
+        result={'staff_age': staff_age, 'askillset': askillset, 'awetv': awetv, 'awetv': awetv, 't_exp': t_exp}
+
+        skills_age.append(result)
+
+    skills_list_age_range_18_25=[list(x['askillset']) for x in skills_age if x['staff_age'] in range(18, 25)]
+    skills_list_age_range_26_35=[list(x['askillset']) for x in skills_age if x['staff_age'] in range(26, 35)]
+    skills_list_age_range_36_45=[list(x['askillset']) for x in skills_age if x['staff_age'] in range(36, 45)]
+    skills_list_age_range_46_55=[list(x['askillset']) for x in skills_age if x['staff_age'] in range(46, 55)]
+    skills_list_age_range_56_65=[list(x['askillset']) for x in skills_age if x['staff_age'] in range(56, 65)]
+    skills_list_age_range_66_100=[list(x['askillset']) for x in skills_age if x['staff_age'] in range(66, 100)]
+
+    global_skills_list_age_range_18_25 =[]
+    for sublist in skills_list_age_range_18_25:
+        for item in sublist:
+            global_skills_list_age_range_18_25.append(item)
+
+    global_skills_list_age_range_26_35 =[]
+    for sublist in skills_list_age_range_26_35:
+        for item in sublist:
+            global_skills_list_age_range_26_35.append(item)
+
+    global_skills_list_age_range_36_45 =[]
+    for sublist in skills_list_age_range_36_45:
+        for item in sublist:
+            global_skills_list_age_range_36_45.append(item)
+
+    global_skills_list_age_range_46_55 =[]
+    for sublist in skills_list_age_range_46_55:
+        for item in sublist:
+            global_skills_list_age_range_46_55.append(item)
+
+    global_skills_list_age_range_56_65 =[]
+    for sublist in skills_list_age_range_56_65:
+        for item in sublist:
+            global_skills_list_age_range_56_65.append(item)
+
+    global_skills_list_age_range_66_100 =[]
+    for sublist in skills_list_age_range_66_100:
+        for item in sublist:
+            global_skills_list_age_range_66_100.append(item)
+
+    skills_list_age_range_18_25 = set(global_skills_list_age_range_18_25)
+    skills_list_age_range_26_35 = set(global_skills_list_age_range_26_35)
+    skills_list_age_range_36_45 = set(global_skills_list_age_range_36_45)
+    skills_list_age_range_46_55 = set(global_skills_list_age_range_46_55)
+    skills_list_age_range_56_65 = set(global_skills_list_age_range_56_65)
+    skills_list_age_range_66_100 = set(global_skills_list_age_range_66_100)
+
+    sum_skills_range_18_25 = len(skills_list_age_range_18_25)
+    sum_skills_range_26_35 = len(skills_list_age_range_26_35)
+    sum_skills_range_36_45 = len(skills_list_age_range_36_45)
+    sum_skills_range_46_55 = len(skills_list_age_range_46_55)
+    sum_skills_range_56_65 = len(skills_list_age_range_56_65)
+    sum_skills_range_66_100 = len(skills_list_age_range_66_100)
+
+    number_skills_age_brackets_data = [sum_skills_range_18_25, sum_skills_range_26_35, sum_skills_range_36_45, sum_skills_range_46_55, sum_skills_range_56_65, sum_skills_range_66_100]
+    # end number skills per age Bracket
+
+    # Total hours experience
+    he_list_age_range_18_25=[float(x['t_exp']) for x in skills_age if x['staff_age'] in range(18, 25)]
+    he_list_age_range_26_35=[float(x['t_exp']) for x in skills_age if x['staff_age'] in range(26, 35)]
+    he_list_age_range_36_45=[float(x['t_exp']) for x in skills_age if x['staff_age'] in range(36, 45)]
+    he_list_age_range_46_55=[float(x['t_exp']) for x in skills_age if x['staff_age'] in range(46, 55)]
+    he_list_age_range_56_65=[float(x['t_exp']) for x in skills_age if x['staff_age'] in range(56, 65)]
+    he_list_age_range_66_100=[float(x['t_exp']) for x in skills_age if x['staff_age'] in range(66, 100)]
+
+
+    sum_he_range_18_25 = sum(he_list_age_range_18_25)
+    sum_he_range_26_35 = sum(he_list_age_range_26_35)
+    sum_he_range_36_45 = sum(he_list_age_range_36_45)
+    sum_he_range_46_55 = sum(he_list_age_range_46_55)
+    sum_he_range_56_65 = sum(he_list_age_range_56_65)
+    sum_he_range_66_100 = sum(he_list_age_range_66_100)
+
+    hours_experience_age_brackets_data = [sum_he_range_18_25, sum_he_range_26_35, sum_he_range_36_45, sum_he_range_46_55, sum_he_range_56_65, sum_he_range_66_100]
 
     potential = BriefCareerHistory.objects.exclude(talent__id__in=current_staff).filter(Q(companybranch__company=company.company) & Q(date_to__isnull=True)).count()
 
@@ -227,7 +632,9 @@ def dashboard_corporate(request, cor):
         'department_labels': department_labels,
         'dpt_staff_data': dpt_staff_data,
         'number_age_brackets_data': number_age_brackets_data,
-        'number_age_bracket_labels': number_age_bracket_labels,
+        'age_bracket_labels': age_bracket_labels,
+        'number_skills_age_brackets_data': number_skills_age_brackets_data,
+        'hours_experience_age_brackets_data': hours_experience_age_brackets_data,
         'departments_link': departments_link,
         'ave_age': ave_age,
         }
