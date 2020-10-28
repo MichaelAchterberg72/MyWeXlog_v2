@@ -276,8 +276,10 @@ def org_department_dashboard(request, cor, dept):
         for item in sublist:
             global_skills_list.append(item)
 
-    skills_list_set = set(global_skills_list)
-    
+    skills_list_set_set = set(global_skills_list)
+    # skills_list_set = skills_list_set_set.sort()
+    skills_list_set = sorted(skills_list_set_set, reverse=False)
+
     skills_list_labels = list(skills_list_set)
 
     dept_skills_link = SkillTag.objects.filter(skill__in=skills_list_set).order_by('skill')
