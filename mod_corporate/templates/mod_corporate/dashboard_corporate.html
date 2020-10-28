@@ -133,6 +133,13 @@
 {% endblock MidTopLeft %}
 
 {% block MidTopRight %}
+  <div class="btn-group float-right">
+    <div class="btn-group mr-2">
+      <a href="{% url 'Corporate:StaffPast' corp.corporate.slug %}?next={{ request.path|urlencode }}" class="badge badge-primary">
+        List
+      </a>
+    </div>
+  </div>
   <h4>Past Staff</h4>
   <table class="table table-sm">
     <thead>

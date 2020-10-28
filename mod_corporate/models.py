@@ -20,7 +20,7 @@ class OrgStructure(models.Model):
     parent = models.ForeignKey('OrgStructure', on_delete=models.CASCADE, related_name='parentdept', blank=True, null=True)
 
     def __str__(self):
-        return f'{self.level_name}' 
+        return f'{self.level_name}'
 
     class Meta:
         unique_together = (('corporate','level_name'),)
@@ -58,3 +58,7 @@ class CorporateStaff(models.Model):
             self.slug = create_code9(self)
 
         super(CorporateStaff, self).save(*args, **kwargs)
+
+
+class RequiredSkills(models.Model):
+    department = models.ForeignKey(OrgStructure, on_delete=models.CASCADE)

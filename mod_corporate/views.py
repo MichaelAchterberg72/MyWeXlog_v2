@@ -145,6 +145,8 @@ def dashboard_corporate(request, cor):
         for person in ps_emp:
             tnr = person.tenure
             ps_emp_l.append(tnr)
+    else:
+        ps_emp_l.append(0)
     ps_emp_c = len(ps_emp_l)
     ps_emp_m = mean(ps_emp_l)
 
@@ -584,6 +586,19 @@ def experience_dashboard(request, cor):
     #total experience and training hours (confirmed)
     corp_ehrs = we_qs.filter(edt=False).aggregate(exp_sum = Sum('hours_worked'))
     corp_thrs = we_qs.filter(edt=True).aggregate(trn_sum = Sum('topic__hours'))
+
+
+def past_staff(request, cor):
+    corp = CorporateHR.objects.get(slug=cor)
+    company = corp.company
+    print(company)
+    past_qs = BriefCareerHistory.objects.filter(Q(companybranch__company=company) & Q(date_to__isnull=False)).select_related('talent').order_by('-date_to')
+
+    template = 'mod_corporate/staff_past.html'
+    context = {'past_qs': past_qs, 'corp': corp,}
+    return render(request, template, context)
+
+
 
     #count staff at each experience level
 
