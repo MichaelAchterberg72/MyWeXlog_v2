@@ -1079,49 +1079,13 @@ def staff_actions(request):
 def staff_current(request, cor):
     '''Lists the current staff members'''
     corp = get_object_or_404(CorporateHR, slug=cor)
-    staff = CorporateStaff.objects.filter(corporate__slug=cor).filter(Q(hide=False) | Q(resigned=False)).select_related('talent').order_by('talent__last_name')
-    staff_id = staff.values_list('talent__id')
-    staff_c = staff.count()
+    current = CorporateStaff.objects.filter(corporate__slug=cor).filter(Q(hide=False) | Q(resigned=False)).select_related('talent').order_by('talent__last_name')
 
-    current = BriefCareerHistory.objects.filter(Q(companybranch__company=corp.company) & Q(talent__id__in=staff_id) & Q(date_to__isnull=True)).select_related('talent').order_by('talent__last_name')
+    staff_c = current.count()
 
     template = 'mod_corporate/staff_current.html'
     context = {'current': current, 'cor': cor, 'corp': corp, 'staff_c': staff_c,}
     return render(request, template, context)
-
-
-@login_required()
-@corp_permission(1)
-def staff_admin(request, cor):
-    '''Manages the staff (make admin, remove from staff, etc.)'''
-    tlt = request.user
-    corp = get_object_or_404(CorporateHR, slug=cor)
-    current = CorporateStaff.objects.filter(corporate__slug=cor).filter(Q(hide=False) | Q(resigned=False)).select_related('talent').order_by('talent__last_name')
-    staff_c = current.count()
-
-    l2 = current.get(talent = tlt)
-
-    if l2.corp_access >= 3:
-        perm = 'granted'
-    else:
-        perm = 'denied'
-
-    locked = current.filter(unlocked=False)
-
-    today = timezone.now().date()
-    '''at least 1 month billed for each added user'''
-    for ind in locked:
-        age = (today - ind.date_modified).days
-        if age > 32:
-            ind.unlocked = True
-            ind.save()
-        else:
-            pass
-
-    template = 'mod_corporate/staff_current.html'
-    context = {'current': current, 'corp': corp, 'staff_c': staff_c, 'perm': perm,}
-    return render(request, template, context)
-
 
 
 @login_required()

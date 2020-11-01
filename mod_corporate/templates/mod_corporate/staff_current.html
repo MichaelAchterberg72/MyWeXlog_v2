@@ -68,8 +68,8 @@
               <td class="align-middle text-center">
                 <div class="btn-toolbar float-right">
                   <div class="btn-group mr-2">
-                    <a href="{% url 'Talent:APV_C' item.talent.alias %}" target="_blank">
-                      <i class="fa fa-id-badge" aria-hidden="true"style="font-size:30px; color:black" data-toggle="tooltip" data-placement="top" title="View Profile"></i>
+                    <a href="{% url 'Talent:APV_C' cor=corp.slug tlt=item.talent.alias %}" target="_blank">
+                      <i class="fa fa-id-badge" aria-hidden="true" style="font-size:30px; color:black" data-toggle="tooltip" data-placement="top" title="View Profile"></i>
                     </a>
                   </div>
                   <div class="btn-group mr-2">
