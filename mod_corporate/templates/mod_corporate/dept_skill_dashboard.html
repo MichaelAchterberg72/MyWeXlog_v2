@@ -125,7 +125,7 @@
         </div>
       </div>
 
-    {% for item in brief_history %}
+    {% for item in current_staff_skill %}
     <div class="row">
       <div class="card mt-1 card-hover" style="width: 100%;">
         <div class="card-body small-pad">
@@ -166,7 +166,7 @@
     {% endfor %}
     </div>
     <br>
-    {% if brief_history_count >= 10 %}
+    {% if current_staff_skill_count >= 10 %}
       <div class="float-right">
         <a href="{% url 'Corporate:DeptSkillCurrentStaff' cor dept skl %}" class="btn btn-primary"style="width: 10rem">View All Staff</a>
       </div>
@@ -183,7 +183,7 @@
           <strong>Last name, First name</strong>
         </div>
         <div class="col-md-2 h-100 text-center my-auto">
-          <strong>Date Joined</strong>
+          <strong>Date Left</strong>
         </div>
         <div class="col-md-1 h-100 text-center my-auto">
           <strong>Tenure</strong>
@@ -199,7 +199,7 @@
         </div>
       </div>
 
-    {% for item in past_brief_history %}
+    {% for item in past_staff_skill %}
     <div class="row">
       <div class="card mt-1 card-hover" style="width: 100%;">
         <div class="card-body small-pad">
@@ -208,7 +208,7 @@
               {{ item.talent.last_name }}, {{ item.talent.first_name }}
             </div>
             <div class="col-md-2 h-100 text-center my-auto">
-              {{ item.date_from }}
+              {{ item.date_to }}
             </div>
             <div class="col-md-1 h-100 text-center my-auto">
               {{ item.tenure|floatformat:2 }}
@@ -240,9 +240,9 @@
     {% endfor %}
     </div>
     <br>
-    {% if past_brief_history_count >= 10 %}
+    {% if current_staff_skill_count >= 10 %}
       <div class="float-right">
-        <a href="{% url 'Corporate:DeptSkillCurrentStaff' cor dept skl %}" class="btn btn-primary"style="width: 10rem">View All Staff</a>
+        <a href="{% url 'Corporate:DeptSkillPastStaff' cor dept skl %}" class="btn btn-primary"style="width: 10rem">View All Staff</a>
       </div>
     {% endif %}
   </div>

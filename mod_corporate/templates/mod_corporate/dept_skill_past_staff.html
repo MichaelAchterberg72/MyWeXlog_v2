@@ -1,0 +1,124 @@
+{% extends 'mod_corporate/base_corporate.html' %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Department Skill Current Staff{% endblock title %}
+
+{% block subStyle %}{% endblock subStyle %}
+
+{% block content %}
+<div class="card card-shadow">
+  <div class="card-body">
+    <div class="float-right">
+      <a href="{% url 'Corporate:DeptSkillDashboard' cor dept skl %}" class="btn btn-secondary"style="width: 6rem">Back</a>
+    </div>
+    <h3>{{ dept }} Department, {{ skill }} Skill Past Staff</h3>
+  </div>
+</div>
+<br>
+<div class="card card-shadow">
+  <div class="card-body">
+    <h4>Past Staff with {{ skill }} Skill</h4>
+    <div class="container">
+      <div class="row my-auto">
+        <div class="col-md-3 h-100 text-center my-auto">
+          <strong>Last name, First name</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Date Joined</strong>
+        </div>
+        <div class="col-md-1 h-100 text-center my-auto">
+          <strong>Tenure</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Designation</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Relationship</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong></strong>
+        </div>
+      </div>
+
+    {% for item in pageitems %}
+    <div class="row">
+      <div class="card mt-1 card-hover" style="width: 100%;">
+        <div class="card-body small-pad">
+          <div class="row my-auto">
+            <div class="col-md-3 h-100 text-center my-auto">
+              {{ item.talent.last_name }}, {{ item.talent.first_name }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ item.date_from }}
+            </div>
+            <div class="col-md-1 h-100 text-center my-auto">
+              {{ item.tenure|floatformat:2 }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ item.designation }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ item.work_configeration }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              <div class="btn-toolbar">
+                <div class="btn-group mr-2">
+                  <a href="{% url 'Talent:APV_C' cor item.talent.alias %}" target="_blank">
+                    <i class="fa fa-id-badge" aria-hidden="true"style="font-size:30px; color:black" data-toggle="tooltip" data-placement="top" title="View Profile"></i>
+                  </a>
+                </div>
+                <div class="btn-group mr-2">
+                  <i class="fa fa-folder-open-o" aria-hidden="true"  style="font-size:30px; color:blue" data-toggle="tooltip" data-placement="top" title="View {{ corp.company }} Work History"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+      <p>You do not have any past staff with this skill registered with your company.</p>
+    {% endfor %}
+    </div>
+  </div>
+
+  <nav aria-label="Page navigation">
+      {% if pageitems.has_other_pages %}
+        <ul class="pagination">
+          {% if pageitems.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ pageitems.previous_page_number }}" aria-label="Previous">
+                <span aria-hidden="true">Previous</span>
+                <span class="sr-only disabled">Previous</span>
+              </a></li>
+          {% else %}
+            <li class="page-link disabled" tabindex="-1"><span>Previous</span></li>
+          {% endif %}
+
+          {% if pageitems.number|add:'-4' > 1 %}
+            <li class="page-link"><a href="?page={{ pageitems.number|add:'-5' }}">&hellip;</a></li>
+          {% endif %}
+
+          {% for i in pageitems.paginator.page_range %}
+            {% if pageitems.number == i %}
+              <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
+            {% elif i > pageitems.number|add:'-5' and i < pageitems.number|add:'5' %}
+              <li class="page-link"><a class="page-item" href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+          {% endfor %}
+
+          {% if pageitems.paginator.num_pages > pageitems.number|add:'4' %}
+            <li class="page-link"><a href="?page={{ pageitems.number|add:'5' }}">&hellip;</a></li>
+          {% endif %}
+
+          {% if pageitems.has_next %}
+            <li class="page-link"><a href="?page={{ pageitems.next_page_number }}">Next</a></li>
+          {% else %}
+            <li class="page-link disabled"><span>Next</span></li>
+          {% endif %}
+        </ul>
+      {% endif %}
+  </nav>
+
+</div>
+{% endblock content %}
