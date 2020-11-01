@@ -20,9 +20,6 @@
       {% csrf_token %}
       <div class="form-row">
         <div class="form-group col-md-6 mb-0">
-
-          {{ form.type|as_crispy_field }}
-          <br>
           {{ form.department|as_crispy_field }}
           <br>
           {{ form.status|as_crispy_field }}
@@ -31,7 +28,7 @@
         </div>
         <div class="">
           <p>
-            <a href="{% url 'Corporate:DashCorp' %}" class="btn btn-danger">
+            <a href="{% url 'Corporate:DashCorp' corp.slug %}" class="btn btn-danger">
               Cancel
             </a>
             <button type="submit" name="Done" class="btn btn-primary">

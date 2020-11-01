@@ -11,7 +11,9 @@ import math
 import json
 
 from datetime import datetime
+from django.utils import timezone
 from statistics import mean
+from users.models import CustomUser
 
 from core.decorators import corp_permission, subscription
 from django.contrib.postgres.search import SearchVector, TrigramSimilarity
@@ -21,7 +23,7 @@ from .models import (
     CorporateStaff, OrgStructure
     )
 from .forms import (
-    OrgStructureForm, AddStaffForm, StaffSearchForm, AdminTypeForm
+    OrgStructureForm, AddStaffForm, StaffSearchForm, AdminTypeForm, AddNewStaffForm
 )
 
 from AppControl.models import (
@@ -277,7 +279,7 @@ def org_department_dashboard(request, cor, dept):
             global_skills_list.append(item)
 
     skills_list_set = set(global_skills_list)
-    
+
     skills_list_labels = list(skills_list_set)
 
     dept_skills_link = SkillTag.objects.filter(skill__in=skills_list_set).order_by('skill')
@@ -523,7 +525,7 @@ def dashboard_corporate(request, cor):
         dpt_staff_data.append(dpt_staff)
 
     staff = CorporateStaff.objects.filter(corporate=company)
-    current_staff = staff.values_list('talent__id', flat=True)
+    current_staff = staff.filter(Q(hide=False) | Q(resigned=False)).values_list('talent__id', flat=True)
     current_count = current_staff.count()
 
     staff = Profile.objects.filter(talent__id__in=current_staff)
@@ -586,7 +588,7 @@ def dashboard_corporate(request, cor):
 
     staff_id = Profile.objects.filter(talent__id__in=current_staff).values_list('id', flat=True)
 
-    we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
+    we = WorkExperience.objects.filter(Q(talent__subscription__gte=0) & Q(score__gte=skill_pass_score))
 
     # Number of skills per age bracket
     skills_age=[]
@@ -718,7 +720,7 @@ def dashboard_corporate(request, cor):
 
 
 @login_required()
-@corp_permission(1)
+@corp_permission(2)
 def org_structure_view(request):
     '''A view of the levels in the corporate structure'''
     usr = request.user
@@ -747,7 +749,7 @@ def org_structure_view(request):
 
 
 @login_required()
-@corp_permission(2)
+@corp_permission(3)
 def org_structure_add(request, cor):
     '''View to capture the company structure - only corporate administrators can edit the structure '''
     corp = get_object_or_404(CorporateHR, slug=cor)
@@ -771,7 +773,7 @@ def org_structure_add(request, cor):
 
 
 @login_required()
-@corp_permission(1)
+@corp_permission(2)
 def staff_manage(request, cor):
     '''View the people who have listed the company as an employer, but have not been identified as staff'''
     #logit to test if limited to a companybranch
@@ -790,21 +792,57 @@ def staff_manage(request, cor):
     return render(request, template, context)
 
 @login_required()
-@corp_permission(1)
-def staff_include(request, cor, tlt):
+@corp_permission(2)
+def staff_include(request, cor, tlt, bch):
     '''Add people to the company staff'''
     corp = get_object_or_404(CorporateHR,slug=cor)
     staff = get_object_or_404(Profile, alias=tlt)
+    bch = get_object_or_404(BriefCareerHistory, slug=bch)
 
 
     form = AddStaffForm(request.POST or None)
     template = 'mod_corporate/staff_include.html'
-    context = {'form': form, 'staff': staff,}
-
+    context = {'form': form, 'staff': staff, 'corp': corp,}
     if request.method == 'POST':
         if form.is_valid():
             new = form.save(commit=False)
             new.talent = staff.talent
+            new.corporate = corp
+            new.date_from = bch.date_from
+            new.type = bch.work_configeration
+            if bch.date_to:
+                new.date_to = bch.date_to
+            new.designation = bch.designation
+            new.save()
+            return redirect(reverse('Corporate:StaffManage',kwargs={'cor':cor,}))
+        else:
+            return render(request, template, context)
+    else:
+        return render(request, template, context)
+
+
+@login_required()
+@corp_permission(2)
+def staff_add(request, cor):
+    '''Add people to the company staff that have not indicated they work for the company'''
+    corp = get_object_or_404(CorporateHR,slug=cor)
+
+    if request.is_ajax():
+        qry = request.GET.get('term')
+        filt = CorporateStaff.objects.filter(corporate__slug=cor)
+
+        people = CustomUser.objects.all().filter(~Q(id__in=filt)).filter(Q(first_name__icontains=qry) | Q(last_name__icontains=qry) | Q(email__icontains=qry) | Q(display_text__icontains=qry)).order_by('last_name')
+        response_content = list(people.values('id','email'))
+
+        return JsonResponse(response_content, safe=False)
+
+    form = AddNewStaffForm(request.POST or None, cor_sg=cor)
+    template = 'mod_corporate/staff_add.html'
+    context = {'form': form, 'corp': corp,}
+
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
             new.corporate = corp
             new.save()
             return redirect(reverse('Corporate:StaffManage',kwargs={'cor':cor,}))
@@ -815,7 +853,7 @@ def staff_include(request, cor, tlt):
 
 
 @login_required()
-@corp_permission(1)
+@corp_permission(2)
 def staff_actions(request):
     '''Actions from the Staff Admin template'''
     data = json.loads(request.body)
@@ -838,38 +876,22 @@ def staff_actions(request):
 
 
 @login_required()
-@corp_permission(1)
+@corp_permission(2)
 def staff_current(request, cor):
     '''Lists the current staff members'''
-    corp = get_object_or_404(CorporateHR, slug=cor)
-    staff = CorporateStaff.objects.filter(corporate__slug=cor).filter(Q(hide=False) | Q(resigned=False)).select_related('talent').order_by('talent__last_name')
-    staff_id = staff.values_list('talent__id')
-    staff_c = staff.count()
-
-    current = BriefCareerHistory.objects.filter(Q(companybranch__company=corp.company) & Q(talent__id__in=staff_id) & Q(date_to__isnull=True)).select_related('talent').order_by('talent__last_name')
-
-    template = 'mod_corporate/staff_current.html'
-    context = {'current': current, 'corp': corp, 'staff_c': staff_c,}
-    return render(request, template, context)
-
-
-@login_required()
-@corp_permission(1)
-def staff_admin(request, cor):
-    '''Manages the staff (make admin, remove from staff, etc.)'''
     tlt = request.user
-    corp = CorporateHR.objects.get(slug=cor)
+    corp = get_object_or_404(CorporateHR, slug=cor)
+    current = CorporateStaff.objects.filter(corporate__slug=cor).filter(Q(hide=False) | Q(resigned=False)).select_related('talent').order_by('talent__last_name')
+    staff_c = current.count()
 
-    staff_qs = CorporateStaff.objects.filter(corporate__slug=cor).filter(Q(hide=False) | Q(resigned=False)).select_related('talent').order_by('talent__last_name')
+    l2 = current.get(talent = tlt)
 
-    l2 = staff_qs.get(talent = tlt)
-
-    if l2.corp_access >= 2:
+    if l2.corp_access >= 3:
         perm = 'granted'
     else:
         perm = 'denied'
 
-    locked = staff_qs.filter(unlocked=False)
+    locked = current.filter(unlocked=False)
 
     today = timezone.now().date()
     '''at least 1 month billed for each added user'''
@@ -881,13 +903,14 @@ def staff_admin(request, cor):
         else:
             pass
 
-    template = 'mod_corporate/staff_admin.html'
-    context = {'staff_qs':staff_qs, 'access': perm, 'corp': corp,}
+    template = 'mod_corporate/staff_current.html'
+    context = {'current': current, 'corp': corp, 'staff_c': staff_c, 'perm': perm,}
     return render(request, template, context)
 
 
+
 @login_required()
-@corp_permission(1)
+@corp_permission(2)
 def admin_staff(request, cor):
     corp = CorporateHR.objects.get(slug=cor)
     staff_qs = CorporateStaff.objects.filter(Q(corporate=corp) & Q(resigned=False) & Q(hide = False)).select_related('talent').order_by('talent__last_name')
@@ -910,8 +933,9 @@ def admin_staff(request, cor):
             no_cont = 20
 
     admin_qs = staff_qs.filter(status=True)
-    admin_c = admin_qs.filter(corp_access = 2).count()
-    cont_c = admin_qs.filter(corp_access = 1).count()
+    admin_c = admin_qs.filter(corp_access = 3).count()
+    cont_c = admin_qs.filter(corp_access = 2).count()
+    hod_c = admin_qs.filter(corp_access = 1).count()
 
     template = 'mod_corporate/admin_manage.html'
     context = {
@@ -921,7 +945,7 @@ def admin_staff(request, cor):
 
 
 @login_required()
-@corp_permission(2)
+@corp_permission(3)
 def admin_permission(request):
 
     data = json.loads(request.body)
@@ -948,7 +972,7 @@ def admin_permission(request):
 
 
 @login_required()
-@corp_permission(1)
+@corp_permission(2)
 def talent_hidden(request, cor):
     '''Lists the hidden/ignored users'''
     corp = get_object_or_404(CorporateHR, slug=cor)
@@ -965,7 +989,7 @@ def talent_hidden(request, cor):
 
 
 @login_required()
-@corp_permission(1)
+@corp_permission(2)
 def hidden_actions(request):
 
     data = json.loads(request.body)
@@ -983,7 +1007,8 @@ def hidden_actions(request):
 
     return JsonResponse('Action Processed', safe=False)
 
-
+@login_required()
+@corp_permission(1)
 def experience_dashboard(request, cor):
     staff_qs = CorporateStaff.objects.filter(Q(corporate__slug=cor) & Q(hide=False)).select_related('talent')
 
@@ -995,6 +1020,8 @@ def experience_dashboard(request, cor):
     corp_thrs = we_qs.filter(edt=True).aggregate(trn_sum = Sum('topic__hours'))
 
 
+@login_required()
+@corp_permission(2)
 def past_staff(request, cor):
     corp = CorporateHR.objects.get(slug=cor)
     company = corp.company

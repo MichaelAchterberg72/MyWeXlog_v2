@@ -37,9 +37,12 @@
         <thead>
           <tr>
             <th class="align-middle text-center">Last name, First name</th>
+            <th class="align-middle text-center">Department</th>
             <th class="align-middle text-center">Designation</th>
+            <th class="align-middle text-center">Relationship</th>
             <th class="align-middle text-center">Date Joined</th>
             <th class="align-middle text-center">Tenure<br>(years)</th>
+            <th class="align-middle text-center">System<br>Rights</th>
             <th class="align-middle text-center">Actions</th>
           </tr>
         </thead>
@@ -48,15 +51,46 @@
 
             <tr id="{{ item.id }}">
               <td class="align-middle text-center">{{ item.talent.last_name }}, {{ item.talent.first_name }}</td>
+              <td class="align-middle text-center">{{ item.department }}</td>
               <td class="align-middle text-center">{{ item.designation }}</td>
+              <td class="align-middle text-center">{{ item.type }}</td>
               <td class="align-middle text-center">
                 {{ item.date_from|date:"j M Y" }}
               </td>
               <td class="align-middle text-center">{{ item.tenure|floatformat:1 }}</td>
               <td class="align-middle text-center">
-                <a href="{% url 'Talent:APV_C' item.talent.alias %}" target="_blank">
-                  <i class="fa fa-id-badge" aria-hidden="true"style="font-size:30px; color:black" data-toggle="tooltip" data-placement="top" title="View Profile"></i>
-                </a>
+                {% if item.status == True %}
+                  Admin
+                {% else %}
+                  Staff
+                {% endif %}
+                </td>
+              <td class="align-middle text-center">
+                <div class="btn-toolbar float-right">
+                  <div class="btn-group mr-2">
+                    <a href="{% url 'Talent:APV_C' item.talent.alias %}" target="_blank">
+                      <i class="fa fa-id-badge" aria-hidden="true"style="font-size:30px; color:black" data-toggle="tooltip" data-placement="top" title="View Profile"></i>
+                    </a>
+                  </div>
+                  <div class="btn-group mr-2">
+                    {% if perm == 'granted' %}
+                      {% if item.status == False %}
+                        <div class="update-staff" data-slug="{{ item.slug }}" data-action="admin">
+                          <i class="fa fa-eye" aria-hidden="true" style="font-size:25px; color:black" data-toggle="tooltip" data-placement="top" title="Grant administrator permissions"></i>
+                        </div>
+                      {% endif %}
+                    {% endif %}
+                  </div>
+                  <div class="btn-group mr-2">
+                    {% if item.unlocked == True %}
+                      <div class="update-staff" data-slug="{{ item.slug }}" data-action="remove">
+                        <i class="fa fa-user-times" aria-hidden="true" style="font-size:25px; color:red" data-toggle="tooltip" data-placement="top" title="Remove {{ item.talent.first_name }} {{ item.talent.last_name }} from Staff?" onclick="return confirm('Remove {{ item.talent.first_name }} {{ item.talent.last_name }} - Are you sure?');"></i>
+                    </div>
+                    {% else %}
+                        <i class="fa fa-user-times" aria-hidden="true" style="font-size:25px; color:grey" data-toggle="tooltip" data-placement="top" title="Locked: Will be unlocked 32 days after being added to staff"></i>
+                    {% endif %}
+                  </div>
+                </div>
               </td>
             </tr>
           {% empty %}

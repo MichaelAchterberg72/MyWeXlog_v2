@@ -140,7 +140,7 @@ for (var i = 0; i < setCorpCookie.length; i++){
   setCorpCookie[i].addEventListener('click', function(){
     var corp = this.dataset.slug
 
-    document.cookie = 'corp=' + JSON.stringify(corp) + ";max-age=83200; domain=; path=/"
+    document.cookie = 'corp=' + JSON.stringify(corp) + ";max-age=96400; domain=; path=/"
 
   });
 }

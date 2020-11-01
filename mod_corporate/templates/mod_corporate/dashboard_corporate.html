@@ -60,18 +60,13 @@
 
   <div class="btn-group float-right">
     <div class="btn-group mr-2">
-      <a href="{% url 'Corporate:StaffManage' corp.corporate.slug %}?next={{ request.path|urlencode }}" class="badge badge-primary">
-        Potential ( {{ potential|intcomma }} )
+      <a href="{% url 'Corporate:StaffManage' corp.corporate.slug %}?next={{ request.path|urlencode }}" class="badge badge-primary" data-toggle="tooltip" data-placement="top" title="People listing {{ company}} as their employer shown in brackets">
+        Add ( {{ potential|intcomma }} )
       </a>
     </div>
     <div class="btn-group mr-2">
       <a href="{% url 'Corporate:StaffCurrent' corp.corporate.slug %}?next={{ request.path|urlencode }}" class="badge badge-primary align-middle">
         Current ( {{ current_count|intcomma }} )
-      </a>
-    </div>
-    <div class="btn-group mr-2">
-      <a href="{% url 'Corporate:StaffAdmn' corp.corporate.slug %}?next={{ request.path|urlencode }}" class="badge badge-primary align-middle">
-        Manage
       </a>
     </div>
     <div class="btn-group mr-2">
