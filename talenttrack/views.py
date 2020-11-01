@@ -1398,11 +1398,11 @@ def profile_view(request, tlt):
 
 @login_required()
 @corp_permission(1)
-def profile_view_corp(request, tlt):
+def profile_view_corp(request, cor, tlt):
     '''View for profile without reference to a vacancy. Used for the corporate feature'''
     #caching
     bch = BriefCareerHistory.objects.filter(talent__alias=tlt).order_by('-date_from')[:6]
-    corp_info = CorporateStaff.objects.get(talent__alias=tlt)
+    corp_info = CorporateStaff.objects.get(Q(talent__alias=tlt) & Q(corporate__slug=cor))
     bch_count = bch.count()
     pfl = Profile.objects.filter(alias=tlt)
     als = get_object_or_404(Profile, alias=tlt)

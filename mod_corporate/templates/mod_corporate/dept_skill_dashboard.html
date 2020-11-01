@@ -7,10 +7,244 @@
 
 {% block content %}
 <div class="card card-shadow">
+
   <div class="card-body">
+    <div class="float-right">
+      <a href="{% url 'Corporate:OrgDepartment' cor dept %}" class="btn btn-secondary"style="width: 6rem">Back</a>
+    </div>
     <h3>{{ dept }} Department, {{ skill }} Skill Dashboard</h3>
   </div>
 </div>
 <br>
+<div class="card card-shadow">
+  <div class="card-body">
+    <h4>Experience</h4>
+    <div class="row">
+      <div class="col-md-6"
+    <p>Total Staff with Skill</p>
+    <canvas id="staff-with-skill-chart" height="100px"></canvas>
+    <script>
+      window.onload = function() {
+        var ctx = document.getElementById('staff-with-skill-chart').getContext('2d');
+        window.myPie = new Chart(ctx, number_staff_skill_config);
 
+        var hours_experience_ctx = document.getElementById('hours-experience-in-skill-by-age-chart').getContext('2d');
+        window.myChart = new Chart(hours_experience_ctx, hours_experience_skills_config);
+      };
+    </script>
+    <script>
+    var number_staff_skill_config = {
+      type: 'bar',
+      data: {
+          labels: {{ age_bracket_labels|safe }},
+          datasets: [{
+            label: 'Number Staff with Skill by Age Bracket',
+            data: {{ number_age_brackets_data|safe }},
+              backgroundColor: [
+                  '#218B82', '#9AD9DB', '#E5DBD9', '#98D4BB', '#EB96AA', '#C6C9D0',
+              ],
+              borderColor: [
+
+              ],
+              borderWidth: 1
+          }]
+      },
+      options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero: true
+                  }
+              }]
+            },
+        }
+    };
+
+    </script>
+    </div>
+    <div class="col-md-6">
+    <p>Total Hours</p>
+    <canvas id="hours-experience-in-skill-by-age-chart" height="100px"></canvas>
+    <script>
+    var hours_experience_skills_config = {
+      type: 'bar',
+      data: {
+          labels: {{ age_bracket_labels|safe }},
+          datasets: [{
+            label: 'Hours Experience in Skill by Age Bracket',
+            data: {{ hours_experience_age_brackets_data|safe }},
+              backgroundColor: [
+                  '#B6D8F2', '#F4CFDF', '#5784BA', '#C54B6C', '#F5BFD2', '#E5DB9C',
+              ],
+              borderColor: [
+
+              ],
+              borderWidth: 1
+          }]
+      },
+      options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero: true
+                  }
+              }]
+            },
+        }
+    };
+
+  </script>
+    </div>
+    </div>
+
+  </div>
+</div>
+<br>
+<div class="card card-shadow">
+  <div class="card-body">
+    <h4>Current Staff with {{ skill }} Skill</h4>
+    <div class="container">
+      <div class="row my-auto">
+        <div class="col-md-3 h-100 text-center my-auto">
+          <strong>Last name, First name</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Date Joined</strong>
+        </div>
+        <div class="col-md-1 h-100 text-center my-auto">
+          <strong>Tenure</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Designation</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Relationship</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong></strong>
+        </div>
+      </div>
+
+    {% for item in brief_history %}
+    <div class="row">
+      <div class="card mt-1 card-hover" style="width: 100%;">
+        <div class="card-body small-pad">
+          <div class="row my-auto">
+            <div class="col-md-3 h-100 text-center my-auto">
+              {{ item.talent.last_name }}, {{ item.talent.first_name }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ item.date_from }}
+            </div>
+            <div class="col-md-1 h-100 text-center my-auto">
+              {{ item.tenure|floatformat:2 }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ item.designation }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ item.work_configeration }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              <div class="btn-toolbar">
+                <div class="btn-group mr-2">
+                  <a href="{% url 'Talent:APV_C' cor item.talent.alias %}" target="_blank">
+                    <i class="fa fa-id-badge" aria-hidden="true"style="font-size:30px; color:black" data-toggle="tooltip" data-placement="top" title="View Profile"></i>
+                  </a>
+                </div>
+                <div class="btn-group mr-2">
+                  <i class="fa fa-folder-open-o" aria-hidden="true"  style="font-size:30px; color:blue" data-toggle="tooltip" data-placement="top" title="View {{ corp.company }} Work History"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+      <p>You do not have any staff registered as their Brief Career History with your company.</p>
+    {% endfor %}
+    </div>
+    <br>
+    {% if brief_history_count >= 10 %}
+      <div class="float-right">
+        <a href="{% url 'Corporate:DeptSkillCurrentStaff' cor dept skl %}" class="btn btn-primary"style="width: 10rem">View All Staff</a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+<br>
+<div class="card card-shadow">
+  <div class="card-body">
+    <h4>Past Staff with {{ skill }} Skill</h4>
+    <div class="container">
+      <div class="row my-auto">
+        <div class="col-md-3 h-100 text-center my-auto">
+          <strong>Last name, First name</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Date Joined</strong>
+        </div>
+        <div class="col-md-1 h-100 text-center my-auto">
+          <strong>Tenure</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Designation</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Relationship</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong></strong>
+        </div>
+      </div>
+
+    {% for item in past_brief_history %}
+    <div class="row">
+      <div class="card mt-1 card-hover" style="width: 100%;">
+        <div class="card-body small-pad">
+          <div class="row my-auto">
+            <div class="col-md-3 h-100 text-center my-auto">
+              {{ item.talent.last_name }}, {{ item.talent.first_name }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ item.date_from }}
+            </div>
+            <div class="col-md-1 h-100 text-center my-auto">
+              {{ item.tenure|floatformat:2 }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ item.designation }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ item.work_configeration }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              <div class="btn-toolbar">
+                <div class="btn-group mr-2">
+                  <a href="{% url 'Talent:APV_C' cor item.talent.alias %}" target="_blank">
+                    <i class="fa fa-id-badge" aria-hidden="true"style="font-size:30px; color:black" data-toggle="tooltip" data-placement="top" title="View Profile"></i>
+                  </a>
+                </div>
+                <div class="btn-group mr-2">
+                  <i class="fa fa-folder-open-o" aria-hidden="true"  style="font-size:30px; color:blue" data-toggle="tooltip" data-placement="top" title="View {{ corp.company }} Work History"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+      <p>You do not have any past staff registered as their Brief Career History with your company.</p>
+    {% endfor %}
+    </div>
+    <br>
+    {% if past_brief_history_count >= 10 %}
+      <div class="float-right">
+        <a href="{% url 'Corporate:DeptSkillCurrentStaff' cor dept skl %}" class="btn btn-primary"style="width: 10rem">View All Staff</a>
+      </div>
+    {% endif %}
+  </div>
+</div>
 {% endblock content %}
