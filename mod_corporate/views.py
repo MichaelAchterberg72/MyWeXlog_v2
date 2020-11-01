@@ -54,7 +54,7 @@ def dept_skill_dashboard(request, cor, dept, skl):
 
     structure = OrgStructure.objects.filter(Q(corporate__slug=cor) & Q(level_name=dept))
 
-    staff_list = CorporateStaff.objects.filter(Q(corporate__slug=cor) & Q(department__level_name=dept))
+    staff_list = CorporateStaff.objects.filter(Q(corporate__slug=cor) & Q(department__level_name=dept) & Q(date_to__isnull=True))
 
     current_staff = staff_list.values_list('talent__id', flat=True)
 
@@ -69,17 +69,18 @@ def dept_skill_dashboard(request, cor, dept, skl):
     staff_skills_id = we_skill.filter(talent__id__in=current_staff).values_list('talent__id', flat=True)
 
     staff_skill = Profile.objects.filter(talent__id__in=staff_skills_id)
-    staff_skill_id = staff_skill.values_list('id', flat=True)
+    staff_skill_id = staff_skill.values_list('id', flat=True).distinct()
 
     #Current staff for skill list
-    brief_history_l = BriefCareerHistory.objects.filter(Q(talent__id__in=staff_skill_id) & Q(date_to__isnull=True))
-    brief_history_count = brief_history_l.count()
-    brief_history = brief_history_l[:10]
+    current_staff_skill_l = CorporateStaff.objects.filter(Q(talent__id__in=staff_skill_id) & Q(date_to__isnull=True) & Q(corporate__slug=cor) & Q(department__level_name=dept))
+
+    current_staff_skill_count = current_staff_skill_l.count()
+    current_staff_skill = current_staff_skill_l[:10]
 
     #Past staff for skill list
-    past_brief_history_l = BriefCareerHistory.objects.filter(Q(talent__id__in=staff_skill_id) & Q(date_to__isnull=False))
-    past_brief_history_count = brief_history_l.count()
-    past_brief_history = brief_history_l[:10]
+    past_staff_skill_l = CorporateStaff.objects.filter(Q(talent__id__in=staff_skill_id) & Q(date_to__isnull=False) & Q(corporate__slug=cor) & Q(department__level_name=dept)).order_by('-date_to')
+    past_staff_skill_count = past_staff_skill_l.count()
+    past_staff_skill = past_staff_skill_l[:10]
 
     today = timezone.now().date()
 
@@ -188,10 +189,10 @@ def dept_skill_dashboard(request, cor, dept, skl):
         'dept': dept,
         'skl': skl,
         'skill': skill,
-        'brief_history': brief_history,
-        'brief_history_count': brief_history_count,
-        'past_brief_history': past_brief_history,
-        'past_brief_history_count': past_brief_history_count,
+        'current_staff_skill': current_staff_skill,
+        'current_staff_skill_count': current_staff_skill_count,
+        'past_staff_skill': past_staff_skill,
+        'past_staff_skill_count': past_staff_skill_count,
         'age_bracket_labels': age_bracket_labels,
         'number_age_brackets_data': number_age_brackets_data,
         'hours_experience_age_brackets_data': hours_experience_age_brackets_data,
@@ -216,18 +217,18 @@ def dept_skill_current_staff(request, cor, dept, skl):
     staff_skills_id = we_skill.filter(talent__id__in=current_staff).values_list('talent__id', flat=True)
 
     staff_skill = Profile.objects.filter(talent__id__in=staff_skills_id)
-    staff_skill_id = staff_skill.values_list('id', flat=True)
+    staff_skill_id = staff_skill.values_list('id', flat=True).distinct()
 
     #Current staff for skill list
-    brief_history_l = BriefCareerHistory.objects.filter(Q(talent__id__in=staff_skill_id) & Q(date_to__isnull=True))
-    brief_history_count = brief_history_l.count()
+    current_staff_skill_l = CorporateStaff.objects.filter(Q(talent__id__in=staff_skill_id) & Q(date_to__isnull=True) & Q(corporate__slug=cor) & Q(department__level_name=dept))
+    current_staff_count = current_staff_skill_l.count()
 
     try:
         page = int(request.GET.get('page', 1))
     except:
         page = 1
 
-    paginator = Paginator(brief_history_l, 20)
+    paginator = Paginator(current_staff_skill_l, 20)
 
     try:
         pageitems = paginator.page(page)
@@ -248,7 +249,62 @@ def dept_skill_current_staff(request, cor, dept, skl):
         'dept': dept,
         'skl': skl,
         'skill': skill,
-        'brief_history_count': brief_history_count,
+        'current_staff_count': current_staff_count,
+        'pageitems': pageitems,
+        'page_range': page_range,
+    }
+    return render(request, template, context)
+
+
+@login_required()
+@corp_permission(1)
+def dept_skill_past_staff(request, cor, dept, skl):
+    skill = SkillTag.objects.get(id=skl)
+
+    staff_list = CorporateStaff.objects.filter(Q(corporate__slug=cor) & Q(department__level_name=dept))
+
+    current_staff = staff_list.values_list('talent__id', flat=True)
+
+    we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
+
+    we_skill = we.filter(Q(skills__skill=skill.skill, edt=False) | Q(topic__skills__skill=skill.skill, edt=True))
+
+    staff_skills_id = we_skill.filter(talent__id__in=current_staff).values_list('talent__id', flat=True)
+
+    staff_skill = Profile.objects.filter(talent__id__in=staff_skills_id)
+    staff_skill_id = staff_skill.values_list('id', flat=True).distinct()
+
+    #Past staff for skill list
+    past_staff_skill_l = CorporateStaff.objects.filter(Q(talent__id__in=staff_skill_id) & Q(date_to__isnull=False) & Q(corporate__slug=cor) & Q(department__level_name=dept)).order_by('-date_to')
+    past_staff_count = past_staff_skill_l.count()
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(current_staff_skill_l, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+    template = 'mod_corporate/dept_skill_past_staff.html'
+    context = {
+        'cor': cor,
+        'dept': dept,
+        'skl': skl,
+        'skill': skill,
+        'past_staff_count': past_staff_count,
         'pageitems': pageitems,
         'page_range': page_range,
     }
@@ -296,7 +352,7 @@ def dept_skills_not_utilised(request, cor, dept):
 def org_department_dashboard(request, cor, dept):
     structure = OrgStructure.objects.filter(Q(corporate__slug=cor) & Q(level_name=dept))
 
-    staff_list = CorporateStaff.objects.filter(Q(corporate__slug=cor) & Q(department__level_name=dept))
+    staff_list = CorporateStaff.objects.filter(Q(corporate__slug=cor) & Q(department__level_name=dept) & Q(date_to__isnull=True))
 
     current_staff = staff_list.values_list('talent__id', flat=True)
     current_count = current_staff.count()
@@ -706,7 +762,7 @@ def dashboard_corporate(request, cor):
 
     dpt_staff_data=[]
     for d in structure:
-        staff = CorporateStaff.objects.filter(Q(corporate=company) & Q(department=d))
+        staff = CorporateStaff.objects.filter(Q(corporate=company) & Q(department=d) & Q(date_to__isnull=True))
         current_staff = staff.values_list('talent__id', flat=True)
         if current_staff.count() >= 1:
             current_count = current_staff.count()
