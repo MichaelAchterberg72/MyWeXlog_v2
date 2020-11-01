@@ -17,6 +17,8 @@ from core.decorators import corp_permission, subscription
 from django.contrib.postgres.search import SearchVector, TrigramSimilarity
 from django.db.models.functions import Greatest
 
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 from .models import (
     CorporateStaff, OrgStructure
     )
@@ -48,10 +50,205 @@ from WeXlog.app_config import (
 def dept_skill_dashboard(request, cor, dept, skl):
     skill = SkillTag.objects.get(id=skl)
 
+    structure = OrgStructure.objects.filter(Q(corporate__slug=cor) & Q(level_name=dept))
+
+    staff_list = CorporateStaff.objects.filter(Q(corporate__slug=cor) & Q(department__level_name=dept))
+
+    current_staff = staff_list.values_list('talent__id', flat=True)
+
+    today = timezone.now().date()
+
+    staff_id = Profile.objects.filter(talent__id__in=current_staff).values_list('id', flat=True)
+
+    we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
+
+    we_skill = we.filter(Q(skills__skill=skill.skill, edt=False) | Q(topic__skills__skill=skill.skill, edt=True))
+
+    staff_skills_id = we_skill.filter(talent__id__in=current_staff).values_list('talent__id', flat=True)
+
+    staff_skill = Profile.objects.filter(talent__id__in=staff_skills_id)
+    staff_skill_id = staff_skill.values_list('id', flat=True)
+
+    #Current staff for skill list
+    brief_history_l = BriefCareerHistory.objects.filter(Q(talent__id__in=staff_skill_id) & Q(date_to__isnull=True))
+    brief_history_count = brief_history_l.count()
+    brief_history = brief_history_l[:10]
+
+    #Past staff for skill list
+    past_brief_history_l = BriefCareerHistory.objects.filter(Q(talent__id__in=staff_skill_id) & Q(date_to__isnull=False))
+    past_brief_history_count = brief_history_l.count()
+    past_brief_history = brief_history_l[:10]
+
+    today = timezone.now().date()
+
+    age=[]
+    for i in staff_skill:
+        staff_age=relativedelta(today, i.birth_date).years
+        age.append(staff_age)
+
+    age_range_18_25 = []
+    for i in age:
+        if i in range(18, 25):
+            staff_age = {'staff_age': i}
+            age_range_18_25.append(staff_age)
+
+    age_range_26_35 = []
+    for i in age:
+        if i in range(26, 35):
+            staff_age = {'staff_age': i}
+            age_range_26_35.append(staff_age)
+
+    age_range_36_45 = []
+    for i in age:
+        if i in range(36, 45):
+            staff_age = {'staff_age': i}
+            age_range_36_45.append(staff_age)
+
+    age_range_46_55 = []
+    for i in age:
+        if i in range(46, 55):
+            staff_age = {'staff_age': i}
+            age_range_46_55.append(staff_age)
+
+    age_range_56_65 = []
+    for i in age:
+        if i in range(56, 65):
+            staff_age = {'staff_age': i}
+            age_range_56_65.append(staff_age)
+
+    age_range_66_100 = []
+    for i in age:
+        if i in range(66, 100):
+            staff_age = {'staff_age': i}
+            age_range_66_100.append(staff_age)
+
+    sum_age_range_18_25 = len(age_range_18_25)
+    sum_age_range_26_35 = len(age_range_26_35)
+    sum_age_range_36_45 = len(age_range_36_45)
+    sum_age_range_46_55 = len(age_range_46_55)
+    sum_age_range_56_65 = len(age_range_56_65)
+    sum_age_range_66_100 = len(age_range_66_100)
+
+    number_age_brackets_data = [sum_age_range_18_25, sum_age_range_26_35, sum_age_range_36_45, sum_age_range_46_55, sum_age_range_56_65, sum_age_range_66_100]
+
+    # Number of staff with skill per age bracket
+    skills_age=[]
+    for i in staff_skill_id:
+        tlt = Profile.objects.get(talent=i)
+        staff_age=relativedelta(today, tlt.birth_date).years
+
+        talent_skill_l = we_skill.filter(talent=i, edt=False)
+        talent_skillt_l = we_skill.filter(talent=i, edt=True)
+
+        aw_exp = talent_skill_l.filter(talent=i, edt=False).aggregate(awet=Sum('hours_worked'))
+        awetv = aw_exp.get('awet')
+        if awetv == None:
+            awetv = 0
+        else:
+            awetv = awetv
+
+        at_exp = talent_skillt_l.filter(talent=i, edt=True).aggregate(tet=Sum('topic__hours'))
+        atetv = at_exp.get('tet')
+        if atetv == None:
+            atetv = 0
+        else:
+            atetv = atetv
+
+        t_exp = awetv + atetv
+
+        result={'tlt': tlt, 'staff_age': staff_age, 't_exp': t_exp}
+
+        skills_age.append(result)
+
+    # Total hours experience
+    he_list_age_range_18_25=[float(x['t_exp']) for x in skills_age if x['staff_age'] in range(18, 25)]
+    he_list_age_range_26_35=[float(x['t_exp']) for x in skills_age if x['staff_age'] in range(26, 35)]
+    he_list_age_range_36_45=[float(x['t_exp']) for x in skills_age if x['staff_age'] in range(36, 45)]
+    he_list_age_range_46_55=[float(x['t_exp']) for x in skills_age if x['staff_age'] in range(46, 55)]
+    he_list_age_range_56_65=[float(x['t_exp']) for x in skills_age if x['staff_age'] in range(56, 65)]
+    he_list_age_range_66_100=[float(x['t_exp']) for x in skills_age if x['staff_age'] in range(66, 100)]
+
+
+    sum_he_range_18_25 = sum(he_list_age_range_18_25)
+    sum_he_range_26_35 = sum(he_list_age_range_26_35)
+    sum_he_range_36_45 = sum(he_list_age_range_36_45)
+    sum_he_range_46_55 = sum(he_list_age_range_46_55)
+    sum_he_range_56_65 = sum(he_list_age_range_56_65)
+    sum_he_range_66_100 = sum(he_list_age_range_66_100)
+
+    hours_experience_age_brackets_data = [sum_he_range_18_25, sum_he_range_26_35, sum_he_range_36_45, sum_he_range_46_55, sum_he_range_56_65, sum_he_range_66_100]
+
+    age_bracket_labels = ['18-25', '26-35', '36-45', '46-55', '56-65', '66 & up']
+
     template = 'mod_corporate/dept_skill_dashboard.html'
     context = {
+        'cor': cor,
         'dept': dept,
+        'skl': skl,
         'skill': skill,
+        'brief_history': brief_history,
+        'brief_history_count': brief_history_count,
+        'past_brief_history': past_brief_history,
+        'past_brief_history_count': past_brief_history_count,
+        'age_bracket_labels': age_bracket_labels,
+        'number_age_brackets_data': number_age_brackets_data,
+        'hours_experience_age_brackets_data': hours_experience_age_brackets_data,
+        'skills_age': skills_age,
+    }
+    return render(request, template, context)
+
+
+@login_required()
+@corp_permission(1)
+def dept_skill_current_staff(request, cor, dept, skl):
+    skill = SkillTag.objects.get(id=skl)
+
+    staff_list = CorporateStaff.objects.filter(Q(corporate__slug=cor) & Q(department__level_name=dept))
+
+    current_staff = staff_list.values_list('talent__id', flat=True)
+
+    we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
+
+    we_skill = we.filter(Q(skills__skill=skill.skill, edt=False) | Q(topic__skills__skill=skill.skill, edt=True))
+
+    staff_skills_id = we_skill.filter(talent__id__in=current_staff).values_list('talent__id', flat=True)
+
+    staff_skill = Profile.objects.filter(talent__id__in=staff_skills_id)
+    staff_skill_id = staff_skill.values_list('id', flat=True)
+
+    #Current staff for skill list
+    brief_history_l = BriefCareerHistory.objects.filter(Q(talent__id__in=staff_skill_id) & Q(date_to__isnull=True))
+    brief_history_count = brief_history_l.count()
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(brief_history_l, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+    template = 'mod_corporate/dept_skill_current_staff.html'
+    context = {
+        'cor': cor,
+        'dept': dept,
+        'skl': skl,
+        'skill': skill,
+        'brief_history_count': brief_history_count,
+        'pageitems': pageitems,
+        'page_range': page_range,
     }
     return render(request, template, context)
 
@@ -97,9 +294,9 @@ def dept_skills_not_utilised(request, cor, dept):
 def org_department_dashboard(request, cor, dept):
     structure = OrgStructure.objects.filter(Q(corporate__slug=cor) & Q(level_name=dept))
 
-    staff = CorporateStaff.objects.filter(Q(corporate__slug=cor) & Q(department__level_name=dept))
+    staff_list = CorporateStaff.objects.filter(Q(corporate__slug=cor) & Q(department__level_name=dept))
 
-    current_staff = staff.values_list('talent__id', flat=True)
+    current_staff = staff_list.values_list('talent__id', flat=True)
     current_count = current_staff.count()
 
     staff = Profile.objects.filter(talent__id__in=current_staff)
@@ -268,7 +465,7 @@ def org_department_dashboard(request, cor, dept):
 
     hours_experience_age_brackets_data = [sum_he_range_18_25, sum_he_range_26_35, sum_he_range_36_45, sum_he_range_46_55, sum_he_range_56_65, sum_he_range_66_100]
 
-    # Lost of skills for buttons
+    # List of skills for buttons
     skills_list = [list(x['askillset']) for x in skills_age]
 
     global_skills_list =[]
@@ -277,7 +474,7 @@ def org_department_dashboard(request, cor, dept):
             global_skills_list.append(item)
 
     skills_list_set_set = set(global_skills_list)
-    # skills_list_set = skills_list_set_set.sort()
+
     skills_list_set = sorted(skills_list_set_set, reverse=False)
 
     skills_list_labels = list(skills_list_set)
@@ -379,7 +576,7 @@ def staff_search(request, cor):
                 )).filter(similarity__gt=0.3).order_by('-similarity')
 
     template = 'mod_corporate/staff_search.html'
-    context = {'form': form, 'query': query, 'results': results, 'access': perm,}
+    context = {'form': form, 'cor': cor, 'query': query, 'results': results, 'access': perm,}
     return render(request, template, context)
 
 
@@ -851,7 +1048,7 @@ def staff_current(request, cor):
     current = BriefCareerHistory.objects.filter(Q(companybranch__company=corp.company) & Q(talent__id__in=staff_id) & Q(date_to__isnull=True)).select_related('talent').order_by('talent__last_name')
 
     template = 'mod_corporate/staff_current.html'
-    context = {'current': current, 'corp': corp, 'staff_c': staff_c,}
+    context = {'current': current, 'cor': cor, 'corp': corp, 'staff_c': staff_c,}
     return render(request, template, context)
 
 
@@ -1004,7 +1201,7 @@ def past_staff(request, cor):
     past_qs = BriefCareerHistory.objects.filter(Q(companybranch__company=company) & Q(date_to__isnull=False)).select_related('talent').order_by('-date_to')
 
     template = 'mod_corporate/staff_past.html'
-    context = {'past_qs': past_qs, 'corp': corp,}
+    context = {'past_qs': past_qs, 'cor': cor, 'corp': corp,}
     return render(request, template, context)
 
 

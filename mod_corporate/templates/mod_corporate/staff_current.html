@@ -54,7 +54,7 @@
               </td>
               <td class="align-middle text-center">{{ item.tenure|floatformat:1 }}</td>
               <td class="align-middle text-center">
-                <a href="{% url 'Talent:APV_C' item.talent.alias %}" target="_blank">
+                <a href="{% url 'Talent:APV_C' cor item.talent.alias %}" target="_blank">
                   <i class="fa fa-id-badge" aria-hidden="true"style="font-size:30px; color:black" data-toggle="tooltip" data-placement="top" title="View Profile"></i>
                 </a>
               </td>

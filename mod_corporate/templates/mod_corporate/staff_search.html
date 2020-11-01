@@ -48,7 +48,7 @@
               <div class="col-md-3 h-100 text-center my-auto">
                 <div class="btn-toolbar">
                   <div class="btn-group mr-2">
-                    <a href="{% url 'Talent:APV_C' tlt=i.talent.alias %}?next={{ request.path|urlencode }}" target="_blank">
+                    <a href="{% url 'Talent:APV_C' cor tlt=i.talent.alias %}?next={{ request.path|urlencode }}" target="_blank">
                       <i class="fa fa-id-badge" aria-hidden="true"style="font-size:30px; color:black" data-toggle="tooltip" data-placement="top" title="Profile"></i>
                     </a>
                   </div>
