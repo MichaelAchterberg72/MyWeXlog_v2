@@ -162,7 +162,7 @@
       </div>
     </div>
     {% empty %}
-      <p>You do not have any staff registered as their Brief Career History with your company.</p>
+      <p>You do not have any staff registered with this skill with your company.</p>
     {% endfor %}
     </div>
     <br>
@@ -236,11 +236,11 @@
       </div>
     </div>
     {% empty %}
-      <p>You do not have any past staff registered as their Brief Career History with your company.</p>
+      <p>You do not have any past staff registered with this skill with your company.</p>
     {% endfor %}
     </div>
     <br>
-    {% if current_staff_skill_count >= 10 %}
+    {% if past_staff_skill_count >= 10 %}
       <div class="float-right">
         <a href="{% url 'Corporate:DeptSkillPastStaff' cor dept skl %}" class="btn btn-primary"style="width: 10rem">View All Staff</a>
       </div>

@@ -333,16 +333,79 @@ def dept_skills_resigned(request, cor, dept):
 @corp_permission(1)
 def dept_skills_freelance(request, cor, dept):
 
-    staff_list = CorporateStaff.objects.filter(Q(corporate__slug=cor) & Q(department__level_name=dept) & Q(type__type='Remote Freelance'or'Freelance') & Q(date_to__isnull=True))
+    structure = OrgStructure.objects.filter(Q(corporate__slug=cor) & Q(level_name=dept))
 
-    current_staff = staff_list.values_list('talent__id', flat=True)
-    staff_id = Profile.objects.filter(talent__id__in=current_staff).values_list('id', flat=True)
+    full_staff_list = CorporateStaff.objects.filter(Q(corporate__slug=cor) & Q(department__level_name=dept))
+
+    staff_list = full_staff_list.filter(Q(date_to__isnull=True))
+
+    freelance_staff_list = staff_list.filter(Q(type__type__icontains='freelance'))
+
+    freelance_current_staff = freelance_staff_list.values_list('talent__id', flat=True)
+    freelance_current_count = freelance_current_staff.count()
+
+    freelance_staff = Profile.objects.filter(talent__id__in=freelance_current_staff)
+    today = timezone.now().date()
+
+    freelance_age=[]
+    for i in freelance_staff:
+        freelance_staff_age=relativedelta(today, i.birth_date).years
+        freelance_age.append(freelance_staff_age)
+
+    freelance_age_range_18_25 = []
+    for i in freelance_age:
+        if i in range(18, 25):
+            freelance_staff_age = {'staff_age': i}
+            freelance_age_range_18_25.append(freelance_staff_age)
+
+    freelance_age_range_26_35 = []
+    for i in freelance_age:
+        if i in range(26, 35):
+            freelance_staff_age = {'staff_age': i}
+            freelance_age_range_26_35.append(freelance_staff_age)
+
+    freelance_age_range_36_45 = []
+    for i in freelance_age:
+        if i in range(36, 45):
+            freelance_staff_age = {'staff_age': i}
+            freelance_age_range_36_45.append(freelance_staff_age)
+
+    freelance_age_range_46_55 = []
+    for i in freelance_age:
+        if i in range(46, 55):
+            freelance_staff_age = {'staff_age': i}
+            freelance_age_range_46_55.append(freelance_staff_age)
+
+    freelance_age_range_56_65 = []
+    for i in freelance_age:
+        if i in range(56, 65):
+            freelance_staff_age = {'staff_age': i}
+            freelance_age_range_56_65.append(freelance_staff_age)
+
+    freelance_age_range_66_100 = []
+    for i in freelance_age:
+        if i in range(66, 100):
+            freelance_staff_age = {'staff_age': i}
+            freelance_age_range_66_100.append(freelance_staff_age)
+
+    freelance_sum_age_range_18_25 = len(freelance_age_range_18_25)
+    freelance_sum_age_range_26_35 = len(freelance_age_range_26_35)
+    freelance_sum_age_range_36_45 = len(freelance_age_range_36_45)
+    freelance_sum_age_range_46_55 = len(freelance_age_range_46_55)
+    freelance_sum_age_range_56_65 = len(freelance_age_range_56_65)
+    freelance_sum_age_range_66_100 = len(freelance_age_range_66_100)
+
+    freelance_number_age_brackets_data = [freelance_sum_age_range_18_25, freelance_sum_age_range_26_35, freelance_sum_age_range_36_45, freelance_sum_age_range_46_55, freelance_sum_age_range_56_65, freelance_sum_age_range_66_100]
+
+    age_bracket_labels = ['18-25', '26-35', '36-45', '46-55', '56-65', '66 & up']
+
+    freelance_staff_id = Profile.objects.filter(talent__id__in=freelance_current_staff).values_list('id', flat=True)
 
     we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
 
-    # Number of skills per age bracket
-    skills_age=[]
-    for i in staff_id:
+    # Total Number of freelance skills per age bracket
+    freelance_skills_age=[]
+    for i in freelance_staff_id:
         tlt = Profile.objects.get(talent=i)
         staff_age=relativedelta(today, tlt.birth_date).years
 
@@ -373,10 +436,81 @@ def dept_skills_freelance(request, cor, dept):
 
         result={'staff_age': staff_age, 'askillset': askillset, 'awetv': awetv, 'awetv': awetv, 't_exp': t_exp}
 
-        skills_age.append(result)
+        freelance_skills_age.append(result)
+
+    freelance_skills_list_age_range_18_25=[list(x['askillset']) for x in freelance_skills_age if x['staff_age'] in range(18, 25)]
+    freelance_skills_list_age_range_26_35=[list(x['askillset']) for x in freelance_skills_age if x['staff_age'] in range(26, 35)]
+    freelance_skills_list_age_range_36_45=[list(x['askillset']) for x in freelance_skills_age if x['staff_age'] in range(36, 45)]
+    freelance_skills_list_age_range_46_55=[list(x['askillset']) for x in freelance_skills_age if x['staff_age'] in range(46, 55)]
+    freelance_skills_list_age_range_56_65=[list(x['askillset']) for x in freelance_skills_age if x['staff_age'] in range(56, 65)]
+    freelance_skills_list_age_range_66_100=[list(x['askillset']) for x in freelance_skills_age if x['staff_age'] in range(66, 100)]
+
+    freelance_global_skills_list_age_range_18_25 =[]
+    for sublist in freelance_skills_list_age_range_18_25:
+        for item in sublist:
+            freelance_global_skills_list_age_range_18_25.append(item)
+
+    freelance_global_skills_list_age_range_26_35 =[]
+    for sublist in freelance_skills_list_age_range_26_35:
+        for item in sublist:
+            freelance_global_skills_list_age_range_26_35.append(item)
+
+    freelance_global_skills_list_age_range_36_45 =[]
+    for sublist in freelance_skills_list_age_range_36_45:
+        for item in sublist:
+            freelance_global_skills_list_age_range_36_45.append(item)
+
+    freelance_global_skills_list_age_range_46_55 =[]
+    for sublist in freelance_skills_list_age_range_46_55:
+        for item in sublist:
+            freelance_global_skills_list_age_range_46_55.append(item)
+
+    freelance_global_skills_list_age_range_56_65 =[]
+    for sublist in freelance_skills_list_age_range_56_65:
+        for item in sublist:
+            freelance_global_skills_list_age_range_56_65.append(item)
+
+    freelance_global_skills_list_age_range_66_100 =[]
+    for sublist in freelance_skills_list_age_range_66_100:
+        for item in sublist:
+            freelance_global_skills_list_age_range_66_100.append(item)
+
+    freelance_skills_list_age_range_18_25 = set(freelance_global_skills_list_age_range_18_25)
+    freelance_skills_list_age_range_26_35 = set(freelance_global_skills_list_age_range_26_35)
+    freelance_skills_list_age_range_36_45 = set(freelance_global_skills_list_age_range_36_45)
+    freelance_skills_list_age_range_46_55 = set(freelance_global_skills_list_age_range_46_55)
+    freelance_skills_list_age_range_56_65 = set(freelance_global_skills_list_age_range_56_65)
+    freelance_skills_list_age_range_66_100 = set(freelance_global_skills_list_age_range_66_100)
+
+    freelance_sum_skills_range_18_25 = len(freelance_skills_list_age_range_18_25)
+    freelance_sum_skills_range_26_35 = len(freelance_skills_list_age_range_26_35)
+    freelance_sum_skills_range_36_45 = len(freelance_skills_list_age_range_36_45)
+    freelance_sum_skills_range_46_55 = len(freelance_skills_list_age_range_46_55)
+    freelance_sum_skills_range_56_65 = len(freelance_skills_list_age_range_56_65)
+    freelance_sum_skills_range_66_100 = len(freelance_skills_list_age_range_66_100)
+
+    freelance_number_skills_age_brackets_data = [freelance_sum_skills_range_18_25, freelance_sum_skills_range_26_35, freelance_sum_skills_range_36_45, freelance_sum_skills_range_46_55, freelance_sum_skills_range_56_65, freelance_sum_skills_range_66_100]
+    # end number freelance skills per age Bracket
+
+    # Total hours freelance experience
+    freelance_he_list_age_range_18_25=[float(x['t_exp']) for x in freelance_skills_age if x['staff_age'] in range(18, 25)]
+    freelance_he_list_age_range_26_35=[float(x['t_exp']) for x in freelance_skills_age if x['staff_age'] in range(26, 35)]
+    freelance_he_list_age_range_36_45=[float(x['t_exp']) for x in freelance_skills_age if x['staff_age'] in range(36, 45)]
+    freelance_he_list_age_range_46_55=[float(x['t_exp']) for x in freelance_skills_age if x['staff_age'] in range(46, 55)]
+    freelance_he_list_age_range_56_65=[float(x['t_exp']) for x in freelance_skills_age if x['staff_age'] in range(56, 65)]
+    freelance_he_list_age_range_66_100=[float(x['t_exp']) for x in freelance_skills_age if x['staff_age'] in range(66, 100)]
+
+    freelance_sum_he_range_18_25 = sum(freelance_he_list_age_range_18_25)
+    freelance_sum_he_range_26_35 = sum(freelance_he_list_age_range_26_35)
+    freelance_sum_he_range_36_45 = sum(freelance_he_list_age_range_36_45)
+    freelance_sum_he_range_46_55 = sum(freelance_he_list_age_range_46_55)
+    freelance_sum_he_range_56_65 = sum(freelance_he_list_age_range_56_65)
+    freelance_sum_he_range_66_100 = sum(freelance_he_list_age_range_66_100)
+
+    freelance_hours_experience_age_brackets_data = [freelance_sum_he_range_18_25, freelance_sum_he_range_26_35, freelance_sum_he_range_36_45, freelance_sum_he_range_46_55, freelance_sum_he_range_56_65, freelance_sum_he_range_66_100]
 
     # List of skills for buttons
-    skills_list = [list(x['askillset']) for x in skills_age]
+    skills_list = [list(x['askillset']) for x in freelance_skills_age]
 
     global_skills_list =[]
     for sublist in skills_list:
@@ -393,12 +527,12 @@ def dept_skills_freelance(request, cor, dept):
 
     sum_skills = len(skills_list_set)
 
-    #Hours Experience per skill chart
-    skills_hours_skill_data = []
+    #Hours Freelance Experience per skill chart
+    freelance_skills_hours_skill_data = []
     for s in skills_list_set:
         shwe = we.filter(Q(skills__skill=s, edt=False) | Q(topic__skills__skill=s, edt=True))
-        skills_hours=[]
-        for i in staff_id:
+        freelance_skills_hours=[]
+        for i in freelance_staff_id:
             tlt = Profile.objects.get(talent=i)
 
             aw_exp = shwe.filter(talent=i, edt=False).aggregate(awet=Sum('hours_worked'))
@@ -419,15 +553,124 @@ def dept_skills_freelance(request, cor, dept):
 
             result={'t_exp': t_exp}
 
-            skills_hours.append(result)
+            freelance_skills_hours.append(result)
 
-        skills_list=[float(x['t_exp']) for x in skills_hours]
-        sum_shwe = sum(skills_list)
+        freelance_skills_list=[float(x['t_exp']) for x in freelance_skills_hours]
+        sum_fshwe = sum(freelance_skills_list)
 
-        skills_hours_skill_data.append(sum_shwe)
+        freelance_skills_hours_skill_data.append(sum_fshwe)
+
+    #Current Freelance staff
+    current_freelance_staff_l =     staff_list.filter(Q(type__type__icontains='freelance')).order_by('-date_to')
+    current_freelance_staff_count = current_freelance_staff_l.count()
+    current_freelance_staff = current_freelance_staff_l[:10]
+
+    #Past staff for skill list
+    past_freelance_staff_l = full_staff_list.filter(Q(date_to__isnull=False) & Q(type__type__icontains='freelance')).order_by('-date_to')
+    past_freelance_staff_count = past_freelance_staff_l.count()
+    past_freelance_staff = past_freelance_staff_l[:10]
+
 
     template = 'mod_corporate/dept_skills_freelance.html'
-    context = {}
+    context = {
+            'cor': cor,
+            'dept': dept,
+            'dept_skills_link': dept_skills_link,
+            'freelance_number_age_brackets_data': freelance_number_age_brackets_data,
+            'age_bracket_labels': age_bracket_labels,
+            'freelance_number_skills_age_brackets_data': freelance_number_skills_age_brackets_data,
+            'freelance_hours_experience_age_brackets_data': freelance_hours_experience_age_brackets_data,
+            'skills_list_set': skills_list_set,
+            'skills_list_labels': skills_list_labels,
+            'freelance_skills_hours_skill_data': freelance_skills_hours_skill_data,
+            'sum_skills': sum_skills,
+            'current_freelance_staff': current_freelance_staff,
+            'current_freelance_staff_count': current_freelance_staff_count,
+            'past_freelance_staff': past_freelance_staff,
+            'past_freelance_staff_count': past_freelance_staff_count,
+    }
+    return render(request, template, context)
+
+
+@login_required()
+@corp_permission(1)
+def dept_freelance_current_staff(request, cor, dept):
+
+    full_staff_list = CorporateStaff.objects.filter(Q(corporate__slug=cor) & Q(department__level_name=dept))
+
+    staff_list = full_staff_list.filter(Q(date_to__isnull=True))
+
+    #Current Freelance staff
+    current_freelance_staff_l =     staff_list.filter(Q(type__type__icontains='freelance')).order_by('-date_to')
+    current_freelance_staff_count = current_freelance_staff_l.count()
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(current_freelance_staff_l, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+    template = 'mod_corporate/dept_freelance_current_staff.html'
+    context = {
+            'cor': cor,
+            'dept': dept,
+            'pageitems': pageitems,
+            'page_range': page_range,
+    }
+    return render(request, template, context)
+
+
+@login_required()
+@corp_permission(1)
+def dept_freelance_past_staff(request, cor, dept):
+
+    full_staff_list = CorporateStaff.objects.filter(Q(corporate__slug=cor) & Q(department__level_name=dept))
+
+    #Past staff for skill list
+    past_freelance_staff_l = full_staff_list.filter(Q(date_to__isnull=False) & Q(type__type__icontains='freelance')).order_by('-date_to')
+    past_freelance_staff_count = past_freelance_staff_l.count()
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(past_freelance_staff_l, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+    template = 'mod_corporate/dept_freelance_past_staff.html'
+    context = {
+            'cor': cor,
+            'dept': dept,
+            'pageitems': pageitems,
+            'page_range': page_range,
+    }
     return render(request, template, context)
 
 
@@ -831,38 +1074,38 @@ def org_department_dashboard(request, cor, dept):
 
         skills_hours_skill_data.append(sum_shwe)
 
-        #Hours Freelance Experience per skill chart
-        freelance_skills_hours_skill_data = []
-        for s in skills_list_set:
-            shwe = we.filter(Q(skills__skill=s, edt=False) | Q(topic__skills__skill=s, edt=True))
-            freelance_skills_hours=[]
-            for i in freelance_staff_id:
-                tlt = Profile.objects.get(talent=i)
+    #Hours Freelance Experience per skill chart
+    freelance_skills_hours_skill_data = []
+    for s in skills_list_set:
+        shwe = we.filter(Q(skills__skill=s, edt=False) | Q(topic__skills__skill=s, edt=True))
+        freelance_skills_hours=[]
+        for i in freelance_staff_id:
+            tlt = Profile.objects.get(talent=i)
 
-                aw_exp = shwe.filter(talent=i, edt=False).aggregate(awet=Sum('hours_worked'))
-                awetv = aw_exp.get('awet')
-                if awetv == None:
-                    awetv = 0
-                else:
-                    awetv = awetv
+            aw_exp = shwe.filter(talent=i, edt=False).aggregate(awet=Sum('hours_worked'))
+            awetv = aw_exp.get('awet')
+            if awetv == None:
+                awetv = 0
+            else:
+                awetv = awetv
 
-                at_exp = shwe.filter(talent=i, edt=True).aggregate(tet=Sum('topic__hours'))
-                atetv = at_exp.get('tet')
-                if atetv == None:
-                    atetv = 0
-                else:
-                    atetv = atetv
+            at_exp = shwe.filter(talent=i, edt=True).aggregate(tet=Sum('topic__hours'))
+            atetv = at_exp.get('tet')
+            if atetv == None:
+                atetv = 0
+            else:
+                atetv = atetv
 
-                t_exp = awetv + atetv
+            t_exp = awetv + atetv
 
-                result={'t_exp': t_exp}
+            result={'t_exp': t_exp}
 
-                freelance_skills_hours.append(result)
+            freelance_skills_hours.append(result)
 
-            freelance_skills_list=[float(x['t_exp']) for x in freelance_skills_hours]
-            sum_fshwe = sum(freelance_skills_list)
+        freelance_skills_list=[float(x['t_exp']) for x in freelance_skills_hours]
+        sum_fshwe = sum(freelance_skills_list)
 
-            freelance_skills_hours_skill_data.append(sum_fshwe)
+        freelance_skills_hours_skill_data.append(sum_fshwe)
 
     template = 'mod_corporate/dashboard_department.html'
     context = {
