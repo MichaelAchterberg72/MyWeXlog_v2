@@ -677,9 +677,202 @@ def dept_freelance_past_staff(request, cor, dept):
 @login_required()
 @corp_permission(1)
 def dept_skills_not_utilised(request, cor, dept):
+    webr = CorporateHR.objects.get(slug=cor)
+    webrb = webr.companybranch
+
+    staff_list = CorporateStaff.objects.filter(Q(corporate__slug=cor) & Q(department__level_name=dept) & Q(date_to__isnull=True))
+
+    current_staff = staff_list.values_list('talent__id', flat=True)
+
+    today = timezone.now().date()
+
+    freelance_staff_list = staff_list.filter(Q(type__type__icontains='freelance'))
+
+    freelance_current_staff = freelance_staff_list.values_list('talent__id', flat=True)
+
+    staff_id = Profile.objects.filter(talent__id__in=current_staff).values_list('id', flat=True)
+
+    freelance_staff_id = Profile.objects.filter(talent__id__in=freelance_current_staff).values_list('id', flat=True)
+
+    we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
+
+    # Total list of skills for company
+    skills_age=[]
+    for i in staff_id:
+        tlt = Profile.objects.get(talent=i)
+        staff_age=relativedelta(today, tlt.birth_date).years
+
+        talent_skill_l = we.filter(talent=i, edt=False).values_list('skills__skill', flat=True)
+        talent_skillt_l = we.filter(talent=i, edt=True).values_list('topic__skills__skill', flat=True)
+
+        aw_exp = we.filter(talent=i, edt=False).aggregate(awet=Sum('hours_worked'))
+        awetv = aw_exp.get('awet')
+        if awetv == None:
+            awetv = 0
+        else:
+            awetv = awetv
+
+        at_exp = we.filter(talent=i, edt=True).aggregate(tet=Sum('topic__hours'))
+        atetv = at_exp.get('tet')
+        if atetv == None:
+            atetv = 0
+        else:
+            atetv = atetv
+
+        t_exp = awetv + atetv
+
+        atalent_skill = list(talent_skill_l)
+        atalent_skillt = list(talent_skillt_l)
+        aslist = atalent_skill + atalent_skillt
+        askillset = set(aslist)
+        askill_count = len(askillset)
+
+        result={'staff_age': staff_age, 'askillset': askillset, 'awetv': awetv, 'awetv': awetv, 't_exp': t_exp}
+
+        skills_age.append(result)
+
+    # Total List of skills
+    total_skills_list = [list(x['askillset']) for x in skills_age]
+
+    total_global_skills_list =[]
+    for sublist in total_skills_list:
+        for item in sublist:
+            total_global_skills_list.append(item)
+
+    total_skills_list_set_set = set(total_global_skills_list)
+
+
+    # List of Skills not used in Company
+    wenc = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score) & Q(companybranch=webrb))
+
+    cor_skills_age=[]
+    for i in staff_id:
+        tlt = Profile.objects.get(talent=i)
+        staff_age=relativedelta(today, tlt.birth_date).years
+
+        talent_skill_l = wenc.filter(talent=i, edt=False).values_list('skills__skill', flat=True)
+        talent_skillt_l = wenc.filter(talent=i, edt=True).values_list('topic__skills__skill', flat=True)
+
+        aw_exp = we.filter(talent=i, edt=False).aggregate(awet=Sum('hours_worked'))
+        awetv = aw_exp.get('awet')
+        if awetv == None:
+            awetv = 0
+        else:
+            awetv = awetv
+
+        at_exp = we.filter(talent=i, edt=True).aggregate(tet=Sum('topic__hours'))
+        atetv = at_exp.get('tet')
+        if atetv == None:
+            atetv = 0
+        else:
+            atetv = atetv
+
+        t_exp = awetv + atetv
+
+        atalent_skill = list(talent_skill_l)
+        atalent_skillt = list(talent_skillt_l)
+        aslist = atalent_skill + atalent_skillt
+        askillset = set(aslist)
+        askill_count = len(askillset)
+
+        result={'staff_age': staff_age, 'askillset': askillset, 'awetv': awetv, 'awetv': awetv, 't_exp': t_exp}
+
+        cor_skills_age.append(result)
+
+    # Total not utilised List of skills for buttons
+    cor_skills_list = [list(x['askillset']) for x in cor_skills_age]
+
+    cor_global_skills_list =[]
+    for sublist in cor_skills_list:
+        for item in sublist:
+            cor_global_skills_list.append(item)
+
+    cor_skills_list_set_set = set(cor_global_skills_list)
+
+    nu_skills = total_skills_list_set_set - cor_skills_list_set_set
+
+    skills_list_set = sorted(nu_skills, reverse=False)
+
+    skills_list_labels = list(skills_list_set)
+
+    dept_skills_link = SkillTag.objects.filter(skill__in=skills_list_set).order_by('skill')
+
+    #Hours Experience per skill chart
+    skills_hours_skill_data = []
+    for s in skills_list_set:
+        shwe = we.filter(Q(skills__skill=s, edt=False) | Q(topic__skills__skill=s, edt=True))
+        skills_hours=[]
+        for i in staff_id:
+            tlt = Profile.objects.get(talent=i)
+
+            aw_exp = shwe.filter(talent=i, edt=False).aggregate(awet=Sum('hours_worked'))
+            awetv = aw_exp.get('awet')
+            if awetv == None:
+                awetv = 0
+            else:
+                awetv = awetv
+
+            at_exp = shwe.filter(talent=i, edt=True).aggregate(tet=Sum('topic__hours'))
+            atetv = at_exp.get('tet')
+            if atetv == None:
+                atetv = 0
+            else:
+                atetv = atetv
+
+            t_exp = awetv + atetv
+
+            result={'t_exp': t_exp}
+
+            skills_hours.append(result)
+
+        skills_list=[float(x['t_exp']) for x in skills_hours]
+        sum_shwe = sum(skills_list)
+
+        skills_hours_skill_data.append(sum_shwe)
+
+    #Hours Freelance Experience per skill chart
+    freelance_skills_hours_skill_data = []
+    for s in skills_list_set:
+        shwe = we.filter(Q(skills__skill=s, edt=False) | Q(topic__skills__skill=s, edt=True))
+        freelance_skills_hours=[]
+        for i in freelance_staff_id:
+            tlt = Profile.objects.get(talent=i)
+
+            aw_exp = shwe.filter(talent=i, edt=False).aggregate(awet=Sum('hours_worked'))
+            awetv = aw_exp.get('awet')
+            if awetv == None:
+                awetv = 0
+            else:
+                awetv = awetv
+
+            at_exp = shwe.filter(talent=i, edt=True).aggregate(tet=Sum('topic__hours'))
+            atetv = at_exp.get('tet')
+            if atetv == None:
+                atetv = 0
+            else:
+                atetv = atetv
+
+            t_exp = awetv + atetv
+
+            result={'t_exp': t_exp}
+
+            freelance_skills_hours.append(result)
+
+        freelance_skills_list=[float(x['t_exp']) for x in freelance_skills_hours]
+        sum_fshwe = sum(freelance_skills_list)
+
+        freelance_skills_hours_skill_data.append(sum_fshwe)
 
     template = 'mod_corporate/dept_skills_not_utilised.html'
-    context = {}
+    context = {
+            'cor': cor,
+            'dept': dept,
+            'dept_skills_link': dept_skills_link,
+            'skills_list_set': skills_list_set,
+            'skills_list_labels': skills_list_labels,
+            'skills_hours_skill_data': skills_hours_skill_data,
+            'freelance_skills_hours_skill_data': freelance_skills_hours_skill_data,
+    }
     return render(request, template, context)
 
 
@@ -687,7 +880,7 @@ def dept_skills_not_utilised(request, cor, dept):
 @corp_permission(1)
 def org_department_dashboard(request, cor, dept):
     structure = OrgStructure.objects.filter(Q(corporate__slug=cor) & Q(level_name=dept))
-    print(structure)
+
     staff_list = CorporateStaff.objects.filter(Q(corporate__slug=cor) & Q(department__level_name=dept) & Q(date_to__isnull=True))
 
     freelance_staff_list = staff_list.filter(Q(type__type__icontains='freelance'))
