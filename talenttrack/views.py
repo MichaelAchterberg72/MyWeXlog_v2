@@ -14,6 +14,7 @@ from django.db.models import Count, Sum, Q, F
 from django.db.models.functions import Greatest
 from decimal import Decimal
 from django.contrib.postgres.search import SearchVector, TrigramSimilarity
+import math
 
 
 from csp.decorators import csp_exempt
@@ -1612,14 +1613,72 @@ def LCMFullView(request, tlt):
 def SkillProfileDetailView(request, tlt):
     '''A list of all hours logged against a skill for experience and training'''
     tlt_p = Profile.objects.get(talent__alias=tlt)
-    skill_qs = SkillTag.objects.all()
-    exp = WorkExperience.objects.filter(talent__alias = tlt).select_related('topic')
+    skill_qs_n = SkillTag.objects.all()
+    skill_qs = skill_qs_n.exclude(pk__isnull=True)
+    exp = WorkExperience.objects.filter(talent__alias=tlt).select_related('topic')
+    tlt=tlt
+    exp_skills = exp.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
 
-    exp_s = exp.values_list('skills', flat=True).distinct('skills')
-    exp_t = exp.order_by('topic__skills').values_list('topic__skills', flat=True).distinct('topic__skills')
-    edt_topic = exp.values_list('topic', flat=True).distinct('topic')
+    exp_s_nn = exp.values_list('skills', flat=True).distinct('skills')
+    exp_t_nn = exp.order_by('topic__skills').values_list('topic__skills', flat=True).distinct('topic__skills')
+    edt_topic_nn = exp.values_list('topic', flat=True).distinct('topic')
 
-    tlt = tlt
+    exp_s = exp_s_nn.exclude(skills__isnull=True)
+    exp_t = exp_t_nn.exclude(topic__skills__isnull=True)
+    edt_topic = edt_topic_nn.exclude(topic__isnull=True)
+
+    exp_s_n = exp_skills.values_list('skills__skill', flat=True).distinct('skills')
+    exp_s_skill = exp_s_n.exclude(skills__skill__isnull=True)
+    exp_t_n = exp_skills.order_by('topic__skills__skill').values_list('topic__skills__skill', flat=True).distinct('topic__skills__skill')
+    exp_t_skill = exp_t_n.exclude(topic__skills__skill__isnull=True)
+
+    exp_s_list = list(exp_s_skill)
+    exp_t_list = list(exp_t_skill)
+    skills_list = list(exp_s_list + exp_t_list)
+
+    skills_list_set=[]
+    for x in skills_list:
+        skills_list_set.append(x)
+    skills_list_set_set = set(skills_list_set)
+    ordered_skills_list = sorted(skills_list_set_set, reverse=False)
+
+    skills_list_Labels = ordered_skills_list
+    we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
+
+    tlt_id = [tlt_p.id]
+
+    #Hours Experience per skill chart
+    skills_hours_skill_data = []
+    for s in skills_list_set:
+        shwe = we.filter(Q(skills__skill=s, edt=False) | Q(topic__skills__skill=s, edt=True))
+        skills_hours=[]
+        for i in tlt_id:
+            tlt = Profile.objects.get(talent=i)
+
+            aw_exp = shwe.filter(talent=i, edt=False).aggregate(awet=Sum('hours_worked'))
+            awetv = aw_exp.get('awet')
+            if awetv == None:
+                awetv = 0
+            else:
+                awetv = awetv
+
+            at_exp = shwe.filter(talent=i, edt=True).aggregate(tet=Sum('topic__hours'))
+            atetv = at_exp.get('tet')
+            if atetv == None:
+                atetv = 0
+            else:
+                atetv = atetv
+
+            t_exp = awetv + atetv
+
+            result={'t_exp': t_exp}
+
+            skills_hours.append(result)
+
+        skills_list=[float(x['t_exp']) for x in skills_hours]
+        sum_shwe = sum(skills_list)
+
+        skills_hours_skill_data.append(sum_shwe)
 
     #gathering all experience hours per topic
     exp_set = {}
@@ -1630,8 +1689,11 @@ def SkillProfileDetailView(request, tlt):
             b = skill_qs.get(pk=s)
             c = b.experience.filter(talent__alias=tlt)
             cnt = c.count()
-            sum = c.aggregate(sum_s=Sum('hours_worked'))
-            sum_float = float(sum.get('sum_s'))
+            sum_h = c.aggregate(sum_s=Sum('hours_worked'))
+            if sum_h.get('sum_s')==None:
+                sum_float=0
+            else:
+                sum_float = float(sum_h.get('sum_s'))
             info_set = {}
             info_set['count']=cnt
             info_set['sum']=sum_float
@@ -1670,6 +1732,8 @@ def SkillProfileDetailView(request, tlt):
 
     template = 'talenttrack/talent_detail_summary.html'
     context = {
+        'skills_list_Labels': skills_list_Labels,
+        'skills_hours_skill_data': skills_hours_skill_data,
         'edt_set': edt_set, 'exp_set': exp_set, 'tlt_p': tlt_p, 'tlt': tlt,
     }
     return render(request, template, context)

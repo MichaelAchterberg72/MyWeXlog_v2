@@ -39,6 +39,9 @@
 
         var hours_experience_lost_skills_year_config_ctx = document.getElementById('hours-experience-lost-in-skill-by-year-chart').getContext('2d');
         window.myChart = new Chart(hours_experience_lost_skills_year_config_ctx, hours_experience_lost_skills_year_config);
+
+        var volume_skill_lost_by_month_last_year_ctx = document.getElementById('experience-lost in-skill-by-month-last-year-chart').getContext('2d');
+        window.myChart = new Chart(volume_skill_lost_by_month_last_year_ctx, volume_skill_lost_by_month_last_year_config);
       };
     </script>
     <script>
@@ -156,11 +159,11 @@
       <div class="col-md-4">
         <p>Total Hours Training</p>
         <div class="text-center" style="font-size:60px">
-          {{ total_sum_t_we }}
+          {{ total_sum_t_we|floatformat:0|intcomma }}
         </div>
         <p>Total Hours Freelance Training</p>
         <div class="text-center" style="font-size:60px">
-          {{ total_sum_ft_we }}
+          {{ total_sum_ft_we|floatformat:0|intcomma }}
         </div>
       </div>
       <div class="col-md-8">
@@ -227,11 +230,11 @@
       <div class="col-md-4">
         <p>Total Hours Experience</p>
         <div class="text-center" style="font-size:60px">
-          {{ total_sum_we }}
+          {{ total_sum_we|floatformat:0|intcomma }}
         </div>
         <p>Total Hours Freelance Experience</p>
         <div class="text-center" style="font-size:60px">
-          {{ total_sum_f_we }}
+          {{ total_sum_f_we|floatformat:0|intcomma }}
         </div>
       </div>
       <div class="col-md-8">
@@ -371,27 +374,27 @@
     <div class="row">
       <div class="col-md-6"
     <p>Volume of Skill Lost over last Yeaer</p>
-    <canvas id="staff-with-skill-chart" height="100px"></canvas>
-  <!--
+    <canvas id="experience-lost in-skill-by-month-last-year-chart" height="100px"></canvas>
+
     <script>
     var volume_skill_lost_by_month_last_year_config = {
       type: 'bar',
       data: {
-          labels: {{ age_bracket_labels|safe }},
+          labels: {{ hours_experience_lost_month_labels|safe }},
           datasets: [{
-            label: 'Volume Skill Lost by Month in Last Year',
-            data: {{ number_age_brackets_data|safe }},
+            label: 'Hours Experience Lost in Skill by Month in Last Year',
+            data: {{ hours_experience_lost_month_brackets_data|safe }},
             order: 2,
               backgroundColor: [
-                  '#218B82', '#9AD9DB', '#E5DBD9', '#98D4BB', '#EB96AA', '#C6C9D0',
+                    '#D5BDD5', '#BFABDC', '#7EAFC8', '#004698', '#0280BD', '#B8E1FF', '#5586BO', '#011F82', '#6D92DO', '#CED1E6', '#03417F', '#5883AD',
               ],
               borderColor: [
 
               ],
               borderWidth: 1
           },  {
-            label: 'Number Staff with Skill by Age Bracket',
-            data: {{ freelance_number_age_brackets_data|safe }},
+            label: 'Hours Freelance Experience Lost in Skill by Month in Last Year',
+            data: {{ hours_freelance_experience_lost_month_brackets_data|safe }},
             type: 'line',
             order: 1,
             fill: false,
@@ -422,10 +425,10 @@
     };
 
     </script>
-    --!>
+
     </div>
     <div class="col-md-6">
-    <p>Total Hours Experience Lost Over last Five Years</p>
+    <p>Total Hours Experience Lost Over last Six Years</p>
     <canvas id="hours-experience-lost-in-skill-by-year-chart" height="100px"></canvas>
     <script>
     var hours_experience_lost_skills_year_config = {
@@ -433,7 +436,7 @@
       data: {
           labels: {{ experience_lost_labels|safe }},
           datasets: [{
-            label: 'Hours Experience in Skill by Age Bracket',
+            label: 'Hours Experience Lost in Skill by Year',
             data: {{ hours_experience_lost_year_brackets_data|safe }},
             order: 2,
               backgroundColor: [
@@ -444,7 +447,7 @@
               ],
               borderWidth: 1
           },  {
-            label: 'Hours Freelance Experience in Skill by Age Bracket',
+            label: 'Hours Freelance Experience Lost in Skill by Year',
             data: {{ freelance_hours_experience_lost_year_brackets_data|safe }},
             type: 'line',
             order: 1,

@@ -518,7 +518,9 @@ def dept_skill_dashboard(request, cor, dept, skl):
     ft_we_skills_used_year_range_data.append(sum_ft_we_range_1_2)
     ft_we_skills_used_year_range_data.append(sum_ft_we_range_0_1)
 
-    experience_lost_labels = [5,4,3,'last year', 'this year']
+    experience_lost_labels = [6, 5, 4, 3, 'last year', 'this year']
+
+    hours_experience_lost_month_labels = [12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 'last month', 'This month']
 
     # Volume skill lost by Year Range
     past_staff_list = CorporateStaff.objects.filter(Q(corporate__slug=cor) & Q(department__level_name=dept) & Q(date_to__isnull=False))
@@ -529,6 +531,7 @@ def dept_skill_dashboard(request, cor, dept, skl):
     for i in past_staff_id:
         tlt = CorporateStaff.objects.filter(talent__id=i).order_by('-date_to')[:0]
         staff_resigned_age = relativedelta(today, tlt.date_to).years
+        staff_resigned_months = relativedelta(today, tlt.date_to).months
 
         talent_skill_l = we_skill.filter(talent=i, edt=False)
         talent_skillt_l = we_skill.filter(talent=i, edt=True)
@@ -549,7 +552,7 @@ def dept_skill_dashboard(request, cor, dept, skl):
 
         t_exp = awetv + atetv
 
-        result={'staff_resigned_age': staff_resigned_age, 't_exp': t_exp}
+        result={'staff_resigned_age': staff_resigned_age, 'staff_resigned_months': staff_resigned_months, 't_exp': t_exp}
 
         skills_lost_age.append(result)
 
@@ -570,6 +573,35 @@ def dept_skill_dashboard(request, cor, dept, skl):
 
     hours_experience_lost_year_brackets_data = [sum_he_range_5_6, sum_he_range_4_5, sum_he_range_3_4, sum_he_range_2_3, sum_he_range_1_2, sum_he_range_0_1]
 
+    # Total hours experience by month past year
+    he_list_month_range_0_1=[float(x['t_exp']) for x in skills_lost_age if x['staff_resigned_months'] in range(0, 1)]
+    he_list_month_range_1_2=[float(x['t_exp']) for x in skills_lost_age if x['staff_resigned_months'] in range(1, 2)]
+    he_list_month_range_2_3=[float(x['t_exp']) for x in skills_lost_age if x['staff_resigned_months'] in range(2, 3)]
+    he_list_month_range_3_4=[float(x['t_exp']) for x in skills_lost_age if x['staff_resigned_months'] in range(3, 4)]
+    he_list_month_range_4_5=[float(x['t_exp']) for x in skills_lost_age if x['staff_resigned_months'] in range(4, 5)]
+    he_list_month_range_5_6=[float(x['t_exp']) for x in skills_lost_age if x['staff_resigned_months'] in range(5, 6)]
+    he_list_month_range_6_7=[float(x['t_exp']) for x in skills_lost_age if x['staff_resigned_months'] in range(6, 7)]
+    he_list_month_range_7_8=[float(x['t_exp']) for x in skills_lost_age if x['staff_resigned_months'] in range(7, 8)]
+    he_list_month_range_8_9=[float(x['t_exp']) for x in skills_lost_age if x['staff_resigned_months'] in range(8, 9)]
+    he_list_month_range_9_10=[float(x['t_exp']) for x in skills_lost_age if x['staff_resigned_months'] in range(9, 10)]
+    he_list_month_range_10_11=[float(x['t_exp']) for x in skills_lost_age if x['staff_resigned_months'] in range(10, 11)]
+    he_list_month_range_11_12=[float(x['t_exp']) for x in skills_lost_age if x['staff_resigned_months'] in range(11, 12)]
+
+    sum_he_month_range_0_1 = sum(he_list_month_range_0_1)
+    sum_he_month_range_1_2 = sum(he_list_month_range_1_2)
+    sum_he_month_range_2_3 = sum(he_list_month_range_2_3)
+    sum_he_month_range_3_4 = sum(he_list_month_range_3_4)
+    sum_he_month_range_4_5 = sum(he_list_month_range_4_5)
+    sum_he_month_range_5_6 = sum(he_list_month_range_5_6)
+    sum_he_month_range_6_7 = sum(he_list_month_range_6_7)
+    sum_he_month_range_7_8 = sum(he_list_month_range_7_8)
+    sum_he_month_range_8_9 = sum(he_list_month_range_8_9)
+    sum_he_month_range_9_10 = sum(he_list_month_range_9_10)
+    sum_he_month_range_10_11 = sum(he_list_month_range_10_11)
+    sum_he_month_range_11_12 = sum(he_list_month_range_11_12)
+
+    hours_experience_lost_month_brackets_data = [sum_he_month_range_11_12, sum_he_month_range_10_11, sum_he_month_range_9_10, sum_he_month_range_8_9, sum_he_month_range_7_8, sum_he_month_range_6_7, sum_he_month_range_5_6, sum_he_month_range_4_5, sum_he_month_range_3_4, sum_he_month_range_2_3, sum_he_month_range_1_2, sum_he_month_range_0_1]
+
     # Volume freelance skill lost by Year Range
     freelance_past_staff_list = CorporateStaff.objects.filter(Q(corporate__slug=cor) & Q(department__level_name=dept) & Q(date_to__isnull=False) & Q(type__type__icontains='freelance'))
 
@@ -579,6 +611,7 @@ def dept_skill_dashboard(request, cor, dept, skl):
     for i in freelance_past_staff_id:
         tlt = CorporateStaff.objects.filter(talent__id=i).order_by('-date_to')[:0]
         staff_resigned_age = relativedelta(today, tlt.date_to).years
+        staff_resigned_months = relativedelta(today, tlt.date_to).months
 
         talent_skill_l = we_skill.filter(talent=i, edt=False)
         talent_skillt_l = we_skill.filter(talent=i, edt=True)
@@ -599,7 +632,7 @@ def dept_skill_dashboard(request, cor, dept, skl):
 
         t_exp = awetv + atetv
 
-        result={'staff_resigned_age': staff_resigned_age, 't_exp': t_exp}
+        result={'staff_resigned_age': staff_resigned_age, 'staff_resigned_months': staff_resigned_months, 't_exp': t_exp}
 
         freelance_skills_lost_age.append(result)
 
@@ -619,6 +652,35 @@ def dept_skill_dashboard(request, cor, dept, skl):
     freelance_sum_he_range_5_6 = sum(freelance_he_list_year_range_5_6)
 
     freelance_hours_experience_lost_year_brackets_data = [freelance_sum_he_range_5_6, freelance_sum_he_range_4_5, freelance_sum_he_range_3_4, freelance_sum_he_range_2_3, freelance_sum_he_range_1_2, freelance_sum_he_range_0_1]
+
+    # Total hours freelance experience by month past year
+    freelance_he_list_month_range_0_1=[float(x['t_exp']) for x in freelance_skills_lost_age if x['staff_resigned_months'] in range(0, 1)]
+    freelance_he_list_month_range_1_2=[float(x['t_exp']) for x in freelance_skills_lost_age if x['staff_resigned_months'] in range(1, 2)]
+    freelance_he_list_month_range_2_3=[float(x['t_exp']) for x in freelance_skills_lost_age if x['staff_resigned_months'] in range(2, 3)]
+    freelance_he_list_month_range_3_4=[float(x['t_exp']) for x in freelance_skills_lost_age if x['staff_resigned_months'] in range(3, 4)]
+    freelance_he_list_month_range_4_5=[float(x['t_exp']) for x in freelance_skills_lost_age if x['staff_resigned_months'] in range(4, 5)]
+    freelance_he_list_month_range_5_6=[float(x['t_exp']) for x in freelance_skills_lost_age if x['staff_resigned_months'] in range(5, 6)]
+    freelance_he_list_month_range_6_7=[float(x['t_exp']) for x in freelance_skills_lost_age if x['staff_resigned_months'] in range(6, 7)]
+    freelance_he_list_month_range_7_8=[float(x['t_exp']) for x in freelance_skills_lost_age if x['staff_resigned_months'] in range(7, 8)]
+    freelance_he_list_month_range_8_9=[float(x['t_exp']) for x in freelance_skills_lost_age if x['staff_resigned_months'] in range(8, 9)]
+    freelance_he_list_month_range_9_10=[float(x['t_exp']) for x in freelance_skills_lost_age if x['staff_resigned_months'] in range(9, 10)]
+    freelance_he_list_month_range_10_11=[float(x['t_exp']) for x in freelance_skills_lost_age if x['staff_resigned_months'] in range(10, 11)]
+    freelance_he_list_month_range_11_12=[float(x['t_exp']) for x in freelance_skills_lost_age if x['staff_resigned_months'] in range(11, 12)]
+
+    freelance_sum_he_month_range_0_1 = sum(freelance_he_list_month_range_0_1)
+    freelance_sum_he_month_range_1_2 = sum(freelance_he_list_month_range_1_2)
+    freelance_sum_he_month_range_2_3 = sum(freelance_he_list_month_range_2_3)
+    freelance_sum_he_month_range_3_4 = sum(freelance_he_list_month_range_3_4)
+    freelance_sum_he_month_range_4_5 = sum(freelance_he_list_month_range_4_5)
+    freelance_sum_he_month_range_5_6 = sum(freelance_he_list_month_range_5_6)
+    freelance_sum_he_month_range_6_7 = sum(freelance_he_list_month_range_6_7)
+    freelance_sum_he_month_range_7_8 = sum(freelance_he_list_month_range_7_8)
+    freelance_sum_he_month_range_8_9 = sum(freelance_he_list_month_range_8_9)
+    freelance_sum_he_month_range_9_10 = sum(freelance_he_list_month_range_9_10)
+    freelance_sum_he_month_range_10_11 = sum(freelance_he_list_month_range_10_11)
+    freelance_sum_he_month_range_11_12 = sum(freelance_he_list_month_range_11_12)
+
+    hours_freelance_experience_lost_month_brackets_data = [freelance_sum_he_month_range_11_12, freelance_sum_he_month_range_10_11, freelance_sum_he_month_range_9_10, freelance_sum_he_month_range_8_9, freelance_sum_he_month_range_7_8, freelance_sum_he_month_range_6_7, freelance_sum_he_month_range_5_6, freelance_sum_he_month_range_4_5, freelance_sum_he_month_range_3_4, freelance_sum_he_month_range_2_3, freelance_sum_he_month_range_1_2, freelance_sum_he_month_range_0_1]
 
     template = 'mod_corporate/dept_skill_dashboard.html'
     context = {
@@ -648,6 +710,9 @@ def dept_skill_dashboard(request, cor, dept, skl):
         'experience_lost_labels': experience_lost_labels,
         'hours_experience_lost_year_brackets_data': hours_experience_lost_year_brackets_data,
         'freelance_hours_experience_lost_year_brackets_data': freelance_hours_experience_lost_year_brackets_data,
+        'hours_experience_lost_month_labels': hours_experience_lost_month_labels,
+        'hours_experience_lost_month_brackets_data': hours_experience_lost_month_brackets_data,
+        'hours_freelance_experience_lost_month_brackets_data': hours_freelance_experience_lost_month_brackets_data,
     }
     return render(request, template, context)
 
