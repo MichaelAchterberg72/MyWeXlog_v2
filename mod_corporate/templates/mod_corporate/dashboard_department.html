@@ -20,6 +20,7 @@
     <div class="card card-shadow">
       <div class="card-body">
         <h4>{{ dept }} Staff</h4>
+        <p>Total Number Staff by Age Bracket</p>
         <canvas id="members-chart" height="100px"></canvas>
         <script>
         var config = {
@@ -27,8 +28,9 @@
           data: {
               labels: {{ age_bracket_labels|safe }},
               datasets: [{
-                label: 'Number Staff by Age Bracket',
+                label: 'Number Total Staff by Age Bracket',
                 data: {{ number_age_brackets_data|safe }},
+                order: 2,
                   backgroundColor: [
                       '#C54B6C', '#F5BFD2', '#E5DB9C', '#D0BCAC', '#BEB4C5', '#E6A57E',
                   ],
@@ -36,6 +38,17 @@
 
                   ],
                   borderWidth: 1
+              }, {
+                label: 'Number Freelance Skills by Age Bracket',
+                data: {{ freelance_number_age_brackets_data|safe }},
+                type: 'line',
+                order: 1,
+                fill: false,
+                borderColor: '#0000FF',
+                borderWidth: 2,
+                pointBorderWidth: 2,
+                pointStyle: 'circle',
+                pointHitRadius: 20,
               }]
           },
           options: {
@@ -46,6 +59,14 @@
                       }
                   }]
                 },
+              legend: {
+                  display: false,
+                  position: 'left',
+                  labels: {
+                      fontColor: '#0000ff',
+              },
+
+              }
             }
         };
 
@@ -81,7 +102,7 @@
     <h4>Experience</h4>
     <div class="row">
       <div class="col-md-6"
-    <p>Total Skills</p>
+    <p>Total Number Skills by Age Bracket</p>
     <canvas id="skills-by-age-chart" height="100px"></canvas>
     <script>
     var number_skills_config = {
@@ -91,6 +112,7 @@
           datasets: [{
             label: 'Number Skills by Age Bracket',
             data: {{ number_skills_age_brackets_data|safe }},
+            order: 2,
               backgroundColor: [
                   '#218B82', '#9AD9DB', '#E5DBD9', '#98D4BB', '#EB96AA', '#C6C9D0',
               ],
@@ -98,6 +120,17 @@
 
               ],
               borderWidth: 1
+          }, {
+            label: 'Number Freelance Skills by Age Bracket',
+            data: {{ freelance_number_skills_age_brackets_data|safe }},
+            type: 'line',
+            order: 1,
+            fill: false,
+            borderColor: '#0000FF',
+            borderWidth: 2,
+            pointBorderWidth: 2,
+            pointStyle: 'circle',
+            pointHitRadius: 20,
           }]
       },
       options: {
@@ -108,13 +141,21 @@
                   }
               }]
             },
+            legend: {
+                display: false,
+                position: 'left',
+                labels: {
+                    fontColor: '#0000ff',
+            },
+
+            }
         }
     };
 
     </script>
     </div>
     <div class="col-md-6">
-    <p>Total Hours</p>
+    <p>Total Hours Experience by Age Bracket</p>
     <canvas id="hours-experience-by-age-chart" height="100px"></canvas>
     <script>
     var hours_experience_skills_config = {
@@ -124,13 +165,25 @@
           datasets: [{
             label: 'Hours Experience by Age Bracket',
             data: {{ hours_experience_age_brackets_data|safe }},
+            order: 2,
               backgroundColor: [
                   '#B6D8F2', '#F4CFDF', '#5784BA', '#C54B6C', '#F5BFD2', '#E5DB9C',
               ],
               borderColor: [
-                  
+
               ],
               borderWidth: 1
+          }, {
+            label: 'Hours Freelance Experience by Age Bracket',
+            data: {{ freelance_hours_experience_age_brackets_data|safe }},
+            type: 'line',
+            order: 1,
+            fill: false,
+            borderColor: '#0000FF',
+            borderWidth: 2,
+            pointBorderWidth: 2,
+            pointStyle: 'circle',
+            pointHitRadius: 20,
           }]
       },
       options: {
@@ -142,6 +195,14 @@
                   }
               }]
             },
+          legend: {
+              display: false,
+              position: 'top',
+              labels: {
+                  fontColor: '#0000ff',
+          },
+
+          }
         }
     };
 
@@ -196,7 +257,10 @@
     </div>
     <h4>Skills</h4>
     <p> Hours of Experience by Skill Currently Possessed by {{ dept }} Department</p>
+    <div style="overflow-x: scroll">
+    <div id="chart-container" style="position: relative;  width:auto;">
     <canvas id="hours-experience-by-skill-chart" height="100px"></canvas>
+
     <script>
     var hours_experience_by_skill_config = {
       type: 'bar',
@@ -205,12 +269,24 @@
           datasets: [{
             label: 'Hours Experience by Skill',
             data: {{ skills_hours_skill_data|safe }},
+            order: 2,
               backgroundColor: ['#B6D8F2', '#F4CFDF', '#5784BA', '#C54B6C', '#F5BFD2', '#E5DB9C', '#D0BCAC', '#BEB4C5', '#E6A57E', '#218B82', '#9AD9DB', '#E5DBD9', '#98D4BB', '#EB96AA', '#C6C9D0', '#C54B6C', '#E5B3BB', '#C47482', '#D5E4C3', '#F9968B', '#F27348', '#26474E', '#76CDCD', '#2CCED2', '#B8E0F6', '#A4CCE3', '#37667E', '#DEC4D6', '#7B92AA', '#B8E0F6', '#A4CCE3', '#37667E', '#DEC4D6', '#7B92AA', '#DDF2F4', '#84A6D6', '#4382BB', '#E4CEE0', '#A15D98', '#DC828F', '#F7CE76', '#E8D6CF', '#8C7386', '#9C9359', '#E9BBB5', '#E7CBA9', '#AAD9CD', '#E8D595', '#8DA47E', '#CAE7E3', '#B2B2B2', '#EEB8C5', '#DCDBD9', '#FEC7BC', '#8EA4C8', '#C3B8AA', '#DEDCE4', '#DB93A5', '#C7CDC5',
               ],
               borderColor: [
 
               ],
               borderWidth: 1
+          },  {
+            label: 'Hours Freelance Experience by Skill',
+            data: {{ freelance_skills_hours_skill_data|safe }},
+            type: 'line',
+            order: 1,
+            fill: false,
+            borderColor: '#0000FF',
+            borderWidth: 2,
+            pointBorderWidth: 2,
+            pointStyle: 'circle',
+            pointHitRadius: 20,
           }]
       },
       options: {
@@ -221,10 +297,38 @@
                   }
               }]
             },
+          legend: {
+              display: true,
+              position: 'top',
+              labels: {
+                  fontColor: '#0000ff',
+          },
+
+          }
         }
     };
 
+      var dataList = {{ skills_hours_skill_data|safe }};
+      var count = 0;
+      for(var i = 0; i < dataList.length; ++i){
+          if(dataList[i] >= 0)
+              count++;
+      }
+      var widthValue = 34 * count;
+      console.log(widthValue)
+      var divWidth = document.getElementById("chart-container");
+
+      if (count > 25){
+        divWidth.style.width = widthValue+"px";
+        }
+      else{
+        divWidth.style.width = "auto";
+        }
+
     </script>
+  </div>
+  </div>
+  <br>
     <div class="container">
     <div class="row">
       <div class="col-md-12">

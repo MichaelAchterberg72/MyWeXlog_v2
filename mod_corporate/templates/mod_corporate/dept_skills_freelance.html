@@ -8,9 +8,422 @@
 {% block content %}
 <div class="card card-shadow">
   <div class="card-body">
-    <h3>{{ dept }} Freelance Skills</h3>
+    <div class="float-right">
+      <a href="{% url 'Corporate:OrgDepartment' cor dept %}" class="btn btn-secondary"style="width: 6rem">Back</a>
+    </div>
+    <h3>{{ dept }} Department Freelance Skills</h3>
   </div>
 </div>
 <br>
+<div class="row">
+  <div class="col-md-6">
+    <div class="card card-shadow">
+      <div class="card-body">
+        <h4>{{ dept }} Current Staff</h4>
+          <p>Freelance Staff by Age Bracket</p>
+        <canvas id="members-chart" height="100px"></canvas>
+        <script>
+        var config = {
+          type: 'bar',
+          data: {
+              labels: {{ age_bracket_labels|safe }},
+              datasets: [{
+                label: 'Number Freelance Skills by Age Bracket',
+                data: {{ freelance_number_age_brackets_data|safe }},
+                order: 1,
+                  backgroundColor: [
+                      '#C54B6C', '#F5BFD2', '#E5DB9C', '#D0BCAC', '#BEB4C5', '#E6A57E',
+                  ],
+                  borderColor: [
 
+                  ],
+                  borderWidth: 1
+              }]
+          },
+          options: {
+              scales: {
+                  yAxes: [{
+                      ticks: {
+                          beginAtZero: true
+                      }
+                  }]
+                },
+              legend: {
+                  display: false,
+                  position: 'left',
+                  labels: {
+                      fontColor: '#0000ff',
+              },
+
+              }
+            }
+        };
+
+      window.onload = function() {
+        var ctx = document.getElementById('members-chart').getContext('2d');
+        window.myPie = new Chart(ctx, config);
+
+        var number_skills_ctx = document.getElementById('skills-by-age-chart').getContext('2d');
+        window.myChart = new Chart(number_skills_ctx, number_skills_config);
+
+        var hours_experience_ctx = document.getElementById('hours-experience-by-age-chart').getContext('2d');
+        window.myChart = new Chart(hours_experience_ctx, hours_experience_skills_config);
+
+        var hours_experience_by_skill_ctx = document.getElementById('hours-experience-by-skill-chart').getContext('2d');
+        window.myChart = new Chart(hours_experience_by_skill_ctx, hours_experience_by_skill_config);
+      };
+        </script>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card card-shadow">
+      <div class="card-body">
+        <h4>{{ dept }} Past Staff</h4>
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+<div class="card card-shadow">
+  <div class="card-body">
+    <h4>Experience</h4>
+    <div class="row">
+      <div class="col-md-6"
+    <p>Freelance Staff Total Skills by Age Bracket</p>
+    <canvas id="skills-by-age-chart" height="100px"></canvas>
+    <script>
+    var number_skills_config = {
+      type: 'bar',
+      data: {
+          labels: {{ age_bracket_labels|safe }},
+          datasets: [{
+            label: 'Number Freelance Skills by Age Bracket',
+            data: {{ freelance_number_skills_age_brackets_data|safe }},
+            order: 1,
+              backgroundColor: [
+                  '#218B82', '#9AD9DB', '#E5DBD9', '#98D4BB', '#EB96AA', '#C6C9D0',
+              ],
+              borderColor: [
+
+              ],
+              borderWidth: 1
+          }]
+      },
+      options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero: true
+                  }
+              }]
+            },
+            legend: {
+                display: false,
+                position: 'left',
+                labels: {
+                    fontColor: '#0000ff',
+            },
+
+            }
+        }
+    };
+
+    </script>
+    </div>
+    <div class="col-md-6">
+    <p>Total Hours Experience by Age Bracket</p>
+    <canvas id="hours-experience-by-age-chart" height="100px"></canvas>
+    <script>
+    var hours_experience_skills_config = {
+      type: 'bar',
+      data: {
+          labels: {{ age_bracket_labels|safe }},
+          datasets: [{
+            label: 'Hours Freelance Experience by Age Bracket',
+            data: {{ freelance_hours_experience_age_brackets_data|safe }},
+            order: 1,
+              backgroundColor: [
+                  '#B6D8F2', '#F4CFDF', '#5784BA', '#C54B6C', '#F5BFD2', '#E5DB9C',
+              ],
+              borderColor: [
+
+              ],
+              borderWidth: 1
+          }]
+      },
+      options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero: true
+                  }
+              }]
+            },
+          legend: {
+              display: false,
+              position: 'left',
+              labels: {
+                  fontColor: '#0000ff',
+          },
+
+          }
+        }
+    };
+
+    </script>
+    </div>
+    </div>
+    <p>skills histogram by 10 year buckets</p>
+  </div>
+</div>
+<br>
+<div class="card card-shadow">
+  <div class="card-body">
+    <div class="btn-group float-right">
+      <div class="btn-group mr-2">
+        <a href="{% url 'Corporate:DeptSkillsCurrent' cor dept %}?next={{ request.path|urlencode }}" class="badge badge-primary">
+          Current ( {{ sum_skills|intcomma }} )
+        </a>
+      </div>
+      <div class="btn-group mr-2">
+        <a href="{% url 'Corporate:DeptSkillsResigned' cor dept %}?next={{ request.path|urlencode }}" class="badge badge-primary align-middle">
+          Resigned ( {{ current_count|intcomma }} )
+        </a>
+      </div>
+      <div class="btn-group mr-2">
+        <a href="{% url 'Corporate:DeptSkillsNotUtilised' cor dept %}?next={{ request.path|urlencode }}" class="badge badge-primary align-middle">
+          Not Utilised ( {{ current_count|intcomma }} )
+        </a>
+      </div>
+      <div class="btn-group mr-2">
+        <a href="#?next={{ request.path|urlencode }}" class="badge badge-primary align-middle">
+          Admin
+        </a>
+      </div>
+      <div class="btn-group mr-2">
+        <a href="#?next={{ request.path|urlencode }}" class="badge badge-secondary align-middle">
+          Hidden
+        </a>
+      </div>
+    </div>
+    <h4>Skills</h4>
+    <p> Hours of Freelance Experience by Skill Currently Possessed by {{ dept }} Department</p>
+    <div style="overflow-x: scroll">
+    <div id="chart-container" style="position: relative;  width:auto;">
+    <canvas id="hours-experience-by-skill-chart" height="100px"></canvas>
+    <script>
+    var hours_experience_by_skill_config = {
+      type: 'bar',
+      data: {
+          labels: {{ skills_list_labels|safe }},
+          datasets: [{
+            label: 'Hours Freelance Experience by Skill',
+            data: {{ freelance_skills_hours_skill_data|safe }},
+            order: 1,
+              backgroundColor: ['#B6D8F2', '#F4CFDF', '#5784BA', '#C54B6C', '#F5BFD2', '#E5DB9C', '#D0BCAC', '#BEB4C5', '#E6A57E', '#218B82', '#9AD9DB', '#E5DBD9', '#98D4BB', '#EB96AA', '#C6C9D0', '#C54B6C', '#E5B3BB', '#C47482', '#D5E4C3', '#F9968B', '#F27348', '#26474E', '#76CDCD', '#2CCED2', '#B8E0F6', '#A4CCE3', '#37667E', '#DEC4D6', '#7B92AA', '#B8E0F6', '#A4CCE3', '#37667E', '#DEC4D6', '#7B92AA', '#DDF2F4', '#84A6D6', '#4382BB', '#E4CEE0', '#A15D98', '#DC828F', '#F7CE76', '#E8D6CF', '#8C7386', '#9C9359', '#E9BBB5', '#E7CBA9', '#AAD9CD', '#E8D595', '#8DA47E', '#CAE7E3', '#B2B2B2', '#EEB8C5', '#DCDBD9', '#FEC7BC', '#8EA4C8', '#C3B8AA', '#DEDCE4', '#DB93A5', '#C7CDC5',
+              ],
+              borderColor: [
+
+              ],
+              borderWidth: 1
+          }]
+      },
+      options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero: true
+                  }
+              }]
+            },
+          legend: {
+              display: false,
+              position: 'left',
+              labels: {
+                  fontColor: '#0000ff',
+          },
+
+          }
+        }
+    };
+    var dataList = {{ freelance_skills_hours_skill_data|safe }};
+    var count = 0;
+    for(var i = 0; i < dataList.length; ++i){
+        if(dataList[i] >= 0)
+            count++;
+    }
+    var widthValue = 34 * count;
+    console.log(widthValue)
+    var divWidth = document.getElementById("chart-container");
+
+    if (count > 25){
+      divWidth.style.width = widthValue+"px";
+      }
+    else{
+      divWidth.style.width = "auto";
+      }
+
+    </script>
+    </div>
+    </div>
+    <br>
+    <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+      </div>
+        {% for skl in dept_skills_link %}<a href="{% url 'Corporate:DeptSkillDashboard' cor dept skl.id %}?next={{ request.path|urlencode }}" class="btn btn-outline-success auto mb-1 mr-1 pointer">{{ skl.skill }}</a> {% endfor %}
+    </div>
+    </div>
+  </div>
+</div>
+<br>
+<div class="card card-shadow">
+  <div class="card-body">
+    <h4>Current Freelance Staff working for {{ dept }} Department</h4>
+    <div class="container">
+      <div class="row my-auto">
+        <div class="col-md-3 h-100 text-center my-auto">
+          <strong>Last name, First name</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Date Joined</strong>
+        </div>
+        <div class="col-md-1 h-100 text-center my-auto">
+          <strong>Tenure</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Designation</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Relationship</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong></strong>
+        </div>
+      </div>
+
+    {% for item in current_freelance_staff %}
+    <div class="row">
+      <div class="card mt-1 card-hover" style="width: 100%;">
+        <div class="card-body small-pad">
+          <div class="row my-auto">
+            <div class="col-md-3 h-100 text-center my-auto">
+              {{ item.talent.last_name }}, {{ item.talent.first_name }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ item.date_from }}
+            </div>
+            <div class="col-md-1 h-100 text-center my-auto">
+              {{ item.tenure|floatformat:2 }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ item.designation }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ item.work_configeration }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              <div class="btn-toolbar">
+                <div class="btn-group mr-2">
+                  <a href="{% url 'Talent:APV_C' cor item.talent.alias %}" target="_blank">
+                    <i class="fa fa-id-badge" aria-hidden="true"style="font-size:30px; color:black" data-toggle="tooltip" data-placement="top" title="View Profile"></i>
+                  </a>
+                </div>
+                <div class="btn-group mr-2">
+                  <i class="fa fa-folder-open-o" aria-hidden="true"  style="font-size:30px; color:blue" data-toggle="tooltip" data-placement="top" title="View {{ corp.company }} Work History"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+      <p>You do not have any freelance staff registered with your department.</p>
+    {% endfor %}
+    </div>
+    <br>
+    {% if current_freelance_staff_count >= 10 %}
+      <div class="float-right">
+        <a href="{% url 'Corporate:DeptCurrentFreelance' cor dept %}" class="btn btn-primary"style="width: 10rem">View All Staff</a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+<br>
+<div class="card card-shadow">
+  <div class="card-body">
+    <h4>Past Freelance Staff that have worked for {{ dept }} Department</h4>
+    <div class="container">
+      <div class="row my-auto">
+        <div class="col-md-3 h-100 text-center my-auto">
+          <strong>Last name, First name</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Date Left</strong>
+        </div>
+        <div class="col-md-1 h-100 text-center my-auto">
+          <strong>Tenure</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Designation</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Relationship</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong></strong>
+        </div>
+      </div>
+
+    {% for item in past_freelance_staff %}
+    <div class="row">
+      <div class="card mt-1 card-hover" style="width: 100%;">
+        <div class="card-body small-pad">
+          <div class="row my-auto">
+            <div class="col-md-3 h-100 text-center my-auto">
+              {{ item.talent.last_name }}, {{ item.talent.first_name }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ item.date_to }}
+            </div>
+            <div class="col-md-1 h-100 text-center my-auto">
+              {{ item.tenure|floatformat:2 }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ item.designation }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ item.work_configeration }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              <div class="btn-toolbar">
+                <div class="btn-group mr-2">
+                  <a href="{% url 'Talent:APV_C' cor item.talent.alias %}" target="_blank">
+                    <i class="fa fa-id-badge" aria-hidden="true"style="font-size:30px; color:black" data-toggle="tooltip" data-placement="top" title="View Profile"></i>
+                  </a>
+                </div>
+                <div class="btn-group mr-2">
+                  <i class="fa fa-folder-open-o" aria-hidden="true"  style="font-size:30px; color:blue" data-toggle="tooltip" data-placement="top" title="View {{ corp.company }} Work History"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+      <p>You do not have any past freelance staff registered that gave worked for this department.</p>
+    {% endfor %}
+    </div>
+    <br>
+    {% if past_freelance_staff_count >= 10 %}
+      <div class="float-right">
+        <a href="{% url 'Corporate:DeptPastFreelance' cor dept %}" class="btn btn-primary"style="width: 10rem">View All Staff</a>
+      </div>
+    {% endif %}
+  </div>
+</div>
 {% endblock content %}

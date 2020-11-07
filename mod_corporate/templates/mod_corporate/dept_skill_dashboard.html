@@ -21,7 +21,7 @@
     <h4>Experience</h4>
     <div class="row">
       <div class="col-md-6"
-    <p>Total Staff with Skill</p>
+    <p>Total Staff with {{ skill }} Skill by Age Bracket</p>
     <canvas id="staff-with-skill-chart" height="100px"></canvas>
     <script>
       window.onload = function() {
@@ -30,6 +30,18 @@
 
         var hours_experience_ctx = document.getElementById('hours-experience-in-skill-by-age-chart').getContext('2d');
         window.myChart = new Chart(hours_experience_ctx, hours_experience_skills_config);
+
+        var wt_skills_used_year_range_ctx = document.getElementById('wt-skills-used-year-range-chart').getContext('2d');
+        window.myChart = new Chart(wt_skills_used_year_range_ctx, wt_skills_used_year_range_config);
+
+        var we_skills_used_year_range_ctx = document.getElementById('we-skills-used-year-range-chart').getContext('2d');
+        window.myChart = new Chart(we_skills_used_year_range_ctx, we_skills_used_year_range_config);
+
+        var hours_experience_lost_skills_year_config_ctx = document.getElementById('hours-experience-lost-in-skill-by-year-chart').getContext('2d');
+        window.myChart = new Chart(hours_experience_lost_skills_year_config_ctx, hours_experience_lost_skills_year_config);
+
+        var volume_skill_lost_by_month_last_year_ctx = document.getElementById('experience-lost in-skill-by-month-last-year-chart').getContext('2d');
+        window.myChart = new Chart(volume_skill_lost_by_month_last_year_ctx, volume_skill_lost_by_month_last_year_config);
       };
     </script>
     <script>
@@ -40,6 +52,7 @@
           datasets: [{
             label: 'Number Staff with Skill by Age Bracket',
             data: {{ number_age_brackets_data|safe }},
+            order: 2,
               backgroundColor: [
                   '#218B82', '#9AD9DB', '#E5DBD9', '#98D4BB', '#EB96AA', '#C6C9D0',
               ],
@@ -47,6 +60,17 @@
 
               ],
               borderWidth: 1
+          },  {
+            label: 'Number Staff with Skill by Age Bracket',
+            data: {{ freelance_number_age_brackets_data|safe }},
+            type: 'line',
+            order: 1,
+            fill: false,
+            borderColor: '#0000FF',
+            borderWidth: 2,
+            pointBorderWidth: 2,
+            pointStyle: 'circle',
+            pointHitRadius: 20,
           }]
       },
       options: {
@@ -57,13 +81,21 @@
                   }
               }]
             },
+          legend: {
+              display: false,
+              position: 'left',
+              labels: {
+                  fontColor: '#0000ff',
+          },
+
+          }
         }
     };
 
     </script>
     </div>
     <div class="col-md-6">
-    <p>Total Hours</p>
+    <p>Total Hours Experience in {{ skill }} Skill by Age Bracket</p>
     <canvas id="hours-experience-in-skill-by-age-chart" height="100px"></canvas>
     <script>
     var hours_experience_skills_config = {
@@ -73,6 +105,7 @@
           datasets: [{
             label: 'Hours Experience in Skill by Age Bracket',
             data: {{ hours_experience_age_brackets_data|safe }},
+            order: 2,
               backgroundColor: [
                   '#B6D8F2', '#F4CFDF', '#5784BA', '#C54B6C', '#F5BFD2', '#E5DB9C',
               ],
@@ -80,6 +113,17 @@
 
               ],
               borderWidth: 1
+          },  {
+            label: 'Hours Freelance Experience in Skill by Age Bracket',
+            data: {{ freelance_hours_experience_age_brackets_data|safe }},
+            type: 'line',
+            order: 1,
+            fill: false,
+            borderColor: '#0000FF',
+            borderWidth: 2,
+            pointBorderWidth: 2,
+            pointStyle: 'circle',
+            pointHitRadius: 20,
           }]
       },
       options: {
@@ -90,6 +134,14 @@
                   }
               }]
             },
+          legend: {
+              display: false,
+              position: 'left',
+              labels: {
+                  fontColor: '#0000ff',
+          },
+
+          }
         }
     };
 
@@ -97,6 +149,148 @@
     </div>
     </div>
 
+  </div>
+</div>
+<br>
+<div class="card card-shadow">
+  <div class="card-body">
+    <h4>{{ skill }} Skill Training Details</h4>
+    <div class="row">
+      <div class="col-md-4">
+        <p>Total Hours Training</p>
+        <div class="text-center" style="font-size:60px">
+          {{ total_sum_t_we|floatformat:0|intcomma }}
+        </div>
+        <p>Total Hours Freelance Training</p>
+        <div class="text-center" style="font-size:60px">
+          {{ total_sum_ft_we|floatformat:0|intcomma }}
+        </div>
+      </div>
+      <div class="col-md-8">
+        <p>Skill Training by Year</p>
+        <canvas id="wt-skills-used-year-range-chart" height="100px"></canvas>
+        <script>
+        var wt_skills_used_year_range_config = {
+          type: 'bar',
+          data: {
+              labels: {{ skills_used_year_range_labels|safe }},
+              datasets: [{
+                label: 'Hours Training in Skill by Year Range',
+                data: {{ t_we_skills_used_year_range_data|safe }},
+                order: 2,
+                  backgroundColor: [
+                      '#E8D595', '#8DA47E', '#CAE7E3', '#B2B2B2', '#EEB8C5', '#DCDBD9', '#FEC7BC', '#8EA4C8', '#C3B8AA', '#DEDCE4',
+                  ],
+                  borderColor: [
+
+                  ],
+                  borderWidth: 1
+              },  {
+                label: 'Hours Freelance Training in Skill by Year Range',
+                data: {{ ft_we_skills_used_year_range_data|safe }},
+                type: 'line',
+                order: 1,
+                fill: false,
+                borderColor: '#0000FF',
+                borderWidth: 2,
+                pointBorderWidth: 2,
+                pointStyle: 'circle',
+                pointHitRadius: 20,
+              }]
+          },
+          options: {
+              scales: {
+                  yAxes: [{
+                      ticks: {
+                          beginAtZero: true
+                      }
+                  }]
+                },
+              legend: {
+                  display: false,
+                  position: 'left',
+                  labels: {
+                      fontColor: '#0000ff',
+              },
+
+              }
+            }
+        };
+
+      </script>
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+<div class="card card-shadow">
+  <div class="card-body">
+    <h4>{{ skill }} Skill Work Experience Details</h4>
+    <div class="row">
+      <div class="col-md-4">
+        <p>Total Hours Experience</p>
+        <div class="text-center" style="font-size:60px">
+          {{ total_sum_we|floatformat:0|intcomma }}
+        </div>
+        <p>Total Hours Freelance Experience</p>
+        <div class="text-center" style="font-size:60px">
+          {{ total_sum_f_we|floatformat:0|intcomma }}
+        </div>
+      </div>
+      <div class="col-md-8">
+        <p>Skill Utilised in Work Experience by Year</p>
+        <canvas id="we-skills-used-year-range-chart" height="100px"></canvas>
+        <script>
+        var we_skills_used_year_range_config = {
+          type: 'bar',
+          data: {
+              labels: {{ skills_used_year_range_labels|safe }},
+              datasets: [{
+                label: 'Hours Experience in Skill by Year Range',
+                data: {{ we_skills_used_year_range_data|safe }},
+                order: 2,
+                  backgroundColor: [
+                      '#E8D595', '#8DA47E', '#CAE7E3', '#B2B2B2', '#EEB8C5', '#DCDBD9', '#FEC7BC', '#8EA4C8', '#C3B8AA', '#DEDCE4',
+                  ],
+                  borderColor: [
+
+                  ],
+                  borderWidth: 1
+              },  {
+                label: 'Hours Freelance Experience in Skill by Year Range',
+                data: {{ f_we_skills_used_year_range_data|safe }},
+                type: 'line',
+                order: 1,
+                fill: false,
+                borderColor: '#0000FF',
+                borderWidth: 2,
+                pointBorderWidth: 2,
+                pointStyle: 'circle',
+                pointHitRadius: 20,
+              }]
+          },
+          options: {
+              scales: {
+                  yAxes: [{
+                      ticks: {
+                          beginAtZero: true
+                      }
+                  }]
+                },
+              legend: {
+                  display: false,
+                  position: 'left',
+                  labels: {
+                      fontColor: '#0000ff',
+              },
+
+              }
+            }
+        };
+
+      </script>
+      </div>
+    </div>
   </div>
 </div>
 <br>
@@ -162,7 +356,7 @@
       </div>
     </div>
     {% empty %}
-      <p>You do not have any staff registered as their Brief Career History with your company.</p>
+      <p>You do not have any staff registered with this skill with your company.</p>
     {% endfor %}
     </div>
     <br>
@@ -171,6 +365,123 @@
         <a href="{% url 'Corporate:DeptSkillCurrentStaff' cor dept skl %}" class="btn btn-primary"style="width: 10rem">View All Staff</a>
       </div>
     {% endif %}
+  </div>
+</div>
+<br>
+<div class="card card-shadow">
+  <div class="card-body">
+    <h4>Skills Lost</h4>
+    <div class="row">
+      <div class="col-md-6"
+    <p>Volume of Skill Lost over last Year</p>
+    <canvas id="experience-lost in-skill-by-month-last-year-chart" height="100px"></canvas>
+
+    <script>
+    var volume_skill_lost_by_month_last_year_config = {
+      type: 'bar',
+      data: {
+          labels: {{ hours_experience_lost_month_labels|safe }},
+          datasets: [{
+            label: 'Hours Experience Lost in Skill by Month in Last Year',
+            data: {{ hours_experience_lost_month_brackets_data|safe }},
+            order: 2,
+              backgroundColor: [
+                    '#D5BDD5', '#BFABDC', '#7EAFC8', '#004698', '#0280BD', '#B8E1FF', '#5586BO', '#011F82', '#6D92DO', '#CED1E6', '#03417F', '#5883AD',
+              ],
+              borderColor: [
+
+              ],
+              borderWidth: 1
+          },  {
+            label: 'Hours Freelance Experience Lost in Skill by Month in Last Year',
+            data: {{ hours_freelance_experience_lost_month_brackets_data|safe }},
+            type: 'line',
+            order: 1,
+            fill: false,
+            borderColor: '#0000FF',
+            borderWidth: 2,
+            pointBorderWidth: 2,
+            pointStyle: 'circle',
+            pointHitRadius: 20,
+          }]
+      },
+      options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero: true
+                  }
+              }]
+            },
+          legend: {
+              display: false,
+              position: 'left',
+              labels: {
+                  fontColor: '#0000ff',
+          },
+
+          }
+        }
+    };
+
+    </script>
+
+    </div>
+    <div class="col-md-6">
+    <p>Total Hours Experience Lost Over last Six Years</p>
+    <canvas id="hours-experience-lost-in-skill-by-year-chart" height="100px"></canvas>
+    <script>
+    var hours_experience_lost_skills_year_config = {
+      type: 'bar',
+      data: {
+          labels: {{ experience_lost_labels|safe }},
+          datasets: [{
+            label: 'Hours Experience Lost in Skill by Year',
+            data: {{ hours_experience_lost_year_brackets_data|safe }},
+            order: 2,
+              backgroundColor: [
+                  '#B6D8F2', '#F4CFDF', '#5784BA', '#C54B6C', '#F5BFD2', '#E5DB9C',
+              ],
+              borderColor: [
+
+              ],
+              borderWidth: 1
+          },  {
+            label: 'Hours Freelance Experience Lost in Skill by Year',
+            data: {{ freelance_hours_experience_lost_year_brackets_data|safe }},
+            type: 'line',
+            order: 1,
+            fill: false,
+            borderColor: '#0000FF',
+            borderWidth: 2,
+            pointBorderWidth: 2,
+            pointStyle: 'circle',
+            pointHitRadius: 20,
+          }]
+      },
+      options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero: true
+                  }
+              }]
+            },
+          legend: {
+              display: false,
+              position: 'left',
+              labels: {
+                  fontColor: '#0000ff',
+          },
+
+          }
+        }
+    };
+
+  </script>
+    </div>
+    </div>
+
   </div>
 </div>
 <br>
@@ -236,15 +547,16 @@
       </div>
     </div>
     {% empty %}
-      <p>You do not have any past staff registered as their Brief Career History with your company.</p>
+      <p>You do not have any past staff registered with this skill with your company.</p>
     {% endfor %}
     </div>
     <br>
-    {% if current_staff_skill_count >= 10 %}
+    {% if past_staff_skill_count >= 10 %}
       <div class="float-right">
         <a href="{% url 'Corporate:DeptSkillPastStaff' cor dept skl %}" class="btn btn-primary"style="width: 10rem">View All Staff</a>
       </div>
     {% endif %}
   </div>
 </div>
+
 {% endblock content %}

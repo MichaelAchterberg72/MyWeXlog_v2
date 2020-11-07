@@ -29,6 +29,8 @@ urlpatterns = [
     path('<slug:cor>/<str:dept>/department-skills-current/', views.dept_skills_current, name='DeptSkillsCurrent'),
     path('<slug:cor>/<str:dept>/department-skills-resigned/', views.dept_skills_resigned, name='DeptSkillsResigned'),
     path('<slug:cor>/<str:dept>/department-skills-freelance/', views.dept_skills_freelance, name='DeptSkillsFreelance'),
+    path('<slug:cor>/<str:dept>/department-current-freelance/', views.dept_freelance_current_staff, name='DeptCurrentFreelance'),
+    path('<slug:cor>/<str:dept>/department-past-freelance/', views.dept_freelance_past_staff, name='DeptPastFreelance'),
     path('<slug:cor>/<str:dept>/department-skills-not-utilised/', views.dept_skills_not_utilised, name='DeptSkillsNotUtilised'),
     #skills detail page
     path('<slug:cor>/<str:dept>/<int:skl>/department-skill-detail/', views.dept_skill_dashboard, name='DeptSkillDashboard'),
