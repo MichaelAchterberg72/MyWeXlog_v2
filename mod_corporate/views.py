@@ -66,10 +66,8 @@ def dept_skill_dashboard(request, cor, dept, skl):
 
     we_skill = we.filter(Q(skills__skill=skill.skill, edt=False) | Q(topic__skills__skill=skill.skill, edt=True))
 
-    staff_skills_id = we_skill.filter(talent__id__in=current_staff).values_list('talent__id', flat=True)
-
-    staff_skill = Profile.objects.filter(talent__id__in=staff_skills_id)
-    staff_skill_id = staff_skill.values_list('id', flat=True).distinct()
+    staff_skill = Profile.objects.filter(talent__id__in=current_staff)
+    staff_skill_id = current_staff
 
     # Freelance Staff List
     freelance_staff_list = staff_list.filter(Q(type__type__icontains='freelance'))
@@ -78,7 +76,8 @@ def dept_skill_dashboard(request, cor, dept, skl):
 
     freelance_staff_id = Profile.objects.filter(talent__id__in=freelance_current_staff).values_list('id', flat=True)
 
-    freelance_staff_skills_id = we_skill.filter(talent__id__in=freelance_current_staff).values_list('talent__id', flat=True)
+    freelance_staff_skills_id = freelance_current_staff
+    #we_skill.filter(talent__id__in=freelance_current_staff).values_list('talent__id', flat=True)
 
     freelance_staff_skill = Profile.objects.filter(talent__id__in=freelance_staff_skills_id)
     freelance_staff_skill_id = freelance_staff_skill.values_list('id', flat=True).distinct()
@@ -1358,6 +1357,135 @@ def dept_skills_not_utilised(request, cor, dept):
 
 @login_required()
 @corp_permission(1)
+def dept_skills_training(request, cor, dept):
+
+    structure = OrgStructure.objects.filter(Q(corporate__slug=cor) & Q(level_name=dept))
+
+    staff_list = CorporateStaff.objects.filter(Q(corporate__slug=cor) & Q(department__level_name=dept) & Q(date_to__isnull=True))
+
+    freelance_staff_list = staff_list.filter(Q(type__type__icontains='freelance'))
+
+    current_staff = staff_list.values_list('talent__id', flat=True)
+    current_count = current_staff.count()
+
+    freelance_current_staff = freelance_staff_list.values_list('talent__id', flat=True)
+
+    we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
+
+    exp_skills = we.filter(talent__id__in=current_staff)
+
+    #skills list
+    exp_s_n = exp_skills.values_list('skills__skill', flat=True).distinct('skills')
+    exp_t_n = exp_skills.order_by('topic__skills__skill').values_list('topic__skills__skill', flat=True).distinct('topic__skills__skill')
+
+    exp_s_skill = exp_s_n.exclude(skills__skill__isnull=True)
+    exp_t_skill = exp_t_n.exclude(topic__skills__skill__isnull=True)
+
+    exp_s_list = list(exp_s_skill)
+    exp_t_list = list(exp_t_skill)
+    skills_list = list(exp_s_list + exp_t_list)
+
+    skills_list_set=[]
+    for x in skills_list:
+        skills_list_set.append(x)
+    skills_list_set_set = set(skills_list_set)
+    ordered_skills_list = sorted(skills_list_set_set, reverse=False)
+
+    skills_list_Labels = ordered_skills_list
+
+    dept_skills_link = SkillTag.objects.filter(skill__in=ordered_skills_list).order_by('skill')
+
+    #Hours Experience per skill chart
+    skills_hours_skill_data = []
+    for s in ordered_skills_list:
+        shwe = we.filter(Q(skills__skill=s, edt=False) | Q(topic__skills__skill=s, edt=True))
+        skills_hours=[]
+        for i in current_staff:
+
+            aw_exp = shwe.filter(talent=i, edt=False).aggregate(awet=Sum('hours_worked'))
+            awetv = aw_exp.get('awet')
+            if awetv == None:
+                awetv = 0
+            else:
+                awetv = awetv
+
+            at_exp = shwe.filter(talent=i, edt=True).aggregate(tet=Sum('topic__hours'))
+            atetv = at_exp.get('tet')
+            if atetv == None:
+                atetv = 0
+            else:
+                atetv = atetv
+
+            t_exp = awetv + atetv
+
+            result={'t_exp': t_exp}
+
+            skills_hours.append(result)
+
+        skills_list=[float(x['t_exp']) for x in skills_hours]
+        sum_shwe = sum(skills_list)
+
+        skills_hours_skill_data.append(sum_shwe)
+
+    #Hours Training Experience per skill chart
+    training_skills_hours_skill_data = []
+    for s in ordered_skills_list:
+        shwt = we.filter(Q(topic__skills__skill=s, edt=True))
+        training_skills_hours=[]
+        for i in current_staff:
+            at_exp = shwt.filter(talent=i, edt=True).aggregate(tet=Sum('topic__hours'))
+            atetv = at_exp.get('tet')
+            if atetv == None:
+                atetv = 0
+            else:
+                atetv = atetv
+
+            result={'t_exp': atetv}
+
+            training_skills_hours.append(result)
+
+        training_skills_list=[float(x['t_exp']) for x in training_skills_hours]
+        sum_shwt = sum(training_skills_list)
+
+        training_skills_hours_skill_data.append(sum_shwt)
+
+    #Hours Training Experience per skill chart
+    freelance_training_skills_hours_skill_data = []
+    for s in ordered_skills_list:
+        shwt = we.filter(Q(topic__skills__skill=s, edt=True))
+        freelance_training_skills_hours=[]
+        for i in freelance_current_staff:
+            at_exp = shwt.filter(talent=i, edt=True).aggregate(tet=Sum('topic__hours'))
+            atetv = at_exp.get('tet')
+            if atetv == None:
+                atetv = 0
+            else:
+                atetv = atetv
+
+            result={'t_exp': atetv}
+
+            freelance_training_skills_hours.append(result)
+
+        freelance_training_skills_list=[float(x['t_exp']) for x in freelance_training_skills_hours]
+        freelance_sum_shwt = sum(freelance_training_skills_list)
+
+        freelance_training_skills_hours_skill_data.append(freelance_sum_shwt)
+
+    template = 'mod_corporate/dept_skills_training.html'
+    context = {
+        'cor': cor,
+        'dept': dept,
+        'skills_list_Labels': skills_list_Labels,
+        'skills_hours_skill_data': skills_hours_skill_data,
+        'training_skills_hours_skill_data': training_skills_hours_skill_data,
+        'freelance_training_skills_hours_skill_data': freelance_training_skills_hours_skill_data,
+        'dept_skills_link': dept_skills_link,
+    }
+    return render(request, template, context)
+
+
+@login_required()
+@corp_permission(1)
 def org_department_dashboard(request, cor, dept):
     structure = OrgStructure.objects.filter(Q(corporate__slug=cor) & Q(level_name=dept))
 
@@ -2478,7 +2606,7 @@ def experience_dashboard(request, cor):
 def past_staff(request, cor):
     corp = CorporateHR.objects.get(slug=cor)
     company = corp.company
-    print(company)
+
     past_qs = BriefCareerHistory.objects.filter(Q(companybranch__company=company) & Q(date_to__isnull=False)).select_related('talent').order_by('-date_to')
 
     template = 'mod_corporate/staff_past.html'

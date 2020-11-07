@@ -1649,11 +1649,10 @@ def SkillProfileDetailView(request, tlt):
 
     #Hours Experience per skill chart
     skills_hours_skill_data = []
-    for s in skills_list_set:
+    for s in ordered_skills_list:
         shwe = we.filter(Q(skills__skill=s, edt=False) | Q(topic__skills__skill=s, edt=True))
         skills_hours=[]
         for i in tlt_id:
-            tlt = Profile.objects.get(talent=i)
 
             aw_exp = shwe.filter(talent=i, edt=False).aggregate(awet=Sum('hours_worked'))
             awetv = aw_exp.get('awet')
@@ -1682,11 +1681,10 @@ def SkillProfileDetailView(request, tlt):
 
     #Hours Training Experience per skill chart
     training_skills_hours_skill_data = []
-    for s in skills_list_set:
+    for s in ordered_skills_list:
         shwt = we.filter(Q(topic__skills__skill=s, edt=True))
         training_skills_hours=[]
         for i in tlt_id:
-            tlt = Profile.objects.get(talent=i)
 
             at_exp = shwt.filter(talent=i, edt=True).aggregate(tet=Sum('topic__hours'))
             atetv = at_exp.get('tet')

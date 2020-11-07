@@ -230,8 +230,8 @@
         </a>
       </div>
       <div class="btn-group mr-2">
-        <a href="{% url 'Corporate:DeptSkillsResigned' cor dept %}?next={{ request.path|urlencode }}" class="badge badge-primary align-middle">
-          Resigned ( {{ current_count|intcomma }} )
+        <a href="{% url 'Corporate:DeptSkillsTraining' cor dept %}?next={{ request.path|urlencode }}" class="badge badge-primary align-middle">
+          Training ( {{ current_count|intcomma }} )
         </a>
       </div>
       <div class="btn-group mr-2">
@@ -332,8 +332,8 @@
     <div class="container">
     <div class="row">
       <div class="col-md-12">
-      </div>
         {% for skl in dept_skills_link %}<a href="{% url 'Corporate:DeptSkillDashboard' cor dept skl.id %}?next={{ request.path|urlencode }}" class="btn btn-outline-success auto mb-1 mr-1 pointer">{{ skl.skill }}</a> {% endfor %}
+      </div>
     </div>
     </div>
   </div>
