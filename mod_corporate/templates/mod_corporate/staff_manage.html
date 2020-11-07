@@ -18,11 +18,9 @@
           </a>
         </div>
         <div class="btn-group mr-2">
-          <form  action="{% url 'BookList:BLB' %}" method="post">
-            <input type="hidden" name="next" value="{{ request.GET.next }}">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-secondary">Back</button>
-          </form>
+          <a href="{% url 'Corporate:DashCorp' corp.slug %}" class="btn btn-secondary">
+            Back
+          </a>
           </div>
       </div>
       <h3>Add Staff for {{ corp.company }}</h3>

@@ -1028,6 +1028,15 @@ def org_structure_add(request, cor):
 
 
 @login_required()
+@corp_permission(1)
+def help_dash_staff(request):
+    '''Help page for the staff card on the corporate dashboard, context not working'''
+    context = {}
+    template = 'mod_corporate/help_dashboard_staff.html'
+    return render(request, template, context)
+
+
+@login_required()
 @corp_permission(2)
 def staff_manage(request, cor):
     '''View the people who have listed the company as an employer, but have not been identified as staff'''

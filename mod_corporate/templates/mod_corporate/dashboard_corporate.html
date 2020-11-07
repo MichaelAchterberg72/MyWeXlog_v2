@@ -79,6 +79,10 @@
         Hidden
       </a>
     </div>
+    <div class="btn-group mr-2">
+      <a href="{% url 'Corporate:HelpDashStaff' %}?next={{ request.path|urlencode }}" target="_blank" class="align-middle" style="font-size: 18px" data-toggle="tooltip" title="Click here for help">
+      <i class="fa fa-question-circle"></i></a>
+    </div>
   </div>
     <h4>Staff</h4>
     <canvas id="members-chart" height="100px"></canvas>
@@ -263,7 +267,7 @@
                 '#B6D8F2', '#F4CFDF', '#5784BA', '#C54B6C', '#F5BFD2', '#E5DB9C',
             ],
             borderColor: [
-                
+
             ],
             borderWidth: 1
         }]

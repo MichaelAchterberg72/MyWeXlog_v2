@@ -34,4 +34,6 @@ urlpatterns = [
     path('<slug:cor>/<str:dept>/<int:skl>/department-skill-detail/', views.dept_skill_dashboard, name='DeptSkillDashboard'),
     path('<slug:cor>/<str:dept>/<int:skl>/department-skill-current-staff/', views.dept_skill_current_staff, name='DeptSkillCurrentStaff'),
     path('<slug:cor>/<str:dept>/<int:skl>/department-skill-past-staff/', views.dept_skill_past_staff, name='DeptSkillPastStaff'),
+    #Help pages
+    path('dashboard-staff/', views.help_dash_staff, name='HelpDashStaff'),
 ]
