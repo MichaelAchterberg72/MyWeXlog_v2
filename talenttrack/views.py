@@ -1680,6 +1680,30 @@ def SkillProfileDetailView(request, tlt):
 
         skills_hours_skill_data.append(sum_shwe)
 
+    #Hours Training Experience per skill chart
+    training_skills_hours_skill_data = []
+    for s in skills_list_set:
+        shwt = we.filter(Q(topic__skills__skill=s, edt=True))
+        training_skills_hours=[]
+        for i in tlt_id:
+            tlt = Profile.objects.get(talent=i)
+
+            at_exp = shwt.filter(talent=i, edt=True).aggregate(tet=Sum('topic__hours'))
+            atetv = at_exp.get('tet')
+            if atetv == None:
+                atetv = 0
+            else:
+                atetv = atetv
+
+            result={'t_exp': atetv}
+
+            training_skills_hours.append(result)
+
+        training_skills_list=[float(x['t_exp']) for x in training_skills_hours]
+        sum_shwt = sum(training_skills_list)
+
+        training_skills_hours_skill_data.append(sum_shwt)
+
     #gathering all experience hours per topic
     exp_set = {}
     for s in exp_s:
@@ -1734,6 +1758,7 @@ def SkillProfileDetailView(request, tlt):
     context = {
         'skills_list_Labels': skills_list_Labels,
         'skills_hours_skill_data': skills_hours_skill_data,
+        'training_skills_hours_skill_data': training_skills_hours_skill_data,
         'edt_set': edt_set, 'exp_set': exp_set, 'tlt_p': tlt_p, 'tlt': tlt,
     }
     return render(request, template, context)

@@ -31,11 +31,6 @@
         </a>
       </div>
       <div class="btn-group mr-2">
-        <a href="{% url 'Corporate:DeptSkillsNotUtilised' cor dept %}?next={{ request.path|urlencode }}" class="badge badge-primary align-middle">
-          Not Utilised ( {{ current_count|intcomma }} )
-        </a>
-      </div>
-      <div class="btn-group mr-2">
         <a href="#?next={{ request.path|urlencode }}" class="badge badge-primary align-middle">
           Admin
         </a>
@@ -48,6 +43,8 @@
     </div>
     <h4>Skills</h4>
     <p> Hours of Experience by Skill Currently Possessed by {{ dept }} Department but Not Utilised</p>
+    <div style="overflow-x: scroll">
+    <div id="chart-container" style="position: relative;  width:auto;">
     <canvas id="hours-experience-by-skill-chart" height="100px"></canvas>
     <script>
       window.onload = function() {
@@ -100,8 +97,27 @@
           }
         }
     };
+    var dataList = {{ skills_hours_skill_data|safe }};
+    var count = 0;
+    for(var i = 0; i < dataList.length; ++i){
+        if(dataList[i] >= 0)
+            count++;
+    }
+    var widthValue = 34 * count;
+    console.log(widthValue)
+    var divWidth = document.getElementById("chart-container");
+
+    if (count > 25){
+      divWidth.style.width = widthValue+"px";
+      }
+    else{
+      divWidth.style.width = "auto";
+      }
 
     </script>
+    </div>
+    </div>
+    <br>
     <div class="container">
     <div class="row">
       <div class="col-md-12">

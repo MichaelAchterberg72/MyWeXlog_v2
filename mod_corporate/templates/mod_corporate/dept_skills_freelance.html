@@ -183,6 +183,11 @@
   <div class="card-body">
     <div class="btn-group float-right">
       <div class="btn-group mr-2">
+        <a href="{% url 'Corporate:DeptSkillsCurrent' cor dept %}?next={{ request.path|urlencode }}" class="badge badge-primary">
+          Current ( {{ sum_skills|intcomma }} )
+        </a>
+      </div>
+      <div class="btn-group mr-2">
         <a href="{% url 'Corporate:DeptSkillsResigned' cor dept %}?next={{ request.path|urlencode }}" class="badge badge-primary align-middle">
           Resigned ( {{ current_count|intcomma }} )
         </a>
@@ -205,6 +210,8 @@
     </div>
     <h4>Skills</h4>
     <p> Hours of Freelance Experience by Skill Currently Possessed by {{ dept }} Department</p>
+    <div style="overflow-x: scroll">
+    <div id="chart-container" style="position: relative;  width:auto;">
     <canvas id="hours-experience-by-skill-chart" height="100px"></canvas>
     <script>
     var hours_experience_by_skill_config = {
@@ -241,8 +248,27 @@
           }
         }
     };
+    var dataList = {{ freelance_skills_hours_skill_data|safe }};
+    var count = 0;
+    for(var i = 0; i < dataList.length; ++i){
+        if(dataList[i] >= 0)
+            count++;
+    }
+    var widthValue = 34 * count;
+    console.log(widthValue)
+    var divWidth = document.getElementById("chart-container");
+
+    if (count > 25){
+      divWidth.style.width = widthValue+"px";
+      }
+    else{
+      divWidth.style.width = "auto";
+      }
 
     </script>
+    </div>
+    </div>
+    <br>
     <div class="container">
     <div class="row">
       <div class="col-md-12">
