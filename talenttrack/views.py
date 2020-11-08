@@ -1613,24 +1613,17 @@ def LCMFullView(request, tlt):
 def SkillProfileDetailView(request, tlt):
     '''A list of all hours logged against a skill for experience and training'''
     tlt_p = Profile.objects.get(talent__alias=tlt)
-    skill_qs_n = SkillTag.objects.all()
-    skill_qs = skill_qs_n.exclude(pk__isnull=True)
+    skill_qs = SkillTag.objects.all()
     exp = WorkExperience.objects.filter(talent__alias=tlt).select_related('topic')
     tlt=tlt
     exp_skills = exp.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
 
-    exp_s_nn = exp.values_list('skills', flat=True).distinct('skills')
-    exp_t_nn = exp.order_by('topic__skills').values_list('topic__skills', flat=True).distinct('topic__skills')
-    edt_topic_nn = exp.values_list('topic', flat=True).distinct('topic')
+    exp_s = exp_skills.values_list('skills', flat=True).distinct('skills')
+    exp_t = exp_skills.order_by('topic__skills').values_list('topic__skills', flat=True).distinct('topic__skills')
+    edt_topic = exp_skills.values_list('topic', flat=True).distinct('topic')
 
-    exp_s = exp_s_nn.exclude(skills__isnull=True)
-    exp_t = exp_t_nn.exclude(topic__skills__isnull=True)
-    edt_topic = edt_topic_nn.exclude(topic__isnull=True)
-
-    exp_s_n = exp_skills.values_list('skills__skill', flat=True).distinct('skills')
-    exp_s_skill = exp_s_n.exclude(skills__skill__isnull=True)
-    exp_t_n = exp_skills.order_by('topic__skills__skill').values_list('topic__skills__skill', flat=True).distinct('topic__skills__skill')
-    exp_t_skill = exp_t_n.exclude(topic__skills__skill__isnull=True)
+    exp_s_skill = exp_skills.values_list('skills__skill', flat=True).distinct('skills')
+    exp_t_skill = exp_skills.order_by('topic__skills__skill').values_list('topic__skills__skill', flat=True).distinct('topic__skills__skill')
 
     exp_s_list = list(exp_s_skill)
     exp_t_list = list(exp_t_skill)
@@ -1639,18 +1632,19 @@ def SkillProfileDetailView(request, tlt):
     skills_list_set=[]
     for x in skills_list:
         skills_list_set.append(x)
-    skills_list_set_set = set(skills_list_set)
+    skills_list_n = [x for x in skills_list_set if x is not None]
+
+    skills_list_set_set = set(skills_list_n)
     ordered_skills_list = sorted(skills_list_set_set, reverse=False)
 
     skills_list_Labels = ordered_skills_list
-    we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
 
     tlt_id = [tlt_p.id]
 
     #Hours Experience per skill chart
     skills_hours_skill_data = []
     for s in ordered_skills_list:
-        shwe = we.filter(Q(skills__skill=s, edt=False) | Q(topic__skills__skill=s, edt=True))
+        shwe = exp_skill.filter(Q(skills__skill=s, edt=False) | Q(topic__skills__skill=s, edt=True))
         skills_hours=[]
         for i in tlt_id:
 
@@ -1682,7 +1676,7 @@ def SkillProfileDetailView(request, tlt):
     #Hours Training Experience per skill chart
     training_skills_hours_skill_data = []
     for s in ordered_skills_list:
-        shwt = we.filter(Q(topic__skills__skill=s, edt=True))
+        shwt = exp_skill.filter(Q(topic__skills__skill=s, edt=True))
         training_skills_hours=[]
         for i in tlt_id:
 
