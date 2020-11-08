@@ -1611,12 +1611,12 @@ def LCMFullView(request, tlt):
 
 
 def SkillProfileDetailView(request, tlt):
-    '''A list of all hours logged against a skill for experience and training'''
+    '''A list of all hours logged against a skill (for an individual) for experience and training'''
     tlt_p = Profile.objects.get(talent__alias=tlt)
     skill_qs_n = SkillTag.objects.all()
     skill_qs = skill_qs_n.exclude(pk__isnull=True)
-    exp = WorkExperience.objects.filter(talent__alias=tlt).select_related('topic')
-    tlt=tlt
+    exp = WorkExperience.objects.filter(Q(talent__alias=tlt) & Q(score__gte=skill_pass_score)).select_related('topic')
+    tlt_filter=tlt
     exp_skills = exp.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
 
     exp_s_nn = exp.values_list('skills', flat=True).distinct('skills')
@@ -1711,15 +1711,15 @@ def SkillProfileDetailView(request, tlt):
             pass
         else:
             b = skill_qs.get(pk=s)
-            c = b.experience.filter(talent__alias=tlt)
-            cnt = c.count()
+            c = b.experience.filter(talent__alias=tlt_filter)
+            #cnt = c.count()
             sum_h = c.aggregate(sum_s=Sum('hours_worked'))
-            if sum_h.get('sum_s')==None:
+            if sum_h.get('sum_s') == None:
                 sum_float=0
             else:
                 sum_float = float(sum_h.get('sum_s'))
             info_set = {}
-            info_set['count']=cnt
+            #info_set['count']=cnt
             info_set['sum']=sum_float
             skill_q = skill_qs.filter(pk=s).values_list('skill', flat=True)
             skill_f = skill_q[0]
