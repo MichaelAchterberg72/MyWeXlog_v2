@@ -31,6 +31,9 @@
         var hours_experience_ctx = document.getElementById('hours-experience-in-skill-by-age-chart').getContext('2d');
         window.myChart = new Chart(hours_experience_ctx, hours_experience_skills_config);
 
+        var experience_rating_year_range_ctx = document.getElementById('experience-rating-year-range-chart').getContext('2d');
+        window.myChart = new Chart(experience_rating_year_range_ctx, experience_rating_year_range_config);
+
         var wt_skills_used_year_range_ctx = document.getElementById('wt-skills-used-year-range-chart').getContext('2d');
         window.myChart = new Chart(wt_skills_used_year_range_ctx, wt_skills_used_year_range_config);
 
@@ -149,6 +152,89 @@
     </div>
     </div>
 
+  </div>
+</div>
+<br>
+<div class="card card-shadow">
+  <div class="card-body">
+    <h4>Average Rating for Staff with {{ skill }} Skill</h4>
+    <div class="row">
+      <div class="col-md-4">
+        <p>Total Experience Rating</p>
+        <div class="text-center" style="font-size:60px">
+          <span style="font-size:50px"><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span style="font-size:50px"><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span style="font-size:50px"><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span style="font-size:50px"><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+          <span style="font-size:50px"><i class="fa fa-star-o" aria-hidden="true"></i></span>
+        </div>
+        <p>Freelance Experience Rating</p>
+        <div class="text-center" style="font-size:60px">
+          <span style="font-size:50px"><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span style="font-size:50px"><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span style="font-size:50px"><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span style="font-size:50px"><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span style="font-size:50px"><i class="fa fa-star-o" aria-hidden="true"></i></span>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <p>Average Rating for Skill Work Experience by Year</p>
+        <canvas id="experience-rating-year-range-chart" height="100px"></canvas>
+        <script>
+        var experience_rating_year_range_config = {
+          type: 'line',
+          data: {
+              labels: {{ skills_used_year_range_labels|safe }},
+              datasets: [{
+                label: 'Experience Rating by Year Range',
+                data: [2,2.5,3,4,3.5,3,3.5,4,3,3.5],
+                order: 2,
+                fill: false,
+                borderWidth: 2,
+                pointBorderWidth: 2,
+                pointStyle: 'circle',
+                pointHitRadius: 20,
+                  backgroundColor: [
+                      '#FF0000',
+                  ],
+                  borderColor: [
+                      '#FF0000',
+                  ],
+              },  {
+                label: 'Freelance Experience Rating by Year Range',
+                data: [3,3,3.5,4,3,4,4.5,4,4,4.5],
+                type: 'line',
+                order: 1,
+                fill: false,
+                borderColor: '#0000FF',
+                borderWidth: 2,
+                pointBorderWidth: 2,
+                pointStyle: 'circle',
+                pointHitRadius: 20,
+              }]
+          },
+          options: {
+              scales: {
+                  yAxes: [{
+                      ticks: {
+                          beginAtZero: true
+                      }
+                  }]
+                },
+              legend: {
+                  display: false,
+                  position: 'left',
+                  labels: {
+                      fontColor: '#0000ff',
+              },
+
+              }
+            }
+        };
+
+      </script>
+      </div>
+    </div>
   </div>
 </div>
 <br>
