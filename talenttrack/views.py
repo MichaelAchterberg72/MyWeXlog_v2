@@ -1617,7 +1617,7 @@ def SkillProfileDetailView(request, tlt):
     skill_qs = skill_qs_n.exclude(pk__isnull=True)
     exp = WorkExperience.objects.filter(Q(talent__alias=tlt) & Q(score__gte=skill_pass_score)).select_related('topic')
     tlt_filter=tlt
-    exp_skills = exp.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
+    exp_skills = exp.filter(Q(talent__subscription__gte=0) & Q(score__gte=skill_pass_score))
 
     exp_s_nn = exp.values_list('skills', flat=True).distinct('skills')
     exp_t_nn = exp.order_by('topic__skills').values_list('topic__skills', flat=True).distinct('topic__skills')
@@ -1704,14 +1704,14 @@ def SkillProfileDetailView(request, tlt):
 
         training_skills_hours_skill_data.append(sum_shwt)
 
-    #gathering all experience hours per topic
+    #gathering all experience hours per topic-this not working again
     exp_set = {}
     for s in exp_s:
         if s == None:
             pass
         else:
             b = skill_qs.get(pk=s)
-            c = b.experience.filter(talent__alias=tlt_filter)
+            c = b.experience.filter(Q(talent__alias=tlt_filter) & Q(score__gte=skill_pass_score))
             #cnt = c.count()
             sum_h = c.aggregate(sum_s=Sum('hours_worked'))
             if sum_h.get('sum_s') == None:
