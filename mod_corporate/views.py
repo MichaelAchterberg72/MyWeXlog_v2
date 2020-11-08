@@ -56,7 +56,10 @@ def dept_skill_dashboard(request, cor, dept, skl):
     # Full Staff List
     staff_list = CorporateStaff.objects.filter(Q(corporate__slug=cor) & Q(department__level_name=dept) & Q(date_to__isnull=True))
 
+    past_staff_list = CorporateStaff.objects.filter(Q(corporate__slug=cor) & Q(department__level_name=dept) & Q(date_to__isnull=False))
+
     current_staff = staff_list.values_list('talent__id', flat=True)
+    past_staff = past_staff_list.values_list('talent__id', flat=True)
 
     today = timezone.now().date()
 
@@ -66,9 +69,11 @@ def dept_skill_dashboard(request, cor, dept, skl):
 
     we_skill = we.filter(Q(skills__skill=skill.skill, edt=False) | Q(topic__skills__skill=skill.skill, edt=True))
 
-    staff_skill = Profile.objects.filter(talent__id__in=current_staff)
-    staff_skill_id = current_staff
+    staff_skill = Profile.objects.filter(talent__id__in=current_staff).distinct()
+    staff_skill_id = we_skill.filter(talent__id__in=current_staff).values_list('talent__id', flat=True).distinct()
+    staff_skill_id_p = Profile.objects.filter(talent__id__in=staff_skill_id)
 
+    past_staff_skill_id = we_skill.filter(talent__id__in=current_staff).values_list('talent__id', flat=True)
     # Freelance Staff List
     freelance_staff_list = staff_list.filter(Q(type__type__icontains='freelance'))
 
@@ -76,8 +81,7 @@ def dept_skill_dashboard(request, cor, dept, skl):
 
     freelance_staff_id = Profile.objects.filter(talent__id__in=freelance_current_staff).values_list('id', flat=True)
 
-    freelance_staff_skills_id = freelance_current_staff
-    #we_skill.filter(talent__id__in=freelance_current_staff).values_list('talent__id', flat=True)
+    freelance_staff_skills_id = we_skill.filter(talent__id__in=freelance_current_staff).values_list('talent__id', flat=True)
 
     freelance_staff_skill = Profile.objects.filter(talent__id__in=freelance_staff_skills_id)
     freelance_staff_skill_id = freelance_staff_skill.values_list('id', flat=True).distinct()
@@ -89,7 +93,7 @@ def dept_skill_dashboard(request, cor, dept, skl):
     current_staff_skill = current_staff_skill_l[:10]
 
     #Past staff for skill list
-    past_staff_skill_l = CorporateStaff.objects.filter(Q(talent__id__in=staff_skill_id) & Q(date_to__isnull=False) & Q(corporate__slug=cor) & Q(department__level_name=dept)).order_by('-date_to')
+    past_staff_skill_l = CorporateStaff.objects.filter(Q(talent__id__in=past_staff_skill_id) & Q(date_to__isnull=False) & Q(corporate__slug=cor) & Q(department__level_name=dept)).order_by('-date_to')
     past_staff_skill_count = past_staff_skill_l.count()
     past_staff_skill = past_staff_skill_l[:10]
 
@@ -97,7 +101,7 @@ def dept_skill_dashboard(request, cor, dept, skl):
 
     #Full Staff for skill by age bracket
     age=[]
-    for i in staff_skill:
+    for i in staff_skill_id_p:
         staff_age=relativedelta(today, i.birth_date).years
         age.append(staff_age)
 
@@ -522,9 +526,7 @@ def dept_skill_dashboard(request, cor, dept, skl):
     hours_experience_lost_month_labels = [12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 'last month', 'This month']
 
     # Volume skill lost by Year Range
-    past_staff_list = CorporateStaff.objects.filter(Q(corporate__slug=cor) & Q(department__level_name=dept) & Q(date_to__isnull=False))
-
-    past_staff_id = past_staff_list.values_list('talent__id', flat=True)
+    past_staff_id = past_staff_skill_l.values_list('talent__id', flat=True)
 
     skills_lost_age=[]
     for i in past_staff_id:
@@ -602,7 +604,7 @@ def dept_skill_dashboard(request, cor, dept, skl):
     hours_experience_lost_month_brackets_data = [sum_he_month_range_11_12, sum_he_month_range_10_11, sum_he_month_range_9_10, sum_he_month_range_8_9, sum_he_month_range_7_8, sum_he_month_range_6_7, sum_he_month_range_5_6, sum_he_month_range_4_5, sum_he_month_range_3_4, sum_he_month_range_2_3, sum_he_month_range_1_2, sum_he_month_range_0_1]
 
     # Volume freelance skill lost by Year Range
-    freelance_past_staff_list = CorporateStaff.objects.filter(Q(corporate__slug=cor) & Q(department__level_name=dept) & Q(date_to__isnull=False) & Q(type__type__icontains='freelance'))
+    freelance_past_staff_list = past_staff_skill_l.filter(Q(type__type__icontains='freelance'))
 
     freelance_past_staff_id = freelance_past_staff_list.values_list('talent__id', flat=True)
 
