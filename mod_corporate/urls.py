@@ -32,6 +32,7 @@ urlpatterns = [
     path('<slug:cor>/<str:dept>/department-current-freelance/', views.dept_freelance_current_staff, name='DeptCurrentFreelance'),
     path('<slug:cor>/<str:dept>/department-past-freelance/', views.dept_freelance_past_staff, name='DeptPastFreelance'),
     path('<slug:cor>/<str:dept>/department-skills-not-utilised/', views.dept_skills_not_utilised, name='DeptSkillsNotUtilised'),
+    path('<slug:cor>/<str:dept>/department-skills-training/', views.dept_skills_training, name='DeptSkillsTraining'),
     #skills detail page
     path('<slug:cor>/<str:dept>/<int:skl>/department-skill-detail/', views.dept_skill_dashboard, name='DeptSkillDashboard'),
     path('<slug:cor>/<str:dept>/<int:skl>/department-skill-current-staff/', views.dept_skill_current_staff, name='DeptSkillCurrentStaff'),

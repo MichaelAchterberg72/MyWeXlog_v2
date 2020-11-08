@@ -1615,7 +1615,7 @@ def SkillProfileDetailView(request, tlt):
     tlt_p = Profile.objects.get(talent__alias=tlt)
     skill_qs_n = SkillTag.objects.all()
     skill_qs = skill_qs_n.exclude(pk__isnull=True)
-    exp = WorkExperience.objects.filter(Q(talent__alias=tlt) & Q(score__gte=skill_pass_score)).select_related('topic')
+    exp = WorkExperience.objects.filter(Q(talent__alias=tlt) & Q(score__gte=skill_pass_score))git merge origin.select_related('topic')
     tlt_filter=tlt
     exp_skills = exp.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
 
