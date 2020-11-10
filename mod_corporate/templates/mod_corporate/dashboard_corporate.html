@@ -85,7 +85,7 @@
     </div>
   </div>
     <h4>Staff</h4>
-    <canvas id="members-chart" height="100px"></canvas>
+    <canvas id="members-chart" height="80px"></canvas>
     <script>
     var config = {
       type: 'bar',
@@ -118,12 +118,46 @@
     var ctx = document.getElementById('members-chart').getContext('2d');
     window.myPie = new Chart(ctx, config);
 
+    var ave_tnr_age_bracket_ctx = document.getElementById('average-tenure-by-age-bracket-chart').getContext('2d');
+    window.myChart = new Chart(ave_tnr_age_bracket_ctx, ave_tnr_age_bracket_config);
+
     var number_skills_ctx = document.getElementById('skills-by-age-chart').getContext('2d');
     window.myChart = new Chart(number_skills_ctx, number_skills_config);
 
     var hours_experience_ctx = document.getElementById('hours-experience-by-age-chart').getContext('2d');
     window.myChart = new Chart(hours_experience_ctx, hours_experience_skills_config);
   };
+    </script>
+
+    <canvas id="average-tenure-by-age-bracket-chart" height="80px"></canvas>
+    <script>
+    var ave_tnr_age_bracket_config = {
+      type: 'bar',
+      data: {
+          labels: {{ age_bracket_labels|safe }},
+          datasets: [{
+            label: 'Average Tenure by Age Bracket',
+            data: {{ ave_tnr_age_range_data|safe }},
+              backgroundColor: [
+                  '#C54B6C', '#F5BFD2', '#E5DB9C', '#D0BCAC', '#BEB4C5', '#E6A57E',
+              ],
+              borderColor: [
+
+              ],
+              borderWidth: 1
+          }]
+      },
+      options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero: true
+                  }
+              }]
+            },
+        }
+    };
+
     </script>
 {% endblock MidTopLeft %}
 
