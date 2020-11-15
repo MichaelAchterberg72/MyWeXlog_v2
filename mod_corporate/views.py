@@ -2949,3 +2949,5 @@ def past_staff(request, cor):
 
     #list projects staff members have worked on.
     #sum the number of hours worked on the project.
+    
+    # Notes from Mike
