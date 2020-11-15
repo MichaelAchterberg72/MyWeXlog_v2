@@ -24,7 +24,7 @@
     <div class="border-0">
       <div class="">
         <a href="{% url 'Talent:Home' %}" class="btn btn-secondary float-right">Experience Home</a>
-        <a href="{% url 'Talent:ExperienceSum' tlt %}" class="btn btn-primary">Skills Summary</a>
+        <a href="{% url 'Talent:SPDView' tlt %}" class="btn btn-primary">Skills Summary</a>
       </div>
       <br>
     </div>
@@ -32,7 +32,7 @@
   </div>
   <div class="row">
     <div class="col-sm-6">
-      <div class="card h-100">
+      <div class="card card-shadow h-100">
         <div class="card-body">
           <h5 class="card-title">Designation Summary</h5>
           <p>This is a list of the hours you have logged against each designation.</p>
@@ -59,7 +59,7 @@
     </div>
 
     <div class="col-sm-6">
-      <div class="card">
+      <div class="card card-shadow">
         <div class="card-body">
           <h5 class="card-title" id="Company">Company Summary</h5>
           <p>This is a list of the time spent by  {% if request.user.alias == tlt %} you {% else %} <strong>{{ tlt }}</strong> {% endif%}at various companies.</p>
@@ -88,7 +88,7 @@
   <br>
   <div class="row">
     <div class="col-sm-12">
-      <div class="card">
+      <div class="card card-shadow">
         <div class="card-body">
           <h5 class="card-title" id="Project">Project Summary</h5>
           <p>This is a list of the time spent by {% if request.user.alias == tlt %} you {% else %} <strong>{{ tlt }}</strong> {% endif%}on various Projects.</p>
