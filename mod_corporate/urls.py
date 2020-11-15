@@ -30,12 +30,14 @@ urlpatterns = [
     path('<slug:cor>/<str:dept>/department-skills-resigned/', views.dept_skills_resigned, name='DeptSkillsResigned'),
     path('<slug:cor>/<str:dept>/department-skills-freelance/', views.dept_skills_freelance, name='DeptSkillsFreelance'),
     path('<slug:cor>/<str:dept>/department-current-freelance/', views.dept_freelance_current_staff, name='DeptCurrentFreelance'),
+
     path('<slug:cor>/<str:dept>/department-past-freelance/', views.dept_freelance_past_staff, name='DeptPastFreelance'),
     path('<slug:cor>/<str:dept>/department-skills-not-utilised/', views.dept_skills_not_utilised, name='DeptSkillsNotUtilised'),
     path('<slug:cor>/<str:dept>/department-skills-training/', views.dept_skills_training, name='DeptSkillsTraining'),
     #skills detail page
     path('<slug:cor>/<str:dept>/<int:skl>/department-skill-detail/', views.dept_skill_dashboard, name='DeptSkillDashboard'),
     path('<slug:cor>/<str:dept>/<int:skl>/department-skill-current-staff/', views.dept_skill_current_staff, name='DeptSkillCurrentStaff'),
+    path('<slug:cor>/<str:dept>/<int:skl>/department-skill-not-utilised-staff/', views.dept_skill_not_utilised_staff, name='DeptSkillNotUtilisedStaff'),
     path('<slug:cor>/<str:dept>/<int:skl>/department-skill-past-staff/', views.dept_skill_past_staff, name='DeptSkillPastStaff'),
     #Help pages
     path('dashboard-staff/', views.help_dash_staff, name='HelpDashStaff'),

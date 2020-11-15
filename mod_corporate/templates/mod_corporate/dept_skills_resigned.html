@@ -8,6 +8,9 @@
 {% block content %}
 <div class="card card-shadow">
   <div class="card-body">
+    <div class="float-right">
+      <a href="{% url 'Corporate:OrgDepartment' cor dept %}" class="btn btn-secondary"style="width: 6rem">Back</a>
+    </div>
     <h3>{{ dept }} Skills Resigned</h3>
   </div>
 </div>

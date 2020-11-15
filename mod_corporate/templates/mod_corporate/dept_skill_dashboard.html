@@ -40,6 +40,12 @@
         var we_skills_used_year_range_ctx = document.getElementById('we-skills-used-year-range-chart').getContext('2d');
         window.myChart = new Chart(we_skills_used_year_range_ctx, we_skills_used_year_range_config);
 
+        var staff_nc_number_age_brackets_ctx = document.getElementById('staff-not-utilising-skill-chart').getContext('2d');
+        window.myChart = new Chart(staff_nc_number_age_brackets_ctx, staff_nc_number_age_brackets_config);
+
+        var hours_nc_experience_ctx = document.getElementById('hours-nc-experience-in-skill-by-age-chart').getContext('2d');
+        window.myChart = new Chart(hours_nc_experience_ctx, hours_nc_experience_skills_config);
+
         var hours_experience_lost_skills_year_config_ctx = document.getElementById('hours-experience-lost-in-skill-by-year-chart').getContext('2d');
         window.myChart = new Chart(hours_experience_lost_skills_year_config_ctx, hours_experience_lost_skills_year_config);
 
@@ -449,6 +455,189 @@
     {% if current_staff_skill_count >= 10 %}
       <div class="float-right">
         <a href="{% url 'Corporate:DeptSkillCurrentStaff' cor dept skl %}" class="btn btn-primary"style="width: 10rem">View All Staff</a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+<br>
+<div class="card card-shadow">
+  <div class="card-body">
+    <h4>Current Staff not utilising {{ skill }} Skill</h4>
+    <div class="row">
+      <div class="col-md-6"
+    <p>Staff Not Utilising {{ skill }} Skill by Age Bracket</p>
+    <canvas id="staff-not-utilising-skill-chart" height="100px"></canvas>
+    <script>
+    var staff_nc_number_age_brackets_config = {
+      type: 'bar',
+      data: {
+          labels: {{ age_bracket_labels|safe }},
+          datasets: [{
+            label: 'Staff Not Utilising Skill by Age Bracket',
+            data: {{ staff_nc_number_age_brackets_data|safe }},
+            order: 2,
+              backgroundColor: [
+                  '#218B82', '#9AD9DB', '#E5DBD9', '#98D4BB', '#EB96AA', '#C6C9D0',
+              ],
+              borderColor: [
+
+              ],
+              borderWidth: 1
+          },  {
+            label: 'Freelance Staff Not Utilising Skill by Age Bracket',
+            data: {{ freelance_staff_nc_number_age_brackets_data|safe }},
+            type: 'line',
+            order: 1,
+            fill: false,
+            borderColor: '#0000FF',
+            borderWidth: 2,
+            pointBorderWidth: 2,
+            pointStyle: 'circle',
+            pointHitRadius: 20,
+          }]
+      },
+      options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero: true
+                  }
+              }]
+            },
+          legend: {
+              display: false,
+              position: 'left',
+              labels: {
+                  fontColor: '#0000ff',
+          },
+
+          }
+        }
+    };
+
+    </script>
+    </div>
+    <div class="col-md-6">
+    <p>Total Hours Experience in {{ skill }} Skill by Age Bracket</p>
+    <canvas id="hours-nc-experience-in-skill-by-age-chart" height="100px"></canvas>
+    <script>
+    var hours_nc_experience_skills_config = {
+      type: 'bar',
+      data: {
+          labels: {{ age_bracket_labels|safe }},
+          datasets: [{
+            label: 'Hours Experience in Skill by Age Bracket',
+            data: {{ hours_nc_experience_age_brackets_data|safe }},
+            order: 2,
+              backgroundColor: [
+                  '#B6D8F2', '#F4CFDF', '#5784BA', '#C54B6C', '#F5BFD2', '#E5DB9C',
+              ],
+              borderColor: [
+
+              ],
+              borderWidth: 1
+          },  {
+            label: 'Hours Freelance Experience in Skill by Age Bracket',
+            data: {{ hours_freelance_nc_experience_age_brackets_data|safe }},
+            type: 'line',
+            order: 1,
+            fill: false,
+            borderColor: '#0000FF',
+            borderWidth: 2,
+            pointBorderWidth: 2,
+            pointStyle: 'circle',
+            pointHitRadius: 20,
+          }]
+      },
+      options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero: true
+                  }
+              }]
+            },
+          legend: {
+              display: false,
+              position: 'left',
+              labels: {
+                  fontColor: '#0000ff',
+          },
+
+          }
+        }
+    };
+
+  </script>
+    </div>
+    </div>
+    <br>
+    <div class="container">
+      <div class="row my-auto">
+        <div class="col-md-3 h-100 text-center my-auto">
+          <strong>Last name, First name</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Date Joined</strong>
+        </div>
+        <div class="col-md-1 h-100 text-center my-auto">
+          <strong>Tenure</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Designation</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Relationship</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong></strong>
+        </div>
+      </div>
+
+    {% for item in we_staff_skill_nc %}
+    <div class="row">
+      <div class="card mt-1 card-hover" style="width: 100%;">
+        <div class="card-body small-pad">
+          <div class="row my-auto">
+            <div class="col-md-3 h-100 text-center my-auto">
+              {{ item.talent.last_name }}, {{ item.talent.first_name }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ item.date_from }}
+            </div>
+            <div class="col-md-1 h-100 text-center my-auto">
+              {{ item.tenure|floatformat:2 }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ item.designation }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ item.work_configeration }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              <div class="btn-toolbar">
+                <div class="btn-group mr-2">
+                  <a href="{% url 'Talent:APV_C' cor item.talent.alias %}" target="_blank">
+                    <i class="fa fa-id-badge" aria-hidden="true"style="font-size:30px; color:black" data-toggle="tooltip" data-placement="top" title="View Profile"></i>
+                  </a>
+                </div>
+                <div class="btn-group mr-2">
+                  <i class="fa fa-folder-open-o" aria-hidden="true"  style="font-size:30px; color:blue" data-toggle="tooltip" data-placement="top" title="View {{ corp.company }} Work History"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+      <p>You do not have any staff registered that are not utilising this skill with your company.</p>
+    {% endfor %}
+    </div>
+    <br>
+    {% if we_staff_skill_nc_count >= 10 %}
+      <div class="float-right">
+        <a href="{% url 'Corporate:DeptSkillNotUtilisedStaff' cor dept skl %}" class="btn btn-primary"style="width: 10rem">View All Staff</a>
       </div>
     {% endif %}
   </div>

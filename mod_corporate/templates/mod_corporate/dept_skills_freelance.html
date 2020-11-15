@@ -183,7 +183,7 @@
   <div class="card-body">
     <div class="btn-group float-right">
       <div class="btn-group mr-2">
-        <a href="{% url 'Corporate:DeptSkillsCurrent' cor dept %}?next={{ request.path|urlencode }}" class="badge badge-primary">
+        <a href="{% url 'Corporate:OrgDepartment' cor dept %}?next={{ request.path|urlencode }}" class="badge badge-primary">
           Current ( {{ sum_skills|intcomma }} )
         </a>
       </div>
@@ -198,8 +198,8 @@
         </a>
       </div>
       <div class="btn-group mr-2">
-        <a href="#?next={{ request.path|urlencode }}" class="badge badge-primary align-middle">
-          Admin
+        <a href="#?next={{ request.path|urlencode }}" class="badge badge-secondary align-middle">
+          Corp Only
         </a>
       </div>
       <div class="btn-group mr-2">

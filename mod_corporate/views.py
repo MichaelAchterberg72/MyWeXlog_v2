@@ -51,49 +51,72 @@ from WeXlog.app_config import (
 @corp_permission(1)
 def dept_skill_dashboard(request, cor, dept, skl):
     skill = SkillTag.objects.get(id=skl)
+    webr = CorporateHR.objects.get(slug=cor)
+    webrb = webr.companybranch
+    corp_staff = CorporateStaff.objects.all()
 
-    structure = OrgStructure.objects.filter(Q(corporate__slug=cor) & Q(level_name=dept))
+    structure = corp_staff.filter(Q(corporate__slug=cor) & Q(department__level_name=dept))
     # Full Staff List
-    staff_list = CorporateStaff.objects.filter(Q(corporate__slug=cor) & Q(department__level_name=dept) & Q(date_to__isnull=True))
+    staff_list = corp_staff.filter(Q(corporate__slug=cor) & Q(department__level_name=dept) & Q(date_to__isnull=True))
 
-    past_staff_list = CorporateStaff.objects.filter(Q(corporate__slug=cor) & Q(department__level_name=dept) & Q(date_to__isnull=False))
+    profile_list = Profile.objects.all()
+
+    past_staff_list = corp_staff.filter(Q(corporate__slug=cor) & Q(department__level_name=dept) & Q(date_to__isnull=False))
 
     current_staff = staff_list.values_list('talent__id', flat=True)
     past_staff = past_staff_list.values_list('talent__id', flat=True)
 
     today = timezone.now().date()
 
-    staff_id = Profile.objects.filter(talent__id__in=current_staff).values_list('id', flat=True)
+    staff_id = profile_list.filter(talent__id__in=current_staff).values_list('id', flat=True)
 
     we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
 
     we_skill = we.filter(Q(skills__skill=skill.skill, edt=False) | Q(topic__skills__skill=skill.skill, edt=True))
 
-    staff_skill = Profile.objects.filter(talent__id__in=current_staff).distinct()
-    staff_skill_id = we_skill.filter(talent__id__in=current_staff).values_list('talent__id', flat=True).distinct()
-    staff_skill_id_p = Profile.objects.filter(talent__id__in=staff_skill_id)
+    staff_skill = profile_list.filter(talent__id__in=current_staff).distinct()
+    staff_skill_l = we_skill.filter(talent__id__in=current_staff)
+    staff_skill_id = staff_skill_l.values_list('talent__id', flat=True).distinct()
+    staff_skill_id_p = profile_list.filter(talent__id__in=staff_skill_id)
 
     past_staff_skill_id = we_skill.filter(talent__id__in=current_staff).values_list('talent__id', flat=True)
+
+    #staff with skill work experience not in corporate
+    we_skill_nc = staff_skill_l.exclude(companybranch=webrb).values_list('talent__id', flat=True).distinct()
+
+    staff_skill_nc_p = profile_list.filter(talent__id__in=we_skill_nc)
+
+    we_staff_skill_nc_l = corp_staff.filter(Q(talent__id__in=we_skill_nc) & Q(date_to__isnull=True) & Q(corporate__slug=cor) & Q(department__level_name=dept))
+
+    we_staff_skill_nc_count = we_staff_skill_nc_l.count()
+    we_staff_skill_nc = we_staff_skill_nc_l[:10]
+    #>>>
+
+    #freelance staff not utilising skill
+    freelance_we_staff_skill_nc_l = we_staff_skill_nc_l.filter(Q(type__type__icontains='freelance')).values_list('talent__id').distinct()
+
+    freelance_staff_skill_nc_p = profile_list.filter(talent__id__in=freelance_we_staff_skill_nc_l)
+
     # Freelance Staff List
     freelance_staff_list = staff_list.filter(Q(type__type__icontains='freelance'))
 
     freelance_current_staff = freelance_staff_list.values_list('talent__id', flat=True)
 
-    freelance_staff_id = Profile.objects.filter(talent__id__in=freelance_current_staff).values_list('id', flat=True)
+    freelance_staff_id = profile_list.filter(talent__id__in=freelance_current_staff).values_list('id', flat=True)
 
     freelance_staff_skills_id = we_skill.filter(talent__id__in=freelance_current_staff).values_list('talent__id', flat=True)
 
-    freelance_staff_skill = Profile.objects.filter(talent__id__in=freelance_staff_skills_id)
+    freelance_staff_skill = profile_list.filter(talent__id__in=freelance_staff_skills_id)
     freelance_staff_skill_id = freelance_staff_skill.values_list('id', flat=True).distinct()
 
     #Current staff for skill list
-    current_staff_skill_l = CorporateStaff.objects.filter(Q(talent__id__in=staff_skill_id) & Q(date_to__isnull=True) & Q(corporate__slug=cor) & Q(department__level_name=dept))
+    current_staff_skill_l = corp_staff.filter(Q(talent__id__in=staff_skill_id) & Q(date_to__isnull=True) & Q(corporate__slug=cor) & Q(department__level_name=dept))
 
     current_staff_skill_count = current_staff_skill_l.count()
     current_staff_skill = current_staff_skill_l[:10]
 
     #Past staff for skill list
-    past_staff_skill_l = CorporateStaff.objects.filter(Q(talent__id__in=past_staff_skill_id) & Q(date_to__isnull=False) & Q(corporate__slug=cor) & Q(department__level_name=dept)).order_by('-date_to')
+    past_staff_skill_l = corp_staff.filter(Q(talent__id__in=past_staff_skill_id) & Q(date_to__isnull=False) & Q(corporate__slug=cor) & Q(department__level_name=dept)).order_by('-date_to')
     past_staff_skill_count = past_staff_skill_l.count()
     past_staff_skill = past_staff_skill_l[:10]
 
@@ -201,10 +224,112 @@ def dept_skill_dashboard(request, cor, dept, skl):
 
     freelance_number_age_brackets_data = [freelance_sum_age_range_18_25, freelance_sum_age_range_26_35, freelance_sum_age_range_36_45, freelance_sum_age_range_46_55, freelance_sum_age_range_56_65, freelance_sum_age_range_66_100]
 
-    # Number of staff with skill per age bracket
+    #Staff not utilising skill by age bracket
+    staff_nc_age=[]
+    for i in staff_skill_nc_p:
+        staff_age=relativedelta(today, i.birth_date).years
+        staff_nc_age.append(staff_age)
+
+    staff_nc_age_range_18_25 = []
+    for i in staff_nc_age:
+        if i in range(18, 25):
+            staff_age = {'staff_age': i}
+            staff_nc_age_range_18_25.append(staff_age)
+
+    staff_nc_age_range_26_35 = []
+    for i in staff_nc_age:
+        if i in range(26, 35):
+            staff_age = {'staff_age': i}
+            staff_nc_age_range_26_35.append(staff_age)
+
+    staff_nc_age_range_36_45 = []
+    for i in staff_nc_age:
+        if i in range(36, 45):
+            staff_age = {'staff_age': i}
+            staff_nc_age_range_36_45.append(staff_age)
+
+    staff_nc_age_range_46_55 = []
+    for i in staff_nc_age:
+        if i in range(46, 55):
+            staff_age = {'staff_age': i}
+            staff_nc_age_range_46_55.append(staff_age)
+
+    staff_nc_age_range_56_65 = []
+    for i in staff_nc_age:
+        if i in range(56, 65):
+            staff_age = {'staff_age': i}
+            staff_nc_age_range_56_65.append(staff_age)
+
+    staff_nc_age_range_66_100 = []
+    for i in staff_nc_age:
+        if i in range(66, 100):
+            staff_age = {'staff_age': i}
+            staff_nc_age_range_66_100.append(staff_age)
+
+    sum_staff_nc_age_range_18_25 = len(staff_nc_age_range_18_25)
+    sum_staff_nc_age_range_26_35 = len(staff_nc_age_range_26_35)
+    sum_staff_nc_age_range_36_45 = len(staff_nc_age_range_36_45)
+    sum_staff_nc_age_range_46_55 = len(staff_nc_age_range_46_55)
+    sum_staff_nc_age_range_56_65 = len(staff_nc_age_range_56_65)
+    sum_staff_nc_age_range_66_100 = len(staff_nc_age_range_66_100)
+
+    staff_nc_number_age_brackets_data = [sum_staff_nc_age_range_18_25, sum_staff_nc_age_range_26_35, sum_staff_nc_age_range_36_45, sum_staff_nc_age_range_46_55, sum_staff_nc_age_range_56_65, sum_staff_nc_age_range_66_100]
+
+    #Freelance Staff not utilising skill by age bracket
+    freelance_staff_nc_age=[]
+    for i in freelance_staff_skill_nc_p:
+        staff_age=relativedelta(today, i.birth_date).years
+        freelance_staff_nc_age.append(staff_age)
+
+    freelance_staff_nc_age_range_18_25 = []
+    for i in freelance_staff_nc_age:
+        if i in range(18, 25):
+            staff_age = {'staff_age': i}
+            freelance_staff_nc_age_range_18_25.append(staff_age)
+
+    freelance_staff_nc_age_range_26_35 = []
+    for i in freelance_staff_nc_age:
+        if i in range(26, 35):
+            staff_age = {'staff_age': i}
+            freelance_staff_nc_age_range_26_35.append(staff_age)
+
+    freelance_staff_nc_age_range_36_45 = []
+    for i in freelance_staff_nc_age:
+        if i in range(36, 45):
+            staff_age = {'staff_age': i}
+            freelance_staff_nc_age_range_36_45.append(staff_age)
+
+    freelance_staff_nc_age_range_46_55 = []
+    for i in freelance_staff_nc_age:
+        if i in range(46, 55):
+            staff_age = {'staff_age': i}
+            freelance_staff_nc_age_range_46_55.append(staff_age)
+
+    freelance_staff_nc_age_range_56_65 = []
+    for i in freelance_staff_nc_age:
+        if i in range(56, 65):
+            staff_age = {'staff_age': i}
+            freelance_staff_nc_age_range_56_65.append(staff_age)
+
+    freelance_staff_nc_age_range_66_100 = []
+    for i in freelance_staff_nc_age:
+        if i in range(66, 100):
+            staff_age = {'staff_age': i}
+            freelance_staff_nc_age_range_66_100.append(staff_age)
+
+    sum_freelance_staff_nc_age_range_18_25 = len(freelance_staff_nc_age_range_18_25)
+    sum_freelance_staff_nc_age_range_26_35 = len(freelance_staff_nc_age_range_26_35)
+    sum_freelance_staff_nc_age_range_36_45 = len(freelance_staff_nc_age_range_36_45)
+    sum_freelance_staff_nc_age_range_46_55 = len(freelance_staff_nc_age_range_46_55)
+    sum_freelance_staff_nc_age_range_56_65 = len(freelance_staff_nc_age_range_56_65)
+    sum_freelance_staff_nc_age_range_66_100 = len(freelance_staff_nc_age_range_66_100)
+
+    freelance_staff_nc_number_age_brackets_data = [sum_freelance_staff_nc_age_range_18_25, sum_freelance_staff_nc_age_range_26_35, sum_freelance_staff_nc_age_range_36_45, sum_freelance_staff_nc_age_range_46_55, sum_freelance_staff_nc_age_range_56_65, sum_freelance_staff_nc_age_range_66_100]
+
+    # Number of hours experience of staff with skill per age bracket
     skills_age=[]
     for i in staff_skill_id:
-        tlt = Profile.objects.get(talent=i)
+        tlt = profile_list.get(talent=i)
         staff_age=relativedelta(today, tlt.birth_date).years
 
         talent_skill_l = we_skill.filter(talent=i, edt=False)
@@ -250,7 +375,7 @@ def dept_skill_dashboard(request, cor, dept, skl):
     # Volume freelance staff experience with skill per age bracket
     freelance_skills_age=[]
     for i in freelance_staff_skill_id:
-        tlt = Profile.objects.get(talent=i)
+        tlt = profile_list.get(talent=i)
         staff_age=relativedelta(today, tlt.birth_date).years
 
         talent_skill_l = we_skill.filter(talent=i, edt=False)
@@ -292,6 +417,98 @@ def dept_skill_dashboard(request, cor, dept, skl):
     freelance_sum_he_range_66_100 = sum(freelance_he_list_age_range_66_100)
 
     freelance_hours_experience_age_brackets_data = [freelance_sum_he_range_18_25, freelance_sum_he_range_26_35, freelance_sum_he_range_36_45, freelance_sum_he_range_46_55, freelance_sum_he_range_56_65, freelance_sum_he_range_66_100]
+
+    # Number of hours experience of staff with skill per age bracket
+    nc_skills_age=[]
+    for i in we_skill_nc:
+        tlt = profile_list.get(talent=i)
+        staff_age=relativedelta(today, tlt.birth_date).years
+
+        talent_skill_l = we_skill.filter(talent=i, edt=False)
+        talent_skillt_l = we_skill.filter(talent=i, edt=True)
+
+        aw_exp = talent_skill_l.filter(talent=i, edt=False).aggregate(awet=Sum('hours_worked'))
+        awetv = aw_exp.get('awet')
+        if awetv == None:
+            awetv = 0
+        else:
+            awetv = awetv
+
+        at_exp = talent_skillt_l.filter(talent=i, edt=True).aggregate(tet=Sum('topic__hours'))
+        atetv = at_exp.get('tet')
+        if atetv == None:
+            atetv = 0
+        else:
+            atetv = atetv
+
+        t_exp = awetv + atetv
+
+        result={'staff_age': staff_age, 't_exp': t_exp}
+
+        nc_skills_age.append(result)
+
+    # Total hours experience
+    nc_he_list_age_range_18_25=[float(x['t_exp']) for x in nc_skills_age if x['staff_age'] in range(18, 25)]
+    nc_he_list_age_range_26_35=[float(x['t_exp']) for x in nc_skills_age if x['staff_age'] in range(26, 35)]
+    nc_he_list_age_range_36_45=[float(x['t_exp']) for x in nc_skills_age if x['staff_age'] in range(36, 45)]
+    nc_he_list_age_range_46_55=[float(x['t_exp']) for x in nc_skills_age if x['staff_age'] in range(46, 55)]
+    nc_he_list_age_range_56_65=[float(x['t_exp']) for x in nc_skills_age if x['staff_age'] in range(56, 65)]
+    nc_he_list_age_range_66_100=[float(x['t_exp']) for x in nc_skills_age if x['staff_age'] in range(66, 100)]
+
+    sum_nc_he_range_18_25 = sum(nc_he_list_age_range_18_25)
+    sum_nc_he_range_26_35 = sum(nc_he_list_age_range_26_35)
+    sum_nc_he_range_36_45 = sum(nc_he_list_age_range_36_45)
+    sum_nc_he_range_46_55 = sum(nc_he_list_age_range_46_55)
+    sum_nc_he_range_56_65 = sum(nc_he_list_age_range_56_65)
+    sum_nc_he_range_66_100 = sum(nc_he_list_age_range_66_100)
+
+    hours_nc_experience_age_brackets_data = [sum_nc_he_range_18_25, sum_nc_he_range_26_35, sum_nc_he_range_36_45, sum_nc_he_range_46_55, sum_nc_he_range_56_65, sum_nc_he_range_66_100]
+
+    # Number of freelance hours experience of staff with skill per age bracket
+    freelance_nc_skills_age=[]
+    for i in freelance_we_staff_skill_nc_l:
+        tlt = profile_list.get(talent=i)
+        staff_age=relativedelta(today, tlt.birth_date).years
+
+        talent_skill_l = we_skill.filter(talent=i, edt=False)
+        talent_skillt_l = we_skill.filter(talent=i, edt=True)
+
+        aw_exp = talent_skill_l.filter(talent=i, edt=False).aggregate(awet=Sum('hours_worked'))
+        awetv = aw_exp.get('awet')
+        if awetv == None:
+            awetv = 0
+        else:
+            awetv = awetv
+
+        at_exp = talent_skillt_l.filter(talent=i, edt=True).aggregate(tet=Sum('topic__hours'))
+        atetv = at_exp.get('tet')
+        if atetv == None:
+            atetv = 0
+        else:
+            atetv = atetv
+
+        t_exp = awetv + atetv
+
+        result={'staff_age': staff_age, 't_exp': t_exp}
+
+        freelance_nc_skills_age.append(result)
+
+    # Total hours experience
+    freelance_nc_he_list_age_range_18_25=[float(x['t_exp']) for x in freelance_nc_skills_age if x['staff_age'] in range(18, 25)]
+    freelance_nc_he_list_age_range_26_35=[float(x['t_exp']) for x in freelance_nc_skills_age if x['staff_age'] in range(26, 35)]
+    freelance_nc_he_list_age_range_36_45=[float(x['t_exp']) for x in freelance_nc_skills_age if x['staff_age'] in range(36, 45)]
+    freelance_nc_he_list_age_range_46_55=[float(x['t_exp']) for x in freelance_nc_skills_age if x['staff_age'] in range(46, 55)]
+    freelance_nc_he_list_age_range_56_65=[float(x['t_exp']) for x in freelance_nc_skills_age if x['staff_age'] in range(56, 65)]
+    freelance_nc_he_list_age_range_66_100=[float(x['t_exp']) for x in freelance_nc_skills_age if x['staff_age'] in range(66, 100)]
+
+    sum_freelance_nc_he_range_18_25 = sum(freelance_nc_he_list_age_range_18_25)
+    sum_freelance_nc_he_range_26_35 = sum(freelance_nc_he_list_age_range_26_35)
+    sum_freelance_nc_he_range_36_45 = sum(freelance_nc_he_list_age_range_36_45)
+    sum_freelance_nc_he_range_46_55 = sum(freelance_nc_he_list_age_range_46_55)
+    sum_freelance_nc_he_range_56_65 = sum(freelance_nc_he_list_age_range_56_65)
+    sum_freelance_nc_he_range_66_100 = sum(freelance_nc_he_list_age_range_66_100)
+
+    hours_freelance_nc_experience_age_brackets_data = [sum_freelance_nc_he_range_18_25, sum_freelance_nc_he_range_26_35, sum_freelance_nc_he_range_36_45, sum_freelance_nc_he_range_46_55, sum_freelance_nc_he_range_56_65, sum_freelance_nc_he_range_66_100]
 
     age_bracket_labels = ['18-25', '26-35', '36-45', '46-55', '56-65', '66 & up']
 
@@ -530,7 +747,7 @@ def dept_skill_dashboard(request, cor, dept, skl):
 
     skills_lost_age=[]
     for i in past_staff_id:
-        tlt = CorporateStaff.objects.filter(talent__id=i).order_by('-date_to')[:0]
+        tlt = corp_staff.filter(talent__id=i).order_by('-date_to')[:0]
         staff_resigned_age = relativedelta(today, tlt.date_to).years
         staff_resigned_months = relativedelta(today, tlt.date_to).months
 
@@ -610,7 +827,7 @@ def dept_skill_dashboard(request, cor, dept, skl):
 
     freelance_skills_lost_age=[]
     for i in freelance_past_staff_id:
-        tlt = CorporateStaff.objects.filter(talent__id=i).order_by('-date_to')[:0]
+        tlt = corp_staff.filter(talent__id=i).order_by('-date_to')[:0]
         staff_resigned_age = relativedelta(today, tlt.date_to).years
         staff_resigned_months = relativedelta(today, tlt.date_to).months
 
@@ -693,11 +910,17 @@ def dept_skill_dashboard(request, cor, dept, skl):
         'current_staff_skill_count': current_staff_skill_count,
         'past_staff_skill': past_staff_skill,
         'past_staff_skill_count': past_staff_skill_count,
+        'we_staff_skill_nc': we_staff_skill_nc,
+        'we_staff_skill_nc_count': we_staff_skill_nc_count,
         'age_bracket_labels': age_bracket_labels,
         'number_age_brackets_data': number_age_brackets_data,
         'freelance_number_age_brackets_data': freelance_number_age_brackets_data,
+        'staff_nc_number_age_brackets_data': staff_nc_number_age_brackets_data,
+        'freelance_staff_nc_number_age_brackets_data': freelance_staff_nc_number_age_brackets_data,
         'hours_experience_age_brackets_data': hours_experience_age_brackets_data,
         'freelance_hours_experience_age_brackets_data': freelance_hours_experience_age_brackets_data,
+        'hours_nc_experience_age_brackets_data': hours_nc_experience_age_brackets_data,
+        'hours_freelance_nc_experience_age_brackets_data': hours_freelance_nc_experience_age_brackets_data,
         'total_sum_we': total_sum_we,
         'total_sum_f_we': total_sum_f_we,
         'total_sum_t_we': total_sum_t_we,
@@ -737,7 +960,7 @@ def dept_skill_current_staff(request, cor, dept, skl):
     staff_skill_id = staff_skill.values_list('id', flat=True).distinct()
 
     #Current staff for skill list
-    current_staff_skill_l = CorporateStaff.objects.filter(Q(talent__id__in=staff_skill_id) & Q(date_to__isnull=True) & Q(corporate__slug=cor) & Q(department__level_name=dept))
+    current_staff_skill_l = staff_list.filter(Q(talent__id__in=staff_skill_id) & Q(date_to__isnull=True))
     current_staff_count = current_staff_skill_l.count()
 
     try:
@@ -792,7 +1015,7 @@ def dept_skill_past_staff(request, cor, dept, skl):
     staff_skill_id = staff_skill.values_list('id', flat=True).distinct()
 
     #Past staff for skill list
-    past_staff_skill_l = CorporateStaff.objects.filter(Q(talent__id__in=staff_skill_id) & Q(date_to__isnull=False) & Q(corporate__slug=cor) & Q(department__level_name=dept)).order_by('-date_to')
+    past_staff_skill_l = staff_list.filter(Q(talent__id__in=staff_skill_id) & Q(date_to__isnull=False)).order_by('-date_to')
     past_staff_count = past_staff_skill_l.count()
 
     try:
@@ -830,6 +1053,60 @@ def dept_skill_past_staff(request, cor, dept, skl):
 
 @login_required()
 @corp_permission(1)
+def dept_skill_not_utilised_staff(request, cor, dept, skl):
+    skill = SkillTag.objects.get(id=skl)
+    webr = CorporateHR.objects.get(slug=cor)
+    webrb = webr.companybranch
+
+    staff_list = CorporateStaff.objects.filter(Q(corporate__slug=cor) & Q(department__level_name=dept))
+
+    current_staff = staff_list.values_list('talent__id', flat=True)
+
+    we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
+
+    we_skill = we.filter(Q(skills__skill=skill.skill, edt=False) | Q(topic__skills__skill=skill.skill, edt=True))
+
+    staff_skill_l = we_skill.filter(talent__id__in=current_staff)
+
+    we_skill_nc = staff_skill_l.exclude(companybranch=webrb).values_list('talent__id', flat=True).distinct()
+
+    #Current staff not utilising skill list
+    we_staff_skill_nc_l = staff_list.filter(Q(talent__id__in=we_skill_nc) & Q(date_to__isnull=True))
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(we_staff_skill_nc_l, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+    template = 'mod_corporate/dept_skill_not_utilised_staff.html'
+    context = {
+        'cor': cor,
+        'dept': dept,
+        'skl': skl,
+        'skill': skill,
+        'pageitems': pageitems,
+        'page_range': page_range,
+    }
+    return render(request, template, context)
+
+
+@login_required()
+@corp_permission(1)
 def dept_skills_current(request, cor, dept):
 
     template = 'mod_corporate/dept_skills_current.html'
@@ -854,6 +1131,8 @@ def dept_skills_freelance(request, cor, dept):
 
     full_staff_list = CorporateStaff.objects.filter(Q(corporate__slug=cor) & Q(department__level_name=dept))
 
+    profile_list = Profile.objects.all()
+
     staff_list = full_staff_list.filter(Q(date_to__isnull=True))
 
     freelance_staff_list = staff_list.filter(Q(type__type__icontains='freelance'))
@@ -861,7 +1140,7 @@ def dept_skills_freelance(request, cor, dept):
     freelance_current_staff = freelance_staff_list.values_list('talent__id', flat=True)
     freelance_current_count = freelance_current_staff.count()
 
-    freelance_staff = Profile.objects.filter(talent__id__in=freelance_current_staff)
+    freelance_staff = profile_list.filter(talent__id__in=freelance_current_staff)
     today = timezone.now().date()
 
     freelance_age=[]
@@ -916,14 +1195,14 @@ def dept_skills_freelance(request, cor, dept):
 
     age_bracket_labels = ['18-25', '26-35', '36-45', '46-55', '56-65', '66 & up']
 
-    freelance_staff_id = Profile.objects.filter(talent__id__in=freelance_current_staff).values_list('id', flat=True)
+    freelance_staff_id = profile_list.filter(talent__id__in=freelance_current_staff).values_list('id', flat=True)
 
     we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
 
     # Total Number of freelance skills per age bracket
     freelance_skills_age=[]
     for i in freelance_staff_id:
-        tlt = Profile.objects.get(talent=i)
+        tlt = profile_list.get(talent=i)
         staff_age=relativedelta(today, tlt.birth_date).years
 
         talent_skill_l = we.filter(talent=i, edt=False).values_list('skills__skill', flat=True)
@@ -1050,7 +1329,7 @@ def dept_skills_freelance(request, cor, dept):
         shwe = we.filter(Q(skills__skill=s, edt=False) | Q(topic__skills__skill=s, edt=True))
         freelance_skills_hours=[]
         for i in freelance_staff_id:
-            tlt = Profile.objects.get(talent=i)
+            tlt = profile_list.get(talent=i)
 
             aw_exp = shwe.filter(talent=i, edt=False).aggregate(awet=Sum('hours_worked'))
             awetv = aw_exp.get('awet')
@@ -1199,6 +1478,8 @@ def dept_skills_not_utilised(request, cor, dept):
 
     staff_list = CorporateStaff.objects.filter(Q(corporate__slug=cor) & Q(department__level_name=dept) & Q(date_to__isnull=True))
 
+    profile_list = Profile.objects.all()
+
     current_staff = staff_list.values_list('talent__id', flat=True)
 
     today = timezone.now().date()
@@ -1207,9 +1488,9 @@ def dept_skills_not_utilised(request, cor, dept):
 
     freelance_current_staff = freelance_staff_list.values_list('talent__id', flat=True)
 
-    staff_id = Profile.objects.filter(talent__id__in=current_staff).values_list('id', flat=True)
+    staff_id = profile_list.filter(talent__id__in=current_staff).values_list('id', flat=True)
 
-    freelance_staff_id = Profile.objects.filter(talent__id__in=freelance_current_staff).values_list('id', flat=True)
+    freelance_staff_id = profile_list.filter(talent__id__in=freelance_current_staff).values_list('id', flat=True)
 
     we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
 
@@ -1240,7 +1521,7 @@ def dept_skills_not_utilised(request, cor, dept):
 
 
     # List of Skills not used in Company
-    wenc = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score) & Q(companybranch=webrb))
+    wenc = we.filter(Q(companybranch=webrb))
 
     cor_skills=[]
     for i in staff_id:
@@ -1311,8 +1592,6 @@ def dept_skills_not_utilised(request, cor, dept):
         shwe = we.filter(Q(skills__skill=s, edt=False) | Q(topic__skills__skill=s, edt=True))
         freelance_skills_hours=[]
         for i in freelance_staff_id:
-            tlt = Profile.objects.get(talent=i)
-
             aw_exp = shwe.filter(talent=i, edt=False).aggregate(awet=Sum('hours_worked'))
             awetv = aw_exp.get('awet')
             if awetv == None:
@@ -1493,6 +1772,8 @@ def org_department_dashboard(request, cor, dept):
 
     staff_list = CorporateStaff.objects.filter(Q(corporate__slug=cor) & Q(department__level_name=dept) & Q(date_to__isnull=True))
 
+    profile_list = Profile.objects.all()
+
     freelance_staff_list = staff_list.filter(Q(type__type__icontains='freelance'))
 
     current_staff = staff_list.values_list('talent__id', flat=True)
@@ -1501,8 +1782,8 @@ def org_department_dashboard(request, cor, dept):
     freelance_current_staff = freelance_staff_list.values_list('talent__id', flat=True)
     freelance_current_count = freelance_current_staff.count()
 
-    staff = Profile.objects.filter(talent__id__in=current_staff)
-    freelance_staff = Profile.objects.filter(talent__id__in=freelance_current_staff)
+    staff = profile_list.filter(talent__id__in=current_staff)
+    freelance_staff = profile_list.filter(talent__id__in=freelance_current_staff)
     today = timezone.now().date()
 
     age=[]
@@ -1607,16 +1888,16 @@ def org_department_dashboard(request, cor, dept):
 
     age_bracket_labels = ['18-25', '26-35', '36-45', '46-55', '56-65', '66 & up']
 
-    staff_id = Profile.objects.filter(talent__id__in=current_staff).values_list('id', flat=True)
+    staff_id = profile_list.filter(talent__id__in=current_staff).values_list('id', flat=True)
 
-    freelance_staff_id = Profile.objects.filter(talent__id__in=freelance_current_staff).values_list('id', flat=True)
+    freelance_staff_id = profile_list.filter(talent__id__in=freelance_current_staff).values_list('id', flat=True)
 
     we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
 
     # Total Number of skills per age bracket
     skills_age=[]
     for i in staff_id:
-        tlt = Profile.objects.get(talent=i)
+        tlt = profile_list.get(talent=i)
         staff_age=relativedelta(today, tlt.birth_date).years
 
         talent_skill_l = we.filter(talent=i, edt=False).values_list('skills__skill', flat=True)
@@ -1705,7 +1986,7 @@ def org_department_dashboard(request, cor, dept):
     # Total Number of freelance skills per age bracket
     freelance_skills_age=[]
     for i in freelance_staff_id:
-        tlt = Profile.objects.get(talent=i)
+        tlt = profile_list.get(talent=i)
         staff_age=relativedelta(today, tlt.birth_date).years
 
         talent_skill_l = we.filter(talent=i, edt=False).values_list('skills__skill', flat=True)
@@ -1850,7 +2131,7 @@ def org_department_dashboard(request, cor, dept):
         shwe = we.filter(Q(skills__skill=s, edt=False) | Q(topic__skills__skill=s, edt=True))
         skills_hours=[]
         for i in staff_id:
-            tlt = Profile.objects.get(talent=i)
+            tlt = profile_list.get(talent=i)
 
             aw_exp = shwe.filter(talent=i, edt=False).aggregate(awet=Sum('hours_worked'))
             awetv = aw_exp.get('awet')
@@ -1883,7 +2164,7 @@ def org_department_dashboard(request, cor, dept):
         shwe = we.filter(Q(skills__skill=s, edt=False) | Q(topic__skills__skill=s, edt=True))
         freelance_skills_hours=[]
         for i in freelance_staff_id:
-            tlt = Profile.objects.get(talent=i)
+            tlt = profile_list.get(talent=i)
 
             aw_exp = shwe.filter(talent=i, edt=False).aggregate(awet=Sum('hours_worked'))
             awetv = aw_exp.get('awet')
@@ -1997,9 +2278,11 @@ def corporate_select(request):
 @corp_permission(1)
 def dashboard_corporate(request, cor):
     usr = request.user
-    corp = CorporateStaff.objects.get(Q(talent=usr) & Q(corporate__slug=cor))
+    staff_list = CorporateStaff.objects.all()
+    corp = staff_list.get(Q(talent=usr) & Q(corporate__slug=cor))
     company = corp.corporate
     structure = OrgStructure.objects.filter(corporate__slug=cor)
+    profile_list = Profile.objects.all()
     bch_qs = BriefCareerHistory.objects.filter(companybranch__company=company.company)
 
     #>>> Past Staff window
@@ -2101,13 +2384,13 @@ def dashboard_corporate(request, cor):
 
     dpt_staff_data=[]
     for d in structure:
-        staff = CorporateStaff.objects.filter(Q(corporate=company) & Q(department=d) & Q(date_to__isnull=True))
+        staff = staff_list.filter(Q(corporate=company) & Q(department=d) & Q(date_to__isnull=True))
         current_staff = staff.values_list('talent__id', flat=True)
         if current_staff.count() >= 1:
             current_count = current_staff.count()
         else:
             current_count = 1
-        staff = Profile.objects.filter(talent__id__in=current_staff)
+        staff = profile_list.filter(talent__id__in=current_staff)
         today = timezone.now().date()
         age={}
         for i in staff:
@@ -2118,15 +2401,16 @@ def dashboard_corporate(request, cor):
         dpt_staff=ave_age
         dpt_staff_data.append(dpt_staff)
 
-    staff = CorporateStaff.objects.filter(corporate=company)
+    staff = staff_list.filter(corporate=company)
+    current_staff_list = staff.filter(Q(hide=False) | Q(resigned=False))
     current_staff = staff.filter(Q(hide=False) | Q(resigned=False)).values_list('talent__id', flat=True)
     current_count = current_staff.count()
 
-    staff = Profile.objects.filter(talent__id__in=current_staff)
+    staff_p = profile_list.filter(talent__id__in=current_staff)
     today = timezone.now().date()
 
     age=[]
-    for i in staff:
+    for i in staff_p:
         staff_age=relativedelta(today, i.birth_date).years
         age.append(staff_age)
 
@@ -2177,17 +2461,57 @@ def dashboard_corporate(request, cor):
 
     age_bracket_labels = ['18-25', '26-35', '36-45', '46-55', '56-65', '66 & up']
 
-#    total_age = sum(age.values())
-#    ave_age = [total_age / current_count]
+    #average Tenure by Age Bracket
+    average_tenure=[]
+    for i in current_staff_list:
+        staff_age = profile_list.get(talent=i.talent).age
+        tnr = i.tenure
 
-    staff_id = Profile.objects.filter(talent__id__in=current_staff).values_list('id', flat=True)
+        result={'staff_age': staff_age, 'tnr': tnr}
+        average_tenure.append(result)
+
+    tenure_age_range_18_25=[float(x['tnr']) for x in average_tenure if x['staff_age'] in range(18, 25)]
+    tenure_age_range_26_35=[float(x['tnr']) for x in average_tenure if x['staff_age'] in range(26, 35)]
+    tenure_age_range_36_45=[float(x['tnr']) for x in average_tenure if x['staff_age'] in range(36, 45)]
+    tenure_age_range_46_55=[float(x['tnr']) for x in average_tenure if x['staff_age'] in range(46, 55)]
+    tenure_age_range_56_65=[float(x['tnr']) for x in average_tenure if x['staff_age'] in range(56, 65)]
+    tenure_age_range_66_100=[float(x['tnr']) for x in average_tenure if x['staff_age'] in range(66, 100)]
+
+    if tenure_age_range_18_25 == []:
+        tenure_age_range_18_25 = [0]
+
+    if tenure_age_range_26_35 == []:
+        tenure_age_range_26_35 = [0]
+
+    if tenure_age_range_36_45 == []:
+        tenure_age_range_36_45 = [0]
+
+    if tenure_age_range_46_55 == []:
+        tenure_age_range_46_55 = [0]
+
+    if tenure_age_range_56_65 == []:
+        tenure_age_range_56_65 = [0]
+
+    if tenure_age_range_66_100 == []:
+        tenure_age_range_66_100 = [0]
+
+    ave_tnr_age_range_18_25 = round(mean(tenure_age_range_18_25), 2)
+    ave_tnr_age_range_26_35 = round(mean(tenure_age_range_26_35), 2)
+    ave_tnr_age_range_36_45 = round(mean(tenure_age_range_36_45), 2)
+    ave_tnr_age_range_46_55 = round(mean(tenure_age_range_46_55), 2)
+    ave_tnr_age_range_56_65 = round(mean(tenure_age_range_56_65), 2)
+    ave_tnr_age_range_66_100 = round(mean(tenure_age_range_66_100), 2)
+
+    ave_tnr_age_range_data = [ave_tnr_age_range_18_25, ave_tnr_age_range_26_35, ave_tnr_age_range_36_45, ave_tnr_age_range_46_55, ave_tnr_age_range_56_65, ave_tnr_age_range_66_100]
+
+    staff_id = profile_list.filter(talent__id__in=current_staff).values_list('id', flat=True)
 
     we = WorkExperience.objects.filter(Q(talent__subscription__gte=0) & Q(score__gte=skill_pass_score))
 
     # Number of skills per age bracket
     skills_age=[]
     for i in staff_id:
-        tlt = Profile.objects.get(talent=i)
+        tlt = profile_list.get(talent=i)
         staff_age=relativedelta(today, tlt.birth_date).years
 
         talent_skill_l = we.filter(talent=i, edt=False).values_list('skills__skill', flat=True)
@@ -2291,13 +2615,10 @@ def dashboard_corporate(request, cor):
 
     hours_experience_age_brackets_data = [sum_he_range_18_25, sum_he_range_26_35, sum_he_range_36_45, sum_he_range_46_55, sum_he_range_56_65, sum_he_range_66_100]
 
-    potential = bch_qs.exclude(talent__id__in=current_staff).filter(date_to__isnull=True).count()
-
     template = 'mod_corporate/dashboard_corporate.html'
     context = {
         'corp': corp,
         'company': company,
-        'potential': potential,
         'chart': chart,
         'current_count': current_count,
         'department_labels': department_labels,
@@ -2305,6 +2626,7 @@ def dashboard_corporate(request, cor):
         'number_age_brackets_data': number_age_brackets_data,
         'age_bracket_labels': age_bracket_labels,
         'number_skills_age_brackets_data': number_skills_age_brackets_data,
+        'ave_tnr_age_range_data': ave_tnr_age_range_data,
         'hours_experience_age_brackets_data': hours_experience_age_brackets_data,
         'departments_link': departments_link,
         'ave_age': ave_age,
