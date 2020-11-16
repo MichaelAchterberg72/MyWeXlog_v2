@@ -16,6 +16,7 @@ from dateutil.relativedelta import relativedelta
 from django.utils import timezone
 
 from .utils import create_code7, create_code9
+from WeXlog.storage_backends import PrivateMediaStorage
 
 
 from marketplace.models import WorkLocation, SkillLevel
@@ -362,7 +363,7 @@ def ExtFilename(instance, filename):
 class FileUpload(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
     title = models.CharField(max_length=150)
-    file = models.FileField(upload_to=ExtFilename, validators=[FileExtensionValidator(['pdf'])])
+    file = models.FileField(storage=PrivateMediaStorage(), upload_to=ExtFilename, validators=[FileExtensionValidator(['pdf'])])
 
     def __str__(self):
         return '{}: {}'.format(self.talent, self.title)
