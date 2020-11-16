@@ -1,0 +1,91 @@
+{% extends 'base_home.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}{{block.super}} Staff{% endblock title %}
+{% block Style %}
+  <style>
+
+  </style>
+{% endblock Style %}
+{% block content %}
+  <div class="card card-shadow">
+    <div class="card-body">
+        <div class="btn-toolbar float-right">
+          <div class="btn-group mr-2">
+            <a href="{% url 'Corporate:StaffSearch' corp.slug %}" class="">
+              <i class="fa fa-search" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Staff Search"></i>
+            </a>
+          </div>
+          <div class="btn-group mr-2">
+            <form  action="{% url 'BookList:BLB' %}" method="post">
+              <input type="hidden" name="next" value="{{ request.GET.next }}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-secondary">Back</button>
+            </form>
+          </div>
+      </div>
+      <h3>{{ corp.company }} Staff</h3>
+    </div>
+  </div>
+  <br>
+  <div class="card card-shadow">
+    <div class="card-body">
+
+      <table class="table table-sm">
+        <thead>
+          <tr>
+            <th class="align-middle text-center">Last name, First name</th>
+            <th class="align-middle text-center">Department</th>
+            <th class="align-middle text-center">Admin Rights</th>
+            <th class="align-middle text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in staff_qs %}
+
+            <tr id="{{ item.id }}">
+              <td class="align-middle text-center">{{ item.talent.last_name }}, {{ item.talent.first_name }}</td>
+              <td class="align-middle text-center">{{ item.department }}</td>
+              <td class="align-middle text-center">
+                {% if item.status == True %}
+                  Administrator
+                {% else %}
+                  Staff
+                {% endif %}
+              </td>
+              <td class="align-middle text-center">
+                <div class="btn-toolbar">
+                  <div class="btn-group mr-2">
+                    {% if item.unlocked == True %}
+                      <div class="update-staff" data-slug="{{ item.slug }}" data-action="remove">
+                      <i class="fa fa-user-times" aria-hidden="true" style="font-size:25px; color:red" data-toggle="tooltip" data-placement="top" title="Remove {{ item.talent.first_name }} {{ item.talent.last_name }} from Staff?" onclick="return confirm('Remove {{ item.talent.first_name }} {{ item.talent.last_name }} - Are you sure?');"></i>
+                    </div>
+                    {% else %}
+                    {% endif %}
+                  </div>
+                  <div class="btn-group mr-2">
+                  {% if access == 'granted' %}
+                    {% if item.status == False %}
+                      <div class="update-staff" data-slug="{{ item.slug }}" data-action="admin">
+                        <i class="fa fa-eye" aria-hidden="true" style="font-size:25px; color:black" data-toggle="tooltip" data-placement="top" title="Grant administrator permissions"></i>
+                      </div>
+                    {% endif %}
+                  {% endif %}
+                </div>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="2">No Staff added at this time</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+{% block Script %}
+
+{% endblock Script %}

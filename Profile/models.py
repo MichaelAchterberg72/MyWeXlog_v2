@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
+import datetime
 from time import time
 from random import random
 from django.urls import reverse
@@ -11,6 +12,8 @@ from django.core.validators import FileExtensionValidator
 
 from django_countries.fields import CountryField
 from phonenumber_field.modelfields import PhoneNumberField
+from dateutil.relativedelta import relativedelta
+from django.utils import timezone
 
 from .utils import create_code7, create_code9
 
@@ -43,6 +46,19 @@ class BriefCareerHistory(models.Model):
             return f'{self.talent}, {self.work_configeration}: {self.companybranch}, from: {self.date_from}, to: {self.date_to}'
         else:
             return f'{self.talent}, {self.work_configeration}: {self.companybranch}, from: {self.date_from} (Currently Employed Here)'
+
+    @property
+    def tenure(self):
+        today = timezone.now().date()
+        if self.date_to:
+            tenure = self.date_to - self.date_from
+        else:
+            tenure = today - self.date_from
+
+        months = tenure.days/(365/12)
+        years = months/12
+
+        return years
 
     def save(self, *args, **kwargs):
         if self.date_to:
@@ -127,6 +143,13 @@ class Profile(models.Model):
             sum=0
         return round(Decimal(sum/300),2)
     average = property(avg_rate)
+
+    @property
+    def age(self):
+        '''Age at last birthday'''
+        today = timezone.now().date()
+        age = relativedelta(today, self.birth_date).years
+        return age
 
     def save(self, *args, **kwargs):
         if self.alias is None or self.alias == "":

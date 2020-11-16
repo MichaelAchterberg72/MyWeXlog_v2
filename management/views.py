@@ -287,7 +287,7 @@ def ManagementDashboardView(request):
 
     report_members_labels = [week24_date, week23_date, week22_date, week21_date, week20_date, week19_date, week18_date, week17_date, week16_date, week15_date, week14_date, week13_date, week12_date, week11_date, week10_date, week9_date, week8_date, week7_date, week6_date, week5_date, week4_date, week3_date, 'Last Week', 'This Week']
 
-    free_members_weekly_data = [fm_week24, fm_week23, fm_week22, fm_week21, fm_week20, fm_week19, fm_week18, fm_week17, fm_week16, fm_week15, fm_week14, fm_week13, fm_week12, fm_week11, fm_week10, fm_week9, fm_week8, fm_week7, fm_week6, fm_week5, fm_week4, fm_week3, fm_week2, fm_week1]
+    free_members_weekly_data = [fm_week24, fm_week23, fm_week22, fm_week21, fm_week20, fm_week19, fm_week18, fm_week17, fm_week16, fm_week15, fm_week14, fm_week13, fm_week12, fm_week11, fm_week10, fm_week9, fm_week8, fm_week7, fm_week6, fm_week5, fm_week4, fm_week3, fm_week2, fm_week1] 
 
     passive_members_weekly_data = [pm_week24, pm_week23, pm_week22, pm_week21, pm_week20, pm_week19, pm_week18, pm_week17, pm_week16, pm_week15, pm_week14, pm_week13, pm_week12, pm_week11, pm_week10, pm_week9, pm_week8, pm_week7, pm_week6, pm_week5, pm_week4, pm_week3, pm_week2, pm_week1]
 

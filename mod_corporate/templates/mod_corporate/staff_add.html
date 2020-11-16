@@ -1,0 +1,124 @@
+{% extends 'base_home.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}{{block.super}} Staff{% endblock title %}
+
+{% block Style %}
+  {{ form.media.css }}
+  <style type="text/css">
+    select {
+      width: 200px;
+    }
+</style>
+{% endblock Style %}
+
+{% block content %}
+<div class="card card-shadow">
+  <div class="card-body">
+    <div class="float-right">
+      <form  action="{% url 'BookList:BLB' %}" method="post">
+        <input type="hidden" name="next" value="{{ request.GET.next }}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-secondary">Back</button>
+      </form>
+    </div>
+    <h3>Add to staff</h3>
+    <form method="post">
+      <input type="hidden" name="next" value="{{ request.GET.next }}">
+      {% csrf_token %}
+      <div class="form-row">
+        <div class="form-group col-md-6 mb-0">
+          {{ form.talent|as_crispy_field }}
+          <br>
+          {{ form.type|as_crispy_field }}
+          <br>
+          {{ form.department|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-6 mb-0">
+          <div class="form-row">
+            <div class="form-group col-md-6 mb-0">
+              {{ form.designation|as_crispy_field }}
+            </div>
+            <div class="form-group col-md-6 mb-0">
+              <p>
+                <br>
+                <br>
+                <a href="{% url 'Talent:DesignationAddPop' %}" id='add_designation' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">
+                  Add Designation
+                </a>
+              </p>
+            </div>
+          </div>
+          <br>
+          <div class="form-row">
+            <div class="form-group col-md-6 mb-0">
+              {{ form.date_from|as_crispy_field }}
+            </div>
+            <div class="form-group col-md-6 mb-0">
+              {{ form.date_to|as_crispy_field }}
+            </div>
+          </div>
+          <br>
+          {{ form.status|as_crispy_field }}
+        </div>
+        <div class="">
+          <p>
+            <a href="{% url 'Corporate:DashCorp' corp.slug %}" class="btn btn-danger">
+              Cancel
+            </a>
+            <button type="submit" name="Done" class="btn btn-primary">
+              Save
+            </button>
+          </p>
+        </div>
+    </form>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block Script %}
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  {{ form.media.js }}
+
+  <!-- code for popups -->
+  <script type="text/javascript">
+    function showAddPopup(triggeringLink) {
+        var name = triggeringLink.id.replace(/^add_/, '');
+        href = triggeringLink.href;
+        var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes');
+        win.focus();
+        return false;
+    }
+
+    function closePopup(win, newID, newRepr, id) {
+        $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
+        win.close();
+    }
+
+    window.onerror = function (msg) {
+      $("body").attr("JSError", msg);
+    }
+  </script>
+  <script>
+    $(document).ready(function () {
+       $('#id_talent').select2({
+           ajax: {
+               url: '{% url 'Corporate:StaffAdd' corp.slug %}',
+               dataType: 'json',
+               processResults: function (data) {
+                   return {
+                       results: $.map(data, function (item) {
+                           return {id: item.id, text: item.email};
+                       })
+                   };
+               }
+           },
+           minimumInputLength: 3,
+           placeholder: "Type an email address (Results sorted by last name)",
+           allowClear: true
+       });
+   });
+  </script>
+{% endblock Script %}

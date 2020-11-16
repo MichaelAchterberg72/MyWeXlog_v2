@@ -8,8 +8,8 @@
   <div class="card-body">
     <div class="float-right">
       <a href="{% url 'MarketPlace:Entrance' %}" class="btn btn-secondary">Back</a>
-      <a href="{% url 'MarketPlace:HelpRolesAppliedForSummary' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
-      <i class="icon icon-question-circle"></i></a>
+      <a href="{% url 'MarketPlace:HelpRolesAppliedForSummary' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="tooltip" title="Click here for help on this page!">
+      <i class="fa fa-question-circle"></i></a>
     </div>
     <h4 class="card-title">Vacancy History</h4>
   </div>
@@ -340,8 +340,8 @@
 <div class="card card-shadow" style="width: 100%;">
   <div class="card-body">
     <div class="float-right">
-      <a href="{% url 'MarketPlace:HelpRolesShortlistedForSummary' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
-      <i class="icon icon-question-circle"></i></a>
+      <a href="{% url 'MarketPlace:HelpRolesShortlistedForSummary' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="popover" title="Click here for help on this page!">
+      <i class="fa fa-question-circle"></i></a>
     </div>
     <h4 class="card-title">Roles the Employer has shortlisted you for</h4>
     <p>You have been shortlisted for <strong>{{ sl_qs_c }}</strong> roles {% if sl_qs_c > 10 %}, we only list the most recent 5 for each condition here.{% else %}.{% endif %}</p>

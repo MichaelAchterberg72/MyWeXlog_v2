@@ -1,0 +1,19 @@
+{% extends 'mod_corporate/base_corporate.html' %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Department Skills Resigned{% endblock title %}
+
+{% block subStyle %}{% endblock subStyle %}
+
+{% block content %}
+<div class="card card-shadow">
+  <div class="card-body">
+    <div class="float-right">
+      <a href="{% url 'Corporate:OrgDepartment' cor dept %}" class="btn btn-secondary"style="width: 6rem">Back</a>
+    </div>
+    <h3>{{ dept }} Skills Resigned</h3>
+  </div>
+</div>
+<br>
+
+{% endblock content %}

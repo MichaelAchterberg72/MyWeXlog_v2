@@ -30,6 +30,7 @@
               <p class="btn btn-info float-right" style="width: 8rem" data-toggle="tooltip" title="Rating calculated for 5 or more votes">{{ als.rate_count }} votes</p>
             {% endif %}
             <p><strong>Alias:</strong> {{ als.alias }}</p>
+            <p><strong>Experience Level:</strong> {{ als.exp_level }}</p>
             <hr>
             <p class="text-center"><strong>Languages</strong></p>
             <table class="table table-sm">
@@ -154,25 +155,28 @@
       </div>
       <h4 class="card-title" id="career">Career in Summary</h4>
       <table class="table table-sm">
-        <col width="20%">
-        <col width="20%">
-        <col width="60%">
+        <col width="10%">
+        <col width="10%">
+        <col width="8%">
+        <col width="62%">
         <thead>
           <tr>
-            <th>Date from</th>
-            <th>Date to</th>
-            <th>Company</th>
+            <th class="align-middle text-center">Date from</th>
+            <th class="align-middle text-center">Date to</th>
+            <th class="align-middle text-center">Tenure<br>(years)</th>
+            <th class="align-middle">Company</th>
           </tr>
         </thead>
         <tbody>
           {% for h in bch %}
             <tr>
-              <td>{{ h.date_from|date:"j M Y" }}</td>
+              <td class="align-middle text-center">{{ h.date_from|date:"j M Y" }}</td>
               {% if h.date_to %}
-                <td>{{ h.date_to|date:"j M Y" }}</td>
+                <td class="align-middle text-center">{{ h.date_to|date:"j M Y" }}</td>
               {% else %}
-                <td>Present</td>
+                <td class="align-middle text-center">Present</td>
               {% endif %}
+              <td class="align-middle text-center">{{ h.tenure|floatformat:1 }}</td>
               <td>{{ h.companybranch }}</td>
               {% empty %}
                 <td colspan="3">Nothing Captured.</td>

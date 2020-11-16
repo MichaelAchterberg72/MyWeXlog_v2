@@ -11,6 +11,21 @@ User = get_user_model()
 
 
 class ChatConsumer(WebsocketConsumer):
+    def fetch_menu(self, data):
+    groups_qs = ChatRoomMembers.objects.filter(talent=request.user).order_by('-date_modified').values_list('chat_group')
+
+    chat_rooms = {}
+    for item in groups_qs:
+        groups = ChatRoomMembers.objects.filter(Q(talent=request.user) & Q(chat_group=item)).values_list('room_name', 'date_modified', 'chat_group__slug')
+        messages_received = MessageRead.objects.filter(Q(chat_group=item) & Q(message_read=False) & ~Q(talent=request.user)).count()
+
+        chat_rooms[item] = { 'group': groups, 'notification': messages_received}
+
+        content = {
+            'command': 'fetch_menu',
+            'menus': self.menus_to_json(chat_rooms),
+        }
+        return send_menu(content)
 
     def fetch_messages(self, data):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
@@ -70,9 +85,24 @@ class ChatConsumer(WebsocketConsumer):
             'timestamp': str(message.timestamp.strftime('%a, %b %d, %H:%M'))
         }
 
+    def menus_to_json(self, menus):
+        result =[]
+        for menu in menus:
+            result.append(self.menu_to_json(menu))
+        return result
+
+    def menu_to_json(self, menu):
+        return {
+            'group': 1.group.0.0,
+            'group_url': 1.group.0.2,
+            'notification': 1.notification,
+            'notification_timestamp': str(1.group.0.1.strftime('%a, %b %d'))
+        }
+
     commands = {
         'fetch_messages': fetch_messages,
-        'new_message': new_message
+        'new_message': new_message,
+        'fetch_menu': fetch_menu,
     }
 
     def connect(self):
@@ -111,6 +141,9 @@ class ChatConsumer(WebsocketConsumer):
 
     def send_message(self, message):
         self.send(text_data=json.dumps(message))
+
+    def send_menu(self, menu):
+        self.send(text_data=json.dumps(menu))
 
     # Receive message from room group
     def chat_message(self, event):
@@ -178,7 +211,7 @@ class ChatConsumerv2(WebsocketConsumer):
 
     commands = {
         'fetch_messages': fetch_messages,
-        'new_message': new_message
+        'new_message': new_message,
     }
 
     def connect(self):

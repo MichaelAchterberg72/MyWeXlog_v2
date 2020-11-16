@@ -1,0 +1,336 @@
+{% extends 'mod_corporate/base_corporate.html' %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Corporate{% endblock title %}
+
+{% block subStyle %}{% endblock subStyle %}
+
+{% block TopCenter %}
+<div class="btn-group float-right">
+  <a href="{% url 'Corporate:OrgAdd' corp.corporate.slug %}?next={{ request.path|urlencode }}" class="badge badge-primary align-middle">
+    Add
+  </a>
+</div>
+<h4>Organisation Structure - {{ company }}</h4>
+<div>
+  <div id="chart_div"></div>
+</div>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+  google.charts.load('current', {packages:["orgchart"]});
+  google.charts.setOnLoadCallback(drawChart);
+
+  function drawChart() {
+    var data = new google.visualization.DataTable();
+    data.addColumn('string', 'Name');
+    data.addColumn('string', 'Manager');
+    data.addColumn('string', 'ToolTip');
+
+    // For each orgchart box, provide the name, manager, and tooltip to show.
+    data.addRows({{ chart|safe }});
+//        [
+//          [{'v':'Mike', 'f':'Mike<div style="color:red; font-style:italic">President</div>'},
+//           '', 'The President'],
+//          [{'v':'Jim', 'f':'Jim<div style="color:red; font-style:italic">Vice President</div>'},
+//           'Mike', 'VP'],
+//          ['Alice', 'Mike', ''],
+//          ['Bob', 'Jim', 'Bob Sponge'],
+//          ['Carol', 'Bob', '']
+//        ]);
+
+    // Create the chart.
+    var chart = new google.visualization.OrgChart(document.getElementById('chart_div'));
+    // Draw the chart, setting the allowHtml option to true for the tooltips.
+    chart.draw(data, {'allowHtml':true});
+  }
+</script>
+
+<div class="row col-12">
+  {% for key in departments_link.items %}
+  <div class="mr-2 mb-2">
+    <a href="{% url 'Corporate:OrgDepartment' key.1.cor key.1.dept  %}?next={{ request.path|urlencode }}" class="btn btn-primary">
+      {{ key.1.dept }}
+    </a>
+  </div>
+  {% endfor %}
+</div>
+{% endblock TopCenter %}
+
+{% block MidTopLeft %}
+
+  <div class="btn-group float-right">
+    <div class="btn-group mr-2">
+      <a href="{% url 'Corporate:StaffManage' corp.corporate.slug %}?next={{ request.path|urlencode }}" class="badge badge-primary" data-toggle="tooltip" data-placement="top" title="People listing {{ company}} as their employer shown in brackets">
+        Add ( {{ potential|intcomma }} )
+      </a>
+    </div>
+    <div class="btn-group mr-2">
+      <a href="{% url 'Corporate:StaffCurrent' corp.corporate.slug %}?next={{ request.path|urlencode }}" class="badge badge-primary align-middle">
+        Current ( {{ current_count|intcomma }} )
+      </a>
+    </div>
+    <div class="btn-group mr-2">
+      <a href="{% url 'Corporate:CorpAdmin' corp.corporate.slug %}?next={{ request.path|urlencode }}" class="badge badge-primary align-middle">
+        Admin
+      </a>
+    </div>
+    <div class="btn-group mr-2">
+      <a href="{% url 'Corporate:Hidden' corp.corporate.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary align-middle">
+        Hidden
+      </a>
+    </div>
+    <div class="btn-group mr-2">
+      <a href="{% url 'Corporate:HelpDashStaff' %}?next={{ request.path|urlencode }}" target="_blank" class="align-middle" style="font-size: 14px" data-toggle="tooltip" title="Click here for help">
+      <i class="fa fa-question-circle"></i></a>
+    </div>
+  </div>
+    <h4>Staff</h4>
+    <canvas id="members-chart" height="80px"></canvas>
+    <script>
+    var config = {
+      type: 'bar',
+      data: {
+          labels: {{ age_bracket_labels|safe }},
+          datasets: [{
+            label: 'Number Staff by Age Bracket',
+            data: {{ number_age_brackets_data|safe }},
+              backgroundColor: [
+                  '#C54B6C', '#F5BFD2', '#E5DB9C', '#D0BCAC', '#BEB4C5', '#E6A57E',
+              ],
+              borderColor: [
+
+              ],
+              borderWidth: 1
+          }]
+      },
+      options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero: true
+                  }
+              }]
+            },
+        }
+    };
+
+  window.onload = function() {
+    var ctx = document.getElementById('members-chart').getContext('2d');
+    window.myPie = new Chart(ctx, config);
+
+    var ave_tnr_age_bracket_ctx = document.getElementById('average-tenure-by-age-bracket-chart').getContext('2d');
+    window.myChart = new Chart(ave_tnr_age_bracket_ctx, ave_tnr_age_bracket_config);
+
+    var number_skills_ctx = document.getElementById('skills-by-age-chart').getContext('2d');
+    window.myChart = new Chart(number_skills_ctx, number_skills_config);
+
+    var hours_experience_ctx = document.getElementById('hours-experience-by-age-chart').getContext('2d');
+    window.myChart = new Chart(hours_experience_ctx, hours_experience_skills_config);
+  };
+    </script>
+
+    <canvas id="average-tenure-by-age-bracket-chart" height="80px"></canvas>
+    <script>
+    var ave_tnr_age_bracket_config = {
+      type: 'bar',
+      data: {
+          labels: {{ age_bracket_labels|safe }},
+          datasets: [{
+            label: 'Average Tenure by Age Bracket',
+            data: {{ ave_tnr_age_range_data|safe }},
+              backgroundColor: [
+                  '#C54B6C', '#F5BFD2', '#E5DB9C', '#D0BCAC', '#BEB4C5', '#E6A57E',
+              ],
+              borderColor: [
+
+              ],
+              borderWidth: 1
+          }]
+      },
+      options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero: true
+                  }
+              }]
+            },
+        }
+    };
+
+    </script>
+{% endblock MidTopLeft %}
+
+{% block MidTopRight %}
+  <div class="btn-group float-right">
+    <div class="btn-group mr-2">
+      <a href="{% url 'Corporate:StaffPast' corp.corporate.slug %}?next={{ request.path|urlencode }}" class="badge badge-primary">
+        List
+      </a>
+    </div>
+  </div>
+  <h4>Past Staff</h4>
+  <table class="table table-sm">
+    <thead>
+      <th></th>
+      <th class="align-middle text-center">Average<br>Tenure</th>
+      <th class="align-middle text-center">Count</th>
+    </thead>
+    <tbody>
+      <tr>
+        <th class="align-middle text-center">Employee</th>
+        {% if ps_emp_m > 0 %}
+          <td class="align-middle text-center">{{ ps_emp_m|floatformat:2 }} years</td>
+          <td class="align-middle text-center">{{ ps_emp_c }}</td>
+        {% else %}
+          <td class="align-middle text-center">-</td>
+          <td class="align-middle text-center">0</td>
+        {% endif %}
+      </tr>
+      <tr>
+        <th class="align-middle text-center">Contractor</th>
+        {% if ps_ctr_m > 0 %}
+          <td class="align-middle text-center">{{ ps_ctr_m|floatformat:2 }} years</td>
+          <td class="align-middle text-center">{{ ps_ctr_c }}</td>
+        {% else %}
+          <td class="align-middle text-center">-</td>
+          <td class="align-middle text-center">0</td>
+        {% endif %}
+      </tr>
+      <tr>
+        <th class="align-middle text-center">Fly-in / Fly-out</th>
+        {% if ps_fifo_m > 0 %}
+          <td class="align-middle text-center">{{ ps_fifo_m|floatformat:2 }} years</td>
+          <td class="align-middle text-center">{{ ps_fifo_c }}</td>
+        {% else %}
+          <td class="align-middle text-center">-</td>
+          <td class="align-middle text-center">0</td>
+        {% endif %}
+      </tr>
+      <tr>
+        <th class="align-middle text-center">Consultant</th>
+        {% if ps_cons_m > 0 %}
+          <td class="align-middle text-center">{{ ps_cons_m|floatformat:2 }} years</td>
+          <td class="align-middle text-center">{{ ps_cons_c }}</td>
+        {% else %}
+          <td class="align-middle text-center">-</td>
+          <td class="align-middle text-center">0</td>
+        {% endif %}
+      </tr>
+      <tr>
+        <th class="align-middle text-center">Freelance</th>
+        {% if ps_fl_m > 0 %}
+          <td class="align-middle text-center">{{ ps_fl_m|floatformat:2 }} years</td>
+          <td class="align-middle text-center">{{ ps_fl_c }}</td>
+        {% else %}
+          <td class="align-middle text-center">-</td>
+          <td class="align-middle text-center">0</td>
+        {% endif %}
+      </tr>
+      <tr>
+        <th class="align-middle text-center">Remote Freelance</th>
+        {% if ps_rfl_m > 0 %}
+          <td class="align-middle text-center">{{ ps_rfl_m|floatformat:2 }} years</td>
+          <td class="align-middle text-center">{{ ps_rfl_c }}</td>
+        {% else %}
+          <td class="align-middle text-center">-</td>
+          <td class="align-middle text-center">0</td>
+        {% endif %}
+      </tr>
+    </tbody>
+  </table>
+
+{% endblock MidTopRight %}
+
+{% block MidBotLeft %}
+
+{% endblock MidBotLeft %}
+
+{% block MidBotRight %}
+
+{% endblock MidBotRight %}
+
+{% block BotCenter %}
+  <h4>Experience</h4>
+  <div class="row">
+    <div class="col-md-6">
+  <p>Total Skills</p>
+  <canvas id="skills-by-age-chart" height="100px"></canvas>
+  <script>
+  var number_skills_config = {
+    type: 'bar',
+    data: {
+        labels: {{ age_bracket_labels|safe }},
+        datasets: [{
+          label: 'Number Skills by Age Bracket',
+          data: {{ number_skills_age_brackets_data|safe }},
+            backgroundColor: [
+                '#218B82', '#9AD9DB', '#E5DBD9', '#98D4BB', '#EB96AA', '#C6C9D0',
+            ],
+            borderColor: [
+
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+          },
+      }
+  };
+
+  </script>
+  </div>
+  <div class="col-md-6"
+  <p>Total Hours</p>
+  <canvas id="hours-experience-by-age-chart" height="100px"></canvas>
+  <script>
+  var hours_experience_skills_config = {
+    type: 'bar',
+    data: {
+        labels: {{ age_bracket_labels|safe }},
+        datasets: [{
+          label: 'Hours Experience by Age Bracket',
+          data: {{ hours_experience_age_brackets_data|safe }},
+            backgroundColor: [
+                '#B6D8F2', '#F4CFDF', '#5784BA', '#C54B6C', '#F5BFD2', '#E5DB9C',
+            ],
+            borderColor: [
+
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+      onClick: graphClickEvent,
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+          },
+      }
+  };
+
+  function graphClickEvent(event, array){
+    if(array[0]){
+       var url = "{% url 'Corporate:CorpSelect' %}?next={{ request.path|urlencode }}";
+
+       document.location.href = url;
+    }
+  }
+
+
+  </script>
+  </div>
+  </div>
+  <p>skills histogram by 10 year buckets</p>
+{% endblock BotCenter %}
+
+{% block subScript %}{% endblock subScript %}

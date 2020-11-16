@@ -137,6 +137,11 @@ table {
   display: flex;
   position: inherit;
 }
+.small-paragraph {
+  height: 0.2rem;
+  display: flex;
+  position: inherit;
+}
 .table-hover tr:hover {
   z-index: 1;
   transition: all .4s ease;
@@ -566,4 +571,10 @@ img .btn-image {
 
 .text-center {
     text-align: center;
+}
+
+/* css for checkboxes */
+.format_chkbox{
+height: 1.3em;
+width: 1.3em;
 }

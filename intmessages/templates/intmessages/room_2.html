@@ -35,7 +35,7 @@
           </div>
         </div>
 
-        <div class="row sideBar">
+        <div class="row sideBar" id='menu'>
           {% for room in chat_rooms.items %}
 
           <a href="{% url 'Chat:room' room.1.group.0.2 %}">
@@ -357,6 +357,7 @@
 
   chatSocket.onopen = function(e) {
     fetchMessages();
+    fetchMenu();
   }
 
   chatSocket.onmessage = function(e) {
@@ -367,6 +368,10 @@
        }
      } else if (data['command'] === 'new_message'){
        createMessage(data['message']);
+     } else if (data['command'] === 'fetch_menu'){
+        for (let i=0; i<data['menus'].length; i++){
+          createMenu(data['menus'][i]);
+        }
      }
  };
 
@@ -397,6 +402,10 @@
 
   };
 
+  function fetchMenu() {
+    chatSocket.send(JSON.stringify({'command': 'fetch_menu' }));
+  }
+
   function fetchMessages() {
     chatSocket.send(JSON.stringify({'command': 'fetch_messages' }));
   }
@@ -423,11 +432,62 @@
       msgListTag.className = 'receiver';
       rowTag.className = 'row message-body';
     }
+    
     document.querySelector('#chat-log').appendChild(rowTag);
     rowTag.appendChild(colTag);
     colTag.appendChild(msgListTag);
     msgListTag.appendChild(messageTag);
     messageTag.after(spanTag);
+  }
+
+  function createMenu(data) {
+    var url = data['group_url'];
+    var urlTag = document.createElement('a');
+    var menuSidebarTag = document.createElement('div');
+    menuSidebarTag.className = 'row sideBar-body';
+    var avatarTag = document.createElement('div');
+    avatarTag.className = 'col-md-3 sideBar-avatar';
+    var avatarIconTag = document.createElement('div');
+    avatarIconTag.className = 'avatar-icon';
+    var avatarImgTag = document.createElement('img');
+    var sidebarMainTag = document.createElement('div');
+    sidebarMainTag.className = 'col-md-9 sideBar-main';
+    var rowTag = document.createElement('div');
+    rowTag.className = 'row';
+    var sidebarNameTag = document.createElement('div');
+    sidebarNameTag.className = 'col-8 col-no-pad sideBar-name';
+    var spanNameMeta = document.createElement('span');
+    spanNameMeta.className = 'name-meta';
+    spanNameMeta.textContent = [data.group];
+    var notificationCount = data['notification'];
+    var spanNotification = document.createElement('span');
+    spanNotification.className = 'notification';
+    var sidebarTime = document.createElement('div');
+    sidebarTime.className = 'col-4 col-no-pad float-right sideBar-time';
+    var spanSidebarTime = document.createElement('span');
+    spanSidebarTime.className = 'time-meta float-right';
+    spanSidebarTime.textContent = [data.notification_timestamp];
+
+    if (notificationCount > 0) {
+      spanNotification.textContent = [data.notification];
+    } else {
+      spanNotification.textContent = '';
+    }
+
+    document.querySelector('#menu').appendChild(urlTag);
+    urlTag.href = "{% url 'Chat:room' ${url} %}";
+    urlTag.appendChild(menuSidebarTag);
+    menuSidebarTag.appendChild(avatarTag);
+    avatarTag.appendChild(avatarIconTag);
+    avatarIconTag.appendChild(avatarImgTag);
+    avatarImgTag.src = "https://bootdey.com/img/Content/avatar/avatar1.png";
+    menuSidebarTag.after(sidebarMainTag);
+    sidebarMainTag.appendChild(rowTag);
+    rowTag.appendChild(sidebarNameTag);
+    sidebarNameTag.appendChild(spanNameMeta);
+    spanNameMeta.appendChild(spanNotification);
+    sidebarNameTag.after(sidebarTime);
+    sidebarTime.appendChild(spanSidebarTime);
   }
 </script>
 {% endblock content %}

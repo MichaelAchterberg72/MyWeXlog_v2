@@ -1,0 +1,105 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}{{block.super}}-Staff Search{% endblock title %}
+
+{% block content %}
+<div class="card card-shadow">
+  <div class="card-body">
+  {% if query %}
+    <h4>Staff Names containing "{{ query }}"</h4>
+    <h3>
+      {% with results.count as total_results %}
+      Found {{ total_results }} result{{ total_results|pluralize }}
+      {% endwith %}
+    </h3>
+    <div class="container">
+      <div class="row my-auto">
+        <div class="col-md-5 h-100 text-center my-auto">
+          <strong>Name</strong>
+        </div>
+        <div class="col-md-3 h-100 text-center my-auto">
+          <strong>Information</strong>
+        </div>
+        <div class="col-md-3 h-100 text-center my-auto">
+          <strong>Options</strong>
+        </div>
+      </div>
+    </div>
+    {% for i in results %}
+      <div class="row">
+        <div class="card mt-1 card-hover" style="width: 100%;">
+          <div class="card-body small-pad">
+            <div class="row my-auto">
+              <div class="col-md-5 h-100 text-center my-auto">
+                {{ i.talent.first_name }} {{ i.talent.last_name }}
+              </div>
+              <div class="col-md-3 h-100 text-center my-auto">
+                {% if i.hide == True %}
+                 Hidden
+                {% elif i.status == True %}
+                  Administrator
+                {% else %}
+                  Staff
+                {% endif %}
+              </div>
+              <div class="col-md-3 h-100 text-center my-auto">
+                <div class="btn-toolbar">
+                  <div class="btn-group mr-2">
+                    <a href="{% url 'Talent:APV_C' cor tlt=i.talent.alias %}?next={{ request.path|urlencode }}" target="_blank">
+                      <i class="fa fa-id-badge" aria-hidden="true"style="font-size:30px; color:black" data-toggle="tooltip" data-placement="top" title="Profile"></i>
+                    </a>
+                  </div>
+                  <div class="btn-group mr-2">
+                  {% if access == 'granted' %}
+                    {% if i.status == False and i.hide == False %}
+                      <div class="update-staff" data-slug="{{ i.slug }}" data-action="admin">
+                        <i class="fa fa-eye" aria-hidden="true" style="font-size:25px; color:black" data-toggle="tooltip" data-placement="top" title="Grant administrator permissions"></i>
+                      </div>
+                    {% endif %}
+                  {% endif %}
+                  </div>
+                  <div class="btn-group mr-2">
+                    {% if i.hide == True or i.resigned == True %}
+                    <div class="hide-talent"  data-slug="{{ i.talent.alias }}" data-action="reinstate">
+                      <i class="fa fa-handshake-o" aria-hidden="true"  style="font-size:30px; color:green" data-toggle="tooltip" data-placement="top" title="Re-Instate"></i>
+                    </div>
+                    {% endif %}
+                  </div>
+                  <div class="btn-group mr-2">
+                    {% if i.unlocked == True  and i.hide == False %}
+                      <div class="update-staff" data-slug="{{ i.slug }}">
+                        <i class="fa fa-user-times" aria-hidden="true" style="font-size:25px; color:red" data-toggle="tooltip" data-placement="top" title="Remove {{ i.talent.first_name }} {{ i.talent.last_name }} from Staff?" onclick="return confirm('Remove {{ i.talent.first_name }} {{ i.talent.last_name }} - Are you sure?');"></i>
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <p>No staff matching your query.</p>
+    {% endfor %}
+
+    <form action="." method="get">
+    {{ form.as_p }}
+    <input type="submit" class="btn btn-primary 8rem " style="width: 8rem" value="Search Again">
+    </form>
+    {% else %}
+    <h4>Search for Profile</h4>
+    <div class="card-body">
+      <form action="." method="get">
+      {{ form.as_p }}
+      <input type="submit" value="Search" class="btn btn-primary 8rem " style="width: 8rem">
+      </form>
+    </div>
+  {% endif %}
+</div>
+
+{% endblock content %}
+{% block Script %}
+{% endblock Script %}

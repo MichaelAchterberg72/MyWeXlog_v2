@@ -23,8 +23,8 @@
           <button type="submit" class="btn btn-secondary">Back</button>
         </form>&nbsp
           <a href="{% url 'MarketPlace:VacancyEdit' instance.ref_no %}" class="btn btn-info ">Edit Vacancy</a>&nbsp
-          <a href="{% url 'MarketPlace:HelpVacancyPost' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
-          <i class="icon icon-question-circle"></i></a>
+          <a href="{% url 'MarketPlace:HelpVacancyPost' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="tooltip" title="Click here for help on this page!">
+          <i class="fa fa-question-circle"></i></a>
       </div>
       <h3>Vacancy Review</h3>
       <h5 class="card-title">Vacancy: {{ instance.title }} ({{ instance.ref_no }})</h5>
@@ -208,8 +208,8 @@
   <div class="card card-shadow">
     <div class="card-body">
       <div class="float-right">
-        <a href="{% url 'MarketPlace:HelpApplicantsVacancy' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
-        <i class="icon icon-question-circle"></i></a>
+        <a href="{% url 'MarketPlace:HelpApplicantsVacancy' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="popover" title="Click here for help on this page!">
+        <i class="fa fa-question-circle"></i></a>
       </div>
     <h3 id="applicants">Applicants</h3>
     <p>There are a total of {{ applied_count }} bids that talent have applied for the vacancy{% if applied_count >= 5 %}, we only list the top 5 here.{% else %}.{% endif %}</p>
@@ -322,8 +322,8 @@
   <div class="card card-shadow">
     <div class="card-body">
       <div class="float-right">
-        <a href="{% url 'MarketPlace:HelpTalentSuitedVacancy' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="popover" title="Click here for help on this page!">
-        <i class="icon icon-question-circle"></i></a>
+        <a href="{% url 'MarketPlace:HelpTalentSuitedVacancy' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="popover" title="Click here for help on this page!">
+        <i class="fa fa-question-circle"></i></a>
       </div>
       <h3 id='suited'>Talent suited to the Vacancy</h3>
       <p>There are a total of {{ suitable_count }} talent suited to the vacancy{% if suitable_count >= 5 %}, we only list the top 5 here.{% else %}.{% endif %}</p>

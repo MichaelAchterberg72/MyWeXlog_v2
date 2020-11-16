@@ -52,7 +52,7 @@
               {% if o.assignment_complete_tlt == False %}
                   Incomplete
                   <br>
-                  <a href="{% url 'Profile:TltMarkComp' o.slug %}" data-toggle="tooltip" title="Mark Complete"><i class="fa fa-check-square-o" aria-hidden="true" style="font-size:24px;color:green !important"></i></a>
+                  <a href="{% url 'Profile:TltMarkComp' o.slug %}" data-toggle="tooltip" title="Mark Complete"><i class="fa fa-check-square-o" aria-hidden="true" style="font-size:24px; color:green !important"></i></a>
               {% else %}
                 Complete
               {% endif %}

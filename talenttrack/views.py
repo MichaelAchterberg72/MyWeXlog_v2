@@ -14,10 +14,11 @@ from django.db.models import Count, Sum, Q, F
 from django.db.models.functions import Greatest
 from decimal import Decimal
 from django.contrib.postgres.search import SearchVector, TrigramSimilarity
+import math
 
 
 from csp.decorators import csp_exempt
-from core.decorators import subscription
+from core.decorators import subscription, corp_permission
 from WeXlog.app_config import(
         client_score, lecturer_score, classmate_score, colleague_score, pre_colleague_score, collaborator_score, superior_score
         )
@@ -42,6 +43,7 @@ from Profile.models import (
 )
 from booklist.models import ReadBy
 from users.models import CustomUser
+from mod_corporate.models import CorporateStaff
 
 from WeXlog.app_config import (
     skill_pass_score, locked_age,
@@ -55,7 +57,7 @@ from analytics.signals import object_viewed_signal
 def ExperienceHome(request):
     '''The view for the main page for Talenttrack app'''
     #>>>Step 1
-    basequery = WorkExperience.objects.select_related('topic').filter(talent=request.user)
+    basequery = WorkExperience.objects.filter(talent=request.user).select_related('topic')
     skills = SkillTag.objects.all()
     sl = SkillLevel.objects.all()
     we_c = basequery.filter(score__gte=skill_pass_score)
@@ -1355,8 +1357,8 @@ def profile_view(request, tlt):
     pfl = Profile.objects.filter(alias=tlt).first()
     als = get_object_or_404(Profile, alias=tlt)
     padd = PhysicalAddress.objects.only('country', 'region', 'city').get(talent__alias=tlt)
-    vacancy = TalentRequired.objects.filter(ref_no=vac)
-    skr = SkillRequired.objects.filter(scope__ref_no=vac).values_list('skills', flat=True).distinct('skills')
+    #vacancy = TalentRequired.objects.filter(ref_no=vac)
+    #skr = SkillRequired.objects.filter(scope__ref_no=vac).values_list('skills', flat=True).distinct('skills')
     skill_qs = SkillTag.objects.all()
     exp = WorkExperience.objects.filter(talent__alias=tlt).select_related('topic', 'course', 'project')
     edtexp = exp.filter(edt=True).order_by('-date_from')
@@ -1364,7 +1366,7 @@ def profile_view(request, tlt):
     bkl = ReadBy.objects.filter(talent__alias=tlt).select_related('book', 'type')[:6]
     bkl_count = bkl.count()
     prj_qs = ProjectData.objects.all()
-    bid_qs = WorkBid.objects.filter(Q(talent__alias=tlt) & Q(work__ref_no=vac))
+    #bid_qs = WorkBid.objects.filter(Q(talent__alias=tlt) & Q(work__ref_no=vac))
     achievement_qs = Achievements.objects.filter(talent__alias=tlt).order_by('-date_achieved')[:6]
     achievement_qs_count = achievement_qs.count()
     language_qs = LanguageTrack.objects.filter(talent__alias=tlt).order_by('-language')
@@ -1390,7 +1392,56 @@ def profile_view(request, tlt):
 
     template = 'talenttrack/active_profile_view_light.html'
     context = {
-        'tlt': tlt, 'bch': bch, 'bch_count': bch_count, 'pfl': pfl, 'padd': padd, 'exp': exp, 'bkl': bkl, 'edtexp': edtexp, 'edtexp_count': edtexp_count, 'bkl_count': bkl_count, 'prj_set': prj_set, 'prj_count': prj_count, 'achievement_qs': achievement_qs, 'achievement_qs_count': achievement_qs_count, 'language_qs': language_qs, 'membership_qs': membership_qs, 'membership_qs_count': membership_qs_count, 'als': als, 'vac': vac, 'wtr_qs': wtr_qs,
+        'tlt': tlt, 'bch': bch, 'bch_count': bch_count, 'pfl': pfl, 'padd': padd, 'exp': exp, 'bkl': bkl, 'edtexp': edtexp, 'edtexp_count': edtexp_count, 'bkl_count': bkl_count, 'prj_set': prj_set, 'prj_count': prj_count, 'achievement_qs': achievement_qs, 'achievement_qs_count': achievement_qs_count, 'language_qs': language_qs, 'membership_qs': membership_qs, 'membership_qs_count': membership_qs_count, 'als': als, 'wtr_qs': wtr_qs,
+        }
+    return render(request, template, context)
+
+
+@login_required()
+@corp_permission(1)
+def profile_view_corp(request, cor, tlt):
+    '''View for profile without reference to a vacancy. Used for the corporate feature'''
+    #caching
+    bch = BriefCareerHistory.objects.filter(talent__alias=tlt).order_by('-date_from')[:6]
+    corp_info = CorporateStaff.objects.get(Q(talent__alias=tlt) & Q(corporate__slug=cor))
+    bch_count = bch.count()
+    pfl = Profile.objects.filter(alias=tlt)
+    als = get_object_or_404(Profile, alias=tlt)
+    padd = PhysicalAddress.objects.only('country', 'region', 'city').get(talent__alias=tlt)
+    skill_qs = SkillTag.objects.all()
+    exp = WorkExperience.objects.filter(talent__alias=tlt).select_related('topic', 'course', 'project')
+    edtexp = exp.filter(edt=True).order_by('-date_from')
+    edtexp_count = edtexp.count()
+    bkl = ReadBy.objects.filter(talent__alias=tlt).select_related('book', 'type')[:6]
+    bkl_count = bkl.count()
+    prj_qs = ProjectData.objects.all()
+    #bid_qs = WorkBid.objects.filter(Q(talent__alias=tlt) & Q(work__ref_no=vac))
+    achievement_qs = Achievements.objects.filter(talent__alias=tlt).order_by('-date_achieved')[:6]
+    achievement_qs_count = achievement_qs.count()
+    language_qs = LanguageTrack.objects.filter(talent__alias=tlt).order_by('-language')
+    membership_qs = LicenseCertification.objects.filter(talent__alias=tlt).order_by('-issue_date')[:6]
+    membership_qs_count = membership_qs.count()
+    wtr_qs = WillingToRelocate.objects.filter(talent__alias=tlt)
+
+    #Project Summary
+    prj = exp.values_list('project', flat=True).distinct('project')
+    prj_set = {}
+    prj_count = 0
+    for p in prj:
+        if p == None:
+            pass
+        else:
+            prj_count +=1
+            project_q = prj_qs.filter(pk=p).values_list('name', 'company__ename', 'companybranch__name', 'industry__industry')
+            info_list=[project_q[0][1], project_q[0][2], project_q[0][3]]
+            prj_set[project_q[0][0]] = info_list
+
+    #object_viewed_signal.send(pfl.__class__, instance=pfl, request=request)
+
+
+    template = 'talenttrack/active_profile_view_corp.html'
+    context = {
+        'tlt': tlt, 'bch': bch, 'bch_count': bch_count, 'pfl': pfl, 'padd': padd, 'exp': exp, 'bkl': bkl, 'edtexp': edtexp, 'edtexp_count': edtexp_count, 'bkl_count': bkl_count, 'prj_set': prj_set, 'prj_count': prj_count, 'achievement_qs': achievement_qs, 'achievement_qs_count': achievement_qs_count, 'language_qs': language_qs, 'membership_qs': membership_qs, 'membership_qs_count': membership_qs_count, 'als': als, 'wtr_qs': wtr_qs, 'corp_info': corp_info
         }
     return render(request, template, context)
 
@@ -1560,30 +1611,107 @@ def LCMFullView(request, tlt):
 
 
 def SkillProfileDetailView(request, tlt):
-    '''A list of all hours logged against a skill for experience and training'''
+    '''A list of all hours logged against a skill (for an individual) for experience and training'''
     tlt_p = Profile.objects.get(talent__alias=tlt)
     skill_qs = SkillTag.objects.all()
-    exp = WorkExperience.objects.filter(talent__alias = tlt).select_related('topic')
+    exp = WorkExperience.objects.filter(talent__alias=tlt).select_related('topic')
+    tlt_filter=tlt
+    exp_skills = exp.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
 
-    exp_s = exp.values_list('skills', flat=True).distinct('skills')
-    exp_t = exp.order_by('topic__skills').values_list('topic__skills', flat=True).distinct('topic__skills')
-    edt_topic = exp.values_list('topic', flat=True).distinct('topic')
+    exp_s = exp_skills.values_list('skills', flat=True).distinct('skills')
+    exp_t = exp_skills.order_by('topic__skills').values_list('topic__skills', flat=True).distinct('topic__skills')
+    edt_topic = exp_skills.values_list('topic', flat=True).distinct('topic')
 
-    tlt = tlt
+    exp_s_skill = exp_skills.values_list('skills__skill', flat=True).distinct('skills')
+    exp_t_skill = exp_skills.order_by('topic__skills__skill').values_list('topic__skills__skill', flat=True).distinct('topic__skills__skill')
 
-    #gathering all experience hours per topic
+    exp_s_list = list(exp_s_skill)
+    exp_t_list = list(exp_t_skill)
+    skills_list = list(exp_s_list + exp_t_list)
+
+    skills_list_set=[]
+    for x in skills_list:
+        skills_list_set.append(x)
+    skills_list_n = [x for x in skills_list_set if x is not None]
+
+    skills_list_set_set = set(skills_list_n)
+    ordered_skills_list = sorted(skills_list_set_set, reverse=False)
+
+    skills_list_Labels = ordered_skills_list
+
+    tlt_id = [tlt_p.id]
+
+    #Hours Experience per skill chart
+    skills_hours_skill_data = []
+    for s in ordered_skills_list:
+        shwe = exp_skills.filter(Q(skills__skill=s, edt=False) | Q(topic__skills__skill=s, edt=True))
+        skills_hours=[]
+        for i in tlt_id:
+
+            aw_exp = shwe.filter(talent=i, edt=False).aggregate(awet=Sum('hours_worked'))
+            awetv = aw_exp.get('awet')
+            if awetv == None:
+                awetv = 0
+            else:
+                awetv = awetv
+
+            at_exp = shwe.filter(talent=i, edt=True).aggregate(tet=Sum('topic__hours'))
+            atetv = at_exp.get('tet')
+            if atetv == None:
+                atetv = 0
+            else:
+                atetv = atetv
+
+            t_exp = awetv + atetv
+
+            result={'t_exp': t_exp}
+
+            skills_hours.append(result)
+
+        skills_list=[float(x['t_exp']) for x in skills_hours]
+        sum_shwe = sum(skills_list)
+
+        skills_hours_skill_data.append(sum_shwe)
+
+    #Hours Training Experience per skill chart
+    training_skills_hours_skill_data = []
+    for s in ordered_skills_list:
+        shwt = exp_skills.filter(Q(topic__skills__skill=s, edt=True))
+        training_skills_hours=[]
+        for i in tlt_id:
+
+            at_exp = shwt.filter(talent=i, edt=True).aggregate(tet=Sum('topic__hours'))
+            atetv = at_exp.get('tet')
+            if atetv == None:
+                atetv = 0
+            else:
+                atetv = atetv
+
+            result={'t_exp': atetv}
+
+            training_skills_hours.append(result)
+
+        training_skills_list=[float(x['t_exp']) for x in training_skills_hours]
+        sum_shwt = sum(training_skills_list)
+
+        training_skills_hours_skill_data.append(sum_shwt)
+
+    #gathering all experience hours per topic-this not working again
     exp_set = {}
     for s in exp_s:
         if s == None:
             pass
         else:
             b = skill_qs.get(pk=s)
-            c = b.experience.filter(talent__alias=tlt)
-            cnt = c.count()
-            sum = c.aggregate(sum_s=Sum('hours_worked'))
-            sum_float = float(sum.get('sum_s'))
+            c = b.experience.filter(Q(talent__alias=tlt_filter) & Q(score__gte=skill_pass_score))
+            #cnt = c.count()
+            sum_h = c.aggregate(sum_s=Sum('hours_worked'))
+            if sum_h.get('sum_s')==None:
+                sum_float=0
+            else:
+                sum_float = float(sum_h.get('sum_s'))
             info_set = {}
-            info_set['count']=cnt
+            #info_set['count']=cnt
             info_set['sum']=sum_float
             skill_q = skill_qs.filter(pk=s).values_list('skill', flat=True)
             skill_f = skill_q[0]
@@ -1607,7 +1735,7 @@ def SkillProfileDetailView(request, tlt):
                 pass
             else:
                 d = skill_qs.get(pk=t)
-                e = exp.filter(topic__skills=d)
+                e = exp_skills.filter(topic__skills=d)
                 e_sum = e.aggregate(sum_t=Sum('topic__hours'))
                 sum_float = float(e_sum.get('sum_t'))
                 skill_q = skill_qs.filter(pk=t).values_list('skill', flat=True)
@@ -1620,6 +1748,9 @@ def SkillProfileDetailView(request, tlt):
 
     template = 'talenttrack/talent_detail_summary.html'
     context = {
+        'skills_list_Labels': skills_list_Labels,
+        'skills_hours_skill_data': skills_hours_skill_data,
+        'training_skills_hours_skill_data': training_skills_hours_skill_data,
         'edt_set': edt_set, 'exp_set': exp_set, 'tlt_p': tlt_p, 'tlt': tlt,
     }
     return render(request, template, context)

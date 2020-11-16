@@ -13,8 +13,8 @@
         <a href="{% url 'MarketPlace:History' %}" class="btn btn-primary" style="width: 8rem">View History</a>
         <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary 8rem" style="width: 10rem">Interview History</a>
         {% endif %}
-        <a href="{% url 'MarketPlace:HelpVacanciesSuitedForMeFull' %}" target="_blank" class="align-middle" style="font-size: 27px" data-toggle="tooltip" title="Click here for help on this page!">
-        <i class="icon icon-question-circle"></i></a>
+        <a href="{% url 'MarketPlace:HelpVacanciesSuitedForMeFull' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="tooltip" title="Click here for help on this page!">
+        <i class="fa fa-question-circle"></i></a>
       </div>
       <h4 class="card-title">Vacancies Suited for Me - Full List</h4>
       <p>You currently have <strong>{{ rem_vac }}</strong> vacancies that match your skillset experience.</p>

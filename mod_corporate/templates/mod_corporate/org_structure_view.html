@@ -1,0 +1,65 @@
+{% extends 'base_home.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}{{block.super}} Org Structure{% endblock title %}
+
+{% block content %}
+<div class="card card-shadow">
+  <div class="card-body">
+    <div class="float-right">
+      <form  action="{% url 'BookList:BLB' %}" method="post">
+        <input type="hidden" name="next" value="{{ request.GET.next }}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-secondary">Back</button>
+      </form>
+    </div>
+  </div>
+</div>
+<br>
+{% for key in corp_charts.items %}
+<div class="card card-shadow">
+  <div class="card-body">
+
+    <h3>{{ key.1.co }}</h3>
+    <br>
+    <div>
+      <div id="chart_div"></div>
+    </div>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {packages:["orgchart"]});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Name');
+        data.addColumn('string', 'Manager');
+        data.addColumn('string', 'ToolTip');
+
+        // For each orgchart box, provide the name, manager, and tooltip to show.
+        data.addRows({{ key.1.chart|safe }});
+//        [
+//          [{'v':'Mike', 'f':'Mike<div style="color:red; font-style:italic">President</div>'},
+//           '', 'The President'],
+//          [{'v':'Jim', 'f':'Jim<div style="color:red; font-style:italic">Vice President</div>'},
+//           'Mike', 'VP'],
+//          ['Alice', 'Mike', ''],
+//          ['Bob', 'Jim', 'Bob Sponge'],
+//          ['Carol', 'Bob', '']
+//        ]);
+
+        // Create the chart.
+        var chart = new google.visualization.OrgChart(document.getElementById('chart_div'));
+        // Draw the chart, setting the allowHtml option to true for the tooltips.
+        chart.draw(data, {'allowHtml':true});
+      }
+   </script>
+
+
+
+  </div>
+</div>
+<br>
+{% endfor %}
+{% endblock content %}

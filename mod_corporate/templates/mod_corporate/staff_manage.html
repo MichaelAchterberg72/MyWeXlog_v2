@@ -1,0 +1,70 @@
+{% extends 'base_home.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}{{block.super}} Staff{% endblock title %}
+{% block Style %}
+  <style>
+
+  </style>
+{% endblock Style %}
+{% block content %}
+  <div class="card card-shadow">
+    <div class="card-body">
+      <div class="btn-toolbar float-right">
+        <div class="btn-group mr-2">
+          <a href="{% url 'Corporate:StaffAdd' corp.slug %}?next={{ request.path|urlencode }}">
+            <i class="fa fa-user-plus" aria-hidden="true" style="font-size:30px; color:green" data-toggle="tooltip" data-placement="top" title="Add non-listed person to staff"></i>
+          </a>
+        </div>
+        <div class="btn-group mr-2">
+          <a href="{% url 'Corporate:DashCorp' corp.slug %}" class="btn btn-secondary">
+            Back
+          </a>
+          </div>
+      </div>
+      <h3>Add Staff for {{ corp.company }}</h3>
+    </div>
+  </div>
+  <br>
+  <div class="card card-shadow">
+    <div class="card-body">
+      <h5>People that have indicated {{ corp.company }} as their current employer</h5>
+
+      <table class="table table-sm">
+        <thead>
+          <tr>
+            <th class="align-middle text-center">Last name, First name</th>
+            <th class="align-middle text-center">Designation</th>
+            <th class="align-middle text-center">Date Joined</th>
+            <th class="align-middle text-center">Add to Staff</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in potential %}
+            {% if item.talent.id not in staff_id %}
+            <tr>
+              <td class="align-middle text-center">{{ item.talent.last_name }}, {{ item.talent.first_name }}</td>
+              <td class="align-middle text-center">{{ item.designation }}</td>
+              <td class="align-middle text-center">{{ item.date_from|date:"j M Y" }}</td>
+              <td class="align-middle text-center">
+                <a href="{% url 'Corporate:StaffInclude' cor=corp.slug tlt=item.talent.alias bch=item.slug %}">
+                  <i class="fa fa-user-plus" aria-hidden="true" style="font-size:30px; color:green" data-toggle="tooltip" data-placement="top" title="Add {{ item.talent.first_name }} to staff"></i>
+                </a>
+              </td>
+            </tr>
+            {% endif %}
+          {% empty %}
+            <tr>
+              <td colspan="2">All people have been added to your staff</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+{% block Script %}
+
+{% endblock Script %}

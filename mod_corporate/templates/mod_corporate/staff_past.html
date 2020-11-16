@@ -1,0 +1,89 @@
+{% extends 'base_home.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}{{block.super}} Past Staff{% endblock title %}
+{% block Style %}
+  <style>
+
+  </style>
+{% endblock Style %}
+{% block content %}
+  <div class="card card-shadow">
+    <div class="card-body">
+        <div class="btn-toolbar float-right">
+          <div class="btn-group mr-2">
+            <a href="{% url 'Corporate:StaffSearch' corp.slug %}" class="">
+              <i class="fa fa-search" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Staff Search"></i>
+            </a>
+          </div>
+          <div class="btn-group mr-2">
+            <form  action="{% url 'BookList:BLB' %}" method="post">
+              <input type="hidden" name="next" value="{{ request.GET.next }}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-secondary">Back</button>
+            </form>
+          </div>
+      </div>
+      <h3>Past {{ corp.company }} Staff</h3>
+    </div>
+  </div>
+  <br>
+  <div class="card card-shadow">
+    <div class="card-body">
+
+      <table class="table table-sm">
+        <thead>
+          <tr>
+            <th class="align-middle text-center">Date Left</th>
+            <th class="align-middle text-center">Last name, First name</th>
+            <th class="align-middle text-center">Date Joined</th>
+            <th class="align-middle text-center">Tenure</th>
+            <th class="align-middle text-center">Designation</th>
+            <th class="align-middle text-center">Relationship</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in past_qs %}
+            <tr>
+              <td class="align-middle text-center">{{ item.date_to }}</td>
+              <td class="align-middle text-center">{{ item.talent.last_name }}, {{ item.talent.first_name }}</td>
+              <td class="align-middle text-center">{{ item.date_from }}</td>
+              <td class="align-middle text-center">{{ item.tenure|floatformat:2 }}</td>
+              <td class="align-middle text-center">{{ item.designation }}</td>
+              <td class="align-middle text-center">{{ item.work_configeration }}</td>
+
+
+              <td class="align-middle text-center">
+                <div class="btn-toolbar">
+                  <div class="btn-group mr-2">
+                    <a href="{% url 'Talent:APV_C' cor item.talent.alias %}" target="_blank">
+                      <i class="fa fa-id-badge" aria-hidden="true"style="font-size:30px; color:black" data-toggle="tooltip" data-placement="top" title="View Profile"></i>
+                    </a>
+                  </div>
+                  <div class="btn-group mr-2">
+                    <i class="fa fa-folder-open-o" aria-hidden="true"  style="font-size:30px; color:blue" data-toggle="tooltip" data-placement="top" title="View {{ corp.company }} Work History"></i>
+                  </div>
+                  <div class="btn-group mr-2">
+                    <div class="hide-talent"  data-slug="{{ item.talent.alias }}" data-action="reinstate">
+                      <i class="fa fa-handshake-o" aria-hidden="true"  style="font-size:30px; color:green" data-toggle="tooltip" data-placement="top" title="Re-Instate"></i>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="2">No past staff at this time!</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+{% block Script %}
+
+{% endblock Script %}

@@ -1,0 +1,360 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+{% block title %}{{block.super}}- {{ als.talent.first_name }} Profile{% endblock title %}
+
+{% block content %}
+<h3>Profile for {{ als.talent.first_name }} {{ als.talent.last_name }}</h3>
+<div class="row">
+  <div class="col-sm-12">
+  </div>
+</div>
+  <div class="">
+    <div class="card-header">
+      <a href="{% url 'Talent:SPDView' als.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right" >View All Skills</a>
+      <h5>Basic Information</h5>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="card card-shadow h-100">
+          <div class="card-body">
+          <h5 class="card-title">General Information</h5>
+
+            <p><strong>Name:</strong>
+              {{ als.talent.first_name }} {{ als.talent.last_name }}
+            </p>
+            <p><strong>Department:</strong>
+              {{ corp_info.department }}
+            </p>
+            <p><strong>Experience Level:</strong>
+              {{ als.exp_lvl }}
+            </p>
+
+            <p><strong>Birthdate:</strong>
+              {{ als.birth_date|date:"j M Y" }} <strong>& Age: </strong>{{ als.age }} (at last birthday)
+            </p>
+
+            <hr>
+            <p class="text-center"><strong>Languages</strong></p>
+            <table class="table table-sm">
+              <thead>
+                <tr>
+                  <th>Language</th>
+                  <th>Level</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for l in language_qs %}
+                <tr>
+                  <td>{{ l.language }}</td>
+                  <td>{{ l.get_level_display }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan=2>No languages captued.</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            <hr>
+            <p>
+              <strong>Current location:</strong> {{ padd.country.name }}, {{ padd.region }}, {{ padd.city }}
+            </p>
+            {% if wtr_qs %}
+              <p class="text-center"><strong>Willing to Relocate</strong></p>
+              <table class="table table-sm">
+                <thead>
+                  <tr>
+                    <th>Country</th>
+                    <th>Permits</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for wtr in wtr_qs %}
+                    <tr>
+                      <td>{{ wtr.country.name }}</td>
+                      <td>
+                      {% if wtr.documents == True %}
+                        I can legally work in {{ wtr.country.name }}
+                      {% else %}
+                        I need to apply for work permits, etc.
+                      {% endif %}
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            {% endif %}
+            <hr>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="card card-shadow h-100">
+          <div class="card-body">
+            <div class="class="card-title"">
+              {% if membership_qs_count >= 6 %}
+                <a href="{% url 'Talent:LCM_FV' als.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Detail</a>
+              {% endif %}
+            <div class="card-title">
+              <h5>Licenses, Certifications & Memberships</h5>
+            </div>
+            <table class="table table-sm">
+              <col width="15%">
+              <col width="20%">
+              <col width="35%">
+              <col width="15%">
+              <col width="15%">
+              <thead>
+                <tr>
+                  <th class="align-middle text-center">Type</th>
+                  <th class="align-middle text-center">Name</th>
+                  <th class="align-middle text-center">Managing Institution</th>
+                  <th class="align-middle text-center">Country</th>
+                  <th class="align-middle text-center">Region</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for lcm in membership_qs %}
+                  <tr>
+                    <td class="align-middle text-center">{{ lcm.certification }}</td>
+                    <td class="align-middle text-center">{{ lcm.cert_name }}</td>
+                    <td class="align-middle text-center">{{ lcm.companybranch }}</td>
+                    <td class="align-middle text-center">{{ lcm.country.name }}</td>
+                    <td class="align-middle text-center">{{ lcm.region }}</td>
+                    {% empty %}
+                      <td colspan="4">None Captured.</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="card card-shadow">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="">
+          <div class="card-body">
+          <h4 class="card-title">General Information</h4>
+            <hr>
+            <p><strong>Background</strong><br>
+               {{ als.background|linebreaks }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <br>
+  <div class="card card-shadow">
+    <div class="card-body">
+      <div class="float-right">
+        {% if bch_count >= 6 %}
+        <a href="{% url 'Talent:DPCSum' als.alias %}#Company" class="btn btn-primary">All Companies</a>
+        {% endif %}
+      </div>
+      <h4 class="card-title" id="career">Career in Summary</h4>
+      <table class="table table-sm">
+        <col width="10%">
+        <col width="10%">
+        <col width="8%">
+        <col width="62%">
+        <thead>
+          <tr>
+            <th class="align-middle text-center">Date from</th>
+            <th class="align-middle text-center">Date to</th>
+            <th class="align-middle text-center">Tenure<br>(years)</th>
+            <th class="align-middle">Company</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for h in bch %}
+            <tr>
+              <td class="align-middle text-center">{{ h.date_from|date:"j M Y" }}</td>
+              {% if h.date_to %}
+                <td class="align-middle text-center">{{ h.date_to|date:"j M Y" }}</td>
+              {% else %}
+                <td class="align-middle text-center">Present</td>
+              {% endif %}
+              <td class="align-middle text-center">{{ h.tenure|floatformat:1 }}</td>
+              <td>{{ h.companybranch }}</td>
+              {% empty %}
+                <td colspan="3">Nothing Captured.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card card-shadow">
+        <div class="card-body">
+          {% if achievement_qs_count >= 6 %}
+            <a href="{% url 'Talent:ACH_L_FV' tlt %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Detail</a>
+          {% endif %}
+        <h4 class="card-title" id="achievements">Achievements</h4>
+        <table class="table table-sm">
+          <col width="30%">
+          <col width="10%">
+          <col width="55%">
+          <thead>
+            <tr>
+              <th class="align-middle text-center">Achievement</th>
+              <th class="align-middle text-center">Date Achieved</th>
+              <th class="align-middle text-left">Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for a in achievement_qs %}
+            <tr>
+              <td class="align-middle text-left">{{ a.achievement}}</td>
+              <td class="align-middle text-center">{{ a.date_achieved|date:"j M Y"}}</td>
+              <td class="align-middle text-left">{{ a.description|linebreaks}}</td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="3">No achievements captured.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="card card-shadow">
+    <div class="card-body">
+      <div class="float-right">
+        {% if prj_count >= 6 %}
+        <a href="{% url 'Talent:DPCSum' als.alias %}#Project" class="btn btn-primary">All Projects</a>
+        {% endif %}
+      </div>
+      <h4 class="card-title" id="projects">Project History</h4>
+    </div>
+      <div class="col-sm-12">
+
+        <p>Total Projects: <strong>{{ prj_count }}</strong> </p>
+
+            <table class="table table-sm">
+              <col width="45%">
+              <col width="20%">
+              <col width="15%">
+              <col width="20%">
+              <thead>
+                <tr>
+                  <th>Project Name</th>
+                  <th>Project Owner</th>
+                  <th>Project Site</th>
+                  <th>Industry</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for b in prj_set.items %}
+                  <tr>
+                    <td>{{ b.0 }}</td>
+                    <td>{{ b.1.0 }}</td>
+                    <td>{{ b.1.1 }}</td>
+                    <td>{{ b.1.2 }}</td>
+                  {% empty %}
+                    <td colspan="4">No projects listed.</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="card card-shadow">
+    <div class="card-body">
+      <div class="float-right">
+      {% if bkl %}
+        <a href="{% url 'BookList:VPBL' als.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary">View All Books</a>
+      {% else %}
+
+      {% endif %}
+      </div>
+      <h4 class="card-title">Books Read</h4>
+      <div class="col-sm-12">
+        <p>Total Books Read: <strong>{{ bkl_count }}</strong> </p>
+
+            <table class="table table-sm">
+              <col width="45%">
+              <col width="20%">
+              <col width="15%">
+              <col width="20%">
+              <thead>
+                <tr>
+                  <th>Title, Publisher</th>
+                  <th>Author(s)</th>
+                  <th>Format</th>
+                  <th>Date Completed</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for b in bkl %}
+                  <tr>
+                    <td>{{ b.book }}</td>
+                    <td>{{ b.book.author.all|join:", " }}</td>
+                    <td>{{ b.type }}</td>
+                    <td>{{ b.date|date:"j M Y" }}</td>
+                  {% empty %}
+                    <td colspan="4">No books listed.</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="card card-shadow">
+    <div class="card-body">
+      {% if edtexp_count >= 6 %}
+        <a href="{% url 'Talent:EDU_L_FV' tlt %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Details</a>
+      {% endif %}
+      <h4 class="card-title" id="education">Education & Training</h4>
+        <table class="table table-sm">
+          <col width="10%">
+          <col width="10%">
+          <col width="20%">
+          <col width="30%">
+          <col width="20%">
+          <col width="10%">
+          <thead>
+            <tr>
+              <th class="align-middle">Date from</th>
+              <th class="align-middle">Date to</th>
+              <th class="align-middle">Institution</th>
+              <th class="align-middle">Course</th>
+              <th class="align-middle">Topic</th>
+              <th class="align-middle">Certification</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for e in edtexp %}
+              <tr>
+                <td class="align-middle">{{ e.date_from|date:"j M Y" }}</td>
+                <td class="align-middle">{{ e.date_to|date:"j M Y" }}</td>
+                <td class="align-middle">{{ e.course.company }}</td>
+                <td class="align-middle">{{ e.course }}</td>
+                <td class="align-middle">{{ e.topic }}</td>
+                <td class="align-middle">{{ e.course.certification }}{% if e.upload %}<br>(Uploaded){% else %}{% endif %}</td>
+                {% empty %}
+                  <td colspan="6">Nothing Captured.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+    </div>
+  </div>
+{% endblock content %}

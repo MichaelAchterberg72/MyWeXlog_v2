@@ -10,7 +10,7 @@
 {% endblock title %}
 
 {% block content %}
-<div class="border-0">
+<div class="card card-shadow">
   <div class="card-body">
   <h4 class="">Skills Summary</h4>
   {% if request.user.id == tlt_p.id %}
@@ -23,7 +23,7 @@
         <a href="{% url 'Talent:Home' %}" class="btn btn-secondary">Experience Home</a>
       </div>
       <div class="btn-toolbar">
-        <a href="{% url 'Talent:DPCSum' tlt %}" class="btn btn-primary">Designation, Project & Company Summary</a>
+        <a href="{% url 'Talent:DPCSum' tlt=request.user.alias %}" class="btn btn-primary">Designation, Project & Company Summary</a>
       </div>
     </div>
     </div>
@@ -45,6 +45,87 @@
   </div>
   <br>
   {% endif %}
+  <div style="overflow-x: scroll">
+  <div id="chart-container" style="position: relative;  width:auto;">
+
+  <h4>Skills List</h4>
+  <p class="short-paragraph">Total Hours of Training & Experience by Skill Currently Possessed.</p>
+  <p class="small-paragraph"><small>(Skills included will only be those skills and hours relating to them that have been validated and received a score of 3 or more.)</small></p>
+  <br>
+  <canvas id="hours-experience-by-skill-chart" height="100px"></canvas>
+  <script>
+  window.onload = function() {
+    var hours_experience_by_skill_ctx = document.getElementById('hours-experience-by-skill-chart').getContext('2d');
+    window.myChart = new Chart(hours_experience_by_skill_ctx, hours_experience_by_skill_config);
+  };
+
+  var hours_experience_by_skill_config = {
+    type: 'bar',
+    data: {
+        labels: {{ skills_list_Labels|safe }},
+        datasets: [{
+          label: 'Hours Experience by Skill',
+          data: {{ skills_hours_skill_data|safe }},
+          order: 2,
+            backgroundColor: ['#B6D8F2', '#F4CFDF', '#5784BA', '#C54B6C', '#F5BFD2', '#E5DB9C', '#D0BCAC', '#BEB4C5', '#E6A57E', '#218B82', '#9AD9DB', '#E5DBD9', '#98D4BB', '#EB96AA', '#C6C9D0', '#C54B6C', '#E5B3BB', '#C47482', '#D5E4C3', '#F9968B', '#F27348', '#26474E', '#76CDCD', '#2CCED2', '#B8E0F6', '#A4CCE3', '#37667E', '#DEC4D6', '#7B92AA', '#B8E0F6', '#A4CCE3', '#37667E', '#DEC4D6', '#7B92AA', '#DDF2F4', '#84A6D6', '#4382BB', '#E4CEE0', '#A15D98', '#DC828F', '#F7CE76', '#E8D6CF', '#8C7386', '#9C9359', '#E9BBB5', '#E7CBA9', '#AAD9CD', '#E8D595', '#8DA47E', '#CAE7E3', '#B2B2B2', '#EEB8C5', '#DCDBD9', '#FEC7BC', '#8EA4C8', '#C3B8AA', '#DEDCE4', '#DB93A5', '#C7CDC5',
+            ],
+            borderColor: [
+
+            ],
+            borderWidth: 1
+        }, {
+          label: 'Hours Training Experience by Skill',
+          data: {{ training_skills_hours_skill_data|safe }},
+          type: 'line',
+          order: 1,
+          fill: false,
+          borderColor: '#FF0000',
+          borderWidth: 2,
+          pointBorderWidth: 2,
+          pointStyle: 'circle',
+          pointHitRadius: 20,
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+          },
+        legend: {
+            display: false,
+            position: 'top',
+            labels: {
+                fontColor: '#0000ff',
+        },
+
+        }
+      }
+  };
+
+  var dataList = {{ skills_hours_skill_data|safe }};
+  var count = 0;
+  for(var i = 0; i < dataList.length; ++i){
+      if(dataList[i] >= 0)
+          count++;
+  }
+  var widthValue = 34 * count;
+  console.log(widthValue)
+  var divWidth = document.getElementById("chart-container");
+
+  if (count > 25){
+    divWidth.style.width = widthValue+"px";
+    }
+  else{
+    divWidth.style.width = "auto";
+    }
+
+  </script>
+</div>
+</div>
+  <br>
   <div class="row">
     <div class="col-sm-6">
       <div class="card">

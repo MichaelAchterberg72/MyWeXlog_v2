@@ -43,4 +43,104 @@ function getToken(name) {
   }
   return cookieValue;
 }
-const csrftoken = getToken('csrftoken');
+/*const csrftoken = getToken('csrftoken');*/
+
+/* js for mod_corporate */
+
+var updateStatus = document.getElementsByClassName('update-status')
+
+for (var i = 0; i < updateStatus.length; i++){
+  updateStatus[i].addEventListener('click', function(){
+    var staffSlug = this.dataset.slug
+    var action = this.dataset.action
+
+    var url = '/corporate/admin-permission/'
+    var csrftoken = Cookies.get('csrftoken');
+
+    fetch(url, {
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'X-CSRFToken':csrftoken,
+      },
+      body:JSON.stringify({'staffSlug': staffSlug, 'action': action})
+    })
+
+    .then((response) => {
+      return response.json();
+    })
+
+    .then ((data) => {
+      location.reload()
+    });
+  });
+}
+
+var currentStaff = document.getElementsByClassName('update-staff')
+
+for (var i = 0; i < currentStaff.length; i++){
+  currentStaff[i].addEventListener('click', function(){
+    var staffSlug = this.dataset.slug
+    var action = this.dataset.action
+    console.log(staffSlug)
+    var url = '/corporate/staff-actions/'
+    var csrftoken = Cookies.get('csrftoken');
+
+    fetch(url, {
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'X-CSRFToken':csrftoken,
+      },
+      body:JSON.stringify({'staffSlug': staffSlug, 'action': action})
+    })
+
+    .then((response) => {
+      return response.json();
+    })
+
+    .then ((data) => {
+      location.reload()
+    });
+  });
+}
+
+var hiddenBtn = document.getElementsByClassName('hide-talent')
+
+for (var i = 0; i < hiddenBtn.length; i++){
+  hiddenBtn[i].addEventListener('click', function(){
+    var tltAlias = this.dataset.slug
+    var action = this.dataset.action
+
+    var url = '/corporate/hidden-actions/'
+    var csrftoken = Cookies.get('csrftoken');
+
+    fetch(url, {
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'X-CSRFToken':csrftoken,
+      },
+      body:JSON.stringify({'tltAlias': tltAlias, 'action': action})
+    })
+
+    .then((response) => {
+      return response.json();
+    })
+
+    .then ((data) => {
+      location.reload()
+    });
+  });
+}
+
+var setCorpCookie = document.getElementsByClassName('setCorp')
+
+for (var i = 0; i < setCorpCookie.length; i++){
+  setCorpCookie[i].addEventListener('click', function(){
+    var corp = this.dataset.slug
+
+    document.cookie = 'corp=' + JSON.stringify(corp) + ";max-age=96400; domain=; path=/"
+
+  });
+}
