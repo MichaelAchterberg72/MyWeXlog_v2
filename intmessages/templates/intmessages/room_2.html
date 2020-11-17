@@ -36,6 +36,7 @@
         </div>
 
         <div class="row sideBar" id='menu'>
+          <!--
           {% for room in chat_rooms.items %}
 
           <a href="{% url 'Chat:room' room.1.group.0.2 %}">
@@ -67,6 +68,7 @@
           </div>
           </a>
           {% endfor %}
+          -->
         </div>
       </div>
     </div>
@@ -404,11 +406,11 @@
 
   function fetchMenu() {
     chatSocket.send(JSON.stringify({'command': 'fetch_menu' }));
-  }
+  };
 
   function fetchMessages() {
     chatSocket.send(JSON.stringify({'command': 'fetch_messages' }));
-  }
+  };
 
   function createMessage(data) {
     var author = data['author'];
@@ -420,6 +422,10 @@
     messageTag.className = 'message-text';
     var spanTag = document.createElement('span');
     spanTag.className = 'message-time pull-right';
+    var messageId = document.createElement('div');
+    messageId.className = 'd-none';
+    var messageRID = [data.id]
+    messageId.textContent = [data.id];
     messageTag.textContent = [data.content];
     spanTag.textContent = [data.timestamp];
 
@@ -432,12 +438,25 @@
       msgListTag.className = 'receiver';
       rowTag.className = 'row message-body';
     }
-    
+
     document.querySelector('#chat-log').appendChild(rowTag);
     rowTag.appendChild(colTag);
     colTag.appendChild(msgListTag);
     msgListTag.appendChild(messageTag);
-    messageTag.after(spanTag);
+    messageTag.after(messageId);
+    messageId.after(spanTag);
+//    messageReadNotification();
+    //Message read function
+//    $('chat-log').delay(3000)fadeIn(0, function() {
+//      messageReadNotification();
+//    });
+
+    function messageReadNotification() {
+      chatSocket.send(JSON.stringify({
+          'command': 'message_read_notification',
+          'id': messageRID
+      }));
+    };
   }
 
   function createMenu(data) {
@@ -474,14 +493,19 @@
       spanNotification.textContent = '';
     }
 
+//    document.getElementById('menu').innerHTML = "";
+//    function(div.firstChild){
+//        div.removeChild(div.firstChild);
+//    }
+
     document.querySelector('#menu').appendChild(urlTag);
-    urlTag.href = "{% url 'Chat:room' ${url} %}";
+    urlTag.href = "{% url 'Chat:room' 12345 %}".replace(/12345/, url.toString());
     urlTag.appendChild(menuSidebarTag);
     menuSidebarTag.appendChild(avatarTag);
     avatarTag.appendChild(avatarIconTag);
     avatarIconTag.appendChild(avatarImgTag);
     avatarImgTag.src = "https://bootdey.com/img/Content/avatar/avatar1.png";
-    menuSidebarTag.after(sidebarMainTag);
+    avatarTag.after(sidebarMainTag);
     sidebarMainTag.appendChild(rowTag);
     rowTag.appendChild(sidebarNameTag);
     sidebarNameTag.appendChild(spanNameMeta);

@@ -11,30 +11,61 @@ User = get_user_model()
 
 
 class ChatConsumer(WebsocketConsumer):
+    def message_read_notification(self, data):
+        author = self.scope["user"]
+        author_user = User.objects.get(alias=author.alias)
+        message_id = Message.objects.get(pk=data['id'])
+        self.room_name = self.scope['url_route']['kwargs']['room_name']
+        chat_name = self.room_name
+        chatgroup_id = ChatGroup.objects.get(slug=chat_name)
+        update_message_read = MessageRead.objects.update(
+            message=message_id,
+            talent=author_user,
+            chat_group=chatgroup_id,
+            message_read=True,
+            read_date=timezone.now())
+
+        #is it necessary to rebuild the menu with each message read - processor heavy
+        groups_qs = ChatRoomMembers.objects.filter(talent=author_user).order_by('-date_modified').values_list('chat_group')
+
+        chat_rooms = []
+        for item in groups_qs:
+            groups = ChatRoomMembers.objects.filter(Q(talent=author_user) & Q(chat_group=item)).values_list('room_name', 'date_modified', 'chat_group__slug')
+            messages_received = MessageRead.objects.filter(Q(chat_group=item) & Q(message_read=False) & ~Q(talent=author_user)).count()
+
+            result = {'group': groups, 'notification': messages_received}
+            chat_rooms.append(result)
+            
+        content = {
+            'command': 'fetch_menu',
+            'menus': self.menus_to_json(chat_rooms),
+        }
+        return self.send_menu(content)
+
     def fetch_menu(self, data):
-    groups_qs = ChatRoomMembers.objects.filter(talent=request.user).order_by('-date_modified').values_list('chat_group')
+        author = self.scope["user"]
+        author_user = User.objects.get(alias=author.alias)
+        groups_qs = ChatRoomMembers.objects.filter(talent=author_user).order_by('-date_modified').values_list('chat_group')
 
-    chat_rooms = {}
-    for item in groups_qs:
-        groups = ChatRoomMembers.objects.filter(Q(talent=request.user) & Q(chat_group=item)).values_list('room_name', 'date_modified', 'chat_group__slug')
-        messages_received = MessageRead.objects.filter(Q(chat_group=item) & Q(message_read=False) & ~Q(talent=request.user)).count()
+        chat_rooms = []
+        for item in groups_qs:
+            groups = ChatRoomMembers.objects.filter(Q(talent=author_user) & Q(chat_group=item)).values_list('room_name', 'date_modified', 'chat_group__slug')
+            messages_received = MessageRead.objects.filter(Q(chat_group=item) & Q(message_read=False) & ~Q(talent=author_user)).count()
 
-        chat_rooms[item] = { 'group': groups, 'notification': messages_received}
+            result = {'group': groups, 'notification': messages_received}
+            chat_rooms.append(result)
 
         content = {
             'command': 'fetch_menu',
             'menus': self.menus_to_json(chat_rooms),
         }
-        return send_menu(content)
+        return self.send_menu(content)
 
     def fetch_messages(self, data):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         chat_name = self.room_name
         messages = Message.objects.filter(room_name=chat_name).order_by('-timestamp')[:20]
 
-#        author = 'Astronaut'
-#        author_user = User.objects.get(alias=author)
-#        messages = MessageRead.objects.filter(Q(message__room_name=chat_name) & Q(talent=author_user)).order_by('-message__timestamp')[:20]
         content = {
             'command': 'messages',
             'messages': self.messages_to_json(messages),
@@ -80,33 +111,37 @@ class ChatConsumer(WebsocketConsumer):
 
     def message_to_json(self, message):
         return {
+            'id': message.pk,
             'author': message.author.alias,
             'content': message.content,
             'timestamp': str(message.timestamp.strftime('%a, %b %d, %H:%M'))
         }
 
     def menus_to_json(self, menus):
-        result =[]
+        result=[]
         for menu in menus:
             result.append(self.menu_to_json(menu))
         return result
 
     def menu_to_json(self, menu):
+        print(menu['group'][0][0])
         return {
-            'group': 1.group.0.0,
-            'group_url': 1.group.0.2,
-            'notification': 1.notification,
-            'notification_timestamp': str(1.group.0.1.strftime('%a, %b %d'))
+            'group': menu['group'][0][0],
+            'group_url': menu['group'][0][2],
+            'notification': menu['notification'],
+            'notification_timestamp': str(menu['group'][0][1].strftime('%a, %d %b'))
         }
 
     commands = {
         'fetch_messages': fetch_messages,
         'new_message': new_message,
         'fetch_menu': fetch_menu,
+        'message_read_notification': message_read_notification,
     }
 
     def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
+        self.user = self.scope["user"]
         self.room_group_name = 'chat_%s' % self.room_name
 
         # Join room group

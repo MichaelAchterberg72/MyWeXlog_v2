@@ -22,20 +22,20 @@ def index(request):
 @csp_exempt
 def room(request, room_name):
 
-    groups_qs = ChatRoomMembers.objects.filter(talent=request.user).order_by('-date_modified').values_list('chat_group')
+#    groups_qs = ChatRoomMembers.objects.filter(talent=request.user).order_by('-date_modified').values_list('chat_group')
 
-    chat_rooms = {}
-    for item in groups_qs:
-        groups = ChatRoomMembers.objects.filter(Q(talent=request.user) & Q(chat_group=item)).values_list('room_name', 'date_modified', 'chat_group__slug')
-        messages_received = MessageRead.objects.filter(Q(chat_group=item) & Q(message_read=False) & ~Q(talent=request.user)).count()
-
-        chat_rooms[item] = { 'group': groups, 'notification': messages_received}
+#    chat_rooms = {}
+#    for item in groups_qs:
+#        groups = ChatRoomMembers.objects.filter(Q(talent=request.user) & Q(chat_group=item)).values_list('room_name', 'date_modified', 'chat_group__slug')
+#        messages_received = MessageRead.objects.filter(Q(chat_group=item) & Q(message_read=False) & ~Q(talent=request.user)).count()
+#
+#        chat_rooms[item] = { 'group': groups, 'notification': messages_received}
 
     room = ChatRoomMembers.objects.filter(Q(chat_group__slug=room_name) & Q(talent=request.user)).values_list('room_name', flat=True)
 
     template_name = 'intmessages/room_2.html'
     context = {
-            'chat_rooms': chat_rooms,
+#            'chat_rooms': chat_rooms,
             'room': room,
             'room_name_json': mark_safe(json.dumps(room_name)),
             'username': mark_safe(json.dumps(request.user.alias))
