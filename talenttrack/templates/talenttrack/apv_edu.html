@@ -4,11 +4,22 @@
 
 {% block content %}
 <h3>Profile for {{ tlt }}</h3>
-<div class="card">
-  <div class="card-body">
-    <div class="float-right">
-      <a href="{% url 'Talent:APV' tlt vac %}?next={{ request.path|urlencode }}#education" class="btn btn-secondary" style="width: 5rem;">Back</a>
+
+  <div class="">
+    <div class="btn-group float-right">
+    <form  action="{% url 'BookList:BLB' %}" method="post">
+      <input type="hidden" name="next" value="{{ request.GET.next }}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-success">Back to your profile</button>
+    </form>&nbsp
+    <a href="{% url 'Talent:Home' %}" class="btn btn-secondary">Experience Home</a>
     </div>
+    <a href="{% url 'Talent:DPCSum' tlt %}" class="btn btn-primary">Designation, Project & Company Summary</a>
+    <a href="{% url 'Talent:SPDView' tlt %}" class="btn btn-primary">Skills Summary</a>
+  </div>
+  <br>
+<div class="card card-shadow">
+  <div class="card-body">
     <h4 class="card-title">Education & Training</h4>
   <div class="">
     <div class="col-sm-12">
@@ -17,22 +28,16 @@
 
           <div class="container">
             <div class="row my-auto">
-              <div class="col-1 col-no-pad h-100 text-center my-auto">
+              <div class="col-md-2 h-100 text-center my-auto">
                 <strong>Date from</strong>
               </div>
-              <div class="col-1 col-no-pad h-100 text-center my-auto">
+              <div class="col-md-2 h-100 text-center my-auto">
                 <strong>Date to</strong>
               </div>
-              <div class="col-3 col-no-pad h-100 text-center my-auto">
+              <div class="col-md-5 h-100 text-center my-auto">
                 <strong>Institution</strong>
               </div>
-              <div class="col-3 col-no-pad h-100 text-center my-auto">
-                <strong>Course</strong>
-              </div>
-              <div class="col-2 col-no-pad h-100 text-center my-auto">
-                <strong>Topic</strong>
-              </div>
-              <div class="col-2 col-no-pad h-100 text-center my-auto">
+              <div class="col-md-3 h-100 text-center my-auto">
                 <strong>Certification</strong>
               </div>
             </div>
@@ -42,22 +47,25 @@
             <div class="card mt-1 card-hover" style="width: 100%;">
               <div class="card-body small-pad">
                 <div class="row my-auto">
-                  <div class="col-1 col-no-pad h-100 text-center my-auto">
-                    {{ e.date_from|date:"j M Y" }}
-                  </div>
-                  <div class="col-1 col-no-pad h-100 text-center my-auto">
-                    {{ e.date_to|date:"j M Y" }}
-                  </div>
-                  <div class="col-3 col-no-pad h-100 text-center my-auto">
-                    {{ e.course.company }}
-                  </div>
-                  <div class="col-3 col-no-pad h-100 text-center my-auto">
-                    {{ e.course }}
-                  </div>
-                  <div class="col-2 col-no-pad h-100 text-center my-auto">
+                  <div class="col-md-12 h-100 text-left my-auto">
                     {{ e.topic }}
                   </div>
-                  <div class="col-2 col-no-pad h-100 text-center my-auto">
+                  <div class="col-md-12 h-100 text-left my-auto">
+                    {{ e.course }}
+                  </div>
+                </div>
+                <p class="tiny-paragraph">&nbsp</p>
+                <div class="row my-auto">
+                  <div class="col-md-2 h-100 text-left my-auto">
+                    {{ e.date_from|date:"j M Y" }}
+                  </div>
+                  <div class="col-md-2 h-100 text-center my-auto">
+                    {{ e.date_to|date:"j M Y" }}
+                  </div>
+                  <div class="col-md-5 h-100 text-center my-auto">
+                    {{ e.course.company }}
+                  </div>
+                  <div class="col-md-3 h-100 text-center my-auto">
                     {{ e.course.certification }}{% if e.upload %}<br>(Uploaded){% else %}{% endif %}
                   </div>
                 </div>
@@ -65,7 +73,7 @@
             </div>
           </div>
           {% empty %}
-            <p>Nothing captured.</p>
+              <p>Nothing Captured.</p>
           {% endfor %}
 
       <p>&nbsp</p>

@@ -30,13 +30,13 @@
           <div class="form-group col-md-5 mb-0">
             {{ form.company|as_crispy_field }}
             <p>
-              <a href="{% url 'Enterprise:EnterpriseAddPop' %}" id='add_company' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">
+              <a href="{% url 'Enterprise:EnterpriseAddPop' %}" id='add_company' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">
                 Add Company
               </a>
             </p>
             {{ form.companybranch|as_crispy_field }}
             <p>
-              <a href="{% url 'Enterprise:BranchAddPop' %}" id='add_branch' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">
+              <a href="{% url 'Enterprise:BranchAddPop' %}" id='add_branch' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">
                 Add Branch
               </a>
             </p>
@@ -44,7 +44,7 @@
             <div class="form-row">
               <div class="form-group col-md-4 mb-0">
                 <p>
-                  <a href="{% url 'Project:ProjectAddPop' %}" id='add_project' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">
+                  <a href="{% url 'Project:ProjectAddPop' %}" id='add_project' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">
                     Add Project
                   </a>
                 </p>
@@ -77,7 +77,7 @@
                 <div class="form-group col-md-6 mb-0">
                   {{ form.industry|as_crispy_field }}
                   <p>
-                    <a href="{% url 'Enterprise:IndustryAddPop' %}" id='add_industry' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">
+                    <a href="{% url 'Enterprise:IndustryAddPop' %}" id='add_industry' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">
                       Add Industry
                     </a>
                   </p>
@@ -85,7 +85,7 @@
                 <div class="form-group col-md-6 mb-0">
                   {{ form.designation|as_crispy_field }}
                   <p>
-                    <a href="{% url 'Talent:DesignationAddPop' %}" id='add_designation' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">
+                    <a href="{% url 'Talent:DesignationAddPop' %}" id='add_designation' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">
                       Add Designation
                     </a>
                   </p>
@@ -101,7 +101,7 @@
           </div>
           {{ form.skills|as_crispy_field }}
           <p>
-            <a href="{% url 'Flatten:SkillAddPop' %}" id='add_skill' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">
+            <a href="{% url 'Flatten:SkillAddPop' %}" id='add_skill' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">
               Add Skill
             </a>
           </p>

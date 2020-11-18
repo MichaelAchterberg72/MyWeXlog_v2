@@ -10,8 +10,7 @@
 {% endblock title %}
 
 {% block content %}
-<div class="card card-shadow">
-  <div class="card-body">
+
   <h4 class="">Skills Summary</h4>
   {% if request.user.id == tlt_p.id %}
   <div class="row">
@@ -45,6 +44,8 @@
   </div>
   <br>
   {% endif %}
+  <div class="card card-shadow">
+    <div class="card-body">
   <div style="overflow-x: scroll">
   <div id="chart-container" style="position: relative;  width:auto;">
 

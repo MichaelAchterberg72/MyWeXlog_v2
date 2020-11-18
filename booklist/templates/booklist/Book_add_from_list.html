@@ -45,7 +45,7 @@
     <div class="form-row">
       <div class="form-group col-md-6 mb-0">
         {{ form.type|as_crispy_field }}
-        <a href="{% url 'BookList:FormatCreatePopup' %}" id='format' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">
+        <a href="{% url 'BookList:FormatCreatePopup' %}" id='format' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">
           Add a new book type
         </a>
       {{ form.date|as_crispy_field }}

@@ -98,35 +98,48 @@
             <div class="card-title">
               <h5>Licenses, Certifications & Memberships</h5>
             </div>
-            <table class="table table-sm">
-              <col width="15%">
-              <col width="20%">
-              <col width="35%">
-              <col width="15%">
-              <col width="15%">
-              <thead>
-                <tr>
-                  <th class="align-middle text-center">Type</th>
-                  <th class="align-middle text-center">Name</th>
-                  <th class="align-middle text-center">Managing Institution</th>
-                  <th class="align-middle text-center">Country</th>
-                  <th class="align-middle text-center">Region</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for lcm in membership_qs %}
-                  <tr>
-                    <td class="align-middle text-center">{{ lcm.certification }}</td>
-                    <td class="align-middle text-center">{{ lcm.cert_name }}</td>
-                    <td class="align-middle text-center">{{ lcm.companybranch }}</td>
-                    <td class="align-middle text-center">{{ lcm.country.name }}</td>
-                    <td class="align-middle text-center">{{ lcm.region }}</td>
-                    {% empty %}
-                      <td colspan="4">None Captured.</td>
-                  </tr>
-                {% endfor %}
-              </tbody>
-            </table>
+            <div class="container">
+              <div class="row my-auto">
+                <div class="col-4 col-no-pad h-100 text-center my-auto">
+                  <strong>Managing Institution</strong>
+                </div>
+                <div class="col-4 col-no-pad h-100 text-center my-auto">
+                  <strong>Country</strong>
+                </div>
+                <div class="col-4 col-no-pad h-100 text-center my-auto">
+                  <strong>Region</strong>
+                </div>
+              </div>
+            </div>
+            {% for lcm in membership_qs %}
+            <div class="row">
+              <div class="card mt-1 card-hover" style="width: 100%;">
+                <div class="card-body small-pad">
+                  <div class="row my-auto">
+                    <div class="col-md-6 col-no-pad h-100 text-center my-auto">
+                      {{ lcm.certification }}
+                    </div>
+                    <div class="col-6 col-no-pad h-100 text-center my-auto">
+                      {{ lcm.cert_name }}
+                    </div>
+                  </div>
+                  <div class="row my-auto">
+                    <div class="col-4 col-no-pad h-100 text-center my-auto">
+                      {{ lcm.companybranch }}
+                    </div>
+                    <div class="col-4 col-no-pad h-100 text-center my-auto">
+                      {{ lcm.country.name }}
+                    </div>
+                    <div class="col-4 col-no-pad h-100 text-center my-auto">
+                      {{ lcm.region }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% empty %}
+                <p>There are no licences, certifications or memberships added yet.</p>
+            {% endfor %}
           </div>
         </div>
       </div>
@@ -156,36 +169,50 @@
         {% endif %}
       </div>
       <h4 class="card-title" id="career">Career in Summary</h4>
-      <table class="table table-sm">
-        <col width="10%">
-        <col width="10%">
-        <col width="8%">
-        <col width="62%">
-        <thead>
-          <tr>
-            <th class="align-middle text-center">Date from</th>
-            <th class="align-middle text-center">Date to</th>
-            <th class="align-middle text-center">Tenure<br>(years)</th>
-            <th class="align-middle">Company</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for h in bch %}
-            <tr>
-              <td class="align-middle text-center">{{ h.date_from|date:"j M Y" }}</td>
-              {% if h.date_to %}
-                <td class="align-middle text-center">{{ h.date_to|date:"j M Y" }}</td>
-              {% else %}
-                <td class="align-middle text-center">Present</td>
-              {% endif %}
-              <td class="align-middle text-center">{{ h.tenure|floatformat:1 }}</td>
-              <td>{{ h.companybranch }}</td>
-              {% empty %}
-                <td colspan="3">Nothing Captured.</td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+      <div class="container">
+        <div class="row my-auto">
+          <div class="col-md-2 h-100 text-center my-auto">
+            <strong>Date from</strong>
+          </div>
+          <div class="col-md-2 h-100 text-center my-auto">
+            <strong>Date to</strong>
+          </div>
+          <div class="col-md-2 h-100 text-center my-auto">
+            <strong>Tenure<br>(Years)</strong>
+          </div>
+          <div class="col-md-6 h-100 text-center my-auto">
+            <strong>Company</strong>
+          </div>
+        </div>
+      </div>
+      {% for h in bch %}
+      <div class="row">
+        <div class="card mt-1 card-hover" style="width: 100%;">
+          <div class="card-body small-pad">
+            <div class="row my-auto">
+              <div class="col-md-2 h-100 text-center my-auto">
+                {{ h.date_from|date:"j M Y" }}
+              </div>
+              <div class="col-md-2 h-100 text-center my-auto">
+                {% if h.date_to %}
+                  {{ h.date_to|date:"j M Y" }}
+                {% else %}
+                  Present
+                {% endif %}
+              </div>
+              <div class="col-md-2 h-100 text-center my-auto">
+                {{ h.tenure|floatformat:1 }}
+              </div>
+              <div class="col-md-6 h-100 text-center my-auto">
+                {{ h.companybranch }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+          <p>Nothing Captured.</p>
+      {% endfor %}
     </div>
   </div>
   <br>
@@ -197,32 +224,42 @@
             <a href="{% url 'Talent:ACH_L_FV' tlt %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Detail</a>
           {% endif %}
         <h4 class="card-title" id="achievements">Achievements</h4>
-        <table class="table table-sm">
-          <col width="30%">
-          <col width="10%">
-          <col width="55%">
-          <thead>
-            <tr>
-              <th class="align-middle text-center">Achievement</th>
-              <th class="align-middle text-center">Date Achieved</th>
-              <th class="align-middle text-left">Details</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for a in achievement_qs %}
-            <tr>
-              <td class="align-middle text-left">{{ a.achievement}}</td>
-              <td class="align-middle text-center">{{ a.date_achieved|date:"j M Y"}}</td>
-              <td class="align-middle text-left">{{ a.description|linebreaks}}</td>
-            </tr>
-            {% empty %}
-            <tr>
-              <td colspan="3">No achievements captured.</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-
+        <div class="container">
+          <div class="row my-auto">
+            <div class="col-md-7 h-100 text-center my-auto">
+              <strong>Achievement</strong>
+            </div>
+            <div class="col-md-5 h-100 text-center my-auto">
+              <strong>Date from</strong>
+            </div>
+          </div>
+        </div>
+        {% for a in achievement_qs %}
+        <div class="row">
+          <div class="card mt-1 card-hover" style="width: 100%;">
+            <div class="card-body small-pad">
+              <div class="row my-auto">
+                <div class="col-md-7 h-100 text-center my-auto">
+                  {{ a.achievement}}
+                </div>
+                <div class="col-md-5 h-100 text-center my-auto">
+                  {{ a.date_achieved|date:"j M Y" }}
+                </div>
+                <div class="row my-auto">
+                  <div class="col-md-12 h-100 text-left my-auto">
+                    <div class="container">
+                    <strong>Description:</strong><br>
+                    {{ a.description|linebreaks }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+            <p>No achievements captured.</p>
+        {% endfor %}
         </div>
       </div>
     </div>
@@ -236,40 +273,53 @@
         {% endif %}
       </div>
       <h4 class="card-title" id="projects">Project History</h4>
-    </div>
+
       <div class="col-sm-12">
 
         <p>Total Projects: <strong>{{ prj_count }}</strong> </p>
-
-            <table class="table table-sm">
-              <col width="45%">
-              <col width="20%">
-              <col width="15%">
-              <col width="20%">
-              <thead>
-                <tr>
-                  <th>Project Name</th>
-                  <th>Project Owner</th>
-                  <th>Project Site</th>
-                  <th>Industry</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for b in prj_set.items %}
-                  <tr>
-                    <td>{{ b.0 }}</td>
-                    <td>{{ b.1.0 }}</td>
-                    <td>{{ b.1.1 }}</td>
-                    <td>{{ b.1.2 }}</td>
-                  {% empty %}
-                    <td colspan="4">No projects listed.</td>
-                  </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-
+        <div class="container">
+          <div class="row my-auto">
+            <div class="col-md-4 h-100 text-center my-auto">
+              <strong>Project Name</strong>
+            </div>
+            <div class="col-md-3 h-100 text-center my-auto">
+              <strong>Project Owner</strong>
+            </div>
+            <div class="col-md-3 h-100 text-center my-auto">
+              <strong>Project Site</strong>
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              <strong>Industry</strong>
+            </div>
+          </div>
+        </div>
+        {% for b in prj_set.items %}
+        <div class="row">
+          <div class="card mt-1 card-hover" style="width: 100%;">
+            <div class="card-body small-pad">
+              <div class="row my-auto">
+                <div class="col-md-4 h-100 text-center my-auto">
+                  {{ b.0 }}
+                </div>
+                <div class="col-md-3 h-100 text-center my-auto">
+                  {{ b.1.0 }}
+                </div>
+                <div class="col-md-3 h-100 text-center my-auto">
+                  {{ b.1.1 }}
+                </div>
+                <div class="col-md-2 h-100 text-center my-auto">
+                  {{ b.1.2 }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+            <p>No projects listed.</p>
+        {% endfor %}
       </div>
     </div>
+  </div>
   </div>
   <br>
   <div class="card card-shadow">
@@ -284,34 +334,46 @@
       <h4 class="card-title">Books Read</h4>
       <div class="col-sm-12">
         <p>Total Books Read: <strong>{{ bkl_count }}</strong> </p>
-
-            <table class="table table-sm">
-              <col width="45%">
-              <col width="20%">
-              <col width="15%">
-              <col width="20%">
-              <thead>
-                <tr>
-                  <th>Title, Publisher</th>
-                  <th>Author(s)</th>
-                  <th>Format</th>
-                  <th>Date Completed</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for b in bkl %}
-                  <tr>
-                    <td>{{ b.book }}</td>
-                    <td>{{ b.book.author.all|join:", " }}</td>
-                    <td>{{ b.type }}</td>
-                    <td>{{ b.date|date:"j M Y" }}</td>
-                  {% empty %}
-                    <td colspan="4">No books listed.</td>
-                  </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-
+        <div class="container">
+          <div class="row my-auto">
+            <div class="col-md-4 h-100 text-center my-auto">
+              <strong>Title, Publisher</strong>
+            </div>
+            <div class="col-md-3 h-100 text-center my-auto">
+              <strong>Author(s)</strong>
+            </div>
+            <div class="col-md-3 h-100 text-center my-auto">
+              <strong>Format</strong>
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              <strong>Date Completed</strong>
+            </div>
+          </div>
+        </div>
+        {% for b in bkl %}
+        <div class="row">
+          <div class="card mt-1 card-hover" style="width: 100%;">
+            <div class="card-body small-pad">
+              <div class="row my-auto">
+                <div class="col-md-4 h-100 text-center my-auto">
+                  {{ b.book }}
+                </div>
+                <div class="col-md-3 h-100 text-center my-auto">
+                  {{ b.book.author.all|join:", " }}
+                </div>
+                <div class="col-md-3 h-100 text-center my-auto">
+                  {{ b.type }}
+                </div>
+                <div class="col-md-2 h-100 text-center my-auto">
+                  {{ b.date|date:"j M Y" }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+            <p>No books listed.</p>
+        {% endfor %}
       </div>
     </div>
   </div>
@@ -322,39 +384,55 @@
         <a href="{% url 'Talent:EDU_L_FV' tlt %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Details</a>
       {% endif %}
       <h4 class="card-title" id="education">Education & Training</h4>
-        <table class="table table-sm">
-          <col width="10%">
-          <col width="10%">
-          <col width="20%">
-          <col width="30%">
-          <col width="20%">
-          <col width="10%">
-          <thead>
-            <tr>
-              <th class="align-middle">Date from</th>
-              <th class="align-middle">Date to</th>
-              <th class="align-middle">Institution</th>
-              <th class="align-middle">Course</th>
-              <th class="align-middle">Topic</th>
-              <th class="align-middle">Certification</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for e in edtexp %}
-              <tr>
-                <td class="align-middle">{{ e.date_from|date:"j M Y" }}</td>
-                <td class="align-middle">{{ e.date_to|date:"j M Y" }}</td>
-                <td class="align-middle">{{ e.course.company }}</td>
-                <td class="align-middle">{{ e.course }}</td>
-                <td class="align-middle">{{ e.topic }}</td>
-                <td class="align-middle">{{ e.course.certification }}{% if e.upload %}<br>(Uploaded){% else %}{% endif %}</td>
-                {% empty %}
-                  <td colspan="6">Nothing Captured.</td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-
+      <div class="container">
+        <div class="row my-auto">
+          <div class="col-md-2 h-100 text-center my-auto">
+            <strong>Date from</strong>
+          </div>
+          <div class="col-md-2 h-100 text-center my-auto">
+            <strong>Date to</strong>
+          </div>
+          <div class="col-md-5 h-100 text-center my-auto">
+            <strong>Institution</strong>
+          </div>
+          <div class="col-md-3 h-100 text-center my-auto">
+            <strong>Certification</strong>
+          </div>
+        </div>
+      </div>
+      {% for e in edtexp %}
+      <div class="row">
+        <div class="card mt-1 card-hover" style="width: 100%;">
+          <div class="card-body small-pad">
+            <div class="row my-auto">
+              <div class="col-md-12 h-100 text-left my-auto">
+                {{ e.topic }}
+              </div>
+              <div class="col-md-12 h-100 text-left my-auto">
+                {{ e.course }}
+              </div>
+            </div>
+            <p class="tiny-paragraph">&nbsp</p>
+            <div class="row my-auto">
+              <div class="col-md-2 h-100 text-left my-auto">
+                {{ e.date_from|date:"j M Y" }}
+              </div>
+              <div class="col-md-2 h-100 text-center my-auto">
+                {{ e.date_to|date:"j M Y" }}
+              </div>
+              <div class="col-md-5 h-100 text-center my-auto">
+                {{ e.course.company }}
+              </div>
+              <div class="col-md-3 h-100 text-center my-auto">
+                {{ e.course.certification }}{% if e.upload %}<br>(Uploaded){% else %}{% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+          <p>Nothing Captured.</p>
+      {% endfor %}
     </div>
   </div>
 {% endblock content %}

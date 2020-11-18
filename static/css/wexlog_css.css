@@ -142,6 +142,11 @@ table {
   display: flex;
   position: inherit;
 }
+.tiny-paragraph {
+  height: 0rem;
+  display: flex;
+  position: inherit;
+}
 .table-hover tr:hover {
   z-index: 1;
   transition: all .4s ease;

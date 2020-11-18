@@ -32,7 +32,7 @@
         </button>
       </div>
       <p>
-        <a href="{% url 'Location:RegionAddPop' %}" id='add_region' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">
+        <a href="{% url 'Location:RegionAddPop' %}" id='add_region' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">
           Add a Region
         </a>
       </p>
@@ -44,7 +44,7 @@
         </div>
         <p>
           <a href="#" id='ad_cty'>
-            <img src = "{% static '/images/icon-addlink.svg' %}">
+            <img src = "{% static 'images/icon-addlink.svg' %}">
             Add a City / Town / Village
           </a>
           <a href="{% url 'Location:CityAddPop' %}" id='add_city' onclick='return showAddPopup(this);'>
@@ -52,7 +52,7 @@
         </p>
       {{ form.suburb|as_crispy_field }}
         <p>
-          <a href="#" id='add_sub'><img src = "{% static '/images/icon-addlink.svg' %}">
+          <a href="#" id='add_sub'><img src = "{% static 'images/icon-addlink.svg' %}">
             Add a Suburb
           </a>
           <a href="{% url 'Location:SuburbAddPop' %}" id='add_suburb' onclick='return showAddPopup(this);' >
