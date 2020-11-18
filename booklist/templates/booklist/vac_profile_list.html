@@ -17,16 +17,16 @@
     <div class="col-sm-12">
     <div class="">
       <div class="">
-        <div class="">
-        <a href="{% url 'Talent:Home' %}" class="btn btn-secondary float-right">Experience Home</a>
+        <div class="btn-group float-right">
         <form  action="{% url 'BookList:BLB' %}" method="post">
           <input type="hidden" name="next" value="{{ request.GET.next }}">
           {% csrf_token %}
-          <button type="submit" class="btn btn-secondary float-right">Back to your profile</button>
-        </form>
+          <button type="submit" class="btn btn-success">Back to your profile</button>
+        </form>&nbsp
+        <a href="{% url 'Talent:Home' %}" class="btn btn-secondary">Experience Home</a>
         </div>
         <a href="{% url 'Talent:DPCSum' tlt %}" class="btn btn-primary">Designation, Project & Company Summary</a>
-        <a href="{% url 'Talent:ExperienceSum' tlt %}" class="btn btn-primary">Skills Summary</a>
+        <a href="{% url 'Talent:SPDView' tlt %}" class="btn btn-primary">Skills Summary</a>
       </div>
     </div>
     </div>
@@ -44,26 +44,47 @@
       <div class="card card-shadow">
         <div class="card-body">
         <h5 class="card-title">Completed Books</h5>
-        <table class="table table-hover table-sm">
-          <thead>
-            <tr>
-              <th>Title, Publisher</th>
-              <th>Author(s)</th>
-              <th>Format</th>
-              <th>Date Completed</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for b in pageitems %}
-              <tr>
-                <td>{{ b.book }}</td>
-                <td>{{ b.book.author.all|join:", " }}</td>
-                <td>{{ b.type }}</td>
-                <td>{{ b.date|date:"j M Y" }}</td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+        <div class="container">
+          <div class="row my-auto">
+            <div class="col-md-4 h-100 text-center my-auto">
+              <strong>Title, Publisher</strong>
+            </div>
+            <div class="col-md-3 h-100 text-center my-auto">
+              <strong>Author(s)</strong>
+            </div>
+            <div class="col-md-3 h-100 text-center my-auto">
+              <strong>Format</strong>
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              <strong>Date Completed</strong>
+            </div>
+          </div>
+        </div>
+        {% for b in pageitems %}
+        <div class="row">
+          <div class="card mt-1 card-hover" style="width: 100%;">
+            <div class="card-body small-pad">
+              <div class="row my-auto">
+                <div class="col-md-4 h-100 text-center my-auto">
+                  {{ b.book }}
+                </div>
+                <div class="col-md-3 h-100 text-center my-auto">
+                  {{ b.book.author.all|join:", " }}
+                </div>
+                <div class="col-md-3 h-100 text-center my-auto">
+                  {{ b.type }}
+                </div>
+                <div class="col-md-2 h-100 text-center my-auto">
+                  {{ b.date|date:"j M Y" }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+            <p>No books listed.</p>
+        {% endfor %}
+        
         <p>&nbsp</p>
 
         <nav aria-label="Page navigation">

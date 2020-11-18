@@ -1094,7 +1094,7 @@ def ActiveProfileView(request, tlt, vac):
     skr = SkillRequired.objects.filter(scope__ref_no=vac).values_list('skills', flat=True).distinct('skills')
     skill_qs = SkillTag.objects.all()
     exp = WorkExperience.objects.filter(talent__alias=tlt).select_related('topic', 'course', 'project')
-    edtexp = exp.filter(edt=True).order_by('-date_from')
+    edtexp = exp.filter(edt=True).order_by('-date_from')[:6]
     edtexp_count = edtexp.count()
     bkl = ReadBy.objects.filter(talent__alias=tlt).select_related('book', 'type')[:6]
     bkl_count = bkl.count()
