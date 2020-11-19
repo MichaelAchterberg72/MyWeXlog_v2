@@ -106,4 +106,6 @@ urlpatterns = [
     path('reqsup-list/', views.sup_req_list, name='ReqSupList'),
     path('reqclt-list/', views.clt_req_list, name='ReqCltList'),
     path('reqclb-list/', views.clb_req_list, name='ReqClbList'),
+    #skills stats
+    path('skill-stats-overview/<int:skl>/', views.skill_stats, name='SkillsStats'),
 ]
