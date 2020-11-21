@@ -81,8 +81,12 @@ urlpatterns = [
     path('ple-del-full/<int:ple_pk>/', views.PreLoggedExperienceDeleteFullView, name='PLEFDelete'),
     path('we-del/<int:we_pk>/', views.WorkExperienceDeleteView, name='WEDelete'),
     path('we-del-full/<int:we_pk>/', views.WorkExperienceDeleteFullView, name='WEFDelete'),
+    path('we-del-skill/<int:we_pk>/<int:skl>/', views.WorkExperienceDeleteSkillView, name='WESDelete'),
+    path('we-del-skill-full/<int:we_pk>/<int:skl>/', views.WorkExperienceDeleteSkillFullView, name='WESFDelete'),
     path('edt-del/<int:edt_pk>/', views.EducationDeleteView, name='EDTDelete'),
     path('edt-del-full/<int:edt_pk>/', views.EducationDeleteFullView, name='EDTFDelete'),
+    path('edt-del-skill/<int:edt_pk>/<int:skl>/', views.EducationDeleteSkillView, name='EDTSDelete'),
+    path('edt-del-skill-full/<int:edt_pk>/<int:skl>/', views.EducationDeleteSkillFullView, name='EDTSFDelete'),
     # Help urls
     path('help/experience-home/', views.HelpExperienceHomeView, name='HelpExperienceHome'),
     path('help/experience-education/', views.HelpExperienceEducationView, name='HelpExperienceEducation'),
@@ -108,4 +112,7 @@ urlpatterns = [
     path('reqclb-list/', views.clb_req_list, name='ReqClbList'),
     #skills stats
     path('skill-stats-overview/<int:skl>/', views.skill_stats, name='SkillsStats'),
+    path('skill-validation-list/<int:skl>/', views.skill_validate_list, name='SkillValidationList'),
+    path('skill-education-list/<int:skl>/', views.skill_training_list_view, name='SkillEducationList'),
+    path('skill-work-experience-list/<int:skl>/', views.skill_work_experience_list_view, name='SkillWorkExperienceList'),
 ]

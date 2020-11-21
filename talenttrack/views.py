@@ -26,7 +26,7 @@ from WeXlog.app_config import(
 
 
 from .forms import (
-        TopicForm, ResultForm, CourseTypeForm, CourseForm, DesignationForm, ClassMatesSelectForm, ClassMatesConfirmForm, LecturerSelectForm, LecturerConfirmForm, EducationForm, WorkExperienceForm, WorkColleagueSelectForm, WorkColleagueConfirmForm, WorkColleagueResponseForm, ClassMatesResponseForm, LecturerResponseForm, SuperiorSelectForm, WorkCollaboratorResponseForm, WorkCollaboratorConfirmForm, WorkCollaboratorSelectForm, WorkClientResponseForm, WorkClientConfirmForm, WorkClientSelectForm, PreLoggedExperienceForm, TopicPopForm, LecturerRespondForm, ClassMatesRespondForm, AchievementsForm, LicenseCertificationForm, ProfileSearchForm,
+        TopicForm, ResultForm, CourseTypeForm, CourseForm, DesignationForm, ClassMatesSelectForm, ClassMatesConfirmForm, LecturerSelectForm, LecturerConfirmForm, EducationForm, WorkExperienceForm, WorkColleagueSelectForm, WorkColleagueConfirmForm, WorkColleagueResponseForm, ClassMatesResponseForm, LecturerResponseForm, SuperiorSelectForm, WorkCollaboratorResponseForm, WorkCollaboratorConfirmForm, WorkCollaboratorSelectForm, WorkClientResponseForm, WorkClientConfirmForm, WorkClientSelectForm, PreLoggedExperienceForm, TopicPopForm, LecturerRespondForm, ClassMatesRespondForm, AchievementsForm, LicenseCertificationForm, ProfileSearchForm, EmailFormModal
 )
 
 from .models import (
@@ -66,7 +66,7 @@ def skill_stats(request, skl):
     val_we = we.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
 
     #work experience not validated
-    n_val_we = we.filter(Q(skills__id=skl) | Q(topic__skills__id=skl))
+    n_val_we = we.filter(Q(skills__skill=skill.skill, edt=False) | Q(topic__skills__skill=skill.skill, edt=True))
     n_val_we_slug = n_val_we.values_list('slug', flat=True)
 
     wc_lt = Lecturer.objects.filter(Q(education__slug__in=n_val_we_slug) & Q(confirm='S')).values_list('lecturer__alias', flat=True).distinct('lecturer__alias')
@@ -96,6 +96,16 @@ def skill_stats(request, skl):
     we_tbc_p = we_tbc_p_l[:6]
     we_tbc_p_l_count = we_tbc_p_l.count()
 
+    val_we_lts = n_val_we.filter(Q(talent__subscription__gte=1) & Q(score__lt=skill_pass_score))
+    #Traing experience without sufficient pass score
+    nsps_te_l = val_we_lts.select_related('topic').filter(edt=True).order_by('-date_from')
+    nsps_te_l_count = nsps_te_l.count()
+    nsps_te = nsps_te_l[:6]
+
+    #Work experience without sufficient pass score
+    nsps_we_l = val_we_lts.select_related('topic').filter(wexp=True).order_by('-date_from')
+    nsps_we_l_count = nsps_we_l.count()
+    nsps_we = nsps_we_l[:6]
 
     we_skill = we.filter(Q(skills__skill=skill.skill, edt=False) | Q(topic__skills__skill=skill.skill, edt=True))
     val_we_skill = val_we.filter(Q(skills__skill=skill.skill, edt=False) | Q(topic__skills__skill=skill.skill, edt=True))
@@ -329,7 +339,12 @@ def skill_stats(request, skl):
     template = 'talenttrack/skill_stats.html'
     context = {
             'tlt': tlt,
+            'skl': skl,
             'skill': skill,
+            'nsps_te': nsps_te,
+            'nsps_te_l_count': nsps_te_l_count,
+            'nsps_we': nsps_we,
+            'nsps_we_l_count': nsps_we_l_count,
             'skills_used_year_range_labels': skills_used_year_range_labels,
             'total_sum_t_we': total_sum_t_we,
             'total_val_sum_t_we': total_val_sum_t_we,
@@ -343,6 +358,234 @@ def skill_stats(request, skl):
             'we_tbc_p_l_count': we_tbc_p_l_count,
     }
     return render(request, template, context)
+
+
+@login_required()
+def skill_training_list_view(request, skl):
+    skill = SkillTag.objects.get(id=skl)
+    tlt = request.user.alias
+    we = WorkExperience.objects.filter(talent__alias=tlt)
+    n_val_we = we.filter(Q(topic__skills__skill=skill.skill, edt=True))
+    val_we_lts = n_val_we.filter(Q(talent__subscription__gte=1) & Q(score__lt=skill_pass_score))
+    #Traing experience without sufficient pass score
+    nsps_we_l = val_we_lts.select_related('topic').order_by('-date_from')
+    train_sum = nsps_we_l.aggregate(Edu_sum=Sum('topic__hours'))
+    train_count = nsps_we_l.count()
+
+    t_sum = train_sum.get('Edu_sum')
+
+    if t_sum:
+        t_sum = t_sum
+    else:
+        t_sum=0
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(nsps_we_l, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+    template = 'talenttrack/training_skill_list.html'
+    context = {
+        'skl': skl,
+        'train_sum': train_sum,
+        'train_count': train_count,
+        'pageitems': pageitems,
+        'page_range': page_range
+    }
+    return render(request, template, context)
+
+
+@login_required()
+def skill_work_experience_list_view(request, skl):
+    skill = SkillTag.objects.get(id=skl)
+    tlt = request.user.alias
+    we = WorkExperience.objects.filter(talent__alias=tlt)
+    n_val_we = we.filter(Q(skills__skill=skill.skill, wexp=True))
+    val_we_lts = n_val_we.filter(Q(talent__subscription__gte=1) & Q(score__lt=skill_pass_score))
+    #Traing experience without sufficient pass score
+    nsps_we_l = val_we_lts.select_related('topic').order_by('-date_from')
+    exp_sum = nsps_we_l.aggregate(we_sum=Sum('hours_worked'))
+    exp_count = nsps_we_l.count()
+
+    e_sum = exp_sum.get('we_sum')
+
+    if e_sum:
+        e_sum = e_sum
+    else:
+        e_sum = 0
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(nsps_we_l, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+    template = 'talenttrack/experience_skill_list.html'
+    context = {
+        'skl': skl,
+        'exp_sum': exp_sum,
+        'exp_count': exp_count,
+        'pageitems': pageitems,
+        'page_range': page_range
+    }
+    return render(request, template, context)
+
+
+@login_required()
+def skill_validate_list(request, skl):
+    tlt = request.user.alias
+    tlt_id = [request.user.id]
+    skill = SkillTag.objects.get(id=skl)
+
+    we = WorkExperience.objects.filter(talent__alias=tlt)
+    val_we = we.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
+
+    #work experience not validated
+    n_val_we = we.filter(Q(skills__skill=skill.skill, edt=False) | Q(topic__skills__skill=skill.skill, edt=True) & Q(score__lt=skill_pass_score))
+    n_val_we_slug = n_val_we.values_list('slug', flat=True)
+
+    wc_lt = Lecturer.objects.filter(Q(education__slug__in=n_val_we_slug) & Q(confirm='S')).values_list('lecturer__alias', flat=True).distinct('lecturer__alias')
+    wc_ct = ClassMates.objects.filter(Q(education__slug__in=n_val_we_slug) & Q(confirm='S')).values_list('colleague__alias', flat=True).distinct('colleague__alias')
+    wc_we = WorkColleague.objects.filter(Q(experience__slug__in=n_val_we_slug) & Q(confirm='S')).values_list('colleague_name__alias', flat=True).distinct('colleague_name__alias')
+    wc_se = Superior.objects.filter(Q(experience__slug__in=n_val_we_slug) & Q(confirm='S')).values_list('superior_name__alias', flat=True).distinct('superior_name__alias')
+    wc_wce = WorkCollaborator.objects.filter(Q(experience__slug__in=n_val_we_slug) & Q(confirm='S')).values_list('collaborator_name__alias', flat=True).distinct('collaborator_name__alias')
+    wc_wcle = WorkClient.objects.filter(Q(experience__slug__in=n_val_we_slug) & Q(confirm='S')).values_list('client_name__alias', flat=True).distinct('client_name__alias')
+
+    wc_lt_l = list(wc_lt)
+    wc_ct_l = list(wc_ct)
+    wc_we_l = list(wc_we)
+    wc_se_l = list(wc_se)
+    wc_wce_l = list(wc_wce)
+    wc_wcle_l = list(wc_wcle)
+
+    we_tn_l = list(wc_lt_l + wc_ct_l + wc_we_l + wc_se_l + wc_wce_l + wc_wcle_l)
+
+    profile_slug_list_set=[]
+    for x in we_tn_l:
+        profile_slug_list_set.append(x)
+    we_nvs_list_n = [x for x in profile_slug_list_set if x is not None]
+
+    we_nvs_list = set(we_nvs_list_n)
+
+    we_tbc_p_l = Profile.objects.filter(alias__in=we_nvs_list)
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(we_tbc_p_l, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+    template = 'talenttrack/skill_not_validated_list.html'
+    context = {'skl': skl, 'tlt': tlt, 'skill': skill, 'pageitems': pageitems,  'page_range': page_range}
+    return render(request, template, context)
+
+
+@login_required()
+def email_reminder_validate(request, skl, tlt):
+    '''The view to email member to remind them to validate a tlt experience'''
+    current_user = request.user
+    invitee = current_user.email
+
+    recipient = Profile.objects.get(alias=tlt)
+
+    form = EmailFormModal(initial={
+                    'sender': invitee,
+                    'recipient': recipient.email,
+                    'subject': "Please Confirm MyWeXlog Experience",
+                    'message': message,})
+
+    if request.method == 'POST':
+        next_url=request.POST.get('next', '/')
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.sender = request.user
+            new.recipient = recipient
+            new.save()
+            cd = form.cleaned_data
+
+            recipient = cd['recipient']
+            sender = cd['sender']
+            subject = cd['subject']
+            message = cd['message']
+
+            subject = f"{{ subject }}"
+            context = {'form': form, 'user_email': invitee }
+            html_message = render_to_string('invitations/validate_request.html', context)
+            plain_message = strip_tags(html_message)
+
+            message = Mail(
+                from_email = (settings.SENDGRID_FROM_EMAIL, f"{tlt.first_name} {tlt.last_name}"),
+                to_emails = invitee,
+                subject = subject,
+                plain_text_content = strip_tags(html_message),
+                html_content = html_message)
+
+            try:
+                sg = sendgrid.SendGridAPIClient(settings.SENDGRID_API_KEY)
+                response = sg.send(message)
+                print(response.status_code)
+                print(response.body)
+                print(response.headers)
+
+            except Exception as e:
+                print(e)
+
+            template = 'invitations/invitation.html'
+            if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
+                next_url = reverse('Talent:SkillsStats', kwargs={'skl': skl})
+            response = HttpResponseRedirect(next_url)
+            return response
+        else:
+            template = 'talenttrack/request_validate_email.html'
+            context = {'form': form}
+            return render(request, template, context)
+    else:
+        template = 'talenttrack/request_validate_email.html'
+        context = {'form': form}
+        return render(request, template, context)
 
 
 @login_required()
@@ -3013,6 +3256,28 @@ def WorkExperienceDeleteFullView(request, we_pk):
 
 
 @login_required()
+def WorkExperienceDeleteSkillView(request, we_pk, skl):
+    info = WorkExperience.objects.get(pk=we_pk)
+    if info.talent == request.user:
+        if request.method =='POST':
+            info.delete()
+            return redirect(reverse('Talent:SkillsStats', kwargs={'skl': skl}))
+    else:
+        raise PermissionDenied
+
+
+@login_required()
+def WorkExperienceDeleteSkillFullView(request, we_pk, skl):
+    info = WorkExperience.objects.get(pk=we_pk)
+    if info.talent == request.user:
+        if request.method =='POST':
+            info.delete()
+            return redirect(reverse('Talent:SkillWorkExperienceList', kwargs={'skl':skl}))
+    else:
+        raise PermissionDenied
+
+
+@login_required()
 def EducationDetail(request, tex):
     check = WorkExperience.objects.get(slug=tex, edt=True)
     if check.talent == request.user:
@@ -3290,6 +3555,28 @@ def EducationDeleteFullView(request, edt_pk):
         if request.method =='POST':
             info.delete()
             return redirect(reverse('Talent:TrainingList'))
+    else:
+        raise PermissionDenied
+
+
+@login_required()
+def EducationDeleteSkillView(request, edt_pk, skl):
+    info = WorkExperience.objects.get(pk=edt_pk)
+    if info.talent == request.user:
+        if request.method =='POST':
+            info.delete()
+            return redirect(reverse('Talent:SkillsStats', kwargs={'skl': skl}))
+    else:
+        raise PermissionDenied
+
+
+@login_required()
+def EducationDeleteSkillFullView(request, edt_pk, skl):
+    info = WorkExperience.objects.get(pk=edt_pk)
+    if info.talent == request.user:
+        if request.method =='POST':
+            info.delete()
+            return redirect(reverse('Talent:SkillEducationList', kwargs={'skl': skl}))
     else:
         raise PermissionDenied
 

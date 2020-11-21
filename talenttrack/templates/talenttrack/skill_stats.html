@@ -1,4 +1,5 @@
 {% extends "base_home.html" %}
+{% load crispy_forms_tags %}
 {% load humanize %}
 {% block title %}{{block.super}}- {{ tlt_p.f_name }} Skill Statistics Overview{% endblock title %}
 
@@ -180,6 +181,76 @@
   </div>
 </div>
 <br>
+{% if nsps_te_l_count >= 1 %}
+<div class="card card-shadow">
+  <div class="card-body">
+    <h4>Traing & Education Experience Items Without Sufficient Pass Score</h4>
+    <div class="container">
+      <div class="row my-auto">
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Start Date</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Completion date</strong>
+        </div>
+        <div class="col-md-5 h-100 text-center my-auto">
+          <strong>Course</strong>
+        </div>
+        <div class="col-1 col-no-pad h-100 text-center my-auto">
+          <strong>Time Logged</strong>
+        </div>
+        <div class="col-md-1 h-100 text-center my-auto">
+          <span data-toggle="tooltip" data-placement="top" title="A score > 3 is required to achieve a 'confirmed' status"><strong>Score</strong></span>
+        </div>
+        <div class="col-1 col-no-pad h-100 text-center my-auto">
+          <strong>Actions</strong>
+        </div>
+      </div>
+    </div>
+    {% for t in nsps_te %}
+    <div class="row">
+      <div class="card mt-1 card-hover" style="width: 100%;">
+        <div class="card-body small-pad">
+          <div class="row my-auto">
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ t.date_from|date:"j M Y" }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ t.date_to|date:"j M Y" }}
+            </div>
+            <div class="col-md-5 h-100 text-center my-auto">
+              {{ t.course }}
+            </div>
+            <div class="col-1 col-no-pad h-100 text-center my-auto">
+              {{ t.topic.hours|intcomma }}
+            </div>
+            <div class="col-md-1 h-100 text-center my-auto">
+              <span data-toggle="tooltip" data-placement="top" title="A score > 3 is required to achieve a 'confirmed' status">{{ t.score }}</span>
+            </div>
+            <div class="col-1 col-no-pad h-100 text-left my-auto">
+              <a href="{% url 'Talent:EducationDetail' t.slug %}" class="badge badge-pill badge-secondary" style="width: 5rem;">Detail</a>
+              <form  action="{% url 'Talent:EDTSDelete' t.id skl %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+      <p>You have no education items without sufficient pass score.</p>
+    {% endfor %}
+    <br>
+    <div class="float-right">
+      {% if nsps_te_l_count >= 6 %}
+        <a href="{% url 'Talent:SkillEducationList' skl %}?next={{ request.path|urlencode }}" class="btn btn-primary">View All Experience</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+<br>
+{% endif %}
 <div class="card card-shadow">
   <div class="card-body">
     <h4>{{ skill }} Skill Work Experience Details</h4>
@@ -251,6 +322,83 @@
   </div>
 </div>
 <br>
+{% if nsps_we_l_count >= 1 %}
+<div class="card card-shadow">
+  <div class="card-body">
+    <h4>Work Experience Items Without Sufficient Pass Score</h4>
+    <div class="container">
+      <div class="row my-auto">
+        <div class="col-md-3 h-100 text-center my-auto">
+          <strong>Employer</strong>
+        </div>
+        <div class="col-md-1 h-100 text-center my-auto">
+          <strong>Date from</strong>
+        </div>
+        <div class="col-md-1 h-100 text-center my-auto">
+          <strong>Date to</strong>
+        </div>
+        <div class="col-md-1 h-100 text-center my-auto">
+          <strong>Hours</strong>
+        </div>
+        <div class="col-md-4 h-100 text-center my-auto">
+          <strong>Project</strong>
+        </div>
+        <div class="col-md-1 h-100 text-center my-auto">
+          <strong>Score</strong>
+        </div>
+        <div class="col-1 col-no-pad h-100 text-center my-auto">
+          <strong>Actions</strong>
+        </div>
+      </div>
+    </div>
+    {% for e in nsps_we %}
+    <div class="row">
+      <div class="card mt-1 card-hover" style="width: 100%;">
+        <div class="card-body small-pad">
+          <div class="row my-auto">
+            <div class="col-md-3 h-100 text-center my-auto">
+              {{ e.company }}
+            </div>
+            <div class="col-md-1 h-100 text-center my-auto">
+              {{ e.date_from|date:"j M Y" }}
+            </div>
+            <div class="col-md-1 h-100 text-center my-auto">
+              {{ e.date_to|date:"j M Y" }}
+            </div>
+            <div class="col-md-1 h-100 text-center my-auto">
+              {{ e.hours_worked|intcomma }}
+            </div>
+            <div class="col-md-4 h-100 text-center my-auto">
+              {{ e.project }}
+            </div>
+            <div class="col-md-1 h-100 text-center my-auto">
+              <span data-toggle="tooltip" data-placement="top" title="A score > 3 is required to achieve a 'confirmed' status">{{ e.score }}</span>
+            </div>
+            <div class="col-1 col-no-pad h-100 text-left my-auto">
+                <a href="{% url 'Talent:ExperienceDetail' e.slug %}" class="badge badge-pill badge-secondary"  style="width: 5rem;">Detail</a>
+                <form  action="{% url 'Talent:WESDelete' e.id skl %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
+                </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+      <p>You have no work experience items without sufficient pass score.</p>
+    {% endfor %}
+    <br>
+    <div class="float-right">
+      {% if nsps_we_l_count >= 6 %}
+        <a href="{% url 'Talent:SkillWorkExperienceList' skl %}?next={{ request.path|urlencode }}" class="btn btn-primary">View All Experience</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+<br>
+{% endif %}
+{% if we_tbc_p_l_count >= 1 %}
 <div class="card card-shadow">
   <div class="card-body">
     <h4>MyWeXlog Members that have not yet confirmed Work Experience with {{ skill }} skill in it</h4>
@@ -258,16 +406,16 @@
     <div class="container">
       <div class="row my-auto">
         <div class="col-md-2 h-100 text-center my-auto">
-          <strong>Last Request Date</strong>
+          <strong></strong>
         </div>
         <div class="col-md-2 h-100 text-center my-auto">
           <strong>Name</strong>
         </div>
         <div class="col-md-2 h-100 text-center my-auto">
-          <strong>Company</strong>
+          <strong></strong>
         </div>
         <div class="col-md-1 h-100 text-center my-auto">
-          <strong>Relationship</strong>
+          <strong></strong>
         </div>
         <div class="col-md-3 h-100 text-center my-auto">
           <strong>Email</strong>
@@ -298,7 +446,16 @@
               {{ i.talent.email }}
             </div>
             <div class="col-md-2 h-100 text-left my-auto">
-              <a href="mailto:{{ i.talent.email }}?&subject=Please confirm my MyWeXlog experience&body=Sorry to bother you.  Would it be possible to log in to MyWeXlog and update my experience confirmations as the are still un-verified.  Thanks, appreciate it." class="badge badge-primary" style="width:6rem;">Send<br>E-Mail</a>
+              <div class="btn-group" role="group">
+                <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Send Email
+                </button>
+                <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                  <a href="" class="dropdown-item">MyWeXlog</a>
+
+                  <a class="dropdown-item" href="mailto:{{ i.talent.email }}?&subject=Please confirm my MyWeXlog experience&body=Sorry to bother you.  Would it be possible to log in to MyWeXlog and update my experience confirmations as the are still un-verified.  Thanks, appreciate it.">Private</a>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -307,12 +464,14 @@
     {% empty %}
     <p>All your experience log items with {{ skill }} experience have been confirmed.</p>
     {% endfor %}
+
     <br>
     <div class="float-right">
       {% if we_tbc_p_l_count >= 6 %}
-        <a href="#?next={{ request.path|urlencode }}" class="btn btn-primary">View All Members</a>
+        <a href="{% url 'Talent:SkillValidationList' skl %}?next={{ request.path|urlencode }}" class="btn btn-primary">View All Members</a>
       {% endif %}
     </div>
   </div>
-</div>
+</div
+{% endif %}
 {% endblock content %}
