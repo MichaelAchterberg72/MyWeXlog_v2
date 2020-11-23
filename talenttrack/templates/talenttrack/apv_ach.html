@@ -4,6 +4,19 @@
 
 {% block content %}
 <h3>Profile for {{ tlt }}</h3>
+<div class="">
+  <div class="btn-group float-right">
+  <form  action="{% url 'BookList:BLB' %}" method="post">
+    <input type="hidden" name="next" value="{{ request.GET.next }}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-success">Back to your profile</button>
+  </form>&nbsp
+  <a href="{% url 'Talent:Home' %}" class="btn btn-secondary">Experience Home</a>
+  </div>
+  <a href="{% url 'Talent:DPCSum' tlt %}" class="btn btn-primary">Designation, Project & Company Summary</a>
+  <a href="{% url 'Talent:SPDView' tlt %}" class="btn btn-primary">Skills Summary</a>
+</div>
+<br>
 <div class="card card-shadow">
   <div class="card-body">
     <div class="float-right">

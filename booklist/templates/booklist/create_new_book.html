@@ -38,16 +38,16 @@ function closePopup(win, newID, newRepr, id) {
   {{ form.title|as_crispy_field }}
   {{ form.type|as_crispy_field }}
   {{ form.publisher|as_crispy_field }}
-    <a href="{% url 'BookList:PublisherCreatePopup' %}" id='add_publisher' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}"> Add a new Publisher</a>
+    <a href="{% url 'BookList:PublisherCreatePopup' %}" id='add_publisher' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}"> Add a new Publisher</a>
   {{ form.author|as_crispy_field }}
-    <a href="{% url 'BookList:AuthorCreatePopup' %}" id='add_author' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}"> Add a new Author</a>
+    <a href="{% url 'BookList:AuthorCreatePopup' %}" id='add_author' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}"> Add a new Author</a>
   </div>
   <div class="form-group col-md-6 mb-0">
   {{ form.genre|as_crispy_field }}
-  <a href="{% url 'BookList:GenreCreatePopup' %}" id='add_tag' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}"> Add a Genre</a>
+  <a href="{% url 'BookList:GenreCreatePopup' %}" id='add_tag' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}"> Add a Genre</a>
   {{ form.link|as_crispy_field }}
   {{ form.tag|as_crispy_field }}
-  <a href="{% url 'BookList:TagCreatePopup' %}" id='add_tag' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}"> Add a new Skill Tag</a>
+  <a href="{% url 'BookList:TagCreatePopup' %}" id='add_tag' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}"> Add a new Skill Tag</a>
 </div>
 <p><p>
   <a href="{% url 'BookList:BookListHome' %}" class="btn btn-danger">Cancel</a>

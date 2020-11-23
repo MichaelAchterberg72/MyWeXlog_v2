@@ -1,0 +1,121 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+
+{% block title %}{{block.super}}-Skill Training & Education List{% endblock title %}
+
+{% block content %}
+<div class="card card-shadow">
+  <div class="card-body">
+  <h4 class="">Training & Education - Skill Without Sufficient Score Full List<span><p class="float-right">
+    <a href="{% url 'Talent:SkillsStats' skl %}"  class="btn btn-primary">Back</a>
+    <a href="{% url 'MarketPlace:HelpWorkCOnfigeration' %}" target="_blank" class="align-middle" style="font-size: 16px"><i class="fa fa-question-circle"></i></a>
+  </p></span></h4>
+  <p>There are a total of {{ train_count }} Training & Education experience items that have not been confirmed to provide a score > 3.</p>
+  <br>
+
+    <div class="float-right">
+      <p><a href="{% url 'Talent:Capture' %}" class="badge badge-pill badge-primary float-right">Add Education</a></p>
+    </div>
+      <p><strong>Total hours in training: </strong>{{ train_sum.Edu_sum|intcomma }}</p>
+    <div>
+      <div class="container">
+        <div class="row my-auto">
+          <div class="col-md-2 h-100 text-center my-auto">
+            <strong>Start Date</strong>
+          </div>
+          <div class="col-md-2 h-100 text-center my-auto">
+            <strong>Completion date</strong>
+          </div>
+          <div class="col-md-5 h-100 text-center my-auto">
+            <strong>Course</strong>
+          </div>
+          <div class="col-1 col-no-pad h-100 text-center my-auto">
+            <strong>Time Logged</strong>
+          </div>
+          <div class="col-md-1 h-100 text-center my-auto">
+            <strong><span data-toggle="tooltip" data-placement="top" title="A score > 3 is required to achieve a 'confirmed' status">Score</span></strong>
+          </div>
+          <div class="col-1 col-no-pad h-100 text-center my-auto">
+            <strong>Actions</strong>
+          </div>
+        </div>
+      </div>
+      {% for t in pageitems %}
+      <div class="row">
+        <div class="card mt-1 card-hover" style="width: 100%;">
+          <div class="card-body small-pad">
+            <div class="row my-auto">
+              <div class="col-md-2 h-100 text-center my-auto">
+                {{ t.date_from|date:"j M Y" }}
+              </div>
+              <div class="col-md-2 h-100 text-center my-auto">
+                {{ t.date_to|date:"j M Y" }}
+              </div>
+              <div class="col-md-5 h-100 text-center my-auto">
+                {{ t.course }}
+              </div>
+              <div class="col-1 col-no-pad h-100 text-center my-auto">
+                {{ t.topic.hours|intcomma }}
+              </div>
+              <div class="col-md-1 h-100 text-center my-auto">
+                <span data-toggle="tooltip" data-placement="top" title="A score > 3 is required to achieve a 'confirmed' status">{{ t.score }}</span>
+              </div>
+              <div class="col-1 col-no-pad h-100 text-left my-auto">
+                <a href="{% url 'Talent:EducationDetail' t.slug %}" class="badge badge-pill badge-secondary" style="width: 5rem;">Detail</a>
+                <form  action="{% url 'Talent:EDTSFDelete' t.id skl %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+        <p>You have not captured You have no education items without sufficient pass score.</p>
+      {% endfor %}
+
+    <p>&nbsp</p>
+
+    <nav aria-label="Page navigation">
+        {% if pageitems.has_other_pages %}
+          <ul class="pagination">
+            {% if pageitems.has_previous %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ pageitems.previous_page_number }}" aria-label="Previous">
+                  <span aria-hidden="true">Previous</span>
+                  <span class="sr-only disabled">Previous</span>
+                </a></li>
+            {% else %}
+              <li class="page-link disabled" tabindex="-1"><span>Previous</span></li>
+            {% endif %}
+
+            {% if pageitems.number|add:'-4' > 1 %}
+              <li class="page-link"><a href="?page={{ pageitems.number|add:'-5' }}">&hellip;</a></li>
+            {% endif %}
+
+            {% for i in pageitems.paginator.page_range %}
+              {% if pageitems.number == i %}
+                <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
+              {% elif i > pageitems.number|add:'-5' and i < pageitems.number|add:'5' %}
+                <li class="page-link"><a class="page-item" href="?page={{ i }}">{{ i }}</a></li>
+              {% endif %}
+            {% endfor %}
+
+            {% if pageitems.paginator.num_pages > pageitems.number|add:'4' %}
+              <li class="page-link"><a href="?page={{ pageitems.number|add:'5' }}">&hellip;</a></li>
+            {% endif %}
+
+            {% if pageitems.has_next %}
+              <li class="page-link"><a href="?page={{ pageitems.next_page_number }}">Next</a></li>
+            {% else %}
+              <li class="page-link disabled"><span>Next</span></li>
+            {% endif %}
+          </ul>
+        {% endif %}
+    </nav>
+
+  </div>
+</div>
+
+{% endblock content %}

@@ -21,7 +21,7 @@
         <div class="form-group col-md-7 mb-0">
           {{ form.superior_name|as_crispy_field }}
           {{ form.designation|as_crispy_field }}
-          <p><a href="{% url 'Talent:DesignationAddPop' %}" id='add_designation' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a Designation</a></p>
+          <p><a href="{% url 'Talent:DesignationAddPop' %}" id='add_designation' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add a Designation</a></p>
           <div class="">
             <p><button type="submit" name="another" class="btn btn-secondary">Save & Add Another</button> <button type="submit" name="done" class="btn btn-primary">Save & Next</button>  <a href="{% url 'Invitation:Invite2' instance.slug %}?next={{ request.path|urlencode }}" class="btn btn-info" target="_blank">Invite</a></p>
           </div>
