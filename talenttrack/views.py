@@ -2549,6 +2549,81 @@ def DPC_SummaryView(request, tlt):
     return render(request, template, context)
 
 
+def DPCP_SummaryView(request, tlt):
+    '''View for Designation, Project and Company hours logged'''
+    #caching
+    exp = WorkExperience.objects.filter(talent__alias = tlt).select_related('designation')
+    designation_qs = Designation.objects.all()
+    companybranch_qs = Branch.objects.all()
+    project_qs = ProjectData.objects.all()
+    tlt = tlt
+
+    #Designation Summary
+    dgn = exp.values_list('designation', flat=True).distinct('designation')
+
+    dgn_set = {}
+    for d in dgn:
+        if d == None:
+            pass
+        else:
+            a = designation_qs.get(pk=d)
+            b = a.workexperience_set.all()
+            cnt = b.count()
+            sum = b.aggregate(sum_d=Sum('hours_worked'))
+            sum_float = float(sum.get('sum_d'))
+            info_set = {}
+            info_set['count']=cnt
+            info_set['sum']=sum_float
+            designation_q = designation_qs.filter(pk=d).values_list('name', flat=True)
+            designation_f = designation_q[0]
+            dgn_set[designation_f] = info_set
+
+
+    #Company Summary - Listed Per Branch
+    cmp = exp.values_list('companybranch', flat=True).distinct('companybranch')
+    cmp_set = {}
+    for c in cmp:
+        if c == None:
+            pass
+        else:
+            a = companybranch_qs.get(pk=c)
+            b = a.workexperience_set.all()
+            cnt = b.count()
+            sum = b.aggregate(sum_d=Sum('hours_worked'))
+            sum_float = float(sum.get('sum_d'))
+            info_set = {}
+            info_set['count']=cnt
+            info_set['sum']=sum_float
+            companybranch_q = companybranch_qs.filter(pk=c).values_list('company__ename', 'name', 'city__city')
+            companybranch_f = f'{companybranch_q[0][0]}: {companybranch_q[0][1]} ({companybranch_q[0][2]})'
+            cmp_set[companybranch_f] = info_set
+
+    #Project Summary
+    prj = exp.values_list('project', flat=True).distinct('project')
+    prj_set = {}
+    for p in prj:
+        if p == None:
+            pass
+        else:
+            a = project_qs.get(pk=p)
+            b = a.workexperience_set.all()
+            cnt = b.count()
+            sum = b.aggregate(sum_d=Sum('hours_worked'))
+            sum_float = float(sum.get('sum_d'))
+            info_set = {}
+            info_set['count']=cnt
+            info_set['sum']=sum_float
+            project_q = project_qs.filter(pk=p).values_list('name', 'company__ename', 'companybranch__name')
+            project_f = f'{project_q[0][0]}: {project_q[0][1]} ({project_q[0][2]})'
+            prj_set[project_f] = info_set
+
+    template = 'talenttrack/talent_dpcp_summary.html'
+    context = {
+        'dgn_set': dgn_set, 'tlt': tlt, 'cmp_set': cmp_set, 'prj_set': prj_set,
+    }
+    return render(request, template, context)
+
+
 @login_required()
 @csp_exempt
 def PreLoggedExperienceCaptureView(request):

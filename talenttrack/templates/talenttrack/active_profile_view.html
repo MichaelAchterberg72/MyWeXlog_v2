@@ -233,7 +233,7 @@
             <div class="card-body">
               <div class="float-right">
                 {% if bch_count >= 6 %}
-                <a href="{% url 'Talent:DPCSum' als.alias %}#Company" class="btn btn-primary">All Companies</a>
+                <a href="{% url 'Talent:DPCPSum' als.alias %}#Company" class="btn btn-primary">All Companies</a>
                 {% endif %}
               </div>
               <h5 class="card-title">Career in Summary</h5>
@@ -340,7 +340,7 @@
     <div class="card-body">
       <div class="float-right">
         {% if prj_count >= 6 %}
-        <a href="{% url 'Talent:DPCSum' als.alias %}#Project" class="btn btn-primary">All Projects</a>
+        <a href="{% url 'Talent:DPCPSum' als.alias %}#Project" class="btn btn-primary">All Projects</a>
         {% endif %}
       </div>
       <h4 class="card-title" id="projects">Project History</h4>
@@ -473,10 +473,7 @@
           <div class="card-body small-pad">
             <div class="row my-auto">
               <div class="col-md-12 h-100 text-left my-auto">
-                {{ e.topic }}
-              </div>
-              <div class="col-md-12 h-100 text-left my-auto">
-                {{ e.course }}
+                {{ e.topic }} - {{ e.course }}
               </div>
             </div>
             <p class="tiny-paragraph">&nbsp</p>

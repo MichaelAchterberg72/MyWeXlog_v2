@@ -57,6 +57,7 @@ urlpatterns = [
     path('experience-detail/<slug:tlt>/', views.SumAllExperienceView, name='ExperienceSum'),
     path('skill-profile-detail/<slug:tlt>/', views.SkillProfileDetailView, name='SPDView'),
     path('dpc-detail/<slug:tlt>/', views.DPC_SummaryView, name='DPCSum'),
+    path('dpcp-detail/<slug:tlt>/', views.DPCP_SummaryView, name='DPCPSum'),
     path('apv/<slug:tlt>/<slug:vac>/', views.ActiveProfileView, name='APV'),
     path('apv-bch/<slug:tlt>/<slug:vac>/', views.BCHView, name='BCH_FV'),
     path('apv-ach/<slug:tlt>/<slug:vac>/', views.AchievementsView, name='ACH_FV'),
