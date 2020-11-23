@@ -18,6 +18,7 @@ from project.models import ProjectData
 from db_flatten.models import SkillTag
 from django_countries.fields import CountryField
 from locations.models import Region
+from WeXlog.storage_backends import PrivateMediaStorage
 
 
 CONFIRM = (
@@ -39,7 +40,7 @@ class Achievements(models.Model):
     achievement = models.CharField(max_length=500)
     date_achieved = models.DateField()
     description = models.TextField('Describe the Achievement')
-    upload = models.FileField(upload_to=AchFilename, blank=True, null=True, validators=[FileExtensionValidator(['pdf'])])
+    upload = models.FileField(storage=PrivateMediaStorage(), upload_to=AchFilename, blank=True, null=True, validators=[FileExtensionValidator(['pdf'])])
     slug = models.SlugField(max_length=15, unique=True, null=True, blank=True)
 
     class Meta:
@@ -89,7 +90,7 @@ class LicenseCertification(models.Model):
     region = models.ForeignKey(Region, on_delete=models.PROTECT, blank=True, null=True)
     cm_no = models.CharField('Membership / Credential Number', max_length=40)
     companybranch = models.ForeignKey(Enterprise, on_delete=models.PROTECT, verbose_name='Issued By')
-    upload = models.FileField(upload_to=CertFilename, blank=True, null=True, validators=[FileExtensionValidator(['pdf'])])
+    upload = models.FileField(storage=PrivateMediaStorage(), upload_to=CertFilename, blank=True, null=True, validators=[FileExtensionValidator(['pdf'])])
     issue_date = models.DateField()
     expiry_date = models.DateField(null=True, blank=True)
     current = models.BooleanField('Is this current?', default = True)
@@ -229,7 +230,7 @@ class WorkExperience(models.Model):
     date_from = models.DateField()
     date_to = models.DateField()
     date_captured = models.DateField(auto_now_add=True)
-    upload = models.FileField(upload_to=ExpFilename, blank=True, null=True, validators=[FileExtensionValidator(['pdf'])])
+    upload = models.FileField(storage=PrivateMediaStorage(), upload_to=ExpFilename, blank=True, null=True, validators=[FileExtensionValidator(['pdf'])])
     score = models.SmallIntegerField(default=0)
     comment = models.TextField(blank=True, null=True)
     #Work Experience Fields (Captured & Pre-Experience)

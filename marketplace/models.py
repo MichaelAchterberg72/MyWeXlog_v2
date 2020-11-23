@@ -8,6 +8,9 @@ from random import random
 from time import time
 
 from Profile.utils import create_code9, create_code8
+from WeXlog.storage_backends import PublicMediaStorage, PrivateMediaStorage
+
+
 
 from django.contrib.auth.models import User
 from users.models import CustomUser
@@ -117,7 +120,7 @@ class TalentRequired(models.Model):
     certification = models.ManyToManyField(Result, verbose_name='Certifications Required', blank=True)
     scope = models.TextField()
     expectations = models.TextField()
-    terms = models.FileField(upload_to=BidTerms, blank=True, null=True, validators=[FileExtensionValidator(['pdf'])])
+    terms = models.FileField(storage=PublicMediaStorage(), upload_to=BidTerms, blank=True, null=True, validators=[FileExtensionValidator(['pdf'])])
     city = models.ForeignKey(City, on_delete=models.PROTECT, verbose_name='City, Town or Place')
     date_modified = models.DateField(auto_now=True)
     vac_wkfl = models.CharField(max_length=1, choices=WKFLOW, default='P')
