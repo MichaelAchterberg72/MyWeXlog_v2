@@ -21,7 +21,7 @@
     <div class="form-group col-md-6 mb-0">
       {{ form.language|as_crispy_field }}
       <p>
-        <a href="{% url 'Profile:LanguagePop' %}" id='add_language' onclick='return showAddPopup(this);'><img src = "{% static '/images/icon-addlink.svg' %}">Add a Language</a>
+        <a href="{% url 'Profile:LanguagePop' %}" id='add_language' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add a Language</a>
       </p>
       {{ form.level|as_crispy_field }}
     </div>

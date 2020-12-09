@@ -26,6 +26,12 @@ from users.models import CustomUser
 from locations.models import Region
 
 
+class EmailFormModal(forms.Form):
+    recipient = forms.EmailField(label='To', max_length=40)
+    sender = forms.EmailField(label='From', max_length=40)
+    subject = forms.CharField(label='Subject', max_length=120)
+    message = forms.CharField(label='Message', widget=forms.Textarea, max_length=300)
+
 #>>> Select 2
 class UserSearchFieldMixin:
     search_fields = [
