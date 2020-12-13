@@ -14,16 +14,21 @@ class ChatConsumer(WebsocketConsumer):
     def message_read_notification(self, data):
         author = self.scope["user"]
         author_user = User.objects.get(alias=author.alias)
-        message_id = Message.objects.get(pk=data['id'])
+        x = data['id']
+        y = ''.join(map(str, x))
+        z = int(y)
+        message_id = Message.objects.get(pk=z)
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         chat_name = self.room_name
         chatgroup_id = ChatGroup.objects.get(slug=chat_name)
-        update_message_read = MessageRead.objects.update(
+        update_message_read = MessageRead.objects.filter(
             message=message_id,
             talent=author_user,
             chat_group=chatgroup_id,
+            ).update(
             message_read=True,
-            read_date=timezone.now())
+            read_date=timezone.now()
+            )
 
         #is it necessary to rebuild the menu with each message read - processor heavy
         groups_qs = ChatRoomMembers.objects.filter(talent=author_user).order_by('-date_modified').values_list('chat_group')
@@ -31,11 +36,11 @@ class ChatConsumer(WebsocketConsumer):
         chat_rooms = []
         for item in groups_qs:
             groups = ChatRoomMembers.objects.filter(Q(talent=author_user) & Q(chat_group=item)).values_list('room_name', 'date_modified', 'chat_group__slug')
-            messages_received = MessageRead.objects.filter(Q(chat_group=item) & Q(message_read=False) & ~Q(talent=author_user)).count()
+            messages_received = MessageRead.objects.filter(Q(chat_group=item) & Q(message_read=False) & Q(talent=author_user)).count()
 
             result = {'group': groups, 'notification': messages_received}
             chat_rooms.append(result)
-            
+
         content = {
             'command': 'fetch_menu',
             'menus': self.menus_to_json(chat_rooms),
@@ -50,7 +55,7 @@ class ChatConsumer(WebsocketConsumer):
         chat_rooms = []
         for item in groups_qs:
             groups = ChatRoomMembers.objects.filter(Q(talent=author_user) & Q(chat_group=item)).values_list('room_name', 'date_modified', 'chat_group__slug')
-            messages_received = MessageRead.objects.filter(Q(chat_group=item) & Q(message_read=False) & ~Q(talent=author_user)).count()
+            messages_received = MessageRead.objects.filter(Q(chat_group=item) & Q(message_read=False) & Q(talent=author_user)).count()
 
             result = {'group': groups, 'notification': messages_received}
             chat_rooms.append(result)
@@ -60,6 +65,21 @@ class ChatConsumer(WebsocketConsumer):
             'menus': self.menus_to_json(chat_rooms),
         }
         return self.send_menu(content)
+
+    def fetch_previous_messages(self, data):
+        self.room_name = self.scope['url_route']['kwargs']['room_name']
+        chat_name = self.room_name
+        x = data['id']
+        y = ''.join(map(str, x))
+        message_id = int(y)
+        messages = Message.objects.filter(room_name=chat_name, id__lt=message_id).order_by('-timestamp')[:100]
+#        messages = message_list.order_by('timestamp')
+
+        content = {
+            'command': 'fetch_previous_messages',
+            'messages': self.messages_to_json(messages),
+        }
+        return self.send_message(content)
 
     def fetch_messages(self, data):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
@@ -137,6 +157,7 @@ class ChatConsumer(WebsocketConsumer):
         'new_message': new_message,
         'fetch_menu': fetch_menu,
         'message_read_notification': message_read_notification,
+        'fetch_previous_messages': fetch_previous_messages,
     }
 
     def connect(self):
@@ -183,7 +204,6 @@ class ChatConsumer(WebsocketConsumer):
     # Receive message from room group
     def chat_message(self, event):
         message = event['message']
-
         # Send message to WebSocket
         self.send(text_data=json.dumps(message))
 
