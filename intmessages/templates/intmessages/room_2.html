@@ -443,6 +443,7 @@
     var msgListTag = document.createElement('div');
     var rowTag = document.createElement('div');
     rowTag.className = 'row message-body';
+    rowTag.setAttribute('id', 'message');
     var colTag = document.createElement('div');
     var messageTag = document.createElement('div');
     messageTag.className = 'message-text';
@@ -488,11 +489,12 @@
   }
 
   function createPreviousMessages(data) {
-    var app = document.querySelector('#chat-log')
+    var app = document.querySelector('#message')
     var author = data['author'];
     var msgListTag = document.createElement('div');
     var rowTag = document.createElement('div');
     rowTag.className = 'row message-body';
+    rowTag.setAttribute('id', 'message');
     var colTag = document.createElement('div');
     var messageTag = document.createElement('div');
     messageTag.className = 'message-text';

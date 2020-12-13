@@ -72,8 +72,7 @@ class ChatConsumer(WebsocketConsumer):
         x = data['id']
         y = ''.join(map(str, x))
         message_id = int(y)
-        messages = Message.objects.filter(room_name=chat_name, id__lt=message_id).order_by('-timestamp')[:100]
-#        messages = message_list.order_by('timestamp')
+        messages = reversed(Message.objects.filter(room_name=chat_name, id__lt=message_id).order_by('-timestamp')[:100])
 
         content = {
             'command': 'fetch_previous_messages',
