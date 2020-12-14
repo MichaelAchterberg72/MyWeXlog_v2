@@ -104,7 +104,7 @@
             -->
           </div>
         </div>
-
+<!--
         <div class="row message-body">
           <div class="col-sm-12 message-main-receiver">
             <div class="receiver">
@@ -130,6 +130,7 @@
             </div>
           </div>
         </div>
+-->
       </div>
 
       <div class="row reply">
@@ -435,9 +436,9 @@
     }));
   };
 
-  setInterval(function() {
-      fetchMenu();
-  }, 60 * 1000); // 60 * 1000 milsec fir every 1 minute
+  //setInterval(function() {
+  //    fetchMenu();
+  //}, 60 * 1000); // 60 * 1000 milsec fir every 1 minute
 
   function createMessage(data) {
     var author = data['author'];
@@ -536,8 +537,7 @@
     for (let i=0; i<data.length; i++) {
       var url = [data[i].group_url];
       var urlTag = document.createElement('a');
-      var menuSidebarTag = document.createElement('div');
-      menuSidebarTag.className = 'row sideBar-body';
+      urlTag.className = 'row sideBar-body';
       var avatarTag = document.createElement('div');
       avatarTag.className = 'col-md-3 sideBar-avatar';
       var avatarIconTag = document.createElement('div');
@@ -548,15 +548,16 @@
       var rowTag = document.createElement('div');
       rowTag.className = 'row';
       var sidebarNameTag = document.createElement('div');
-      sidebarNameTag.className = 'col-8 col-no-pad sideBar-name';
+      sidebarNameTag.className = 'col-7 col-no-pad sideBar-name';
       var spanNameMeta = document.createElement('span');
       spanNameMeta.className = 'name-meta';
       spanNameMeta.textContent = [data[i].group];
       var notificationCount = [data[i].notification];
       var spanNotification = document.createElement('span');
+      var spanNotificationBlank = document.createElement('span');
       spanNotification.className = 'notification';
       var sidebarTime = document.createElement('div');
-      sidebarTime.className = 'col-4 col-no-pad float-right sideBar-time';
+      sidebarTime.className = 'col-5 col-no-pad float-right sideBar-time';
       var spanSidebarTime = document.createElement('span');
       spanSidebarTime.className = 'time-meta float-right';
       spanSidebarTime.textContent = [data[i].notification_timestamp];
@@ -570,8 +571,8 @@
       document.querySelector('#menu').appendChild(urlTag);
       urlTag.href = "{% url 'Chat:room' 12345 %}".replace(/12345/, url.toString());
       urlTag.setAttribute("id", "urlTag");
-      urlTag.appendChild(menuSidebarTag);
-      menuSidebarTag.appendChild(avatarTag);
+      urlTag.appendChild(avatarTag);
+//      menuSidebarTag.appendChild(avatarTag);
       avatarTag.appendChild(avatarIconTag);
       avatarIconTag.appendChild(avatarImgTag);
       avatarImgTag.src = "https://bootdey.com/img/Content/avatar/avatar1.png";
@@ -579,7 +580,11 @@
       sidebarMainTag.appendChild(rowTag);
       rowTag.appendChild(sidebarNameTag);
       sidebarNameTag.appendChild(spanNameMeta);
-      spanNameMeta.appendChild(spanNotification);
+      if (notificationCount > 0) {
+        spanNameMeta.after(spanNotification);
+      } else {
+        spanNameMeta.after(spanNotificationBlank);
+      };
       sidebarNameTag.after(sidebarTime);
       sidebarTime.appendChild(spanSidebarTime);
   }}

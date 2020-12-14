@@ -157,6 +157,9 @@
   -moz-border-radius: 50%;
   -ms-border-radius: 50%;
   border-radius: 50%;
+  padding: 1.2px;
+  padding-left: 6px;
+  padding-right: 6px;
 }
 
 /*#searchBox-inner input {
@@ -185,6 +188,7 @@
   height: 72px;
   margin: 0 !important;
   cursor: pointer;
+  width: -webkit-fill-available;
 }
 
 .sideBar-body:hover {
@@ -220,7 +224,7 @@
   padding: 1% !important;
   text-align: left;
   text-overflow: ellipsis;
-  white-space: normal;
+  white-space: nowrap;
   color: #000;
 }
 
@@ -229,6 +233,7 @@
 }
 
 .time-meta {
+  top: 5px;
   text-align: left;
   font-size: 12px;
   padding: 1% !important;
