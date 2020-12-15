@@ -101,7 +101,7 @@ class ChatConsumer(WebsocketConsumer):
             author=author_user,
             content=data['message'])
 
-        latest_message = Message.objects.latest('id').id
+        latest_message = message.id
         message_id = Message.objects.get(pk=latest_message)
         chatgroup_id = ChatGroup.objects.get(slug=chat_name)
         message_talent = ChatRoomMembers.objects.filter(chat_group__slug=chat_name)
