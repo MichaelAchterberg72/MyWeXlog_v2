@@ -22,7 +22,9 @@
             <i class="fa fa-ellipsis-v fa-2x  pull-right" aria-hidden="true"></i>
           </div>
           <div class="col-sm-2 col-xs-2 heading-compose  pull-right">
-            <i class="fa fa-comments fa-2x  pull-right" aria-hidden="true" data-toggle="tooltip" title="New Chat"></i>
+            <a href="{% url 'Chat:index' %}">
+            <i class="fa fa-comments fa-2x  pull-right" aria-hidden="true" data-toggle="tooltip" title="Back to Index"></i
+            </a>
           </div>
         </div>
 
@@ -368,6 +370,25 @@
     fetchMessages();
     fetchMenu();
   }
+  var menuList = document.querySelector('#menu');
+  var filterMenu = document.getElementById('searchText');
+
+  filterMenu.addEventListener('keyup', filterMenuItems);
+
+  function filterMenuItems(e){
+   var text = e.target.value.toLowerCase();
+   var menuItems = menuList.getElementsByClassName('row sidebar-body');
+
+   Array.from(menuItems).forEach(function(menuItem){
+     var menuItemName = menuItem.childNodes[0][1][0][1].textContent;
+
+     if(menuItemName.toLowerCase().indexOf(text) != -1){
+       menuItem.style.display = 'block';
+     } else {
+       menuItem.style.display = 'none';
+     }
+   });
+ };
 
   chatSocket.onmessage = function(e) {
        var data = JSON.parse(e.data);
@@ -386,6 +407,8 @@
          for (let i=0; i<data['messages'].length; i++){
            createPreviousMessages(data['messages'][i]);
         }
+     } else if (data['command'] === 'update_message'){
+         updateMessageReadCheck(data['message']);
      }
    };
 
@@ -429,16 +452,32 @@
 
   function fetchPreviousMessages() {
     messageRID = document.getElementById("msgID").textContent;
-    console.log(messageRID)
     chatSocket.send(JSON.stringify({
         'command': 'fetch_previous_messages',
         'id': messageRID
-    }));
+      }));
   };
+
 
   setInterval(function() {
       fetchMenu();
   }, 60 * 1000); // 60 * 1000 milsec fir every 1 minute
+
+  function updateMessageReadCheck(data) {
+    var msgID = [data.id]
+    var msgCheckID = "msgCheckID"+msgID;
+    var msgReadCount = [data.message_read]
+    var msgReadID = "msgReadID"+msgID;
+    console.log(msgCheckID)
+    var msgIdElement = document.getElementById(msgReadID);
+    var msgCheckElement = document.getElementById(msgCheckID);
+    msgIdElement.innerText = msgReadCount;
+    if (msgIdElement.innerText > 0) {
+      msgCheckElement.setAttribute("style", "color:#9a9a9a !important");
+    } else {
+      msgCheckElement.setAttribute("style", "color:#66ff00 !important");
+    }
+  };
 
   function createMessage(data) {
     var author = data['author'];
@@ -458,6 +497,19 @@
     messageId.textContent = [data.id];
     messageTag.textContent = [data.content];
     spanTag.textContent = [data.timestamp];
+    var msgReadTag = document.createElement('span');
+    msgReadTag.className = 'd-none';
+    msgReadTag.setAttribute("id", "msgReadID"+messageRID);
+    var magReadCount = [data.message_read]
+    msgReadTag.textContent = [data.message_read];
+    var msgReadSelfTag = document.createElement('span');
+    msgReadSelfTag.className = 'd-none';
+    var magReadSelfCount = [data.message_read_self]
+    msgReadSelfTag.textContent = [data.message_read_self];
+    var msgCheck = document.createElement('i');
+    msgCheck.className = 'fa fa-check message-check pull-right';
+    msgCheck.setAttribute("aria-hidden", "true");
+    msgCheck.setAttribute('id', "msgCheckID"+messageRID);
 
     if (author === username) {
       colTag.className = 'col-sm-12 message-main-sender';
@@ -467,20 +519,34 @@
       colTag.className = 'col-sm-12 message-main-receiver';
       msgListTag.className = 'receiver';
       rowTag.className = 'row message-body';
+      msgCheck.className = 'd-none';
     }
 
     document.querySelector('#chat-log').appendChild(rowTag);
     rowTag.appendChild(colTag);
     colTag.appendChild(msgListTag);
     msgListTag.appendChild(messageTag);
-    messageTag.after(messageId);
-    messageId.after(spanTag);
+    messageTag.after(msgReadSelfTag);
+    msgReadSelfTag.after(msgReadTag);
+    messageTag.after(spanTag);
+    spanTag.after(messageId);
+    spanTag.appendChild(msgCheck);
 
-    messageReadNotification();
-    //Message read function
-//    $('chat-log').delay(3000)fadeIn(0, function() {
-//      messageReadNotification();
-//    });
+    if (magReadCount > 0) {
+      msgCheck.setAttribute("style", "color:#9a9a9a !important");
+    };
+
+    if (magReadSelfCount > 0) {
+      messageReadNotification();
+      cmdUpdateMessageRead();
+    };
+
+    function cmdUpdateMessageRead() {
+      chatSocket.send(JSON.stringify({
+          'command': 'update_message',
+          'id': messageRID
+        }));
+    };
 
     function messageReadNotification() {
       chatSocket.send(JSON.stringify({
@@ -509,6 +575,19 @@
     messageId.textContent = [data.id];
     messageTag.textContent = [data.content];
     spanTag.textContent = [data.timestamp];
+    var msgReadTag = document.createElement('span');
+    msgReadTag.className = 'd-none';
+    msgReadTag.setAttribute("id", "msgReadID"+messageRID);
+    var magReadCount = [data.message_read]
+    msgReadTag.textContent = [data.message_read];
+    var msgReadSelfTag = document.createElement('span');
+    msgReadSelfTag.className = 'd-none';
+    var magReadSelfCount = [data.message_read_self]
+    msgReadSelfTag.textContent = [data.message_read_self];
+    var msgCheck = document.createElement('i');
+    msgCheck.className = 'fa fa-check message-check pull-right';
+    msgCheck.setAttribute("aria-hidden", "true");
+    msgCheck.setAttribute('id', "msgCheckID"+messageRID);
 
     if (author === username) {
       colTag.className = 'col-sm-12 message-main-sender';
@@ -518,14 +597,41 @@
       colTag.className = 'col-sm-12 message-main-receiver';
       msgListTag.className = 'receiver';
       rowTag.className = 'row message-body';
+      msgCheck.className = 'd-none';
     }
 
     app.prepend(rowTag);
     rowTag.appendChild(colTag);
     colTag.appendChild(msgListTag);
     msgListTag.appendChild(messageTag);
-    messageTag.after(messageId);
-    messageId.after(spanTag);
+    messageTag.after(msgReadSelfTag);
+    msgReadSelfTag.after(msgReadTag);
+    messageTag.after(spanTag);
+    spanTag.after(messageId);
+    spanTag.appendChild(msgCheck);
+
+    if (magReadCount > 0) {
+      msgCheck.setAttribute("style", "color:#9a9a9a !important");
+    };
+
+    if (magReadSelfCount > 0) {
+      messageReadNotification();
+      cmdUpdateMessageRead();
+    };
+
+    function cmdUpdateMessageRead() {
+      chatSocket.send(JSON.stringify({
+          'command': 'update_message',
+          'id': messageRID
+        }));
+    };
+
+    function messageReadNotification() {
+      chatSocket.send(JSON.stringify({
+          'command': 'message_read_notification',
+          'id': messageRID
+      }));
+    };
   };
 
   function createMenu(data) {
@@ -572,7 +678,6 @@
       urlTag.href = "{% url 'Chat:room' 12345 %}".replace(/12345/, url.toString());
       urlTag.setAttribute("id", "urlTag");
       urlTag.appendChild(avatarTag);
-//      menuSidebarTag.appendChild(avatarTag);
       avatarTag.appendChild(avatarIconTag);
       avatarIconTag.appendChild(avatarImgTag);
       avatarImgTag.src = "https://bootdey.com/img/Content/avatar/avatar1.png";

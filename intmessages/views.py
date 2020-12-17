@@ -15,27 +15,34 @@ from users.models import CustomUser
 @login_required()
 @csp_exempt
 def index(request):
-    return render(request, 'intmessages/index.html', {})
+    username = request.user.alias
+    groups_qs = ChatRoomMembers.objects.filter(talent__alias=username).order_by('-date_modified').values_list('chat_group')
+
+    chat_rooms = {}
+    for item in groups_qs:
+        groups = ChatRoomMembers.objects.filter(Q(talent__alias=username) & Q(chat_group=item)).values_list('room_name', 'date_modified', 'chat_group__slug')
+        messages_received = MessageRead.objects.filter(Q(chat_group=item) & Q(message_read=False) & Q(talent__alias=username)).count()
+
+        chat_rooms[item] = {'group': groups, 'notification': messages_received}
+#        chat_rooms.append(result)
+
+
+    template_name = 'intmessages/menu.html'
+    context = {
+            'username': username,
+            'chat_rooms': chat_rooms,
+    }
+    return render(request, template_name, context)
 
 
 @login_required()
 @csp_exempt
 def room(request, room_name):
 
-#    groups_qs = ChatRoomMembers.objects.filter(talent=request.user).order_by('-date_modified').values_list('chat_group')
-
-#    chat_rooms = {}
-#    for item in groups_qs:
-#        groups = ChatRoomMembers.objects.filter(Q(talent=request.user) & Q(chat_group=item)).values_list('room_name', 'date_modified', 'chat_group__slug')
-#        messages_received = MessageRead.objects.filter(Q(chat_group=item) & Q(message_read=False) & ~Q(talent=request.user)).count()
-#
-#        chat_rooms[item] = { 'group': groups, 'notification': messages_received}
-
     room = ChatRoomMembers.objects.filter(Q(chat_group__slug=room_name) & Q(talent=request.user)).values_list('room_name', flat=True)
 
     template_name = 'intmessages/room_2.html'
     context = {
-#            'chat_rooms': chat_rooms,
             'room': room,
             'room_name_json': mark_safe(json.dumps(room_name)),
             'username': mark_safe(json.dumps(request.user.alias))

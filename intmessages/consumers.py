@@ -11,6 +11,32 @@ User = get_user_model()
 
 
 class ChatConsumer(WebsocketConsumer):
+    def update_message_read(self, data):
+        author = self.scope["user"]
+        author_user = User.objects.get(alias=author.alias)
+        x = data['id']
+        y = ''.join(map(str, x))
+        z = int(y)
+        message_id = Message.objects.get(pk=z)
+        self.room_name = self.scope['url_route']['kwargs']['room_name']
+        chat_name = self.room_name
+        chatgroup_id = ChatGroup.objects.get(slug=chat_name)
+
+        message = []
+        message_instance = Message.objects.filter(Q(room_name=chat_name) & Q(pk=message_id.pk)).values_list('pk')
+        messages_read = MessageRead.objects.filter(Q(message__id=message_id.id) & Q(message_read=False) & ~Q(talent=author_user)).count()
+        messages_read_self = MessageRead.objects.filter(Q(message__id=message_id.id) & Q(message_read=False) & Q(talent=author_user)).count()
+
+        result = {'message': message_instance, 'messages_read': messages_read, 'messages_read_self': messages_read_self}
+        message.append(result)
+
+        content = {
+            'command': 'update_message',
+            'message': self.message_check_to_json(message),
+        }
+
+        return self.send_message_update(content)
+
     def message_read_notification(self, data):
         author = self.scope["user"]
         author_user = User.objects.get(alias=author.alias)
@@ -69,10 +95,21 @@ class ChatConsumer(WebsocketConsumer):
     def fetch_previous_messages(self, data):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         chat_name = self.room_name
+        author = self.scope["user"]
+        author_user = User.objects.get(alias=author.alias)
         x = data['id']
         y = ''.join(map(str, x))
         message_id = int(y)
-        messages = reversed(Message.objects.filter(room_name=chat_name, id__lt=message_id).order_by('-timestamp')[:100])
+        previous_messages_list = reversed(Message.objects.filter(room_name=chat_name, id__lt=message_id).order_by('-timestamp')[:100])
+
+        messages = []
+        for item in previous_messages_list:
+            message_instance = Message.objects.filter(Q(room_name=chat_name) & Q(pk=item.pk)).values_list('pk', 'author__alias', 'room_name', 'content', 'timestamp')
+            messages_read = MessageRead.objects.filter(Q(message__id=item.id) & Q(message_read=False) & ~Q(talent=author_user)).count()
+            messages_read_self = MessageRead.objects.filter(Q(message__id=item.id) & Q(message_read=False) & Q(talent=author_user)).count()
+
+            result = {'message': message_instance, 'messages_read': messages_read, 'messages_read_self': messages_read_self}
+            messages.append(result)
 
         content = {
             'command': 'fetch_previous_messages',
@@ -83,7 +120,18 @@ class ChatConsumer(WebsocketConsumer):
     def fetch_messages(self, data):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         chat_name = self.room_name
-        messages = Message.objects.filter(room_name=chat_name).order_by('-timestamp')[:20]
+        author = self.scope["user"]
+        author_user = User.objects.get(alias=author.alias)
+        fetch_messages_list = Message.objects.filter(room_name=chat_name).order_by('-timestamp')[:20]
+
+        messages = []
+        for item in fetch_messages_list:
+            message_instance = Message.objects.filter(Q(room_name=chat_name) & Q(pk=item.pk)).values_list('pk', 'author__alias', 'room_name', 'content', 'timestamp')
+            messages_read = MessageRead.objects.filter(Q(message__id=item.id) & Q(message_read=False) & ~Q(talent=author_user)).count()
+            messages_read_self = MessageRead.objects.filter(Q(message__id=item.id) & Q(message_read=False) & Q(talent=author_user)).count()
+
+            result = {'message': message_instance, 'messages_read': messages_read, 'messages_read_self': messages_read_self}
+            messages.append(result)
 
         content = {
             'command': 'messages',
@@ -94,14 +142,14 @@ class ChatConsumer(WebsocketConsumer):
     def new_message(self, data):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         chat_name = self.room_name
-        author = data['from']
-        author_user = User.objects.get(alias=author)
-        message = Message.objects.create(
+        author = self.scope["user"]
+        author_user = User.objects.get(alias=author.alias)
+        message_item = Message.objects.create(
             room_name=chat_name,
             author=author_user,
             content=data['message'])
 
-        latest_message = message.id
+        latest_message = message_item.id
         message_id = Message.objects.get(pk=latest_message)
         chatgroup_id = ChatGroup.objects.get(slug=chat_name)
         message_talent = ChatRoomMembers.objects.filter(chat_group__slug=chat_name)
@@ -115,11 +163,28 @@ class ChatConsumer(WebsocketConsumer):
         update_group_modified = ChatRoomMembers.objects.filter(chat_group__slug=chat_name).update(
             date_modified=timezone.now()
         )
+
+        message = []
+        message_instance = Message.objects.filter(Q(room_name=chat_name) & Q(pk=message_item.pk)).values_list('pk', 'author__alias', 'room_name', 'content', 'timestamp')
+        messages_read = MessageRead.objects.filter(Q(message__id=message_item.id) & Q(message_read=False) & ~Q(talent=author_user)).count()
+        messages_read_self = MessageRead.objects.filter(Q(message__id=message_item.id) & Q(message_read=False) & Q(talent=author_user)).count()
+
+        result = {'message': message_instance, 'messages_read': messages_read, 'messages_read_self': messages_read_self}
+        message.append(result)
+
         content = {
             'command': 'new_message',
-            'message': self.message_to_json(message)
+            'message': self.message_item_to_json(message)
         }
+
         return self.send_chat_message(content)
+
+    def message_check_to_json(self, message):
+        return {
+            'id': message[0]['message'][0][0],
+            'message_read': message[0]['messages_read'],
+            'message_read_self': message[0]['messages_read_self'],
+        }
 
     def messages_to_json(self, messages):
         result =[]
@@ -128,12 +193,24 @@ class ChatConsumer(WebsocketConsumer):
         result.reverse()
         return result
 
+    def message_item_to_json(self, message):
+        return {
+            'id': message[0]['message'][0][0],
+            'author': message[0]['message'][0][1],
+            'content': message[0]['message'][0][3],
+            'timestamp': str(message[0]['message'][0][4].strftime('%a, %b %d, %H:%M')),
+            'message_read': message[0]['messages_read'],
+            'message_read_self': message[0]['messages_read_self'],
+        }
+
     def message_to_json(self, message):
         return {
-            'id': message.pk,
-            'author': message.author.alias,
-            'content': message.content,
-            'timestamp': str(message.timestamp.strftime('%a, %b %d, %H:%M'))
+            'id': message['message'][0][0],
+            'author': message['message'][0][1],
+            'content': message['message'][0][3],
+            'timestamp': str(message['message'][0][4].strftime('%a, %b %d, %H:%M')),
+            'message_read': message['messages_read'],
+            'message_read_self': message['messages_read_self'],
         }
 
     def menus_to_json(self, menus):
@@ -143,7 +220,7 @@ class ChatConsumer(WebsocketConsumer):
         return result
 
     def menu_to_json(self, menu):
-        print(menu['group'][0][0])
+#        print(menu['group'][0][0])
         return {
             'group': menu['group'][0][0],
             'group_url': menu['group'][0][2],
@@ -157,6 +234,7 @@ class ChatConsumer(WebsocketConsumer):
         'fetch_menu': fetch_menu,
         'message_read_notification': message_read_notification,
         'fetch_previous_messages': fetch_previous_messages,
+        'update_message': update_message_read,
     }
 
     def connect(self):
@@ -193,6 +271,8 @@ class ChatConsumer(WebsocketConsumer):
                 'message': message
             }
         )
+    def send_message_update(self, message):
+        self.send(text_data=json.dumps(message))
 
     def send_message(self, message):
         self.send(text_data=json.dumps(message))

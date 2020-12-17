@@ -385,11 +385,19 @@
 
 .message-time {
   margin: 0 !important;
-  margin-left: 50px !important;
+  margin-right: 0px !important;
   font-size: 12px;
   text-align: right;
   color: #9a9a9a;
+}
 
+.message-check {
+  top: 15px !important;
+  margin: 0 !important;
+  margin-left: 5px !important;
+  font-size: 12px;
+  text-align: right;
+  color: #66ff00 !important;
 }
 
 .receiver {
