@@ -9,6 +9,7 @@ from django.db.models import Count, Sum, F, Q
 from django.utils import timezone
 from decimal import getcontext, Decimal
 import itertools
+from collections import OrderedDict
 
 from csp.decorators import csp_exempt
 from core.decorators import subscription
@@ -629,6 +630,8 @@ def InterviewListView(request, vac):
             'we':awetv, 'te':atetv, 's_no': askill_count, 'skill_rc': skill_rc, 'skill_int_count': skill_int_count, 'skill_match': skill_match, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score':avg, 'count': cnt, 'background': bg, 'des': des,
             }
 
+    interview_s = OrderedDict(sorted(interview_s.items(), key=lambda kv: kv[1]['skill_match'], reverse=True))
+
     interview_s_slice = dict(itertools.islice(interview_s.items(), 5))
     interview_s_count = len(interview_s)
 
@@ -670,6 +673,8 @@ def InterviewListView(request, vac):
 
 
         interview_p[app]={'we':awetv, 'te':atetv, 's_no': askill_count, 'skill_rc': skill_rc, 'skill_int_count': skill_int_count, 'skill_match': skill_match, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score':avg, 'count':cnt, 'background': bg, 'des': des,}
+
+    interview_p = OrderedDict(sorted(interview_p.items(), key=lambda kv: kv[1]['skill_match'], reverse=True))
 
     interview_p_slice = dict(itertools.islice(interview_p.items(), 5))
     interview_p_count = len(interview_p)
@@ -714,6 +719,8 @@ def InterviewListView(request, vac):
 
         interview_n[app]={'we':awetv, 'te':atetv, 's_no': askill_count, 'skill_rc': skill_rc, 'skill_int_count': skill_int_count, 'skill_match': skill_match, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score':avg, 'count': cnt, 'background': bg, 'des': des,}
 
+    interview_n = OrderedDict(sorted(interview_n.items(), key=lambda kv: kv[1]['skill_match'], reverse=True))
+
     interview_n_slice = dict(itertools.islice(interview_n.items(), 5))
     interview_n_count = len(interview_n)
 
@@ -756,6 +763,8 @@ def InterviewListView(request, vac):
 
 
         rej_bid_n[app]={'we':awetv, 'te':atetv, 's_no': askill_count, 'skill_rc': skill_rc, 'skill_int_count': skill_int_count, 'skill_match': skill_match, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score':avg, 'count': cnt, 'background': bg, 'des': des,}
+
+    rej_bid_n = OrderedDict(sorted(rej_bid_n.items(), key=lambda kv: kv[1]['skill_match'], reverse=True))
 
     rej_bid_n_slice = dict(itertools.islice(rej_bid_n.items(), 5))
     rej_bid_n_count = len(rej_bid_n)
@@ -863,6 +872,8 @@ def PendingInterviewListView(request, vac):
 
 
         interview_p[app]={'we':awetv, 'te':atetv, 's_no': askill_count, 'skill_rc': skill_rc, 'skill_int_count': skill_int_count, 'skill_match': skill_match, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score': avg, 'count': cnt, 'background': bg, 'des': des,}
+
+    interview_p = OrderedDict(sorted(interview_p.items(), key=lambda kv: kv[1]['skill_match'], reverse=True))
 
     interview_p_count = len(interview_p)
 
@@ -985,6 +996,8 @@ def SuitableInterviewListView(request, vac):
             'we':awetv, 'te':atetv, 's_no': askill_count, 'skill_rc': skill_rc, 'skill_int_count': skill_int_count, 'skill_match': skill_match, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score': avg, 'count': cnt, 'background': bg, 'des': des,
             }
 
+    interview_s = OrderedDict(sorted(interview_s.items(), key=lambda kv: kv[1]['skill_match'], reverse=True))
+
     interview_s_count = len(interview_s)
 
     t = tuple(interview_s.items())
@@ -1098,6 +1111,8 @@ def UnsuitableInterviewListView(request, vac):
             'we':awetv, 'te':atetv, 's_no': askill_count, 'skill_rc': skill_rc, 'skill_int_count': skill_int_count, 'skill_match': skill_match, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score': avg, 'count': cnt, 'background': bg, 'des': des,
             }
 
+    interview_n = OrderedDict(sorted(interview_n.items(), key=lambda kv: kv[1]['skill_match'], reverse=True))
+
     interview_n_count = len(interview_n)
 
     t = tuple(interview_n.items())
@@ -1208,6 +1223,8 @@ def BidRejectedListView(request, vac):
         rej_bid_n[app]={
             'we':awetv, 'te':atetv, 's_no': askill_count, 'skill_rc': skill_rc, 'skill_int_count': skill_int_count, 'skill_match': skill_match, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score': avg, 'count': cnt, 'background': bg, 'des': des,
             }
+
+    rej_bid_n = OrderedDict(sorted(rej_bid_n.items(), key=lambda kv: kv[1]['skill_match'], reverse=True))
 
     rej_bid_n_count = len(rej_bid_n)
 
@@ -2697,7 +2714,7 @@ def VacancyPostView(request, vac):
     else:
         wel = set(PhysicalAddress.objects.filter(region=instance.city.region).values_list('talent', flat=True))
         #Willing to Relocate
-        
+
         ctry = Region.objects.get(region=instance.city.region)
         wtr = set(WillingToRelocate.objects.filter(country=ctry.country).values_list('talent', flat=True))
         wel = wel|wtr
@@ -2759,6 +2776,8 @@ def VacancyPostView(request, vac):
             'we':wetv, 'te':tetv,'s_no':skill_count, 'skill_rc': skill_rc, 'skill_int_count': skill_int_count, 'skill_match': skill_match, 'skillset': skillset, 'rb':rb, 'ro':rate, 'score': avg, 'count': cnt, 'background': bg, 'des': des,
             }
 
+    suitable = OrderedDict(sorted(suitable.items(), key=lambda kv: kv[1]['skill_match'], reverse=True))
+
         #Extracting information for the applicants
     applied ={}
     for app in app_list:
@@ -2790,6 +2809,8 @@ def VacancyPostView(request, vac):
             applied[app]={
                 'we':awetv, 'te':atetv, 's_no': askill_count, 'skill_rc': skill_rc, 'skill_int_count': skill_int_count, 'skill_match': skill_match, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score': avg, 'count': cnt, 'background': bg, 'des': des,
                 }
+
+    applied = OrderedDict(sorted(applied.items(), key=lambda kv: kv[1]['skill_match'], reverse=True))
 
     suitable_slice = dict(itertools.islice(suitable.items(), 5))
     applied_slice = dict(itertools.islice(applied.items(), 5))
@@ -2942,6 +2963,7 @@ def TalentSuitedVacancyListView(request, vac):
             'we':wetv, 'te':tetv,'s_no':skill_count, 'skill_rc': skill_rc, 'skill_int_count': skill_int_count, 'skill_match': skill_match, 'skillset': skillset, 'rb':rb, 'ro':rate, 'score':avg, 'count':cnt, 'background': bg, 'des': des,
             }
 
+    suitable = OrderedDict(sorted(suitable.items(), key=lambda kv: kv[1]['skill_match'], reverse=True))
 
     suitable_slice = dict(itertools.islice(suitable.items(), 5))
 
@@ -3069,6 +3091,8 @@ def ApplicantsForVacancyListView(request, vac):
             skill_match = skill_int_count / skill_rc * 100
 
             applied[app]={'we':awetv, 'te':atetv, 's_no': askill_count, 'skill_rc': skill_rc, 'skill_int_count': skill_int_count, 'skill_match': skill_match, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score': avg, 'count': cnt, 'background': bg, 'des': des,}
+
+    applied = OrderedDict(sorted(applied.items(), key=lambda kv: kv[1]['skill_match'], reverse=True))
 
     applied_count = len(applied)
 
@@ -3755,6 +3779,8 @@ def ShortListView(request, vac):
         short[app]={
             'we':awetv, 'te':atetv, 's_no': askill_count, 'skill_rc': skill_rc, 'skill_int_count': skill_int_count, 'skill_match': skill_match, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score':avg, 'count': cnt, 'background': bg, 'des': des,
             }
+
+    short = OrderedDict(sorted(short.items(), key=lambda kv: kv[1]['skill_match'], reverse=True))
 
     t = tuple(short.items())
 

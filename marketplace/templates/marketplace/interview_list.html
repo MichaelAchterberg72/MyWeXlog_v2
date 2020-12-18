@@ -48,13 +48,14 @@
                     {{ a.get_tlt_response_display }}
                   </div>
                   <div class="col-md-3 h-100 text-center my-auto">
+
+                    <a href="{% url 'Talent:APV' tlt=a.talent.alias  vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill" style="width: 7rem">
+                      View Profile
+                    </a>
                     <form  action="{% url 'Chat:NewChat' tlt=a.talent.alias %}" method="post" name="active" target="_blank">
                     {% csrf_token %}
                     <button type="submit"  class="badge badge-success badge-pill float-right" style="width: 7rem;">Chat</button>
                     </form>
-                    <a href="{% url 'Talent:APV' tlt=a.talent.alias  vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill" style="width: 7rem">
-                      View Profile
-                    </a>
                     <a href="{% url 'Profile:WorkshopEmp' %}?next={{ request.path|urlencode }}" class="badge badge-primary badge-pill" style="width: 7rem">
                       Enter Office
                     </a>
@@ -204,11 +205,12 @@
                   <div class="row my-auto">
                     {% include 'marketplace/list_view_fields.html' %}
                     <div class="col-1 col-no-pad h-100 text-center my-auto">
+
+                      <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4  vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill float-right" style="width: 6rem">View Profile</a>
                       <form  action="{% url 'Chat:NewChat' tlt=key.1.ro.0.4 %}" method="post" name="active" target="_blank">
                       {% csrf_token %}
                       <button type="submit"  class="badge badge-success badge-pill float-right" style="width: 6rem;">Chat</button>
                       </form>
-                      <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4  vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill float-right" style="width: 6rem">View Profile</a>
                       <form  action="{% url 'MarketPlace:Suitable' tlt=key.1.ro.0.4 vac=scope.ref_no %}" method="post">
                         {% csrf_token %}
                         <button type="submit" class="badge badge-success badge-pill float-right" style="width: 6rem">Suitable</button>
@@ -231,16 +233,17 @@
                   <div class="row my-auto">
                     <div class="col-md-12 h-100">
                       <div class="row my-auto float-right">
-                        <form  action="{% url 'Chat:NewChat' tlt=key.1.ro.0.4 %}" method="post" name="active" target="_blank">
-                        {% csrf_token %}
-                        <button type="submit"  class="btn btn-outline-success" style="width: 10rem;">Chat</button>
-                        </form>&nbsp
+
                         <form  action="{% url 'MarketPlace:Suitable' tlt=key.1.ro.0.4 vac=scope.ref_no %}" method="post">
                           {% csrf_token %}
                           <button type="submit" class="btn btn-outline-success" style="width: 10rem">Suitable</button>
                         </form>&nbsp
                         <a href="{% url 'MarketPlace:NotSuitable' tlt=key.1.ro.0.4 vac=scope.ref_no %}" class="btn btn-outline-danger" style="width: 10rem">Not Suitable</a>&nbsp
-                        <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4  vac=scope.ref_no %}" target="_blank" class="btn btn-outline-secondary" style="width: 10rem">View Profile</a>
+                        <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4  vac=scope.ref_no %}" target="_blank" class="btn btn-outline-secondary" style="width: 10rem">View Profile</a>&nbsp
+                        <form  action="{% url 'Chat:NewChat' tlt=key.1.ro.0.4 %}" method="post" name="active" target="_blank">
+                        {% csrf_token %}
+                        <button type="submit"  class="btn btn-outline-success" style="width: 10rem;">Chat</button>
+                        </form>
                       </div>
                     </div>
                   </div>
@@ -300,10 +303,7 @@
                   <div class="row my-auto">
                     {% include 'marketplace/list_view_fields.html' %}
                     <div class="col-1 col-no-pad h-100 text-center my-auto">
-                      <form  action="{% url 'Chat:NewChat' tlt=key.1.ro.0.4 %}" method="post" name="active" target="_blank">
-                      {% csrf_token %}
-                      <button type="submit"  class="badge badge-success badge-pill float-right" style="width: 6rem;">Chat</button>
-                      </form>
+
                       {% if active == 'False' %}
                         <form  action="{% url 'MarketPlace:VacAssign' tlt=key.1.ro.0.4 vac=scope.ref_no %}" method="post">
                           {% csrf_token %}
@@ -314,6 +314,10 @@
                         <button type="submit" class="badge badge-success badge-pill float-right" style="width: 6rem">Pending</button>
                       {% endif %}
                         <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill float-right" style="width: 6rem">View Profile</a>
+                        <form  action="{% url 'Chat:NewChat' tlt=key.1.ro.0.4 %}" method="post" name="active" target="_blank">
+                        {% csrf_token %}
+                        <button type="submit"  class="badge badge-success badge-pill float-right" style="width: 6rem;">Chat</button>
+                        </form>
                     </div>
                   </div>
                 </div>
@@ -331,10 +335,7 @@
                   <div class="row my-auto">
                     <div class="col-md-12 h-100">
                       <div class="row my-auto float-right">
-                        <form  action="{% url 'Chat:NewChat' tlt=key.1.ro.0.4 %}" method="post" name="active" target="_blank">
-                        {% csrf_token %}
-                        <button type="submit"  class="btn btn-outline-success" style="width: 10rem;">Chat</button>
-                        </form>&nbsp
+
                         {% if active == 'False' %}
                           <form  action="{% url 'MarketPlace:VacAssign' tlt=key.1.ro.0.4 vac=scope.ref_no %}" method="post">
                             {% csrf_token %}
@@ -344,7 +345,11 @@
                         {% else %}
                           <button type="submit" class="btn btn-outline-success" style="width: 10rem">Pending</button>&nbsp
                         {% endif %}
-                          <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="btn btn-outline-secondary" style="width: 10rem">View Profile</a>
+                          <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="btn btn-outline-secondary" style="width: 10rem">View Profile</a>&nbsp
+                          <form  action="{% url 'Chat:NewChat' tlt=key.1.ro.0.4 %}" method="post" name="active" target="_blank">
+                          {% csrf_token %}
+                          <button type="submit"  class="btn btn-outline-success" style="width: 10rem;">Chat</button>
+                          </form>
                       </div>
                     </div>
                   </div>
@@ -394,15 +399,16 @@
                   <div class="row my-auto">
                     {% include 'marketplace/list_view_fields.html' %}
                     <div class="col-1 col-no-pad h-100 text-center my-auto">
-                      <form  action="{% url 'Chat:NewChat' tlt=key.1.ro.0.4 %}" method="post" name="active" target="_blank">
-                      {% csrf_token %}
-                      <button type="submit"  class="badge badge-success badge-pill float-right" style="width: 6rem;">Chat</button>
-                      </form>
+
                       <form  action="{% url 'MarketPlace:Suitable' tlt=key.1.ro.0.4  vac=scope.ref_no %}" method="post">
                         {% csrf_token %}
                         <button type="submit" class="badge badge-success badge-pill float-right" style="width: 6rem">Suitable</button>
                       </form>
                       <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill float-right" style="width: 6rem">View Profile</a>
+                      <form  action="{% url 'Chat:NewChat' tlt=key.1.ro.0.4 %}" method="post" name="active" target="_blank">
+                      {% csrf_token %}
+                      <button type="submit"  class="badge badge-success badge-pill float-right" style="width: 6rem;">Chat</button>
+                      </form>
                     </div>
                   </div>
                 </div>
@@ -420,15 +426,16 @@
                   <div class="row my-auto">
                     <div class="col-md-12 h-100">
                       <div class="row my-auto float-right">
-                        <form  action="{% url 'Chat:NewChat' tlt=key.1.ro.0.4 %}" method="post" name="active" target="_blank">
-                        {% csrf_token %}
-                        <button type="submit"  class="btn btn-outline-success" style="width: 10rem;">Chat</button>
-                        </form>&nbsp
+
                         <form  action="{% url 'MarketPlace:Suitable' tlt=key.1.ro.0.4  vac=scope.ref_no %}" method="post">
                           {% csrf_token %}
                           <button type="submit" class="btn btn-outline-success" style="width: 10rem">Suitable</button>
                         </form>&nbsp
-                        <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="btn btn-outline-secondary" style="width: 10rem">View Profile</a>
+                        <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="btn btn-outline-secondary" style="width: 10rem">View Profile</a>&nbsp
+                        <form  action="{% url 'Chat:NewChat' tlt=key.1.ro.0.4 %}" method="post" name="active" target="_blank">
+                        {% csrf_token %}
+                        <button type="submit"  class="btn btn-outline-success" style="width: 10rem;">Chat</button>
+                        </form>
                       </div>
                     </div>
                   </div>
@@ -478,14 +485,15 @@
                 <div class="row my-auto">
                   {% include 'marketplace/list_view_fields.html' %}
                   <div class="col-1 col-no-pad h-100 text-center my-auto">
-                    <form  action="{% url 'Chat:NewChat' tlt=key.1.ro.0.4 %}" method="post" name="active" target="_blank">
-                    {% csrf_token %}
-                    <button type="submit"  class="badge badge-success badge-pill float-right" style="width: 6rem;">Chat</button>
-                    </form>
+
                     <form  action="{% url 'MarketPlace:ApplicantsBidShortList' tlt=key.1.ro.0.4  vac=scope.ref_no %}" method="post" name="active">
                     {% csrf_token %}
                     <button type="submit"  class="badge badge-success badge-pill float-right" style="width: 6rem;">Short-list</button>
                     <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill float-right" style="width: 6rem">View Profile</a>
+                    <form  action="{% url 'Chat:NewChat' tlt=key.1.ro.0.4 %}" method="post" name="active" target="_blank">
+                    {% csrf_token %}
+                    <button type="submit"  class="badge badge-success badge-pill float-right" style="width: 6rem;">Chat</button>
+                    </form>
                   </div>
                 </div>
               </div>
@@ -503,14 +511,15 @@
                 <div class="row my-auto">
                   <div class="col-md-12 h-100">
                     <div class="row my-auto float-right">
-                      <form  action="{% url 'Chat:NewChat' tlt=key.1.ro.0.4 %}" method="post" name="active" target="_blank">
-                      {% csrf_token %}
-                      <button type="submit"  class="btn btn-outline-success" style="width: 6rem;">Chat</button>
-                      </form>&nbsp
+
                       <form  action="{% url 'MarketPlace:ApplicantsBidShortList' tlt=key.1.ro.0.4  vac=scope.ref_no %}" method="post" name="active">
                       {% csrf_token %}
                       <button type="submit"  class="btn btn-outline-success" style="width: 10rem;">Short-list</button>&nbsp
-                      <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="btn btn-outline-secondary" style="width: 10rem">View Profile</a>
+                      <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="btn btn-outline-secondary" style="width: 10rem">View Profile</a>&nbsp
+                      <form  action="{% url 'Chat:NewChat' tlt=key.1.ro.0.4 %}" method="post" name="active" target="_blank">
+                      {% csrf_token %}
+                      <button type="submit"  class="btn btn-outline-success" style="width: 6rem;">Chat</button>
+                      </form>
                     </div>
                   </div>
                 </div>
