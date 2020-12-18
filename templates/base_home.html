@@ -215,6 +215,10 @@
       <div class="btn-group">
       <a class="navbar-brand" href="{% url 'Feedback:NoticesList' %}?next={{ request.path|urlencode }}"><i class="fa fa-bell" aria-hidden="true" style="font-size:30px;" data-toggle="tooltip" title="Please click here to view MyWeXlog Notices!"></i></a>
 
+      {% if request.user.subscription > 1 %}
+      <a class="navbar-brand" href="{% url 'Chat:index' %}?next={{ request.path|urlencode }}"><i class="fa fa-comments fa-2x" aria-hidden="true" style="font-size:30px;" data-toggle="tooltip" title="Chat App"></i></a>
+      {% endif %}
+
       <a class="navbar-brand" href="{% url 'Users:UserAgreement' %}">User Agreement</a>
       <a class="navbar-brand" href="{% url 'Users:PrivacyPolicy' %}">Privacy Policy</a>
 

@@ -125,3 +125,67 @@
   background-color: 	#303030 !important;
   color: #ffffff !important;
 }
+
+/* Chat App */
+[data-theme="dark"] .heading {
+  background-color: 	#303030 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .user-name-heading {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .searchBox-inner {
+  background-color: 	#303030 !important;
+}
+
+[data-theme="dark"] .sideBar {
+  background-color: 	#303030 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .name-meta {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .sideBar-body:hover {
+  background-color: #202020;
+}
+
+[data-theme="dark"] .sideBar {
+  border: 1px solid #202020;
+}
+
+[data-theme="dark"] .sideBar-body {
+  border-bottom: 1px solid #202020;
+}
+
+[data-theme="dark"] .message {
+  border: 1px solid #202020;
+}
+
+[data-theme="dark"] .message-text {
+  color: #000 !important;
+}
+
+[data-theme="dark"] .fa-check {
+  color: #66ff00 !important;
+}
+
+[data-theme="dark"] .reply {
+  background-color: #303030 !important;
+}
+
+[data-theme="dark"] .reply button {
+  background-color: #303030 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .reply-main textarea {
+  border: 1px solid #ffffff;
+}
+
+[data-theme="dark"] .time-meta {
+  color: #ffffff !important;
+}
