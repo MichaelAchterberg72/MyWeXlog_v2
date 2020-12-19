@@ -43,11 +43,10 @@
 
           {% for room in chat_rooms.items %}
 
-          <a href="{% url 'Chat:room' room.1.group.0.2 %}">
-          <div class="row sideBar-body">
+          <a class="row sideBar-body href="{% url 'Chat:room' room.1.group.0.2 %}">
             <div class="col-md-3 sideBar-avatar">
               <div class="avatar-icon">
-                <img src="https://bootdey.com/img/Content/avatar/avatar1.png">
+                <img src="https://bootdey.com/img/Content/avatar/avatar6.png">
               </div>
             </div>
             <div class="col-md-9 sideBar-main">
@@ -68,8 +67,6 @@
 
               </div>
             </div>
-
-          </div>
           </a>
           {% endfor %}
 
