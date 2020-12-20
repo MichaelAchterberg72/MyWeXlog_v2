@@ -271,8 +271,15 @@ class ChatConsumer(WebsocketConsumer):
                 'message': message
             }
         )
+        
     def send_message_update(self, message):
-        self.send(text_data=json.dumps(message))
+        async_to_sync(self.channel_layer.group_send)(
+            self.room_group_name,
+            {
+                'type': 'chat_message',
+                'message': message
+            }
+        )
 
     def send_message(self, message):
         self.send(text_data=json.dumps(message))
