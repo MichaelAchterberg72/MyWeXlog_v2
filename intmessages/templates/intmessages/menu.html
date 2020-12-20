@@ -89,7 +89,7 @@
    var menuItems = menuList.getElementsByClassName('row sidebar-body');
 
    Array.from(menuItems).forEach(function(menuItem){
-     var menuItemName = menuItem.childNodes[0][1][0][1].textContent;
+     var menuItemName = menuItem.childNodes[1][0][0][0].textContent;
 
      if(menuItemName.toLowerCase().indexOf(text) != -1){
        menuItem.style.display = 'block';
