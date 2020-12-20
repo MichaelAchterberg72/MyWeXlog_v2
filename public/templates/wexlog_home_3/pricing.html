@@ -15,84 +15,14 @@
   <div class="jumbotron-fluid">
     <div class="container">
       <p>&nbsp</p>
-      <div class="row">
-        <div class="col-sm-12">
-          <div class="card border-0 bg-transparent">
-            <div class="card border-0 bg-transparent">
-              <div class="card-clear">
-                <div class="card-body">
-                  <div class="title3">
-                    <h5>CHOOSE YOUR PASSIVE SUBSCRIPTION UPGRADE!</h5>
-                  </div>
-                <p class="card-text">Get a discount by paying 6-monthly or yearly.</p>
-      <p>&nbsp<p>
-
-
-            <div class="row">
-              <div class="col-sm-4">
-                <div class="card expand">
-                  <div class="card-body">
-                    <center>
-                    <div class="title3 text-center">
-                      <h5>MONTHLY<br>MEMBERSHIP</h5>
-                    </div>
-                    <hr>
-                    <div class="card-body">
-                      <span class="price"><sup>$</sup> <span class="number">4<sup>,99</sup><small class="per">/mo</small></span></span>
-                      <span class="excerpt d-block">Billed Monthly</span>
-                      <p class="text-center">Features Included Listed Below</p>
-
-                      {{ passive_form.render }}
-                    </div>
-                    </center>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-4">
-                <div class="card expand">
-                  <div class="card-body">
-                    <center>
-                    <div class="title3 text-center">
-                      <h5>SIX MONTHLY<br>MEMBERSHIP</h5>
-                    </div>
-                    <hr>
-                    <div class="card-body">
-                      <span class="price"><sup>$</sup> <span class="number">28<sup>,44</sup><small class="per">/6-mo</small></span></span>
-                      <span class="excerpt d-block">Billed 6-Monthly</span>
-                      <p class="text-center">Enjoy Selected Features</p>
-                      {{ six_passive_form.render }}
-                    </div>
-                    </center>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-4">
-                <div class="card expand">
-                  <div class="card-body">
-                    <center>
-                    <div class="title3 text-center">
-                      <h5>YEARLY<br>MEMBERSHIP</h5>
-                    </div>
-                    <hr>
-                    <div class="card-body">
-                      <span class="price"><sup>$</sup> <span class="number">56<sup>,58</sup><small class="per">/year</small></span></span>
-                      <span class="excerpt d-block">All features are listed below</span>
-                      <p class="text-center">Billed Yearly</p>
-                      {{ twelve_passive_form.render }}
-                    </div>
-                    </center>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-
+      <p>&nbsp</p>
+{% include "wexlog_home_3/payments_card.html" %}
 <div class="row">
   <div class="col-sm-12">
     <div class="card border-0">
       <div class="card-body">
         <p class="text-center">We use PayPal as our billing partner<br>Prices displayed are in USD.</p>
-        {% include "subscription_payments/wexlog_home_3/package_benefits.html" %}
+        {% include "wexlog_home_3/package_bennefits.html" %}
       </div>
     </div>
   </div>

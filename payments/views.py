@@ -76,7 +76,7 @@ def GeneralPassiveSubscriptionView(request):
             "cmd": "_xclick-subscriptions",
             "business": settings.PAYPAL_RECEIVER_EMAIL,
             "currency_code": "USD",
-            "a3": "30.24",                      # monthly price
+            "a3": "28.44",                      # monthly price
             "p3": "6",                         # duration of each unit (depends on unit)
             "t3": "M",                         # duration unit ("M for Month")
             "src": "1",                        # make payments recur
@@ -94,7 +94,7 @@ def GeneralPassiveSubscriptionView(request):
             "cmd": "_xclick-subscriptions",
             "business": settings.PAYPAL_RECEIVER_EMAIL,
             "currency_code": "USD",
-            "a3": "50.18",                      # monthly price
+            "a3": "56.58",                      # monthly price
             "p3": "1",                         # duration of each unit (depends on unit)
             "t3": "Y",                         # duration unit ("M for Month")
             "src": "1",                        # make payments recur
@@ -146,7 +146,7 @@ def GeneralActiveSubscriptionView(request):
             "cmd": "_xclick-subscriptions",
             "business": settings.PAYPAL_RECEIVER_EMAIL,
             "currency_code": "USD",
-            "a3": "41.64",                      # monthly price
+            "a3": "39.84",                      # monthly price
             "p3": "6",                         # duration of each unit (depends on unit)
             "t3": "M",                         # duration unit ("M for Month")
             "src": "1",                        # make payments recur
@@ -164,7 +164,7 @@ def GeneralActiveSubscriptionView(request):
             "cmd": "_xclick-subscriptions",
             "business": settings.PAYPAL_RECEIVER_EMAIL,
             "currency_code": "USD",
-            "a3": "82.98",                      # monthly price
+            "a3": "79.38",                      # monthly price
             "tax_rate": "0.10",                # tax rate (confirm works with subscribe button)
             "p3": "1",                         # duration of each unit (depends on unit)
             "t3": "Y",                         # duration unit ("M for Month")
@@ -222,7 +222,7 @@ def BetaGeneralPassiveSubscriptionView(request):
             "a1": "0.00",                      # trial period monthly price
             "p1": "12",                        # number months trial period
             "t1": "M",                         # duration of unit ('M' for months)
-            "a3": "30.24",                      # monthly price
+            "a3": "28.44",                      # monthly price
             "p3": "6",                         # duration of each unit (depends on unit)
             "t3": "M",                         # duration unit ("M for Month")
             "src": "1",                        # make payments recur
@@ -243,7 +243,7 @@ def BetaGeneralPassiveSubscriptionView(request):
             "a1": "0.00",                      # trial period monthly price
             "p1": "1",                        # number months trial period
             "t1": "Y",                         # duration of unit ('M' for months)
-            "a3": "60.18",                      # monthly price
+            "a3": "56.58",                      # monthly price
             "p3": "1",                         # duration of each unit (depends on unit)
             "t3": "Y",                         # duration unit ("M for Month")
             "src": "1",                        # make payments recur
@@ -301,7 +301,7 @@ def BetaGeneralActiveSubscriptionView(request):
             "a1": "0.00",                      # trial period monthly price
             "p1": "12",                        # number months trial period
             "t1": "M",                         # duration of unit ('M' for months)
-            "a3": "41.64",                      # monthly price
+            "a3": "39.84",                      # monthly price
             "p3": "6",                         # duration of each unit (depends on unit)
             "t3": "M",                         # duration unit ("M for Month")
             "src": "1",                        # make payments recur
@@ -322,7 +322,7 @@ def BetaGeneralActiveSubscriptionView(request):
             "a1": "0.00",                      # trial period monthly price
             "p1": "1",                        # number months trial period
             "t1": "Y",                         # duration of unit ('M' for months)
-            "a3": "82.98",                      # monthly price
+            "a3": "79.38",                      # monthly price
             "p3": "1",                         # duration of each unit (depends on unit)
             "t3": "Y",                         # duration unit ("M for Month")
             "src": "1",                        # make payments recur
@@ -373,7 +373,7 @@ def PassiveUpgradeActiveSubscriptionView(request):
             "cmd": "_xclick-subscriptions",
             "business": settings.PAYPAL_RECEIVER_EMAIL,
             "currency_code": "USD",
-            "a3": "41.64",                      # monthly price
+            "a3": "39.84",                      # monthly price
             "p3": "6",                         # duration of each unit (depends on unit)
             "t3": "M",                         # duration unit ("M for Month")
             "src": "1",                        # make payments recur
@@ -391,8 +391,8 @@ def PassiveUpgradeActiveSubscriptionView(request):
             "cmd": "_xclick-subscriptions",
             "business": settings.PAYPAL_RECEIVER_EMAIL,
             "currency_code": "USD",
-            "a3": "82.98",                      # monthly price
-            "tax_rate": "0.10",                # tax rate (confirm works with subscribe button)
+            "a3": "79.38",                      # monthly price
+#            "tax_rate": "0.10",                # tax rate (confirm works with subscribe button)
             "p3": "1",                         # duration of each unit (depends on unit)
             "t3": "Y",                         # duration unit ("M for Month")
             "src": "1",                        # make payments recur
