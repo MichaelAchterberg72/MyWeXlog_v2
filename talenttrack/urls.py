@@ -57,6 +57,7 @@ urlpatterns = [
     path('experience-detail/<slug:tlt>/', views.SumAllExperienceView, name='ExperienceSum'),
     path('skill-profile-detail/<slug:tlt>/', views.SkillProfileDetailView, name='SPDView'),
     path('dpc-detail/<slug:tlt>/', views.DPC_SummaryView, name='DPCSum'),
+    path('dpcp-detail/<slug:tlt>/', views.DPCP_SummaryView, name='DPCPSum'),
     path('apv/<slug:tlt>/<slug:vac>/', views.ActiveProfileView, name='APV'),
     path('apv-bch/<slug:tlt>/<slug:vac>/', views.BCHView, name='BCH_FV'),
     path('apv-ach/<slug:tlt>/<slug:vac>/', views.AchievementsView, name='ACH_FV'),
@@ -81,8 +82,12 @@ urlpatterns = [
     path('ple-del-full/<int:ple_pk>/', views.PreLoggedExperienceDeleteFullView, name='PLEFDelete'),
     path('we-del/<int:we_pk>/', views.WorkExperienceDeleteView, name='WEDelete'),
     path('we-del-full/<int:we_pk>/', views.WorkExperienceDeleteFullView, name='WEFDelete'),
+    path('we-del-skill/<int:we_pk>/<int:skl>/', views.WorkExperienceDeleteSkillView, name='WESDelete'),
+    path('we-del-skill-full/<int:we_pk>/<int:skl>/', views.WorkExperienceDeleteSkillFullView, name='WESFDelete'),
     path('edt-del/<int:edt_pk>/', views.EducationDeleteView, name='EDTDelete'),
     path('edt-del-full/<int:edt_pk>/', views.EducationDeleteFullView, name='EDTFDelete'),
+    path('edt-del-skill/<int:edt_pk>/<int:skl>/', views.EducationDeleteSkillView, name='EDTSDelete'),
+    path('edt-del-skill-full/<int:edt_pk>/<int:skl>/', views.EducationDeleteSkillFullView, name='EDTSFDelete'),
     # Help urls
     path('help/experience-home/', views.HelpExperienceHomeView, name='HelpExperienceHome'),
     path('help/experience-education/', views.HelpExperienceEducationView, name='HelpExperienceEducation'),
@@ -106,4 +111,9 @@ urlpatterns = [
     path('reqsup-list/', views.sup_req_list, name='ReqSupList'),
     path('reqclt-list/', views.clt_req_list, name='ReqCltList'),
     path('reqclb-list/', views.clb_req_list, name='ReqClbList'),
+    #skills stats
+    path('skill-stats-overview/<int:skl>/', views.skill_stats, name='SkillsStats'),
+    path('skill-validation-list/<int:skl>/', views.skill_validate_list, name='SkillValidationList'),
+    path('skill-education-list/<int:skl>/', views.skill_training_list_view, name='SkillEducationList'),
+    path('skill-work-experience-list/<int:skl>/', views.skill_work_experience_list_view, name='SkillWorkExperienceList'),
 ]

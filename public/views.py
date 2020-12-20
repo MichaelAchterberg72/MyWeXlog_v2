@@ -126,7 +126,7 @@ class WexlogHomeBenefitsView(TemplateView):
 
 
 class WexlogHomePricingView(TemplateView):
-    template_name = 'wexlog_home/pricing.html'
+    template_name = 'wexlog_home_3/pricing.html'
 
 
 class WexlogHomeBlogView(TemplateView):
