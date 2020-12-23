@@ -16,7 +16,7 @@ from django_select2.forms import (
 )
 
 from .models import (
-    Topic, Result, CourseType, Course, Lecturer, ClassMates, WorkClient, WorkExperience, WorkColleague, Superior, WorkCollaborator, Designation, Achievements, LicenseCertification
+    Topic, Result, CourseType, Course, Lecturer, ClassMates, WorkClient, WorkExperience, WorkColleague, Superior, WorkCollaborator, Designation, Achievements, LicenseCertification, EmailRemindValidate
     )
 
 from enterprises.models import Enterprise, Branch, Industry
@@ -26,11 +26,15 @@ from users.models import CustomUser
 from locations.models import Region
 
 
-class EmailFormModal(forms.Form):
-    recipient = forms.EmailField(label='To', max_length=40)
-    sender = forms.EmailField(label='From', max_length=40)
-    subject = forms.CharField(label='Subject', max_length=120)
-    message = forms.CharField(label='Message', widget=forms.Textarea, max_length=300)
+class EmailFormModal(forms.ModelForm):
+#    recipient = forms.EmailField(label='To', max_length=40)
+#    sender = forms.EmailField(label='From', max_length=40)
+#    subject = forms.CharField(label='Subject', max_length=120)
+#    message = forms.CharField(label='Message', widget=forms.Textarea, max_length=300)
+
+    class Meta:
+        model = EmailRemindValidate
+        fields = ('subject', 'message')
 
 #>>> Select 2
 class UserSearchFieldMixin:

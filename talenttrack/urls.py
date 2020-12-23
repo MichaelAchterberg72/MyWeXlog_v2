@@ -116,4 +116,7 @@ urlpatterns = [
     path('skill-validation-list/<int:skl>/', views.skill_validate_list, name='SkillValidationList'),
     path('skill-education-list/<int:skl>/', views.skill_training_list_view, name='SkillEducationList'),
     path('skill-work-experience-list/<int:skl>/', views.skill_work_experience_list_view, name='SkillWorkExperienceList'),
+
+    path('request-validate-experience/<int:skl>/<slug:tlt>/', views.email_reminder_validate, name='RequestValidateExperienceEmail'),
+    path('request-validate-experience-list/<int:skl>/<slug:tlt>/', views.email_reminder_validate_list, name='RequestValidateExperienceEmailList'),
 ]

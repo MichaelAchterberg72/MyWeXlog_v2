@@ -5,6 +5,8 @@ from django.views.generic import TemplateView
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.http import is_safe_url
+from django.template.loader import get_template, render_to_string
+from django.conf import settings
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.urls import reverse
 from django.utils import timezone
@@ -17,6 +19,10 @@ from decimal import Decimal
 from django.contrib.postgres.search import SearchVector, TrigramSimilarity
 import math
 
+import sendgrid
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import (Mail, Subject, To, ReplyTo, SendAt, Content, From, CustomArg, Header)
+from django.utils.html import strip_tags
 
 from csp.decorators import csp_exempt
 from core.decorators import subscription, corp_permission
@@ -529,37 +535,32 @@ def email_reminder_validate(request, skl, tlt):
     current_user = request.user
     invitee = current_user.email
 
-    recipient = Profile.objects.get(alias=tlt)
+    recipient = CustomUser.objects.get(alias=tlt)
 
-    form = EmailFormModal(initial={
-                    'sender': invitee,
-                    'recipient': recipient.email,
+    form = EmailFormModal(request.POST or None, initial={
                     'subject': "Please Confirm MyWeXlog Experience",
-                    'message': message,})
+                    'message': f"Hi { recipient.first_name }, I have sent you a validation request and was hopeing you would be able log in to MyWeXlog and confirm it for me."})
 
     if request.method == 'POST':
         next_url=request.POST.get('next', '/')
         if form.is_valid():
             new = form.save(commit=False)
-            new.sender = request.user
+            new.sender = current_user
             new.recipient = recipient
             new.save()
             cd = form.cleaned_data
 
-            recipient = cd['recipient']
-            sender = cd['sender']
             subject = cd['subject']
             message = cd['message']
 
-            subject = f"{{ subject }}"
-            context = {'form': form, 'user_email': invitee }
+            email_subject = f"{ subject }"
+            context = {'form': form, 'sender': current_user, 'recipient': recipient, 'user_email': invitee }
             html_message = render_to_string('invitations/validate_request.html', context)
-            plain_message = strip_tags(html_message)
 
             message = Mail(
-                from_email = (settings.SENDGRID_FROM_EMAIL, f"{tlt.first_name} {tlt.last_name}"),
+                from_email = (settings.SENDGRID_FROM_EMAIL, f"{current_user.first_name} {current_user.last_name}"),
                 to_emails = invitee,
-                subject = subject,
+                subject = email_subject,
                 plain_text_content = strip_tags(html_message),
                 html_content = html_message)
 
@@ -573,18 +574,76 @@ def email_reminder_validate(request, skl, tlt):
             except Exception as e:
                 print(e)
 
-            template = 'invitations/invitation.html'
             if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
                 next_url = reverse('Talent:SkillsStats', kwargs={'skl': skl})
             response = HttpResponseRedirect(next_url)
             return response
         else:
             template = 'talenttrack/request_validate_email.html'
-            context = {'form': form}
+            context = {'form': form, 'skl': skl}
             return render(request, template, context)
     else:
         template = 'talenttrack/request_validate_email.html'
-        context = {'form': form}
+        context = {'form': form, 'skl': skl}
+        return render(request, template, context)
+
+
+@login_required()
+def email_reminder_validate_list(request, skl, tlt):
+    '''The view to email member to remind them to validate a tlt experience'''
+    current_user = request.user
+    invitee = current_user.email
+
+    recipient = CustomUser.objects.get(alias=tlt)
+
+    form = EmailFormModal(request.POST or None, initial={
+                    'subject': "Please Confirm MyWeXlog Experience",
+                    'message': f"Hi { recipient.first_name }, I have sent you a validation request and was hopeing you would be able log in to MyWeXlog and confirm it for me."})
+
+    if request.method == 'POST':
+        next_url=request.POST.get('next', '/')
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.sender = current_user
+            new.recipient = recipient
+            new.save()
+            cd = form.cleaned_data
+
+            subject = cd['subject']
+            message = cd['message']
+
+            email_subject = f"{ subject }"
+            context = {'form': form, 'sender': current_user, 'recipient': recipient, 'user_email': invitee }
+            html_message = render_to_string('invitations/validate_request.html', context)
+
+            message = Mail(
+                from_email = (settings.SENDGRID_FROM_EMAIL, f"{current_user.first_name} {current_user.last_name}"),
+                to_emails = invitee,
+                subject = email_subject,
+                plain_text_content = strip_tags(html_message),
+                html_content = html_message)
+
+            try:
+                sg = sendgrid.SendGridAPIClient(settings.SENDGRID_API_KEY)
+                response = sg.send(message)
+                print(response.status_code)
+                print(response.body)
+                print(response.headers)
+
+            except Exception as e:
+                print(e)
+
+            if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
+                next_url = reverse('Talent:SkillValidationList', kwargs={'skl': skl})
+            response = HttpResponseRedirect(next_url)
+            return response
+        else:
+            template = 'talenttrack/request_validate_email_list.html'
+            context = {'form': form, 'skl': skl}
+            return render(request, template, context)
+    else:
+        template = 'talenttrack/request_validate_email_list.html'
+        context = {'form': form, 'skl': skl}
         return render(request, template, context)
 
 
