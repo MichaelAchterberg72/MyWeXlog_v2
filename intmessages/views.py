@@ -41,7 +41,7 @@ def room(request, room_name):
 
     room = ChatRoomMembers.objects.filter(Q(chat_group__slug=room_name) & Q(talent=request.user)).values_list('room_name', flat=True)
 
-    template_name = 'intmessages/room_2.html'
+    template_name = 'intmessages/room_3.html'
     context = {
             'room': room,
             'room_name_json': mark_safe(json.dumps(room_name)),
