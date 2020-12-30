@@ -23,7 +23,7 @@
           </div>
           <div class="col-sm-2 col-xs-2 heading-compose  pull-right">
             <a href="{% url 'Chat:index' %}">
-            <i class="fa fa-comments fa-2x  pull-right" aria-hidden="true" data-toggle="tooltip" title="Back to Index"></i
+              <i class="fa fa-comments fa-2x  pull-right" aria-hidden="true" data-toggle="tooltip" title="Back to Index"></i
             </a>
           </div>
         </div>
@@ -169,7 +169,6 @@
 <script src="{% static 'js/reconnecting-websocket.js' %}"></script>
 <script src= "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
-
   $(document).ready(function(){
    $('#chat-log').animate({ scrollTop: $(document).height() }, 1000);
   });
@@ -185,7 +184,12 @@
   chatSocket.onopen = function(e) {
     fetchMessages();
     fetchMenu();
+
+    $('#chat-log').stop().animate({
+      scrollTop: $('#chat-log')[0].scrollHeight
+    }, 800);
   }
+
   var menuList = document.querySelector('#menu');
   var filterMenu = document.getElementById('searchText');
 
@@ -259,9 +263,12 @@
 
       closeReplyDialog();
 
-      $(document).ready(function(){
-       $('#chat-log').animate({ scrollTop: $(document).height() }, 1000);
-      });
+//      $(document).ready(function(){
+//       $('#chat-log').animate({ scrollTop: $(document).height() }, 1000);
+//      });
+      $('#chat-log').stop().animate({
+        scrollTop: $('#chat-log')[0].scrollHeight
+      }, 800);
    };
 
   document.querySelector('#show-previous-messages-submit').onclick = function(e) {
@@ -298,6 +305,8 @@
 
   function msgReply(messageRID) {
     var replyDiv = document.getElementById('reply-div-id');
+    var chatDiv = document.getElementById('chat-log');
+    chatDiv.setAttribute("style", "height:368px");
     replyDiv.className = 'row reply-message-dialog';
     var msgAuthor = document.getElementById('message-author'+messageRID);
     var replyDivAuthor = document.getElementById('reply-div-author-id');
@@ -313,6 +322,8 @@
   function closeReplyDialog() {
     var replyDiv = document.getElementById('reply-div-id');
     replyDiv.className = 'row reply-message-dialog d-none';
+    var chatDiv = document.getElementById('chat-log');
+    chatDiv.setAttribute("style", "height:480px");
     var replyDivAuthor = document.getElementById('reply-div-author-id');
     replyDivAuthor.innerText = '';
     var replyDivMessage = document.getElementById('reply-div-message-id');
@@ -347,10 +358,29 @@
     }
   };
 
+  function linkify(inputText) {
+  //URLs starting with http://, https://, or ftp://
+  var replacePattern1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
+  var replacedText = inputText.replace(replacePattern1, '<a href="$1" target="_blank">$1</a>');
+
+  //URLs starting with www. (without // before it, or it'd re-link the ones done above)
+  var replacePattern2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
+  var replacedText = replacedText.replace(replacePattern2, '$1<a href="http://$2" target="_blank">$2</a>');
+
+  //Change email addresses to mailto:: links
+  var replacePattern3 = /(\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,6})/gim;
+  var replacedText = replacedText.replace(replacePattern3, '<a href="mailto:$1">$1</a>');
+
+  return replacedText
+  };
+
   function createMessage(data) {
     var author = data['author'];
     var msgChatMembersCount = [data.chat_room_members_count]
     var messageRID = [data.id]
+    var inputText = [data.content];
+//    var textContent = linkify(inputText);
+    var textContent = inputText;
     var msgListTag = document.createElement('div');
 
     var replyMsgDiv = document.createElement('div');
@@ -375,7 +405,7 @@
     var messageTag = document.createElement('div');
     messageTag.className = 'message-text';
     messageTag.setAttribute("id", "msgTextID"+messageRID);
-    messageTag.textContent = [data.content];
+    messageTag.textContent = textContent;
     var spanTimeTag = document.createElement('span');
     spanTimeTag.className = 'message-time pull-right';
     var messageId = document.createElement('div');
@@ -492,7 +522,6 @@
       }));
     };
 
-
   };
 
   function createPreviousMessages(data) {
@@ -500,6 +529,9 @@
     var author = data['author'];
     var msgChatMembersCount = [data.chat_room_members_count]
     var messageRID = [data.id]
+    var inputText = [data.content];
+//    var textContent = linkify(inputText);
+    var textContent = inputText;
     var msgListTag = document.createElement('div');
 
     var replyMsgDiv = document.createElement('div');
@@ -524,7 +556,7 @@
     var messageTag = document.createElement('div');
     messageTag.className = 'message-text';
     messageTag.setAttribute("id", "msgTextID"+messageRID);
-    messageTag.textContent = [data.content];
+    messageTag.textContent = textContent;
     var spanTimeTag = document.createElement('span');
     spanTimeTag.className = 'message-time pull-right';
     var messageId = document.createElement('div');

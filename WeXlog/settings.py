@@ -90,6 +90,7 @@ INSTALLED_APPS = [
 #    'M2Crypto',
     'paypal.standard.ipn',
     'django_celery_beat',
+#    'emoji',
 ]
 
 
@@ -312,6 +313,9 @@ LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/Profile/'
 LOGOUT_REDIRECT_URL = 'https://mywexlog.com/'
 
+# Djano-Emoji settings
+EMOJI_ALT_AS_UNICODE = True
+EMOJI_REPLACE_HTML_ENTITIES = True
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/

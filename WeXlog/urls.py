@@ -37,6 +37,7 @@ urlpatterns = [
     path('chat/', include('intmessages.urls', namespace='Chat')),
     path('appcontrol/', include('AppControl.urls', namespace='AppControl')),
     path('corporate/', include('mod_corporate.urls', namespace='Corporate')),
+#    path('emoji/', include('emoji.urls')),
     ]
 
 if settings.DEBUG:

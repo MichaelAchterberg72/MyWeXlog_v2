@@ -333,7 +333,7 @@
   overflow-y: scroll !important;
   display: flex;
   border: 1px solid #f7f7f7;
-  height: 500px;
+  height: 480px;
 }
 .message-previous {
   margin : 0 !important;
@@ -397,15 +397,14 @@
 }
 */
 .receiver .message-text:hover button {
-  display: block;
+  display: flex;
   position: absolute;
   z-index: 1;
-  top: -10px;
   left: -30px;
   background: #ffffff;
 }
 .sender .message-text:hover button {
-  display: block;
+  display: flex;
   position: absolute;
   z-index: 1;
   left: -30px;
@@ -499,16 +498,17 @@
 /*Reply Message Input*/
 
 .reply-message-dialog {
-  max-height: 100px;
+  max-height: 120px;
   min-height: 80px;
   overflow: auto;
   width: 100%;
   background-color: #f5f1ee;
   padding: 10px 5px 10px 5px !important;
   margin: 0 !important;
-  z-index: 1000;
+  z-index: 1100;
   border-bottom: 1px;
   border-color: #A9A9A9;
+/*  position: relative; */
   top: -120px;
 }
 .reply-message-dialog-box {
@@ -548,7 +548,9 @@
   margin: 0 !important;
   z-index: 1000;
 }
-
+.reply button {
+  border: 0;
+}
 .reply-emojis {
   padding: 5px !important;
 }
