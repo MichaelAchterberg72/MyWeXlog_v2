@@ -12,6 +12,83 @@
     <h3>{{ skill }} Skill Statistics Overview</h3>
   </div>
 </div>
+<br>
+<div class="card card-shadow">
+  <div class="card-body">
+<div style="overflow-x: scroll">
+<div id="chart-container" style="position: relative;  width:auto;">
+
+<h4>{{ skill }} Associated Skills List</h4>
+<p class="short-paragraph">Percentge occurance of associated skills with skill {{ skill }}.</p>
+<p class="short-paragraph">You have a total of&nbsp<strong>{{ skill_list_labels_count }}</strong>&nbspassociated skills from&nbsp<strong>{{ skills_list_qs_count }}</strong>&nbspCaptured Work Experience logs.</p>
+<p class="small-paragraph"><small>Skills included are all skills relating to them that have been logged as Work Esxperience.  <br>(Includes all skills & logs, not only validated skills that have received a score of 3 or more.)</small></p>
+<br>
+<canvas id="percentage-associated-skills-by-skill-chart" height="100px"></canvas>
+<script>
+var percentage_associated_by_skill_config = {
+  type: 'bar',
+  data: {
+      labels: {{ skill_list_labels|safe }},
+      datasets: [{
+        label: 'Percentage Occurance with Associated skill',
+        data: {{ skill_percentage_data|safe }},
+        order: 1,
+          backgroundColor: ['#B6D8F2', '#F4CFDF', '#5784BA', '#C54B6C', '#F5BFD2', '#E5DB9C', '#D0BCAC', '#BEB4C5', '#E6A57E', '#218B82', '#9AD9DB', '#E5DBD9', '#98D4BB', '#EB96AA', '#C6C9D0', '#C54B6C', '#E5B3BB', '#C47482', '#D5E4C3', '#F9968B', '#F27348', '#26474E', '#76CDCD', '#2CCED2', '#B8E0F6', '#A4CCE3', '#37667E', '#DEC4D6', '#7B92AA', '#B8E0F6', '#A4CCE3', '#37667E', '#DEC4D6', '#7B92AA', '#DDF2F4', '#84A6D6', '#4382BB', '#E4CEE0', '#A15D98', '#DC828F', '#F7CE76', '#E8D6CF', '#8C7386', '#9C9359', '#E9BBB5', '#E7CBA9', '#AAD9CD', '#E8D595', '#8DA47E', '#CAE7E3', '#B2B2B2', '#EEB8C5', '#DCDBD9', '#FEC7BC', '#8EA4C8', '#C3B8AA', '#DEDCE4', '#DB93A5', '#C7CDC5',
+          ],
+          borderColor: [
+
+          ],
+          borderWidth: 1
+      }]
+  },
+  options: {
+      scales: {
+          yAxes: [{
+              ticks: {
+                  beginAtZero: true
+              }
+          }]
+        },
+      legend: {
+          display: false,
+          position: 'top',
+          labels: {
+              fontColor: '#0000ff',
+      },
+
+      }
+    }
+};
+
+var dataList = {{ skill_percentage_data|safe }};
+var count = 0;
+for(var i = 0; i < dataList.length; ++i){
+    if(dataList[i] >= 0)
+        count++;
+}
+var widthValue = 34 * count;
+var divWidth = document.getElementById("chart-container");
+
+if (count > 25){
+  divWidth.style.width = widthValue+"px";
+  }
+else{
+  divWidth.style.width = "auto";
+  }
+
+</script>
+</div>
+</div>
+<br>
+<div class="container">
+<div class="row">
+  <div class="col-md-12">
+    {% for skl in dept_skills_link %}<a href="{% url 'Talent:SkillsStats' skl.id %}?next={{ request.path|urlencode }}" class="btn btn-outline-success auto mb-1 mr-1 pointer">{{ skl.skill }}</a> {% endfor %}
+  </div>
+</div>
+</div>
+</div>
+</div>
 <br class="d-none">
 <div class="card card-shadow d-none">
   <div class="card-body">
@@ -40,6 +117,8 @@
         <canvas id="experience-rating-year-range-chart" height="100px"></canvas>
         <script>
           window.onload = function() {
+            var percentage_associated_by_skill_ctx = document.getElementById('percentage-associated-skills-by-skill-chart').getContext('2d');
+            window.myChart = new Chart(percentage_associated_by_skill_ctx, percentage_associated_by_skill_config);
 
             var experience_rating_year_range_ctx = document.getElementById('experience-rating-year-range-chart').getContext('2d');
             window.myChart = new Chart(experience_rating_year_range_ctx, experience_rating_year_range_config);
@@ -472,6 +551,76 @@
       {% endif %}
     </div>
   </div>
-</div
+</div>
+{% if invitation_sent_count >= 1 %}
+<br>
+<div class="card card-shadow">
+  <div class="card-body">
+        <h3 class="card-title">Invitations Already Sent Not Accepted</h3>
+        <p>Below is a list of people that you have sent invites to join MyWeXlog that have not yet accepted the invitation. Perhaps you would like to contact them directly to ask them to register.</p>
+        <p class="small-paragraph"><small>By law we are only allowed to send one invite from the MyWexlog email account, you will be required to send a reminder email from your private email address.</small></p>
+        <br>
+        <div class="container">
+          <div class="row my-auto">
+            <div class="col-1 col-no-pad h-100 text-center my-auto">
+              <strong>Date Invited</strong>
+            </div>
+            <div class="col-2 col-no-pad h-100 text-center my-auto">
+              <strong>Name</strong>
+            </div>
+            <div class="col-3 col-no-pad h-100 text-center my-auto">
+              <strong>Company</strong>
+            </div>
+            <div class="col-2 col-no-pad h-100 text-center my-auto">
+              <strong>Relationship</strong>
+            </div>
+            <div class="col-3 col-no-pad h-100 text-center my-auto">
+              <strong>email</strong>
+            </div>
+            <div class="col-1 col-no-pad h-100 text-center my-auto">
+              <strong></strong>
+            </div>
+          </div>
+        </div>
+        {% for i in invitation_sent %}
+        <div class="row">
+          <div class="card mt-1 card-hover" style="width: 100%;">
+            <div class="card-body small-pad">
+              <div class="row my-auto">
+                <div class="col-1 col-no-pad h-100 text-center my-auto">
+                  {{ i.date_invited|date:"j M Y" }}
+                </div>
+                <div class="col-2 col-no-pad h-100 text-center my-auto">
+                  {{ i.name }} {{ i.surname }}
+                </div>
+                <div class="col-3 col-no-pad h-100 text-center my-auto">
+                  {{ i.companybranch }}
+                </div>
+                <div class="col-2 col-no-pad h-100 text-center my-auto">
+                  {{ i.get_relationship_display }}
+                </div>
+                <div class="col-3 col-no-pad h-100 text-center my-auto">
+                  {{ i.email }}
+                </div>
+                <div class="col-1 col-no-pad h-100 text-center my-auto">
+                  <a href="mailto:{{ i.email }}" class="badge badge-primary" style="width:5rem;">Send<br>E-Mail</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+        <p>You do not have any sent invitations that have not been accepted at the moment
+        </p>
+        {% endfor %}
+        <br>
+        <div class="float-right">
+          {% if invitation_sent_count >= 6 %}
+            <a href="{% url 'Invitation:InvitationsSent' %}?next={{ request.path|urlencode }}" class="btn btn-primary">View All Invites</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endif %}
 {% endif %}
 {% endblock content %}

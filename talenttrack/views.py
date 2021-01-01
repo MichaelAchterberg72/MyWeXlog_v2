@@ -51,6 +51,7 @@ from Profile.models import (
 from booklist.models import ReadBy
 from users.models import CustomUser
 from mod_corporate.models import CorporateStaff
+from invitations.models import Invitation
 
 from WeXlog.app_config import (
     skill_pass_score, locked_age,
@@ -64,12 +65,55 @@ from analytics.signals import object_viewed_signal
 def skill_stats(request, skl):
     '''The view for the individual skill overview and stats'''
     skill = SkillTag.objects.get(id=skl)
-    tlt = request.user.alias
-    tlt_id = [request.user.id]
+    tlt_instance = request.user
+    tlt = tlt_instance.alias
+    tlt_id = [tlt_instance.id]
     today = timezone.now().date()
 
     we = WorkExperience.objects.filter(talent__alias=tlt)
     val_we = we.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
+
+    #Skills associated with skill - includes all skills not just validated ones
+    skill_we =  we.filter(skills__skill=skill.skill, edt=False)
+    skills_assoc_qs = skill_we.values_list('pk', flat=True)
+
+    skills_list_qs = we.filter(pk__in=skills_assoc_qs)
+    skills_list_qs_count = skills_list_qs.count()
+
+    skills_list = skills_list_qs.values_list('skills__skill', flat=True).distinct()
+
+    skills_list_set_all = [x for x in skills_list if x is not None]
+
+    skills_list_set = [x for x in skills_list_set_all if x is not f'{skill.skill}']
+
+    dept_skills_link = SkillTag.objects.filter(skill__in=skills_list_set).order_by('skill')
+
+    skills_instance_count = []
+    skill_list_labels = []
+    skill_percentage_data = []
+    for skill_item in skills_list_set:
+        skill_count = 0
+        tlt_we_skill = skills_list_qs.filter(skills__skill=skill_item).values_list('skills__skill', flat=True)
+
+        for we_instance in tlt_we_skill:
+            skill_count +=1
+        skill_percentage = int(format(skill_count / skills_list_qs_count * 100, '.0f'))
+
+        result={'skill': skill_item, 'skill_count': skill_count, 'skill_percentage': skill_percentage}
+
+        skills_instance_count.append(result)
+
+        skill_list_labels.append(skill_item)
+        skill_percentage_data.append(skill_percentage)
+
+    skill_list_labels_count = skills_list.count()
+
+#    print(skill_list_labels)
+#    print(skill_percentage_data)
+    orderd_skills_instance_count = sorted(skills_instance_count, key=lambda kv: kv['skill_percentage'], reverse=True)
+#    print(orderd_skills_instance_count['skill'])
+
+
 
     #work experience not validated
     n_val_we = we.filter(Q(skills__skill=skill.skill, edt=False) | Q(topic__skills__skill=skill.skill, edt=True))
@@ -115,6 +159,11 @@ def skill_stats(request, skl):
 
     we_skill = we.filter(Q(skills__skill=skill.skill, edt=False) | Q(topic__skills__skill=skill.skill, edt=True))
     val_we_skill = val_we.filter(Q(skills__skill=skill.skill, edt=False) | Q(topic__skills__skill=skill.skill, edt=True))
+
+    # Colleagues invited but not registered list
+    invitation_sent = Invitation.objects.filter(Q(invited_by=tlt_instance) & Q(accpeted=False)).order_by('-date_invited')[:6]
+
+    invitation_sent_count = invitation_sent.count()
 
     # Total Work Experience Skill Sum Experience by Year
     we_skills_used_year_range_data = []
@@ -347,6 +396,11 @@ def skill_stats(request, skl):
             'tlt': tlt,
             'skl': skl,
             'skill': skill,
+            'skills_list_qs_count': skills_list_qs_count,
+            'skill_list_labels_count': skill_list_labels_count,
+            'skill_list_labels': skill_list_labels,
+            'skill_percentage_data': skill_percentage_data,
+            'dept_skills_link': dept_skills_link,
             'nsps_te': nsps_te,
             'nsps_te_l_count': nsps_te_l_count,
             'nsps_we': nsps_we,
@@ -362,6 +416,8 @@ def skill_stats(request, skl):
             'val_we_skills_used_year_range_data': val_we_skills_used_year_range_data,
             'we_tbc_p': we_tbc_p,
             'we_tbc_p_l_count': we_tbc_p_l_count,
+            'invitation_sent': invitation_sent,
+            'invitation_sent_count': invitation_sent_count,
     }
     return render(request, template, context)
 
