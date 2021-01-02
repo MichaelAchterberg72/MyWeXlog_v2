@@ -10,6 +10,8 @@ from django.utils import timezone
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Row, Column
 
+from django_countries.fields import CountryField
+
 
 from django_select2.forms import (
     ModelSelect2TagWidget, ModelSelect2Widget, ModelSelect2MultipleWidget,
@@ -784,7 +786,7 @@ class TopicPopForm(forms.ModelForm):
 
 
 class SiteSkillStatsFilter(forms.Form):
-    country = forms.CharField(max_length=30, required=False)
+    country = CountryField(blank=True).formfield()
     region = forms.CharField(max_length=30, required=False)
     designation = forms.CharField(max_length=30, required=False)
     industry = forms.CharField(max_length=30, required=False)
