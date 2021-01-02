@@ -32,7 +32,7 @@ from WeXlog.app_config import(
 
 
 from .forms import (
-        TopicForm, ResultForm, CourseTypeForm, CourseForm, DesignationForm, ClassMatesSelectForm, ClassMatesConfirmForm, LecturerSelectForm, LecturerConfirmForm, EducationForm, WorkExperienceForm, WorkColleagueSelectForm, WorkColleagueConfirmForm, WorkColleagueResponseForm, ClassMatesResponseForm, LecturerResponseForm, SuperiorSelectForm, WorkCollaboratorResponseForm, WorkCollaboratorConfirmForm, WorkCollaboratorSelectForm, WorkClientResponseForm, WorkClientConfirmForm, WorkClientSelectForm, PreLoggedExperienceForm, TopicPopForm, LecturerRespondForm, ClassMatesRespondForm, AchievementsForm, LicenseCertificationForm, ProfileSearchForm, EmailFormModal
+        TopicForm, ResultForm, CourseTypeForm, CourseForm, DesignationForm, ClassMatesSelectForm, ClassMatesConfirmForm, LecturerSelectForm, LecturerConfirmForm, EducationForm, WorkExperienceForm, WorkColleagueSelectForm, WorkColleagueConfirmForm, WorkColleagueResponseForm, ClassMatesResponseForm, LecturerResponseForm, SuperiorSelectForm, WorkCollaboratorResponseForm, WorkCollaboratorConfirmForm, WorkCollaboratorSelectForm, WorkClientResponseForm, WorkClientConfirmForm, WorkClientSelectForm, PreLoggedExperienceForm, TopicPopForm, LecturerRespondForm, ClassMatesRespondForm, AchievementsForm, LicenseCertificationForm, ProfileSearchForm, EmailFormModal, SiteSkillStatsFilter
 )
 
 from .models import (
@@ -59,6 +59,99 @@ from WeXlog.app_config import (
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from analytics.signals import object_viewed_signal
+
+
+@login_required()
+def site_skill_stats(request, skl):
+    '''The view for the site wide skill overview and stats'''
+    skill = SkillTag.objects.get(id=skl)
+    tlt_instance = request.user
+    today = timezone.now().date()
+
+
+    val_we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
+
+    form = SiteSkillStatsFilter()
+
+    industry_query = request.GET.get('industry')
+    designation_query = request.GET.get('designation')
+    date_from_query = request.GET.get('date_from')
+    date_to_query = request.GET.get('date_to')
+    country_query = request.GET.get('country')
+    region_query = request.GET.get('region')
+
+    if industry_query != '' and industry_query is not None:
+        val_we = val_we.filter(industry__industry__icontains=industry_query)
+
+    elif designation_query != '' and designation_query is not None:
+        val_we = val_we.filter(designation__name__icontains=designation_query)
+
+    elif date_from_query != '' and date_from_query is not None:
+        val_we = val_we.filter(date_from__gte=date_from_query)
+
+    elif date_to_query != '' and date_to_query is not None:
+        val_we = val_we.filter(date_te__lte=date_to_query)
+
+    elif country_query != '' and country_query is not None:
+        country_profiles = PhysicalAddress.objects.filter(country__icontains=country_query).values_list('talent__id')
+        val_we = val_we.filter(talent__id__in=country_profiles)
+
+    elif region_query != '' and region_query is not None:
+        region_profiles = PhysicalAddress.objects.filter(region__region__icontains=region_query).values_list('talent__id')
+        val_we = val_we.filter(talent__id__in=region_profiles)
+
+    #Skills associated with skill - includes all skills not just validated ones
+    skill_we =  val_we.filter(skills__skill=skill.skill, edt=False)
+    skills_assoc_qs = skill_we.values_list('pk', flat=True)
+
+    skills_list_qs = val_we.filter(pk__in=skills_assoc_qs)
+    skills_list_qs_count = skills_list_qs.count()
+
+    skills_list = skills_list_qs.values_list('skills__skill', flat=True).distinct()
+
+    skills_list_set_all = [x for x in skills_list if x is not None]
+
+    skills_list_set = [x for x in skills_list_set_all if x is not f'{skill.skill}']
+
+    dept_skills_link = SkillTag.objects.filter(skill__in=skills_list_set).order_by('skill')
+
+    skills_instance_count = []
+    skill_list_labels = []
+    skill_percentage_data = []
+    for skill_item in skills_list_set:
+        skill_count = 0
+        tlt_we_skill = skills_list_qs.filter(skills__skill=skill_item).values_list('skills__skill', flat=True)
+
+        for we_instance in tlt_we_skill:
+            skill_count +=1
+        skill_percentage = int(format(skill_count / skills_list_qs_count * 100, '.0f'))
+
+        result={'skill': skill_item, 'skill_count': skill_count, 'skill_percentage': skill_percentage}
+
+        skills_instance_count.append(result)
+
+        skill_list_labels.append(skill_item)
+        skill_percentage_data.append(skill_percentage)
+
+    skill_list_labels_count = skills_list.count()
+
+#    print(skill_list_labels)
+#    print(skill_percentage_data)
+    orderd_skills_instance_count = sorted(skills_instance_count, key=lambda kv: kv['skill_percentage'], reverse=True)
+#    print(orderd_skills_instance_count['skill'])
+
+    template = 'talenttrack/site_skill_stats.html'
+    context = {
+            'skl': skl,
+            'skill': skill,
+            'form': form,
+            'skills_list_qs_count': skills_list_qs_count,
+            'skill_list_labels_count': skill_list_labels_count,
+            'skill_list_labels': skill_list_labels,
+            'skill_percentage_data': skill_percentage_data,
+            'dept_skills_link': dept_skills_link,
+    }
+    return render(request, template, context)
 
 
 @login_required()

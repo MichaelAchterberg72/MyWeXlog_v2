@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from users.models import CustomUser
 from django.utils.encoding import force_text
@@ -16,7 +17,7 @@ from django_select2.forms import (
 )
 
 from .models import (
-    Topic, Result, CourseType, Course, Lecturer, ClassMates, WorkClient, WorkExperience, WorkColleague, Superior, WorkCollaborator, Designation, Achievements, LicenseCertification, EmailRemindValidate
+    Topic, Result, CourseType, Course, Lecturer, ClassMates, WorkClient, WorkExperience, WorkColleague, Superior, WorkCollaborator, Designation, Achievements, LicenseCertification, EmailRemindValidate, SkillSearchStats
     )
 
 from enterprises.models import Enterprise, Branch, Industry
@@ -780,3 +781,22 @@ class TopicPopForm(forms.ModelForm):
         widgets={
             'skills': SkillModelSelect2MultipleWidget(),
             }
+
+
+class SiteSkillStatsFilter(forms.Form):
+    country = forms.CharField(max_length=30, required=False)
+    region = forms.CharField(max_length=30, required=False)
+    designation = forms.CharField(max_length=30, required=False)
+    industry = forms.CharField(max_length=30, required=False)
+    date_from = forms.DateField(required=False, widget=forms.DateInput(attrs={'placeholder': 'YYYY-MM-DD'}))
+    date_to = forms.DateField(required=False, widget=forms.DateInput(attrs={'placeholder': 'YYYY-MM-DD'}))
+
+    class Meta():
+        fields = ('country', 'region', 'designation', 'industry', 'date_from', 'date_to')
+        widgets={
+            'region': RegionWidget(),
+            'designation': DesignationSelect2Widget(),
+            'industry': IndSelect2Widget(),
+            'date_from': DateInput(),
+            'date_to': DateInput(),
+        }

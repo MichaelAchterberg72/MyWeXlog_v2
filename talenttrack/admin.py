@@ -1,8 +1,13 @@
 from django.contrib import admin
 
 from .models import (
-    Topic, Result, CourseType, Course, Lecturer, ClassMates, WorkClient, WorkExperience, WorkColleague, Superior, WorkCollaborator, Designation, Achievements, LicenseCertification, EmailRemindValidate
+    Topic, Result, CourseType, Course, Lecturer, ClassMates, WorkClient, WorkExperience, WorkColleague, Superior, WorkCollaborator, Designation, Achievements, LicenseCertification, EmailRemindValidate, SkillSearchStats
     )
+
+
+@admin.register(SkillSearchStats)
+class SkillSearchStatsAdmin(admin.ModelAdmin):
+    pass
 
 
 @admin.register(EmailRemindValidate)
