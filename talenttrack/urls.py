@@ -114,6 +114,7 @@ urlpatterns = [
     #skills stats
     path('skill-stats-overview/<int:skl>/', views.skill_stats, name='SkillsStats'),
     path('site-skill-stats-overview/<int:skl>/', views.site_skill_stats, name='SiteSkillsStats'),
+    path('site-demand_skill-stats-overview/<int:skl>/', views.site_demand_skill_stats, name='SiteDemandSkillsStats'),
     path('skill-validation-list/<int:skl>/', views.skill_validate_list, name='SkillValidationList'),
     path('skill-education-list/<int:skl>/', views.skill_training_list_view, name='SkillEducationList'),
     path('skill-work-experience-list/<int:skl>/', views.skill_work_experience_list_view, name='SkillWorkExperienceList'),

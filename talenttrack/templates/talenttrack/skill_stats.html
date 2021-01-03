@@ -13,6 +13,28 @@
   </div>
 </div>
 <br>
+
+<!-- Modal -->
+<div class="modal fade" id="siteStatsModal" tabindex="-1" role="dialog" aria-labelledby="siteStatsModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="siteStatsModalLabel">Site Wide Skill Stats</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <a href="{% url 'Talent:SiteDemandSkillsStats' skl %}" class="btn btn-primary"style="width: 10rem">Demanded Skills</a>
+        <a href="{% url 'Talent:SiteSkillsStats' skl %}" class="btn btn-primary float-right"style="width: 10rem">Logged Skills</a>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="card card-shadow">
   <div class="card-body">
 <div style="overflow-x: scroll">
@@ -20,7 +42,10 @@
 
 <h4>{{ skill }} Associated Skills List</h4>
 <div class="float-right">
-  <a href="{% url 'Talent:SiteSkillsStats' skl %}" class="btn btn-primary"style="width: 10rem">Site Wide</a>
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#siteStatsModal">
+    Site Wide Stats
+  </button>
 </div>
 <p class="short-paragraph">Percentge occurance of associated skills with skill {{ skill }}.</p>
 <p class="short-paragraph">You have a total of&nbsp<strong>{{ skill_list_labels_count }}</strong>&nbspassociated skills from&nbsp<strong>{{ skills_list_qs_count }}</strong>&nbspCaptured Work Experience logs.</p>

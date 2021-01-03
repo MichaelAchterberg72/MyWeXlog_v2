@@ -790,15 +790,31 @@ class SiteSkillStatsFilter(forms.Form):
     region = forms.CharField(max_length=30, required=False)
     designation = forms.CharField(max_length=30, required=False)
     industry = forms.CharField(max_length=30, required=False)
-    date_from = forms.DateField(required=False, widget=forms.DateInput(attrs={'placeholder': 'YYYY-MM-DD'}))
-    date_to = forms.DateField(required=False, widget=forms.DateInput(attrs={'placeholder': 'YYYY-MM-DD'}))
+    date_from = forms.DateField(required=False, widget=DateInput(attrs={'placeholder': 'YYYY-MM-DD'}))
+    date_to = forms.DateField(required=False, widget=DateInput(attrs={'placeholder': 'YYYY-MM-DD'}))
 
     class Meta():
         fields = ('country', 'region', 'designation', 'industry', 'date_from', 'date_to')
         widgets={
-            'region': RegionWidget(),
+#            'region': RegionWidget(),
             'designation': DesignationSelect2Widget(),
             'industry': IndSelect2Widget(),
-            'date_from': DateInput(),
-            'date_to': DateInput(),
+#            'date_from': DateInput(),
+#            'date_to': DateInput(),
+        }
+
+
+class SiteDemandSkillStatsFilter(forms.Form):
+    country = CountryField(blank=True).formfield()
+    worklocation = forms.CharField(max_length=30, required=False)
+    designation = forms.CharField(max_length=30, required=False)
+    experience_level = forms.CharField(max_length=30, required=False)
+    title = forms.CharField(max_length=30, required=False)
+    date_entered = forms.DateField(required=False, widget=DateInput(attrs={'placeholder': 'YYYY-MM-DD'}))
+    date_to = forms.DateField(required=False, widget=DateInput(attrs={'placeholder': 'YYYY-MM-DD'}))
+
+    class Meta():
+        fields = ('country', 'worklocation', 'designation', 'title', 'experience_level', 'date_entered', 'date_to')
+        widgets={
+            'designation': DesignationSelect2Widget(),
         }
