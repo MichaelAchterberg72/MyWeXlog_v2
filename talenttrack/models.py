@@ -412,13 +412,3 @@ class EmailRemindValidate(models.Model):
 
     def __str__(self):
         return f"{self.sender} sent to {self.recipient} on {self.date_sent}"
-
-class SkillSearchStats(models.Model):
-    country = CountryField(null=True,)
-    region = models.ForeignKey(Region, on_delete=models.PROTECT, blank=True, null=True)
-    industry = models.ForeignKey(Industry, on_delete=models.PROTECT, null=True)
-    designation = models.ForeignKey(Designation, on_delete=models.PROTECT, null=True)
-    timestamp = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.country}, {self.industry}, {self.designation}"

@@ -19,7 +19,7 @@ from django_select2.forms import (
 )
 
 from .models import (
-    Topic, Result, CourseType, Course, Lecturer, ClassMates, WorkClient, WorkExperience, WorkColleague, Superior, WorkCollaborator, Designation, Achievements, LicenseCertification, EmailRemindValidate, SkillSearchStats
+    Topic, Result, CourseType, Course, Lecturer, ClassMates, WorkClient, WorkExperience, WorkColleague, Superior, WorkCollaborator, Designation, Achievements, LicenseCertification, EmailRemindValidate
     )
 
 from enterprises.models import Enterprise, Branch, Industry
@@ -30,10 +30,6 @@ from locations.models import Region
 
 
 class EmailFormModal(forms.ModelForm):
-#    recipient = forms.EmailField(label='To', max_length=40)
-#    sender = forms.EmailField(label='From', max_length=40)
-#    subject = forms.CharField(label='Subject', max_length=120)
-#    message = forms.CharField(label='Message', widget=forms.Textarea, max_length=300)
 
     class Meta:
         model = EmailRemindValidate
@@ -796,19 +792,37 @@ class SiteSkillStatsFilter(forms.Form):
     class Meta():
         fields = ('country', 'region', 'designation', 'industry', 'date_from', 'date_to')
         widgets={
-#            'region': RegionWidget(),
             'designation': DesignationSelect2Widget(),
             'industry': IndSelect2Widget(),
-#            'date_from': DateInput(),
-#            'date_to': DateInput(),
         }
 
 
 class SiteDemandSkillStatsFilter(forms.Form):
+    WTPE = (
+        ('',''),
+        ('Remote freelance','Remote freelance'),
+        ('Freelance','Freelance'),
+        ('Consultant','Consultant'),
+        ('Contractor','Contractor'),
+        ('Employee','Employee'),
+        ('FiFo','FiFo'),
+    )
+
+    LEVEL = (
+        ('',''),
+        (0,'Student'),
+        (1,'Beginner'),
+        (2,'Junior'),
+        (3,'Intermediate'),
+        (4,'Senior'),
+        (5,'Lead'),
+    )
+
     country = CountryField(blank=True).formfield()
-    worklocation = forms.CharField(max_length=30, required=False)
-    designation = forms.CharField(max_length=30, required=False)
-    experience_level = forms.CharField(max_length=30, required=False)
+    worklocation = forms.ChoiceField(required=False, choices=WTPE)
+    designation = forms.ModelChoiceField(queryset=Designation.objects.all(),
+                    empty_label="", required=False)
+    experience_level = forms.ChoiceField(required=False, choices=LEVEL)
     title = forms.CharField(max_length=30, required=False)
     date_entered = forms.DateField(required=False, widget=DateInput(attrs={'placeholder': 'YYYY-MM-DD'}))
     date_to = forms.DateField(required=False, widget=DateInput(attrs={'placeholder': 'YYYY-MM-DD'}))
