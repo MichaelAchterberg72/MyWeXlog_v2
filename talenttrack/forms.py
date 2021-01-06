@@ -12,6 +12,7 @@ from crispy_forms.layout import Layout, Submit, Row, Column
 
 from django_countries.fields import CountryField
 
+from .widgets import ListTextWidget
 
 from django_select2.forms import (
     ModelSelect2TagWidget, ModelSelect2Widget, ModelSelect2MultipleWidget,
@@ -27,6 +28,7 @@ from project.models import ProjectData
 from db_flatten.models import SkillTag
 from users.models import CustomUser
 from locations.models import Region
+from marketplace.models import TalentRequired
 
 
 class EmailFormModal(forms.ModelForm):
@@ -789,6 +791,13 @@ class SiteSkillStatsFilter(forms.Form):
     date_from = forms.DateField(required=False, widget=DateInput(attrs={'placeholder': 'YYYY-MM-DD'}))
     date_to = forms.DateField(required=False, widget=DateInput(attrs={'placeholder': 'YYYY-MM-DD'}))
 
+    def __init__(self, *args, **kwargs):
+        _country_list = kwargs.pop('data_list', None)
+        super(SiteSkillStatsFilter, self).__init__(*args, **kwargs)
+
+        self.fields['designation'].widget = ListTextWidget(data_list=Designation.objects.all().only('name'), name='designation-list')
+        self.fields['industry'].widget = ListTextWidget(data_list=Industry.objects.all().only('industry'), name='industry-list')
+
     class Meta():
         fields = ('country', 'region', 'designation', 'industry', 'date_from', 'date_to')
         widgets={
@@ -820,12 +829,21 @@ class SiteDemandSkillStatsFilter(forms.Form):
 
     country = CountryField(blank=True).formfield()
     worklocation = forms.ChoiceField(required=False, choices=WTPE)
-    designation = forms.ModelChoiceField(queryset=Designation.objects.all(),
-                    empty_label="", required=False)
+    designation = forms.CharField(max_length=30, required=False)
     experience_level = forms.ChoiceField(required=False, choices=LEVEL)
     title = forms.CharField(max_length=30, required=False)
     date_entered = forms.DateField(required=False, widget=DateInput(attrs={'placeholder': 'YYYY-MM-DD'}))
     date_to = forms.DateField(required=False, widget=DateInput(attrs={'placeholder': 'YYYY-MM-DD'}))
+
+# the "name" parameter will allow you to use the same widget more than once in the same
+# form, not setting this parameter differently will cuse all inputs display the same list.
+
+    def __init__(self, *args, **kwargs):
+        _country_list = kwargs.pop('data_list', None)
+        super(SiteDemandSkillStatsFilter, self).__init__(*args, **kwargs)
+
+        self.fields['designation'].widget = ListTextWidget(data_list=Designation.objects.all().only('name'), name='designation-list')
+        self.fields['title'].widget = ListTextWidget(data_list=TalentRequired.objects.all().values_list('title', flat=True).distinct(), name='title-list')
 
     class Meta():
         fields = ('country', 'worklocation', 'designation', 'title', 'experience_level', 'date_entered', 'date_to')

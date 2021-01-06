@@ -69,6 +69,11 @@ table {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
+.card {
+  transition: all .4s ease;
+  transform: translate3D(0,-1px,0) scale(1.00);
+}
+
 .card-hover:hover {
   background-color: var(--hover);
   z-index: 1;
@@ -77,7 +82,7 @@ table {
 }
 
 .card-no-hover {
-  background-color: #fff;
+  background-color: #fff !important;
 }
 
 .card-close {
@@ -158,6 +163,19 @@ table {
   transform: translate3D(0,0,0) scale(1);
 }
 
+datalist {
+  max-height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 5px;
+  width: 100px;
+}
+datalist option {
+  max-height: 200px;
+  font-size: 40px !important;
+  padding-right: 5px;
+  width: 100%;
+}
 .select2-container {
   height: 38px !important;
 }
