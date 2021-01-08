@@ -44,6 +44,7 @@ from marketplace.models import(
     SkillLevel, SkillRequired, WorkBid, BidShortList, TalentRequired, BidInterviewList,
 )
 from enterprises.models import Branch
+from locations.models import Region, City
 from project.models import ProjectData
 from Profile.models import (
         BriefCareerHistory, Profile, LanguageTrack, PhysicalAddress, WillingToRelocate
@@ -94,8 +95,9 @@ def site_demand_skill_stats(request, skl):
         val_we = val_we.filter(date_deadline__lte=date_to_query)
 
     elif country_query != '' and country_query is not None:
-        country_profiles = PhysicalAddress.objects.filter(country__icontains=country_query).values_list('talent__id')
-        val_we = val_we.filter(talent__id__in=country_profiles)
+        region = Region.objects.filter(country__icontains=country_query).values_list('pk', flat=True)
+        city = City.objects.filter(region__pk__in=region).values_list('pk', flat=True)
+        val_we = val_we.filter(city__pk__in=city)
 
     elif worklocation_query != '' and worklocation_query is not None:
         val_we = val_we.filter(worklocation__type__icontains=worklocation_query)
@@ -113,7 +115,7 @@ def site_demand_skill_stats(request, skl):
     vac_list_qs_count = vac_list_qs.count()
 
     skills_list = SkillRequired.objects.filter(scope__pk__in=vac_list_qs_id).values_list('skills__skill', flat=True).distinct()
-    
+
     skills_list_set_all = [x for x in skills_list if x is not None]
 
     skills_list_set = [x for x in skills_list_set_all if x is not f'{skill.skill}']
