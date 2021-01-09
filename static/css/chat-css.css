@@ -66,8 +66,6 @@
 
 .heading-avatar {
   padding: 0;
-  cursor: pointer;
-
 }
 
 .heading-avatar-icon img {
@@ -78,7 +76,6 @@
 
 .heading-name {
   padding: 0 !important;
-  cursor: pointer;
 }
 .user-name-heading {
   font-weight: 700;
@@ -99,6 +96,10 @@
   white-space: nowrap;
   color: #000;
   display: block;
+}
+.heading-name a {
+  color: #000;
+  text-decoration: none;
 }
 .heading-online {
   display: none;
@@ -126,7 +127,6 @@
   text-align: right;
   padding: 5px;
   color: #93918f;
-  cursor: pointer;
 }
 
 .searchBox {
@@ -312,6 +312,10 @@
   overflow-y: auto;
   border: 1px solid #f7f7f7;
   height: calc(100% - 160px);
+}
+
+.delete-chat button {
+  border: 0;
 }
 
 /*Conversation*/

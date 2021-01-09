@@ -38,7 +38,8 @@ class Message(models.Model):
     room_name = models.CharField(max_length=200, null=True)
     message_read = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="message_read_user", blank=True) # , through=MessageRead
     content = models.TextField()
-    reply_pk = models.CharField(max_length=20, null=True)
+    reply_pk = models.CharField(max_length=20, null=True, required=False)
+    initial_members_count = models.CharField(max_length=20, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

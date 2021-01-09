@@ -56,12 +56,29 @@ def NewChatView(request, tlt):
     custom_user = CustomUser.objects.get(alias=tlt)
 
     if request.method == 'POST':
-        if own_chat:
-            chat_room = own_chat.values_list('chat_group__slug', flat=True)[0]
-            own_chat.update(date_modified=timezone.now())
-            other_chat.update(date_modified=timezone.now())
+        if other_chat:
+            if own_chat:
+                chat_room = own_chat.values_list('chat_group__slug', flat=True)[0]
+                own_chat.update(date_modified=timezone.now())
+                other_chat.update(date_modified=timezone.now())
 
-            return redirect(reverse('Chat:room', kwargs={'room_name': chat_room}))
+                return redirect(reverse('Chat:room', kwargs={'room_name': chat_room}))
+
+            else:
+                create_new_chat_group = ChatGroup.objects.create(room_name='New Chat')
+                chat_group = ChatGroup.objects.latest('date_created')
+                create_own_chat = ChatRoomMembers.objects.create(
+                        talent=request.user,
+                        chat_group=chat_group,
+                        room_name=tlt,
+                        date_modified=timezone.now())
+                create_other_chat = ChatRoomMembers.objects.create(
+                        talent=custom_user,
+                        chat_group=chat_group,
+                        room_name=request.user.alias,
+                        date_modified=timezone.now())
+
+                return redirect(reverse('Chat:room', kwargs={'room_name': chat_group.slug}))
 
         else:
             create_new_chat_group = ChatGroup.objects.create(room_name='New Chat')

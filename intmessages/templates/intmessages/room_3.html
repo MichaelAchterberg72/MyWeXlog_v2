@@ -79,17 +79,28 @@
     <div class="card card-shadow">
       <div class="row heading">
         <div class="col-sm-2 col-md-1 col-xs-3 heading-avatar">
-          <div class="heading-avatar-icon">
-            <img src="https://bootdey.com/img/Content/avatar/avatar6.png">
-          </div>
+          <a href="{% url 'Talent:APV_L' room.0 %}" target="_blank">
+            <div class="heading-avatar-icon">
+              <img src="https://bootdey.com/img/Content/avatar/avatar6.png">
+            </div>
+          </a>
         </div>
         <div class="col-sm-9 col-xs-7 heading-name">
-          <a class="heading-name-meta">{{ room.0 }}
+          <a class="heading-name-meta" href="{% url 'Talent:APV_L' room.0 %}" target="_blank">{{ room.0 }}
           </a>
           <span class="heading-online">Online</span>
         </div>
-        <div class="col-sm-1 col-xs-1  heading-dot pull-right">
-          <i class="fa fa-ellipsis-v fa-2x  pull-right" aria-hidden="true"></i>
+        <div class="col-sm-1 col-xs-1 heading-dot pull-right">
+          <div class="btn-group delete-chat">
+            <button class="" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-ellipsis-v fa-2x  pull-right" aria-hidden="true"></i>
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <a class="dropdown-item" href="{% url 'Talent:APV_L' room.0 %}" target="_blank">View Profile</a>
+              <a class="dropdown-item" onclick="deleteChat()" href="{% url 'Chat:index' %}">Delete Chat</a>
+            </div>
+          </div>
+
         </div>
       </div>
 
@@ -298,6 +309,12 @@
       }));
   };
 
+  function deleteChat() {
+    chatSocket.send(JSON.stringify({
+      'command': 'delete_chat',
+      'from': username
+      }));
+  };
 
   setInterval(function() {
       fetchMenu();
@@ -348,43 +365,46 @@
     var msgCheckID = "msgCheckID"+msgID;
     var msgReadCount = [data.message_read]
     var msgReadID = "msgReadID"+msgID;
+    var msgInitialMembersID = "msgInitialMembersID"+msgID
+    var msgInitialMembersElement = document.getElementById(msgInitialMembersID);
     var msgIdElement = document.getElementById(msgReadID);
     var msgCheckElement = document.getElementById(msgCheckID);
     msgIdElement.innerText = msgReadCount;
     if (msgIdElement.innerText > 0) {
+      msgCheckElement.setAttribute("style", "color:#9a9a9a !important");
+    } else if (msgInitialMembersElement.innerText == 1) {
       msgCheckElement.setAttribute("style", "color:#9a9a9a !important");
     } else {
       msgCheckElement.setAttribute("style", "color:#66ff00 !important");
     }
   };
 
+
   function linkify(inputText) {
-  //URLs starting with http://, https://, or ftp://
-  var replacePattern1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
-  var replacedText = inputText.replace(replacePattern1, '<a href="$1" target="_blank">$1</a>');
+    //URLs starting with http://, https://, or ftp://
+    var replacePattern1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
+    var replacedText = inputText.replace(replacePattern1, '<a href="$1" target="_blank">$1</a>');
 
-  //URLs starting with www. (without // before it, or it'd re-link the ones done above)
-  var replacePattern2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
-  var replacedText = replacedText.replace(replacePattern2, '$1<a href="http://$2" target="_blank">$2</a>');
+    //URLs starting with www. (without // before it, or it'd re-link the ones done above)
+    var replacePattern2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
+    var replacedText = replacedText.replace(replacePattern2, '$1<a href="http://$2" target="_blank">$2</a>');
 
-  //Change email addresses to mailto:: links
-  var replacePattern3 = /(\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,6})/gim;
-  var replacedText = replacedText.replace(replacePattern3, '<a href="mailto:$1">$1</a>');
+    //Change email addresses to mailto:: links
+    var replacePattern3 = /(\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,6})/gim;
+    var replacedText = replacedText.replace(replacePattern3, '<a href="mailto:$1">$1</a>');
 
-  return replacedText
+    return replacedText
   };
 
   function createMessage(data) {
     var author = data['author'];
-    var msgChatMembersCount = [data.chat_room_members_count]
-    var messageRID = [data.id]
+    var msgChatMembersCount = [data.chat_room_members_count];
+    var messageRID = [data.id];
     var inputText = [data.content];
 //    var textContent = linkify(inputText);
     var textContent = inputText;
     var msgListTag = document.createElement('div');
-
     var replyMsgDiv = document.createElement('div');
-
     var replyMsgAuthor = document.createElement('div');
     replyMsgAuthor.className = 'reply-message-author';
     replyMsgAuthor.textContent = [data.reply_message_author];
@@ -418,9 +438,16 @@
     msgReadTag.setAttribute("id", "msgReadID"+messageRID);
     var magReadCount = [data.message_read]
     msgReadTag.textContent = [data.message_read];
+
+    var initialMembersTag = document.createElement('span');
+    initialMembersTag.className = 'd-none';
+    var initialMembersCount = [data.initial_members_count];
+    initialMembersTag.textContent = initialMembersCount;
+    initialMembersTag.setAttribute('id', "msgInitialMembersID"+messageRID);
+
     var msgReadSelfTag = document.createElement('span');
     msgReadSelfTag.className = 'd-none';
-    var magReadSelfCount = [data.message_read_self]
+    var magReadSelfCount = [data.message_read_self];
     msgReadSelfTag.textContent = [data.message_read_self];
     var msgCheck = document.createElement('i');
     msgCheck.className = 'fa fa-check message-check pull-right';
@@ -493,13 +520,16 @@
     dropDownTag.appendChild(replyLinkTag);
     replyLinkTag.after(delLinkTag);
 
-    messageTag.appendChild(msgReadSelfTag);
+    messageTag.appendChild(initialMembersTag);
+    initialMembersTag.after(msgReadSelfTag);
     msgReadSelfTag.after(msgReadTag);
     messageTag.after(spanTimeTag);
     spanTimeTag.after(messageId);
     spanTimeTag.appendChild(msgCheck);
 
     if (magReadCount > 0) {
+      msgCheck.setAttribute("style", "color:#9a9a9a !important");
+    } else if (initialMembersCount == 1) {
       msgCheck.setAttribute("style", "color:#9a9a9a !important");
     };
 
@@ -527,15 +557,13 @@
   function createPreviousMessages(data) {
     var app = document.querySelector('#message')
     var author = data['author'];
-    var msgChatMembersCount = [data.chat_room_members_count]
-    var messageRID = [data.id]
+    var msgChatMembersCount = [data.chat_room_members_count];
+    var messageRID = [data.id];
     var inputText = [data.content];
 //    var textContent = linkify(inputText);
     var textContent = inputText;
     var msgListTag = document.createElement('div');
-
     var replyMsgDiv = document.createElement('div');
-
     var replyMsgAuthor = document.createElement('div');
     replyMsgAuthor.className = 'reply-message-author';
     replyMsgAuthor.textContent = [data.reply_message_author];
@@ -569,6 +597,11 @@
     msgReadTag.setAttribute("id", "msgReadID"+messageRID);
     var magReadCount = [data.message_read]
     msgReadTag.textContent = [data.message_read];
+    var initialMembersTag = document.createElement('span');
+    initialMembersTag.className = 'd-none';
+    var initialMembersCount = [data.initial_members_count];
+    initialMembersTag.textContent = initialMembersCount;
+    initialMembersTag.setAttribute('id', "msgInitialMembersID"+messageRID);
     var msgReadSelfTag = document.createElement('span');
     msgReadSelfTag.className = 'd-none';
     var magReadSelfCount = [data.message_read_self]
@@ -651,6 +684,8 @@
     spanTimeTag.appendChild(msgCheck);
 
     if (magReadCount > 0) {
+      msgCheck.setAttribute("style", "color:#9a9a9a !important");
+    } else if (initialMembersCount == 1) {
       msgCheck.setAttribute("style", "color:#9a9a9a !important");
     };
 

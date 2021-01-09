@@ -77,9 +77,12 @@
 
 </div>
 
-<script>
+{% endblock content %}
 
-  var menuList = document.querySelector('#menu');
+{% block Script %}
+<script type="text/javascript">
+
+  var menuList = document.getElementById('menu');
   var filterMenu = document.getElementById('searchText');
 
   filterMenu.addEventListener('keyup', filterMenuItems);
@@ -89,9 +92,10 @@
    var menuItems = menuList.getElementsByClassName('row sidebar-body');
 
    Array.from(menuItems).forEach(function(menuItem){
-     var menuItemName = menuItem.childNodes[1][0][0][0].textContent;
+     var menuItemName = menuItem.children.className == "name-meta"
+     var menuItemNameContent = menuItemName.textContent
 
-     if(menuItemName.toLowerCase().indexOf(text) != -1){
+     if(menuItemNameContent.toLowerCase().indexOf(text) != -1){
        menuItem.style.display = 'block';
      } else {
        menuItem.style.display = 'none';
@@ -100,4 +104,4 @@
  };
 
 </script>
-{% endblock content %}
+{% endblock Script %}
