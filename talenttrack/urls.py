@@ -113,6 +113,7 @@ urlpatterns = [
     path('reqclb-list/', views.clb_req_list, name='ReqClbList'),
     #skills stats
     path('skill-stats-overview/<int:skl>/', views.skill_stats, name='SkillsStats'),
+    path('profile-skill-stats-overview/<int:skl>/', views.profile_skill_stats, name='ProfileSkillsStats'),
     path('site-skill-stats-overview/<int:skl>/', views.site_skill_stats, name='SiteSkillsStats'),
     path('site-demand_skill-stats-overview/<int:skl>/', views.site_demand_skill_stats, name='SiteDemandSkillsStats'),
     path('skill-validation-list/<int:skl>/', views.skill_validate_list, name='SkillValidationList'),

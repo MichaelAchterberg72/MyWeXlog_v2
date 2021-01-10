@@ -162,7 +162,12 @@ table {
   transition: all .4s ease;
   transform: translate3D(0,0,0) scale(1);
 }
-
+.vertical-center {
+  min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+  min-height: 100vh; /* These two lines are counted as one :-)       */
+  display: flex;
+  align-items: center;
+}
 datalist {
   max-height: 200px;
   overflow-y: auto;
