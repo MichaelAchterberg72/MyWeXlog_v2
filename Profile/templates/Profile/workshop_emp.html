@@ -7,11 +7,15 @@
 <div class="card card-shadow" style="width: 100%;">
   <div class="card-body">
     <div class="float-right">
+      <div class="btn-group">
       <form  action="{% url 'BookList:BLB' %}" method="post">
       <input type="hidden" name="next" value="{{ request.GET.next }}">
       {% csrf_token %}
       <button type="submit" class="btn btn-secondary">Back</button>
-    </form>
+    </form>&nbsp
+    <a href="{% url 'Profile:HelpEmployerWorkshop' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="tooltip" title="Click here for help on this page!">
+    <i class="fa fa-question-circle"></i></a>
+    </div>
     </div>
     <h4 class="card-title">My Office</h4>
     <br>

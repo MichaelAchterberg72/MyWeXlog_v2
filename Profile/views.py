@@ -2554,3 +2554,17 @@ def HelpContractorConfirmView(request):
     template_name = 'Profile/help_confirm_contractor.html'
     context = {}
     return render(request, template_name, context)
+
+
+@login_required()
+def HelpTalentWorkshopView(request):
+    template_name = 'Profile/help_workshop_tlt.html'
+    context = {}
+    return render(request, template_name, context)
+
+
+@login_required()
+def HelpEmployerWorkshopView(request):
+    template_name = 'Profile/help_workshop_employer.html'
+    context = {}
+    return render(request, template_name, context)

@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<div class="card border-0">
+<div class="card card-shadow border-0">
   <div class="card-body">
     <div class="float-right">
       <form  action="{% url 'BookList:BLB' %}" method="post">
@@ -30,10 +30,10 @@
         <div class="col-md-2 h-100 text-center my-auto">
           <strong>Talent's Response</strong>
         </div>
-        <div class="col-md-1 h-100 text-center my-auto">
+        <div class="col-1 col-no-pad h-100 text-center my-auto">
           <strong>My Response</strong>
         </div>
-        <div class="col-md-1 h-100 text-center my-auto">
+        <div class="col-1 col-no-pad h-100 text-center my-auto">
           <strong>Interview Status</strong>
         </div>
         <div class="col-md-2 h-100 text-center my-auto">
@@ -55,10 +55,10 @@
             <div class="col-md-2 h-100 text-center my-auto">
               {{ l.get_tlt_response_display }}
             </div>
-            <div class="col-md-1 h-100 text-center my-auto">
+            <div class="col-1 col-no-pad h-100 text-center my-auto">
               {{ l.get_outcome_display }}
             </div>
-            <div class="col-md-1 h-100 text-center my-auto">
+            <div class="col-1 col-no-pad h-100 text-center my-auto">
               {% if l.emp_intcomplete == True %}
                 Closed
               {% else %}
