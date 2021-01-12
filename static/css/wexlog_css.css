@@ -170,7 +170,9 @@ table {
 }
 .number-souround {
   margin: -5px;
+  padding: 0px 0px 10px 0px;
   border: 10px solid #e0e0e0;
+  background-color:#fff;
   -webkit-border-radius: 10%;
   -moz-border-radius: 10%;
   -ms-border-radius: 10%;
