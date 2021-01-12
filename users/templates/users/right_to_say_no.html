@@ -1,52 +1,88 @@
-{% extends "wexlog_home/base_wexlog_home.html" %}
+{% extends "wexlog_home_3/base_wexlog_home_3.html" %}
 {% load humanize %}
 {% load crispy_forms_tags %}
 {% load static %}
 
 {% block content %}
 
-<p>&nbsp</p>
-<p>&nbsp</p>
+<section id="header-block" class="">
+  <div class="jumbotron jumbotron-fluid">
+    <div class="container">
+    </div>
+  </div>
+</section>
 
-      <div class="container">
-        <div class="row no-gutters slider-text align-items-end justify-content-start">
-          <div class="col-md-8 ftco-animate text-center text-md-left mb-5">
-          	<p class="breadcrumbs mb-0"><span class="mr-3"><a href="{% url 'Public:WexlogHomeIndex' %}">Home <i class="ion-ios-arrow-forward"></i></a></span> <span>Setttings</span></p>
-            <h1 class="mb-3 bread">Right to say no</h1>
+<section id="find-the-right-person" class="">
+  <div class="jumbotron-fluid">
+    <div class="container">
+
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="card border-0 bg-transparent">
+            <div class="card border-0 bg-transparent">
+              <div class="card-clear">
+                <div class="card-body">
+                  <div class="title3">
+                    <h5>RIGHT TO SAY NO TO THE SALE OF PERSONAL INFORMATION</h5>
+                    <p class="card-text">Please check the box if you would like to restrict the user settings and enforce your right to say no to the sale of your personaL information.</p>
+                    <p>&nbsp</p>
+                  </div>
+
+                  <div class="card border-0 col-sm-5 mx-auto">
+                    <div class="card-body">
+                  <div class="row">
+                    <form class="" action="" method="POST" id="ContactUsForm">
+
+                      {% csrf_token %}
+                      {{ form|crispy }}
+
+                    <p><button type="submit" class="btn btn-outline-primary btn-block" name="button">Update Settings</button></p>
+
+                    </form>
+                  </div>
+                </div>
+              </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-
-    <section class="ftco-section">
-    	<div class="container">
-    		<div class="row justify-content-center mb-5 pb-3">
-          <div class="col-md-7 text-center heading-section ftco-animate">
-            <h2 class="mb-4">Right To Say No To Sale of Personal Information!</h2>
+      <p>&nbsp</p>
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="card border-0 bg-transparent">
+              <div class="card border-0 bg-transparent">
+              </div>
           </div>
         </div>
-    		<div class="row d-flex">
-          <div class="col-md-12 ftco-animate p-md-5">
-            <p>Please check the box if you would like to restrict the user settings
-              and enforce your right to say no to the sale of your personaL information.<br>&nbsp</p>
-            <div class="row block-9">
-              <div class="col-md-6 pr-md-5">
-                <form class="" action="" method="POST" id="CustomUserSettingsForm">
-
-                  {% csrf_token %}
-                  {{ form|crispy }}
-
-                <p>&nbsp</p>
-                <p><button type="submit" class="btn btn-primary py-3 px-5" name="button">Update Settings</button></p>
-
-                </form>
-
+        <div class="col-sm-6">
+          <div class="card border-0 bg-transparent">
+            <div class="card border-0 bg-transparent">
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="card border-0 bg-transparent">
+                    <a href="{% url 'Home_3:WexlogHome3Index' %}" class="btn btn-outline-primary btn-block">Back to Home Page ..</a>
+                  </div>
+                </div>
               </div>
-
             </div>
           </div>
+        </div>
+      </div>
+      <p>&nbsp</p>
+      <p>&nbsp</p>
+    </div>
+  </div>
+</section>
 
-	      </div>
-    	</div>
-    </section>
-
+<section id="questions">
+  <div class="jumbotron jumbotron-fluid">
+    <div class="container">
+      <div class="row">
+        <p>&nbsp</p>
+      </div>
+    </div>
+  </div>
+</section>
 {% endblock content %}
