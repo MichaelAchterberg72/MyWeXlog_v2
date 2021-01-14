@@ -329,9 +329,19 @@
     var replyDivAuthor = document.getElementById('reply-div-author-id');
     replyDivAuthor.innerText = msgAuthor.innerText;
     var replyDivMessage = document.getElementById('reply-div-message-id');
-    msgText = document.getElementById("msgTextID"+messageRID).childNodes[0].nodeValue;
     var text_to_change = replyDivMessage.childNodes[0];
-    text_to_change.nodeValue = msgText;
+    if (document.getElementById("msgTextLinkID"+messageRID) == null) {
+      var msgText = document.getElementById("msgTextID"+messageRID).childNodes[0].nodeValue;
+      text_to_change.nodeValue = msgText;
+    } else if (document.getElementById("msgTextID"+messageRID).childNodes[0].nodeValue == null) {
+      var msgLinkText = document.getElementById("msgTextLinkID"+messageRID).innerHTML;
+      text_to_change.nodeValue = msgLinkText;
+    } else {
+      var msgText = document.getElementById("msgTextID"+messageRID).childNodes[0].nodeValue;
+      var msgLinkText = document.getElementById("msgTextLinkID"+messageRID).innerHTML;
+      text_to_change.nodeValue = msgText + msgLinkText;
+    };
+//text_to_change.nodeValue = msgText + msgLinkText;
     var replyDivID = document.getElementById('reply-div-message-id-id');
     replyDivID.innerText = messageRID;
   };
@@ -380,19 +390,19 @@
   };
 
 
-  function linkify(inputText) {
+  function linkify(inputText, messageRID) {
 
     //URLs starting with http://, https://, or ftp://
     var replacePattern1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
-    var replacedText = inputText.replace(replacePattern1, '<a class="message-text link" href="$1" target="_blank">$1</a>');
+    var replacedText = inputText.replace(replacePattern1, '<a class="message-text link" id="msgTextLinkID' + messageRID + '" href="$1" target="_blank">$1</a>');
 
     //URLs starting with www. (without // before it, or it'd re-link the ones done above)
     var replacePattern2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
-    var replacedText = replacedText.replace(replacePattern2, '$1<a class="message-text link" href="http://$2" target="_blank">$2</a>');
+    var replacedText = replacedText.replace(replacePattern2, '$1<a class="message-text link" id="msgTextLinkID' + messageRID + '" href="http://$2" target="_blank">$2</a>');
 
     //Change email addresses to mailto:: links
     var replacePattern3 = /(\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,6})/gim;
-    var replacedText = replacedText.replace(replacePattern3, '<a class="message-text link" href="mailto:$1">$1</a>');
+    var replacedText = replacedText.replace(replacePattern3, '<a class="message-text link" id="msgTextLinkID' + messageRID + '" href="mailto:$1">$1</a>');
 
     return replacedText
   };
@@ -402,7 +412,7 @@
     var msgChatMembersCount = [data.chat_room_members_count];
     var messageRID = [data.id];
     var inputText = data.content;
-    var textContent = linkify(inputText);
+    var textContent = linkify(inputText, messageRID);
     var msgListTag = document.createElement('div');
     var replyMsgDiv = document.createElement('div');
     var replyMsgAuthor = document.createElement('div');
