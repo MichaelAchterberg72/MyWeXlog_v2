@@ -381,6 +381,7 @@
 
 
   function linkify(inputText) {
+
     //URLs starting with http://, https://, or ftp://
     var replacePattern1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
     var replacedText = inputText.replace(replacePattern1, '<a href="$1" target="_blank">$1</a>');
@@ -400,9 +401,8 @@
     var author = data['author'];
     var msgChatMembersCount = [data.chat_room_members_count];
     var messageRID = [data.id];
-    var inputText = [data.content];
-//    var textContent = linkify(inputText);
-    var textContent = inputText;
+    var inputText = data.content;
+    var textContent = linkify(inputText);
     var msgListTag = document.createElement('div');
     var replyMsgDiv = document.createElement('div');
     var replyMsgAuthor = document.createElement('div');
@@ -425,7 +425,7 @@
     var messageTag = document.createElement('div');
     messageTag.className = 'message-text';
     messageTag.setAttribute("id", "msgTextID"+messageRID);
-    messageTag.textContent = textContent;
+    messageTag.innerHTML = textContent;
     var spanTimeTag = document.createElement('span');
     spanTimeTag.className = 'message-time pull-right';
     var messageId = document.createElement('div');
@@ -560,9 +560,8 @@
     var author = data['author'];
     var msgChatMembersCount = [data.chat_room_members_count];
     var messageRID = [data.id];
-    var inputText = [data.content];
-//    var textContent = linkify(inputText);
-    var textContent = inputText;
+    var inputText = data.content;
+    var textContent = linkify(inputText);
     var msgListTag = document.createElement('div');
     var replyMsgDiv = document.createElement('div');
     var replyMsgAuthor = document.createElement('div');

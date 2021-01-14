@@ -389,6 +389,17 @@
   white-space: pre-wrap;
   flex-wrap: wrap;
 }
+.message-text a {
+  margin: 0 !important;
+  padding: 5px !important;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  font-weight: 200;
+  font-size: 14px;
+  padding-bottom: 0 !important;
+  white-space: pre-wrap;
+  flex-wrap: wrap;
+}
 .message-text button {
   display: none;
 }
@@ -420,7 +431,7 @@
   margin: 0 !important;
   border-radius: 5px;
   border-left: 5px;
-  border-color: #00CC66;
+  border-color: #7790cb;
 }
 .reply-message-author {
   margin: 0 !important;
@@ -429,7 +440,7 @@
   overflow-wrap: break-word;
   font-weight: 200;
   font-size: 14px;
-  color: #00CC66;
+  color: #7790cb;
   padding-bottom: 0 !important;
 }
 .reply-message-text {
