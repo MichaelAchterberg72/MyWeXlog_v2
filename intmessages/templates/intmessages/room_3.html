@@ -489,6 +489,11 @@
       rowTag.className = 'row message-body';
       msgCheck.className = 'd-none';
       delLinkTag.className = 'dropdown-item d-none';
+      if (msgChatMembersCount > 2) {
+        msgAuthor.className = 'message-author';
+      } else {
+        msgAuthor.className = 'd-none';
+      }
     }
 
     if (replyMsgContent.textContent === "") {
@@ -497,23 +502,19 @@
       replyMsgDiv.className = 'reply-message-div';
     }
 
-    if (msgChatMembersCount > 2) {
-      msgAuthor.className = 'message-author';
-    } else {
-      msgAuthor.className = 'd-none';
-    }
+
 
     document.querySelector('#chat-log').appendChild(rowTag);
     rowTag.appendChild(colTag);
     colTag.appendChild(msgListTag);
 
-    msgListTag.appendChild(replyMsgDiv);
+    msgListTag.appendChild(msgAuthor);
+
+    msgAuthor.after(replyMsgDiv);
     replyMsgDiv.appendChild(replyMsgAuthor);
     replyMsgAuthor.after(replyMsgContent);
 
-    msgListTag.appendChild(msgAuthor);
-
-    msgAuthor.after(messageTag)
+    replyMsgDiv.after(messageTag)
     messageTag.appendChild(btnDivTag);
     btnDivTag.appendChild(btnButtonTag);
     btnButtonTag.after(dropDownTag);
@@ -646,7 +647,12 @@
       rowTag.className = 'row message-body';
       msgCheck.className = 'd-none';
       delLinkTag.className = 'dropdown-item d-none';
-    }
+      if (msgChatMembersCount > 2) {
+        msgAuthor.className = 'message-author';
+      } else {
+        msgAuthor.className = 'd-none';
+      }
+    };
 
     if (replyMsgContent.textContent === "") {
       replyMsgDiv.className = 'reply-message-div d-none';
@@ -654,23 +660,19 @@
       replyMsgDiv.className = 'reply-message-div';
     }
 
-    if (msgChatMembersCount > 2) {
-      msgAuthor.className = 'message-author';
-    } else {
-      msgAuthor.className = 'd-none';
-    }
+
 
     app.prepend(rowTag);
     rowTag.appendChild(colTag);
     colTag.appendChild(msgListTag);
 
-    msgListTag.appendChild(replyMsgDiv);
+    msgListTag.appendChild(msgAuthor);
+
+    msgAuthor.after(replyMsgDiv);
     replyMsgDiv.appendChild(replyMsgAuthor);
     replyMsgAuthor.after(replyMsgContent);
 
-    msgListTag.appendChild(msgAuthor);
-
-    msgAuthor.after(messageTag)
+    replyMsgDiv.after(messageTag)
     messageTag.appendChild(btnDivTag);
     btnDivTag.appendChild(btnButtonTag);
     btnButtonTag.after(dropDownTag);
