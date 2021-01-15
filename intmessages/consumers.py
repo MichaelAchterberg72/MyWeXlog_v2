@@ -74,7 +74,7 @@ class ChatConsumer(WebsocketConsumer):
         author_user = User.objects.get(alias=author.alias)
         x = data['id']
 
-        update_content = Message.objects.filter(pk=x).update(content="-- Message Deleted --")
+        update_content = Message.objects.filter(pk=x).update(content="-- Message Deleted --", message_deleted=True)
 
         message = []
         message_id = x
@@ -186,7 +186,7 @@ class ChatConsumer(WebsocketConsumer):
         for item in previous_messages_list:
             message_qs = Message.objects.filter(Q(room_name=chat_name) & Q(pk=item.pk))
             message_get = message_qs.get(Q(room_name=chat_name) & Q(pk=item.pk))
-            message_instance = message_qs.values_list('pk', 'author__alias', 'room_name', 'content', 'timestamp', 'initial_members_count')
+            message_instance = message_qs.values_list('pk', 'author__alias', 'room_name', 'content', 'timestamp', 'initial_members_count', 'message_deleted')
             try:
                 reply_message = Message.objects.filter(pk=message_get.reply_pk)
                 reply_message_author_qs = reply_message.values_list('author__alias', flat=True).distinct()
@@ -223,7 +223,7 @@ class ChatConsumer(WebsocketConsumer):
         for item in fetch_messages_list:
             message_qs = Message.objects.filter(Q(room_name=chat_name) & Q(pk=item.pk))
             message_get = message_qs.get(Q(room_name=chat_name) & Q(pk=item.pk))
-            message_instance = message_qs.values_list('pk', 'author__alias', 'room_name', 'content', 'timestamp', 'initial_members_count')
+            message_instance = message_qs.values_list('pk', 'author__alias', 'room_name', 'content', 'timestamp', 'initial_members_count', 'message_deleted')
             try:
                 reply_message = Message.objects.filter(pk=message_get.reply_pk)
                 reply_message_author_qs = reply_message.values_list('author__alias', flat=True).distinct()
@@ -280,7 +280,7 @@ class ChatConsumer(WebsocketConsumer):
 
         message = []
         message_qs = Message.objects.filter(Q(room_name=chat_name) & Q(pk=message_item.pk))
-        message_instance = message_qs.values_list('pk', 'author__alias', 'room_name', 'content', 'timestamp', 'initial_members_count')
+        message_instance = message_qs.values_list('pk', 'author__alias', 'room_name', 'content', 'timestamp', 'initial_members_count', 'message_deleted')
         try:
             reply_message = Message.objects.filter(pk=message_item.reply_pk)
             reply_message_author_qs = reply_message.values_list('author__alias', flat=True).distinct()
@@ -333,6 +333,7 @@ class ChatConsumer(WebsocketConsumer):
             'content': message[0]['message'][0][3],
             'timestamp': str(message[0]['message'][0][4].strftime('%a, %b %d, %H:%M')),
             'initial_members_count': message[0]['message'][0][5],
+            'message_deleted': message[0]['message'][0][6],
             'reply_message_author': message[0]['reply_message_author'],
             'reply_message_content': message[0]['reply_message_content'],
             'chat_room_members_count': message[0]['chat_room_members_count'],
@@ -347,6 +348,7 @@ class ChatConsumer(WebsocketConsumer):
             'content': message['message'][0][3],
             'timestamp': str(message['message'][0][4].strftime('%a, %b %d, %H:%M')),
             'initial_members_count': message['message'][0][5],
+            'message_deleted': message['message'][0][6],
             'reply_message_author': message['reply_message_author'],
             'reply_message_content': message['reply_message_content'],
             'chat_room_members_count': message['chat_room_members_count'],

@@ -40,6 +40,7 @@ class Message(models.Model):
     content = models.TextField()
     reply_pk = models.CharField(max_length=20, null=True, blank=True)
     initial_members_count = models.CharField(max_length=20, null=True)
+    message_deleted = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
