@@ -286,7 +286,6 @@ class TalentRequiredForm(forms.ModelForm):
             'date_deadline': 'Work Completed By',
             'hours_required': 'Hours',
             'own_ref_no': 'Own Internal Vacancy Reference Number',
-            'companybranch': 'Company',
         }
 #Help_texts = {
 #            'own_ref_no': 'Maximum length: 7 Alpha-numeric characters'

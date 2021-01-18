@@ -9,7 +9,7 @@ from .utils import get_client_ip
 User = settings.AUTH_USER_MODEL
 
 class ObjectViewed(models.Model):
-    user = models.ForeignKey(User, on_delete=models.PROTECT, blank=True, null=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
     ip_address = models.CharField(max_length=220, blank=True, null=True)
     content_type = models.ForeignKey(ContentType, on_delete=models.PROTECT)
     object_id = models.PositiveIntegerField()

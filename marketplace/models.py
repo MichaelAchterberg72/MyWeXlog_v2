@@ -103,7 +103,8 @@ class TalentRequired(models.Model):
     ref_no = models.CharField(max_length=10, unique=True, null=True, blank=True)#SlugField
     own_ref_no = models.CharField(max_length=100, unique=True, null=True, blank=True)
     designation = models.ForeignKey(Designation, on_delete=models.PROTECT, null=True)
-    companybranch = models.ForeignKey(Branch, on_delete=models.CASCADE, verbose_name="Company", related_name="Test")
+    # (companybranch = models.ForeignKey(Branch, on_delete=models.CASCADE, verbose_name="Company", related_name="Test")
+    companybranch = models.ForeignKey(Branch, on_delete=models.CASCADE, verbose_name="Company")
     requested_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     date_deadline = models.DateField('Work completed by')
     hours_required = models.IntegerField()
@@ -284,6 +285,7 @@ class TalentAvailabillity(models.Model):
 
     def __str__(self):
         return '{} - {} {} ({})'.format(self.talent, self.hours_available, self.get_unit_display, self.date_to)
+
 
 #Reasons: No Available Capacity, Not Looking for work, Not suited to vacancy, Rate too low, Company Reputation, other (comment)
 class DeclineAssignment(models.Model):
