@@ -60,7 +60,11 @@ def UpdateSubscriptionPaidDate():
                 if username.paid_date <= datetime.now() - six_monthly:
                     username.paid = False
                     username.subscription = 0
+                    if username.free_month == True:
+                        username.free_month = False
+                        instance2.trial_expired = False
                     username.save()
+                    instance2.save()
                     # send user an email to let them know the subscription has expired
     #                SubscriptionExpiredTask.delay(username)
 
@@ -68,7 +72,11 @@ def UpdateSubscriptionPaidDate():
                 if username.paid_date <= datetime.now() - twelve_monthly:
                     username.paid = False
                     username.subscription = 0
+                    if username.free_month == True:
+                        username.free_month = False
+                        instance2.trial_expired = False
                     username.save()
+                    instance2.save()
                     # send user an email to let them know the subscription has expired
     #                SubscriptionExpiredTask.delay(username)
         username.save()

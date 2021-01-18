@@ -291,7 +291,7 @@ else{
 {% if nsps_te_l_count >= 1 %}
 <div class="card card-shadow">
   <div class="card-body">
-    <h4>Traing & Education Experience Items Without Sufficient Pass Score</h4>
+    <h4>Training & Education Experience Items Without Sufficient Pass Score</h4>
     <div class="container">
       <div class="row my-auto">
         <div class="col-md-2 h-100 text-center my-auto">
@@ -541,7 +541,7 @@ else{
 
             </div>
             <div class="col-md-2 h-100 text-center my-auto">
-              {{ i.f_name }} {{ i.l_name}}
+              {{ i.f_name|default_if_none:'Name not captured' }} {{ i.l_name|default_if_none:'Name not captured' }}
             </div>
             <div class="col-md-2 h-100 text-center my-auto">
 
