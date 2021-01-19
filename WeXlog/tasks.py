@@ -167,40 +167,43 @@ def weekly_email():
         exp_req_clt_count = exp_req_clt.count()
         exp_req_clb_count = exp_req_clb.count()
 
+        sum_req = edu_req_lect_count + edu_req_cm_count + exp_req_clg_count + exp_req_sup_count + exp_req_clt_count + exp_req_clb_count
 
-        subject = f"MyWeXlog Weekly Update"
-        context = {
-            'edu_req_lect': edu_req_lect,
-            'edu_req_cm': edu_req_cm,
-            'exp_req_clg': exp_req_clg,
-            'exp_req_sup': exp_req_sup,
-            'exp_req_clt': exp_req_clt,
-            'exp_req_clb': exp_req_clb,
-            'edu_req_lect_count': edu_req_lect_count,
-            'edu_req_cm_count': edu_req_cm_count,
-            'exp_req_clg_count': exp_req_clg_count,
-            'exp_req_sup_count': exp_req_sup_count,
-            'exp_req_clt_count': exp_req_clt_count,
-            'exp_req_clb_count': exp_req_clb_count,
-            'user': username.first_name,
-            'user_email': username.email,
-            }
-        html_message = render_to_string('templates/email/weekly/weekly_email_update.html', context)
-        plain_message = strip_tags(html_message)
+        if sum_req > 0:
 
-        message = Mail(
-            from_email = settings.SENDGRID_FROM_EMAIL,
-            to_emails = settings.ACCOUNTS_EMAIL,
-            subject = subject,
-            plain_text_content = strip_tags(html_message),
-            html_content = html_message)
+            subject = f"MyWeXlog Weekly Update"
+            context = {
+                'edu_req_lect': edu_req_lect,
+                'edu_req_cm': edu_req_cm,
+                'exp_req_clg': exp_req_clg,
+                'exp_req_sup': exp_req_sup,
+                'exp_req_clt': exp_req_clt,
+                'exp_req_clb': exp_req_clb,
+                'edu_req_lect_count': edu_req_lect_count,
+                'edu_req_cm_count': edu_req_cm_count,
+                'exp_req_clg_count': exp_req_clg_count,
+                'exp_req_sup_count': exp_req_sup_count,
+                'exp_req_clt_count': exp_req_clt_count,
+                'exp_req_clb_count': exp_req_clb_count,
+                'user': username.first_name,
+                'user_email': username.email,
+                }
+            html_message = render_to_string('templates/email/weekly/weekly_email_update.html', context)
+            plain_message = strip_tags(html_message)
 
-        try:
-            sg = sendgrid.SendGridAPIClient(settings.SENDGRID_API_KEY)
-            response = sg.send(message)
-            print(response.status_code)
-            print(response.body)
-            print(response.headers)
+            message = Mail(
+                from_email = settings.SENDGRID_FROM_EMAIL,
+                to_emails = username.email,
+                subject = subject,
+                plain_text_content = strip_tags(html_message),
+                html_content = html_message)
 
-        except Exception as e:
-            print(e)
+            try:
+                sg = sendgrid.SendGridAPIClient(settings.SENDGRID_API_KEY)
+                response = sg.send(message)
+                print(response.status_code)
+                print(response.body)
+                print(response.headers)
+
+            except Exception as e:
+                print(e)
