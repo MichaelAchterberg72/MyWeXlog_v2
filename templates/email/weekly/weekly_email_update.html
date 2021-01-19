@@ -1,0 +1,84 @@
+{% extends "base_email.html" %}
+{% load humanize %}
+{% load static %}
+
+{% block content %}
+
+  <div style="">
+    <p>Hi {{ user }}!,</p>
+    <p>A friendly reminder of the activity on your account in the last week. Please click here to log-in to your <a href="https://app.mywexlog.com/">MyWeXlog</a> account to validate the experience items that have been requested of you.</p>
+
+    {% if edu_req_lect_count > 0 %}
+    <p><strong>List of confirmations with you as the lecturer<strong></p>
+    <p>You have <strong>{{ edu_req_lect_count }}</strong> requisitions with you as a Lecturer.<p>
+    <ul>
+      {% for item in edu_req_lect %}
+        <li>{{ item.date_captured }} - {{ item.lecturer.get_full_name }} {{ item.education.course }} {{ item.education.topic }}</li>
+      {% endfor %}
+    </ul>
+    <br>
+    {% endif %}
+
+    {% if edu_req_cm_count > 0 %}
+    <p><strong>List of confirmations with you as a class mate<strong></p>
+    <p>You have <strong>{{ edu_req_cm_count }}</strong> requisitions with you as a class mate.<p>
+    <ul>
+      {% for item in edu_req_cm %}
+        <li>{{ item.date_captured }} - {{ item.colleague.get_full_name }} {{ item.education.course }} {{ item.education.topic }}</li>
+      {% endfor %}
+    </ul>
+    <br>
+    {% endif %}
+
+    {% if exp_req_clg_count > 0 %}
+    <p><strong>List of confirmations with you as a work colleague<strong></p>
+    <p>You have <strong>{{ exp_req_clg_count }}</strong> requisitions with you as a class mate.<p>
+    <ul>
+      {% for item in exp_req_clg %}
+        <li>{{ item.date_captured }} - {{ item.experience.talent.get_full_name }} {{ item.experience.company.ename }} {{ item.experience.companybranch.name }}</li>
+      {% endfor %}
+    </ul>
+    <br>
+    {% endif %}
+
+    {% if exp_req_sup_count > 0 %}
+    <p><strong>List of confirmations with you as a superior<strong></p>
+    <p>You have <strong>{{ exp_req_sup_count }}</strong> requisitions with you as a superior.<p>
+    <ul>
+      {% for item in exp_req_sup %}
+        <li>{{ item.date_captured }} - {{ item.experience.talent.get_full_name }} {{ item.experience.company.ename }} {{ item.experience.companybranch.name }}</li>
+      {% endfor %}
+    </ul>
+    <br>
+    {% endif %}
+
+    {% if exp_req_clb_count > 0 %}
+    <p><strong>List of confirmations with you as a work collaborator<strong></p>
+    <p>You have <strong>{{ exp_req_clb_count }}</strong> requisitions with you as a work collaborator.<p>
+    <ul>
+      {% for item in exp_req_clb %}
+        <li>{{ item.date_captured }} - {{ item.experience.talent.get_full_name }} {{ item.experience.company.ename }} {{ item.experience.companybranch.name }}</li>
+      {% endfor %}
+    </ul>
+    <br>
+    {% endif %}
+
+    {% if exp_req_clt_count > 0 %}
+    <p><strong>List of confirmations with you as a client<strong></p>
+    <p>You have <strong>{{ exp_req_clt_count }}</strong> requisitions with you as a client.<p>
+    <ul>
+      {% for item in exp_req_clt %}
+        <li>{{ item.date_captured }} - {{ item.experience.talent.get_full_name }} {{ item.experience.company.ename }} {{ item.experience.companybranch.name }}</li>
+      {% endfor %}
+    </ul>
+    <br>
+    {% endif %}
+
+
+    <p>Please click here to log-in to your <a href="https://app.mywexlog.com/">MyWeXlog</a> account.</p>
+
+    <p>Thanks, we look forward to hearing from you soon.</p>
+    <p>&nbsp</p>
+    <p>- MyWeXlog Team</p>
+  </div>
+{% endblock contnt %}

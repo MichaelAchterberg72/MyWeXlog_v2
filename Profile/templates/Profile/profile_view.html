@@ -78,10 +78,10 @@
               <div class="col-md-4 h-100 text-center my-auto">
                 <strong>Language</strong>
               </div>
-              <div class="col-md-6 h-100 text-center my-auto">
+              <div class="col-md-5 h-100 text-center my-auto">
                 <strong>Level</strong>
               </div>
-              <div class="col-md-2 h-100 text-center my-auto">
+              <div class="col-md-3 h-100 text-center my-auto">
                 <strong></strong>
               </div>
             </div>
@@ -94,10 +94,10 @@
                   <div class="col-md-4 h-100 text-center my-auto">
                     {{ l.language }}
                   </div>
-                  <div class="col-md-6 h-100 text-center my-auto">
+                  <div class="col-md-5 h-100 text-center my-auto">
                     {{ l.get_level_display }}
                   </div>
-                  <div class="col-md-2 h-100 text-left my-auto">
+                  <div class="col-md-3 h-100 text-left my-auto">
                     <a href="{% url 'Profile:LanguageEdit' tlt=request.user.alias lang=l.slug %}" class="badge badge-secondary badge-pill" style="width: 5rem;">Edit</a>
                     <form  action="{% url 'Profile:LanguageDelete' lang_id=l.id tlt=l.talent.alias %}" method="post">
                       {% csrf_token %}
