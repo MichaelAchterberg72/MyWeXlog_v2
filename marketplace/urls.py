@@ -86,7 +86,7 @@ urlpatterns = [
         #emp int close URLs
     path('emp-int-close/<slug:bil>/<slug:tlt>/', views.EmpInterviewClose, name='EmployerIntClose'),
     path('emp-dash-close/<slug:bil>/<slug:tlt>/', views.emp_dashint_close, name='Emp_DashIntClose'),
-    path('emp-int-detail/<slug:bil>/<slug:tlt>/', views.EmpIntFullDetail, name='EmployerIntDetail'),
+    path('emp-int-detail/vac/<slug:bil>/<slug:tlt>/', views.EmpIntFullDetail, name='EmployerIntDetail'),
     path('emp-int-detail/<slug:vac>/', views.EmpIntDetailVacancy, name='VacancyIntDetail'),
     path('emp-int-comment/<slug:bil>/<slug:tlt>/', views.EmpIntCommentView, name='VacancyIntComment'),
 

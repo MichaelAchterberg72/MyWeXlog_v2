@@ -1,0 +1,75 @@
+{% extends 'base_homelite.html' %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Help{% endblock title %}
+
+{% block Style %}
+
+{% endblock Style %}
+{% block content %}
+<div class="container">
+  <h3>Employer Workshop - Help</h3>
+    <p>&nbsp</p>
+    <p>This is broken down into four sections, Open Assignments, Pending Assignments, Completed Assignments and Declined Assignments.</p>
+    <br>
+    <p><strong>Section Details</strong></p>
+    <p>Each of the sections displays information relating to then status of the assignments that have been issued to you. The information is divided into six areas:-</p>
+    <ul>
+      <li>Vacancy Reference Number</li>
+      <li>Assignment assigned to</li>
+      <li>Status of task completion by the talent</li>
+      <li>Status of task completion by yourself</li>
+      <li>Successful pay rate for the assignment</li>
+      <li>Due date for the vacancy</li>
+      <li>Actions available for information relating to the assignment</li>
+    </ul>
+    <p>The options you will be provided with for the assignment detail will be:</p>
+    <table class="table table-sm">
+    <col width="10%">
+    <col width="70%">
+    <tbody>
+      <tr>
+        <td class="text-center"><i class="fa fa-puzzle-piece" aria-hidden="true" style="font-size:24px;color:black" data-toggle="tooltip" title="Additional information requested"></i>
+        </td>
+        <td>Additional Information Requested - Indicates that the talent has requested additional information prior to acceptance if the assignment.</td>
+      </tr>
+      <tr>
+        <td class="text-center"><i class="fa fa-spinner" aria-hidden="true" style="font-size:24px;color:green !important" data-toggle="tooltip" title="Response Pending"></i>
+        </td>
+        <td>Pending Status - Indicates that the vacancy acceptance is still pending.</td>
+      </tr>
+      <tr>
+        <td class="text-center"><i class="fa fa-check-square-o" aria-hidden="true" style="font-size:24px; color:green !important"></i>
+        </td>
+        <td>Incomplete Completion checkmark - allows you to mark the assignment as complete by clicking on it.</td>
+      </tr>
+    </tbody>
+  </table>
+  <br>
+    <br>
+    <p><strong>Actions available for each assignment</strong></p>
+    <p>This details the icons available under the Actions heading and what each of them will present.</p>
+      <p>The options you will be provided with will be:</p>
+      <table class="table table-sm">
+      <col width="10%">
+      <col width="70%">
+      <tbody>
+          <tr>
+            <td class="text-center"><i class="fa fa-tty" aria-hidden="true" style="font-size:24px;color:black"></i></td>
+            <td>Contact Detail - This will provide you with the contact details of the member that has issued you with the assignment (Name, email address and link to their profile).</td>
+          </tr>
+          <tr>
+            <td class="text-center"><i class="fa fa-industry" style="font-size:24px;color:black"></i></td>
+            <td>Vacancy Detail - This will open the vacancy detail for which you applied.</td>
+          </tr>
+          <tr>
+            <td class="text-center"><i class="fa fa-star-half-o" aria-hidden="true" style="font-size:24px;color:black"></i></td>
+            <td>Performance Rating - This will allow you to rate the performance of the employer on four points with comments as to your experience whilst working for them.<td>
+          </tr>
+        </tbody>
+    </table>
+    <br>
+
+</div>
+{% endblock content %}

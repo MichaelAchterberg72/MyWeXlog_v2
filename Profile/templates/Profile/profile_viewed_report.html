@@ -3,8 +3,16 @@
 {% block title %}My {{block.super}} Profile View{% endblock title %}
 
 {% block content %}
-
-<div class="card">
+<div class="card card-shadow">
+  <div class="card-body">
+    <div class="float-right">
+      <a class="btn btn-secondary" href="{% url 'Profile:ProfileHome' %}">Back</a>
+    </div>
+        <h4 class="card-title">Profile Views</h4>
+  </div>
+</div>
+<br>
+<div class="card card-shadow">
   <div class="card-body">
         <h5 class="card-title">Weekly Profile Views</h5>
 
@@ -24,7 +32,7 @@
     </div>
   </div>
   <br>
-  <div class="card">
+  <div class="card card-shadow">
     <div class="card-body">
       <h5 class="card-title">Increase Your Profile Views</h5>
       <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="10000">
@@ -152,7 +160,7 @@
 <br>
 
   <div class="">
-    <div class="card">
+    <div class="card card-shadow">
       <div class="card-body">
 
           <h5 class="card-title">Profile Viewed Report</h5>

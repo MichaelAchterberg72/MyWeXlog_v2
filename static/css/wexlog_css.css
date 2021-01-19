@@ -69,6 +69,11 @@ table {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
+.card {
+  transition: all .4s ease;
+  transform: translate3D(0,-1px,0) scale(1.00);
+}
+
 .card-hover:hover {
   background-color: var(--hover);
   z-index: 1;
@@ -77,7 +82,7 @@ table {
 }
 
 .card-no-hover {
-  background-color: #fff;
+  background-color: #fff !important;
 }
 
 .card-close {
@@ -156,6 +161,23 @@ table {
   z-index: 1;
   transition: all .4s ease;
   transform: translate3D(0,0,0) scale(1);
+}
+.vertical-center {
+  min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+  min-height: 100vh; /* These two lines are counted as one :-)       */
+  display: flex;
+  align-items: center;
+}
+.number-souround {
+  margin: -5px;
+  padding: 0px 0px 10px 0px;
+  border: 10px solid #e0e0e0;
+  background-color:#fff;
+  -webkit-border-radius: 10%;
+  -moz-border-radius: 10%;
+  -ms-border-radius: 10%;
+  border-radius: 10%;
+  z-index: 1;
 }
 
 .select2-container {

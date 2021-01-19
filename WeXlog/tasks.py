@@ -60,7 +60,11 @@ def UpdateSubscriptionPaidDate():
                 if username.paid_date <= datetime.now() - six_monthly:
                     username.paid = False
                     username.subscription = 0
+                    if username.free_month == True:
+                        username.free_month = False
+                        instance2.trial_expired = False
                     username.save()
+                    instance2.save()
                     # send user an email to let them know the subscription has expired
     #                SubscriptionExpiredTask.delay(username)
 
@@ -68,7 +72,11 @@ def UpdateSubscriptionPaidDate():
                 if username.paid_date <= datetime.now() - twelve_monthly:
                     username.paid = False
                     username.subscription = 0
+                    if username.free_month == True:
+                        username.free_month = False
+                        instance2.trial_expired = False
                     username.save()
+                    instance2.save()
                     # send user an email to let them know the subscription has expired
     #                SubscriptionExpiredTask.delay(username)
         username.save()
@@ -136,3 +144,66 @@ def UpgradeRefunds():
 
     except Exception as e:
         print(e)
+
+
+@celery_app.task(name="WeeklyUpdateEmail")
+@periodic_task(run_every=(crontab(day_of_week=1, hour=0, minute=0)), name="WeeklyUpdateEmail", ignore_result=True)
+def weekly_email():
+    users = CustomUser.objects.all()
+
+    for u in users:
+        username = CustomUser.objects.get(pk=u.id)
+        edu_req_lect = Lecturer.objects.filter(Q(confirm='S') & Q(lecturer=u)).order_by('-date_captured')
+        edu_req_cm = ClassMates.objects.filter(Q(confirm='S') & Q(colleague=u)).order_by('-date_captured')
+        exp_req_clg = WorkColleague.objects.filter(Q(confirm='S') & Q(colleague_name=u)).order_by('-date_captured')
+        exp_req_sup = Superior.objects.filter(Q(confirm='S') & Q(superior_name=u)).order_by('-date_captured')
+        exp_req_clt = WorkClient.objects.filter(Q(confirm='S') & Q(collaborator_name=u)).order_by('-date_captured')
+        exp_req_clb = WorkCollaborator.objects.filter(Q(confirm='S') & Q(client_name=u)).order_by('-date_captured')
+
+        edu_req_lect_count = edu_req_lect.count()
+        edu_req_cm_count = edu_req_cm.count()
+        exp_req_clg_count = exp_req_clg.count()
+        exp_req_sup_count = exp_req_sup.count()
+        exp_req_clt_count = exp_req_clt.count()
+        exp_req_clb_count = exp_req_clb.count()
+
+        sum_req = edu_req_lect_count + edu_req_cm_count + exp_req_clg_count + exp_req_sup_count + exp_req_clt_count + exp_req_clb_count
+
+        if sum_req > 0:
+
+            subject = f"MyWeXlog Weekly Update"
+            context = {
+                'edu_req_lect': edu_req_lect,
+                'edu_req_cm': edu_req_cm,
+                'exp_req_clg': exp_req_clg,
+                'exp_req_sup': exp_req_sup,
+                'exp_req_clt': exp_req_clt,
+                'exp_req_clb': exp_req_clb,
+                'edu_req_lect_count': edu_req_lect_count,
+                'edu_req_cm_count': edu_req_cm_count,
+                'exp_req_clg_count': exp_req_clg_count,
+                'exp_req_sup_count': exp_req_sup_count,
+                'exp_req_clt_count': exp_req_clt_count,
+                'exp_req_clb_count': exp_req_clb_count,
+                'user': username.first_name,
+                'user_email': username.email,
+                }
+            html_message = render_to_string('templates/email/weekly/weekly_email_update.html', context)
+            plain_message = strip_tags(html_message)
+
+            message = Mail(
+                from_email = settings.SENDGRID_FROM_EMAIL,
+                to_emails = username.email,
+                subject = subject,
+                plain_text_content = strip_tags(html_message),
+                html_content = html_message)
+
+            try:
+                sg = sendgrid.SendGridAPIClient(settings.SENDGRID_API_KEY)
+                response = sg.send(message)
+                print(response.status_code)
+                print(response.body)
+                print(response.headers)
+
+            except Exception as e:
+                print(e)

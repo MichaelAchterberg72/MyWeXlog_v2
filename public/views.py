@@ -94,7 +94,7 @@ def WexlogHomeContactView(request):
 
 
 class WexlogHomeDeletedView(TemplateView):
-    template_name = 'wexlog_home/deleted.html'
+    template_name = 'wexlog_home_3/deleted.html'
 
 
 class WexlogHomePostVacancyView(TemplateView):
@@ -146,7 +146,7 @@ class WexlogHomeCookiePolicyView(TemplateView):
 
 
 class WexlogHomeRightToSayNoView(TemplateView):
-    template_name = 'wexlog_home/right_to_say_no.html'
+    template_name = 'wexlog_home_3/right_to_say_no.html'
 
 
 class WexlogHomeHelpSupportView(TemplateView):

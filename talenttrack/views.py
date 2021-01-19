@@ -5,6 +5,8 @@ from django.views.generic import TemplateView
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.http import is_safe_url
+from django.template.loader import get_template, render_to_string
+from django.conf import settings
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.urls import reverse
 from django.utils import timezone
@@ -17,6 +19,10 @@ from decimal import Decimal
 from django.contrib.postgres.search import SearchVector, TrigramSimilarity
 import math
 
+import sendgrid
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import (Mail, Subject, To, ReplyTo, SendAt, Content, From, CustomArg, Header)
+from django.utils.html import strip_tags
 
 from csp.decorators import csp_exempt
 from core.decorators import subscription, corp_permission
@@ -26,7 +32,7 @@ from WeXlog.app_config import(
 
 
 from .forms import (
-        TopicForm, ResultForm, CourseTypeForm, CourseForm, DesignationForm, ClassMatesSelectForm, ClassMatesConfirmForm, LecturerSelectForm, LecturerConfirmForm, EducationForm, WorkExperienceForm, WorkColleagueSelectForm, WorkColleagueConfirmForm, WorkColleagueResponseForm, ClassMatesResponseForm, LecturerResponseForm, SuperiorSelectForm, WorkCollaboratorResponseForm, WorkCollaboratorConfirmForm, WorkCollaboratorSelectForm, WorkClientResponseForm, WorkClientConfirmForm, WorkClientSelectForm, PreLoggedExperienceForm, TopicPopForm, LecturerRespondForm, ClassMatesRespondForm, AchievementsForm, LicenseCertificationForm, ProfileSearchForm, EmailFormModal
+        TopicForm, ResultForm, CourseTypeForm, CourseForm, DesignationForm, ClassMatesSelectForm, ClassMatesConfirmForm, LecturerSelectForm, LecturerConfirmForm, EducationForm, WorkExperienceForm, WorkColleagueSelectForm, WorkColleagueConfirmForm, WorkColleagueResponseForm, ClassMatesResponseForm, LecturerResponseForm, SuperiorSelectForm, WorkCollaboratorResponseForm, WorkCollaboratorConfirmForm, WorkCollaboratorSelectForm, WorkClientResponseForm, WorkClientConfirmForm, WorkClientSelectForm, PreLoggedExperienceForm, TopicPopForm, LecturerRespondForm, ClassMatesRespondForm, AchievementsForm, LicenseCertificationForm, ProfileSearchForm, EmailFormModal, SiteSkillStatsFilter, SiteDemandSkillStatsFilter
 )
 
 from .models import (
@@ -38,6 +44,7 @@ from marketplace.models import(
     SkillLevel, SkillRequired, WorkBid, BidShortList, TalentRequired, BidInterviewList,
 )
 from enterprises.models import Branch
+from locations.models import Region, City
 from project.models import ProjectData
 from Profile.models import (
         BriefCareerHistory, Profile, LanguageTrack, PhysicalAddress, WillingToRelocate
@@ -45,6 +52,7 @@ from Profile.models import (
 from booklist.models import ReadBy
 from users.models import CustomUser
 from mod_corporate.models import CorporateStaff
+from invitations.models import Invitation
 
 from WeXlog.app_config import (
     skill_pass_score, locked_age,
@@ -55,15 +63,444 @@ from analytics.signals import object_viewed_signal
 
 
 @login_required()
-def skill_stats(request, skl):
+def site_demand_skill_stats(request, skl):
+    '''The view for the site wide skill demand overview and stats'''
+    skill = SkillTag.objects.get(id=skl)
+    tlt_instance = request.user
+    today = timezone.now().date()
+
+
+    val_we = TalentRequired.objects.all()
+
+    form = SiteDemandSkillStatsFilter()
+
+    title_query = request.GET.get('title')
+    designation_query = request.GET.get('designation')
+    date_entered_query = request.GET.get('date_entered')
+    date_to_query = request.GET.get('date_to')
+    country_query = request.GET.get('country')
+    worklocation_query = request.GET.get('worklocation')
+    experience_level_query = request.GET.get('experience_level')
+
+    if title_query != '' and title_query is not None:
+        val_we = val_we.filter(title__icontains=title_query)
+
+    elif designation_query != '' and designation_query is not None:
+        val_we = val_we.filter(designation__name__icontains=designation_query)
+
+    elif date_entered_query != '' and date_entered_query is not None:
+        val_we = val_we.filter(date_entered__gte=date_entered_query)
+
+    elif date_to_query != '' and date_to_query is not None:
+        val_we = val_we.filter(date_deadline__lte=date_to_query)
+
+    elif country_query != '' and country_query is not None:
+        region = Region.objects.filter(country__icontains=country_query).values_list('pk', flat=True)
+        city = City.objects.filter(region__pk__in=region).values_list('pk', flat=True)
+        val_we = val_we.filter(city__pk__in=city)
+
+    elif worklocation_query != '' and worklocation_query is not None:
+        val_we = val_we.filter(worklocation__type__icontains=worklocation_query)
+
+    elif experience_level_query != '' and experience_level_query is not None:
+        val_we = val_we.filter(experience_level__level__icontains=experience_level_query)
+
+    #Skills associated with skill - includes all skills not just validated ones
+    vac_id = val_we.values_list('pk')
+    skill_we =  SkillRequired.objects.filter(Q(scope__pk__in=vac_id) & Q(skills__skill=skill.skill))
+    skills_assoc_qs = skill_we.values_list('scope__pk', flat=True).distinct()
+
+    vac_list_qs = val_we.filter(pk__in=skills_assoc_qs)
+    vac_list_qs_id = vac_list_qs.values_list('pk').distinct()
+    vac_list_qs_count = vac_list_qs.count()
+
+    skills_list = SkillRequired.objects.filter(scope__pk__in=vac_list_qs_id).values_list('skills__skill', flat=True).distinct()
+
+    skills_list_set_all = [x for x in skills_list if x is not None]
+
+    skills_list_set = [x for x in skills_list_set_all if x is not f'{skill.skill}']
+
+    dept_skills_link = SkillTag.objects.filter(skill__in=skills_list_set).order_by('skill')
+
+    skills_instance_count = []
+    skill_list_labels = []
+    skill_percentage_data = []
+    for skill_item in skills_list_set:
+        skill_count = 0
+        vac_skills = SkillRequired.objects.filter(skills__skill=skill_item).values_list('scope__pk', flat=True)
+        vac_skill = vac_list_qs.filter(pk__in=vac_skills)
+
+        for vac_instance in vac_skill:
+            skill_count +=1
+        skill_percentage = int(format(skill_count / vac_list_qs_count * 100, '.0f'))
+
+        result={'skill': skill_item, 'skill_count': skill_count, 'skill_percentage': skill_percentage}
+
+        skills_instance_count.append(result)
+
+        skill_list_labels.append(skill_item)
+        skill_percentage_data.append(skill_percentage)
+
+    skill_list_labels_count = skills_list.count()
+
+#    print(skill_list_labels)
+#    print(skill_percentage_data)
+    orderd_skills_instance_count = sorted(skills_instance_count, key=lambda kv: kv['skill_percentage'], reverse=True)
+#    print(orderd_skills_instance_count['skill'])
+
+    template = 'talenttrack/site_demand_skill_stats.html'
+    context = {
+            'skl': skl,
+            'skill': skill,
+            'form': form,
+            'vac_list_qs_count': vac_list_qs_count,
+            'skill_list_labels_count': skill_list_labels_count,
+            'skill_list_labels': skill_list_labels,
+            'skill_percentage_data': skill_percentage_data,
+            'dept_skills_link': dept_skills_link,
+    }
+    return render(request, template, context)
+
+
+@login_required()
+def site_skill_stats(request, skl):
+    '''The view for the site wide skill overview and stats'''
+    skill = SkillTag.objects.get(id=skl)
+    tlt_instance = request.user
+    today = timezone.now().date()
+
+
+    val_we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
+
+    form = SiteSkillStatsFilter()
+
+    industry_query = request.GET.get('industry')
+    designation_query = request.GET.get('designation')
+    date_from_query = request.GET.get('date_from')
+    date_to_query = request.GET.get('date_to')
+    country_query = request.GET.get('country')
+    region_query = request.GET.get('region')
+
+    if industry_query != '' and industry_query is not None:
+        val_we = val_we.filter(industry__industry__icontains=industry_query)
+
+    elif designation_query != '' and designation_query is not None:
+        val_we = val_we.filter(designation__name__icontains=designation_query)
+
+    elif date_from_query != '' and date_from_query is not None:
+        val_we = val_we.filter(date_from__gte=date_from_query)
+
+    elif date_to_query != '' and date_to_query is not None:
+        val_we = val_we.filter(date_to__lte=date_to_query)
+
+    elif country_query != '' and country_query is not None:
+        country_profiles = PhysicalAddress.objects.filter(country__icontains=country_query).values_list('talent__id')
+        val_we = val_we.filter(talent__id__in=country_profiles)
+
+    elif region_query != '' and region_query is not None:
+        region_profiles = PhysicalAddress.objects.filter(region__region__icontains=region_query).values_list('talent__id')
+        val_we = val_we.filter(talent__id__in=region_profiles)
+
+    #Skills associated with skill - includes all skills not just validated ones
+    skill_we =  val_we.filter(skills__skill=skill.skill, edt=False)
+    skills_assoc_qs = skill_we.values_list('pk', flat=True)
+
+    skills_list_qs = val_we.filter(pk__in=skills_assoc_qs)
+    skills_list_qs_count = skills_list_qs.count()
+
+    skills_list = skills_list_qs.values_list('skills__skill', flat=True).distinct()
+
+    skills_list_set_all = [x for x in skills_list if x is not None]
+
+    skills_list_set = [x for x in skills_list_set_all if x is not f'{skill.skill}']
+
+    dept_skills_link = SkillTag.objects.filter(skill__in=skills_list_set).order_by('skill')
+
+    skills_instance_count = []
+    skill_list_labels = []
+    skill_percentage_data = []
+    for skill_item in skills_list_set:
+        skill_count = 0
+        tlt_we_skill = skills_list_qs.filter(skills__skill=skill_item).values_list('skills__skill', flat=True)
+
+        for we_instance in tlt_we_skill:
+            skill_count +=1
+        skill_percentage = int(format(skill_count / skills_list_qs_count * 100, '.0f'))
+
+        result={'skill': skill_item, 'skill_count': skill_count, 'skill_percentage': skill_percentage}
+
+        skills_instance_count.append(result)
+
+        skill_list_labels.append(skill_item)
+        skill_percentage_data.append(skill_percentage)
+
+    skill_list_labels_count = skills_list.count()
+
+#    print(skill_list_labels)
+#    print(skill_percentage_data)
+    orderd_skills_instance_count = sorted(skills_instance_count, key=lambda kv: kv['skill_percentage'], reverse=True)
+#    print(orderd_skills_instance_count['skill'])
+
+    template = 'talenttrack/site_skill_stats.html'
+    context = {
+            'skl': skl,
+            'skill': skill,
+            'form': form,
+            'skills_list_qs_count': skills_list_qs_count,
+            'skill_list_labels_count': skill_list_labels_count,
+            'skill_list_labels': skill_list_labels,
+            'skill_percentage_data': skill_percentage_data,
+            'dept_skills_link': dept_skills_link,
+    }
+    return render(request, template, context)
+
+
+@login_required()
+def profile_skill_stats(request, skl):
     '''The view for the individual skill overview and stats'''
     skill = SkillTag.objects.get(id=skl)
-    tlt = request.user.alias
-    tlt_id = [request.user.id]
+    tlt_instance = request.user
+    tlt = tlt_instance.alias
+    tlt_id = [tlt_instance.id]
     today = timezone.now().date()
 
     we = WorkExperience.objects.filter(talent__alias=tlt)
     val_we = we.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
+
+    #Skills associated with skill - includes all skills not just validated ones
+    skill_we =  val_we.filter(skills__skill=skill.skill, edt=False)
+    skills_assoc_qs = skill_we.values_list('pk', flat=True)
+
+    skills_list_qs = val_we.filter(pk__in=skills_assoc_qs)
+    skills_list_qs_count = skills_list_qs.count()
+
+    skills_list = skills_list_qs.values_list('skills__skill', flat=True).distinct()
+
+    skills_list_set_all = [x for x in skills_list if x is not None]
+
+    skills_list_set = [x for x in skills_list_set_all if x is not f'{skill.skill}']
+
+    dept_skills_link = SkillTag.objects.filter(skill__in=skills_list_set).order_by('skill')
+
+    skills_instance_count = []
+    skill_list_labels = []
+    skill_percentage_data = []
+    for skill_item in skills_list_set:
+        skill_count = 0
+        tlt_we_skill = skills_list_qs.filter(skills__skill=skill_item).values_list('skills__skill', flat=True)
+
+        for we_instance in tlt_we_skill:
+            skill_count +=1
+        skill_percentage = int(format(skill_count / skills_list_qs_count * 100, '.0f'))
+
+        result={'skill': skill_item, 'skill_count': skill_count, 'skill_percentage': skill_percentage}
+
+        skills_instance_count.append(result)
+
+        skill_list_labels.append(skill_item)
+        skill_percentage_data.append(skill_percentage)
+
+    skill_list_labels_count = skills_list.count()
+
+#    print(skill_list_labels)
+#    print(skill_percentage_data)
+    orderd_skills_instance_count = sorted(skills_instance_count, key=lambda kv: kv['skill_percentage'], reverse=True)
+#    print(orderd_skills_instance_count['skill'])
+
+
+
+    we_skill = we.filter(Q(skills__skill=skill.skill, edt=False) | Q(topic__skills__skill=skill.skill, edt=True))
+    val_we_skill = val_we.filter(Q(skills__skill=skill.skill, edt=False) | Q(topic__skills__skill=skill.skill, edt=True))
+
+
+
+    # Total Work Experience Skill Sum Experience by Year
+    val_we_skills_used_year_range_data = []
+    val_we_skills_age_range=[]
+    for i in tlt_id:
+        we_qs = val_we_skill.filter(talent=i, edt=False)
+        for wet in we_qs:
+            swewd = wet.date_to
+            we_skill_age=relativedelta(today, swewd).years
+
+            aw_exp = wet.hours_worked
+            if aw_exp == None:
+                awetv = 0
+            else:
+                awetv = aw_exp
+
+            result={'we_skill_age': we_skill_age, 'awetv': awetv}
+
+            val_we_skills_age_range.append(result)
+
+    # Total hours experience in year range
+    val_we_skill_age_range_0_1=[float(x['awetv']) for x in val_we_skills_age_range if x['we_skill_age'] in range(0, 1)]
+    val_we_skill_age_range_1_2=[float(x['awetv']) for x in val_we_skills_age_range if x['we_skill_age'] in range(1, 2)]
+    val_we_skill_age_range_2_3=[float(x['awetv']) for x in val_we_skills_age_range if x['we_skill_age'] in range(2, 3)]
+    val_we_skill_age_range_3_4=[float(x['awetv']) for x in val_we_skills_age_range if x['we_skill_age'] in range(3, 4)]
+    val_we_skill_age_range_4_5=[float(x['awetv']) for x in val_we_skills_age_range if x['we_skill_age'] in range(4, 5)]
+    val_we_skill_age_range_5_6=[float(x['awetv']) for x in val_we_skills_age_range if x['we_skill_age'] in range(5, 6)]
+    val_we_skill_age_range_6_7=[float(x['awetv']) for x in val_we_skills_age_range if x['we_skill_age'] in range(6, 7)]
+    val_we_skill_age_range_7_8=[float(x['awetv']) for x in val_we_skills_age_range if x['we_skill_age'] in range(7, 8)]
+    val_we_skill_age_range_8_9=[float(x['awetv']) for x in val_we_skills_age_range if x['we_skill_age'] in range(8, 9)]
+    val_we_skill_age_range_9_10=[float(x['awetv']) for x in val_we_skills_age_range if x['we_skill_age'] in range(9, 10)]
+
+    total_val_we_skill_age=[float(x['awetv']) for x in val_we_skills_age_range if x['we_skill_age'] in range(0, 100)]
+    total_val_sum_we = sum(total_val_we_skill_age)
+
+    sum_val_we_range_0_1 = sum(val_we_skill_age_range_0_1)
+    sum_val_we_range_1_2 = sum(val_we_skill_age_range_1_2)
+    sum_val_we_range_2_3 = sum(val_we_skill_age_range_2_3)
+    sum_val_we_range_3_4 = sum(val_we_skill_age_range_3_4)
+    sum_val_we_range_4_5 = sum(val_we_skill_age_range_4_5)
+    sum_val_we_range_5_6 = sum(val_we_skill_age_range_5_6)
+    sum_val_we_range_6_7 = sum(val_we_skill_age_range_6_7)
+    sum_val_we_range_7_8 = sum(val_we_skill_age_range_7_8)
+    sum_val_we_range_8_9 = sum(val_we_skill_age_range_8_9)
+    sum_val_we_range_9_10 = sum(val_we_skill_age_range_9_10)
+
+    val_we_skills_used_year_range_data.append(sum_val_we_range_9_10)
+    val_we_skills_used_year_range_data.append(sum_val_we_range_8_9)
+    val_we_skills_used_year_range_data.append(sum_val_we_range_7_8)
+    val_we_skills_used_year_range_data.append(sum_val_we_range_6_7)
+    val_we_skills_used_year_range_data.append(sum_val_we_range_5_6)
+    val_we_skills_used_year_range_data.append(sum_val_we_range_4_5)
+    val_we_skills_used_year_range_data.append(sum_val_we_range_3_4)
+    val_we_skills_used_year_range_data.append(sum_val_we_range_2_3)
+    val_we_skills_used_year_range_data.append(sum_val_we_range_1_2)
+    val_we_skills_used_year_range_data.append(sum_val_we_range_0_1)
+
+
+    # Training Validated Experience Skill Sum Experience by Year
+    t_val_we_skills_used_year_range_data = []
+    t_val_we_skills_age_range=[]
+    for i in tlt_id:
+        t_we_qs = val_we_skill.filter(talent=i, edt=True)
+        for wet in t_we_qs:
+            swewd = wet.date_to
+            we_skill_age=relativedelta(today, swewd).years
+
+            aw_exp = wet.topic.hours
+            if aw_exp == None:
+                awetv = 0
+            else:
+                awetv = aw_exp
+
+            t_result={'we_skill_age': we_skill_age, 'awetv': awetv}
+
+            t_val_we_skills_age_range.append(t_result)
+
+    # Total Validated hours experience in year range
+    t_val_we_skill_age_range_0_1=[float(x['awetv']) for x in t_val_we_skills_age_range if x['we_skill_age'] in range(0, 1)]
+    t_val_we_skill_age_range_1_2=[float(x['awetv']) for x in t_val_we_skills_age_range if x['we_skill_age'] in range(1, 2)]
+    t_val_we_skill_age_range_2_3=[float(x['awetv']) for x in t_val_we_skills_age_range if x['we_skill_age'] in range(2, 3)]
+    t_val_we_skill_age_range_3_4=[float(x['awetv']) for x in t_val_we_skills_age_range if x['we_skill_age'] in range(3, 4)]
+    t_val_we_skill_age_range_4_5=[float(x['awetv']) for x in t_val_we_skills_age_range if x['we_skill_age'] in range(4, 5)]
+    t_val_we_skill_age_range_5_6=[float(x['awetv']) for x in t_val_we_skills_age_range if x['we_skill_age'] in range(5, 6)]
+    t_val_we_skill_age_range_6_7=[float(x['awetv']) for x in t_val_we_skills_age_range if x['we_skill_age'] in range(6, 7)]
+    t_val_we_skill_age_range_7_8=[float(x['awetv']) for x in t_val_we_skills_age_range if x['we_skill_age'] in range(7, 8)]
+    t_val_we_skill_age_range_8_9=[float(x['awetv']) for x in t_val_we_skills_age_range if x['we_skill_age'] in range(8, 9)]
+    t_val_we_skill_age_range_9_10=[float(x['awetv']) for x in t_val_we_skills_age_range if x['we_skill_age'] in range(9, 10)]
+
+    total_t_val_we_skill_age=[float(x['awetv']) for x in t_val_we_skills_age_range if x['we_skill_age'] in range(0, 100)]
+    total_val_sum_t_we = sum(total_t_val_we_skill_age)
+
+    sum_t_val_we_range_0_1 = sum(t_val_we_skill_age_range_0_1)
+    sum_t_val_we_range_1_2 = sum(t_val_we_skill_age_range_1_2)
+    sum_t_val_we_range_2_3 = sum(t_val_we_skill_age_range_2_3)
+    sum_t_val_we_range_3_4 = sum(t_val_we_skill_age_range_3_4)
+    sum_t_val_we_range_4_5 = sum(t_val_we_skill_age_range_4_5)
+    sum_t_val_we_range_5_6 = sum(t_val_we_skill_age_range_5_6)
+    sum_t_val_we_range_6_7 = sum(t_val_we_skill_age_range_6_7)
+    sum_t_val_we_range_7_8 = sum(t_val_we_skill_age_range_7_8)
+    sum_t_val_we_range_8_9 = sum(t_val_we_skill_age_range_8_9)
+    sum_t_val_we_range_9_10 = sum(t_val_we_skill_age_range_9_10)
+
+    t_val_we_skills_used_year_range_data.append(sum_t_val_we_range_9_10)
+    t_val_we_skills_used_year_range_data.append(sum_t_val_we_range_8_9)
+    t_val_we_skills_used_year_range_data.append(sum_t_val_we_range_7_8)
+    t_val_we_skills_used_year_range_data.append(sum_t_val_we_range_6_7)
+    t_val_we_skills_used_year_range_data.append(sum_t_val_we_range_5_6)
+    t_val_we_skills_used_year_range_data.append(sum_t_val_we_range_4_5)
+    t_val_we_skills_used_year_range_data.append(sum_t_val_we_range_3_4)
+    t_val_we_skills_used_year_range_data.append(sum_t_val_we_range_2_3)
+    t_val_we_skills_used_year_range_data.append(sum_t_val_we_range_1_2)
+    t_val_we_skills_used_year_range_data.append(sum_t_val_we_range_0_1)
+
+    skills_used_year_range_labels = [10, 9, 8, 7, 6, 5, 4, 3, 'last year', 'This year']
+
+    template = 'talenttrack/profile_skill_stats.html'
+    context = {
+            'tlt': tlt,
+            'skl': skl,
+            'skill': skill,
+            'skills_list_qs_count': skills_list_qs_count,
+            'skill_list_labels_count': skill_list_labels_count,
+            'skill_list_labels': skill_list_labels,
+            'skill_percentage_data': skill_percentage_data,
+            'dept_skills_link': dept_skills_link,
+            'skills_used_year_range_labels': skills_used_year_range_labels,
+            'total_val_sum_t_we': total_val_sum_t_we,
+            'total_val_sum_we': total_val_sum_we,
+            't_val_we_skills_used_year_range_data': t_val_we_skills_used_year_range_data,
+            'val_we_skills_used_year_range_data': val_we_skills_used_year_range_data,
+    }
+    return render(request, template, context)
+
+
+@login_required()
+def skill_stats(request, skl):
+    '''The view for the individual skill overview and stats'''
+    skill = SkillTag.objects.get(id=skl)
+    tlt_instance = request.user
+    tlt = tlt_instance.alias
+    tlt_id = [tlt_instance.id]
+    today = timezone.now().date()
+
+    we = WorkExperience.objects.filter(talent__alias=tlt)
+    val_we = we.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
+
+    #Skills associated with skill - includes all skills not just validated ones
+    skill_we =  we.filter(skills__skill=skill.skill, edt=False)
+    skills_assoc_qs = skill_we.values_list('pk', flat=True)
+
+    skills_list_qs = we.filter(pk__in=skills_assoc_qs)
+    skills_list_qs_count = skills_list_qs.count()
+
+    skills_list = skills_list_qs.values_list('skills__skill', flat=True).distinct()
+
+    skills_list_set_all = [x for x in skills_list if x is not None]
+
+    skills_list_set = [x for x in skills_list_set_all if x is not f'{skill.skill}']
+
+    dept_skills_link = SkillTag.objects.filter(skill__in=skills_list_set).order_by('skill')
+
+    skills_instance_count = []
+    skill_list_labels = []
+    skill_percentage_data = []
+    for skill_item in skills_list_set:
+        skill_count = 0
+        tlt_we_skill = skills_list_qs.filter(skills__skill=skill_item).values_list('skills__skill', flat=True)
+
+        for we_instance in tlt_we_skill:
+            skill_count +=1
+        skill_percentage = int(format(skill_count / skills_list_qs_count * 100, '.0f'))
+
+        result={'skill': skill_item, 'skill_count': skill_count, 'skill_percentage': skill_percentage}
+
+        skills_instance_count.append(result)
+
+        skill_list_labels.append(skill_item)
+        skill_percentage_data.append(skill_percentage)
+
+    skill_list_labels_count = skills_list.count()
+
+#    print(skill_list_labels)
+#    print(skill_percentage_data)
+    orderd_skills_instance_count = sorted(skills_instance_count, key=lambda kv: kv['skill_percentage'], reverse=True)
+#    print(orderd_skills_instance_count['skill'])
+
+
 
     #work experience not validated
     n_val_we = we.filter(Q(skills__skill=skill.skill, edt=False) | Q(topic__skills__skill=skill.skill, edt=True))
@@ -109,6 +546,11 @@ def skill_stats(request, skl):
 
     we_skill = we.filter(Q(skills__skill=skill.skill, edt=False) | Q(topic__skills__skill=skill.skill, edt=True))
     val_we_skill = val_we.filter(Q(skills__skill=skill.skill, edt=False) | Q(topic__skills__skill=skill.skill, edt=True))
+
+    # Colleagues invited but not registered list
+    invitation_sent = Invitation.objects.filter(Q(invited_by=tlt_instance) & Q(accpeted=False)).order_by('-date_invited')[:6]
+
+    invitation_sent_count = invitation_sent.count()
 
     # Total Work Experience Skill Sum Experience by Year
     we_skills_used_year_range_data = []
@@ -341,6 +783,11 @@ def skill_stats(request, skl):
             'tlt': tlt,
             'skl': skl,
             'skill': skill,
+            'skills_list_qs_count': skills_list_qs_count,
+            'skill_list_labels_count': skill_list_labels_count,
+            'skill_list_labels': skill_list_labels,
+            'skill_percentage_data': skill_percentage_data,
+            'dept_skills_link': dept_skills_link,
             'nsps_te': nsps_te,
             'nsps_te_l_count': nsps_te_l_count,
             'nsps_we': nsps_we,
@@ -356,6 +803,8 @@ def skill_stats(request, skl):
             'val_we_skills_used_year_range_data': val_we_skills_used_year_range_data,
             'we_tbc_p': we_tbc_p,
             'we_tbc_p_l_count': we_tbc_p_l_count,
+            'invitation_sent': invitation_sent,
+            'invitation_sent_count': invitation_sent_count,
     }
     return render(request, template, context)
 
@@ -529,37 +978,32 @@ def email_reminder_validate(request, skl, tlt):
     current_user = request.user
     invitee = current_user.email
 
-    recipient = Profile.objects.get(alias=tlt)
+    recipient = CustomUser.objects.get(alias=tlt)
 
-    form = EmailFormModal(initial={
-                    'sender': invitee,
-                    'recipient': recipient.email,
+    form = EmailFormModal(request.POST or None, initial={
                     'subject': "Please Confirm MyWeXlog Experience",
-                    'message': message,})
+                    'message': f"Hi { recipient.first_name }, I have sent you a validation request and was hopeing you would be able log in to MyWeXlog and confirm it for me."})
 
     if request.method == 'POST':
         next_url=request.POST.get('next', '/')
         if form.is_valid():
             new = form.save(commit=False)
-            new.sender = request.user
+            new.sender = current_user
             new.recipient = recipient
             new.save()
             cd = form.cleaned_data
 
-            recipient = cd['recipient']
-            sender = cd['sender']
             subject = cd['subject']
             message = cd['message']
 
-            subject = f"{{ subject }}"
-            context = {'form': form, 'user_email': invitee }
+            email_subject = f"{ subject }"
+            context = {'form': form, 'sender': current_user, 'recipient': recipient, 'user_email': invitee }
             html_message = render_to_string('invitations/validate_request.html', context)
-            plain_message = strip_tags(html_message)
 
             message = Mail(
-                from_email = (settings.SENDGRID_FROM_EMAIL, f"{tlt.first_name} {tlt.last_name}"),
+                from_email = (settings.SENDGRID_FROM_EMAIL, f"{current_user.first_name} {current_user.last_name}"),
                 to_emails = invitee,
-                subject = subject,
+                subject = email_subject,
                 plain_text_content = strip_tags(html_message),
                 html_content = html_message)
 
@@ -573,18 +1017,76 @@ def email_reminder_validate(request, skl, tlt):
             except Exception as e:
                 print(e)
 
-            template = 'invitations/invitation.html'
             if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
                 next_url = reverse('Talent:SkillsStats', kwargs={'skl': skl})
             response = HttpResponseRedirect(next_url)
             return response
         else:
             template = 'talenttrack/request_validate_email.html'
-            context = {'form': form}
+            context = {'form': form, 'skl': skl}
             return render(request, template, context)
     else:
         template = 'talenttrack/request_validate_email.html'
-        context = {'form': form}
+        context = {'form': form, 'skl': skl}
+        return render(request, template, context)
+
+
+@login_required()
+def email_reminder_validate_list(request, skl, tlt):
+    '''The view to email member to remind them to validate a tlt experience'''
+    current_user = request.user
+    invitee = current_user.email
+
+    recipient = CustomUser.objects.get(alias=tlt)
+
+    form = EmailFormModal(request.POST or None, initial={
+                    'subject': "Please Confirm MyWeXlog Experience",
+                    'message': f"Hi { recipient.first_name }, I have sent you a validation request and was hopeing you would be able log in to MyWeXlog and confirm it for me."})
+
+    if request.method == 'POST':
+        next_url=request.POST.get('next', '/')
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.sender = current_user
+            new.recipient = recipient
+            new.save()
+            cd = form.cleaned_data
+
+            subject = cd['subject']
+            message = cd['message']
+
+            email_subject = f"{ subject }"
+            context = {'form': form, 'sender': current_user, 'recipient': recipient, 'user_email': invitee }
+            html_message = render_to_string('invitations/validate_request.html', context)
+
+            message = Mail(
+                from_email = (settings.SENDGRID_FROM_EMAIL, f"{current_user.first_name} {current_user.last_name}"),
+                to_emails = invitee,
+                subject = email_subject,
+                plain_text_content = strip_tags(html_message),
+                html_content = html_message)
+
+            try:
+                sg = sendgrid.SendGridAPIClient(settings.SENDGRID_API_KEY)
+                response = sg.send(message)
+                print(response.status_code)
+                print(response.body)
+                print(response.headers)
+
+            except Exception as e:
+                print(e)
+
+            if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
+                next_url = reverse('Talent:SkillValidationList', kwargs={'skl': skl})
+            response = HttpResponseRedirect(next_url)
+            return response
+        else:
+            template = 'talenttrack/request_validate_email_list.html'
+            context = {'form': form, 'skl': skl}
+            return render(request, template, context)
+    else:
+        template = 'talenttrack/request_validate_email_list.html'
+        context = {'form': form, 'skl': skl}
         return render(request, template, context)
 
 
@@ -2231,6 +2733,9 @@ def SkillProfileDetailView(request, tlt):
 
         training_skills_hours_skill_data.append(sum_shwt)
 
+    dept_skills_link = SkillTag.objects.filter(skill__in=ordered_skills_list).order_by('skill')
+
+    skills_count = len(ordered_skills_list)
     #gathering all experience hours per topic-this not working again
     exp_set = {}
     for s in exp_s:
@@ -2286,6 +2791,8 @@ def SkillProfileDetailView(request, tlt):
         'skills_list_Labels': skills_list_Labels,
         'skills_hours_skill_data': skills_hours_skill_data,
         'training_skills_hours_skill_data': training_skills_hours_skill_data,
+        'skills_count': skills_count,
+        'dept_skills_link': dept_skills_link,
         'edt_set': edt_set, 'exp_set': exp_set, 'tlt_p': tlt_p, 'tlt': tlt,
     }
     return render(request, template, context)
