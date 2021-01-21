@@ -6,7 +6,31 @@
 
   <div style="">
     <p>Hi {{ user }}!,</p>
-    <p>A friendly reminder of the activity on your account in the last week. Please click here to log-in to your <a href="https://app.mywexlog.com/">MyWeXlog</a> account to validate the experience items that have been requested of you.</p>
+    <p>A friendly reminder of the activity on your account in the last week. Please click here to log-in to your <a href="https://app.mywexlog.com/">MyWeXlog</a> account to apply for vacancies or validate the experience items that have been requested of you.</p>
+
+    {% if rem_vac == 0 %}
+    <p><strong>There are currently {{ tr_count }} vacancies that are listed with MyWeXlog that may match your skillset. You need to log-on, update your profile and capture experience to make use of the bennefits currently available.<strong></p>
+    {% endif %}
+
+    {% if rem_vac > 0 %}
+    <p><strong>There are {{ rem_vac }} vacancies that match the skillset you have currently available.<strong></p>
+    <ul>
+      {% for item in dsd %}
+        <li><strong>{{ item.title|truncatechars:37 }}</strong><br>
+          {{ item.hours_required|intcomma }} Hours ({{ item.get_unit_display }}) @ {{ item.rate_offered|intcomma }} {{ item.currency }} {{ item.get_rate_unit_display }}<br>
+          {{ item.worklocation }} in {{ item.city }}<br>
+          <strong>Scope:</strong><br>
+          {{ item.scope|truncatechars:250 }}}}<br>
+          <strong>Expectations:</strong><br>
+          {{ item.expectations|truncatechars:250 }}
+        </li>
+      {% endfor %}
+      {% if rem_vac > 5 %}
+        <li><a href="{% url 'MarketPlace:Entrance' %}">More ..</a></li>
+      {% endif %}
+      </ul>
+    <br>
+    {% endif %}
 
     {% if edu_req_lect_count > 0 %}
     <p><strong>List of confirmations with you as the lecturer<strong></p>
@@ -24,7 +48,7 @@
     <p>You have <strong>{{ edu_req_cm_count }}</strong> requisitions with you as a class mate.<p>
     <ul>
       {% for item in edu_req_cm %}
-        <li>{{ item.date_captured }} - {{ item.colleague.get_full_name }} {{ item.education.course }} {{ item.education.topic }}</li>
+        <li>{{ item.date_captured }}: {{ item.colleague.get_full_name }} - {{ item.education.course }} {{ item.education.topic }}</li>
       {% endfor %}
     </ul>
     <br>
@@ -32,10 +56,10 @@
 
     {% if exp_req_clg_count > 0 %}
     <p><strong>List of confirmations with you as a work colleague<strong></p>
-    <p>You have <strong>{{ exp_req_clg_count }}</strong> requisitions with you as a class mate.<p>
+    <p>You have <strong>{{ exp_req_clg_count }}</strong> requisitions with you as a work colleague.<p>
     <ul>
       {% for item in exp_req_clg %}
-        <li>{{ item.date_captured }} - {{ item.experience.talent.get_full_name }} {{ item.experience.company.ename }} {{ item.experience.companybranch.name }}</li>
+        <li>{{ item.date_captured }}: {{ item.experience.talent.get_full_name }} - {{ item.experience.company.ename }} {{ item.experience.companybranch.name }}</li>
       {% endfor %}
     </ul>
     <br>
@@ -46,7 +70,7 @@
     <p>You have <strong>{{ exp_req_sup_count }}</strong> requisitions with you as a superior.<p>
     <ul>
       {% for item in exp_req_sup %}
-        <li>{{ item.date_captured }} - {{ item.experience.talent.get_full_name }} {{ item.experience.company.ename }} {{ item.experience.companybranch.name }}</li>
+        <li>{{ item.date_captured }}: {{ item.experience.talent.get_full_name }} - {{ item.experience.company.ename }} {{ item.experience.companybranch.name }}</li>
       {% endfor %}
     </ul>
     <br>
@@ -57,7 +81,7 @@
     <p>You have <strong>{{ exp_req_clb_count }}</strong> requisitions with you as a work collaborator.<p>
     <ul>
       {% for item in exp_req_clb %}
-        <li>{{ item.date_captured }} - {{ item.experience.talent.get_full_name }} {{ item.experience.company.ename }} {{ item.experience.companybranch.name }}</li>
+        <li>{{ item.date_captured }}: {{ item.experience.talent.get_full_name }} - {{ item.experience.company.ename }} {{ item.experience.companybranch.name }}</li>
       {% endfor %}
     </ul>
     <br>
@@ -68,8 +92,22 @@
     <p>You have <strong>{{ exp_req_clt_count }}</strong> requisitions with you as a client.<p>
     <ul>
       {% for item in exp_req_clt %}
-        <li>{{ item.date_captured }} - {{ item.experience.talent.get_full_name }} {{ item.experience.company.ename }} {{ item.experience.companybranch.name }}</li>
+        <li>{{ item.date_captured }}: {{ item.experience.talent.get_full_name }} - {{ item.experience.company.ename }} {{ item.experience.companybranch.name }}</li>
       {% endfor %}
+    </ul>
+    <br>
+    {% endif %}
+
+    {% if invitation_sent_count > 0 %}
+    <p><strong>List of invitations sent not yet responded<strong></p>
+    <p>You have <strong>{{ invitation_sent_count }}</strong> invitations sent where the recipient has not yet responded.<p>
+    <ul>
+      {% for item in invitation_sent %}
+        <li>{{ item.name }} {{ item.surname }}: {{ item.date_invited|date:"j M Y" }} - {{ tem.email }}</li>
+      {% endfor %}
+      {% if invitation_sent_count > 5 %}
+        <li><a href="{% url 'Invitation:InvitationsSent' %}">More ..</a></li>
+      {% endif %}
     </ul>
     <br>
     {% endif %}
