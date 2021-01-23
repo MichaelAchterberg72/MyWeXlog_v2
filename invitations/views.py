@@ -540,7 +540,8 @@ def email_test_view(request):
     invitation_sent = invitation_sent_qs[:5]
     invitation_sent_count = invitation_sent_qs.count()
 
-    template = 'email/weekly/weekly_email_update.html'
+    template = 'invitations/invitation_email.html'
+#    template = 'email/weekly/weekly_email_update.html'
     context = {
         'rem_vac': rem_vac,
         'dsd': dsd,
