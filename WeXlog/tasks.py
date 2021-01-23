@@ -15,6 +15,7 @@ from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.template.loader import get_template
+from django.db.models import Count, Sum, F, Q
 
 import sendgrid
 import os
@@ -24,9 +25,13 @@ from sendgrid.helpers.mail import (Mail, Subject, To, ReplyTo, SendAt, Content, 
 import datetime
 from datetime import timedelta
 
+from WeXlog.app_config import (
+    skill_pass_score,
+)
+
 from payments.tasks import FreeMonthExpiredTask
 
-from users.models import CustomUser, ExpandedView
+from users.models import CustomUser, CustomUserSettings, ExpandedView
 
 from talenttrack.models import (
         WorkExperience, Lecturer, ClassMates, WorkColleague, Superior, WorkClient,  WorkCollaborator, LicenseCertification
@@ -37,7 +42,7 @@ from marketplace.models import (
 
 from db_flatten.models import SkillTag
 
-from Profile.models import PhysicalAddress, LanguageTrack
+from Profile.models import PhysicalAddress, LanguageTrack, WillingToRelocate
 
 from invitations.models import Invitation
 
@@ -162,7 +167,8 @@ def UpgradeRefunds():
 @celery_app.task(name="WeeklyUpdateEmail")
 @periodic_task(run_every=(crontab(day_of_week=1, hour=0, minute=0)), name="WeeklyUpdateEmail", ignore_result=True)
 def weekly_email():
-    users = CustomUser.objects.all()
+    user_settings = CustomUserSettings.objects.filter(Q(unsubscribe=False) & Q(receive_newsletter=True)).values_list('Talent__id')
+    users = CustomUser.objects.filter(id__icontains=user_settings)
 
     for talent in users:
         username = CustomUser.objects.get(pk=talent.id)
@@ -333,8 +339,8 @@ def weekly_email():
         edu_req_cm = ClassMates.objects.filter(Q(confirm='S') & Q(colleague=talent)).order_by('-date_captured')
         exp_req_clg = WorkColleague.objects.filter(Q(confirm='S') & Q(colleague_name=talent)).order_by('-date_captured')
         exp_req_sup = Superior.objects.filter(Q(confirm='S') & Q(superior_name=talent)).order_by('-date_captured')
-        exp_req_clt = WorkClient.objects.filter(Q(confirm='S') & Q(collaborator_name=talent)).order_by('-date_captured')
-        exp_req_clb = WorkCollaborator.objects.filter(Q(confirm='S') & Q(client_name=talent)).order_by('-date_captured')
+        exp_req_clt = WorkClient.objects.filter(Q(confirm='S') & Q(client_name=talent)).order_by('-date_captured')
+        exp_req_clb = WorkCollaborator.objects.filter(Q(confirm='S') & Q(collaborator_name=talent)).order_by('-date_captured')
 
         edu_req_lect_count = edu_req_lect.count()
         edu_req_cm_count = edu_req_cm.count()
@@ -379,7 +385,7 @@ def weekly_email():
                 'user': username.first_name,
                 'user_email': username.email,
                 }
-            html_message = render_to_string('templates/email/weekly/weekly_email_update.html', context)
+            html_message = render_to_string('email/weekly/weekly_email_update.html', context)
             plain_message = strip_tags(html_message)
 
             message = Mail(

@@ -7,6 +7,7 @@
 
 {% load static %}
 
+{% block heading %}Registration Confirmation{% endblock heading %}
 {% block content %}
 
 <p>{% autoescape off %}{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}Hello from {{ site_name }},</p>
