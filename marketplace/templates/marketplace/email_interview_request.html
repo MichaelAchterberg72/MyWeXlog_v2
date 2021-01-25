@@ -8,7 +8,7 @@
     {{ form.instance.invited_by.first_name }} {{ form.instance.invited_by.last_name }} interview
 
 {% endblock title %}
-
+{% block heading %}Interview Request{% endblock heading %}
 {% block content %}
 
       <p>Hi {{ talent.first_name }},</p>

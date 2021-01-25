@@ -3,6 +3,8 @@
 {% load humanize %}
 {% load static %}
 
+{% block heading %}Request to Validate{% endblock heading %}
+
 {% block content %}
 
       <p>Hi {{ recipient.first_name }},</p>
@@ -11,7 +13,7 @@
       <p><strong>{{ form.instance.subject }},</strong></p>
       <p>{{ form.instance.message }}</p>
       <br>
-      
+
       <p>MyWeXlog is a live experience log on which you can capture your experience and associate skills with that experience. Then, depending on your subscription, you can either search for companies looking for your skills or find people that have skills you require.</p>
       <p>All skills are confirmed by other people, as {{ sender.first_name }} is asking you to do for them right now.</p>
       <br>

@@ -9,7 +9,7 @@
     {{ form.instance.invited_by.first_name }} {{ form.instance.invited_by.last_name }} Assigned
 
 {% endblock title %}
-
+{% block heading %}Successful Vacancy Assignment{% endblock heading %}
 {% block content %}
 
       <p>Hi {{ talent.first_name }},</p>

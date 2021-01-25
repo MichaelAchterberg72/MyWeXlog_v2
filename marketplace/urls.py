@@ -8,7 +8,6 @@ app_name = 'MarketPlace'
 
 urlpatterns = [
     path('entrance/', views.MarketHome, name='Entrance'),
-    path('entrance-1/', views.MarketHome_test1, name='Entrance1'),
     path('vacancy-viewed-updated/', views.VacancyViewedJsonView, name='VacancyViewedJson'),
     path('close-vacancy/<int:tlt>/<int:vac>/', views.CloseVacancyAvailableCard, name='CloseVacancy'),
     path('minimise-vacancy/<int:tlt>/<int:vac>/', views.MinimiseVacancyAvailableCard, name='MinimiseVacancy'),
