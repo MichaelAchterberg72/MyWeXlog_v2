@@ -15,16 +15,26 @@
   {% if request.user.id == tlt_p.id %}
   <div class="row">
     <div class="col-sm-12">
-    <div class="border-0">
-      <div class="btn-toolbar float-right">
-        <a href="{% url 'Talent:APV' tlt=request.user.alias vac='1ad9t2' %}" class="btn btn-success">Public Profile</a>
-        &nbsp
-        <a href="{% url 'Talent:Home' %}" class="btn btn-secondary">Experience Home</a>
+      <div class="border-0">
+        <div class="btn-toolbar float-right">
+          {% if request.user.id == tlt_p.id %}
+            <a href="{% url 'Talent:APV' tlt=request.user.alias vac='1ad9t2' %}" class="btn btn-success">
+              My Public Profile
+            </a>
+            &nbsp
+          {% else %}
+
+          {% endif %}
+          <a href="{% url 'Talent:Home' %}" class="btn btn-secondary">
+            Experience Home
+          </a>
+        </div>
+        <div class="btn-toolbar">
+          <a href="{% url 'Talent:DPCSum' tlt=request.user.alias %}" class="btn btn-primary">
+            Designation, Project & Company Summary
+          </a>
+        </div>
       </div>
-      <div class="btn-toolbar">
-        <a href="{% url 'Talent:DPCSum' tlt=request.user.alias %}" class="btn btn-primary">Designation, Project & Company Summary</a>
-      </div>
-    </div>
     </div>
   </div>
   <br>
@@ -46,103 +56,110 @@
   {% endif %}
   <div class="card card-shadow">
     <div class="card-body">
-  <div style="overflow-x: scroll">
-  <div id="chart-container" style="position: relative;  width:auto;">
+      <div style="overflow-x: scroll">
+        <div id="chart-container" style="position: relative;  width:auto;">
 
-  <h4>Skills List</h4>
-  <p class="short-paragraph">Total Hours of Training & Experience by Skill Currently Possessed.</p>
-  <p class="small-paragraph"><small>Skills included are all skills and hours relating to them that have been logged.  <br>(Only validated skills that have received a score of 3 or more will appear on your Public Profile.)</small></p>
-  <br>
-  <canvas id="hours-experience-by-skill-chart" height="100px"></canvas>
-  <script>
-  window.onload = function() {
-    var hours_experience_by_skill_ctx = document.getElementById('hours-experience-by-skill-chart').getContext('2d');
-    window.myChart = new Chart(hours_experience_by_skill_ctx, hours_experience_by_skill_config);
-  };
+        <h4>Skills List</h4>
+        <p class="short-paragraph">
+          Total Hours of Training & Experience by Skill Currently Possessed.
+        </p>
+        <p class="small-paragraph">
+          <small>
+            Skills included are all skills and hours relating to them that have been logged.<br>(Only validated skills that have received a score of 3 or more will appear on your Public Profile.)
+          </small>
+        </p>
+        <br>
+        <canvas id="hours-experience-by-skill-chart" height="100px"></canvas>
+        <script>
+        window.onload = function() {
+          var hours_experience_by_skill_ctx = document.getElementById('hours-experience-by-skill-chart').getContext('2d');
+          window.myChart = new Chart(hours_experience_by_skill_ctx, hours_experience_by_skill_config);
+        };
 
-  var hours_experience_by_skill_config = {
-    type: 'bar',
-    data: {
-        labels: {{ skills_list_Labels|safe }},
-        datasets: [{
-          label: 'Total Hours Experience by Skill',
-          data: {{ skills_hours_skill_data|safe }},
-          order: 3,
-            backgroundColor: ['#B6D8F2', '#F4CFDF', '#5784BA', '#C54B6C', '#F5BFD2', '#E5DB9C', '#D0BCAC', '#BEB4C5', '#E6A57E', '#218B82', '#9AD9DB', '#E5DBD9', '#98D4BB', '#EB96AA', '#C6C9D0', '#C54B6C', '#E5B3BB', '#C47482', '#D5E4C3', '#F9968B', '#F27348', '#26474E', '#76CDCD', '#2CCED2', '#B8E0F6', '#A4CCE3', '#37667E', '#DEC4D6', '#7B92AA', '#B8E0F6', '#A4CCE3', '#37667E', '#DEC4D6', '#7B92AA', '#DDF2F4', '#84A6D6', '#4382BB', '#E4CEE0', '#A15D98', '#DC828F', '#F7CE76', '#E8D6CF', '#8C7386', '#9C9359', '#E9BBB5', '#E7CBA9', '#AAD9CD', '#E8D595', '#8DA47E', '#CAE7E3', '#B2B2B2', '#EEB8C5', '#DCDBD9', '#FEC7BC', '#8EA4C8', '#C3B8AA', '#DEDCE4', '#DB93A5', '#C7CDC5',
-            ],
-            borderColor: [
+        var hours_experience_by_skill_config = {
+          type: 'bar',
+          data: {
+              labels: {{ skills_list_Labels|safe }},
+              datasets: [{
+                label: 'Total Hours Experience by Skill',
+                data: {{ skills_hours_skill_data|safe }},
+                order: 3,
+                  backgroundColor: ['#B6D8F2', '#F4CFDF', '#5784BA', '#C54B6C', '#F5BFD2', '#E5DB9C', '#D0BCAC', '#BEB4C5', '#E6A57E', '#218B82', '#9AD9DB', '#E5DBD9', '#98D4BB', '#EB96AA', '#C6C9D0', '#C54B6C', '#E5B3BB', '#C47482', '#D5E4C3', '#F9968B', '#F27348', '#26474E', '#76CDCD', '#2CCED2', '#B8E0F6', '#A4CCE3', '#37667E', '#DEC4D6', '#7B92AA', '#B8E0F6', '#A4CCE3', '#37667E', '#DEC4D6', '#7B92AA', '#DDF2F4', '#84A6D6', '#4382BB', '#E4CEE0', '#A15D98', '#DC828F', '#F7CE76', '#E8D6CF', '#8C7386', '#9C9359', '#E9BBB5', '#E7CBA9', '#AAD9CD', '#E8D595', '#8DA47E', '#CAE7E3', '#B2B2B2', '#EEB8C5', '#DCDBD9', '#FEC7BC', '#8EA4C8', '#C3B8AA', '#DEDCE4', '#DB93A5', '#C7CDC5',
+                  ],
+                  borderColor: [
 
-            ],
-            borderWidth: 1
-        }, {
-          label: 'Validated Hours Experience by Skill',
-          data: {{ val_skills_hours_skill_data|safe }},
-          type: 'line',
-          order: 1,
-          fill: false,
-          borderColor: '#0000FF',
-          borderWidth: 2,
-          pointBorderWidth: 2,
-          pointStyle: 'circle',
-          pointHitRadius: 20,
-        }, {
-          label: 'Hours Training Experience by Skill',
-          data: {{ training_skills_hours_skill_data|safe }},
-          type: 'line',
-          order: 2,
-          fill: false,
-          borderColor: '#FF0000',
-          borderWidth: 2,
-          pointBorderWidth: 2,
-          pointStyle: 'circle',
-          pointHitRadius: 20,
-        }]
-    },
-    options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true
-                }
-            }]
+                  ],
+                  borderWidth: 1
+              }, {
+                label: 'Validated Hours Experience by Skill',
+                data: {{ val_skills_hours_skill_data|safe }},
+                type: 'line',
+                order: 1,
+                fill: false,
+                borderColor: '#0000FF',
+                borderWidth: 2,
+                pointBorderWidth: 2,
+                pointStyle: 'circle',
+                pointHitRadius: 20,
+              }, {
+                label: 'Hours Training Experience by Skill',
+                data: {{ training_skills_hours_skill_data|safe }},
+                type: 'line',
+                order: 2,
+                fill: false,
+                borderColor: '#FF0000',
+                borderWidth: 2,
+                pointBorderWidth: 2,
+                pointStyle: 'circle',
+                pointHitRadius: 20,
+              }]
           },
-        legend: {
-            display: false,
-            position: 'top',
-            labels: {
-                fontColor: '#0000ff',
-        },
+          options: {
+              scales: {
+                  yAxes: [{
+                      ticks: {
+                          beginAtZero: true
+                      }
+                  }]
+                },
+              legend: {
+                  display: false,
+                  position: 'top',
+                  labels: {
+                      fontColor: '#0000ff',
+              },
 
+              }
+            }
+        };
+
+        var dataList = {{ skills_hours_skill_data|safe }};
+        var count = 0;
+        for(var i = 0; i < dataList.length; ++i){
+            if(dataList[i] >= 0)
+                count++;
         }
-      }
-  };
+        var widthValue = 34 * count;
+        console.log(widthValue)
+        var divWidth = document.getElementById("chart-container");
 
-  var dataList = {{ skills_hours_skill_data|safe }};
-  var count = 0;
-  for(var i = 0; i < dataList.length; ++i){
-      if(dataList[i] >= 0)
-          count++;
-  }
-  var widthValue = 34 * count;
-  var divWidth = document.getElementById("chart-container");
+        if (count > 25){
+          divWidth.style.width = widthValue+"px";
+          }
+        else{
+          divWidth.style.width = "auto";
+          }
 
-  if (count > 25){
-    divWidth.style.width = widthValue+"px";
-    }
-  else{
-    divWidth.style.width = "auto";
-    }
-
-  </script>
-</div>
-</div>
+        </script>
+      </div>
+    </div>
 <br>
   <div class="container">
-  <div class="row">
-    <div class="col-md-12">
-      {% for skl in dept_skills_link %}<a href="{% url 'Talent:SkillsStats' skl.id %}?next={{ request.path|urlencode }}" class="btn btn-outline-success auto mb-1 mr-1 pointer">{{ skl.skill }}</a> {% endfor %}
+    <div class="row">
+      <div class="col-md-12">
+        {% for skl in dept_skills_link %}<a href="{% url 'Talent:SkillsStats' skl.id %}?next={{ request.path|urlencode }}" class="btn btn-outline-success auto mb-1 mr-1 pointer">{{ skl.skill }}</a> {% endfor %}
+      </div>
     </div>
-  </div>
   </div>
   <br>
   <div class="row">
@@ -151,9 +168,9 @@
         <div class="card-body">
         <h5 class="card-title">Experience skills</h5>
         <p>This is a list of the hours you have logged against each skill.</p>
-        <div class="float-right">
-          <input type="text" id="searchE" placeholder="Search..." data-toggle="tooltip" title="Search this list for a skill.">
-        </div>
+          <div class="float-right">
+            <input type="text" id="searchE" placeholder="Search..." data-toggle="tooltip" title="Search this list for a skill.">
+          </div>
         <br>
           <h5 class="text-center"><strong>Skill ( Hours )</strong></h5>
           <ul class="list-group" id="experience">

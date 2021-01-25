@@ -3000,12 +3000,28 @@ def DPC_SummaryView(request, tlt):
         else:
             a = designation_qs.get(pk=d)
             b = a.workexperience_set.all()
-            cnt = b.count()
+
             sum = b.aggregate(sum_d=Sum('hours_worked'))
             sum_float = float(sum.get('sum_d'))
+
+            confirmed = b.filter(score__gte=skill_pass_score)
+            confirmed_s = confirmed.aggregate(sum_dc=Sum('hours_worked'))
+
+            cnt = b.count()
+            cnt_c = confirmed.count()
+            unconfirmed_count = cnt-cnt_c
+
+            sum_c = confirmed_s.get('sum_dc')
+            if sum_c is None:
+                sum_float_c = 0
+            else:
+                sum_float_c = float(sum_c)
+
             info_set = {}
-            info_set['count']=cnt
+            info_set['confirmed']=sum_float_c
+            info_set['cnt_u']=unconfirmed_count
             info_set['sum']=sum_float
+
             designation_q = designation_qs.filter(pk=d).values_list('name', flat=True)
             designation_f = designation_q[0]
             dgn_set[designation_f] = info_set
@@ -3020,12 +3036,28 @@ def DPC_SummaryView(request, tlt):
         else:
             a = companybranch_qs.get(pk=c)
             b = a.workexperience_set.all()
-            cnt = b.count()
+
             sum = b.aggregate(sum_d=Sum('hours_worked'))
             sum_float = float(sum.get('sum_d'))
+
+            confirmed = b.filter(score__gte=skill_pass_score)
+            confirmed_s = confirmed.aggregate(sum_dc=Sum('hours_worked'))
+
+            cnt = b.count()
+            cnt_c = confirmed.count()
+            unconfirmed_count = cnt-cnt_c
+
+            sum_c = confirmed_s.get('sum_dc')
+            if sum_c is None:
+                sum_float_c = 0
+            else:
+                sum_float_c = float(sum_c)
+
             info_set = {}
-            info_set['count']=cnt
+            info_set['confirmed']=sum_float_c
+            info_set['cnt_u']=unconfirmed_count
             info_set['sum']=sum_float
+
             companybranch_q = companybranch_qs.filter(pk=c).values_list('company__ename', 'name', 'city__city')
             companybranch_f = f'{companybranch_q[0][0]}: {companybranch_q[0][1]} ({companybranch_q[0][2]})'
             cmp_set[companybranch_f] = info_set
@@ -3039,12 +3071,28 @@ def DPC_SummaryView(request, tlt):
         else:
             a = project_qs.get(pk=p)
             b = a.workexperience_set.all()
-            cnt = b.count()
+
             sum = b.aggregate(sum_d=Sum('hours_worked'))
             sum_float = float(sum.get('sum_d'))
+
+            confirmed = b.filter(score__gte=skill_pass_score)
+            confirmed_s = confirmed.aggregate(sum_dc=Sum('hours_worked'))
+
+            cnt = b.count()
+            cnt_c = confirmed.count()
+            unconfirmed_count = cnt-cnt_c
+
+            sum_c = confirmed_s.get('sum_dc')
+            if sum_c is None:
+                sum_float_c = 0
+            else:
+                sum_float_c = float(sum_c)
+
             info_set = {}
-            info_set['count']=cnt
+            info_set['confirmed']=sum_float_c
+            info_set['cnt_u']=unconfirmed_count
             info_set['sum']=sum_float
+
             project_q = project_qs.filter(pk=p).values_list('name', 'company__ename', 'companybranch__name')
             project_f = f'{project_q[0][0]}: {project_q[0][1]} ({project_q[0][2]})'
             prj_set[project_f] = info_set
@@ -3075,12 +3123,29 @@ def DPCP_SummaryView(request, tlt):
         else:
             a = designation_qs.get(pk=d)
             b = a.workexperience_set.all()
-            cnt = b.count()
+
             sum = b.aggregate(sum_d=Sum('hours_worked'))
             sum_float = float(sum.get('sum_d'))
+
+            confirmed = b.filter(score__gte=skill_pass_score)
+            confirmed_s = confirmed.aggregate(sum_dc=Sum('hours_worked'))
+
+            cnt = b.count()
+            cnt_c = confirmed.count()
+            unconfirmed_count = cnt-cnt_c
+
+
+
+            sum_c = confirmed_s.get('sum_dc')
+            if sum_c is None:
+                sum_float_c = 0
+            else:
+                sum_float_c = float(sum_c)
+
             info_set = {}
-            info_set['count']=cnt
             info_set['sum']=sum_float
+            info_set['confirmed']=sum_float_c
+            info_set['cnt_u']=unconfirmed_count
             designation_q = designation_qs.filter(pk=d).values_list('name', flat=True)
             designation_f = designation_q[0]
             dgn_set[designation_f] = info_set
@@ -3095,12 +3160,28 @@ def DPCP_SummaryView(request, tlt):
         else:
             a = companybranch_qs.get(pk=c)
             b = a.workexperience_set.all()
-            cnt = b.count()
+
             sum = b.aggregate(sum_d=Sum('hours_worked'))
             sum_float = float(sum.get('sum_d'))
+
+            confirmed = b.filter(score__gte=skill_pass_score)
+            confirmed_s = confirmed.aggregate(sum_dc=Sum('hours_worked'))
+
+            sum_c = confirmed_s.get('sum_dc')
+            if sum_c is None:
+                confirmed_float = 0
+            else:
+                confirmed_float = float(sum_c)
+
+            cnt = b.count()
+            cnt_c = confirmed.count()
+            unconfirmed_count = cnt-cnt_c
+
             info_set = {}
-            info_set['count']=cnt
+            info_set['confirmed']=confirmed_float
             info_set['sum']=sum_float
+            info_set['cnt_u']=unconfirmed_count
+
             companybranch_q = companybranch_qs.filter(pk=c).values_list('company__ename', 'name', 'city__city')
             companybranch_f = f'{companybranch_q[0][0]}: {companybranch_q[0][1]} ({companybranch_q[0][2]})'
             cmp_set[companybranch_f] = info_set
@@ -3114,12 +3195,27 @@ def DPCP_SummaryView(request, tlt):
         else:
             a = project_qs.get(pk=p)
             b = a.workexperience_set.all()
-            cnt = b.count()
             sum = b.aggregate(sum_d=Sum('hours_worked'))
             sum_float = float(sum.get('sum_d'))
+
+            confirmed = b.filter(score__gte=skill_pass_score)
+            confirmed_s = confirmed.aggregate(sum_dc=Sum('hours_worked'))
+
+            sum_c = confirmed_s.get('sum_dc')
+            if sum_c is None:
+                confirmed_float = 0
+            else:
+                confirmed_float = float(sum_c)
+
+            cnt = b.count()
+            cnt_c = confirmed.count()
+            unconfirmed_count = cnt-cnt_c
+
             info_set = {}
-            info_set['count']=cnt
+            info_set['confirmed']=confirmed_float
             info_set['sum']=sum_float
+            info_set['cnt_u']=unconfirmed_count
+
             project_q = project_qs.filter(pk=p).values_list('name', 'company__ename', 'companybranch__name')
             project_f = f'{project_q[0][0]}: {project_q[0][1]} ({project_q[0][2]})'
             prj_set[project_f] = info_set
