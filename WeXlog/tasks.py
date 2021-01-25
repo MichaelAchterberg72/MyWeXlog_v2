@@ -382,7 +382,7 @@ def weekly_email():
                 'exp_req_clb_count': exp_req_clb_count,
                 'invitation_sent': invitation_sent,
                 'invitation_sent_count': invitation_sent_count,
-                'user': username.first_name,
+                'user': username.email,
                 'user_email': username.email,
                 }
             html_message = render_to_string('email/weekly/weekly_email_update.html', context)

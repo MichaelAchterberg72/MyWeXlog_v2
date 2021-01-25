@@ -7,7 +7,7 @@
 {% block content %}
 
   <div style="">
-    <p>Hi {{ user }}!,</p>
+    <p>Hi {{ user.first_name }}!,</p>
     <p>A friendly reminder of the activity on your account in the last week. Please click here to <a href="https://app.mywexlog.com/accounts/login/?next=/Profile/">log-in</a> to your <a href="https://app.mywexlog.com/">MyWeXlog</a> account to apply for vacancies or validate the experience items that have been requested of you.</p>
 
     {% if rem_vac == 0 %}
