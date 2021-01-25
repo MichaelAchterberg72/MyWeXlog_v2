@@ -19,6 +19,8 @@ from Profile.models import (
 from marketplace.models import (
         TalentRequired, BidShortList, BidInterviewList, WorkBid, TalentAvailabillity, WorkIssuedTo, VacancyRate, TalentRate
 )
+
+from locations.models import Region
 from talenttrack.models import (
         Achievements, LicenseCertification, Lecturer, ClassMates, WorkExperience, WorkColleague, Superior, WorkClient, WorkCollaborator
 )
