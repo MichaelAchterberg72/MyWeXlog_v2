@@ -5,7 +5,7 @@
 {% if request.user.id == talent %}
   {{block.super}}-Experience Overview
 {% else %}
-  {{block.super}}-Skill Summary
+  {{block.super}}-Summary
 {% endif %}
 {% endblock title %}
 
@@ -21,13 +21,26 @@
   <h5></h5>
   <div class="row">
     <div class="col-sm-12">
-    <div class="border-0">
-      <div class="">
-        <a href="{% url 'Talent:Home' %}" class="btn btn-secondary float-right">Experience Home</a>
-        <a href="{% url 'Talent:ExperienceSum' tlt %}" class="btn btn-primary">Skills Summary</a>
+      <div class="border-0">
+        <div class="btn-toolbar float-right">
+          {% if request.user.alias == tlt %}
+          <div class="btn-group mr-2">
+            <a href="{% url 'Talent:APV' tlt=request.user.alias vac='1ad9t2' %}" class="btn btn-success  float-right">
+              My Public Profile
+            </a>
+          </div>
+          {% endif %}
+          <div class="btn-group mr-2">
+          <a href="{% url 'Talent:Home' %}" class="btn btn-secondary float-right">
+            Experience Home
+          </a>
+          </div>
+        </div>
+          <a href="{% url 'Talent:ExperienceSum' tlt %}" class="btn btn-primary">
+            Skills Summary
+          </a>
+        </div>
       </div>
-      <br>
-    </div>
     </div>
   </div>
   <div class="row">
@@ -39,17 +52,23 @@
           <table class="table table-sm">
             <thead>
               <tr>
-                <th>Designation</th>
-                <th class="align-middle text-center">Hours</th>
-                <th class="align-middle text-center">Quantity</th>
+                <th class="align-middle text-center">Designation</th>
+                {% if request.user.alias == tlt %}
+                  <th class="align-middle text-center">Hours<br>Captured</th>
+                  <th class="align-middle text-center">Count<br>Unconfirmed</th>
+                {% endif %}
+                <th class="align-middle text-center">Hours<br>Confirmed</th>
               </tr>
             </thead>
             <tbody>
               {% for key in dgn_set.items %}
                 <tr>
                   <td>{{ key.0 }}</td>
-                  <td class="align-middle text-center">{{ key.1.sum|intcomma }}</td>
-                  <td class="align-middle text-center">{{ key.1.count }}</td>
+                  {% if request.user.alias == tlt %}
+                    <td class="align-middle text-center">{{ key.1.sum|intcomma }}</td>
+                    <td class="align-middle text-center">{{ key.1.cnt_u }}</td>
+                  {% endif %}
+                  <td class="align-middle text-center">{{ key.1.confirmed|intcomma }}</td>
                 </tr>
               {% endfor %}
             </tbody>
@@ -66,17 +85,24 @@
           <table class="table table-sm">
             <thead>
               <tr>
-                <th>Company & Branch</th>
-                <th class="align-middle text-center">Hours</th>
-                <th class="align-middle text-center">Quantity</th>
+                <th class="align-middle text-center">Company & Branch</th>
+                {% if request.user.alias == tlt %}
+                  <th class="align-middle text-center">Hours<br>Captured</th>
+                  <th class="align-middle text-center">Count<br>Unconfirmed</th>
+                {% endif %}
+                <th class="align-middle text-center">Hours<br>Confirmed</th>
+              </tr>
               </tr>
             </thead>
             <tbody>
               {% for key in cmp_set.items %}
                 <tr>
                   <td>{{ key.0 }}</td>
-                  <td class="align-middle text-center">{{ key.1.sum|intcomma }}</td>
-                  <td class="align-middle text-center">{{ key.1.count|intcomma }}</td>
+                  {% if request.user.alias == tlt %}
+                    <td class="align-middle text-center">{{ key.1.sum|intcomma }}</td>
+                    <td class="align-middle text-center">{{ key.1.cnt_u }}</td>
+                  {% endif %}
+                  <td class="align-middle text-center">{{ key.1.confirmed|intcomma }}</td>
                 </tr>
               {% endfor %}
             </tbody>
@@ -95,17 +121,23 @@
           <table class="table table-sm">
             <thead>
               <tr>
-                <th>Project & Client</th>
-                <th class="align-middle text-center">Hours</th>
-                <th class="align-middle text-center">Quantity</th>
+                <th class="align-middle text-center">Project & Client</th>
+                {% if request.user.alias == tlt %}
+                  <th class="align-middle text-center">Hours<br>Captured</th>
+                  <th class="align-middle text-center">Count<br>Unconfirmed</th>
+                {% endif %}
+                <th class="align-middle text-center">Hours<br>Confirmed</th>
               </tr>
             </thead>
             <tbody>
               {% for key in prj_set.items %}
                 <tr>
                   <td>{{ key.0 }}</td>
-                  <td class="align-middle text-center">{{ key.1.sum|intcomma }}</td>
-                  <td class="align-middle text-center">{{ key.1.count|intcomma }}</td>
+                  {% if request.user.alias == tlt %}
+                    <td class="align-middle text-center">{{ key.1.sum|intcomma }}</td>
+                    <td class="align-middle text-center">{{ key.1.cnt_u }}</td>
+                  {% endif %}
+                  <td class="align-middle text-center">{{ key.1.confirmed|intcomma }}</td>
                 </tr>
               {% endfor %}
             </tbody>
