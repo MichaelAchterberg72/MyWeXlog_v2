@@ -9,32 +9,45 @@
   <div style="">
     <p>Hi {{ user.first_name }}!,</p>
     <p>A friendly reminder of the activity on your account in the last week. Please click here to <a href="https://app.mywexlog.com/accounts/login/?next=/Profile/">log-in</a> to your <a href="https://app.mywexlog.com/">MyWeXlog</a> account to apply for vacancies or validate the experience items that have been requested of you.</p>
+    <br>
 
     {% if rem_vac == 0 %}
-    <p><strong>There are currently {{ tr_count }} vacancies that are listed with MyWeXlog that may match your skillset. You need to log-on, update your profile and capture experience to make use of the bennefits currently available.</strong></p>
+    <p style="border-top: thin solid black; padding-top: 30px;"><strong>Current Vacancies Available</strong><br>
+    There are currently {{ tr_count }} vacancies that are listed with MyWeXlog that may match your skillset. You need to <a href="https://app.mywexlog.com/accounts/login/?next=/Profile/">log-in</a>, update your profile and capture experience to make use of the benefits currently available.</p>
+      <br>
     {% endif %}
 
     {% if rem_vac > 0 %}
-    <p><strong>There are {{ rem_vac }} vacancies that match the skillset you have currently available.</strong></p>
-    <ul>
+    <p style="border-top: thin solid black; border-bottom: thin solid black; padding: 30px 30px 30px 30px; font-size: 22px; text-align: center; text-transform: uppercase;"><strong>There are currently {{ rem_vac }} vacancies available that match your skillset</strong></p>
       {% for item in dsd %}
-        <li><strong>{{ item.title|truncatechars:37 }}</strong><br>
+        <div style="border-bottom: thin solid black; width:97%; padding: 10px; padding-bottom: 58px;">
+          <p><strong>{{ item.title|truncatechars:37 }}</strong><br>
           {{ item.hours_required|intcomma }} Hours ({{ item.get_unit_display }}) @ {{ item.rate_offered|intcomma }} {{ item.currency }} {{ item.get_rate_unit_display }}<br>
-          {{ item.worklocation }} in {{ item.city }}<br>
-          <strong>Scope:</strong><br>
-          {{ item.scope|truncatechars:250 }}<br>
-          <strong>Expectations:</strong><br>
-          {{ item.expectations|truncatechars:250 }}
-        </li>
+          {{ item.worklocation }} in {{ item.city }}</p>
+          <p><strong>Scope:</strong><br>
+          {{ item.scope|truncatechars:266 }}</p>
+          <p><strong>Expectations:</strong><br>
+          {{ item.expectations|truncatechars:266 }}</p>
+          <a href="{{site}}{% url 'MarketPlace:VacancyDetail' item.ref_no %}" target="_blank">
+          <div onmouseover="this.style.backgroundColor='dodgerblue';this.style.color='#FFF'" onmouseout="this.style.backgroundColor='#FFF';this.style.color='dodgerblue'" style="border: 2px solid dodgerblue; color: dodgerblue; background-color: inherit; text-align:right;  float: right; margin-bottom: 8px; -webkit-border-radius: 5px; border-radius: 5px; padding: 14px 28px; font-size: 16px; cursor: pointer; display: inline-block;">Apply Now</div></a>
+        </div>
       {% endfor %}
       {% if rem_vac > 5 %}
-        <li><a href="{% url 'MarketPlace:Entrance' %}">More ..</a></li>
+      <br>
+        <a style="padding: 10px; padding-bottom: 58px;" href="{% url 'MarketPlace:Entrance' %}" target="_blank">View More ..</a>
+        <div style="padding: 60px; padding-bottom: 58px;"></div>
+      {% else %}
+      <div style="padding: 60px; padding-bottom: 58px;"></div>
       {% endif %}
-      </ul>
     <br>
     {% endif %}
 
+    {% if sum_req > 0 %}
+    <p style="border-top: thin solid black; border-bottom: thin solid black; padding: 30px 30px 30px 30px; font-size: 22px; text-align: center; text-transform: uppercase;"><strong>There are currently {{ sum_req }} validations requested of you.</strong></p>
+    {% endif %}
+
     {% if edu_req_lect_count > 0 %}
+    <div style="border-bottom: thin solid black; width:97%; padding: 10px; padding-bottom: 58px;">
     <p><strong>List of confirmations with you as the lecturer</strong><br>
     You have <strong>{{ edu_req_lect_count }}</strong> requisitions with you as a Lecturer.<p>
     <ul>
@@ -42,10 +55,14 @@
         <li>{{ item.date_captured }} - {{ item.lecturer.get_full_name }} {{ item.education.course }} {{ item.education.topic }}</li>
       {% endfor %}
     </ul>
+    <a href="{{site}}{% url 'Profile:Confirm' %}#Lect" target="_blank">
+    <div onmouseover="this.style.backgroundColor='dodgerblue';this.style.color='#FFF'" onmouseout="this.style.backgroundColor='#FFF';this.style.color='dodgerblue'" style="border: 2px solid dodgerblue; color: dodgerblue; background-color: inherit; text-align:right;  float: right; margin-bottom: 8px; -webkit-border-radius: 5px; border-radius: 5px; padding: 14px 28px; font-size: 16px; cursor: pointer; display: inline-block;">Validate Now</div></a>
+    </div>
     <br>
     {% endif %}
 
     {% if edu_req_cm_count > 0 %}
+    <div style="border-bottom: thin solid black; width:97%; padding: 10px; padding-bottom: 58px;">
     <p><strong>List of confirmations with you as a class mate</strong><br>
     You have <strong>{{ edu_req_cm_count }}</strong> requisitions with you as a class mate.<p>
     <ul>
@@ -53,10 +70,14 @@
         <li>{{ item.date_captured }}: {{ item.colleague.get_full_name }} - {{ item.education.course }} {{ item.education.topic }}</li>
       {% endfor %}
     </ul>
+    <a href="{{site}}{% url 'Profile:Confirm' %}#Cm" target="_blank">
+    <div onmouseover="this.style.backgroundColor='dodgerblue';this.style.color='#FFF'" onmouseout="this.style.backgroundColor='#FFF';this.style.color='dodgerblue'" style="border: 2px solid dodgerblue; color: dodgerblue; background-color: inherit; text-align:right;  float: right; margin-bottom: 8px; -webkit-border-radius: 5px; border-radius: 5px; padding: 14px 28px; font-size: 16px; cursor: pointer; display: inline-block;">Validate Now</div></a>
+    </div>
     <br>
     {% endif %}
 
     {% if exp_req_clg_count > 0 %}
+    <div style="border-bottom: thin solid black; width:97%; padding: 10px; padding-bottom: 58px;">
     <p><strong>List of confirmations with you as a work colleague</strong><br>
     You have <strong>{{ exp_req_clg_count }}</strong> requisitions with you as a work colleague.<p>
     <ul>
@@ -64,10 +85,14 @@
         <li>{{ item.date_captured }}: {{ item.experience.talent.get_full_name }} - {{ item.experience.company.ename }} {{ item.experience.companybranch.name }}</li>
       {% endfor %}
     </ul>
+    <a href="{{site}}{% url 'Profile:Confirm' %}#Clg" target="_blank">
+    <div onmouseover="this.style.backgroundColor='dodgerblue';this.style.color='#FFF'" onmouseout="this.style.backgroundColor='#FFF';this.style.color='dodgerblue'" style="border: 2px solid dodgerblue; color: dodgerblue; background-color: inherit; text-align:right;  float: right; margin-bottom: 8px; -webkit-border-radius: 5px; border-radius: 5px; padding: 14px 28px; font-size: 16px; cursor: pointer; display: inline-block;">Validate Now</div></a>
+    </div>
     <br>
     {% endif %}
 
     {% if exp_req_sup_count > 0 %}
+    <div style="border-bottom: thin solid black; width:97%; padding: 10px; padding-bottom: 58px;">
     <p><strong>List of confirmations with you as a superior</strong><br>
     You have <strong>{{ exp_req_sup_count }}</strong> requisitions with you as a superior.<p>
     <ul>
@@ -75,21 +100,14 @@
         <li>{{ item.date_captured }}: {{ item.experience.talent.get_full_name }} - {{ item.experience.company.ename }} {{ item.experience.companybranch.name }}</li>
       {% endfor %}
     </ul>
-    <br>
-    {% endif %}
-
-    {% if exp_req_clb_count > 0 %}
-    <p><strong>List of confirmations with you as a work collaborator</strong><br>
-    You have <strong>{{ exp_req_clb_count }}</strong> requisitions with you as a work collaborator.<p>
-    <ul>
-      {% for item in exp_req_clb %}
-        <li>{{ item.date_captured }}: {{ item.experience.talent.get_full_name }} - {{ item.experience.company.ename }} {{ item.experience.companybranch.name }}</li>
-      {% endfor %}
-    </ul>
+    <a href="{{site}}{% url 'Profile:Confirm' %}#Sup" target="_blank">
+    <div onmouseover="this.style.backgroundColor='dodgerblue';this.style.color='#FFF'" onmouseout="this.style.backgroundColor='#FFF';this.style.color='dodgerblue'" style="border: 2px solid dodgerblue; color: dodgerblue; background-color: inherit; text-align:right;  float: right; margin-bottom: 8px; -webkit-border-radius: 5px; border-radius: 5px; padding: 14px 28px; font-size: 16px; cursor: pointer; display: inline-block;">Validate Now</div></a>
+    </div>
     <br>
     {% endif %}
 
     {% if exp_req_clt_count > 0 %}
+    <div style="border-bottom: thin solid black; width:97%; padding: 10px; padding-bottom: 58px;">
     <p><strong>List of confirmations with you as a client</strong><br>
     You have <strong>{{ exp_req_clt_count }}</strong> requisitions with you as a client.<p>
     <ul>
@@ -97,7 +115,29 @@
         <li>{{ item.date_captured }}: {{ item.experience.talent.get_full_name }} - {{ item.experience.company.ename }} {{ item.experience.companybranch.name }}</li>
       {% endfor %}
     </ul>
+    <a href="{{site}}{% url 'Profile:Confirm' %}#Clt" target="_blank">
+    <div onmouseover="this.style.backgroundColor='dodgerblue';this.style.color='#FFF'" onmouseout="this.style.backgroundColor='#FFF';this.style.color='dodgerblue'" style="border: 2px solid dodgerblue; color: dodgerblue; background-color: inherit; text-align:right;  float: right; margin-bottom: 8px; -webkit-border-radius: 5px; border-radius: 5px; padding: 14px 28px; font-size: 16px; cursor: pointer; display: inline-block;">Validate Now</div></a>
+    </div>
     <br>
+    {% endif %}
+
+    {% if exp_req_clb_count > 0 %}
+    <div style="border-bottom: thin solid black; width:97%; padding: 10px; padding-bottom: 58px;">
+    <p><strong>List of confirmations with you as a work collaborator</strong><br>
+    You have <strong>{{ exp_req_clb_count }}</strong> requisitions with you as a work collaborator.<p>
+    <ul>
+      {% for item in exp_req_clb %}
+        <li>{{ item.date_captured }}: {{ item.experience.talent.get_full_name }} - {{ item.experience.company.ename }} {{ item.experience.companybranch.name }}</li>
+      {% endfor %}
+    </ul>
+    <a href="{{site}}{% url 'Profile:Confirm' %}#Clb" target="_blank">
+    <div onmouseover="this.style.backgroundColor='dodgerblue';this.style.color='#FFF'" onmouseout="this.style.backgroundColor='#FFF';this.style.color='dodgerblue'" style="border: 2px solid dodgerblue; color: dodgerblue; background-color: inherit; text-align:right;  float: right; margin-bottom: 8px; -webkit-border-radius: 5px; border-radius: 5px; padding: 14px 28px; font-size: 16px; cursor: pointer; display: inline-block;">Validate Now</div></a>
+    </div>
+    <br>
+    {% endif %}
+
+    {% if invitation_sent_count > 0 %}
+    <p style="border-top: thin solid black; border-bottom: thin solid black; padding: 30px 30px 30px 30px; font-size: 22px; text-align: center; text-transform: uppercase;"><strong>Invitations not yet responded to</strong></p>
     {% endif %}
 
     {% if invitation_sent_count > 0 %}

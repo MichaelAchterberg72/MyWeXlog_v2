@@ -369,6 +369,7 @@ def weekly_email():
                 'dsd': dsd,
                 'tr_count': tr_count,
                 'edu_req_lect': edu_req_lect,
+                'sum_req': sum_req,
                 'edu_req_cm': edu_req_cm,
                 'exp_req_clg': exp_req_clg,
                 'exp_req_sup': exp_req_sup,
