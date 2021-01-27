@@ -30,40 +30,40 @@ def show_me_the_money(sender, instance, **kwargs):
     instance2 = ExpandedView.objects.get(talent=ipn_username.pk)
 
     if ipn_obj.item_name == "MyWeXlog Passive Subscription":
-        price = "3.99"
+        price = "4.99"
 
     elif ipn_obj.item_name == "MyWeXlog 6 Month Passive Subscription":
-        price = "22.00"
+        price = "28.44"
 
     elif ipn_obj.item_name == "MyWeXlog 12 Month Passive Subscription":
-        price = "43.56"
+        price = "56.58"
 
     elif ipn_obj.item_name == "MyWeXlog Active Subscription" or "MyWeXlog Active Subscription Upgrade":
-        price = "5.20"
+        price = "6.89"
 
     elif ipn_obj.item_name == "MyWeXlog 6 Month Active Subscription" or "MyWeXlog 6 Month Active Subscription Upgrade":
-        price = "29.20"
+        price = "39.84"
 
     elif ipn_obj.item_name == "MyWeXlog 12 Month Active Subscription" or "MyWeXlog 12 Month Active Subscription Upgrade":
-        price = "57.96"
+        price = "79.38"
 
     elif ipn_obj.item_name == "MyWeXlog Passive Subscription - Beta":
-        price = "3.99" or "0.00"
+        price = "4.99" or "0.00"
 
     elif ipn_obj.item_name == "MyWeXlog 6 Month Passive Subscription - Beta":
-        price = "22.00" or "0.00"
+        price = "28.44" or "0.00"
 
     elif ipn_obj.item_name == "MyWeXlog 12 Month Passive Subscription - Beta":
-        price = "43.56" or "0.00"
+        price = "56.58" or "0.00"
 
     elif ipn_obj.item_name == "MyWeXlog Active Subscription - Beta":
-        price = "5.20" or "0.00"
+        price = "6.89" or "0.00"
 
     elif ipn_obj.item_name == "MyWeXlog 6 Month Active Subscription - Beta":
-        price = "29.20" or "0.00"
+        price = "39.84" or "0.00"
 
     elif ipn_obj.item_name == "MyWeXlog 12 Month Active Subscription - Beta":
-        price = "57.96" or "0.00"
+        price = "79.38" or "0.00"
 
     else:
         pass

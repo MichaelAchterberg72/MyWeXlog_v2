@@ -1,0 +1,174 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+    <meta content="width=device-width" name="viewport"/>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+  <title>{% block title %}MyWeXlog{% endblock title %}</title>
+  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+  <style>
+    @import url('https://fonts.googleapis.com/css?family=Montserrat');
+    @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
+  </style>
+  <style type="text/css">
+    body {margin:0;padding:0;}
+    table, td, tr {vertical-align: top;border-collapse: collapse;}
+    * {line-height: inherit;}
+    a[x-apple-data-detectors=true] {color: inherit !important;text-decoration: none !important;}
+  </style>
+  {% block Style %}
+  {% endblock Style %}
+</head>
+<body style="background-color: #f2f2f7; margin: 0; padding: 0; -webkit-text-size-adjust: 100%;">
+<table bgcolor="#f2f2f7" cellpadding="0" cellspacing="0" role="presentation" style="font-family:Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif; color:#0d1451; line-height:1.2; background-color: #f2f2f7; table-layout: fixed; margin-left: auto; margin-right: auto; min-width: 320px; max-width: 640px; vertical-align: top; border-spacing: 0; border-collapse: collapse; width: 100%; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word;" valign="top">
+<tbody>
+  <tr style="vertical-align: top;" valign="top">
+    <td>
+      <div style="background-color: transparent; min-width: 320px; width: 100% !important; max-width: 640px; Margin: 0 auto; height:80px;">
+      </div>
+    </td>
+  </tr>
+
+  <tr style="background-color: #e1e1ef; vertical-align: top; border-top: thin solid black; border-left: thin solid black; border-right: thin solid black; border-color: #0d1451;" valign="top">
+    <td>
+      <div style="min-width: 320px; width: 100% !important; max-width: 640px; Margin: 0 auto; background-color: transparent;">
+        <div style="padding-top:45px; padding-bottom:45px; padding-left:10px; padding-right:10px; text-align: center;">
+          <p style="font-size:34px; text-transform:uppercase; margin:0; padding-bottom:30px;"><strong>MYWEXLOG<br>{% block heading %}{% endblock heading %}</strong></p>
+        <div style="padding-top:10px; padding-bottom:10px; padding-left:35px; padding-right:35px;">
+          <p style="font-size: 18px; margin: 0;"><strong>Verify the hours spent developing your skills and automatically match to positions suited to your skillset.</strong></p>
+          <p style="font-size: 14px; line-height: 3.2; margin: 0;"><strong>Experience tracking and skills marketing made easy.</strong></p>
+        </div>
+      </div>
+      </div>
+    </td>
+  </tr>
+
+  <tr style="vertical-align: top;background-color: #ffffff; border-left: thin solid black; border-right: thin solid black; border-color: #0d1451;" valign="top">
+    <td>
+      <div style="min-width: 320px; width: 100% !important; max-width: 640px; Margin: 0 auto; background-color: transparent;">
+        <div style="padding-right:20px;padding-bottom:50px;padding-left:20px;padding-top:50px;">
+
+          {% block content %}
+          {% endblock content %}
+
+      </div>
+      </div>
+    </td>
+  </tr>
+
+  <tr style="background-color: #e1e1ef; vertical-align: top; border-left: thin solid black; border-right: thin solid black; border-color: #0d1451;" valign="top">
+    <td>
+      <div style="min-width: 320px; width: 100% !important; max-width: 640px; Margin: 0 auto; background-color: transparent;">
+        <div style="padding-top:35px; padding-bottom:35px; padding-left:10px; padding-right:10px; text-align: center;">
+        <p style="font-size: 34px; margin: 0; padding-bottom: 30px;">MISSION <strong>STATEMENT</strong></p>
+        <div style="padding-top:10px; padding-bottom:10px; padding-left:35px; padding-right:35px;">
+        <p style="font-size: 18px; margin: 0;"><strong>To advance humanity through the measurement of skills and knowledge and its effective application to solve the challenges that plague us.</strong></p>
+        </div>
+      </div>
+      </div>
+    </td>
+  </tr>
+
+  <tr style="vertical-align: top;background-color: #ffffff; border-left: thin solid black; border-right: thin solid black; border-bottom: thin solid black; border-color: #0d1451;" valign="top">
+    <td style="vertical-align: top;" valign="top">
+      <div style="min-width: 320px; width: 100% !important; max-width: 640px; Margin: 0 auto; background-color: transparent;">
+
+        <div style="text-align: center; min-width: 320px; max-width: 640px; Margin: 0 auto; background-color: #ffffff; padding-top:80px; padding-bottom:30px;">
+        <div style="border-collapse: collapse;display: table; width: 100%; background-color:#ffffff;">
+
+        <div style="display: table-cell; vertical-align: top; max-width: 320px; min-width: 212px; width: 213px;">
+
+        <div style="border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:0px; padding-bottom:0px; padding-right: 0px; padding-left: 0px;">
+
+        <div style="padding-top:0px;padding-right:10px;padding-bottom:0px;padding-left:10px;">
+          <p style="font-size: 24px; margin: 0;"><strong>ADDRESS</strong></p>
+        </div>
+
+        <div style="padding-top:10px; padding-right:10px; padding-bottom:10px; padding-left:10px;">
+          <p style="font-size: 14px; line-height: 1.2; text-align: center; margin: 0;"><span style="font-size: 14px;"><strong>DevOpTec (Pty.) Ltd T/A<br>32 Viewland Crescent, Thornlands, Queensland, 4164, Australia</p>
+        </div>
+        </div>
+        </div>
+
+        <div style="display: table-cell; vertical-align: top; max-width: 320px; min-width: 212px; width: 213px;">
+
+        <div style="border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:0px; padding-bottom:0px; padding-right: 0px; padding-left: 0px;">
+
+        <div style="padding-top:0px;padding-right:10px;padding-bottom:5px;padding-left:10px;">
+          <p style="font-size: 24px; margin: 0;"><strong>FOLLOW US</strong></p>
+        </div>
+
+        <table cellpadding="0" cellspacing="0" role="presentation" style="table-layout: fixed; vertical-align: top; border-spacing: 0; border-collapse: collapse; padding-top:15px;" valign="top" width="100%">
+        <tr>
+        <td style="vertical-align: top; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px;" valign="top">
+        <table align="center" cellpadding="0" cellspacing="0" role="presentation" style="table-layout: fixed; vertical-align: top; border-spacing: 0; border-collapse: collapse;" valign="top">
+        <tr style="vertical-align: top;" valign="top">
+        <td align="center" style="vertical-align: top; text-align: center; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px;" valign="top"><a href="https://www.facebook.com/Mywexlog-110146303820922"><i style="font-size: 25px; color:#0d1451;" class="fa fa-facebook-square"></i></a></td>
+        <td align="center" style="vertical-align: top; text-align: center; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px;" valign="top"><a href="https://twitter.com/MyWeXlog"><i style="font-size: 25px; color:#0d1451;" class="fa fa-twitter-square"></i></a></td>
+        <td align="center" style="vertical-align: top; text-align: center; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px;" valign="top"><a href="https://www.linkedin.com/company/mywexlog/"><i style="font-size: 25px; color:#0d1451;" class="fa fa-linkedin-square"></i></a></td>
+        <td align="center" style="word-break: break-word; vertical-align: top; text-align: center; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px;" valign="top"><a href="https://www.youtube.com/channel/UCqT7Jr6aKefHsqPlWmpPqhA/channels"><i style="font-size: 25px; color:#0d1451;" class="fa fa-youtube-square"></i></a></td>
+        </tr>
+        </table>
+        </td>
+        </tr>
+        </table>
+
+        <div style="padding-top:5px; padding-right:10px; padding-bottom:10px; padding-left:10px;">
+          <p style="font-size: 14px; margin: 0;"><strong>Follow us on social media and become part of our wider world.</strong></p>
+        </div>
+        </div>
+        </div>
+
+        <div style="display: table-cell; vertical-align: top; max-width: 320px; min-width: 212px; width: 213px;">
+        <div style="border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:0px; padding-bottom:0px; padding-right: 0px; padding-left: 0px;">
+
+        <div style="padding-top:0px;padding-right:10px;padding-bottom:0px;padding-left:10px;">
+          <p style="font-size: 24px; margin: 0;"><strong>CONTACT US</strong></p>
+        </div>
+
+        <div style="padding-top:10px; padding-right:10px; padding-bottom:10px; padding-left:10px;">
+          <p style="font-size: 14px; margin: 0;"><strong>info@mywexlog.com<br><a href="https://www.mywexlog.com" style="text-decoration:none; color:inherit;">www.mywexlog.com</a></strong></p>
+        </div>
+
+        <div style="padding-top:10px; padding-right:10px; padding-bottom:10px; padding-left:10px;">
+          <p style="font-size: 14px; margin: 0;"><strong>Tel: +123 456 789</strong></p>
+        </div>
+
+        </div>
+        </div>
+        </div>
+        <div style="padding-top:10px; padding-right:35px; padding-bottom:10px; padding-left:35px;">
+        <p style="font-size: 14px; margin: 0;"><strong>
+          <a href="https://mywexlog.com/user/settings/" style="color: inherit; text-decoration: none;">Manage your account</a> |
+          <a href="https://mywexlog.com//user/privacy-policy/" style="color: inherit; text-decoration: none;">Privacy Policy</a> |
+          <a href="https://mywexlog.com/user/user-agreement/" style="color: inherit; text-decoration: none;">User Agreement</a><br></strong>
+        </p>
+        </div>
+        <div style="font-size: 12px; text-align: center; padding-top:10px; padding-right:35px; padding-bottom:10px; padding-left:35px;">
+          <p><strong>{% if user.email %}This email was sent to {{ user.email }}. {% endif %}You are receiving this email as you are registered to receive notifications, updates, news and/or promotional updates.</p>
+          <p>* Please do not reply to this email. You may log into your account and utilise the feekback icon for any queries. ** To change your preference or unsubscribe please <a href="https://mywexlog.com/user/settings/">click here</a>.</strong></p>
+        </div>
+        </div>
+      </div>
+    </td>
+  </tr>
+
+  <tr style="vertical-align: top;" valign="top">
+    <td>
+      <div style="background-color:transparent;">
+      <div style="min-width: 320px; width: 100% !important; max-width: 640px; Margin: 0 auto; background-color: transparent; height:140px;">
+    </td>
+  </tr>
+  <tr>
+    <td style="font-size: 15px; color: #9d9d9d; vertical-align: middle; text-align: center; padding-bottom:10px;" valign="middle"><a href="https://www.designedwithbee.com/" style="color:#9d9d9d;text-decoration:none;">Designed with BEE</a></td>
+  </tr>
+</tbody>
+
+</table>
+</body>
+</html>

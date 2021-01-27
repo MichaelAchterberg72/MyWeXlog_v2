@@ -55,7 +55,8 @@ def RightToSayNoView(request):
             if form.is_valid():
                 new = form.save(commit=False)
                 new.save()
-                return redirect(reverse('Profile:ProfileView', kwargs={'profile_id': user_id.id})+'#online')
+                messages.success(request, "Your account settings have been updated")
+                return redirect(reverse('Profile:ProfileHome'))
         else:
             context = {'form': form}
             template = 'users/right_to_say_no.html'

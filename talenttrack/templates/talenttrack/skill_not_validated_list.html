@@ -61,7 +61,7 @@
                   Send Email
                 </button>
                 <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                  <a href="" class="dropdown-item">MyWeXlog</a>
+                  <a href="{% url 'Talent:RequestValidateExperienceEmailList' skl i.talent.alias %}" class="dropdown-item">MyWeXlog</a>
 
                   <a class="dropdown-item" href="mailto:{{ i.talent.email }}?&subject=Please confirm my MyWeXlog experience&body=Sorry to bother you.  Would it be possible to log in to MyWeXlog and update my experience confirmations as the are still un-verified.  Thanks, appreciate it.">Private</a>
                 </div>

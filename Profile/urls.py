@@ -113,6 +113,9 @@ urlpatterns = [
         path('help/experience-review/subordinate/', views.HelpSubordinateConfirmView, name='HelpConfirmSubordinate'),
         path('help/experience-review/co-worker/', views.HelpCoworkerConfirmView, name='HelpConfirmCoworker'),
         path('help/experience-review/coonsultant-contractor/', views.HelpContractorConfirmView, name='HelpConfirmContractor'),
+        path('help/talent-workshop/', views.HelpTalentWorkshopView, name='HelpTalentWorkshop'),
+        path('help/employer-workshop/', views.HelpEmployerWorkshopView, name='HelpEmployerWorkshop'),
+
         path('contact-detail/<slug:tlt>/<slug:vac>/', views.ContactDetailView, name="ContactDetail"),
         # Introduction Wizard
         path('intro-MyWeXlog-introduction/', views.IntroIntroductionView, name="IntroIntroduction"),

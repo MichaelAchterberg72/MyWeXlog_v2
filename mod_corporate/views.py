@@ -2937,6 +2937,7 @@ def past_staff(request, cor):
     context = {'past_qs': past_qs, 'cor': cor, 'corp': corp,}
     return render(request, template, context)
 
+    #2020-11-15 JK Changes for test
 
 
     #count staff at each experience level
@@ -2949,3 +2950,5 @@ def past_staff(request, cor):
 
     #list projects staff members have worked on.
     #sum the number of hours worked on the project.
+    
+    # Notes from Mike

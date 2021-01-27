@@ -402,3 +402,13 @@ class WorkClient(models.Model):
             self.slug = create_code9(self)
 
         super(WorkClient, self).save(*args, **kwargs)
+
+class EmailRemindValidate(models.Model):
+    sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, blank=True, null=True)
+    recipient = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='sent_to', on_delete=models.SET_NULL, blank=True, null=True)
+    subject = models.CharField(max_length=240, blank=True, null=True)
+    message = models.TextField(blank=True, null=True)
+    date_sent= models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.sender} sent to {self.recipient} on {self.date_sent}"

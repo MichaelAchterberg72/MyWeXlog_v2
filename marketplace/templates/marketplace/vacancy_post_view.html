@@ -21,10 +21,15 @@
           <input type="hidden" name="next" value="{{ request.GET.next }}">
           {% csrf_token %}
           <button type="submit" class="btn btn-secondary">Back</button>
-        </form>&nbsp
-          <a href="{% url 'MarketPlace:VacancyEdit' instance.ref_no %}" class="btn btn-info ">Edit Vacancy</a>&nbsp
-          <a href="{% url 'MarketPlace:HelpVacancyPost' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="tooltip" title="Click here for help on this page!">
-          <i class="fa fa-question-circle"></i></a>
+        </form>
+        &nbsp
+        <a href="{% url 'MarketPlace:VacancyEdit' instance.ref_no %}" class="btn btn-info ">
+          Edit Vacancy
+        </a>
+        &nbsp
+        <a href="{% url 'MarketPlace:HelpVacancyPost' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="tooltip" title="Click here for help on this page!">
+          <i class="fa fa-question-circle"></i>
+        </a>
       </div>
       <h3>Vacancy Review</h3>
       <h5 class="card-title">Vacancy: {{ instance.title }} ({{ instance.ref_no }})</h5>
@@ -88,36 +93,36 @@
       <div class="">
         <div class="">
           <div class="card-body">
-      <table class="table table-sm">
-        <thead>
-          <tr>
-            <th class="align-middle text-center">Proposed Rate</th>
-            <th class="align-middle text-center">Bid Closing Date</th>
-            <th class="align-middle text-center">Work Completion Date</th>
-            <th class="align-middle text-center">Required Language</th>
-            <th class="align-middle text-center">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="align-middle text-center">{{ instance.currency }}<br><strong>{{ instance.rate_offered|intcomma }}</strong><br>({{ instance.get_rate_unit_display }})</td>
-            <td class="align-middle text-center">{{ instance.bid_closes|date:'j M Y' }}</td>
-            <td class="align-middle text-center">{{ instance.date_deadline|date:'j M Y' }}</td>
-            <td class="align-middle text-center">{{ instance.language.all|join:", " }}</td>
-            <td class="align-middle text-center">
-              {% if instance.offer_status == 'O' %}
-                {{ instance.get_offer_status_display }}
-                <br>
-                <a href="{% url 'MarketPlace:VacClose' instance.ref_no %}" style="font-size: 25px;color:red !important" data-toggle="tooltip" title="Close Vacancy"><i class="fa fa-times" aria-hidden="true"></i></a>
-              {% else %}
-                {{ instance.get_offer_status_display }}
-              {% endif %}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      </div>
-      </div>
+            <table class="table table-sm">
+              <thead>
+                <tr>
+                  <th class="align-middle text-center">Proposed Rate</th>
+                  <th class="align-middle text-center">Bid Closing Date</th>
+                  <th class="align-middle text-center">Work Completion Date</th>
+                  <th class="align-middle text-center">Required Language</th>
+                  <th class="align-middle text-center">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="align-middle text-center">{{ instance.currency }}<br><strong>{{ instance.rate_offered|intcomma }}</strong><br>({{ instance.get_rate_unit_display }})</td>
+                  <td class="align-middle text-center">{{ instance.bid_closes|date:'j M Y' }}</td>
+                  <td class="align-middle text-center">{{ instance.date_deadline|date:'j M Y' }}</td>
+                  <td class="align-middle text-center">{{ instance.language.all|join:", " }}</td>
+                  <td class="align-middle text-center">
+                    {% if instance.offer_status == 'O' %}
+                      {{ instance.get_offer_status_display }}
+                      <br>
+                      <a href="{% url 'MarketPlace:VacClose' instance.ref_no %}" style="font-size: 25px;color:red !important" data-toggle="tooltip" title="Close Vacancy"><i class="fa fa-times" aria-hidden="true"></i></a>
+                    {% else %}
+                      {{ instance.get_offer_status_display }}
+                    {% endif %}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
       <br>
       <div class="row">
@@ -132,12 +137,7 @@
               <col width="90%">
               <col width="10%">
               <thead>
-                <col width="85%">
-                <col width="15%">
-                <tr>
-                  <th>Deliverable</th>
-                  <th>Options</th>
-                </tr>
+
               </thead>
               {% for d in delivere %}
               <tbody>
@@ -167,11 +167,7 @@
                 <col width="90%">
                 <col width="10%">
                 <thead>
-                  <col width="85%">
-                  <col width="15%">
-                  <tr>
-                    <th>Skill</th>
-                  </tr>
+
                 </thead>
                 <tbody>
                   {% for s in skille %}
@@ -193,38 +189,55 @@
   </div>
   <p>&nbsp</p>
   <div class="float-right">
-    <a href="{% url 'Profile:WorkshopEmp' %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 8rem">Enter Office</a>
-    <a href="{% url 'MarketPlace:EmployerInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary">Interview History</a>
+    <a href="{% url 'Profile:WorkshopEmp' %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 8rem">
+      Enter Office
+    </a>
+    <a href="{% url 'MarketPlace:EmployerInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary">
+      Interview History
+    </a>
   </div>
-  <div><a href="{% url 'MarketPlace:ShortListView' instance.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-info">View Short-list</a>
+  <div>
+    <a href="{% url 'MarketPlace:ShortListView' instance.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-info">
+      View Short-list
+    </a>
     &nbsp
-    <a href="{% url 'MarketPlace:VacancyIntDetail' instance.ref_no %}" class="btn btn-info">Interview List</a>
+    <a href="{% url 'MarketPlace:VacancyIntDetail' instance.ref_no %}" class="btn btn-info">
+      Interview List
+    </a>
     &nbsp
-    <a href="{% url 'MarketPlace:InterviewList' instance.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-info">Vacancy Dashboard</a>
+    <a href="{% url 'MarketPlace:InterviewList' instance.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-info">
+      Vacancy Dashboard
+    </a>
   </div>
   <br>
-
 
   <div class="card card-shadow">
     <div class="card-body">
       <div class="float-right">
         <a href="{% url 'MarketPlace:HelpApplicantsVacancy' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="popover" title="Click here for help on this page!">
-        <i class="fa fa-question-circle"></i></a>
+          <i class="fa fa-question-circle"></i>
+        </a>
       </div>
     <h3 id="applicants">Applicants</h3>
-    <p>There are a total of {{ applied_count }} bids that talent have applied for the vacancy{% if applied_count >= 5 %}, we only list the top 5 here.{% else %}.{% endif %}</p>
+    <p>
+      There are a total of {{ applied_count }} bids that talent have applied for the vacancy{% if applied_count >= 5 %}, we only list the top 5 here.{% else %}.{% endif %}
+    </p>
     <div class="">
       <div class="row">
         <div class="col-12">
         {% if applicants_list_view %}
           <form  action="{% url 'MarketPlace:AppExpand' vac=instance.ref_no %}" method="post">
             {% csrf_token %}
-            <button type="submit" class="badge badge-primary float-right" style="width:8rem;">Expand All</button>
+            <button type="submit" class="badge badge-primary float-right" style="width:8rem;">
+              Expand All
+            </button>
           </form>
         {% else %}
           <form  action="{% url 'MarketPlace:AppExpand' vac=instance.ref_no %}" method="post">
             {% csrf_token %}
-            <button type="submit" class="badge badge-primary float-right" style="width:8rem;">List View</button>
+            <button type="submit" class="badge badge-primary float-right" style="width:8rem;">
+              List View
+            </button>
           </form>
         {% endif %}
         </div>
@@ -241,11 +254,14 @@
                   <div class="col-1 col-no-pad h-100 text-center my-auto">
 
                     <form  action="{% url 'MarketPlace:RejectBidFromAppliedList' vac=instance.ref_no tlt=key.1.ro.0.4 %}" method="post" name="active">
-                    {% csrf_token %}
-                    <button type="submit"  class="badge badge-danger badge-pill float-right" style="width: 6rem;">Rejected</button>
+                      {% csrf_token %}
+                      <button type="submit"  class="badge badge-danger badge-pill float-right" style="width: 6rem;">
+                        Rejected
+                      </button>
                     </form>
                     <br>
                     <form  action="{% url 'MarketPlace:ShortList' tlt=key.1.ro.0.4  vac=instance.ref_no %}" method="post" name="active">
+<<<<<<< HEAD
                     {% csrf_token %}
                     <button type="submit"  class="badge badge-info badge-pill float-right" style="width: 6rem;">Short-list</button>
                   </form><br>
@@ -255,6 +271,17 @@
                   {% csrf_token %}
                   <button type="submit"  class="badge badge-success badge-pill float-right" style="width: 6rem;">Chat</button>
                   </form>
+=======
+                      {% csrf_token %}
+                      <button type="submit"  class="badge badge-info badge-pill float-right" style="width: 6rem;">
+                        Short-list
+                      </button>
+                    </form>
+                    <br>
+                    <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=instance.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-success badge-pill float-right" style="width: 6rem;" target="new">
+                      View Profile
+                    </a>
+>>>>>>> master
                   </div>
                 </div>
               </div>
@@ -273,7 +300,7 @@
           {% else %}
           {% for key in applied_slice.items %}
           <div class="row">
-            <div class="card mt-1 card-hover" style="width: 100%;">
+            <div class="card mt-1 card-hover card-no-hover" style="width: 100%;">
               <div class="card-body small-pad">
                 {% include 'marketplace/expanded_view_fields.html' %}
                 <div class="row my-auto">
@@ -281,9 +308,12 @@
                     <div class="row my-auto float-right">
 
                       <form  action="{% url 'MarketPlace:RejectBidFromAppliedList' vac=instance.ref_no tlt=key.1.ro.0.4 %}" method="post" name="active">
-                      {% csrf_token %}
-                      <button type="submit"  class="btn btn-outline-danger" style="width: 10rem;">Rejected</button>
+                        {% csrf_token %}
+                        <button type="submit"  class="btn btn-outline-danger" style="width: 10rem;">
+                          Rejected
+                        </button>
                       </form>&nbsp
+<<<<<<< HEAD
                       <form  action="{% url 'MarketPlace:ShortList' tlt=key.1.ro.0.4  vac=instance.ref_no %}" method="post" name="active">
                       {% csrf_token %}
                       <button type="submit"  class="btn btn-outline-info" style="width: 10rem;">Short-list</button>
@@ -293,6 +323,17 @@
                     {% csrf_token %}
                     <button type="submit"  class="btn btn-outline-success" style="width: 10rem;">Chat</button>
                     </form>
+=======
+                      <form action="{% url 'MarketPlace:ShortList' tlt=key.1.ro.0.4  vac=instance.ref_no %}" method="post" name="active">
+                        {% csrf_token %}
+                        <button type="submit"  class="btn btn-outline-info" style="width: 10rem;">
+                          Short-list
+                        </button>
+                      </form>&nbsp
+                    <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=instance.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-outline-success" style="width: 10rem;" target="new">
+                      View Profile
+                    </a>
+>>>>>>> master
                     </div>
                   </div>
                 </div>
@@ -330,19 +371,25 @@
         <i class="fa fa-question-circle"></i></a>
       </div>
       <h3 id='suited'>Talent suited to the Vacancy</h3>
-      <p>There are a total of {{ suitable_count }} talent suited to the vacancy{% if suitable_count >= 5 %}, we only list the top 5 here.{% else %}.{% endif %}</p>
+      <p>
+        There are a total of {{ suitable_count }} talent suited to the vacancy{% if suitable_count >= 5 %}, we only list the top 5 here.{% else %}.{% endif %}
+      </p>
       <div class="">
         <div class="row">
           <div class="col-12">
           {% if suited_list_view %}
             <form  action="{% url 'MarketPlace:SuitedExpand' vac=instance.ref_no %}" method="post">
               {% csrf_token %}
-              <button type="submit" class="badge badge-primary float-right" style="width:8rem;">Expand All</button>
+              <button type="submit" class="badge badge-primary float-right" style="width:8rem;">
+                Expand All
+              </button>
             </form>
           {% else %}
             <form  action="{% url 'MarketPlace:SuitedExpand' vac=instance.ref_no %}" method="post">
               {% csrf_token %}
-              <button type="submit" class="badge badge-primary float-right" style="width:8rem;">List View</button>
+              <button type="submit" class="badge badge-primary float-right" style="width:8rem;">
+                List View
+              </button>
             </form>
           {% endif %}
           </div>
@@ -359,18 +406,28 @@
                     <div class="col-1 col-no-pad h-100 text-center my-auto">
 
                       <form  action="{% url 'MarketPlace:RejectBidFromAppliedList' vac=instance.ref_no tlt=key.1.ro.0.4 %}" method="post" name="active">
-                      {% csrf_token %}
-                      <button type="submit"  class="badge badge-danger badge-pill float-right" style="width: 6rem;">Rejected</button>
+                        {% csrf_token %}
+                        <button type="submit"  class="badge badge-danger badge-pill float-right" style="width: 6rem;">
+                          Rejected
+                        </button>
                       </form>
                       <form  action="{% url 'MarketPlace:ShortList' tlt=key.1.ro.0.4  vac=instance.ref_no %}" method="post">
                         {% csrf_token %}
-                        <button type="submit" class="badge badge-info badge-pill float-right" style="width: 6rem;">Short-list</button>
+                        <button type="submit" class="badge badge-info badge-pill float-right" style="width: 6rem;">
+                          Short-list
+                        </button>
                       </form><br>
+<<<<<<< HEAD
                       <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=instance.ref_no %}" class="badge badge-success badge-pill float-right" style="width: 6rem;" target="new">View Profile</a><br>
                       <form  action="{% url 'Chat:NewChat' tlt=key.1.ro.0.4 %}" method="post" name="active" target="_blank">
                       {% csrf_token %}
                       <button type="submit"  class="badge badge-success badge-pill float-right" style="width: 6rem;">Chat</button>
                       </form>
+=======
+                      <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=instance.ref_no %}" class="badge badge-success badge-pill float-right" style="width: 6rem;" target="new">
+                        View Profile
+                      </a>
+>>>>>>> master
                     </div>
                   </div>
                 </div>
@@ -380,7 +437,9 @@
             {% if s_list %}
                 <p>All suitable talent has been short-listed.</p>
                 <p>
-                  <a href="{% url 'MarketPlace:ShortListView' instance.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-info">Goto Short-list</a>
+                  <a href="{% url 'MarketPlace:ShortListView' instance.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-info">
+                    Goto Short-list
+                  </a>
                 </p>
             {% else %}
                   <p>There is no talent currently in MyWexLog suited to this vacancy.</p>
@@ -389,7 +448,7 @@
             {% else %}
             {% for key in suitable_slice.items %}
             <div class="row">
-              <div class="card mt-1 card-hover" style="width: 100%;">
+              <div class="card mt-1 card-hover card-no-hover" style="width: 100%;">
                 <div class="card-body small-pad">
                   {% include 'marketplace/expanded_view_fields.html' %}
                   <div class="row my-auto">

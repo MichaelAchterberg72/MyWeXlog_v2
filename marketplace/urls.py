@@ -8,7 +8,6 @@ app_name = 'MarketPlace'
 
 urlpatterns = [
     path('entrance/', views.MarketHome, name='Entrance'),
-    path('entrance-1/', views.MarketHome_test1, name='Entrance1'),
     path('vacancy-viewed-updated/', views.VacancyViewedJsonView, name='VacancyViewedJson'),
     path('close-vacancy/<int:tlt>/<int:vac>/', views.CloseVacancyAvailableCard, name='CloseVacancy'),
     path('minimise-vacancy/<int:tlt>/<int:vac>/', views.MinimiseVacancyAvailableCard, name='MinimiseVacancy'),
@@ -86,7 +85,7 @@ urlpatterns = [
         #emp int close URLs
     path('emp-int-close/<slug:bil>/<slug:tlt>/', views.EmpInterviewClose, name='EmployerIntClose'),
     path('emp-dash-close/<slug:bil>/<slug:tlt>/', views.emp_dashint_close, name='Emp_DashIntClose'),
-    path('emp-int-detail/<slug:bil>/<slug:tlt>/', views.EmpIntFullDetail, name='EmployerIntDetail'),
+    path('emp-int-detail/vac/<slug:bil>/<slug:tlt>/', views.EmpIntFullDetail, name='EmployerIntDetail'),
     path('emp-int-detail/<slug:vac>/', views.EmpIntDetailVacancy, name='VacancyIntDetail'),
     path('emp-int-comment/<slug:bil>/<slug:tlt>/', views.EmpIntCommentView, name='VacancyIntComment'),
 

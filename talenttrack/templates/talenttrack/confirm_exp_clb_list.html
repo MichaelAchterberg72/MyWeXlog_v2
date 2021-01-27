@@ -5,7 +5,7 @@
 
 {% block content %}
 
-<div class="card">
+<div class="card card-shadow">
   <div class="card-body">
     <div class="float-right">
       <form  action="{% url 'BookList:BLB' %}" method="post">
@@ -37,7 +37,7 @@
           </div>
         </div>
         <div class="col-1 col-no-pad h-100 text-center my-auto">
-          <strong><span data-toggle="tooltip" data-placement="top" title="You can edit if entry is less than {{ age }} days old">Edit</span></strong>
+          <span data-toggle="tooltip" data-placement="top" title="You can edit if entry is less than {{ age }} days old"><strong>Edit</strong></span>
         </div>
       </div>
     </div>

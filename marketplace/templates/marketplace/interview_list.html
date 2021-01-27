@@ -19,6 +19,46 @@
   <h3 class="card-title">
     Vacancy Dashboard for {{ scope.title }} ({{ scope.ref_no }})
   </h3>
+  <br>
+  <div class="card-transparent">
+    <div class="card-body bg-transparent">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="number-souround" style="border-color:#f0ad4e">
+          <h4 class="text-center" style="background-color:#f0ad4e;padding-bottom:14px;"><strong>Pending<br>Interviews</strong></h4>
+          <div class="text-center" style="font-size:60px">
+            {{ interview_p_count|floatformat:0|intcomma }}
+          </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="number-souround" style="border-color:#e0e0e0">
+          <h4 class="text-center" style="background-color:#e0e0e0;padding-bottom:14px;"><strong>Delined<br>Interviews</strong></h4>
+          <div class="text-center" style="font-size:60px">
+            {{ intv_declined_count|floatformat:0|intcomma }}
+          </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="number-souround" style="border-color:#5cb85c">
+          <h4 class="text-center" style="background-color:#5cb85c;padding-bottom:14px;"><strong>Suitable<br>Interviews</strong></h4>
+          <div class="text-center" style="font-size:60px">
+            {{ interview_s_count|floatformat:0|intcomma }}
+          </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="number-souround" style="border-color:#d9534f">
+          <h4 class="text-center" style="background-color:#d9534f;padding-bottom:14px;"><strong>Unsuitable<br>Interviews</strong></h4>
+          <div class="text-center" style="font-size:60px">
+            {{ interview_n_count|floatformat:0|intcomma }}
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br>
     {% if wit_qs %}
     <div class="card card-shadow">
       <div class="card-body">
@@ -205,17 +245,21 @@
                   <div class="row my-auto">
                     {% include 'marketplace/list_view_fields.html' %}
                     <div class="col-1 col-no-pad h-100 text-center my-auto">
+<<<<<<< HEAD
 
                       <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4  vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill float-right" style="width: 6rem">View Profile</a>
                       <form  action="{% url 'Chat:NewChat' tlt=key.1.ro.0.4 %}" method="post" name="active" target="_blank">
                       {% csrf_token %}
                       <button type="submit"  class="badge badge-success badge-pill float-right" style="width: 6rem;">Chat</button>
                       </form>
+=======
+                      <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4  vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill float-right" style="min-width: 6rem">View Profile</a>
+>>>>>>> master
                       <form  action="{% url 'MarketPlace:Suitable' tlt=key.1.ro.0.4 vac=scope.ref_no %}" method="post">
                         {% csrf_token %}
-                        <button type="submit" class="badge badge-success badge-pill float-right" style="width: 6rem">Suitable</button>
+                        <button type="submit" class="badge badge-success badge-pill float-right" style="min-width: 6rem">Suitable</button>
                       </form>
-                        <a href="{% url 'MarketPlace:NotSuitable' tlt=key.1.ro.0.4 vac=scope.ref_no %}" class="badge badge-danger badge-pill float-right" style="width: 6rem">Not Suitable</a>
+                        <a href="{% url 'MarketPlace:NotSuitable' tlt=key.1.ro.0.4 vac=scope.ref_no %}" class="badge badge-danger badge-pill float-right" style="min-width: 6rem">Not Suitable</a>
                     </div>
                   </div>
                 </div>
@@ -227,7 +271,7 @@
             {% else %}
             {% for key in interview_p_slice.items %}
             <div class="row">
-              <div class="card mt-1 card-hover" style="width: 100%;">
+              <div class="card mt-1 card-hover card-no-hover" style="width: 100%;">
                 <div class="card-body small-pad">
                   {% include 'marketplace/expanded_view_fields.html' %}
                   <div class="row my-auto">
@@ -307,17 +351,21 @@
                       {% if active == 'False' %}
                         <form  action="{% url 'MarketPlace:VacAssign' tlt=key.1.ro.0.4 vac=scope.ref_no %}" method="post">
                           {% csrf_token %}
-                          <button type="submit" class="badge badge-success badge-pill float-right" style="width: 6rem">Assign</button>
-                          <a href="{% url 'MarketPlace:NotSuitable' tlt=key.1.ro.0.4 vac=scope.ref_no %}" class="badge badge-danger badge-pill float-right" style="width: 6rem">Not Suitable</a>
+                          <button type="submit" class="badge badge-success badge-pill float-right" style="min-width: 6rem">Assign</button>
+                          <a href="{% url 'MarketPlace:NotSuitable' tlt=key.1.ro.0.4 vac=scope.ref_no %}" class="badge badge-danger badge-pill float-right" style="min-width: 6rem">Not Suitable</a>
                         </form>
                       {% else %}
-                        <button type="submit" class="badge badge-success badge-pill float-right" style="width: 6rem">Pending</button>
+                        <button type="submit" class="badge badge-success badge-pill float-right" style="min-width: 6rem">Pending</button>
                       {% endif %}
+<<<<<<< HEAD
                         <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill float-right" style="width: 6rem">View Profile</a>
                         <form  action="{% url 'Chat:NewChat' tlt=key.1.ro.0.4 %}" method="post" name="active" target="_blank">
                         {% csrf_token %}
                         <button type="submit"  class="badge badge-success badge-pill float-right" style="width: 6rem;">Chat</button>
                         </form>
+=======
+                        <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill float-right" style="min-width: 6rem">View Profile</a>
+>>>>>>> master
                     </div>
                   </div>
                 </div>
@@ -329,7 +377,7 @@
             {% else %}
             {% for key in interview_s_slice.items %}
             <div class="row">
-              <div class="card mt-1 card-hover" style="width: 100%;">
+              <div class="card mt-1 card-hover card-no-hover" style="width: 100%;">
                 <div class="card-body small-pad">
                   {% include 'marketplace/expanded_view_fields.html' %}
                   <div class="row my-auto">
@@ -339,6 +387,7 @@
                         {% if active == 'False' %}
                           <form  action="{% url 'MarketPlace:VacAssign' tlt=key.1.ro.0.4 vac=scope.ref_no %}" method="post">
                             {% csrf_token %}
+<<<<<<< HEAD
                             <button type="submit" class="btn btn-outline-success" style="width: 10rem">Assign</button>&nbsp
                             <a href="{% url 'MarketPlace:NotSuitable' tlt=key.1.ro.0.4 vac=scope.ref_no %}" class="btn btn-outline-danger" style="width: 10rem">Not Suitable</a>
                           </form>&nbsp
@@ -350,6 +399,15 @@
                           {% csrf_token %}
                           <button type="submit"  class="btn btn-outline-success" style="width: 10rem;">Chat</button>
                           </form>
+=======
+                            <button type="submit" class="btn btn-outline-success" style="min-width: 6rem">Assign</button>&nbsp
+                            <a href="{% url 'MarketPlace:NotSuitable' tlt=key.1.ro.0.4 vac=scope.ref_no %}" class="btn btn-outline-danger" style="min-width: 6rem">Not Suitable</a>
+                          </form>&nbsp
+                        {% else %}
+                          <button type="submit" class="btn btn-outline-success" style="min-width: 6rem">Pending</button>&nbsp
+                        {% endif %}
+                          <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="btn btn-outline-secondary" style="min-width: 6rem">View Profile</a>
+>>>>>>> master
                       </div>
                     </div>
                   </div>
@@ -402,13 +460,17 @@
 
                       <form  action="{% url 'MarketPlace:Suitable' tlt=key.1.ro.0.4  vac=scope.ref_no %}" method="post">
                         {% csrf_token %}
-                        <button type="submit" class="badge badge-success badge-pill float-right" style="width: 6rem">Suitable</button>
+                        <button type="submit" class="badge badge-success badge-pill float-right" style="min-width: 6rem">Suitable</button>
                       </form>
+<<<<<<< HEAD
                       <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill float-right" style="width: 6rem">View Profile</a>
                       <form  action="{% url 'Chat:NewChat' tlt=key.1.ro.0.4 %}" method="post" name="active" target="_blank">
                       {% csrf_token %}
                       <button type="submit"  class="badge badge-success badge-pill float-right" style="width: 6rem;">Chat</button>
                       </form>
+=======
+                      <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill float-right" style="min-width: 6rem">View Profile</a>
+>>>>>>> master
                     </div>
                   </div>
                 </div>
@@ -420,7 +482,7 @@
             {% else %}
             {% for key in interview_n_slice.items %}
             <div class="row">
-              <div class="card mt-1 card-hover" style="width: 100%;">
+              <div class="card mt-1 card-hover card-no-hover" style="width: 100%;">
                 <div class="card-body small-pad">
                   {% include 'marketplace/expanded_view_fields.html' %}
                   <div class="row my-auto">
@@ -489,11 +551,15 @@
                     <form  action="{% url 'MarketPlace:ApplicantsBidShortList' tlt=key.1.ro.0.4  vac=scope.ref_no %}" method="post" name="active">
                     {% csrf_token %}
                     <button type="submit"  class="badge badge-success badge-pill float-right" style="width: 6rem;">Short-list</button>
+<<<<<<< HEAD
                     <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill float-right" style="width: 6rem">View Profile</a>
                     <form  action="{% url 'Chat:NewChat' tlt=key.1.ro.0.4 %}" method="post" name="active" target="_blank">
                     {% csrf_token %}
                     <button type="submit"  class="badge badge-success badge-pill float-right" style="width: 6rem;">Chat</button>
                     </form>
+=======
+                    <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=scope.ref_no %}" target="_blank" class="badge badge-secondary badge-pill float-right" style="min-width: 6rem">View Profile</a>
+>>>>>>> master
                   </div>
                 </div>
               </div>
@@ -505,7 +571,7 @@
           {% else %}
           {% for key in rej_bid_n_slice.items %}
           <div class="row">
-            <div class="card mt-1 card-hover" style="width: 100%;">
+            <div class="card mt-1 card-hover card-no-hover" style="width: 100%;">
               <div class="card-body small-pad">
                 {% include 'marketplace/expanded_view_fields.html' %}
                 <div class="row my-auto">

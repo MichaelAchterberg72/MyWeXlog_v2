@@ -15,14 +15,21 @@
   {% if request.user.id == tlt_p.id %}
   <div class="row">
     <div class="col-sm-12">
-    <div class="border-0">
-      <div class="btn-toolbar float-right">
-        <a href="{% url 'Talent:APV' tlt=request.user.alias vac='1ad9t2' %}" class="btn btn-success">Public Profile</a>
+      <div class="border-0">
+        <div class="btn-toolbar float-right">
+          {% if request.user.id == tlt_p.id %}
+          <a href="{% url 'Talent:APV' tlt=request.user.alias vac='1ad9t2' %}" class="btn btn-success">
+            My Public Profile
+          </a>
+        {% else %}
+        {% endif %}
+        </div>
+        <div class="btn-toolbar">
+          <a href="{% url 'Talent:DPCPSum' tlt=request.user.alias %}" class="btn btn-primary">
+            Designation, Project & Company Summary
+          </a>
+        </div>
       </div>
-      <div class="btn-toolbar">
-        <a href="{% url 'Talent:DPCPSum' tlt=request.user.alias %}" class="btn btn-primary">Designation, Project & Company Summary</a>
-      </div>
-    </div>
     </div>
   </div>
   <br>
@@ -124,6 +131,14 @@
   </script>
 </div>
 </div>
+<br>
+  <div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      {% for skl in dept_skills_link %}<a href="{% url 'Talent:ProfileSkillsStats' skl.id %}?next={{ request.path|urlencode }}" class="btn btn-outline-success auto mb-1 mr-1 pointer">{{ skl.skill }}</a> {% endfor %}
+    </div>
+  </div>
+  </div>
 <br>
   <div class="row">
     <div class="col-sm-6">

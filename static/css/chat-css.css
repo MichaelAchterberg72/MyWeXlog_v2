@@ -430,7 +430,7 @@ a.link {
   padding: 5px 10px 5px 5px !important;
   margin: 0px -6px 0px -6px !important;
   border-radius: 5px;
-  border-left: 5px;
+  border-left: 3px solid #7790cb;
   border-color: #7790cb;
 }
 .reply-message-author {
@@ -534,7 +534,7 @@ a.link {
   margin: 0 !important;
   z-index: 1000;
   border-radius: 10px;
-  border-left: 5px;
+  border-left: 3px solid #00CC66;
   border-color: #00CC66;
 }
 .reply-author {

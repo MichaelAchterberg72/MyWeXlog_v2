@@ -23,9 +23,9 @@
       <table class="table table-sm">
         <thead>
           <tr>
-            <th>Question</th>
-            <th class="text-center">Rating</th>
-            <th class="text-center">Average Rating</th>
+            <th><strong>Question</strong></th>
+            <th class="text-center"><strong>Rating</strong></th>
+            <th class="text-center"><strong>Average Rating</strong></th>
 
           </tr>
         </thead>
@@ -46,17 +46,17 @@
         </tbody>
       </table>
       <hr>
-      <h6>My Comments</h6>
+      <h6><strong>My Comments</strong></h6>
       <div class="container">
         <p>{{ emp_qs.comment }}</p>
       </div>
       <hr>
-      <h6>My Suggestions to Talent</h6>
+      <h6><strong>My Suggestions to Talent</strong></h6>
       <div class="container">
         <p>{{ emp_qs.suggestions }}</p>
       </div>
       <hr>
-      <h6>Talent Suggestions for Me</h6>
+      <h6><strong> Suggestions for Me</strong></h6>
       <div class="container">
         {% if tlt_qs == 0 %}
           <p>None - Talent has not posted any suggestions at this time</p>

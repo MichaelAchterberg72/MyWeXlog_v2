@@ -16,7 +16,7 @@ SCORE = (
 
 
 class EnterprisePassport(models.Model):
-    score_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='enterprise_scorer')
+    score_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, related_name='enterprise_scorer', null=True)
     enterprise = models.ForeignKey(Branch, on_delete=models.PROTECT)
     date_score = models.DateField(auto_now_add=True)
     payment_text = models.TextField('Comment', blank=True, null=True)
@@ -40,8 +40,8 @@ class EnterprisePassport(models.Model):
 
 
 class TalentPassport(models.Model):
-    talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
-    score_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='talent_scorer')
+    talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    score_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='talent_scorer')
     date_score = models.DateField(auto_now_add=True)
     q1_text = models.TextField('Comment', blank=True, null=True)
     q1_score = models.IntegerField('Score', choices=SCORE, default=3)
