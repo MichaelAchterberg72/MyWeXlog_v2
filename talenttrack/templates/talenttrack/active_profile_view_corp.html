@@ -171,6 +171,9 @@
       <h4 class="card-title" id="career">Career in Summary</h4>
       <div class="container">
         <div class="row my-auto">
+          <div class="col-md-6 h-100 text-center my-auto">
+            <strong>Company</strong>
+          </div>
           <div class="col-md-2 h-100 text-center my-auto">
             <strong>Date from</strong>
           </div>
@@ -180,9 +183,6 @@
           <div class="col-md-2 h-100 text-center my-auto">
             <strong>Tenure<br>(Years)</strong>
           </div>
-          <div class="col-md-6 h-100 text-center my-auto">
-            <strong>Company</strong>
-          </div>
         </div>
       </div>
       {% for h in bch %}
@@ -190,6 +190,9 @@
         <div class="card mt-1 card-hover" style="width: 100%;">
           <div class="card-body small-pad">
             <div class="row my-auto">
+              <div class="col-md-6 h-100 text-center my-auto">
+                {{ h.companybranch }}
+              </div>
               <div class="col-md-2 h-100 text-center my-auto">
                 {{ h.date_from|date:"j M Y" }}
               </div>
@@ -203,10 +206,15 @@
               <div class="col-md-2 h-100 text-center my-auto">
                 {{ h.tenure|floatformat:1 }}
               </div>
-              <div class="col-md-6 h-100 text-center my-auto">
-                {{ h.companybranch }}
+            </div>
+            {% if h.description %}
+            <div class="row pt-2 my-auto">
+              <div class="col-md-12 h-100 text-left my-auto">
+                <p><strong>Description:</strong><br>
+                {{ h.description }}</p>
               </div>
             </div>
+            {% endif %}
           </div>
         </div>
       </div>

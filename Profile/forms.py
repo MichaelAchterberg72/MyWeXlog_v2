@@ -84,7 +84,7 @@ class DateInput(forms.DateInput):
 class BriefCareerHistoryForm(forms.ModelForm):
     class Meta:
         model = BriefCareerHistory
-        fields = ('work_configeration', 'companybranch', 'date_from', 'date_to', 'designation',)
+        fields = ('work_configeration', 'companybranch', 'date_from', 'date_to', 'designation', 'description')
         widgets = {
             'companybranch': BranchWidget(),
             'date_from': DateInput(),

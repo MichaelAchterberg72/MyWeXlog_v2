@@ -20,7 +20,7 @@
     {% if rem_vac > 0 %}
     <p style="border-top: thin solid black; border-bottom: thin solid black; padding: 30px 30px 30px 30px; font-size: 22px; text-align: center; text-transform: uppercase;"><strong>There are currently {{ rem_vac }} vacancies available that match your skillset</strong></p>
       {% for item in dsd %}
-        <div style="border-bottom: thin solid black; width:97%; padding: 10px; padding-bottom: 58px;">
+        <div style="{% if forloop.last %}border-bottom: none;{% else %}border-bottom: thin solid black;{% endif %} width:97%; padding: 10px; padding-bottom: 58px;">
           <p><strong>{{ item.title|truncatechars:37 }}</strong><br>
           {{ item.hours_required|intcomma }} Hours ({{ item.get_unit_display }}) @ {{ item.rate_offered|intcomma }} {{ item.currency }} {{ item.get_rate_unit_display }}<br>
           {{ item.worklocation }} in {{ item.city }}</p>
@@ -33,11 +33,12 @@
         </div>
       {% endfor %}
       {% if rem_vac > 5 %}
-      <br>
-        <a style="padding: 10px; padding-bottom: 58px;" href="{% url 'MarketPlace:Entrance' %}" target="_blank">View More ..</a>
-        <div style="padding: 60px; padding-bottom: 58px;"></div>
+      <div style="border-top: thin solid black; padding: 30px 30px 30px 30px; margin: auto;">
+        <div style="margin: auto; width: 28%;">
+        <a onmouseover="this.style.backgroundColor='#000';this.style.color='#FFF'" onmouseout="this.style.backgroundColor='#FFF';this.style.color='#000'" style="border: 2px solid #000; color: #000; background-color: inherit; text-align:center; float: center; margin-bottom: 8px; text-decoration: none; -webkit-border-radius: 5px; border-radius: 5px; padding: 14px 28px; font-size: 16px; cursor: pointer; display: inline-block;" href="{% url 'MarketPlace:Entrance' %}" target="_blank">View More ..</a>
+        </div>
+      </div>
       {% else %}
-      <div style="padding: 60px; padding-bottom: 58px;"></div>
       {% endif %}
     <br>
     {% endif %}

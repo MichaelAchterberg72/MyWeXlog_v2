@@ -36,6 +36,7 @@ class BriefCareerHistory(models.Model):
     work_configeration = models.ForeignKey(WorkLocation, on_delete=models.PROTECT)
     designation = models.ForeignKey(Designation, on_delete=models.PROTECT, null=True)
     companybranch = models.ForeignKey(Branch, on_delete=models.PROTECT, verbose_name="Home_Base")
+    description = models.TextField(blank=True, null=True)
     current = models.BooleanField(default=False)
     date_captured = models.DateField(auto_now_add=True)
     date_from = models.DateField()
