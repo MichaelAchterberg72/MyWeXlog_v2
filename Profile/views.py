@@ -115,7 +115,7 @@ def copy_phy_address(request):
 def ProfileViewedReport(request):
     tlt = request.user
     tlt_id = tlt.id
-    qs = ObjectViewed.objects.filter(object_id=tlt_id)
+    qs = ObjectViewed.objects.filter(object_id=tlt_id).exclude(user=tlt)
     pvr = qs.filter(content_type__app_label="Profile").order_by('-timestamp')
     vbm = WorkBid.objects.filter(talent=tlt).order_by('-date_applied')
     pvr_p = pvr.values_list('user__alias', flat=True).distinct()
@@ -536,7 +536,7 @@ def ProfileHome(request):
     tlt = tl.alias
 
     tlt_id = tl.id
-    qs = ObjectViewed.objects.filter(object_id=tlt_id)
+    qs = ObjectViewed.objects.filter(object_id=tlt_id).exclude(user=tl)
     pvr_count = qs.filter(content_type__app_label="Profile").count()
 
     list_length = len(list)
