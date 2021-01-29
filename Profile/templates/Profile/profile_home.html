@@ -27,6 +27,28 @@
     <div>
   {% endif %}
 
+  {% if fm %}
+  {% if not fse %}
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="card card-shadow">
+          <div class="card-body">
+            <h3 class="card-title text-center">Your 30 Day Trial Active Subscription Has Been Initiated!</h3>
+            Your one month free Active Subscription has been initiated. You can enjoy the full benefits of MyWeXlog for the next 30 days. In order top make your account permissions permanent please select one of the subscriptions to upgrade to:<br><br>
+            <div class="row">
+              <div class="col-sm-12">
+              <a href="{% url 'Payments:PassiveSubscription' %}" class="btn btn-primary float-left">Passive Subscription</a>
+              <a href="{% url 'Payments:ActiveSubscription' %}" class="btn btn-primary float-right">Active Subscription</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+  {% endif %}
+  {% endif %}
+
   {% if not fm %}
   {% if not fse %}
     <div class="row">
@@ -37,13 +59,13 @@
             Your one month free Active Subscription has expired. To contine enjoying the full benefits of MyWeXlog please select one of the subscriptions to upgrade to:<br><br>
 
             <div class="row">
-              <div class="col-sm-7">
+              <div class="col-sm-6">
               <form  action="{% url 'Profile:CloseEndFreeSubscription' %}" method="post">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-secondary">Don't Show This Again!</button>
               </form>
               </div>
-              <div class="col-sm-5">
+              <div class="col-sm-6">
               <a href="{% url 'Payments:PassiveSubscription' %}" class="btn btn-primary float-left">Passive Subscription</a>
               <a href="{% url 'Payments:ActiveSubscription' %}" class="btn btn-primary float-right">Active Subscription</a>
               </div>
