@@ -4152,9 +4152,6 @@ def ClassMateAddView(request, tex):
     score = classmate_score
     instance = get_object_or_404(WorkExperience, slug=tex)
 
-    instance = WorkExperience.objects.filter(talent=request.user,edt=True).latest('date_captured')
-    tex = instance.slug
-
     lecturer_excl = set(Lecturer.objects.filter(education__slug=tex).values_list('lecturer', flat=True))
     colleague_excl = set(ClassMates.objects.filter(education__slug=tex).values_list('colleague', flat=True))
     myself = set(Profile.objects.filter(talent=request.user).values_list('talent', flat=True))
