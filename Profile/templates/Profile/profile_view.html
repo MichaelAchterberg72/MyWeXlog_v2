@@ -277,7 +277,7 @@
         </div>
       </div>
       {% empty %}
-        <p>You do not have any bookes read lilicenses, certifications or memberships listed.</p>
+        <p>You have not captured any licenses, certifications or memberships.</p>
       {% endfor %}
     </div>
   </div>
@@ -400,11 +400,17 @@
                 <div class="col-md-2 h-100 text-center my-auto">
                   {{ h.work_configeration }}
                 </div>
-                <div class="col-md-1 h-100 text-center my-auto">
+                <div class="col-md-1 h-100 text-left my-auto">
+                  <a href="{% url 'Profile:HistoryEdit' bch=h.slug %}" class="badge badge-secondary">
+                    Edit
+                  </a>
                   {% if h.date_to %}
 
                   {% else %}
-                    <a href="{% url 'Profile:Resigned' bch=h.slug tlt=h.talent.alias %}" class="badge badge-primary">I Resigned</a>
+                    <br>
+                    <a href="{% url 'Profile:Resigned' bch=h.slug tlt=h.talent.alias %}" class="badge badge-primary">
+                      I Resigned
+                    </a>
                   {% endif %}
                 </div>
               </div>
@@ -423,9 +429,13 @@
 <div class="card-group">
   <div class="card card-shadow">
     <div class="card-body">
-      <h5 class="card-title" id="Upload">Uploaded Files <a href="{% url 'Profile:FileUploadView' %}" class="badge badge-primary float-right">Add File</a></h5>
-      <p>(Only <strong>PDF</strong> files are allowed to be uploaded)</p>
-
+      <h5 class="card-title" id="Upload">Upload Files <a href="{% url 'Profile:FileUploadView' %}" class="badge badge-primary float-right">Add File</a></h5>
+      <p>
+        Upload files such as your static cv, academic records, copies of passports, id documents or any other document you may want to keep here.
+      </p>
+      <p>
+        (Only <strong>PDF</strong> files are allowed to be uploaded)
+      </p>
       {% for f in upload %}
       <div class="row">
         <div class="card mt-1 card-hover" style="width: 100%;">
@@ -447,7 +457,6 @@
       {% empty %}
         <p>You do not have any files loaded yet.</p>
       {% endfor %}
-
     </div>
   </div>
 </div>
@@ -457,6 +466,7 @@
   <div class="card card-shadow">
     <div class="card-body">
       <h5 class="card-title">Identification Document <a href="{% url 'Profile:IdView' %}" class="badge badge-secondary float-right">Edit</a></h5>
+      <p>Identification information is not required by the site at the moment. You do not need to capture this information if you don't want to.</p>
       <div class="container">
         <div class="row my-auto">
           <div class="col-md-6 h-100 text-center my-auto">
@@ -483,7 +493,7 @@
         </div>
       </div>
       {% empty %}
-        <p>You do not have any identification documkent loaded yet.</p>
+        <p>You do not have an identification document loaded yet.</p>
       {% endfor %}
     </div>
   </div>
@@ -491,7 +501,7 @@
     <div class="card card-shadow">
       <div class="card-body">
         <h5 class="card-title">Passport Information <a href="{% url 'Profile:PassportAddView' %}" class="badge badge-primary float-right">Add</a></h5>
-
+        <p>Passport information is not required by the site at the moment. You do not need to capture this information if you don't want to.</p>
         <div class="container">
           <div class="row my-auto">
             <div class="col-md-3 h-100 text-center my-auto">
@@ -534,7 +544,7 @@
           </div>
         </div>
         {% empty %}
-          <p>You do not have any identification documkent loaded yet.</p>
+          <p>You do not have any passports loaded.</p>
         {% endfor %}
 
       </div>
@@ -548,66 +558,58 @@
       <div class="container">
       <div class="row">
         <div class="col-4 col-no-pad">
-    <div class="card">
-      <div class="card-body">
-        <div class="btn-group float-right">
-          <div class="btn-group mr-2">
-            <a href="{% url 'Profile:PhysicalAddress' %}" class="badge badge-secondary">
-              Edit
-            </a>
-          </div>
-          <div class="btn-group mr-2">
-            <a href="{% url 'Profile:CopyPhyAdd' %}" class="badge badge-dark" data-toggle="tooltip" title="Copy Physical Address to Postal Address" onclick="return confirm('This will over write all information currently in your postal address - Are you sure?');">
-              Copy
-            </a>
+          <div class="card">
+            <div class="card-body">
+              <div class="btn-group float-right">
+                <div class="btn-group mr-2">
+                  <a href="{% url 'Profile:PhysicalAddress' %}" class="badge badge-secondary">
+                    Edit
+                  </a>
+                </div>
+                <div class="btn-group mr-2">
+                  <a href="{% url 'Profile:CopyPhyAdd' %}" class="badge badge-dark" data-toggle="tooltip" title="Copy Physical Address to Postal Address" onclick="return confirm('This will over write all information currently in your postal address - Are you sure?');">
+                    Copy
+                  </a>
+                </div>
+              </div>
+              <h5 class="card-title">
+                Physical Address
+              </h5>
+
+              <table class="table table-sm">
+                <thead>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>Line 1</th>
+                    <td>{{ physical.line1 }}</td>
+                  </tr>
+                  <tr>
+                    <th>Line 2</th>
+                    <td>{{ physical.line2 }}</td>
+                  </tr>
+                  <tr>
+                    <th>Country</th>
+                    <td>{{ physical.get_country_display }}</td>
+                  </tr>
+                  <tr>
+                    <th>Region</th>
+                    <td>{{ physical.region.region }}</td>
+                  </tr>
+                  <tr>
+                    <th>City</th>
+                    <td>{{ physical.city.city }}</td>
+                  </tr>
+                  <tr>
+                    <th>Postal Code</th>
+                    <td>{{ physical.code }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
-        <h5 class="card-title">
-          Physical Address
-        </h5>
-
-        <table class="table table-sm">
-          <thead>
-          </thead>
-          <tbody>
-            <tr>
-              <th>Line 1</th>
-              <td>{{ physical.line1 }}</td>
-            </tr>
-            <tr>
-              <th>Line 2</th>
-              <td>{{ physical.line2 }}</td>
-            </tr>
-            <tr>
-              <th>Line 3</th>
-              <td>{{ physical.line3 }}</td>
-            </tr>
-            <tr>
-              <th>Country</th>
-              <td>{{ physical.get_country_display }}</td>
-            </tr>
-            <tr>
-              <th>Region</th>
-              <td>{{ physical.region.region }}</td>
-            </tr>
-            <tr>
-              <th>City</th>
-              <td>{{ physical.city.city }}</td>
-            </tr>
-            <tr>
-              <th>Suburb</th>
-              <td>{{ physical.suburb.suburb }}</td>
-            </tr>
-            <tr>
-              <th>Postal Code</th>
-              <td>{{ physical.code }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      </div>
-    </div>
-    <div class="col-4 col-no-pad">
+        <div class="col-4 col-no-pad">
     <div class="card">
       <div class="card-body">
         <div class="btn-group float-right">
@@ -638,10 +640,6 @@
               <td>{{ postal.line2 }}</td>
             </tr>
             <tr>
-              <th>Line 3</th>
-              <td>{{ postal.line3 }}</td>
-            </tr>
-            <tr>
               <th>Country</th>
               <td>{{ postal.get_country_display }}</td>
             </tr>
@@ -652,10 +650,6 @@
             <tr>
               <th>City</th>
               <td>{{ postal.city.city }}</td>
-            </tr>
-            <tr>
-              <th>Suburb</th>
-              <td>{{ postal.suburb.suburb }}</td>
             </tr>
             <tr>
               <th>Postal Code</th>
@@ -724,7 +718,9 @@
             Willingness to Relocate
           </h5>
           <p>
-            Note: Relocation applies to positions that required you to be at a particular location. They do not apply for Freelancing or Consulting where you can take a short trip.
+            <strong>
+            Note:</strong><br>
+            Relocation applies to positions that require you to physically be at a location other than your current location, and is too far away to commute. Relocation does not apply to vacancies that can be completed remotely, or where a short business trip can be made.
           </p>
           <table class="table table-sm">
             <thead>
@@ -787,6 +783,20 @@
             </tbody>
             {% endfor %}
           </table>
+        </div>
+      </div>
+    </div>
+    <br>
+    <div class="card card-shadow">
+      <div class="card-body">
+        <h3>End of Profile</h3>
+        <div class="card-body">
+          <a href="{% url 'Talent:Home' %}" class="btn btn-primary float-right">
+            Next: Experience
+          </a>
+          <p>
+            Now that you have completed your profile - begin capturing your experience!
+          </p>
         </div>
       </div>
     </div>

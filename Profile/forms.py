@@ -261,11 +261,11 @@ class EmailStatusForm(forms.ModelForm):
 class PhysicalAddressForm(forms.ModelForm):
     class Meta:
         model = PhysicalAddress
-        exclude = ['talent']
+        exclude = ['talent', 'line3', 'suburb']
         widgets={
             'region': RegionSelect2Widget(),
             'city': CitySelect2Widget(),
-            'suburb': SuburbSelect2Widget(),
+            #'suburb': SuburbSelect2Widget(),
         }
         labels = {
             'city': 'City / Town / Village',
@@ -275,11 +275,11 @@ class PhysicalAddressForm(forms.ModelForm):
 class PostalAddressForm(forms.ModelForm):
     class Meta:
         model = PostalAddress
-        exclude = ['talent']
+        exclude = ['talent', 'line3', 'suburb']
         widgets={
             'region': RegionSelect2Widget(),
             'city': CitySelect2Widget(),
-            'suburb': SuburbSelect2Widget(),
+            #'suburb': SuburbSelect2Widget(),
         }
 
         labels = {
