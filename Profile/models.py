@@ -336,7 +336,7 @@ class PhysicalAddress(models.Model):
 
 class PostalAddress(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
-    line1 = models.CharField('Address Line 1', max_length=100)
+    line1 = models.CharField('Address Line 1', max_length=100, blank=True, null=True)
     line2 = models.CharField('Address Line 2', max_length=100, blank=True, null=True)
     line3 = models.CharField('Address Line 3', max_length=100, blank=True, null=True)
     country = CountryField()

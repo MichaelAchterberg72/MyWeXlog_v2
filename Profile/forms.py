@@ -279,12 +279,12 @@ class PostalAddressForm(forms.ModelForm):
         widgets={
             'region': RegionSelect2Widget(),
             'city': CitySelect2Widget(),
-            #'suburb': SuburbSelect2Widget(),
         }
 
         labels = {
             'city': 'City / Town / Village',
         }
+
 
 class PhoneNumberForm(forms.ModelForm):
     class Meta:
