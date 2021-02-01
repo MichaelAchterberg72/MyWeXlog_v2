@@ -2155,8 +2155,11 @@ def ActiveProfileView(request, tlt, vac):
             pass
         else:
             prj_count +=1
-            project_q = prj_qs.filter(pk=p).values_list('name', 'company__ename', 'companybranch__name', 'industry__industry')
-            info_list=[project_q[0][1], project_q[0][2], project_q[0][3]]
+            project_q = prj_qs.filter(pk=p).values_list('name', 'company__ename', 'companybranch__name', 'industry__industry', 'country')
+            cache = WorkExperience.objects.filter(project__pk=p)
+            hr = cache.aggregate(sum_t=Sum('hours_worked'))
+            ppl = cache.distinct('talent').count()
+            info_list=[project_q[0][1], project_q[0][2], project_q[0][3], project_q[0][4], hr['sum_t'], ppl]
             prj_set[project_q[0][0]] = info_list
 
     #experience hours on skills required

@@ -10,9 +10,10 @@
 {% endblock title %}
 
 {% block content %}
-<div class="border-0">
+<div class="card profile-card">
   <div class="card-body">
-  <h4 class="">Designation, Project & Company Summary</h4>
+  <h4 class="profile-header">Designation, Project & Company Summary</h4>
+
   {% if request.user.alias == tlt %}
 
   {% else %}
@@ -45,7 +46,7 @@
   </div>
   <div class="row">
     <div class="col-sm-6">
-      <div class="card card-shadow h-100">
+      <div class="card profile-card h-100">
         <div class="card-body">
           <h5 class="card-title">Designation Summary</h5>
           <p>This is a list of the hours you have logged against each designation.</p>

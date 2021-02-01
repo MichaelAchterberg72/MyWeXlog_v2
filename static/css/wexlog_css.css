@@ -21,6 +21,7 @@
   --font-light: #D3D3D3;
   --font-grey: #ADABAB;
   --font-blue: #0000FF;
+  --Montserrat-family: "Montserrat", Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;;
 }
 
 *{
@@ -73,14 +74,92 @@ table {
   transition: all .4s ease;
   transform: translate3D(0,-1px,0) scale(1.00);
 }
-
+.profile-header {
+  font-family: var(--Montserrat-family);
+  color:#0d1451;
+  font-size: 24px;
+  font-weight: 600;
+  line-height:1.2;
+  text-align: center;
+  text-transform: uppercase;
+  margin: 20px 0px 20px 0px;
+  vertical-align: top;
+  border-spacing: 0;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+.profile-footer {
+  background-color: #e1e1ef;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  padding: 20px 10px 20px 0px;
+}
 .card-hover:hover {
   background-color: var(--hover);
   z-index: 1;
   transition: all .4s ease;
   transform: translate3D(0,-1px,0) scale(1.01);
 }
-
+.profile-card {
+  background-color: #e1e1ef;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  margin: 0px -10px 0px -10px;
+}
+.profile-card-header {
+  font-family: var(--Montserrat-family);
+  color:#0d1451;
+  font-size: 24px;
+  font-weight: 600;
+  line-height:1.2;
+  text-align: center;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  vertical-align: top;
+  border-spacing: 0;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+.profile-card-under {
+  font-family: var(--Montserrat-family);
+  color:#0d1451;
+  font-size: 18px;
+  font-weight: 400;
+  line-height:1.2;
+  text-align: center;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  vertical-align: top;
+  border-spacing: 0;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+.profile-card-body {
+  background-color: #ffffff;
+  padding: 10px;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  margin: 0px -10px 0px -10px;
+}
+.profile-br-top {
+  margin: 0px -10px 40px -10px;
+}
+.profile-br-break {
+  margin: 40px -10px 40px -10px;
+}
+.profile-card-display-number {
+  font-size: 22px;
+  font-weight: 500;
+}
 .card-no-hover {
   background-color: #fff !important;
 }
