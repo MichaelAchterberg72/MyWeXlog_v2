@@ -18,9 +18,11 @@ from django_select2.forms import (
     ModelSelect2TagWidget, ModelSelect2Widget, ModelSelect2MultipleWidget,
     Select2Widget, Select2MultipleWidget, HeavySelect2MultipleWidget
 )
-
+from booklist.forms import (
+    PublisherSelect2Widget, TagModelSelect2MultipleWidget, AuthorModelSelect2MultipleWidget, GenreWidget
+)
 from .models import (
-    Topic, Result, CourseType, Course, Lecturer, ClassMates, WorkClient, WorkExperience, WorkColleague, Superior, WorkCollaborator, Designation, Achievements, LicenseCertification, EmailRemindValidate
+    Topic, Result, CourseType, Course, Lecturer, ClassMates, WorkClient, WorkExperience, WorkColleague, Superior, WorkCollaborator, Designation, Achievements, Awards, Publications, LicenseCertification, EmailRemindValidate
     )
 
 from enterprises.models import Enterprise, Branch, Industry
@@ -209,6 +211,41 @@ class AchievementsForm(forms.ModelForm):
         help_texts = {
             'achievement': 'Brief description or name of the achievement',
             'description': 'Background of what the achiement is, and what led to you receiving it.',
+        }
+
+
+class AwardsForm(forms.ModelForm):
+    class Meta:
+        model = Awards
+        fields = ('award', 'date_achieved', 'description', 'tag', 'upload',)
+        widgets = {
+            'date_achieved': DateInput(),
+            'award': forms.TextInput(),
+            'tag': TagModelSelect2MultipleWidget(),
+        }
+        labels = {
+            'description': 'Award Description',
+        }
+        help_texts = {
+            'award': 'Brief description or name of the award',
+            'description': 'Background of what the award is, and what led to you receiving it.',
+        }
+
+
+class PublicationsForm(forms.ModelForm):
+    class Meta:
+        model = Publications
+        fields = ('title', 'publisher', 'date_published', 'author', 'tag', 'link', 'type', 'genre', 'description', 'upload')
+        widgets = {
+            'publisher': PublisherSelect2Widget(),
+            'tag': TagModelSelect2MultipleWidget(),
+            'author': AuthorModelSelect2MultipleWidget(),
+            'genre': GenreWidget(),
+            'date_published': DateInput(),
+        }
+        help_texts = {
+            'title': 'Brief description or name of the publication',
+            'description': 'Background of what the publication is, and what led to you creating it.',
         }
 
 

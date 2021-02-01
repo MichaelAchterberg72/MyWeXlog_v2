@@ -14,7 +14,7 @@
 
 <div class="card card-shadow">
   <div class="card-body">
-    <h3>Update Your Career History</h3>
+    <h3>Add to Your Career History</h3>
 
     <form method="post">
       <input type="hidden" name="next" value="{{ request.GET.next }}">
@@ -41,6 +41,84 @@
         <p><a href="{% url 'Profile:ProfileView' %}" class="btn btn-danger">Cancel</a> <button type="submit" name="another" class="btn btn-secondary">Save & Add Another</button> <button type="submit" name="done" class="btn btn-primary">Save & Done</button>
       </div>
     </form>
+  </div>
+</div>
+<br>
+<div class="card card-shadow">
+  <div class="card-body">
+    <h3>Your Career History</h3>
+    <div class="card-body" id="History">
+      <p class="card-text">
+        {% if history %}
+        <div class="container">
+          <div class="row my-auto">
+            <div class="col-md-1 h-100 text-center my-auto">
+              <strong>From</strong>
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              <strong>To</strong>
+            </div>
+            <div class="col-md-3 h-100 text-center my-auto">
+              <strong>Employer</strong>
+            </div>
+            <div class="col-md-3 h-100 text-center my-auto">
+              <strong>Designation</strong>
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              <strong>Work Configuration</strong>
+            </div>
+            <div class="col-md-1 h-100 text-center my-auto">
+              <strong></strong>
+            </div>
+          </div>
+        </div>
+        {% for h in history %}
+        <div class="row">
+          <div class="card mt-1 card-hover" style="width: 100%;">
+            <div class="card-body small-pad">
+              <div class="row my-auto">
+                <div class="col-md-1 h-100 text-center my-auto">
+                  {{ h.date_from }}
+                </div>
+                <div class="col-md-2 h-100 text-center my-auto">
+                  {% if h.date_to %}
+                    {{ h.date_to }}
+                  {% else %}
+                    Currently Works Here
+                  {% endif %}
+                </div>
+                <div class="col-md-3 h-100 text-center my-auto">
+                  {{ h.companybranch }}
+                </div>
+                <div class="col-md-3 h-100 text-center my-auto">
+                  {{ h.designation }}
+                </div>
+                <div class="col-md-2 h-100 text-center my-auto">
+                  {{ h.work_configeration }}
+                </div>
+                <div class="col-md-1 h-100 text-left my-auto">
+                  <a href="{% url 'Profile:HistoryEdit' bch=h.slug %}" class="badge badge-secondary">
+                    Edit
+                  </a>
+                  {% if h.date_to %}
+
+                  {% else %}
+                    <br>
+                    <a href="{% url 'Profile:Resigned' bch=h.slug tlt=h.talent.alias %}" class="badge badge-primary">
+                      I Resigned
+                    </a>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+          <p>No career history currently loaded.</p>
+        {% endfor %}
+
+      {% endif %}
+    </div>
   </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>

@@ -15,22 +15,6 @@ Add a New Book<span><p class="float-right">
 <i class="fa fa-question-circle"></i></a>
 </p></span></h4>
 
-<script type="text/javascript">
-
-function showAddPopup(triggeringLink) {
-    var name = triggeringLink.id.replace(/^add_/, '');
-    href = triggeringLink.href;
-    var win = window.open(href, name, 'height=350,width=600,resizable=yes,scrollbars=yes');
-    win.focus();
-    return false;
-}
-function closePopup(win, newID, newRepr, id) {
-    $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
-    win.close();
-}
-
-</script>
-
 <div class="card-body">
 
 <form class="" action="" method="POST" novalidate>
@@ -66,6 +50,21 @@ function closePopup(win, newID, newRepr, id) {
     width: 100px;
   }
   </style>
+  <script type="text/javascript">
+
+  function showAddPopup(triggeringLink) {
+      var name = triggeringLink.id.replace(/^add_/, '');
+      href = triggeringLink.href;
+      var win = window.open(href, name, 'height=350,width=600,resizable=yes,scrollbars=yes');
+      win.focus();
+      return false;
+  }
+  function closePopup(win, newID, newRepr, id) {
+      $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
+      win.close();
+  }
+
+  </script>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 {{ form.media.js }}
 {% endblock content %}

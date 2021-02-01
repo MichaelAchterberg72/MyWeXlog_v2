@@ -47,7 +47,7 @@ from .forms import (
 )
 
 from talenttrack.models import (
-        Lecturer, ClassMates, WorkColleague, Superior, WorkCollaborator,  WorkClient, WorkExperience, Achievements, LicenseCertification,
+        Lecturer, ClassMates, WorkColleague, Superior, WorkCollaborator,  WorkClient, WorkExperience, Achievements, Awards, Publications, LicenseCertification,
 )
 
 from talenttrack.forms import (
@@ -101,11 +101,9 @@ def copy_phy_address(request):
     qs_post.update(
         line1=qs_addr.line1,
         line2=qs_addr.line2,
-        line3=qs_addr.line3,
         country=qs_addr.country,
         region=qs_addr.region,
         city=qs_addr.city,
-        suburb=qs_addr.suburb,
         code=qs_addr.code,
         )
 
@@ -1195,6 +1193,30 @@ def BriefCareerHistoryView(request):
 
 
 @login_required()
+@csp_exempt
+def BriefHistoryEditView(request, bch):
+    talent=request.user
+    instance = BriefCareerHistory.objects.get(slug=bch)
+
+    form = BriefCareerHistoryForm(request.POST or None, instance=instance)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.talent = request.user
+            new.save()
+
+            response = redirect(reverse('Profile:ProfileView')+"#History")
+            return response
+
+    else:
+        template = 'Profile/brief_career_history_edit.html'
+        context = {'form': form,}
+        response = render(request, template, context)
+        return response
+
+
+@login_required()
 def ResignedView(request, bch, tlt):
     r_from = get_object_or_404(BriefCareerHistory, slug=bch)
     form = ResignedForm(request.POST or None, instance=r_from)
@@ -2174,19 +2196,22 @@ def ProfileView(request):
         postal = PostalAddress.objects.get(talent__alias=tlt)
         pnumbers = PhoneNumber.objects.filter(talent__alias=tlt)
         online = OnlineRegistrations.objects.filter(talent__alias=tlt)
-        upload = FileUpload.objects.filter(talent__alias=tlt)
         id = IdentificationDetail.objects.filter(talent__alias=tlt)
         passport = PassportDetail.objects.filter(talent__alias=tlt)
         speak = LanguageTrack.objects.filter(talent__alias=tlt)
         history = BriefCareerHistory.objects.filter(talent__alias=tlt).order_by('-date_from')
         user_info = CustomUser.objects.get(pk=tlt_id)
         achievement = Achievements.objects.filter(talent=tlt_id).order_by('-date_achieved')
+        award = Awards.objects.filter(talent=tlt_id).order_by('-date_achieved')
+        publication = Publications.objects.filter(talent=tlt_id).order_by('-date_published')
         lcm_qs = LicenseCertification.objects.filter(talent=tlt_id).order_by('-issue_date')
+        upload = FileUpload.objects.filter(talent__alias=tlt)
         relocate = WillingToRelocate.objects.filter(talent__alias=tlt)
 
         template = 'Profile/profile_view.html'
         context = {
-            'info':info, 'email':email, 'physical':physical, 'postal': postal, 'pnumbers': pnumbers, 'online': online, 'upload': upload, 'id': id, 'passport': passport, 'speak': speak, 'history': history, 'user_info': user_info, 'achievement': achievement, 'lcm_qs': lcm_qs, 'tlt': tlt, 'relocate': relocate,
+            'info':info, 'email':email, 'physical':physical, 'postal': postal, 'pnumbers': pnumbers, 'online': online, 'id': id, 'passport': passport, 'speak': speak, 'history': history, 'user_info': user_info, 'tlt': tlt, 'relocate': relocate,
+            #'upload': upload, 'lcm_qs': lcm_qs,'achievement': achievement, 'award': award, 'publication': publication,
             }
 
         return render(request, template, context)

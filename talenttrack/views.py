@@ -32,11 +32,11 @@ from WeXlog.app_config import(
 
 
 from .forms import (
-        TopicForm, ResultForm, CourseTypeForm, CourseForm, DesignationForm, ClassMatesSelectForm, ClassMatesConfirmForm, LecturerSelectForm, LecturerConfirmForm, EducationForm, WorkExperienceForm, WorkColleagueSelectForm, WorkColleagueConfirmForm, WorkColleagueResponseForm, ClassMatesResponseForm, LecturerResponseForm, SuperiorSelectForm, WorkCollaboratorResponseForm, WorkCollaboratorConfirmForm, WorkCollaboratorSelectForm, WorkClientResponseForm, WorkClientConfirmForm, WorkClientSelectForm, PreLoggedExperienceForm, TopicPopForm, LecturerRespondForm, ClassMatesRespondForm, AchievementsForm, LicenseCertificationForm, ProfileSearchForm, EmailFormModal, SiteSkillStatsFilter, SiteDemandSkillStatsFilter
+        TopicForm, ResultForm, CourseTypeForm, CourseForm, DesignationForm, ClassMatesSelectForm, ClassMatesConfirmForm, LecturerSelectForm, LecturerConfirmForm, EducationForm, WorkExperienceForm, WorkColleagueSelectForm, WorkColleagueConfirmForm, WorkColleagueResponseForm, ClassMatesResponseForm, LecturerResponseForm, SuperiorSelectForm, WorkCollaboratorResponseForm, WorkCollaboratorConfirmForm, WorkCollaboratorSelectForm, WorkClientResponseForm, WorkClientConfirmForm, WorkClientSelectForm, PreLoggedExperienceForm, TopicPopForm, LecturerRespondForm, ClassMatesRespondForm, AchievementsForm, AwardsForm, PublicationsForm, LicenseCertificationForm, ProfileSearchForm, EmailFormModal, SiteSkillStatsFilter, SiteDemandSkillStatsFilter
 )
 
 from .models import (
-        Lecturer, Course, ClassMates, WorkExperience, Superior, WorkCollaborator, WorkClient, WorkColleague, Designation, Achievements, LicenseCertification,
+        Lecturer, Course, ClassMates, WorkExperience, Superior, WorkCollaborator, WorkClient, WorkColleague, Designation, Achievements, Awards, Publications, LicenseCertification,
 )
 
 from db_flatten.models import SkillTag
@@ -2054,6 +2054,118 @@ def DeleteAchievementView(request, ach_i, tlt):
 
 
 @login_required()
+def CaptureAwardView(request):
+    pfl = get_object_or_404(CustomUser, pk=request.user.id)
+
+    if request.method == 'POST':
+        form = AwardsForm(request.POST, request.FILES)
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.talent = pfl
+            new.save()
+            form.save_m2m()
+            return redirect(reverse('Profile:ProfileView')+'#awards')
+        else:
+            template = 'talenttrack/award_capture.html'
+            context = {'form': form,}
+            return render(request, template, context)
+    else:
+        form = AwardsForm()
+        template = 'talenttrack/award_capture.html'
+        context = {'form': form,}
+        return render(request, template, context)
+
+
+@login_required()
+def EditAwardView(request, awd):
+    instance = get_object_or_404(Awards, slug=awd)
+
+    if request.method == 'POST':
+        form = AwardsForm(request.POST, request.FILES, instance=instance)
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.save()
+            form.save_m2m()
+            return redirect(reverse('Profile:ProfileView')+'#awards')
+        else:
+            template = 'talenttrack/award_capture.html'
+            context = {'form': form,}
+            return render(request, template, context)
+    else:
+        form = AwardsForm(instance=instance)
+        template = 'talenttrack/award_capture.html'
+        context = {'form': form,}
+        return render(request, template, context)
+
+
+@login_required()
+def DeleteAwardView(request, awd_i, tlt):
+    info = Awards.objects.get(pk=awd_i)
+    if info.talent == request.user:
+        if request.method =='POST':
+            info.delete()
+            return redirect(reverse('Profile:ProfileView')+'#awards')
+    else:
+        raise PermissionDenied
+
+
+@login_required()
+def CapturePublicationView(request):
+    pfl = get_object_or_404(CustomUser, pk=request.user.id)
+
+    if request.method == 'POST':
+        form = PublicationsForm(request.POST, request.FILES)
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.talent = pfl
+            new.save()
+            form.save_m2m()
+            return redirect(reverse('Profile:ProfileView')+'#publications')
+        else:
+            template = 'talenttrack/publication_capture.html'
+            context = {'form': form,}
+            return render(request, template, context)
+    else:
+        form = PublicationsForm()
+        template = 'talenttrack/publication_capture.html'
+        context = {'form': form,}
+        return render(request, template, context)
+
+
+@login_required()
+def EditPublicationView(request, pub):
+    instance = get_object_or_404(Publications, slug=pub)
+
+    if request.method == 'POST':
+        form = PublicationsForm(request.POST, request.FILES, instance=instance)
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.save()
+            form.save_m2m()
+            return redirect(reverse('Profile:ProfileView')+'#publications')
+        else:
+            template = 'talenttrack/publication_capture.html'
+            context = {'form': form,}
+            return render(request, template, context)
+    else:
+        form = PublicationsForm(instance=instance)
+        template = 'talenttrack/publication_capture.html'
+        context = {'form': form,}
+        return render(request, template, context)
+
+
+@login_required()
+def DeletePublicationView(request, pub_i, tlt):
+    info = Publications.objects.get(pk=pub_i)
+    if info.talent == request.user:
+        if request.method =='POST':
+            info.delete()
+            return redirect(reverse('Profile:ProfileView')+'#publications')
+    else:
+        raise PermissionDenied
+
+
+@login_required()
 @csp_exempt
 def LicenseCertificationCaptureView(request):
     tlt_i = get_object_or_404(CustomUser, pk=request.user.id)
@@ -2137,8 +2249,16 @@ def ActiveProfileView(request, tlt, vac):
     bkl_count = bkl.count()
     prj_qs = ProjectData.objects.all()
     bid_qs = WorkBid.objects.filter(Q(talent__alias=tlt) & Q(work__ref_no=vac))
-    achievement_qs = Achievements.objects.filter(talent__alias=tlt).order_by('-date_achieved')[:6]
+    achievement_qs = Achievements.objects.filter(talent__alias=tlt).order_by('-date_achieved')
+    achievement = achievement_qs[:6]
     achievement_qs_count = achievement_qs.count()
+    award_qs = Awards.objects.filter(talent__alias=tlt).order_by('-date_achieved')
+    award = award_qs[:6]
+    print(award.values_list('tag'))
+    award_qs_count = award.count()
+    publication_qs = Publications.objects.filter(talent__alias=tlt).order_by('-date_published')
+    publication = publication_qs[:6]
+    publication_qs_count = publication_qs.count()
     language_qs = LanguageTrack.objects.filter(talent__alias=tlt).order_by('-language')
     membership_qs = LicenseCertification.objects.filter(talent__alias=tlt).order_by('-issue_date')[:6]
     membership_qs_count = membership_qs.count()
@@ -2219,7 +2339,7 @@ def ActiveProfileView(request, tlt, vac):
 
     template = 'talenttrack/active_profile_view.html'
     context = {
-        'tlt': tlt, 'bch': bch, 'bch_count': bch_count, 'pfl': pfl, 'padd': padd,'vacse_set': vacse_set, 'vacst_set': vacst_set, 'exp': exp, 'bkl': bkl, 'edtexp': edtexp, 'edtexp_count': edtexp_count, 'bkl_count': bkl_count, 'prj_set': prj_set, 'prj_count': prj_count, 'bid_qs': bid_qs, 'achievement_qs': achievement_qs, 'achievement_qs_count': achievement_qs_count, 'language_qs': language_qs, 'membership_qs': membership_qs, 'membership_qs_count': membership_qs_count, 'bslist_qs': bslist_qs, 'vacancy': vacancy, 'int_list': int_list, 'als': als, 'vac': vac, 'wtr_qs': wtr_qs,
+        'tlt': tlt, 'bch': bch, 'bch_count': bch_count, 'pfl': pfl, 'padd': padd,'vacse_set': vacse_set, 'vacst_set': vacst_set, 'exp': exp, 'bkl': bkl, 'edtexp': edtexp, 'edtexp_count': edtexp_count, 'bkl_count': bkl_count, 'prj_set': prj_set, 'prj_count': prj_count, 'bid_qs': bid_qs, 'achievement': achievement, 'achievement_qs_count': achievement_qs_count, 'award': award, 'award_qs_count': award_qs_count, 'publication': publication, 'publication_qs_count': publication_qs_count, 'language_qs': language_qs, 'membership_qs': membership_qs, 'membership_qs_count': membership_qs_count, 'bslist_qs': bslist_qs, 'vacancy': vacancy, 'int_list': int_list, 'als': als, 'vac': vac, 'wtr_qs': wtr_qs,
         }
     return render(request, template, context)
 

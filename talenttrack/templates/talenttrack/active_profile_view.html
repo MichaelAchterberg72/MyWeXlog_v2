@@ -369,27 +369,138 @@
     </div>
   <br>
   <div class="profile-br-break">
+  <div class="card-body">
+  <div class="card profile-card">
+  <h4 class="profile-header" id="achievements">Achievements</h4>
+    <div class="profile-card-under">Total Achievements: {{ achievement_qs_count }}</div>
+  </div>
+
+    <div class="row">
+    {% for a in achievement %}
+    <div class="col-4 pt-3">
+    <div class="card card-hover profile-card h-100" style="width: 100%;">
+      <div class="card-body">
+        <div class="row pt-4 my-auto">
+          <div class="col-md-12 text-center my-auto">
+            <div class="profile-card-header">{{ a.achievement }}</div><br>
+          </div>
+        </div>
+        <div class="profile-card-body mb-auto">
+        <div class="row pt-3 h-100 my-auto">
+          <div class="col-md-12 text-left my-auto">
+            <strong>Date Achieved: </strong><br>
+            <span class="">{{ a.date_achieved|date:"j M Y" }}</span>
+          </div>
+        </div>
+        <div class="row pt-3 h-100 my-auto">
+          <div class="col-md-12 text-left my-auto">
+            <strong>Description: </strong><br>
+            <span class="">{{ a.description|linebreaks }}</span>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+    {% empty %}
+        <p>No achievements captured.</p>
+    {% endfor %}
+    </div>
+  </div>
+  <div class="card profile-footer">
+    <div class="float-right">
+      {% if achievement_qs_count >= 6 %}
+        <a href="{% url 'Talent:ACH_FV' tlt vac %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Detail</a>
+      {% endif %}
+    </div>
+  </div>
+  <br>
+  <div class="profile-br-break">
     <div class="card-body">
       <div class="card profile-card">
-      <h4 class="profile-header" id="achievements">Achievements</h4>
-        <div class="profile-card-under">Total Achievements: {{ achievement_qs_count }}</div>
+      <h4 class="profile-header" id="achievements">Awards</h4>
+        <div class="profile-card-under">Total Awards: {{ award_qs_count }}</div>
+      </div>
+
+      <div class="row">
+      {% for a in award %}
+      <div class="col-4 pt-3">
+      <div class="card card-hover profile-card h-100" style="width: 100%;">
+        <div class="card-body">
+          <div class="row pt-4 my-auto">
+            <div class="col-md-12 text-center my-auto">
+              <div class="profile-card-header">{{ a.award }}</div><br>
+            </div>
+          </div>
+          <div class="profile-card-body mb-auto">
+          <div class="row pt-3 h-100 my-auto">
+            <div class="col-md-12 text-left my-auto">
+              <strong>Date Awarded: </strong><br>
+              <span class="">{{ a.date_achieved|date:"j M Y" }}</span>
+            </div>
+          </div>
+          <div class="row pt-3 h-100 my-auto">
+            <div class="col-md-12 text-left my-auto">
+              <strong>Description: </strong><br>
+              <span class="">{{ a.description|linebreaks }}</span>
+            </div>
+          </div>
+          <div class="row pt-3 h-100 my-auto">
+            <div class="col-md-12 text-left my-auto">
+              <strong>Skills: </strong><br>
+              <span class="">{{ a.tag.all|join:" || " }}</span>
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+      {% empty %}
+          <p>No awards captured.</p>
+      {% endfor %}
+      </div>
+    </div>
+    <div class="card profile-footer">
+      <div class="float-right">
+        {% if award_qs_count >= 6 %}
+          <a href="{% url 'Talent:ACH_FV' tlt vac %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Detail</a>
+        {% endif %}
+      </div>
+    </div>
+    <br>
+  <div class="profile-br-break">
+    <div class="card-body">
+      <div class="card profile-card">
+      <h4 class="profile-header" id="achievements">Publications</h4>
+        <div class="profile-card-under">Total Publications: {{ publication_qs_count }}</div>
       </div>
 
         <div class="row">
-        {% for a in achievement_qs %}
+        {% for a in publication %}
         <div class="col-4 pt-3">
         <div class="card card-hover profile-card h-100" style="width: 100%;">
           <div class="card-body">
             <div class="row pt-4 my-auto">
               <div class="col-md-12 text-center my-auto">
-                <div class="profile-card-header">{{ a.achievement }}</div><br>
+                <div class="profile-card-header">{{ a.title }}</div><br>
+                <div class="profile-card-under">{{ a.publisher }}</div>
               </div>
             </div>
             <div class="profile-card-body mb-auto">
             <div class="row pt-3 h-100 my-auto">
               <div class="col-md-12 text-left my-auto">
-                <strong>Date Achieved: </strong><br>
-                <span class="">{{ a.date_achieved|date:"j M Y" }}</span>
+                <strong>Date Published: </strong><br>
+                <span class="">{{ a.date_published|date:"j M Y" }}</span>
+              </div>
+            </div>
+            <div class="row pt-3 h-100 my-auto">
+              <div class="col-md-6 text-left my-auto">
+                <strong>Type: </strong><br>
+                <span class="">{{ a.get_type_display }}</span>
+              </div>
+              <div class="col-md-6 text-left my-auto">
+                <strong>Genre: </strong><br>
+                <span class="">{{ a.genre.all|join:", " }}</span>
               </div>
             </div>
             <div class="row pt-3 h-100 my-auto">
@@ -398,23 +509,28 @@
                 <span class="">{{ a.description|linebreaks }}</span>
               </div>
             </div>
+            <div class="row pt-3 h-100 my-auto">
+              <div class="col-md-12 text-left my-auto">
+                <strong>Skills: </strong><br>
+                <span class="">{{ a.tag.all|join:" || " }}</span>
+              </div>
+            </div>
             </div>
           </div>
         </div>
       </div>
         {% empty %}
-            <p>No achievements captured.</p>
+            <p>No publications captured.</p>
         {% endfor %}
         </div>
       </div>
       <div class="card profile-footer">
         <div class="float-right">
-          {% if achievement_qs_count >= 6 %}
+          {% if publication_qs_count >= 6 %}
             <a href="{% url 'Talent:ACH_FV' tlt vac %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Detail</a>
           {% endif %}
         </div>
       </div>
-
   <br>
   <div class="profile-br-break">
     <div class="card-body">

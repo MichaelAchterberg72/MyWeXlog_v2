@@ -16,6 +16,7 @@ from Profile.utils import create_code9
 from enterprises.models import Enterprise, Industry, Branch
 from project.models import ProjectData
 from db_flatten.models import SkillTag
+from booklist.models import Publisher, Author, Genre
 from django_countries.fields import CountryField
 from locations.models import Region
 from WeXlog.storage_backends import PrivateMediaStorage
@@ -55,6 +56,73 @@ class Achievements(models.Model):
             self.slug = create_code9(self)
 
         super(Achievements, self).save(*args, **kwargs)
+
+
+#Function to randomise filename for Profile Awards Upload
+def AwardFilename(instance, filename):
+	ext = filename.split('.')[-1]
+	return "%s/award\%s_%s.%s" % (instance.talent.id, str(time()).replace('.','_'), random(), ext)
+
+
+class Awards(models.Model):
+    talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    award = models.CharField(max_length=500)
+    date_achieved = models.DateField()
+    description = models.TextField('Describe the Award')
+    tag = models.ManyToManyField(SkillTag, verbose_name='Tag / Associated Skill')
+    upload = models.FileField(storage=PrivateMediaStorage(), upload_to=AwardFilename, blank=True, null=True, validators=[FileExtensionValidator(['pdf'])])
+    slug = models.SlugField(max_length=15, unique=True, null=True, blank=True)
+
+    class Meta:
+        ordering = ['-date_achieved']
+        unique_together = (('talent', 'award', 'date_achieved'),)
+
+    def __str__(self):
+        return f'{self.talent}: {self.award} ({self.date_achieved})'
+
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
+
+        super(Awards, self).save(*args, **kwargs)
+
+
+#Function to randomise filename for Profile Upload
+def PublicationFilename(instance, filename):
+	ext = filename.split('.')[-1]
+	return "%s/pub\%s_%s.%s" % (instance.talent.id, str(time()).replace('.','_'), random(), ext)
+
+
+class Publications(models.Model):
+    CLASS=(
+        ('F','Fiction'),
+        ('N','Non-fiction'),
+    )
+    talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    title = models.CharField(max_length=500)
+    type = models.CharField(max_length=1, choices=CLASS, default='F' )
+    publisher = models.ForeignKey(Publisher, on_delete=models.PROTECT)
+    link = models.URLField('Publication URL', blank=True, null=True)
+    author = models.ManyToManyField(Author)
+    tag = models.ManyToManyField(SkillTag, verbose_name='Tag / Associated Skill')
+    genre = models.ManyToManyField(Genre)
+    date_published = models.DateField()
+    description = models.TextField('Describe the Publication')
+    upload = models.FileField(storage=PrivateMediaStorage(), upload_to=PublicationFilename, blank=True, null=True, validators=[FileExtensionValidator(['pdf'])])
+    slug = models.SlugField(max_length=15, unique=True, null=True, blank=True)
+
+    class Meta:
+        ordering = ['-date_published']
+        unique_together = (('talent', 'title', 'date_published'),)
+
+    def __str__(self):
+        return f'{self.talent}: {self.title} ({self.date_published})'
+
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
+
+        super(Publications, self).save(*args, **kwargs)
 
 
 class Result(models.Model):#What you receive when completing the course

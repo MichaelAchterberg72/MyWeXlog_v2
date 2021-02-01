@@ -78,6 +78,7 @@ urlpatterns = [
         path('precolleague-wrongperson/<int:pk>/', views.PreColleagueWrongPersonView, name='PreColleagueWrongPerson'),
         path('precolleague-comment/<slug:clg>/', views.PreColleagueCommentView, name='PreColleagueComment'),
         path('careerhistory/', views.BriefCareerHistoryView, name='History'),
+        path('career-edit/<slug:bch>/', views.BriefHistoryEditView, name='HistoryEdit'),
         path('career-resign/<slug:bch>/<slug:tlt>/', views.ResignedView, name='Resigned'),
         path('int-remove/<slug:tlt>/', views.InterviewTltRemove, name='IntRemove'),
         path('int-accept/<int:int_id>/', views.InterviewAcceptView, name='IntAccept'),
