@@ -982,7 +982,7 @@ def email_reminder_validate(request, skl, tlt):
 
     form = EmailFormModal(request.POST or None, initial={
                     'subject': "Please Confirm MyWeXlog Experience",
-                    'message': f"Hi { recipient.first_name }, I have sent you a validation request and was hopeing you would be able log in to MyWeXlog and confirm it for me."})
+                    'message': f"Hi { recipient.first_name }, I have sent you a validation request and was hoping you would be able log in to MyWeXlog and confirm it for me."})
 
     if request.method == 'POST':
         next_url=request.POST.get('next', '/')
