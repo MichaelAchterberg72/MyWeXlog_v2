@@ -1,0 +1,145 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+
+{% block title %}
+  {% if request.user.id == tlt_p.id %}
+    {{block.super}}-Experience Overview
+  {% else %}
+    {{block.super}}-{{tlt.alias}} Publications Detail
+  {% endif %}
+{% endblock title %}
+
+{% block content %}
+<div class="profile-br-top">
+  <div class="card-body">
+    <div class="card profile-card">
+    <h4 class="profile-header" id="skills">MyWeXlog Public Profile</h4>
+    <div class="profile-card-under">{{ tlt }}</div>
+    <div class="row ml-3 mr-3">
+      <div class="col-sm-12">
+        <div class="btn-toolbar float-right">
+          {% if request.user.alias == tlt %}
+          <a href="{% url 'Talent:APV' tlt=request.user.alias vac='1ad9t2' %}#publications" class="btn btn-success">
+            Back to your Profile
+          </a>&nbsp
+          <a href="{% url 'Talent:Home' %}" class="btn btn-secondary">Experience Home</a>
+          {% else %}
+          <form  action="{% url 'BookList:BLB' %}" method="post">
+            <input type="hidden" name="next" value="{{ request.GET.next }}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-secondary float-right">Back to {{tlt_p.alias}}'s Profile</button>
+          </form>
+          {% endif %}
+        </div>
+        <div class="btn-toolbar">
+          <a href="{% url 'Talent:DPCPSum' tlt=request.user.alias %}" class="btn btn-primary">
+            Designation, Project & Company Summary
+          </a>&nbsp
+          <a href="{% url 'Talent:SPDView' tlt %}" class="btn btn-primary">
+            Skills Summary
+          </a>
+        </div>
+      </div>
+    </div>
+    <br>
+  </div>
+</div>
+
+<div class="card-body">
+  <div class="card profile-card">
+  <h4 class="profile-header" id="achievements">Publications</h4>
+    <div class="profile-card-under">Total Publications: {{ publication_qs_count }}</div>
+  </div>
+
+    <div class="row">
+    {% for a in pageitems %}
+    <div class="col-4 pt-3">
+    <div class="card card-hover profile-card h-100" style="width: 100%;">
+      <div class="card-body">
+        <div class="row pt-4 my-auto">
+          <div class="col-md-12 text-center my-auto">
+            <div class="profile-card-header">{{ a.title }}</div><br>
+            <div class="profile-card-under">{{ a.publisher }}</div>
+          </div>
+        </div>
+        <div class="profile-card-body mb-auto">
+        <div class="row pt-3 h-100 my-auto">
+          <div class="col-md-12 text-left my-auto">
+            <strong>Date Published: </strong><br>
+            <span class="">{{ a.date_published|date:"j M Y" }}</span>
+          </div>
+        </div>
+        <div class="row pt-3 h-100 my-auto">
+          <div class="col-md-6 text-left my-auto">
+            <strong>Type: </strong><br>
+            <span class="">{{ a.get_type_display }}</span>
+          </div>
+          <div class="col-md-6 text-left my-auto">
+            <strong>Genre: </strong><br>
+            <span class="">{{ a.genre.all|join:", " }}</span>
+          </div>
+        </div>
+        <div class="row pt-3 h-100 my-auto">
+          <div class="col-md-12 text-left my-auto">
+            <strong>Description: </strong><br>
+            <span class="">{{ a.description|linebreaks }}</span>
+          </div>
+        </div>
+        <div class="row pt-3 h-100 my-auto">
+          <div class="col-md-12 text-left my-auto">
+            <strong>Skills: </strong><br>
+            <span class="">{{ a.tag.all|join:" || " }}</span>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+    {% empty %}
+        <p>No publications captured.</p>
+    {% endfor %}
+    </div>
+  </div>
+  <div class="card profile-footer">
+    <div class="float-right ml-3">
+      <nav aria-label="Page navigation">
+          {% if pageitems.has_other_pages %}
+            <ul class="pagination">
+              {% if pageitems.has_previous %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ pageitems.previous_page_number }}" aria-label="Previous">
+                    <span aria-hidden="true">Previous</span>
+                    <span class="sr-only disabled">Previous</span>
+                  </a></li>
+              {% else %}
+                <li class="page-link disabled" tabindex="-1"><span>Previous</span></li>
+              {% endif %}
+
+              {% if pageitems.number|add:'-4' > 1 %}
+                <li class="page-link"><a href="?page={{ pageitems.number|add:'-5' }}">&hellip;</a></li>
+              {% endif %}
+
+              {% for i in pageitems.paginator.page_range %}
+                {% if pageitems.number == i %}
+                  <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
+                {% elif i > pageitems.number|add:'-5' and i < pageitems.number|add:'5' %}
+                  <li class="page-link"><a class="page-item" href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+              {% endfor %}
+
+              {% if pageitems.paginator.num_pages > pageitems.number|add:'4' %}
+                <li class="page-link"><a href="?page={{ pageitems.number|add:'5' }}">&hellip;</a></li>
+              {% endif %}
+
+              {% if pageitems.has_next %}
+                <li class="page-link"><a href="?page={{ pageitems.next_page_number }}">Next</a></li>
+              {% else %}
+                <li class="page-link disabled"><span>Next</span></li>
+              {% endif %}
+            </ul>
+          {% endif %}
+      </nav>
+    </div>
+  </div>
+  </div>
+  {% endblock content %}

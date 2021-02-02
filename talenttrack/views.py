@@ -2234,8 +2234,9 @@ def TltRatingDetailView(request, tlt):
 def ActiveProfileView(request, tlt, vac):
     '''View for profile and skills for specified vacancy'''
     #caching
-    bch = BriefCareerHistory.objects.filter(talent__alias=tlt).order_by('-date_from')[:6]
-    bch_count = bch.count()
+    bch_qs = BriefCareerHistory.objects.filter(talent__alias=tlt).order_by('-date_from')
+    bch = bch_qs[:6]
+    bch_count = bch_qs.count()
     pfl = Profile.objects.filter(alias=tlt).first()
     als = get_object_or_404(Profile, alias=tlt)
     padd = PhysicalAddress.objects.only('country', 'region', 'city').get(talent__alias=tlt)
@@ -2245,7 +2246,8 @@ def ActiveProfileView(request, tlt, vac):
     exp = WorkExperience.objects.filter(talent__alias=tlt).select_related('topic', 'course', 'project')
     edtexp = exp.filter(edt=True).order_by('-date_from')[:6]
     edtexp_count = edtexp.count()
-    bkl = ReadBy.objects.filter(talent__alias=tlt).select_related('book', 'type')[:6]
+    bkl_qs = ReadBy.objects.filter(talent__alias=tlt).select_related('book', 'type')
+    bkl = bkl_qs[:8]
     bkl_count = bkl.count()
     prj_qs = ProjectData.objects.all()
     bid_qs = WorkBid.objects.filter(Q(talent__alias=tlt) & Q(work__ref_no=vac))
@@ -2254,13 +2256,13 @@ def ActiveProfileView(request, tlt, vac):
     achievement_qs_count = achievement_qs.count()
     award_qs = Awards.objects.filter(talent__alias=tlt).order_by('-date_achieved')
     award = award_qs[:6]
-    print(award.values_list('tag'))
     award_qs_count = award.count()
     publication_qs = Publications.objects.filter(talent__alias=tlt).order_by('-date_published')
     publication = publication_qs[:6]
     publication_qs_count = publication_qs.count()
     language_qs = LanguageTrack.objects.filter(talent__alias=tlt).order_by('-language')
-    membership_qs = LicenseCertification.objects.filter(talent__alias=tlt).order_by('-issue_date')[:6]
+    membership_qs = LicenseCertification.objects.filter(talent__alias=tlt).order_by('-issue_date')
+    membership = membership_qs[:12]
     membership_qs_count = membership_qs.count()
     bslist_qs = BidShortList.objects.filter(Q(talent__alias=tlt) & Q(scope__ref_no=vac))
     int_list = BidInterviewList.objects.filter(Q(talent__alias=tlt) & Q(scope__ref_no=vac))
@@ -2339,8 +2341,38 @@ def ActiveProfileView(request, tlt, vac):
 
     template = 'talenttrack/active_profile_view.html'
     context = {
-        'tlt': tlt, 'bch': bch, 'bch_count': bch_count, 'pfl': pfl, 'padd': padd,'vacse_set': vacse_set, 'vacst_set': vacst_set, 'exp': exp, 'bkl': bkl, 'edtexp': edtexp, 'edtexp_count': edtexp_count, 'bkl_count': bkl_count, 'prj_set': prj_set, 'prj_count': prj_count, 'bid_qs': bid_qs, 'achievement': achievement, 'achievement_qs_count': achievement_qs_count, 'award': award, 'award_qs_count': award_qs_count, 'publication': publication, 'publication_qs_count': publication_qs_count, 'language_qs': language_qs, 'membership_qs': membership_qs, 'membership_qs_count': membership_qs_count, 'bslist_qs': bslist_qs, 'vacancy': vacancy, 'int_list': int_list, 'als': als, 'vac': vac, 'wtr_qs': wtr_qs,
+        'tlt': tlt, 'bch': bch, 'bch_count': bch_count, 'pfl': pfl, 'padd': padd,'vacse_set': vacse_set, 'vacst_set': vacst_set, 'exp': exp, 'bkl': bkl, 'edtexp': edtexp, 'edtexp_count': edtexp_count, 'bkl_count': bkl_count, 'prj_set': prj_set, 'prj_count': prj_count, 'bid_qs': bid_qs, 'achievement': achievement, 'achievement_qs_count': achievement_qs_count, 'award': award, 'award_qs_count': award_qs_count, 'publication': publication, 'publication_qs_count': publication_qs_count, 'language_qs': language_qs, 'membership': membership, 'membership_qs_count': membership_qs_count, 'bslist_qs': bslist_qs, 'vacancy': vacancy, 'int_list': int_list, 'als': als, 'vac': vac, 'wtr_qs': wtr_qs,
         }
+    return render(request, template, context)
+
+
+def LCMFVView(request, tlt, vac):
+
+    membership_qs = LicenseCertification.objects.filter(talent__alias=tlt).order_by('-issue_date')
+    membership_qs_count = membership_qs.count()
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(membership_qs, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+    template = 'talenttrack/apv_lcm.html'
+    context = {'tlt': tlt, 'vac': vac, 'membership_qs_count': membership_qs_count, 'pageitems': pageitems, 'page_range': page_range}
     return render(request, template, context)
 
 
@@ -2373,16 +2405,17 @@ def BCHView(request, tlt, vac):
     return render(request, template, context)
 
 
-def AchievementsView(request, tlt, vac):
+def AchievementsFVView(request, tlt, vac):
 
-    achievement_qs = Achievements.objects.filter(talent__alias=tlt).order_by('-date_achieved')
+    achievements_qs = Achievements.objects.filter(talent__alias=tlt).order_by('-date_achieved')
+    achievements_qs_count = achievements_qs.count()
 
     try:
         page = int(request.GET.get('page', 1))
     except:
         page = 1
 
-    paginator = Paginator(achievement_qs, 20)
+    paginator = Paginator(achievements_qs, 21)
 
     try:
         pageitems = paginator.page(page)
@@ -2398,7 +2431,67 @@ def AchievementsView(request, tlt, vac):
     page_range = list(paginator.page_range)[start_index:end_index]
 
     template = 'talenttrack/apv_ach.html'
-    context = {'tlt': tlt, 'vac': vac, 'pageitems': pageitems, 'page_range': page_range}
+    context = {'tlt': tlt, 'vac': vac, 'achievements_qs_count': achievements_qs_count, 'pageitems': pageitems, 'page_range': page_range}
+    return render(request, template, context)
+
+
+def AwardsFVView(request, tlt, vac):
+
+    awards_qs = Awards.objects.filter(talent__alias=tlt).order_by('-date_achieved')
+    awards_qs_count = awards_qs.count()
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(awards_qs, 21)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+    template = 'talenttrack/apv_awd.html'
+    context = {'tlt': tlt, 'vac': vac, 'awards_qs_count': awards_qs_count, 'pageitems': pageitems, 'page_range': page_range}
+    return render(request, template, context)
+
+
+def PublicationsFVView(request, tlt, vac):
+
+    publications_qs = Publications.objects.filter(talent__alias=tlt).order_by('-date_published')
+    publications_qs_count = publications_qs.count()
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(publications_qs, 21)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+    template = 'talenttrack/apv_pub.html'
+    context = {'tlt': tlt, 'vac': vac, 'publications_qs_count': publications_qs_count, 'pageitems': pageitems, 'page_range': page_range}
     return render(request, template, context)
 
 
@@ -2415,8 +2508,11 @@ def ProjectsFVView(request, tlt, vac):
             pass
         else:
             prj_count +=1
-            project_q = prj_qs.filter(pk=p).values_list('name', 'company__ename', 'companybranch__name', 'industry__industry')
-            info_list=[project_q[0][1], project_q[0][2], project_q[0][3]]
+            project_q = prj_qs.filter(pk=p).values_list('name', 'company__ename', 'companybranch__name', 'industry__industry', 'country')
+            cache = WorkExperience.objects.filter(project__pk=p)
+            hr = cache.aggregate(sum_t=Sum('hours_worked'))
+            ppl = cache.distinct('talent').count()
+            info_list=[project_q[0][1], project_q[0][2], project_q[0][3], project_q[0][4], hr['sum_t'], ppl]
             prj_set[project_q[0][0]] = info_list
 
     t = tuple(prj_set.items())
@@ -2426,7 +2522,7 @@ def ProjectsFVView(request, tlt, vac):
     except:
         page = 1
 
-    paginator = Paginator(t, 20)
+    paginator = Paginator(t, 21)
 
     try:
         pageitems = paginator.page(page)
@@ -2456,7 +2552,7 @@ def EduFVView(request, tlt, vac):
     except:
         page = 1
 
-    paginator = Paginator(edtexp, 20)
+    paginator = Paginator(edtexp, 21)
 
     try:
         pageitems = paginator.page(page)
@@ -2512,8 +2608,9 @@ def LCMFullView(request, tlt):
 def profile_view(request, tlt):
     '''View for profile without reference to a vacancy. Used for the search feature'''
     #caching
-    bch = BriefCareerHistory.objects.filter(talent__alias=tlt).order_by('-date_from')[:6]
-    bch_count = bch.count()
+    bch_qs = BriefCareerHistory.objects.filter(talent__alias=tlt).order_by('-date_from')
+    bch = bch_qs[:6]
+    bch_count = bch_qs.count()
     pfl = Profile.objects.filter(alias=tlt).first()
     als = get_object_or_404(Profile, alias=tlt)
     padd = PhysicalAddress.objects.only('country', 'region', 'city').get(talent__alias=tlt)
@@ -2523,14 +2620,23 @@ def profile_view(request, tlt):
     exp = WorkExperience.objects.filter(talent__alias=tlt).select_related('topic', 'course', 'project')
     edtexp = exp.filter(edt=True).order_by('-date_from')
     edtexp_count = edtexp.count()
-    bkl = ReadBy.objects.filter(talent__alias=tlt).select_related('book', 'type')[:6]
-    bkl_count = bkl.count()
+    bkl_qs = ReadBy.objects.filter(talent__alias=tlt).select_related('book', 'type')
+    bkl = bkl_qs[:8]
+    bkl_count = bkl_qs.count()
     prj_qs = ProjectData.objects.all()
     #bid_qs = WorkBid.objects.filter(Q(talent__alias=tlt) & Q(work__ref_no=vac))
-    achievement_qs = Achievements.objects.filter(talent__alias=tlt).order_by('-date_achieved')[:6]
+    achievement_qs = Achievements.objects.filter(talent__alias=tlt).order_by('-date_achieved')
+    achievement = achievement_qs[:6]
     achievement_qs_count = achievement_qs.count()
+    award_qs = Awards.objects.filter(talent__alias=tlt).order_by('-date_achieved')
+    award = award_qs[:6]
+    award_qs_count = award.count()
+    publication_qs = Publications.objects.filter(talent__alias=tlt).order_by('-date_published')
+    publication = publication_qs[:6]
+    publication_qs_count = publication_qs.count()
     language_qs = LanguageTrack.objects.filter(talent__alias=tlt).order_by('-language')
-    membership_qs = LicenseCertification.objects.filter(talent__alias=tlt).order_by('-issue_date')[:6]
+    membership_qs = LicenseCertification.objects.filter(talent__alias=tlt).order_by('-issue_date')
+    membership = membership_qs[:12]
     membership_qs_count = membership_qs.count()
     wtr_qs = WillingToRelocate.objects.filter(talent__alias=tlt)
 
@@ -2543,8 +2649,11 @@ def profile_view(request, tlt):
             pass
         else:
             prj_count +=1
-            project_q = prj_qs.filter(pk=p).values_list('name', 'company__ename', 'companybranch__name', 'industry__industry')
-            info_list=[project_q[0][1], project_q[0][2], project_q[0][3]]
+            project_q = prj_qs.filter(pk=p).values_list('name', 'company__ename', 'companybranch__name', 'industry__industry', 'country')
+            cache = WorkExperience.objects.filter(project__pk=p)
+            hr = cache.aggregate(sum_t=Sum('hours_worked'))
+            ppl = cache.distinct('talent').count()
+            info_list=[project_q[0][1], project_q[0][2], project_q[0][3], project_q[0][4], hr['sum_t'], ppl]
             prj_set[project_q[0][0]] = info_list
 
     object_viewed_signal.send(pfl.__class__, instance=pfl, request=request)
@@ -2552,7 +2661,7 @@ def profile_view(request, tlt):
 
     template = 'talenttrack/active_profile_view_light.html'
     context = {
-        'tlt': tlt, 'bch': bch, 'bch_count': bch_count, 'pfl': pfl, 'padd': padd, 'exp': exp, 'bkl': bkl, 'edtexp': edtexp, 'edtexp_count': edtexp_count, 'bkl_count': bkl_count, 'prj_set': prj_set, 'prj_count': prj_count, 'achievement_qs': achievement_qs, 'achievement_qs_count': achievement_qs_count, 'language_qs': language_qs, 'membership_qs': membership_qs, 'membership_qs_count': membership_qs_count, 'als': als, 'wtr_qs': wtr_qs,
+        'tlt': tlt, 'bch': bch, 'bch_count': bch_count, 'pfl': pfl, 'padd': padd, 'exp': exp, 'bkl': bkl, 'edtexp': edtexp, 'edtexp_count': edtexp_count, 'bkl_count': bkl_count, 'prj_set': prj_set, 'prj_count': prj_count, 'achievement': achievement, 'achievement_qs_count': achievement_qs_count, 'award': award, 'award_qs_count': award_qs_count, 'publication': publication, 'publication_qs_count': publication_qs_count, 'language_qs': language_qs, 'membership': membership, 'membership_qs_count': membership_qs_count, 'als': als, 'wtr_qs': wtr_qs,
         }
     return render(request, template, context)
 
@@ -2562,9 +2671,10 @@ def profile_view(request, tlt):
 def profile_view_corp(request, cor, tlt):
     '''View for profile without reference to a vacancy. Used for the corporate feature'''
     #caching
-    bch = BriefCareerHistory.objects.filter(talent__alias=tlt).order_by('-date_from')[:6]
+    bch_qs = BriefCareerHistory.objects.filter(talent__alias=tlt).order_by('-date_from')
+    bch = bch_qs[:6]
     corp_info = CorporateStaff.objects.get(Q(talent__alias=tlt) & Q(corporate__slug=cor))
-    bch_count = bch.count()
+    bch_count = bch_qs.count()
     pfl = Profile.objects.filter(alias=tlt)
     als = get_object_or_404(Profile, alias=tlt)
     padd = PhysicalAddress.objects.only('country', 'region', 'city').get(talent__alias=tlt)
@@ -2572,12 +2682,20 @@ def profile_view_corp(request, cor, tlt):
     exp = WorkExperience.objects.filter(talent__alias=tlt).select_related('topic', 'course', 'project')
     edtexp = exp.filter(edt=True).order_by('-date_from')
     edtexp_count = edtexp.count()
-    bkl = ReadBy.objects.filter(talent__alias=tlt).select_related('book', 'type')[:6]
-    bkl_count = bkl.count()
+    bkl_qs = ReadBy.objects.filter(talent__alias=tlt).select_related('book', 'type')
+    bkl = bkl_qs[:8]
+    bkl_count = bkl_qs.count()
     prj_qs = ProjectData.objects.all()
     #bid_qs = WorkBid.objects.filter(Q(talent__alias=tlt) & Q(work__ref_no=vac))
-    achievement_qs = Achievements.objects.filter(talent__alias=tlt).order_by('-date_achieved')[:6]
+    achievement_qs = Achievements.objects.filter(talent__alias=tlt).order_by('-date_achieved')
+    achievement = achievement_qs[:6]
     achievement_qs_count = achievement_qs.count()
+    award_qs = Awards.objects.filter(talent__alias=tlt).order_by('-date_achieved')
+    award = award_qs[:6]
+    award_qs_count = award.count()
+    publication_qs = Publications.objects.filter(talent__alias=tlt).order_by('-date_published')
+    publication = publication_qs[:6]
+    publication_qs_count = publication_qs.count()
     language_qs = LanguageTrack.objects.filter(talent__alias=tlt).order_by('-language')
     membership_qs = LicenseCertification.objects.filter(talent__alias=tlt).order_by('-issue_date')[:6]
     membership_qs_count = membership_qs.count()
@@ -2592,8 +2710,11 @@ def profile_view_corp(request, cor, tlt):
             pass
         else:
             prj_count +=1
-            project_q = prj_qs.filter(pk=p).values_list('name', 'company__ename', 'companybranch__name', 'industry__industry')
-            info_list=[project_q[0][1], project_q[0][2], project_q[0][3]]
+            project_q = prj_qs.filter(pk=p).values_list('name', 'company__ename', 'companybranch__name', 'industry__industry', 'country')
+            cache = WorkExperience.objects.filter(project__pk=p)
+            hr = cache.aggregate(sum_t=Sum('hours_worked'))
+            ppl = cache.distinct('talent').count()
+            info_list=[project_q[0][1], project_q[0][2], project_q[0][3], project_q[0][4], hr['sum_t'], ppl]
             prj_set[project_q[0][0]] = info_list
 
     #object_viewed_signal.send(pfl.__class__, instance=pfl, request=request)
@@ -2601,7 +2722,7 @@ def profile_view_corp(request, cor, tlt):
 
     template = 'talenttrack/active_profile_view_corp.html'
     context = {
-        'tlt': tlt, 'bch': bch, 'bch_count': bch_count, 'pfl': pfl, 'padd': padd, 'exp': exp, 'bkl': bkl, 'edtexp': edtexp, 'edtexp_count': edtexp_count, 'bkl_count': bkl_count, 'prj_set': prj_set, 'prj_count': prj_count, 'achievement_qs': achievement_qs, 'achievement_qs_count': achievement_qs_count, 'language_qs': language_qs, 'membership_qs': membership_qs, 'membership_qs_count': membership_qs_count, 'als': als, 'wtr_qs': wtr_qs, 'corp_info': corp_info
+        'tlt': tlt, 'bch': bch, 'bch_count': bch_count, 'pfl': pfl, 'padd': padd, 'exp': exp, 'bkl': bkl, 'edtexp': edtexp, 'edtexp_count': edtexp_count, 'bkl_count': bkl_count, 'prj_set': prj_set, 'prj_count': prj_count, 'achievement': achievement, 'achievement_qs_count': achievement_qs_count, 'award': award, 'award_qs_count': award_qs_count, 'publication': publication, 'publication_qs_count': publication_qs_count, 'language_qs': language_qs, 'membership_qs': membership_qs, 'membership_qs_count': membership_qs_count, 'als': als, 'wtr_qs': wtr_qs, 'corp_info': corp_info
         }
     return render(request, template, context)
 

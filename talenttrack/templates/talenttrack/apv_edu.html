@@ -1,83 +1,100 @@
 {% extends "base_home.html" %}
 {% load humanize %}
-{% block title %}{{block.super}}- {{ tlt }} Profile{% endblock title %}
+
+{% block title %}
+  {% if request.user.id == tlt_p.id %}
+    {{block.super}}-Experience Overview
+  {% else %}
+    {{block.super}}-{{tlt.alias}} Education History Detail
+  {% endif %}
+{% endblock title %}
 
 {% block content %}
-<h3>Profile for {{ tlt }}</h3>
-
-  <div class="">
-    <div class="btn-group float-right">
-    <form  action="{% url 'BookList:BLB' %}" method="post">
-      <input type="hidden" name="next" value="{{ request.GET.next }}">
-      {% csrf_token %}
-      <button type="submit" class="btn btn-success">Back to your profile</button>
-    </form>&nbsp
-    <a href="{% url 'Talent:Home' %}" class="btn btn-secondary">Experience Home</a>
-    </div>
-    <a href="{% url 'Talent:DPCSum' tlt %}" class="btn btn-primary">Designation, Project & Company Summary</a>
-    <a href="{% url 'Talent:SPDView' tlt %}" class="btn btn-primary">Skills Summary</a>
-  </div>
-  <br>
-<div class="card card-shadow">
+<div class="profile-br-top">
   <div class="card-body">
-    <h4 class="card-title">Education & Training</h4>
-  <div class="">
-    <div class="col-sm-12">
-      <div class="">
-        <div class="">
+    <div class="card profile-card">
+    <h4 class="profile-header" id="skills">MyWeXlog Public Profile</h4>
+    <div class="profile-card-under">{{ tlt }}</div>
+    <div class="row ml-3 mr-3">
+      <div class="col-sm-12">
+        <div class="btn-toolbar float-right">
+          {% if request.user.alias == tlt %}
+          <a href="{% url 'Talent:APV' tlt=request.user.alias vac='1ad9t2' %}#edu" class="btn btn-success">
+            Back to your Profile
+          </a>&nbsp
+          <a href="{% url 'Talent:Home' %}" class="btn btn-secondary">Experience Home</a>
+          {% else %}
+          <form  action="{% url 'BookList:BLB' %}" method="post">
+            <input type="hidden" name="next" value="{{ request.GET.next }}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-secondary float-right">Back to {{tlt_p.alias}}'s Profile</button>
+          </form>
+          {% endif %}
+        </div>
+        <div class="btn-toolbar">
+          <a href="{% url 'Talent:DPCPSum' tlt=request.user.alias %}" class="btn btn-primary">
+            Designation, Project & Company Summary
+          </a>&nbsp
+          <a href="{% url 'Talent:SPDView' tlt %}" class="btn btn-primary">
+            Skills Summary
+          </a>
+        </div>
+      </div>
+    </div>
+    <br>
+  </div>
+</div>
 
-          <div class="container">
-            <div class="row my-auto">
-              <div class="col-md-2 h-100 text-center my-auto">
-                <strong>Date from</strong>
-              </div>
-              <div class="col-md-2 h-100 text-center my-auto">
-                <strong>Date to</strong>
-              </div>
-              <div class="col-md-5 h-100 text-center my-auto">
-                <strong>Institution</strong>
-              </div>
-              <div class="col-md-3 h-100 text-center my-auto">
-                <strong>Certification</strong>
-              </div>
-            </div>
+<div class="card-body">
+  <div class="card profile-card">
+  <h4 class="profile-header">Education & Training</h4>
+  <div class="profile-card-under">Total Courses Attended: {{ edtexp_count }}</div>
+  </div>
+
+  <div class="row">
+    {% for e in pageitems %}
+    <div class="col-4 pt-3">
+    <div class="card card-hover profile-card h-100" style="width: 100%;">
+      <div class="card-body">
+        <div class="row pt-4 my-auto">
+          <div class="col-md-12 text-center my-auto">
+            <div class="profile-card-header">{{ e.topic }}</div><br>
+            <div class="profile-card-under">{{ e.course }}</div>
           </div>
-          {% for e in pageitems %}
-          <div class="row">
-            <div class="card mt-1 card-hover" style="width: 100%;">
-              <div class="card-body small-pad">
-                <div class="row my-auto">
-                  <div class="col-md-12 h-100 text-left my-auto">
-                    {{ e.topic }}
-                  </div>
-                  <div class="col-md-12 h-100 text-left my-auto">
-                    {{ e.course }}
-                  </div>
-                </div>
-                <p class="tiny-paragraph">&nbsp</p>
-                <div class="row my-auto">
-                  <div class="col-md-2 h-100 text-left my-auto">
-                    {{ e.date_from|date:"j M Y" }}
-                  </div>
-                  <div class="col-md-2 h-100 text-center my-auto">
-                    {{ e.date_to|date:"j M Y" }}
-                  </div>
-                  <div class="col-md-5 h-100 text-center my-auto">
-                    {{ e.course.company }}
-                  </div>
-                  <div class="col-md-3 h-100 text-center my-auto">
-                    {{ e.course.certification }}{% if e.upload %}<br>(Uploaded){% else %}{% endif %}
-                  </div>
-                </div>
-              </div>
-            </div>
+        </div>
+        <div class="profile-card-body mb-auto">
+        <div class="row pt-3 h-100 my-auto">
+          <div class="col-md-12 text-left my-auto">
+            <strong>Attended from: </strong><br>
+            <span class="">{{ e.date_from|date:"j M Y" }} to {{ e.date_to|date:"j M Y" }}</span>
           </div>
-          {% empty %}
-              <p>Nothing Captured.</p>
-          {% endfor %}
-
-      <p>&nbsp</p>
-
+        </div>
+        <div class="row pt-3 my-auto">
+          <div class="col-md-8  pt-2 text-left my-auto">
+            <strong>Institution: </strong><br>
+            {{ e.course.company }}
+          </div>
+          <div class="col-4 col-no-pad text-center my-auto">
+            {{ e.course.certification }}{% if e.upload %}<br>(Uploaded){% else %}{% endif %}
+          </div>
+        </div>
+        <div class="row  pt-4 my-auto">
+          <div class="col-md-12 text-left my-auto">
+            <strong>Skills: </strong><br>
+            {{ e.topic.skills.all|join:" || " }}
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+      <p>Nothing Captured.</p>
+  {% endfor %}
+  </div>
+</div>
+<div class="card profile-footer">
+  <div class="float-right ml-3">
     <nav aria-label="Page navigation">
         {% if pageitems.has_other_pages %}
           <ul class="pagination">
@@ -117,4 +134,5 @@
     </nav>
   </div>
 </div>
-{% endblock content %}
+  </div>
+  {% endblock content %}

@@ -59,8 +59,11 @@ urlpatterns = [
     path('dpc-detail/<slug:tlt>/', views.DPC_SummaryView, name='DPCSum'),
     path('dpcp-detail/<slug:tlt>/', views.DPCP_SummaryView, name='DPCPSum'),
     path('apv/<slug:tlt>/<slug:vac>/', views.ActiveProfileView, name='APV'),
+    path('apv-lcm/<slug:tlt>/<slug:vac>/', views.LCMFVView, name='LCM_FV'),
     path('apv-bch/<slug:tlt>/<slug:vac>/', views.BCHView, name='BCH_FV'),
-    path('apv-ach/<slug:tlt>/<slug:vac>/', views.AchievementsView, name='ACH_FV'),
+    path('apv-ach/<slug:tlt>/<slug:vac>/', views.AchievementsFVView, name='ACH_FV'),
+    path('apv-awd/<slug:tlt>/<slug:vac>/', views.AwardsFVView, name='AWD_FV'),
+    path('apv-pub/<slug:tlt>/<slug:vac>/', views.PublicationsFVView, name='PUB_FV'),
     path('apv-projects/<slug:tlt>/<slug:vac>/', views.ProjectsFVView, name='Projects_FV'),
     path('apv-edu/<slug:tlt>/<slug:vac>/', views.EduFVView, name='EDU_FV'),
 

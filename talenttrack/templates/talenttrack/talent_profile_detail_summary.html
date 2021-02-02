@@ -59,7 +59,7 @@
         <div class="profile-card-header">Skills List</div><br>
       </div>
 
-    <div class="profile-card-body mb-auto">
+  <div class="profile-card-body mb-auto">
 
   <div style="overflow-x: scroll">
   <div id="chart-container" style="position: relative;  width:auto;">
@@ -146,6 +146,9 @@
     <div class="col-md-12">
       {% for skl in dept_skills_link %}<a href="{% url 'Talent:ProfileSkillsStats' skl.id %}?next={{ request.path|urlencode }}" class="btn btn-outline-success auto mb-1 mr-1 pointer">{{ skl.skill }}</a> {% endfor %}
     </div>
+  </div>
+  </div>
+  </div>
   </div>
   </div>
 <br>

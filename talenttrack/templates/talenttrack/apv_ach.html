@@ -1,61 +1,90 @@
 {% extends "base_home.html" %}
 {% load humanize %}
-{% block title %}{{block.super}}- {{ tlt }} Profile{% endblock title %}
+
+{% block title %}
+  {% if request.user.id == tlt_p.id %}
+    {{block.super}}-Experience Overview
+  {% else %}
+    {{block.super}}-{{tlt.alias}} Achievements Detail
+  {% endif %}
+{% endblock title %}
 
 {% block content %}
-<h3>Profile for {{ tlt }}</h3>
-<div class="">
-  <div class="btn-group float-right">
-  <form  action="{% url 'BookList:BLB' %}" method="post">
-    <input type="hidden" name="next" value="{{ request.GET.next }}">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-success">Back to your profile</button>
-  </form>&nbsp
-  <a href="{% url 'Talent:Home' %}" class="btn btn-secondary">Experience Home</a>
-  </div>
-  <a href="{% url 'Talent:DPCSum' tlt %}" class="btn btn-primary">Designation, Project & Company Summary</a>
-  <a href="{% url 'Talent:SPDView' tlt %}" class="btn btn-primary">Skills Summary</a>
-</div>
-<br>
-<div class="card card-shadow">
+<div class="profile-br-top">
   <div class="card-body">
-    <div class="float-right">
-      <a href="{% url 'Talent:APV' tlt vac %}?next={{ request.path|urlencode }}#achievements" class="btn btn-secondary" style="width: 5rem;">Back</a>
-    </div>
-    <h4 class="card-title">Achievements</h4>
-
-    {% for a in pageitems %}
-    <div class="container">
-    <div class="row">
-      <div class="card mt-1 card-hover" style="width: 100%;">
-        <div class="card-body small-pad">
-          <div class="row my-auto">
-            <div class="col-md-4 h-100 text-left my-auto">
-              <p class="short-paragraph"><strong>Achievement:</strong></p>
-              {{ a.achievement}}
-            </div>
-            <div class="col-md-3 h-100 text-left my-auto">
-              <p class="short-paragraph"><strong>Date Achieved:</strong></p>
-              {{ a.date_achieved|date:"j M Y"}}
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12 h-100 text-left my-auto">
-              <br>
-              <p class="short-paragraph"><strong>Description:</strong></p>
-              {{ a.description|linebreaks}}
-            </div>
-          </div>
+    <div class="card profile-card">
+    <h4 class="profile-header" id="skills">MyWeXlog Public Profile</h4>
+    <div class="profile-card-under">{{ tlt }}</div>
+    <div class="row ml-3 mr-3">
+      <div class="col-sm-12">
+        <div class="btn-toolbar float-right">
+          {% if request.user.alias == tlt %}
+          <a href="{% url 'Talent:APV' tlt=request.user.alias vac='1ad9t2' %}#achievements" class="btn btn-success">
+            Back to your Profile
+          </a>&nbsp
+          <a href="{% url 'Talent:Home' %}" class="btn btn-secondary">Experience Home</a>
+          {% else %}
+          <form  action="{% url 'BookList:BLB' %}" method="post">
+            <input type="hidden" name="next" value="{{ request.GET.next }}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-secondary float-right">Back to {{tlt_p.alias}}'s Profile</button>
+          </form>
+          {% endif %}
+        </div>
+        <div class="btn-toolbar">
+          <a href="{% url 'Talent:DPCPSum' tlt=request.user.alias %}" class="btn btn-primary">
+            Designation, Project & Company Summary
+          </a>&nbsp
+          <a href="{% url 'Talent:SPDView' tlt %}" class="btn btn-primary">
+            Skills Summary
+          </a>
         </div>
       </div>
     </div>
+    <br>
+  </div>
+</div>
+
+<div class="card-body">
+<div class="card profile-card">
+<h4 class="profile-header" id="achievements">Achievements</h4>
+  <div class="profile-card-under">Total Achievements: {{ achievement_qs_count }}</div>
+</div>
+
+  <div class="row">
+  {% for a in pageitems %}
+  <div class="col-4 pt-3">
+  <div class="card card-hover profile-card h-100" style="width: 100%;">
+    <div class="card-body">
+      <div class="row pt-4 my-auto">
+        <div class="col-md-12 text-center my-auto">
+          <div class="profile-card-header">{{ a.achievement }}</div><br>
+        </div>
+      </div>
+      <div class="profile-card-body mb-auto">
+      <div class="row pt-3 h-100 my-auto">
+        <div class="col-md-12 text-left my-auto">
+          <strong>Date Achieved: </strong><br>
+          <span class="">{{ a.date_achieved|date:"j M Y" }}</span>
+        </div>
+      </div>
+      <div class="row pt-3 h-100 my-auto">
+        <div class="col-md-12 text-left my-auto">
+          <strong>Description: </strong><br>
+          <span class="">{{ a.description|linebreaks }}</span>
+        </div>
+      </div>
+      </div>
     </div>
-    {% empty %}
-    <p>No achievements captured.</p>
-    {% endfor %}
-
-    <p>&nbsp</p>
-
+  </div>
+</div>
+  {% empty %}
+      <p>No achievements captured.</p>
+  {% endfor %}
+  </div>
+</div>
+<div class="card profile-footer">
+  <div class="float-right ml-3">
     <nav aria-label="Page navigation">
         {% if pageitems.has_other_pages %}
           <ul class="pagination">
@@ -95,4 +124,5 @@
     </nav>
   </div>
 </div>
-{% endblock content %}
+  </div>
+  {% endblock content %}

@@ -200,12 +200,12 @@
 <br>
 
     <div class="card profile-card">
-    <h4 class="profile-header">Licenses, Certifications & Memberships</h4>
+    <h4 class="profile-header" id="certs">Licenses, Certifications & Memberships</h4>
     <div class="profile-card-under">Total: {{ membership_qs_count }}</div>
     </div>
 
     <div class="row">
-    {% for lcm in membership_qs %}
+    {% for lcm in membership %}
       <div class="col-3 pt-3">
       <div class="card card-hover profile-card h-100" style="width: 100%;">
         <div class="card-body">
@@ -245,6 +245,11 @@
     </div>
   </div>
   <div class="card profile-footer">
+    <div class="float-right">
+      {% if membership_qs_count >= 12 %}
+      <a href="{% url 'Talent:LCM_FV' tlt vac %}" class="btn btn-primary float-right">View All Certificates</a>
+      {% endif %}
+    </div>
   </div>
 </div>
   <br>
@@ -311,7 +316,7 @@
 
           <div class="row">
           {% for h in bch %}
-          <div class="col-6 pt-3">
+          <div class="col-12 pt-3">
           <div class="card card-hover profile-card h-100" style="width: 100%;">
             <div class="card-body">
               <div class="row pt-4 my-auto">
@@ -362,7 +367,7 @@
       <div class="card profile-footer">
         <div class="float-right">
           {% if bch_count >= 6 %}
-          <a href="{% url 'Talent:DPCPSum' als.alias %}#Company" class="btn btn-primary">All Companies</a>
+          <a href="{% url 'Talent:BCH_FV' tlt vac %}" class="btn btn-primary float-right">View All Placements</a>
           {% endif %}
         </div>
       </div>
@@ -418,7 +423,7 @@
   <div class="profile-br-break">
     <div class="card-body">
       <div class="card profile-card">
-      <h4 class="profile-header" id="achievements">Awards</h4>
+      <h4 class="profile-header" id="awards">Awards</h4>
         <div class="profile-card-under">Total Awards: {{ award_qs_count }}</div>
       </div>
 
@@ -463,7 +468,7 @@
     <div class="card profile-footer">
       <div class="float-right">
         {% if award_qs_count >= 6 %}
-          <a href="{% url 'Talent:ACH_FV' tlt vac %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Detail</a>
+          <a href="{% url 'Talent:AWD_FV' tlt vac %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Detail</a>
         {% endif %}
       </div>
     </div>
@@ -471,7 +476,7 @@
   <div class="profile-br-break">
     <div class="card-body">
       <div class="card profile-card">
-      <h4 class="profile-header" id="achievements">Publications</h4>
+      <h4 class="profile-header" id="publications">Publications</h4>
         <div class="profile-card-under">Total Publications: {{ publication_qs_count }}</div>
       </div>
 
@@ -527,10 +532,62 @@
       <div class="card profile-footer">
         <div class="float-right">
           {% if publication_qs_count >= 6 %}
-            <a href="{% url 'Talent:ACH_FV' tlt vac %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Detail</a>
+            <a href="{% url 'Talent:PUB_FV' tlt vac %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Detail</a>
           {% endif %}
         </div>
       </div>
+    </div>
+    <br>
+    <div class="profile-br-break">
+      <div class="card-body">
+        <div class="card profile-card">
+        <h4 class="profile-header" id="books">Books Read</h4>
+        <div class="profile-card-under">Total Books Read: {{ bkl_count }}</div>
+        </div>
+
+        <div class="row">
+        {% for b in bkl %}
+          <div class="col-3 pt-3">
+          <div class="card card-hover profile-card h-100" style="width: 100%;">
+            <div class="card-body">
+              <div class="row pt-4 my-auto">
+                <div class="col-md-12 text-center my-auto">
+                  <div class="profile-card-header">{{ b.book }}</div><br>
+                  <div class="profile-card-under">{{ b.book.author.all|join:", " }}</div>
+                </div>
+              </div>
+              <div class="profile-card-body mb-auto">
+              <div class="row pt-3 h-100 my-auto">
+                <div class="col-md-12 text-left my-auto">
+                  <strong>Book Type: </strong><br>
+                  <span class="">{{ b.type }}</span>
+                </div>
+              </div>
+              <div class="row pt-3 h-100 my-auto">
+                <div class="col-md-12 text-left my-auto">
+                  <strong>Date Read: </strong><br>
+                  <span class="">{{ b.date|date:"j M Y" }}</span>
+                </div>
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+            <p>No books listed.</p>
+        {% endfor %}
+        </div>
+      </div>
+      <div class="card profile-footer">
+        <div class="float-right">
+        {% if bkl_count >= 8 %}
+          <a href="{% url 'BookList:VPBL' als.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Books</a>
+        {% else %}
+
+        {% endif %}
+      </div>
+    </div>
+    </div>
   <br>
   <div class="profile-br-break">
     <div class="card-body">
@@ -593,69 +650,19 @@
     <div class="card profile-footer">
       <div class="float-right">
         {% if prj_count >= 6 %}
-        <a href="{% url 'Talent:DPCPSum' als.alias %}#Project" class="btn btn-primary">All Projects</a>
+        <a href="{% url 'Talent:Projects_FV' tlt vac %}#Project" class="btn btn-primary float-right">All Projects</a>
         {% endif %}
       </div>
     </div>
   </div>
-  <br>
-  <div class="profile-br-break">
-    <div class="card-body">
-      <div class="card profile-card">
-      <h4 class="profile-header">Books Read</h4>
-      <div class="profile-card-under">Total Books Read: {{ bkl_count }}</div>
-      </div>
-
-      <div class="row">
-      {% for b in bkl %}
-        <div class="col-3 pt-3">
-        <div class="card card-hover profile-card h-100" style="width: 100%;">
-          <div class="card-body">
-            <div class="row pt-4 my-auto">
-              <div class="col-md-12 text-center my-auto">
-                <div class="profile-card-header">{{ b.book }}</div><br>
-                <div class="profile-card-under">{{ b.book.author.all|join:", " }}</div>
-              </div>
-            </div>
-            <div class="profile-card-body mb-auto">
-            <div class="row pt-3 h-100 my-auto">
-              <div class="col-md-12 text-left my-auto">
-                <strong>Book Type: </strong><br>
-                <span class="">{{ b.type }}</span>
-              </div>
-            </div>
-            <div class="row pt-3 h-100 my-auto">
-              <div class="col-md-12 text-left my-auto">
-                <strong>Date Read: </strong><br>
-                <span class="">{{ b.date|date:"j M Y" }}</span>
-              </div>
-            </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      {% empty %}
-          <p>No books listed.</p>
-      {% endfor %}
-      </div>
-    </div>
-    <div class="card profile-footer">
-      <div class="float-right">
-      {% if bkl %}
-        <a href="{% url 'BookList:VPBL' als.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Books</a>
-      {% else %}
-
-      {% endif %}
-    </div>
-  </div>
-  </div>
 
   <br>
 
   <div class="profile-br-break">
     <div class="card-body">
       <div class="card profile-card">
-      <h4 class="profile-header">Education & Training</h4>
+      <h4 class="profile-header" id="edu">Education & Training</h4>
+      <div class="profile-card-under">Total Courses Attended: {{ edtexp_count }}</div>
       </div>
 
       <div class="row">
