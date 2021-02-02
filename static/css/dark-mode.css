@@ -128,16 +128,28 @@
 
 /* Public Profile */
 [data-theme="dark"] .profile-card {
-  background-color: 	#808080 !important;
-  color: #ffffff !important;
-}
-
-[data-theme="dark"] .profile-card-body {
   background-color: 	#444444 !important;
   color: #ffffff !important;
 }
 
+[data-theme="dark"] .profile-card-body {
+  background-color: 	#303030 !important;
+  color: #ffffff !important;
+}
+
 [data-theme="dark"] .profile-footer {
-  background-color: 	#808080 !important;
+  background-color: 	#444444 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .profile-header {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .profile-card-header {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .profile-card-under {
   color: #ffffff !important;
 }
