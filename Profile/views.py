@@ -2211,7 +2211,7 @@ def ProfileView(request):
         template = 'Profile/profile_view.html'
         context = {
             'info':info, 'email':email, 'physical':physical, 'postal': postal, 'pnumbers': pnumbers, 'online': online, 'id': id, 'passport': passport, 'speak': speak, 'history': history, 'user_info': user_info, 'tlt': tlt, 'relocate': relocate,
-            #'upload': upload, 'lcm_qs': lcm_qs,'achievement': achievement, 'award': award, 'publication': publication,
+            'upload': upload, 'lcm_qs': lcm_qs,'achievement': achievement, 'award': award, 'publication': publication,
             }
 
         return render(request, template, context)
