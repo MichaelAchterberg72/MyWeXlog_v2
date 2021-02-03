@@ -151,10 +151,10 @@ table {
   margin: 0px -10px 0px -10px;
 }
 .profile-br-top {
-  margin: 0px -10px 40px -10px;
+  margin: 0px 0px 40px 0px;
 }
 .profile-br-break {
-  margin: 40px -10px 40px -10px;
+  margin: 40px 0px 40px 0px;
 }
 .profile-card-display-number {
   font-size: 22px;

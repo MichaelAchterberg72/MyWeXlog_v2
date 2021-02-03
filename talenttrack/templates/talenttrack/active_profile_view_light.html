@@ -126,8 +126,9 @@
 
     <div class="card profile-card">
     <h4 class="profile-header" id="certs">Licenses, Certifications & Memberships</h4>
-    <div class="profile-card-under">Total: {{ membership_qs_count }}</div>
+    <div class="profile-card-under">{% if membership_qs_count > 0 %}Total: {{ membership_qs_count }}{% else %}No licences, certifications or memberships captured yet{% endif %}</div>
     </div>
+    {% if membership_qs_count > 0 %}
 
     <div class="row">
     {% for lcm in membership %}
@@ -177,128 +178,207 @@
     </div>
   </div>
 </div>
-  <br>
-  <div class="profile-br-break">
-    <div class="card-body">
-      <div class="card profile-card">
-      <h4 class="profile-header" id="General">General Information</h4>
-      <div class="profile-card-under">Expected Rate: {% if bid_qs %}{{ bid_qs.currency }} {{ bid_qs.rate_bid }} {{ bid_qs.get_rate_unit_display }}{% else %}{{ als.currency }} {{ als.std_rate }} per hour{% endif %}</div>
-      </div>
+<br>
+{% else %}
+</div>
+{% endif %}
 
+<div class="profile-br-break">
+  <div class="card-body">
+    <div class="card profile-card">
+    <h4 class="profile-header" id="General">General Information</h4>
+    <div class="profile-card-under">Expected Rate: {% if bid_qs %}{{ bid_qs.currency }} {{ bid_qs.rate_bid }} {{ bid_qs.get_rate_unit_display }}{% else %}{{ als.currency }} {{ als.std_rate }} per hour{% endif %}</div>
+    </div>
     <div class="row">
       <div class="col-12 pt-3">
       <div class="card card-hover profile-card h-100" style="width: 100%;">
         <div class="card-body">
           <div class="row pt-4 my-auto">
             <div class="col-md-12 text-center my-auto">
-              <div class="profile-card-header">Background</div><br>
+              <div class="profile-card-header">Motivation for position</div><br>
               <div class="profile-card-under">{{ h.designation }}</div>
             </div>
           </div>
           <div class="profile-card-body mb-auto">
           <div class="row pt-3 h-100 my-auto">
             <div class="col-md-12 text-left my-auto">
-              <span class="">{{ als.background|linebreaks }}</span>
+              <span class="">{% if bid_qs %}{{ bid_qs.motivation|linebreaks }}{% else %}{{ als.motivation|linebreaks }}{% endif %}</span>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-
-</div>
-  <div class="card profile-footer">
   </div>
-</div>
-    <br>
-    <div class="profile-br-break">
-      <div class="card-body">
-        <div class="card profile-card">
-        <h4 class="profile-header" id="career">Career in Summary</h4>
-          <div class="profile-card-under">Total Placements: {{ bch_count }}</div>
-        </div>
-
-          <div class="row">
-          {% for h in bch %}
-          <div class="col-6 pt-3">
-          <div class="card card-hover profile-card h-100" style="width: 100%;">
-            <div class="card-body">
-              <div class="row pt-4 my-auto">
-                <div class="col-md-12 text-center my-auto">
-                  <div class="profile-card-header">{{ h.companybranch }}</div><br>
-                  <div class="profile-card-under">{{ h.designation }}</div>
-                </div>
-              </div>
-              <div class="profile-card-body mb-auto">
-              <div class="row pt-3 h-100 my-auto">
-                <div class="col-md-7 text-left my-auto">
-                  <strong>Employed From: </strong><br>
-                  <span class="">{{ h.date_from|date:"j M Y" }} to {% if h.date_to %}
-                    {{ h.date_to|date:"j M Y" }}
-                  {% else %}
-                    Present
-                  {% endif %}</span>
-                </div>
-                <div class="col-md-5 text-left my-auto">
-                  <strong>Tenure: </strong><br>
-                  <span class="">{{ h.tenure|floatformat:1 }}</span>
-                </div>
-              </div>
-              <div class="row pt-3 h-100 my-auto">
-                <div class="col-md-12 text-left my-auto">
-                  <strong>Configuration: </strong><br>
-                  <span class="">{{ h.work_configeration }}</span>
-                </div>
-              </div>
-              {% if h.description %}
-              <div class="row pt-3 h-100 my-auto">
-                <div class="col-md-12 text-left my-auto">
-                  <strong>Description: </strong><br>
-                  <span class="">{{ h.description|linebreaks }}</span>
-                </div>
-              </div>
-              {% endif %}
-              </div>
-            </div>
-          </div>
-        </div>
-
-          {% empty %}
-              <p>Nothing Captured.</p>
-          {% endfor %}
-        </div>
-      </div>
-      <div class="card profile-footer">
-        <div class="float-right">
-          {% if bch_count >= 6 %}
-          <a href="{% url 'Talent:BCH_FV' tlt vac %}" class="btn btn-primary float-right">View All Placements</a>
-          {% endif %}
-        </div>
-      </div>
-    </div>
-  <br>
-  <div class="profile-br-break">
-  <div class="card-body">
-  <div class="card profile-card">
-  <h4 class="profile-header" id="achievements">Achievements</h4>
-    <div class="profile-card-under">Total Achievements: {{ achievement_qs_count }}</div>
-  </div>
-
-    <div class="row">
-    {% for a in achievement %}
-    <div class="col-4 pt-3">
+  <div class="row">
+    <div class="col-12 pt-3">
     <div class="card card-hover profile-card h-100" style="width: 100%;">
       <div class="card-body">
         <div class="row pt-4 my-auto">
           <div class="col-md-12 text-center my-auto">
-            <div class="profile-card-header">{{ a.achievement }}</div><br>
+            <div class="profile-card-header">Background</div><br>
+            <div class="profile-card-under">{{ h.designation }}</div>
           </div>
         </div>
         <div class="profile-card-body mb-auto">
         <div class="row pt-3 h-100 my-auto">
           <div class="col-md-12 text-left my-auto">
-            <strong>Date Achieved: </strong><br>
+            <span class="">{{ als.background|linebreaks }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<br>
+
+<div class="card profile-footer">
+</div>
+</div>
+</div>
+  <br>
+  <div class="profile-br-break">
+    <div class="card-body">
+      <div class="card profile-card">
+      <h4 class="profile-header" id="career">Career in Summary</h4>
+        <div class="profile-card-under">{% if bch_count > 0 %}Total Placements: {{ bch_count }}{% else %}No Career Detaiuls captured yet{% endif %}</div>
+      </div>
+      {% if bch_count > 0 %}
+        <div class="row">
+        {% for h in bch %}
+        <div class="col-6 pt-3">
+        <div class="card card-hover profile-card h-100" style="width: 100%;">
+          <div class="card-body">
+            <div class="row pt-4 my-auto">
+              <div class="col-md-12 text-center my-auto">
+                <div class="profile-card-header">{{ h.companybranch }}</div><br>
+                <div class="profile-card-under">{{ h.designation }}</div>
+              </div>
+            </div>
+            <div class="profile-card-body mb-auto">
+            <div class="row pt-3 h-100 my-auto">
+              <div class="col-md-7 text-left my-auto">
+                <strong>Employed From: </strong><br>
+                <span class="">{{ h.date_from|date:"j M Y" }} to {% if h.date_to %}
+                  {{ h.date_to|date:"j M Y" }}
+                {% else %}
+                  Present
+                {% endif %}</span>
+              </div>
+              <div class="col-md-5 text-left my-auto">
+                <strong>Tenure: </strong><br>
+                <span class="">{{ h.tenure|floatformat:1 }}</span>
+              </div>
+            </div>
+            <div class="row pt-3 h-100 my-auto">
+              <div class="col-md-12 text-left my-auto">
+                <strong>Configuration: </strong><br>
+                <span class="">{{ h.work_configeration }}</span>
+              </div>
+            </div>
+            {% if h.description %}
+            <div class="row pt-3 h-100 my-auto">
+              <div class="col-md-12 text-left my-auto">
+                <strong>Description: </strong><br>
+                <span class="">{{ h.description|linebreaks }}</span>
+              </div>
+            </div>
+            {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+        {% empty %}
+            <p>Nothing Captured.</p>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="card profile-footer">
+      <div class="float-right">
+        {% if bch_count >= 6 %}
+        <a href="{% url 'Talent:BCH_FV' tlt vac %}" class="btn btn-primary float-right">View All Placements</a>
+        {% endif %}
+      </div>
+    </div>
+<br>
+{% else %}
+</div>
+{% endif %}
+</div>
+<div class="profile-br-break">
+<div class="card-body">
+<div class="card profile-card">
+<h4 class="profile-header" id="achievements">Achievements</h4>
+  <div class="profile-card-under">{% if achievement_qs_count > 0 %}Total Achievements: {{ achievement_qs_count }}{% else %}No achievements captured yet{% endif %}</div>
+</div>
+{% if achievement_qs_count > 0 %}
+  <div class="row">
+  {% for a in achievement %}
+  <div class="col-4 pt-3">
+  <div class="card card-hover profile-card h-100" style="width: 100%;">
+    <div class="card-body">
+      <div class="row pt-4 my-auto">
+        <div class="col-md-12 text-center my-auto">
+          <div class="profile-card-header">{{ a.achievement }}</div><br>
+        </div>
+      </div>
+      <div class="profile-card-body mb-auto">
+      <div class="row pt-3 h-100 my-auto">
+        <div class="col-md-12 text-left my-auto">
+          <strong>Date Achieved: </strong><br>
+          <span class="">{{ a.date_achieved|date:"j M Y" }}</span>
+        </div>
+      </div>
+      <div class="row pt-3 h-100 my-auto">
+        <div class="col-md-12 text-left my-auto">
+          <strong>Description: </strong><br>
+          <span class="">{{ a.description|linebreaks }}</span>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+  {% empty %}
+      <p>No achievements captured.</p>
+  {% endfor %}
+  </div>
+</div>
+<div class="card profile-footer">
+  <div class="float-right">
+    {% if achievement_qs_count >= 6 %}
+      <a href="{% url 'Talent:ACH_FV' tlt vac %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Detail</a>
+    {% endif %}
+  </div>
+</div>
+
+<br>
+{% else %}
+{% endif %}
+</div>
+<div class="profile-br-break">
+  <div class="card-body">
+    <div class="card profile-card">
+    <h4 class="profile-header" id="awards">Awards</h4>
+      <div class="profile-card-under">{% if award_qs_count > 0 %}Total Awards: {{ award_qs_count }}{% else %}No awards captured yet{% endif %}</div>
+    </div>
+    {% if award_qs_count > 0 %}
+    <div class="row">
+    {% for a in award %}
+    <div class="col-4 pt-3">
+    <div class="card card-hover profile-card h-100" style="width: 100%;">
+      <div class="card-body">
+        <div class="row pt-4 my-auto">
+          <div class="col-md-12 text-center my-auto">
+            <div class="profile-card-header">{{ a.award }}</div><br>
+          </div>
+        </div>
+        <div class="profile-card-body mb-auto">
+        <div class="row pt-3 h-100 my-auto">
+          <div class="col-md-12 text-left my-auto">
+            <strong>Date Awarded: </strong><br>
             <span class="">{{ a.date_achieved|date:"j M Y" }}</span>
           </div>
         </div>
@@ -308,45 +388,65 @@
             <span class="">{{ a.description|linebreaks }}</span>
           </div>
         </div>
+        <div class="row pt-3 h-100 my-auto">
+          <div class="col-md-12 text-left my-auto">
+            <strong>Skills: </strong><br>
+            <span class="">{{ a.tag.all|join:" || " }}</span>
+          </div>
+        </div>
         </div>
       </div>
     </div>
   </div>
     {% empty %}
-        <p>No achievements captured.</p>
+        <p>No awards captured.</p>
     {% endfor %}
     </div>
   </div>
   <div class="card profile-footer">
     <div class="float-right">
-      {% if achievement_qs_count >= 6 %}
-        <a href="{% url 'Talent:ACH_FV' tlt vac %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Detail</a>
+      {% if award_qs_count >= 6 %}
+        <a href="{% url 'Talent:AWD_FV' tlt vac %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Detail</a>
       {% endif %}
     </div>
   </div>
   <br>
-  <div class="profile-br-break">
-    <div class="card-body">
-      <div class="card profile-card">
-      <h4 class="profile-header" id="awards">Awards</h4>
-        <div class="profile-card-under">Total Awards: {{ award_qs_count }}</div>
-      </div>
-
+  {% else %}
+  </div>
+  {% endif %}
+<div class="profile-br-break">
+  <div class="card-body">
+    <div class="card profile-card">
+    <h4 class="profile-header" id="publications">Publications</h4>
+      <div class="profile-card-under">{% if publication_qs_count > 0 %}Total Publications: {{ publication_qs_count }}{% else %}No publications captured yet{% endif %}</div>
+    </div>
+    {% if publication_qs_count > 0 %}
       <div class="row">
-      {% for a in award %}
+      {% for a in publication %}
       <div class="col-4 pt-3">
       <div class="card card-hover profile-card h-100" style="width: 100%;">
         <div class="card-body">
           <div class="row pt-4 my-auto">
             <div class="col-md-12 text-center my-auto">
-              <div class="profile-card-header">{{ a.award }}</div><br>
+              <div class="profile-card-header">{{ a.title }}</div><br>
+              <div class="profile-card-under">{{ a.publisher }}</div>
             </div>
           </div>
           <div class="profile-card-body mb-auto">
           <div class="row pt-3 h-100 my-auto">
             <div class="col-md-12 text-left my-auto">
-              <strong>Date Awarded: </strong><br>
-              <span class="">{{ a.date_achieved|date:"j M Y" }}</span>
+              <strong>Date Published: </strong><br>
+              <span class="">{{ a.date_published|date:"j M Y" }}</span>
+            </div>
+          </div>
+          <div class="row pt-3 h-100 my-auto">
+            <div class="col-md-6 text-left my-auto">
+              <strong>Type: </strong><br>
+              <span class="">{{ a.get_type_display }}</span>
+            </div>
+            <div class="col-md-6 text-left my-auto">
+              <strong>Genre: </strong><br>
+              <span class="">{{ a.genre.all|join:", " }}</span>
             </div>
           </div>
           <div class="row pt-3 h-100 my-auto">
@@ -366,258 +466,203 @@
       </div>
     </div>
       {% empty %}
-          <p>No awards captured.</p>
+          <p>No publications captured.</p>
       {% endfor %}
       </div>
-    </div>
+      </div>
     <div class="card profile-footer">
       <div class="float-right">
-        {% if award_qs_count >= 6 %}
-          <a href="{% url 'Talent:AWD_FV' tlt vac %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Detail</a>
+        {% if publication_qs_count >= 6 %}
+          <a href="{% url 'Talent:PUB_FV' tlt vac %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Detail</a>
         {% endif %}
       </div>
     </div>
-    <br>
+  </div>
+  <br>
+  {% else %}
+  </div>
+  {% endif %}
   <div class="profile-br-break">
     <div class="card-body">
       <div class="card profile-card">
-      <h4 class="profile-header" id="publications">Publications</h4>
-        <div class="profile-card-under">Total Publications: {{ publication_qs_count }}</div>
+      <h4 class="profile-header" id="books">Books Read</h4>
+      <div class="profile-card-under">{% if bkl_count > 0 %}Total Books Read: {{ bkl_count }}{% else %}No Books captured yet{% endif %}</div>
       </div>
-
-        <div class="row">
-        {% for a in publication %}
-        <div class="col-4 pt-3">
+      {% if bkl_count > 0 %}
+      <div class="row">
+      {% for b in bkl %}
+        <div class="col-3 pt-3">
         <div class="card card-hover profile-card h-100" style="width: 100%;">
           <div class="card-body">
             <div class="row pt-4 my-auto">
               <div class="col-md-12 text-center my-auto">
-                <div class="profile-card-header">{{ a.title }}</div><br>
-                <div class="profile-card-under">{{ a.publisher }}</div>
+                <div class="profile-card-header">{{ b.book }}</div><br>
+                <div class="profile-card-under">{{ b.book.author.all|join:", " }}</div>
               </div>
             </div>
             <div class="profile-card-body mb-auto">
             <div class="row pt-3 h-100 my-auto">
               <div class="col-md-12 text-left my-auto">
-                <strong>Date Published: </strong><br>
-                <span class="">{{ a.date_published|date:"j M Y" }}</span>
-              </div>
-            </div>
-            <div class="row pt-3 h-100 my-auto">
-              <div class="col-md-6 text-left my-auto">
-                <strong>Type: </strong><br>
-                <span class="">{{ a.get_type_display }}</span>
-              </div>
-              <div class="col-md-6 text-left my-auto">
-                <strong>Genre: </strong><br>
-                <span class="">{{ a.genre.all|join:", " }}</span>
+                <strong>Book Type: </strong><br>
+                <span class="">{{ b.type }}</span>
               </div>
             </div>
             <div class="row pt-3 h-100 my-auto">
               <div class="col-md-12 text-left my-auto">
-                <strong>Description: </strong><br>
-                <span class="">{{ a.description|linebreaks }}</span>
-              </div>
-            </div>
-            <div class="row pt-3 h-100 my-auto">
-              <div class="col-md-12 text-left my-auto">
-                <strong>Skills: </strong><br>
-                <span class="">{{ a.tag.all|join:" || " }}</span>
+                <strong>Date Read: </strong><br>
+                <span class="">{{ b.date|date:"j M Y" }}</span>
               </div>
             </div>
             </div>
           </div>
         </div>
       </div>
-        {% empty %}
-            <p>No publications captured.</p>
-        {% endfor %}
-        </div>
-      </div>
-      <div class="card profile-footer">
-        <div class="float-right">
-          {% if publication_qs_count >= 6 %}
-            <a href="{% url 'Talent:PUB_FV' tlt vac %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Detail</a>
-          {% endif %}
-        </div>
+      {% empty %}
+          <p>No books listed.</p>
+      {% endfor %}
       </div>
     </div>
-    <br>
-    <div class="profile-br-break">
+    <div class="card profile-footer">
+      <div class="float-right">
+      {% if bkl_count >= 8 %}
+        <a href="{% url 'BookList:VPBL' als.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Books</a>
+      {% endif %}
+    </div>
+  </div>
+  </div>
+<br>
+{% else %}
+</div>
+{% endif %}
+<div class="profile-br-break">
+  <div class="card-body">
+    <div class="card profile-card">
+    <h4 class="profile-header" id="projects">Project History</h4>
+      <div class="profile-card-under">{% if prj_count > 0 %}Total Projects: {{ prj_count }}{% else %}No projects captured yet{% endif %}</div>
+    </div>
+    {% if prj_count > 0 %}
+    <div class="row">
+    {% for b in prj_set.items %}
+    <div class="col-4 pt-3">
+    <div class="card card-hover profile-card h-100" style="width: 100%;">
       <div class="card-body">
-        <div class="card profile-card">
-        <h4 class="profile-header" id="books">Books Read</h4>
-        <div class="profile-card-under">Total Books Read: {{ bkl_count }}</div>
-        </div>
-
-        <div class="row">
-        {% for b in bkl %}
-          <div class="col-3 pt-3">
-          <div class="card card-hover profile-card h-100" style="width: 100%;">
-            <div class="card-body">
-              <div class="row pt-4 my-auto">
-                <div class="col-md-12 text-center my-auto">
-                  <div class="profile-card-header">{{ b.book }}</div><br>
-                  <div class="profile-card-under">{{ b.book.author.all|join:", " }}</div>
-                </div>
-              </div>
-              <div class="profile-card-body mb-auto">
-              <div class="row pt-3 h-100 my-auto">
-                <div class="col-md-12 text-left my-auto">
-                  <strong>Book Type: </strong><br>
-                  <span class="">{{ b.type }}</span>
-                </div>
-              </div>
-              <div class="row pt-3 h-100 my-auto">
-                <div class="col-md-12 text-left my-auto">
-                  <strong>Date Read: </strong><br>
-                  <span class="">{{ b.date|date:"j M Y" }}</span>
-                </div>
-              </div>
-              </div>
-            </div>
+        <div class="row pt-4 my-auto">
+          <div class="col-md-12 text-center my-auto">
+            <div class="profile-card-header">{{ b.0 }}</div><br>
+            <div class="profile-card-under">{{ b.1.0 }}</div>
           </div>
         </div>
-        {% empty %}
-            <p>No books listed.</p>
-        {% endfor %}
+        <div class="profile-card-body mb-auto">
+        <div class="row pt-3 my-auto">
+          <div class="col-md-12 text-left my-auto">
+            <strong>Project Site: </strong><br>
+            <span class="">{{ b.1.1 }}</span>
+          </div>
+        </div>
+        <div class="row pt-3 h-100 my-auto">
+          <div class="col-md-12 text-left my-auto">
+            <strong>Industry: </strong><br>
+            <span class="">{{ b.1.2 }}</span>
+          </div>
+        </div>
+        <div class="row pt-3 h-100 my-auto">
+          <div class="col-md-12 text-left my-auto">
+            <strong>Country: </strong><br>
+            <span class="">{{ b.1.3 }}</span>
+          </div>
+        </div>
+        <div class="row pt-3 align-top h-100 my-auto">
+          <div class="col-md-6 text-center my-auto">
+            <strong>Total Hours: </strong><br>
+            <span class="profile-card-display-number">{{ b.1.4|floatformat:0|intcomma }}</span>
+          </div>
+          <div class="col-md-6 text-center my-auto">
+            <strong>Total People: </strong><br>
+            <span class="profile-card-display-number">{{ b.1.5|floatformat:0|intcomma }}</span>
+          </div>
+        </div>
+        </div>
+
         </div>
       </div>
-      <div class="card profile-footer">
-        <div class="float-right">
-        {% if bkl_count >= 8 %}
-          <a href="{% url 'BookList:VPBL' als.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Books</a>
-        {% else %}
-
-        {% endif %}
-      </div>
     </div>
-    </div>
-  <br>
-  <div class="profile-br-break">
-    <div class="card-body">
-      <div class="card profile-card">
-      <h4 class="profile-header" id="projects">Project History</h4>
-        <div class="profile-card-under">Total Projects: {{ prj_count }}</div>
-      </div>
 
-      <div class="row">
-      {% for b in prj_set.items %}
+    {% empty %}
+        <p>No projects listed.</p>
+    {% endfor %}
+    </div>
+  </div>
+  <div class="card profile-footer">
+    <div class="float-right">
+      {% if prj_count >= 6 %}
+      <a href="{% url 'Talent:Projects_FV' tlt vac %}#Project" class="btn btn-primary float-right">All Projects</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+<br>
+{% else %}
+</div>
+{% endif %}
+<div class="profile-br-break">
+  <div class="card-body">
+    <div class="card profile-card">
+    <h4 class="profile-header" id="edu">Education & Training</h4>
+    <div class="profile-card-under">{% if edtexp_count > 0 %}Total Courses Attended: {{ edtexp_count }}{% else %}No courses captured yet{% endif %}</div>
+    </div>
+    {% if edtexp_count > 0 %}
+    <div class="row">
+      {% for e in edtexp %}
       <div class="col-4 pt-3">
       <div class="card card-hover profile-card h-100" style="width: 100%;">
         <div class="card-body">
           <div class="row pt-4 my-auto">
             <div class="col-md-12 text-center my-auto">
-              <div class="profile-card-header">{{ b.0 }}</div><br>
-              <div class="profile-card-under">{{ b.1.0 }}</div>
+              <div class="profile-card-header">{{ e.topic }}</div><br>
+              <div class="profile-card-under">{{ e.course }}</div>
             </div>
           </div>
           <div class="profile-card-body mb-auto">
+          <div class="row pt-3 h-100 my-auto">
+            <div class="col-md-12 text-left my-auto">
+              <strong>Attended from: </strong><br>
+              <span class="">{{ e.date_from|date:"j M Y" }} to {{ e.date_to|date:"j M Y" }}</span>
+            </div>
+          </div>
           <div class="row pt-3 my-auto">
+            <div class="col-md-8  pt-2 text-left my-auto">
+              <strong>Institution: </strong><br>
+              {{ e.course.company }}
+            </div>
+            <div class="col-4 col-no-pad text-center my-auto">
+              {{ e.course.certification }}{% if e.upload %}<br>(Uploaded){% else %}{% endif %}
+            </div>
+          </div>
+          <div class="row  pt-4 my-auto">
             <div class="col-md-12 text-left my-auto">
-              <strong>Project Site: </strong><br>
-              <span class="">{{ b.1.1 }}</span>
+              <strong>Skills: </strong><br>
+              {{ e.topic.skills.all|join:" || " }}
             </div>
           </div>
-          <div class="row pt-3 h-100 my-auto">
-            <div class="col-md-12 text-left my-auto">
-              <strong>Industry: </strong><br>
-              <span class="">{{ b.1.2 }}</span>
-            </div>
-          </div>
-          <div class="row pt-3 h-100 my-auto">
-            <div class="col-md-12 text-left my-auto">
-              <strong>Country: </strong><br>
-              <span class="">{{ b.1.3 }}</span>
-            </div>
-          </div>
-          <div class="row pt-3 align-top h-100 my-auto">
-            <div class="col-md-6 text-center my-auto">
-              <strong>Total Hours: </strong><br>
-              <span class="profile-card-display-number">{{ b.1.4|floatformat:0|intcomma }}</span>
-            </div>
-            <div class="col-md-6 text-center my-auto">
-              <strong>Total People: </strong><br>
-              <span class="profile-card-display-number">{{ b.1.5|floatformat:0|intcomma }}</span>
-            </div>
-          </div>
-          </div>
-
           </div>
         </div>
       </div>
-
-      {% empty %}
-          <p>No projects listed.</p>
-      {% endfor %}
-      </div>
     </div>
-    <div class="card profile-footer">
-      <div class="float-right">
-        {% if prj_count >= 6 %}
-        <a href="{% url 'Talent:Projects_FV' tlt vac %}#Project" class="btn btn-primary float-right">All Projects</a>
-        {% endif %}
-      </div>
+    {% empty %}
+        <p>Nothing Captured.</p>
+    {% endfor %}
+    </div>
+  </div>
+  <div class="card profile-footer">
+    <div class="float-right">
+      {% if edtexp_count >= 6 %}
+        <a href="{% url 'Talent:EDU_FV' tlt vac %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Details</a>
+      {% endif %}
     </div>
   </div>
 
-  <br>
-
-  <div class="profile-br-break">
-    <div class="card-body">
-      <div class="card profile-card">
-      <h4 class="profile-header" id="edu">Education & Training</h4>
-      <div class="profile-card-under">Total Courses Attended: {{ edtexp_count }}</div>
-      </div>
-
-      <div class="row">
-        {% for e in edtexp %}
-        <div class="col-4 pt-3">
-        <div class="card card-hover profile-card h-100" style="width: 100%;">
-          <div class="card-body">
-            <div class="row pt-4 my-auto">
-              <div class="col-md-12 text-center my-auto">
-                <div class="profile-card-header">{{ e.topic }}</div><br>
-                <div class="profile-card-under">{{ e.course }}</div>
-              </div>
-            </div>
-            <div class="profile-card-body mb-auto">
-            <div class="row pt-3 h-100 my-auto">
-              <div class="col-md-12 text-left my-auto">
-                <strong>Attended from: </strong><br>
-                <span class="">{{ e.date_from|date:"j M Y" }} to {{ e.date_to|date:"j M Y" }}</span>
-              </div>
-            </div>
-            <div class="row pt-3 my-auto">
-              <div class="col-md-8  pt-2 text-left my-auto">
-                <strong>Institution: </strong><br>
-                {{ e.course.company }}
-              </div>
-              <div class="col-4 col-no-pad text-center my-auto">
-                {{ e.course.certification }}{% if e.upload %}<br>(Uploaded){% else %}{% endif %}
-              </div>
-            </div>
-            <div class="row  pt-4 my-auto">
-              <div class="col-md-12 text-left my-auto">
-                <strong>Skills: </strong><br>
-                {{ e.topic.skills.all|join:" || " }}
-              </div>
-            </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      {% empty %}
-          <p>Nothing Captured.</p>
-      {% endfor %}
-      </div>
-    </div>
-    <div class="card profile-footer">
-      <div class="float-right">
-        {% if edtexp_count >= 6 %}
-          <a href="{% url 'Talent:EDU_FV' tlt vac %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Details</a>
-        {% endif %}
-      </div>
-    </div>
-  </div>
+<br>
+{% else %}
+</div>
+{% endif %}
 {% endblock content %}

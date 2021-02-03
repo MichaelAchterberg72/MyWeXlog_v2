@@ -405,7 +405,7 @@ PAYPAL_CERT_ID = 'J7C4RR9N34PZJ'
 ACCOUNTS_EMAIL = "machterberg@tkgm.co.za"
 
 # Celery Settings
-CELERY_SYSTEM_EMAIL = 'no_reply@mywexlog.dev'
+CELERY_SYSTEM_EMAIL = 'mywexloginfo@mywexlog.dev'
 
 ## Broker settings.
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
@@ -434,5 +434,5 @@ CELERY_TASK_ANNOTATIONS = {'tasks.add': {'rate_limit': '10/s'}}
 SENDGRID_API_KEY = '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'  # MyWeXlog Domain
 # SENDGRID_API_KEY = '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'  # Test machterberg@devoptec.com single sender auth
 
-SENDGRID_FROM_EMAIL = 'no-reply@mywexlog.dev'    #
+SENDGRID_FROM_EMAIL = 'mywexloginfo@mywexlog.dev'    #
 # SENDGRID_FROM_EMAIL = 'machterberg@devoptec.com'
