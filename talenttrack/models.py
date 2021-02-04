@@ -306,7 +306,7 @@ class WorkExperience(models.Model):
     date_captured = models.DateField(auto_now_add=True)
     upload = models.FileField(storage=PrivateMediaStorage(), upload_to=ExpFilename, blank=True, null=True, validators=[FileExtensionValidator(['pdf'])])
     score = models.SmallIntegerField(default=0)
-    employment_type = models.CharField(max_length=1, choices=TYPE, default='F' )
+    employment_type = models.CharField(max_length=1, choices=TYPE, default='F', blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
     #Work Experience Fields (Captured & Pre-Experience)
     company = models.ForeignKey(Enterprise, on_delete=models.PROTECT, verbose_name='Company', null=True)
