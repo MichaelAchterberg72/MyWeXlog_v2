@@ -262,7 +262,7 @@ def ProjectAddPopup(request):
 
     filt = exist_project
 
-    form = ProjectAddForm(request.POST or None, pwd=filt)
+    form = ProjectAddForm(request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
             instance=form.save(commit=False)
