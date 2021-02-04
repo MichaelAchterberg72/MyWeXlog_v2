@@ -277,7 +277,7 @@ class PreLoggedExperienceForm(forms.ModelForm):
     '''Form to capture experience earned and captured on previously approved timesheets'''
     class Meta:
         model = WorkExperience
-        fields = ('date_from', 'date_to', 'company', 'companybranch', 'project', 'industry', 'hours_worked', 'comment', 'designation', 'upload', 'skills',)
+        fields = ('date_from', 'date_to', 'company', 'companybranch', 'employment_type', 'project', 'industry', 'hours_worked', 'comment', 'designation', 'upload', 'skills',)
         widgets={
             'company': CompanySelect2Widget(),
             'companybranch': BranchSelect2Widget(),
@@ -541,7 +541,7 @@ class WorkExperienceForm(forms.ModelForm):
     class Meta:
         model = WorkExperience
         fields = (
-            'date_from', 'date_to', 'company', 'companybranch', 'estimated', 'project', 'industry', 'hours_worked', 'comment', 'designation', 'upload', 'skills'
+            'date_from', 'date_to', 'company', 'companybranch', 'employment_type', 'estimated', 'project', 'industry', 'hours_worked', 'comment', 'designation', 'upload', 'skills'
             )
         widgets={
             'company': CompanySelect2Widget(),
@@ -752,7 +752,7 @@ class LecturerRespondForm(forms.ModelForm):
 class EducationForm(forms.ModelForm):
     class Meta:
         model = WorkExperience
-        fields = ('course', 'date_from', 'date_to', 'topic', 'upload', 'comment',)
+        fields = ('course', 'date_from', 'date_to', 'topic', 'employment_type', 'upload', 'comment',)
         widgets={
             'course': CourseSelect2Widget(),
             'topic': TopicSelect2Widget(),

@@ -2608,6 +2608,7 @@ def LCMFullView(request, tlt):
 def profile_view(request, tlt):
     '''View for profile without reference to a vacancy. Used for the search feature'''
     #caching
+    vac = '1ad9t2'
     bch_qs = BriefCareerHistory.objects.filter(talent__alias=tlt).order_by('-date_from')
     bch = bch_qs[:6]
     bch_count = bch_qs.count()
@@ -2661,7 +2662,7 @@ def profile_view(request, tlt):
 
     template = 'talenttrack/active_profile_view_light.html'
     context = {
-        'tlt': tlt, 'bch': bch, 'bch_count': bch_count, 'pfl': pfl, 'padd': padd, 'exp': exp, 'bkl': bkl, 'edtexp': edtexp, 'edtexp_count': edtexp_count, 'bkl_count': bkl_count, 'prj_set': prj_set, 'prj_count': prj_count, 'achievement': achievement, 'achievement_qs_count': achievement_qs_count, 'award': award, 'award_qs_count': award_qs_count, 'publication': publication, 'publication_qs_count': publication_qs_count, 'language_qs': language_qs, 'membership': membership, 'membership_qs_count': membership_qs_count, 'als': als, 'wtr_qs': wtr_qs,
+        'tlt': tlt, 'bch': bch, 'bch_count': bch_count, 'pfl': pfl, 'padd': padd, 'exp': exp, 'bkl': bkl, 'edtexp': edtexp, 'edtexp_count': edtexp_count, 'bkl_count': bkl_count, 'prj_set': prj_set, 'prj_count': prj_count, 'achievement': achievement, 'achievement_qs_count': achievement_qs_count, 'award': award, 'award_qs_count': award_qs_count, 'publication': publication, 'publication_qs_count': publication_qs_count, 'language_qs': language_qs, 'membership': membership, 'membership_qs_count': membership_qs_count, 'als': als, 'vac': vac, 'wtr_qs': wtr_qs,
         }
     return render(request, template, context)
 
@@ -2671,6 +2672,7 @@ def profile_view(request, tlt):
 def profile_view_corp(request, cor, tlt):
     '''View for profile without reference to a vacancy. Used for the corporate feature'''
     #caching
+    vac = '1ad9t2'
     bch_qs = BriefCareerHistory.objects.filter(talent__alias=tlt).order_by('-date_from')
     bch = bch_qs[:6]
     corp_info = CorporateStaff.objects.get(Q(talent__alias=tlt) & Q(corporate__slug=cor))
@@ -2697,7 +2699,8 @@ def profile_view_corp(request, cor, tlt):
     publication = publication_qs[:6]
     publication_qs_count = publication_qs.count()
     language_qs = LanguageTrack.objects.filter(talent__alias=tlt).order_by('-language')
-    membership_qs = LicenseCertification.objects.filter(talent__alias=tlt).order_by('-issue_date')[:6]
+    membership_qs = LicenseCertification.objects.filter(talent__alias=tlt).order_by('-issue_date')
+    membership = membership_qs[:6]
     membership_qs_count = membership_qs.count()
     wtr_qs = WillingToRelocate.objects.filter(talent__alias=tlt)
 
@@ -2722,7 +2725,7 @@ def profile_view_corp(request, cor, tlt):
 
     template = 'talenttrack/active_profile_view_corp.html'
     context = {
-        'tlt': tlt, 'bch': bch, 'bch_count': bch_count, 'pfl': pfl, 'padd': padd, 'exp': exp, 'bkl': bkl, 'edtexp': edtexp, 'edtexp_count': edtexp_count, 'bkl_count': bkl_count, 'prj_set': prj_set, 'prj_count': prj_count, 'achievement': achievement, 'achievement_qs_count': achievement_qs_count, 'award': award, 'award_qs_count': award_qs_count, 'publication': publication, 'publication_qs_count': publication_qs_count, 'language_qs': language_qs, 'membership_qs': membership_qs, 'membership_qs_count': membership_qs_count, 'als': als, 'wtr_qs': wtr_qs, 'corp_info': corp_info
+        'tlt': tlt, 'bch': bch, 'bch_count': bch_count, 'pfl': pfl, 'padd': padd, 'exp': exp, 'bkl': bkl, 'edtexp': edtexp, 'edtexp_count': edtexp_count, 'bkl_count': bkl_count, 'prj_set': prj_set, 'prj_count': prj_count, 'achievement': achievement, 'achievement_qs_count': achievement_qs_count, 'award': award, 'award_qs_count': award_qs_count, 'publication': publication, 'publication_qs_count': publication_qs_count, 'language_qs': language_qs, 'membership': membership, 'membership_qs_count': membership_qs_count, 'als': als, 'vac': vac, 'wtr_qs': wtr_qs, 'corp_info': corp_info
         }
     return render(request, template, context)
 
