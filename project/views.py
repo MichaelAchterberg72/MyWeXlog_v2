@@ -196,7 +196,7 @@ def HoursWorkedOnProject(request, prj):
     except:
         page = 1
 
-    paginator = Paginator(dsd, 20)
+    paginator = Paginator(info, 20)
 
     try:
         pageitems = paginator.page(page)
