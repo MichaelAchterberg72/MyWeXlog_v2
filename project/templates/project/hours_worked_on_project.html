@@ -12,7 +12,7 @@
       {% if request.user.is_authenticated %}
       <p><a href="{% url 'Project:ProjectAdd' %}" class="badge badge-pill badge-primary">Add Project</a><a href="{% url 'Project:ProjectHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
       {% endif %}
-    <p>There are currently {{ hr.sum_t|intcomma }} hours spent working on project {{ projectdata.name }}.</p>
+    <p>There are currently <strong>{{ hr.sum_t|floatformat:0|intcomma }}</strong> hours spent working on project {{ projectdata.name }}.</p>
 
     <div class="container">
       <div class="row my-auto">
@@ -23,7 +23,7 @@
           <strong>Date Complete</strong>
         </div>
         <div class="col-md-3 h-100 text-center my-auto">
-          <strong>Hours Spent</strong>
+          <strong>Total Hours Spent</strong>
         </div>
       </div>
     </div>
@@ -39,7 +39,7 @@
               {{ p.date_to }}
             </div>
             <div class="col-md-3 h-100 text-center my-auto">
-              {{ p.hours_worked|intcomma }}
+              {{ p.hours_worked|floatformat:0|intcomma }}
             </div>
           </div>
         </div>

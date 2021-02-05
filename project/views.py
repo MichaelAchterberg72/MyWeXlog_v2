@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
-from django.db.models import Count, Sum
+from django.db.models import Count, Sum, F, Q, Avg, Max
 from django.utils.http import is_safe_url
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
@@ -22,6 +22,7 @@ from locations.models import Region
 from .models import *
 from Profile.models import Profile
 from talenttrack.models import WorkExperience
+from enterprises.models import Enterprise
 
 from .forms import ProjectAddForm, ProjectSearchForm, ProjectForm
 
@@ -188,15 +189,27 @@ def ProjectSearch(request):
 @login_required()
 def HoursWorkedOnProject(request, prj):
     projectdata = get_object_or_404(ProjectData, slug=prj)
-    info = WorkExperience.objects.filter(project__slug=prj).annotate(sum_hours=Sum('hours_worked')).order_by('date_to')
-    hr = WorkExperience.objects.filter(project__slug=prj).aggregate(sum_t=Sum('hours_worked'))
+    wk_qs = WorkExperience.objects.filter(project__slug=prj)
+    hr = wk_qs.aggregate(sum_t=Sum('hours_worked'))
+    comp_qs = wk_qs.values_list('company__ename', flat=True).distinct()
+    comp = list(comp_qs)
+
+    hours = []
+    for c in comp:
+        info = wk_qs.filter(Q(company__ename=c) & Q(project__slug=prj)).aggregate(sum_t=Sum('hours_worked'))
+        date = wk_qs.filter(Q(company__ename=c) & Q(project__slug=prj)).aggregate(Max('date_to'))
+
+        result={'company': c, 'hours_worked': info['sum_t'], 'date_to': date['date_to__max']}
+
+        hours.append(result)
+
 
     try:
         page = int(request.GET.get('page', 1))
     except:
         page = 1
 
-    paginator = Paginator(info, 20)
+    paginator = Paginator(hours, 20)
 
     try:
         pageitems = paginator.page(page)
