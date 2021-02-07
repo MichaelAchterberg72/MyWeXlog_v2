@@ -330,7 +330,7 @@ class WorkClientResponseForm(forms.ModelForm):
 class WorkClientConfirmForm(forms.ModelForm):
     class Meta:
         model = WorkClient
-        fields = ('confirm', 'comments', )
+        fields = ('confirm', 'comments', 'quality', 'time_taken', 'complexity')
 
     def clean_confirm(self):
         confirm_entry = self.cleaned_data.get("confirm")
@@ -388,7 +388,7 @@ class WorkCollaboratorResponseForm(forms.ModelForm):
 class WorkCollaboratorConfirmForm(forms.ModelForm):
     class Meta:
         model = WorkCollaborator
-        fields = ('confirm', 'comments', )
+        fields = ('confirm', 'comments', 'quality', 'time_taken', 'complexity')
 
     def clean_confirm(self):
         confirm_entry = self.cleaned_data.get("confirm")
@@ -444,7 +444,7 @@ class SuperiorResponseForm(forms.ModelForm):
 class SuperiorConfirmForm(forms.ModelForm):
     class Meta:
         model = Superior
-        fields = ('confirm', 'comments', )
+        fields = ('confirm', 'comments', 'quality', 'time_taken', 'complexity')
 
     def clean_confirm(self):
         confirm_entry = self.cleaned_data.get("confirm")
@@ -495,7 +495,7 @@ class WorkColleagueResponseForm(forms.ModelForm):
 class WorkColleagueConfirmForm(forms.ModelForm):
     class Meta:
         model = WorkColleague
-        fields = ('confirm', 'comments')
+        fields = ('confirm', 'comments', 'quality', 'time_taken', 'complexity')
 
     def clean_confirm(self):
         confirm_entry = self.cleaned_data.get("confirm")

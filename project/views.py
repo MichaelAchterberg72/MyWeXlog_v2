@@ -2,7 +2,6 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
-#from django.db.models import Count, Sum, F, Q, Avg, Max, Min
 from django.db.models import Count, Sum, F, Q, Avg, Max, Min
 from django.utils.http import is_safe_url
 from django.http import HttpResponseRedirect, HttpResponse

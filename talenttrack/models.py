@@ -28,7 +28,13 @@ CONFIRM = (
     ('R','Reject'),
     ('Y','Wrong Person'),
 )
-
+RATING=(
+    ('1','basic'),
+    ('2','working'),
+    ('3','good'),
+    ('4','master'),
+    ('5','grand master'),
+)
 
 #Function to randomise filename for Profile Upload
 def AchFilename(instance, filename):
@@ -298,7 +304,6 @@ class WorkExperience(models.Model):
         ('C','Contract'),
         ('E','Employee'),
     )
-
     #Common Fields
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     date_from = models.DateField()
@@ -366,6 +371,10 @@ class WorkColleague(models.Model):
         #Captured by colleague
     confirm = models.CharField(max_length=1, choices=CONFIRM, default='S')
     comments = models.TextField(blank=True, null=True)
+    #skills rating
+    quality = models.CharField(max_length=1, choices=RATING, blank=True, null=True)
+    time_taken = models.CharField(max_length=1, choices=RATING, blank=True, null=True)
+    complexity = models.CharField(max_length=1, choices=RATING, blank=True, null=True)
         #Captured by talent
     response = models.TextField(blank=True, null=True)
     slug = models.SlugField(max_length=9, unique=True, null=True)
@@ -395,6 +404,10 @@ class Superior(models.Model):
         #Captured by superior
     confirm = models.CharField(max_length=1, choices=CONFIRM, default='S')
     comments = models.TextField(blank=True, null=True)
+    #skills rating
+    quality = models.CharField(max_length=1, choices=RATING, blank=True, null=True)
+    time_taken = models.CharField(max_length=1, choices=RATING, blank=True, null=True)
+    complexity = models.CharField(max_length=1, choices=RATING, blank=True, null=True)
         #Captured by talent
     response = models.TextField(blank=True, null=True)
     slug = models.SlugField(max_length=9, unique=True, null=True)
@@ -427,6 +440,10 @@ class WorkCollaborator(models.Model):
         #Captured by collaborator
     confirm = models.CharField(max_length=1, choices=CONFIRM, default='S')
     comments = models.TextField(blank=True, null=True)
+    #skills rating
+    quality = models.CharField(max_length=1, choices=RATING, blank=True, null=True)
+    time_taken = models.CharField(max_length=1, choices=RATING, blank=True, null=True)
+    complexity = models.CharField(max_length=1, choices=RATING, blank=True, null=True)
         #Captured by talent
     response = models.TextField(blank=True, null=True)
     slug = models.SlugField(max_length=9, unique=True, null=True, blank=True)
@@ -460,6 +477,10 @@ class WorkClient(models.Model):
         #Captured by collaborator
     confirm = models.CharField(max_length=1, choices=CONFIRM, default='S')
     comments = models.TextField(blank=True, null=True)
+    #skills rating
+    quality = models.CharField(max_length=1, choices=RATING, blank=True, null=True)
+    time_taken = models.CharField(max_length=1, choices=RATING, blank=True, null=True)
+    complexity = models.CharField(max_length=1, choices=RATING, blank=True, null=True)
         #Captured by talent
     response = models.TextField(blank=True, null=True)
     slug = models.SlugField(max_length=20, unique=True, null=True)

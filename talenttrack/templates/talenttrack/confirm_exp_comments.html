@@ -38,6 +38,411 @@
       {% csrf_token %}
         {{ form.confirm|as_crispy_field }}
         {{ form.comments|as_crispy_field }}
+        <div class="row d-none">
+          <div class="col-md-4">
+            {{ form.quality|as_crispy_field }}
+          </div>
+          <div class="col-md-4">
+            {{ form.time_taken|as_crispy_field }}
+          </div>
+          <div class="col-md-4">
+            {{ form.complexity|as_crispy_field }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <strong>Rate the Quality of their work</strong>
+          </div>
+          <div class="col-md-4">
+            <strong>Rate the Time Taken to perform the work</strong>
+          </div>
+          <div class="col-md-4">
+            <strong>Rate the Complexity of the work done</strong>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <span><i class="fa fa-star-o" id="qualityStarOne" aria-hidden="true" style="font-size: 2.1rem;"></i></span>
+            <span><i class="fa fa-star-o" id="qualityStarTwo" aria-hidden="true" style="font-size: 2.1rem;"></i></span>
+            <span><i class="fa fa-star-o" id="qualityStarThree" aria-hidden="true" style="font-size: 2.1rem;"></i></span>
+            <span><i class="fa fa-star-o" id="qualityStarFour" aria-hidden="true" style="font-size: 2.1rem;"></i></span>
+            <span><i class="fa fa-star-o" id="qualityStarFive" aria-hidden="true" style="font-size: 2.1rem;"></i></span>
+          </div>
+          <div class="col-md-4">
+            <span><i class="fa fa-star-o" id="timeTakenStarOne" aria-hidden="true" style="font-size: 2.1rem;"></i></span>
+            <span><i class="fa fa-star-o" id="timeTakenStarTwo" aria-hidden="true" style="font-size: 2.1rem;"></i></span>
+            <span><i class="fa fa-star-o" id="timeTakenStarThree" aria-hidden="true" style="font-size: 2.1rem;"></i></span>
+            <span><i class="fa fa-star-o" id="timeTakenStarFour" aria-hidden="true" style="font-size: 2.1rem;"></i></span>
+            <span><i class="fa fa-star-o" id="timeTakenStarFive" aria-hidden="true" style="font-size: 2.1rem;"></i></span>
+          </div>
+          <div class="col-md-4">
+            <span><i class="fa fa-star-o" id="complexityStarOne" aria-hidden="true" style="font-size: 2.1rem;"></i></span>
+            <span><i class="fa fa-star-o" id="complexityStarTwo" aria-hidden="true" style="font-size: 2.1rem;"></i></span>
+            <span><i class="fa fa-star-o" id="complexityStarThree" aria-hidden="true" style="font-size: 2.1rem;"></i></span>
+            <span><i class="fa fa-star-o" id="complexityStarFour" aria-hidden="true" style="font-size: 2.1rem;"></i></span>
+            <span><i class="fa fa-star-o" id="complexityStarFive" aria-hidden="true" style="font-size: 2.1rem;"></i></span>
+          </div>
+        </div>
+        <div class="row">
+          <p>&nbsp</p>
+        </div>
+        <script type="text/javascript">
+           var qualityStarOne = document.getElementById("qualityStarOne");
+           var qualityStarTwo = document.getElementById("qualityStarTwo")
+           var qualityStarThree = document.getElementById("qualityStarThree")
+           var qualityStarFour = document.getElementById("qualityStarFour")
+           var qualityStarFive = document.getElementById("qualityStarFive")
+
+           var qualityInput = document.getElementById("id_quality");
+
+           qualityStarOne.onmouseover = function(){
+             qualityStarOne.setAttribute("class", "fa fa-star");
+           };
+           qualityStarOne.onmouseout = function(){
+             qualityStarOne.setAttribute("class", "fa fa-star-o");
+           };
+           qualityStarOne.onclick = function(){
+             qualityInput.value = "1";
+             qualityStarOne.setAttribute("class", "fa fa-star");
+             qualityStarOne.style.color = "#FF0000";
+             qualityStarTwo.style.color = "#000000";
+             qualityStarThree.style.color = "#000000";
+             qualityStarFour.style.color = "#000000";
+             qualityStarFive.style.color = "#000000";
+           };
+
+           qualityStarTwo.onmouseover = function(){
+             qualityStarOne.setAttribute("class", "fa fa-star");
+             qualityStarTwo.setAttribute("class", "fa fa-star");
+           };
+           qualityStarTwo.onmouseout = function(){
+             qualityStarOne.setAttribute("class", "fa fa-star-o");
+             qualityStarTwo.setAttribute("class", "fa fa-star-o");
+           };
+           qualityStarTwo.onclick = function(){
+             qualityInput.value = "2";
+             qualityStarOne.setAttribute("class", "fa fa-star");
+             qualityStarTwo.setAttribute("class", "fa fa-star");
+             qualityStarOne.style.color = "#FF0000";
+             qualityStarTwo.style.color = "#FF0000";
+             qualityStarThree.style.color = "#000000";
+             qualityStarFour.style.color = "#000000";
+             qualityStarFive.style.color = "#000000";
+           };
+
+           qualityStarThree.onmouseover = function(){
+             qualityStarOne.setAttribute("class", "fa fa-star");
+             qualityStarTwo.setAttribute("class", "fa fa-star");
+             qualityStarThree.setAttribute("class", "fa fa-star");
+           };
+           qualityStarThree.onmouseout = function(){
+             qualityStarOne.setAttribute("class", "fa fa-star-o");
+             qualityStarTwo.setAttribute("class", "fa fa-star-o");
+             qualityStarThree.setAttribute("class", "fa fa-star-o");
+           };
+           qualityStarThree.onclick = function(){
+             qualityInput.value = "3";
+             qualityStarOne.setAttribute("class", "fa fa-star");
+             qualityStarTwo.setAttribute("class", "fa fa-star");
+             qualityStarThree.setAttribute("class", "fa fa-star");
+             qualityStarOne.style.color = "#FF0000";
+             qualityStarTwo.style.color = "#FF0000";
+             qualityStarThree.style.color = "#FF0000";
+             qualityStarFour.style.color = "#000000";
+             qualityStarFive.style.color = "#000000";
+           };
+
+           qualityStarFour.onmouseover = function(){
+             qualityStarOne.setAttribute("class", "fa fa-star");
+             qualityStarTwo.setAttribute("class", "fa fa-star");
+             qualityStarThree.setAttribute("class", "fa fa-star");
+             qualityStarFour.setAttribute("class", "fa fa-star");
+           };
+           qualityStarFour.onmouseout = function(){
+             qualityStarOne.setAttribute("class", "fa fa-star-o");
+             qualityStarTwo.setAttribute("class", "fa fa-star-o");
+             qualityStarThree.setAttribute("class", "fa fa-star-o");
+             qualityStarFour.setAttribute("class", "fa fa-star-o");
+           };
+           qualityStarFour.onclick = function(){
+             qualityInput.value = "4";
+             qualityStarOne.setAttribute("class", "fa fa-star");
+             qualityStarTwo.setAttribute("class", "fa fa-star");
+             qualityStarThree.setAttribute("class", "fa fa-star");
+             qualityStarFour.setAttribute("class", "fa fa-star");
+             qualityStarOne.style.color = "#FF0000";
+             qualityStarTwo.style.color = "#FF0000";
+             qualityStarThree.style.color = "#FF0000";
+             qualityStarFour.style.color = "#FF0000";
+             qualityStarFive.style.color = "#000000";
+           };
+
+           qualityStarFive.onmouseover = function(){
+             qualityStarOne.setAttribute("class", "fa fa-star");
+             qualityStarTwo.setAttribute("class", "fa fa-star");
+             qualityStarThree.setAttribute("class", "fa fa-star");
+             qualityStarFour.setAttribute("class", "fa fa-star");
+             qualityStarFive.setAttribute("class", "fa fa-star");
+           };
+           qualityStarFive.onmouseout = function(){
+             qualityStarOne.setAttribute("class", "fa fa-star-o");
+             qualityStarTwo.setAttribute("class", "fa fa-star-o");
+             qualityStarThree.setAttribute("class", "fa fa-star-o");
+             qualityStarFour.setAttribute("class", "fa fa-star-o");
+             qualityStarFive.setAttribute("class", "fa fa-star-o");
+           };
+           qualityStarFive.onclick = function(){
+             qualityInput.value = "5";
+             qualityStarOne.setAttribute("class", "fa fa-star");
+             qualityStarTwo.setAttribute("class", "fa fa-star");
+             qualityStarThree.setAttribute("class", "fa fa-star");
+             qualityStarFour.setAttribute("class", "fa fa-star");
+             qualityStarFive.setAttribute("class", "fa fa-star");
+             qualityStarOne.style.color = "#FF0000";
+             qualityStarTwo.style.color = "#FF0000";
+             qualityStarThree.style.color = "#FF0000";
+             qualityStarFour.style.color = "#FF0000";
+             qualityStarFive.style.color = "#FF0000";
+           };
+
+
+           var timeTakenStarOne = document.getElementById("timeTakenStarOne");
+           var timeTakenStarTwo = document.getElementById("timeTakenStarTwo")
+           var timeTakenStarThree = document.getElementById("timeTakenStarThree")
+           var timeTakenStarFour = document.getElementById("timeTakenStarFour")
+           var timeTakenStarFive = document.getElementById("timeTakenStarFive")
+
+           var timeTakenInput = document.getElementById("id_time_taken");
+
+           timeTakenStarOne.onmouseover = function(){
+             timeTakenStarOne.setAttribute("class", "fa fa-star");
+           };
+           timeTakenStarOne.onmouseout = function(){
+             timeTakenStarOne.setAttribute("class", "fa fa-star-o");
+           };
+           timeTakenStarOne.onclick = function(){
+             timeTakenInput.value = "1";
+             timeTakenStarOne.setAttribute("class", "fa fa-star");
+             timeTakenStarOne.style.color = "#FF0000";
+             timeTakenStarTwo.style.color = "#000000";
+             timeTakenStarThree.style.color = "#000000";
+             timeTakenStarFour.style.color = "#000000";
+             timeTakenStarFive.style.color = "#000000";
+           };
+
+           timeTakenStarTwo.onmouseover = function(){
+             timeTakenStarOne.setAttribute("class", "fa fa-star");
+             timeTakenStarTwo.setAttribute("class", "fa fa-star");
+           };
+           timeTakenStarTwo.onmouseout = function(){
+             timeTakenStarOne.setAttribute("class", "fa fa-star-o");
+             timeTakenStarTwo.setAttribute("class", "fa fa-star-o");
+           };
+           timeTakenStarTwo.onclick = function(){
+             timeTakenInput.value = "2";
+             timeTakenStarOne.setAttribute("class", "fa fa-star");
+             timeTakenStarTwo.setAttribute("class", "fa fa-star");
+             timeTakenStarOne.style.color = "#FF0000";
+             timeTakenStarTwo.style.color = "#FF0000";
+             timeTakenStarThree.style.color = "#000000";
+             timeTakenStarFour.style.color = "#000000";
+             timeTakenStarFive.style.color = "#000000";
+           };
+
+           timeTakenStarThree.onmouseover = function(){
+             timeTakenStarOne.setAttribute("class", "fa fa-star");
+             timeTakenStarTwo.setAttribute("class", "fa fa-star");
+             timeTakenStarThree.setAttribute("class", "fa fa-star");
+           };
+           timeTakenStarThree.onmouseout = function(){
+             timeTakenStarOne.setAttribute("class", "fa fa-star-o");
+             timeTakenStarTwo.setAttribute("class", "fa fa-star-o");
+             timeTakenStarThree.setAttribute("class", "fa fa-star-o");
+           };
+           timeTakenStarThree.onclick = function(){
+             timeTakenInput.value = "3";
+             timeTakenStarOne.setAttribute("class", "fa fa-star");
+             timeTakenStarTwo.setAttribute("class", "fa fa-star");
+             timeTakenStarThree.setAttribute("class", "fa fa-star");
+             timeTakenStarOne.style.color = "#FF0000";
+             timeTakenStarTwo.style.color = "#FF0000";
+             timeTakenStarThree.style.color = "#FF0000";
+             timeTakenStarFour.style.color = "#000000";
+             timeTakenStarFive.style.color = "#000000";
+           };
+
+           timeTakenStarFour.onmouseover = function(){
+             timeTakenStarOne.setAttribute("class", "fa fa-star");
+             timeTakenStarTwo.setAttribute("class", "fa fa-star");
+             timeTakenStarThree.setAttribute("class", "fa fa-star");
+             timeTakenStarFour.setAttribute("class", "fa fa-star");
+           };
+           timeTakenStarFour.onmouseout = function(){
+             timeTakenStarOne.setAttribute("class", "fa fa-star-o");
+             timeTakenStarTwo.setAttribute("class", "fa fa-star-o");
+             timeTakenStarThree.setAttribute("class", "fa fa-star-o");
+             timeTakenStarFour.setAttribute("class", "fa fa-star-o");
+           };
+           timeTakenStarFour.onclick = function(){
+             timeTakenInput.value = "4";
+             timeTakenStarOne.setAttribute("class", "fa fa-star");
+             timeTakenStarTwo.setAttribute("class", "fa fa-star");
+             timeTakenStarThree.setAttribute("class", "fa fa-star");
+             timeTakenStarFour.setAttribute("class", "fa fa-star");
+             timeTakenStarOne.style.color = "#FF0000";
+             timeTakenStarTwo.style.color = "#FF0000";
+             timeTakenStarThree.style.color = "#FF0000";
+             timeTakenStarFour.style.color = "#FF0000";
+             timeTakenStarFive.style.color = "#000000";
+           };
+
+           timeTakenStarFive.onmouseover = function(){
+             timeTakenStarOne.setAttribute("class", "fa fa-star");
+             timeTakenStarTwo.setAttribute("class", "fa fa-star");
+             timeTakenStarThree.setAttribute("class", "fa fa-star");
+             timeTakenStarFour.setAttribute("class", "fa fa-star");
+             timeTakenStarFive.setAttribute("class", "fa fa-star");
+           };
+           timeTakenStarFive.onmouseout = function(){
+             timeTakenStarOne.setAttribute("class", "fa fa-star-o");
+             timeTakenStarTwo.setAttribute("class", "fa fa-star-o");
+             timeTakenStarThree.setAttribute("class", "fa fa-star-o");
+             timeTakenStarFour.setAttribute("class", "fa fa-star-o");
+             timeTakenStarFive.setAttribute("class", "fa fa-star-o");
+           };
+           timeTakenStarFive.onclick = function(){
+             timeTakenInput.value = "5";
+             timeTakenStarOne.setAttribute("class", "fa fa-star");
+             timeTakenStarTwo.setAttribute("class", "fa fa-star");
+             timeTakenStarThree.setAttribute("class", "fa fa-star");
+             timeTakenStarFour.setAttribute("class", "fa fa-star");
+             timeTakenStarFive.setAttribute("class", "fa fa-star");
+             timeTakenStarOne.style.color = "#FF0000";
+             timeTakenStarTwo.style.color = "#FF0000";
+             timeTakenStarThree.style.color = "#FF0000";
+             timeTakenStarFour.style.color = "#FF0000";
+             timeTakenStarFive.style.color = "#FF0000";
+           };
+
+
+           var complexityStarOne = document.getElementById("complexityStarOne");
+           var complexityStarTwo = document.getElementById("complexityStarTwo")
+           var complexityStarThree = document.getElementById("complexityStarThree")
+           var complexityStarFour = document.getElementById("complexityStarFour")
+           var complexityStarFive = document.getElementById("complexityStarFive")
+
+           var complexityInput = document.getElementById("id_complexity");
+
+           complexityStarOne.onmouseover = function(){
+             complexityStarOne.setAttribute("class", "fa fa-star");
+           };
+           complexityStarOne.onmouseout = function(){
+             complexityStarOne.setAttribute("class", "fa fa-star-o");
+           };
+           complexityStarOne.onclick = function(){
+             complexityInput.value = "1";
+             complexityStarOne.setAttribute("class", "fa fa-star");
+             complexityStarOne.style.color = "#FF0000";
+             complexityStarTwo.style.color = "#000000";
+             complexityStarThree.style.color = "#000000";
+             complexityStarFour.style.color = "#000000";
+             complexityStarFive.style.color = "#000000";
+           };
+
+           complexityStarTwo.onmouseover = function(){
+             complexityStarOne.setAttribute("class", "fa fa-star");
+             complexityStarTwo.setAttribute("class", "fa fa-star");
+           };
+           complexityStarTwo.onmouseout = function(){
+             complexityStarOne.setAttribute("class", "fa fa-star-o");
+             complexityStarTwo.setAttribute("class", "fa fa-star-o");
+           };
+           complexityStarTwo.onclick = function(){
+             complexityInput.value = "2";
+             complexityStarOne.setAttribute("class", "fa fa-star");
+             complexityStarTwo.setAttribute("class", "fa fa-star");
+             complexityStarOne.style.color = "#FF0000";
+             complexityStarTwo.style.color = "#FF0000";
+             complexityStarThree.style.color = "#000000";
+             complexityStarFour.style.color = "#000000";
+             complexityStarFive.style.color = "#000000";
+           };
+
+           complexityStarThree.onmouseover = function(){
+             complexityStarOne.setAttribute("class", "fa fa-star");
+             complexityStarTwo.setAttribute("class", "fa fa-star");
+             complexityStarThree.setAttribute("class", "fa fa-star");
+           };
+           complexityStarThree.onmouseout = function(){
+             complexityStarOne.setAttribute("class", "fa fa-star-o");
+             complexityStarTwo.setAttribute("class", "fa fa-star-o");
+             complexityStarThree.setAttribute("class", "fa fa-star-o");
+           };
+           complexityStarThree.onclick = function(){
+             complexityInput.value = "3";
+             complexityStarOne.setAttribute("class", "fa fa-star");
+             complexityStarTwo.setAttribute("class", "fa fa-star");
+             complexityStarThree.setAttribute("class", "fa fa-star");
+             complexityStarOne.style.color = "#FF0000";
+             complexityStarTwo.style.color = "#FF0000";
+             complexityStarThree.style.color = "#FF0000";
+             complexityStarFour.style.color = "#000000";
+             complexityStarFive.style.color = "#000000";
+           };
+
+           complexityStarFour.onmouseover = function(){
+             complexityStarOne.setAttribute("class", "fa fa-star");
+             complexityStarTwo.setAttribute("class", "fa fa-star");
+             complexityStarThree.setAttribute("class", "fa fa-star");
+             complexityStarFour.setAttribute("class", "fa fa-star");
+           };
+           complexityStarFour.onmouseout = function(){
+             complexityStarOne.setAttribute("class", "fa fa-star-o");
+             complexityStarTwo.setAttribute("class", "fa fa-star-o");
+             complexityStarThree.setAttribute("class", "fa fa-star-o");
+             complexityStarFour.setAttribute("class", "fa fa-star-o");
+           };
+           complexityStarFour.onclick = function(){
+             complexityInput.value = "4";
+             complexityStarOne.setAttribute("class", "fa fa-star");
+             complexityStarTwo.setAttribute("class", "fa fa-star");
+             complexityStarThree.setAttribute("class", "fa fa-star");
+             complexityStarFour.setAttribute("class", "fa fa-star");
+             complexityStarOne.style.color = "#FF0000";
+             complexityStarTwo.style.color = "#FF0000";
+             complexityStarThree.style.color = "#FF0000";
+             complexityStarFour.style.color = "#FF0000";
+             complexityStarFive.style.color = "#000000";
+           };
+
+           complexityStarFive.onmouseover = function(){
+             complexityStarOne.setAttribute("class", "fa fa-star");
+             complexityStarTwo.setAttribute("class", "fa fa-star");
+             complexityStarThree.setAttribute("class", "fa fa-star");
+             complexityStarFour.setAttribute("class", "fa fa-star");
+             complexityStarFive.setAttribute("class", "fa fa-star");
+           };
+           complexityStarFive.onmouseout = function(){
+             complexityStarOne.setAttribute("class", "fa fa-star-o");
+             complexityStarTwo.setAttribute("class", "fa fa-star-o");
+             complexityStarThree.setAttribute("class", "fa fa-star-o");
+             complexityStarFour.setAttribute("class", "fa fa-star-o");
+             complexityStarFive.setAttribute("class", "fa fa-star-o");
+           };
+           complexityStarFive.onclick = function(){
+             complexityInput.value = "5";
+             complexityStarOne.setAttribute("class", "fa fa-star");
+             complexityStarTwo.setAttribute("class", "fa fa-star");
+             complexityStarThree.setAttribute("class", "fa fa-star");
+             complexityStarFour.setAttribute("class", "fa fa-star");
+             complexityStarFive.setAttribute("class", "fa fa-star");
+             complexityStarOne.style.color = "#FF0000";
+             complexityStarTwo.style.color = "#FF0000";
+             complexityStarThree.style.color = "#FF0000";
+             complexityStarFour.style.color = "#FF0000";
+             complexityStarFive.style.color = "#FF0000";
+           };
+        </script>
       <div class="">
         <p><a href="{% url 'Profile:Confirm' %}" class="btn btn-danger">Cancel</a> <button type="submit" name="Done" class="btn btn-primary">Save</button></p>
       </div>

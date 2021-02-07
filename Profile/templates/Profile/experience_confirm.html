@@ -274,11 +274,7 @@
                       </div>
                     </div>
                     <div class="col-md-2 h-100 text-center my-auto">
-                      <form  action="{% url 'Profile:ColleagueConfirm' l.id %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit" class="badge badge-primary badge-pill" style="width: 10rem">Confirm</button>
-                      </form>
-                      <a href="{% url 'Profile:ColleagueComment' l.slug %}" class="badge badge-success badge-pill" style="width: 10rem">Confirm with Comment</a>
+                      <a href="{% url 'Profile:ColleagueComment' l.slug %}" class="badge badge-primary badge-pill" style="width: 10rem;border:solid 2px #000000;">Confirm</a>
                       <br>
                       <br>
                       <form  action="{% url 'Profile:ColleagueReject' l.id %}" method="post">
@@ -380,11 +376,7 @@
                       </div>
                     </div>
                     <div class="col-md-2 h-100 text-center my-auto">
-                      <form  action="{% url 'Profile:SuperiorConfirm' l.id %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit" class="badge badge-primary badge-pill" style="width: 10rem">Confirm</button>
-                      </form>
-                      <a href="{% url 'Profile:SuperiorComment' l.slug %}" class="badge badge-pill badge-success" style="width: 10rem">Confirm with Comment</a>
+                      <a href="{% url 'Profile:SuperiorComment' l.slug %}" class="badge badge-primary badge-pill" style="width: 10rem;border:solid 2px #000000;">Confirm</a>
                       <br>
                       <br>
                       <form  action="{% url 'Profile:SuperiorReject' l.id %}" method="post">
@@ -486,11 +478,7 @@
                       </div>
                     </div>
                     <div class="col-md-2 h-100 text-center my-auto">
-                      <form  action="{% url 'Profile:CollaboratorConfirm' l.id %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit" class="badge badge-primary badge-pill" style="width: 10rem">Confirm</button>
-                      </form>
-                      <a href="{% url 'Profile:CollaboratorComment' l.slug %}" class="badge badge-pill badge-success" style="width: 10rem">Confirm with Comment</a>
+                      <a href="{% url 'Profile:CollaboratorComment' l.slug %}" class="badge badge-primary badge-pill" style="width: 10rem;border:solid 2px #000000;">Confirm</a>
                       <br>
                       <br>
                       <form  action="{% url 'Profile:CollaboratorReject' l.id %}" method="post">
@@ -591,11 +579,7 @@
                       </div>
                     </div>
                     <div class="col-md-2 h-100 text-center my-auto">
-                      <form  action="{% url 'Profile:ClientConfirm' l.id %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit" class="badge badge-primary badge-pill" style="width: 10rem">Confirm</button>
-                      </form>
-                      <a href="{% url 'Profile:ClientComment' l.slug %}" class="badge badge-pill badge-success" style="width: 10rem">Confirm with Comment</a>
+                      <a href="{% url 'Profile:ClientComment' l.slug %}" class="badge badge-primary badge-pill" style="width: 10rem;border:solid 2px #000000;">Confirm</a>
                       <br>
                       <br>
                       <form  action="{% url 'Profile:ClientReject' l.id %}" method="post">
@@ -695,11 +679,7 @@
                       </div>
                     </div>
                     <div class="col-md-2 h-100 text-center my-auto">
-                      <form  action="{% url 'Profile:PreColleagueConfirm' l.id %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit" class="badge badge-primary badge-pill">Confirm</button>
-                      </form>
-                      <a href="{% url 'Profile:PreColleagueComment' l.slug %}" class="badge badge-pill badge-success">Confirm with Comment</a>
+                      <a href="{% url 'Profile:PreColleagueComment' l.slug %}" class="badge badge-primary badge-pill" style="width: 10rem;border:solid 2px #000000;">Confirm</a>
                       <br>
                       <br>
                       <form  action="{% url 'Profile:PreColleagueReject' l.id %}" method="post">
