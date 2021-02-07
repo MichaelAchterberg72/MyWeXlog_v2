@@ -254,8 +254,8 @@ def EmployeesOnProject(request, prj, corp):
 
         hours.append(result)
 
-#    info = WorkExperience.objects.filter(project__slug=prj).annotate('talent').order_by('talent')
-#    employee = Users.objects.filter(project__slug=prj)
+        hours = sorted(hours, key=lambda kv: kv['date_to'], reverse=True)
+
     try:
         page = int(request.GET.get('page', 1))
     except:
