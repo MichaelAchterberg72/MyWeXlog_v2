@@ -36,8 +36,23 @@
     <hr>
     <form method="post">
       {% csrf_token %}
-        {{ form.confirm|as_crispy_field }}
-        {{ form.comments|as_crispy_field }}
+        <div class="row d-none">
+          {{ form.confirm|as_crispy_field }}
+        </div>
+        <div class="row text-center">
+          <div class="col-md-4">
+            <button type="button" class="btn btn-success" id="confirm-button" style="width:19rem;border:solid 1px #000000;" name="button">Confirm</button>
+          </div>
+          <div class="col-md-4">
+            <button type="button" class="btn btn-danger" id="reject-button" style="width:19rem;border:solid 1px #000000;" name="button">Reject</button>
+          </div>
+          <div class="col-md-4">
+            <button type="button" class="btn btn-info" id="wrongp-button" style="width:19rem;border:solid 1px #000000;" name="button">Wrong Person</button>
+          </div>
+        </div>
+        <div class="container">
+          {{ form.comments|as_crispy_field }}
+        </div>
         <div class="row d-none">
           <div class="col-md-4">
             {{ form.quality|as_crispy_field }}
@@ -87,6 +102,33 @@
           <p>&nbsp</p>
         </div>
         <script type="text/javascript">
+          var confirmButton = document.getElementById("confirm-button");
+          var rejectButton = document.getElementById("reject-button");
+          var wrongpButton = document.getElementById("wrongp-button");
+
+          var confirmInput = document.getElementById("id_confirm");
+
+          confirmButton.onclick = function(){
+            confirmInput.value = "C";
+            confirmButton.setAttribute("class", "btn btn-success");
+            rejectButton.setAttribute("class", "btn btn-light");
+            wrongpButton.setAttribute("class", "btn btn-light");
+          };
+
+          rejectButton.onclick = function(){
+            confirmInput.value = "R";
+            confirmButton.setAttribute("class", "btn btn-light");
+            rejectButton.setAttribute("class", "btn btn-danger");
+            wrongpButton.setAttribute("class", "btn btn-light");
+          };
+
+          wrongpButton.onclick = function(){
+            confirmInput.value = "Y";
+            confirmButton.setAttribute("class", "btn btn-light");
+            rejectButton.setAttribute("class", "btn btn-light");
+            wrongpButton.setAttribute("class", "btn btn-info");
+          };
+
            var qualityStarOne = document.getElementById("qualityStarOne");
            var qualityStarTwo = document.getElementById("qualityStarTwo")
            var qualityStarThree = document.getElementById("qualityStarThree")
