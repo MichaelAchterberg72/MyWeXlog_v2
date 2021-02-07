@@ -22,73 +22,120 @@
             <div class="border-0">
               <div class="card-body">
                 <h5 class="card-title">Project Details</h5>
-                <table class="table table-bordered">
-                  <thead>
-                  </thead>
-                  <tbody>
-                      {% for d in detail %}
-                      <tr>
-                        <col width="20%">
-                        <col width="30%">
-                        <col width="20%">
-                        <col width="10%">
-                        <col width="10%">
-                        <col width="10%">
 
-                        <th class="align-middle text-center"><strong>Project Owner</strong></th>
-                        <th class="align-middle text-center"><strong>Project Name</strong></th>
-                        <th class="align-middle text-center"><strong>Industry</strong></th>
-                        <th class="align-middle text-center"><strong>Total Project Hours</strong></th>
-                      </tr>
-                        <td class="align-middle text-center">{{ d.company }}<br>{{ d.companybranch }} </td>
-                        <td class="align-middle text-center">{{ d.name }}</td>
-                        <td class="align-middle text-center">{{ d.industry }}</td>
-                        <td class="align-middle text-center">{{ hr.sum_t|intcomma }}</td>
-                      <tr>
-                        <th class="align-middle text-center"><strong>Country</strong></th>
-                        <th class="align-middle text-center"><strong>City</strong></th>
-                        <th class="align-middle text-center"><strong>Region</strong></th>
-                        <th class="align-middle text-center"><strong>Total People</strong></th>
-                      </tr>
-                      <tr>
-                        <td class="align-middle text-center">{{ d.get_country_display }}</td>
-                        <td class="align-middle text-center">{{ d.city }}</td>
-                        <td class="align-middle text-center">{{ d.region }}</td>
-                        <td class="align-middle text-center">{{ ppl|intcomma }}</td>
-                      </tr>
-                      {% endfor %}
-                      <tr>
-                  </tbody>
-                </table>
+                {% for d in detail %}
+
+                <div class="row">
+                  <div class="col-md-2">
+                    <strong>Project Name</strong>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="card-title">
+                      {{ d.name }}
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-2">
+                    <strong>Project Owner</strong>
+                  </div>
+                  <div class="col-md-6">
+                    {{ d.companybranch }}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-2">
+                    <strong>Industry</strong>
+                  </div>
+                  <div class="col-md-6">
+                    {{ d.industry }}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-2">
+                    <p>&nbsp</p>
+                  </div>
+                  <div class="col-md-6">
+
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-2">
+                    <strong>Country</strong>
+                  </div>
+                  <div class="col-md-6">
+                    {{ d.get_country_display }}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-2">
+                    <strong>Region</strong>
+                  </div>
+                  <div class="col-md-6">
+                    {{ d.region }}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-2">
+                    <strong>City</strong>
+                  </div>
+                  <div class="col-md-6">
+                    {{ d.city }}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-2">
+                    <p>&nbsp</p>
+                  </div>
+                  <div class="col-md-6">
+
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3">
+                    <strong>Total People on Project</strong>
+                  </div>
+                  <div class="col-md-6">
+                    {{ ppl|intcomma }}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3">
+                    <strong>Total Hours on Project</strong>
+                  </div>
+                  <div class="col-md-6">
+                    {{ hr.sum_t|floatformat:0|intcomma }}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-2">
+
+                  </div>
+                  <div class="col-md-6">
+                    {% if request.user.subscription >= 2 %}
+                      <p class="text-right">
+                        <a href="{% url 'Project:HoursOnProject' info.slug %}?next={{ request.path|urlencode }}"class="btn btn-primary">
+                          MyWeXlog Hours
+                        </a>
+                        &nbsp
+                      {% else %}
+                        <a href="{% url 'Payments:ActiveSubscription' %}" class="btn btn-primary">
+                          Active Subscription Required
+                        </a>
+                      </p>
+                      {% endif %}
+                  </div>
+                </div>
+
+                {% endfor %}
               </div>
             </div>
           </div>
         </div>
-        <p>&nbsp</p>
-        <div class="row">
-          <div class="col-sm-6">
-          </div>
-          <div class="col-sm-6">
-            <div class="">
-              <div class="card-body">
-              {% if request.user.subscription >= 2 %}
-                <p class="text-right">
-                  <a href="{% url 'Project:HoursOnProject' info.slug %}?next={{ request.path|urlencode }}"class="btn btn-primary">
-                    MyWeXlog Hours
-                  </a>
-                  &nbsp
-                {% else %}
-                  <a href="{% url 'Payments:ActiveSubscription' %}" class="btn btn-primary">
-                    Active Subscription Required
-                  </a>
-                </p>
-                {% endif %}
-              </div>
-            </div>
-          </div>
-        </div>
+
       </div>
     </div>
+
 
 
 

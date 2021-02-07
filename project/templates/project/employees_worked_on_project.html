@@ -1,32 +1,35 @@
 {% extends "base_home.html" %}
 {% load humanize %}
 
-{% block title %}{{block.super}}-Hours Spent Working On Project{% endblock title %}
+{% block title %}{{block.super}}-Employees Hours Spent Working On Project{% endblock title %}
 
 {% block content %}
 
 <div class="card card-shadow">
   <div class="card-body">
-  <h4 class="">List of companies worked on {{ projectdata.name }}!</h4>
+  <h4 class="">List of employees hours working for company on {{ projectdata.name }}!</h4>
 
       {% if request.user.is_authenticated %}
-      <p><a href="{% url 'Project:ProjectAdd' %}" class="badge badge-pill badge-primary">Add Project</a><a href="{% url 'Project:ProjectHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
+      <p><a href="{% url 'Project:ProjectAdd' %}" class="badge badge-pill badge-primary">Add Project</a><a href="{% url 'Project:HoursOnProject' prj %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
       {% endif %}
     <p>There are currently <strong>{{ hr.sum_t|floatformat:0|intcomma }}</strong> hours spent working on project {{ projectdata.name }}.</p>
 
     <div class="container">
       <div class="row my-auto">
         <div class="col-md-4 h-100 text-center my-auto">
-          <strong>Company Name</strong>
+          <strong>Talen Alias</strong>
         </div>
-        <div class="col-md-3 h-100 text-center my-auto">
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Date From</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
           <strong>Last Date Captured</strong>
         </div>
-        <div class="col-md-3 h-100 text-center my-auto">
+        <div class="col-md-2 h-100 text-center my-auto">
           <strong>Total Hours Spent</strong>
         </div>
         <div class="col-md-2 h-100 text-center my-auto">
-          <strong>Detail</strong>
+          <strong>Profile</strong>
         </div>
       </div>
     </div>
@@ -36,16 +39,21 @@
         <div class="card-body small-pad">
           <div class="row my-auto">
             <div class="col-md-4 h-100 text-center my-auto">
-              {{ p.company }}
+              {{ p.talent }}
             </div>
-            <div class="col-md-3 h-100 text-center my-auto">
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ p.date_from }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
               {{ p.date_to }}
             </div>
-            <div class="col-md-3 h-100 text-center my-auto">
+            <div class="col-md-2 h-100 text-center my-auto">
               {{ p.hours_worked|floatformat:0|intcomma }}
             </div>
             <div class="col-md-2 h-100 text-center my-auto">
-              <a href="{% url 'Project:TltOnProject' p.prj p.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary float-right" style="width: 5rem;">See Detail</a>
+              <a href="{% url 'Talent:APV_L' p.talent %}" target="_blank">
+                <i class="fa fa-id-badge" aria-hidden="true"style="font-size:30px; color:black" data-toggle="tooltip" data-placement="top" title="View Profile"></i>
+              </a>
             </div>
           </div>
         </div>

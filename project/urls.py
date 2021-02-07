@@ -18,6 +18,7 @@ urlpatterns = [
     path('add/', views.ProjectAddView, name='ProjectAdd'),
     path('edit/project/<slug:prj>/', views.ProjectEditView, name="EditProject"),
     path('hours/<slug:prj>/', views.HoursWorkedOnProject, name='HoursOnProject'),
+    path('talent/<slug:prj>/<slug:corp>/', views.EmployeesOnProject, name='TltOnProject'),
     path('experience/detail/<slug:prj>/', views.WorkExperienceDetail, name='DetailExperienceOnProject'),
 
     path('list/', views.ProjectListView, name='ProjectList'),

@@ -2,7 +2,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
-from django.db.models import Count, Sum, F, Q, Avg, Max
+#from django.db.models import Count, Sum, F, Q, Avg, Max, Min
+from django.db.models import Count, Sum, F, Q, Avg, Max, Min
 from django.utils.http import is_safe_url
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
@@ -191,15 +192,16 @@ def HoursWorkedOnProject(request, prj):
     projectdata = get_object_or_404(ProjectData, slug=prj)
     wk_qs = WorkExperience.objects.filter(project__slug=prj)
     hr = wk_qs.aggregate(sum_t=Sum('hours_worked'))
-    comp_qs = wk_qs.values_list('company__ename', flat=True).distinct()
+    comp_qs = wk_qs.values_list('company__slug', flat=True).distinct()
     comp = list(comp_qs)
 
     hours = []
     for c in comp:
-        info = wk_qs.filter(Q(company__ename=c) & Q(project__slug=prj)).aggregate(sum_t=Sum('hours_worked'))
-        date = wk_qs.filter(Q(company__ename=c) & Q(project__slug=prj)).aggregate(Max('date_to'))
+        company = Enterprise.objects.get(slug=c).ename
+        info = wk_qs.filter(Q(company__slug=c) & Q(project__slug=prj)).aggregate(sum_t=Sum('hours_worked'))
+        date = wk_qs.filter(Q(company__slug=c) & Q(project__slug=prj)).aggregate(Max('date_to'))
 
-        result={'company': c, 'hours_worked': info['sum_t'], 'date_to': date['date_to__max']}
+        result={'company': company, 'slug': c, 'prj': prj, 'hours_worked': info['sum_t'], 'date_to': date['date_to__max']}
 
         hours.append(result)
 
@@ -227,7 +229,6 @@ def HoursWorkedOnProject(request, prj):
     template_name = 'project/hours_worked_on_project.html'
     context = {
             'projectdata': projectdata,
-            'info': info,
             'hr': hr,
             'pageitems': pageitems,
             'page_range': page_range,
@@ -236,16 +237,52 @@ def HoursWorkedOnProject(request, prj):
 
 
 @login_required()
-def EmployeesOnProject(request, prj):
+def EmployeesOnProject(request, prj, corp):
     projectdata = get_object_or_404(ProjectData, slug=prj)
-    info = WorkExperience.objects.filter(project__slug=prj).annotate('talent').order_by('talent')
-    employee = Users.objects.filter(project__slug=prj)
+    wk_qs = WorkExperience.objects.filter(Q(project__slug=prj) & Q(company__slug=corp))
+    hr = wk_qs.aggregate(sum_t=Sum('hours_worked'))
+    talent_qs = wk_qs.values_list('talent__alias', flat=True).distinct()
+    talent = list(talent_qs)
+
+    hours = []
+    for t in talent:
+        info = wk_qs.filter(Q(talent__alias=t) & Q(project__slug=prj)).aggregate(sum_t=Sum('hours_worked'))
+        date_from = wk_qs.filter(Q(talent__alias=t) & Q(project__slug=prj)).aggregate(Min('date_from'))
+        date_to = wk_qs.filter(Q(talent__alias=t) & Q(project__slug=prj)).aggregate(Max('date_to'))
+
+        result={'talent': t, 'hours_worked': info['sum_t'], 'date_from': date_from['date_from__min'], 'date_to': date_to['date_to__max']}
+
+        hours.append(result)
+
+#    info = WorkExperience.objects.filter(project__slug=prj).annotate('talent').order_by('talent')
+#    employee = Users.objects.filter(project__slug=prj)
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(hours, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
 
     template_name = 'project/employees_worked_on_project.html'
     context = {
             'projectdata': projectdata,
-            'info': info,
-            'employee': employee
+            'prj': prj,
+            'hr': hr,
+            'pageitems': pageitems,
+            'page_range': page_range,
     }
     return render(request, template_name, context)
 
