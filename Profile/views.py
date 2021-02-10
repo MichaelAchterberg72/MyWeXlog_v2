@@ -1211,9 +1211,35 @@ def BriefHistoryEditView(request, bch):
 
     else:
         template = 'Profile/brief_career_history_edit.html'
-        context = {'form': form,}
+        context = {'form': form, 'bch': bch, 'instance': instance}
         response = render(request, template, context)
         return response
+
+
+@login_required()
+def BriefHistoryDeleteView(request, bch):
+    talent=request.user
+    instance = BriefCareerHistory.objects.get(slug=bch)
+
+    if instance.talent == request.user:
+        if request.method =='POST':
+            instance.delete()
+            return redirect(reverse('Profile:ProfileView')+'#History')
+    else:
+        raise PermissionDenied
+
+
+@login_required()
+def BriefHistoryAddDeleteView(request, bch):
+    talent=request.user
+    instance = BriefCareerHistory.objects.get(slug=bch)
+
+    if instance.talent == request.user:
+        if request.method =='POST':
+            instance.delete()
+            return redirect(reverse('Profile:History'))
+    else:
+        raise PermissionDenied
 
 
 @login_required()
