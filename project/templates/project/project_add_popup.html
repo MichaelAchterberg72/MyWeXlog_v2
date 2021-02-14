@@ -22,18 +22,43 @@
       <div class="form-group col-md-6 mb-0">
         {{ form.name|as_crispy_field }}
         {{ form.company|as_crispy_field }}
-        <a href="{% url 'Enterprise:EnterpriseAddPop' %}" id='add_enterprise' onclick='return showAddPopup(this);'><img src="{% static 'images/icon-addlink.svg' %}"> Add a new Company</a>
+        <a href="{% url 'Enterprise:EnterpriseAddPop' %}" id='add_enterprise' onclick='return showAddPopup(this);'>
+          <img src="{% static 'images/icon-addlink.svg' %}">
+          Add Company
+        </a>
         {{ form.companybranch|as_crispy_field }}
-        <p><a href="{% url 'Enterprise:BranchAddPop' %}" id='add_branch' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add a Branch</a></p>
+        <p>
+          <a href="{% url 'Enterprise:BranchAddPop' %}" id='add_branch' onclick='return showAddPopup(this);'>
+            <img src = "{% static 'images/icon-addlink.svg' %}">
+            Add Branch
+          </a>
+        </p>
         {{ form.industry|as_crispy_field }}
-        <a href="{% url 'Enterprise:IndustryAddPop' %}" id='add_industry' onclick='return showAddPopup(this);'><img src="{% static 'images/icon-addlink.svg' %}"> Add a new Industry</a>
+        <a href="{% url 'Enterprise:IndustryAddPop' %}" id='add_industry' onclick='return showAddPopup(this);'>
+          <img src="{% static 'images/icon-addlink.svg' %}">
+          Add Industry
+        </a>
         {{ form.country|as_crispy_field }}
       </div>
       <div class="form-group col-md-6 mb-0">
         {{ form.region|as_crispy_field }}
-        <a href="{% url 'Location:RegionAddPop' %}" id='add_region' onclick='return showAddPopup(this);'><img src="{% static 'images/icon-addlink.svg' %}"> Add a new Region</a>
+        <div id="city_error" class="d-none float-right">
+          <button class="btn btn-danger btn-block" type="button" name="button">
+            Please enter a region
+          </button>
+        </div>
+        <a href="{% url 'Location:RegionAddPop' %}" id='add_region' onclick='return showAddPopup(this);'>
+          <img src="{% static 'images/icon-addlink.svg' %}">
+          Add Region
+        </a>
         {{ form.city|as_crispy_field }}
-        <a href="{% url 'Location:CityAddPop' %}" id='add_city' onclick='return showAddPopup(this);'><img src="{% static 'images/icon-addlink.svg' %}"> Add a new City</a>
+
+        <a href="#" id='ad_cty'>
+          <img src = "{% static 'images/icon-addlink.svg' %}">
+          Add City or Town
+        </a>
+        <a href="{% url 'Location:CityAddPop' %}" id='add_city' onclick='return showAddPopup(this);'>
+        </a>
       </div>
     </div>
     <div class="">
@@ -63,5 +88,19 @@
   window.onerror = function(msg) {
     $("body").attr("JSError", msg);
   }
+
+  var form = document.getElementById('ProjectForm')
+  var city = document.getElementById('city_error')
+
+  document.getElementById('ad_cty').addEventListener('click', function(e){
+    if(form.region.value == ''){
+      city.classList.remove('d-none')
+    }else{
+      document.cookie = 'region=' + JSON.stringify(form.region.value) + ";domain=;path=/"
+      city.classList.add('d-none')
+      document.getElementById('add_city').click();
+    }
+  })
+
 </script>
 {% endblock Script %}
