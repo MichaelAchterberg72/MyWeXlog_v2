@@ -41,9 +41,17 @@
     </div>
     <div class="form-group col-md-6 mb-0">
       {{ form.region|as_crispy_field }}
-      <p><a href="{% url 'Location:RegionAddPop' %}" id='add_region' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add a Region</a></p>
+      <p>
+        <a href="{% url 'Location:RegionAddPop' %}" id='add_region' onclick='return showAddPopup(this);'>
+          <img src = "{% static 'images/icon-addlink.svg' %}">Add a Region
+        </a>
+      </p>
       {{ form.city|as_crispy_field }}
-      <p><a href="{% url 'Location:CityAddPop' %}" id='add_city' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add a City</a></p>
+      <p>
+        <a href="{% url 'Location:CityAddPop' %}" id='add_city' onclick='return showAddPopup(this);'>
+          <img src = "{% static 'images/icon-addlink.svg' %}">Add a City
+        </a>
+      </p>
       {{ form.suburb|as_crispy_field }}
       <p><a href="{% url 'Location:SuburbAddPop' %}" id='add_suburb' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add a Suburb</a></p>
       {{ form.code|as_crispy_field }}
