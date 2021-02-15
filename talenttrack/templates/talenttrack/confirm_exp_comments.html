@@ -16,11 +16,11 @@
       <col width="10%">
       <thead>
         <tr align="Center">
-          <th>Company</th>
-          <th>Project</th>
-          <th>Designation</th>
-          <th>Dates</th>
-          <th>Hours</th>
+          <th><strong>Company</strong></th>
+          <th><strong>Project</strong></th>
+          <th><strong>Designation</strong></th>
+          <th><strong>Dates</strong></th>
+          <th><strong>Hours</strong></th>
         </tr>
       </thead>
       <tbody>
@@ -31,11 +31,24 @@
           <td align="Center">{{ info.experience.date_from|date:"j M Y" }} <br>to<br>{{ info.experience.date_to|date:"j M Y" }}</td>
           <td class="align-middle" align="Center">{{ info.experience.hours_worked }}</td>
         </tr>
+        <tr>
+          <th colspan="5" class="text-center"><strong>Skills</strong></th>
+        </tr>
+        <tr>
+          <td colspan="5" class="text-center">{{ info.experience.skills.all|join:" || " }}</td>
+        </tr>
+        <tr>
+          <th colspan="5" class="text-center"><strong>Comment</strong></th>
+        </tr>
+        <tr>
+          <td colspan="5" class="text-left">{{ info.experience.comment|linebreaks|truncatechars:560 }}</td>
+        </tr>
       </tbody>
     </table>
     <hr>
     <form method="post">
       {% csrf_token %}
+
         <div class="row d-none">
           {{ form.confirm|as_crispy_field }}
         </div>
@@ -49,7 +62,16 @@
           <div class="col-md-4">
             <button type="button" class="btn btn-info" id="wrongp-button" style="width:19rem;border:solid 1px #000000;" name="button">Wrong Person</button>
           </div>
+          <div class="row text-center d-none" id="error_id_confirm_message">
+            <div class="container">
+              <div class="col-md-12" style="color:red;">
+                <br>
+              <p><strong>** Please Select either Confirm, Reject or mark as Wrong Person before saving</strong></p>
+              </div>
+            </div>
+          </div>
         </div>
+
         <div class="container">
           {{ form.comments|as_crispy_field }}
         </div>
@@ -100,7 +122,7 @@
         </div>
         <div class="row">
           <div class="container">
-          <small>**Rate the ability in terms of -- 
+          <small>**Rate the ability in terms of --
             <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 1rem;"></i></span> (Basic), --
             <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 1rem;"></i></span>
             <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 1rem;"></i></span> (Working), --
@@ -145,6 +167,13 @@
             confirmButton.setAttribute("class", "btn btn-light");
             rejectButton.setAttribute("class", "btn btn-light");
             wrongpButton.setAttribute("class", "btn btn-info");
+          };
+
+          var errorInput = document.getElementById("error_1_id_confirm");
+          var errorInputMessage = document.getElementById("error_id_confirm_message");
+
+          if (errorInput) {
+            errorInputMessage.setAttribute("class", "row text-center");
           };
 
            var qualityStarOne = document.getElementById("qualityStarOne");

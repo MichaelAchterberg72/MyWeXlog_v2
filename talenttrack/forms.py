@@ -832,15 +832,11 @@ class SiteSkillStatsFilter(forms.Form):
         _country_list = kwargs.pop('data_list', None)
         super(SiteSkillStatsFilter, self).__init__(*args, **kwargs)
 
-        self.fields['designation'].widget = ListTextWidget(data_list=Designation.objects.all().only('name'), name='designation-list')
-        self.fields['industry'].widget = ListTextWidget(data_list=Industry.objects.all().only('industry'), name='industry-list')
+#        self.fields['designation'].widget = ListTextWidget(data_list=Designation.objects.all().only('name'), name='designation-list')
+#        self.fields['industry'].widget = ListTextWidget(data_list=Industry.objects.all().only('industry'), name='industry-list')
 
     class Meta():
         fields = ('country', 'region', 'designation', 'industry', 'date_from', 'date_to')
-        widgets={
-            'designation': DesignationSelect2Widget(),
-            'industry': IndSelect2Widget(),
-        }
 
 
 class SiteDemandSkillStatsFilter(forms.Form):
@@ -879,11 +875,9 @@ class SiteDemandSkillStatsFilter(forms.Form):
         _country_list = kwargs.pop('data_list', None)
         super(SiteDemandSkillStatsFilter, self).__init__(*args, **kwargs)
 
-        self.fields['designation'].widget = ListTextWidget(data_list=Designation.objects.all().only('name'), name='designation-list')
-        self.fields['title'].widget = ListTextWidget(data_list=TalentRequired.objects.all().values_list('title', flat=True).distinct(), name='title-list')
+        #moved to vies.py to incorporate query
+#        self.fields['designation'].widget = ListTextWidget(data_list=Designation.objects.all().only('name'), name='designation-list')
+#        self.fields['title'].widget = ListTextWidget(data_list=TalentRequired.objects.filter(pk=vac_list_qs_id).values_list('title', flat=True).distinct(), name='title-list')
 
     class Meta():
         fields = ('country', 'worklocation', 'designation', 'title', 'experience_level', 'date_entered', 'date_to')
-        widgets={
-            'designation': DesignationSelect2Widget(),
-        }

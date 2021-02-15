@@ -30,11 +30,15 @@
           </p>
           {{ form.companybranch|as_crispy_field }}
           <p><a href="{% url 'Enterprise:BranchAddPop' %}" id='add_branch' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add a Branch</a></p>
-          {{ form.description|as_crispy_field }}
         </div>
         <div class="form-group col-md-6 mb-0">
           {{ form.date_from|as_crispy_field }}
           {{ form.date_to|as_crispy_field }}<p>Leave blank if you currently work here</p>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="col-md-12">
+          {{ form.description|as_crispy_field }}
         </div>
       </div>
       <div class="">
@@ -97,14 +101,18 @@
                   {{ h.work_configeration }}
                 </div>
                 <div class="col-md-1 h-100 text-left my-auto">
-                  <a href="{% url 'Profile:HistoryEdit' bch=h.slug %}" class="badge badge-secondary">
+                  <a href="{% url 'Profile:HistoryEdit' bch=h.slug %}" class="badge badge-secondary" style="width:4.5rem;">
                     Edit
                   </a>
+                  <form  action="{% url 'Profile:HistoryAddDelete' bch=h.slug %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="badge badge-danger" style="width:4.5rem;" onclick="return confirm('Delete {{ h.companybranch }} - Are you sure?');">Delete</button>
+                  </form>
                   {% if h.date_to %}
 
                   {% else %}
                     <br>
-                    <a href="{% url 'Profile:Resigned' bch=h.slug tlt=h.talent.alias %}" class="badge badge-primary">
+                    <a href="{% url 'Profile:Resigned' bch=h.slug tlt=h.talent.alias %}" class="badge badge-primary" style="width:4.5rem;">
                       I Resigned
                     </a>
                   {% endif %}
