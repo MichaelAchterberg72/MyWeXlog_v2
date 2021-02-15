@@ -18,6 +18,7 @@ from django.db.models.functions import Greatest
 from decimal import Decimal
 from django.contrib.postgres.search import SearchVector, TrigramSimilarity
 import math
+from .widgets import ListTextWidget
 
 import sendgrid
 from sendgrid import SendGridAPIClient
@@ -43,7 +44,7 @@ from db_flatten.models import SkillTag
 from marketplace.models import(
     SkillLevel, SkillRequired, WorkBid, BidShortList, TalentRequired, BidInterviewList,
 )
-from enterprises.models import Branch
+from enterprises.models import Branch, Industry
 from locations.models import Region, City
 from project.models import ProjectData
 from Profile.models import (
@@ -71,8 +72,22 @@ def site_demand_skill_stats(request, skl):
 
 
     val_we = TalentRequired.objects.all()
+    skills_rec = SkillRequired.objects.all()
+
+    #Skills associated with skill for datalist filter - includes all skills not just validated ones
+    f_vac_id = val_we.values_list('pk')
+    f_skill_we =  skills_rec.filter(Q(scope__pk__in=f_vac_id) & Q(skills__skill=skill.skill))
+    f_skills_assoc_qs = f_skill_we.values_list('scope__pk', flat=True).distinct()
+
+    f_vac_list_qs = val_we.filter(pk__in=f_skills_assoc_qs)
+    f_vac_list_qs_id = f_vac_list_qs.values_list('pk').distinct()
+
+    f_skill_des = val_we.filter(skillrequired__skills__pk=skl).values_list('designation__pk', flat=True).distinct()
+    print(f_skill_des)
 
     form = SiteDemandSkillStatsFilter()
+    form.fields['title'].widget = ListTextWidget(data_list=TalentRequired.objects.filter(pk__in=f_vac_list_qs_id).values_list('title', flat=True).distinct(), name='title-list')
+    form.fields['designation'].widget = ListTextWidget(data_list=Designation.objects.filter(pk__in=f_skill_des).only('name'), name='designation-list')
 
     title_query = request.GET.get('title')
     designation_query = request.GET.get('designation')
@@ -85,36 +100,36 @@ def site_demand_skill_stats(request, skl):
     if title_query != '' and title_query is not None:
         val_we = val_we.filter(title__icontains=title_query)
 
-    elif designation_query != '' and designation_query is not None:
+    if designation_query != '' and designation_query is not None:
         val_we = val_we.filter(designation__name__icontains=designation_query)
 
-    elif date_entered_query != '' and date_entered_query is not None:
+    if date_entered_query != '' and date_entered_query is not None:
         val_we = val_we.filter(date_entered__gte=date_entered_query)
 
-    elif date_to_query != '' and date_to_query is not None:
+    if date_to_query != '' and date_to_query is not None:
         val_we = val_we.filter(date_deadline__lte=date_to_query)
 
-    elif country_query != '' and country_query is not None:
+    if country_query != '' and country_query is not None:
         region = Region.objects.filter(country__icontains=country_query).values_list('pk', flat=True)
         city = City.objects.filter(region__pk__in=region).values_list('pk', flat=True)
         val_we = val_we.filter(city__pk__in=city)
 
-    elif worklocation_query != '' and worklocation_query is not None:
+    if worklocation_query != '' and worklocation_query is not None:
         val_we = val_we.filter(worklocation__type__icontains=worklocation_query)
 
-    elif experience_level_query != '' and experience_level_query is not None:
+    if experience_level_query != '' and experience_level_query is not None:
         val_we = val_we.filter(experience_level__level__icontains=experience_level_query)
 
     #Skills associated with skill - includes all skills not just validated ones
     vac_id = val_we.values_list('pk')
-    skill_we =  SkillRequired.objects.filter(Q(scope__pk__in=vac_id) & Q(skills__skill=skill.skill))
+    skill_we =  skills_rec.filter(Q(scope__pk__in=vac_id) & Q(skills__skill=skill.skill))
     skills_assoc_qs = skill_we.values_list('scope__pk', flat=True).distinct()
 
     vac_list_qs = val_we.filter(pk__in=skills_assoc_qs)
     vac_list_qs_id = vac_list_qs.values_list('pk').distinct()
     vac_list_qs_count = vac_list_qs.count()
 
-    skills_list = SkillRequired.objects.filter(scope__pk__in=vac_list_qs_id).values_list('skills__skill', flat=True).distinct()
+    skills_list = skills_rec.filter(scope__pk__in=vac_list_qs_id).values_list('skills__skill', flat=True).distinct()
 
     skills_list_set_all = [x for x in skills_list if x is not None]
 
@@ -127,7 +142,7 @@ def site_demand_skill_stats(request, skl):
     skill_percentage_data = []
     for skill_item in skills_list_set:
         skill_count = 0
-        vac_skills = SkillRequired.objects.filter(skills__skill=skill_item).values_list('scope__pk', flat=True)
+        vac_skills = skills_rec.filter(skills__skill=skill_item).values_list('scope__pk', flat=True)
         vac_skill = vac_list_qs.filter(pk__in=vac_skills)
 
         for vac_instance in vac_skill:
@@ -143,10 +158,7 @@ def site_demand_skill_stats(request, skl):
 
     skill_list_labels_count = skills_list.count()
 
-#    print(skill_list_labels)
-#    print(skill_percentage_data)
     orderd_skills_instance_count = sorted(skills_instance_count, key=lambda kv: kv['skill_percentage'], reverse=True)
-#    print(orderd_skills_instance_count['skill'])
 
     template = 'talenttrack/site_demand_skill_stats.html'
     context = {
@@ -172,7 +184,16 @@ def site_skill_stats(request, skl):
 
     val_we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
 
+    #Industries associated with skill for datalist filter - includes all skills not just validated ones
+    f_skill_ind = val_we.filter(skills__pk=skl).values_list('industry__pk', flat=True).distinct()
+    f_skill_des = val_we.filter(skills__pk=skl).values_list('designation__pk', flat=True).distinct()
+    f_skill_region = val_we.filter(skills__pk=skl).values_list('talent__physicaladdress__region__pk', flat=True).distinct()
+
+
     form = SiteSkillStatsFilter()
+    form.fields['industry'].widget = ListTextWidget(data_list=Industry.objects.filter(pk__in=f_skill_ind).only('industry'), name='industry-list')
+    form.fields['designation'].widget = ListTextWidget(data_list=Designation.objects.filter(pk__in=f_skill_des).only('name'), name='designation-list')
+    form.fields['region'].widget = ListTextWidget(data_list=Region.objects.filter(pk__in=f_skill_region).only('region'), name='region-list')
 
     industry_query = request.GET.get('industry')
     designation_query = request.GET.get('designation')
@@ -184,20 +205,20 @@ def site_skill_stats(request, skl):
     if industry_query != '' and industry_query is not None:
         val_we = val_we.filter(industry__industry__icontains=industry_query)
 
-    elif designation_query != '' and designation_query is not None:
+    if designation_query != '' and designation_query is not None:
         val_we = val_we.filter(designation__name__icontains=designation_query)
 
-    elif date_from_query != '' and date_from_query is not None:
+    if date_from_query != '' and date_from_query is not None:
         val_we = val_we.filter(date_from__gte=date_from_query)
 
-    elif date_to_query != '' and date_to_query is not None:
+    if date_to_query != '' and date_to_query is not None:
         val_we = val_we.filter(date_to__lte=date_to_query)
 
-    elif country_query != '' and country_query is not None:
+    if country_query != '' and country_query is not None:
         country_profiles = PhysicalAddress.objects.filter(country__icontains=country_query).values_list('talent__id')
         val_we = val_we.filter(talent__id__in=country_profiles)
 
-    elif region_query != '' and region_query is not None:
+    if region_query != '' and region_query is not None:
         region_profiles = PhysicalAddress.objects.filter(region__region__icontains=region_query).values_list('talent__id')
         val_we = val_we.filter(talent__id__in=region_profiles)
 
@@ -236,8 +257,6 @@ def site_skill_stats(request, skl):
 
     skill_list_labels_count = skills_list.count()
 
-#    print(skill_list_labels)
-#    print(skill_percentage_data)
     orderd_skills_instance_count = sorted(skills_instance_count, key=lambda kv: kv['skill_percentage'], reverse=True)
 #    print(orderd_skills_instance_count['skill'])
 
@@ -2379,6 +2398,7 @@ def LCMFVView(request, tlt, vac):
 def BCHView(request, tlt, vac):
 
     bch = BriefCareerHistory.objects.filter(talent__alias=tlt).order_by('-date_from')
+    bch_count = bch.count()
 
     try:
         page = int(request.GET.get('page', 1))
@@ -2401,7 +2421,7 @@ def BCHView(request, tlt, vac):
     page_range = list(paginator.page_range)[start_index:end_index]
 
     template = 'talenttrack/apv_bch.html'
-    context = {'tlt': tlt, 'vac': vac, 'pageitems': pageitems, 'page_range': page_range}
+    context = {'tlt': tlt, 'vac': vac, 'bch_count': bch_count, 'pageitems': pageitems, 'page_range': page_range}
     return render(request, template, context)
 
 
@@ -2546,6 +2566,7 @@ def EduFVView(request, tlt, vac):
 
     exp = WorkExperience.objects.filter(talent__alias=tlt).select_related('topic', 'course', 'project')
     edtexp = exp.filter(edt=True).order_by('-date_from')
+    edtexp_count = edtexp.count()
 
     try:
         page = int(request.GET.get('page', 1))
@@ -2568,7 +2589,7 @@ def EduFVView(request, tlt, vac):
     page_range = list(paginator.page_range)[start_index:end_index]
 
     template = 'talenttrack/apv_edu.html'
-    context = {'tlt': tlt, 'vac': vac, 'pageitems': pageitems, 'page_range': page_range}
+    context = {'tlt': tlt, 'vac': vac, 'edtexp_count': edtexp_count, 'pageitems': pageitems, 'page_range': page_range}
     return render(request, template, context)
 
 

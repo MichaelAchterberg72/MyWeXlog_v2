@@ -35,18 +35,22 @@
               Add a Branch
             </a>
           </p>
-          {{ form.description|as_crispy_field }}
+
         </div>
         <div class="form-group col-md-6 mb-0">
           {{ form.date_from|as_crispy_field }}
           {{ form.date_to|as_crispy_field }}<p>Leave blank if you currently work here</p>
         </div>
       </div>
-      <div class="">
-        <p>
-          <a href="{% url 'Profile:ProfileView' %}" class="btn btn-danger">
+      <div class="form-row">
+        <div class="col-md-12">
+          {{ form.description|as_crispy_field }}
+        </div>
+      </div>
+      <div class="row btn-toolbar">
+          <a href="{% url 'Profile:ProfileView' %}#History" class="btn btn-danger">
             Cancel
-          </a>
+          </a>&nbsp
           <button type="submit" name="done" class="btn btn-primary">
             Save
           </button>

@@ -568,14 +568,18 @@
                   {{ h.work_configeration }}
                 </div>
                 <div class="col-md-1 h-100 text-left my-auto">
-                  <a href="{% url 'Profile:HistoryEdit' bch=h.slug %}" class="badge badge-secondary">
+                  <a href="{% url 'Profile:HistoryEdit' bch=h.slug %}" class="badge badge-secondary" style="width:4.5rem;">
                     Edit
                   </a>
+                  <form  action="{% url 'Profile:HistoryDelete' bch=h.slug %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="badge badge-danger" style="width:4.5rem;" onclick="return confirm('Delete {{ h.companybranch }} - Are you sure?');">Delete</button>
+                  </form>
                   {% if h.date_to %}
 
                   {% else %}
                     <br>
-                    <a href="{% url 'Profile:Resigned' bch=h.slug tlt=h.talent.alias %}" class="badge badge-primary">
+                    <a href="{% url 'Profile:Resigned' bch=h.slug tlt=h.talent.alias %}" class="badge badge-primary" style="width:4.5rem;">
                       I Resigned
                     </a>
                   {% endif %}

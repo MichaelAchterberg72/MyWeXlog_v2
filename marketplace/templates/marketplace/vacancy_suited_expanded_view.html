@@ -103,9 +103,9 @@
       <button class="btn btn-outline-secondary auto">{{ vac.skills.skill }}</button>
     {% endfor %}</p>
     <p class="short-paragraph"><strong>Scope:</strong></p>
-    <p>{{ s.scope|truncatechars:650 }}</p>
+    <p>{{ s.scope|linebreaks|truncatechars:650 }}</p>
     <p class="short-paragraph"><strong>Expectations:</strong></p>
-    <p>{{ s.expectations|truncatechars:650 }}</p>
+    <p>{{ s.expectations|linebreaks|truncatechars:650 }}</p>
 
     </div>
   </div>
