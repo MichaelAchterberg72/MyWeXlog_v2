@@ -21,7 +21,7 @@ class CustomUserChangeForm(UserChangeForm):
 class CustomSignupForm(SignupForm):
     first_name = forms.CharField(max_length=30, label='First Name', widget=forms.TextInput(attrs={'placeholder': 'First name'}))
     last_name = forms.CharField(max_length=30, label='Last Name', widget=forms.TextInput(attrs={'placeholder': 'Last name'}))
-    terms = forms.BooleanField(required=True, label="Accept Terms and Conditions")
+    terms = forms.BooleanField(required=True, label='Accept <a type="button" data-toggle="modal" data-target="#exampleModalCenter"><span class="link">Terms and Conditions</span></a>')
     age_accept = forms.BooleanField(required=True, label="Confirm you are 18 Years or Older")
 
     class Meta:
