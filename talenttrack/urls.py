@@ -10,7 +10,6 @@ app_name = 'Talent'
 urlpatterns = [
     path('home/', views.ExperienceHome, name='Home'),
     path('capture/', views.EducationCaptureView, name='Capture'),
-#    path('education-edit/<slug:edt_slug>/', views.EducationEditView, name='EducationEdit'),
     path('education-edit/<slug:edt_slug>/', views.EducationEditView, name='EducationEdit'),
     path('popup/add/', views.CourseAddPopup, name="CourseAddPop"),
     path('popup/ajax/get_course_id/', views.get_course_id, name="AJAX_GetCourseID"),

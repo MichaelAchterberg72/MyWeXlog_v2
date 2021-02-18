@@ -275,6 +275,12 @@ class LicenseCertificationForm(forms.ModelForm):
 
 class PreLoggedExperienceForm(forms.ModelForm):
     '''Form to capture experience earned and captured on previously approved timesheets'''
+    def __init__(self, *args, **kwargs):
+        super(PreLoggedExperienceForm, self).__init__(*args, **kwargs)
+
+        self.helper = FormHelper(self)
+        self.helper.form_show_errors = False
+
     class Meta:
         model = WorkExperience
         fields = ('date_from', 'date_to', 'company', 'companybranch', 'employment_type', 'project', 'industry', 'hours_worked', 'comment', 'designation', 'upload', 'skills',)
@@ -538,6 +544,12 @@ class WorkColleagueSelectForm(forms.ModelForm):
             return colleague_passed
 
 class WorkExperienceForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(WorkExperienceForm, self).__init__(*args, **kwargs)
+
+        self.helper = FormHelper(self)
+        self.helper.form_show_errors = False
+
     class Meta:
         model = WorkExperience
         fields = (
@@ -750,6 +762,12 @@ class LecturerRespondForm(forms.ModelForm):
 
 #Combined into WorkExperience table (20191210)
 class EducationForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(EducationForm, self).__init__(*args, **kwargs)
+
+        self.helper = FormHelper(self)
+        self.helper.form_show_errors = False
+
     class Meta:
         model = WorkExperience
         fields = ('course', 'date_from', 'date_to', 'topic', 'employment_type', 'upload', 'comment',)
