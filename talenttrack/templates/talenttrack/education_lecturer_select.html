@@ -8,6 +8,41 @@
   <div class="card card-shadow">
     <div class="card-body">
       <h3>List a Lecturer to Confirm your course attendance</h3>
+      <br>
+      <div class="container">
+      <div class="row">
+        <center>
+        <span>
+          <button type="button" class="btn btn-primary" name="button" style="width:9rem;cursor:auto;">Capture</button>
+        </span>
+        <span class="text-center">
+          <i class="fa fa-arrow-right" aria-hidden="true"></i>
+        </span>
+        <span>
+          <button type="button" class="btn btn-success" name="button" style="width:14rem;cursor:auto;">Select<br>Lecturer</button>
+        </span>
+        <span class="text-center">
+          <i class="fa fa-arrow-right" aria-hidden="true"></i>
+        </span>
+        <span>
+          <a href="{% url 'Talent:ClassMatesSelect' instance.slug %}?next={{ request.path|urlencode }}" class="btn btn-outline-success" style="width:14rem;">Select<br>Classmate</a>
+        </span>
+        <span class="text-center">
+          <i class="fa fa-arrow-right" aria-hidden="true"></i>
+        </span>
+        <span>
+          <a href="{% url 'Talent:EducationDetail' instance.slug %}?next={{ request.path|urlencode }}" class="btn btn-outline-success" style="width:14rem;">Exit &<br>Review</a>
+        </span>
+        <span class="text-center">
+          <i class="fa fa-arrow-right" aria-hidden="true"></i>
+        </span>
+        <span>
+          <a href="{% url 'Talent:Home' %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width:9rem;">Exit</a>
+        </span>
+        </center>
+      </div>
+      </div>
+      <hr>
         <form method="post">
         <!--   <input type="hidden" name="next" value="{{ request.GET.next }}"> -->
           {% csrf_token %}
@@ -16,6 +51,7 @@
               {{ form.lecturer|as_crispy_field }}
             </div>
             <div class="form-group col-md-5 mb-0">
+
               <p>
                 All claimed experience, in order to appear in your profile, must have a confirmation score of 3 or more.
               </p>

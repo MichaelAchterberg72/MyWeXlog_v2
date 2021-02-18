@@ -4180,6 +4180,29 @@ def WorkExperienceCaptureView(request):
 
 
 @login_required()
+@csp_exempt
+def WorkExperienceEditView(request, we_slug):
+    instance = get_object_or_404(WorkExperience, slug=we_slug)
+    form = WorkExperienceForm(request.POST or None, request.FILES, instance=instance)
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.talent = request.user
+            new.wexp = True
+            new.save()
+            form.save_m2m()
+            return redirect(reverse('Talent:ColleagueSelect', kwargs={'pk': new.id}))
+        else:
+            template = 'talenttrack/experience_capture.html'
+            context = {'form': form}
+            return render(request, template, context)
+    else:
+        template = 'talenttrack/experience_capture.html'
+        context = {'form': form}
+        return render(request, template, context)
+
+
+@login_required()
 def WorkExperienceDeleteView(request, we_pk):
     info = WorkExperience.objects.get(pk=we_pk)
     if info.talent == request.user:
@@ -4462,6 +4485,29 @@ def ClassMateAddView(request, tex):
 @csp_exempt
 def EducationCaptureView(request):
     form = EducationForm(request.POST or None, request.FILES)
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.talent = request.user
+            new.edt = True
+            new.save()
+            form.save_m2m()
+            return redirect(reverse('Talent:LecturerSelect', kwargs={'tex': new.slug}))
+        else:
+            template = 'talenttrack/education_capture.html'
+            context = {'form': form}
+            return render(request, template, context)
+    else:
+        template = 'talenttrack/education_capture.html'
+        context = {'form': form}
+        return render(request, template, context)
+
+
+@login_required()
+@csp_exempt
+def EducationEditView(request, edt_slug):
+    instance = get_object_or_404(WorkExperience, slug=edt_slug)
+    form = EducationForm(request.POST or None, request.FILES, instance=instance)
     if request.method == 'POST':
         if form.is_valid():
             new = form.save(commit=False)
