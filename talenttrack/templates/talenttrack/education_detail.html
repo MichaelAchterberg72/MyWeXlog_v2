@@ -11,9 +11,15 @@
   <h6 class="card-subtitle mb-2">{{ check.course }}</h6>
     <p class="card-text float-right"><strong>Qualification: </strong>{{ check.course.certification }}</p>
     <p class="card-text">Attended from {{ check.date_from }} to {{ check.date_to }}</p>
-    <p class="card-text float-right"><strong>Hours: </strong>{{ check.topic.hours }}</p>
-    <p class="card-text"><strong>Topic: </strong>{{ check.topic.topic }}</p>
-    <p class="card-text"><strong>Skills: </strong>{{ check.topic.skills.all|join:" || " }}</p>
+    <div class="text-right">
+      <p class="card-text"><strong>Score: </strong>{{ check.score }}<br>
+      <strong>Hours: </strong>{{ check.topic.hours }}</p>
+    </div>
+    <div class="">
+      <p class="card-text"><strong>Topic: </strong>{{ check.topic.topic }}</p>
+      <p class="card-text"><strong>Skills: </strong>{{ check.topic.skills.all|join:" || " }}</p>
+    </div>
+
     <form  action="{% url 'Talent:EducationDetailDelete' check.pk %}" method="post">
       {% csrf_token %}
       <button type="submit" class="btn btn-danger float-right" style="width:7rem">Delete</button>
