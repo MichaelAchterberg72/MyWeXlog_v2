@@ -74,6 +74,8 @@ table {
   transition: all .4s ease;
   transform: translate3D(0,-1px,0) scale(1.00);
 }
+.modal-backdrop { z-index: 0 !important; display:none;}
+
 .profile-header {
   font-family: var(--Montserrat-family);
   color:#0d1451;
