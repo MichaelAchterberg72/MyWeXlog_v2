@@ -32,13 +32,13 @@
           </div>
           <div class="">
             <p>
-              <button type="submit" name="another" class="btn btn-secondary">
+              <button type="submit" name="another" class="btn btn-secondary" style="width:12rem;">
                 Save & Add Another
               </button>
-              <button type="submit" name="done" class="btn btn-primary">
+              <button type="submit" name="done" class="btn btn-primary" style="width:12rem;">
                 Save & Next
               </button>
-              <a href="{% url 'Invitation:Invite2' instance.slug %}?next={{ request.path|urlencode }}" class="btn btn-info" target="_blank">
+              <a href="{% url 'Invitation:Invite2' instance.slug %}?next={{ request.path|urlencode }}" class="btn btn-info" target="_blank" style="width:12rem;">
                 Invite
               </a>
             </p>
