@@ -87,8 +87,8 @@ class BriefCareerHistoryForm(forms.ModelForm):
         fields = ('work_configeration', 'companybranch', 'date_from', 'date_to', 'designation', 'description')
         widgets = {
             'companybranch': BranchWidget(),
-            'date_from': DateInput(),
-            'date_to': DateInput(),
+            'date_from': DateInput(attrs={'max': timezone.now().date()}),
+            'date_to': DateInput(attrs={'max': timezone.now().date()}),
             'designation': DesignationSelect2Widget(),
         }
         labels = {
@@ -102,7 +102,7 @@ class ResignedForm(forms.ModelForm):
         model = BriefCareerHistory
         fields = ('date_to',)
         widgets = {
-        'date_to': DateInput(),
+        'date_to': DateInput(attrs={'max': timezone.now().date()}),
             }
 
 
@@ -156,7 +156,7 @@ class ProfileForm(forms.ModelForm):
         model = Profile
         fields = ('birth_date', 'mentor', 'std_rate', 'currency', 'alias', 'f_name', 'l_name')
         widgets = {
-            'birth_date': DateInput(),
+            'birth_date': DateInput(attrs={'max': timezone.now().date()}),
             }
         labels = {
             'f_name': 'First Name',

@@ -202,7 +202,7 @@ class AchievementsForm(forms.ModelForm):
         model = Achievements
         fields = ('achievement', 'date_achieved', 'description', 'upload',)
         widgets = {
-            'date_achieved': DateInput(),
+            'date_achieved': DateInput(attrs={'max': timezone.now().date()}),
             'achievement': forms.TextInput(),
         }
         labels = {
@@ -219,7 +219,7 @@ class AwardsForm(forms.ModelForm):
         model = Awards
         fields = ('award', 'date_achieved', 'description', 'tag', 'upload',)
         widgets = {
-            'date_achieved': DateInput(),
+            'date_achieved': DateInput(attrs={'max': timezone.now().date()}),
             'award': forms.TextInput(),
             'tag': TagModelSelect2MultipleWidget(),
         }
@@ -241,7 +241,7 @@ class PublicationsForm(forms.ModelForm):
             'tag': TagModelSelect2MultipleWidget(),
             'author': AuthorModelSelect2MultipleWidget(),
             'genre': GenreWidget(),
-            'date_published': DateInput(),
+            'date_published': DateInput(attrs={'max': timezone.now().date()}),
         }
         help_texts = {
             'title': 'Brief description or name of the publication',
@@ -254,7 +254,7 @@ class LicenseCertificationForm(forms.ModelForm):
         model = LicenseCertification
         fields = ('certification', 'cm_no', 'companybranch', 'issue_date', 'expiry_date', 'current', 'country', 'region', 'upload', 'cert_name')
         widgets = {
-            'issue_date': DateInput(),
+            'issue_date': DateInput(attrs={'max': timezone.now().date()}),
             'expiry_date': DateInput(),
             'companybranch': CompanySelect2Widget(),
             'certification': ResultWidget(),
@@ -289,8 +289,8 @@ class PreLoggedExperienceForm(forms.ModelForm):
             'companybranch': BranchSelect2Widget(),
             'designation': DesignationSelect2Widget(),
             'project': ProjectSelect2Widget(),
-            'date_from': DateInput(),
-            'date_to': DateInput(),
+            'date_from': DateInput(attrs={'max': timezone.now().date()}),
+            'date_to': DateInput(attrs={'max': timezone.now().date()}),
             'skills': SkillModelSelect2MultipleWidget(),
             }
         lables = {
@@ -559,8 +559,8 @@ class WorkExperienceForm(forms.ModelForm):
             'company': CompanySelect2Widget(),
             'designation': DesignationSelect2Widget(),
             'project': ProjectSelect2Widget(),
-            'date_from': DateInput(),
-            'date_to': DateInput(),
+            'date_from': DateInput(attrs={'max': timezone.now().date()}),
+            'date_to': DateInput(attrs={'max': timezone.now().date()}),
             'skills': SkillModelSelect2MultipleWidget(),
             'industry': IndSelect2Widget(),
             'companybranch': BranchSelect2Widget(),
@@ -774,8 +774,8 @@ class EducationForm(forms.ModelForm):
         widgets={
             'course': CourseSelect2Widget(),
             'topic': TopicSelect2Widget(),
-            'date_from': DateInput(),
-            'date_to': DateInput(),
+            'date_from': DateInput(attrs={'max': timezone.now().date()}),
+            'date_to': DateInput(attrs={'max': timezone.now().date()}),
         }
         labels = {
             'course': 'Course Name',
