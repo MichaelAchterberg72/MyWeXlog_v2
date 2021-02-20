@@ -20,7 +20,10 @@
       <link rel="stylesheet" href="{% static 'css/wexlog_navbar_css.css' %}">
       <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700&display=swap" rel="stylesheet">
       <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css"/>
-      <link rel="stylesheet" href="{% static 'css/dark-mode.css' %}">
+      {% if theme == 1 %}
+        <link rel="stylesheet" href="{% static 'css/dark-mode.css' %}" type="text/css">
+      {% endif %}
+
         <!-- Select2 Stylsheet -->
       <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet"/>
       <!-- Favicon -->
@@ -153,7 +156,7 @@
           </li>
         {% endif %}
 
-        <li class="nav-item" id="themeButton">
+        <li class="nav-item" id="settingsButton">
           <a href="{% url 'Users:CustomUserSettings' %}" class="nav-link">
             <div class="fa-primary">
               <i style="font-size: 27px" class="fa fa-cog"></i>
@@ -194,15 +197,7 @@
 
   <main>
     <div class="container pt-3">
-      <p>
-        <div class="custom-control custom-switch">
-            <input type="checkbox" class="custom-control-input" id="darkSwitch">
-            <label class="custom-control-label" for="darkSwitch">
-              Dark Mode
-            </label>
-        </div>
-      </p>
-      <br>
+      <p>&nbsp</p><br>
     {% block content %}
 
     {% endblock content %}
@@ -213,6 +208,7 @@
   {% if request.user.is_authenticated %}
   <nav class="sticky-top navbar-light bg-light top-right-navbar" style="height: 5rem;">
     <div class="">
+      <span><img align="center" class="icon" height="30" src="{% static 'images/email/mywexlog-logo.png' %}" style="height:30px;border:0;padding:0px 35px 5px 0px;" width="null"/></span>&nbsp
 
       <a class="navbar-brand" href="{% url 'Feedback:FeedBack' %}?next={{ request.path|urlencode }}"><i class="fa fa-bullhorn" aria-hidden="true" style="font-size:30px;color:black" data-toggle="tooltip" title="We love to hear your feedback!"></i></a>
 
@@ -268,7 +264,6 @@
       <script src="{% static 'js/tooltip.js' %}"></script>
       <script src="{% static 'js/wexlog-js.js' %}"></script>
       <script src="{% static 'js/copy_text.js' %}"></script>
-      <script src="{% static 'js/dark-mode-switch.min.js' %}"></script>
 
     {% block Script %}
     {% endblock Script %}

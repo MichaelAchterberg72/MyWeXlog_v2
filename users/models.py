@@ -82,6 +82,10 @@ def after_signup(request, user, **kwargs):
 
 
 class CustomUserSettings(models.Model):
+    THEMES = (
+        (0, 'Light Theme'),
+        (1, 'Dark Theme'),
+    )
     talent = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     right_to_say_no = models.BooleanField('The right to say no to the sale of personal information', default=False)
     unsubscribe = models.BooleanField('Unsubscribe from all newsletters', default=False)
@@ -94,6 +98,7 @@ class CustomUserSettings(models.Model):
     subscription_notifications = models.BooleanField('Receive subscription status notifications', default=True)
     privacy = models.BooleanField('Accept Privacy Policy', default=True)
     useragree = models.BooleanField('Accept User Agreement', default=True)
+    theme = models.IntegerField(choices=THEMES, default=0)
 
     def __str__(self):
         return f"Settings for {self.talent}"

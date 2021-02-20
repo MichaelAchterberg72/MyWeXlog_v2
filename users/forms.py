@@ -40,7 +40,8 @@ class CustomSignupForm(SignupForm):
 class CustomUserSettingsForm(forms.ModelForm):
     class Meta:
         model = CustomUserSettings
-        fields = ('right_to_say_no',
+        fields = (  'theme',
+                    'right_to_say_no',
                     'unsubscribe',
                     'receive_newsletter',
                     'validation_requests',
