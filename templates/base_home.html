@@ -214,6 +214,18 @@
 
       <div class="btn-group">
       <a class="navbar-brand" href="{% url 'Feedback:NoticesList' %}?next={{ request.path|urlencode }}"><i class="fa fa-bell" aria-hidden="true" style="font-size:30px;" data-toggle="tooltip" title="Please click here to view MyWeXlog Notices!"></i></a>
+      {% if notification > 0 %}
+        <span class="icon-notification">
+            {{ notification }}
+        </span>
+      {% endif %}
+
+      <a class="navbar-brand" href="{% url 'Profile:Confirm' %}?next={{ request.path|urlencode }}"><i class="fa fa-connectdevelop" aria-hidden="true" style="font-size:30px;" data-toggle="tooltip" title="Please click here to confirm MyWeXlog verification requests!"></i></a>
+      {% if verifications > 0 %}
+        <span class="icon-notification">
+            {{ verifications }}
+        </span>
+      {% endif %}
 
       <a class="navbar-brand" href="{% url 'Users:UserAgreement' %}">User Agreement</a>
       <a class="navbar-brand" href="{% url 'Users:PrivacyPolicy' %}">Privacy Policy</a>

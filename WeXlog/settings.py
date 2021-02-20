@@ -122,6 +122,8 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.request',
                 'users.context_processor.theme',
+                'users.context_processor.notification_count',
+                'users.context_processor.confirm_count',
             ],
 #            'loaders': [
 #            ('django.template.loaders.cached.Loader', [
