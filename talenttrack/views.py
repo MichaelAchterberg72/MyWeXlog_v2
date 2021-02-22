@@ -56,7 +56,7 @@ from mod_corporate.models import CorporateStaff
 from invitations.models import Invitation
 
 from WeXlog.app_config import (
-    skill_pass_score, locked_age,
+    skill_pass_score, locked_age, client_score, lecturer_score, classmate_score,    colleague_score, pre_colleague_score, collaborator_score, superior_score
 )
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -3559,7 +3559,7 @@ def PreLogDetailView(request, tex):
 
         template = 'talenttrack/prelogged_experience_detail.html'
         context = {
-            'check': check, 'confirmed_clg': confirmed_clg, 'confirmed_sup': confirmed_sup, 'confirmed_clr': confirmed_clr, 'confirmed_cnt': confirmed_cnt, 'list': list, 'sum_company': sum_company, 'sum_project': sum_project
+            'check': check, 'confirmed_clg': confirmed_clg, 'confirmed_sup': confirmed_sup, 'confirmed_clr': confirmed_clr, 'confirmed_cnt': confirmed_cnt, 'list': list, 'sum_company': sum_company, 'sum_project': sum_project, 'client_score': client_score, 'colleague_score': colleague_score, 'pre_colleague_score': pre_colleague_score, 'collaborator_score': collaborator_score, 'superior_score': superior_score
             }
 
         return render(request, template, context)
@@ -4125,7 +4125,7 @@ def ExperienceDetailView(request, tex):
         confirmed_cnt = WorkClient.objects.filter(experience__slug=tex)
 
         template = 'talenttrack/experience_detail.html'
-        context = {'check': check, 'confirmed_clg': confirmed_clg, 'confirmed_sup': confirmed_sup, 'confirmed_clr': confirmed_clr, 'confirmed_cnt': confirmed_cnt, 'list': list, 'sum_company': sum_company, 'sum_project': sum_project}
+        context = {'check': check, 'confirmed_clg': confirmed_clg, 'confirmed_sup': confirmed_sup, 'confirmed_clr': confirmed_clr, 'confirmed_cnt': confirmed_cnt, 'list': list, 'sum_company': sum_company, 'sum_project': sum_project, 'client_score': client_score, 'colleague_score': colleague_score, 'pre_colleague_score': pre_colleague_score, 'collaborator_score': collaborator_score, 'superior_score': superior_score}
         return render(request, template, context)
     else:
         raise PermissionDenied
@@ -4230,7 +4230,7 @@ def EducationDetail(request, tex):
         confirmed_l = Lecturer.objects.filter(education__slug=tex)
         confirmed_cm = ClassMates.objects.filter(education__slug=tex)
         template = 'talenttrack/education_detail.html'
-        context = {'check': check, 'confirmed_l': confirmed_l, 'confirmed_cm': confirmed_cm}
+        context = {'check': check, 'confirmed_l': confirmed_l, 'confirmed_cm': confirmed_cm, 'classmate_score': classmate_score, 'lecturer_score': lecturer_score}
         return render(request, template, context)
     else:
         raise PermissionDenied

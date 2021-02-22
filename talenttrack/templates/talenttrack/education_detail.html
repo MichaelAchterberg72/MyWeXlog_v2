@@ -11,7 +11,7 @@
   <h6 class="card-subtitle mb-2">{{ check.course }}</h6>
     <p class="card-text float-right"><strong>Qualification: </strong>{{ check.course.certification }}</p>
     <p class="card-text">Attended from {{ check.date_from }} to {{ check.date_to }}</p>
-    <p class="card-text float-right"><strong>Hours: </strong>{{ check.topic.hours }}</p>
+    <p class="card-text float-right"><strong>Hours: </strong>{{ check.topic.hours }} <strong>Score: </strong>{{ check.score }}</p>
     <p class="card-text"><strong>Topic: </strong>{{ check.topic.topic }}</p>
     <p class="card-text"><strong>Skills: </strong>{{ check.topic.skills.all|join:" || " }}</p>
     <br>
@@ -42,7 +42,7 @@
      <div class="card card-shadow h-100">
        <div class="card-body">
          <p class="float-right"><a href="{% url 'Talent:LecturerAdd' check.slug %}"  class="badge badge-pill badge-primary" style="width: 8rem">Add Lecturer</a></p>
-         <h5 class="card-title">Lecturers</h5>
+         <h5 class="card-title">Lecturers ({{ lecturer_score }} Points)</h5>
          <table class="table table-sm">
            <thead>
              <tr>
@@ -77,7 +77,7 @@
      <div class="card card-shadow h-100">
        <div class="card-body">
          <p class="float-right"><a href="{% url 'Talent:ClassMatesAdd' check.slug %}"  class="badge badge-pill badge-primary" style="width: 8rem">Add Class Mate</a></p>
-         <h5 class="card-title">Class Mates</h5>
+         <h5 class="card-title">Class Mates ({{ classmate_score }} Point)</h5>
          <table class=" table table-sm">
            <thead>
              <tr>
