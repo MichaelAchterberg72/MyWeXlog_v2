@@ -277,20 +277,7 @@ def public_profile(request):
         we_co_mn = we_co_min_date.get('min_date').strftime('%b %-m, %Y')
         we_co_max_date = wec_qs.filter(companybranch=c).aggregate(max_date=Max('date_to'))
         we_co_mx = we_co_max_date.get('max_date').strftime('%b %-m, %Y')
-#        wec_co_no_p = wec_qs.filter(Q(companybranch=c) & Q(project=None)).values_list('pk', flat=True).distinct()
-#        wec_co_no_p_list = list(wec_co_no_p)
-#        wec_co_no_p_set = set(wec_co_no_p_list)
-#        no_pr=[]
-#        for c in wec_co_no_p_set:
-#            wec_no_p = wec_qs.filter(pk=c).values_list('comment', 'date_to')
-#            c_we_no_p = wec_qs.filter(pk=c).values_list('pk', flat=True).distinct()
-#            c_we_no_p_list = list(c_we_no_p)
-#            cli_no_p_pr=[]
-#            for s in c_we_no_p_list:
-#                cli_no_p = wcli_qs.filter(experience__pk=s)
-#                cli_no_p_comments = cli_no_p.values_list('client_name__first_name', 'client_name__last_name', 'date_confirmed', 'comments', 'designation__name')
-#                cli_no_p_result = {'cli_no_p_comments': cli_no_p_comments}
-#                cli_no_p_pr.append(cli_no_p_result)
+
         wec_co_qs = wec_qs.filter(companybranch=c)
         wec_co = wec_co_qs.values_list('project', flat=True).distinct()
         pr=[]
@@ -359,7 +346,7 @@ def public_profile(request):
     template = 'talenttrack/public_profile.html'
     context = {
     #Header
-    'dispay_user': dispay_user,  'tlt': tlt,
+    'dispay_user': dispay_user,  'tlt': tlt,  'padd': padd, 'language_qs': language_qs,
     #S3 Issue 'upload': upload,
     #Membership
     'membership': membership, 'membership_qs_count': membership_qs_count,

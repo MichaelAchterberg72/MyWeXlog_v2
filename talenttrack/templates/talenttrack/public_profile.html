@@ -30,6 +30,45 @@
                 <span class="">{% if key.dt.0.0 %}{{ key.dt.0.0 }}{% else %}{{ key.we_co.0.0 }}{% endif %}</span>
               </div>
             </div>
+            <div class="row pt-3 h-100 my-auto">
+              <div class="col-md-4 text-center my-auto">
+                <strong>Current Location: </strong><br>
+                <span class="text-left">{{ padd.get_country_display }},<br>
+                  {{ padd.region }},<br>{{ padd.city }}</span>
+              </div>
+              <div class="col-md-4 text-center my-auto">
+                <strong>Social Media: </strong><br>
+                <div class="row">
+                {% for l in language_qs %}
+                <div class="col-12">
+                  <div class="row h-100 my-auto">
+                    <div class="col-md-12 text-left my-auto">
+                      <span class="">{{ l.language }}, {{ l.get_level_display }}</span>
+                    </div>
+                  </div>
+                </div>
+                {% empty %}
+                    <p>Nothing Captured.</p>
+                {% endfor %}
+              </div>
+              </div>
+              <div class="col-md-4 text-center my-auto">
+                <strong>Languages: </strong><br>
+                <div class="row">
+                {% for l in language_qs %}
+                <div class="col-12">
+                  <div class="row h-100 my-auto">
+                    <div class="col-md-12 text-left my-auto">
+                      <span class="">{{ l.language }}, {{ l.get_level_display }}</span>
+                    </div>
+                  </div>
+                </div>
+                {% empty %}
+                    <p>Nothing Captured.</p>
+                {% endfor %}
+              </div>
+              </div>
+            </div>
             {% if upload %}
             <div class="row pt-3 h-100 my-auto">
               <div class="col-md-12 text-left my-auto">
