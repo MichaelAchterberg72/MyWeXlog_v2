@@ -75,6 +75,13 @@ urlpatterns = [
     path('apv-projects/<slug:tlt>/', views.ProjectsLFVView, name='Projects_L_FV'),
     path('apv-edu/<slug:tlt>/', views.EduLFVView, name='EDU_L_FV'),
 
+    path('public-profile/', views.public_profile, name='PublicProfile'),
+    path('we-comment/<slug:wes>/', views.publish_experience_comment, name="WEPComment"),
+    path('publish-colleague-response/<slug:rc>/', views.publish_colleague_response, name="CRPComment"),
+    path('publish-superior-response/<slug:rc>/', views.publish_superior_response, name="SRPComment"),
+    path('publish-collaborator-response/<slug:rc>/', views.publish_collaborator_response, name="WCollRPComment"),
+    path('publish-client-response/<slug:rc>/', views.publish_client_response, name="WClRPComment"),
+
     path('achievement-capture/', views.CaptureAchievementView, name='AchieveCap'),
     path('achievement-edit/<slug:ach>/', views.EditAchievementView, name='AchieveEdit'),
     path('achievement-del/<int:ach_i>/<slug:tlt>/', views.DeleteAchievementView, name='AchieveDelete'),

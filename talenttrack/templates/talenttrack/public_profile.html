@@ -1,0 +1,302 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+{% block title %}{{block.super}}- {{ als.talent.first_name }} Profile{% endblock title %}
+
+{% block content %}
+  <div class="profile-br-top">
+    <div class="card-body">
+      <div class="card profile-card">
+      <h4 class="profile-header">MyWeXlog Public Profile</h4>
+      <div class="profile-card-under">{{ talent.first_name }} {{ talent.last_name }}</div>
+      </div>
+    </div>
+
+  <div class="card profile-footer">
+    <a href="" class="btn btn-primary float-right" >View All Skills</a>
+  </div>
+</div>
+<br>
+<div class="container">
+
+<div class="card profile-card">
+  <div class="card-body">
+
+    <div class="col-md-12 text-center my-auto">
+      <div class="profile-card-header">Skills List</div><br>
+    </div>
+
+<div class="profile-card-body mb-auto">
+
+<div style="overflow-x: scroll">
+<div id="chart-container" style="position: relative;  width:auto;">
+
+<p class="short-paragraph">Total Hours of Training & Experience by Skill Currently Possessed.</p>
+<p class="small-paragraph"><small>(Skills included will only be those skills and hours relating to them that have been validated and received a score of 3 or more.)</small></p>
+<br>
+<canvas id="hours-experience-by-skill-chart" height="100px"></canvas>
+<script>
+window.onload = function() {
+  var hours_experience_by_skill_ctx = document.getElementById('hours-experience-by-skill-chart').getContext('2d');
+  window.myChart = new Chart(hours_experience_by_skill_ctx, hours_experience_by_skill_config);
+};
+
+var hours_experience_by_skill_config = {
+  type: 'bar',
+  data: {
+      labels: {{ skills_list_Labels|safe }},
+      datasets: [{
+        label: 'Total Hours Experience by Skill',
+        data: {{ skills_hours_skill_data|safe }},
+        order: 2,
+          backgroundColor: ['#B6D8F2', '#F4CFDF', '#5784BA', '#C54B6C', '#F5BFD2', '#E5DB9C', '#D0BCAC', '#BEB4C5', '#E6A57E', '#218B82', '#9AD9DB', '#E5DBD9', '#98D4BB', '#EB96AA', '#C6C9D0', '#C54B6C', '#E5B3BB', '#C47482', '#D5E4C3', '#F9968B', '#F27348', '#26474E', '#76CDCD', '#2CCED2', '#B8E0F6', '#A4CCE3', '#37667E', '#DEC4D6', '#7B92AA', '#B8E0F6', '#A4CCE3', '#37667E', '#DEC4D6', '#7B92AA', '#DDF2F4', '#84A6D6', '#4382BB', '#E4CEE0', '#A15D98', '#DC828F', '#F7CE76', '#E8D6CF', '#8C7386', '#9C9359', '#E9BBB5', '#E7CBA9', '#AAD9CD', '#E8D595', '#8DA47E', '#CAE7E3', '#B2B2B2', '#EEB8C5', '#DCDBD9', '#FEC7BC', '#8EA4C8', '#C3B8AA', '#DEDCE4', '#DB93A5', '#C7CDC5',
+          ],
+          borderColor: [
+
+          ],
+          borderWidth: 1
+      }, {
+        label: 'Hours Training Experience by Skill',
+        data: {{ training_skills_hours_skill_data|safe }},
+        type: 'line',
+        order: 1,
+        fill: false,
+        borderColor: '#FF0000',
+        borderWidth: 2,
+        pointBorderWidth: 2,
+        pointStyle: 'circle',
+        pointHitRadius: 20,
+      }]
+  },
+  options: {
+      scales: {
+          yAxes: [{
+              ticks: {
+                  beginAtZero: true
+              }
+          }]
+        },
+      legend: {
+          display: false,
+          position: 'top',
+          labels: {
+              fontColor: '#0000ff',
+      },
+
+      }
+    }
+};
+
+var dataList = {{ skills_hours_skill_data|safe }};
+var count = 0;
+for(var i = 0; i < dataList.length; ++i){
+    if(dataList[i] >= 0)
+        count++;
+}
+var widthValue = 44 * count;
+console.log(widthValue)
+var divWidth = document.getElementById("chart-container");
+
+if (count > 24){
+  divWidth.style.width = widthValue+"px";
+  }
+else{
+  divWidth.style.width = "auto";
+  }
+
+</script>
+</div>
+</div>
+<br>
+<div class="container">
+<div class="row">
+  <div class="col-md-12">
+    {% for skl in dept_skills_link %}<a href="{% url 'Talent:ProfileSkillsStats' skl.id %}?next={{ request.path|urlencode }}" class="btn btn-outline-success auto mb-1 mr-1 pointer">{{ skl.skill }}</a> {% endfor %}
+  </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<br>
+<div class="profile-br-break">
+  <div class="card-body">
+    <div class="card profile-card">
+    <h4 class="profile-header" id="basic">Employment History</h4>
+    <div class="profile-card-under"></div>
+    </div>
+    <div class="row">
+      {% for key in public_profile_list %}
+        <div class="col-12 pt-3">
+        <div class="card card-hover1 profile-card h-100" style="width: 100%;">
+          <div class="card-body">
+            <div class="row pt-4 my-auto">
+              <div class="col-md-12 text-center my-auto">
+                <div class="profile-card-header">{{ key.co.0.1 }}</div><br>
+                <div class="profile-card-under">{{ key.co.0.0 }}</div>
+              </div>
+            </div>
+            <div class="profile-card-body mb-auto">
+            <div class="row pt-3 h-100 my-auto">
+              <div class="col-md-12 text-left my-auto">
+                <strong>Designation: </strong><br>
+                <span class="">{% if key.dt.0.0 %}{{ key.dt.0.0 }}{% else %}{{ key.we_co.0.0 }}{% endif %}</span>
+              </div>
+            </div>
+            <div class="row pt-3 h-100 my-auto">
+              <div class="col-md-8 text-left my-auto">
+                <strong>Employment Period: </strong><br>
+                <span class="">{% if key.dt.0.1 %}{{ key.dt.0.1 }}{% else %}{{ key.we_co_mn }}{% endif %} to {% if key.dt.0.2 %}{{ key.dt.0.2 }}{% else %}{% if key.we_co_mx %}{{ key.we_co_mx }}{% else %}Current{% endif %}{% endif %}</span>
+              </div>
+              <div class="col-md-4 text-left my-auto">
+                <strong>Tenure: </strong><br>
+                <span class="">{{ key.tn }}</span>
+              </div>
+            </div>
+            {% if key.dt.0.3 %}
+            <div class="row pt-3 h-100 my-auto">
+              <div class="col-md-12 text-left my-auto">
+                <strong>Description: </strong><br>
+                <span class="">{{ key.dt.0.3|linebreaks }}</span>
+              </div>
+            </div>
+            {% endif %}
+            <hr>
+            <div class="row">
+              <div class="col-md-12 text-left my-auto">
+                <div class="profile-card-header"><strong>Projects with {{ key.co.0.1 }}: </strong></div>
+
+              {% for project in key.pr %}
+              <div class="row pt-3 h-100 my-auto">
+                <div class="col-md-12 text-left my-auto">
+                  <div class="profile-card-body-heading">
+                    <strong>Project Name: </strong>
+                    <span class="">{{ project.we.0.0 }}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="row pt-3 h-100 my-auto">
+                <div class="col-md-4 center-text my-auto">
+                  <strong>Project Period: </strong><br>
+                  <span class="">{{ project.pwe_co_mn }} to {{ project.pwe_co_mx }}</span>
+                </div>
+                <div class="col-md-4 center-text my-auto">
+                  <strong>Total Hours: </strong><br>
+                  <span class="">{{ project.pco_hr }}</span>
+                </div>
+                <div class="col-md-4 center-text my-auto">
+                  <strong>Tenure: </strong><br>
+                  <span class="">{{ key.tn }}</span>
+                </div>
+              </div>
+              {% for c in project.pr_com %}
+              <div class="row pt-3 h-100 my-auto">
+                <div class="col-md-12 text-left my-auto">
+                  <div class="profile-body-header">
+                    <strong>Project Comments:</strong><br>
+                    <strong>Date: </strong>
+                    <span class="">{{ c.wec.0.1 }}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="row pt-3 h-100 my-auto">
+                <div class="col-md-12 text-left my-auto">
+                  {{ c.wec.0.0|linebreaks }}
+                </div>
+              </div>
+              {% if c.cli_pr %}
+              <div id="cli_pr_div" class="row">
+                <div class="col-md-12 text-left my-auto">
+                  <div class="profile-card-body-header">
+                    <strong>Client Comments:</strong><br>
+                  </div>
+                </div>
+              </div>
+              <div class="row pt-3 h-100 my-auto">
+                {% for cli in c.cli_pr %}
+                <div class="col-md-12 text-left my-auto">
+                  <strong>{{ cli.cli_comments.0.0 }} {{ cli.cli_comments.0.1 }}, {{ cli.cli_comments.0.4 }}</strong> &nbsp&nbsp&nbsp&nbsp&nbspDated: <strong>{{ cli.cli_comments.0.2 }}</strong><br>
+                  <div id="cli_pr">
+                    {{ cli.cli_comments.0.3 }}
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+              {% endif %}
+              {% if c.sup_pr %}
+              <div class="row">
+                <div class="col-md-12 text-left my-auto">
+                  <div class="profile-card-body-header">
+                    <strong>Supplier Comments:</strong><br>
+                  </div>
+                </div>
+              </div>
+              <div class="row pt-3 h-100 my-auto">
+                {% for sup in c.sup_pr %}
+                <div class="col-md-12 text-left my-auto">
+                  <strong>{{ sup.sup_comments.0.0 }} {{ sup.sup_comments.0.1 }}, {{ sup.sup_comments.0.4 }}</strong> &nbsp&nbsp&nbsp&nbsp&nbspDated: <strong>{{ sup.sup_comments.0.2 }}</strong><br>
+                  {{ sup.sup_comments.0.3 }}
+                </div>
+                {% endfor %}
+              </div>
+              {% endif %}
+              {% if c.clg_pr %}
+              <div class="row">
+                <div class="col-md-12 text-left my-auto">
+                  <div class="profile-card-body-header">
+                    <strong>Colleague Comments:</strong><br>
+                  </div>
+                </div>
+              </div>
+              <div class="row pt-3 h-100 my-auto">
+                {% for clg in c.clg_pr %}
+                <div class="col-md-12 text-left my-auto">
+                  <strong>{{ clg.clg_comments.0.0 }} {{ clg.clg_comments.0.1 }}, {{ clg.clg_comments.0.4 }}</strong> &nbsp&nbsp&nbsp&nbsp&nbspDated: <strong>{{ clg.clg_comments.0.2 }}</strong><br>
+                  {{ clg.clg_comments.0.3 }}
+                </div>
+                {% endfor %}
+              </div>
+              {% endif %}
+              {% if c.clb_pr %}
+              <div class="row">
+                <div class="col-md-12 text-left my-auto">
+                  <div class="profile-card-body-header">
+                    <strong>Collaborator Comments:</strong><br>
+                  </div>
+                </div>
+              </div>
+              <div class="row pt-3 h-100 my-auto">
+                {% for clb in c.clb_pr %}
+                <div class="col-md-12 text-left my-auto">
+                  <strong>{{ clb.clb_comments.0.0 }} {{ clb.clb_comments.0.1 }}, {{ clb.clb_comments.0.4 }}</strong> &nbsp&nbsp&nbsp&nbsp&nbspDated: <strong>{{ clb.clb_comments.0.2 }}</strong><br>
+                  {{ clb.clb_comments.0.3 }}
+                </div>
+                {% endfor %}
+              </div>
+              {% endif %}
+              <hr>
+              {% endfor %}
+              {% endfor %}
+              </div>
+            </div>
+
+            </div>
+            </div>
+          </div>
+        </div>
+
+      {% empty %}
+          <p>No Employment History.</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+<br>
+<script type="text/javascript">
+  var cli_pr = document.getElementById("cli_pr");
+  var cli_pr_div = document.getElementById("cli_pr");
+  if (cli_pr.innerText == '') {
+    cli_pr_div.setAttribute("class", "d-none");
+  };
+</script>
+{% endblock content %}

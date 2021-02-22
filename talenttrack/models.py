@@ -236,6 +236,7 @@ class Lecturer(models.Model):
         #Captured by lecturer
     confirm = models.CharField(max_length=1, choices=CONFIRM, default='S', null=True)
     comments = models.TextField(blank=True, null=True)
+    publish_comment = models.BooleanField(default=False)
         #Captured by talent
     response = models.TextField('My Response', blank=True, null=True)
     slug = models.SlugField(max_length=9, unique=True, null=True)
@@ -265,6 +266,7 @@ class ClassMates(models.Model):
         #Captured by colleague
     confirm = models.CharField(max_length=1, choices=CONFIRM, default='S')
     comments = models.TextField(blank=True, null=True)
+    publish_comment = models.BooleanField(default=False)
         #Captured by talent
     response = models.TextField(blank=True, null=True)
     slug = models.SlugField(max_length=9, unique=True, null=True)
@@ -313,6 +315,7 @@ class WorkExperience(models.Model):
     score = models.SmallIntegerField(default=0)
     employment_type = models.CharField(max_length=1, choices=TYPE, default='F', blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
+    publish_comment = models.BooleanField(default=False)
     #Work Experience Fields (Captured & Pre-Experience)
     company = models.ForeignKey(Enterprise, on_delete=models.PROTECT, verbose_name='Company', null=True)
     companybranch = models.ForeignKey(Branch, on_delete=models.PROTECT, verbose_name='Company Branch', null=True)
@@ -371,6 +374,7 @@ class WorkColleague(models.Model):
         #Captured by colleague
     confirm = models.CharField(max_length=1, choices=CONFIRM, default='S')
     comments = models.TextField(blank=True, null=True)
+    publish_comment = models.BooleanField(default=False)
     #skills rating
     quality = models.CharField(max_length=1, choices=RATING, blank=True, null=True)
     time_taken = models.CharField(max_length=1, choices=RATING, blank=True, null=True)
@@ -404,6 +408,7 @@ class Superior(models.Model):
         #Captured by superior
     confirm = models.CharField(max_length=1, choices=CONFIRM, default='S')
     comments = models.TextField(blank=True, null=True)
+    publish_comment = models.BooleanField(default=False)
     #skills rating
     quality = models.CharField(max_length=1, choices=RATING, blank=True, null=True)
     time_taken = models.CharField(max_length=1, choices=RATING, blank=True, null=True)
@@ -440,6 +445,7 @@ class WorkCollaborator(models.Model):
         #Captured by collaborator
     confirm = models.CharField(max_length=1, choices=CONFIRM, default='S')
     comments = models.TextField(blank=True, null=True)
+    publish_comment = models.BooleanField(default=False)
     #skills rating
     quality = models.CharField(max_length=1, choices=RATING, blank=True, null=True)
     time_taken = models.CharField(max_length=1, choices=RATING, blank=True, null=True)
@@ -477,6 +483,7 @@ class WorkClient(models.Model):
         #Captured by collaborator
     confirm = models.CharField(max_length=1, choices=CONFIRM, default='S')
     comments = models.TextField(blank=True, null=True)
+    publish_comment = models.BooleanField(default=False)
     #skills rating
     quality = models.CharField(max_length=1, choices=RATING, blank=True, null=True)
     time_taken = models.CharField(max_length=1, choices=RATING, blank=True, null=True)
