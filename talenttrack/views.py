@@ -48,7 +48,7 @@ from enterprises.models import Branch, Industry
 from locations.models import Region, City
 from project.models import ProjectData
 from Profile.models import (
-        BriefCareerHistory, Profile, LanguageTrack, PhysicalAddress, WillingToRelocate
+        BriefCareerHistory, Profile, LanguageTrack, PhysicalAddress, WillingToRelocate, FileUpload
 )
 from booklist.models import ReadBy
 from users.models import CustomUser
@@ -68,13 +68,51 @@ def public_profile(request):
     tlt = request.user.alias
 
     talent = Profile.objects.get(alias=tlt)
+    dispay_user = CustomUser.objects.get(alias=tlt)
 
     bch_qs = BriefCareerHistory.objects.filter(talent__alias=tlt)
     wec_qs = WorkExperience.objects.filter(talent__alias=tlt)
-    wcli_qs = WorkClient.objects.filter(Q(experience__talent__alias=tlt))
-    wsp_qs = Superior.objects.filter(Q(experience__talent__alias=tlt))
-    wclg_qs = WorkColleague.objects.filter(Q(experience__talent__alias=tlt))
-    wlb_qs = WorkCollaborator.objects.filter(Q(experience__talent__alias=tlt))
+    wcli_qs = WorkClient.objects.filter(Q(experience__talent__alias=tlt) & Q(publish_comment=True))
+    wsp_qs = Superior.objects.filter(Q(experience__talent__alias=tlt) & Q(publish_comment=True))
+    wclg_qs = WorkColleague.objects.filter(Q(experience__talent__alias=tlt) & Q(publish_comment=True))
+    wlb_qs = WorkCollaborator.objects.filter(Q(experience__talent__alias=tlt) & Q(publish_comment=True))
+
+    '''View for profile and skills for specified vacancy'''
+    #caching
+#    bch_qs = BriefCareerHistory.objects.filter(talent__alias=tlt).order_by('-date_from')
+#    bch = bch_qs[:6]
+#    bch_count = bch_qs.count()
+    pfl = Profile.objects.filter(alias=tlt).first()
+    upload = FileUpload.objects.filter(talent__alias=tlt)
+    als = get_object_or_404(Profile, alias=tlt)
+    padd = PhysicalAddress.objects.only('country', 'region', 'city').get(talent__alias=tlt)
+#    vacancy = TalentRequired.objects.filter(ref_no=vac)
+#    skr = SkillRequired.objects.filter(scope__ref_no=vac).values_list('skills', flat=True).distinct('skills')
+    skill_qs = SkillTag.objects.all()
+    exp = WorkExperience.objects.filter(talent__alias=tlt).select_related('topic', 'course', 'project')
+    edtexp = exp.filter(edt=True).order_by('-date_from')[:6]
+    edtexp_count = edtexp.count()
+    bkl_qs = ReadBy.objects.filter(talent__alias=tlt).select_related('book', 'type')
+    bkl = bkl_qs[:8]
+    bkl_count = bkl.count()
+    prj_qs = ProjectData.objects.all()
+#    bid_qs = WorkBid.objects.filter(Q(talent__alias=tlt) & Q(work__ref_no=vac))
+    achievement_qs = Achievements.objects.filter(talent__alias=tlt).order_by('-date_achieved')
+    achievement = achievement_qs[:6]
+    achievement_qs_count = achievement_qs.count()
+    award_qs = Awards.objects.filter(talent__alias=tlt).order_by('-date_achieved')
+    award = award_qs[:6]
+    award_qs_count = award.count()
+    publication_qs = Publications.objects.filter(talent__alias=tlt).order_by('-date_published')
+    publication = publication_qs[:6]
+    publication_qs_count = publication_qs.count()
+    language_qs = LanguageTrack.objects.filter(talent__alias=tlt).order_by('-language')
+    membership_qs = LicenseCertification.objects.filter(talent__alias=tlt).order_by('-issue_date')
+    membership = membership_qs[:12]
+    membership_qs_count = membership_qs.count()
+#    bslist_qs = BidShortList.objects.filter(Q(talent__alias=tlt) & Q(scope__ref_no=vac))
+#    int_list = BidInterviewList.objects.filter(Q(talent__alias=tlt) & Q(scope__ref_no=vac))
+    wtr_qs = WillingToRelocate.objects.filter(talent__alias=tlt)
 
 
     '''Chart of hours logged against skills (validated only) for experience and training'''
@@ -216,7 +254,7 @@ def public_profile(request):
                     edt_set[skill_f] = sum_float
 
 
-                    
+
     '''Employment History Section'''
     bch = bch_qs.values_list('companybranch', flat=True).distinct('companybranch')
     wec = wec_qs.values_list('companybranch', flat=True).distinct('companybranch')
@@ -253,11 +291,11 @@ def public_profile(request):
 #                cli_no_p_comments = cli_no_p.values_list('client_name__first_name', 'client_name__last_name', 'date_confirmed', 'comments', 'designation__name')
 #                cli_no_p_result = {'cli_no_p_comments': cli_no_p_comments}
 #                cli_no_p_pr.append(cli_no_p_result)
-
-        wec_co = wec_qs.filter(companybranch=c).values_list('project', flat=True).distinct()
+        wec_co_qs = wec_qs.filter(companybranch=c)
+        wec_co = wec_co_qs.values_list('project', flat=True).distinct()
         pr=[]
         for p in wec_co:
-            wep_qs = wec_qs.filter(project=p)
+            wep_qs = wec_co_qs.filter(project=p)
             wep_pk = wep_qs.values_list('pk', flat=True).distinct()
             wep_pk_list = list(wep_pk)
             wep_pk_set = set(wep_pk_list)
@@ -274,8 +312,8 @@ def public_profile(request):
 
             pr_com=[]
             for c in wep_pk_set:
-                wec = wep_qs.filter(pk=c).values_list('comment', 'date_to')
-                c_we = wep_qs.filter(pk=c).values_list('pk', flat=True).distinct()
+                wec = wep_qs.filter(Q(pk=c) & Q(publish_comment=True)).values_list('comment', 'date_to')
+                c_we = wep_qs.filter(Q(pk=c) & Q(publish_comment=True)).values_list('pk', flat=True).distinct()
                 c_we_list = list(c_we)
                 cli_pr=[]
                 for s in c_we_list:
@@ -320,15 +358,23 @@ def public_profile(request):
 
     template = 'talenttrack/public_profile.html'
     context = {
+    #Header
+    'dispay_user': dispay_user,  'tlt': tlt,
+    #S3 Issue 'upload': upload,
+    #Membership
+    'membership': membership, 'membership_qs_count': membership_qs_count,
     #Skills Chart
     'skills_list_Labels': skills_list_Labels,
     'skills_hours_skill_data': skills_hours_skill_data,
     'training_skills_hours_skill_data': training_skills_hours_skill_data,
     'skills_count': skills_count,
     'dept_skills_link': dept_skills_link,
-    'edt_set': edt_set, 'exp_set': exp_set, 'tlt_p': tlt_p, 'tlt': tlt,
+    'edt_set': edt_set, 'exp_set': exp_set, 'tlt_p': tlt_p,
+    #General Information
+    'als': als,
     #Employment History
-    'talent': talent, 'public_profile_list': public_profile_list}
+    'talent': talent, 'public_profile_list': public_profile_list
+    }
     return render(request, template, context)
 
 

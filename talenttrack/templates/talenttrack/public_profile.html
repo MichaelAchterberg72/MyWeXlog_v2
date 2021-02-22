@@ -1,4 +1,5 @@
 {% extends "base_home.html" %}
+{% load static %}
 {% load humanize %}
 {% block title %}{{block.super}}- {{ als.talent.first_name }} Profile{% endblock title %}
 
@@ -10,9 +11,131 @@
       <div class="profile-card-under">{{ talent.first_name }} {{ talent.last_name }}</div>
       </div>
     </div>
+    <div class="container">
+    <div class="row">
+        <div class="col-12 pt-3">
+        <div class="card card-hover1 profile-card h-100" style="width: 100%;">
+          <div class="card-body">
+            <div class="row pt-4 my-auto">
+              <div class="col-md-12 text-center my-auto">
+                <center><img align="center" class="icon" height="162" src="{% static 'images/email/mywexlog-logo.png' %}" style="border:0;" width="null"/></center><br>
+                <div class="profile-card-header">{{ talent.f_name }} {{ talent.l_name }}</div><br>
+                <div class="profile-card-under">{{ dispay_user.display_text }}</div>
+              </div>
+            </div>
+            <div class="profile-card-body mb-auto">
+            <div class="row pt-3 h-100 my-auto">
+              <div class="col-md-12 text-left my-auto">
+                <strong>Designation: </strong><br>
+                <span class="">{% if key.dt.0.0 %}{{ key.dt.0.0 }}{% else %}{{ key.we_co.0.0 }}{% endif %}</span>
+              </div>
+            </div>
+            {% if upload %}
+            <div class="row pt-3 h-100 my-auto">
+              <div class="col-md-12 text-left my-auto">
+                <strong>Uploaded Files: </strong><br>
+                <div class="d-flex justify-content-center">
+                  {% for file in upload %}
+                  <div class="my-auto">
+                    <a href="{{ file.file.url }}" class="btn btn-primary"target="_blank">{{ file.title}}</a>&nbsp
+                  </div>
+                  {% endfor %}</div>
+              </div>
+            </div>
+            {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="container">
 
+      <div class="card profile-card">
+      <h4 class="profile-header" id="certs">Licenses, Certifications & Memberships</h4>
+      <div class="profile-card-under">{% if membership_qs_count > 0 %}Total: {{ membership_qs_count }}{% else %}No licences, certifications or memberships captured yet{% endif %}</div>
+      </div>
+      {% if membership_qs_count > 0 %}
+      <div class="row">
+      {% for lcm in membership %}
+        <div class="col-4 pt-3">
+        <div class="card card-hover profile-card h-100" style="width: 100%;">
+          <div class="card-body">
+            <div class="row pt-4 my-auto">
+              <div class="col-md-12 text-center my-auto">
+                <div class="profile-card-header">{{ lcm.certification }}</div><br>
+                <div class="profile-card-under">{{ lcm.cert_name }}</div>
+              </div>
+            </div>
+            <div class="profile-card-body mb-auto">
+            <div class="row pt-3 h-100 my-auto">
+              <div class="col-md-12 text-left my-auto">
+                <strong>Institution: </strong><br>
+                <span class="">{{ lcm.companybranch }}</span>
+              </div>
+            </div>
+            <div class="row pt-3 h-100 my-auto">
+              <div class="col-md-12 text-left my-auto">
+                <strong>Country: </strong><br>
+                <span class="">{{ lcm.country.name }}</span>
+              </div>
+            </div>
+            <div class="row pt-3 h-100 my-auto">
+              <div class="col-md-12 text-left my-auto">
+                <strong>Region: </strong><br>
+                <span class="">{{ lcm.region }}</span>
+              </div>
+            </div>
+            <div class="row pt-3 h-100 my-auto">
+              <div class="col-md-12 text-left my-auto">
+                <strong>Membership / Credential Number: </strong><br>
+                <span class="">{{ lcm.cn_no }}</span>
+              </div>
+            </div>
+            <div class="row pt-3 h-100 my-auto">
+              <div class="col-md-6 text-left my-auto">
+                <strong>Issue Date: </strong><br>
+                <span class="">{{ lcm.issue_date }}</span>
+              </div>
+              <div class="col-md-6 text-left my-auto">
+                <strong>Expiry Date: </strong><br>
+                <span class="">{{ lcm.expiry_date }}</span>
+              </div>
+            </div>
+            {% if lcm.upload %}
+            <div class="row pt-3 h-100 my-auto">
+              <div class="col-md-12 text-center my-auto">
+                <a href="{{ lcm.upload.url }}" class="btn btn-primary"target="_blank">Certificate</a>
+              </div>
+            </div>
+            {% endif %}
+            </div>
+            </div>
+          </div>
+        </div>
+
+      {% empty %}
+          <p>There are no licences, certifications or memberships added yet.</p>
+      {% endfor %}
+      </div>
+    </div>
+      <br>
+        <div class="card profile-footer">
+          <div class="float-right">
+            {% if membership_qs_count >= 12 %}
+            <a href="{% url 'Talent:LCM_FV' tlt vac %}" class="btn btn-primary float-right">View All Certificates</a>
+            {% endif %}
+          </div>
+        </div>
+        </div>
+        <br>
+        {% else %}
+        </div>
+        {% endif %}
+    <br>
   <div class="card profile-footer">
-    <a href="" class="btn btn-primary float-right" >View All Skills</a>
+    <p>&nbsp</p>
   </div>
 </div>
 <br>
@@ -22,7 +145,7 @@
   <div class="card-body">
 
     <div class="col-md-12 text-center my-auto">
-      <div class="profile-card-header">Skills List</div><br>
+      <div class="profile-card-header">Confirmed Skills List</div><br>
     </div>
 
 <div class="profile-card-body mb-auto">
@@ -117,6 +240,61 @@ else{
 </div>
 </div>
 </div>
+
+<br>
+<div class="profile-br-break">
+  <div class="card-body">
+    <div class="card profile-card">
+    <h4 class="profile-header" id="General">General Information</h4>
+    <div class="profile-card-under">Expected Rate: {% if bid_qs %}{{ bid_qs.currency }} {{ bid_qs.rate_bid }} {{ bid_qs.get_rate_unit_display }}{% else %}{{ als.currency }} {{ als.std_rate }} per hour{% endif %}</div>
+    </div>
+    <div class="row">
+      <div class="col-12 pt-3">
+      <div class="card card-hover profile-card h-100" style="width: 100%;">
+        <div class="card-body">
+          <div class="row pt-4 my-auto">
+            <div class="col-md-12 text-center my-auto">
+              <div class="profile-card-header">{% if bid_qs %}Motivation for position{% else %}Generl Motivation{% endif %}</div><br>
+              <div class="profile-card-under">{{ h.designation }}</div>
+            </div>
+          </div>
+          <div class="profile-card-body mb-auto">
+          <div class="row pt-3 h-100 my-auto">
+            <div class="col-md-12 text-left my-auto">
+              <span class="">{% if bid_qs %}{{ bid_qs.motivation|linebreaks }}{% else %}{{ als.motivation|linebreaks }}{% endif %}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  <div class="row">
+    <div class="col-12 pt-3">
+    <div class="card card-hover profile-card h-100" style="width: 100%;">
+      <div class="card-body">
+        <div class="row pt-4 my-auto">
+          <div class="col-md-12 text-center my-auto">
+            <div class="profile-card-header">Background</div><br>
+            <div class="profile-card-under">{{ h.designation }}</div>
+          </div>
+        </div>
+        <div class="profile-card-body mb-auto">
+        <div class="row pt-3 h-100 my-auto">
+          <div class="col-md-12 text-left my-auto">
+            <span class="">{{ als.background|linebreaks }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<br>
+
+<div class="card profile-footer">
+</div>
+</div>
 </div>
 <br>
 <div class="profile-br-break">
@@ -170,8 +348,7 @@ else{
               <div class="row pt-3 h-100 my-auto">
                 <div class="col-md-12 text-left my-auto">
                   <div class="profile-card-body-heading">
-                    <strong>Project Name: </strong>
-                    <span class="">{{ project.we.0.0 }}</span>
+                    <strong>{% if project.we.0.0 %}Project Name: <span class="">{{ project.we.0.0 }}</span>{% else %}Work not allocated to a Project: {% endif %}</strong>
                   </div>
                 </div>
               </div>
@@ -190,6 +367,7 @@ else{
                 </div>
               </div>
               {% for c in project.pr_com %}
+              {% if c.wec.0.1 %}
               <div class="row pt-3 h-100 my-auto">
                 <div class="col-md-12 text-left my-auto">
                   <div class="profile-body-header">
@@ -204,7 +382,10 @@ else{
                   {{ c.wec.0.0|linebreaks }}
                 </div>
               </div>
-              {% if c.cli_pr %}
+
+              {% for cli in c.cli_pr %}
+              {% if cli.cli_comments.0.3 %}
+              {% if forloop.counter == 1 %}
               <div id="cli_pr_div" class="row">
                 <div class="col-md-12 text-left my-auto">
                   <div class="profile-card-body-header">
@@ -212,18 +393,20 @@ else{
                   </div>
                 </div>
               </div>
+              {% endif %}
               <div class="row pt-3 h-100 my-auto">
-                {% for cli in c.cli_pr %}
                 <div class="col-md-12 text-left my-auto">
                   <strong>{{ cli.cli_comments.0.0 }} {{ cli.cli_comments.0.1 }}, {{ cli.cli_comments.0.4 }}</strong> &nbsp&nbsp&nbsp&nbsp&nbspDated: <strong>{{ cli.cli_comments.0.2 }}</strong><br>
                   <div id="cli_pr">
                     {{ cli.cli_comments.0.3 }}
                   </div>
                 </div>
-                {% endfor %}
               </div>
               {% endif %}
-              {% if c.sup_pr %}
+              {% endfor %}
+              {% for sup in c.sup_pr %}
+              {% if sup.sup_comments.0.3 %}
+              {% if forloop.counter == 1 %}
               <div class="row">
                 <div class="col-md-12 text-left my-auto">
                   <div class="profile-card-body-header">
@@ -231,16 +414,18 @@ else{
                   </div>
                 </div>
               </div>
+              {% endif %}
               <div class="row pt-3 h-100 my-auto">
-                {% for sup in c.sup_pr %}
                 <div class="col-md-12 text-left my-auto">
                   <strong>{{ sup.sup_comments.0.0 }} {{ sup.sup_comments.0.1 }}, {{ sup.sup_comments.0.4 }}</strong> &nbsp&nbsp&nbsp&nbsp&nbspDated: <strong>{{ sup.sup_comments.0.2 }}</strong><br>
                   {{ sup.sup_comments.0.3 }}
                 </div>
-                {% endfor %}
               </div>
               {% endif %}
-              {% if c.clg_pr %}
+              {% endfor %}
+              {% for clg in c.clg_pr %}
+              {% if clg.clg_comments.0.3 %}
+              {% if forloop.counter == 1 %}
               <div class="row">
                 <div class="col-md-12 text-left my-auto">
                   <div class="profile-card-body-header">
@@ -248,16 +433,18 @@ else{
                   </div>
                 </div>
               </div>
+              {% endif %}
               <div class="row pt-3 h-100 my-auto">
-                {% for clg in c.clg_pr %}
                 <div class="col-md-12 text-left my-auto">
                   <strong>{{ clg.clg_comments.0.0 }} {{ clg.clg_comments.0.1 }}, {{ clg.clg_comments.0.4 }}</strong> &nbsp&nbsp&nbsp&nbsp&nbspDated: <strong>{{ clg.clg_comments.0.2 }}</strong><br>
                   {{ clg.clg_comments.0.3 }}
                 </div>
-                {% endfor %}
               </div>
               {% endif %}
-              {% if c.clb_pr %}
+              {% endfor %}
+              {% for clb in c.clb_pr %}
+              {% if clb.clb_comments.0.3 %}
+              {% if forloop.counter == 1 %}
               <div class="row">
                 <div class="col-md-12 text-left my-auto">
                   <div class="profile-card-body-header">
@@ -265,16 +452,17 @@ else{
                   </div>
                 </div>
               </div>
+              {% endif %}
               <div class="row pt-3 h-100 my-auto">
-                {% for clb in c.clb_pr %}
                 <div class="col-md-12 text-left my-auto">
                   <strong>{{ clb.clb_comments.0.0 }} {{ clb.clb_comments.0.1 }}, {{ clb.clb_comments.0.4 }}</strong> &nbsp&nbsp&nbsp&nbsp&nbspDated: <strong>{{ clb.clb_comments.0.2 }}</strong><br>
                   {{ clb.clb_comments.0.3 }}
                 </div>
-                {% endfor %}
               </div>
               {% endif %}
+              {% endfor %}
               <hr>
+              {% endif %}
               {% endfor %}
               {% endfor %}
               </div>
