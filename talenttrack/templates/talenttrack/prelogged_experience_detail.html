@@ -49,7 +49,22 @@
     {% endif %}
     <form  action="{% url 'Talent:ExperienceDelete' check.pk %}" method="post">
       {% csrf_token %}
-      <button type="submit" class="btn btn-danger float-right" style="width:7rem">Delete</button>
+      <div>
+        <table>
+          <tr>
+            <td>
+              <p>
+                <strong>An entry cannot be edited, only deleted.<br>Once confirmed, an entry cannot be confirmed again, hence the information is locked. To change an entry, it must be deleted and re-captured.</strong>
+              </p>
+            </td>
+            <td class="align-middle">
+              <button type="submit" class="btn btn-danger float-right" style="width:7rem">
+                Delete
+              </button>
+            </td>
+          </tr>
+        </table>
+      </div>
     </form>
   </div>
 </div>
