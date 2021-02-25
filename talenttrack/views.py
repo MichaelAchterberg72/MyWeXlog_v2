@@ -13,6 +13,7 @@ from django.utils import timezone
 from django.core.exceptions import PermissionDenied
 import json
 from django.db.models import Count, Sum, F, Q, Avg, Min, Max
+from itertools import chain
 from dateutil.relativedelta import relativedelta
 from django.db.models.functions import Greatest
 from decimal import Decimal
@@ -42,13 +43,13 @@ from .models import (
 
 from db_flatten.models import SkillTag
 from marketplace.models import(
-    SkillLevel, SkillRequired, WorkBid, BidShortList, TalentRequired, BidInterviewList,
+    SkillLevel, SkillRequired, WorkBid, BidShortList, TalentRequired, BidInterviewList, WorkIssuedTo, VacancyRate, TalentRate,
 )
 from enterprises.models import Branch, Industry
 from locations.models import Region, City
 from project.models import ProjectData
 from Profile.models import (
-        BriefCareerHistory, Profile, LanguageTrack, PhysicalAddress, WillingToRelocate, FileUpload
+        BriefCareerHistory, Profile, LanguageTrack, PhysicalAddress, WillingToRelocate, FileUpload, OnlineRegistrations
 )
 from booklist.models import ReadBy
 from users.models import CustomUser
@@ -71,7 +72,8 @@ def public_profile(request):
     dispay_user = CustomUser.objects.get(alias=tlt)
 
     bch_qs = BriefCareerHistory.objects.filter(talent__alias=tlt)
-    wec_qs = WorkExperience.objects.filter(talent__alias=tlt)
+    exp_qs = WorkExperience.objects.filter(talent__alias=tlt)
+    wec_qs = exp_qs
     wcli_qs = WorkClient.objects.filter(Q(experience__talent__alias=tlt) & Q(publish_comment=True))
     wsp_qs = Superior.objects.filter(Q(experience__talent__alias=tlt) & Q(publish_comment=True))
     wclg_qs = WorkColleague.objects.filter(Q(experience__talent__alias=tlt) & Q(publish_comment=True))
@@ -83,13 +85,20 @@ def public_profile(request):
 #    bch = bch_qs[:6]
 #    bch_count = bch_qs.count()
     pfl = Profile.objects.filter(alias=tlt).first()
+    pfl_g = Profile.objects.get(alias=tlt)
+
+    r_1 = pfl_g.rate_1/100
+    r_2 = pfl_g.rate_2/100
+    r_3 = pfl_g.rate_3/100
     upload = FileUpload.objects.filter(talent__alias=tlt)
     als = get_object_or_404(Profile, alias=tlt)
+    current_pos = BriefCareerHistory.objects.filter(Q(talent__alias=tlt) & Q(current=True))
     padd = PhysicalAddress.objects.only('country', 'region', 'city').get(talent__alias=tlt)
+    online = OnlineRegistrations.objects.filter(talent__alias=tlt)
 #    vacancy = TalentRequired.objects.filter(ref_no=vac)
 #    skr = SkillRequired.objects.filter(scope__ref_no=vac).values_list('skills', flat=True).distinct('skills')
     skill_qs = SkillTag.objects.all()
-    exp = WorkExperience.objects.filter(talent__alias=tlt).select_related('topic', 'course', 'project')
+    exp = exp_qs.select_related('topic', 'course', 'project')
     edtexp = exp.filter(edt=True).order_by('-date_from')[:6]
     edtexp_count = edtexp.count()
     bkl_qs = ReadBy.objects.filter(talent__alias=tlt).select_related('book', 'type')
@@ -254,19 +263,61 @@ def public_profile(request):
                     edt_set[skill_f] = sum_float
 
 
+    '''MyWeXlog Projects History Section'''
+    wit_qs = WorkIssuedTo.objects.filter(Q(talent__alias=tlt) & Q(assignment_complete_emp=True)).order_by('-date_complete').values_list('slug', flat=True)
+    wit_list = list(wit_qs)
+    print(wit_list)
+    wcp = []
+    for vac in wit_list:
+        wit_qs = WorkIssuedTo.objects.filter(Q(talent__alias=tlt) & Q(slug=vac))
+        wit_v = wit_qs.values_list('work__title', 'work__companybranch__company__ename', 'work__requested_by__first_name', 'work__requested_by__last_name', 'work__vacancyrate__comment', 'date_begin', 'date_complete')
+        wit = wit_qs.get(Q(talent__alias=tlt) & Q(slug=vac))
+        ref = wit.work.ref_no
+
+        emp_qs = VacancyRate.objects.filter(Q(vacancy__ref_no=ref))
+
+        if emp_qs:
+            emp = emp_qs.values_list('rate_1', 'rate_2', 'rate_1')
+            emp_a = emp_qs.get(Q(vacancy__ref_no=ref)).average
+        if wit.tlt_rated == True:
+            tlt_qs = TalentRate.objects.get(vacancy__ref_no=ref)
+        else:
+            tlt_qs = 0
+
+        result={'wit_v': wit_v, 'emp': emp, 'emp_a': emp_a, 'tlt_qs': tlt_qs}
+        wcp.append(result)
+    print(wcp)
 
     '''Employment History Section'''
-    bch = bch_qs.values_list('companybranch', flat=True).distinct('companybranch')
-    wec = wec_qs.values_list('companybranch', flat=True).distinct('companybranch')
-    bch_list = list(bch)
-    wec_list = list(wec)
-    co_list = list(bch_list + wec_list)
-    co_set = set(co_list)
+    bch_qs_qs = bch_qs.order_by('date_from').values('companybranch', 'date_from')
+    wec_qs_qs = wec_qs.order_by('date_from').values('companybranch', 'date_from')
+
+#    co_list_qs = bch_qs_qs.union(wec_qs_qs)
+#    print(co_list_qs)
+#    co_list_set_qs = [x for x in co_list_qs if x['companybranch'] is not None]
+
+#    co_list_set = co_list_set_qs.sort(key=lambda x: x["date_from"])
+#    print(co_list_set)
+
+#    or
+
+    co_list_qs = sorted(list(chain(bch_qs_qs,wec_qs_qs)), key=lambda item: item['date_from'], reverse=True)
+    print(co_list_qs)
+
+#    co_list_qs = bch_qs_qs.union(wec_qs_qs).order_by(F('date_from'), F('companybranch')).distinct('companybranch').reverse()
+
+    co_list=[]
+    for val in co_list_qs:
+        if val['companybranch'] in co_list:
+            pass
+        else:
+            co_list.append(val['companybranch'])
+
     co_list_qs = []
-    for x in co_set:
+    for x in co_list:
         co_list_qs.append(x)
     co_list_set = [x for x in co_list_qs if x is not None]
-
+    print(co_list_set)
     public_profile_list = []
     for c in co_list_set:
         co = Branch.objects.filter(pk=c).values_list('name', 'company__ename')
@@ -278,51 +329,59 @@ def public_profile(request):
         we_co_max_date = wec_qs.filter(companybranch=c).aggregate(max_date=Max('date_to'))
         we_co_mx = we_co_max_date.get('max_date').strftime('%b %-m, %Y')
 
-        wec_co_qs = wec_qs.filter(companybranch=c)
-        wec_co = wec_co_qs.values_list('project', flat=True).distinct()
+        wec_co_qs_qs = wec_qs.filter(companybranch=c)
+        wec_co_qs = wec_co_qs_qs.order_by('project', '-date_from').distinct('project')
+
+        wec_co = wec_co_qs.values_list('project', flat=True)
+
         pr=[]
         for p in wec_co:
-            wep_qs = wec_co_qs.filter(project=p)
-            wep_pk = wep_qs.values_list('pk', flat=True).distinct()
-            wep_pk_list = list(wep_pk)
-            wep_pk_set = set(wep_pk_list)
+            # Project Comments list
+            wep_qs = wec_co_qs_qs.filter(project=p).order_by('date_from').values_list('pk', flat=True)
+            wesp_qs = wec_co_qs_qs.filter(project=p)
+            print(wep_qs)
 
             we = wep_qs.values_list('project__name', 'industry__industry', 'designation__name', 'date_to')
 
-            pwe_co_min_date = wep_qs.aggregate(min_date=Min('date_from'))
+            pwe_co_min_date = wesp_qs.aggregate(min_date=Min('date_from'))
             pwe_co_mn = pwe_co_min_date.get('min_date').strftime('%b %-m, %Y')
-            pwe_co_max_date = wep_qs.aggregate(max_date=Max('date_to'))
+            pwe_co_max_date = wesp_qs.aggregate(max_date=Max('date_to'))
             pwe_co_mx = pwe_co_max_date.get('max_date').strftime('%b %-m, %Y')
 
-            pco_hr_sum = wep_qs.aggregate(thr=Sum('hours_worked'))
+            pco_hr_sum = wesp_qs.aggregate(thr=Sum('hours_worked'))
             pco_hr = pco_hr_sum.get('thr')
 
+            exp = wesp_qs.filter(talent__alias=tlt).select_related('topic')
+            exp_skills = exp.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
+            pr_skl = wesp_qs.values_list('skills__skill', flat=True).distinct('skills')
+
             pr_com=[]
-            for c in wep_pk_set:
-                wec = wep_qs.filter(Q(pk=c) & Q(publish_comment=True)).values_list('comment', 'date_to')
-                c_we = wep_qs.filter(Q(pk=c) & Q(publish_comment=True)).values_list('pk', flat=True).distinct()
+            for c in wep_qs:
+                wepc_qs = wesp_qs.filter(Q(pk=c) & Q(publish_comment=True)).order_by('-date_to')
+                wec = wepc_qs.values_list('comment', 'date_to')
+                c_we = wesp_qs.filter(Q(pk=c) & Q(publish_comment=True)).values_list('pk', flat=True).distinct()
                 c_we_list = list(c_we)
                 cli_pr=[]
                 for s in c_we_list:
-                    cli = wcli_qs.filter(experience__pk=s)
+                    cli = wcli_qs.filter(experience__pk=s).order_by('-date_confirmed')
                     cli_comments = cli.values_list('client_name__first_name', 'client_name__last_name', 'date_confirmed', 'comments', 'designation__name')
                     cli_result = {'cli_comments': cli_comments}
                     cli_pr.append(cli_result)
                 sup_pr=[]
                 for s in c_we_list:
-                    sup = wsp_qs.filter(experience__pk=s)
+                    sup = wsp_qs.filter(experience__pk=s).order_by('-date_confirmed')
                     sup_comments = sup.values_list('superior_name__first_name', 'superior_name__last_name', 'date_confirmed', 'comments', 'designation__name')
                     sup_result = {'sup_comments': sup_comments}
                     sup_pr.append(sup_result)
                 clg_pr=[]
                 for s in c_we_list:
-                    clg = wclg_qs.filter(experience__pk=s)
+                    clg = wclg_qs.filter(experience__pk=s).order_by('-date_confirmed')
                     clg_comments = clg.values_list('colleague_name__first_name', 'colleague_name__last_name', 'date_confirmed', 'comments', 'designation__name')
                     clg_result = {'clg_comments': clg_comments}
                     clg_pr.append(clg_result)
                 clb_pr=[]
                 for s in c_we_list:
-                    clb = wlb_qs.filter(experience__pk=s)
+                    clb = wlb_qs.filter(experience__pk=s).order_by('-date_confirmed')
                     clb_comments = clb.values_list('collaborator_name__first_name', 'collaborator_name__last_name', 'date_confirmed', 'comments', 'designation__name')
                     clb_result = {'clb_comments': clb_comments}
                     clb_pr.append(clb_result)
@@ -333,7 +392,7 @@ def public_profile(request):
 #            no_p_result = {'cli_no_p_pr': cli_no_p_pr,}
 #            no_pr.append(no_p_result)
 
-            p_result = {'we': we, 'pwe_co_mn': pwe_co_mn, 'pwe_co_mx': pwe_co_mx, 'pco_hr': pco_hr, 'pr_com': pr_com}
+            p_result = {'we': we, 'pwe_co_mn': pwe_co_mn, 'pwe_co_mx': pwe_co_mx, 'pr_skl': pr_skl, 'pco_hr': pco_hr, 'pr_com': pr_com}
             pr.append(p_result)
 
         result={'co': co, 'dt': dt, 'we_co': we_co, 'we_co_mn': we_co_mn, 'we_co_mx': we_co_mx, 'pr': pr,
@@ -346,7 +405,8 @@ def public_profile(request):
     template = 'talenttrack/public_profile.html'
     context = {
     #Header
-    'dispay_user': dispay_user,  'tlt': tlt,  'padd': padd, 'language_qs': language_qs,
+    'dispay_user': dispay_user,  'tlt': tlt,  'padd': padd, 'current_pos': current_pos, 'language_qs': language_qs, 'online': online,
+    'pfl_g': pfl_g, 'r_1': r_1, 'r_2': r_2, 'r_3': r_3,
     #S3 Issue 'upload': upload,
     #Membership
     'membership': membership, 'membership_qs_count': membership_qs_count,
@@ -357,10 +417,18 @@ def public_profile(request):
     'skills_count': skills_count,
     'dept_skills_link': dept_skills_link,
     'edt_set': edt_set, 'exp_set': exp_set, 'tlt_p': tlt_p,
+    #Mywexlog jobs history`
+    'wcp': wcp,
     #General Information
     'als': als,
     #Employment History
-    'talent': talent, 'public_profile_list': public_profile_list
+    'talent': talent, 'public_profile_list': public_profile_list,
+    #Rest
+    'achievement': achievement, 'achievement_qs_count': achievement_qs_count,
+    'award': award, 'award_qs_count': award_qs_count,
+    'publication': publication, 'publication_qs_count': publication_qs_count,
+    'bkl': bkl, 'bkl_count': bkl_count,
+    'edtexp': edtexp, 'edtexp_count': edtexp_count,
     }
     return render(request, template, context)
 
@@ -382,13 +450,16 @@ def publish_experience_comment(request, wes):
 login_required()
 def publish_colleague_response(request, rc):
     '''Selects wether to publish a colleague response comemnt or not'''
-    we_qs = WorkColleague.objects.filter(slug=rc)
+    wec_qs = WorkColleague.objects.filter(slug=rc)
+    wes = wec_qs.get(slug=rc).experience.slug
+    we_qs = WorkExperience.objects.filter(slug=wes)
 
     if request.method =='POST':
         if 'yes' in request.POST:
+            wec_qs.update(publish_comment=True)
             we_qs.update(publish_comment=True)
         elif 'no' in request.POST:
-            we_qs.update(publish_comment=False)
+            wec_qs.update(publish_comment=False)
 
         return redirect(reverse('Talent:ColleagueResponse', kwargs={'clg': rc}))
 
@@ -396,27 +467,32 @@ def publish_colleague_response(request, rc):
 login_required()
 def publish_superior_response(request, rc):
     '''Selects wether to publish a superior response comemnt or not'''
-    we_qs = Superior.objects.filter(slug=rc)
+    wec_qs = Superior.objects.filter(slug=rc)
+    wes = wec_qs.get(slug=rc).experience.slug
+    we_qs = WorkExperience.objects.filter(slug=wes)
 
     if request.method =='POST':
         if 'yes' in request.POST:
+            wec_qs.update(publish_comment=True)
             we_qs.update(publish_comment=True)
         elif 'no' in request.POST:
-            we_qs.update(publish_comment=False)
+            wec_qs.update(publish_comment=False)
 
         return redirect(reverse('Talent:SuperiorResponse', kwargs={'spr': rc}))
-
 
 login_required()
 def publish_collaborator_response(request, rc):
     '''Selects wether to publish a collaborator response comemnt or not'''
-    we_qs = WorkCollaborator.objects.filter(slug=rc)
+    wec_qs = WorkCollaborator.objects.filter(slug=rc)
+    wes = wec_qs.get(slug=rc).experience.slug
+    we_qs = WorkExperience.objects.filter(slug=wes)
 
     if request.method =='POST':
         if 'yes' in request.POST:
+            wec_qs.update(publish_comment=True)
             we_qs.update(publish_comment=True)
         elif 'no' in request.POST:
-            we_qs.update(publish_comment=False)
+            wec_qs.update(publish_comment=False)
 
         return redirect(reverse('Talent:CollaboratorResponse', kwargs={'clb': rc}))
 
@@ -424,13 +500,16 @@ def publish_collaborator_response(request, rc):
 login_required()
 def publish_client_response(request, rc):
     '''Selects wether to publish a client response comemnt or not'''
-    we_qs = WorkClient.objects.filter(slug=rc)
+    wec_qs = WorkClient.objects.filter(slug=rc)
+    wes = wec_qs.get(slug=rc).experience.slug
+    we_qs = WorkExperience.objects.filter(slug=wes)
 
     if request.method =='POST':
         if 'yes' in request.POST:
+            wec_qs.update(publish_comment=True)
             we_qs.update(publish_comment=True)
         elif 'no' in request.POST:
-            we_qs.update(publish_comment=False)
+            wec_qs.update(publish_comment=False)
 
         return redirect(reverse('Talent:ClientResponse', kwargs={'wkc': rc}))
 

@@ -18,32 +18,380 @@
           <div class="card-body">
             <div class="row pt-4 my-auto">
               <div class="col-md-12 text-center my-auto">
-                <center><img align="center" class="icon" height="162" src="{% static 'images/email/mywexlog-logo.png' %}" style="border:0;" width="null"/></center><br>
+                <center><img align="center" class="profile-pic" height="162" src="{% static 'images/email/mywexlog-logo.png' %}" style="border:0;" width="null"/></center><br>
                 <div class="profile-card-header">{{ talent.f_name }} {{ talent.l_name }}</div><br>
-                <div class="profile-card-under">{{ dispay_user.display_text }}</div>
+                <center>
+                {% for pos in current_pos %}
+                  <div class="profile-card-under ">{{ pos.companybranch }}<br></div>
+                {% endfor %}
+                </center>
               </div>
             </div>
             <div class="profile-card-body mb-auto">
-            <div class="row pt-3 h-100 my-auto">
-              <div class="col-md-12 text-left my-auto">
+            <div class="row pt-3 align-items-top h-100">
+              <div class="col-md-7 text-left my-auto">
+                <strong>Name: </strong><br>
+                <span class="">{{ talent.f_name }} {{ talent.l_name }}</span>
+              </div>
+              <div class="col-md-5 text-left my-auto">
                 <strong>Designation: </strong><br>
-                <span class="">{% if key.dt.0.0 %}{{ key.dt.0.0 }}{% else %}{{ key.we_co.0.0 }}{% endif %}</span>
+                <span class="">{% for pos in current_pos %}
+                  <span class="">{{ pos.designation|join:", " }}</span>
+                {% endfor %}</span>
               </div>
             </div>
-            <div class="row pt-3 h-100 my-auto">
-              <div class="col-md-4 text-center my-auto">
+            <div class="row pt-3 align-items-top h-100">
+              <div class="col-md-12 text-left my-auto">
+                <strong>Current Position: </strong><br>
+                {% for pos in current_pos %}
+                <div class="row col-md-12">
+                  <span class="">{{ pos.designation }}, {{ pos.companybranch }}</span>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+            <div class="row pt-3 align-items-top h-100">
+              <div class="col-md-12 text-left my-auto">
+                <strong>Experience Level: </strong><br>
+                <span class="">{{ als.exp_level }}</span>
+              </div>
+            </div>
+            <br>
+            <div class="row pt-3 align-items-top h-100">
+              <div class="col-md-12 text-left my-auto">
+
+                  {% if als.rate_count >= 5 %}
+                  <strong>Total Rating Votes: </strong>{{ als.avg_rate|floatformat:2 }} ({{ als.rate_count }} votes)<br>
+                  {% else %}
+                  <strong>Total Rating: </strong>Not available doe to member only having {{ als.rate_count }} votes.<br>
+                  {% endif %}
+                <br>
+                {% if pfl.rate_count < 5 %}
+                  <p>Average rating only calculated if 5 ore more votes</p>
+                {% else %}
+                  <table class="table table-sm">
+                    <thead>
+                      <tr>
+                        <th class="text-center">Quality of Work</th>
+                        <th class="text-center">Schedule Performance</th>
+                        <th class="text-center">Repeat Work Potential</th>
+                        <th class="text-center">Average</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="text-center">
+                          {% if r_1 >= 0 and r_1 < 0.5 %}
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                          {% elif r_1 >= 0.5 and r_1 < 1 %}
+                            <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                          {% elif r_1 >= 1 and r_1 < 1.5 %}
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                          {% elif r_1 >= 1.5 and r_1 < 2 %}
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                          {% elif r_1 >= 2 and r_1 < 2.5 %}
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                          {% elif r_1 >= 2.5 and r_1 < 3 %}
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                          {% elif r_1 >= 3 and r_1 < 3.5 %}
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                          {% elif r_1 >= 3.5 and r_1 < 4 %}
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                          {% elif r_1 >= 4 and r_1 < 4.5 %}
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                          {% elif r_1 >= 4.5 and r_1 < 4.95 %}
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                          {% elif r_1 >= 4.95 %}
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                          {% endif %}
+                        </td>
+                        <td class="text-center">
+                          {% if r_2 >= 0 and r_2 < 0.5 %}
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                          {% elif r_2 >= 0.5 and r_2 < 1 %}
+                            <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                          {% elif r_2 >= 1 and r_2 < 1.5 %}
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                          {% elif r_2 >= 1.5 and r_2 < 2 %}
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                          {% elif r_2 >= 2 and r_2 < 2.5 %}
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                          {% elif r_2 >= 2.5 and r_2 < 3 %}
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                          {% elif r_2 >= 3 and r_2 < 3.5 %}
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                          {% elif r_2 >= 3.5 and r_2 < 4 %}
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                          {% elif r_2 >= 4 and r_2 < 4.5 %}
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                          {% elif r_2 >= 4.5 and r_2 < 4.95 %}
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                          {% elif r_2 >= 4.95 %}
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                          {% endif %}
+                        </td>
+                        <td class="text-center">
+                          {% if r_3 >= 0 and r_3 < 0.5 %}
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                          {% elif r_3 >= 0.5 and r_3 < 1 %}
+                            <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                          {% elif r_3 >= 1 and r_3 < 1.5 %}
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                          {% elif r_3 >= 1.5 and r_3 < 2 %}
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                          {% elif r_3 >= 2 and r_3 < 2.5 %}
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                          {% elif r_3 >= 2.5 and r_3 < 3 %}
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                          {% elif r_3 >= 3 and r_3 < 3.5 %}
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                          {% elif r_3 >= 3.5 and r_3 < 4 %}
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                          {% elif r_3 >= 4 and r_3 < 4.5 %}
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                          {% elif r_3 >= 4.5 and r_3 < 4.95 %}
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                          {% elif r_3 >= 4.95 %}
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                          {% endif %}
+                        </td>
+                        <td class="text-center">
+                          {% if pfl_g.avg_rate >= 0 and pfl_g.avg_rate < 0.5 %}
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                          {% elif pfl_g.avg_rate >= 0.5 and pfl_g.avg_rate < 1 %}
+                            <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                          {% elif pfl_g.avg_rate >= 1 and pfl_g.avg_rate < 1.5 %}
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                          {% elif pfl_g.avg_rate >= 1.5 and pfl_g.avg_rate < 2 %}
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                          {% elif pfl_g.avg_rate >= 2 and pfl_g.avg_rate < 2.5 %}
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                          {% elif pfl_g.avg_rate >= 2.5 and pfl_g.avg_rate < 3 %}
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                          {% elif pfl_g.avg_rate >= 3 and pfl_g.avg_rate < 3.5 %}
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                          {% elif pfl_g.avg_rate >= 3.5 and pfl_g.avg_rate < 4 %}
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                          {% elif pfl_g.avg_rate >= 4 and pfl_g.avg_rate < 4.5 %}
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                          {% elif pfl_g.avg_rate >= 4.5 and pfl_g.avg_rate < 4.95 %}
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                          {% elif pfl_g.avg_rate >= 4.95 %}
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                            <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                          {% endif %}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="text-center">
+                          {{ r_1|floatformat:2 }}
+                        </td>
+                        <td class="text-center">
+                          {{ r_2|floatformat:2 }}
+                        </td>
+                        <td class="text-center">
+                          {{ r_3|floatformat:2 }}
+                        </td>
+                        <td class="text-center">
+                          {{ pfl_g.avg_rate|floatformat:2 }}
+                        </td class="text-center">
+                      </tr>
+                    </tbody>
+                  </table>
+                {% endif %}
+
+              </div>
+            </div>
+            <br>
+            <div class="row pt-3 align-items-top h-100">
+              <div class="col-md-3 text-center my-auto">
                 <strong>Current Location: </strong><br>
                 <span class="text-left">{{ padd.get_country_display }},<br>
                   {{ padd.region }},<br>{{ padd.city }}</span>
               </div>
-              <div class="col-md-4 text-center my-auto">
+              <div class="col-md-6 align-items-top h-100 text-center">
                 <strong>Social Media: </strong><br>
                 <div class="row">
-                {% for l in language_qs %}
+                {% for l in online %}
                 <div class="col-12">
                   <div class="row h-100 my-auto">
                     <div class="col-md-12 text-left my-auto">
-                      <span class="">{{ l.language }}, {{ l.get_level_display }}</span>
+                      <span class="">{{ l.sitename }}: <a href="{{ l.profileurl }}" target="_blank">{{ l.profileurl }}</a></span>
                     </div>
                   </div>
                 </div>
@@ -52,7 +400,7 @@
                 {% endfor %}
               </div>
               </div>
-              <div class="col-md-4 text-center my-auto">
+              <div class="col-md-3 text-center align-items-top h-100">
                 <strong>Languages: </strong><br>
                 <div class="row">
                 {% for l in language_qs %}
@@ -69,6 +417,7 @@
               </div>
               </div>
             </div>
+            <br>
             {% if upload %}
             <div class="row pt-3 h-100 my-auto">
               <div class="col-md-12 text-left my-auto">
@@ -76,7 +425,7 @@
                 <div class="d-flex justify-content-center">
                   {% for file in upload %}
                   <div class="my-auto">
-                    <a href="{{ file.file.url }}" class="btn btn-primary"target="_blank">{{ file.title}}</a>&nbsp
+                    <a href="{{ file.file.url }}" class="btn btn-primary" target="_blank">{{ file.title}}</a>&nbsp
                   </div>
                   {% endfor %}</div>
               </div>
@@ -90,7 +439,6 @@
   </div>
   <br>
   <div class="container">
-
       <div class="card profile-card">
       <h4 class="profile-header" id="certs">Licenses, Certifications & Memberships</h4>
       <div class="profile-card-under">{% if membership_qs_count > 0 %}Total: {{ membership_qs_count }}{% else %}No licences, certifications or memberships captured yet{% endif %}</div>
@@ -335,7 +683,334 @@ else{
 </div>
 </div>
 </div>
-<br>
+
+<div class="profile-br-break">
+  <div class="card-body">
+    <div class="card profile-card">
+    <h4 class="profile-header" id="basic">MyWeXlog Project History</h4>
+    <div class="profile-card-under"></div>
+    </div>
+    <div class="row">
+      {% for vac in wcp %}
+        <div class="col-12 pt-3">
+        <div class="card card-hover1 profile-card h-100" style="width: 100%;">
+          <div class="card-body">
+            <div class="row pt-4 my-auto">
+              <div class="col-md-12 text-center my-auto">
+                <div class="profile-card-header">{{ vac.wit_v.0.0 }}</div><br>
+                <div class="profile-card-under">{{ vac.wit_v.0.1 }}</div>
+              </div>
+            </div>
+            <div class="profile-card-body mb-auto">
+              <div class="row pt-3 h-100 my-auto">
+                <div class="col-md-12 text-left my-auto">
+                  <strong>Date Completed: </strong><br>
+                  <span class="">{{ vac.wit_v.0.6|date:"j F Y" }}</span>
+                </div>
+              </div>
+              <div class="row pt-3 h-100 my-auto">
+                <div class="col-md-12 text-left my-auto">
+                  <strong>Work Issued By: </strong><br>
+                  <span class="">{{ vac.wit_v.0.2 }} {{ vac.wit_v.0.3 }}</span>
+                </div>
+              </div>
+            <div class="row pt-3 h-100 my-auto">
+              <div class="col-md-12 text-left my-auto">
+                <strong>Comment: </strong><br>
+                <span class="">{{ vac.wit_v.0.4 }}</span>
+              </div>
+            </div>
+            <div class="row pt-3 h-100 my-auto">
+              <div class="col-md-3 text-left my-auto">
+                <strong>Work Performance: </strong><br>
+                <span class="">{% if vac.emp.0.0 >= 0 and vac.emp.0.0 < 0.5 %}
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                {% elif vac.emp.0.0 >= 0.5 and vac.emp.0.0 < 1 %}
+                  <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                {% elif vac.emp.0.0 >= 1 and vac.emp.0.0 < 1.5 %}
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                {% elif vac.emp.0.0 >= 1.5 and vac.emp.0.0 < 2 %}
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                {% elif r_1 >= 2 and r_1 < 2.5 %}
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                {% elif vac.emp.0.0 >= 2.5 and vac.emp.0.0 < 3 %}
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                {% elif vac.emp.0.0 >= 3 and vac.emp.0.0 < 3.5 %}
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                {% elif vac.emp.0.0 >= 3.5 and vac.emp.0.0 < 4 %}
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                {% elif r_1 >= 4 and r_1 < 4.5 %}
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                {% elif vac.emp.0.0 >= 4.5 and vac.emp.0.0 < 4.95 %}
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                {% elif vac.emp.0.0 >= 4.95 %}
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                {% endif %}<span>
+              </div>
+              <div class="col-md-3 text-left my-auto">
+                <strong>Completed on time: </strong><br>
+                <span class="">{% if vac.emp.0.1 >= 0 and vac.emp.0.1 < 0.5 %}
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                {% elif vac.emp.0.1 >= 0.5 and vac.emp.0.1 < 1 %}
+                  <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                {% elif vac.emp.0.1 >= 1 and vac.emp.0.1 < 1.5 %}
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                {% elif vac.emp.0.1 >= 1.5 and vac.emp.0.1 < 2 %}
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                {% elif vac.emp.0.1 >= 2 and vac.emp.0.1 < 2.5 %}
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                {% elif vac.emp.0.1 >= 2.5 and vac.emp.0.1 < 3 %}
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                {% elif vac.emp.0.1 >= 3 and vac.emp.0.1 < 3.5 %}
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                {% elif vac.emp.0.1 >= 3.5 and vac.emp.0.1 < 4 %}
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                {% elif vac.emp.0.1 >= 4 and vac.emp.0.1 < 4.5 %}
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                {% elif vac.emp.0.1 >= 4.5 and vac.emp.0.1 < 4.95 %}
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                {% elif vac.emp.0.1 >= 4.95 %}
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                {% endif %}</span>
+              </div>
+              <div class="col-md-3 text-left my-auto">
+                <strong>Would hire again: </strong><br>
+                <span class="">{% if vac.emp.0.2 >= 0 and vac.emp.0.2 < 0.5 %}
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                {% elif vac.emp.0.2 >= 0.5 and vac.emp.0.2 < 1 %}
+                  <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                {% elif vac.emp.0.2 >= 1 and vac.emp.0.2 < 1.5 %}
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                {% elif vac.emp.0.2 >= 1.5 and vac.emp.0.2 < 2 %}
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                {% elif vac.emp.0.2 >= 2 and vac.emp.0.2 < 2.5 %}
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                {% elif vac.emp.0.2 >= 2.5 and vac.emp.0.2 < 3 %}
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                {% elif vac.emp.0.2 >= 3 and vac.emp.0.2 < 3.5 %}
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                {% elif vac.emp.0.2 >= 3.5 and vac.emp.0.2 < 4 %}
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                {% elif vac.emp.0.2 >= 4 and vac.emp.0.2 < 4.5 %}
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                {% elif vac.emp.0.2 >= 4.5 and vac.emp.0.2 < 4.95 %}
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                {% elif vac.emp.0.2 >= 4.95 %}
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                {% endif %}</span>
+              </div>
+              <div class="col-md-3 text-left my-auto">
+                <strong>Average: </strong><br>
+                <span class="">{% if vac.emp_a >= 0 and vac.emp_a < 0.5 %}
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                {% elif vac.emp_a >= 0.5 and vac.emp_a < 1 %}
+                  <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                {% elif vac.emp_a >= 1 and vac.emp_a < 1.5 %}
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                {% elif vac.emp_a >= 1.5 and vac.emp_a < 2 %}
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                {% elif vac.emp_a >= 2 and vac.emp_a < 2.5 %}
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                {% elif vac.emp_a >= 2.5 and vac.emp_a < 3 %}
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                {% elif vac.emp_a >= 3 and vac.emp_a < 3.5 %}
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                {% elif vac.emp_a >= 3.5 and vac.emp_a < 4 %}
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                {% elif vac.emp_a >= 4 and vac.emp_a < 4.5 %}
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                {% elif vac.emp_a >= 4.5 and vac.emp_a < 4.95 %}
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                {% elif vac.emp_a >= 4.95 %}
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                {% endif %}</span>
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
 <div class="profile-br-break">
   <div class="card-body">
     <div class="card profile-card">
@@ -383,7 +1058,7 @@ else{
               <div class="col-md-12 text-left my-auto">
                 <div class="profile-card-header"><strong>Projects with {{ key.co.0.1 }}: </strong></div>
 
-              {% for project in key.pr %}
+              {% for project in key.pr|dictsort:"pwe_co_mn" %}
               <div class="row pt-3 h-100 my-auto">
                 <div class="col-md-12 text-left my-auto">
                   <div class="profile-card-body-heading">
@@ -401,8 +1076,15 @@ else{
                   <span class="">{{ project.pco_hr }}</span>
                 </div>
                 <div class="col-md-4 center-text my-auto">
-                  <strong>Tenure: </strong><br>
+                  <strong>Project Tenure: </strong><br>
                   <span class="">{{ key.tn }}</span>
+                </div>
+              </div>
+              <div class="row pt-3 h-100 my-auto">
+                <div class="col-md-12 center-text my-auto">
+                  <strong>Project Skills: </strong><br>
+                  <span class="">{% for c in project.pr_skl %}
+                    <a  class="btn btn-outline-success auto mb-1 mr-1 pointer">{{ c }}</a>{% endfor %}</span>
                 </div>
               </div>
               {% for c in project.pr_com %}
@@ -518,12 +1200,296 @@ else{
     </div>
   </div>
 </div>
+
+<div class="profile-br-break">
+  <div class="card-body">
+    <div class="card profile-card">
+    <h4 class="profile-header" id="edu">Education & Training</h4>
+    <div class="profile-card-under">{% if edtexp_count > 0 %}Total Courses Attended: {{ edtexp_count }}{% else %}No courses captured yet{% endif %}</div>
+    </div>
+    {% if edtexp_count > 0 %}
+    <div class="row">
+      {% for e in edtexp %}
+      <div class="col-4 pt-3">
+      <div class="card card-hover profile-card h-100" style="width: 100%;">
+        <div class="card-body">
+          <div class="row pt-4 my-auto">
+            <div class="col-md-12 text-center my-auto">
+              <div class="profile-card-header">{{ e.topic }}</div><br>
+              <div class="profile-card-under">{{ e.course }}</div>
+            </div>
+          </div>
+          <div class="profile-card-body mb-auto">
+          <div class="row pt-3 h-100 my-auto">
+            <div class="col-md-12 text-left my-auto">
+              <strong>Attended from: </strong><br>
+              <span class="">{{ e.date_from|date:"j M Y" }} to {{ e.date_to|date:"j M Y" }}</span>
+            </div>
+          </div>
+          <div class="row pt-3 my-auto">
+            <div class="col-md-8  pt-2 text-left my-auto">
+              <strong>Institution: </strong><br>
+              {{ e.course.company }}
+            </div>
+            <div class="col-4 col-no-pad text-center my-auto">
+              {{ e.course.certification }}{% if e.upload %}<br>(Uploaded){% else %}{% endif %}
+            </div>
+          </div>
+          <div class="row  pt-4 my-auto">
+            <div class="col-md-12 text-left my-auto">
+              <strong>Skills: </strong><br>
+              {{ e.topic.skills.all|join:" || " }}
+            </div>
+          </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+        <p>Nothing Captured.</p>
+    {% endfor %}
+    </div>
+  </div>
+  <div class="card profile-footer">
+    <div class="float-right">
+      {% if edtexp_count >= 6 %}
+        <a href="" class="btn btn-primary float-right">View All Details</a>
+      {% endif %}
+    </div>
+  </div>
+
 <br>
-<script type="text/javascript">
-  var cli_pr = document.getElementById("cli_pr");
-  var cli_pr_div = document.getElementById("cli_pr");
-  if (cli_pr.innerText == '') {
-    cli_pr_div.setAttribute("class", "d-none");
-  };
-</script>
+{% else %}
+</div>
+{% endif %}
+
+<div class="profile-br-break">
+<div class="card-body">
+<div class="card profile-card">
+<h4 class="profile-header" id="achievements">Achievements</h4>
+  <div class="profile-card-under">{% if achievement_qs_count > 0 %}Total Achievements: {{ achievement_qs_count }}{% else %}No achievements captured yet{% endif %}</div>
+</div>
+{% if achievement_qs_count > 0 %}
+  <div class="row">
+  {% for a in achievement %}
+  <div class="col-4 pt-3">
+  <div class="card card-hover profile-card h-100" style="width: 100%;">
+    <div class="card-body">
+      <div class="row pt-4 my-auto">
+        <div class="col-md-12 text-center my-auto">
+          <div class="profile-card-header">{{ a.achievement }}</div><br>
+        </div>
+      </div>
+      <div class="profile-card-body mb-auto">
+      <div class="row pt-3 h-100 my-auto">
+        <div class="col-md-12 text-left my-auto">
+          <strong>Date Achieved: </strong><br>
+          <span class="">{{ a.date_achieved|date:"j M Y" }}</span>
+        </div>
+      </div>
+      <div class="row pt-3 h-100 my-auto">
+        <div class="col-md-12 text-left my-auto">
+          <strong>Description: </strong><br>
+          <span class="">{{ a.description|linebreaks }}</span>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+  {% empty %}
+      <p>No achievements captured.</p>
+  {% endfor %}
+  </div>
+</div>
+<div class="card profile-footer">
+  <div class="float-right">
+    {% if achievement_qs_count >= 6 %}
+      <a href="{% url 'Talent:ACH_FV' tlt vac %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Detail</a>
+    {% endif %}
+  </div>
+</div>
+
+<br>
+{% else %}
+{% endif %}
+</div>
+<div class="profile-br-break">
+  <div class="card-body">
+    <div class="card profile-card">
+    <h4 class="profile-header" id="awards">Awards</h4>
+      <div class="profile-card-under">{% if award_qs_count > 0 %}Total Awards: {{ award_qs_count }}{% else %}No awards captured yet{% endif %}</div>
+    </div>
+    {% if award_qs_count > 0 %}
+    <div class="row">
+    {% for a in award %}
+    <div class="col-4 pt-3">
+    <div class="card card-hover profile-card h-100" style="width: 100%;">
+      <div class="card-body">
+        <div class="row pt-4 my-auto">
+          <div class="col-md-12 text-center my-auto">
+            <div class="profile-card-header">{{ a.award }}</div><br>
+          </div>
+        </div>
+        <div class="profile-card-body mb-auto">
+        <div class="row pt-3 h-100 my-auto">
+          <div class="col-md-12 text-left my-auto">
+            <strong>Date Awarded: </strong><br>
+            <span class="">{{ a.date_achieved|date:"j M Y" }}</span>
+          </div>
+        </div>
+        <div class="row pt-3 h-100 my-auto">
+          <div class="col-md-12 text-left my-auto">
+            <strong>Description: </strong><br>
+            <span class="">{{ a.description|linebreaks }}</span>
+          </div>
+        </div>
+        <div class="row pt-3 h-100 my-auto">
+          <div class="col-md-12 text-left my-auto">
+            <strong>Skills: </strong><br>
+            <span class="">{{ a.tag.all|join:" || " }}</span>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+    {% empty %}
+        <p>No awards captured.</p>
+    {% endfor %}
+    </div>
+  </div>
+  <div class="card profile-footer">
+    <div class="float-right">
+      {% if award_qs_count >= 6 %}
+        <a href="{% url 'Talent:AWD_FV' tlt vac %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Detail</a>
+      {% endif %}
+    </div>
+  </div>
+  <br>
+  {% else %}
+  </div>
+  {% endif %}
+<div class="profile-br-break">
+  <div class="card-body">
+    <div class="card profile-card">
+    <h4 class="profile-header" id="publications">Publications</h4>
+      <div class="profile-card-under">{% if publication_qs_count > 0 %}Total Publications: {{ publication_qs_count }}{% else %}No publications captured yet{% endif %}</div>
+    </div>
+    {% if publication_qs_count > 0 %}
+      <div class="row">
+      {% for a in publication %}
+      <div class="col-4 pt-3">
+      <div class="card card-hover profile-card h-100" style="width: 100%;">
+        <div class="card-body">
+          <div class="row pt-4 my-auto">
+            <div class="col-md-12 text-center my-auto">
+              <div class="profile-card-header">{{ a.title }}</div><br>
+              <div class="profile-card-under">{{ a.publisher }}</div>
+            </div>
+          </div>
+          <div class="profile-card-body mb-auto">
+          <div class="row pt-3 h-100 my-auto">
+            <div class="col-md-12 text-left my-auto">
+              <strong>Date Published: </strong><br>
+              <span class="">{{ a.date_published|date:"j M Y" }}</span>
+            </div>
+          </div>
+          <div class="row pt-3 h-100 my-auto">
+            <div class="col-md-6 text-left my-auto">
+              <strong>Type: </strong><br>
+              <span class="">{{ a.get_type_display }}</span>
+            </div>
+            <div class="col-md-6 text-left my-auto">
+              <strong>Genre: </strong><br>
+              <span class="">{{ a.genre.all|join:", " }}</span>
+            </div>
+          </div>
+          <div class="row pt-3 h-100 my-auto">
+            <div class="col-md-12 text-left my-auto">
+              <strong>Description: </strong><br>
+              <span class="">{{ a.description|linebreaks }}</span>
+            </div>
+          </div>
+          <div class="row pt-3 h-100 my-auto">
+            <div class="col-md-12 text-left my-auto">
+              <strong>Skills: </strong><br>
+              <span class="">{{ a.tag.all|join:" || " }}</span>
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+      {% empty %}
+          <p>No publications captured.</p>
+      {% endfor %}
+      </div>
+      </div>
+    <div class="card profile-footer">
+      <div class="float-right">
+        {% if publication_qs_count >= 6 %}
+          <a href="{% url 'Talent:PUB_FV' tlt vac %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Detail</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <br>
+  {% else %}
+  </div>
+  {% endif %}
+  <div class="profile-br-break">
+    <div class="card-body">
+      <div class="card profile-card">
+      <h4 class="profile-header" id="books">Books Read</h4>
+      <div class="profile-card-under">{% if bkl_count > 0 %}Total Books Read: {{ bkl_count }}{% else %}No Books captured yet{% endif %}</div>
+      </div>
+      {% if bkl_count > 0 %}
+      <div class="row">
+      {% for b in bkl %}
+        <div class="col-3 pt-3">
+        <div class="card card-hover profile-card h-100" style="width: 100%;">
+          <div class="card-body">
+            <div class="row pt-4 my-auto">
+              <div class="col-md-12 text-center my-auto">
+                <div class="profile-card-header">{{ b.book }}</div><br>
+                <div class="profile-card-under">{{ b.book.author.all|join:", " }}</div>
+              </div>
+            </div>
+            <div class="profile-card-body mb-auto">
+            <div class="row pt-3 h-100 my-auto">
+              <div class="col-md-12 text-left my-auto">
+                <strong>Book Type: </strong><br>
+                <span class="">{{ b.type }}</span>
+              </div>
+            </div>
+            <div class="row pt-3 h-100 my-auto">
+              <div class="col-md-12 text-left my-auto">
+                <strong>Date Read: </strong><br>
+                <span class="">{{ b.date|date:"j M Y" }}</span>
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+          <p>No books listed.</p>
+      {% endfor %}
+      </div>
+    </div>
+    <div class="card profile-footer">
+      <div class="float-right">
+      {% if bkl_count >= 8 %}
+        <a href="{% url 'BookList:VPBL' als.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Books</a>
+      {% endif %}
+    </div>
+  </div>
+  </div>
+<br>
+{% else %}
+</div>
+{% endif %}
+
 {% endblock content %}
