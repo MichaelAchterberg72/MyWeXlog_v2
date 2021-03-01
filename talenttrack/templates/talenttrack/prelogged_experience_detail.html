@@ -9,47 +9,69 @@
   <h4 class="">Experience - Pre-Logged Hours<span><p class="float-right"><a href="{% url 'Talent:Home' %}"  class="badge badge-pill badge-primary">Back</a></p></span></h4>
 
 
-    <table class="table table-bordered">
+    <table class="table table-sm">
       <thead>
         <tr>
-          <th>Employer</th>
-          <th>Designation</th>
-          <th>Date from</th>
-          <th>Date to</th>
-          <th>Project</th>
-          <th>Industry</th>
-          <th>Hours logged</th>
+          <th class="align-middle text-center">Employer</th>
+          <th class="align-middle text-center">Designation</th>
+          <th class="align-middle text-center">Date from</th>
+          <th class="align-middle text-center">Date to</th>
+          <th class="align-middle text-center">Project</th>
+          <th class="align-middle text-center">Industry</th>
+          <th class="align-middle text-center">Hours logged<br><strong>(Score)</strong></th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>{{ check.company }}<br>({{ sum_company.co_sum|intcomma }})*</td>
-          <td>{{ check.designation }}</td>
-          <td>{{ check.date_from }}</td>
-          <td>{{ check.date_to }}</td>
-          <td>{{ check.project }}<br>({{ sum_project.p_sum|intcomma }})*</td>
-          <td>{{ check.industry }}</td>
-          <td>{{ check.hours_worked }}</td>
+          <td class="align-middle text-center">{{ check.company }}<br>({{ sum_company.co_sum|intcomma }})*</td>
+          <td class="align-middle text-center">{{ check.designation }}</td>
+          <td class="align-middle text-center">{{ check.date_from }}</td>
+          <td class="align-middle text-center">{{ check.date_to }}</td>
+          <td class="align-middle text-center">{{ check.project }}<br>({{ sum_project.p_sum|intcomma }})*</td>
+          <td class="align-middle text-center">{{ check.industry }}</td>
+          <td class="align-middle text-center">{{ check.hours_worked }} <br><strong>({{ check.score }})</strong></td>
         </tr>
         <tr>
-          <th>Skills</th>
+          <th class="align-middle text-center">Skills</th>
           {% for s in list %}
-            <td colspan="6">{{ s.skills.all|join:", " }}</td>
+            <td colspan="6" class="align-middle text-left">{{ s.skills.all|join:", " }}</td>
           {% endfor %}
         </tr>
         <tr>
-          <th>Comment</th>
-          <td colspan="6">{{ check.comment|linebreaks }}</td>
+          <th class="align-middle text-center">Comment</th>
+          <td colspan="6" class="align-middle text-left">{{ check.comment|linebreaks }}</td>
         </tr>
       </tbody>
     </table>
-    <p>*Numbers in brackets below Employer and Project are the total hours logged with the employer or on that project.</p>
+    <p>
+      *Numbers in brackets below Employer and Project are the total hours logged with the employer or on that project.
+    </p>
     {% if check.upload %}
-      <p>Attached File: <a href="{{ check.upload.url }}" target="_blank" class="badge badge-pill badge-success">Open</a></p>
+      <p>
+        Attached File:
+        <a href="{{ check.upload.url }}" target="_blank" class="badge badge-pill badge-success">
+          Open
+        </a>
+      </p>
     {% endif %}
     <form  action="{% url 'Talent:ExperienceDelete' check.pk %}" method="post">
       {% csrf_token %}
-      <button type="submit" class="btn btn-danger float-right" style="width:7rem">Delete</button>
+      <div>
+        <table>
+          <tr>
+            <td>
+              <p>
+                <strong>An entry cannot be edited, only deleted.<br>Once confirmed, an entry cannot be confirmed again, hence the information is locked. To change an entry, it must be deleted and re-captured.</strong>
+              </p>
+            </td>
+            <td class="align-middle">
+              <button type="submit" class="btn btn-danger float-right" style="width:7rem">
+                Delete
+              </button>
+            </td>
+          </tr>
+        </table>
+      </div>
     </form>
   </div>
 </div>
@@ -59,7 +81,7 @@
      <div class="card card-shadow h-100">
        <div class="card-body">
          <p class="float-right"><a href="{% url 'Talent:ColleagueAdd' check.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 8rem">Add Colleague</a></p>
-         <h5 class="card-title">Colleagues</h5>
+         <h5 class="card-title">Colleagues ({{ colleague_score }} Point)</h5>
          <table class="table table-sm">
            <thead>
              <tr>
@@ -93,8 +115,12 @@
     <div class="col-sm-6">
      <div class="card card-shadow h-100">
        <div class="card-body">
-         <p class="float-right"><a href="{% url 'Talent:SuperiorAdd' check.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 8rem">Add Superior</a></p>
-         <h5 class="card-title">Superiors</h5>
+         <p class="float-right">
+           <a href="{% url 'Talent:SuperiorAdd' check.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 8rem">
+             Add Superior
+           </a>
+         </p>
+         <h5 class="card-title">Superiors ({{ superior_score }} Points)</h5>
          <table class="table table-sm">
            <thead>
              <tr>
@@ -131,8 +157,12 @@
     <div class="col-sm-6">
      <div class="card card-shadow h-100">
        <div class="card-body">
-         <p class="float-right"><a href="{% url 'Talent:CollaboratorAdd' check.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 8rem">Add Collaborator</a></p>
-         <h5 class="card-title">Collaborators</h5>
+         <p class="float-right">
+           <a href="{% url 'Talent:CollaboratorAdd' check.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 8rem">
+             Add Collaborator
+           </a>
+         </p>
+         <h5 class="card-title">Collaborators ({{ collaborator_score }} Point)</h5>
          <table class="table table-sm">
            <thead>
              <tr>
@@ -155,7 +185,11 @@
                    <i class="fa fa-times-rectangle-o" style="font-size:24px;color:red !important" data-toggle="tooltip" title="Wrong Person"></i>
                  {% endif %}
                  {{wc.get_confirm_display}}</td>
-               <td><a href="{% url 'Talent:CollaboratorPreResponse' wc.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 5rem">Detail</a></td>
+               <td>
+                 <a href="{% url 'Talent:CollaboratorPreResponse' wc.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 5rem">
+                   Detail
+                 </a>
+               </td>
              </tr>
             {% endfor %}
            </tbody>
@@ -166,8 +200,12 @@
     <div class="col-sm-6">
      <div class="card card-shadow h-100">
        <div class="card-body">
-         <p class="float-right"><a href="{% url 'Talent:ClientAdd' check.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 8rem">Add Client</a></p>
-         <h5 class="card-title">Clients</h5>
+         <p class="float-right">
+           <a href="{% url 'Talent:ClientAdd' check.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 8rem">
+             Add Client
+           </a>
+         </p>
+         <h5 class="card-title">Clients ({{ client_score }} Points)</h5>
          <table class="table table-sm">
            <thead>
              <tr>

@@ -71,7 +71,6 @@
               </div>
             </div>
             <div>
-
             </div>
           </div>
         </div>
@@ -122,7 +121,9 @@
       <hr>
       <p>View a listing of associates that have not yet accepted:</p>
       <div class="float-right">
-        <a href="{% url 'Invitation:InvitationsSent' %}" class="btn btn-primary">Invitations</a>
+        <a href="{% url 'Invitation:InvitationsSent' %}" class="btn btn-primary">
+          Invitations
+        </a>
       </div>
   </div>
 
@@ -239,27 +240,47 @@
 
 {% block TBA %}
   <div class="text-center">
-    <a href="{% url 'Talent:APV' tlt=request.user.alias vac='1ad9t2' %}?next={{ request.path|urlencode }}" target="_blank"><i class="fa fa-id-badge" aria-hidden="true"style="font-size:30px;color:black" data-toggle="tooltip" data-placement="top" title="Public Profile"></i></a>
+    <a href="{% url 'Talent:APV' tlt=request.user.alias vac='1ad9t2' %}?next={{ request.path|urlencode }}" target="_blank">
+      <i class="fa fa-id-badge" aria-hidden="true"style="font-size:30px;color:black" data-toggle="tooltip" data-placement="top" title="Public Profile"></i>
+    </a>
     &nbsp &nbsp
-    <a href="{% url 'Talent:DPCSum' tlt %}?next={{ request.path|urlencode }}"><i class="fa fa-industry" style="font-size:30px;color:black" data-toggle="tooltip" title="View Summary for Industry, Project and Designation."></i></a>
+    <a href="{% url 'Talent:DPCSum' tlt %}?next={{ request.path|urlencode }}">
+      <i class="fa fa-industry" style="font-size:30px;color:black" data-toggle="tooltip" title="View Summary for Industry, Project and Designation."></i>
+    </a>
     &nbsp &nbsp
-    <a href="{% url 'BookList:VPBL' tlt=request.user.alias %}?next={{ request.path|urlencode }}" class=""><i class="fa fa-book" aria-hidden="true" style="font-size:30px;color:black" data-toggle="tooltip" title="Book Summary"></i></a>
+    <a href="{% url 'BookList:VPBL' tlt=request.user.alias %}?next={{ request.path|urlencode }}" class="">
+      <i class="fa fa-book" aria-hidden="true" style="font-size:30px;color:black" data-toggle="tooltip" title="Book Summary"></i>
+    </a>
     &nbsp &nbsp
-    <a href="{% url 'Talent:SPDView' tlt=request.user.alias %}?next={{ request.path|urlencode }}"><i class="fa fa-database" aria-hidden="true" style="font-size:30px;color:black" data-toggle="tooltip" title="Skills Summary"></i></a>
+    <a href="{% url 'Talent:SPDView' tlt=request.user.alias %}?next={{ request.path|urlencode }}">
+      <i class="fa fa-database" aria-hidden="true" style="font-size:30px;color:black" data-toggle="tooltip" title="Skills Summary"></i>
+    </a>
     &nbsp &nbsp
-    <a href="{% url 'Talent:Capture' %}"><i class="fa fa-graduation-cap" aria-hidden="true" style="font-size:30px;color:black" data-toggle="tooltip" title="Capture Training"></i></a>
+    <a href="{% url 'Talent:Capture' %}">
+      <i class="fa fa-graduation-cap" aria-hidden="true" style="font-size:30px;color:black" data-toggle="tooltip" title="Capture Training"></i>
+    </a>
     &nbsp &nbsp
-    <a href="{% url 'Talent:ExperienceCapture' %}" class=""><i class="fa fa-laptop" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Capture Experience"></i></a>
+    <a href="{% url 'Talent:ExperienceCapture' %}" class="">
+      <i class="fa fa-laptop" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Capture Experience"></i>
+    </a>
     &nbsp &nbsp
-    <a href="{% url 'BookList:books-read-new' %}" class=""><i class="fa fa-bookmark-o" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Capture Book"></i></a>
+    <a href="{% url 'BookList:books-read-new' %}" class="">
+      <i class="fa fa-bookmark-o" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Capture Book"></i>
+    </a>
     &nbsp &nbsp
     {% if user.subscription < 1 %}
-        <a href="#" class=""><i class="fa fa-map-signs" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Vacancy Search (Not available to free users)"></i></a>
+        <a href="#" class="">
+          <i class="fa fa-map-signs" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Vacancy Search (Not available to free users)"></i>
+        </a>
     {% else %}
-      <a href="{% url 'MarketPlace:VacSearch' %}" class=""><i class="fa fa-map-signs" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Vacancy Search"></i></a>
+      <a href="{% url 'MarketPlace:VacSearch' %}" class="">
+        <i class="fa fa-map-signs" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Vacancy Search"></i>
+      </a>
     {% endif %}
     &nbsp &nbsp
-    <a href="{% url 'Talent:PflSearch' %}" class=""><i class="fa fa-users" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Profile Search"></i></a>
+    <a href="{% url 'Talent:PflSearch' %}" class="">
+      <i class="fa fa-users" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Profile Search"></i>
+    </a>
   </div>
   <hr>
   <br>
@@ -335,7 +356,9 @@
           <span><i class="fa fa-star" aria-hidden="true" style="font-size:25px;"></i></span>
         {% endif %}
         {{ pfl.avg_rate|floatformat:2 }} from {{ pfl.rate_count|intcomma }} votes
-        <a href="{% url 'Talent:TltRatingDetail' pfl.alias %}" style="font-size:20px;color:black" target="_blank" data-toggle="tooltip" title="Ratings Breakdown"><i class="fa fa-pie-chart" aria-hidden="true"></i></a>
+        <a href="{% url 'Talent:TltRatingDetail' pfl.alias %}" style="font-size:20px;color:black" target="_blank" data-toggle="tooltip" title="Ratings Breakdown">
+          <i class="fa fa-pie-chart" aria-hidden="true"></i>
+        </a>
     {% else %}
       Ratings calculated over 5 or more votes, you currently have {{ pfl.rate_count|intcomma }}.
     {% endif %}
@@ -370,7 +393,9 @@
         <td class="align-middle text-center">{{ conf_tot_s|intcomma }}</td>
         <td class="align-middle text-center">
           {% if conf_tot_s > 0 %}
-            <a href="{% url 'Profile:Confirm' %}" style="font-size:20px;color:black" target="_blank" data-toggle="tooltip" title="Review Waiting Requests"><i class="fa fa-paint-brush" aria-hidden="true"></i></a>
+            <a href="{% url 'Profile:Confirm' %}" style="font-size:20px;color:black" target="_blank" data-toggle="tooltip" title="Review Waiting Requests">
+              <i class="fa fa-paint-brush" aria-hidden="true"></i>
+            </a>
           {% endif %}
           <a href="{% url 'Talent:Home' %}?next={{ request.path|urlencode }} #confirm">
             <i class="fa fa-binoculars" aria-hidden="true"style="font-size:25px;color:black" data-toggle="tooltip" data-placement="top" title="See more detail"></i>
