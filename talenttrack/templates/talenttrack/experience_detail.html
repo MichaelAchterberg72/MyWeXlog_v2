@@ -40,6 +40,10 @@
           {% endfor %}
         </tr>
         <tr>
+          <th>Title</th>
+          <td>{{ check.title }}</td>
+        </tr>
+        <tr>
           <th>Comment</th>
           <td colspan="6">{{ check.comment|linebreaks }}</td>
           <td colspan="1" class="text-center">{% if check.publish_comment == True %}

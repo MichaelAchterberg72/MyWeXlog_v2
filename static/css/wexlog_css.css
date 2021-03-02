@@ -189,6 +189,20 @@ table {
   word-wrap: break-word;
   word-break: break-word;
 }
+.profile-card-body-heading-header {
+  font-family: var(--Montserrat-family);
+  color:#0d1451;
+  font-size: 24px !important;
+  font-weight: 600;
+  line-height:1.2;
+  text-align: left;
+  text-transform: uppercase;
+  vertical-align: top;
+  border-spacing: 0;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+}
 .profile-card-body-heading {
   font-family: var(--Montserrat-family);
   color:#0d1451;

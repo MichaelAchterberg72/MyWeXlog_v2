@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 from django_countries.fields import CountryField
 
@@ -33,3 +34,14 @@ class ProjectData(models.Model):
             self.slug = create_code9(self)
 
         super(ProjectData, self).save(*args, **kwargs)
+
+
+class ProjectPersonalDetails(models.Model):
+    talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    project = models.ForeignKey(ProjectData, on_delete=models.CASCADE)
+    company = models.ForeignKey(Enterprise, on_delete=models.PROTECT, verbose_name="Owner", null=True)
+    companybranch = models.ForeignKey(Branch, on_delete=models.PROTECT, verbose_name='Branch Working for on the Project', null=True)
+    description = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return '{} - {}'.format(self.talent, self.project)

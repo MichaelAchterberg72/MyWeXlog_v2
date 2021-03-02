@@ -22,18 +22,20 @@
                 <div class="profile-card-header">{{ talent.f_name }} {{ talent.l_name }}</div><br>
                 <center>
                 {% for pos in current_pos %}
-                  <div class="profile-card-under ">{{ pos.companybranch }}<br></div>
+                  <div class="profile-card-under">{{ pos.companybranch }}<br></div>
                 {% endfor %}
                 </center>
               </div>
             </div>
             <div class="profile-card-body mb-auto">
             <div class="row pt-3 align-items-top h-100">
-              <div class="col-md-7 text-left my-auto">
+              <div class="col-md-12 text-left my-auto">
                 <strong>Name: </strong><br>
                 <span class="">{{ talent.f_name }} {{ talent.l_name }}</span>
               </div>
-              <div class="col-md-5 text-left my-auto">
+            </div>
+            <div class="row pt-3 align-items-top h-100">
+              <div class="col-md-12 text-left my-auto">
                 <strong>Designation: </strong><br>
                 <span class="">{% for pos in current_pos %}
                   <span class="">{{ pos.designation|join:", " }}</span>
@@ -61,9 +63,9 @@
               <div class="col-md-12 text-left my-auto">
 
                   {% if als.rate_count >= 5 %}
-                  <strong>Total Rating Votes: </strong>{{ als.avg_rate|floatformat:2 }} ({{ als.rate_count }} votes)<br>
+                  <strong>MyWeXlog Projects Total Rating Votes: </strong>{{ als.avg_rate|floatformat:2 }} ({{ als.rate_count }} votes)<br>
                   {% else %}
-                  <strong>Total Rating: </strong>Not available doe to member only having {{ als.rate_count }} votes.<br>
+                  <strong>MyWeXlog Projects Total Rating: </strong>Not available doe to member only having {{ als.rate_count }} votes.<br>
                   {% endif %}
                 <br>
                 {% if pfl.rate_count < 5 %}
@@ -528,7 +530,7 @@
 <br>
 <div class="container">
 
-<div class="card profile-card">
+<div class="card profile-card"  id="skills">
   <div class="card-body">
 
     <div class="col-md-12 text-center my-auto">
@@ -620,12 +622,19 @@ else{
 <div class="container">
 <div class="row">
   <div class="col-md-12">
-    {% for skl in dept_skills_link %}<a href="{% url 'Talent:ProfileSkillsStats' skl.id %}?next={{ request.path|urlencode }}" class="btn btn-outline-success auto mb-1 mr-1 pointer">{{ skl.skill }}</a> {% endfor %}
+    {% for skl in dept_skills_link %}<a href="{% url 'Talent:PrublicProfileSkillsStats' ppl skl.id %}?next={{ request.path|urlencode }}" class="btn btn-outline-success auto mb-1 mr-1 pointer">{{ skl.skill }}</a> {% endfor %}
   </div>
 </div>
 </div>
 </div>
 </div>
+</div>
+<br>
+<div class="card profile-footer">
+  <div class="row container">
+    <div class="col-md-12">
+    </div>
+  </div>
 </div>
 
 <br>
@@ -687,7 +696,7 @@ else{
 <div class="profile-br-break">
   <div class="card-body">
     <div class="card profile-card">
-    <h4 class="profile-header" id="basic">MyWeXlog Project History</h4>
+    <h4 class="profile-header" id="projects">MyWeXlog Project History</h4>
     <div class="profile-card-under"></div>
     </div>
     <div class="row">
@@ -721,7 +730,7 @@ else{
               </div>
             </div>
             <div class="row pt-3 h-100 my-auto">
-              <div class="col-md-3 text-left my-auto">
+              <div class="col-md-3 text-center my-auto">
                 <strong>Work Performance: </strong><br>
                 <span class="">{% if vac.emp.0.0 >= 0 and vac.emp.0.0 < 0.5 %}
                   <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
@@ -747,7 +756,7 @@ else{
                   <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
                   <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
                   <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
-                {% elif r_1 >= 2 and r_1 < 2.5 %}
+                {% elif vac.emp.0.0 >= 2 and vac.emp.0.0 < 2.5 %}
                   <span><i class="fa fa-star" aria-hidden="true"></i></span>
                   <span><i class="fa fa-star" aria-hidden="true"></i></span>
                   <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
@@ -771,7 +780,7 @@ else{
                   <span><i class="fa fa-star" aria-hidden="true"></i></span>
                   <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
                   <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
-                {% elif r_1 >= 4 and r_1 < 4.5 %}
+                {% elif vac.emp.0.0 >= 4 and vac.emp.0.0 < 4.5 %}
                   <span><i class="fa fa-star" aria-hidden="true"></i></span>
                   <span><i class="fa fa-star" aria-hidden="true"></i></span>
                   <span><i class="fa fa-star" aria-hidden="true"></i></span>
@@ -791,7 +800,7 @@ else{
                   <span><i class="fa fa-star" aria-hidden="true"></i></span>
                 {% endif %}<span>
               </div>
-              <div class="col-md-3 text-left my-auto">
+              <div class="col-md-3 text-center my-auto">
                 <strong>Completed on time: </strong><br>
                 <span class="">{% if vac.emp.0.1 >= 0 and vac.emp.0.1 < 0.5 %}
                   <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
@@ -861,7 +870,7 @@ else{
                   <span><i class="fa fa-star" aria-hidden="true"></i></span>
                 {% endif %}</span>
               </div>
-              <div class="col-md-3 text-left my-auto">
+              <div class="col-md-3 text-center my-auto">
                 <strong>Would hire again: </strong><br>
                 <span class="">{% if vac.emp.0.2 >= 0 and vac.emp.0.2 < 0.5 %}
                   <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
@@ -931,7 +940,7 @@ else{
                   <span><i class="fa fa-star" aria-hidden="true"></i></span>
                 {% endif %}</span>
               </div>
-              <div class="col-md-3 text-left my-auto">
+              <div class="col-md-3 text-center my-auto">
                 <strong>Average: </strong><br>
                 <span class="">{% if vac.emp_a >= 0 and vac.emp_a < 0.5 %}
                   <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
@@ -1009,6 +1018,13 @@ else{
         {% endfor %}
       </div>
     </div>
+    <div class="card profile-footer">
+      <div class="float-right">
+      {% if wcp_count >= 5 %}
+        <a href="{% url 'Talent:PublicProfileProjects' ppl %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Projects</a>
+      {% endif %}
+    </div>
+  </div>
   </div>
 
 <div class="profile-br-break">
@@ -1038,11 +1054,11 @@ else{
             <div class="row pt-3 h-100 my-auto">
               <div class="col-md-8 text-left my-auto">
                 <strong>Employment Period: </strong><br>
-                <span class="">{% if key.dt.0.1 %}{{ key.dt.0.1 }}{% else %}{{ key.we_co_mn }}{% endif %} to {% if key.dt.0.2 %}{{ key.dt.0.2 }}{% else %}{% if key.we_co_mx %}{{ key.we_co_mx }}{% else %}Current{% endif %}{% endif %}</span>
+                <span class="">{% if key.dt.0.1 >= key.we_co_mn %}{{ key.dt.0.1 }}{% else %}{{ key.we_co_mn }}{% endif %} to {% if key.dt.0.2 >= key.we_co_mx %}{{ key.dt.0.2 }}{% else %}{% if key.we_co_mx %}{{ key.we_co_mx }}{% else %}Current{% endif %}{% endif %}</span>
               </div>
               <div class="col-md-4 text-left my-auto">
                 <strong>Tenure: </strong><br>
-                <span class="">{{ key.tn }}</span>
+                <span class="">{{ key.tn|floatformat:1 }} years</span>
               </div>
             </div>
             {% if key.dt.0.3 %}
@@ -1059,25 +1075,390 @@ else{
                 <div class="profile-card-header"><strong>Projects with {{ key.co.0.1 }}: </strong></div>
 
               {% for project in key.pr|dictsort:"pwe_co_mn" %}
+      <div class="">
+        <div class="row">
+          <div class="card mt-1 ml-1 mr-1" style="width: 100%;" id="{{ project.prj_s }}">
+            <div class="post-wrap">
+            <div class="post">
+
+
+              <div class="post-front" style="display:block;" id="oldCard{{key.co.0.2}}{{project.prj_s}}">
+
+              <div class="card-body small-pad">
+                <div class="row" style="height: 20px;">
+                  <div class="col-md-12 h-100 my-auto">
+                    <div class="card-maximise float-right">
+                      <div class="row">
+                          <button type="submit" class="pointer no-border max-btn" data-vac={{s.ref_no}} data-tlt={{tlt}} data-toggle="tooltip" title="Maximise" data-vac={{s.ref_no}} data-action="maximise" id="clickMe{{key.co.0.2}}{{project.prj_s}}"><i class="fa fa-window-maximize"></i></button>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              <div class="">
+                <div class="row pt-3 h-100 my-auto">
+                  <div class="col-md-3 text-left my-auto">
+                    <span class="">{{ project.pwe_co_mn }} to {{ project.pwe_co_mx }}</span>
+                  </div>
+                  <div class="col-md-9 text-left my-auto">
+                    <div class="profile-card-body-heading-header">
+                      <strong>{% if project.we.0.0 %}<span class="text-left">{{ project.we.0.0 }}{% else %}Work not allocated to a Project{% endif %}</span></strong>
+                    </div>
+                  </div>
+                </div>
+                <div class="row pt-3 h-100 my-auto">
+                  <div class="col-md-12 text-left my-auto">
+                    <strong>Personal Responsibilities on Project: </strong><br>
+                    <span class="">{{ project.pd_desc.0.0|truncatechars:390 }}</span>
+                  </div>
+                </div>
+              </div>
+              </div>
+              </div>
+
+
+              <div class="post-back" style="display:none;" id="newCard{{key.co.0.2}}{{project.prj_s}}">
+
+                <div class="card-body card-no-hover">
+                  <div class="row" style="height: 20px;">
+                    <div class="col-md-12 h-100 my-auto">
+                      <div class="card-maximise float-right">
+                        <div class="row">
+                          <button type="submit" class="pointer no-border" data-toggle="tooltip" title="Minimise" id="un-clickMe{{key.co.0.2}}{{project.prj_s}}"><i class="fa fa-window-minimize"></i></button>
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+  <!-- START CARD FLIP SIDE INFO  -->
               <div class="row pt-3 h-100 my-auto">
                 <div class="col-md-12 text-left my-auto">
                   <div class="profile-card-body-heading">
-                    <strong>{% if project.we.0.0 %}Project Name: <span class="">{{ project.we.0.0 }}</span>{% else %}Work not allocated to a Project: {% endif %}</strong>
+                    <strong>{% if project.we.0.0 %}Project Name: <br><span class="" style="font-size:45px !important;">{{ project.we.0.0 }}</span>{% else %}Work not allocated to a Project: {% endif %}</strong>
                   </div>
                 </div>
               </div>
               <div class="row pt-3 h-100 my-auto">
-                <div class="col-md-4 center-text my-auto">
+                <div class="col-md-4 text-left my-auto">
                   <strong>Project Period: </strong><br>
                   <span class="">{{ project.pwe_co_mn }} to {{ project.pwe_co_mx }}</span>
                 </div>
-                <div class="col-md-4 center-text my-auto">
+              </div>
+              <div class="row pt-3 h-100 my-auto">
+                <div class="col-md-4 text-left my-auto">
+                  <strong>Project Tenure: </strong><br>
+                  <span class="">{{ project.pwe_tn|floatformat:1 }} years</span>
+                </div>
+                <div class="col-md-4 text-left my-auto">
                   <strong>Total Hours: </strong><br>
                   <span class="">{{ project.pco_hr }}</span>
                 </div>
-                <div class="col-md-4 center-text my-auto">
-                  <strong>Project Tenure: </strong><br>
-                  <span class="">{{ key.tn }}</span>
+
+              </div>
+              <div class="row pt-3 h-100 my-auto">
+                <div class="col-md-12 text-left my-auto">
+                  <strong>Personal Responsibilites on Project: </strong><br>
+                  <span class="">{{ project.pd_desc.0.0 }}</span>
+                </div>
+              </div>
+              <br>
+              <div class="row pt-3 h-100 my-auto">
+                <div class="col-md-3 text-center my-auto">
+                  <strong>Work of Quality: </strong><br>
+                  <span class="">{% if project.pwq_ave >= 0 and project.pwq_ave < 0.5 %}
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  {% elif project.pwq_ave >= 0.5 and project.pwq_ave < 1 %}
+                    <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  {% elif project.pwq_ave >= 1 and project.pwq_ave < 1.5 %}
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  {% elif project.pwq_ave >= 1.5 and project.pwq_ave < 2 %}
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  {% elif project.pwq_ave >= 2 and project.pwq_ave < 2.5 %}
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  {% elif project.pwq_ave >= 2.5 and project.pwq_ave < 3 %}
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  {% elif project.pwq_ave >= 3 and project.pwq_ave < 3.5 %}
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  {% elif project.pwq_ave >= 3.5 and project.pwq_ave < 4 %}
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  {% elif project.pwq_ave >= 4 and project.pwq_ave < 4.5 %}
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  {% elif project.pwq_ave >= 4.5 and project.pwq_ave < 4.95 %}
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                  {% elif project.pwq_ave >= 4.95 %}
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  {% endif %}<span>
+                </div>
+                <div class="col-md-3 text-center my-auto">
+                  <strong>Time Taken: </strong><br>
+                  <span class="">{% if project.twq_ave >= 0 and project.twq_ave < 0.5 %}
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  {% elif project.twq_ave >= 0.5 and project.twq_ave < 1 %}
+                    <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  {% elif project.twq_ave >= 1 and project.twq_ave < 1.5 %}
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  {% elif project.twq_ave >= 1.5 and project.twq_ave < 2 %}
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  {% elif project.twq_ave >= 2 and project.twq_ave < 2.5 %}
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  {% elif project.twq_ave >= 2.5 and project.twq_ave < 3 %}
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  {% elif project.twq_ave >= 3 and project.twq_ave < 3.5 %}
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  {% elif project.twq_ave >= 3.5 and project.twq_ave < 4 %}
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  {% elif project.twq_ave >= 4 and project.twq_ave < 4.5 %}
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  {% elif project.twq_ave >= 4.5 and project.twq_ave < 4.95 %}
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                  {% elif project.twq_ave >= 4.95 %}
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  {% endif %}</span>
+                </div>
+                <div class="col-md-3 text-center my-auto">
+                  <strong>Complexity of Work: </strong><br>
+                  <span class="">{% if project.cwq_ave >= 0 and project.cwq_ave < 0.5 %}
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  {% elif project.cwq_ave >= 0.5 and project.cwq_ave < 1 %}
+                    <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  {% elif project.cwq_ave >= 1 and project.cwq_ave < 1.5 %}
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  {% elif project.cwq_ave >= 1.5 and project.cwq_ave < 2 %}
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  {% elif project.cwq_ave >= 2 and project.cwq_ave < 2.5 %}
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  {% elif project.cwq_ave >= 2.5 and project.cwq_ave < 3 %}
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  {% elif project.cwq_ave >= 3 and project.cwq_ave < 3.5 %}
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  {% elif project.cwq_ave >= 3.5 and project.cwq_ave < 4 %}
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  {% elif project.cwq_ave >= 4 and project.cwq_ave < 4.5 %}
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  {% elif project.cwq_ave >= 4.5 and project.cwq_ave < 4.95 %}
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                  {% elif project.cwq_ave >= 4.95 %}
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  {% endif %}</span>
+                </div>
+                <div class="col-md-3 text-center my-auto">
+                  <strong>Average: </strong><br>
+                  <span class="">{% if project.awq_ave >= 0 and project.awq_ave < 0.5 %}
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  {% elif project.awq_ave >= 0.5 and project.awq_ave < 1 %}
+                    <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  {% elif project.awq_ave >= 1 and project.awq_ave < 1.5 %}
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  {% elif project.awq_ave >= 1.5 and project.awq_ave < 2 %}
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  {% elif project.awq_ave >= 2 and project.awq_ave < 2.5 %}
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  {% elif project.awq_ave >= 2.5 and project.awq_ave < 3 %}
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  {% elif project.awq_ave >= 3 and project.awq_ave < 3.5 %}
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  {% elif project.awq_ave >= 3.5 and project.awq_ave < 4 %}
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  {% elif project.awq_ave >= 4 and project.awq_ave < 4.5 %}
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                  {% elif project.awq_ave >= 4.5 and project.awq_ave < 4.95 %}
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                  {% elif project.awq_ave >= 4.95 %}
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                    <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                  {% endif %}</span>
+                </div>
+              </div>
+              <div class="row h-100 my-auto">
+                <div class="col-md-3 text-center my-auto">
+                  <span class="">({% if project.pwq_ave %}{{ project.pwq_ave|floatformat:2 }}{% else %}Not Rated{% endif %})</span>
+                </div>
+                <div class="col-md-3 text-center my-auto">
+                  <span class="">({% if project.twq_ave %}{{ project.twq_ave|floatformat:2 }}{% else %}Not Rated{% endif %})</span>
+                </div>
+                <div class="col-md-3 text-center my-auto">
+                  <span class="">({% if project.cwq_ave %}{{ project.cwq_ave|floatformat:2 }}{% else %}Not Rated{% endif %})</span>
+                </div>
+                <div class="col-md-3 text-center my-auto">
+                  <span class="">({% if project.awq_ave %}{{ project.awq_ave|floatformat:2 }}{% else %}Not Rated{% endif %})</span>
                 </div>
               </div>
               <div class="row pt-3 h-100 my-auto">
@@ -1088,16 +1469,91 @@ else{
                 </div>
               </div>
               {% for c in project.pr_com %}
+              {% if forloop.counter == 1 %}
               {% if c.wec.0.1 %}
               <div class="row pt-3 h-100 my-auto">
                 <div class="col-md-12 text-left my-auto">
                   <div class="profile-body-header">
-                    <strong>Project Comments:</strong><br>
+                    <strong>{% if project.we.0.0 %}Project Comments:{% else %}Comments:{% endif %}</strong>
+                  </div>
+                </div>
+              </div>
+              {% endif %}
+              {% endif %}
+        <div class="">
+        <div class="row">
+          <div class="card mt-1" style="width: 100%;" id="{{key.co.0.2}}{{project.prj_s}}{{c.wec.0.2}}">
+            <div class="post-wrap">
+            <div class="post">
+
+              <div class="post-front" style="display:block;" id="commentsoldCard{{key.co.0.2}}{{project.prj_s}}{{c.wec.0.2}}">
+
+              <div class="card-body small-pad">
+                <div class="row" style="height: 20px;">
+                  <div class="col-md-12 h-100 my-auto">
+                    <div class="card-maximise float-right">
+                      <div class="row">
+                          <button type="submit" class="pointer no-border max-btn" data-vac={{s.ref_no}} data-tlt={{tlt}} data-toggle="tooltip" title="Maximise" data-vac={{s.ref_no}} data-action="maximise" id="clickMe{{key.co.0.2}}{{project.prj_s}}{{c.wec.0.2}}"><i class="fa fa-window-maximize"></i></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <div class="row pt-3 h-100 my-auto">
+                <div class="col-md-3 text-left my-auto">
+                  <div class="">
+                    <strong>Date: </strong>
+                    <span class="">{{ c.wec.0.1 }}</span>
+                  </div>
+                </div>
+                {% if c.wec.0.3 %}
+                <div class="col-md-9 text-left my-auto">
+                  <div class="">
+                    <strong>Title: </strong>
+                    <span class="">{{ c.wec.0.3 }}</span>
+                  </div>
+                </div>
+                {% endif %}
+              </div>
+              <div class="row pt-3 h-100 my-auto">
+                <div class="col-md-12 text-left my-auto">
+                  <div class="">
+                    <span class="">{{ c.wec.0.0|linebreaks|truncatechars:390 }}</span>
+                  </div>
+                </div>
+              </div>
+              </div>
+              </div>
+
+              <div class="post-back card-no-hover" style="display:none;" id="commentsnewCard{{key.co.0.2}}{{project.prj_s}}{{c.wec.0.2}}">
+
+                <div class="card-body">
+                  <div class="row" style="height: 20px;">
+                    <div class="col-md-12 h-100 my-auto">
+                      <div class="card-maximise float-right">
+                        <div class="row">
+                          <button type="submit" class="pointer no-border" data-toggle="tooltip" title="Minimise" id="un-clickMe{{key.co.0.2}}{{project.prj_s}}{{c.wec.0.2}}"><i class="fa fa-window-minimize"></i></button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+  <!--  Comments flip side details  -->
+              {% if c.wec.0.1 %}
+              <div class="row pt-3 h-100 my-auto">
+                <div class="col-md-12 text-left my-auto">
+                  <div class="profile-body-header">
+                    <strong>{% if project.we.0.0 %}Project Comments:{% else %}Comments:{% endif %}</strong><br>
                     <strong>Date: </strong>
                     <span class="">{{ c.wec.0.1 }}</span>
                   </div>
                 </div>
               </div>
+              {% if c.wec.0.3 %}
+              <div class="row pt-3 h-100 my-auto">
+                <div class="col-md-12 text-left my-auto">
+                  <strong>{{ c.wec.0.3 }}</strong>
+                </div>
+              </div>
+              {% endif %}
               <div class="row pt-3 h-100 my-auto">
                 <div class="col-md-12 text-left my-auto">
                   {{ c.wec.0.0|linebreaks }}
@@ -1181,10 +1637,62 @@ else{
                 </div>
               </div>
               {% endif %}
-              {% endfor %}
-              <hr>
+              {% if forloop.last %}
+
               {% endif %}
               {% endfor %}
+
+              {% endif %}
+              </div>
+              </div>
+              </div>
+              </div>
+              </div>
+              <script>
+                var maxButton = document.getElementById('clickMe{{key.co.0.2}}{{project.prj_s}}{{c.wec.0.2}}');  // 1
+                maxButton.addEventListener('click', function() {    // 3
+                   commentsnewCard{{key.co.0.2}}{{project.prj_s}}{{c.wec.0.2}}.style.display = 'block';
+                   commentsoldCard{{key.co.0.2}}{{project.prj_s}}{{c.wec.0.2}}.style.display = 'none';          // 4
+                });
+                var minButton = document.getElementById('un-clickMe{{key.co.0.2}}{{project.prj_s}}{{c.wec.0.2}}');  // 1
+                minButton.addEventListener('click', function() {  // 3
+                   commentsnewCard{{key.co.0.2}}{{project.prj_s}}{{c.wec.0.2}}.style.display = 'none';
+                   commentsoldCard{{key.co.0.2}}{{project.prj_s}}{{c.wec.0.2}}.style.display = 'block';               // 4
+                });
+              </script>
+
+
+            </div>
+            </div>
+              {% endfor %}
+              <br>
+              <hr>
+
+<!--  END FLIP SIDE OF CARD INFO  -->
+                </div>
+              </div>
+            </div>
+            </div>
+            </div>
+            <script>
+              var maxButton = document.getElementById('clickMe{{key.co.0.2}}{{project.prj_s}}');  // 1
+              maxButton.addEventListener('click', function() {    // 3
+                 newCard{{key.co.0.2}}{{ project.prj_s }}.style.display = 'block';
+                 oldCard{{key.co.0.2}}{{ project.prj_s }}.style.display = 'none';          // 4
+              });
+              var minButton = document.getElementById('un-clickMe{{key.co.0.2}}{{project.prj_s}}');  // 1
+              minButton.addEventListener('click', function() {  // 3
+                 newCard{{key.co.0.2}}{{ project.prj_s }}.style.display = 'none';
+                 oldCard{{key.co.0.2}}{{ project.prj_s }}.style.display = 'block';               // 4
+              });
+            </script>
+
+
+
+          </div>
+          </div>
+
+
               {% endfor %}
               </div>
             </div>
@@ -1193,10 +1701,15 @@ else{
             </div>
           </div>
         </div>
-
       {% empty %}
           <p>No Employment History.</p>
       {% endfor %}
+    </div>
+  </div>
+  <div class="card profile-footer">
+    <div class="row container">
+      <div class="col-md-12">
+      </div>
     </div>
   </div>
 </div>

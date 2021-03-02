@@ -40,6 +40,7 @@ class CustomUser(AbstractUser):
     )
     alias = models.CharField(max_length=30, null=True)
     display_text = models.CharField(max_length=250, null=True)
+    public_profile_name = models.CharField(max_length=100, unique=True, null=True)
     subscription = models.IntegerField(choices=PKG, default=2)
     permission = models.IntegerField(choices=COMPANY, default=1)
     role = models.IntegerField(choices=ROLE, default=0)

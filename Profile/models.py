@@ -118,6 +118,7 @@ class Profile(models.Model):
     f_name = models.CharField(max_length=30, null=True)
     l_name = models.CharField(max_length=30, null=True)
     alias = models.CharField(max_length=30, null=True, unique=True)
+    public_profile_name = models.CharField(max_length=100, unique=True, null=True)
     birth_date = models.DateField('Date of Birth', null=True)
     background = models.TextField()
     mentor = models.CharField('Do you wish to be a mentor?', max_length=1, choices=MENTOR, default='N')#Opt in to be a mentor to other people
@@ -160,11 +161,12 @@ class Profile(models.Model):
         inject_fn = f'{self.f_name}'
         inject_ln = f'{self.l_name}'
         inject_al = f'{self.alias}'
+        inject_pp = f'{self.public_profile_name}'
         target = CustomUser.objects.filter(pk=self.talent.id)
         if self.f_name is None or self.f_name =="":
-            target.update(alias=inject_al, alphanum=inject_al, display_text=inject_al)
+            target.update(alias=inject_al, alphanum=inject_al, display_text=inject_al, public_profile_name=inject_al)
         else:
-            target.update(alias=inject_al, first_name=inject_fn, last_name=inject_ln)
+            target.update(alias=inject_al, first_name=inject_fn, last_name=inject_ln, public_profile_name=inject_pp)
 
         #check for confirmations once registering
         if self.confirm_check == False:

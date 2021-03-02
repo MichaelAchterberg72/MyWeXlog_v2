@@ -283,7 +283,7 @@ class PreLoggedExperienceForm(forms.ModelForm):
 
     class Meta:
         model = WorkExperience
-        fields = ('date_from', 'date_to', 'company', 'companybranch', 'employment_type', 'project', 'industry', 'hours_worked', 'comment', 'designation', 'upload', 'skills',)
+        fields = ('date_from', 'date_to', 'company', 'companybranch', 'employment_type', 'project', 'industry', 'hours_worked', 'title', 'comment', 'designation', 'upload', 'skills',)
         widgets={
             'company': CompanySelect2Widget(),
             'companybranch': BranchSelect2Widget(),
@@ -553,7 +553,7 @@ class WorkExperienceForm(forms.ModelForm):
     class Meta:
         model = WorkExperience
         fields = (
-            'date_from', 'date_to', 'company', 'companybranch', 'employment_type', 'estimated', 'project', 'industry', 'hours_worked', 'comment', 'designation', 'upload', 'skills'
+            'date_from', 'date_to', 'company', 'companybranch', 'employment_type', 'estimated', 'project', 'industry', 'hours_worked', 'title', 'comment', 'designation', 'upload', 'skills'
             )
         widgets={
             'company': CompanySelect2Widget(),

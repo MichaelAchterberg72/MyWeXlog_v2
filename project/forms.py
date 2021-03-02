@@ -10,7 +10,7 @@ from django_select2.forms import (
     Select2Widget
 )
 
-from .models import ProjectData
+from .models import ProjectData, ProjectPersonalDetails
 from enterprises.models import Enterprise, Industry, Branch
 from locations.models import Region, City, Suburb
 
@@ -120,5 +120,13 @@ class ProjectForm(forms.ModelForm):
             'industry': IndustrySelect2Widget(),
             'region': RegionSelect2Widget(),
             'city': CitySelect2Widget(),
+            'companybranch': BranchSelect2Widget(),
+        }
+
+class ProjectPersonalDetailsForm(forms.ModelForm):
+    class Meta:
+        model = ProjectPersonalDetails
+        fields = ('description',)
+        widgets = {
             'companybranch': BranchSelect2Widget(),
         }

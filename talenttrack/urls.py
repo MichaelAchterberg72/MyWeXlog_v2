@@ -75,12 +75,21 @@ urlpatterns = [
     path('apv-projects/<slug:tlt>/', views.ProjectsLFVView, name='Projects_L_FV'),
     path('apv-edu/<slug:tlt>/', views.EduLFVView, name='EDU_L_FV'),
 
-    path('public-profile/', views.public_profile, name='PublicProfile'),
+    path('public-profile/<slug:ppl>/', views.public_profile, name='PublicProfile'),
+    path('public-profile/<slug:ppl>/profile-skill-stats-overview/<int:skl>/', views.public_profile_skill_stats, name='PrublicProfileSkillsStats'),
+    path('public-profile-projects/<slug:ppl>/', views.public_profile_projects, name='PublicProfileProjects'),
+
     path('we-comment/<slug:wes>/', views.publish_experience_comment, name="WEPComment"),
+    path('pre-we-comment/<slug:wes>/', views.publish_pre_experience_comment, name="PreWEPComment"),
     path('publish-colleague-response/<slug:rc>/', views.publish_colleague_response, name="CRPComment"),
     path('publish-superior-response/<slug:rc>/', views.publish_superior_response, name="SRPComment"),
     path('publish-collaborator-response/<slug:rc>/', views.publish_collaborator_response, name="WCollRPComment"),
     path('publish-client-response/<slug:rc>/', views.publish_client_response, name="WClRPComment"),
+
+    path('publish-pre-colleague-response/<slug:rc>/', views.publish_pre_colleague_response, name="CRPPreComment"),
+    path('publish-pre-superior-response/<slug:rc>/', views.publish_pre_superior_response, name="SRPPreComment"),
+    path('publish-pre-collaborator-response/<slug:rc>/', views.publish_pre_collaborator_response, name="WCollRPPreComment"),
+    path('publish-pre-client-response/<slug:rc>/', views.publish_pre_client_response, name="WClRPPreComment"),
 
     path('achievement-capture/', views.CaptureAchievementView, name='AchieveCap'),
     path('achievement-edit/<slug:ach>/', views.EditAchievementView, name='AchieveEdit'),

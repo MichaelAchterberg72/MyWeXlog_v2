@@ -26,6 +26,26 @@
         </tr>
       </tbody>
     </table>
+    <div class="float-right">{% if check.publish_comment == True %}
+      <div class="btn-group mr-2" role="group" aria-label="First group">
+        <form  action="{% url 'Talent:CRPPreComment' check.slug %}" method="post">
+          {% csrf_token %}
+          <button type="submit" class="badge badge-success badge-pill" name="no"  data-toggle="tooltip" title="This response has been published to your Public Profile'">
+            <i class="fa fa-toggle-off" aria-hidden="true" style="font-size:20px;"></i>
+          </button>
+        </form>
+      </div>
+    {% elif check.publish_comment == False %}
+      <div class="btn-group mr-2" role="group" aria-label="First group">
+        <form  action="{% url 'Talent:CRPPreComment' check.slug %}" method="post">
+          {% csrf_token %}
+          <button type="submit" class="badge badge-danger badge-pill" name="yes"  data-toggle="tooltip" title="This response is not published'">
+            <i class="fa fa-toggle-on" aria-hidden="true" style="font-size:20px;"></i>
+          </button>
+        </form>
+      </div>
+    {% endif %}
+  </div>
     <form method="post">
     <input type="hidden" name="next" value="{{ request.GET.next }}">
       {% csrf_token %}

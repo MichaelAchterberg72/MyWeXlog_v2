@@ -7,7 +7,9 @@ from .views import *
 app_name = 'Project'
 
 urlpatterns = [
-    path('home/', views.ProjectListHome, name='ProjectHome'),
+    path('home/', views.ProjectHome, name='ProjectHome'),
+    path('full-list/', views.ProjectListHome, name='ProjectList'),
+    path('personal-details/<slug:prj>/<slug:co>/<slug:bch>/', views.ProjectPersonalDetailsView, name='ProjectPersonal'),
 
     path('help/project-home/', views.HelpProjectHomeView, name='HelpProjectHome'),
     path('help/project-add', views.HelpProjectAddView, name='HelpProjectAdd'),
@@ -21,7 +23,7 @@ urlpatterns = [
     path('talent/<slug:prj>/<slug:corp>/', views.EmployeesOnProject, name='TltOnProject'),
     path('experience/detail/<slug:prj>/', views.WorkExperienceDetail, name='DetailExperienceOnProject'),
 
-    path('list/', views.ProjectListView, name='ProjectList'),
+#    path('list/', views.ProjectListView, name='ProjectList'),
     path('search/', views.ProjectSearch, name='Project-Search'),
     path('popup/project/add/', views.ProjectAddPopup, name="ProjectAddPop"),
     path('popup/ajax/get_project_id/', views.get_project_id, name="AJAX_GetProjectID"),

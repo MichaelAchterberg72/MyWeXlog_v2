@@ -14,6 +14,8 @@ from django.core.exceptions import PermissionDenied
 import json
 from django.db.models import Count, Sum, F, Q, Avg, Min, Max
 from itertools import chain
+import datetime
+from django.utils.dateparse import parse_date
 from dateutil.relativedelta import relativedelta
 from django.db.models.functions import Greatest
 from decimal import Decimal
@@ -47,7 +49,7 @@ from marketplace.models import(
 )
 from enterprises.models import Branch, Industry
 from locations.models import Region, City
-from project.models import ProjectData
+from project.models import ProjectData, ProjectPersonalDetails
 from Profile.models import (
         BriefCareerHistory, Profile, LanguageTrack, PhysicalAddress, WillingToRelocate, FileUpload, OnlineRegistrations
 )
@@ -65,8 +67,8 @@ from analytics.signals import object_viewed_signal
 
 
 @login_required()
-def public_profile(request):
-    tlt = request.user.alias
+def public_profile(request, ppl):
+    tlt = get_object_or_404(Profile, public_profile_name=ppl).alias
 
     talent = Profile.objects.get(alias=tlt)
     dispay_user = CustomUser.objects.get(alias=tlt)
@@ -90,6 +92,7 @@ def public_profile(request):
     r_1 = pfl_g.rate_1/100
     r_2 = pfl_g.rate_2/100
     r_3 = pfl_g.rate_3/100
+
     upload = FileUpload.objects.filter(talent__alias=tlt)
     als = get_object_or_404(Profile, alias=tlt)
     current_pos = BriefCareerHistory.objects.filter(Q(talent__alias=tlt) & Q(current=True))
@@ -264,9 +267,10 @@ def public_profile(request):
 
 
     '''MyWeXlog Projects History Section'''
-    wit_qs = WorkIssuedTo.objects.filter(Q(talent__alias=tlt) & Q(assignment_complete_emp=True)).order_by('-date_complete').values_list('slug', flat=True)
+    wit_qs = WorkIssuedTo.objects.filter(Q(talent__alias=tlt) & Q(assignment_complete_emp=True)).order_by('-date_complete').values_list('slug', flat=True)[:5]
+    wcp_count = wit_qs.count()
     wit_list = list(wit_qs)
-    print(wit_list)
+
     wcp = []
     for vac in wit_list:
         wit_qs = WorkIssuedTo.objects.filter(Q(talent__alias=tlt) & Q(slug=vac))
@@ -286,25 +290,21 @@ def public_profile(request):
 
         result={'wit_v': wit_v, 'emp': emp, 'emp_a': emp_a, 'tlt_qs': tlt_qs}
         wcp.append(result)
-    print(wcp)
+
 
     '''Employment History Section'''
-    bch_qs_qs = bch_qs.order_by('date_from').values('companybranch', 'date_from')
-    wec_qs_qs = wec_qs.order_by('date_from').values('companybranch', 'date_from')
+    bch_qs_qs = bch_qs.order_by('date_from').values('companybranch', 'date_from', 'date_to')
+    wec_qs_qs = wec_qs.order_by('date_from').values('companybranch', 'date_from', 'date_to')
 
-#    co_list_qs = bch_qs_qs.union(wec_qs_qs)
-#    print(co_list_qs)
-#    co_list_set_qs = [x for x in co_list_qs if x['companybranch'] is not None]
+    current_date = timezone.now().date()
+    current_date_strf = parse_date(current_date.strftime("%Y-%m-%d"))
 
-#    co_list_set = co_list_set_qs.sort(key=lambda x: x["date_from"])
-#    print(co_list_set)
+    big_list = bch_qs_qs.union(wec_qs_qs)
+    for val in big_list:
+        if val['date_to'] is None:
+            val['date_to'] = current_date_strf
 
-#    or
-
-    co_list_qs = sorted(list(chain(bch_qs_qs,wec_qs_qs)), key=lambda item: item['date_from'], reverse=True)
-    print(co_list_qs)
-
-#    co_list_qs = bch_qs_qs.union(wec_qs_qs).order_by(F('date_from'), F('companybranch')).distinct('companybranch').reverse()
+    co_list_qs = sorted(list(big_list), key=lambda item: item['date_to'], reverse=True)
 
     co_list=[]
     for val in co_list_qs:
@@ -320,33 +320,62 @@ def public_profile(request):
     print(co_list_set)
     public_profile_list = []
     for c in co_list_set:
-        co = Branch.objects.filter(pk=c).values_list('name', 'company__ename')
+        co = Branch.objects.filter(pk=c).values_list('name', 'company__ename', 'pk')
         dt = bch_qs.filter(companybranch=c).values_list('designation__name', 'date_from', 'date_to', 'description')
-#        tn = bch_qs.get(companybranch=c).slug
-        we_co = wec_qs.filter(companybranch=c).values_list('designation__name', 'score', 'industry__industry', 'hours_worked').distinct()
-        we_co_min_date = wec_qs.filter(companybranch=c).aggregate(min_date=Min('date_from'))
-        we_co_mn = we_co_min_date.get('min_date').strftime('%b %-m, %Y')
-        we_co_max_date = wec_qs.filter(companybranch=c).aggregate(max_date=Max('date_to'))
-        we_co_mx = we_co_max_date.get('max_date').strftime('%b %-m, %Y')
 
-        wec_co_qs_qs = wec_qs.filter(companybranch=c)
+        we_co = wec_qs.filter(companybranch=c).values_list('designation__name', 'score', 'industry__industry', 'hours_worked').distinct()
+
+        we_co_min_date_qs = wec_qs.filter(companybranch=c).aggregate(min_date=Min('date_from'))
+        we_co_mn_date = we_co_min_date_qs.get('min_date')
+        we_co_mn = we_co_mn_date.strftime('%b %-m, %Y')
+
+        we_co_max_date_qs = wec_qs.filter(companybranch=c).aggregate(max_date=Max('date_to'))
+        we_co_mx_date = we_co_max_date_qs.get('max_date')
+        we_co_mx = we_co_mx_date.strftime('%b %-m, %Y')
+
+        tn_qs = we_co_mx_date - we_co_mn_date
+        months = tn_qs.days/(365/12)
+        tn = months/12
+
+        wec_co_qs_qs = wec_qs.filter(Q(companybranch=c))
         wec_co_qs = wec_co_qs_qs.order_by('project', '-date_from').distinct('project')
 
         wec_co = wec_co_qs.values_list('project', flat=True)
-
+        print(c)
+        prj_n = 0
         pr=[]
         for p in wec_co:
-            # Project Comments list
+            # Project details list
+            if p == None:
+                prj_n += 1
+                prj_s = str(prj_n)
+            else:
+                prj_s = ProjectData.objects.get(pk=p).slug
+
+            wepc_qs_list = wec_co_qs_qs.filter(Q(project=p) & Q(publish_comment=True)).order_by('date_from').values_list('pk', flat=True)
+
             wep_qs = wec_co_qs_qs.filter(project=p).order_by('date_from').values_list('pk', flat=True)
+
             wesp_qs = wec_co_qs_qs.filter(project=p)
-            print(wep_qs)
 
             we = wep_qs.values_list('project__name', 'industry__industry', 'designation__name', 'date_to')
 
-            pwe_co_min_date = wesp_qs.aggregate(min_date=Min('date_from'))
-            pwe_co_mn = pwe_co_min_date.get('min_date').strftime('%b %-m, %Y')
-            pwe_co_max_date = wesp_qs.aggregate(max_date=Max('date_to'))
-            pwe_co_mx = pwe_co_max_date.get('max_date').strftime('%b %-m, %Y')
+            try:
+                prj_name = ProjectData.objects.get(pk=p)
+                pd_desc = ProjectPersonalDetails.objects.filter(Q(talent__alias=tlt) & Q(companybranch__pk=c) & Q(project=prj_name)).values_list('description')
+            except:
+                pd_desc = "No description provided as yet"
+
+            pwe_co_min_qs = wesp_qs.aggregate(min_date=Min('date_from'))
+            pwe_co_mn_date = pwe_co_min_qs.get('min_date')
+            pwe_co_mn = pwe_co_mn_date.strftime('%b %-m, %Y')
+            pwe_co_max_qs = wesp_qs.aggregate(max_date=Max('date_to'))
+            pwe_co_mx_date = pwe_co_max_qs.get('max_date')
+            pwe_co_mx = pwe_co_mx_date.strftime('%b %-m, %Y')
+
+            pwe_tn_qs = pwe_co_mx_date - pwe_co_mn_date
+            months = pwe_tn_qs.days/(365/12)
+            pwe_tn = months/12
 
             pco_hr_sum = wesp_qs.aggregate(thr=Sum('hours_worked'))
             pco_hr = pco_hr_sum.get('thr')
@@ -355,11 +384,179 @@ def public_profile(request):
             exp_skills = exp.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
             pr_skl = wesp_qs.values_list('skills__skill', flat=True).distinct('skills')
 
+            wclg_ave_qs = wesp_qs.aggregate(quality_rate=Avg('workcolleague__quality'))
+            wclg_ave = wclg_ave_qs.get('quality_rate')
+
+            wsup_ave_qs = wesp_qs.aggregate(quality_rate=Avg('superior__quality'))
+            wsup_ave = wsup_ave_qs.get('quality_rate')
+
+            wcol_ave_qs = wesp_qs.aggregate(quality_rate=Avg('workcollaborator__quality'))
+            wcol_ave = wcol_ave_qs.get('quality_rate')
+
+            wcli_ave_qs = wesp_qs.aggregate(quality_rate=Avg('workclient__quality'))
+            wcli_ave = wcli_ave_qs.get('quality_rate')
+
+            pwq_count = 0
+            if wclg_ave != None:
+                pwq_count += 1
+                wclg_ave == wclg_ave
+            else:
+                wclg_ave = 0
+
+            if wsup_ave != None:
+                pwq_count += 1
+                wsup_ave == wsup_ave
+            else:
+                wsup_ave = 0
+
+            if wcol_ave != None:
+                pwq_count += 1
+                wcol_ave == wcol_ave
+            else:
+                wcol_ave = 0
+
+            if wcli_ave != None:
+                pwq_count += 1
+                wcli_ave == wcli_ave
+            else:
+                wcli_ave = 0
+
+            if pwq_count == 0:
+                pwq_count = 1
+            else:
+                pwq_count == pwq_count
+
+            pwq_total = wclg_ave + wsup_ave + wcol_ave + wcli_ave
+            pwq_ave = pwq_total / pwq_count
+
+
+            wtclg_ave_qs = wesp_qs.aggregate(time_taken_rate=Avg('workcolleague__time_taken'))
+            wtclg_ave = wtclg_ave_qs.get('time_taken_rate')
+
+            wtsup_ave_qs = wesp_qs.aggregate(time_taken_rate=Avg('superior__time_taken'))
+            wtsup_ave = wtsup_ave_qs.get('time_taken_rate')
+
+            wtcol_ave_qs = wesp_qs.aggregate(time_taken_rate=Avg('workcollaborator__time_taken'))
+            wtcol_ave = wtcol_ave_qs.get('time_taken_rate')
+
+            wtcli_ave_qs = wesp_qs.aggregate(time_taken_rate=Avg('workclient__time_taken'))
+            wtcli_ave = wtcli_ave_qs.get('time_taken_rate')
+
+            twq_count = 0
+            if wtclg_ave != None:
+                twq_count += 1
+                wtclg_ave == wtclg_ave
+            else:
+                wtclg_ave = 0
+
+            if wtsup_ave != None:
+                twq_count += 1
+                wtsup_ave == wtsup_ave
+            else:
+                wtsup_ave = 0
+
+            if wtcol_ave != None:
+                twq_count += 1
+                wtcol_ave == wtcol_ave
+            else:
+                wtcol_ave = 0
+
+            if wtcli_ave != None:
+                twq_count += 1
+                wtcli_ave == wtcli_ave
+            else:
+                wtcli_ave = 0
+
+            if twq_count == 0:
+                twq_count = 1
+            else:
+                twq_count == twq_count
+
+            twq_total = wtclg_ave + wtsup_ave + wtcol_ave + wtcli_ave
+            twq_ave = twq_total / twq_count
+
+
+            wcclg_ave_qs = wesp_qs.aggregate(complexity_rate=Avg('workcolleague__complexity'))
+            wcclg_ave = wcclg_ave_qs.get('complexity_rate')
+
+            wcsup_ave_qs = wesp_qs.aggregate(complexity_rate=Avg('superior__complexity'))
+            wcsup_ave = wcsup_ave_qs.get('complexity_rate')
+
+            wccol_ave_qs = wesp_qs.aggregate(complexity_rate=Avg('workcollaborator__complexity'))
+            wccol_ave = wccol_ave_qs.get('complexity_rate')
+
+            wccli_ave_qs = wesp_qs.aggregate(quality_rate=Avg('workclient__complexity'))
+            wccli_ave = wccli_ave_qs.get('complexity_rate')
+
+            cwq_count = 0
+            if wcclg_ave != None:
+                cwq_count += 1
+                wcclg_ave == wcclg_ave
+            else:
+                wcclg_ave = 0
+
+            if wcsup_ave != None:
+                cwq_count += 1
+                wcsup_ave == wcsup_ave
+            else:
+                wcsup_ave = 0
+
+            if wccol_ave != None:
+                cwq_count += 1
+                wccol_ave == wccol_ave
+            else:
+                wccol_ave = 0
+
+            if wccli_ave != None:
+                cwq_count += 1
+                wccli_ave == wccli_ave
+            else:
+                wccli_ave = 0
+
+            if cwq_count == 0:
+                cwq_count = 1
+            else:
+                cwq_count == cwq_count
+
+            cwq_total = wcclg_ave + wcsup_ave + wccol_ave + wccli_ave
+            cwq_ave = twq_total / cwq_count
+
+
+            awq_count = 0
+            if pwq_ave != None:
+                awq_count += 1
+                pwq_ave == pwq_ave
+            else:
+                pwq_ave = 0
+
+            if twq_ave != None:
+                awq_count += 1
+                twq_ave == twq_ave
+            else:
+                twq_ave = 0
+
+            if cwq_ave != None:
+                awq_count += 1
+                cwq_ave == cwq_ave
+            else:
+                cwq_ave = 0
+
+
+            if awq_count == 0:
+                awq_count = 1
+            else:
+                awq_count == awq_count
+
+            awq_total = pwq_ave + twq_ave + cwq_ave
+            awq_ave = awq_total / awq_count
+
+
             pr_com=[]
-            for c in wep_qs:
-                wepc_qs = wesp_qs.filter(Q(pk=c) & Q(publish_comment=True)).order_by('-date_to')
-                wec = wepc_qs.values_list('comment', 'date_to')
-                c_we = wesp_qs.filter(Q(pk=c) & Q(publish_comment=True)).values_list('pk', flat=True).distinct()
+            for cm in wepc_qs_list:
+                #Comments details
+                wepc_qs = wesp_qs.filter(Q(pk=cm) & Q(publish_comment=True)).order_by('-date_to')
+                wec = wepc_qs.values_list('comment', 'date_to', 'slug', 'title')
+                c_we = wesp_qs.filter(Q(pk=cm) & Q(publish_comment=True)).values_list('pk', flat=True).distinct()
                 c_we_list = list(c_we)
                 cli_pr=[]
                 for s in c_we_list:
@@ -389,13 +586,10 @@ def public_profile(request):
                 pr_com_result = {'wec': wec, 'cli_pr': cli_pr, 'sup_pr': sup_pr, 'clg_pr': clg_pr, 'clb_pr': clb_pr}
                 pr_com.append(pr_com_result)
 
-#            no_p_result = {'cli_no_p_pr': cli_no_p_pr,}
-#            no_pr.append(no_p_result)
-
-            p_result = {'we': we, 'pwe_co_mn': pwe_co_mn, 'pwe_co_mx': pwe_co_mx, 'pr_skl': pr_skl, 'pco_hr': pco_hr, 'pr_com': pr_com}
+            p_result = {'we': we, 'prj_s': prj_s, 'pd_desc': pd_desc, 'pwe_co_mn': pwe_co_mn, 'pwe_co_mx': pwe_co_mx, 'pwe_tn': pwe_tn, 'pr_skl': pr_skl, 'pco_hr': pco_hr, 'pr_com': pr_com, 'pwq_ave': pwq_ave, 'twq_ave': twq_ave, 'cwq_ave': cwq_ave, 'awq_ave': awq_ave}
             pr.append(p_result)
 
-        result={'co': co, 'dt': dt, 'we_co': we_co, 'we_co_mn': we_co_mn, 'we_co_mx': we_co_mx, 'pr': pr,
+        result={'co': co, 'dt': dt, 'we_co': we_co, 'we_co_mn': we_co_mn, 'we_co_mx': we_co_mx, 'tn': tn, 'pr': pr,
 #        'no_pr': no_pr
         }
 
@@ -404,6 +598,7 @@ def public_profile(request):
 
     template = 'talenttrack/public_profile.html'
     context = {
+    'ppl': ppl,
     #Header
     'dispay_user': dispay_user,  'tlt': tlt,  'padd': padd, 'current_pos': current_pos, 'language_qs': language_qs, 'online': online,
     'pfl_g': pfl_g, 'r_1': r_1, 'r_2': r_2, 'r_3': r_3,
@@ -418,7 +613,7 @@ def public_profile(request):
     'dept_skills_link': dept_skills_link,
     'edt_set': edt_set, 'exp_set': exp_set, 'tlt_p': tlt_p,
     #Mywexlog jobs history`
-    'wcp': wcp,
+    'wcp': wcp, 'wcp_count': wcp_count,
     #General Information
     'als': als,
     #Employment History
@@ -430,6 +625,261 @@ def public_profile(request):
     'bkl': bkl, 'bkl_count': bkl_count,
     'edtexp': edtexp, 'edtexp_count': edtexp_count,
     }
+    return render(request, template, context)
+
+
+@login_required()
+def public_profile_skill_stats(request, ppl, skl):
+    '''The view for the individual public profile skill overview and stats'''
+    tlt = get_object_or_404(Profile, public_profile_name=ppl).alias
+    skill = SkillTag.objects.get(id=skl)
+    tlt_instance = CustomUser.objects.get(alias=tlt) #request.user
+    tlt_id = [tlt_instance.id]
+    today = timezone.now().date()
+
+    we = WorkExperience.objects.filter(talent__alias=tlt)
+    val_we = we.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
+
+    #Skills associated with skill - includes all skills not just validated ones
+    skill_we =  val_we.filter(skills__skill=skill.skill, edt=False)
+    skills_assoc_qs = skill_we.values_list('pk', flat=True)
+
+    skills_list_qs = val_we.filter(pk__in=skills_assoc_qs)
+    skills_list_qs_count = skills_list_qs.count()
+
+    skills_list = skills_list_qs.values_list('skills__skill', flat=True).distinct()
+
+    skills_list_set_all = [x for x in skills_list if x is not None]
+
+    skills_list_set = [x for x in skills_list_set_all if x is not f'{skill.skill}']
+
+    dept_skills_link = SkillTag.objects.filter(skill__in=skills_list_set).order_by('skill')
+
+    skills_instance_count = []
+    skill_list_labels = []
+    skill_percentage_data = []
+    for skill_item in skills_list_set:
+        skill_count = 0
+        tlt_we_skill = skills_list_qs.filter(skills__skill=skill_item).values_list('skills__skill', flat=True)
+
+        for we_instance in tlt_we_skill:
+            skill_count +=1
+        skill_percentage = int(format(skill_count / skills_list_qs_count * 100, '.0f'))
+
+        result={'skill': skill_item, 'skill_count': skill_count, 'skill_percentage': skill_percentage}
+
+        skills_instance_count.append(result)
+
+        skill_list_labels.append(skill_item)
+        skill_percentage_data.append(skill_percentage)
+
+    skill_list_labels_count = skills_list.count()
+
+#    print(skill_list_labels)
+#    print(skill_percentage_data)
+    orderd_skills_instance_count = sorted(skills_instance_count, key=lambda kv: kv['skill_percentage'], reverse=True)
+#    print(orderd_skills_instance_count['skill'])
+
+
+
+    we_skill = we.filter(Q(skills__skill=skill.skill, edt=False) | Q(topic__skills__skill=skill.skill, edt=True))
+    val_we_skill = val_we.filter(Q(skills__skill=skill.skill, edt=False) | Q(topic__skills__skill=skill.skill, edt=True))
+
+
+
+    # Total Work Experience Skill Sum Experience by Year
+    val_we_skills_used_year_range_data = []
+    val_we_skills_age_range=[]
+    for i in tlt_id:
+        we_qs = val_we_skill.filter(talent=i, edt=False)
+        for wet in we_qs:
+            swewd = wet.date_to
+            we_skill_age=relativedelta(today, swewd).years
+
+            aw_exp = wet.hours_worked
+            if aw_exp == None:
+                awetv = 0
+            else:
+                awetv = aw_exp
+
+            result={'we_skill_age': we_skill_age, 'awetv': awetv}
+
+            val_we_skills_age_range.append(result)
+
+    # Total hours experience in year range
+    val_we_skill_age_range_0_1=[float(x['awetv']) for x in val_we_skills_age_range if x['we_skill_age'] in range(0, 1)]
+    val_we_skill_age_range_1_2=[float(x['awetv']) for x in val_we_skills_age_range if x['we_skill_age'] in range(1, 2)]
+    val_we_skill_age_range_2_3=[float(x['awetv']) for x in val_we_skills_age_range if x['we_skill_age'] in range(2, 3)]
+    val_we_skill_age_range_3_4=[float(x['awetv']) for x in val_we_skills_age_range if x['we_skill_age'] in range(3, 4)]
+    val_we_skill_age_range_4_5=[float(x['awetv']) for x in val_we_skills_age_range if x['we_skill_age'] in range(4, 5)]
+    val_we_skill_age_range_5_6=[float(x['awetv']) for x in val_we_skills_age_range if x['we_skill_age'] in range(5, 6)]
+    val_we_skill_age_range_6_7=[float(x['awetv']) for x in val_we_skills_age_range if x['we_skill_age'] in range(6, 7)]
+    val_we_skill_age_range_7_8=[float(x['awetv']) for x in val_we_skills_age_range if x['we_skill_age'] in range(7, 8)]
+    val_we_skill_age_range_8_9=[float(x['awetv']) for x in val_we_skills_age_range if x['we_skill_age'] in range(8, 9)]
+    val_we_skill_age_range_9_10=[float(x['awetv']) for x in val_we_skills_age_range if x['we_skill_age'] in range(9, 10)]
+
+    total_val_we_skill_age=[float(x['awetv']) for x in val_we_skills_age_range if x['we_skill_age'] in range(0, 100)]
+    total_val_sum_we = sum(total_val_we_skill_age)
+
+    sum_val_we_range_0_1 = sum(val_we_skill_age_range_0_1)
+    sum_val_we_range_1_2 = sum(val_we_skill_age_range_1_2)
+    sum_val_we_range_2_3 = sum(val_we_skill_age_range_2_3)
+    sum_val_we_range_3_4 = sum(val_we_skill_age_range_3_4)
+    sum_val_we_range_4_5 = sum(val_we_skill_age_range_4_5)
+    sum_val_we_range_5_6 = sum(val_we_skill_age_range_5_6)
+    sum_val_we_range_6_7 = sum(val_we_skill_age_range_6_7)
+    sum_val_we_range_7_8 = sum(val_we_skill_age_range_7_8)
+    sum_val_we_range_8_9 = sum(val_we_skill_age_range_8_9)
+    sum_val_we_range_9_10 = sum(val_we_skill_age_range_9_10)
+
+    val_we_skills_used_year_range_data.append(sum_val_we_range_9_10)
+    val_we_skills_used_year_range_data.append(sum_val_we_range_8_9)
+    val_we_skills_used_year_range_data.append(sum_val_we_range_7_8)
+    val_we_skills_used_year_range_data.append(sum_val_we_range_6_7)
+    val_we_skills_used_year_range_data.append(sum_val_we_range_5_6)
+    val_we_skills_used_year_range_data.append(sum_val_we_range_4_5)
+    val_we_skills_used_year_range_data.append(sum_val_we_range_3_4)
+    val_we_skills_used_year_range_data.append(sum_val_we_range_2_3)
+    val_we_skills_used_year_range_data.append(sum_val_we_range_1_2)
+    val_we_skills_used_year_range_data.append(sum_val_we_range_0_1)
+
+
+    # Training Validated Experience Skill Sum Experience by Year
+    t_val_we_skills_used_year_range_data = []
+    t_val_we_skills_age_range=[]
+    for i in tlt_id:
+        t_we_qs = val_we_skill.filter(talent=i, edt=True)
+        for wet in t_we_qs:
+            swewd = wet.date_to
+            we_skill_age=relativedelta(today, swewd).years
+
+            aw_exp = wet.topic.hours
+            if aw_exp == None:
+                awetv = 0
+            else:
+                awetv = aw_exp
+
+            t_result={'we_skill_age': we_skill_age, 'awetv': awetv}
+
+            t_val_we_skills_age_range.append(t_result)
+
+    # Total Validated hours experience in year range
+    t_val_we_skill_age_range_0_1=[float(x['awetv']) for x in t_val_we_skills_age_range if x['we_skill_age'] in range(0, 1)]
+    t_val_we_skill_age_range_1_2=[float(x['awetv']) for x in t_val_we_skills_age_range if x['we_skill_age'] in range(1, 2)]
+    t_val_we_skill_age_range_2_3=[float(x['awetv']) for x in t_val_we_skills_age_range if x['we_skill_age'] in range(2, 3)]
+    t_val_we_skill_age_range_3_4=[float(x['awetv']) for x in t_val_we_skills_age_range if x['we_skill_age'] in range(3, 4)]
+    t_val_we_skill_age_range_4_5=[float(x['awetv']) for x in t_val_we_skills_age_range if x['we_skill_age'] in range(4, 5)]
+    t_val_we_skill_age_range_5_6=[float(x['awetv']) for x in t_val_we_skills_age_range if x['we_skill_age'] in range(5, 6)]
+    t_val_we_skill_age_range_6_7=[float(x['awetv']) for x in t_val_we_skills_age_range if x['we_skill_age'] in range(6, 7)]
+    t_val_we_skill_age_range_7_8=[float(x['awetv']) for x in t_val_we_skills_age_range if x['we_skill_age'] in range(7, 8)]
+    t_val_we_skill_age_range_8_9=[float(x['awetv']) for x in t_val_we_skills_age_range if x['we_skill_age'] in range(8, 9)]
+    t_val_we_skill_age_range_9_10=[float(x['awetv']) for x in t_val_we_skills_age_range if x['we_skill_age'] in range(9, 10)]
+
+    total_t_val_we_skill_age=[float(x['awetv']) for x in t_val_we_skills_age_range if x['we_skill_age'] in range(0, 100)]
+    total_val_sum_t_we = sum(total_t_val_we_skill_age)
+
+    sum_t_val_we_range_0_1 = sum(t_val_we_skill_age_range_0_1)
+    sum_t_val_we_range_1_2 = sum(t_val_we_skill_age_range_1_2)
+    sum_t_val_we_range_2_3 = sum(t_val_we_skill_age_range_2_3)
+    sum_t_val_we_range_3_4 = sum(t_val_we_skill_age_range_3_4)
+    sum_t_val_we_range_4_5 = sum(t_val_we_skill_age_range_4_5)
+    sum_t_val_we_range_5_6 = sum(t_val_we_skill_age_range_5_6)
+    sum_t_val_we_range_6_7 = sum(t_val_we_skill_age_range_6_7)
+    sum_t_val_we_range_7_8 = sum(t_val_we_skill_age_range_7_8)
+    sum_t_val_we_range_8_9 = sum(t_val_we_skill_age_range_8_9)
+    sum_t_val_we_range_9_10 = sum(t_val_we_skill_age_range_9_10)
+
+    t_val_we_skills_used_year_range_data.append(sum_t_val_we_range_9_10)
+    t_val_we_skills_used_year_range_data.append(sum_t_val_we_range_8_9)
+    t_val_we_skills_used_year_range_data.append(sum_t_val_we_range_7_8)
+    t_val_we_skills_used_year_range_data.append(sum_t_val_we_range_6_7)
+    t_val_we_skills_used_year_range_data.append(sum_t_val_we_range_5_6)
+    t_val_we_skills_used_year_range_data.append(sum_t_val_we_range_4_5)
+    t_val_we_skills_used_year_range_data.append(sum_t_val_we_range_3_4)
+    t_val_we_skills_used_year_range_data.append(sum_t_val_we_range_2_3)
+    t_val_we_skills_used_year_range_data.append(sum_t_val_we_range_1_2)
+    t_val_we_skills_used_year_range_data.append(sum_t_val_we_range_0_1)
+
+    skills_used_year_range_labels = [10, 9, 8, 7, 6, 5, 4, 3, 'last year', 'This year']
+
+    template = 'talenttrack/public_profile_skill_stats.html'
+    context = {
+            'ppl': ppl,
+            'tlt': tlt,
+            'skl': skl,
+            'skill': skill,
+            'skills_list_qs_count': skills_list_qs_count,
+            'skill_list_labels_count': skill_list_labels_count,
+            'skill_list_labels': skill_list_labels,
+            'skill_percentage_data': skill_percentage_data,
+            'dept_skills_link': dept_skills_link,
+            'skills_used_year_range_labels': skills_used_year_range_labels,
+            'total_val_sum_t_we': total_val_sum_t_we,
+            'total_val_sum_we': total_val_sum_we,
+            't_val_we_skills_used_year_range_data': t_val_we_skills_used_year_range_data,
+            'val_we_skills_used_year_range_data': val_we_skills_used_year_range_data,
+    }
+    return render(request, template, context)
+
+
+login_required()
+def public_profile_projects(request, ppl):
+    '''MyWeXlog Projects History detail page'''
+    tlt = get_object_or_404(Profile, public_profile_name=ppl).alias
+    wit_qs = WorkIssuedTo.objects.filter(Q(talent__alias=tlt) & Q(assignment_complete_emp=True)).order_by('-date_complete').values_list('slug', flat=True)
+    wcp_count = wit_qs.count()
+    wit_list = list(wit_qs)
+
+    wcp = {}
+    for item in wit_list:
+        wit_qs = WorkIssuedTo.objects.filter(Q(talent__alias=tlt) & Q(slug=item))
+        wit_v = wit_qs.values_list('work__title', 'work__companybranch__company__ename', 'work__requested_by__first_name', 'work__requested_by__last_name', 'work__vacancyrate__comment', 'date_begin', 'date_complete')
+        wit = wit_qs.get(Q(talent__alias=tlt) & Q(slug=item))
+        ref = wit.work.ref_no
+
+        emp_qs = VacancyRate.objects.filter(Q(vacancy__ref_no=ref))
+
+        if emp_qs:
+            emp = emp_qs.values_list('rate_1', 'rate_2', 'rate_1')
+            emp_a = emp_qs.get(Q(vacancy__ref_no=ref)).average
+        if wit.tlt_rated == True:
+            tlt_qs = TalentRate.objects.get(vacancy__ref_no=ref)
+        else:
+            tlt_qs = 0
+
+        wcp[item]={'wit_v': wit_v, 'emp': emp, 'emp_a': emp_a, 'tlt_qs': tlt_qs}
+#        wcp.append(result)
+
+    t = tuple(wcp.items())
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(t, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+    template = 'talenttrack/public_profile_projects.html'
+    context = {
+            'ppl': ppl,
+            'wcp_count': wcp_count,
+            'pageitems': pageitems,
+            'page_range': page_range
+    }
+
     return render(request, template, context)
 
 
@@ -445,6 +895,20 @@ def publish_experience_comment(request, wes):
             we_qs.update(publish_comment=False)
 
         return redirect(reverse('Talent:ExperienceDetail', kwargs={'tex': wes}))
+
+
+login_required()
+def publish_pre_experience_comment(request, wes):
+    '''Selects wether to publish a workexperience comemnt or not'''
+    we_qs = WorkExperience.objects.filter(slug=wes)
+
+    if request.method =='POST':
+        if 'yes' in request.POST:
+            we_qs.update(publish_comment=True)
+        elif 'no' in request.POST:
+            we_qs.update(publish_comment=False)
+
+        return redirect(reverse('Talent:PreLogDetail', kwargs={'tex': wes}))
 
 
 login_required()
@@ -465,6 +929,23 @@ def publish_colleague_response(request, rc):
 
 
 login_required()
+def publish_pre_colleague_response(request, rc):
+    '''Selects wether to publish a pre-colleague response comemnt or not'''
+    wec_qs = WorkColleague.objects.filter(slug=rc)
+    wes = wec_qs.get(slug=rc).experience.slug
+    we_qs = WorkExperience.objects.filter(slug=wes)
+
+    if request.method =='POST':
+        if 'yes' in request.POST:
+            wec_qs.update(publish_comment=True)
+            we_qs.update(publish_comment=True)
+        elif 'no' in request.POST:
+            wec_qs.update(publish_comment=False)
+
+        return redirect(reverse('Talent:ColleaguePreResponse', kwargs={'clg': rc}))
+
+
+login_required()
 def publish_superior_response(request, rc):
     '''Selects wether to publish a superior response comemnt or not'''
     wec_qs = Superior.objects.filter(slug=rc)
@@ -479,6 +960,24 @@ def publish_superior_response(request, rc):
             wec_qs.update(publish_comment=False)
 
         return redirect(reverse('Talent:SuperiorResponse', kwargs={'spr': rc}))
+
+
+login_required()
+def publish_pre_superior_response(request, rc):
+    '''Selects wether to publish a pre-superior response comemnt or not'''
+    wec_qs = Superior.objects.filter(slug=rc)
+    wes = wec_qs.get(slug=rc).experience.slug
+    we_qs = WorkExperience.objects.filter(slug=wes)
+
+    if request.method =='POST':
+        if 'yes' in request.POST:
+            wec_qs.update(publish_comment=True)
+            we_qs.update(publish_comment=True)
+        elif 'no' in request.POST:
+            wec_qs.update(publish_comment=False)
+
+        return redirect(reverse('Talent:SuperiorPreResponse', kwargs={'spr': rc}))
+
 
 login_required()
 def publish_collaborator_response(request, rc):
@@ -498,6 +997,23 @@ def publish_collaborator_response(request, rc):
 
 
 login_required()
+def publish_pre_collaborator_response(request, rc):
+    '''Selects wether to publish a pre-collaborator response comemnt or not'''
+    wec_qs = WorkCollaborator.objects.filter(slug=rc)
+    wes = wec_qs.get(slug=rc).experience.slug
+    we_qs = WorkExperience.objects.filter(slug=wes)
+
+    if request.method =='POST':
+        if 'yes' in request.POST:
+            wec_qs.update(publish_comment=True)
+            we_qs.update(publish_comment=True)
+        elif 'no' in request.POST:
+            wec_qs.update(publish_comment=False)
+
+        return redirect(reverse('Talent:CollaboratorPreResponse', kwargs={'clb': rc}))
+
+
+login_required()
 def publish_client_response(request, rc):
     '''Selects wether to publish a client response comemnt or not'''
     wec_qs = WorkClient.objects.filter(slug=rc)
@@ -512,6 +1028,23 @@ def publish_client_response(request, rc):
             wec_qs.update(publish_comment=False)
 
         return redirect(reverse('Talent:ClientResponse', kwargs={'wkc': rc}))
+
+
+login_required()
+def publish_pre_client_response(request, rc):
+    '''Selects wether to publish a pre-client response comemnt or not'''
+    wec_qs = WorkClient.objects.filter(slug=rc)
+    wes = wec_qs.get(slug=rc).experience.slug
+    we_qs = WorkExperience.objects.filter(slug=wes)
+
+    if request.method =='POST':
+        if 'yes' in request.POST:
+            wec_qs.update(publish_comment=True)
+            we_qs.update(publish_comment=True)
+        elif 'no' in request.POST:
+            wec_qs.update(publish_comment=False)
+
+        return redirect(reverse('Talent:ClientPreResponse', kwargs={'wkc': rc}))
 
 
 @login_required()

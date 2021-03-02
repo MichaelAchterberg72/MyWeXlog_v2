@@ -152,9 +152,13 @@ class FileUploadForm(forms.ModelForm):
 
 
 class ProfileForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(ProfileForm, self).__init__(*args, **kwargs)
+        self.fields['public_profile_name'].strip = True
+        
     class Meta:
         model = Profile
-        fields = ('birth_date', 'mentor', 'std_rate', 'currency', 'alias', 'f_name', 'l_name')
+        fields = ('birth_date', 'mentor', 'std_rate', 'currency', 'alias', 'public_profile_name', 'f_name', 'l_name')
         widgets = {
             'birth_date': DateInput(attrs={'max': timezone.now().date()}),
             }
@@ -193,7 +197,7 @@ class UserUpdateForm(forms.ModelForm):
 class CustomUserUpdateForm(forms.ModelForm):
     class Meta:
         model = CustomUser
-        fields = ('alias', )
+        fields = ('alias', 'public_profile_name')
 
 
 #>>> Select2 Company Field in email

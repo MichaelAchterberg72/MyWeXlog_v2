@@ -22,11 +22,93 @@ from locations.models import Region
 from .models import *
 from Profile.models import Profile
 from talenttrack.models import WorkExperience
-from enterprises.models import Enterprise
+from enterprises.models import Enterprise, Branch
 
-from .forms import ProjectAddForm, ProjectSearchForm, ProjectForm
+from .forms import ProjectAddForm, ProjectSearchForm, ProjectForm, ProjectPersonalDetailsForm
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+
+@login_required()
+def ProjectHome(request):
+    tlt = request.user
+    projects_qs = WorkExperience.objects.filter(talent=tlt).values('project', 'companybranch')
+    prj_list = [dict(t) for t in {tuple(d.items()) for d in projects_qs}]
+
+    tlt_prj_list=[]
+    for item in prj_list:
+        prj_pk = item['project']
+        cob_pk = item['companybranch']
+        if prj_pk == None:
+            pass
+        else:
+            prj_qs = ProjectData.objects.get(pk=prj_pk)
+            prj = prj_qs.name
+            prj_slug = prj_qs.slug
+            brch_qs = Branch.objects.get(pk=cob_pk)
+            bch = brch_qs.name
+            bch_slug = brch_qs.slug
+            co = brch_qs.company.ename
+            co_slug = brch_qs.company.slug
+            industry = prj_qs.industry.industry
+            city = prj_qs.city.city
+
+        result={'project': prj, 'prj_slug': prj_slug, 'company': co, 'co_slug': co_slug, 'branch': bch, 'bch_slug': bch_slug, 'industry': industry, 'city': city}
+        tlt_prj_list.append(result)
+
+    pcount = len(tlt_prj_list)
+
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(tlt_prj_list, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+    template_name = 'project/personal_projects.html'
+    context = {'pcount': pcount, 'pageitems': pageitems, 'page_range': page_range}
+    return render(request, template_name, context)
+
+
+@login_required()
+def ProjectPersonalDetailsView(request, prj, co, bch):
+    project = ProjectData.objects.get(slug=prj)
+    pr_c_i = Enterprise.objects.get(slug=co)
+    pr_b_i = Branch.objects.get(slug=bch)
+
+    instance, _ = ProjectPersonalDetails.objects.get_or_create(
+            talent=request.user,
+            project=project,
+            company=pr_c_i,
+            companybranch=pr_b_i)
+
+    if request.method == 'POST':
+        form = ProjectPersonalDetailsForm(request.POST, instance=instance)
+        if form.is_valid():
+            new = form.save(commit=False)
+#            new.talent = request.user
+#            new.project.slug = prj
+            new.save()
+            return redirect(reverse('Project:ProjectHome'))
+    else:
+        form = ProjectPersonalDetailsForm(instance=instance)
+        template_name = 'project/personal_detail.html'
+        context = {'form': form, 'project': project}
+        return render(request, template_name, context)
 
 
 @login_required()
