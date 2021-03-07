@@ -70,26 +70,16 @@
           {{ form.designation|as_crispy_field }}
           <p><a href="{% url 'Talent:DesignationAddPop' %}" id='add_designation' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add a Designation</a></p>
           <div class="">
-<<<<<<< HEAD
-            <p><button type="submit" name="another" class="btn btn-secondary" style="width:12rem;">Save & Add Another</button> <button type="submit" name="done" class="btn btn-primary" style="width:12rem;">Save & Next</button>  <a href="{% url 'Invitation:Invite2' instance.slug %}?next={{ request.path|urlencode }}" class="btn btn-info" target="_blank" style="width:12rem;">Invite</a></p>
-=======
-            <p>
-              <button type="submit" name="another" class="btn btn-secondary">
-                Save & Add Another
-              </button>
-              <button type="submit" name="done" class="btn btn-primary">
-                Save & Next
-              </button>
-              <a href="{% url 'Invitation:Invite2' instance.slug %}?next={{ request.path|urlencode }}" class="btn btn-info" target="_blank">
-                Invite
-              </a>
+            <p><button type="submit" name="another" class="btn btn-secondary" style="width:12rem;">Save & Add Another</button> <button type="submit" name="done" class="btn btn-primary" style="width:12rem;">Save & Next</button>
             </p>
             <p>
-              <a href="{% url 'Talent:CollaboratorSelect' instance.id %}" class="btn btn-danger">
+              <a href="{% url 'Invitation:Invite2' instance.slug %}?next={{ request.path|urlencode }}" class="btn btn-info" target="_blank" style="width:12rem;">
+                Invite
+              </a>
+              <a href="{% url 'Talent:CollaboratorSelect' instance.id %}" class="btn btn-danger" style="width:6rem;">
                 Skip
               </a>
             </p>
->>>>>>> 2021-02_JK-21
           </div>
         </div>
         <div class="form-group col-md-5 mb-0">

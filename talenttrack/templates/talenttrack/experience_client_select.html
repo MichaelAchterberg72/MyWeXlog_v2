@@ -79,14 +79,14 @@
             </p>
           <div class="">
             <p>
-              <button type="submit" name="another" class="btn btn-secondary">
+              <button type="submit" name="another" class="btn btn-secondary" style="width:12rem;">
                 Save & Add Another
               </button>
-              <button type="submit" name="done" class="btn btn-primary">
-                Save & Next
+              <button type="submit" name="done" class="btn btn-primary" style="width:12rem;">
+                Save & Exit
               </button>
-              <a href="{% url 'Invitation:Invite2' instance.slug %}?next={{ request.path|urlencode }}" class="btn btn-info" target="_blank">
-                Invite
+              <a href="{% url 'Talent:ExperienceDetail' instance.slug %}?next={{ request.path|urlencode }}" class="btn btn-success" style="width:12rem;">
+                Save & Review
               </a>
             </p>
           </div>
@@ -111,7 +111,10 @@
       </div>
     </form>
     <p>
-      <a href="{% url 'Talent:Home' %}" class="btn btn-danger">Skip</a>
+      <a href="{% url 'Invitation:Invite2' instance.slug %}?next={{ request.path|urlencode }}" class="btn btn-info" target="_blank" style="width:12rem;">
+        Invite
+      </a>
+      <a href="{% url 'Talent:Home' %}" class="btn btn-danger" style="width:6rem;">Skip</a>
     </p>
   </div>
 </div>

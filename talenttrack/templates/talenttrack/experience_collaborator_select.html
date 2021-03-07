@@ -95,20 +95,22 @@
     </div>
     <div class="">
       <p>
-        <button type="submit" name="another" class="btn btn-secondary">
+        <button type="submit" name="another" class="btn btn-secondary" style="width:12rem;">
           Save & Add Another
         </button>
-        <button type="submit" name="done" class="btn btn-primary">
+        <button type="submit" name="done" class="btn btn-primary" style="width:12rem;">
           Save & Next
         </button>
-        <a href="{% url 'Invitation:Invite2' instance.slug %}?next={{ request.path|urlencode }}" class="btn btn-info" target="_blank">
-          Invite
-        </a>
       </p>
     </div>
   </form>
   <p>
-    <a href="{% url 'Talent:ClientSelect' instance.id %}" class="btn btn-danger">Skip</a>
+    <a href="{% url 'Invitation:Invite2' instance.slug %}?next={{ request.path|urlencode }}" class="btn btn-info" target="_blank" style="width:12rem;">
+      Invite
+    </a>
+    <a href="{% url 'Talent:ClientSelect' instance.id %}" class="btn btn-danger" style="width:6rem;">
+      Skip
+    </a>
   </p>
 </div>
 </div>
