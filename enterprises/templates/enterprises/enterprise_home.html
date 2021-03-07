@@ -3,14 +3,25 @@
 {% block title %}{{block.super}}-Enterprise{% endblock title %}
 
 {% block content %}
-
 <div class="card card-shadow">
   <div class="card-body">
-  <h4 class="">Welcome to the Enterprises home page!
+  <h4 class="">Enterprises
     <span><p class="float-right">
     <a href="{% url 'Enterprise:HelpEnterpriseHome' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="tooltip" title="Click here for help on this page!">
     <i class="fa fa-question-circle"></i></a>
   </p></span></h4>
+    <div class="card-body">
+      <p>On this page:</p>
+      <ul>
+        <li>Enterprises/companies and their branches can be viewed.</li>
+        <li>More enterprises and branches can be added.</li>
+        <li>Details about already captured enterprises can be viewed.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<br>
+<div class="card card-shadow">
   <div class="card-body">
     <p>
       There are currently {{ ecount.sum_e }} Enterprises and {{ bcount.sum_b }} Branches listed in MyWeXlog!
@@ -128,7 +139,6 @@
           </ul>
         {% endif %}
     </nav>
-  </div>
 </div>
 
 {% endblock content %}
