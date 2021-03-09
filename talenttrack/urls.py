@@ -76,6 +76,8 @@ urlpatterns = [
     path('apv-edu/<slug:tlt>/', views.EduLFVView, name='EDU_L_FV'),
 
     path('public-profile/<slug:ppl>/', views.public_profile, name='PublicProfile'),
+    path('<slug:ppl>/project-rating/', views.public_profile_project_rating, name="PublicProfileRatingDetail"),
+    path('<slug:ppl>/evaluation-rating/', views.public_profile_evaluation_rating, name="PublicProfileEvaluationRatingDetail"),
     path('public-profile/<slug:ppl>/profile-skill-stats-overview/<int:skl>/', views.public_profile_skill_stats, name='PrublicProfileSkillsStats'),
     path('public-profile-projects/<slug:ppl>/', views.public_profile_projects, name='PublicProfileProjects'),
 

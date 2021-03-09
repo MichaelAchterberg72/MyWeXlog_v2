@@ -119,6 +119,7 @@ class Profile(models.Model):
     l_name = models.CharField(max_length=30, null=True)
     alias = models.CharField(max_length=30, null=True, unique=True)
     public_profile_name = models.CharField(max_length=100, unique=True, null=True)
+    public_profile_intro = models.TextField(max_length=460, blank=True, null=True)
     birth_date = models.DateField('Date of Birth', null=True)
     background = models.TextField()
     mentor = models.CharField('Do you wish to be a mentor?', max_length=1, choices=MENTOR, default='N')#Opt in to be a mentor to other people

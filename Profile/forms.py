@@ -155,10 +155,10 @@ class ProfileForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ProfileForm, self).__init__(*args, **kwargs)
         self.fields['public_profile_name'].strip = True
-        
+
     class Meta:
         model = Profile
-        fields = ('birth_date', 'mentor', 'std_rate', 'currency', 'alias', 'public_profile_name', 'f_name', 'l_name')
+        fields = ('birth_date', 'mentor', 'std_rate', 'currency', 'alias', 'public_profile_name', 'public_profile_intro', 'f_name', 'l_name')
         widgets = {
             'birth_date': DateInput(attrs={'max': timezone.now().date()}),
             }

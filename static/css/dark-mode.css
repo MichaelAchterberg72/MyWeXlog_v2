@@ -146,7 +146,20 @@ body {
   color: #ffffff !important;
 }
 
+.profile-pic-box {
+  background-color: 	#303030 !important;
+}
+
+.profile-info-box {
+  background-color: 	#444444 !important;
+  color: #ffffff !important;
+}
+
 .profile-header {
+  color: #ffffff !important;
+}
+
+.profile-header-under {
   color: #ffffff !important;
 }
 
@@ -165,5 +178,17 @@ body {
   color: #ffffff !important;
 }
 .profile-body-header {
+  color: #ffffff !important;
+}
+.profile-list-header {
+  color: #ffffff !important;
+}
+.profile-list-heading {
+  color: #ffffff !important;
+}
+.profile-list-under {
+  color: #ffffff !important;
+}
+.profile-list-heading-under {
   color: #ffffff !important;
 }

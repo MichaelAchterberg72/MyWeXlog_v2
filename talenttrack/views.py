@@ -105,7 +105,7 @@ def public_profile(request, ppl):
     edtexp = exp.filter(edt=True).order_by('-date_from')[:6]
     edtexp_count = edtexp.count()
     bkl_qs = ReadBy.objects.filter(talent__alias=tlt).select_related('book', 'type')
-    bkl = bkl_qs[:8]
+    bkl = bkl_qs[:6]
     bkl_count = bkl.count()
     prj_qs = ProjectData.objects.all()
 #    bid_qs = WorkBid.objects.filter(Q(talent__alias=tlt) & Q(work__ref_no=vac))
@@ -120,12 +120,179 @@ def public_profile(request, ppl):
     publication_qs_count = publication_qs.count()
     language_qs = LanguageTrack.objects.filter(talent__alias=tlt).order_by('-language')
     membership_qs = LicenseCertification.objects.filter(talent__alias=tlt).order_by('-issue_date')
-    membership = membership_qs[:12]
+    membership = membership_qs
     membership_qs_count = membership_qs.count()
 #    bslist_qs = BidShortList.objects.filter(Q(talent__alias=tlt) & Q(scope__ref_no=vac))
 #    int_list = BidInterviewList.objects.filter(Q(talent__alias=tlt) & Q(scope__ref_no=vac))
     wtr_qs = WillingToRelocate.objects.filter(talent__alias=tlt)
 
+
+    '''Mywexlog evaluation rating'''
+    twclg_ave_qs = wec_qs.aggregate(quality_rate=Avg('workcolleague__quality'))
+    twclg_ave = twclg_ave_qs.get('quality_rate')
+
+    twsup_ave_qs = wec_qs.aggregate(quality_rate=Avg('superior__quality'))
+    twsup_ave = twsup_ave_qs.get('quality_rate')
+
+    twcol_ave_qs = wec_qs.aggregate(quality_rate=Avg('workcollaborator__quality'))
+    twcol_ave = twcol_ave_qs.get('quality_rate')
+
+    twcli_ave_qs = wec_qs.aggregate(quality_rate=Avg('workclient__quality'))
+    twcli_ave = twcli_ave_qs.get('quality_rate')
+
+    tpwq_count = 0
+    if twclg_ave != None:
+        tpwq_count += 1
+        twclg_ave == twclg_ave
+    else:
+        twclg_ave = 0
+
+    if twsup_ave != None:
+        tpwq_count += 1
+        twsup_ave == twsup_ave
+    else:
+        twsup_ave = 0
+
+    if twcol_ave != None:
+        tpwq_count += 1
+        twcol_ave == twcol_ave
+    else:
+        twcol_ave = 0
+
+    if twcli_ave != None:
+        tpwq_count += 1
+        twcli_ave == twcli_ave
+    else:
+        twcli_ave = 0
+
+    if tpwq_count == 0:
+        tpwq_count = 1
+    else:
+        tpwq_count == tpwq_count
+
+    tpwq_total = twclg_ave + twsup_ave + twcol_ave + twcli_ave
+    tpwq_ave = tpwq_total / tpwq_count
+
+
+    twtclg_ave_qs = wec_qs.aggregate(time_taken_rate=Avg('workcolleague__time_taken'))
+    twtclg_ave = twtclg_ave_qs.get('time_taken_rate')
+
+    twtsup_ave_qs = wec_qs.aggregate(time_taken_rate=Avg('superior__time_taken'))
+    twtsup_ave = twtsup_ave_qs.get('time_taken_rate')
+
+    twtcol_ave_qs = wec_qs.aggregate(time_taken_rate=Avg('workcollaborator__time_taken'))
+    twtcol_ave = twtcol_ave_qs.get('time_taken_rate')
+
+    twtcli_ave_qs = wec_qs.aggregate(time_taken_rate=Avg('workclient__time_taken'))
+    twtcli_ave = twtcli_ave_qs.get('time_taken_rate')
+
+    ttwq_count = 0
+    if twtclg_ave != None:
+        ttwq_count += 1
+        twtclg_ave == twtclg_ave
+    else:
+        twtclg_ave = 0
+
+    if twtsup_ave != None:
+        ttwq_count += 1
+        twtsup_ave == twtsup_ave
+    else:
+        twtsup_ave = 0
+
+    if twtcol_ave != None:
+        ttwq_count += 1
+        twtcol_ave == twtcol_ave
+    else:
+        twtcol_ave = 0
+
+    if twtcli_ave != None:
+        ttwq_count += 1
+        twtcli_ave == twtcli_ave
+    else:
+        twtcli_ave = 0
+
+    if ttwq_count == 0:
+        ttwq_count = 1
+    else:
+        ttwq_count == ttwq_count
+
+    ttwq_total = twtclg_ave + twtsup_ave + twtcol_ave + twtcli_ave
+    ttwq_ave = ttwq_total / ttwq_count
+
+
+    twcclg_ave_qs = wec_qs.aggregate(complexity_rate=Avg('workcolleague__complexity'))
+    twcclg_ave = twcclg_ave_qs.get('complexity_rate')
+
+    twcsup_ave_qs = wec_qs.aggregate(complexity_rate=Avg('superior__complexity'))
+    twcsup_ave = twcsup_ave_qs.get('complexity_rate')
+
+    twccol_ave_qs = wec_qs.aggregate(complexity_rate=Avg('workcollaborator__complexity'))
+    twccol_ave = twccol_ave_qs.get('complexity_rate')
+
+    twccli_ave_qs = wec_qs.aggregate(quality_rate=Avg('workclient__complexity'))
+    twccli_ave = twccli_ave_qs.get('complexity_rate')
+
+    tcwq_count = 0
+    if twcclg_ave != None:
+        tcwq_count += 1
+        twcclg_ave == twcclg_ave
+    else:
+        twcclg_ave = 0
+
+    if twcsup_ave != None:
+        tcwq_count += 1
+        twcsup_ave == twcsup_ave
+    else:
+        twcsup_ave = 0
+
+    if twccol_ave != None:
+        tcwq_count += 1
+        twccol_ave == twccol_ave
+    else:
+        twccol_ave = 0
+
+    if twccli_ave != None:
+        tcwq_count += 1
+        twccli_ave == twccli_ave
+    else:
+        twccli_ave = 0
+
+    if tcwq_count == 0:
+        tcwq_count = 1
+    else:
+        tcwq_count == tcwq_count
+
+    tcwq_total = twcclg_ave + twcsup_ave + twccol_ave + twccli_ave
+    tcwq_ave = ttwq_total / tcwq_count
+
+
+    tawq_count = 0
+    if tpwq_ave != None:
+        tawq_count += 1
+        tpwq_ave == tpwq_ave
+    else:
+        tpwq_ave = 0
+
+    if ttwq_ave != None:
+        tawq_count += 1
+        ttwq_ave == ttwq_ave
+    else:
+        ttwq_ave = 0
+
+    if tcwq_ave != None:
+        tawq_count += 1
+        tcwq_ave == tcwq_ave
+    else:
+        tcwq_ave = 0
+
+
+    if tawq_count == 0:
+        tawq_count = 1
+    else:
+        tawq_count == tawq_count
+
+    tawq_total = tpwq_ave + ttwq_ave + tcwq_ave
+    tawq_ave = tawq_total / tawq_count
 
     '''Chart of hours logged against skills (validated only) for experience and training'''
     tlt_p = Profile.objects.get(talent__alias=tlt)
@@ -341,7 +508,7 @@ def public_profile(request, ppl):
         wec_co_qs = wec_co_qs_qs.order_by('project', '-date_from').distinct('project')
 
         wec_co = wec_co_qs.values_list('project', flat=True)
-        print(c)
+
         prj_n = 0
         pr=[]
         for p in wec_co:
@@ -602,6 +769,7 @@ def public_profile(request, ppl):
     #Header
     'dispay_user': dispay_user,  'tlt': tlt,  'padd': padd, 'current_pos': current_pos, 'language_qs': language_qs, 'online': online,
     'pfl_g': pfl_g, 'r_1': r_1, 'r_2': r_2, 'r_3': r_3,
+    'tawq_ave': tawq_ave,
     #S3 Issue 'upload': upload,
     #Membership
     'membership': membership, 'membership_qs_count': membership_qs_count,
@@ -624,6 +792,205 @@ def public_profile(request, ppl):
     'publication': publication, 'publication_qs_count': publication_qs_count,
     'bkl': bkl, 'bkl_count': bkl_count,
     'edtexp': edtexp, 'edtexp_count': edtexp_count,
+    }
+    return render(request, template, context)
+
+
+@login_required()
+def public_profile_project_rating(request, ppl):
+    '''The view for the individual public profile mywexlog project rating overview and stats'''
+    tlt = get_object_or_404(Profile, public_profile_name=ppl).alias
+    pfl = Profile.objects.get(alias=tlt)
+
+    r_1 = pfl.rate_1/100
+    r_2 = pfl.rate_2/100
+    r_3 = pfl.rate_3/100
+
+    template = 'talenttrack/public_profile_rating_detail.html'
+    context = {
+            'ppl': ppl,
+            'pfl': pfl, 'r_1': r_1, 'r_2': r_2, 'r_3': r_3,
+    }
+    return render(request, template, context)
+
+
+@login_required()
+def public_profile_evaluation_rating(request, ppl):
+    '''The view for the individual public profile mywexlog work experience evaluation rating overview and stats'''
+    tlt = get_object_or_404(Profile, public_profile_name=ppl).alias
+    pfl = Profile.objects.get(alias=tlt)
+    wec_qs = WorkExperience.objects.filter(talent__alias=tlt)
+
+    twclg_ave_qs = wec_qs.aggregate(quality_rate=Avg('workcolleague__quality'))
+    twclg_ave = twclg_ave_qs.get('quality_rate')
+
+    twsup_ave_qs = wec_qs.aggregate(quality_rate=Avg('superior__quality'))
+    twsup_ave = twsup_ave_qs.get('quality_rate')
+
+    twcol_ave_qs = wec_qs.aggregate(quality_rate=Avg('workcollaborator__quality'))
+    twcol_ave = twcol_ave_qs.get('quality_rate')
+
+    twcli_ave_qs = wec_qs.aggregate(quality_rate=Avg('workclient__quality'))
+    twcli_ave = twcli_ave_qs.get('quality_rate')
+
+    tpwq_count = 0
+    if twclg_ave != None:
+        tpwq_count += 1
+        twclg_ave == twclg_ave
+    else:
+        twclg_ave = 0
+
+    if twsup_ave != None:
+        tpwq_count += 1
+        twsup_ave == twsup_ave
+    else:
+        twsup_ave = 0
+
+    if twcol_ave != None:
+        tpwq_count += 1
+        twcol_ave == twcol_ave
+    else:
+        twcol_ave = 0
+
+    if twcli_ave != None:
+        tpwq_count += 1
+        twcli_ave == twcli_ave
+    else:
+        twcli_ave = 0
+
+    if tpwq_count == 0:
+        tpwq_count = 1
+    else:
+        tpwq_count == tpwq_count
+
+    tpwq_total = twclg_ave + twsup_ave + twcol_ave + twcli_ave
+    tpwq_ave = tpwq_total / tpwq_count
+
+
+    twtclg_ave_qs = wec_qs.aggregate(time_taken_rate=Avg('workcolleague__time_taken'))
+    twtclg_ave = twtclg_ave_qs.get('time_taken_rate')
+
+    twtsup_ave_qs = wec_qs.aggregate(time_taken_rate=Avg('superior__time_taken'))
+    twtsup_ave = twtsup_ave_qs.get('time_taken_rate')
+
+    twtcol_ave_qs = wec_qs.aggregate(time_taken_rate=Avg('workcollaborator__time_taken'))
+    twtcol_ave = twtcol_ave_qs.get('time_taken_rate')
+
+    twtcli_ave_qs = wec_qs.aggregate(time_taken_rate=Avg('workclient__time_taken'))
+    twtcli_ave = twtcli_ave_qs.get('time_taken_rate')
+
+    ttwq_count = 0
+    if twtclg_ave != None:
+        ttwq_count += 1
+        twtclg_ave == twtclg_ave
+    else:
+        twtclg_ave = 0
+
+    if twtsup_ave != None:
+        ttwq_count += 1
+        twtsup_ave == twtsup_ave
+    else:
+        twtsup_ave = 0
+
+    if twtcol_ave != None:
+        ttwq_count += 1
+        twtcol_ave == twtcol_ave
+    else:
+        twtcol_ave = 0
+
+    if twtcli_ave != None:
+        ttwq_count += 1
+        twtcli_ave == twtcli_ave
+    else:
+        twtcli_ave = 0
+
+    if ttwq_count == 0:
+        ttwq_count = 1
+    else:
+        ttwq_count == ttwq_count
+
+    ttwq_total = twtclg_ave + twtsup_ave + twtcol_ave + twtcli_ave
+    ttwq_ave = ttwq_total / ttwq_count
+
+
+    twcclg_ave_qs = wec_qs.aggregate(complexity_rate=Avg('workcolleague__complexity'))
+    twcclg_ave = twcclg_ave_qs.get('complexity_rate')
+
+    twcsup_ave_qs = wec_qs.aggregate(complexity_rate=Avg('superior__complexity'))
+    twcsup_ave = twcsup_ave_qs.get('complexity_rate')
+
+    twccol_ave_qs = wec_qs.aggregate(complexity_rate=Avg('workcollaborator__complexity'))
+    twccol_ave = twccol_ave_qs.get('complexity_rate')
+
+    twccli_ave_qs = wec_qs.aggregate(quality_rate=Avg('workclient__complexity'))
+    twccli_ave = twccli_ave_qs.get('complexity_rate')
+
+    tcwq_count = 0
+    if twcclg_ave != None:
+        tcwq_count += 1
+        twcclg_ave == twcclg_ave
+    else:
+        twcclg_ave = 0
+
+    if twcsup_ave != None:
+        tcwq_count += 1
+        twcsup_ave == twcsup_ave
+    else:
+        twcsup_ave = 0
+
+    if twccol_ave != None:
+        tcwq_count += 1
+        twccol_ave == twccol_ave
+    else:
+        twccol_ave = 0
+
+    if twccli_ave != None:
+        tcwq_count += 1
+        twccli_ave == twccli_ave
+    else:
+        twccli_ave = 0
+
+    if tcwq_count == 0:
+        tcwq_count = 1
+    else:
+        tcwq_count == tcwq_count
+
+    tcwq_total = twcclg_ave + twcsup_ave + twccol_ave + twccli_ave
+    tcwq_ave = ttwq_total / tcwq_count
+
+
+    tawq_count = 0
+    if tpwq_ave != None:
+        tawq_count += 1
+        tpwq_ave == tpwq_ave
+    else:
+        tpwq_ave = 0
+
+    if ttwq_ave != None:
+        tawq_count += 1
+        ttwq_ave == ttwq_ave
+    else:
+        ttwq_ave = 0
+
+    if tcwq_ave != None:
+        tawq_count += 1
+        tcwq_ave == tcwq_ave
+    else:
+        tcwq_ave = 0
+
+
+    if tawq_count == 0:
+        tawq_count = 1
+    else:
+        tawq_count == tawq_count
+
+    tawq_total = tpwq_ave + ttwq_ave + tcwq_ave
+    tawq_ave = tawq_total / tawq_count
+
+    template = 'talenttrack/public_profile_evaluation_rating_detail.html'
+    context = {
+            'ppl': ppl,
+            'pfl': pfl, 'tpwq_ave': tpwq_ave, 'ttwq_ave': ttwq_ave, 'tcwq_ave': tcwq_ave, 'tawq_ave': tawq_ave,
     }
     return render(request, template, context)
 
