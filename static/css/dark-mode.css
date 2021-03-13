@@ -155,8 +155,20 @@ body {
   color: #ffffff !important;
 }
 
+.profile-social-box {
+  background-color: #444444;
+}
+
 .profile-header {
   color: #ffffff !important;
+}
+
+.carousel-control-prev {
+  color: #444444 !important;
+}
+
+.carousel-control-next {
+  color: #444444 !important;
 }
 
 .profile-header-under {

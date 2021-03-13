@@ -51,7 +51,7 @@ from enterprises.models import Branch, Industry
 from locations.models import Region, City
 from project.models import ProjectData, ProjectPersonalDetails
 from Profile.models import (
-        BriefCareerHistory, Profile, LanguageTrack, PhysicalAddress, WillingToRelocate, FileUpload, OnlineRegistrations
+        BriefCareerHistory, Profile, LanguageTrack, PhysicalAddress, WillingToRelocate, FileUpload, OnlineRegistrations, PhoneNumber
 )
 from booklist.models import ReadBy
 from users.models import CustomUser
@@ -93,9 +93,9 @@ def public_profile(request, ppl):
     r_2 = pfl_g.rate_2/100
     r_3 = pfl_g.rate_3/100
 
-    upload = FileUpload.objects.filter(talent__alias=tlt)
     als = get_object_or_404(Profile, alias=tlt)
     current_pos = BriefCareerHistory.objects.filter(Q(talent__alias=tlt) & Q(current=True))
+    phone = PhoneNumber.objects.filter(Q(talent__alias=tlt) & Q(current=True))
     padd = PhysicalAddress.objects.only('country', 'region', 'city').get(talent__alias=tlt)
     online = OnlineRegistrations.objects.filter(talent__alias=tlt)
 #    vacancy = TalentRequired.objects.filter(ref_no=vac)
@@ -116,6 +116,8 @@ def public_profile(request, ppl):
     award = award_qs[:6]
     award_qs_count = award.count()
     publication_qs = Publications.objects.filter(talent__alias=tlt).order_by('-date_published')
+    upload = FileUpload.objects.filter(talent__alias=tlt)
+    upload_count = upload.count()
     publication = publication_qs[:6]
     publication_qs_count = publication_qs.count()
     language_qs = LanguageTrack.objects.filter(talent__alias=tlt).order_by('-language')
@@ -319,6 +321,7 @@ def public_profile(request, ppl):
 
     skills_list_set_set = set(skills_list_n)
     ordered_skills_list = sorted(skills_list_set_set, reverse=False)
+    skills_count = len(ordered_skills_list)
 
     skills_list_Labels = ordered_skills_list
 
@@ -356,6 +359,9 @@ def public_profile(request, ppl):
 
         skills_hours_skill_data.append(sum_shwe)
 
+
+    total_skills_hours = sum(skills_hours_skill_data)
+
     #Hours Training Experience per skill chart
     training_skills_hours_skill_data = []
     for s in ordered_skills_list:
@@ -378,6 +384,11 @@ def public_profile(request, ppl):
         sum_shwt = sum(training_skills_list)
 
         training_skills_hours_skill_data.append(sum_shwt)
+
+
+    total_training_skills_hours = sum(training_skills_hours_skill_data)
+
+    total_skills_hours = total_skills_hours + total_training_skills_hours
 
     dept_skills_link = SkillTag.objects.filter(skill__in=ordered_skills_list).order_by('skill')
 
@@ -767,13 +778,14 @@ def public_profile(request, ppl):
     context = {
     'ppl': ppl,
     #Header
-    'dispay_user': dispay_user,  'tlt': tlt,  'padd': padd, 'current_pos': current_pos, 'language_qs': language_qs, 'online': online,
+    'dispay_user': dispay_user,  'tlt': tlt,  'padd': padd, 'current_pos': current_pos, 'language_qs': language_qs, 'online': online, 'phone': phone,
     'pfl_g': pfl_g, 'r_1': r_1, 'r_2': r_2, 'r_3': r_3,
     'tawq_ave': tawq_ave,
-    #S3 Issue 'upload': upload,
+    'upload': upload, 'upload_count': upload_count,
     #Membership
     'membership': membership, 'membership_qs_count': membership_qs_count,
     #Skills Chart
+    'total_skills_hours': total_skills_hours, 'skills_count': skills_count,
     'skills_list_Labels': skills_list_Labels,
     'skills_hours_skill_data': skills_hours_skill_data,
     'training_skills_hours_skill_data': training_skills_hours_skill_data,
@@ -999,6 +1011,7 @@ def public_profile_evaluation_rating(request, ppl):
 def public_profile_skill_stats(request, ppl, skl):
     '''The view for the individual public profile skill overview and stats'''
     tlt = get_object_or_404(Profile, public_profile_name=ppl).alias
+    pfl = Profile.objects.get(alias=tlt)
     skill = SkillTag.objects.get(id=skl)
     tlt_instance = CustomUser.objects.get(alias=tlt) #request.user
     tlt_id = [tlt_instance.id]
@@ -1172,6 +1185,7 @@ def public_profile_skill_stats(request, ppl, skl):
     template = 'talenttrack/public_profile_skill_stats.html'
     context = {
             'ppl': ppl,
+            'pfl': pfl,
             'tlt': tlt,
             'skl': skl,
             'skill': skill,
@@ -1193,6 +1207,7 @@ login_required()
 def public_profile_projects(request, ppl):
     '''MyWeXlog Projects History detail page'''
     tlt = get_object_or_404(Profile, public_profile_name=ppl).alias
+    pfl = Profile.objects.get(alias=tlt)
     wit_qs = WorkIssuedTo.objects.filter(Q(talent__alias=tlt) & Q(assignment_complete_emp=True)).order_by('-date_complete').values_list('slug', flat=True)
     wcp_count = wit_qs.count()
     wit_list = list(wit_qs)
@@ -1242,7 +1257,216 @@ def public_profile_projects(request, ppl):
     template = 'talenttrack/public_profile_projects.html'
     context = {
             'ppl': ppl,
+            'pfl': pfl,
             'wcp_count': wcp_count,
+            'pageitems': pageitems,
+            'page_range': page_range
+    }
+
+    return render(request, template, context)
+
+
+login_required()
+def public_profile_education(request, ppl):
+    '''MyWeXlog Education History detail page'''
+    tlt = get_object_or_404(Profile, public_profile_name=ppl).alias
+    pfl = Profile.objects.get(alias=tlt)
+
+    exp_qs = WorkExperience.objects.filter(talent__alias=tlt)
+    exp = exp_qs.select_related('topic', 'course', 'project')
+
+    edtexp = exp.filter(edt=True).order_by('-date_from')
+    edtexp_count = edtexp.count()
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(edtexp, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+    template = 'talenttrack/public_profile_education.html'
+    context = {
+            'ppl': ppl,
+            'pfl': pfl,
+            'edtexp_count': edtexp_count,
+            'pageitems': pageitems,
+            'page_range': page_range
+    }
+
+    return render(request, template, context)
+
+
+login_required()
+def public_profile_achievements(request, ppl):
+    '''MyWeXlog Achievements History detail page'''
+    tlt = get_object_or_404(Profile, public_profile_name=ppl).alias
+    pfl = Profile.objects.get(alias=tlt)
+
+    achievement_qs = Achievements.objects.filter(talent__alias=tlt).order_by('-date_achieved')
+    achievement_qs_count = achievement_qs.count()
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(achievement_qs, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+    template = 'talenttrack/public_profile_achievements.html'
+    context = {
+            'ppl': ppl,
+            'pfl': pfl,
+            'achievement_qs_count': achievement_qs_count,
+            'pageitems': pageitems,
+            'page_range': page_range
+    }
+
+    return render(request, template, context)
+
+
+login_required()
+def public_profile_awards(request, ppl):
+    '''MyWeXlog Awards History detail page'''
+    tlt = get_object_or_404(Profile, public_profile_name=ppl).alias
+    pfl = Profile.objects.get(alias=tlt)
+
+    award_qs = Awards.objects.filter(talent__alias=tlt).order_by('-date_achieved')
+    award_qs_count = award_qs.count()
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(award_qs, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+    template = 'talenttrack/public_profile_awards.html'
+    context = {
+            'ppl': ppl,
+            'pfl': pfl,
+            'award_qs_count': award_qs_count,
+            'pageitems': pageitems,
+            'page_range': page_range
+    }
+
+    return render(request, template, context)
+
+
+login_required()
+def public_profile_publications(request, ppl):
+    '''MyWeXlog Publications History detail page'''
+    tlt = get_object_or_404(Profile, public_profile_name=ppl).alias
+    pfl = Profile.objects.get(alias=tlt)
+
+    publication_qs = Publications.objects.filter(talent__alias=tlt).order_by('-date_published')
+    publication_qs_count = publication_qs.count()
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(publication_qs, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+    template = 'talenttrack/public_profile_publications.html'
+    context = {
+            'ppl': ppl,
+            'pfl': pfl,
+            'publication_qs_count': publication_qs_count,
+            'pageitems': pageitems,
+            'page_range': page_range
+    }
+
+    return render(request, template, context)
+
+
+login_required()
+def public_profile_books(request, ppl):
+    '''MyWeXlog Books Read History detail page'''
+    tlt = get_object_or_404(Profile, public_profile_name=ppl).alias
+    pfl = Profile.objects.get(alias=tlt)
+
+    bkl_qs = ReadBy.objects.filter(talent__alias=tlt).select_related('book', 'type')
+    bkl_count = bkl_qs.count()
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(bkl_qs, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+    template = 'talenttrack/public_profile_books.html'
+    context = {
+            'ppl': ppl,
+            'pfl': pfl,
+            'bkl_count': bkl_count,
             'pageitems': pageitems,
             'page_range': page_range
     }

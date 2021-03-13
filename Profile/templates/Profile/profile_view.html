@@ -23,9 +23,8 @@
             Public profile name: {{ user_info.public_profile_name }}
           </p>
           <p class="card-text">
-            Public profile intro: {{ user_info.public_profile_intro }}
+            Public profile intro: <small>(max 460 characters)</small><br>{{ d.public_profile_intro }}
           </p>
-          <small>(max 460 characters)</small>
           <p class="card-text">
             Date of Birth: {{ d.birth_date|date:"j M Y" }}
           </p>
@@ -319,13 +318,6 @@
                     {{ a.achievement }}
                   </div>
                 </div>
-                <div class="row my-auto">
-                  <div class="col-md-12 h-100 text-left my-auto">
-                    <br>
-                    <p class="short-paragraph"><strong>Details:</strong></p>
-                    <p>{{ a.description|linebreaks|truncatechars:465 }}</p>
-                  </div>
-                </div>
               </div>
               <div class="col-md-1 h-100 text-center my-auto">
                 {% if a.upload %}
@@ -378,24 +370,10 @@
               <div class="col-md-11 h-100 text-center my-auto">
                 <div class="row my-auto">
                   <div class="col-md-4 h-100 text-center my-auto">
-                    {{ a.date_award|date:"j M Y" }}
+                    {{ a.date_achieved|date:"j M Y" }}
                   </div>
                   <div class="col-md-8 h-100 text-center my-auto">
                     {{ a.award }}
-                  </div>
-                </div>
-                <div class="row my-auto">
-                  <div class="col-md-12 h-100 text-left my-auto">
-                    <br>
-                    <p class="short-paragraph"><strong>Details:</strong></p>
-                    <p>{{ a.description|linebreaks|truncatechars:465 }}</p>
-                  </div>
-                </div>
-                <div class="row my-auto">
-                  <div class="col-md-12 h-100 text-center my-auto">
-                    <br>
-                    <p class="short-paragraph"><strong>Skills:</strong></p>
-                    <p>{{ a.tag.skills.all|join:" || " }}</p>
                   </div>
                 </div>
               </div>
@@ -466,31 +444,6 @@
                   </div>
                   <div class="col-md-4 h-100 text-center my-auto">
                     {{ a.link }}
-                  </div>
-                </div>
-                <div class="row my-auto">
-                  <div class="col-md-4 h-100 text-center my-auto">
-                    {{ a.author.all|join:", " }}
-                  </div>
-                  <div class="col-md-3 h-100 text-center my-auto">
-                    {{ a.type }}
-                  </div>
-                  <div class="col-md-5 h-100 text-center my-auto">
-                    {{ a.tag.skills.all|join:" || " }}
-                  </div>
-                </div>
-                <div class="row my-auto">
-                  <div class="col-md-12 h-100 text-left my-auto">
-                    <br>
-                    <p class="short-paragraph"><strong>Details:</strong></p>
-                    <p>{{ a.description|linebreaks|truncatechars:465 }}</p>
-                  </div>
-                </div>
-                <div class="row my-auto">
-                  <div class="col-md-12 h-100 text-center my-auto">
-                    <br>
-                    <p class="short-paragraph"><strong>Skills:</strong></p>
-                    <p>{{ a.tag.skills.all|join:" || " }}</p>
                   </div>
                 </div>
               </div>

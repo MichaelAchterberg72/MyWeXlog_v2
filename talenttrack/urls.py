@@ -80,6 +80,11 @@ urlpatterns = [
     path('<slug:ppl>/evaluation-rating/', views.public_profile_evaluation_rating, name="PublicProfileEvaluationRatingDetail"),
     path('public-profile/<slug:ppl>/profile-skill-stats-overview/<int:skl>/', views.public_profile_skill_stats, name='PrublicProfileSkillsStats'),
     path('public-profile-projects/<slug:ppl>/', views.public_profile_projects, name='PublicProfileProjects'),
+    path('public-profile-education/<slug:ppl>/', views.public_profile_education, name='PublicProfileEducation'),
+    path('public-profile-achievements/<slug:ppl>/', views.public_profile_achievements, name='PublicProfileAchievements'),
+    path('public-profile-awards/<slug:ppl>/', views.public_profile_awards, name='PublicProfileAwards'),
+    path('public-profile-publications/<slug:ppl>/', views.public_profile_publications, name='PublicProfilePublications'),
+    path('public-profile-books/<slug:ppl>/', views.public_profile_books, name='PublicProfileBooks'),
 
     path('we-comment/<slug:wes>/', views.publish_experience_comment, name="WEPComment"),
     path('pre-we-comment/<slug:wes>/', views.publish_pre_experience_comment, name="PreWEPComment"),

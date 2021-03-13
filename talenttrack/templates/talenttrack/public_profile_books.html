@@ -1,0 +1,87 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+
+{% block title %}{{block.super}}-Books Read List{% endblock title %}
+
+{% block content %}
+
+<div class="jumbotron bg-light">
+  <div class="container">
+    <div class="row header-border">
+      <div class="col-md-2">
+      </div>
+      <div class="col-md-8">
+        <h4 class="profile-header" id="top">MyWexlog Public Profile<br>{{ pfl.f_name }} {{ pfl.l_name }}</h4>
+      </div>
+      <div class="col-md-2 my-auto">
+        <div class="container ">
+          <a href="{% url 'Talent:PublicProfile' ppl %}?next={{ request.path|urlencode }}#books" class="btn btn-primary float-right">Back</a>
+        </div>
+      </div>
+    </div>
+
+    <br>
+    <h4 class="profile-header">MyWexlog Books Read History</h4>
+    <div class="profile-card-under">{% if bkl_count > 0 %}Total Books Read: {{ bkl_count }}{% else %}No Books Read with MyWeXlog yet{% endif %}</div>
+    <br>
+    <br>
+    {% for b in pageitems %}
+      <div class="row">
+        <div class="col-md-3">
+          <div class="profile-list-header">{{ b.date|date:"j M Y" }}</div><br>
+        </div>
+        <div class="col-md-9 border-left">
+          <div class="col-md-12">
+            <div class="profile-list-heading">{{ b.book }}</div><br>
+            <div class="profile-list-heading-under">{{ b.book.author.all|join:", " }}</div><br>
+            <div>{{ b.type }}</div>
+          </div>
+          <br><br><br>
+        </div>
+      </div>
+      {% endfor %}
+  </div>
+</div>
+
+<div class="row header-border">
+  <div class="col-md-12">
+    <nav aria-label="Page navigation">
+        {% if pageitems.has_other_pages %}
+          <ul class="pagination">
+            {% if pageitems.has_previous %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ pageitems.previous_page_number }}" aria-label="Previous">
+                  <span aria-hidden="true">Previous</span>
+                  <span class="sr-only disabled">Previous</span>
+                </a></li>
+            {% else %}
+              <li class="page-link disabled" tabindex="-1"><span>Previous</span></li>
+            {% endif %}
+
+            {% if pageitems.number|add:'-4' > 1 %}
+              <li class="page-link"><a href="?page={{ pageitems.number|add:'-5' }}">&hellip;</a></li>
+            {% endif %}
+
+            {% for i in pageitems.paginator.page_range %}
+              {% if pageitems.number == i %}
+                <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
+              {% elif i > pageitems.number|add:'-5' and i < pageitems.number|add:'5' %}
+                <li class="page-link"><a class="page-item" href="?page={{ i }}">{{ i }}</a></li>
+              {% endif %}
+            {% endfor %}
+
+            {% if pageitems.paginator.num_pages > pageitems.number|add:'4' %}
+              <li class="page-link"><a href="?page={{ pageitems.number|add:'5' }}">&hellip;</a></li>
+            {% endif %}
+
+            {% if pageitems.has_next %}
+              <li class="page-link"><a href="?page={{ pageitems.next_page_number }}">Next</a></li>
+            {% else %}
+              <li class="page-link disabled"><span>Next</span></li>
+            {% endif %}
+          </ul>
+        {% endif %}
+    </nav>
+  </div>
+
+{% endblock content %}

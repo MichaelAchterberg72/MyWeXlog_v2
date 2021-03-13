@@ -18,6 +18,9 @@
       {{ form.f_name|as_crispy_field }}
       {{ form.l_name|as_crispy_field }}
       {{ form.birth_date|as_crispy_field }}
+      {{ form.public_profile_intro|as_crispy_field }}
+      ** Max 460 characters are allowed
+      <br><br>
     </div>
     <div class="form-group col-md-6 mb-0">
       <div class="form-row">
@@ -37,12 +40,8 @@
           {{ form.alias|as_crispy_field }}
         </div>
         <div class="form-group col-md-6 mb-0">
-          {{ form.public_profile_name|as_crispy_field }}<br>
+          {{ form.public_profile_name|as_crispy_field }}
           ** No spaces or special characters are allowed
-        </div>
-        <div class="form-group col-md-6 mb-0">
-          {{ form.public_profile_intro|as_crispy_field }}<br>
-          ** Max 460 characters are allowed
         </div>
         <div class="form-group col-md-6 mb-0">
           {{ form.mentor|as_crispy_field }}

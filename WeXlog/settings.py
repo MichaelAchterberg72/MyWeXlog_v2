@@ -335,9 +335,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 
-
-
-USE_S3 = os.getenv('USE_S3') == 'TRUE'
+USE_S3 = os.getenv('USE_S3') == False
 if USE_S3:
     # aws settings
     AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
@@ -363,29 +361,46 @@ else:
     MEDIA_URL = '/library/'
     MEDIA_ROOT = os.path.join(BASE_DIR, 'filelibrary')
 
+    # aws settings
+    AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
+    AWS_DEFAULT_ACL = None
+    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+    AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+#    STATIC_URL = "https://s3-dot-machterberg.s3.amazonaws.com/app-static/"
+#    DEFAULT_FILE_STORAGE = 'WeXlog.storage_backends.MediaStorage'
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+#    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
 
-'''
 #files for Amazon S3
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'MyWeXlog/static'),
+    os.path.join(BASE_DIR, 'static'),
 ]
 
-AWS_ACCESS_KEY_ID = ''
-AWS_SECRET_ACCESS_KEY = ''
-AWS_STORAGE_BUCKET_NAME = ''
-AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+AWS_ACCESS_KEY_ID = 'AKIASSC2VYJPXZJTEH3M'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 's3-dot-machterberg'
+AWS_S3_CUSTOM_DOMAIN = 's3-dot-machterberg.s3.amazonaws.com'
+AWS_S3_REGION_NAME = 'eu-west-2'
+AWS_S3_SIGNATURE_VERSION = 's3v4'
+# AWS_QUERYSTRING_AUTH=False
 
 AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': 'max-age=86400',
 }
 
-AWS_LOCATION = 'static'
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+AWS_LOCATION = 'app-static'
+# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+#STATIC_URL = "https://s3-dot-machterberg.s3.amazonaws.com/app-static/"
 
-DEFAULT_FILE_STORAGE = 'WeXlog.storage_backends.MediaStorage'
-'''
+#DEFAULT_FILE_STORAGE = 'WeXlog.storage_backends.MediaStorage'
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# End S3 config
+
 #Crispy Forms
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
