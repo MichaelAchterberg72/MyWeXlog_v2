@@ -218,7 +218,7 @@
           <i class="fa fa-question-circle"></i>
         </a>
       </div>
-    <h3 id="applicants">Applicants</h3>
+    <h3 id="applicants">Vacancy Applicants</h3>
     <p>
       There are a total of {{ applied_count }} bids that talent have applied for the vacancy{% if applied_count >= 5 %}, we only list the top 5 here.{% else %}.{% endif %}
     </p>
@@ -244,7 +244,9 @@
       </div>
 
         {% if applicants_list_view %}
+          {% if applied_slice.items %}
           {% include 'marketplace/list_view_headings.html' %}
+          {% endif %}
           {% for key in applied_slice.items %}
           <div class="row">
             <div class="card mt-1 card-hover" style="width: 100%;">
@@ -369,7 +371,9 @@
         </div>
 
           {% if suited_list_view %}
+          {% if suitable_slice.items %}
             {% include 'marketplace/list_view_headings.html' %}
+          {% endif %}
             {% for key in suitable_slice.items %}
             <div class="row">
               <div class="card mt-1 card-hover" style="width: 100%;">
