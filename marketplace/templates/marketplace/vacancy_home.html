@@ -109,7 +109,7 @@
           </div>
         {% endif %}
         <h4 class="card-title">Vacancies Suited for Me </h4>
-        <p>There are currently a total of <strong>{{ tot_vac }}</strong> vacancies suitable to you.<br>{% if request.user.subscription >= 2 %}You have already applied for <strong>{{ wbt_c }}</strong>.{% endif %}You have been shortlisted for
+        <p>There are currently a total of <strong>{{ tot_vac }}</strong> vacancies suitable to you.<br>{% if request.user.subscription >= 2 %} You have already applied for <strong>{{ wbt_c }}</strong>.{% endif %} You have been shortlisted for
         <strong>{{ bsl_c }}</strong>. That leaves <strong>{{ rem_vac }}</strong> for you to review.
         {% if rem_vac > 5 %}We only list the 5 most recent vacancies here.{% endif %}</p>
         <div class="row">
@@ -137,28 +137,26 @@
         {% with id=s.id %}
 
         <div class="post-front" style="display:block;" id="oldCard{{id}}">
-
-        <div class="card-body small-pad">
-          <div class="row" style="height: 20px;">
-            <div class="col-md-12 h-100 my-auto">
-              <div class="card-maximise float-right">
-                <div class="row">
-                    <button type="submit" class="pointer no-border max-btn" data-vac={{s.ref_no}} data-tlt={{tlt}} data-toggle="tooltip" title="Maximise" data-vac={{s.ref_no}} data-tlt={{tlt}} data-action="maximise" id="clickMe{{id}}"><i class="fa fa-window-maximize"></i></button>
-                  &nbsp
-                  <form action="{% url 'MarketPlace:CloseVacancy' tlt s.id %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit" class="pointer no-border" data-toggle="tooltip" title="Close" name="close"><i class="fa fa-times" aria-hidden="true"></i></button>
-                  </form>
+          <div class="card-body small-pad">
+            <div class="row" style="height: 20px;">
+              <div class="col-md-12 h-100 my-auto">
+                <div class="card-maximise float-right">
+                  <div class="row">
+                      <button type="submit" class="pointer no-border max-btn" data-vac={{s.ref_no}} data-tlt={{tlt}} data-toggle="tooltip" title="Maximise" data-vac={{s.ref_no}} data-tlt={{tlt}} data-action="maximise" id="clickMe{{id}}"><i class="fa fa-window-maximize"></i></button>
+                    &nbsp
+                    <form action="{% url 'MarketPlace:CloseVacancy' tlt s.id %}" method="post">
+                      {% csrf_token %}
+                      <button type="submit" class="pointer no-border" data-toggle="tooltip" title="Close" name="close"><i class="fa fa-times" aria-hidden="true"></i></button>
+                    </form>
+                  </div>
                 </div>
               </div>
             </div>
+          {% include 'marketplace/vacancy_suited_list_view.html' %}
           </div>
-        {% include 'marketplace/vacancy_suited_list_view.html' %}
-        </div>
         </div>
 
         <div class="post-back" style="display:none;" id="newCard{{id}}">
-
           <div class="card-body card-hover card-no-hover">
             <div class="row" style="height: 20px;">
               <div class="col-md-12 h-100 my-auto">
@@ -328,7 +326,7 @@
 <div class="card card-shadow">
   <div class="card-body">
   <h4 class="card-title">My Posted Vacancies Information</h4>
-  <p>Information regarding your vacancies with details as to the Talent suited to the Vacancy as well as Applicants for the Vacancy will only be available once you have posted your first vacancy.</p>
+  <p>Information regarding your vacancies with details as to the talent suited to the vacancy as well as applicants for the vacancy will only be available once you have posted your first vacancy.</p>
   <p>In order to do this please click the below "Post Vacancy" button and complete the form.</p>
   <div class="float-right">
   <a href="{% url 'MarketPlace:Vacancy' %}" class="btn btn-primary">Post Vacancy</a>
