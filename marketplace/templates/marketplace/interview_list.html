@@ -228,7 +228,9 @@
         </div>
 
           {% if pending_interviews_list_view %}
+          {% if interview_p_slice.items %}
             {% include 'marketplace/list_view_headings.html' %}
+          {% endif %}
             {% for key in interview_p_slice.items %}
             <div class="row">
               <div class="card mt-1 card-hover" style="width: 100%;">
@@ -316,7 +318,9 @@
         </div>
 
           {% if suitable_applicants_list_view %}
+          {% if interview_s_slice.items %}
             {% include 'marketplace/list_view_headings.html' %}
+          {% endif %}
             {% for key in interview_s_slice.items %}
             <div class="row">
               <div class="card mt-1 card-hover" style="width: 100%;">
@@ -403,7 +407,9 @@
         </div>
 
           {% if unsuitable_applicants_list_view %}
+          {% if interview_n_slice.items %}
             {% include 'marketplace/list_view_headings.html' %}
+          {% endif %}
             {% for key in interview_n_slice.items %}
             <div class="row">
               <div class="card mt-1 card-hover" style="width: 100%;">
@@ -479,7 +485,9 @@
       </div>
 
         {% if rejected_applicants_list_view %}
+        {% if rej_bid_n_slice.items %}
           {% include 'marketplace/list_view_headings.html' %}
+        {% endif %}
           {% for key in rej_bid_n_slice.items %}
           <div class="row">
             <div class="card mt-1 card-hover" style="width: 100%;">
