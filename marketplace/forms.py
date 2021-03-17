@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.utils.encoding import force_text
+from django.utils import timezone
 
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from crispy_forms.helper import FormHelper
@@ -278,8 +279,8 @@ class TalentRequiredForm(forms.ModelForm):
             'currency': CurrencySelect2Widget(),
             'designation': DesignationSelect2Widget(),
             'language': LanguageWidget(),
-            'date_deadline': DateInput(),
-            'bid_closes': DateInput(),
+            'date_deadline': DateInput(attrs={'min': timezone.now().date()}),
+            'bid_closes': DateInput(attrs={'min': timezone.now().date()}),
             'certification': CertModelSelect2MultipleWidget(),
         }
         labels = {
