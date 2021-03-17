@@ -30,7 +30,7 @@
               <div class="modal-header">
                 <h4 class="modal-title" id="exampleModalLabel">My Availability</h4>
                 <div class="float-right">
-                  <a href="{% url 'MarketPlace:Availabillity' %}" class="badge badge-primary" style="width: 8rem;">Add</a>
+                  <a href="{% url 'MarketPlace:Availabillity' %}" class="badge badge-primary" style="width: 8rem;">Edit</a>
                   <a href="{% url 'MarketPlace:HelpAvailability' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="tooltip" title="Click here for help on this page!">
                   <i class="fa fa-question-circle"></i></a>
                 </div>
@@ -45,61 +45,44 @@
                     <i class="fa fa-square-o" aria-hidden="true"></i>
                     {% endif %}
                   </div>
-                  <div class="col-md-4">
+                  <div class="col-md-4 text-center">
                     Part Time<br>
-                    {{ ta.part_time }}
+                    {% if ta.part_time %}
+                    <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                    {% else %}
+                    <i class="fa fa-square-o" aria-hidden="true"></i>
+                    {% endif %}
                   </div>
-                  <div class="col-md-4">
+                  <div class="col-md-4 text-center">
                     Permanent<br>
-                    {{ ta.permanent }}
+                    {% if ta.permanent %}
+                    <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                    {% else %}
+                    <i class="fa fa-square-o" aria-hidden="true"></i>
+                    {% endif %}
                   </div>
                 </div>
+                <br>
                 <div class="row">
                   <div class="col-md-3">
                   </div>
-                  <div class="col-md-3">
+                  <div class="col-md-3 text-center">
                     Freelance<br>
-                    {{ ta.freelance }}
+                    {% if ta.freelance %}
+                    <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                    {% else %}
+                    <i class="fa fa-square-o" aria-hidden="true"></i>
+                    {% endif %}
                   </div>
-                  <div class="col-md-3">
+                  <div class="col-md-4 text-center">
                     Remote Freelance<br>
-                    {{ ta.remote_freelance }}
+                    {% if ta.remote_freelance %}
+                    <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                    {% else %}
+                    <i class="fa fa-square-o" aria-hidden="true"></i>
+                    {% endif %}
                   </div>
-                  <div class="col-md-3">
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-sm-12">
-                    <div class="border-0">
-                        <table class="table table-hover table-sm">
-                          <thead>
-                            <col width="30%">
-                            <col width="30%">
-                            <col width="30%">
-                            <col width="10%">
-                            <tr class="no-hover">
-                              <th class="align-middle text-center">Date From</th>
-                              <th class="align-middle text-center">Date to</th>
-                              <th class="align-middle text-center">Time Available</th>
-                            </tr>
-                          </thead>
-                          {% for a in capacity %}
-                            <tbody>
-                              <tr>
-                                <td class="align-middle text-center">{{ a.date_from|date:'d M Y' }}</td>
-                                <td class="align-middle text-center">{{ a.date_to|date:'d M Y' }}</td>
-                                <td class="align-middle text-center">{{ a.hours_available }} hrs {{ a.get_unit_display }}</td>
-                                <td class="align-middle float-right">
-                                  <form  action="{% url 'MarketPlace:NotAvailable' a.id %}" method="post">
-                                    {% csrf_token %}
-                                    <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
-                                  </form>
-                                </td>
-                              </tr>
-                            </tbody>
-                          {% endfor %}
-                        </table>
-                    </div>
+                  <div class="col-md-2">
                   </div>
                 </div>
               </div>

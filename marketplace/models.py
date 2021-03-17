@@ -277,21 +277,15 @@ class WorkBid(models.Model):
 
 class TalentAvailabillity(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    date_from = models.DateField()
-    date_to = models.DateField()
-    hours_available = models.IntegerField()
-    unit = models.CharField(max_length=1, choices=UNIT, default='D')
-
     freelance = models.BooleanField(default=False)
     remote_freelance = models.BooleanField(default=False)
     contract = models.BooleanField(default=False)
     part_time = models.BooleanField(default=False)
     permanent = models.BooleanField(default=False)
-    
     date_modified = models.DateField(auto_now=True)
 
     def __str__(self):
-        return '{} - {} {} ({})'.format(self.talent, self.hours_available, self.get_unit_display, self.date_to)
+        return '{}'.format(self.talent)
 
 
 #Reasons: No Available Capacity, Not Looking for work, Not suited to vacancy, Rate too low, Company Reputation, other (comment)

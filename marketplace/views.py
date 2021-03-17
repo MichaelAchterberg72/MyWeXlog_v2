@@ -1565,7 +1565,7 @@ def MarketHome(request):
     tr = TalentRequired.objects.filter(offer_status='O')
     tr_emp = TalentRequired.objects.filter(requested_by=talent)
     wb = WorkBid.objects.filter(work__requested_by=talent)
-    ta = TalentAvailabillity.objects.filter(talent=talent)
+    ta = TalentAvailabillity.objects.filter(talent=talent).last()
     we = WorkExperience.objects.filter(Q(talent=talent) & Q(score__gte=skill_pass_score)).prefetch_related('topic')
     sr = SkillRequired.objects.filter(scope__offer_status='O')
     sl = SkillLevel.objects.all()
@@ -1588,7 +1588,7 @@ def MarketHome(request):
     ipost_closed_count = ipost_closed.count()
     ipost_bid = wb.filter(~Q(bidreview='D'))
     ipost_bid_flat = ipost_bid.values_list('work', flat=True).distinct()
-    capacity = ta.filter(date_to__gte=timezone.now()).order_by('-date_to')[:5]
+#    capacity = ta.filter(date_to__gte=timezone.now()).order_by('-date_to')[:5]
 
     #Code for stacked lookup for talent's skills
 
@@ -1736,7 +1736,6 @@ def MarketHome(request):
         'tlt': tlt,
         'tlent': talent,
         'ta': ta,
-        'capacity': capacity,
         'tr_emp_count': tr_emp_count,
         'ipost': ipost,
         'ipost_list': ipost_list,
@@ -2437,7 +2436,8 @@ def RolesAppliedForUnsuccessfulApplicationHistoryView(request):
 
 @login_required()
 def TalentAvailabillityView(request):
-    form = TalentAvailabillityForm(request.POST or None)
+    instance=TalentAvailabillity.objects.filter(talent=request.user).last()
+    form = TalentAvailabillityForm(request.POST or None, instance=instance)
     if request.method == 'POST':
         if form.is_valid():
             new = form.save(commit=False)
