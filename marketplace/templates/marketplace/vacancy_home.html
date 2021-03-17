@@ -37,6 +37,38 @@
               </div>
               <div class="modal-body">
                 <div class="row">
+                  <div class="col-md-4 text-center">
+                    Contract<br>
+                    {% if ta.contract %}
+                    <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                    {% else %}
+                    <i class="fa fa-square-o" aria-hidden="true"></i>
+                    {% endif %}
+                  </div>
+                  <div class="col-md-4">
+                    Part Time<br>
+                    {{ ta.part_time }}
+                  </div>
+                  <div class="col-md-4">
+                    Permanent<br>
+                    {{ ta.permanent }}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-3">
+                  </div>
+                  <div class="col-md-3">
+                    Freelance<br>
+                    {{ ta.freelance }}
+                  </div>
+                  <div class="col-md-3">
+                    Remote Freelance<br>
+                    {{ ta.remote_freelance }}
+                  </div>
+                  <div class="col-md-3">
+                  </div>
+                </div>
+                <div class="row">
                   <div class="col-sm-12">
                     <div class="border-0">
                         <table class="table table-hover table-sm">

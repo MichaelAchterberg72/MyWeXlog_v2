@@ -281,6 +281,13 @@ class TalentAvailabillity(models.Model):
     date_to = models.DateField()
     hours_available = models.IntegerField()
     unit = models.CharField(max_length=1, choices=UNIT, default='D')
+
+    freelance = models.BooleanField(default=False)
+    remote_freelance = models.BooleanField(default=False)
+    contract = models.BooleanField(default=False)
+    part_time = models.BooleanField(default=False)
+    permanent = models.BooleanField(default=False)
+    
     date_modified = models.DateField(auto_now=True)
 
     def __str__(self):

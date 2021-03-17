@@ -189,7 +189,7 @@ table {
   left:0;
   height:100%;
   width:100%;
-  background: #27408B;  /* rgb(24,33,83); */
+  background: #e1e1ef;  /* #27408B  rgb(24,33,83); */
   z-index:80;
   opacity: 0.7;
 }
@@ -200,7 +200,7 @@ table {
   left:0;
   height:100%;
   width:100%;
-  background: #3A66A7;    /*  #436EEE */
+  background: #e1e1ef;    /* #3A66A7 #436EEE */
   z-index:80;
 
 }
@@ -278,8 +278,8 @@ table {
   border-left: solid 2px #000000;
 }
 .public-profile-jumbotron-header {
-  background: #104E8B;
-  color: #ffffff;
+  background: #e1e1ef;    /*   #104E8B   */
+  color: #0d1451;
   padding-bottom:1rem;
   text-transform:uppercase;
   padding:1rem 2rem;

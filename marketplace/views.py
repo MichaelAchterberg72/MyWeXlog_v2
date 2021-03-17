@@ -1735,6 +1735,7 @@ def MarketHome(request):
         'vacancies_suited_list_view': vacancies_suited_list_view,
         'tlt': tlt,
         'tlent': talent,
+        'ta': ta,
         'capacity': capacity,
         'tr_emp_count': tr_emp_count,
         'ipost': ipost,
