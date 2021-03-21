@@ -33,10 +33,13 @@
       </div>
       <h3>Vacancy Review</h3>
       <h5 class="card-title">Vacancy: {{ instance.title }} ({{ instance.ref_no }})</h5>
+      <p>
+        This is the place to review and edit a vacancy
+      </p>
       <table class="table table-sm">
         <thead>
           <tr>
-            <th class="align-middle text-center">Own Ref No.</th>
+            <th class="align-middle text-center">My Reference No.</th>
             <th class="align-middle text-center">Company</th>
             <th class="align-middle text-center">Designation</th>
           </tr>
@@ -71,11 +74,12 @@
         </tbody>
       </table>
       <br>
+      <hr>
       <div class="row">
         <div class="col-sm-6">
           <div class="h-100">
             <div class="card-body">
-              <h5 class="card-title">Scope</h5>
+              <h5 class="card-title text-center align-middle">Scope</h5>
               <p>{{ instance.scope|linebreaks }}</p>
             </div>
           </div>
@@ -83,7 +87,7 @@
         <div class="col-sm-6">
           <div class="h-100">
             <div class="card-body">
-              <h5 class="card-title">Expectations</h5>
+              <h5 class="card-title text-center align-middle">Expectations</h5>
               <p>{{ instance.expectations|linebreaks }}</p>
             </div>
           </div>
@@ -144,10 +148,10 @@
                 <tr>
                   <td>{{ d.deliverable|linebreaks|truncatechars:100 }}</td>
                   <td>
-                    <a href="{% url 'MarketPlace:DeliverablesEdit' d.scope.ref_no %}" class="badge badge-secondary badge-pill float-right" style="width: 5rem;">Edit</a>
+                    <a href="{% url 'MarketPlace:DeliverablesEdit' d.scope.ref_no %}" class="badge badge-secondary badge-pill align-middle text-center" style="width: 5rem;">Edit</a>
                     <form  action="{% url 'MarketPlace:DeliverablesDelete' d.id %}" method="post">
                       {% csrf_token %}
-                    <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;" onclick="return confirm('Remove deliverable - Are you sure?');">Remove</button>
+                    <button type="submit" class="badge badge-danger badge-pill align-middle text-center" style="width: 5rem;" onclick="return confirm('Remove deliverable - Are you sure?');">Remove</button>
                     </form>
                   </td>
                 </tr>
