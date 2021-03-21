@@ -1,6 +1,7 @@
 {% extends "base_home.html" %}
 {% load static %}
 {% load humanize %}
+{% load thumbnail %}
 {% block title %}{{block.super}}- {{ als.talent.first_name }} Profile{% endblock title %}
 
 {% block content %}
@@ -1654,7 +1655,6 @@ background-color:transparent;
           </div>
           <br><br><br>
         </div>
-      </div>
       {% if e.upload %}
       <div class="col-md-3 border-left">
         <div class="row pt-3 h-100 my-auto">
@@ -1665,6 +1665,7 @@ background-color:transparent;
         </div>
       </div>
       {% endif %}
+    </div>
       {% endfor %}
       <div class="float-right">
         {% if achievement_qs_count >= 6 %}
@@ -1701,7 +1702,6 @@ background-color:transparent;
     </div>
     <br><br><br>
   </div>
-</div>
 {% if a.upload %}
 <div class="col-md-3 border-left">
   <div class="row pt-3 h-100 my-auto">
@@ -1712,6 +1712,7 @@ background-color:transparent;
   </div>
 </div>
 {% endif %}
+</div>
 {% endfor %}
 <div class="float-right">
   {% if award_qs_count >= 6 %}
@@ -1723,7 +1724,6 @@ background-color:transparent;
 </div>
 
 <hr>
-
 <div class="jumbotron bg-light">
 <div class="container">
   <h4 class="profile-header" id="publications">Publications</h4>
@@ -1732,50 +1732,51 @@ background-color:transparent;
   {% if publication_qs_count > 0 %}
     {% for a in publication %}
     <div class="row">
-      <div class="col-md-3">
-        <div class="profile-list-header">{{ a.date_published|date:"j M Y" }}</div><br>
-      </div>
-      {% if a.upload %}<div class="col-md-6 border-left">{% else %}<div class="col-md-9 border-left">{% endif %}
-        <div class="col-md-12">
-          <div class="profile-list-heading">{{ a.title }}</div><br>
-          <div class="profile-list-heading-under">{{ a.publisher }}</div><br>
-          <div>{{ a.description|linebreaks }}</div>
-          <div class="row pt-3 h-100 my-auto">
-            <div class="col-md-6 text-left my-auto">
-              <strong>Type: </strong><br>
-              <span class="">{{ a.get_type_display }}</span>
+        <div class="col-md-3">
+          <div class="profile-list-header">{{ a.date_published|date:"j M Y" }}</div><br>
+        </div>
+        {% if a.upload %}<div class="col-md-6 border-left">{% else %}<div class="col-md-9 border-left">{% endif %}
+          <div class="col-md-12">
+            <div class="profile-list-heading">{{ a.title }}</div><br>
+            <div class="profile-list-heading-under">{{ a.publisher }}</div><br>
+            <div>{{ a.description|linebreaks }}</div>
+            <div class="row pt-3 h-100 my-auto">
+              <div class="col-md-6 text-left my-auto">
+                <strong>Type: </strong><br>
+                <span class="">{{ a.get_type_display }}</span>
+              </div>
+              <div class="col-md-6 text-left my-auto">
+                <strong>Genre: </strong><br>
+                <span class="">{{ a.genre.all|join:", " }}</span>
+              </div>
             </div>
-            <div class="col-md-6 text-left my-auto">
-              <strong>Genre: </strong><br>
-              <span class="">{{ a.genre.all|join:", " }}</span>
+            <div class="row pt-3 h-100 my-auto">
+              <div class="col-md-12 text-left my-auto">
+                <strong>Skills: </strong><br>
+                <span class="">{{ a.tag.all|join:" || " }}</span>
+              </div>
             </div>
           </div>
-          <div class="row pt-3 h-100 my-auto">
-            <div class="col-md-12 text-left my-auto">
-              <strong>Skills: </strong><br>
-              <span class="">{{ a.tag.all|join:" || " }}</span>
+          <br><br><br>
+        </div>
+      {% if a.upload %}
+      <div class="col-md-3 border-left">
+        <div class="row pt-3 h-100 my-auto">
+          <div class="col-md-12 text-center my-auto">
+            <img src="{% static 'a.thumbnail' %}" alt="{{ a.title }}" height="360" width="260"></img>
+            <div class="wrap-1">
+
+            <a href="{{ a.upload.url }}" target="_blank">
+            <embed src="{{ a.upload.url }}" name="plugin" class="thumbnail" type="application/pdf" alt="{{ a.title }}" height="360" width="260"></embed></a>
+
             </div>
+
           </div>
         </div>
-        <br><br><br>
       </div>
-    </div>
-    {% if a.upload %}
-    <div class="col-md-3 border-left">
-      <div class="row pt-3 h-100 my-auto">
-        <div class="col-md-12 text-center my-auto">
-          <a href="{{ a.upload.url }}" target="_blank">
-          <img src="{{ a.upload.url }}" alt="{{ a.title }}" height="24rem" width="16rem"></a>
-        </div>
-      </div>
-    </div>
-    {% endif %}
-    {% endfor %}
-    <div class="float-right">
-      {% if publication_qs_count >= 6 %}
-        <a href="{% url 'Talent:PublicProfilePublications' ppl %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Publications</a>
       {% endif %}
     </div>
+    {% endfor %}
     {% endif %}
   </div>
 </div>

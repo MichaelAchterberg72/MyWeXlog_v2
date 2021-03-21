@@ -10,6 +10,10 @@ from django.dispatch import receiver
 from django.db.models import Count, Sum, F, Q
 from decimal import Decimal
 
+from smartfields import fields, dependencies
+from smartfields.dependencies import FileDependency
+from smartfields.processors import ImageProcessor
+
 
 from Profile.utils import create_code9
 
@@ -107,6 +111,10 @@ def PublicationFilename(instance, filename):
 	ext = filename.split('.')[-1]
 	return "%s/pub\%s_%s.%s" % (instance.talent.id, str(time()).replace('.','_'), random(), ext)
 
+def PublicationThumbnail(instance, filename):
+	ext = filename.split('.')[-1]
+	return "%s/pub-thumb\%s_%s.%s" % (instance.talent.id, str(time()).replace('.','_'), random(), ext)
+
 
 class Publications(models.Model):
     CLASS=(
@@ -124,6 +132,7 @@ class Publications(models.Model):
     date_published = models.DateField()
     description = models.TextField('Describe the Publication')
     upload = models.FileField(storage=PrivateMediaStorage(), upload_to=PublicationFilename, blank=True, null=True, validators=[FileExtensionValidator(['pdf'])])
+    thumbnail = models.ImageField(storage=PrivateMediaStorage(), upload_to=PublicationThumbnail, blank=True, null=True)
     slug = models.SlugField(max_length=15, unique=True, null=True, blank=True)
 
     class Meta:
@@ -134,6 +143,41 @@ class Publications(models.Model):
         return f'{self.talent}: {self.title} ({self.date_published})'
 
     def save(self, *args, **kwargs):
+        from pdf2image import convert_from_path, convert_from_bytes
+        from pdf2image.exceptions import (
+            PDFInfoNotInstalledError,
+            PDFPageCountError,
+            PDFSyntaxError
+        )
+
+        cache_path = self.upload
+#        file_to_preview_path = self.thumbnail
+        s=bytes(cache_path.open(mode='rb').read())
+
+        images = convert_from_bytes(s)[0]
+        print(images)
+
+        from io import StringIO, BytesIO
+
+        from django.core.files.uploadedfile import InMemoryUploadedFile
+
+        # Create a file-like object to write thumb data (thumb data previously created
+        # using PIL, and stored in variable 'thumb')
+        thumb_io = BytesIO()
+        images.save(thumb_io, format='JPEG')
+
+        # Create a new Django file-like object to be used in models as ImageField using
+        # InMemoryUploadedFile.  If you look at the source in Django, a
+        # SimpleUploadedFile is essentially instantiated similarly to what is shown here
+        thumb_file = InMemoryUploadedFile(thumb_io, None, 'foo.jpg', 'image/jpeg',
+                                          thumb_io, None)
+
+        self.thumbnail = thumb_file
+#        Publications.save(self)
+
+#        manager = PreviewManager(cache_path, create_folder= True)
+#        path_to_preview_image = manager.get_jpeg_preview(file_to_preview_path)
+
         if self.slug is None or self.slug == "":
             self.slug = create_code9(self)
 
