@@ -28,10 +28,13 @@
             </p>
             <div class="">
               <p>
-                <button type="submit" name="another" class="btn btn-primary">Add Another</button> <button type="submit" name="done" class="btn btn-primary">
-                  Add & Exit
+                <button type="submit" name="another" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Save the skill displayed in the field then add another skill">
+                  Save & Add Another Skill
                 </button>
-                <a href="{% url 'MarketPlace:Entrance' %}" class="btn btn-primary">
+                <button type="submit" name="done" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Save the skill displayed in the field and exit">
+                  Save & Exit
+                </button>
+                <a href="{% url 'MarketPlace:Entrance' %}" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Leave this page">
                   Exit
                 </a>
               </p>
