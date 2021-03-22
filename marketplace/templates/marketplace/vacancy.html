@@ -30,6 +30,7 @@
     </h3>
     <p>
       Capture details of work you need completed.<br>
+      For additional help, click on the <i class="fa fa-question-circle" style="color:blue;"></i> in the top right corner.<br>
       All fields marked with "*" are required fields.
     </p>
     <form method="post" id="BranchForm" enctype="multipart/form-data">
@@ -131,7 +132,14 @@
         </div>
       </div>
       <div class="">
-        <p><a href="{% url 'MarketPlace:Entrance' %}" class="btn btn-danger">Cancel</a> <button type="submit" name="Done" class="btn btn-primary">Add Deliverables</button></p>
+        <p>
+          <a href="{% url 'MarketPlace:Entrance' %}" class="btn btn-danger">
+            Cancel
+          </a>
+          <button type="submit" name="Done" class="btn btn-primary">
+            Add Deliverables
+          </button>
+        </p>
       </div>
     </form>
   </div>

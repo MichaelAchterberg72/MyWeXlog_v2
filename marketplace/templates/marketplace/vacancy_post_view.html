@@ -101,7 +101,7 @@
               <thead>
                 <tr>
                   <th class="align-middle text-center">Proposed Rate</th>
-                  <th class="align-middle text-center">Bid Closing Date</th>
+                  <th class="align-middle text-center">Vacancy Closing Date</th>
                   <th class="align-middle text-center">Work Completion Date</th>
                   <th class="align-middle text-center">Required Language</th>
                   <th class="align-middle text-center">Status</th>
@@ -224,9 +224,10 @@
       </div>
     <h3 id="applicants">Applicants</h3>
     <p>
-      There are a total of {{ applied_count }} bids that talent have applied for the vacancy{% if applied_count >= 5 %}, we only list the top 5 here.{% else %}.{% endif %}
+      {{ applied_count }} people have applied for this vacancy{% if applied_count >= 5 %}, we only list the top 5 here.{% else %}.{% endif %}
     </p>
     <div class="">
+      {% if applied_count != 0 %}
       <div class="row">
         <div class="col-12">
         {% if applicants_list_view %}
@@ -246,7 +247,6 @@
         {% endif %}
         </div>
       </div>
-
         {% if applicants_list_view %}
           {% include 'marketplace/list_view_headings.html' %}
           {% for key in applied_slice.items %}
@@ -335,6 +335,9 @@
         <a href="{% url 'MarketPlace:ApplicantsForVacancy' vac=instance.ref_no %}" class="btn btn-primary"style="width: 10rem">View All Applicants</a>
       </div>
     {% endif %}
+    {% else %}
+
+    {% endif %}
     </div>
   </div>
 </div>
@@ -349,8 +352,10 @@
       </div>
       <h3 id='suited'>Talent suited to the Vacancy</h3>
       <p>
-        There are a total of {{ suitable_count }} talent suited to the vacancy{% if suitable_count >= 5 %}, we only list the top 5 here.{% else %}.{% endif %}
+        A total of {{ suitable_count }}
+        {% if suitable_count <= 0 %} people are {% elif suitable_count == 1 %} person is {% elif suitable_count > 1 %} people are {% endif %} suited to the vacancy{% if suitable_count >= 5 %}, we only list the top 5 here.{% else %}.{% endif %}
       </p>
+      {% if suitable_count != 0 %}
       <div class="">
         <div class="row">
           <div class="col-12">
@@ -448,8 +453,9 @@
             {% endif %}
             {% endfor %}
             {% endif %}
-
       </div>
+      {% else %}
+      {% endif %}
       {% if suitable_count > 5 %}
         <div class="float-right">
           <a href="{% url 'MarketPlace:TalentSuitedToVacancy' instance.ref_no %}" class="btn btn-primary"style="width: 10rem">View All Talent</a>
