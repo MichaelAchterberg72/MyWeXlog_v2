@@ -6,9 +6,19 @@
 {% block content %}
 <div class="card card-shadow">
   <div class="card-body">
-  <h4 class="">Experience - Logged Hours<span><p class="float-right"><a href="{% url 'Talent:Home' %}"  class="badge badge-pill badge-primary">Back</a></p></span></h4>
-
-
+  <h4 class="">
+    Experience - Logged Hours
+    <span>
+      <p class="float-right">
+        <a href="{% url 'Talent:Home' %}"  class="badge badge-pill badge-primary">
+          Back
+        </a>
+      </p>
+    </span>
+  </h4>
+    <p>
+      *Numbers in brackets below Employer and Project are the total hours logged with the employer or on that project.
+    </p>
     <table class="table table-bordered">
       <thead>
         <tr>
@@ -25,27 +35,25 @@
         <tr>
           <td class="align-middle text-center">{{ check.company }}<br>({{ sum_company.co_sum|intcomma }})*</td>
           <td class="align-middle text-center">{{ check.designation }}</td>
-          <td class="align-middle text-center">{{ check.date_from }}</td>
-          <td class="align-middle text-center">{{ check.date_to }}</td>
+          <td class="align-middle text-center">{{ check.date_from|date:'j M Y' }}</td>
+          <td class="align-middle text-center">{{ check.date_to|date:'j M Y' }}</td>
           <td class="align-middle text-center">{{ check.project }}<br>({{ sum_project.p_sum|intcomma }})*</td>
-          <td class ="text-center">{{ check.industry }}</td>
-          <td class ="text-center">{{ check.hours_worked }}<br><strong>{{ check.score }}</strong></td>
+          <td class="align-middle text-center">{{ check.industry }}</td>
+          <td class="align-middle text-center">{{ check.hours_worked }}<br><strong>{{ check.score }}</strong></td>
         </tr>
         <tr>
-          <th>Skills</th>
+          <th class="align-middle text-center"><strong>Skills</strong></th>
           {% for s in list %}
             <td colspan="6">{{ s.skills.all|join:", " }}</td>
           {% endfor %}
         </tr>
         <tr>
-          <th>Comment</th>
+          <th class="align-middle text-center"><strong>Comment</strong></th>
           <td colspan="6">{{ check.comment|linebreaks }}</td>
         </tr>
       </tbody>
     </table>
-    <p>
-      *Numbers in brackets below Employer and Project are the total hours logged with the employer or on that project.
-    </p>
+
     {% if check.upload %}
       <p>
         Attached File:

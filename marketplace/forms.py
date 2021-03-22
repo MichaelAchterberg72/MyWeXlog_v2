@@ -278,6 +278,7 @@ class TalentRequiredForm(forms.ModelForm):
             'certification': CertModelSelect2MultipleWidget(),
         }
         labels = {
+            'companybranch': 'Company & Branch',
             'title': 'Vacancy Title',
             'bid_closes': 'Applications Close',
             'offer_status': 'Vacancy Status',
@@ -287,9 +288,6 @@ class TalentRequiredForm(forms.ModelForm):
             'hours_required': 'Hours',
             'own_ref_no': 'Own Internal Vacancy Reference Number',
         }
-#Help_texts = {
-#            'own_ref_no': 'Maximum length: 7 Alpha-numeric characters'
-#        }
 
 
 class TalentRequiredEditForm(forms.ModelForm):
