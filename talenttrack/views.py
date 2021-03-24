@@ -3603,6 +3603,10 @@ def ClientSelectView(request, pk):
                 response = redirect('Talent:Home')
                 response.delete_cookie("confirm")
                 return response
+            elif 'review' in request.POST:
+                response = redirect(reverse('Talent:ExperienceDetail', kwargs={'tex':instance.slug}))
+                response.delete_cookie("confirm")
+                return response
         else:
             template = 'talenttrack/experience_client_select.html'
             context = {'instance': instance, 'form': form, 'score': score,}
