@@ -13,7 +13,11 @@
   </div>
 </div>
 <div class="wrap-1">
+{% if pics.profile_background %}
+<img class="d-block w-100" src="{{ pics.profile_background.url }}" height="662" style="opacity:0.7;--bg-overlay-color:#e1e1ef;" alt="MyWexlog Profile for {{ talent.first_name }} {{ talent.last_name }}">
+{% else %}
 <img class="d-block w-100" src="{% static 'images/business.jpg' %}" height="662" style="opacity:0.7;--bg-overlay-color:#e1e1ef;" alt="MyWexlog Profile for {{ talent.first_name }} {{ talent.last_name }}">
+{% endif %}
 </div>
 <div class="container">
 <div class="row">
@@ -389,9 +393,9 @@
                   <div class="col-md-4">
                     {% if lcm.upload %}
                     <div class="row pt-3 h-100 my-auto">
-                      <div class="col-md-12 text-center my-auto">
+                      <div class="col-md-12 text-center">
                         <a href="{{ lcm.upload.url }}" target="_blank">
-                        <img src="{{ lcm.upload.url }}" alt="{{ lcm.cert_name }}" height="24rem" width="16rem"></a>
+                        <img src="{{ lcm.thumbnail.url }}" alt="{{ lcm.cert_name }}" height="340" width="260"></a>
                       </div>
                     </div>
                     {% endif %}
@@ -1617,9 +1621,9 @@ background-color:transparent;
         {% if e.upload %}
         <div class="col-md-3 border-left">
           <div class="row pt-3 h-100 my-auto">
-            <div class="col-md-12 text-center my-auto">
+            <div class="col-md-12 text-center">
               <a href="{{ e.upload.url }}" target="_blank">
-              <img src="{{ e.upload.url }}" alt="{{ e.cert_name }}" height="24rem" width="16rem"></a>
+              <img src="{{ e.thumbnail.url }}" alt="{{ e.cert_name }}" height="340" width="260"></a>
             </div>
           </div>
         </div>
@@ -1658,9 +1662,9 @@ background-color:transparent;
       {% if e.upload %}
       <div class="col-md-3 border-left">
         <div class="row pt-3 h-100 my-auto">
-          <div class="col-md-12 text-center my-auto">
+          <div class="col-md-12 text-center">
             <a href="{{ e.upload.url }}" target="_blank">
-            <img src="{{ e.upload.url }}" alt="{{ e.achievement }}" height="24rem" width="16rem"></a>
+            <img src="{{ e.thumbnail.url }}" alt="{{ e.achievement }}" height="340" width="260"></a>
           </div>
         </div>
       </div>
@@ -1705,9 +1709,9 @@ background-color:transparent;
 {% if a.upload %}
 <div class="col-md-3 border-left">
   <div class="row pt-3 h-100 my-auto">
-    <div class="col-md-12 text-center my-auto">
+    <div class="col-md-12 text-center">
       <a href="{{ a.upload.url }}" target="_blank">
-      <img src="{{ a.upload.url }}" alt="{{ a.award }}" height="24rem" width="16rem"></a>
+      <img src="{{ a.thumbnail.url }}" alt="{{ a.award }}" height="340" width="260"></a>
     </div>
   </div>
 </div>
@@ -1762,15 +1766,10 @@ background-color:transparent;
       {% if a.upload %}
       <div class="col-md-3 border-left">
         <div class="row pt-3 h-100 my-auto">
-          <div class="col-md-12 text-center my-auto">
-            <img src="{% static 'a.thumbnail' %}" alt="{{ a.title }}" height="360" width="260"></img>
-            <div class="wrap-1">
-
+          <div class="col-md-12 text-center">
             <a href="{{ a.upload.url }}" target="_blank">
-            <embed src="{{ a.upload.url }}" name="plugin" class="thumbnail" type="application/pdf" alt="{{ a.title }}" height="360" width="260"></embed></a>
-
-            </div>
-
+              <img src="{{ a.thumbnail.url }}" alt="{{ a.title }}" height="340" width="260">
+            </a>
           </div>
         </div>
       </div>

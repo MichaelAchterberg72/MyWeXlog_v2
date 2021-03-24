@@ -39,11 +39,11 @@ from WeXlog.app_config import (
     client_score, colleague_score, collaborator_score, superior_score, lecturer_score, classmate_score, pre_colleague_score
 )
 from .models import (
-        Profile, Email, PhysicalAddress, PostalAddress, PhoneNumber, SiteName, OnlineRegistrations, FileUpload, IdentificationDetail, IdType, PassportDetail, LanguageTrack, BriefCareerHistory, WillingToRelocate
+        Profile, Email, PhysicalAddress, PostalAddress, PhoneNumber, SiteName, OnlineRegistrations, FileUpload, IdentificationDetail, IdType, PassportDetail, LanguageTrack, BriefCareerHistory, WillingToRelocate, ProfileImages,
         )
 
 from .forms import (
-    ProfileForm, EmailForm, EmailStatusForm, PhysicalAddressForm, PostalAddressForm, PhoneNumberForm, OnlineProfileForm, ProfileTypeForm, FileUploadForm, IdTypeForm, LanguageTrackForm, LanguageListForm, PassportDetailForm, IdentificationDetailForm, BriefCareerHistoryForm, ResignedForm, UserUpdateForm, CustomUserUpdateForm, ExpandedIntroWalkthroughForm, ProfileBackgroundForm, ProfileMotivationForm, WillingToRelocateForm
+    ProfileForm, EmailForm, EmailStatusForm, PhysicalAddressForm, PostalAddressForm, PhoneNumberForm, OnlineProfileForm, ProfileTypeForm, FileUploadForm, IdTypeForm, LanguageTrackForm, LanguageListForm, PassportDetailForm, IdentificationDetailForm, BriefCareerHistoryForm, ResignedForm, UserUpdateForm, CustomUserUpdateForm, ExpandedIntroWalkthroughForm, ProfileBackgroundForm, ProfileMotivationForm, WillingToRelocateForm, UploadProfilePicForm, UploadProfileBackgroundPicForm,
 )
 
 from talenttrack.models import (
@@ -2217,6 +2217,8 @@ def ProfileView(request):
     tlt_id = request.user.id
     if detail.talent == request.user:
         info = Profile.objects.filter(alias=tlt)
+        pics = ProfileImages.objects.filter(talent__alias=tlt)
+#        print(pics.profile_pic.name)
         email = Email.objects.filter(talent__alias=tlt)
         physical = PhysicalAddress.objects.get(talent__alias=tlt)
         postal = PostalAddress.objects.get(talent__alias=tlt)
@@ -2237,7 +2239,7 @@ def ProfileView(request):
         template = 'Profile/profile_view.html'
         context = {
             'info':info, 'email':email, 'physical':physical, 'postal': postal, 'pnumbers': pnumbers, 'online': online, 'id': id, 'passport': passport, 'speak': speak, 'history': history, 'user_info': user_info, 'tlt': tlt, 'relocate': relocate,
-            'upload': upload, 'lcm_qs': lcm_qs,'achievement': achievement, 'award': award, 'publication': publication,
+            'upload': upload, 'lcm_qs': lcm_qs,'achievement': achievement, 'award': award, 'publication': publication, 'pics': pics,
             }
 
         return render(request, template, context)
@@ -2281,6 +2283,54 @@ def ProfileEditView(request, tlt):
             return render(request, template, context)
     else:
         raise PermissionDenied
+
+
+@login_required()
+def ProfilePicEditView(request, tlt):
+    talent = request.user.id
+    instance = get_object_or_404(ProfileImages, talent_id=talent)
+
+    form = UploadProfilePicForm(request.POST or None, instance=instance)
+
+    if request.method =='POST':
+        next_url=request.POST.get('next','/')
+
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.talent = request.user
+            new.save()
+
+            if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
+                next_url = reverse('Profile:ProfileView')+'#pics'
+            return HttpResponseRedirect(next_url)
+    else:
+        template = 'Profile/profile_pic_edit.html'
+        context = {'form': form,}
+        return render(request, template, context)
+
+
+@login_required()
+def ProfileBackgroundPicEditView(request, tlt):
+    talent = request.user.id
+    instance = get_object_or_404(ProfileImages, talent_id=talent)
+
+    form = UploadProfileBackgroundPicForm(request.POST or None, instance=instance)
+
+    if request.method =='POST':
+        next_url=request.POST.get('next','/')
+
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.talent = request.user
+            new.save()
+
+            if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
+                next_url = reverse('Profile:ProfileView')+'#pics'
+            return HttpResponseRedirect(next_url)
+    else:
+        template = 'Profile/profile_background_pic_edit.html'
+        context = {'form': form,}
+        return render(request, template, context)
 
 
 @login_required()

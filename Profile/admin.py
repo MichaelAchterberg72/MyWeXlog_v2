@@ -1,8 +1,13 @@
 from django.contrib import admin
 
 from .models import (
-    Email, SiteName, OnlineRegistrations, Profile, PhysicalAddress, PostalAddress, FileUpload, PhoneNumber, IdentificationDetail, IdType, PassportDetail, LanguageTrack, BriefCareerHistory, WillingToRelocate
+    Email, SiteName, OnlineRegistrations, Profile, PhysicalAddress, PostalAddress, FileUpload, PhoneNumber, IdentificationDetail, IdType, PassportDetail, LanguageTrack, BriefCareerHistory, WillingToRelocate, ProfileImages
     )
+
+
+@admin.register(ProfileImages)
+class  ProfileImagesAdmin(admin.ModelAdmin):
+    pass
 
 
 @admin.register(WillingToRelocate)

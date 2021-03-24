@@ -165,6 +165,31 @@
 <div class="card-group">
   <div class="card card-shadow">
     <div class="card-body">
+      <h5 class="card-title" id="pics">Profile Pictures</h5>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="float-right">
+            <a href="{% url 'Profile:ProfilePicEdit' tlt %}" class="badge badge-primary">Edit</a>
+          </div>
+          <h5>Profile Picture</h5>
+          <img src="{{ pics.profile_pic.url }}" height="240" width="240">
+          {{ pics.profile_pic.height }}
+        </div>
+        <div class="col-md-9">
+          <div class="float-right">
+            <a href="{% url 'Profile:ProfileBackgroundPicEdit' tlt %}" class="badge badge-primary">Edit</a>
+          </div>
+          <h5>Profile Background Picture</h5>
+          <img src="{{ pics.profile_background.url }}" height="240" width="790">
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+<br>
+<div class="card-group">
+  <div class="card card-shadow">
+    <div class="card-body">
       <div class="float-right">
         <a href="{% url 'Profile:BackgroundEdit' tlt %}" class="btn btn-secondary">Edit</a>
       </div>

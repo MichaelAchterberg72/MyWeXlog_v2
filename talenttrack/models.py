@@ -26,6 +26,14 @@ from django_countries.fields import CountryField
 from locations.models import Region
 from WeXlog.storage_backends import PrivateMediaStorage
 
+from pdf2image import convert_from_path, convert_from_bytes
+from pdf2image.exceptions import (
+    PDFInfoNotInstalledError,
+    PDFPageCountError,
+    PDFSyntaxError )
+from PIL import Image
+from io import StringIO, BytesIO
+from django.core.files.uploadedfile import InMemoryUploadedFile
 
 CONFIRM = (
     ('S','Select'),
@@ -54,6 +62,9 @@ def AchFilename(instance, filename):
 	ext = filename.split('.')[-1]
 	return "%s/ach\%s_%s.%s" % (instance.talent.id, str(time()).replace('.','_'), random(), ext)
 
+def AchThumbnail(instance, filename):
+	ext = filename.split('.')[-1]
+	return "%s/ach\%s_%s.%s" % (instance.talent.id, str(time()).replace('.','_'), random(), ext)
 
 class Achievements(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -61,6 +72,7 @@ class Achievements(models.Model):
     date_achieved = models.DateField()
     description = models.TextField('Describe the Achievement')
     upload = models.FileField(storage=PrivateMediaStorage(), upload_to=AchFilename, blank=True, null=True, validators=[FileExtensionValidator(['pdf'])])
+    thumbnail = models.ImageField(storage=PrivateMediaStorage(), upload_to=AchThumbnail, blank=True, null=True)
     slug = models.SlugField(max_length=15, unique=True, null=True, blank=True)
 
     class Meta:
@@ -71,6 +83,21 @@ class Achievements(models.Model):
         return f'{self.talent}: {self.achievement} ({self.date_achieved})'
 
     def save(self, *args, **kwargs):
+        if self.upload:
+            cache_path = self.upload
+            bytes_file = bytes(cache_path.open(mode='rb').read())
+
+            images = convert_from_bytes(bytes_file)[0]
+            image = images.resize((int(260), int(360)), Image.ANTIALIAS)
+
+            quality_val = 90
+            thumb_io = BytesIO()
+            image.save(thumb_io, format='JPEG', quality=quality_val)
+
+            thumb_file = InMemoryUploadedFile(thumb_io, None, 'foo.jpg', 'image/jpeg', thumb_io.__sizeof__(), None)
+
+            self.thumbnail = thumb_file
+
         if self.slug is None or self.slug == "":
             self.slug = create_code9(self)
 
@@ -82,6 +109,9 @@ def AwardFilename(instance, filename):
 	ext = filename.split('.')[-1]
 	return "%s/award\%s_%s.%s" % (instance.talent.id, str(time()).replace('.','_'), random(), ext)
 
+def AwardThumbnail(instance, filename):
+	ext = filename.split('.')[-1]
+	return "%s/award\%s_%s.%s" % (instance.talent.id, str(time()).replace('.','_'), random(), ext)
 
 class Awards(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -90,6 +120,7 @@ class Awards(models.Model):
     description = models.TextField('Describe the Award')
     tag = models.ManyToManyField(SkillTag, verbose_name='Tag / Associated Skill')
     upload = models.FileField(storage=PrivateMediaStorage(), upload_to=AwardFilename, blank=True, null=True, validators=[FileExtensionValidator(['pdf'])])
+    thumbnail = models.ImageField(storage=PrivateMediaStorage(), upload_to=AwardThumbnail, blank=True, null=True)
     slug = models.SlugField(max_length=15, unique=True, null=True, blank=True)
 
     class Meta:
@@ -100,6 +131,21 @@ class Awards(models.Model):
         return f'{self.talent}: {self.award} ({self.date_achieved})'
 
     def save(self, *args, **kwargs):
+        if self.upload:
+            cache_path = self.upload
+            bytes_file = bytes(cache_path.open(mode='rb').read())
+
+            images = convert_from_bytes(bytes_file)[0]
+            image = images.resize((int(260), int(360)), Image.ANTIALIAS)
+
+            quality_val = 90
+            thumb_io = BytesIO()
+            image.save(thumb_io, format='JPEG', quality=quality_val)
+
+            thumb_file = InMemoryUploadedFile(thumb_io, None, 'foo.jpg', 'image/jpeg', thumb_io.__sizeof__(), None)
+
+            self.thumbnail = thumb_file
+
         if self.slug is None or self.slug == "":
             self.slug = create_code9(self)
 
@@ -143,40 +189,20 @@ class Publications(models.Model):
         return f'{self.talent}: {self.title} ({self.date_published})'
 
     def save(self, *args, **kwargs):
-        from pdf2image import convert_from_path, convert_from_bytes
-        from pdf2image.exceptions import (
-            PDFInfoNotInstalledError,
-            PDFPageCountError,
-            PDFSyntaxError
-        )
+        if self.upload:
+            cache_path = self.upload
+            bytes_file = bytes(cache_path.open(mode='rb').read())
 
-        cache_path = self.upload
-#        file_to_preview_path = self.thumbnail
-        s=bytes(cache_path.open(mode='rb').read())
+            images = convert_from_bytes(bytes_file)[0]
+            image = images.resize((int(260), int(360)), Image.ANTIALIAS)
 
-        images = convert_from_bytes(s)[0]
-        print(images)
+            quality_val = 90
+            thumb_io = BytesIO()
+            image.save(thumb_io, format='JPEG', quality=quality_val)
 
-        from io import StringIO, BytesIO
+            thumb_file = InMemoryUploadedFile(thumb_io, None, 'foo.jpg', 'image/jpeg', thumb_io.__sizeof__(), None)
 
-        from django.core.files.uploadedfile import InMemoryUploadedFile
-
-        # Create a file-like object to write thumb data (thumb data previously created
-        # using PIL, and stored in variable 'thumb')
-        thumb_io = BytesIO()
-        images.save(thumb_io, format='JPEG')
-
-        # Create a new Django file-like object to be used in models as ImageField using
-        # InMemoryUploadedFile.  If you look at the source in Django, a
-        # SimpleUploadedFile is essentially instantiated similarly to what is shown here
-        thumb_file = InMemoryUploadedFile(thumb_io, None, 'foo.jpg', 'image/jpeg',
-                                          thumb_io, None)
-
-        self.thumbnail = thumb_file
-#        Publications.save(self)
-
-#        manager = PreviewManager(cache_path, create_folder= True)
-#        path_to_preview_image = manager.get_jpeg_preview(file_to_preview_path)
+            self.thumbnail = thumb_file
 
         if self.slug is None or self.slug == "":
             self.slug = create_code9(self)
@@ -209,6 +235,10 @@ def CertFilename(instance, filename):
 	ext = filename.split('.')[-1]
 	return "%s/cert\%s_%s.%s" % (instance.talent.id, str(time()).replace('.','_'), random(), ext)
 
+def CertThumbnail(instance, filename):
+	ext = filename.split('.')[-1]
+	return "%s/cert\%s_%s.%s" % (instance.talent.id, str(time()).replace('.','_'), random(), ext)
+
 class LicenseCertification(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     certification = models.ForeignKey(Result, on_delete=models.PROTECT, verbose_name='Proffessional Memberships / Certification type')
@@ -218,6 +248,7 @@ class LicenseCertification(models.Model):
     cm_no = models.CharField('Membership / Credential Number', max_length=40)
     companybranch = models.ForeignKey(Enterprise, on_delete=models.PROTECT, verbose_name='Issued By')
     upload = models.FileField(storage=PrivateMediaStorage(), upload_to=CertFilename, blank=True, null=True, validators=[FileExtensionValidator(['pdf'])])
+    thumbnail = models.ImageField(storage=PrivateMediaStorage(), upload_to=CertThumbnail, blank=True, null=True)
     issue_date = models.DateField()
     expiry_date = models.DateField(null=True, blank=True)
     current = models.BooleanField('Is this current?', default = True)
@@ -231,6 +262,21 @@ class LicenseCertification(models.Model):
         return f'{self.talent}, {self.certification}: {self.current}'
 
     def save(self, *args, **kwargs):
+        if self.upload:
+            cache_path = self.upload
+            bytes_file = bytes(cache_path.open(mode='rb').read())
+
+            images = convert_from_bytes(bytes_file)[0]
+            image = images.resize((int(260), int(360)), Image.ANTIALIAS)
+
+            quality_val = 90
+            thumb_io = BytesIO()
+            image.save(thumb_io, format='JPEG', quality=quality_val)
+
+            thumb_file = InMemoryUploadedFile(thumb_io, None, 'foo.jpg', 'image/jpeg', thumb_io.__sizeof__(), None)
+
+            self.thumbnail = thumb_file
+
         if self.expiry_date:
             ed = self.expiry_date
             cd = datetime.date.today()
@@ -352,6 +398,9 @@ def ExpFilename(instance, filename):
 	ext = filename.split('.')[-1]
 	return "%s/experience\%s_%s.%s" % (instance.talent.id, str(time()).replace('.','_'), random(), ext)
 
+def ExpThumbnail(instance, filename):
+	ext = filename.split('.')[-1]
+	return "%s/experience\%s_%s.%s" % (instance.talent.id, str(time()).replace('.','_'), random(), ext)
 
 class WorkExperience(models.Model):
     TYPE=(
@@ -365,6 +414,7 @@ class WorkExperience(models.Model):
     date_to = models.DateField()
     date_captured = models.DateField(auto_now_add=True)
     upload = models.FileField(storage=PrivateMediaStorage(), upload_to=ExpFilename, blank=True, null=True, validators=[FileExtensionValidator(['pdf'])])
+    thumbnail = models.ImageField(storage=PrivateMediaStorage(), upload_to=ExpThumbnail, blank=True, null=True)
     score = models.SmallIntegerField(default=0)
     employment_type = models.CharField(max_length=1, choices=TYPE, default='F', blank=True, null=True)
     title = models.CharField(max_length=250, blank=True, null=True)
@@ -397,6 +447,21 @@ class WorkExperience(models.Model):
 
     #script to check wheter experience is estimated or not
     def save(self, *args, **kwargs):
+        if self.upload:
+            cache_path = self.upload
+            bytes_file = bytes(cache_path.open(mode='rb').read())
+
+            images = convert_from_bytes(bytes_file)[0]
+            image = images.resize((int(260), int(360)), Image.ANTIALIAS)
+
+            quality_val = 90
+            thumb_io = BytesIO()
+            image.save(thumb_io, format='JPEG', quality=quality_val)
+
+            thumb_file = InMemoryUploadedFile(thumb_io, None, 'foo.jpg', 'image/jpeg', thumb_io.__sizeof__(), None)
+
+            self.thumbnail = thumb_file
+            
         if self.estimated == True:
             pass
         else:
