@@ -13,21 +13,36 @@
 </style>
 <div class="card card-shadow">
   <div class="card-body">
-    <h3>List a Colleague to confirm your experience</h3>
+    <h3>List a colleague to confirm your experience</h3>
     <form method="post">
     <!--   <input type="hidden" name="next" value="{{ request.GET.next }}"> -->
       {% csrf_token %}
       <div class="form-row">
-        <div class="form-group col-md-7 mb-0">
+        <div class="form-group col-md-6 mb-0">
           {{ form.colleague_name|as_crispy_field }}
           {{ form.designation|as_crispy_field }}
           <a href="{% url 'Talent:DesignationAddPop' %}" id='add_designation' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add Designation</a>
           <div class="">
             <br>
-            <p><button type="submit" name="done" class="btn btn-primary">Save</button>  <a href="{% url 'Invitation:Invite2' tex %}?next={{ request.path|urlencode }}" class="btn btn-info">Invite</a></p>
+            <p>
+              <button type="submit" name="done" class="btn btn-primary" style="width:14rem;">
+                Save
+              </button>
+              <a href="{% url 'Invitation:Invite2' tex %}?next={{ request.path|urlencode }}" class="btn btn-info" style="width:14rem;">
+                Invite
+              </a>
+            </p>
+            <p>
+              <a href="{% url 'Talent:ExperienceDetail' tex %}" class="btn btn-danger" style="width:14rem;">
+                Cancel
+              </a>
+            </p>
           </div>
         </div>
-        <div class="form-group col-md-5 mb-0">
+        <div class="form-group col-md-6 mb-0">
+          <p>
+            Each person confirming your claim has a score associated with the confirmation. The greater the seniority of the person the higher the value of the score their confirmation receives.
+          </p>
           <p>
             All claimed experience, in order to appear in your profile, must have a confirmation score of 3 or more.
           </p>

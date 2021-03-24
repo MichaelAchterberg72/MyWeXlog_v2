@@ -10,6 +10,12 @@
       <i class="fa fa-question-circle"></i></a>
     </div>
     <h4 class="card-title">Experience Summary</h4>
+    <ul>
+      <li>Here you can view and capture training and experience you have gained.</li>
+      <li>
+        For more help, click the help icon on the top right corner of selected cards or      hover over items for additional information.
+      </li>
+    </ul>
     <table class="table table-sm">
       <col width = "20%">
       <col width = "20%">
@@ -19,10 +25,27 @@
       <thead>
         <tr>
           <th></th>
-          <th class="align-middle text-center">Total Hours Logged</th>
-          <th class="align-middle text-center">Training<br>(Hours)<br><a href="{% url 'Talent:Capture' %}" class="badge badge-pill badge-primary">Add</a></th>
-          <th class="align-middle text-center">Logged<br>(Hours)<br><a href="{% url 'Talent:ExperienceCapture' %}" class="badge badge-pill badge-primary">Add</a></th>
-          <th class="align-middle text-center">Pre-logged<br>(Hours)<br><a href="{% url 'Talent:PreloggedCapture' %}" class="badge badge-pill badge-primary">Add</a></th>
+          <th class="align-middle text-center">
+            Total Hours Logged
+          </th>
+          <th class="align-middle text-center">
+            Training<br>(Hours)<br>
+            <a href="{% url 'Talent:Capture' %}" class="badge badge-pill badge-success" data-toggle="tooltip" title="Capture education & training">
+              Capture
+            </a>
+          </th>
+          <th class="align-middle text-center">
+            Logged<br>(Hours)<br>
+            <a href="{% url 'Talent:ExperienceCapture' %}" class="badge badge-pill badge-success" data-toggle="tooltip" title="Capture current and previously un-recorded experience.">
+              Capture
+            </a>
+          </th>
+          <th class="align-middle text-center">
+            Pre-logged<br>(Hours)<br>
+            <a href="{% url 'Talent:PreloggedCapture' %}" class="badge badge-pill badge-success"  data-toggle="tooltip" title="Capture experience recorded on previously approved timesheets.">
+              Capture
+            </a>
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -53,7 +76,9 @@
       <i class="fa fa-flag" aria-hidden="true" style="font-size:20px;color:black" data-toggle="tooltip" title="Breakdown of Experience levels"></i>
     </a></p>
     <p class="text-center">
-      <strong>Confirmed Experience has been approved by more than 2 people and has a score greater than 3.</strong><br>
+      <strong>
+        Confirmed Experience has achieved a score greater than 3 through being confirmed by more than 2 people.
+      </strong><br>
       Only confirmed experience is used in matching experience to vacancies.
     </p>
   </div>
@@ -329,10 +354,19 @@
       <i class="fa fa-question-circle"></i></a>
     </div>
     <h4 class="card-title" id="education">Education & Training</h4>
-    <p>There are a total of <strong>{{ train_count }}</strong> Training & Education experience items that have been captured{% if train_count >= 5 %}, we only list the most recent 5 here.{% else %}.{% endif %}</p>
+    <p>
+      There are a total of <strong>{{ train_count }}</strong> Training & Education experience items that have been captured{% if train_count >= 5 %}, we only list the most recent 5 here.{% else %}.{% endif %}
+    </p>
+    <p>
+      <strong>An entry cannot be edited, only deleted. Once confirmed, an entry cannot be confirmed again, hence the information is locked. To change an entry, it must be deleted and re-captured.</strong>
+    </p>
     <br>
     <div class="float-right">
-      <p><a href="{% url 'Talent:Capture' %}" class="badge badge-pill badge-primary float-right">Add Education</a></p>
+      <p>
+        <a href="{% url 'Talent:Capture' %}" class="badge badge-pill badge-success float-right"  data-toggle="tooltip" title="Capture education & training">
+        Capture Education
+      </a>
+    </p>
     </div>
       <p><strong>Total hours in training: </strong>{{ train_sum.Edu_sum|intcomma }}</p>
     <div>
@@ -410,10 +444,19 @@
       <i class="fa fa-question-circle"></i></a>
     </div>
     <h4 class="card-title" id="experience">Work Experience</h4>
-    <p>There are a total of <strong>{{ exp_count }}</strong> Experience items that have been captured{% if exp_count >= 5 %}, we only list the most recent 5 here.{% else %}.{% endif %}</p>
+    <p>
+      There are a total of <strong>{{ exp_count }}</strong> Experience items that have been captured{% if exp_count >= 5 %}, we only list the most recent 5 here.{% else %}.{% endif %}
+    </p>
+    <p>
+      <strong>An entry cannot be edited, only deleted. Once confirmed, an entry cannot be confirmed again, hence the information is locked. To change an entry, it must be deleted and re-captured.</strong>
+    </p>
     <br>
       <div class="float-right">
-        <p><a href="{% url 'Talent:ExperienceCapture' %}" class="badge badge-pill badge-primary float-right">Add Experience</a></p>
+        <p>
+          <a href="{% url 'Talent:ExperienceCapture' %}" class="badge badge-pill badge-success float-right" data-toggle="tooltip" title="Capture current and previously un-recorded experience.">
+          Capture Experience
+        </a>
+      </p>
       </div>
         <p><strong>Total hours of Experience: </strong>{{ exp_sum.we_sum|intcomma }}</p>
         <div class="container">
@@ -495,10 +538,19 @@
       <i class="fa fa-question-circle"></i></a>
     </div>
     <h4 class="card-title" id="pre-experience">Previously Logged Experience</h4>
-    <p>There are a total of <strong>{{ pre_count }}</strong> Previously Logged experience items that have been captured{% if pre_count >= 5 %}, we only list the most recent 5 here.{% else %}.{% endif %}</p>
+    <p>
+      There are a total of <strong>{{ pre_count }}</strong> Previously Logged experience items that have been captured{% if pre_count >= 5 %}, we only list the most recent 5 here.{% else %}.{% endif %}
+    </p>
+    <p>
+      <strong>An entry cannot be edited, only deleted. Once confirmed, an entry cannot be confirmed again, hence the information is locked. To change an entry, it must be deleted and re-captured.</strong>
+    </p>
     <br>
       <div class="float-right">
-        <p><a href="{% url 'Talent:PreloggedCapture' %}" class="badge badge-pill badge-primary float-right">Add Logged Experience</a></p>
+        <p>
+          <a href="{% url 'Talent:PreloggedCapture' %}" class="badge badge-pill badge-success float-right" data-toggle="tooltip" title="Capture experience recorded on previously approved timesheets.">
+            Capture Logged Experience
+          </a>
+        </p>
       </div>
       <p><strong>Total hours of Previously Logged Experience: </strong>{{ pre_sum.p_sum|intcomma }}</p>
       <div class="container">
