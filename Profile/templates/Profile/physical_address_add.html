@@ -82,18 +82,7 @@ window.onerror = function (msg) {
 }
 
 var form = document.getElementById('AddressForm')
-var suburb = document.getElementById('suburb_error')
 var city = document.getElementById('city_error')
-
-document.getElementById('add_sub').addEventListener('click', function(e){
-  if(form.city.value == ''){
-    suburb.classList.remove('d-none')
-  }else{
-    document.cookie = 'city=' + JSON.stringify(form.city.value) + ";domain=;path=/"
-    suburb.classList.add('d-none')
-    document.getElementById('add_suburb').click();
-  }
-})
 
 document.getElementById('ad_cty').addEventListener('click', function(e){
   if(form.region.value == ''){

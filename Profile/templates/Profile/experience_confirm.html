@@ -3,7 +3,9 @@
 {% block title %}{{block.super}} Confirmation{% endblock title %}
 
 {% block content %}
-{% if not wf1 or cm1 or wk1 or spr1 or wclr1 or wc1 %}
+{% if wf1 or cm1 or wk1 or spr1 or wclr1 or wc1 %}
+
+{% else %}
 <div class="card card-shadow">
   <div class="card-body">
     <div class="float-right">
