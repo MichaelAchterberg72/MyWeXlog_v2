@@ -90,7 +90,6 @@ INSTALLED_APPS = [
 #    'M2Crypto',
     'paypal.standard.ipn',
     'django_celery_beat',
-    'fullurl',
 ]
 
 
