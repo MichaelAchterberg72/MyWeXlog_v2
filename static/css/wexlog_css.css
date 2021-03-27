@@ -79,8 +79,8 @@ table {
 
 .icon-notification {
   position: relative;
-  top: 24px;
-  left: -25px;
+  top: 15px;
+  left: -20px;
   right: 0px;
   width: auto;
   height: 1.2rem;
@@ -95,6 +95,21 @@ table {
   padding: 1.2px;
   padding-left: 6px;
   padding-right: 6px;
+}
+.icon-notification-dropdown {
+  top:12px;
+  left:-10px;
+}
+.icon-notification-experience {
+  top:5px;
+  left:-15px;
+}
+.icon-notification-interviews {
+  top:5px;
+  left:-25px;
+}
+.icon-notification-assignments {
+  top:5px;
 }
 .profile-header {
   font-family: var(--Montserrat-family);

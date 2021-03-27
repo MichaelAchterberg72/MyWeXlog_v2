@@ -431,7 +431,7 @@
     <div class="container">
 
       {% if interviews_tlt %}
-        <p><h5><strong>As a Candidate</strong></h5></p>
+        <p><h5 id="TalentInterview"><strong>As a Candidate</strong></h5></p>
         <div class="row my-auto">
           <div class="col-md-4 h-100 text-center my-auto">
             <strong>Vacancy</strong>
@@ -493,7 +493,7 @@
     {% endif %}
 
     {% if interviews_emp %}
-      <p><h5><strong>As an Employer</strong></h5></p>
+      <p><h5 id="EmployerInterview"><strong>As an Employer</strong></h5></p>
       <div class="row my-auto">
         <div class="col-md-4 h-100 text-center my-auto">
           <strong>Vacancy</strong>
@@ -567,7 +567,7 @@
     <div class="container">
 
       {% if assigned_tlt %}
-        <p><h5><strong>As Talent ({{ assigned_tltc }} in Workflow)</strong></h5></p>
+        <p><h5 id="TalentAssignment"><strong>As Talent ({{ assigned_tltc }} in Workflow)</strong></h5></p>
         <div class="row my-auto">
           <div class="col-5 col-no-pad h-100 text-center my-auto">
             <strong>Vacancy<br>(Reference)</strong>
@@ -626,7 +626,7 @@
     {% endif %}
 
     {% if assigned_emp %}
-      <p><h5><strong>As an Employer ({{ assigned_empc }} in Workflow)</strong></h5></p>
+      <p><h5 id="EmployerAssignment"><strong>As an Employer ({{ assigned_empc }} in Workflow)</strong></h5></p>
       <div class="row my-auto">
         <div class="col-5 col-no-pad h-100 text-center my-auto">
           <strong>Vacancy<br>(Reference)</strong>
