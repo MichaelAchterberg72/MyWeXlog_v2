@@ -8,6 +8,7 @@
   --cyan: #17a2b8;
   --white: #fff;
   --gray: #6c757d;
+  --profile-grey: #e1e1ef;
   --gray-dark: #343a40;
   --primary: #007bff;
   --secondary: #6c757d;
@@ -110,6 +111,9 @@ table {
 }
 .icon-notification-assignments {
   top:5px;
+}
+.bg-profile-grey {
+  background-color: var(--profile-grey);
 }
 .profile-header {
   font-family: var(--Montserrat-family);
