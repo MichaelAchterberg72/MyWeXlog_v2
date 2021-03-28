@@ -23,17 +23,18 @@
   {% endblock Style %}
   </head>
   <body class="bg-light">
-    <!-- Fixed navbar -->
-    <div class="">
-    <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
-    <div class="container">
-    <a class="navbar-brand" href="https://mywexlog.dev/public/index/">MyWeXlog</a>
-    </div>
-    <div class="btn-group">
-    <a class="navbar-brand" href="{% url 'Feedback:FeedBack' %}?next={{ request.path|urlencode }}"><i class="fa fa-bullhorn" aria-hidden="true" style="font-size:30px;color:black" data-toggle="tooltip" title="We love to hear your feedback!"></i></a>
-    </div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="https://mywexlog.dev/public/index/">MyWeXlog</a>
+        <div class="" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="navbar-brand float-left" href="{% url 'Feedback:FeedBack' %}?next={{ request.path|urlencode }}"><i class="fa fa-bullhorn" aria-hidden="true" style="font-size:30px;color:black" data-toggle="tooltip" title="We love to hear your feedback!"></i></a>
+            </li>
+          </ul>
+        </div>
+      </div>
     </nav>
-    </div>
 
     <div class="container pt-3">
     {% block content %}
