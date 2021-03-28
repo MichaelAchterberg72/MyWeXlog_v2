@@ -28,17 +28,24 @@
         </p>
       </span>
     </h3>
-    <p>
-      Capture details of work you need completed.<br>
+    <small>
+      Capture details of work you need completed. |
       For additional help, click on the <i class="fa fa-question-circle" style="color:blue;"></i> in the top right corner.<br>
       All fields marked with "*" are required fields.
-    </p>
+    </small>
+    <hr>
     <form method="post" id="BranchForm" enctype="multipart/form-data">
       {% csrf_token %}
       <div class="form-row">
         <div class="form-group col-md-6 mb-0">
           {{ form.title|as_crispy_field }}
+          <p>
+            &nbsp
+          </p>
           {{ form.own_ref_no|as_crispy_field }}
+          <p>
+            &nbsp
+          </p>
           {{ form.designation|as_crispy_field }}
           <p>
             <a href="{% url 'Talent:DesignationAddPop' %}" id='add_designation' onclick='return showAddPopup(this);'>
@@ -69,8 +76,10 @@
             </div>
             <div class="form-group col-md-5 mb-0">
               {{ form.experience_level|as_crispy_field }}
-              <a href="{% url 'MarketPlace:HelpExperienceLevel' %}" target="_blank">
+              <p class="text-center">
+              <a href="{% url 'MarketPlace:HelpExperienceLevel' %}" target="_blank" >
                 <i class="fa fa-flag" aria-hidden="true" style="font-size:20px;color:black" data-toggle="tooltip" title="Breakdown of Experience levels"></i>
+              </p>
               </a>
             </div>
           </div>
@@ -89,9 +98,11 @@
           <div class="form-row">
             <div class="form-group col-md-4 mb-0">
               {{ form.worklocation|as_crispy_field }}
-              <a href="{% url 'MarketPlace:HelpWorkCOnfigeration' %}" target="_blank">
-                <i class="fa fa-flag" aria-hidden="true" style="font-size:20px;color:black" data-toggle="tooltip" title="Breakdown of work configurations"></i>
-              </a>
+              <p class="text-center">
+                <a href="{% url 'MarketPlace:HelpWorkCOnfigeration' %}" target="_blank">
+                  <i class="fa fa-flag" aria-hidden="true" style="font-size:20px;color:black" data-toggle="tooltip" title="Breakdown of work configurations"></i>
+                </a>
+              </p>
             </div>
             <div class="form-group col-md-4 mb-0">
               {{ form.city|as_crispy_field }}
@@ -108,9 +119,9 @@
             </div>
             <div data-toggle="tooltip" title="The Terms & Conditions, if any, for the vacancy">
               {{ form.terms|as_crispy_field }}
-              <p>
+              <small>
                 Only <strong>PDF</strong> files will be able to be uploaded.
-              </p>
+              </small>
             </div>
           </div>
         </div>

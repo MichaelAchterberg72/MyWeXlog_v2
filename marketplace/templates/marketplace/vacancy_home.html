@@ -7,6 +7,91 @@
   <div class="col-md-12">
     <div class="card card-shadow" style="width: 100%;">
       <div class="card-body">
+        {% if request.user.subscription >= 1 %}
+          <div class="float-right">
+            {% if request.user.subscription >= 2 %}
+            <!-- Button trigger modal -->
+
+            <a href="{% url 'MarketPlace:History' %}" class="btn btn-primary 8rem">Applications History</a>
+            {% endif %}
+            <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary 8rem">Interview History</a>
+            {% if request.user.subscription >= 1 %}
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Availability</button>
+            {% endif %}
+            <a href="{% url 'MarketPlace:HelpVacanciesSuitedForMeSummary' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="tooltip" title="Click here for help on this page!">
+            <i class="fa fa-question-circle"></i></a>
+          </div>
+
+          <!-- Modal -->
+          <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="exampleModalLabel">My Availability</h4>
+                  <div class="float-right">
+                    <a href="{% url 'MarketPlace:Availabillity' %}" class="badge badge-primary" style="width: 8rem;">Edit</a>
+                    <a href="{% url 'MarketPlace:HelpAvailability' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="tooltip" title="Click here for help on this page!">
+                    <i class="fa fa-question-circle"></i></a>
+                  </div>
+                </div>
+                <div class="modal-body">
+                  <div class="row">
+                    <div class="col-md-4 text-center">
+                      Contract<br>
+                      {% if ta.contract %}
+                      <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                      {% else %}
+                      <i class="fa fa-square-o" aria-hidden="true"></i>
+                      {% endif %}
+                    </div>
+                    <div class="col-md-4 text-center">
+                      Part Time<br>
+                      {% if ta.part_time %}
+                      <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                      {% else %}
+                      <i class="fa fa-square-o" aria-hidden="true"></i>
+                      {% endif %}
+                    </div>
+                    <div class="col-md-4 text-center">
+                      Permanent<br>
+                      {% if ta.permanent %}
+                      <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                      {% else %}
+                      <i class="fa fa-square-o" aria-hidden="true"></i>
+                      {% endif %}
+                    </div>
+                  </div>
+                  <br>
+                  <div class="row">
+                    <div class="col-md-3">
+                    </div>
+                    <div class="col-md-3 text-center">
+                      Freelance<br>
+                      {% if ta.freelance %}
+                      <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                      {% else %}
+                      <i class="fa fa-square-o" aria-hidden="true"></i>
+                      {% endif %}
+                    </div>
+                    <div class="col-md-4 text-center">
+                      Remote Freelance<br>
+                      {% if ta.remote_freelance %}
+                      <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                      {% else %}
+                      <i class="fa fa-square-o" aria-hidden="true"></i>
+                      {% endif %}
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endif %}
         <h4>Vacancies</h4>
         <small>
           Here you can see vacancies that have been posted on MyWeXlog that require skills you have, depending on your subscription.
@@ -24,153 +109,55 @@
           </ul>
           For more help, click <i class="fa fa-question-circle" style="color:blue;"></i> in the top right corner of selected cards or hover over items for additional information.
         </small>
+        <hr>
+      <h4 class="card-title">Vacancies Suited for Me </h4>
+      <p>There are currently a total of <strong>{{ tot_vac }}</strong> vacancies suitable to you.<br>{% if request.user.subscription >= 2 %}You have already applied for <strong>{{ wbt_c }}</strong>.{% endif %}You have been shortlisted for
+      <strong>{{ bsl_c }}</strong>. That leaves <strong>{{ rem_vac }}</strong> for you to review.
+      {% if rem_vac > 5 %}We only list the 5 most recent vacancies here.{% endif %}</p>
+      <div class="row">
+          <div class="col-md-12 h-100 my-auto">
+      {% if vacancies_suited_list_view %}
+        <form  action="{% url 'MarketPlace:VacanciesExpand' %}" method="post">
+          {% csrf_token %}
+          <button type="submit" class="badge badge-primary float-right" style="width:8rem;">Expand All</button>
+        </form>
+      {% else %}
+        <form  action="{% url 'MarketPlace:VacanciesExpand' %}" method="post">
+          {% csrf_token %}
+          <button type="submit" class="badge badge-primary float-right" style="width:8rem;">List View</button>
+        </form>
+      {% endif %}
       </div>
     </div>
-  </div>
-</div>
-<br>
+      {% if vacancies_suited_list_view %}
+      {% for s in dsd %}
+      <div class="container">
 <div class="row">
-  <div class="col-md-12">
-    <div class="card card-shadow" style="width: 100%;">
-      <div class="card-body">
-        {% if request.user.subscription >= 1 %}
-          <div class="float-right">
-            {% if request.user.subscription >= 2 %}
-              <!-- Button trigger modal -->
+  <div class="card mt-1 card-hover" style="width: 100%;" id="{{ s.id }}">
+    <div class="post-wrap">
+    <div class="post">
+      {% with id=s.id %}
 
-              <a href="{% url 'MarketPlace:History' %}" class="btn btn-primary 8rem">
-                Applications History
-              </a>
-            {% endif %}
-            <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary 8rem">
-              Interview History
-            </a>
-            {% if request.user.subscription >= 1 %}
-              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                Availability
-              </button>
-            {% endif %}
-            <a href="{% url 'MarketPlace:HelpVacanciesSuitedForMeSummary' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="tooltip" title="Click here for help on this page!">
-            <i class="fa fa-question-circle"></i>
-            </a>
-          </div>
+      <div class="post-front" style="display:block;" id="oldCard{{id}}">
 
-        <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h4 class="modal-title" id="exampleModalLabel">My Availability</h4>
-                <div class="float-right">
-                  <a href="{% url 'MarketPlace:Availabillity' %}" class="badge badge-primary" style="width: 8rem;">Edit</a>
-                  <a href="{% url 'MarketPlace:HelpAvailability' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="tooltip" title="Click here for help on this page!">
-                  <i class="fa fa-question-circle"></i></a>
-                </div>
-              </div>
-              <div class="modal-body">
-                <div class="row">
-                  <div class="col-md-4 text-center">
-                    Contract<br>
-                    {% if ta.contract %}
-                    <i class="fa fa-check-square-o" aria-hidden="true"></i>
-                    {% else %}
-                    <i class="fa fa-square-o" aria-hidden="true"></i>
-                    {% endif %}
-                  </div>
-                  <div class="col-md-4 text-center">
-                    Part Time<br>
-                    {% if ta.part_time %}
-                    <i class="fa fa-check-square-o" aria-hidden="true"></i>
-                    {% else %}
-                    <i class="fa fa-square-o" aria-hidden="true"></i>
-                    {% endif %}
-                  </div>
-                  <div class="col-md-4 text-center">
-                    Permanent<br>
-                    {% if ta.permanent %}
-                    <i class="fa fa-check-square-o" aria-hidden="true"></i>
-                    {% else %}
-                    <i class="fa fa-square-o" aria-hidden="true"></i>
-                    {% endif %}
-                  </div>
-                </div>
-                <br>
-                <div class="row">
-                  <div class="col-md-3">
-                  </div>
-                  <div class="col-md-3 text-center">
-                    Freelance<br>
-                    {% if ta.freelance %}
-                    <i class="fa fa-check-square-o" aria-hidden="true"></i>
-                    {% else %}
-                    <i class="fa fa-square-o" aria-hidden="true"></i>
-                    {% endif %}
-                  </div>
-                  <div class="col-md-4 text-center">
-                    Remote Freelance<br>
-                    {% if ta.remote_freelance %}
-                    <i class="fa fa-check-square-o" aria-hidden="true"></i>
-                    {% else %}
-                    <i class="fa fa-square-o" aria-hidden="true"></i>
-                    {% endif %}
-                  </div>
-                  <div class="col-md-2">
-                  </div>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
+      <div class="card-body small-pad">
+        <div class="row" style="height: 20px;">
+          <div class="col-md-12 h-100 my-auto">
+            <div class="card-maximise float-right">
+              <div class="row">
+                  <button type="submit" class="pointer no-border max-btn" data-vac={{s.ref_no}} data-tlt={{tlt}} data-toggle="tooltip" title="Maximise" data-vac={{s.ref_no}} data-tlt={{tlt}} data-action="maximise" id="clickMe{{id}}"><i class="fa fa-window-maximize"></i></button>
+                &nbsp
+                <form action="{% url 'MarketPlace:CloseVacancy' tlt s.id %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="pointer no-border" data-toggle="tooltip" title="Close" name="close"><i class="fa fa-times" aria-hidden="true"></i></button>
+                </form>
               </div>
             </div>
           </div>
-        {% endif %}
-        <h4 class="card-title">Vacancies Suited for Me </h4>
-        <p>There are currently a total of <strong>{{ tot_vac }}</strong> vacancies suitable to you.<br>{% if request.user.subscription >= 2 %} You have already applied for <strong>{{ wbt_c }}</strong>.{% endif %} You have been shortlisted for
-        <strong>{{ bsl_c }}</strong>. That leaves <strong>{{ rem_vac }}</strong> for you to review.
-        {% if rem_vac > 5 %}We only list the 5 most recent vacancies here.{% endif %}</p>
-        <div class="row">
-            <div class="col-md-12 h-100 my-auto">
-        {% if vacancies_suited_list_view %}
-          <form  action="{% url 'MarketPlace:VacanciesExpand' %}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="badge badge-primary float-right" style="width:8rem;">Expand All</button>
-          </form>
-        {% else %}
-          <form  action="{% url 'MarketPlace:VacanciesExpand' %}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="badge badge-primary float-right" style="width:8rem;">List View</button>
-          </form>
-        {% endif %}
         </div>
+      {% include 'marketplace/vacancy_suited_list_view.html' %}
       </div>
-        {% if vacancies_suited_list_view %}
-        {% for s in dsd %}
-        <div class="container">
-  <div class="row">
-    <div class="card mt-1 card-hover" style="width: 100%;" id="{{ s.id }}">
-      <div class="post-wrap">
-      <div class="post">
-        {% with id=s.id %}
-
-        <div class="post-front" style="display:block;" id="oldCard{{id}}">
-          <div class="card-body small-pad">
-            <div class="row" style="height: 20px;">
-              <div class="col-md-12 h-100 my-auto">
-                <div class="card-maximise float-right">
-                  <div class="row">
-                      <button type="submit" class="pointer no-border max-btn" data-vac={{s.ref_no}} data-tlt={{tlt}} data-toggle="tooltip" title="Maximise" data-vac={{s.ref_no}} data-tlt={{tlt}} data-action="maximise" id="clickMe{{id}}"><i class="fa fa-window-maximize"></i></button>
-                    &nbsp
-                    <form action="{% url 'MarketPlace:CloseVacancy' tlt s.id %}" method="post">
-                      {% csrf_token %}
-                      <button type="submit" class="pointer no-border" data-toggle="tooltip" title="Close" name="close"><i class="fa fa-times" aria-hidden="true"></i></button>
-                    </form>
-                  </div>
-                </div>
-              </div>
-            </div>
-          {% include 'marketplace/vacancy_suited_list_view.html' %}
-          </div>
-        </div>
+      </div>
 
       <div class="post-back" style="display:none;" id="newCard{{id}}">
 
@@ -188,80 +175,81 @@
                 </div>
               </div>
             </div>
-              {% include 'marketplace/vacancy_suited_expanded_view.html' %}
-          </div>
-        </div>
-      </div>
-      </div>
-      </div>
-      <script>
-        var maxButton = document.getElementById('clickMe{{id}}');  // 1
-        maxButton.addEventListener('click', function() {    // 3
-           newCard{{ s.id }}.style.display = 'block';
-           oldCard{{ s.id }}.style.display = 'none';          // 4
-        });
-        var minButton = document.getElementById('un-clickMe{{id}}');  // 1
-        minButton.addEventListener('click', function() {  // 3
-           newCard{{ s.id }}.style.display = 'none';
-           oldCard{{ s.id }}.style.display = 'block';               // 4
-        });
-      </script>
-
-
-      {% endwith %}
-    </div>
-    </div>
-
-        {% empty %}
-        <p>No vacancies matching your skills at the moment</p>
-        {% endfor %}
-
-        {% else %}
-        {% for s in dsd %}
-  <div class="container">
-  <div class="row">
-    <div class="card mt-1 card-no-hover" style="width: 100%;" id="{{ s.id }}">
-        <div class="card-body small-pad">
-          <div class="row" style="height: 20px;">
-            <div class="col-md-12 h-100 my-auto">
-
-              <div class="card-maximise float-right">
-              <div class="row">
-
-              <form action="{% url 'MarketPlace:CloseVacancy' tlt s.id %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="pointer no-border" data-toggle="tooltip" title="Close" name="close"><i class="fa fa-times" aria-hidden="true"></i></button>
-              </form>
-              </div>
-            </div>
-
-          </div>
           </div>
             {% include 'marketplace/vacancy_suited_expanded_view.html' %}
         </div>
       </div>
     </div>
+    </div>
+    </div>
+    <script>
+      var maxButton = document.getElementById('clickMe{{id}}');  // 1
+      maxButton.addEventListener('click', function() {    // 3
+         newCard{{ s.id }}.style.display = 'block';
+         oldCard{{ s.id }}.style.display = 'none';          // 4
+      });
+      var minButton = document.getElementById('un-clickMe{{id}}');  // 1
+      minButton.addEventListener('click', function() {  // 3
+         newCard{{ s.id }}.style.display = 'none';
+         oldCard{{ s.id }}.style.display = 'block';               // 4
+      });
+    </script>
+
+
+    {% endwith %}
   </div>
-        {% empty %}
-        <p>No vacancies matching your skills at the moment</p>
-        {% endfor %}
+  </div>
 
-        {% endif %}
+      {% empty %}
+      <p>No vacancies matching your skills at the moment</p>
+      {% endfor %}
 
-        <br>
-        <p>
-          <strong>Only skills with a score of 3 or more are used in matching with required skills in vacancies.</strong>
-        </p>
-        <div class="float-right">
-          <a href="{% url 'MarketPlace:VacSearch' %}" class="btn btn-secondary 8rem" style="width: 8rem">Search</a>&nbsp
-          {% if rem_vac > 5 %}
-            <a href="{% url 'MarketPlace:VacanciesList' %}" class="btn btn-primary"style="width: 10rem">View All Vacancies</a>
-          {% endif %}
+      {% else %}
+      {% for s in dsd %}
+<div class="container">
+<div class="row">
+  <div class="card mt-1 card-no-hover" style="width: 100%;" id="{{ s.id }}">
+      <div class="card-body small-pad">
+        <div class="row" style="height: 20px;">
+          <div class="col-md-12 h-100 my-auto">
+
+            <div class="card-maximise float-right">
+            <div class="row">
+
+            <form action="{% url 'MarketPlace:CloseVacancy' tlt s.id %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="pointer no-border" data-toggle="tooltip" title="Close" name="close"><i class="fa fa-times" aria-hidden="true"></i></button>
+            </form>
+            </div>
+          </div>
+
         </div>
-
+        </div>
+          {% include 'marketplace/vacancy_suited_expanded_view.html' %}
       </div>
     </div>
   </div>
+</div>
+      {% empty %}
+      <p>No vacancies matching your skills at the moment</p>
+      {% endfor %}
+
+      {% endif %}
+
+      <br>
+      <p>
+        <strong>Only skills with a score of 3 or more are used in matching with required skills in vacancies.</strong>
+      </p>
+      <div class="float-right">
+        <a href="{% url 'MarketPlace:VacSearch' %}" class="btn btn-secondary 8rem" style="width: 8rem">Search</a>&nbsp
+        {% if rem_vac > 5 %}
+          <a href="{% url 'MarketPlace:VacanciesList' %}" class="btn btn-primary"style="width: 10rem">View All Vacancies</a>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+</div>
 </div>
 
 <br>
@@ -342,7 +330,7 @@
 <div class="card card-shadow">
   <div class="card-body">
   <h4 class="card-title">My Posted Vacancies Information</h4>
-  <p>Information regarding your vacancies with details as to the talent suited to the vacancy as well as applicants for the vacancy will only be available once you have posted your first vacancy.</p>
+  <p>Information regarding your vacancies with details as to the Talent suited to the Vacancy as well as Applicants for the Vacancy will only be available once you have posted your first vacancy.</p>
   <p>In order to do this please click the below "Post Vacancy" button and complete the form.</p>
   <div class="float-right">
   <a href="{% url 'MarketPlace:Vacancy' %}" class="btn btn-primary">Post Vacancy</a>

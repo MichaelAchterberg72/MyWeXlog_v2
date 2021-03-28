@@ -240,7 +240,6 @@
         <td class="align-middle text-center">{{ emp_wit_c }}</td>
         <td class="align-middle text-center">{{ emp_wit_d }}</td>
         <td class="align-middle text-center">{{ emp_wit_s }}</td>
-
       </tr>
       <tr>
         <th class="align-middle text-center">Candidate</th>
@@ -249,13 +248,21 @@
         <td class="align-middle text-center">{{ tlt_wit_c }}</td>
         <td class="align-middle text-center">{{ tlt_wit_d }}</td>
         <td class="align-middle text-center">{{ tlt_wit_s }}</td>
-
       </tr>
     </tbody>
   </table>
   <br>
-  <p>{% if request.user.subscription >= 1 %}<a href="{% url 'Profile:ProfileViewed' %}" class="btn btn-info float-right">Profile Viewed Report: {{ pvr_count }} times</a>{% else %}<span class="float-right"><strong>{{ pvr_count }}</strong> times.</span>{% endif %}</p>
-
+  <p>
+    {% if request.user.subscription >= 1 %}
+      <a href="{% url 'Profile:ProfileViewed' %}" class="btn btn-info float-right">
+      Profile Viewed Report: {{ pvr_count }} times
+      </a>
+    {% else %}
+      <span class="float-right">
+        <strong>{{ pvr_count }}</strong> times.
+      </span>
+    {% endif %}
+  </p>
 {% endblock score %}
 
 {% block TBA %}
@@ -453,11 +460,11 @@
     <small>
       Once an interview has been accpeted, you will need to make contact to determine the interview date and time.
     </small>
-
     <div class="container">
-
       {% if interviews_tlt %}
-        <p><h5 id="TalentInterview"><strong>As a Candidate</strong></h5></p>
+          <h5 id="TalentInterview">
+            <strong>As a Candidate</strong>
+          </h5>
         <div class="row my-auto">
           <div class="col-md-4 h-100 text-center my-auto">
             <strong>Vacancy</strong>
@@ -573,16 +580,15 @@
         <p>None at the moment.</p>
       {% endfor %}
     {% endif %}
-
     </div>
     <br>
     {% endif %}
-
   </div>
 </div>
 <br>
 
 {% if assigned_tlt or assigned_emp %}
+<div class="container">
 <div class="card card-shadow">
   <div class="card-body">
     <h4 class="card-title" id="Assignment">Assignments<span><p class="float-right">

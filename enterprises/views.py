@@ -20,7 +20,7 @@ from .models import (
 
 
 from .forms import (
-    EnterprisePopupForm, BranchForm, PhoneNumberForm, IndustryPopUpForm, BranchTypePopUpForm, FullBranchForm, EnterpriseBranchPopupForm
+    EnterprisePopupForm, BranchForm, PhoneNumberForm, IndustryPopUpForm, BranchTypePopUpForm, FullBranchForm, FullBranchHome, EnterpriseBranchPopupForm
 )
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -247,7 +247,7 @@ def get_branch_id(request):
 @login_required()
 @csp_exempt
 def FullBranchAddView(request):
-    form = FullBranchForm(request.POST or None)
+    form = FullBranchHome(request.POST or None)
     if request.method == 'POST':
         next_url=request.POST.get('next','/')
         if form.is_valid():
