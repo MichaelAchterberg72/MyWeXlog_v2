@@ -8,6 +8,7 @@ from random import random
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.db.models import Count, Sum, F, Q
+from decimal import Decimal
 
 
 from Profile.utils import create_code9
@@ -35,6 +36,14 @@ RATING=(
     ('4','master'),
     ('5','grand master'),
 )
+
+D_RATING = [
+    (Decimal("1.0"), "basic"),
+    (Decimal("2.0"), "working"),
+    (Decimal("3.0"), "good"),
+    (Decimal("4.0"), "master"),
+    (Decimal("5.0"), "grand master"),
+]
 
 #Function to randomise filename for Profile Upload
 def AchFilename(instance, filename):
@@ -372,9 +381,9 @@ class WorkColleague(models.Model):
     confirm = models.CharField(max_length=1, choices=CONFIRM, default='S')
     comments = models.TextField(blank=True, null=True)
     #skills rating
-    quality = models.CharField(max_length=1, choices=RATING, blank=True, null=True)
-    time_taken = models.CharField(max_length=1, choices=RATING, blank=True, null=True)
-    complexity = models.CharField(max_length=1, choices=RATING, blank=True, null=True)
+    quality = models.DecimalField(max_digits=5, decimal_places=2, choices=D_RATING, blank=True, null=True)
+    time_taken = models.DecimalField(max_digits=5, decimal_places=2, choices=D_RATING, blank=True, null=True)
+    complexity = models.DecimalField(max_digits=5, decimal_places=2, choices=D_RATING, blank=True, null=True)
         #Captured by talent
     response = models.TextField(blank=True, null=True)
     slug = models.SlugField(max_length=9, unique=True, null=True)
@@ -405,9 +414,9 @@ class Superior(models.Model):
     confirm = models.CharField(max_length=1, choices=CONFIRM, default='S')
     comments = models.TextField(blank=True, null=True)
     #skills rating
-    quality = models.CharField(max_length=1, choices=RATING, blank=True, null=True)
-    time_taken = models.CharField(max_length=1, choices=RATING, blank=True, null=True)
-    complexity = models.CharField(max_length=1, choices=RATING, blank=True, null=True)
+    quality = models.DecimalField(max_digits=5, decimal_places=2, choices=D_RATING, blank=True, null=True)
+    time_taken = models.DecimalField(max_digits=5, decimal_places=2, choices=D_RATING, blank=True, null=True)
+    complexity = models.DecimalField(max_digits=5, decimal_places=2, choices=D_RATING, blank=True, null=True)
         #Captured by talent
     response = models.TextField(blank=True, null=True)
     slug = models.SlugField(max_length=9, unique=True, null=True)
@@ -441,9 +450,9 @@ class WorkCollaborator(models.Model):
     confirm = models.CharField(max_length=1, choices=CONFIRM, default='S')
     comments = models.TextField(blank=True, null=True)
     #skills rating
-    quality = models.CharField(max_length=1, choices=RATING, blank=True, null=True)
-    time_taken = models.CharField(max_length=1, choices=RATING, blank=True, null=True)
-    complexity = models.CharField(max_length=1, choices=RATING, blank=True, null=True)
+    quality = models.DecimalField(max_digits=5, decimal_places=2, choices=D_RATING, blank=True, null=True)
+    time_taken = models.DecimalField(max_digits=5, decimal_places=2, choices=D_RATING, blank=True, null=True)
+    complexity = models.DecimalField(max_digits=5, decimal_places=2, choices=D_RATING, blank=True, null=True)
         #Captured by talent
     response = models.TextField(blank=True, null=True)
     slug = models.SlugField(max_length=9, unique=True, null=True, blank=True)
@@ -478,9 +487,9 @@ class WorkClient(models.Model):
     confirm = models.CharField(max_length=1, choices=CONFIRM, default='S')
     comments = models.TextField(blank=True, null=True)
     #skills rating
-    quality = models.CharField(max_length=1, choices=RATING, blank=True, null=True)
-    time_taken = models.CharField(max_length=1, choices=RATING, blank=True, null=True)
-    complexity = models.CharField(max_length=1, choices=RATING, blank=True, null=True)
+    quality = models.DecimalField(max_digits=5, decimal_places=2, choices=D_RATING, blank=True, null=True)
+    time_taken = models.DecimalField(max_digits=5, decimal_places=2, choices=D_RATING, blank=True, null=True)
+    complexity = models.DecimalField(max_digits=5, decimal_places=2, choices=D_RATING, blank=True, null=True)
         #Captured by talent
     response = models.TextField(blank=True, null=True)
     slug = models.SlugField(max_length=20, unique=True, null=True)

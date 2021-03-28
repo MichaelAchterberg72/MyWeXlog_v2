@@ -41,6 +41,320 @@
           <th class="align-middle text-center">Comment</th>
           <td colspan="6" class="align-middle text-left">{{ check.comment|linebreaks }}</td>
         </tr>
+        <tr>
+          <th class="align-middle text-center"><strong>Rating</strong></th>
+          <td colspan="6">
+            <div class="row align-middle text-center">
+              <div class="col-md-4">
+                Quality of work<br>
+                {% if tpwq_ave >= 0 and tpwq_ave < 0.5 %}
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% elif tpwq_ave >= 0.5 and tpwq_ave < 1 %}
+                  <span><i class="fa fa-star-half-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% elif tpwq_ave >= 1 and tpwq_ave < 1.5 %}
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% elif tpwq_ave >= 1.5 and tpwq_ave < 2 %}
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-half-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% elif tpwq_ave >= 2 and tpwq_ave < 2.5 %}
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% elif tpwq_ave >= 2.5 and tpwq_ave < 3 %}
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-half-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% elif tpwq_ave >= 3 and tpwq_ave < 3.5 %}
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% elif tpwq_ave >= 3.5 and tpwq_ave < 4 %}
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-half-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% elif tpwq_ave >= 4 and tpwq_ave < 4.5 %}
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% elif tpwq_ave >= 4.5 and tpwq_ave < 4.95 %}
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-half-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% elif tpwq_ave >= 4.95 %}
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% else %}
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% endif %}
+              </div>
+              <div class="col-md-4">
+                Time taken to perform work<br>
+                {% if ttwq_ave >= 0 and ttwq_ave < 0.5 %}
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% elif ttwq_ave >= 0.5 and ttwq_ave < 1 %}
+                  <span><i class="fa fa-star-half-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% elif ttwq_ave >= 1 and ttwq_ave < 1.5 %}
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% elif ttwq_ave >= 1.5 and ttwq_ave < 2 %}
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-half-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% elif ttwq_ave >= 2 and ttwq_ave < 2.5 %}
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% elif ttwq_ave >= 2.5 and ttwq_ave < 3 %}
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-half-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% elif ttwq_ave >= 3 and ttwq_ave < 3.5 %}
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% elif ttwq_ave >= 3.5 and ttwq_ave < 4 %}
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-half-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% elif ttwq_ave >= 4 and ttwq_ave < 4.5 %}
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% elif ttwq_ave >= 4.5 and ttwq_ave < 4.95 %}
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-half-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% elif ttwq_ave >= 4.95 %}
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% else %}
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% endif %}
+              </div>
+              <div class="col-md-4">
+                Complexity of work done<br>
+                {% if tcwq_ave >= 0 and tcwq_ave < 0.5 %}
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% elif tcwq_ave >= 0.5 and tcwq_ave < 1 %}
+                  <span><i class="fa fa-star-half-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% elif tcwq_ave >= 1 and tcwq_ave < 1.5 %}
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% elif tcwq_ave >= 1.5 and tcwq_ave < 2 %}
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-half-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% elif tcwq_ave >= 2 and tcwq_ave < 2.5 %}
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% elif tcwq_ave >= 2.5 and tcwq_ave < 3 %}
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-half-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% elif tcwq_ave >= 3 and tcwq_ave < 3.5 %}
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% elif tcwq_ave >= 3.5 and tcwq_ave < 4 %}
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-half-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% elif tcwq_ave >= 4 and tcwq_ave < 4.5 %}
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% elif tcwq_ave >= 4.5 and tcwq_ave < 4.95 %}
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-half-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% elif tcwq_ave >= 4.95 %}
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% else %}
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% endif %}
+              </div>
+            </div>
+            <br>
+            <div class="row align-middle text-center">
+              <div class="col-md-12">
+                Total average<br>
+                {% if tawq_ave >= 0 and tawq_ave < 0.5 %}
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% elif tawq_ave >= 0.5 and tawq_ave < 1 %}
+                  <span><i class="fa fa-star-half-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% elif tawq_ave >= 1 and tawq_ave < 1.5 %}
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% elif tawq_ave >= 1.5 and tawq_ave < 2 %}
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-half-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% elif tawq_ave >= 2 and tawq_ave < 2.5 %}
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% elif tawq_ave >= 2.5 and tawq_ave < 3 %}
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-half-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% elif tawq_ave >= 3 and tawq_ave < 3.5 %}
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% elif tawq_ave >= 3.5 and tawq_ave < 4 %}
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-half-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% elif tawq_ave >= 4 and tawq_ave < 4.5 %}
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% elif tawq_ave >= 4.5 and tawq_ave < 4.95 %}
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-half-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% elif tawq_ave >= 4.95 %}
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% else %}
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                  <span><i class="fa fa-star-o" aria-hidden="true" style="font-size: 2rem;"></i></span>
+                {% endif %}
+              </div>
+            </div>
+          </td>
+        </tr>
       </tbody>
     </table>
     <p>

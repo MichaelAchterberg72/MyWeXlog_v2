@@ -54,13 +54,13 @@
         </div>
         <div class="row text-center">
           <div class="col-md-4">
-            <button type="button" class="btn btn-success" id="confirm-button" style="width:19rem;border:solid 1px #000000;" name="button">Confirm</button>
+            <button type="button" class="btn btn-success" id="confirm-button" style="width:19rem;border:solid 1px #000000;" name="button" data-toggle="tooltip" title="Click here to confirm the experience!">Confirm</button>
           </div>
           <div class="col-md-4">
-            <button type="button" class="btn btn-danger" id="reject-button" style="width:19rem;border:solid 1px #000000;" name="button">Reject</button>
+            <button type="button" class="btn btn-danger" id="reject-button" style="width:19rem;border:solid 1px #000000;" name="button" data-toggle="tooltip" title="Click here to indicate you do not agree with experience claim!">Reject</button>
           </div>
           <div class="col-md-4">
-            <button type="button" class="btn btn-info" id="wrongp-button" style="width:19rem;border:solid 1px #000000;" name="button">Wrong Person</button>
+            <button type="button" class="btn btn-info" id="wrongp-button" style="width:19rem;border:solid 1px #000000;" name="button" data-toggle="tooltip" title="Click here to indicate you are the wrong person to verify this experience and do not know the requester!">Dismiss</button>
           </div>
           <div class="row text-center d-none" id="error_id_confirm_message">
             <div class="container">
@@ -201,7 +201,7 @@
      qualityStarOne.setAttribute("class", "fa fa-star-o");
    };
    qualityStarOne.onclick = function(){
-     qualityInput.value = "1";
+     qualityInput.value = "1.0";
      qualityStarOne.setAttribute("class", "fa fa-star");
      qualityStarOne.style.setProperty ("color", "#FF0000", "important");
      qualityStarTwo.style.color = "#000000";
@@ -219,7 +219,7 @@
      qualityStarTwo.setAttribute("class", "fa fa-star-o");
    };
    qualityStarTwo.onclick = function(){
-     qualityInput.value = "2";
+     qualityInput.value = "2.0";
      qualityStarOne.setAttribute("class", "fa fa-star");
      qualityStarTwo.setAttribute("class", "fa fa-star");
      qualityStarOne.style.setProperty ("color", "#FF0000", "important");
@@ -240,7 +240,7 @@
      qualityStarThree.setAttribute("class", "fa fa-star-o");
    };
    qualityStarThree.onclick = function(){
-     qualityInput.value = "3";
+     qualityInput.value = "3.0";
      qualityStarOne.setAttribute("class", "fa fa-star");
      qualityStarTwo.setAttribute("class", "fa fa-star");
      qualityStarThree.setAttribute("class", "fa fa-star");
@@ -264,7 +264,7 @@
      qualityStarFour.setAttribute("class", "fa fa-star-o");
    };
    qualityStarFour.onclick = function(){
-     qualityInput.value = "4";
+     qualityInput.value = "4.0";
      qualityStarOne.setAttribute("class", "fa fa-star");
      qualityStarTwo.setAttribute("class", "fa fa-star");
      qualityStarThree.setAttribute("class", "fa fa-star");
@@ -291,7 +291,7 @@
      qualityStarFive.setAttribute("class", "fa fa-star-o");
    };
    qualityStarFive.onclick = function(){
-     qualityInput.value = "5";
+     qualityInput.value = "5.0";
      qualityStarOne.setAttribute("class", "fa fa-star");
      qualityStarTwo.setAttribute("class", "fa fa-star");
      qualityStarThree.setAttribute("class", "fa fa-star");
@@ -320,7 +320,7 @@
      timeTakenStarOne.setAttribute("class", "fa fa-star-o");
    };
    timeTakenStarOne.onclick = function(){
-     timeTakenInput.value = "1";
+     timeTakenInput.value = "1.0";
      timeTakenStarOne.setAttribute("class", "fa fa-star");
      timeTakenStarOne.style.setProperty ("color", "#FF0000", "important");
      timeTakenStarTwo.style.color = "#000000";
@@ -338,7 +338,7 @@
      timeTakenStarTwo.setAttribute("class", "fa fa-star-o");
    };
    timeTakenStarTwo.onclick = function(){
-     timeTakenInput.value = "2";
+     timeTakenInput.value = "2.0";
      timeTakenStarOne.setAttribute("class", "fa fa-star");
      timeTakenStarTwo.setAttribute("class", "fa fa-star");
      timeTakenStarOne.style.setProperty ("color", "#FF0000", "important");
@@ -359,7 +359,7 @@
      timeTakenStarThree.setAttribute("class", "fa fa-star-o");
    };
    timeTakenStarThree.onclick = function(){
-     timeTakenInput.value = "3";
+     timeTakenInput.value = "3.0";
      timeTakenStarOne.setAttribute("class", "fa fa-star");
      timeTakenStarTwo.setAttribute("class", "fa fa-star");
      timeTakenStarThree.setAttribute("class", "fa fa-star");
@@ -383,7 +383,7 @@
      timeTakenStarFour.setAttribute("class", "fa fa-star-o");
    };
    timeTakenStarFour.onclick = function(){
-     timeTakenInput.value = "4";
+     timeTakenInput.value = "4.0";
      timeTakenStarOne.setAttribute("class", "fa fa-star");
      timeTakenStarTwo.setAttribute("class", "fa fa-star");
      timeTakenStarThree.setAttribute("class", "fa fa-star");
@@ -410,7 +410,7 @@
      timeTakenStarFive.setAttribute("class", "fa fa-star-o");
    };
    timeTakenStarFive.onclick = function(){
-     timeTakenInput.value = "5";
+     timeTakenInput.value = "5.0";
      timeTakenStarOne.setAttribute("class", "fa fa-star");
      timeTakenStarTwo.setAttribute("class", "fa fa-star");
      timeTakenStarThree.setAttribute("class", "fa fa-star");
@@ -439,7 +439,7 @@
      complexityStarOne.setAttribute("class", "fa fa-star-o");
    };
    complexityStarOne.onclick = function(){
-     complexityInput.value = "1";
+     complexityInput.value = "1.0";
      complexityStarOne.setAttribute("class", "fa fa-star");
      complexityStarOne.style.setProperty ("color", "#FF0000", "important");
      complexityStarTwo.style.color = "#000000";
@@ -457,7 +457,7 @@
      complexityStarTwo.setAttribute("class", "fa fa-star-o");
    };
    complexityStarTwo.onclick = function(){
-     complexityInput.value = "2";
+     complexityInput.value = "2.0";
      complexityStarOne.setAttribute("class", "fa fa-star");
      complexityStarTwo.setAttribute("class", "fa fa-star");
      complexityStarOne.style.setProperty ("color", "#FF0000", "important");
@@ -478,7 +478,7 @@
      complexityStarThree.setAttribute("class", "fa fa-star-o");
    };
    complexityStarThree.onclick = function(){
-     complexityInput.value = "3";
+     complexityInput.value = "3.0";
      complexityStarOne.setAttribute("class", "fa fa-star");
      complexityStarTwo.setAttribute("class", "fa fa-star");
      complexityStarThree.setAttribute("class", "fa fa-star");
@@ -502,7 +502,7 @@
      complexityStarFour.setAttribute("class", "fa fa-star-o");
    };
    complexityStarFour.onclick = function(){
-     complexityInput.value = "4";
+     complexityInput.value = "4.0";
      complexityStarOne.setAttribute("class", "fa fa-star");
      complexityStarTwo.setAttribute("class", "fa fa-star");
      complexityStarThree.setAttribute("class", "fa fa-star");
@@ -529,7 +529,7 @@
      complexityStarFive.setAttribute("class", "fa fa-star-o");
    };
    complexityStarFive.onclick = function(){
-     complexityInput.value = "5";
+     complexityInput.value = "5.0";
      complexityStarOne.setAttribute("class", "fa fa-star");
      complexityStarTwo.setAttribute("class", "fa fa-star");
      complexityStarThree.setAttribute("class", "fa fa-star");

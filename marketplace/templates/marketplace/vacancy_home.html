@@ -55,55 +55,66 @@
             </a>
           </div>
 
-          <!-- Modal -->
-          <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h4 class="modal-title" id="exampleModalLabel">My Availability</h4>
-                  <div class="float-right">
-                    <a href="{% url 'MarketPlace:Availabillity' %}" class="badge badge-primary" style="width: 8rem;">
-                      Add
-                    </a>
-                    <a href="{% url 'MarketPlace:HelpAvailability' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="tooltip" title="Click here for help on this page!">
-                      <i class="fa fa-question-circle"></i>
-                    </a>
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel">My Availability</h4>
+                <div class="float-right">
+                  <a href="{% url 'MarketPlace:Availabillity' %}" class="badge badge-primary" style="width: 8rem;">Edit</a>
+                  <a href="{% url 'MarketPlace:HelpAvailability' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="tooltip" title="Click here for help on this page!">
+                  <i class="fa fa-question-circle"></i></a>
+                </div>
+              </div>
+              <div class="modal-body">
+                <div class="row">
+                  <div class="col-md-4 text-center">
+                    Contract<br>
+                    {% if ta.contract %}
+                    <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                    {% else %}
+                    <i class="fa fa-square-o" aria-hidden="true"></i>
+                    {% endif %}
+                  </div>
+                  <div class="col-md-4 text-center">
+                    Part Time<br>
+                    {% if ta.part_time %}
+                    <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                    {% else %}
+                    <i class="fa fa-square-o" aria-hidden="true"></i>
+                    {% endif %}
+                  </div>
+                  <div class="col-md-4 text-center">
+                    Permanent<br>
+                    {% if ta.permanent %}
+                    <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                    {% else %}
+                    <i class="fa fa-square-o" aria-hidden="true"></i>
+                    {% endif %}
                   </div>
                 </div>
-                <div class="modal-body">
-                  <div class="row">
-                    <div class="col-sm-12">
-                      <div class="border-0">
-                          <table class="table table-hover table-sm">
-                            <thead>
-                              <col width="30%">
-                              <col width="30%">
-                              <col width="30%">
-                              <col width="10%">
-                              <tr class="no-hover">
-                                <th class="align-middle text-center">Date From</th>
-                                <th class="align-middle text-center">Date to</th>
-                                <th class="align-middle text-center">Time Available</th>
-                              </tr>
-                            </thead>
-                            {% for a in capacity %}
-                              <tbody>
-                                <tr>
-                                  <td class="align-middle text-center">{{ a.date_from|date:'d M Y' }}</td>
-                                  <td class="align-middle text-center">{{ a.date_to|date:'d M Y' }}</td>
-                                  <td class="align-middle text-center">{{ a.hours_available }} hrs {{ a.get_unit_display }}</td>
-                                  <td class="align-middle float-right">
-                                    <form  action="{% url 'MarketPlace:NotAvailable' a.id %}" method="post">
-                                      {% csrf_token %}
-                                      <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
-                                    </form>
-                                  </td>
-                                </tr>
-                              </tbody>
-                            {% endfor %}
-                          </table>
-                      </div>
-                    </div>
+                <br>
+                <div class="row">
+                  <div class="col-md-3">
+                  </div>
+                  <div class="col-md-3 text-center">
+                    Freelance<br>
+                    {% if ta.freelance %}
+                    <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                    {% else %}
+                    <i class="fa fa-square-o" aria-hidden="true"></i>
+                    {% endif %}
+                  </div>
+                  <div class="col-md-4 text-center">
+                    Remote Freelance<br>
+                    {% if ta.remote_freelance %}
+                    <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                    {% else %}
+                    <i class="fa fa-square-o" aria-hidden="true"></i>
+                    {% endif %}
+                  </div>
+                  <div class="col-md-2">
                   </div>
                 </div>
                 <div class="modal-footer">
@@ -161,19 +172,19 @@
           </div>
         </div>
 
-        <div class="post-back" style="display:none;" id="newCard{{id}}">
-          <div class="card-body card-hover card-no-hover">
-            <div class="row" style="height: 20px;">
-              <div class="col-md-12 h-100 my-auto">
-                <div class="card-maximise float-right">
-                  <div class="row">
-                    <button type="submit" class="pointer no-border" data-toggle="tooltip" title="Minimise" id="un-clickMe{{id}}"><i class="fa fa-window-minimize"></i></button>
-                    &nbsp
-                    <form action="{% url 'MarketPlace:CloseVacancy' tlt s.id %}" method="post">
-                      {% csrf_token %}
-                      <button type="submit" class="pointer no-border" data-toggle="tooltip" title="Close" name="close"><i class="fa fa-times" aria-hidden="true"></i></button>
-                    </form>
-                  </div>
+      <div class="post-back" style="display:none;" id="newCard{{id}}">
+
+        <div class="card-body">
+          <div class="row" style="height: 20px;">
+            <div class="col-md-12 h-100 my-auto">
+              <div class="card-maximise float-right">
+                <div class="row">
+                  <button type="submit" class="pointer no-border" data-toggle="tooltip" title="Minimise" id="un-clickMe{{id}}"><i class="fa fa-window-minimize"></i></button>
+                  &nbsp
+                  <form action="{% url 'MarketPlace:CloseVacancy' tlt s.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="pointer no-border" data-toggle="tooltip" title="Close" name="close"><i class="fa fa-times" aria-hidden="true"></i></button>
+                  </form>
                 </div>
               </div>
             </div>

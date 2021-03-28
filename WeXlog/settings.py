@@ -90,7 +90,6 @@ INSTALLED_APPS = [
 #    'M2Crypto',
     'paypal.standard.ipn',
     'django_celery_beat',
-    'fullurl',
 ]
 
 
@@ -124,6 +123,11 @@ TEMPLATES = [
                 'users.context_processor.theme',
                 'users.context_processor.notification_count',
                 'users.context_processor.confirm_count',
+                'users.context_processor.employer_interviews_count',
+                'users.context_processor.talent_interviews_count',
+                'users.context_processor.employer_assignment_count',
+                'users.context_processor.talent_assignment_count',
+                'users.context_processor.total_notification_count',
             ],
 #            'loaders': [
 #            ('django.template.loaders.cached.Loader', [

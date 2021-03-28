@@ -93,7 +93,7 @@
             <div class="fa-primary">
               <i style="font-size: 27px" class="fa fa-archive"></i>
             </div>
-            <span class="link-text">Vacancies</span>
+            <span class="link-text">Marketplace</span>
           </a>
         </li>
 
@@ -206,49 +206,124 @@
   </main>
 
   {% if request.user.is_authenticated %}
-  <nav class="sticky-top navbar-light bg-light top-right-navbar">
-    <div class="">
-      <span><img align="center" class="icon" height="30" src="{% static 'images/email/mywexlog-logo.png' %}" style="height:30px;border:0;padding:0px 35px 5px 0px;" width="null"/></span>&nbsp
+  <nav class="navbar-light bg-light top-right-navbar">
+    <a class="navbar-brand" href="#"><span><img align="center" class="icon" height="30" src="{% static 'images/email/mywexlog-logo.png' %}" style="height:30px;border:0;padding:0px 35px 5px 0px;" width="null"/></span></a>
+<!--
+    <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+-->
+    <div class="" id="navbarSupportedContent">
+      <ul class="navbar-nav-top mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link nav-link-top" href="{% url 'Feedback:FeedBack' %}?next={{ request.path|urlencode }}"><i class="fa fa-bullhorn" aria-hidden="true" style="font-size:30px;" data-toggle="tooltip" title="We love to hear your feedback!"></i></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link nav-link-top" href="{% url 'Feedback:NoticesList' %}?next={{ request.path|urlencode }}"><i class="fa fa-bell" aria-hidden="true" style="font-size:30px;" data-toggle="tooltip" title="Please click here to view MyWeXlog Notices!"></i></a>
 
-      <a class="navbar-brand" href="{% url 'Feedback:FeedBack' %}?next={{ request.path|urlencode }}"><i class="fa fa-bullhorn" aria-hidden="true" style="font-size:30px;color:black" data-toggle="tooltip" title="We love to hear your feedback!"></i></a>
+          {% if notification > 0 %}
+            <span class="icon-notification">
+                {{ notification }}
+            </span>
+          {% endif %}
 
-      <div class="btn-group">
-      <a class="navbar-brand" href="{% url 'Feedback:NoticesList' %}?next={{ request.path|urlencode }}"><i class="fa fa-bell" aria-hidden="true" style="font-size:30px;" data-toggle="tooltip" title="Please click here to view MyWeXlog Notices!"></i></a>
-      {% if notification > 0 %}
-        <span class="icon-notification">
-            {{ notification }}
-        </span>
-      {% endif %}
-
-      <a class="navbar-brand" href="{% url 'Profile:Confirm' %}?next={{ request.path|urlencode }}"><i class="fa fa-connectdevelop" aria-hidden="true" style="font-size:30px;" data-toggle="tooltip" title="Please click here to confirm MyWeXlog verification requests!"></i></a>
-      {% if verifications > 0 %}
-        <span class="icon-notification">
-            {{ verifications }}
-        </span>
-      {% endif %}
-
-      <a class="navbar-brand" href="{% url 'Users:UserAgreement' %}">User Agreement</a>
-      <a class="navbar-brand" href="{% url 'Users:PrivacyPolicy' %}">Privacy Policy</a>
-
-      <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <img src="{% static 'images/user-unisex-512.png' %}" height="45" width="45" class="avatar">
-      </button>
-        <div class="dropdown-menu dropdown-menu-right">
-          <a class="dropdown-item"  href="{% url 'Profile:ProfileView' %}">View Profile</a>
-          <a class="dropdown-item"  href="{% url 'Invitation:FlatInvite' %}" target="_blank">Invite Someone</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item"  href="{% url 'Profile:IntroIntroduction' %}">Introduction Walkthrough</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item"  href="{% url 'account_email' %}">Manage email</a>
-          <a class="dropdown-item"  href="{% url 'account_change_password' %}">Change Password</a>
-          <a class="dropdown-item"  href="{% url 'Users:CustomUserSettings' %}">Settings</a>
-          <a class="dropdown-item" href="{% url 'Invitation:Profile2PDF' %}" target="_blank" >Profile to PDF</a>
-          <a class="dropdown-item" href="{% url 'Public:ContactUs' %}">Contact Us</a>
-          <div class="dropdown-divider">
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link nav-link-top dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-superpowers" aria-hidden="true" style="font-size:30px;" data-toggle="tooltip" title="Please click here to confirm view MyWeXlog notifications!"></i>
+            {% if total_notification_count > 0 %}
+              <span class="icon-notification icon-notification-dropdown">
+                  {{ total_notification_count }}
+              </span>
+            {% endif %}
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="width:auto;">
+            {% if verifications > 0 %}
+            <a class="dropdown-item" href="{% url 'Profile:Confirm' %}?next={{ request.path|urlencode }}">
+                <i class="fa fa-connectdevelop" aria-hidden="true" style="font-size:30px;"></i>
+                {% if verifications > 0 %}
+                <span class="icon-notification icon-notification-experience">{{ verifications }}</span>
+                {% endif %}
+                Experience Verifications
+            </a>
+            {% endif %}
+            {% if interviews_emp_count > 0 or interviews_tlt_count > 0 %}
+            <div class="dropdown-divider"></div>
+            {% endif %}
+            {% if interviews_emp_count > 0 %}
+            <a class="dropdown-item" href="{% url 'Profile:ProfileHome' %}#EmployerInterview">
+                <i class="fa fa-calendar-o" aria-hidden="true" style="font-size:30px;padding-right:12px;"></i>
+                {% if interviews_emp_count > 0 %}
+                <span class="icon-notification icon-notification-interviews">{{ interviews_emp_count }}</span>
+                {% endif %}
+                Employer Interviews
+            </a>
+            {% endif %}
+            {% if interviews_tlt_count > 0 %}
+            <a class="dropdown-item" href="{% url 'Profile:ProfileHome' %}#TalentInterview">
+                <i class="fa fa-calendar-o" aria-hidden="true" style="font-size:30px;padding-right:12px;"></i>
+                {% if interviews_tlt_count > 0 %}
+                <span class="icon-notification icon-notification-interviews">{{ interviews_tlt_count }}</span>
+                {% endif %}
+                Talent Interviews
+            </a>
+            {% endif %}
+            {% if assigned_tlt_count > 0 or assigned_emp_count > 0 %}
+            <div class="dropdown-divider"></div>
+            {% endif %}
+            {% if assigned_emp_count > 0 %}
+            <a class="dropdown-item" href="{% url 'Profile:ProfileHome' %}#EmployerAssignment">
+                <i class="fa fa-handshake-o" aria-hidden="true" style="font-size:30px;"></i>
+                {% if assigned_emp_count > 0 %}
+                <span class="icon-notification icon-notification-assignments">{{ assigned_emp_count }}</span>
+                {% endif %}
+                Employer Assignments
+            </a>
+            {% endif %}
+            {% if assigned_tlt_count > 0 %}
+            <a class="dropdown-item" href="{% url 'Profile:ProfileHome' %}#TalentAssignment">
+                <i class="fa fa-handshake-o" aria-hidden="true" style="font-size:30px;"></i>
+                {% if assigned_tlt_count > 0 %}
+                <span class="icon-notification icon-notification-assignments">{{ assigned_tlt_count }}</span>
+                {% endif %}
+                Talent Assignments
+            </a>
+            {% endif %}
           </div>
-          <a class="dropdown-item"  href="{% url 'account_logout' %}">Logout</a>
-        </div>
-      </div>
+        </li>
+        <li class="nav-item  nav-link-top">
+          <a class="nav-link nav-link-top" href="{% url 'Users:UserAgreement' %}">User&nbspAgreement</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link nav-link-top" href="{% url 'Users:PrivacyPolicy' %}">Privacy&nbspPolicy</a>
+        </li>
+        <!--
+        <li class="nav-item">
+          <a class="nav-link disabled" href="#">Disabled</a>
+        </li>
+        -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <img src="{% static 'images/user-unisex-512.png' %}" height="45" width="45" class="avatar">
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item"  href="{% url 'Profile:ProfileView' %}">Edit Profile</a>
+            <a class="dropdown-item"  href="{% url 'Invitation:FlatInvite' %}" target="_blank">Invite Someone</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item"  href="{% url 'Profile:IntroIntroduction' %}">Introduction Walkthrough</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item"  href="{% url 'account_email' %}">Manage email</a>
+            <a class="dropdown-item"  href="{% url 'account_change_password' %}">Change Password</a>
+            <a class="dropdown-item"  href="{% url 'Users:CustomUserSettings' %}">Settings</a>
+            <a class="dropdown-item" href="{% url 'Invitation:Profile2PDF' %}" target="_blank" >Profile to PDF</a>
+            <a class="dropdown-item" href="{% url 'Public:ContactUs' %}">Contact Us</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item"  href="{% url 'account_logout' %}">Logout</a>
+          </div>
+        </li>
+      </ul>
+
     </div>
   </nav>
 
