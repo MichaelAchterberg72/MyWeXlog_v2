@@ -134,17 +134,20 @@ class DesignationSelect2Widget(DesignationSearchFieldMixin, ModelSelect2Widget):
     def create_value(self, value):
         self.get_queryset().create(name=value)
 
+
 class ProjectSearchFieldMixin:
     search_fields = [
         'name__icontains', 'pk__startswith', 'company__ename__icontains', 'region__region__icontains', 'city__city__icontains',
     ]
 
+    dependent_fields = {'companybranch': 'companybranch'}
 
 class ProjectSelect2Widget(ProjectSearchFieldMixin, ModelSelect2Widget):
     model = ProjectData
 
     def create_value(self, value):
         self.get_queryset().create(name=value)
+
 
 class SkillSearchFieldMixin:
     search_fields = [
@@ -570,10 +573,6 @@ class WorkExperienceForm(forms.ModelForm):
             'companybranch': 'Branch',
             'upload': 'Upload File (Optional)',
             'comment': 'Comment (Optional)',
-        }
-        help_texts = {
-            'company': 'Please complete the Company field before the Branch Field',
-            'companybranch': 'This field is dependant on the Company Field - fill Company Field first',
         }
 
     def clean_date_to(self):

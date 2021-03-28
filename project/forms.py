@@ -77,7 +77,7 @@ class RegionSelect2Widget(RegionSearchFieldMixin, ModelSelect2Widget):
 class ProjectAddForm(forms.ModelForm):
 
     '''
-    #removed this validation for now.
+    #removed this validation for now...
     pwd = None
     def __init__(self, *args, **kwargs):
         global pwd
@@ -87,13 +87,13 @@ class ProjectAddForm(forms.ModelForm):
 
     class Meta:
         model = ProjectData
-        fields = ('name', 'company', 'country', 'companybranch', 'region', 'city', 'industry')
+        fields = ('name', 'country', 'region', 'city', 'industry')
         widgets = {
-            'company': CompanySelect2Widget(),
+            #'company': CompanySelect2Widget(),
             'industry': IndustrySelect2Widget(),
             'region': RegionSelect2Widget(),
             'city': CitySelect2Widget(),
-            'companybranch': BranchSelect2Widget(),
+            #'companybranch': BranchSelect2Widget(),
         }
         labels = {
             'city' : 'Closest City / Town / Village',

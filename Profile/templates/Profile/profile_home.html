@@ -10,74 +10,96 @@
       <div class="col-sm-12">
         <div class="card card-shadow">
           <div class="card-body">
-            <h3 class="card-title">Introduction Walkthrough</h3>
-            <p>We have created an introduction walkthrough to assist you in your first days using MyWeXlog and to provide you with an overview of how MyWeXlog works and the best way to use the system.
+            <h3 class="card-title">
+              Introduction Walkthrough
+            </h3>
+            <p>
+              We have created an introduction walkthrough to assist you in your first days using MyWeXlog and to provide you with an overview of how MyWeXlog works and the best way to use the system.
+            </p>
             <div>
               <form action="{% url 'Profile:CloseIntro' %}" method="post">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-secondary">Don't View This Again!</button>
-                <a href="{% url 'Profile:IntroIntroduction' %}" class="btn btn-primary float-right">Introduction Wizard</a>
+                <button type="submit" class="btn btn-secondary">
+                  Don't View This Again!
+                </button>
+                <a href="{% url 'Profile:IntroIntroduction' %}" class="btn btn-primary float-right">
+                  Introduction Wizard
+                </a>
               </form>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <br>
-    <div>
+<br>
   {% endif %}
 
   {% if fm %}
-  {% if not fse %}
-    <div class="row">
-      <div class="col-sm-12">
-        <div class="card card-shadow">
-          <div class="card-body">
-            <h3 class="card-title text-center">Your 30 Day Trial Active Subscription Has Been Initiated!</h3>
-            Your one month free Active Subscription has been initiated. You can enjoy the full benefits of MyWeXlog for the next 30 days. In order top make your account permissions permanent please select one of the subscriptions to upgrade to:<br><br>
-            <div class="row">
-              <div class="col-sm-12">
-              <a href="{% url 'Payments:PassiveSubscription' %}" class="btn btn-primary float-left">Passive Subscription</a>
-              <a href="{% url 'Payments:ActiveSubscription' %}" class="btn btn-primary float-right">Active Subscription</a>
+    {% if not fse %}
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="card card-shadow">
+            <div class="card-body">
+              <h3 class="card-title text-center">
+                Your 30 Day Trial Active Subscription Has Been Initiated!
+              </h3>
+              <p>
+                Your one month free Active Subscription has been initiated. You can enjoy the full benefits of MyWeXlog for the next 30 days. In order top make your account permissions permanent please select one of the subscriptions to upgrade to:
+              </p>
+              <div class="row">
+                <div class="col-sm-12">
+                  <a href="{% url 'Payments:PassiveSubscription' %}" class="btn btn-primary float-left">
+                    Passive Subscription
+                  </a>
+                  <a href="{% url 'Payments:ActiveSubscription' %}" class="btn btn-primary float-right">
+                    Active Subscription
+                  </a>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <br>
-  {% endif %}
+      <br>
+    {% endif %}
   {% endif %}
 
   {% if not fm %}
-  {% if not fse %}
-    <div class="row">
-      <div class="col-sm-12">
-        <div class="card card-shadow">
-          <div class="card-body">
-            <h3 class="card-title text-center">Your Trial Active Subscription Has Expired!</h3>
-            Your one month free Active Subscription has expired. To contine enjoying the full benefits of MyWeXlog please select one of the subscriptions to upgrade to:<br><br>
-
-            <div class="row">
-              <div class="col-sm-6">
-              <form  action="{% url 'Profile:CloseEndFreeSubscription' %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-secondary">Don't Show This Again!</button>
-              </form>
+    {% if not fse %}
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="card card-shadow">
+            <div class="card-body">
+              <h3 class="card-title text-center">Your Trial Active Subscription Has Expired!</h3>
+              <p>
+                Your one month free Active Subscription has expired. To contine enjoying the full benefits of MyWeXlog please select one of the subscriptions to upgrade to:
+              </p>
+              <div class="row">
+                <div class="col-sm-6">
+                <form  action="{% url 'Profile:CloseEndFreeSubscription' %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-secondary">
+                    Don't Show This Again!
+                  </button>
+                </form>
+                </div>
+                <div class="col-sm-6">
+                  <a href="{% url 'Payments:PassiveSubscription' %}" class="btn btn-primary float-left">
+                    Passive Subscription
+                  </a>
+                  <a href="{% url 'Payments:ActiveSubscription' %}" class="btn btn-primary float-right">
+                    Active Subscription
+                  </a>
+                </div>
               </div>
-              <div class="col-sm-6">
-              <a href="{% url 'Payments:PassiveSubscription' %}" class="btn btn-primary float-left">Passive Subscription</a>
-              <a href="{% url 'Payments:ActiveSubscription' %}" class="btn btn-primary float-right">Active Subscription</a>
+              <div>
               </div>
-            </div>
-            <div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <br>
-    {% endif %}
+      <br>
+      {% endif %}
     {% endif %}
 {% endblock intro %}
 
@@ -108,20 +130,18 @@
     <p>
       Referral link:
       <hr>
-
       <div class="input-group mb-3">
         <input type="text" class="form-control" value="{{ referral_code.url }}" id="myInput" aria-describedby="basic-addon2">
         <div class="input-group-append">
           <button class="btn btn-outline-secondary" type="button" id="myButton">Copy Link</button>
         </div>
       </div>
-
-      <hr>
-      Copy and paste the above url address into an email or a Social Network Post for your friends to join MyWeXlog in your network.
-      <hr>
-      <p>View a listing of associates that have not yet accepted:</p>
+      <small>
+        Copy and paste the above url address into an email or a Social Network Post for your friends to join MyWeXlog in your network.
+      </small>
+      <br>
       <div class="float-right">
-        <a href="{% url 'Invitation:InvitationsSent' %}" class="btn btn-primary">
+        <a href="{% url 'Invitation:InvitationsSent' %}" class="btn btn-primary" data-toggle=tooltip title="View a list of associates that have not yet accepted you invitation to MyWeXlog">
           Invitations
         </a>
       </div>
@@ -131,11 +151,11 @@
 
 {% block workflow %}
 <div class="float-right">
-  <a href="{% url 'MarketPlace:EmployerInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 10rem">
+  <a href="{% url 'MarketPlace:EmployerInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 10rem" data-toggle=tooltip title="View a history of all interviews you have requested">
     Employer History
   </a>
   &nbsp
-  <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary 8rem" style="width: 10rem">
+  <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 10rem" data-toggle=tooltip title="View a history of all interviews you have accepted">
     Candidate History
   </a>
 </div>
@@ -181,10 +201,10 @@
 
 {% block score %}
   <div class="float-right">
-    <a href="{% url 'Profile:WorkshopEmp' %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 10rem">
+    <a href="{% url 'Profile:WorkshopEmp' %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 10rem" data-toggle=tooltip title="View or manage all work you have assigned">
       Employer Office
     </a> &nbsp
-    <a href="{% url 'Profile:WorkshopTlt' %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 10rem">
+    <a href="{% url 'Profile:WorkshopTlt' %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 10rem" data-toggle=tooltip title="View or manage all vacancies you have accepted">
       Talent Workshop
     </a>
   </div>
@@ -234,7 +254,7 @@
     </tbody>
   </table>
   <br>
-  <p>Your Profile has been viewed: {% if request.user.subscription >= 1 %}<a href="{% url 'Profile:ProfileViewed' %}" class="btn btn-info float-right">Profile Viewed Report: {{ pvr_count }} times</a>{% else %}<span class="float-right"><strong>{{ pvr_count }}</strong> times.</span>{% endif %}</p>
+  <p>{% if request.user.subscription >= 1 %}<a href="{% url 'Profile:ProfileViewed' %}" class="btn btn-info float-right">Profile Viewed Report: {{ pvr_count }} times</a>{% else %}<span class="float-right"><strong>{{ pvr_count }}</strong> times.</span>{% endif %}</p>
 
 {% endblock score %}
 
@@ -424,9 +444,15 @@
   <div class="card-body">
     <div class="float-right">
       <a href="{% url 'Profile:HelpDesktopPendingInterviews' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="tooltip" title="Click here for help on this page!">
-      <i class="fa fa-question-circle"></i></a>
+        <i class="fa fa-question-circle"></i>
+      </a>
     </div>
-    <h4 class="card-title" id="Interview">Pending Interviews</h4>
+    <h4 class="card-title" id="Interview">
+      Pending Interviews
+    </h4>
+    <small>
+      Once an interview has been accpeted, you will need to make contact to determine the interview date and time.
+    </small>
 
     <div class="container">
 

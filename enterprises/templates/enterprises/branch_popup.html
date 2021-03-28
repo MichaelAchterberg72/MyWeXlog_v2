@@ -12,14 +12,12 @@
   }
   </style>
 <div class="container">
-<h3>Company Branch Details</h3>
+<h3>Add a Branch for {{ qs.ename }}</h3>
 <form method="post" id="BranchForm">
 <input type="hidden" name="next" value="{{ request.GET.next }}">
   {% csrf_token %}
   <div class="form-row">
     <div class="form-group col-md-6 mb-0">
-      {{ form.company|as_crispy_field }}
-      <p><a href="{% url 'Enterprise:EnterpriseAddPop' %}" id='add_company' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add Company</a></p>
       {{ form.name|as_crispy_field }}
       <div class="form-row">
         <div class="form-group col-md-6 mb-0">
