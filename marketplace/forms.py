@@ -289,7 +289,7 @@ class TalentRequiredForm(forms.ModelForm):
             'certification': CertModelSelect2MultipleWidget(),
         }
         labels = {
-            'companybranch': 'Company & Branch',
+            'companybranch': 'Company',
             'title': 'Vacancy Title',
             'bid_closes': 'Applications Close',
             'offer_status': 'Vacancy Status',
