@@ -42,8 +42,6 @@
               {{ form.size|as_crispy_field }}
             </div>
           </div>
-          {{ form.phy_address_line1|as_crispy_field }}
-          {{ form.phy_address_line2|as_crispy_field }}
           {{ form.industry|as_crispy_field }}
           <p>
             <a href="{% url 'Enterprise:IndustryAddPop' %}" id='add_branch_industry' onclick='return showAddPopup(this);'>
@@ -51,6 +49,11 @@
               Add Another Industry
             </a>
           </p>
+          {{ form.phy_address_line1|as_crispy_field }}
+          <p>
+            <br>
+          </p>
+          {{ form.phy_address_line2|as_crispy_field }}
         </div>
         <div class="form-group col-md-6 mb-0">
           {{ form.country|as_crispy_field }}

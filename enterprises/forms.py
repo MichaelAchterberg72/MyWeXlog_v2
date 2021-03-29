@@ -107,6 +107,7 @@ class BranchForm(forms.ModelForm):
 
 
 class FullBranchForm(forms.ModelForm):
+    '''This form is used when adding a branch from the talenttrack app'''
     class Meta:
         model = Branch
         fields = ('name', 'type', 'size', 'phy_address_line1', 'phy_address_line2', 'country', 'region', 'city', 'suburb', 'code', 'industry',)
@@ -118,6 +119,19 @@ class FullBranchForm(forms.ModelForm):
             'industry': IndSelect2Widget(),
         }
 
+
+class FullBranchHome(forms.ModelForm):
+    '''This form is used from the Enterprise home page'''
+    class Meta:
+        model = Branch
+        fields = ('company', 'name', 'type', 'size', 'phy_address_line1', 'phy_address_line2', 'country', 'region', 'city', 'suburb', 'code', 'industry',)
+        widgets={
+            'region': RegionSelect2Widget(),
+            'city': CitySelect2Widget(),
+            'suburb': SuburbSelect2Widget(),
+            'company': CompanySelect2Widget(),
+            'industry': IndSelect2Widget(),
+        }
 
 class IndustryPopUpForm(forms.ModelForm):
     class Meta:

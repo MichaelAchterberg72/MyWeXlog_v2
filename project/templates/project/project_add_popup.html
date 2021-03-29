@@ -13,7 +13,8 @@
   }
   </style>
 <div class="container">
-  <h3>Add a Project</h3>
+  <h4>Add Project managed from:<br>
+  {{ qs.company }}-{{ qs.name }}</h4>
 
   <form class="" action="" method="POST" id="ProjectForm">
     <input type="hidden" name="next" value="{{ request.GET.next }}">
@@ -21,6 +22,9 @@
     <div class="form-row">
       <div class="form-group col-md-6 mb-0">
         {{ form.name|as_crispy_field }}
+        <p>
+          <br>
+        </p>
         {{ form.industry|as_crispy_field }}
         <a href="{% url 'Enterprise:IndustryAddPop' %}" id='add_industry' onclick='return showAddPopup(this);'>
           <img src="{% static 'images/icon-addlink.svg' %}">
@@ -35,10 +39,12 @@
             Please enter a region
           </button>
         </div>
-        <a href="{% url 'Location:RegionAddPop' %}" id='add_region' onclick='return showAddPopup(this);'>
-          <img src="{% static 'images/icon-addlink.svg' %}">
-          Add Region
-        </a>
+        <p>
+          <a href="{% url 'Location:RegionAddPop' %}" id='add_region' onclick='return showAddPopup(this);'>
+            <img src="{% static 'images/icon-addlink.svg' %}">
+            Add Region
+          </a>
+        </p>
         {{ form.city|as_crispy_field }}
 
         <a href="#" id='ad_cty'>

@@ -25,7 +25,7 @@ from Profile.models import Profile
 from talenttrack.models import WorkExperience
 from enterprises.models import Enterprise
 
-from .forms import ProjectAddForm, ProjectSearchForm, ProjectForm
+from .forms import ProjectAddForm, ProjectAddHome, ProjectSearchForm, ProjectForm
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
@@ -136,13 +136,13 @@ def ProjectEditView(request, prj):
 @csp_exempt
 def ProjectAddView(request):
     if request.method =='POST':
-        form = ProjectAddForm(request.POST or None)
+        form = ProjectAddHome(request.POST or None)
         if form.is_valid():
             new = form.save(commit=False)
             new.save()
             return redirect(reverse('Project:ProjectHome'))
     else:
-        form = ProjectAddForm()
+        form = ProjectAddHome()
 
     template = 'project/project_add.html'
     context = {'form': form}
