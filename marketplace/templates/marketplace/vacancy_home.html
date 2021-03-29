@@ -3,6 +3,76 @@
 {% block title %}{{block.super}}-Vacancy{% endblock title %}
 
 {% block content %}
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="exampleModalLabel">My Availability</h4>
+        <div class="float-right">
+          <a href="{% url 'MarketPlace:Availabillity' %}" class="badge badge-primary" style="width: 8rem;">Edit</a>
+          <a href="{% url 'MarketPlace:HelpAvailability' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="tooltip" title="Click here for help on this page!">
+          <i class="fa fa-question-circle"></i></a>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-4 text-center">
+            Contract<br>
+            {% if ta.contract %}
+            <i class="fa fa-check-square-o" aria-hidden="true" style="font-size:2rem;"></i>
+            {% else %}
+            <i class="fa fa-square-o" aria-hidden="true" style="font-size:2rem;"></i>
+            {% endif %}
+          </div>
+          <div class="col-md-4 text-center">
+            Part Time<br>
+            {% if ta.part_time %}
+            <i class="fa fa-check-square-o" aria-hidden="true" style="font-size:2rem;"></i>
+            {% else %}
+            <i class="fa fa-square-o" aria-hidden="true" style="font-size:2rem;"></i>
+            {% endif %}
+          </div>
+          <div class="col-md-4 text-center">
+            Permanent<br>
+            {% if ta.permanent %}
+            <i class="fa fa-check-square-o" aria-hidden="true" style="font-size:2rem;"></i>
+            {% else %}
+            <i class="fa fa-square-o" aria-hidden="true" style="font-size:2rem;"></i>
+            {% endif %}
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-md-3">
+          </div>
+          <div class="col-md-3 text-center">
+            Freelance<br>
+            {% if ta.freelance %}
+            <i class="fa fa-check-square-o" aria-hidden="true" style="font-size:2rem;"></i>
+            {% else %}
+            <i class="fa fa-square-o" aria-hidden="true" style="font-size:2rem;"></i>
+            {% endif %}
+          </div>
+          <div class="col-md-4 text-center">
+            Remote Freelance<br>
+            {% if ta.remote_freelance %}
+            <i class="fa fa-check-square-o" aria-hidden="true" style="font-size:2rem;"></i>
+            {% else %}
+            <i class="fa fa-square-o" aria-hidden="true" style="font-size:2rem;"></i>
+            {% endif %}
+          </div>
+          <div class="col-md-2">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="row">
   <div class="col-md-12">
     <div class="card card-shadow" style="width: 100%;">
@@ -38,6 +108,7 @@
             {% if request.user.subscription >= 2 %}
               <!-- Button trigger modal -->
 
+<<<<<<< HEAD
               <a href="{% url 'MarketPlace:History' %}" class="btn btn-primary 8rem">
                 Applications History
               </a>
@@ -142,6 +213,35 @@
           </form>
         {% endif %}
         </div>
+=======
+          <a href="{% url 'MarketPlace:History' %}" class="btn btn-primary 8rem">Applications History</a>
+          {% endif %}
+          <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary 8rem">Interview History</a>
+          {% if request.user.subscription >= 1 %}
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Availability</button>
+          {% endif %}
+          <a href="{% url 'MarketPlace:HelpVacanciesSuitedForMeSummary' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="tooltip" title="Click here for help on this page!">
+          <i class="fa fa-question-circle"></i></a>
+        </div>
+      {% endif %}
+      <h4 class="card-title">Vacancies Suited for Me </h4>
+      <p>There are currently a total of <strong>{{ tot_vac }}</strong> vacancies suitable to you.<br>{% if request.user.subscription >= 2 %}You have already applied for <strong>{{ wbt_c }}</strong>.{% endif %}You have been shortlisted for
+      <strong>{{ bsl_c }}</strong>. That leaves <strong>{{ rem_vac }}</strong> for you to review.
+      {% if rem_vac > 5 %}We only list the 5 most recent vacancies here.{% endif %}</p>
+      <div class="row">
+          <div class="col-md-12 h-100 my-auto">
+      {% if vacancies_suited_list_view %}
+        <form  action="{% url 'MarketPlace:VacanciesExpand' %}" method="post">
+          {% csrf_token %}
+          <button type="submit" class="badge badge-primary float-right" style="width:8rem;">Expand All</button>
+        </form>
+      {% else %}
+        <form  action="{% url 'MarketPlace:VacanciesExpand' %}" method="post">
+          {% csrf_token %}
+          <button type="submit" class="badge badge-primary float-right" style="width:8rem;">List View</button>
+        </form>
+      {% endif %}
+>>>>>>> origin/2021-03-Mike
       </div>
         {% if vacancies_suited_list_view %}
         {% for s in dsd %}

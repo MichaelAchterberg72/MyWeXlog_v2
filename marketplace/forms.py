@@ -206,14 +206,19 @@ class WorkBidForm(forms.ModelForm):
         }
 
 
+#class TalentAvailabillityForm(forms.ModelForm):
+#    class Meta:
+#        model = TalentAvailabillity
+#        fields = ('date_from', 'date_to', 'hours_available', 'unit')
+#        widgets = {
+#            "date_from": DateInput(),
+#            "date_to": DateInput(),
+#        }
+
 class TalentAvailabillityForm(forms.ModelForm):
     class Meta:
         model = TalentAvailabillity
-        fields = ('date_from', 'date_to', 'hours_available', 'unit')
-        widgets = {
-            "date_from": DateInput(),
-            "date_to": DateInput(),
-        }
+        fields = ('freelance', 'remote_freelance', 'contract', 'part_time', 'permanent')
 
 
 class SkillRequiredForm(forms.ModelForm):
