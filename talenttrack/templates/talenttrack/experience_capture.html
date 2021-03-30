@@ -173,6 +173,19 @@
       </div>
     </div>
   </div>
+  <script type="text/javascript">
+    document.getElementById("id_companybranch").disabled = true;
+    document.getElementById("id_project").disabled = true;
+
+    var dis1 = document.getElementById("id_company");
+    dis1.onchange = function () {
+       if (this.value != "" || this.value.length > 0) {
+          document.getElementById("id_companybranch").disabled = false;
+          document.getElementById("id_project").disabled = false;
+       }
+    }
+
+  </script>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 {{ form.media.js }}
 {% endblock content %}
