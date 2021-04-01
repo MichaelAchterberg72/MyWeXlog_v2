@@ -251,6 +251,11 @@
 </div>
 </div>
 <br>
+<div class="float-right">
+  <a href="{% url 'Profile:WorkshopTlt' %}?next={{ request.path|urlencode }}" class="btn btn-primary">Enter Workshop</a>
+  <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary">Interview History</a>
+</div>
+<br><br><br>
 <div class="card card-shadow">
   {% if request.user.subscription >= 2 %}
     <div class="card-body">
@@ -294,11 +299,7 @@
     </div>
   {% endif %}
 </div>
-<br>
-<div class="float-right">
-  <a href="{% url 'Profile:WorkshopTlt' %}?next={{ request.path|urlencode }}" class="btn btn-primary">Enter Workshop</a>
-  <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary">Interview History</a>
-</div>
+
 <p>&nbsp</p>
 
 {% endblock content %}

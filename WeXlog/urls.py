@@ -7,6 +7,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls import handler404, handler500, url  # noqa
+from django.views.generic.base import TemplateView
 
 urlpatterns = [
     path('accounts/', include('allauth.urls')),
@@ -36,6 +37,7 @@ urlpatterns = [
     path('treeMP/', include('nestedsettree.urls', namespace='Structure')),
     path('appcontrol/', include('AppControl.urls', namespace='AppControl')),
     path('corporate/', include('mod_corporate.urls', namespace='Corporate')),
+    path("robots.txt",TemplateView.as_view(template_name="users/robots.txt", content_type="text/plain")),
     ]
 
 if settings.DEBUG:
