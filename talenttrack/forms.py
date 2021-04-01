@@ -253,6 +253,12 @@ class PublicationsForm(forms.ModelForm):
 
 
 class LicenseCertificationForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(LicenseCertificationForm, self).__init__(*args, **kwargs)
+
+        self.helper = FormHelper(self)
+        self.helper.form_show_errors = False
+
     class Meta:
         model = LicenseCertification
         fields = ('certification', 'cm_no', 'companybranch', 'issue_date', 'expiry_date', 'current', 'country', 'region', 'upload', 'cert_name')
