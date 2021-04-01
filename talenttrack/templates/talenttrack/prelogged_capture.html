@@ -12,105 +12,151 @@
   }
   </style>
 <div class="card card-shadow">
-<div class="card-body">
-<div class="container">
-<h3>Capture Logged Experience<span><p class="float-right">
-<a href="{% url 'Talent:HelpCaptureExperience' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 16px">
-<i class="fa fa-question-circle"></i></a>
-</p></span></h3>
-<p><small>(Fields marked with a * are required fields)</small></p>
-<form method="post" id="BranchForm" enctype="multipart/form-data">
-  {% csrf_token %}
-  <div class="form-row">
-    <div class="form-group col-md-5 mb-0">
-      {{ form.company|as_crispy_field }}
-        <p><a href="{% url 'Enterprise:EnterpriseAddPop' %}" id='add_company' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add a Company</a></p>
-      {{ form.companybranch|as_crispy_field }}
-      <p><a href="{% url 'Enterprise:BranchAddPop' %}" id='add_branch' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add a Branch</a></p>
-      {{ form.project|as_crispy_field }}
-      <div class="form-row">
-        <div class="form-group col-md-4 mb-0">
-        <p><a href="{% url 'Project:ProjectAddPop' %}" id='add_project' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add a Project</a></p>
-        </div>
-        <div class="form-group col-md-8 mb-0">
-          <p>
-            <small>Enter a project only if appropriate, else leave the field empty.</small>
+  <div class="card-body">
+    <div class="container">
+      <h3>Capture Logged Experience
+        <span>
+          <p class="float-right">
+            <a href="{% url 'Talent:HelpCaptureExperience' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 16px">
+              <i class="fa fa-question-circle"></i>
+            </a>
           </p>
+        </span>
+      </h3>
+      <p>
+        <small>
+          (Fields marked with a * are required fields)
+        </small>
+      </p>
+      <form method="post" id="BranchForm" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-row">
+          <div class="form-group col-md-5 mb-0">
+            {{ form.company|as_crispy_field }}
+            <p>
+              <a href="{% url 'Enterprise:EnterpriseAddPop' %}" id='add_company' onclick='return showAddPopup(this);'>
+                <img src = "{% static 'images/icon-addlink.svg' %}">
+                Add a Company
+              </a>
+            </p>
+            {{ form.companybranch|as_crispy_field }}
+            <p>
+              <a href="{% url 'Enterprise:BranchAddPop' %}" id='add_branch' onclick='return showAddPopup(this);'>
+                <img src = "{% static 'images/icon-addlink.svg' %}">
+                Add a Branch
+              </a>
+            </p>
+            {{ form.project|as_crispy_field }}
+            <div class="form-row">
+              <div class="form-group col-md-4 mb-0">
+                <p>
+                  <a href="{% url 'Project:ProjectAddPop' %}" id='add_project' onclick='return showAddPopup(this);'>
+                    <img src = "{% static 'images/icon-addlink.svg' %}">
+                    Add a Project
+                  </a>
+                </p>
+              </div>
+              <div class="form-group col-md-8 mb-0">
+                <p>
+                  <small>
+                    Enter a project only if appropriate, else leave the field empty.
+                  </small>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="form-group col-md-7 mb-0">
+            <div class="form-row">
+              <div class="form-group col-md-4 mb-0">
+                {{ form.date_from|as_crispy_field }}
+              </div>
+              <div class="form-group col-md-4 mb-0">
+                {{ form.date_to|as_crispy_field }}
+              </div>
+              <div class="form-group col-md-4 mb-0">
+                {{ form.hours_worked|as_crispy_field }}
+                <p>
+                  <br>
+                </p>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6 mb-0">
+                {{ form.industry|as_crispy_field }}
+                <p>
+                  <a href="{% url 'Enterprise:IndustryAddPop' %}" id='add_industry' onclick='return showAddPopup(this);'>
+                    <img src = "{% static 'images/icon-addlink.svg' %}">
+                    Add an Industry
+                  </a>
+                </p>
+              </div>
+              <div class="form-group col-md-6 mb-0">
+                {{ form.designation|as_crispy_field }}
+                <p>
+                  <a href="{% url 'Talent:DesignationAddPop' %}" id='add_designation' onclick='return showAddPopup(this);'>
+                    <img src = "{% static 'images/icon-addlink.svg' %}">
+                    Add a Designation
+                  </a>
+                </p>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6 mb-0">
+                {{ form.employment_type|as_crispy_field }}
+              </div>
+              <div class="form-group col-md-6 mb-0">
+                {{ form.upload|as_crispy_field }}
+                <small>
+                  Upload a copy of your signed off log.<br>(Only <strong>PDF</strong> files are allowed to be uploaded)
+                </small>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-
-    <div class="form-group col-md-7 mb-0">
-      <div class="form-row">
-        <div class="form-group col-md-4 mb-0">
-          {{ form.date_from|as_crispy_field }}
+        <div class="form-row">
+          <div class="form-group col-md-10 mb-0">
+            {{ form.skills|as_crispy_field }}
+          </div>
+          <div class="form-group col-md-2 mb-0">
+            <p>
+              &nbsp
+            </p>
+            <p>
+              <a href="{% url 'Flatten:SkillAddPop' %}" id='add_skill' onclick='return showAddPopup(this);'>
+                <img src = "{% static 'images/icon-addlink.svg' %}">
+                Add a Skill
+              </a>
+            </p>
+          </div>
         </div>
-        <div class="form-group col-md-4 mb-0">
-          {{ form.date_to|as_crispy_field }}
-        </div>
-        <div class="form-group col-md-4 mb-0">
-          {{ form.hours_worked|as_crispy_field }}
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group col-md-6 mb-0">
-          {{ form.employment_type|as_crispy_field }}
-        </div>
-        <div class="form-group col-md-1 mb-0">
-        </div>
-        <div class="form-group col-md-5 mb-0">
-          <p>&nbsp</p>
-
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group col-md-6 mb-0">
-          {{ form.industry|as_crispy_field }}
-          <p><a href="{% url 'Enterprise:IndustryAddPop' %}" id='add_industry' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add an Industry</a></p>
-        </div>
-        <div class="form-group col-md-6 mb-0">
-          {{ form.designation|as_crispy_field }}
-          <p><a href="{% url 'Talent:DesignationAddPop' %}" id='add_designation' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add a Designation</a></p>
-        </div>
-      </div>
-      <div class="form-row">
+        <div class="form-row">
           <div class="form-group col-md-8 mb-0">
-          {{ form.upload|as_crispy_field }}
-          <p>Upload a copy of your signed off log.<br>(Only <strong>PDF</strong> files are allowed to be uploaded)</p>
+            {{ form.comment|as_crispy_field }}
+          </div>
+          <div class="form-group col-md-4 mb-0">
+              <p>
+                <br>
+                <br>
+                The comments made here are visible to the person confirming your experience.<br><br>
+                Write a short summary to describe the experience you are claiming, both for the reviewer and for your own use when you look back on this entry.
+              </p>
+          </div>
         </div>
-</div>
-  </div>
-  </div>
-  <div class="form-row">
-    <div class="form-group col-md-10 mb-0">
-      {{ form.skills|as_crispy_field }}
-    </div>
-    <div class="form-group col-md-2 mb-0">
-      <p>&nbsp</p>
-      <p><a href="{% url 'Flatten:SkillAddPop' %}" id='add_skill' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add a Skill</a></p>
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group col-md-8 mb-0">
-        {{ form.comment|as_crispy_field }}
-      </div>
-      <div class="form-group col-md-4 mb-0">
+        <div class="">
           <p>
-            <br>
-            <br>
-            The comments made here are visible to the person confirming your experience.<br><br>
-            Write a short summary to describe the experience you are claiming, both for the reviewer and for your own use when you look back on this entry.
+            <a href="{% url 'Talent:Home' %}" class="btn btn-danger">
+              Cancel
+            </a>
+            <button type="submit" name="Done" class="btn btn-primary">
+              Save & Select Reviewers
+            </button>
           </p>
-      </div>
+        </div>
+      </form>
     </div>
-  <div class="">
-    <p><a href="{% url 'Talent:Home' %}" class="btn btn-danger">Cancel</a> <button type="submit" name="Done" class="btn btn-primary">Save & Select Reviewers</button></p>
   </div>
+</div>
 
-</form>
-</div>
-</div>
-</div>
 <script type="text/javascript">
   document.getElementById("id_companybranch").disabled = true;
   document.getElementById("id_project").disabled = true;

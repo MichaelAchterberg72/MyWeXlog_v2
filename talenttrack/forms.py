@@ -276,9 +276,6 @@ class LicenseCertificationForm(forms.ModelForm):
             'cert_name': 'Name',
         }
         help_texts = {
-            'issue_date': 'The date the license / certification / membership was first held.',
-            'expiry_date': 'The date the license / certification / membership expires (Leave Blank if never expires).',
-            'current': 'Is the license / certification / membership currently valid?',
             'region': 'Not all certifications are region specific, in which case, this field can be blank, however some are, in which case this field must be populated.',
         }
 
@@ -304,10 +301,6 @@ class PreLoggedExperienceForm(forms.ModelForm):
             }
         lables = {
             'companybranch': 'Branch',
-        }
-        help_texts = {
-            'company': 'Please complete the Company field before the Branch Field',
-            'companybranch': 'This field is dependant on the Company Field - fill Company Field first',
         }
 
     def clean_date_to(self):

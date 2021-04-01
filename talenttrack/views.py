@@ -2196,6 +2196,10 @@ def LicenseCertificationCaptureView(request):
             new.talent = tlt_i
             new.save()
             return redirect(reverse ('Profile:ProfileView')+'#memberships')
+        else:
+            template = 'talenttrack/membership_view.html'
+            context = {'form': form,}
+            return render(request, template, context)
     else:
         template = 'talenttrack/membership_view.html'
         context = {'form': form,}
