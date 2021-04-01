@@ -21,12 +21,14 @@
         </div>
         <div class="form-group col-md-6 mb-0">
         {{ form.type|as_crispy_field }}
+        <br>
         {{ form.genre|as_crispy_field }}
         <a href="{% url 'BookList:GenreCreatePopup' %}" id='add_tag' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}"> Add a Genre</a>
 
+        {{ form.link|as_crispy_field }}
         {{ form.tag|as_crispy_field }}
         <a href="{% url 'BookList:TagCreatePopup' %}" id='add_tag' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}"> Add a new Skill Tag</a>
-      {{ form.link|as_crispy_field }}
+
       {{ form.upload|as_crispy_field }}
       <p>
         <strong>Please note:</strong> Only <strong>pdf</strong> files can be uploaded.
@@ -49,6 +51,16 @@
     width: 100px;
   }
   </style>
+  <script type="text/javascript">
+    document.getElementById("id_publisher").disabled = true;
+
+    var dis1 = document.getElementById("id_title");
+    dis1.onchange = function () {
+       if (this.value != "" || this.value.length > 0) {
+          document.getElementById("id_publisher").disabled = false;
+       }
+    };
+  </script>
   <script type="text/javascript">
 
   function showAddPopup(triggeringLink) {
