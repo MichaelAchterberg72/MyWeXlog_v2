@@ -1184,7 +1184,11 @@ def BriefCareerHistoryView(request):
             elif 'done' in request.POST:
                 response = redirect(reverse('Profile:ProfileView'))
                 return response
-
+        else:
+            template = 'Profile/brief_career_history.html'
+            context = {'form': form, 'history': history}
+            response = render(request, template, context)
+            return response
     else:
         template = 'Profile/brief_career_history.html'
         context = {'form': form, 'history': history}

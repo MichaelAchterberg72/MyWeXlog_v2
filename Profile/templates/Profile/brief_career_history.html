@@ -15,36 +15,67 @@
 <div class="card card-shadow">
   <div class="card-body">
     <h3>Add to Your Career History</h3>
-    <ul>
-      <li>Please note that you are required to capture at least one current employer to allow the posting branch to be populated when capturing a vacancy. (Only current employers (date to left blank) will populate the list.)</li>
-    </ul>
+      <small>
+        Please note that you are required to capture at least one current employer to allow the branch posting the vacancy to be populated. (Only current employers (date remains blank) will populate the list.)
+      </small>
     <form method="post">
       <input type="hidden" name="next" value="{{ request.GET.next }}">
       {% csrf_token %}
       <div class="form-row">
         <div class="form-group col-md-6 mb-0">
           {{ form.work_configeration|as_crispy_field }}
+          <p class="text-center">
+            <a href="{% url 'MarketPlace:HelpExperienceLevel' %}" target="_blank" >
+            <i class="fa fa-flag" aria-hidden="true" style="font-size:20px;color:black" data-toggle="tooltip" title="Breakdown of work configeration"></i>
+            </a>
+          </p>
+        </div>
+        <div class="form-group col-md-6 mb-0">
           {{ form.designation|as_crispy_field }}
           <p>
-            <a href="{% url 'Talent:DesignationAddPop' %}" id='add_designation' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">
+            <a href="{% url 'Talent:DesignationAddPop' %}" id='add_designation' onclick='return showAddPopup(this);'>
+              <img src = "{% static 'images/icon-addlink.svg' %}">
               Add Designation
             </a>
           </p>
-          {{ form.companybranch|as_crispy_field }}
-          <p><a href="{% url 'Enterprise:BranchAddPop' %}" id='add_branch' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add a Branch</a></p>
+          </div>
         </div>
-        <div class="form-group col-md-6 mb-0">
-          {{ form.date_from|as_crispy_field }}
-          {{ form.date_to|as_crispy_field }}<p>Leave blank if you currently work here</p>
+        <div class="form-row">
+          <div class="form-group col-md-6 mb-0">
+            {{ form.companybranch|as_crispy_field }}
+            <p>
+              <a href="{% url 'Enterprise:BranchAddPop' %}" id='add_branch' onclick='return showAddPopup(this);'>
+                <img src = "{% static 'images/icon-addlink.svg' %}">Add a Branch
+              </a>
+            </p>
+          </div>
+          <div class="form-group col-md-3 mb-0">
+            {{ form.date_from|as_crispy_field }}
+          </div>
+          <div class="form-group col-md-3 mb-0" data-toggle="tooltip" title="Leave this field blank if you currently work at this company">
+            {{ form.date_to|as_crispy_field }}
+            <small>
+              Leave this blank if you currently work here
+            </small>
+          </div>
         </div>
-      </div>
       <div class="form-row">
         <div class="col-md-12">
           {{ form.description|as_crispy_field }}
         </div>
       </div>
       <div class="">
-        <p><a href="{% url 'Profile:ProfileView' %}" class="btn btn-danger">Cancel</a> <button type="submit" name="another" class="btn btn-secondary">Save & Add Another</button> <button type="submit" name="done" class="btn btn-primary">Save & Done</button>
+        <p>
+          <a href="{% url 'Profile:ProfileView' %}" class="btn btn-danger">
+            Cancel
+          </a>
+          <button type="submit" name="another" class="btn btn-secondary">
+            Save & Add Another
+          </button>
+          <button type="submit" name="done" class="btn btn-primary">
+            Save & Done
+          </button>
+        </p>
       </div>
     </form>
   </div>
