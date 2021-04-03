@@ -265,8 +265,8 @@ DATABASES = {
         #'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'Wexlog_3',
         'USER': 'postgres',
-		'PASSWORD': 'rdf8tm1234', #MA
-        #'PASSWORD': 'dJpfss41678', #JK
+		#'PASSWORD': 'rdf8tm1234', #MA
+        'PASSWORD': 'dJpfss41678', #JK
         'HOST': 'localhost',
         #'HOST': 'dbhost',
         'PORT': '5432'

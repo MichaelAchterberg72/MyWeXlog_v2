@@ -2217,7 +2217,9 @@ def wtr_doc_status(request, wtr):
 @login_required()
 def ProfileView(request):
     tlt = request.user.alias
+    usr = CustomUser.objects.get(alias=tlt)
     detail = Profile.objects.get(alias=tlt)
+
     tlt_id = request.user.id
     if detail.talent == request.user:
         info = Profile.objects.filter(alias=tlt)
@@ -2248,21 +2250,20 @@ def ProfileView(request):
     else:
         raise PermissionDenied
 
-
+#this better work
 @login_required()
 def ProfileEditView(request, tlt):
-    talent = request.user.id
-    detail = Profile.objects.get(alias=tlt)
+    talent_id = request.user.id
+    detail = CustomUser.objects.get(id=talent_id)
     #work-around to get first and last names into fields. THere must be a better way for people smarter than me to fix! (JK)
-    usr = list(CustomUser.objects.filter(pk=talent).values_list('first_name', 'last_name'))
+    fn = detail.first_name
+    ln = detail.last_name
 
-    fn = usr[0][0]
-    ln = usr[0][1]
+    Profile.objects.filter(talent=talent_id).update(f_name=fn, l_name=ln)
 
-    Profile.objects.filter(alias=tlt).update(f_name=fn, l_name=ln)
-
-    if detail.talent == request.user:
-        form = ProfileForm(request.POST or None, instance=detail)
+    pfl = Profile.objects.get(talent=talent_id)
+    if detail.id == talent_id:
+        form = ProfileForm(request.POST or None, instance=pfl)
 
         if request.method =='POST':
             next_url=request.POST.get('next','/')
