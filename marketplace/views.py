@@ -1830,7 +1830,7 @@ def VacanciesListView(request):
     ipost_closed_count = ipost_closed.count()
     ipost_bid = wb.filter(~Q(bidreview='D'))
     ipost_bid_flat = ipost_bid.values_list('work', flat=True).distinct()
-    capacity = ta.filter(date_to__gte=timezone.now()).order_by('-date_to')[:5]
+#    capacity = ta.filter(date_to__gte=timezone.now()).order_by('-date_to')[:5]
 
     #Code for stacked lookup for talent's skills
 
@@ -1984,7 +1984,7 @@ def VacanciesListView(request):
         'vvv': vvv,
         'vacancies_suited_list_view': vacancies_suited_list_view,
         'tlt': tlt,
-        'capacity': capacity,
+#        'capacity': capacity,
         'tr_emp_count': tr_emp_count,
         'ipost': ipost,
         'ipost_list': ipost_list,

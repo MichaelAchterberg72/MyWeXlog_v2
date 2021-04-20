@@ -3253,6 +3253,7 @@ def SumAllExperienceView(request, tlt):
     return render(request, template, context)
 
 
+@login_required()
 def DPC_SummaryView(request, tlt):
     '''View for Designation, Project and Company hours logged'''
     #caching
@@ -3376,6 +3377,7 @@ def DPC_SummaryView(request, tlt):
     return render(request, template, context)
 
 
+@login_required()
 def DPCP_SummaryView(request, tlt):
     '''View for Designation, Project and Company hours logged'''
     #caching

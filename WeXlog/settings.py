@@ -87,7 +87,6 @@ INSTALLED_APPS = [
     'pinax.notifications',
     'treebeard',
     'channels',
-#    'M2Crypto',
     'paypal.standard.ipn',
     'django_celery_beat',
 ]
@@ -252,10 +251,10 @@ CSP_INCLUDE_NONCE_IN = None
 CSP_REPORT_ONLY = False
 #CSP_EXCLUDE_URL_PREFIXES = ()
     ##cookie flags
-#CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 #CSRF_USE_SESSIONS = True
 #CSRF_COOKIE_HTTPONLY = True
-#SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
 #SESSION_COOKIE_SAMESITE = 'Strict'
 
 
@@ -266,7 +265,8 @@ DATABASES = {
         'NAME': 'Wexlog_3',
         'USER': 'postgres',
 		#'PASSWORD': 'rdf8tm1234', #MA
-        'PASSWORD': 'dJpfss41678', #JK
+        #'PASSWORD': 'dJpfss41678', #JK
+        'PASSWORD': 'rdf8tm1234', #MA
         'HOST': 'localhost',
         #'HOST': 'dbhost',
         'PORT': '5432'
