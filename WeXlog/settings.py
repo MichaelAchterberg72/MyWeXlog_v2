@@ -89,6 +89,7 @@ INSTALLED_APPS = [
     'channels',
     'paypal.standard.ipn',
     'django_celery_beat',
+    'sri',
 ]
 
 
