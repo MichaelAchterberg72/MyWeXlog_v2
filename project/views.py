@@ -128,12 +128,10 @@ def not_current_task(request, pb, prj, co, bch):
 
 
 @login_required
-def action_project_tasks(request, ppds):
+def action_project_tasks(request, ppds, prj, co, bch):
     """View to activate or deactivate project tasks"""
-    p_instance = ProjectPersonalDetailsTask.objects.filter(ppd__slug=ppds).values_list('slug')
+    ptl = ProjectTaskBilling.objects.filter(ppdt__ppd__slug=ppds).order_by('-date_start')
 
-    ptl = ProjectTaskBilling.objects.filter(ppdt__ppd__slug__in=p_instance).order_by('-date_start')
-    print(p_instance)
     try:
         page = int(request.GET.get('page', 1))
     except:
@@ -155,7 +153,7 @@ def action_project_tasks(request, ppds):
     page_range = list(paginator.page_range)[start_index:end_index]
 
     template_name = 'project/action_project_task.html'
-    context = {'pageitems': pageitems, 'page_range': page_range, 'ppds': ppds}
+    context = {'pageitems': pageitems, 'page_range': page_range, 'ppds': ppds,  'prj': prj, 'co': co, 'bch': bch}
     return render(request, template_name, context)
 
 

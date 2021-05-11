@@ -34,7 +34,7 @@ urlpatterns = [
     path('experience/detail/message/<int:pk>/', views.AutofillMessage, name="DetailMessage"),
 
     #Project Task
-    path('task/list/<slug:ppds>/', views.action_project_tasks, name="ProjectTaskList"),
+    path('task/list/<slug:ppds>/<slug:prj>/<slug:co>/<slug:bch>/', views.action_project_tasks, name="ProjectTaskList"),
     path('action-project-task/<int:pb>/<slug:ppds>/', views.action_current_task, name='ActionProjectTask'),
     path('add/task/<slug:ppd>/', views.ProjectTaskAddView, name="AddProjectTask"),
     path('add/task/billing/<slug:ppdt>/', views.ProjectTaskBillingAddView, name="AddProjectTaskBilling"),
