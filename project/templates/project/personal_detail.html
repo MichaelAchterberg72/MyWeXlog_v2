@@ -1,0 +1,156 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}{{block.super}}-Project{% endblock title %}
+
+{% block content %}
+
+<div class="card card-shadow">
+  <div class="card-body">
+  <h4 class="">Project {{ project.name }}!</h4>
+  </div>
+  <div class="card-body">
+      <div class="container">
+        <div class="row my-auto">
+          <div class="col-md-5 h-100 text-center my-auto">
+            <strong>Project Name</strong>
+          </div>
+          <div class="col-md-7 h-100 text-center my-auto">
+            <strong>Project Company Working For</strong>
+          </div>
+          <div class="col-md-2 h-100 text-center my-auto">
+            <strong></strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="card mt-1 card-hover" style="width: 100%;">
+          <div class="card-body small-pad">
+            <div class="row my-auto">
+              <div class="col-md-5 h-100 text-center my-auto">
+                {{ project.company }}<br>({{ project.name }})
+              </div>
+              <div class="col-md-7 h-100 text-center my-auto">
+                {{ project.companybranch.name }}
+              </div>
+            </div>
+            <div class="row my-auto">
+              <div class="col-md-10 h-100 text-left my-auto">
+                {{ project.description }}
+              </div>
+              <div class="col-md-2 h-100 text-center my-auto">
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <p>&nbsp</p>
+    </div>
+  </div>
+  <br>
+  <div class="card card-shadow">
+    <div class="card-body">
+    <h4 class="">Add New Project Details!</h4>
+
+        <div class="container">
+      <form class="" action="" method="POST" id="ProjectForm">
+        {% csrf_token %}
+        <div class="form-row">
+
+          <div class="form-group col-md-12 mb-0">
+            {{ form.description|as_crispy_field }}
+          </div>
+
+          <p>
+            <a href="{% url 'Project:ProjectHome' %}" class="btn btn-danger">
+              Cancel
+            </a>
+            <button type="submit" class="btn btn-primary" name="button">
+              Save
+            </button>
+          </p>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+<br>
+<div class="card card-shadow">
+  <div class="card-body">
+  <h4 class="">Project Task List</h4>
+  <div class="container">
+    <div class="row my-auto">
+      <div class="col-md-2 h-100 text-center my-auto">
+        <strong>Date Initiated</strong>
+      </div>
+      <div class="col-md-5 h-100 text-center my-auto">
+        <strong>Task</strong>
+      </div>
+      <div class="col-md-3 h-100 text-center my-auto">
+        <strong>Billing Rate</strong>
+      </div>
+      <div class="col-md-2 h-100 text-center my-auto">
+        <strong>Action</strong>
+      </div>
+    </div>
+  </div>
+  {% for task in ptl %}
+  <div class="row">
+    <div class="card mt-1 card-hover" style="width: 100%;">
+      <div class="card-body small-pad">
+        <div class="row my-auto">
+          <div class="col-md-2 h-100 text-center my-auto">
+            {{ task.date_start }}
+          </div>
+          <div class="col-md-5 h-100 text-center my-auto">
+            {{ task.ppdt.task }}
+          </div>
+          <div class="col-md-3 h-100 text-center my-auto">
+            {{ task.currency.currency_abv }}{{ task.billing_rate }} {{ task.get_rate_unit_display }}
+          </div>
+          <div class="col-md-2 h-100 text-center my-auto">
+            <div class="row">
+            {% if task.current == True %}
+              <div class="btn-group mr-2" role="group" aria-label="First group">
+                <form  action="{% url 'Project:NotCurrentProjectTask' task.pk prj co bch %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="badge badge-success badge-pill" name="no"  data-toggle="tooltip" title="Click to deactivate a project task">
+                    <i class="fa fa-toggle-off" aria-hidden="true" style="font-size:20px;"></i>
+                  </button>
+                </form>
+              </div>
+            {% elif task.current == False %}
+              <div class="btn-group mr-2" role="group" aria-label="First group">
+                <form  action="#" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="badge badge-danger badge-pill" name="yes"  data-toggle="tooltip" title="Click to activate a project task">
+                    <i class="fa fa-toggle-on" aria-hidden="true" style="font-size:20px;"></i>
+                  </button>
+                </form>
+              </div>
+            {% endif %}
+              <a href="#" data-toggle="tooltip" title="Click to edit this project task">
+                <i class="fa fa-pencil-square-o" style="font-size:2rem;color:black;" aria-hidden="true"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+  <p>&nbsp</p>
+  <a href="{% url 'Project:ProjectTaskList' instance.slug %}" class="btn btn-primary float-left">
+    Action Tasks
+  </a>
+  <a href="{% url 'Project:AddProjectTask' instance.slug %}" class="btn btn-primary float-right">
+    Add New Task
+  </a>
+  </div>
+</div>
+{% endblock content %}

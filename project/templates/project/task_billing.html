@@ -1,0 +1,96 @@
+{% extends 'base_homelite.html' %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}{{block.super}}-Project{% endblock title %}
+
+{% block content %}
+{{ form.media.css }}
+
+<div class="card card-shadow">
+  <div class="card-body">
+    <h4>Add Billing Rate for:<br>
+    {{ qs.ppd.company }} {{ qs.ppd.project }}-{{ qs.task }}
+    <span>
+      <p class="float-right">
+        <a href="{% url 'Project:HelpProjectAdd' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="popover" title="Click here for help on this page!">
+          <i class="fa fa-question-circle"></i>
+        </a>
+      </p>
+    </span>
+  </h4>
+  <div class="card-body">
+    <form class="" action="" method="POST" id="ProjectPersonalDetailsTaskBillingForm">
+      {% csrf_token %}
+      <div class="">
+        <div class="row">
+          <div class="col-md-3">
+            {{ form.currency|as_crispy_field }}
+            <p><a href="{% url 'Location:CurrencyAddPop' %}" id='add_currency' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add Currency</a></p>
+          </div>
+          <div class="col-md-2">
+            {{ form.billing_rate|as_crispy_field }}
+          </div>
+          <div class="col-md-2">
+            {{ form.rate_unit|as_crispy_field }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3">
+            {{ form.date_start|as_crispy_field }}
+          </div>
+          <div class="col-md-3">
+            {{ form.date_end|as_crispy_field }}
+          </div>
+          <div class="col-md-2">
+            {{ form.current|as_crispy_field }}
+          </div>
+        </div>
+      </div>
+        <p>
+          <br>
+          <a href="{% url 'Project:ProjectHome' %}" class="btn btn-danger">
+            Cancel
+          </a>
+          <button type="submit" class="btn btn-primary" name="button">
+            Save
+          </button>
+        </p>
+    </form>
+    </div>
+  </div>
+</div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{{ form.media.js }}
+
+<script type="text/javascript">
+  function showAddPopup(triggeringLink) {
+    var name = triggeringLink.id.replace(/^add_/, '');
+    href = triggeringLink.href;
+    var win = window.open(href, name, 'height=400,width=600,resizable=yes,scrollbars=yes');
+    win.focus();
+    return false;
+  }
+
+  function closePopup(win, newID, newRepr, id) {
+    $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
+    win.close();
+  }
+
+  var form = document.getElementById('ProjectForm')
+  var city = document.getElementById('city_error')
+
+  document.getElementById('ad_cty').addEventListener('click', function(e){
+    if(form.region.value == ''){
+      city.classList.remove('d-none')
+    }else{
+      document.cookie = 'region=' + JSON.stringify(form.region.value) + ";domain=;path=/"
+      city.classList.add('d-none')
+      document.getElementById('add_city').click();
+    }
+  })
+</script>
+
+{% endblock content %}

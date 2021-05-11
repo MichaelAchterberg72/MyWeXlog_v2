@@ -1,0 +1,27 @@
+{% extends 'base_homelite.html' %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Help{% endblock title %}
+
+{% block Style %}
+
+{% endblock Style %}
+{% block content %}
+<div class="container">
+  <h3>Projects Overview - Help</h3>
+    <p>&nbsp</p>
+    <p>The projects app is designed to provide a listing of projects, both a full list allowing you to view the information captured within MyWeXlog detailing the owner, companies involved, country, region and city the project is active in as well as the number of people and hours captured relating to the project and a listing of the project you are personally involved in.</p>
+    <p>The projects are listing of projects you are personally involved in allows you to view the persoanl information relating to that projects that you have captured within MyWeXlog.</p>
+    <p>You have the option to:</p>
+      <ul>
+        <li><a href="#" class="badge badge-pill badge-primary">Add Project</a> - Add a new project which will request you to supply the Project Name, Project Owner, Project Site, Industry, Country, Region and a City.</li>
+        <li><a href="#" class="badge badge-pill badge-primary">Project Home</a> - View a listing of all projects listed in MyWeXlog personally involved in detailing the Project Name, Project Owner, Industry, Country City.</li>
+        <li><a href="#" class="badge badge-pill badge-primary">Full Project List</a> - View a listing of all projects listed in MyWeXlog detailing the Project Name, Project Owner, Industry, Country City.</li>
+        <li><a href="#" class="badge badge-pill badge-primary">Search Projects</a> - Using a Keyword search the projects based on the Project Name, Company Name, Industry, Country, Region and City.</li>
+        <li><a href="#" class="badge badge-pill badge-primary">Back</a> - allows you to go back to the
+        Enterprises Home page.</li>
+      </ul>
+
+</div>
+{% endblock content %}

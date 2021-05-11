@@ -10,11 +10,15 @@ from django_select2.forms import (
     Select2Widget
 )
 
-from .models import ProjectData
+from .models import (
+    ProjectData, ProjectPersonalDetails, ProjectPersonalDetailsTask, ProjectTaskBilling
+)
 from enterprises.models import Enterprise, Industry, Branch
 from locations.models import Region, City, Suburb
 
 
+class DateInput(forms.DateInput):
+    input_type = 'date'
 
 class BranchSearchFieldMixin:
     search_fields = [
@@ -75,9 +79,9 @@ class RegionSelect2Widget(RegionSearchFieldMixin, ModelSelect2Widget):
 
 
 class ProjectAddForm(forms.ModelForm):
-    '''This form is used when adding aproject from talenttrack app'''
+
     '''
-    #removed this validation for now...
+    #removed this validation for now.
     pwd = None
     def __init__(self, *args, **kwargs):
         global pwd
@@ -87,13 +91,13 @@ class ProjectAddForm(forms.ModelForm):
 
     class Meta:
         model = ProjectData
-        fields = ('name', 'country', 'region', 'city', 'industry')
+        fields = ('name', 'company', 'country', 'companybranch', 'region', 'city', 'industry')
         widgets = {
-            #'company': CompanySelect2Widget(),
+            'company': CompanySelect2Widget(),
             'industry': IndustrySelect2Widget(),
             'region': RegionSelect2Widget(),
             'city': CitySelect2Widget(),
-            #'companybranch': BranchSelect2Widget(),
+            'companybranch': BranchSelect2Widget(),
         }
         labels = {
             'city' : 'Closest City / Town / Village',
@@ -107,22 +111,6 @@ class ProjectAddForm(forms.ModelForm):
             raise forms.ValidationError("A project with this name already exists! Please enter another name.")
         return project_passed
     '''
-class ProjectAddHome(forms.ModelForm):
-    '''This form is used when adding aproject from talenttrack app'''
-    class Meta:
-        model = ProjectData
-        fields = ('company', 'companybranch', 'name', 'country', 'region', 'city', 'industry')
-        widgets = {
-            'company': CompanySelect2Widget(),
-            'industry': IndustrySelect2Widget(),
-            'region': RegionSelect2Widget(),
-            'city': CitySelect2Widget(),
-            'companybranch': BranchSelect2Widget(),
-        }
-        labels = {
-            'city' : 'Closest City / Town / Village',
-        }
-
 
 class ProjectSearchForm(forms.Form):
     query = forms.CharField()
@@ -137,4 +125,28 @@ class ProjectForm(forms.ModelForm):
             'region': RegionSelect2Widget(),
             'city': CitySelect2Widget(),
             'companybranch': BranchSelect2Widget(),
+        }
+
+class ProjectPersonalDetailsForm(forms.ModelForm):
+    class Meta:
+        model = ProjectPersonalDetails
+        fields = ('description',)
+        widgets = {
+            'companybranch': BranchSelect2Widget(),
+        }
+
+
+class ProjectPersonalDetailsTaskForm(forms.ModelForm):
+    class Meta:
+        model = ProjectPersonalDetailsTask
+        fields = ('task', 'description',)
+
+
+class ProjectPersonalDetailsTaskBillingForm(forms.ModelForm):
+    class Meta:
+        model = ProjectTaskBilling
+        fields = ('billing_rate', 'currency', 'rate_unit', 'date_start', 'date_end', 'current')
+        widgets = {
+            'date_start': DateInput(),
+            'date_end': DateInput(),
         }

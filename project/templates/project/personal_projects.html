@@ -6,29 +6,34 @@
 {% block content %}
 <div class="card card-shadow">
   <div class="card-body">
-    <h4 class="">Full projects listing home page!
-      <span><p class="float-right">
-      <a href="{% url 'Project:HelpProjectHome' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 16px">
-      <i class="fa fa-question-circle"></i></a>
-    </p></span></h4>
+  <h4 class="">Projects Page
+    <span><p class="float-right">
+    <a href="{% url 'Project:HelpProjectOverview' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 16px">
+    <i class="fa fa-question-circle"></i></a>
+  </p></span></h4>
+    <div class="card-body">
+      <p>On this page you can:</p>
+      <ul>
+        <li>View projects personally involved in captured on MyWeXlog.</li>
+        <li>Add more projects to MyWeXlog.</li>
+        <li>Capture personal responsabilities on projects active in.</li>
+        <li>View how many hours companies and talent have logged on each project.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<br>
+<div class="card card-shadow">
+  <div class="card-body">
+  <h4 class="">Personal projects active home page!
+    <span><p class="float-right">
+    <a href="{% url 'Project:HelpPersonalProject' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 16px">
+    <i class="fa fa-question-circle"></i></a>
+  </p></span></h4>
+  <div class="card-body">
       {% if request.user.is_authenticated %}
-      <p>
-        There are currently <strong>{{ pcount.sum_p|intcomma }}</strong> projects listed in MyWeXlog!
-      </p>
-      <p>
-        <a href="{% url 'Project:ProjectAdd' %}" class="badge badge-pill badge-primary">
-          Add Project
-        </a>
-        <a href="{% url 'Project:ProjectHome' %}" class="badge badge-pill badge-primary">
-          Project Home
-        </a>
-        <a href="{% url 'Project:Project-Search' %}" class="badge badge-pill badge-primary">
-          Search Projects
-        </a>
-        <a href="{% url 'Enterprise:EnterpriseHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">
-          Back
-        </a>
-      </p>
+      <p>There are currently <strong>{{ pcount|intcomma }}</strong> personal projects listed in MyWeXlog!</p>
+      <p><a href="{% url 'Project:ProjectAdd' %}" class="badge badge-pill badge-primary">Add Project</a><a href="{% url 'Project:ProjectList' %}" class="badge badge-pill badge-primary">Full Project List</a><a href="{% url 'Project:Project-Search' %}" class="badge badge-pill badge-primary">Search Projects</a><a href="{% url 'Enterprise:EnterpriseHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
       {% endif %}
 
       <div class="container">
@@ -53,7 +58,7 @@
           <div class="card-body small-pad">
             <div class="row my-auto">
               <div class="col-md-5 h-100 text-center my-auto">
-                {{ p.company }}<br>({{ p.name }})
+                {{ p.company }}<br>{{ p.branch }}<br>({{ p.project }})
               </div>
               <div class="col-md-3 h-100 text-center my-auto">
                 {{ p.industry }}
@@ -61,8 +66,13 @@
               <div class="col-md-2 h-100 text-center my-auto">
                 {{ p.city }}
               </div>
-              <div class="col-md-2 h-100 text-center my-auto">
-                <a href="{% url 'Project:ProjectDetail' p.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary float-right" style="width: 5rem;">See Detail</a>
+              <div class="col-md-2 h-100 text-center my-auto float-right">
+                <div class="row text-center">
+                  <a href="{% url 'Project:ProjectPersonal' p.prj_slug p.co_slug p.bch_slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 8rem;">Personal<br>Detail</a>
+                </div>
+                <div class="row mt-1 text-center">
+                  <a href="{% url 'Project:ProjectDetail' p.prj_slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 8rem;">See Project <br>Detail</a>
+                </div>
               </div>
             </div>
           </div>
@@ -111,6 +121,7 @@
           </ul>
         {% endif %}
     </nav>
+  </div>
 </div>
 
 {% endblock content %}

@@ -1,0 +1,28 @@
+{% extends 'base_homelite.html' %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Help{% endblock title %}
+
+{% block Style %}
+
+{% endblock Style %}
+{% block content %}
+<div class="container">
+  <h3>Personal Projects Active Page - Help</h3>
+    <p>&nbsp</p>
+    <p>This page displays a list of the projects that are captured in the MyWeXlog system thast you have captured as being personally active in.</p>
+    <p>The projects are listed in alphabetical creating a listing of each project listed by the Company and the Branch specific order detailing the Project Name, Project Industry and the project city.</p>
+    <p>The <a href="#" class="badge badge-secondary" style="width: 8rem;">Personal<br>Detail</a> button will open the project personal details page which will detail the Project Owner, Project Name and the project company you are working for as listed in MyWeXlog. You will be able to view and amend the description you have captured specifying your personal responsibilities in the project.</p>
+    <p>The <a href="#" class="badge badge-secondary" style="width: 8rem;">See Project<br>Detail</a> button will open the project details page which will detail the Project Owner, Project Name, Industry, Total Project Hours, Country, City, Region and the Total number of people on the project as listed in MyWeXlog.</p>
+    <p>You have the option to:</p>
+      <ul>
+        <li><a href="#" class="badge badge-pill badge-primary">Add Project</a> - Add a new project which will request you to supply the Project Name, Project Owner, Project Site, Industry, Country, Region and a City.</li>
+        <li><a href="#" class="badge badge-pill badge-primary">Full Project List</a> - View a listing of all projects listed in MyWeXlog detailing the Project Name, Project Owner, Industry, Country City.</li>
+        <li><a href="#" class="badge badge-pill badge-primary">Search Projects</a> - Using a Keyword search the projects based on the Project Name, Company Name, Industry, Country, Region and City.</li>
+        <li><a href="#" class="badge badge-pill badge-primary">Back</a> - allows you to go back to the
+        Enterprises Home page.</li>
+      </ul>
+
+</div>
+{% endblock content %}

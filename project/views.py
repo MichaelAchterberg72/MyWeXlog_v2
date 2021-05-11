@@ -6,7 +6,6 @@ from django.db.models import Count, Sum, F, Q, Avg, Max, Min
 from django.utils.http import is_safe_url
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
-import json
 
 from django.views.generic import (
         TemplateView
@@ -23,11 +22,155 @@ from locations.models import Region
 from .models import *
 from Profile.models import Profile
 from talenttrack.models import WorkExperience
-from enterprises.models import Enterprise
+from enterprises.models import Enterprise, Branch
 
-from .forms import ProjectAddForm, ProjectAddHome, ProjectSearchForm, ProjectForm
+from .forms import (
+    ProjectAddForm, ProjectSearchForm, ProjectForm, ProjectPersonalDetailsForm, ProjectPersonalDetailsTaskForm, ProjectPersonalDetailsTaskBillingForm
+)
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+
+@login_required()
+def ProjectHome(request):
+    tlt = request.user
+    projects_qs = WorkExperience.objects.filter(talent=tlt).values('project', 'companybranch')
+    prj_list = [dict(t) for t in {tuple(d.items()) for d in projects_qs}]
+
+    tlt_prj_list=[]
+    for item in prj_list:
+        prj_pk = item['project']
+        cob_pk = item['companybranch']
+        if prj_pk == None:
+            pass
+        else:
+            prj_qs = ProjectData.objects.get(pk=prj_pk)
+            prj = prj_qs.name
+            prj_slug = prj_qs.slug
+            brch_qs = Branch.objects.get(pk=cob_pk)
+            bch = brch_qs.name
+            bch_slug = brch_qs.slug
+            co = brch_qs.company.ename
+            co_slug = brch_qs.company.slug
+            industry = prj_qs.industry.industry
+            city = prj_qs.city.city
+
+            result={'project': prj, 'prj_slug': prj_slug, 'company': co, 'co_slug': co_slug, 'branch': bch, 'bch_slug': bch_slug, 'industry': industry, 'city': city}
+            tlt_prj_list.append(result)
+
+            pcount = len(tlt_prj_list)
+
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(tlt_prj_list, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+    template_name = 'project/personal_projects.html'
+    context = {'pcount': pcount, 'pageitems': pageitems, 'page_range': page_range}
+    return render(request, template_name, context)
+
+
+@login_required()
+def ProjectPersonalDetailsView(request, prj, co, bch):
+    project = ProjectData.objects.get(slug=prj)
+    pr_c_i = Enterprise.objects.get(slug=co)
+    pr_b_i = Branch.objects.get(slug=bch)
+
+    p_instance, _ = ProjectPersonalDetails.objects.get_or_create(
+            talent=request.user,
+            project=project,
+            company=pr_c_i,
+            companybranch=pr_b_i)
+
+    ptl = ProjectTaskBilling.objects.filter(ppdt__ppd=p_instance, current=True).order_by('date_start')
+
+    if request.method == 'POST':
+        form = ProjectPersonalDetailsForm(request.POST, instance=p_instance)
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.save()
+            return redirect(reverse('Project:ProjectHome'))
+    else:
+        form = ProjectPersonalDetailsForm(instance=p_instance)
+        template_name = 'project/personal_detail.html'
+        context = {'form': form, 'project': project, 'ptl': ptl, 'instance': p_instance, 'prj': prj, 'co': co, 'bch': bch}
+        return render(request, template_name, context)
+
+
+login_required()
+def not_current_task(request, pb, prj, co, bch):
+    '''Make a project task not current'''
+    pb_qs = ProjectTaskBilling.objects.filter(pk=pb)
+
+    if request.method =='POST':
+        if 'yes' in request.POST:
+            pb_qs.update(current=True)
+        elif 'no' in request.POST:
+            pb_qs.update(current=False)
+
+        return redirect(reverse('Project:ProjectPersonal', kwargs={'prj': prj, 'co': co, 'bch': bch}))
+
+
+@login_required
+def action_project_tasks(request, ppds):
+    """View to activate or deactivate project tasks"""
+    p_instance = ProjectPersonalDetailsTask.objects.filter(ppd__slug=ppds).values_list('slug')
+
+    ptl = ProjectTaskBilling.objects.filter(ppdt__ppd__slug__in=p_instance).order_by('-date_start')
+    print(p_instance)
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(ptl, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+    template_name = 'project/action_project_task.html'
+    context = {'pageitems': pageitems, 'page_range': page_range, 'ppds': ppds}
+    return render(request, template_name, context)
+
+
+login_required()
+def action_current_task(request, pb, ppds):
+    '''action a project task for current or not current'''
+    pb_qs = ProjectTaskBilling.objects.filter(pk=pb)
+
+    if request.method =='POST':
+        if 'yes' in request.POST:
+            pb_qs.update(current=True)
+        elif 'no' in request.POST:
+            pb_qs.update(current=False)
+
+        return redirect(reverse('Project:ProjectTaskList', kwargs={'ppds': ppds}))
 
 
 @login_required()
@@ -63,6 +206,20 @@ def ProjectListHome(request):
 @login_required()
 def HelpProjectHomeView(request):
     template_name = 'project/help_project_home.html'
+    context = {}
+    return render(request, template_name, context)
+
+
+@login_required()
+def HelpProjectOverviewView(request):
+    template_name = 'project/help_projects_overview.html'
+    context = {}
+    return render(request, template_name, context)
+
+
+@login_required()
+def HelpPersonalProjectView(request):
+    template_name = 'project/help_personal_projects.html'
     context = {}
     return render(request, template_name, context)
 
@@ -136,13 +293,13 @@ def ProjectEditView(request, prj):
 @csp_exempt
 def ProjectAddView(request):
     if request.method =='POST':
-        form = ProjectAddHome(request.POST or None)
+        form = ProjectAddForm(request.POST or None)
         if form.is_valid():
             new = form.save(commit=False)
             new.save()
             return redirect(reverse('Project:ProjectHome'))
     else:
-        form = ProjectAddHome()
+        form = ProjectAddForm()
 
     template = 'project/project_add.html'
     context = {'form': form}
@@ -311,26 +468,19 @@ def ProjectAddPopup(request):
     exist_project = set(ProjectData.objects.filter().values_list('name', flat=True))
 
     filt = exist_project
-    data = json.loads(request.COOKIES['branch'])
-    qs = Branch.objects.get(id=data)
 
-    print(qs, qs.company)
     form = ProjectAddForm(request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
             instance=form.save(commit=False)
-            instance.companybranch = qs
-            instance.company = qs.company
             instance.save()
-            response = HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_project");</script>' % (instance.pk, instance))
-            response.delete_cookie('branch')
-            return response
+            return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_project");</script>' % (instance.pk, instance))
         else:
-            context = {'form':form, 'qs':qs}
+            context = {'form':form,}
             template = 'project/project_add_popup.html'
             return render(request, template, context)
     else:
-        context = {'form':form, 'qs':qs}
+        context = {'form':form,}
         template = 'project/project_add_popup.html'
         return render(request, template, context)
 
@@ -367,4 +517,58 @@ def AutofillMessage(request, pk):
     else:
         context = {'info':info, 'form':form,}
         template = 'django_messages/compose.html'
+        return render(request, template, context)
+
+
+@login_required()
+@csp_exempt
+def ProjectTaskAddView(request, ppd):
+    qs = ProjectPersonalDetails.objects.get(slug=ppd)
+    prj = qs.project.slug
+    co = qs.companybranch.slug
+    bch = qs.companybranch.company.slug
+
+    form = ProjectPersonalDetailsTaskForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            instance=form.save(commit=False)
+            instance.talent=request.user
+            instance.ppd=qs
+            instance.client=qs.companybranch
+            instance.save()
+            ppdt=instance.slug
+            return redirect(reverse('Project:AddProjectTaskBilling', kwargs={'ppdt':ppdt}))
+        else:
+            context = {'form': form, 'qs': qs, 'prj': prj, 'co': co, 'bch': bch}
+            template = 'project/project_task.html'
+            return render(request, template, context)
+    else:
+        context = {'form': form, 'qs': qs, 'prj': prj, 'co': co, 'bch': bch}
+        template = 'project/project_task.html'
+        return render(request, template, context)
+
+
+@login_required()
+@csp_exempt
+def ProjectTaskBillingAddView(request, ppdt):
+    qs = ProjectPersonalDetailsTask.objects.get(slug=ppdt)
+    prj = qs.ppd.project.slug
+    co = qs.ppd.companybranch.company.slug
+    bch = qs.ppd.companybranch.slug
+
+    form = ProjectPersonalDetailsTaskBillingForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            instance=form.save(commit=False)
+            instance.talent=request.user
+            instance.ppdt=qs
+            instance.save()
+            return redirect(reverse('Project:ProjectPersonal', kwargs={'prj': prj, 'co': co, 'bch': bch}))
+        else:
+            context = {'form': form, 'qs': qs, 'prj': prj, 'co': co, 'bch': bch}
+            template = 'project/task_billing.html'
+            return render(request, template, context)
+    else:
+        context = {'form': form, 'qs': qs, 'prj': prj, 'co': co, 'bch': bch}
+        template = 'project/task_billing.html'
         return render(request, template, context)

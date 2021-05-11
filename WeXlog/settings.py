@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     'analytics',
     'management',
     'storages',
+    'billing',
     #Django internal applications
     'django.contrib.staticfiles',
     'django.contrib.humanize',
