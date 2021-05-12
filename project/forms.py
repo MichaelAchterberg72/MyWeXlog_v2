@@ -150,3 +150,13 @@ class ProjectPersonalDetailsTaskBillingForm(forms.ModelForm):
             'date_start': DateInput(),
             'date_end': DateInput(),
         }
+
+
+class EditProjectTaskBillingForm(forms.ModelForm):
+    class Meta:
+        model = ProjectTaskBilling
+        fields = ('billing_rate', 'currency', 'rate_unit', 'date_start', 'date_end', 'current')
+        widgets = {
+            'date_start': DateInput(),
+            'date_end': DateInput(),
+        }

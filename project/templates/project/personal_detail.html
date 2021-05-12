@@ -8,20 +8,20 @@
 
 <div class="card card-shadow">
   <div class="card-body">
-  <h4 class="">Project {{ project.name }}!</h4>
+  <h4 class="">{{ pr_c_i }} working on Project {{ project.name }}!</h4>
   </div>
   <div class="card-body">
       <div class="container">
         <div class="row my-auto">
-          <div class="col-md-5 h-100 text-center my-auto">
+          <div class="col-md-4 h-100 text-center my-auto">
+            <strong>Project Owner</strong>
+          </div>
+          <div class="col-md-4 h-100 text-center my-auto">
             <strong>Project Name</strong>
           </div>
-          <div class="col-md-7 h-100 text-center my-auto">
+          <div class="col-md-4 h-100 text-center my-auto">
             <strong>Project Company Working For</strong>
-          </div>
-          <div class="col-md-2 h-100 text-center my-auto">
-            <strong></strong>
-          </div>
+          </div
         </div>
       </div>
 
@@ -29,19 +29,20 @@
         <div class="card mt-1 card-hover" style="width: 100%;">
           <div class="card-body small-pad">
             <div class="row my-auto">
-              <div class="col-md-5 h-100 text-center my-auto">
-                {{ project.company }}<br>({{ project.name }})
+              <div class="col-md-4 h-100 text-center my-auto">
+                {{ project.company }}
               </div>
-              <div class="col-md-7 h-100 text-center my-auto">
-                {{ project.companybranch.name }}
+              <div class="col-md-4 h-100 text-center my-auto">
+                ({{ project.name }})
+              </div>
+              <div class="col-md-4 h-100 text-center my-auto">
+                {{ pr_c_i }}<br>
+                {{ pr_b_i.name }}, {{ pr_b_i.type }}
               </div>
             </div>
             <div class="row my-auto">
               <div class="col-md-10 h-100 text-left my-auto">
                 {{ project.description }}
-              </div>
-              <div class="col-md-2 h-100 text-center my-auto">
-
               </div>
             </div>
           </div>
@@ -82,16 +83,16 @@
 <br>
 <div class="card card-shadow">
   <div class="card-body">
-  <h4 class="">Project Task List</h4>
+  <h4 class="">Current Project Task List</h4>
   <div class="container">
     <div class="row my-auto">
       <div class="col-md-2 h-100 text-center my-auto">
         <strong>Date Initiated</strong>
       </div>
-      <div class="col-md-5 h-100 text-center my-auto">
+      <div class="col-md-6 h-100 text-center my-auto">
         <strong>Task</strong>
       </div>
-      <div class="col-md-3 h-100 text-center my-auto">
+      <div class="col-md-2 h-100 text-center my-auto">
         <strong>Billing Rate</strong>
       </div>
       <div class="col-md-2 h-100 text-center my-auto">
@@ -107,10 +108,10 @@
           <div class="col-md-2 h-100 text-center my-auto">
             {{ task.date_start }}
           </div>
-          <div class="col-md-5 h-100 text-center my-auto">
+          <div class="col-md-6 h-100 text-center my-auto">
             {{ task.ppdt.task }}
           </div>
-          <div class="col-md-3 h-100 text-center my-auto">
+          <div class="col-md-2 h-100 text-center my-auto">
             {{ task.currency.currency_abv }}{{ task.billing_rate }} {{ task.get_rate_unit_display }}
           </div>
           <div class="col-md-2 h-100 text-center my-auto">
@@ -134,7 +135,7 @@
                 </form>
               </div>
             {% endif %}
-              <a href="#" data-toggle="tooltip" title="Click to edit this project task">
+              <a href="{% url 'Project:EditProjectTaskBilling' task.pk task.ppdt.slug prj co bch %}" data-toggle="tooltip" title="Click to edit this project task">
                 <i class="fa fa-pencil-square-o" style="font-size:2rem;color:black;" aria-hidden="true"></i>
               </a>
             </div>
@@ -146,7 +147,7 @@
   {% endfor %}
   <p>&nbsp</p>
   <a href="{% url 'Project:ProjectTaskList' instance.slug prj co bch %}" class="btn btn-primary float-left">
-    Action Tasks
+    Action Full Tasks
   </a>
   <a href="{% url 'Project:AddProjectTask' instance.slug %}" class="btn btn-primary float-right">
     Add New Task

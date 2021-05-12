@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
 from django.db.models import Count, Sum, F, Q, Avg, Max, Min
+from django.utils import timezone
 from django.utils.http import is_safe_url
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
@@ -25,7 +26,7 @@ from talenttrack.models import WorkExperience
 from enterprises.models import Enterprise, Branch
 
 from .forms import (
-    ProjectAddForm, ProjectSearchForm, ProjectForm, ProjectPersonalDetailsForm, ProjectPersonalDetailsTaskForm, ProjectPersonalDetailsTaskBillingForm
+    ProjectAddForm, ProjectSearchForm, ProjectForm, ProjectPersonalDetailsForm, ProjectPersonalDetailsTaskForm, ProjectPersonalDetailsTaskBillingForm, EditProjectTaskBillingForm
 )
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -98,7 +99,7 @@ def ProjectPersonalDetailsView(request, prj, co, bch):
             company=pr_c_i,
             companybranch=pr_b_i)
 
-    ptl = ProjectTaskBilling.objects.filter(ppdt__ppd=p_instance, current=True).order_by('date_start')
+    ptl = ProjectTaskBilling.objects.filter(ppdt__ppd=p_instance, ppdt__current=True, current=True).order_by('date_start')
 
     if request.method == 'POST':
         form = ProjectPersonalDetailsForm(request.POST, instance=p_instance)
@@ -109,28 +110,90 @@ def ProjectPersonalDetailsView(request, prj, co, bch):
     else:
         form = ProjectPersonalDetailsForm(instance=p_instance)
         template_name = 'project/personal_detail.html'
-        context = {'form': form, 'project': project, 'ptl': ptl, 'instance': p_instance, 'prj': prj, 'co': co, 'bch': bch}
+        context = {'form': form, 'project': project, 'pr_c_i': pr_c_i, 'pr_b_i': pr_b_i, 'ptl': ptl, 'instance': p_instance, 'prj': prj, 'co': co, 'bch': bch}
         return render(request, template_name, context)
 
 
 login_required()
 def not_current_task(request, pb, prj, co, bch):
     '''Make a project task not current'''
-    pb_qs = ProjectTaskBilling.objects.filter(pk=pb)
+    pb_qs = ProjectTaskBilling.objects.get(pk=pb)
+    pt_pk = pb_qs.ppdt.pk
+    pt_qs = ProjectPersonalDetailsTask.objects.get(pk=pt_pk)
 
     if request.method =='POST':
         if 'yes' in request.POST:
-            pb_qs.update(current=True)
+            pt_qs.current=True
+            pt_qs.date_end=None
+            pb_qs.date_end=None
+            pt_qs.save()
+            pb_qs.save()
         elif 'no' in request.POST:
-            pb_qs.update(current=False)
+            pt_qs.current=False
+            pt_qs.date_end=timezone.now()
+            pb_qs.date_end=timezone.now()
+            pt_qs.save()
+            pb_qs.save()
 
         return redirect(reverse('Project:ProjectPersonal', kwargs={'prj': prj, 'co': co, 'bch': bch}))
 
 
 @login_required
+def edit_billing_rate_pd(request, pb, ppdts, prj, co, bch):
+    pb_qs = ProjectTaskBilling.objects.get(pk=pb)
+    ppdt_qs = ProjectPersonalDetailsTask.objects.get(slug=ppdts)
+
+    form = ProjectPersonalDetailsTaskBillingForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.talent = request.user
+            new.ppdt = ppdt_qs
+            pb_qs.current=False
+            pb_qs.date_end=timezone.now()
+            new.save()
+            pb_qs.save()
+            return redirect(reverse('Project:ProjectPersonal', kwargs={'prj': prj, 'co': co, 'bch': bch}))
+        else:
+            template_name = 'project/edit_project_task_billing.html'
+            context = {'form': form, 'prj': prj, 'co': co, 'bch': bch}
+            return render(request, template_name, context)
+    else:
+        template_name = 'project/edit_project_task_billing.html'
+        context = {'form': form, 'prj': prj, 'co': co, 'bch': bch}
+        return render(request, template_name, context)
+
+
+@login_required
+def edit_billing_rate_fl(request, pb, ppds, ppdts, prj, co, bch):
+    pb_qs = ProjectTaskBilling.objects.get(pk=pb)
+    ppdt_qs = ProjectPersonalDetailsTask.objects.get(slug=ppds)
+
+    form = ProjectPersonalDetailsTaskBillingForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.talent = request.user
+            new.ppdt = ppdt_qs
+            pb_qs.current=False
+            pb_qs.date_end=timezone.now()
+            new.save()
+            pb_qs.save()
+            return redirect(reverse('Project:ProjectTaskList', kwargs={'ppds': ppdts, 'prj': prj, 'co': co, 'bch': bch}))
+        else:
+            template_name = 'project/edit_project_task_billing.html'
+            context = {'form': form, 'prj': prj, 'co': co, 'bch': bch}
+            return render(request, template_name, context)
+    else:
+        template_name = 'project/edit_project_task_billing.html'
+        context = {'form': form, 'prj': prj, 'co': co, 'bch': bch}
+        return render(request, template_name, context)
+
+
+@login_required
 def action_project_tasks(request, ppds, prj, co, bch):
     """View to activate or deactivate project tasks"""
-    ptl = ProjectTaskBilling.objects.filter(ppdt__ppd__slug=ppds).order_by('-date_start')
+    ptl = ProjectTaskBilling.objects.filter(ppdt__ppd__slug=ppds,  current=True).order_by('-date_start')
 
     try:
         page = int(request.GET.get('page', 1))
@@ -158,17 +221,27 @@ def action_project_tasks(request, ppds, prj, co, bch):
 
 
 login_required()
-def action_current_task(request, pb, ppds):
+def action_current_task(request, pb, ppds, prj, co, bch):
     '''action a project task for current or not current'''
-    pb_qs = ProjectTaskBilling.objects.filter(pk=pb)
+    pb_qs = ProjectTaskBilling.objects.get(pk=pb)
+    pt_pk = pb_qs.ppdt.pk
+    pt_qs = ProjectPersonalDetailsTask.objects.get(pk=pt_pk)
 
     if request.method =='POST':
         if 'yes' in request.POST:
-            pb_qs.update(current=True)
+            pt_qs.current=True
+            pt_qs.date_end=None
+            pb_qs.date_end=None
+            pt_qs.save()
+            pb_qs.save()
         elif 'no' in request.POST:
-            pb_qs.update(current=False)
+            pt_qs.current=False
+            pt_qs.date_end=timezone.now()
+            pb_qs.date_end=timezone.now()
+            pt_qs.save()
+            pb_qs.save()
 
-        return redirect(reverse('Project:ProjectTaskList', kwargs={'ppds': ppds}))
+        return redirect(reverse('Project:ProjectTaskList', kwargs={'ppds': ppds, 'prj': prj, 'co': co, 'bch': bch}))
 
 
 @login_required()

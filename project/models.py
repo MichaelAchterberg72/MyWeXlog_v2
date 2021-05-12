@@ -14,6 +14,7 @@ class ProjectData(models.Model):
     name = models.CharField('Project name', max_length=250)
     company = models.ForeignKey(Enterprise, on_delete=models.PROTECT, verbose_name="Owner", null=True)
     companybranch = models.ForeignKey(Branch, on_delete=models.PROTECT, verbose_name='Branch Managing the Project', null=True)
+    description = models.TextField(blank=True, null=True, verbose_name="Overall project description")
     country = CountryField()
     region = models.ForeignKey(Region, on_delete=models.PROTECT)
     city = models.ForeignKey(City, on_delete=models.PROTECT)
@@ -61,6 +62,9 @@ class ProjectPersonalDetailsTask(models.Model):
     task = models.CharField(max_length=50, null=True, blank=True)
     description = models.TextField(blank=True, null=True)
     date_create = models.DateField(auto_now_add=True)
+    date_start = models.DateField(blank=True, null=True)
+    date_end = models.DateField(blank=True, null=True)
+    current = models.BooleanField(default=True)
     slug = models.SlugField(max_length=50, unique=True, null=True, blank=True)
 
     def __str__(self):

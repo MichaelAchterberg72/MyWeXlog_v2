@@ -10,7 +10,6 @@ urlpatterns = [
     path('home/', views.ProjectHome, name='ProjectHome'),
     path('full-list/', views.ProjectListHome, name='ProjectList'),
     path('personal-details/<slug:prj>/<slug:co>/<slug:bch>/', views.ProjectPersonalDetailsView, name='ProjectPersonal'),
-    path('not-current-project-task/<int:pb>/<slug:prj>/<slug:co>/<slug:bch>/', views.not_current_task, name='NotCurrentProjectTask'),
 
     path('help/project-home/', views.HelpPersonalProjectView, name='HelpPersonalProject'),
     path('help/project-overview/', views.HelpProjectOverviewView, name='HelpProjectOverview'),
@@ -35,7 +34,10 @@ urlpatterns = [
 
     #Project Task
     path('task/list/<slug:ppds>/<slug:prj>/<slug:co>/<slug:bch>/', views.action_project_tasks, name="ProjectTaskList"),
-    path('action-project-task/<int:pb>/<slug:ppds>/', views.action_current_task, name='ActionProjectTask'),
+    path('action-project-task/<int:pb>/<slug:ppds>/<slug:prj>/<slug:co>/<slug:bch>/', views.action_current_task, name='ActionProjectTask'),
     path('add/task/<slug:ppd>/', views.ProjectTaskAddView, name="AddProjectTask"),
     path('add/task/billing/<slug:ppdt>/', views.ProjectTaskBillingAddView, name="AddProjectTaskBilling"),
+    path('not-current-project-task/<int:pb>/<slug:prj>/<slug:co>/<slug:bch>/', views.not_current_task, name='NotCurrentProjectTask'),
+    path('edit-project-task-billing/<int:pb>/<slug:ppdts>/<slug:prj>/<slug:co>/<slug:bch>/', views.edit_billing_rate_pd, name='EditProjectTaskBilling'),
+    path('edit-project-task-billing-full-list/<int:pb>/<slug:ppds>/<slug:ppdts>/<slug:prj>/<slug:co>/<slug:bch>/', views.edit_billing_rate_fl, name='EditProjectTaskBillingFL'),
 ]
