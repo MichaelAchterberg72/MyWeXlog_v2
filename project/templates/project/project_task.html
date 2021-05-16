@@ -25,6 +25,13 @@
       <div class="">
         <div class="row">
           <div class="col-md-12">
+            {{ form.client|as_crispy_field }}
+            <p>
+              <a href="{% url 'Enterprise:BranchAddPop' %}" id='add_branch' onclick='return showAddPopup(this);'>
+                <img src = "{% static 'images/icon-addlink.svg' %}">
+                Add a Client Branch
+              </a>
+            </p>
             {{ form.task|as_crispy_field }}
             {{ form.description|as_crispy_field }}
           </div>

@@ -139,7 +139,12 @@ class ProjectPersonalDetailsForm(forms.ModelForm):
 class ProjectPersonalDetailsTaskForm(forms.ModelForm):
     class Meta:
         model = ProjectPersonalDetailsTask
-        fields = ('task', 'description',)
+        fields = ('client', 'task', 'description', 'date_start', 'date_end',)
+        widgets = {
+            'client': BranchSelect2Widget(),
+            'date_start': DateInput(),
+            'date_end': DateInput(),
+        }
 
 
 class ProjectPersonalDetailsTaskBillingForm(forms.ModelForm):

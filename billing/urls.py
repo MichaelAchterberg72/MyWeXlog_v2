@@ -8,4 +8,5 @@ app_name = 'Billing'
 
 urlpatterns = [
 #    path('home/', views.ProjectListHome, name='ProjectHome'),
+    path('add/calendar-item/', views.create_calendar_entry_view, name='CalendarAddPop'),
 ]

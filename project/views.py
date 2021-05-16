@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
 from django.db.models import Count, Sum, F, Q, Avg, Max, Min
 from django.utils import timezone
+from datetime import datetime, timedelta
 from django.utils.http import is_safe_url
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
@@ -149,8 +150,9 @@ def edit_billing_rate_pd(request, pb, ppdts, prj, co, bch):
             new = form.save(commit=False)
             new.talent = request.user
             new.ppdt = ppdt_qs
-            pb_qs.current=False
-            pb_qs.date_end=timezone.now()
+            query = new.cleaned_data['date_start']
+            pb_qs.current = False
+            pb_qs.date_end = query - datetime.timedelta(days=1)
             new.save()
             pb_qs.save()
             return redirect(reverse('Project:ProjectPersonal', kwargs={'prj': prj, 'co': co, 'bch': bch}))
@@ -175,8 +177,9 @@ def edit_billing_rate_fl(request, pb, ppds, ppdts, prj, co, bch):
             new = form.save(commit=False)
             new.talent = request.user
             new.ppdt = ppdt_qs
-            pb_qs.current=False
-            pb_qs.date_end=timezone.now()
+            query = new.cleaned_data['date_start']
+            pb_qs.current = False
+            pb_qs.date_end = query - datetime.timedelta(days=1)
             new.save()
             pb_qs.save()
             return redirect(reverse('Project:ProjectTaskList', kwargs={'ppds': ppdts, 'prj': prj, 'co': co, 'bch': bch}))
@@ -603,9 +606,9 @@ def ProjectTaskAddView(request, ppd):
     if request.method == 'POST':
         if form.is_valid():
             instance=form.save(commit=False)
-            instance.talent=request.user
-            instance.ppd=qs
-            instance.client=qs.companybranch
+            instance.talent = request.user
+            instance.ppd = qs
+            instance.company = qs.companybranch
             instance.save()
             ppdt=instance.slug
             return redirect(reverse('Project:AddProjectTaskBilling', kwargs={'ppdt':ppdt}))
@@ -633,7 +636,12 @@ def ProjectTaskBillingAddView(request, ppdt):
             instance=form.save(commit=False)
             instance.talent=request.user
             instance.ppdt=qs
+            instance_start = instance.cleaned_data['start_date']
+            instance_end = instance.cleaned_data['end_date']
             instance.save()
+            qs.start_date=instance_start
+            qs.end_date=instance_end
+            qs.save()
             return redirect(reverse('Project:ProjectPersonal', kwargs={'prj': prj, 'co': co, 'bch': bch}))
         else:
             context = {'form': form, 'qs': qs, 'prj': prj, 'co': co, 'bch': bch}

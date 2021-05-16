@@ -58,7 +58,8 @@ class ProjectPersonalDetails(models.Model):
 class ProjectPersonalDetailsTask(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     ppd = models.ForeignKey(ProjectPersonalDetails, on_delete=models.CASCADE)
-    client = models.ForeignKey(Branch, on_delete=models.SET_NULL, null=True, verbose_name="Client")
+    company = models.ForeignKey(Branch, on_delete=models.SET_NULL, null=True, related_name="Company")
+    client = models.ForeignKey(Branch, on_delete=models.SET_NULL, null=True, related_name="Client")
     task = models.CharField(max_length=50, null=True, blank=True)
     description = models.TextField(blank=True, null=True)
     date_create = models.DateField(auto_now_add=True)

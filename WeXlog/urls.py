@@ -38,6 +38,7 @@ urlpatterns = [
     path('appcontrol/', include('AppControl.urls', namespace='AppControl')),
     path('corporate/', include('mod_corporate.urls', namespace='Corporate')),
     path('billing/', include('billing.urls', namespace='Billing')),
+    path('calendar/', include('schedule.urls')),
     path("robots.txt",TemplateView.as_view(template_name="users/robots.txt", content_type="text/plain")),
     ]
 

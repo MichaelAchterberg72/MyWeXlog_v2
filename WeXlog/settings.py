@@ -91,6 +91,8 @@ INSTALLED_APPS = [
     'paypal.standard.ipn',
     'django_celery_beat',
     'sri',
+    'schedule',
+    'djangobower',
 ]
 
 
@@ -147,6 +149,19 @@ AUTHENTICATION_BACKENDS = (
 
     # `allauth` specific authentication methods, such as login by e-mail
     'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+# bower
+STATICFILES_FINDERS = [
+    'djangobower.finders.BowerFinder',
+]
+
+BOWER_COMPONENTS_ROOT = '/WeXlog/bower_components/'
+
+BOWER_INSTALLED_APPS = (
+    'jquery',
+    'jquery-ui',
+    'bootstrap'
 )
 
 SITE_ID = 1

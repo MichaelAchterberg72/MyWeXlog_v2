@@ -4,6 +4,9 @@ from django import forms
 from .models import Timesheet
 
 
+class DateInput(forms.DateInput):
+    input_type = 'date'
+    
 class CalendarDetailForm(forms.ModelForm):
     class Meta:
         model = Timesheet
@@ -22,3 +25,6 @@ class CalendarDetailForm(forms.ModelForm):
             'busy',
             'repeat',
         )
+        widgets = {
+            'date': DateInput(),
+        }
