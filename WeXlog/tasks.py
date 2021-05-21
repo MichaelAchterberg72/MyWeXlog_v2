@@ -29,9 +29,10 @@ from WeXlog.app_config import (
     skill_pass_score,
 )
 
-from payments.tasks import FreeMonthExpiredTask
+from payments.tasks import FreeMonthExpiredTask, SubscriptionExpiredTask
 
 from users.models import CustomUser, CustomUserSettings, ExpandedView
+from Profile.models import Profile
 
 from talenttrack.models import (
         WorkExperience, Lecturer, ClassMates, WorkColleague, Superior, WorkClient,  WorkCollaborator, LicenseCertification
@@ -48,6 +49,7 @@ from invitations.models import Invitation
 
 
 @celery_app.task(name="UpdateSubscriptionPaidDate")
+#@periodic_task(run_every=(crontab(minute='*/2')), name="UpdateSubscriptionPaidDate", ignore_result=True)
 @periodic_task(run_every=(crontab(hour=0, minute=0)), name="UpdateSubscriptionPaidDate", ignore_result=True)
 def UpdateSubscriptionPaidDate():
 
@@ -59,23 +61,26 @@ def UpdateSubscriptionPaidDate():
 
     for u in users:
         username = CustomUser.objects.get(pk=u.id)
-        instance2 = ExpandedView.objects.get(talent=u.id)
+        instance2 = ExpandedView.objects.get(talent__id=u.id)
         if username.paid == True:
             if username.paid_type == 1:
-                if username.paid_date <= timezone.now() - monthly:
+                if username.paid_date == None or username.paid_date <= timezone.now() - monthly:
                     username.paid = False
                     username.subscription = 0
+                    free_month_task = False
                     if username.free_month == True:
-                        FreeMonthExpiredTask.delay(username)
+                        free_month_task = True
+                        FreeMonthExpiredTask.delay(username.pk)
                         username.free_month = False
                         instance2.trial_expired = False
                     username.save()
                     instance2.save()
                     # send user an email to let them know the subscription has expired
-    #                SubscriptionExpiredTask.delay(username)
+                    if free_month_task == False:
+                        SubscriptionExpiredTask.delay(username.pk)
 
             elif username.paid_type == 2:
-                if username.paid_date <= datetime.now() - six_monthly:
+                if username.paid_date == None or username.paid_date <= datetime.now() - six_monthly:
                     username.paid = False
                     username.subscription = 0
                     if username.free_month == True:
@@ -84,10 +89,10 @@ def UpdateSubscriptionPaidDate():
                     username.save()
                     instance2.save()
                     # send user an email to let them know the subscription has expired
-    #                SubscriptionExpiredTask.delay(username)
+                    SubscriptionExpiredTask.delay(username.pk)
 
             elif username.paid_type == 3:
-                if username.paid_date <= datetime.now() - twelve_monthly:
+                if username.paid_date == None or username.paid_date <= datetime.now() - twelve_monthly:
                     username.paid = False
                     username.subscription = 0
                     if username.free_month == True:
@@ -96,7 +101,7 @@ def UpdateSubscriptionPaidDate():
                     username.save()
                     instance2.save()
                     # send user an email to let them know the subscription has expired
-    #                SubscriptionExpiredTask.delay(username)
+                    SubscriptionExpiredTask.delay(username.pk)
         username.save()
         instance2.save()
 
@@ -165,10 +170,11 @@ def UpgradeRefunds():
 
 
 @celery_app.task(name="WeeklyUpdateEmail")
-@periodic_task(run_every=(crontab(day_of_week=1, hour=0, minute=0)), name="WeeklyUpdateEmail", ignore_result=True)
+#@periodic_task(run_every=(crontab(minute='*/2')), name="WeeklyUpdateEmail", ignore_result=True)
+#@periodic_task(run_every=(crontab(day_of_week=1, hour=0, minute=0)), name="WeeklyUpdateEmail", ignore_result=True)
 def weekly_email():
-    user_settings = CustomUserSettings.objects.filter(Q(unsubscribe=False) & Q(receive_newsletter=True)).values_list('Talent__id')
-    users = CustomUser.objects.filter(id__icontains=user_settings)
+    user_settings = CustomUserSettings.objects.filter(Q(unsubscribe=False) & Q(receive_newsletter=True)).values_list('talent__id')
+    users = CustomUser.objects.filter(id__in=user_settings)
 
     for talent in users:
         username = CustomUser.objects.get(pk=talent.id)
@@ -189,8 +195,8 @@ def weekly_email():
         wbt = WorkBid.objects.filter(Q(talent=talent) & Q(work__offer_status='O'))
         bsl = BidShortList.objects.filter(Q(talent=talent) & Q(scope__offer_status='O'))
         vv = set(VacancyViewed.objects.filter(Q(talent=talent) & Q(closed=True)).values_list('vacancy__id', flat=True))
-        vvv = VacancyViewed.objects.filter(Q(talent=request.user) & Q(viewed=True)).values_list('vacancy__id', flat=True).distinct()
-        vac_exp = ExpandedView.objects.get(talent=request.user)
+        vvv = VacancyViewed.objects.filter(Q(talent=talent) & Q(viewed=True)).values_list('vacancy__id', flat=True).distinct()
+        vac_exp = ExpandedView.objects.get(talent=talent)
         vacancies_suited_list_view = vac_exp.vacancies_suited_list
         #  vo = VacancyViewed.objects.filter(closed=False)
 
@@ -225,21 +231,34 @@ def weekly_email():
         tlt_lvl = tlt_lvl[0]
 
         #finds all vacancies that require talent's experience level and below
-        vac_exp = tr.filter(experience_level__level__lte=tlt_lvl)
+        try:
+            vac_exp = tr.filter(experience_level__level__lte=tlt_lvl)
+        except:
+            vac_exp = None
 
         #>>> Check for language
         lang_req = tr.values_list('language')
 
         if lang_req is not None:
             tlt_lang = set(LanguageTrack.objects.filter(talent=talent).values_list('language', flat=True))
-            vac_lang=set(vac_exp.filter(language__in=tlt_lang).values_list('id', flat=True))
+            try:
+                vac_lang=set(vac_exp.filter(language__in=tlt_lang).values_list('id', flat=True))
+            except:
+                vac_lang = None
         else:
             pass
 
         #Certifications Matching
         #identifies the vacancies that do not required certification
-        cert_null_s = set(vac_exp.filter(certification__isnull=True).values_list('id', flat=True))
-        vac_cert_s = set(vac_exp.filter(certification__isnull=False).values_list('certification', flat=True))
+        try:
+            cert_null_s = set(vac_exp.filter(certification__isnull=True).values_list('id', flat=True))
+        except:
+            cert_null_s = None
+
+        try:
+            vac_cert_s = set(vac_exp.filter(certification__isnull=False).values_list('certification', flat=True))
+        except:
+            vac_cert_s = None
 
         if vac_cert_s is None: #if no certifications required, pass
             if vac_lang is None:
@@ -248,7 +267,11 @@ def weekly_email():
                 req_experience = set(vac_exp.values_list('id',flat=True)).intersection(vac_lang)
         else:
             tlt_cert = set(LicenseCertification.objects.filter(talent=talent).values_list('certification', flat=True))
-            vac_cert = set(vac_exp.filter(certification__in=tlt_cert).values_list('id',flat=True))
+            try:
+                vac_cert = set(vac_exp.filter(certification__in=tlt_cert).values_list('id',flat=True))
+            except:
+                vac_cert = None
+
             if vac_lang is not None:
                 req_experience = vac_cert.intersection(vac_lang)
             else:

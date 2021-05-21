@@ -31,12 +31,12 @@ from datetime import date
 @shared_task
 def FreeMonthExpiredTask(username):
     talent = CustomUser.objects.get(pk=username)
-    context = {'user': username.first_name, 'user_email': username.email }
+    context = {'user': talent.first_name, 'user_email': talent.email }
     html_message = render_to_string('email_templates/email_free_trial_expired.html', context)
 
     message = Mail(
         from_email = (settings.SENDGRID_FROM_EMAIL, 'MyWeXlog Notification'),
-        to_emails = username.email,
+        to_emails = talent.email,
         subject = 'Your Free Month Trial Subscription has Expired',
         plain_text_content = strip_tags(html_message),
         html_content = html_message)
@@ -54,15 +54,15 @@ def FreeMonthExpiredTask(username):
 
 @celery_app.task(name="payments.SubscriptionExpiredTask")
 @shared_task
-def SubscriptionExpiredTask(tlt):
+def SubscriptionExpiredTask(username):
 
-    username = CustomUser.objects.get(pk=tlt)
-    context = {'user': username.first_name, 'user_email': username.email }
+    talent = CustomUser.objects.get(pk=username)
+    context = {'user': talent.first_name, 'user_email': talent.email }
     html_message = render_to_string('email_templates/email_subscription_expired.html', context)
 
     message = Mail(
         from_email = settings.SENDGRID_FROM_EMAIL,
-        to_emails = username.email,
+        to_emails = talent.email,
         subject = 'Your Subscription has Expired',
         plain_text_content = strip_tags(html_message),
         html_content = html_message)
