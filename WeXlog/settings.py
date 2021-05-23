@@ -91,8 +91,8 @@ INSTALLED_APPS = [
     'paypal.standard.ipn',
     'django_celery_beat',
     'sri',
-    'schedule',
     'djangobower',
+    'schedule',
 ]
 
 
@@ -119,10 +119,11 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.request',
                 'users.context_processor.theme',
                 'users.context_processor.notification_count',
                 'users.context_processor.confirm_count',
@@ -153,6 +154,8 @@ AUTHENTICATION_BACKENDS = (
 
 # bower
 STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'djangobower.finders.BowerFinder',
 ]
 
@@ -161,7 +164,8 @@ BOWER_COMPONENTS_ROOT = '/WeXlog/bower_components/'
 BOWER_INSTALLED_APPS = (
     'jquery',
     'jquery-ui',
-    'bootstrap'
+    'bootstrap',
+    'fullcalendar#3.8.2'
 )
 
 SITE_ID = 1
@@ -233,7 +237,7 @@ CSP_DEFAULT_SRC = (
     )#app_config
 
 CSP_SCRIPT_SRC = (
-    "'self'", "'unsafe-inline'", '127.0.0.1', '107.191.57.249', 'code.jquery.com', 'maxcdn.bootstrapcdn.com', 'kit.fontawesome.com', 'app.mywexlog.dev', 'mywexlog.dev', 'cdnjs.cloudflare.com', 'maps.googleapis.com', 'bookstrapcdn.com', 'cdn.jsdelivr.net', 'cdn.jsdelivr.net', 'ajax.googleapis.com', 'cdnjs.cloudflare.com', 'apis.google.com', 'https://www.gstatic.com',
+    "'self'", "'unsafe-inline'", '127.0.0.1', '107.191.57.249', 'code.jquery.com', 'maxcdn.bootstrapcdn.com', 'kit.fontawesome.com', 'app.mywexlog.dev', 'mywexlog.dev', 'cdnjs.cloudflare.com', 'maps.googleapis.com', 'bookstrapcdn.com', 'cdn.jsdelivr.net', 'cdn.jsdelivr.net', 'ajax.googleapis.com', 'cdnjs.cloudflare.com', 'apis.google.com', 'https://www.gstatic.com', 'tarruda.github.com/',
     )#app_config
 CSP_IMG_SRC = (
     "'self'", '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev',

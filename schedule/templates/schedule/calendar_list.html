@@ -1,7 +1,14 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load scheduletags %}
 {% block head_title %}{% trans "Available Calendars" %}{% endblock %}
 {% block body %}
+
+
+<h2>{% trans "Schedule" %}</h2>
+{% with request.user.username as talent %}
+{% get_or_create_calendar request.user talent as calendar %}
+{% endwith %}
 <h2>{% trans "Available Calendars" %}</h2>
 <ul>
 {% for cal in object_list %}

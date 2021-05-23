@@ -3,12 +3,16 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.db.models import Q
 from django.template.defaultfilters import slugify
+from django.conf import settings
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from schedule.settings import USE_FULLCALENDAR
 from schedule.utils import EventListManager
+
+from users.models import CustomUser
+
 
 
 class CalendarManager(models.Manager):
@@ -80,6 +84,9 @@ class CalendarManager(models.Manager):
             else:
                 calendar = self.model(name=name)
             calendar.slug = slugify(calendar.name)
+            talent_ctx = calendar.name.split(",")[1].strip()
+            talent_qs = CustomUser.objects.get(username=talent_ctx)
+            calendar.talent = talent_qs
             calendar.save()
             calendar.create_relation(obj, distinction)
             return calendar
@@ -138,6 +145,7 @@ class Calendar(models.Model):
     >>> calendar.events.add(event)
     """
 
+    talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
     name = models.CharField(_("name"), max_length=200)
     slug = models.SlugField(_("slug"), max_length=200, unique=True)
     objects = CalendarManager()
@@ -180,6 +188,11 @@ class Calendar(models.Model):
             return reverse("fullcalendar", kwargs={"calendar_slug": self.slug})
         return reverse("calendar_home", kwargs={"calendar_slug": self.slug})
 
+#    def save(self, *args, **kwargs):
+#        super().save(*args, **kwargs)
+#        if not self.talent:
+#            self.talent = User
+#            super(Calendar, self).save(*args, **kwargs)
 
 class CalendarRelationManager(models.Manager):
     def create_relation(
@@ -223,7 +236,7 @@ class CalendarRelation(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.IntegerField(db_index=True)
     content_object = fields.GenericForeignKey("content_type", "object_id")
-    distinction = models.CharField(_("distinction"), max_length=20)
+    distinction = models.CharField(_("distinction"), blank=True, null=True, max_length=20)
     inheritable = models.BooleanField(_("inheritable"), default=True)
 
     objects = CalendarRelationManager()

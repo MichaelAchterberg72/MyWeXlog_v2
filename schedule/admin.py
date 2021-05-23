@@ -13,10 +13,10 @@ from schedule.models import (
 
 @admin.register(Calendar)
 class CalendarAdmin(admin.ModelAdmin):
-    list_display = ("name", "slug")
+    list_display = ("talent", "name", "slug")
     prepopulated_fields = {"slug": ("name",)}
     search_fields = ["name"]
-    fieldsets = ((None, {"fields": [("name", "slug")]}),)
+    fieldsets = ((None, {"fields": [("talent", "name", "slug")]}),)
 
 
 @admin.register(CalendarRelation)

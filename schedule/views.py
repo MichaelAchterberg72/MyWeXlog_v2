@@ -24,6 +24,7 @@ except ImportError:
 from django.views.decorators.http import require_POST
 from django.views.generic.base import TemplateResponseMixin
 from django.views.generic.detail import DetailView
+from django.views.generic.list import ListView
 from django.views.generic.edit import (
     CreateView,
     DeleteView,
@@ -89,6 +90,22 @@ class CalendarMixin(CalendarViewPermissionMixin):
 
 class CalendarView(CalendarMixin, DetailView):
     template_name = "schedule/calendar.html"
+
+
+class CalendarListView(ListView):
+    template_name = 'schedule/calendar_list.html'
+#    context_object_name = "lead_status_list"
+
+    def get_context_data(self, **kwargs):
+        context = super(CalendarListView, self).get_context_data(**kwargs)
+        user = self.request.user
+        queryset = Calendar.objects.filter(talent=user)
+        return context
+
+    def get_queryset(self):
+        user = self.request.user
+        queryset = Calendar.objects.filter(talent=user)
+        return queryset
 
 
 class FullCalendarView(CalendarMixin, DetailView):
@@ -528,3 +545,54 @@ def _api_select_create(start, end, calendar_slug):
     response_data = {}
     response_data["status"] = "OK"
     return response_data
+
+
+    """
+    -- Syncronise the Google account Calander --
+    https://stackoverflow.com/questions/37754999/google-calendar-integration-with-django
+
+import pytz
+from datetime import timedelta
+
+from google.oauth2 import service_account
+
+from googleapiclient.discovery import build
+
+service_account_email = "app-calendar@xxxxxxxxx.iam.gserviceaccount.com"
+SCOPES = ["https://www.googleapis.com/auth/calendar"]
+
+credentials = service_account.Credentials.from_service_account_file('google_calendar_credential.json')
+scoped_credentials = credentials.with_scopes(SCOPES)
+
+
+def build_service():
+    service = build("calendar", "v3", credentials=scoped_credentials)
+    return service
+
+
+def create_event():
+    service = build_service()
+
+    start_datetime = datetime.datetime.now(tz=pytz.utc)
+    event = (
+        service.events()
+        .insert(
+            calendarId="primary",
+            body={
+                "summary": "Foo 2",
+                "description": "Bar",
+                "start": {"dateTime": start_datetime.isoformat()},
+                "end": {
+                    "dateTime": (start_datetime + timedelta(minutes=15)).isoformat()
+                },
+            },
+        )
+        .execute()
+    )
+
+    print(event)
+
+create_event()
+
+
+    """

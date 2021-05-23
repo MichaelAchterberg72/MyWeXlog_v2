@@ -1,5 +1,6 @@
 from django.urls import re_path
 from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
 
 from schedule.feeds import CalendarICalendar, UpcomingEventsFeed
 from schedule.models import Calendar
@@ -7,6 +8,7 @@ from schedule.periods import Day, Month, Week, Year
 from schedule.views import (
     CalendarByPeriodsView,
     CalendarView,
+    CalendarListView,
     CancelOccurrenceView,
     CreateEventView,
     CreateOccurrenceView,
@@ -23,7 +25,8 @@ from schedule.views import (
 )
 
 urlpatterns = [
-    re_path(r"^$", ListView.as_view(model=Calendar), name="calendar_list"),
+#    re_path(r"^$", ListView.as_view(model=Calendar), name="calendar_list"),
+    re_path(r"^$", CalendarListView.as_view(), name="calendar_list"),
     re_path(
         r"^calendar/year/(?P<calendar_slug>[-\w]+)/$",
         CalendarByPeriodsView.as_view(template_name="schedule/calendar_year.html"),
@@ -134,5 +137,5 @@ urlpatterns = [
         r"^api/move_or_resize/$", api_move_or_resize_by_code, name="api_move_or_resize"
     ),
     re_path(r"^api/select_create/$", api_select_create, name="api_select_create"),
-    re_path(r"^$", ListView.as_view(queryset=Calendar.objects.all()), name="schedule"),
+    re_path(r"^schedule/$", ListView.as_view(queryset=Calendar.objects.all()), name="schedule"),
 ]
