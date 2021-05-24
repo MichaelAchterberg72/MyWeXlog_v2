@@ -7,7 +7,7 @@
 
 <h2>{% trans "Schedule" %}</h2>
 {% with request.user.username as talent %}
-{% get_or_create_calendar request.user talent as calendar %}
+{% get_or_create_calendar request.user other_user.username as calendar %}
 {% endwith %}
 <h2>{% trans "Available Calendars" %}</h2>
 <ul>

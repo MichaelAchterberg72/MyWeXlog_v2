@@ -61,6 +61,8 @@ class EventAdmin(admin.ModelAdmin):
                     ("description",),
                     ("start", "end"),
                     ("creator", "calendar"),
+                    ("companybranch", "task"),
+                    ("skills",),
                     ("rule", "end_recurring_period"),
                 ]
             },

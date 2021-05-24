@@ -23,7 +23,7 @@ class SpanForm(forms.ModelForm):
 
 
 class EventForm(SpanForm):
-    companybranch = forms.ModelChoiceField(queryset=None, required=False)
+#    companybranch = forms.ModelChoiceField(queryset=None, required=False)
 
 #    prj_co_qs = ProjectPersonalDetails.objects.filter(talent=request.user).values_list(companybranch__id, flat=True).distinct()
 #    company_qs = Branch.objects.filter(prj_co_qs__in=pk)

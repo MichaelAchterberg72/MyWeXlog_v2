@@ -63,9 +63,9 @@ class Event(models.Model):
     title = models.CharField(_("title"), max_length=255)
     description = models.TextField(_("description"), blank=True)
     companybranch = models.ForeignKey(Branch, on_delete=models.PROTECT, verbose_name='Branch Working for on Project', null=True)
-    project = models.ForeignKey(ProjectPersonalDetails, on_delete=models.SET_NULL, null=True)
-    task = models.ForeignKey(ProjectPersonalDetailsTask, on_delete=models.SET_NULL, null=True, verbose_name="Tasks")
-    skills = models.ManyToManyField(SkillTag, related_name='event_experience')
+    project = models.ForeignKey(ProjectPersonalDetails, on_delete=models.SET_NULL, blank=True, null=True)
+    task = models.ForeignKey(ProjectPersonalDetailsTask, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Tasks")
+    skills = models.ManyToManyField(SkillTag, related_name='event_experience', blank=True)
     creator = models.ForeignKey(
         django_settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,

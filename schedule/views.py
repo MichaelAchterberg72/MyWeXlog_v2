@@ -103,8 +103,8 @@ class CalendarListView(ListView):
         return context
 
     def get_queryset(self):
-        user = self.request.user
-        queryset = Calendar.objects.filter(talent=user)
+        user = self.request.user.id
+        queryset = Calendar.objects.filter(calendarrelation__object_id=user)
         return queryset
 
 

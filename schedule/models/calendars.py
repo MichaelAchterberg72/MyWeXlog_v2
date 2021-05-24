@@ -11,6 +11,8 @@ from django.utils.translation import gettext_lazy as _
 from schedule.settings import USE_FULLCALENDAR
 from schedule.utils import EventListManager
 
+from Profile.utils import create_code16
+
 from users.models import CustomUser
 
 
@@ -83,10 +85,7 @@ class CalendarManager(models.Manager):
                 calendar = self.model(name=str(obj))
             else:
                 calendar = self.model(name=name)
-            calendar.slug = slugify(calendar.name)
-            talent_ctx = calendar.name.split(",")[1].strip()
-            talent_qs = CustomUser.objects.get(username=talent_ctx)
-            calendar.talent = talent_qs
+            calendar.slug = create_code16(self) #slugify(calendar.name)
             calendar.save()
             calendar.create_relation(obj, distinction)
             return calendar
@@ -189,10 +188,10 @@ class Calendar(models.Model):
         return reverse("calendar_home", kwargs={"calendar_slug": self.slug})
 
 #    def save(self, *args, **kwargs):
-#        super().save(*args, **kwargs)
-#        if not self.talent:
-#            self.talent = User
-#            super(Calendar, self).save(*args, **kwargs)
+#        if self.pk is None:
+#            self.talent.id = self.calendarrelation.object_id
+#        super(Calendar, self).save(*args,**kwargs)
+
 
 class CalendarRelationManager(models.Manager):
     def create_relation(

@@ -3,7 +3,7 @@
 
 {% block body %}
 
-{% include "schedule/_dialogs.html" %}
+
 <div class="row row-centered">
   <a class="btn btn-primary gradient" href="{% url "week_calendar" calendar.slug %}{% querystring_for_date period.start 3 %}">
     {% trans "Week" %}
