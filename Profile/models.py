@@ -170,7 +170,7 @@ class Profile(models.Model):
         inject_fn = f'{self.f_name}'
         inject_ln = f'{self.l_name}'
         inject_al = f'{self.alias}'
-        inject_pp = f'{self.public_profile_name}'
+        inject_pp = f'{self.alias}-{self.f_name}{self.l_name}'
         target = CustomUser.objects.filter(pk=self.talent.id)
         if self.f_name is None or self.f_name =="":
             target.update(alias=inject_al, alphanum=inject_al, display_text=inject_al, public_profile_name=inject_al)
@@ -236,7 +236,7 @@ class ProfileImages(models.Model):
 
     def __str__(self):
         return self.talent
-        
+
 
 class IdType(models.Model):
     type = models.CharField(max_length=50, unique=True)

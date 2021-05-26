@@ -260,7 +260,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         #'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'Wexlog_3',
+        'NAME': 'Wexlog_Public_Profile', #'Wexlog_3',
         'USER': 'postgres',
 		'PASSWORD': 'rdf8tm1234', #MA
         #'PASSWORD': 'dJpfss41678', #JK
