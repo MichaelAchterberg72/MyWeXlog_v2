@@ -47,7 +47,7 @@ class CustomUser(AbstractUser):
     registered_date = models.DateTimeField(auto_now_add=True)
     paid = models.BooleanField(default=True, blank=True)
     free_month = models.BooleanField(default=True, blank=True)
-    paid_date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    paid_date = models.DateTimeField(null=True, blank=True)
     paid_type = models.IntegerField(choices=PAID_TYPE, default=1)
     invite_code = models.CharField(max_length=42, null=True, blank=True)
     alphanum = models.SlugField(max_length=7, unique=True, null=True)

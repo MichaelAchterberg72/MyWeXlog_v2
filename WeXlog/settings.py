@@ -20,8 +20,8 @@ from . import app_config
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
+
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -87,11 +87,10 @@ INSTALLED_APPS = [
     'pinax.notifications',
     'treebeard',
     'channels',
-#    'M2Crypto',
     'paypal.standard.ipn',
     'django_celery_beat',
-    'fullurl',
     'sorl.thumbnail',
+    'sri',
 ]
 
 
@@ -125,6 +124,11 @@ TEMPLATES = [
                 'users.context_processor.theme',
                 'users.context_processor.notification_count',
                 'users.context_processor.confirm_count',
+                'users.context_processor.employer_interviews_count',
+                'users.context_processor.talent_interviews_count',
+                'users.context_processor.employer_assignment_count',
+                'users.context_processor.talent_assignment_count',
+                'users.context_processor.total_notification_count',
             ],
 #            'loaders': [
 #            ('django.template.loaders.cached.Loader', [
@@ -249,10 +253,10 @@ CSP_INCLUDE_NONCE_IN = None
 CSP_REPORT_ONLY = False
 #CSP_EXCLUDE_URL_PREFIXES = ()
     ##cookie flags
-#CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 #CSRF_USE_SESSIONS = True
 #CSRF_COOKIE_HTTPONLY = True
-#SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
 #SESSION_COOKIE_SAMESITE = 'Strict'
 
 
@@ -262,8 +266,9 @@ DATABASES = {
         #'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'Wexlog_Public_Profile', #'Wexlog_3',
         'USER': 'postgres',
-		'PASSWORD': 'rdf8tm1234', #MA
+		#'PASSWORD': 'rdf8tm1234', #MA
         #'PASSWORD': 'dJpfss41678', #JK
+        'PASSWORD': 'rdf8tm1234', #MA
         'HOST': 'localhost',
         #'HOST': 'dbhost',
         'PORT': '5432'
@@ -339,9 +344,9 @@ USE_TZ = True
 USE_S3 = os.getenv('USE_S3') == False
 if USE_S3:
     # aws settings
-    AWS_ACCESS_KEY_ID = 'AKIASSC2VYJP4GNHYTAN'
-    AWS_SECRET_ACCESS_KEY = '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' # credemtial somewhere
-    AWS_STORAGE_BUCKET_NAME = 'dot-test-machterberg'
+    AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
     AWS_DEFAULT_ACL = None
     AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
     AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
@@ -362,36 +367,17 @@ else:
     MEDIA_URL = '/library/'
     MEDIA_ROOT = os.path.join(BASE_DIR, 'filelibrary')
 
-        # aws settings
-    AWS_ACCESS_KEY_ID = 'AKIASSC2VYJP4GNHYTAN'
-    AWS_SECRET_ACCESS_KEY = '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'
-    AWS_STORAGE_BUCKET_NAME = 'dot-test-machterberg'
-    AWS_S3_CUSTOM_DOMAIN = 'dot-test-machterberg.s3.amazonaws.com'
-    AWS_S3_REGION_NAME = 'eu-west-2'
-    AWS_S3_SIGNATURE_VERSION = 's3v4'
-    # AWS_QUERYSTRING_AUTH=False
-
-    AWS_S3_OBJECT_PARAMETERS = {
-        'CacheControl': 'max-age=86400',
-    }
-
-    AWS_LOCATION = 'app-static'
-    # STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-    #STATIC_URL = "https://s3-dot-machterberg.s3.amazonaws.com/app-static/"
-
-    #DEFAULT_FILE_STORAGE = 'WeXlog.storage_backends.MediaStorage'
-    # DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-
-#    AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
-#    AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-#    AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
+    # aws settings
+    AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
     AWS_DEFAULT_ACL = None
-#    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
-#    AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
-    STATIC_URL = "https://s3-dot-machterberg.s3.amazonaws.com/app-static/"
+    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+    AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+#    STATIC_URL = "https://s3-dot-machterberg.s3.amazonaws.com/app-static/"
 #    DEFAULT_FILE_STORAGE = 'WeXlog.storage_backends.MediaStorage'
     DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+#    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
@@ -401,6 +387,24 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
+AWS_ACCESS_KEY_ID = 'AKIASSC2VYJPXZJTEH3M'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 's3-dot-machterberg'
+AWS_S3_CUSTOM_DOMAIN = 's3-dot-machterberg.s3.amazonaws.com'
+AWS_S3_REGION_NAME = 'eu-west-2'
+AWS_S3_SIGNATURE_VERSION = 's3v4'
+# AWS_QUERYSTRING_AUTH=False
+
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+
+AWS_LOCATION = 'app-static'
+# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+#STATIC_URL = "https://s3-dot-machterberg.s3.amazonaws.com/app-static/"
+
+#DEFAULT_FILE_STORAGE = 'WeXlog.storage_backends.MediaStorage'
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 # End S3 config
 
 #Crispy Forms

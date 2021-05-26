@@ -8,7 +8,7 @@
 <div class="card card-shadow">
   <div class="card-body">
     <div class="float-right">
-      <a href="{% url 'Profile:HelpDesktopPendingInterviews' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 16px" data-toggle="tooltip" title="Click here for help on this page!">
+      <a href="{% url 'Profile:HelpDesktopPendingInterviews' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 16px">
       <i class="fa fa-question-circle"></i></a>
     </div>
     <h4 class="card-title">Confirm Experience with Comment</h4>
@@ -41,13 +41,13 @@
       </div>
       <div class="row text-center">
         <div class="col-md-4">
-          <button type="button" class="btn btn-success" id="confirm-button" style="width:19rem;border:solid 1px #000000;" name="button">Confirm</button>
+          <button type="button" class="btn btn-success" id="confirm-button" style="width:19rem;border:solid 1px #000000;" name="button" data-toggle="tooltip" title="Click here to confirm the experience!">Confirm</button>
         </div>
         <div class="col-md-4">
-          <button type="button" class="btn btn-danger" id="reject-button" style="width:19rem;border:solid 1px #000000;" name="button">Reject</button>
+          <button type="button" class="btn btn-danger" id="reject-button" style="width:19rem;border:solid 1px #000000;" name="button" data-toggle="tooltip" title="Click here to indicate you do not agree with experience claim!">Reject</button>
         </div>
         <div class="col-md-4">
-          <button type="button" class="btn btn-info" id="wrongp-button" style="width:19rem;border:solid 1px #000000;" name="button">Wrong Person</button>
+          <button type="button" class="btn btn-info" id="wrongp-button" style="width:19rem;border:solid 1px #000000;" name="button" data-toggle="tooltip" title="Click here to indicate you are the wrong person to verify this experience and do not know the requester!">Dismiss</button>
         </div>
       </div>
       <div class="container">

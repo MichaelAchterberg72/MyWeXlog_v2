@@ -33,10 +33,13 @@
       </div>
       <h3>Vacancy Review</h3>
       <h5 class="card-title">Vacancy: {{ instance.title }} ({{ instance.ref_no }})</h5>
+      <p>
+        This is the place to review and edit a vacancy
+      </p>
       <table class="table table-sm">
         <thead>
           <tr>
-            <th class="align-middle text-center">Own Ref No.</th>
+            <th class="align-middle text-center">My Reference No.</th>
             <th class="align-middle text-center">Company</th>
             <th class="align-middle text-center">Designation</th>
           </tr>
@@ -53,10 +56,10 @@
       <table class="table table-sm">
         <thead>
           <tr>
-            <th class="align-middle text-center">Hours Required</th>
-            <th class="align-middle text-center">Work Format</th>
-            <th class="align-middle text-center">Office Location</th>
-            <th class="align-middle text-center">Experience Level</th>
+            <th class="align-middle text-center">Hours required</th>
+            <th class="align-middle text-center">Work format</th>
+            <th class="align-middle text-center">Office location</th>
+            <th class="align-middle text-center">Experience level</th>
           </tr>
         </thead>
         <tbody>
@@ -71,11 +74,12 @@
         </tbody>
       </table>
       <br>
+      <hr>
       <div class="row">
         <div class="col-sm-6">
           <div class="h-100">
             <div class="card-body">
-              <h5 class="card-title">Scope</h5>
+              <h5 class="card-title text-center align-middle">Scope</h5>
               <p>{{ instance.scope|linebreaks }}</p>
             </div>
           </div>
@@ -83,7 +87,7 @@
         <div class="col-sm-6">
           <div class="h-100">
             <div class="card-body">
-              <h5 class="card-title">Expectations</h5>
+              <h5 class="card-title text-center align-middle">Expectations</h5>
               <p>{{ instance.expectations|linebreaks }}</p>
             </div>
           </div>
@@ -96,10 +100,10 @@
             <table class="table table-sm">
               <thead>
                 <tr>
-                  <th class="align-middle text-center">Proposed Rate</th>
-                  <th class="align-middle text-center">Bid Closing Date</th>
-                  <th class="align-middle text-center">Work Completion Date</th>
-                  <th class="align-middle text-center">Required Language</th>
+                  <th class="align-middle text-center">Proposed rate</th>
+                  <th class="align-middle text-center">Bid closing date</th>
+                  <th class="align-middle text-center">Work completion date</th>
+                  <th class="align-middle text-center">Required language</th>
                   <th class="align-middle text-center">Status</th>
                 </tr>
               </thead>
@@ -144,10 +148,10 @@
                 <tr>
                   <td>{{ d.deliverable|linebreaks|truncatechars:100 }}</td>
                   <td>
-                    <a href="{% url 'MarketPlace:DeliverablesEdit' d.scope.ref_no %}" class="badge badge-secondary badge-pill float-right" style="width: 5rem;">Edit</a>
+                    <a href="{% url 'MarketPlace:DeliverablesEdit' d.scope.ref_no %}" class="badge badge-secondary badge-pill align-middle text-center" style="width: 5rem;">Edit</a>
                     <form  action="{% url 'MarketPlace:DeliverablesDelete' d.id %}" method="post">
                       {% csrf_token %}
-                    <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;" onclick="return confirm('Remove deliverable - Are you sure?');">Remove</button>
+                    <button type="submit" class="badge badge-danger badge-pill align-middle text-center" style="width: 5rem;" onclick="return confirm('Remove deliverable - Are you sure?');">Remove</button>
                     </form>
                   </td>
                 </tr>
@@ -218,11 +222,12 @@
           <i class="fa fa-question-circle"></i>
         </a>
       </div>
-    <h3 id="applicants">Applicants</h3>
+    <h3 id="applicants">Vacancy Applicants</h3>
     <p>
-      There are a total of {{ applied_count }} bids that talent have applied for the vacancy{% if applied_count >= 5 %}, we only list the top 5 here.{% else %}.{% endif %}
+      {{ applied_count }} people have applied for this vacancy{% if applied_count >= 5 %}, we only list the top 5 here.{% else %}.{% endif %}
     </p>
     <div class="">
+      {% if applied_count != 0 %}
       <div class="row">
         <div class="col-12">
         {% if applicants_list_view %}
@@ -242,9 +247,10 @@
         {% endif %}
         </div>
       </div>
-
         {% if applicants_list_view %}
+          {% if applied_slice.items %}
           {% include 'marketplace/list_view_headings.html' %}
+          {% endif %}
           {% for key in applied_slice.items %}
           <div class="row">
             <div class="card mt-1 card-hover" style="width: 100%;">
@@ -331,6 +337,9 @@
         <a href="{% url 'MarketPlace:ApplicantsForVacancy' vac=instance.ref_no %}" class="btn btn-primary"style="width: 10rem">View All Applicants</a>
       </div>
     {% endif %}
+    {% else %}
+
+    {% endif %}
     </div>
   </div>
 </div>
@@ -345,8 +354,10 @@
       </div>
       <h3 id='suited'>Talent suited to the Vacancy</h3>
       <p>
-        There are a total of {{ suitable_count }} talent suited to the vacancy{% if suitable_count >= 5 %}, we only list the top 5 here.{% else %}.{% endif %}
+        A total of {{ suitable_count }}
+        {% if suitable_count <= 0 %} people are {% elif suitable_count == 1 %} person is {% elif suitable_count > 1 %} people are {% endif %} suited to the vacancy{% if suitable_count >= 5 %}, we only list the top 5 here.{% else %}.{% endif %}
       </p>
+      {% if suitable_count != 0 %}
       <div class="">
         <div class="row">
           <div class="col-12">
@@ -369,7 +380,9 @@
         </div>
 
           {% if suited_list_view %}
+          {% if suitable_slice.items %}
             {% include 'marketplace/list_view_headings.html' %}
+          {% endif %}
             {% for key in suitable_slice.items %}
             <div class="row">
               <div class="card mt-1 card-hover" style="width: 100%;">
@@ -444,8 +457,9 @@
             {% endif %}
             {% endfor %}
             {% endif %}
-
       </div>
+      {% else %}
+      {% endif %}
       {% if suitable_count > 5 %}
         <div class="float-right">
           <a href="{% url 'MarketPlace:TalentSuitedToVacancy' instance.ref_no %}" class="btn btn-primary"style="width: 10rem">View All Talent</a>

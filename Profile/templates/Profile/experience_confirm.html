@@ -3,7 +3,9 @@
 {% block title %}{{block.super}} Confirmation{% endblock title %}
 
 {% block content %}
-{% if not wf1 or cm1 or wk1 or spr1 or wclr1 or wc1 %}
+{% if wf1 or cm1 or wk1 or spr1 or wclr1 or wc1 %}
+
+{% else %}
 <div class="card card-shadow">
   <div class="card-body">
     <div class="float-right">
@@ -95,8 +97,6 @@
                   </div>
                 </div>
               </div>
-              {% empty %}
-                <p>You do not have confirmations listed.</p>
               {% endfor %}
 
               <br>
@@ -188,8 +188,6 @@
                 </div>
               </div>
             </div>
-            {% empty %}
-              <p>You do not have confirmations listed.</p>
             {% endfor %}
 
             <br>
@@ -208,7 +206,7 @@
             <a href="{% url 'Profile:HelpConfirmColleague' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 16px" data-toggle="tooltip" title="Click here for help on this page!">
             <i class="fa fa-question-circle"></i></a>
           </div>
-            <h4 class="card-title text-center" id="Clg">Confirm a Colleagues's Experience</h4>
+            <h4 class="card-title text-center" id="Clg">Confirm a Colleagues' Experience</h4>
             <div class="container">
               <div class="row my-auto">
                 <div class="col-md-2 h-100 text-center my-auto">
@@ -290,8 +288,6 @@
                 </div>
               </div>
             </div>
-            {% empty %}
-              <p>You do not have confirmations listed.</p>
             {% endfor %}
 
               <br>
@@ -392,8 +388,6 @@
                 </div>
               </div>
             </div>
-            {% empty %}
-              <p>You do not have confirmations listed.</p>
             {% endfor %}
 
             <br>
@@ -494,8 +488,6 @@
                 </div>
               </div>
             </div>
-            {% empty %}
-              <p>You do not have confirmations listed.</p>
             {% endfor %}
 
           </div>
@@ -513,7 +505,7 @@
             <a href="{% url 'Profile:HelpConfirmContractor' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 16px" data-toggle="tooltip" title="Click here for help on this page!">
             <i class="fa fa-question-circle"></i></a>
           </div>
-            <h4 class="card-title text-center" id="Clt">Confirm the experience of someone working for your company (as a consultalt/contractor)</h4>
+            <h4 class="card-title text-center" id="Clt">Confirm the experience of someone working for your company (as a consultant/contractor)</h4>
             <div class="container">
               <div class="row my-auto">
                 <div class="col-md-2 h-100 text-center my-auto">
@@ -595,8 +587,6 @@
                 </div>
               </div>
             </div>
-            {% empty %}
-              <p>You do not have confirmations listed.</p>
             {% endfor %}
           </div>
         </div>
@@ -695,10 +685,7 @@
                 </div>
               </div>
             </div>
-            {% empty %}
-              <p>You do not have confirmations listed.</p>
             {% endfor %}
-
           </div>
         </div>
       </div>

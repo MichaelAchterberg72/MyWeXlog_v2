@@ -25,11 +25,11 @@
       </thead>
       <tbody>
         <tr>
-          <td class="align-middle" align="Center">{{ info.experience.company }}</td>
-          <td class="align-middle" align="Center">{{ info.experience.project }}</td>
-          <td class="align-middle" align="Center">{{ info.experience.designation }}</td>
+          <td class="align-middle text-center">{{ info.experience.company }}</td>
+          <td class="align-middle text-center">{{ info.experience.project }}</td>
+          <td class="align-middle text-center">{{ info.experience.designation }}</td>
           <td align="Center">{{ info.experience.date_from|date:"j M Y" }} <br>to<br>{{ info.experience.date_to|date:"j M Y" }}</td>
-          <td class="align-middle" align="Center">{{ info.experience.hours_worked }}</td>
+          <td class="align-middle text-center">{{ info.experience.hours_worked }}</td>
         </tr>
         <tr>
           <th colspan="5" class="text-center"><strong>Skills</strong></th>
@@ -54,19 +54,19 @@
         </div>
         <div class="row text-center">
           <div class="col-md-4">
-            <button type="button" class="btn btn-success" id="confirm-button" style="width:19rem;border:solid 1px #000000;" name="button">Confirm</button>
+            <button type="button" class="btn btn-success" id="confirm-button" style="width:19rem;border:solid 1px #000000;" name="button" data-toggle="tooltip" title="Click here to confirm the experience!">Confirm</button>
           </div>
           <div class="col-md-4">
-            <button type="button" class="btn btn-danger" id="reject-button" style="width:19rem;border:solid 1px #000000;" name="button">Reject</button>
+            <button type="button" class="btn btn-danger" id="reject-button" style="width:19rem;border:solid 1px #000000;" name="button" data-toggle="tooltip" title="Click here to indicate you do not agree with experience claim!">Reject</button>
           </div>
           <div class="col-md-4">
-            <button type="button" class="btn btn-info" id="wrongp-button" style="width:19rem;border:solid 1px #000000;" name="button">Wrong Person</button>
+            <button type="button" class="btn btn-info" id="wrongp-button" style="width:19rem;border:solid 1px #000000;" name="button" data-toggle="tooltip" title="Click here to indicate you are the wrong person to verify this experience and do not know the requester!">Dismiss</button>
           </div>
           <div class="row text-center d-none" id="error_id_confirm_message">
             <div class="container">
               <div class="col-md-12" style="color:red;">
                 <br>
-              <p><strong>** Please Select either Confirm, Reject or mark as Wrong Person before saving</strong></p>
+              <p><strong>** Please select either "Confirm", "Reject" or mark as "Wrong Person" before saving</strong></p>
               </div>
             </div>
           </div>
@@ -88,13 +88,13 @@
         </div>
         <div class="row">
           <div class="col-md-4">
-            <strong>Rate the Quality of their work</strong>
+            <strong>Rate the quality of their work</strong>
           </div>
           <div class="col-md-4">
-            <strong>Rate the Time Taken to perform the work</strong>
+            <strong>Rate the time taken to perform the work</strong>
           </div>
           <div class="col-md-4">
-            <strong>Rate the Complexity of the work done</strong>
+            <strong>Rate the complexity of the work done</strong>
           </div>
         </div>
         <div class="row">
@@ -141,397 +141,6 @@
             </div>
         </div>
         <br>
-        <script type="text/javascript">
-          var confirmButton = document.getElementById("confirm-button");
-          var rejectButton = document.getElementById("reject-button");
-          var wrongpButton = document.getElementById("wrongp-button");
-
-          var confirmInput = document.getElementById("id_confirm");
-
-          confirmButton.onclick = function(){
-            confirmInput.value = "C";
-            confirmButton.setAttribute("class", "btn btn-success");
-            rejectButton.setAttribute("class", "btn btn-light");
-            wrongpButton.setAttribute("class", "btn btn-light");
-          };
-
-          rejectButton.onclick = function(){
-            confirmInput.value = "R";
-            confirmButton.setAttribute("class", "btn btn-light");
-            rejectButton.setAttribute("class", "btn btn-danger");
-            wrongpButton.setAttribute("class", "btn btn-light");
-          };
-
-          wrongpButton.onclick = function(){
-            confirmInput.value = "Y";
-            confirmButton.setAttribute("class", "btn btn-light");
-            rejectButton.setAttribute("class", "btn btn-light");
-            wrongpButton.setAttribute("class", "btn btn-info");
-          };
-
-          var errorInput = document.getElementById("error_1_id_confirm");
-          var errorInputMessage = document.getElementById("error_id_confirm_message");
-
-          if (errorInput) {
-            errorInputMessage.setAttribute("class", "row text-center");
-          };
-
-           var qualityStarOne = document.getElementById("qualityStarOne");
-           var qualityStarTwo = document.getElementById("qualityStarTwo")
-           var qualityStarThree = document.getElementById("qualityStarThree")
-           var qualityStarFour = document.getElementById("qualityStarFour")
-           var qualityStarFive = document.getElementById("qualityStarFive")
-
-           var qualityInput = document.getElementById("id_quality");
-
-           qualityStarOne.onmouseover = function(){
-             qualityStarOne.setAttribute("class", "fa fa-star");
-           };
-           qualityStarOne.onmouseout = function(){
-             qualityStarOne.setAttribute("class", "fa fa-star-o");
-           };
-           qualityStarOne.onclick = function(){
-             qualityInput.value = "1.0";
-             qualityStarOne.setAttribute("class", "fa fa-star");
-             qualityStarOne.style.setProperty ("color", "#FF0000", "important");
-             qualityStarTwo.style.color = "#000000";
-             qualityStarThree.style.color = "#000000";
-             qualityStarFour.style.color = "#000000";
-             qualityStarFive.style.color = "#000000";
-           };
-
-           qualityStarTwo.onmouseover = function(){
-             qualityStarOne.setAttribute("class", "fa fa-star");
-             qualityStarTwo.setAttribute("class", "fa fa-star");
-           };
-           qualityStarTwo.onmouseout = function(){
-             qualityStarOne.setAttribute("class", "fa fa-star-o");
-             qualityStarTwo.setAttribute("class", "fa fa-star-o");
-           };
-           qualityStarTwo.onclick = function(){
-             qualityInput.value = "2.0";
-             qualityStarOne.setAttribute("class", "fa fa-star");
-             qualityStarTwo.setAttribute("class", "fa fa-star");
-             qualityStarOne.style.setProperty ("color", "#FF0000", "important");
-             qualityStarTwo.style.setProperty ("color", "#FF0000", "important");
-             qualityStarThree.style.color = "#000000";
-             qualityStarFour.style.color = "#000000";
-             qualityStarFive.style.color = "#000000";
-           };
-
-           qualityStarThree.onmouseover = function(){
-             qualityStarOne.setAttribute("class", "fa fa-star");
-             qualityStarTwo.setAttribute("class", "fa fa-star");
-             qualityStarThree.setAttribute("class", "fa fa-star");
-           };
-           qualityStarThree.onmouseout = function(){
-             qualityStarOne.setAttribute("class", "fa fa-star-o");
-             qualityStarTwo.setAttribute("class", "fa fa-star-o");
-             qualityStarThree.setAttribute("class", "fa fa-star-o");
-           };
-           qualityStarThree.onclick = function(){
-             qualityInput.value = "3.0";
-             qualityStarOne.setAttribute("class", "fa fa-star");
-             qualityStarTwo.setAttribute("class", "fa fa-star");
-             qualityStarThree.setAttribute("class", "fa fa-star");
-             qualityStarOne.style.setProperty ("color", "#FF0000", "important");
-             qualityStarTwo.style.setProperty ("color", "#FF0000", "important");
-             qualityStarThree.style.setProperty ("color", "#FF0000", "important");
-             qualityStarFour.style.color = "#000000";
-             qualityStarFive.style.color = "#000000";
-           };
-
-           qualityStarFour.onmouseover = function(){
-             qualityStarOne.setAttribute("class", "fa fa-star");
-             qualityStarTwo.setAttribute("class", "fa fa-star");
-             qualityStarThree.setAttribute("class", "fa fa-star");
-             qualityStarFour.setAttribute("class", "fa fa-star");
-           };
-           qualityStarFour.onmouseout = function(){
-             qualityStarOne.setAttribute("class", "fa fa-star-o");
-             qualityStarTwo.setAttribute("class", "fa fa-star-o");
-             qualityStarThree.setAttribute("class", "fa fa-star-o");
-             qualityStarFour.setAttribute("class", "fa fa-star-o");
-           };
-           qualityStarFour.onclick = function(){
-             qualityInput.value = "4.0";
-             qualityStarOne.setAttribute("class", "fa fa-star");
-             qualityStarTwo.setAttribute("class", "fa fa-star");
-             qualityStarThree.setAttribute("class", "fa fa-star");
-             qualityStarFour.setAttribute("class", "fa fa-star");
-             qualityStarOne.style.setProperty ("color", "#FF0000", "important");
-             qualityStarTwo.style.setProperty ("color", "#FF0000", "important");
-             qualityStarThree.style.setProperty ("color", "#FF0000", "important");
-             qualityStarFour.style.setProperty ("color", "#FF0000", "important");
-             qualityStarFive.style.color = "#000000";
-           };
-
-           qualityStarFive.onmouseover = function(){
-             qualityStarOne.setAttribute("class", "fa fa-star");
-             qualityStarTwo.setAttribute("class", "fa fa-star");
-             qualityStarThree.setAttribute("class", "fa fa-star");
-             qualityStarFour.setAttribute("class", "fa fa-star");
-             qualityStarFive.setAttribute("class", "fa fa-star");
-           };
-           qualityStarFive.onmouseout = function(){
-             qualityStarOne.setAttribute("class", "fa fa-star-o");
-             qualityStarTwo.setAttribute("class", "fa fa-star-o");
-             qualityStarThree.setAttribute("class", "fa fa-star-o");
-             qualityStarFour.setAttribute("class", "fa fa-star-o");
-             qualityStarFive.setAttribute("class", "fa fa-star-o");
-           };
-           qualityStarFive.onclick = function(){
-             qualityInput.value = "5.0";
-             qualityStarOne.setAttribute("class", "fa fa-star");
-             qualityStarTwo.setAttribute("class", "fa fa-star");
-             qualityStarThree.setAttribute("class", "fa fa-star");
-             qualityStarFour.setAttribute("class", "fa fa-star");
-             qualityStarFive.setAttribute("class", "fa fa-star");
-             qualityStarOne.style.setProperty ("color", "#FF0000", "important");
-             qualityStarTwo.style.setProperty ("color", "#FF0000", "important");
-             qualityStarThree.style.setProperty ("color", "#FF0000", "important");
-             qualityStarFour.style.setProperty ("color", "#FF0000", "important");
-             qualityStarFive.style.setProperty ("color", "#FF0000", "important");
-           };
-
-
-           var timeTakenStarOne = document.getElementById("timeTakenStarOne");
-           var timeTakenStarTwo = document.getElementById("timeTakenStarTwo")
-           var timeTakenStarThree = document.getElementById("timeTakenStarThree")
-           var timeTakenStarFour = document.getElementById("timeTakenStarFour")
-           var timeTakenStarFive = document.getElementById("timeTakenStarFive")
-
-           var timeTakenInput = document.getElementById("id_time_taken");
-
-           timeTakenStarOne.onmouseover = function(){
-             timeTakenStarOne.setAttribute("class", "fa fa-star");
-           };
-           timeTakenStarOne.onmouseout = function(){
-             timeTakenStarOne.setAttribute("class", "fa fa-star-o");
-           };
-           timeTakenStarOne.onclick = function(){
-             timeTakenInput.value = "1.0";
-             timeTakenStarOne.setAttribute("class", "fa fa-star");
-             timeTakenStarOne.style.setProperty ("color", "#FF0000", "important");
-             timeTakenStarTwo.style.color = "#000000";
-             timeTakenStarThree.style.color = "#000000";
-             timeTakenStarFour.style.color = "#000000";
-             timeTakenStarFive.style.color = "#000000";
-           };
-
-           timeTakenStarTwo.onmouseover = function(){
-             timeTakenStarOne.setAttribute("class", "fa fa-star");
-             timeTakenStarTwo.setAttribute("class", "fa fa-star");
-           };
-           timeTakenStarTwo.onmouseout = function(){
-             timeTakenStarOne.setAttribute("class", "fa fa-star-o");
-             timeTakenStarTwo.setAttribute("class", "fa fa-star-o");
-           };
-           timeTakenStarTwo.onclick = function(){
-             timeTakenInput.value = "2.0";
-             timeTakenStarOne.setAttribute("class", "fa fa-star");
-             timeTakenStarTwo.setAttribute("class", "fa fa-star");
-             timeTakenStarOne.style.setProperty ("color", "#FF0000", "important");
-             timeTakenStarTwo.style.setProperty ("color", "#FF0000", "important");
-             timeTakenStarThree.style.color = "#000000";
-             timeTakenStarFour.style.color = "#000000";
-             timeTakenStarFive.style.color = "#000000";
-           };
-
-           timeTakenStarThree.onmouseover = function(){
-             timeTakenStarOne.setAttribute("class", "fa fa-star");
-             timeTakenStarTwo.setAttribute("class", "fa fa-star");
-             timeTakenStarThree.setAttribute("class", "fa fa-star");
-           };
-           timeTakenStarThree.onmouseout = function(){
-             timeTakenStarOne.setAttribute("class", "fa fa-star-o");
-             timeTakenStarTwo.setAttribute("class", "fa fa-star-o");
-             timeTakenStarThree.setAttribute("class", "fa fa-star-o");
-           };
-           timeTakenStarThree.onclick = function(){
-             timeTakenInput.value = "3.0";
-             timeTakenStarOne.setAttribute("class", "fa fa-star");
-             timeTakenStarTwo.setAttribute("class", "fa fa-star");
-             timeTakenStarThree.setAttribute("class", "fa fa-star");
-             timeTakenStarOne.style.setProperty ("color", "#FF0000", "important");
-             timeTakenStarTwo.style.setProperty ("color", "#FF0000", "important");
-             timeTakenStarThree.style.setProperty ("color", "#FF0000", "important");
-             timeTakenStarFour.style.color = "#000000";
-             timeTakenStarFive.style.color = "#000000";
-           };
-
-           timeTakenStarFour.onmouseover = function(){
-             timeTakenStarOne.setAttribute("class", "fa fa-star");
-             timeTakenStarTwo.setAttribute("class", "fa fa-star");
-             timeTakenStarThree.setAttribute("class", "fa fa-star");
-             timeTakenStarFour.setAttribute("class", "fa fa-star");
-           };
-           timeTakenStarFour.onmouseout = function(){
-             timeTakenStarOne.setAttribute("class", "fa fa-star-o");
-             timeTakenStarTwo.setAttribute("class", "fa fa-star-o");
-             timeTakenStarThree.setAttribute("class", "fa fa-star-o");
-             timeTakenStarFour.setAttribute("class", "fa fa-star-o");
-           };
-           timeTakenStarFour.onclick = function(){
-             timeTakenInput.value = "4.0";
-             timeTakenStarOne.setAttribute("class", "fa fa-star");
-             timeTakenStarTwo.setAttribute("class", "fa fa-star");
-             timeTakenStarThree.setAttribute("class", "fa fa-star");
-             timeTakenStarFour.setAttribute("class", "fa fa-star");
-             timeTakenStarOne.style.setProperty ("color", "#FF0000", "important");
-             timeTakenStarTwo.style.setProperty ("color", "#FF0000", "important");
-             timeTakenStarThree.style.setProperty ("color", "#FF0000", "important");
-             timeTakenStarFour.style.setProperty ("color", "#FF0000", "important");
-             timeTakenStarFive.style.color = "#000000";
-           };
-
-           timeTakenStarFive.onmouseover = function(){
-             timeTakenStarOne.setAttribute("class", "fa fa-star");
-             timeTakenStarTwo.setAttribute("class", "fa fa-star");
-             timeTakenStarThree.setAttribute("class", "fa fa-star");
-             timeTakenStarFour.setAttribute("class", "fa fa-star");
-             timeTakenStarFive.setAttribute("class", "fa fa-star");
-           };
-           timeTakenStarFive.onmouseout = function(){
-             timeTakenStarOne.setAttribute("class", "fa fa-star-o");
-             timeTakenStarTwo.setAttribute("class", "fa fa-star-o");
-             timeTakenStarThree.setAttribute("class", "fa fa-star-o");
-             timeTakenStarFour.setAttribute("class", "fa fa-star-o");
-             timeTakenStarFive.setAttribute("class", "fa fa-star-o");
-           };
-           timeTakenStarFive.onclick = function(){
-             timeTakenInput.value = "5.0";
-             timeTakenStarOne.setAttribute("class", "fa fa-star");
-             timeTakenStarTwo.setAttribute("class", "fa fa-star");
-             timeTakenStarThree.setAttribute("class", "fa fa-star");
-             timeTakenStarFour.setAttribute("class", "fa fa-star");
-             timeTakenStarFive.setAttribute("class", "fa fa-star");
-             timeTakenStarOne.style.setProperty ("color", "#FF0000", "important");
-             timeTakenStarTwo.style.setProperty ("color", "#FF0000", "important");
-             timeTakenStarThree.style.setProperty ("color", "#FF0000", "important");
-             timeTakenStarFour.style.setProperty ("color", "#FF0000", "important");
-             timeTakenStarFive.style.setProperty ("color", "#FF0000", "important");
-           };
-
-
-           var complexityStarOne = document.getElementById("complexityStarOne");
-           var complexityStarTwo = document.getElementById("complexityStarTwo")
-           var complexityStarThree = document.getElementById("complexityStarThree")
-           var complexityStarFour = document.getElementById("complexityStarFour")
-           var complexityStarFive = document.getElementById("complexityStarFive")
-
-           var complexityInput = document.getElementById("id_complexity");
-
-           complexityStarOne.onmouseover = function(){
-             complexityStarOne.setAttribute("class", "fa fa-star");
-           };
-           complexityStarOne.onmouseout = function(){
-             complexityStarOne.setAttribute("class", "fa fa-star-o");
-           };
-           complexityStarOne.onclick = function(){
-             complexityInput.value = "1.0";
-             complexityStarOne.setAttribute("class", "fa fa-star");
-             complexityStarOne.style.setProperty ("color", "#FF0000", "important");
-             complexityStarTwo.style.color = "#000000";
-             complexityStarThree.style.color = "#000000";
-             complexityStarFour.style.color = "#000000";
-             complexityStarFive.style.color = "#000000";
-           };
-
-           complexityStarTwo.onmouseover = function(){
-             complexityStarOne.setAttribute("class", "fa fa-star");
-             complexityStarTwo.setAttribute("class", "fa fa-star");
-           };
-           complexityStarTwo.onmouseout = function(){
-             complexityStarOne.setAttribute("class", "fa fa-star-o");
-             complexityStarTwo.setAttribute("class", "fa fa-star-o");
-           };
-           complexityStarTwo.onclick = function(){
-             complexityInput.value = "2.0";
-             complexityStarOne.setAttribute("class", "fa fa-star");
-             complexityStarTwo.setAttribute("class", "fa fa-star");
-             complexityStarOne.style.setProperty ("color", "#FF0000", "important");
-             complexityStarTwo.style.setProperty ("color", "#FF0000", "important");
-             complexityStarThree.style.color = "#000000";
-             complexityStarFour.style.color = "#000000";
-             complexityStarFive.style.color = "#000000";
-           };
-
-           complexityStarThree.onmouseover = function(){
-             complexityStarOne.setAttribute("class", "fa fa-star");
-             complexityStarTwo.setAttribute("class", "fa fa-star");
-             complexityStarThree.setAttribute("class", "fa fa-star");
-           };
-           complexityStarThree.onmouseout = function(){
-             complexityStarOne.setAttribute("class", "fa fa-star-o");
-             complexityStarTwo.setAttribute("class", "fa fa-star-o");
-             complexityStarThree.setAttribute("class", "fa fa-star-o");
-           };
-           complexityStarThree.onclick = function(){
-             complexityInput.value = "3.0";
-             complexityStarOne.setAttribute("class", "fa fa-star");
-             complexityStarTwo.setAttribute("class", "fa fa-star");
-             complexityStarThree.setAttribute("class", "fa fa-star");
-             complexityStarOne.style.setProperty ("color", "#FF0000", "important");
-             complexityStarTwo.style.setProperty ("color", "#FF0000", "important");
-             complexityStarThree.style.setProperty ("color", "#FF0000", "important");
-             complexityStarFour.style.color = "#000000";
-             complexityStarFive.style.color = "#000000";
-           };
-
-           complexityStarFour.onmouseover = function(){
-             complexityStarOne.setAttribute("class", "fa fa-star");
-             complexityStarTwo.setAttribute("class", "fa fa-star");
-             complexityStarThree.setAttribute("class", "fa fa-star");
-             complexityStarFour.setAttribute("class", "fa fa-star");
-           };
-           complexityStarFour.onmouseout = function(){
-             complexityStarOne.setAttribute("class", "fa fa-star-o");
-             complexityStarTwo.setAttribute("class", "fa fa-star-o");
-             complexityStarThree.setAttribute("class", "fa fa-star-o");
-             complexityStarFour.setAttribute("class", "fa fa-star-o");
-           };
-           complexityStarFour.onclick = function(){
-             complexityInput.value = "4.0";
-             complexityStarOne.setAttribute("class", "fa fa-star");
-             complexityStarTwo.setAttribute("class", "fa fa-star");
-             complexityStarThree.setAttribute("class", "fa fa-star");
-             complexityStarFour.setAttribute("class", "fa fa-star");
-             complexityStarOne.style.setProperty ("color", "#FF0000", "important");
-             complexityStarTwo.style.setProperty ("color", "#FF0000", "important");
-             complexityStarThree.style.setProperty ("color", "#FF0000", "important");
-             complexityStarFour.style.setProperty ("color", "#FF0000", "important");
-             complexityStarFive.style.color = "#000000";
-           };
-
-           complexityStarFive.onmouseover = function(){
-             complexityStarOne.setAttribute("class", "fa fa-star");
-             complexityStarTwo.setAttribute("class", "fa fa-star");
-             complexityStarThree.setAttribute("class", "fa fa-star");
-             complexityStarFour.setAttribute("class", "fa fa-star");
-             complexityStarFive.setAttribute("class", "fa fa-star");
-           };
-           complexityStarFive.onmouseout = function(){
-             complexityStarOne.setAttribute("class", "fa fa-star-o");
-             complexityStarTwo.setAttribute("class", "fa fa-star-o");
-             complexityStarThree.setAttribute("class", "fa fa-star-o");
-             complexityStarFour.setAttribute("class", "fa fa-star-o");
-             complexityStarFive.setAttribute("class", "fa fa-star-o");
-           };
-           complexityStarFive.onclick = function(){
-             complexityInput.value = "5.0";
-             complexityStarOne.setAttribute("class", "fa fa-star");
-             complexityStarTwo.setAttribute("class", "fa fa-star");
-             complexityStarThree.setAttribute("class", "fa fa-star");
-             complexityStarFour.setAttribute("class", "fa fa-star");
-             complexityStarFive.setAttribute("class", "fa fa-star");
-             complexityStarOne.style.setProperty ("color", "#FF0000", "important");
-             complexityStarTwo.style.setProperty ("color", "#FF0000", "important");
-             complexityStarThree.style.setProperty ("color", "#FF0000", "important");
-             complexityStarFour.style.setProperty ("color", "#FF0000", "important");
-             complexityStarFive.style.setProperty ("color", "#FF0000", "important");
-           };
-        </script>
       <div class="">
         <p><a href="{% url 'Profile:Confirm' %}" class="btn btn-danger">Cancel</a> <button type="submit" name="Done" class="btn btn-primary">Save</button></p>
       </div>
@@ -540,3 +149,396 @@
 
 
 {% endblock content %}
+{% block Script %}
+<script type="text/javascript">
+  var confirmButton = document.getElementById("confirm-button");
+  var rejectButton = document.getElementById("reject-button");
+  var wrongpButton = document.getElementById("wrongp-button");
+
+  var confirmInput = document.getElementById("id_confirm");
+
+  confirmButton.onclick = function(){
+    confirmInput.value = "C";
+    confirmButton.setAttribute("class", "btn btn-success");
+    rejectButton.setAttribute("class", "btn btn-light");
+    wrongpButton.setAttribute("class", "btn btn-light");
+  };
+
+  rejectButton.onclick = function(){
+    confirmInput.value = "R";
+    confirmButton.setAttribute("class", "btn btn-light");
+    rejectButton.setAttribute("class", "btn btn-danger");
+    wrongpButton.setAttribute("class", "btn btn-light");
+  };
+
+  wrongpButton.onclick = function(){
+    confirmInput.value = "Y";
+    confirmButton.setAttribute("class", "btn btn-light");
+    rejectButton.setAttribute("class", "btn btn-light");
+    wrongpButton.setAttribute("class", "btn btn-info");
+  };
+
+  var errorInput = document.getElementById("error_1_id_confirm");
+  var errorInputMessage = document.getElementById("error_id_confirm_message");
+
+  if (errorInput) {
+    errorInputMessage.setAttribute("class", "row text-center");
+  };
+
+   var qualityStarOne = document.getElementById("qualityStarOne");
+   var qualityStarTwo = document.getElementById("qualityStarTwo")
+   var qualityStarThree = document.getElementById("qualityStarThree")
+   var qualityStarFour = document.getElementById("qualityStarFour")
+   var qualityStarFive = document.getElementById("qualityStarFive")
+
+   var qualityInput = document.getElementById("id_quality");
+
+   qualityStarOne.onmouseover = function(){
+     qualityStarOne.setAttribute("class", "fa fa-star");
+   };
+   qualityStarOne.onmouseout = function(){
+     qualityStarOne.setAttribute("class", "fa fa-star-o");
+   };
+   qualityStarOne.onclick = function(){
+     qualityInput.value = "1.0";
+     qualityStarOne.setAttribute("class", "fa fa-star");
+     qualityStarOne.style.setProperty ("color", "#FF0000", "important");
+     qualityStarTwo.style.color = "#000000";
+     qualityStarThree.style.color = "#000000";
+     qualityStarFour.style.color = "#000000";
+     qualityStarFive.style.color = "#000000";
+   };
+
+   qualityStarTwo.onmouseover = function(){
+     qualityStarOne.setAttribute("class", "fa fa-star");
+     qualityStarTwo.setAttribute("class", "fa fa-star");
+   };
+   qualityStarTwo.onmouseout = function(){
+     qualityStarOne.setAttribute("class", "fa fa-star-o");
+     qualityStarTwo.setAttribute("class", "fa fa-star-o");
+   };
+   qualityStarTwo.onclick = function(){
+     qualityInput.value = "2.0";
+     qualityStarOne.setAttribute("class", "fa fa-star");
+     qualityStarTwo.setAttribute("class", "fa fa-star");
+     qualityStarOne.style.setProperty ("color", "#FF0000", "important");
+     qualityStarTwo.style.setProperty ("color", "#FF0000", "important");
+     qualityStarThree.style.color = "#000000";
+     qualityStarFour.style.color = "#000000";
+     qualityStarFive.style.color = "#000000";
+   };
+
+   qualityStarThree.onmouseover = function(){
+     qualityStarOne.setAttribute("class", "fa fa-star");
+     qualityStarTwo.setAttribute("class", "fa fa-star");
+     qualityStarThree.setAttribute("class", "fa fa-star");
+   };
+   qualityStarThree.onmouseout = function(){
+     qualityStarOne.setAttribute("class", "fa fa-star-o");
+     qualityStarTwo.setAttribute("class", "fa fa-star-o");
+     qualityStarThree.setAttribute("class", "fa fa-star-o");
+   };
+   qualityStarThree.onclick = function(){
+     qualityInput.value = "3.0";
+     qualityStarOne.setAttribute("class", "fa fa-star");
+     qualityStarTwo.setAttribute("class", "fa fa-star");
+     qualityStarThree.setAttribute("class", "fa fa-star");
+     qualityStarOne.style.setProperty ("color", "#FF0000", "important");
+     qualityStarTwo.style.setProperty ("color", "#FF0000", "important");
+     qualityStarThree.style.setProperty ("color", "#FF0000", "important");
+     qualityStarFour.style.color = "#000000";
+     qualityStarFive.style.color = "#000000";
+   };
+
+   qualityStarFour.onmouseover = function(){
+     qualityStarOne.setAttribute("class", "fa fa-star");
+     qualityStarTwo.setAttribute("class", "fa fa-star");
+     qualityStarThree.setAttribute("class", "fa fa-star");
+     qualityStarFour.setAttribute("class", "fa fa-star");
+   };
+   qualityStarFour.onmouseout = function(){
+     qualityStarOne.setAttribute("class", "fa fa-star-o");
+     qualityStarTwo.setAttribute("class", "fa fa-star-o");
+     qualityStarThree.setAttribute("class", "fa fa-star-o");
+     qualityStarFour.setAttribute("class", "fa fa-star-o");
+   };
+   qualityStarFour.onclick = function(){
+     qualityInput.value = "4.0";
+     qualityStarOne.setAttribute("class", "fa fa-star");
+     qualityStarTwo.setAttribute("class", "fa fa-star");
+     qualityStarThree.setAttribute("class", "fa fa-star");
+     qualityStarFour.setAttribute("class", "fa fa-star");
+     qualityStarOne.style.setProperty ("color", "#FF0000", "important");
+     qualityStarTwo.style.setProperty ("color", "#FF0000", "important");
+     qualityStarThree.style.setProperty ("color", "#FF0000", "important");
+     qualityStarFour.style.setProperty ("color", "#FF0000", "important");
+     qualityStarFive.style.color = "#000000";
+   };
+
+   qualityStarFive.onmouseover = function(){
+     qualityStarOne.setAttribute("class", "fa fa-star");
+     qualityStarTwo.setAttribute("class", "fa fa-star");
+     qualityStarThree.setAttribute("class", "fa fa-star");
+     qualityStarFour.setAttribute("class", "fa fa-star");
+     qualityStarFive.setAttribute("class", "fa fa-star");
+   };
+   qualityStarFive.onmouseout = function(){
+     qualityStarOne.setAttribute("class", "fa fa-star-o");
+     qualityStarTwo.setAttribute("class", "fa fa-star-o");
+     qualityStarThree.setAttribute("class", "fa fa-star-o");
+     qualityStarFour.setAttribute("class", "fa fa-star-o");
+     qualityStarFive.setAttribute("class", "fa fa-star-o");
+   };
+   qualityStarFive.onclick = function(){
+     qualityInput.value = "5.0";
+     qualityStarOne.setAttribute("class", "fa fa-star");
+     qualityStarTwo.setAttribute("class", "fa fa-star");
+     qualityStarThree.setAttribute("class", "fa fa-star");
+     qualityStarFour.setAttribute("class", "fa fa-star");
+     qualityStarFive.setAttribute("class", "fa fa-star");
+     qualityStarOne.style.setProperty ("color", "#FF0000", "important");
+     qualityStarTwo.style.setProperty ("color", "#FF0000", "important");
+     qualityStarThree.style.setProperty ("color", "#FF0000", "important");
+     qualityStarFour.style.setProperty ("color", "#FF0000", "important");
+     qualityStarFive.style.setProperty ("color", "#FF0000", "important");
+   };
+
+
+   var timeTakenStarOne = document.getElementById("timeTakenStarOne");
+   var timeTakenStarTwo = document.getElementById("timeTakenStarTwo")
+   var timeTakenStarThree = document.getElementById("timeTakenStarThree")
+   var timeTakenStarFour = document.getElementById("timeTakenStarFour")
+   var timeTakenStarFive = document.getElementById("timeTakenStarFive")
+
+   var timeTakenInput = document.getElementById("id_time_taken");
+
+   timeTakenStarOne.onmouseover = function(){
+     timeTakenStarOne.setAttribute("class", "fa fa-star");
+   };
+   timeTakenStarOne.onmouseout = function(){
+     timeTakenStarOne.setAttribute("class", "fa fa-star-o");
+   };
+   timeTakenStarOne.onclick = function(){
+     timeTakenInput.value = "1.0";
+     timeTakenStarOne.setAttribute("class", "fa fa-star");
+     timeTakenStarOne.style.setProperty ("color", "#FF0000", "important");
+     timeTakenStarTwo.style.color = "#000000";
+     timeTakenStarThree.style.color = "#000000";
+     timeTakenStarFour.style.color = "#000000";
+     timeTakenStarFive.style.color = "#000000";
+   };
+
+   timeTakenStarTwo.onmouseover = function(){
+     timeTakenStarOne.setAttribute("class", "fa fa-star");
+     timeTakenStarTwo.setAttribute("class", "fa fa-star");
+   };
+   timeTakenStarTwo.onmouseout = function(){
+     timeTakenStarOne.setAttribute("class", "fa fa-star-o");
+     timeTakenStarTwo.setAttribute("class", "fa fa-star-o");
+   };
+   timeTakenStarTwo.onclick = function(){
+     timeTakenInput.value = "2.0";
+     timeTakenStarOne.setAttribute("class", "fa fa-star");
+     timeTakenStarTwo.setAttribute("class", "fa fa-star");
+     timeTakenStarOne.style.setProperty ("color", "#FF0000", "important");
+     timeTakenStarTwo.style.setProperty ("color", "#FF0000", "important");
+     timeTakenStarThree.style.color = "#000000";
+     timeTakenStarFour.style.color = "#000000";
+     timeTakenStarFive.style.color = "#000000";
+   };
+
+   timeTakenStarThree.onmouseover = function(){
+     timeTakenStarOne.setAttribute("class", "fa fa-star");
+     timeTakenStarTwo.setAttribute("class", "fa fa-star");
+     timeTakenStarThree.setAttribute("class", "fa fa-star");
+   };
+   timeTakenStarThree.onmouseout = function(){
+     timeTakenStarOne.setAttribute("class", "fa fa-star-o");
+     timeTakenStarTwo.setAttribute("class", "fa fa-star-o");
+     timeTakenStarThree.setAttribute("class", "fa fa-star-o");
+   };
+   timeTakenStarThree.onclick = function(){
+     timeTakenInput.value = "3.0";
+     timeTakenStarOne.setAttribute("class", "fa fa-star");
+     timeTakenStarTwo.setAttribute("class", "fa fa-star");
+     timeTakenStarThree.setAttribute("class", "fa fa-star");
+     timeTakenStarOne.style.setProperty ("color", "#FF0000", "important");
+     timeTakenStarTwo.style.setProperty ("color", "#FF0000", "important");
+     timeTakenStarThree.style.setProperty ("color", "#FF0000", "important");
+     timeTakenStarFour.style.color = "#000000";
+     timeTakenStarFive.style.color = "#000000";
+   };
+
+   timeTakenStarFour.onmouseover = function(){
+     timeTakenStarOne.setAttribute("class", "fa fa-star");
+     timeTakenStarTwo.setAttribute("class", "fa fa-star");
+     timeTakenStarThree.setAttribute("class", "fa fa-star");
+     timeTakenStarFour.setAttribute("class", "fa fa-star");
+   };
+   timeTakenStarFour.onmouseout = function(){
+     timeTakenStarOne.setAttribute("class", "fa fa-star-o");
+     timeTakenStarTwo.setAttribute("class", "fa fa-star-o");
+     timeTakenStarThree.setAttribute("class", "fa fa-star-o");
+     timeTakenStarFour.setAttribute("class", "fa fa-star-o");
+   };
+   timeTakenStarFour.onclick = function(){
+     timeTakenInput.value = "4.0";
+     timeTakenStarOne.setAttribute("class", "fa fa-star");
+     timeTakenStarTwo.setAttribute("class", "fa fa-star");
+     timeTakenStarThree.setAttribute("class", "fa fa-star");
+     timeTakenStarFour.setAttribute("class", "fa fa-star");
+     timeTakenStarOne.style.setProperty ("color", "#FF0000", "important");
+     timeTakenStarTwo.style.setProperty ("color", "#FF0000", "important");
+     timeTakenStarThree.style.setProperty ("color", "#FF0000", "important");
+     timeTakenStarFour.style.setProperty ("color", "#FF0000", "important");
+     timeTakenStarFive.style.color = "#000000";
+   };
+
+   timeTakenStarFive.onmouseover = function(){
+     timeTakenStarOne.setAttribute("class", "fa fa-star");
+     timeTakenStarTwo.setAttribute("class", "fa fa-star");
+     timeTakenStarThree.setAttribute("class", "fa fa-star");
+     timeTakenStarFour.setAttribute("class", "fa fa-star");
+     timeTakenStarFive.setAttribute("class", "fa fa-star");
+   };
+   timeTakenStarFive.onmouseout = function(){
+     timeTakenStarOne.setAttribute("class", "fa fa-star-o");
+     timeTakenStarTwo.setAttribute("class", "fa fa-star-o");
+     timeTakenStarThree.setAttribute("class", "fa fa-star-o");
+     timeTakenStarFour.setAttribute("class", "fa fa-star-o");
+     timeTakenStarFive.setAttribute("class", "fa fa-star-o");
+   };
+   timeTakenStarFive.onclick = function(){
+     timeTakenInput.value = "5.0";
+     timeTakenStarOne.setAttribute("class", "fa fa-star");
+     timeTakenStarTwo.setAttribute("class", "fa fa-star");
+     timeTakenStarThree.setAttribute("class", "fa fa-star");
+     timeTakenStarFour.setAttribute("class", "fa fa-star");
+     timeTakenStarFive.setAttribute("class", "fa fa-star");
+     timeTakenStarOne.style.setProperty ("color", "#FF0000", "important");
+     timeTakenStarTwo.style.setProperty ("color", "#FF0000", "important");
+     timeTakenStarThree.style.setProperty ("color", "#FF0000", "important");
+     timeTakenStarFour.style.setProperty ("color", "#FF0000", "important");
+     timeTakenStarFive.style.setProperty ("color", "#FF0000", "important");
+   };
+
+
+   var complexityStarOne = document.getElementById("complexityStarOne");
+   var complexityStarTwo = document.getElementById("complexityStarTwo")
+   var complexityStarThree = document.getElementById("complexityStarThree")
+   var complexityStarFour = document.getElementById("complexityStarFour")
+   var complexityStarFive = document.getElementById("complexityStarFive")
+
+   var complexityInput = document.getElementById("id_complexity");
+
+   complexityStarOne.onmouseover = function(){
+     complexityStarOne.setAttribute("class", "fa fa-star");
+   };
+   complexityStarOne.onmouseout = function(){
+     complexityStarOne.setAttribute("class", "fa fa-star-o");
+   };
+   complexityStarOne.onclick = function(){
+     complexityInput.value = "1.0";
+     complexityStarOne.setAttribute("class", "fa fa-star");
+     complexityStarOne.style.setProperty ("color", "#FF0000", "important");
+     complexityStarTwo.style.color = "#000000";
+     complexityStarThree.style.color = "#000000";
+     complexityStarFour.style.color = "#000000";
+     complexityStarFive.style.color = "#000000";
+   };
+
+   complexityStarTwo.onmouseover = function(){
+     complexityStarOne.setAttribute("class", "fa fa-star");
+     complexityStarTwo.setAttribute("class", "fa fa-star");
+   };
+   complexityStarTwo.onmouseout = function(){
+     complexityStarOne.setAttribute("class", "fa fa-star-o");
+     complexityStarTwo.setAttribute("class", "fa fa-star-o");
+   };
+   complexityStarTwo.onclick = function(){
+     complexityInput.value = "2.0";
+     complexityStarOne.setAttribute("class", "fa fa-star");
+     complexityStarTwo.setAttribute("class", "fa fa-star");
+     complexityStarOne.style.setProperty ("color", "#FF0000", "important");
+     complexityStarTwo.style.setProperty ("color", "#FF0000", "important");
+     complexityStarThree.style.color = "#000000";
+     complexityStarFour.style.color = "#000000";
+     complexityStarFive.style.color = "#000000";
+   };
+
+   complexityStarThree.onmouseover = function(){
+     complexityStarOne.setAttribute("class", "fa fa-star");
+     complexityStarTwo.setAttribute("class", "fa fa-star");
+     complexityStarThree.setAttribute("class", "fa fa-star");
+   };
+   complexityStarThree.onmouseout = function(){
+     complexityStarOne.setAttribute("class", "fa fa-star-o");
+     complexityStarTwo.setAttribute("class", "fa fa-star-o");
+     complexityStarThree.setAttribute("class", "fa fa-star-o");
+   };
+   complexityStarThree.onclick = function(){
+     complexityInput.value = "3.0";
+     complexityStarOne.setAttribute("class", "fa fa-star");
+     complexityStarTwo.setAttribute("class", "fa fa-star");
+     complexityStarThree.setAttribute("class", "fa fa-star");
+     complexityStarOne.style.setProperty ("color", "#FF0000", "important");
+     complexityStarTwo.style.setProperty ("color", "#FF0000", "important");
+     complexityStarThree.style.setProperty ("color", "#FF0000", "important");
+     complexityStarFour.style.color = "#000000";
+     complexityStarFive.style.color = "#000000";
+   };
+
+   complexityStarFour.onmouseover = function(){
+     complexityStarOne.setAttribute("class", "fa fa-star");
+     complexityStarTwo.setAttribute("class", "fa fa-star");
+     complexityStarThree.setAttribute("class", "fa fa-star");
+     complexityStarFour.setAttribute("class", "fa fa-star");
+   };
+   complexityStarFour.onmouseout = function(){
+     complexityStarOne.setAttribute("class", "fa fa-star-o");
+     complexityStarTwo.setAttribute("class", "fa fa-star-o");
+     complexityStarThree.setAttribute("class", "fa fa-star-o");
+     complexityStarFour.setAttribute("class", "fa fa-star-o");
+   };
+   complexityStarFour.onclick = function(){
+     complexityInput.value = "4.0";
+     complexityStarOne.setAttribute("class", "fa fa-star");
+     complexityStarTwo.setAttribute("class", "fa fa-star");
+     complexityStarThree.setAttribute("class", "fa fa-star");
+     complexityStarFour.setAttribute("class", "fa fa-star");
+     complexityStarOne.style.setProperty ("color", "#FF0000", "important");
+     complexityStarTwo.style.setProperty ("color", "#FF0000", "important");
+     complexityStarThree.style.setProperty ("color", "#FF0000", "important");
+     complexityStarFour.style.setProperty ("color", "#FF0000", "important");
+     complexityStarFive.style.color = "#000000";
+   };
+
+   complexityStarFive.onmouseover = function(){
+     complexityStarOne.setAttribute("class", "fa fa-star");
+     complexityStarTwo.setAttribute("class", "fa fa-star");
+     complexityStarThree.setAttribute("class", "fa fa-star");
+     complexityStarFour.setAttribute("class", "fa fa-star");
+     complexityStarFive.setAttribute("class", "fa fa-star");
+   };
+   complexityStarFive.onmouseout = function(){
+     complexityStarOne.setAttribute("class", "fa fa-star-o");
+     complexityStarTwo.setAttribute("class", "fa fa-star-o");
+     complexityStarThree.setAttribute("class", "fa fa-star-o");
+     complexityStarFour.setAttribute("class", "fa fa-star-o");
+     complexityStarFive.setAttribute("class", "fa fa-star-o");
+   };
+   complexityStarFive.onclick = function(){
+     complexityInput.value = "5.0";
+     complexityStarOne.setAttribute("class", "fa fa-star");
+     complexityStarTwo.setAttribute("class", "fa fa-star");
+     complexityStarThree.setAttribute("class", "fa fa-star");
+     complexityStarFour.setAttribute("class", "fa fa-star");
+     complexityStarFive.setAttribute("class", "fa fa-star");
+     complexityStarOne.style.setProperty ("color", "#FF0000", "important");
+     complexityStarTwo.style.setProperty ("color", "#FF0000", "important");
+     complexityStarThree.style.setProperty ("color", "#FF0000", "important");
+     complexityStarFour.style.setProperty ("color", "#FF0000", "important");
+     complexityStarFive.style.setProperty ("color", "#FF0000", "important");
+   };
+</script>
+{% endblock Script %}

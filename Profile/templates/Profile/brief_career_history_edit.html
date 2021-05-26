@@ -15,7 +15,9 @@
 <div class="card card-shadow">
   <div class="card-body">
     <h3>Edit Career History</h3>
-
+    <ul>
+      <li>Please note that you are required to capture at least one current employer to allow the posting branch to be populated when capturing a vacancy. (Only current employers (date to left blank) will populate the list.)</li>
+    </ul>
     <form method="post">
       <input type="hidden" name="next" value="{{ request.GET.next }}">
       {% csrf_token %}

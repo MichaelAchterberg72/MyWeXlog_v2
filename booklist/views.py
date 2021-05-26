@@ -334,7 +334,6 @@ def AuthorCreatePopupView(request):
 
 
 @login_required()
-@csp_exempt
 def PublisherCreatePopupView(request):
     form = PublisherAddForm(request.POST or None)
     if request.method =='POST':

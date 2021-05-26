@@ -100,13 +100,12 @@ class TalentRequired(models.Model):
     )
     date_entered = models.DateField(auto_now_add=True)
     title = models.CharField(max_length=250)
-    ref_no = models.CharField(max_length=10, unique=True, null=True, blank=True)#SlugField
+    ref_no = models.CharField("MyWeXlog Reference Number",max_length=10, unique=True, null=True, blank=True)#SlugField
     own_ref_no = models.CharField(max_length=100, unique=True, null=True, blank=True)
     designation = models.ForeignKey(Designation, on_delete=models.PROTECT, null=True)
-    # (companybranch = models.ForeignKey(Branch, on_delete=models.CASCADE, verbose_name="Company", related_name="Test")
-    companybranch = models.ForeignKey(Branch, on_delete=models.CASCADE, verbose_name="Company")
+    companybranch = models.ForeignKey(Branch, on_delete=models.SET_NULL, null=True, verbose_name="Company")
     requested_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
-    date_deadline = models.DateField('Work completed by')
+    date_deadline = models.DateField('Work completed by', blank=True, null=True)
     hours_required = models.IntegerField()
     unit = models.CharField(max_length=1, choices=UNIT)
     experience_level = models.ForeignKey(SkillLevel, on_delete=models.PROTECT)

@@ -75,9 +75,9 @@ class RegionSelect2Widget(RegionSearchFieldMixin, ModelSelect2Widget):
 
 
 class ProjectAddForm(forms.ModelForm):
-
+    '''This form is used when adding aproject from talenttrack app'''
     '''
-    #removed this validation for now.
+    #removed this validation for now...
     pwd = None
     def __init__(self, *args, **kwargs):
         global pwd
@@ -87,13 +87,13 @@ class ProjectAddForm(forms.ModelForm):
 
     class Meta:
         model = ProjectData
-        fields = ('name', 'company', 'country', 'companybranch', 'region', 'city', 'industry')
+        fields = ('name', 'country', 'region', 'city', 'industry')
         widgets = {
-            'company': CompanySelect2Widget(),
+            #'company': CompanySelect2Widget(),
             'industry': IndustrySelect2Widget(),
             'region': RegionSelect2Widget(),
             'city': CitySelect2Widget(),
-            'companybranch': BranchSelect2Widget(),
+            #'companybranch': BranchSelect2Widget(),
         }
         labels = {
             'city' : 'Closest City / Town / Village',
@@ -107,6 +107,22 @@ class ProjectAddForm(forms.ModelForm):
             raise forms.ValidationError("A project with this name already exists! Please enter another name.")
         return project_passed
     '''
+class ProjectAddHome(forms.ModelForm):
+    '''This form is used when adding aproject from talenttrack app'''
+    class Meta:
+        model = ProjectData
+        fields = ('company', 'companybranch', 'name', 'country', 'region', 'city', 'industry')
+        widgets = {
+            'company': CompanySelect2Widget(),
+            'industry': IndustrySelect2Widget(),
+            'region': RegionSelect2Widget(),
+            'city': CitySelect2Widget(),
+            'companybranch': BranchSelect2Widget(),
+        }
+        labels = {
+            'city' : 'Closest City / Town / Village',
+        }
+
 
 class ProjectSearchForm(forms.Form):
     query = forms.CharField()

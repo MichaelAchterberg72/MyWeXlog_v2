@@ -36,7 +36,6 @@ django-crispy-forms==1.7.2
 django-csp==3.5
 django-easy-pdf==0.1.1
 django-extensions==2.1.6
-django-fullurl==1.1
 django-leaflet==0.24.0
 django-messages==0.5.3
 django-model-utils==3.1.2
@@ -50,6 +49,7 @@ django-postman==3.6.2
 django-redis==4.12.1
 django-referrer-policy==1.0
 django-select2==7.0.3
+django-sri-0.3.0
 django-storages==1.10
 django-timezone-field==4.0
 django-treebeard==4.3

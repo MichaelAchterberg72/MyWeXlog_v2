@@ -1830,7 +1830,7 @@ def VacanciesListView(request):
     ipost_closed_count = ipost_closed.count()
     ipost_bid = wb.filter(~Q(bidreview='D'))
     ipost_bid_flat = ipost_bid.values_list('work', flat=True).distinct()
-    capacity = ta.filter(date_to__gte=timezone.now()).order_by('-date_to')[:5]
+#    capacity = ta.filter(date_to__gte=timezone.now()).order_by('-date_to')[:5]
 
     #Code for stacked lookup for talent's skills
 
@@ -1984,7 +1984,7 @@ def VacanciesListView(request):
         'vvv': vvv,
         'vacancies_suited_list_view': vacancies_suited_list_view,
         'tlt': tlt,
-        'capacity': capacity,
+#        'capacity': capacity,
         'tr_emp_count': tr_emp_count,
         'ipost': ipost,
         'ipost_list': ipost_list,
@@ -2436,7 +2436,7 @@ def RolesAppliedForUnsuccessfulApplicationHistoryView(request):
 
 @login_required()
 def TalentAvailabillityView(request):
-    instance=TalentAvailabillity.objects.filter(talent=request.user).last()
+    instance = TalentAvailabillity.objects.filter(talent=request.user).last()
     form = TalentAvailabillityForm(request.POST or None, instance=instance)
     if request.method == 'POST':
         if form.is_valid():

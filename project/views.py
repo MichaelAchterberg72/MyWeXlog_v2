@@ -6,6 +6,7 @@ from django.db.models import Count, Sum, F, Q, Avg, Max, Min
 from django.utils.http import is_safe_url
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
+import json
 
 from django.views.generic import (
         TemplateView
@@ -24,7 +25,7 @@ from Profile.models import Profile
 from talenttrack.models import WorkExperience
 from enterprises.models import Enterprise, Branch
 
-from .forms import ProjectAddForm, ProjectSearchForm, ProjectForm, ProjectPersonalDetailsForm
+from .forms import ProjectAddForm, ProjectAddHome, ProjectSearchForm, ProjectForm, ProjectPersonalDetailsForm
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
@@ -217,13 +218,13 @@ def ProjectEditView(request, prj):
 @csp_exempt
 def ProjectAddView(request):
     if request.method =='POST':
-        form = ProjectAddForm(request.POST or None)
+        form = ProjectAddHome(request.POST or None)
         if form.is_valid():
             new = form.save(commit=False)
             new.save()
             return redirect(reverse('Project:ProjectHome'))
     else:
-        form = ProjectAddForm()
+        form = ProjectAddHome()
 
     template = 'project/project_add.html'
     context = {'form': form}
@@ -392,19 +393,26 @@ def ProjectAddPopup(request):
     exist_project = set(ProjectData.objects.filter().values_list('name', flat=True))
 
     filt = exist_project
+    data = json.loads(request.COOKIES['branch'])
+    qs = Branch.objects.get(id=data)
 
+    print(qs, qs.company)
     form = ProjectAddForm(request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
             instance=form.save(commit=False)
+            instance.companybranch = qs
+            instance.company = qs.company
             instance.save()
-            return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_project");</script>' % (instance.pk, instance))
+            response = HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_project");</script>' % (instance.pk, instance))
+            response.delete_cookie('branch')
+            return response
         else:
-            context = {'form':form,}
+            context = {'form':form, 'qs':qs}
             template = 'project/project_add_popup.html'
             return render(request, template, context)
     else:
-        context = {'form':form,}
+        context = {'form':form, 'qs':qs}
         template = 'project/project_add_popup.html'
         return render(request, template, context)
 

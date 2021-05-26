@@ -18,58 +18,89 @@
   </style>
 <div class="card card-shadow">
   <div class="card-body">
-<h3>Licences, Certifications and Memberships</h3>
-<form method="post"  enctype="multipart/form-data">
-  {% csrf_token %}
-  <div class="form-row">
-    <div class="form-group col-md-6 mb-0">
-      {{ form.certification|as_crispy_field }}
-      <p>
-        <a href="{% url 'Talent:ResultAddPop' %}" id='add_result' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">
-          Add Type
-        </a>
-      </p>
-      {{ form.cm_no|as_crispy_field }}
-      {{ form.cert_name|as_crispy_field}}
-      {{ form.companybranch|as_crispy_field }}
-      <p><a href="{% url 'Enterprise:BranchAddPop' %}" id='add_branch' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add Managing Organisation</a></p>
-    </div>
-    <div class="form-group col-md-6 mb-0">
-    <div class="form-row">
-      <div class="form-group col-md-5 mb-0">
-        {{ form.issue_date|as_crispy_field }}
+    <h3>
+      Licences, Certifications and Memberships
+    </h3>
+    <form method="post"  enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="form-row">
+        <div class="form-group col-md-6 mb-0">
+          {{ form.certification|as_crispy_field }}
+          <p>
+            <a href="{% url 'Talent:ResultAddPop' %}" id='add_result' onclick='return showAddPopup(this);'>
+              <img src = "{% static 'images/icon-addlink.svg' %}">
+              Add Type
+            </a>
+          </p>
+          {{ form.cm_no|as_crispy_field }}
+          <div  data-toggle=tooltip title="The name of the document - Type = License, Name = Commercial Pilot">
+            {{ form.cert_name|as_crispy_field}}
+            <small>
+              <br>
+            </small>
+          </div>
+          {{ form.companybranch|as_crispy_field }}
+          <p>
+            <a href="{% url 'Enterprise:BranchAddPop' %}" id='add_branch' onclick='return showAddPopup(this);'>
+              <img src = "{% static 'images/icon-addlink.svg' %}">
+              Add Managing Organisation
+            </a>
+          </p>
+        </div>
+        <div class="form-group col-md-6 mb-0">
+          <div class="form-row">
+            <div class="form-group col-md-6 mb-0" data-toggle=tooltip title="The date the license / certification / membership was first held">
+              {{ form.issue_date|as_crispy_field }}
+              <p>
+                <br>
+              </p>
+            </div>
+            <div class="form-group col-md-6 mb-0" data-toggle=tooltip title="The date the license / certification / membership expires (Leave Blank if never expires).">
+              {{ form.expiry_date|as_crispy_field }}
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-4 mb-0">
+              <p>
+                <br>
+                <div data-toggle=tooltip title="Is the license / certification / membership currently valid?">
+                  {{ form.current|as_crispy_field }}
+                </div>
+              </p>
+            </div>
+            <div class="form-group col-md-8 mb-0" data-toggle=tooltip title="The country in which the document is issued">
+              {{ form.country|as_crispy_field }}
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-12 mb-0">
+              {{ form.upload|as_crispy_field }}
+              <small>Please note: Only <strong>pdf</strong> files can be uploaded.</small>
+            </div>
+          </div>
+          <div class="form-row">
+            {{ form.region|as_crispy_field }}
+            <p>
+              <a href="{% url 'Location:RegionAddPop' %}" id='add_region' onclick='return showAddPopup(this);'>
+                <img src = "{% static 'images/icon-addlink.svg' %}">
+                Add Region
+              </a>
+            </p>
+          </div>
+        </div>
       </div>
-      <div class="form-group col-md-5 mb-0">
-        {{ form.expiry_date|as_crispy_field }}
-      </div>
-    </div>
-    <div class="form-row">
-      {{ form.current|as_crispy_field }}
-      {{ form.upload|as_crispy_field }}
-      <p>
-        <strong>Please note:</strong> Only <strong>pdf</strong> files can be uploaded.
-      </p>
-    </div>
-    <div class="form-row">
-      <div class="form-group col-md-5 mb-0">
-        {{ form.country|as_crispy_field }}
-      </div>
-      <div class="form-group col-md-5 mb-0">
-        {{ form.region|as_crispy_field }}
+      <div class="">
         <p>
-          <a href="{% url 'Location:RegionAddPop' %}" id='add_region' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">
-            Add Region
+          <a href="{% url 'Profile:ProfileView' %}" class="btn btn-danger">
+            Cancel
           </a>
+          <button type="submit" name="Done" class="btn btn-primary">
+            Done
+          </button>
         </p>
       </div>
-    </div>
-    </div>
+    </form>
   </div>
-  <div class="">
-    <p><a href="{% url 'Profile:ProfileView' %}" class="btn btn-danger">Cancel</a> <button type="submit" name="Done" class="btn btn-primary">Done</button></p>
-  </div>
-</form>
-</div>
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 {{ form.media.js }}

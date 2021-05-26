@@ -10,7 +10,7 @@
   <div class="card-body">
 <h3>Edit Your Profile Background Picture</h3>
 
-<form method="post">
+<form method="post" enctype="multipart/form-data">
   <input type="hidden" name="next" value="{{ request.GET.next }}">
   {% csrf_token %}
 

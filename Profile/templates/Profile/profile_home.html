@@ -10,75 +10,96 @@
       <div class="col-sm-12">
         <div class="card card-shadow">
           <div class="card-body">
-            <h3 class="card-title">Introduction Walkthrough</h3>
-            <p>We have created an introduction walkthrough to assist you in your first days using MyWeXlog and to provide you with an overview of how MyWeXlog works and the best way to use the system.
+            <h3 class="card-title">
+              Introduction Walkthrough
+            </h3>
+            <p>
+              We have created an introduction walkthrough to assist you in your first days using MyWeXlog and to provide you with an overview of how MyWeXlog works and the best way to use the system.
+            </p>
             <div>
               <form action="{% url 'Profile:CloseIntro' %}" method="post">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-secondary">Don't View This Again!</button>
-                <a href="{% url 'Profile:IntroIntroduction' %}" class="btn btn-primary float-right">Introduction Wizard</a>
+                <button type="submit" class="btn btn-secondary">
+                  Don't View This Again!
+                </button>
+                <a href="{% url 'Profile:IntroIntroduction' %}" class="btn btn-primary float-right">
+                  Introduction Wizard
+                </a>
               </form>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <br>
-    <div>
+<br>
   {% endif %}
 
   {% if fm %}
-  {% if not fse %}
-    <div class="row">
-      <div class="col-sm-12">
-        <div class="card card-shadow">
-          <div class="card-body">
-            <h3 class="card-title text-center">Your 30 Day Trial Active Subscription Has Been Initiated!</h3>
-            Your one month free Active Subscription has been initiated. You can enjoy the full benefits of MyWeXlog for the next 30 days. In order top make your account permissions permanent please select one of the subscriptions to upgrade to:<br><br>
-            <div class="row">
-              <div class="col-sm-12">
-              <a href="{% url 'Payments:PassiveSubscription' %}" class="btn btn-primary float-left">Passive Subscription</a>
-              <a href="{% url 'Payments:ActiveSubscription' %}" class="btn btn-primary float-right">Active Subscription</a>
+    {% if not fse %}
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="card card-shadow">
+            <div class="card-body">
+              <h3 class="card-title text-center">
+                Your 30 Day Trial Active Subscription Has Been Initiated!
+              </h3>
+              <p>
+                Your one month free Active Subscription has been initiated. You can enjoy the full benefits of MyWeXlog for the next 30 days. In order to make your account permissions permanent please select one of the subscriptions to upgrade to:
+              </p>
+              <div class="row">
+                <div class="col-sm-12">
+                  <a href="{% url 'Payments:PassiveSubscription' %}" class="btn btn-primary float-left">
+                    Passive Subscription
+                  </a>
+                  <a href="{% url 'Payments:ActiveSubscription' %}" class="btn btn-primary float-right">
+                    Active Subscription
+                  </a>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <br>
-  {% endif %}
+      <br>
+    {% endif %}
   {% endif %}
 
   {% if not fm %}
-  {% if not fse %}
-    <div class="row">
-      <div class="col-sm-12">
-        <div class="card card-shadow">
-          <div class="card-body">
-            <h3 class="card-title text-center">Your Trial Active Subscription Has Expired!</h3>
-            Your one month free Active Subscription has expired. To contine enjoying the full benefits of MyWeXlog please select one of the subscriptions to upgrade to:<br><br>
-
-            <div class="row">
-              <div class="col-sm-6">
-              <form  action="{% url 'Profile:CloseEndFreeSubscription' %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-secondary">Don't Show This Again!</button>
-              </form>
+    {% if not fse %}
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="card card-shadow">
+            <div class="card-body">
+              <h3 class="card-title text-center">Your Trial Active Subscription Has Expired!</h3>
+              <p>
+                Your one month free Active Subscription has expired. To contine enjoying the full benefits of MyWeXlog please select one of the subscriptions to upgrade to:
+              </p>
+              <div class="row">
+                <div class="col-sm-6">
+                <form  action="{% url 'Profile:CloseEndFreeSubscription' %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-secondary">
+                    Don't Show This Again!
+                  </button>
+                </form>
+                </div>
+                <div class="col-sm-6">
+                  <a href="{% url 'Payments:PassiveSubscription' %}" class="btn btn-primary float-left">
+                    Passive Subscription
+                  </a>
+                  <a href="{% url 'Payments:ActiveSubscription' %}" class="btn btn-primary float-right">
+                    Active Subscription
+                  </a>
+                </div>
               </div>
-              <div class="col-sm-6">
-              <a href="{% url 'Payments:PassiveSubscription' %}" class="btn btn-primary float-left">Passive Subscription</a>
-              <a href="{% url 'Payments:ActiveSubscription' %}" class="btn btn-primary float-right">Active Subscription</a>
+              <div>
               </div>
-            </div>
-            <div>
-
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <br>
-    {% endif %}
+      <br>
+      {% endif %}
     {% endif %}
 {% endblock intro %}
 
@@ -109,20 +130,20 @@
     <p>
       Referral link:
       <hr>
-
       <div class="input-group mb-3">
         <input type="text" class="form-control" value="{{ referral_code.url }}" id="myInput" aria-describedby="basic-addon2">
         <div class="input-group-append">
           <button class="btn btn-outline-secondary" type="button" id="myButton">Copy Link</button>
         </div>
       </div>
-
-      <hr>
-      Copy and paste the above url address into an email or a Social Network Post for your friends to join MyWeXlog in your network.
-      <hr>
-      <p>View a listing of associates that have not yet accepted:</p>
+      <small>
+        Copy and paste the above url address into an email or a Social Network Post for your friends to join MyWeXlog in your network.
+      </small>
+      <br>
       <div class="float-right">
-        <a href="{% url 'Invitation:InvitationsSent' %}" class="btn btn-primary">Invitations</a>
+        <a href="{% url 'Invitation:InvitationsSent' %}" class="btn btn-primary" data-toggle=tooltip title="View a list of associates that have not yet accepted you invitation to MyWeXlog">
+          Invitations
+        </a>
       </div>
   </div>
 
@@ -130,11 +151,11 @@
 
 {% block workflow %}
 <div class="float-right">
-  <a href="{% url 'MarketPlace:EmployerInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 10rem">
+  <a href="{% url 'MarketPlace:EmployerInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 10rem" data-toggle=tooltip title="View a history of all interviews you have requested">
     Employer History
   </a>
   &nbsp
-  <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary 8rem" style="width: 10rem">
+  <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 10rem" data-toggle=tooltip title="View a history of all interviews you have accepted">
     Candidate History
   </a>
 </div>
@@ -180,10 +201,10 @@
 
 {% block score %}
   <div class="float-right">
-    <a href="{% url 'Profile:WorkshopEmp' %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 10rem">
+    <a href="{% url 'Profile:WorkshopEmp' %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 10rem" data-toggle=tooltip title="View or manage all work you have assigned">
       Employer Office
     </a> &nbsp
-    <a href="{% url 'Profile:WorkshopTlt' %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 10rem">
+    <a href="{% url 'Profile:WorkshopTlt' %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 10rem" data-toggle=tooltip title="View or manage all vacancies you have accepted">
       Talent Workshop
     </a>
   </div>
@@ -219,7 +240,6 @@
         <td class="align-middle text-center">{{ emp_wit_c }}</td>
         <td class="align-middle text-center">{{ emp_wit_d }}</td>
         <td class="align-middle text-center">{{ emp_wit_s }}</td>
-
       </tr>
       <tr>
         <th class="align-middle text-center">Candidate</th>
@@ -228,38 +248,66 @@
         <td class="align-middle text-center">{{ tlt_wit_c }}</td>
         <td class="align-middle text-center">{{ tlt_wit_d }}</td>
         <td class="align-middle text-center">{{ tlt_wit_s }}</td>
-
       </tr>
     </tbody>
   </table>
   <br>
-  <p>Your Profile has been viewed: {% if request.user.subscription >= 1 %}<a href="{% url 'Profile:ProfileViewed' %}" class="btn btn-info float-right">Profile Viewed Report: {{ pvr_count }} times</a>{% else %}<span class="float-right"><strong>{{ pvr_count }}</strong> times.</span>{% endif %}</p>
-
+  <p>
+    {% if request.user.subscription >= 1 %}
+      <a href="{% url 'Profile:ProfileViewed' %}" class="btn btn-info float-right">
+      Profile Viewed Report: {{ pvr_count }} times
+      </a>
+    {% else %}
+      <span class="float-right">
+        <strong>{{ pvr_count }}</strong> times.
+      </span>
+    {% endif %}
+  </p>
 {% endblock score %}
 
 {% block TBA %}
   <div class="text-center">
-    <a href="{% url 'Talent:APV' tlt=request.user.alias vac='1ad9t2' %}?next={{ request.path|urlencode }}" target="_blank"><i class="fa fa-id-badge" aria-hidden="true"style="font-size:30px;color:black" data-toggle="tooltip" data-placement="top" title="Public Profile"></i></a>
+    <a href="{% url 'Talent:APV' tlt=request.user.alias vac='1ad9t2' %}?next={{ request.path|urlencode }}" target="_blank">
+      <i class="fa fa-id-badge" aria-hidden="true"style="font-size:30px;color:black" data-toggle="tooltip" data-placement="top" title="Public Profile"></i>
+    </a>
     &nbsp &nbsp
-    <a href="{% url 'Talent:DPCSum' tlt %}?next={{ request.path|urlencode }}"><i class="fa fa-industry" style="font-size:30px;color:black" data-toggle="tooltip" title="View Summary for Industry, Project and Designation."></i></a>
+    <a href="{% url 'Talent:DPCSum' tlt %}?next={{ request.path|urlencode }}">
+      <i class="fa fa-industry" style="font-size:30px;color:black" data-toggle="tooltip" title="View Summary for Industry, Project and Designation."></i>
+    </a>
     &nbsp &nbsp
-    <a href="{% url 'BookList:VPBL' tlt=request.user.alias %}?next={{ request.path|urlencode }}" class=""><i class="fa fa-book" aria-hidden="true" style="font-size:30px;color:black" data-toggle="tooltip" title="Book Summary"></i></a>
+    <a href="{% url 'BookList:VPBL' tlt=request.user.alias %}?next={{ request.path|urlencode }}" class="">
+      <i class="fa fa-book" aria-hidden="true" style="font-size:30px;color:black" data-toggle="tooltip" title="Book Summary"></i>
+    </a>
     &nbsp &nbsp
-    <a href="{% url 'Talent:SPDView' tlt=request.user.alias %}?next={{ request.path|urlencode }}"><i class="fa fa-database" aria-hidden="true" style="font-size:30px;color:black" data-toggle="tooltip" title="Skills Summary"></i></a>
+    <a href="{% url 'Talent:SPDView' tlt=request.user.alias %}?next={{ request.path|urlencode }}">
+      <i class="fa fa-database" aria-hidden="true" style="font-size:30px;color:black" data-toggle="tooltip" title="Skills Summary"></i>
+    </a>
     &nbsp &nbsp
-    <a href="{% url 'Talent:Capture' %}"><i class="fa fa-graduation-cap" aria-hidden="true" style="font-size:30px;color:black" data-toggle="tooltip" title="Capture Training"></i></a>
+    <a href="{% url 'Talent:Capture' %}">
+      <i class="fa fa-graduation-cap" aria-hidden="true" style="font-size:30px;color:black" data-toggle="tooltip" title="Capture Training"></i>
+    </a>
     &nbsp &nbsp
-    <a href="{% url 'Talent:ExperienceCapture' %}" class=""><i class="fa fa-laptop" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Capture Experience"></i></a>
+    <a href="{% url 'Talent:ExperienceCapture' %}" class="">
+      <i class="fa fa-laptop" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Capture Experience"></i>
+    </a>
     &nbsp &nbsp
-    <a href="{% url 'BookList:books-read-new' %}" class=""><i class="fa fa-bookmark-o" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Capture Book"></i></a>
+    <a href="{% url 'BookList:books-read-new' %}" class="">
+      <i class="fa fa-bookmark-o" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Capture Book"></i>
+    </a>
     &nbsp &nbsp
     {% if user.subscription < 1 %}
-        <a href="#" class=""><i class="fa fa-map-signs" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Vacancy Search (Not available to free users)"></i></a>
+        <a href="#" class="">
+          <i class="fa fa-map-signs" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Vacancy Search (Not available to free users)"></i>
+        </a>
     {% else %}
-      <a href="{% url 'MarketPlace:VacSearch' %}" class=""><i class="fa fa-map-signs" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Vacancy Search"></i></a>
+      <a href="{% url 'MarketPlace:VacSearch' %}" class="">
+        <i class="fa fa-map-signs" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Vacancy Search"></i>
+      </a>
     {% endif %}
     &nbsp &nbsp
-    <a href="{% url 'Talent:PflSearch' %}" class=""><i class="fa fa-users" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Profile Search"></i></a>
+    <a href="{% url 'Talent:PflSearch' %}" class="">
+      <i class="fa fa-users" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Profile Search"></i>
+    </a>
   </div>
   <hr>
   <br>
@@ -335,7 +383,9 @@
           <span><i class="fa fa-star" aria-hidden="true" style="font-size:25px;"></i></span>
         {% endif %}
         {{ pfl.avg_rate|floatformat:2 }} from {{ pfl.rate_count|intcomma }} votes
-        <a href="{% url 'Talent:TltRatingDetail' pfl.alias %}" style="font-size:20px;color:black" target="_blank" data-toggle="tooltip" title="Ratings Breakdown"><i class="fa fa-pie-chart" aria-hidden="true"></i></a>
+        <a href="{% url 'Talent:TltRatingDetail' pfl.alias %}" style="font-size:20px;color:black" target="_blank" data-toggle="tooltip" title="Ratings Breakdown">
+          <i class="fa fa-pie-chart" aria-hidden="true"></i>
+        </a>
     {% else %}
       Ratings calculated over 5 or more votes, you currently have {{ pfl.rate_count|intcomma }}.
     {% endif %}
@@ -370,7 +420,9 @@
         <td class="align-middle text-center">{{ conf_tot_s|intcomma }}</td>
         <td class="align-middle text-center">
           {% if conf_tot_s > 0 %}
-            <a href="{% url 'Profile:Confirm' %}" style="font-size:20px;color:black" target="_blank" data-toggle="tooltip" title="Review Waiting Requests"><i class="fa fa-paint-brush" aria-hidden="true"></i></a>
+            <a href="{% url 'Profile:Confirm' %}" style="font-size:20px;color:black" target="_blank" data-toggle="tooltip" title="Review Waiting Requests">
+              <i class="fa fa-paint-brush" aria-hidden="true"></i>
+            </a>
           {% endif %}
           <a href="{% url 'Talent:Home' %}?next={{ request.path|urlencode }} #confirm">
             <i class="fa fa-binoculars" aria-hidden="true"style="font-size:25px;color:black" data-toggle="tooltip" data-placement="top" title="See more detail"></i>
@@ -399,14 +451,20 @@
   <div class="card-body">
     <div class="float-right">
       <a href="{% url 'Profile:HelpDesktopPendingInterviews' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="tooltip" title="Click here for help on this page!">
-      <i class="fa fa-question-circle"></i></a>
+        <i class="fa fa-question-circle"></i>
+      </a>
     </div>
-    <h4 class="card-title" id="Interview">Pending Interviews</h4>
-
+    <h4 class="card-title" id="Interview">
+      Pending Interviews
+    </h4>
+    <small>
+      Once an interview has been accpeted, you will need to make contact to determine the interview date and time.
+    </small>
     <div class="container">
-
       {% if interviews_tlt %}
-        <p><h5><strong>As a Candidate</strong></h5></p>
+          <h5 id="TalentInterview">
+            <strong>As a Candidate</strong>
+          </h5>
         <div class="row my-auto">
           <div class="col-md-4 h-100 text-center my-auto">
             <strong>Vacancy</strong>
@@ -468,7 +526,7 @@
     {% endif %}
 
     {% if interviews_emp %}
-      <p><h5><strong>As an Employer</strong></h5></p>
+      <p><h5 id="EmployerInterview"><strong>As an Employer</strong></h5></p>
       <div class="row my-auto">
         <div class="col-md-4 h-100 text-center my-auto">
           <strong>Vacancy</strong>
@@ -522,16 +580,15 @@
         <p>None at the moment.</p>
       {% endfor %}
     {% endif %}
-
     </div>
     <br>
     {% endif %}
-
   </div>
 </div>
 <br>
 
 {% if assigned_tlt or assigned_emp %}
+<div class="">
 <div class="card card-shadow">
   <div class="card-body">
     <h4 class="card-title" id="Assignment">Assignments<span><p class="float-right">
@@ -542,7 +599,7 @@
     <div class="container">
 
       {% if assigned_tlt %}
-        <p><h5><strong>As Talent ({{ assigned_tltc }} in Workflow)</strong></h5></p>
+        <p><h5 id="TalentAssignment"><strong>As Talent ({{ assigned_tltc }} in Workflow)</strong></h5></p>
         <div class="row my-auto">
           <div class="col-5 col-no-pad h-100 text-center my-auto">
             <strong>Vacancy<br>(Reference)</strong>
@@ -601,7 +658,7 @@
     {% endif %}
 
     {% if assigned_emp %}
-      <p><h5><strong>As an Employer ({{ assigned_empc }} in Workflow)</strong></h5></p>
+      <p><h5 id="EmployerAssignment"><strong>As an Employer ({{ assigned_empc }} in Workflow)</strong></h5></p>
       <div class="row my-auto">
         <div class="col-5 col-no-pad h-100 text-center my-auto">
           <strong>Vacancy<br>(Reference)</strong>

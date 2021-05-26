@@ -14,15 +14,22 @@
 
 <div class="card card-shadow">
   <div class="card-body">
-  <h4 class="card-title">Your Project Details
-    <span><p class="float-right">
-    <a href="{% url 'Project:HelpProjectAdd' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="popover" title="Click here for help on this page!">
-    <i class="fa fa-question-circle"></i></a>
-  </p></span></h4>
-
+  <h4 class="card-title">Project Details
+    <span>
+      <p class="float-right">
+        <a href="{% url 'Project:HelpProjectAdd' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="popover" title="Click here for help on this page!">
+          <i class="fa fa-question-circle"></i>
+        </a>
+      </p>
+    </span>
+  </h4>
   <div class="card-body">
     {% if request.user.is_authenticated %}
-    <p><a href="{% url 'Project:ProjectHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
+      <p>
+        <a href="{% url 'Project:ProjectHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">
+          Back
+        </a>
+      </p>
     {% endif %}
     <form class="" action="" method="POST" id="ProjectForm">
       {% csrf_token %}
@@ -70,6 +77,7 @@
           </p>
         </div>
         <p>
+          <br>
           <a href="{% url 'Project:ProjectHome' %}" class="btn btn-danger">
             Cancel
           </a>
@@ -85,7 +93,25 @@
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 {{ form.media.js }}
+<script type="text/javascript">
+  document.getElementById("id_region").disabled = true;
 
+  var dis1 = document.getElementById("id_country");
+  dis1.onchange = function () {
+     if (this.value != "" || this.value.length > 0) {
+        document.getElementById("id_region").disabled = false;
+     }
+  };
+
+  document.getElementById("id_city").disabled = true;
+
+  var dis2 = document.getElementById("id_region");
+  dis2.onchange = function () {
+     if (this.value != "" || this.value.length > 0) {
+        document.getElementById("id_city").disabled = false;
+     }
+  };
+</script>
 <script type="text/javascript">
   function showAddPopup(triggeringLink) {
     var name = triggeringLink.id.replace(/^add_/, '');

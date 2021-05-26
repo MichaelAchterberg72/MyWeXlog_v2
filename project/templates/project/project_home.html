@@ -4,7 +4,6 @@
 {% block title %}{{block.super}}-Project{% endblock title %}
 
 {% block content %}
-
 <div class="card card-shadow">
   <div class="card-body">
   <h4 class="">Welcome to the Full Project Listings page!
@@ -12,6 +11,18 @@
     <a href="{% url 'Project:HelpProjectHome' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 16px">
     <i class="fa fa-question-circle"></i></a>
   </p></span></h4>
+    <div class="card-body">
+      <p>On this page you can:</p>
+      <ul>
+        <li>View projects captured on MyWeXlog.</li>
+        <li>Add more projects to MyWeXlog.</li>
+        <li>View how many hours companies and talent have logged on each project.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<br>
+<div class="card card-shadow">
   <div class="card-body">
       {% if request.user.is_authenticated %}
       <p>There are currently <strong>{{ pcount.sum_p|intcomma }}</strong> projects listed in MyWeXlog!</p>
@@ -98,7 +109,6 @@
           </ul>
         {% endif %}
     </nav>
-  </div>
 </div>
 
 {% endblock content %}

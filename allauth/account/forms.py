@@ -70,7 +70,7 @@ class PasswordField(forms.CharField):
                                   app_settings.PASSWORD_INPUT_RENDER_VALUE)
         kwargs['widget'] = forms.PasswordInput(render_value=render_value,
                                                attrs={'placeholder':
-                                                      kwargs.get("label")})
+                                                      kwargs.get("label"), 'autocomplete':'off'})
         super(PasswordField, self).__init__(*args, **kwargs)
 
 

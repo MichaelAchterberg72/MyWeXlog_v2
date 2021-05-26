@@ -461,7 +461,7 @@ class WorkExperience(models.Model):
             thumb_file = InMemoryUploadedFile(thumb_io, None, 'foo.jpg', 'image/jpeg', thumb_io.__sizeof__(), None)
 
             self.thumbnail = thumb_file
-            
+
         if self.estimated == True:
             pass
         else:

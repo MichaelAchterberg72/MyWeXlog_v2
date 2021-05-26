@@ -20,7 +20,7 @@ from .models import (
 
 
 from .forms import (
-    EnterprisePopupForm, BranchForm, PhoneNumberForm, IndustryPopUpForm, BranchTypePopUpForm, FullBranchForm, EnterpriseBranchPopupForm
+    EnterprisePopupForm, BranchForm, PhoneNumberForm, IndustryPopUpForm, BranchTypePopUpForm, FullBranchForm, FullBranchHome, EnterpriseBranchPopupForm
 )
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -208,22 +208,26 @@ def BranchAddView(request, cmp):
 @login_required()
 @csp_exempt
 def BranchAddPopView(request):
+    data = json.loads(request.COOKIES['company'])
+    qs = Enterprise.objects.get(id=data)
     form = FullBranchForm(request.POST or None)
 
     if request.method == 'POST':
         if form.is_valid():
             instance=form.save(commit=False)
+            instance.company = qs
             instance.save()
             response = HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_companybranch");</script>' % (instance.pk, instance))
+            response.delete_cookie('company')
             return response
         else:
-            context = {'form': form}
+            context = {'form': form, 'qs':qs}
             template = 'enterprises/branch_popup.html'
             response = render(request, template, context)
             return response
 
     else:
-        context = {'form': form}
+        context = {'form': form, 'qs':qs}
         template = 'enterprises/branch_popup.html'
         response = render(request, template, context)
         return response
@@ -243,7 +247,7 @@ def get_branch_id(request):
 @login_required()
 @csp_exempt
 def FullBranchAddView(request):
-    form = FullBranchForm(request.POST or None)
+    form = FullBranchHome(request.POST or None)
     if request.method == 'POST':
         next_url=request.POST.get('next','/')
         if form.is_valid():

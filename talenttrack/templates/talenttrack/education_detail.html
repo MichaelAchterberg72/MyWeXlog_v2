@@ -22,7 +22,22 @@
 
     <form  action="{% url 'Talent:EducationDetailDelete' check.pk %}" method="post">
       {% csrf_token %}
-      <button type="submit" class="btn btn-danger float-right" style="width:7rem">Delete</button>
+      <div>
+        <table>
+          <tr>
+            <td>
+              <p>
+                <strong>An entry cannot be edited, only deleted.<br>Once confirmed, an entry cannot be confirmed again, hence the information is locked. To change an entry, it must be deleted and re-captured.</strong>
+              </p>
+            </td>
+            <td class="align-middle">
+              <button type="submit" class="btn btn-danger" style="width:7rem">
+                Delete
+              </button>
+            </td>
+          </tr>
+        </table>
+      </div>
     </form>
   </div>
 </div>
@@ -32,7 +47,7 @@
      <div class="card card-shadow h-100">
        <div class="card-body">
          <p class="float-right"><a href="{% url 'Talent:LecturerAdd' check.slug %}"  class="badge badge-pill badge-primary" style="width: 8rem">Add Lecturer</a></p>
-         <h5 class="card-title">Lecturers</h5>
+         <h5 class="card-title">Lecturers ({{ lecturer_score }} Points)</h5>
          <table class="table table-sm">
            <thead>
              <tr>
@@ -67,7 +82,7 @@
      <div class="card card-shadow h-100">
        <div class="card-body">
          <p class="float-right"><a href="{% url 'Talent:ClassMatesAdd' check.slug %}"  class="badge badge-pill badge-primary" style="width: 8rem">Add Class Mate</a></p>
-         <h5 class="card-title">Class Mates</h5>
+         <h5 class="card-title">Class Mates ({{ classmate_score }} Point)</h5>
          <table class=" table table-sm">
            <thead>
              <tr>

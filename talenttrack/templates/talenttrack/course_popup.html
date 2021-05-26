@@ -14,6 +14,9 @@
 </style>
 <div class="container">
   <h3>Add a Course</h3>
+  <small>
+    All fields marked "*" are required.
+  </small>
 
   <form method="post" novalidate>
     <input type="hidden" name="next" value="{{ request.GET.next }}">
@@ -22,14 +25,31 @@
       <div class="form-group col-md-6 mb-0">
         {{ form.name|as_crispy_field }}
         {{ form.company|as_crispy_field }}
-        <p><a href="{% url 'Enterprise:EnterpriseAddPop' %}" id='add_company' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add an Institution</a></p>
-        {{ form.course_type|as_crispy_field }}
-        <p><a href="{% url 'Talent:CourseTypeAddPop' %}" id='add_type' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add an Course Type</a></p>
+        <p>
+          <a href="{% url 'Enterprise:EnterpriseAddPop' %}" id='add_company' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">
+            Add Institution
+          </a>
+        </p>
+        <div data-toggle="tooltip" title="Is the course part of a degree, an online course, a day course, etc.">
+          {{ form.course_type|as_crispy_field }}
+          <p>
+            <a href="{% url 'Talent:CourseTypeAddPop' %}" id='add_type' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">
+              Add Course Type
+            </a>
+          </p>
+        </div>
       </div>
       <div class="form-group col-md-6 mb-0">
         {{ form.website|as_crispy_field }}
-        {{ form.certification|as_crispy_field }}
-        <p><a href="{% url 'Talent:ResultAddPop' %}" id='add_result' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add a Certification</a></p>
+        <div data-toggle="tooltip" title="The result is what you will get when completing the course, be it an attendance certificate, degree, diploma, certification, etc.">
+          {{ form.certification|as_crispy_field }}
+          <p>
+            <a href="{% url 'Talent:ResultAddPop' %}" id='add_result' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">
+              Add a Result
+            </a>
+
+          </p>
+        </div>
       </div>
     </div>
     <div class="">

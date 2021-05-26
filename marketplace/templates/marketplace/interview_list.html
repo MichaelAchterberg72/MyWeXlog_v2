@@ -33,7 +33,7 @@
         </div>
         <div class="col-md-3">
           <div class="number-souround" style="border-color:#e0e0e0">
-          <h4 class="text-center" style="background-color:#e0e0e0;padding-bottom:14px;"><strong>Delined<br>Interviews</strong></h4>
+          <h4 class="text-center" style="background-color:#e0e0e0;padding-bottom:14px;"><strong>Declined<br>Interviews</strong></h4>
           <div class="text-center" style="font-size:60px">
             {{ intv_declined_count|floatformat:0|intcomma }}
           </div>
@@ -41,7 +41,7 @@
         </div>
         <div class="col-md-3">
           <div class="number-souround" style="border-color:#5cb85c">
-          <h4 class="text-center" style="background-color:#5cb85c;padding-bottom:14px;"><strong>Suitable<br>Interviews</strong></h4>
+          <h4 class="text-center" style="background-color:#5cb85c;padding-bottom:14px;"><strong>Suitable<br>Applicants</strong></h4>
           <div class="text-center" style="font-size:60px">
             {{ interview_s_count|floatformat:0|intcomma }}
           </div>
@@ -49,7 +49,7 @@
         </div>
         <div class="col-md-3">
           <div class="number-souround" style="border-color:#d9534f">
-          <h4 class="text-center" style="background-color:#d9534f;padding-bottom:14px;"><strong>Unsuitable<br>Interviews</strong></h4>
+          <h4 class="text-center" style="background-color:#d9534f;padding-bottom:14px;"><strong>Unsuitable<br>Applicants</strong></h4>
           <div class="text-center" style="font-size:60px">
             {{ interview_n_count|floatformat:0|intcomma }}
           </div>
@@ -228,7 +228,9 @@
         </div>
 
           {% if pending_interviews_list_view %}
+          {% if interview_p_slice.items %}
             {% include 'marketplace/list_view_headings.html' %}
+          {% endif %}
             {% for key in interview_p_slice.items %}
             <div class="row">
               <div class="card mt-1 card-hover" style="width: 100%;">
@@ -316,7 +318,9 @@
         </div>
 
           {% if suitable_applicants_list_view %}
+          {% if interview_s_slice.items %}
             {% include 'marketplace/list_view_headings.html' %}
+          {% endif %}
             {% for key in interview_s_slice.items %}
             <div class="row">
               <div class="card mt-1 card-hover" style="width: 100%;">
@@ -403,7 +407,9 @@
         </div>
 
           {% if unsuitable_applicants_list_view %}
+          {% if interview_n_slice.items %}
             {% include 'marketplace/list_view_headings.html' %}
+          {% endif %}
             {% for key in interview_n_slice.items %}
             <div class="row">
               <div class="card mt-1 card-hover" style="width: 100%;">
@@ -479,7 +485,9 @@
       </div>
 
         {% if rejected_applicants_list_view %}
+        {% if rej_bid_n_slice.items %}
           {% include 'marketplace/list_view_headings.html' %}
+        {% endif %}
           {% for key in rej_bid_n_slice.items %}
           <div class="row">
             <div class="card mt-1 card-hover" style="width: 100%;">

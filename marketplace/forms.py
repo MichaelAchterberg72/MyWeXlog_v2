@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.utils.encoding import force_text
+from django.utils import timezone
 
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from crispy_forms.helper import FormHelper
@@ -263,12 +264,17 @@ class DeliverablesForm(forms.ModelForm):
 
 
 class TalentRequiredForm(forms.ModelForm):
+
     companybranch = forms.ModelChoiceField(queryset=None)
     def __init__(self, *args, **kwargs):
         self.company_qs = kwargs.pop('company_qs', None)
 
         super().__init__(*args, **kwargs)
         self.fields['companybranch'].queryset = Branch.objects.filter(id__in=self.company_qs)
+
+        self.helper = FormHelper(self)
+        self.helper.form_show_errors = False
+
 
     class Meta:
         model = TalentRequired
@@ -278,11 +284,12 @@ class TalentRequiredForm(forms.ModelForm):
             'currency': CurrencySelect2Widget(),
             'designation': DesignationSelect2Widget(),
             'language': LanguageWidget(),
-            'date_deadline': DateInput(),
-            'bid_closes': DateInput(),
+            'date_deadline': DateInput(attrs={'min': timezone.now().date()}),
+            'bid_closes': DateInput(attrs={'min': timezone.now().date()}),
             'certification': CertModelSelect2MultipleWidget(),
         }
         labels = {
+            'companybranch': 'Company',
             'title': 'Vacancy Title',
             'bid_closes': 'Applications Close',
             'offer_status': 'Vacancy Status',
@@ -292,9 +299,6 @@ class TalentRequiredForm(forms.ModelForm):
             'hours_required': 'Hours',
             'own_ref_no': 'Own Internal Vacancy Reference Number',
         }
-#Help_texts = {
-#            'own_ref_no': 'Maximum length: 7 Alpha-numeric characters'
-#        }
 
 
 class TalentRequiredEditForm(forms.ModelForm):

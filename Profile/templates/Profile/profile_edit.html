@@ -13,48 +13,64 @@
 <form method="post">
   <input type="hidden" name="next" value="{{ request.GET.next }}">
   {% csrf_token %}
-  <div class="form-row">
-    <div class="form-group col-md-6 mb-0">
-      {{ form.f_name|as_crispy_field }}
-      {{ form.l_name|as_crispy_field }}
-      {{ form.birth_date|as_crispy_field }}
-      {{ form.public_profile_intro|as_crispy_field }}
-      ** Max 460 characters are allowed
-      <br><br>
-    </div>
-    <div class="form-group col-md-6 mb-0">
       <div class="form-row">
         <div class="form-group col-md-6 mb-0">
-          {{ form.currency|as_crispy_field }}
-          <p><a href="{% url 'Location:CurrencyAddPop' %}" id='add_currency' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add a Currency</a></p>
-        </div>
-        <div class="form-group col-md-6 mb-0">
-          {{ form.std_rate|as_crispy_field }}
+          {{ form.f_name|as_crispy_field }}
           <p>
-            <strong>Enter a rate per hour</strong>
+            <br>
           </p>
+          {{ form.l_name|as_crispy_field }}
+          {{ form.birth_date|as_crispy_field }}
+          {{ form.public_profile_intro|as_crispy_field }}
+          ** Max 460 characters are allowed
+          <br><br>
+        </div>
+        <div class="form-group col-md-6 mb-0">
+          <div class="form-row">
+            <div class="form-group col-md-6 mb-0">
+              {{ form.currency|as_crispy_field }}
+              <p>
+                <a href="{% url 'Location:CurrencyAddPop' %}" id='add_currency' onclick='return showAddPopup(this);'>
+                  <img src = "{% static 'images/icon-addlink.svg' %}">
+                  Add a Currency
+                </a>
+              </p>
+            </div>
+            <div class="form-group col-md-6 mb-0">
+              {{ form.std_rate|as_crispy_field }}
+              <p>
+                <strong>
+                  Enter a rate per hour
+                </strong>
+              </p>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6 mb-0" data-toggle="tooltip" title="Your chosen alias must not indicate race, gender, religion or any other thing that could potentially cause bias">
+              {{ form.alias|as_crispy_field }}
+            </div>
+            <div class="form-group col-md-6 mb-0">
+              {{ form.public_profile_name|as_crispy_field }}
+              ** No spaces or special characters are allowed
+            </div>
+            <div class="form-group col-md-6 mb-0">
+              {{ form.mentor|as_crispy_field }}
+            </div>
+          </div>
         </div>
       </div>
-      <div class="form-row">
-        <div class="form-group col-md-6 mb-0">
-          {{ form.alias|as_crispy_field }}
-        </div>
-        <div class="form-group col-md-6 mb-0">
-          {{ form.public_profile_name|as_crispy_field }}
-          ** No spaces or special characters are allowed
-        </div>
-        <div class="form-group col-md-6 mb-0">
-          {{ form.mentor|as_crispy_field }}
-        </div>
+      <div class="">
+        <p>
+          <a href="{% url 'Profile:ProfileView' %}" class="btn btn-danger">
+            Cancel
+          </a>
+          <button type="submit" name="Done" class="btn btn-primary">
+            Save
+          </button>
+        </p>
       </div>
-    </div>
+    </form>
   </div>
-
-  <div class="">
-    <p><a href="{% url 'Profile:ProfileView' %}" class="btn btn-danger">Cancel</a> <button type="submit" name="Done" class="btn btn-primary">Save</button>
-  </div>
-</form>
-</div>
 </div>
 {% endblock content %}
 {% block Script %}

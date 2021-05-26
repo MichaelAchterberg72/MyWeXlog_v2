@@ -59,7 +59,7 @@ from mod_corporate.models import CorporateStaff
 from invitations.models import Invitation
 
 from WeXlog.app_config import (
-    skill_pass_score, locked_age,
+    skill_pass_score, locked_age, client_score, lecturer_score, classmate_score,    colleague_score, pre_colleague_score, collaborator_score, superior_score
 )
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -505,15 +505,24 @@ def public_profile(request, ppl):
 
         we_co_min_date_qs = wec_qs.filter(companybranch=c).aggregate(min_date=Min('date_from'))
         we_co_mn_date = we_co_min_date_qs.get('min_date')
-        we_co_mn = we_co_mn_date.strftime('%b %-m, %Y')
+        try:
+            we_co_mn = we_co_mn_date.strftime('%b %-m, %Y')
+        except:
+            we_co_mn = ""
 
         we_co_max_date_qs = wec_qs.filter(companybranch=c).aggregate(max_date=Max('date_to'))
         we_co_mx_date = we_co_max_date_qs.get('max_date')
-        we_co_mx = we_co_mx_date.strftime('%b %-m, %Y')
+        try:
+            we_co_mx = we_co_mx_date.strftime('%b %-m, %Y')
+        except:
+            we_co_mx = ''
 
-        tn_qs = we_co_mx_date - we_co_mn_date
-        months = tn_qs.days/(365/12)
-        tn = months/12
+        try:
+            tn_qs = we_co_mx_date - we_co_mn_date
+            months = tn_qs.days/(365/12)
+            tn = months/12
+        except:
+            tn = '0'
 
         wec_co_qs_qs = wec_qs.filter(Q(companybranch=c))
         wec_co_qs = wec_co_qs_qs.order_by('project', '-date_from').distinct('project')
@@ -551,9 +560,12 @@ def public_profile(request, ppl):
             pwe_co_mx_date = pwe_co_max_qs.get('max_date')
             pwe_co_mx = pwe_co_mx_date.strftime('%b %-m, %Y')
 
-            pwe_tn_qs = pwe_co_mx_date - pwe_co_mn_date
-            months = pwe_tn_qs.days/(365/12)
-            pwe_tn = months/12
+            try:
+                pwe_tn_qs = pwe_co_mx_date - pwe_co_mn_date
+                months = pwe_tn_qs.days/(365/12)
+                pwe_tn = months/12
+            except:
+                pwe_tn = 0
 
             pco_hr_sum = wesp_qs.aggregate(thr=Sum('hours_worked'))
             pco_hr = pco_hr_sum.get('thr')
@@ -3771,6 +3783,10 @@ def LicenseCertificationCaptureView(request):
             new.talent = tlt_i
             new.save()
             return redirect(reverse ('Profile:ProfileView')+'#memberships')
+        else:
+            template = 'talenttrack/membership_view.html'
+            context = {'form': form,}
+            return render(request, template, context)
     else:
         template = 'talenttrack/membership_view.html'
         context = {'form': form,}
@@ -4824,6 +4840,7 @@ def SumAllExperienceView(request, tlt):
     return render(request, template, context)
 
 
+@login_required()
 def DPC_SummaryView(request, tlt):
     '''View for Designation, Project and Company hours logged'''
     #caching
@@ -4947,6 +4964,7 @@ def DPC_SummaryView(request, tlt):
     return render(request, template, context)
 
 
+@login_required()
 def DPCP_SummaryView(request, tlt):
     '''View for Designation, Project and Company hours logged'''
     #caching
@@ -5121,20 +5139,189 @@ def PreLoggedExperienceDeleteFullView(request, ple_pk):
 
 @login_required()
 def PreLogDetailView(request, tex):
-    check = WorkExperience.objects.get(slug=tex, prelog=True)
+    we_qs = WorkExperience.objects.filter(slug=tex)
+    check = we_qs.get(slug=tex, prelog=True)
     if check.talent == request.user:
-        sum = WorkExperience.objects.filter(talent=request.user, prelog=True)
+        weq_qs = we_qs.filter(Q(slug=tex) & Q(talent=request.user) & Q(wexp=True))
+        sum = we_qs.filter(talent=request.user, prelog=True)
         sum_company = sum.filter(company=check.company).aggregate(co_sum=Sum('hours_worked'))
         sum_project = sum.filter(project=check.project).aggregate(p_sum=Sum('hours_worked'))
-        list = WorkExperience.objects.filter(slug=tex)
+        list = we_qs.filter(slug=tex)
         confirmed_clg = WorkColleague.objects.filter(experience__slug=tex)
         confirmed_sup = Superior.objects.filter(experience__slug=tex)
         confirmed_clr = WorkCollaborator.objects.filter(experience__slug=tex)
         confirmed_cnt = WorkClient.objects.filter(experience__slug=tex)
 
+        '''Mywexlog evaluation rating'''
+        twclg_ave_qs = weq_qs.aggregate(quality_rate=Avg('workcolleague__quality'))
+        twclg_ave = twclg_ave_qs.get('quality_rate')
+
+        twsup_ave_qs = weq_qs.aggregate(quality_rate=Avg('superior__quality'))
+        twsup_ave = twsup_ave_qs.get('quality_rate')
+
+        twcol_ave_qs = weq_qs.aggregate(quality_rate=Avg('workcollaborator__quality'))
+        twcol_ave = twcol_ave_qs.get('quality_rate')
+
+        twcli_ave_qs = weq_qs.aggregate(quality_rate=Avg('workclient__quality'))
+        twcli_ave = twcli_ave_qs.get('quality_rate')
+
+        tpwq_count = 0
+        if twclg_ave != None:
+            tpwq_count += 1
+            twclg_ave == twclg_ave
+        else:
+            twclg_ave = 0
+
+        if twsup_ave != None:
+            tpwq_count += 1
+            twsup_ave == twsup_ave
+        else:
+            twsup_ave = 0
+
+        if twcol_ave != None:
+            tpwq_count += 1
+            twcol_ave == twcol_ave
+        else:
+            twcol_ave = 0
+
+        if twcli_ave != None:
+            tpwq_count += 1
+            twcli_ave == twcli_ave
+        else:
+            twcli_ave = 0
+
+        if tpwq_count == 0:
+            tpwq_count = 1
+        else:
+            tpwq_count == tpwq_count
+
+        tpwq_total = twclg_ave + twsup_ave + twcol_ave + twcli_ave
+        tpwq_ave = tpwq_total / tpwq_count
+
+
+        twtclg_ave_qs = weq_qs.aggregate(time_taken_rate=Avg('workcolleague__time_taken'))
+        twtclg_ave = twtclg_ave_qs.get('time_taken_rate')
+
+        twtsup_ave_qs = weq_qs.aggregate(time_taken_rate=Avg('superior__time_taken'))
+        twtsup_ave = twtsup_ave_qs.get('time_taken_rate')
+
+        twtcol_ave_qs = weq_qs.aggregate(time_taken_rate=Avg('workcollaborator__time_taken'))
+        twtcol_ave = twtcol_ave_qs.get('time_taken_rate')
+
+        twtcli_ave_qs = weq_qs.aggregate(time_taken_rate=Avg('workclient__time_taken'))
+        twtcli_ave = twtcli_ave_qs.get('time_taken_rate')
+
+        ttwq_count = 0
+        if twtclg_ave != None:
+            ttwq_count += 1
+            twtclg_ave == twtclg_ave
+        else:
+            twtclg_ave = 0
+
+        if twtsup_ave != None:
+            ttwq_count += 1
+            twtsup_ave == twtsup_ave
+        else:
+            twtsup_ave = 0
+
+        if twtcol_ave != None:
+            ttwq_count += 1
+            twtcol_ave == twtcol_ave
+        else:
+            twtcol_ave = 0
+
+        if twtcli_ave != None:
+            ttwq_count += 1
+            twtcli_ave == twtcli_ave
+        else:
+            twtcli_ave = 0
+
+        if ttwq_count == 0:
+            ttwq_count = 1
+        else:
+            ttwq_count == ttwq_count
+
+        ttwq_total = twtclg_ave + twtsup_ave + twtcol_ave + twtcli_ave
+        ttwq_ave = ttwq_total / ttwq_count
+
+
+        twcclg_ave_qs = weq_qs.aggregate(complexity_rate=Avg('workcolleague__complexity'))
+        twcclg_ave = twcclg_ave_qs.get('complexity_rate')
+
+        twcsup_ave_qs = weq_qs.aggregate(complexity_rate=Avg('superior__complexity'))
+        twcsup_ave = twcsup_ave_qs.get('complexity_rate')
+
+        twccol_ave_qs = weq_qs.aggregate(complexity_rate=Avg('workcollaborator__complexity'))
+        twccol_ave = twccol_ave_qs.get('complexity_rate')
+
+        twccli_ave_qs = weq_qs.aggregate(quality_rate=Avg('workclient__complexity'))
+        twccli_ave = twccli_ave_qs.get('complexity_rate')
+
+        tcwq_count = 0
+        if twcclg_ave != None:
+            tcwq_count += 1
+            twcclg_ave == twcclg_ave
+        else:
+            twcclg_ave = 0
+
+        if twcsup_ave != None:
+            tcwq_count += 1
+            twcsup_ave == twcsup_ave
+        else:
+            twcsup_ave = 0
+
+        if twccol_ave != None:
+            tcwq_count += 1
+            twccol_ave == twccol_ave
+        else:
+            twccol_ave = 0
+
+        if twccli_ave != None:
+            tcwq_count += 1
+            twccli_ave == twccli_ave
+        else:
+            twccli_ave = 0
+
+        if tcwq_count == 0:
+            tcwq_count = 1
+        else:
+            tcwq_count == tcwq_count
+
+        tcwq_total = twcclg_ave + twcsup_ave + twccol_ave + twccli_ave
+        tcwq_ave = ttwq_total / tcwq_count
+
+        tawq_count = 0
+        if tpwq_ave != None:
+            tawq_count += 1
+            tpwq_ave == tpwq_ave
+        else:
+            tpwq_ave = 0
+
+        if ttwq_ave != None:
+            tawq_count += 1
+            ttwq_ave == ttwq_ave
+        else:
+            ttwq_ave = 0
+
+        if tcwq_ave != None:
+            tawq_count += 1
+            tcwq_ave == tcwq_ave
+        else:
+            tcwq_ave = 0
+
+
+        if tawq_count == 0:
+            tawq_count = 1
+        else:
+            tawq_count == tawq_count
+
+        tawq_total = tpwq_ave + ttwq_ave + tcwq_ave
+        tawq_ave = tawq_total / tawq_count
+
+
         template = 'talenttrack/prelogged_experience_detail.html'
         context = {
-            'check': check, 'confirmed_clg': confirmed_clg, 'confirmed_sup': confirmed_sup, 'confirmed_clr': confirmed_clr, 'confirmed_cnt': confirmed_cnt, 'list': list, 'sum_company': sum_company, 'sum_project': sum_project
+            'check': check, 'confirmed_clg': confirmed_clg, 'confirmed_sup': confirmed_sup, 'confirmed_clr': confirmed_clr, 'confirmed_cnt': confirmed_cnt, 'list': list, 'sum_company': sum_company, 'sum_project': sum_project, 'client_score': client_score, 'colleague_score': colleague_score, 'pre_colleague_score': pre_colleague_score, 'collaborator_score': collaborator_score, 'superior_score': superior_score, 'tpwq_ave': tpwq_ave, 'ttwq_ave': ttwq_ave, 'tcwq_ave': tcwq_ave, 'tawq_ave': tawq_ave
             }
 
         return render(request, template, context)
@@ -5176,6 +5363,10 @@ def ClientSelectView(request, pk):
                 return response
             elif 'done' in request.POST:
                 response = redirect('Talent:Home')
+                response.delete_cookie("confirm")
+                return response
+            elif 'review' in request.POST:
+                response = redirect(reverse('Talent:ExperienceDetail', kwargs={'tex':instance.slug}))
                 response.delete_cookie("confirm")
                 return response
         else:
@@ -5220,7 +5411,7 @@ def ClientAddView(request, tex):
             new = form.save(commit=False)
             new.experience = instance
             new.save()
-            response = redirect(reverse('Talent:ExperienceDetail', kwargs={'tex': tex}))
+            response = redirect(reverse('Talent:ExperienceDetail',  kwargs={'tex': tex}))
             response.delete_cookie("confirm")
             return response
         else:
@@ -5688,19 +5879,188 @@ def ColleaguePreResponseView(request, clg):
 
 @login_required()
 def ExperienceDetailView(request, tex):
-    check = WorkExperience.objects.get(slug=tex)
+    we_qs = WorkExperience.objects.filter(slug=tex)
+    check = we_qs.get(slug=tex)
     if check.talent == request.user:
-        sum = WorkExperience.objects.filter(talent=request.user, wexp=True)
+        weq_qs = we_qs.filter(Q(slug=tex) & Q(talent=request.user) & Q(wexp=True))
+        sum = we_qs.filter(talent=request.user, wexp=True)
         sum_company = sum.filter(company=check.company).aggregate(co_sum=Sum('hours_worked'))
         sum_project = sum.filter(project=check.project).aggregate(p_sum=Sum('hours_worked'))
-        list = WorkExperience.objects.filter(slug=tex)
+        list = we_qs.filter(slug=tex)
         confirmed_clg = WorkColleague.objects.filter(experience__slug=tex)
         confirmed_sup = Superior.objects.filter(experience__slug=tex)
         confirmed_clr = WorkCollaborator.objects.filter(experience__slug=tex)
         confirmed_cnt = WorkClient.objects.filter(experience__slug=tex)
 
+        '''Mywexlog evaluation rating'''
+        twclg_ave_qs = weq_qs.aggregate(quality_rate=Avg('workcolleague__quality'))
+        twclg_ave = twclg_ave_qs.get('quality_rate')
+
+        twsup_ave_qs = weq_qs.aggregate(quality_rate=Avg('superior__quality'))
+        twsup_ave = twsup_ave_qs.get('quality_rate')
+
+        twcol_ave_qs = weq_qs.aggregate(quality_rate=Avg('workcollaborator__quality'))
+        twcol_ave = twcol_ave_qs.get('quality_rate')
+
+        twcli_ave_qs = weq_qs.aggregate(quality_rate=Avg('workclient__quality'))
+        twcli_ave = twcli_ave_qs.get('quality_rate')
+
+        tpwq_count = 0
+        if twclg_ave != None:
+            tpwq_count += 1
+            twclg_ave == twclg_ave
+        else:
+            twclg_ave = 0
+
+        if twsup_ave != None:
+            tpwq_count += 1
+            twsup_ave == twsup_ave
+        else:
+            twsup_ave = 0
+
+        if twcol_ave != None:
+            tpwq_count += 1
+            twcol_ave == twcol_ave
+        else:
+            twcol_ave = 0
+
+        if twcli_ave != None:
+            tpwq_count += 1
+            twcli_ave == twcli_ave
+        else:
+            twcli_ave = 0
+
+        if tpwq_count == 0:
+            tpwq_count = 1
+        else:
+            tpwq_count == tpwq_count
+
+        tpwq_total = twclg_ave + twsup_ave + twcol_ave + twcli_ave
+        tpwq_ave = tpwq_total / tpwq_count
+
+
+        twtclg_ave_qs = weq_qs.aggregate(time_taken_rate=Avg('workcolleague__time_taken'))
+        twtclg_ave = twtclg_ave_qs.get('time_taken_rate')
+
+        twtsup_ave_qs = weq_qs.aggregate(time_taken_rate=Avg('superior__time_taken'))
+        twtsup_ave = twtsup_ave_qs.get('time_taken_rate')
+
+        twtcol_ave_qs = weq_qs.aggregate(time_taken_rate=Avg('workcollaborator__time_taken'))
+        twtcol_ave = twtcol_ave_qs.get('time_taken_rate')
+
+        twtcli_ave_qs = weq_qs.aggregate(time_taken_rate=Avg('workclient__time_taken'))
+        twtcli_ave = twtcli_ave_qs.get('time_taken_rate')
+
+        ttwq_count = 0
+        if twtclg_ave != None:
+            ttwq_count += 1
+            twtclg_ave == twtclg_ave
+        else:
+            twtclg_ave = 0
+
+        if twtsup_ave != None:
+            ttwq_count += 1
+            twtsup_ave == twtsup_ave
+        else:
+            twtsup_ave = 0
+
+        if twtcol_ave != None:
+            ttwq_count += 1
+            twtcol_ave == twtcol_ave
+        else:
+            twtcol_ave = 0
+
+        if twtcli_ave != None:
+            ttwq_count += 1
+            twtcli_ave == twtcli_ave
+        else:
+            twtcli_ave = 0
+
+        if ttwq_count == 0:
+            ttwq_count = 1
+        else:
+            ttwq_count == ttwq_count
+
+        ttwq_total = twtclg_ave + twtsup_ave + twtcol_ave + twtcli_ave
+        ttwq_ave = ttwq_total / ttwq_count
+
+
+        twcclg_ave_qs = weq_qs.aggregate(complexity_rate=Avg('workcolleague__complexity'))
+        twcclg_ave = twcclg_ave_qs.get('complexity_rate')
+
+        twcsup_ave_qs = weq_qs.aggregate(complexity_rate=Avg('superior__complexity'))
+        twcsup_ave = twcsup_ave_qs.get('complexity_rate')
+
+        twccol_ave_qs = weq_qs.aggregate(complexity_rate=Avg('workcollaborator__complexity'))
+        twccol_ave = twccol_ave_qs.get('complexity_rate')
+
+        twccli_ave_qs = weq_qs.aggregate(quality_rate=Avg('workclient__complexity'))
+        twccli_ave = twccli_ave_qs.get('complexity_rate')
+
+        tcwq_count = 0
+        if twcclg_ave != None:
+            tcwq_count += 1
+            twcclg_ave == twcclg_ave
+        else:
+            twcclg_ave = 0
+
+        if twcsup_ave != None:
+            tcwq_count += 1
+            twcsup_ave == twcsup_ave
+        else:
+            twcsup_ave = 0
+
+        if twccol_ave != None:
+            tcwq_count += 1
+            twccol_ave == twccol_ave
+        else:
+            twccol_ave = 0
+
+        if twccli_ave != None:
+            tcwq_count += 1
+            twccli_ave == twccli_ave
+        else:
+            twccli_ave = 0
+
+        if tcwq_count == 0:
+            tcwq_count = 1
+        else:
+            tcwq_count == tcwq_count
+
+        tcwq_total = twcclg_ave + twcsup_ave + twccol_ave + twccli_ave
+        tcwq_ave = ttwq_total / tcwq_count
+
+        tawq_count = 0
+        if tpwq_ave != None:
+            tawq_count += 1
+            tpwq_ave == tpwq_ave
+        else:
+            tpwq_ave = 0
+
+        if ttwq_ave != None:
+            tawq_count += 1
+            ttwq_ave == ttwq_ave
+        else:
+            ttwq_ave = 0
+
+        if tcwq_ave != None:
+            tawq_count += 1
+            tcwq_ave == tcwq_ave
+        else:
+            tcwq_ave = 0
+
+
+        if tawq_count == 0:
+            tawq_count = 1
+        else:
+            tawq_count == tawq_count
+
+        tawq_total = tpwq_ave + ttwq_ave + tcwq_ave
+        tawq_ave = tawq_total / tawq_count
+
+
         template = 'talenttrack/experience_detail.html'
-        context = {'check': check, 'confirmed_clg': confirmed_clg, 'confirmed_sup': confirmed_sup, 'confirmed_clr': confirmed_clr, 'confirmed_cnt': confirmed_cnt, 'list': list, 'sum_company': sum_company, 'sum_project': sum_project}
+        context = {'check': check, 'confirmed_clg': confirmed_clg, 'confirmed_sup': confirmed_sup, 'confirmed_clr': confirmed_clr, 'confirmed_cnt': confirmed_cnt, 'list': list, 'sum_company': sum_company, 'sum_project': sum_project, 'client_score': client_score, 'colleague_score': colleague_score, 'pre_colleague_score': pre_colleague_score, 'collaborator_score': collaborator_score, 'superior_score': superior_score, 'tpwq_ave': tpwq_ave, 'ttwq_ave': ttwq_ave, 'tcwq_ave': tcwq_ave, 'tawq_ave': tawq_ave}
         return render(request, template, context)
     else:
         raise PermissionDenied
@@ -5828,7 +6188,7 @@ def EducationDetail(request, tex):
         confirmed_l = Lecturer.objects.filter(education__slug=tex)
         confirmed_cm = ClassMates.objects.filter(education__slug=tex)
         template = 'talenttrack/education_detail.html'
-        context = {'check': check, 'confirmed_l': confirmed_l, 'confirmed_cm': confirmed_cm}
+        context = {'check': check, 'confirmed_l': confirmed_l, 'confirmed_cm': confirmed_cm, 'classmate_score': classmate_score, 'lecturer_score': lecturer_score}
         return render(request, template, context)
     else:
         raise PermissionDenied

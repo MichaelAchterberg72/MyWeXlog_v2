@@ -6,6 +6,9 @@ from feedback.models import NoticeRead
 from talenttrack.models import (
         Lecturer, ClassMates, WorkColleague, Superior, WorkCollaborator,  WorkClient,
 )
+from marketplace.models import (
+            BidInterviewList, WorkIssuedTo, VacancyRate, TalentRate, TalentRequired, WorkBid, BidShortList
+)
 
 
 def theme(request):
@@ -44,8 +47,100 @@ def confirm_count(request):
             wclr1 = WorkCollaborator.objects.filter(Q(collaborator_name=talent) & Q(confirm__exact='S')).count()
             wc1 = WorkClient.objects.filter(Q(client_name=talent) & Q(confirm__exact='S')).count()
 
-        verifications = wf1 + cm1 + wk1 + spr1 + wclr1 + wc1
+        if wf1 + cm1 + wk1 + spr1 + wclr1 + wc1 == None:
+            verifications = 0
+        else:
+            verifications = wf1 + cm1 + wk1 + spr1 + wclr1 + wc1
     else:
         verifications = 0
 
     return {'verifications': verifications}
+
+def employer_interviews_count(request):
+    if request.user.is_authenticated:
+        talent = request.user
+        interview_qs = BidInterviewList.objects.all().select_related('scope')
+        interviews_emp = interview_qs.filter(Q(scope__requested_by=talent) & Q(emp_intcomplete=False))
+        interviews_emp_count = interviews_emp.count()
+    else:
+        interviews_emp_count = 0
+
+    return {'interviews_emp_count': interviews_emp_count}
+
+
+def talent_interviews_count(request):
+    if request.user.is_authenticated:
+        talent = request.user
+        interview_qs = BidInterviewList.objects.all().select_related('scope')
+        interviews_tlt = interview_qs.filter(Q(talent=talent) & Q(tlt_intcomplete=False) & ~Q(tlt_response='R'))
+        interviews_tlt_count = interviews_tlt.count()
+    else:
+        interviews_tlt_count = 0
+
+    return {'interviews_tlt_count': interviews_tlt_count}
+
+
+def employer_assignment_count(request):
+    if request.user.is_authenticated:
+        talent = request.user
+        assigned_emp = WorkIssuedTo.objects.filter(Q(work__requested_by=talent) & Q(assignment_complete_emp=False))
+        assigned_emp_count = assigned_emp.count()
+    else:
+        assigned_emp_count = 0
+
+    return {'assigned_emp_count': assigned_emp_count}
+
+
+def talent_assignment_count(request):
+    if request.user.is_authenticated:
+        talent = request.user
+        assigned_tlt_qs = WorkIssuedTo.objects.filter(Q(talent=talent))
+        assigned_tlt = assigned_tlt_qs.filter(Q(tlt_response='P') | Q(tlt_response='C'))
+        assigned_tlt_count = assigned_tlt.count()
+    else:
+        assigned_tlt_count = 0
+
+    return {'assigned_tlt_count': assigned_tlt_count}
+
+
+def total_notification_count(request):
+    if request.user.is_authenticated:
+        talent = request.user
+        if app_config.switch_confirmation == 'off':
+            wf1 = Lecturer.objects.filter(confirm__exact='S').count()
+            cm1 = ClassMates.objects.filter(confirm__exact='S').count()
+            wk1 = WorkColleague.objects.filter(confirm__exact='S').count()
+            spr1 = Superior.objects.filter(confirm__exact='S').count()
+            wclr1 = WorkCollaborator.objects.filter(confirm__exact='S').count()
+            wc1 = WorkClient.objects.filter(confirm__exact='S').count()
+        else:
+            wf1 = Lecturer.objects.filter(Q(lecturer=talent) & Q(confirm__exact='S')).count()
+            cm1 = ClassMates.objects.filter(Q(colleague=talent) & Q(confirm__exact='S')).count()
+            wk1 = WorkColleague.objects.filter(Q(colleague_name=talent) & Q(confirm__exact='S')).count()
+            spr1 = Superior.objects.filter(Q(superior_name=talent) & Q(confirm__exact='S')).count()
+            wclr1 = WorkCollaborator.objects.filter(Q(collaborator_name=talent) & Q(confirm__exact='S')).count()
+            wc1 = WorkClient.objects.filter(Q(client_name=talent) & Q(confirm__exact='S')).count()
+
+        verifications = wf1 + cm1 + wk1 + spr1 + wclr1 + wc1
+
+
+        interview_qs = BidInterviewList.objects.all().select_related('scope')
+        interviews_emp = interview_qs.filter(Q(scope__requested_by=talent) & Q(emp_intcomplete=False))
+        interviews_emp_count = interviews_emp.count()
+
+        interview_qs = BidInterviewList.objects.all().select_related('scope')
+        interviews_tlt = interview_qs.filter(Q(talent=talent) & Q(tlt_intcomplete=False) & ~Q(tlt_response='R'))
+        interviews_tlt_count = interviews_tlt.count()
+
+        assigned_emp = WorkIssuedTo.objects.filter(Q(work__requested_by=talent) & Q(assignment_complete_emp=False))
+        assigned_emp_count = assigned_emp.count()
+
+        assigned_tlt_qs = WorkIssuedTo.objects.filter(Q(talent=talent))
+        assigned_tlt = assigned_tlt_qs.filter(Q(tlt_response='P') | Q(tlt_response='C'))
+        assigned_tlt_count = assigned_tlt.count()
+
+        total_notification_count = verifications + interviews_emp_count + interviews_tlt_count + assigned_emp_count + assigned_tlt_count
+    else:
+        total_notification_count = 0
+
+    return {'total_notification_count': total_notification_count}

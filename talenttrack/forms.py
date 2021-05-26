@@ -134,17 +134,20 @@ class DesignationSelect2Widget(DesignationSearchFieldMixin, ModelSelect2Widget):
     def create_value(self, value):
         self.get_queryset().create(name=value)
 
+
 class ProjectSearchFieldMixin:
     search_fields = [
         'name__icontains', 'pk__startswith', 'company__ename__icontains', 'region__region__icontains', 'city__city__icontains',
     ]
 
+    dependent_fields = {'companybranch': 'companybranch'}
 
 class ProjectSelect2Widget(ProjectSearchFieldMixin, ModelSelect2Widget):
     model = ProjectData
 
     def create_value(self, value):
         self.get_queryset().create(name=value)
+
 
 class SkillSearchFieldMixin:
     search_fields = [
@@ -250,6 +253,12 @@ class PublicationsForm(forms.ModelForm):
 
 
 class LicenseCertificationForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(LicenseCertificationForm, self).__init__(*args, **kwargs)
+
+        self.helper = FormHelper(self)
+        self.helper.form_show_errors = False
+
     class Meta:
         model = LicenseCertification
         fields = ('certification', 'cm_no', 'companybranch', 'issue_date', 'expiry_date', 'current', 'country', 'region', 'upload', 'cert_name')
@@ -267,9 +276,6 @@ class LicenseCertificationForm(forms.ModelForm):
             'cert_name': 'Name',
         }
         help_texts = {
-            'issue_date': 'The date the license / certification / membership was first held.',
-            'expiry_date': 'The date the license / certification / membership expires (Leave Blank if never expires).',
-            'current': 'Is the license / certification / membership currently valid?',
             'region': 'Not all certifications are region specific, in which case, this field can be blank, however some are, in which case this field must be populated.',
         }
 
@@ -295,10 +301,6 @@ class PreLoggedExperienceForm(forms.ModelForm):
             }
         lables = {
             'companybranch': 'Branch',
-        }
-        help_texts = {
-            'company': 'Please complete the Company field before the Branch Field',
-            'companybranch': 'This field is dependant on the Company Field - fill Company Field first',
         }
 
     def clean_date_to(self):
@@ -570,10 +572,6 @@ class WorkExperienceForm(forms.ModelForm):
             'companybranch': 'Branch',
             'upload': 'Upload File (Optional)',
             'comment': 'Comment (Optional)',
-        }
-        help_texts = {
-            'company': 'Please complete the Company field before the Branch Field',
-            'companybranch': 'This field is dependant on the Company Field - fill Company Field first',
         }
 
     def clean_date_to(self):
