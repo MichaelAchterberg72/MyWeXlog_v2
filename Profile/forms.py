@@ -164,13 +164,9 @@ class FileUploadForm(forms.ModelForm):
 
 
 class ProfileForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(ProfileForm, self).__init__(*args, **kwargs)
-        self.fields['public_profile_name'].strip = True
-
     class Meta:
         model = Profile
-        fields = ('birth_date', 'mentor', 'std_rate', 'currency', 'alias', 'public_profile_name', 'public_profile_intro', 'f_name', 'l_name')
+        fields = ('birth_date', 'mentor', 'std_rate', 'currency', 'alias',  'f_name', 'l_name')
         widgets = {
             'birth_date': DateInput(attrs={'max': timezone.now().date()}),
             }
@@ -186,6 +182,22 @@ class ProfileForm(forms.ModelForm):
             raise forms.ValidationError("You need to be older than 18 to use MyWeXlog")
         else:
             return birth_date
+
+
+class PublicProfileNameForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ('public_profile_name',)
+
+    def clean_public_profile_name(self):
+        stripped_text = self.cleaned_data.get('public_profile_name', '').strip()
+        return stripped_text
+
+
+class PublicProfileIntroForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ('public_profile_intro',)
 
 
 class ProfileBackgroundForm(forms.ModelForm):

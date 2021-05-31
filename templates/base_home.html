@@ -207,7 +207,7 @@
   </main>
 
   {% if request.user.is_authenticated %}
-  <nav class="navbar-light bg-light top-right-navbar">
+  <nav class="navbar-light bg-light top-right-navbar" style="z-index:100;">
     <a class="navbar-brand" href="#"><span><img align="center" class="icon" height="45" src="{% static 'images/email/mywexlog-logo.png' %}" style="border:0;padding:0px 35px 5px 0px;" width="null"/></span></a>
 <!--
     <form class="form-inline my-2 my-lg-0">
@@ -238,6 +238,7 @@
                   {{ total_notification_count }}
               </span>
             {% endif %}
+
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="width:auto;">
             {% if verifications > 0 %}
@@ -289,6 +290,13 @@
                 <span class="icon-notification icon-notification-assignments">{{ assigned_tlt_count }}</span>
                 {% endif %}
                 Talent Assignments
+            </a>
+            {% endif %}
+            {% if verifications == 0 %}
+            <a class="dropdown-item">
+                <i class="fa fa-connectdevelop" aria-hidden="true" style="font-size:30px;"></i>
+                <span class="icon-notification-experience">&nbsp</span>
+                No Notifications
             </a>
             {% endif %}
           </div>

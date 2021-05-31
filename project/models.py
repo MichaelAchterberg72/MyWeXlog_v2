@@ -44,4 +44,4 @@ class ProjectPersonalDetails(models.Model):
     description = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return '{} - {}'.format(self.talent, self.project)
+        return '{}'.format(self.project)

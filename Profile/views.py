@@ -43,7 +43,7 @@ from .models import (
         )
 
 from .forms import (
-    ProfileForm, EmailForm, EmailStatusForm, PhysicalAddressForm, PostalAddressForm, PhoneNumberForm, OnlineProfileForm, ProfileTypeForm, FileUploadForm, IdTypeForm, LanguageTrackForm, LanguageListForm, PassportDetailForm, IdentificationDetailForm, BriefCareerHistoryForm, ResignedForm, UserUpdateForm, CustomUserUpdateForm, ExpandedIntroWalkthroughForm, ProfileBackgroundForm, ProfileMotivationForm, WillingToRelocateForm, UploadProfilePicForm, UploadProfileBackgroundPicForm,
+    ProfileForm, PublicProfileNameForm, PublicProfileIntroForm, EmailForm, EmailStatusForm, PhysicalAddressForm, PostalAddressForm, PhoneNumberForm, OnlineProfileForm, ProfileTypeForm, FileUploadForm, IdTypeForm, LanguageTrackForm, LanguageListForm, PassportDetailForm, IdentificationDetailForm, BriefCareerHistoryForm, ResignedForm, UserUpdateForm, CustomUserUpdateForm, ExpandedIntroWalkthroughForm, ProfileBackgroundForm, ProfileMotivationForm, WillingToRelocateForm, UploadProfilePicForm, UploadProfileBackgroundPicForm,
 )
 
 from talenttrack.models import (
@@ -2291,15 +2291,66 @@ def ProfileEditView(request, tlt):
 
 
 @login_required()
-def ProfilePicEditView(request, tlt):
-    talent = request.user.id
-    instance = get_object_or_404(ProfileImages, talent_id=talent)
+def PublicProfileNameEditView(request, tlt):
+    talent_id = request.user.alias
 
-    form = UploadProfilePicForm(request.POST or None, instance=instance)
+    pfl = CustomUser.objects.get(alias=talent_id)
+    form = PublicProfileNameForm(request.POST or None, instance=pfl)
 
     if request.method =='POST':
         next_url=request.POST.get('next','/')
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.save()
 
+            if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
+                next_url = reverse('Profile:ProfileView')
+            return HttpResponseRedirect(next_url)
+        else:
+            template = 'Profile/public_profile_name_edit.html'
+            context = {'form': form,}
+            return render(request, template, context)
+    else:
+        template = 'Profile/public_profile_name_edit.html'
+        context = {'form': form,}
+        return render(request, template, context)
+
+
+@login_required()
+def PublicProfileIntroEditView(request, tlt):
+    talent_id = request.user.alias
+
+    pfl = Profile.objects.get(alias=talent_id)
+    form = PublicProfileIntroForm(request.POST or None, instance=pfl)
+
+    if request.method =='POST':
+        next_url=request.POST.get('next','/')
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.save()
+
+            if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
+                next_url = reverse('Profile:ProfileView')
+            return HttpResponseRedirect(next_url)
+        else:
+            template = 'Profile/public_profile_intro_edit.html'
+            context = {'form': form,}
+            return render(request, template, context)
+    else:
+        template = 'Profile/public_profile_intro_edit.html'
+        context = {'form': form,}
+        return render(request, template, context)
+
+
+@login_required()
+def ProfilePicEditView(request, tlt):
+    talent = request.user.id
+    instance, _ = ProfileImages.objects.get_or_create(talent__id=talent)
+#    instance = get_object_or_404(ProfileImages, talent__alias=tlt)
+
+    if request.method =='POST':
+        next_url=request.POST.get('next','/')
+        form = UploadProfilePicForm(request.POST, request.FILES, instance=instance)
         if form.is_valid():
             new = form.save(commit=False)
             new.talent = request.user
@@ -2309,6 +2360,7 @@ def ProfilePicEditView(request, tlt):
                 next_url = reverse('Profile:ProfileView')+'#pics'
             return HttpResponseRedirect(next_url)
     else:
+        form = UploadProfilePicForm(instance=instance)
         template = 'Profile/profile_pic_edit.html'
         context = {'form': form,}
         return render(request, template, context)
@@ -2317,9 +2369,9 @@ def ProfilePicEditView(request, tlt):
 @login_required()
 def ProfileBackgroundPicEditView(request, tlt):
     talent = request.user.id
-    instance = get_object_or_404(ProfileImages, talent_id=talent)
+    instance, _ = ProfileImages.objects.get_or_create(talent__alias=tlt)
 
-    form = UploadProfileBackgroundPicForm(request.POST or None, instance=instance)
+    form = UploadProfileBackgroundPicForm(request.POST, request.FILES, instance=instance)
 
     if request.method =='POST':
         next_url=request.POST.get('next','/')

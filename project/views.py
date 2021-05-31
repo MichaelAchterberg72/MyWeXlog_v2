@@ -24,12 +24,14 @@ from .models import *
 from Profile.models import Profile
 from talenttrack.models import WorkExperience
 from enterprises.models import Enterprise, Branch
+from users.models import CustomUser
 
-from .forms import ProjectAddForm, ProjectAddHome, ProjectSearchForm, ProjectForm, ProjectPersonalDetailsForm
+from .forms import ProjectAddForm, ProjectAddHome, ProjectSearchForm, ProjectForm, ProjectPersonalDetailsForm, AddProjectPersonalDetailsForm, ProjectFullAddForm
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
+'''
 @login_required()
 def ProjectHome(request):
     tlt = request.user
@@ -54,8 +56,8 @@ def ProjectHome(request):
             industry = prj_qs.industry.industry
             city = prj_qs.city.city
 
-        result={'project': prj, 'prj_slug': prj_slug, 'company': co, 'co_slug': co_slug, 'branch': bch, 'bch_slug': bch_slug, 'industry': industry, 'city': city}
-        tlt_prj_list.append(result)
+            result={'project': prj, 'prj_slug': prj_slug, 'company': co, 'co_slug': co_slug, 'branch': bch, 'bch_slug': bch_slug, 'industry': industry, 'city': city}
+            tlt_prj_list.append(result)
 
     pcount = len(tlt_prj_list)
 
@@ -81,6 +83,39 @@ def ProjectHome(request):
     page_range = list(paginator.page_range)[start_index:end_index]
 
     template_name = 'project/personal_projects.html'
+    context = {'pcount': pcount, 'pageitems': pageitems, 'page_range': page_range}
+    return render(request, template_name, context)
+'''
+
+@login_required()
+def ProjectHome(request):
+    tlt = request.user
+    projects_qs = ProjectPersonalDetails.objects.filter(talent=tlt)
+
+    pcount = projects_qs.count()
+
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(projects_qs, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+    template_name = 'project/personal_projects_a.html'
     context = {'pcount': pcount, 'pageitems': pageitems, 'page_range': page_range}
     return render(request, template_name, context)
 
@@ -110,6 +145,46 @@ def ProjectPersonalDetailsView(request, prj, co, bch):
         template_name = 'project/personal_detail.html'
         context = {'form': form, 'project': project}
         return render(request, template_name, context)
+
+
+@login_required()
+@csp_exempt
+def ProjectPersonalDetailsAddView(request):
+    tlt = CustomUser.objects.get(alias=request.user.alias)
+    if request.method =='POST':
+        form = AddProjectPersonalDetailsForm(request.POST or None)
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.talent=request.user
+            new.save()
+            return redirect(reverse('Project:ProjectHome'))
+    else:
+        form = AddProjectPersonalDetailsForm()
+
+    template = 'project/project_personal_details_add.html'
+    context = {'form': form}
+    return render(request, template, context)
+
+
+@login_required()
+@csp_exempt
+def ProjectPersonalDetailsAddPopupView(request):
+    form = AddProjectPersonalDetailsForm(request.POST or None)
+    if request.method =='POST':
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.talent=request.user
+            instance.save()
+            response = HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_project_data");</script>' % (instance.pk, instance))
+            return response
+        else:
+            context = {'form':form,}
+            template = 'project/project_personal_details_add_popup.html'
+            return render(request, template, context)
+    else:
+        context = {'form':form,}
+        template = 'project/project_personal_details_add_popup.html'
+        return render(request, template, context)
 
 
 @login_required()
@@ -393,8 +468,8 @@ def ProjectAddPopup(request):
     exist_project = set(ProjectData.objects.filter().values_list('name', flat=True))
 
     filt = exist_project
-    data = json.loads(request.COOKIES['branch'])
-    qs = Branch.objects.get(id=data)
+#    data = json.loads(request.COOKIES['branch'])
+#    qs = Branch.objects.get(id=data)
 
     print(qs, qs.company)
     form = ProjectAddForm(request.POST or None)
@@ -414,6 +489,26 @@ def ProjectAddPopup(request):
     else:
         context = {'form':form, 'qs':qs}
         template = 'project/project_add_popup.html'
+        return render(request, template, context)
+
+
+@login_required()
+@csp_exempt
+def ProjectFullAddPopup(request):
+    form = ProjectFullAddForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            instance=form.save(commit=False)
+            instance.save()
+            response = HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_project");</script>' % (instance.pk, instance))
+            return response
+        else:
+            context = {'form':form,}
+            template = 'project/project_full_add_popup.html'
+            return render(request, template, context)
+    else:
+        context = {'form':form,}
+        template = 'project/project_full_add_popup.html'
         return render(request, template, context)
 
 

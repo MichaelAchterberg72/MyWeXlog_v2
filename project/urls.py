@@ -10,6 +10,7 @@ urlpatterns = [
     path('home/', views.ProjectHome, name='ProjectHome'),
     path('full-list/', views.ProjectListHome, name='ProjectList'),
     path('personal-details/<slug:prj>/<slug:co>/<slug:bch>/', views.ProjectPersonalDetailsView, name='ProjectPersonal'),
+    path('personal-project/add/', views.ProjectPersonalDetailsAddView, name='ProjectPersonalAdd'),
 
     path('help/project-home/', views.HelpProjectHomeView, name='HelpProjectHome'),
     path('help/project-add', views.HelpProjectAddView, name='HelpProjectAdd'),
@@ -26,6 +27,8 @@ urlpatterns = [
 #    path('list/', views.ProjectListView, name='ProjectList'),
     path('search/', views.ProjectSearch, name='Project-Search'),
     path('popup/project/add/', views.ProjectAddPopup, name="ProjectAddPop"),
+    path('popup/project-full/add/', views.ProjectFullAddPopup, name="ProjectFullAddPop"),
+    path('popup/personal-project/add/', views.ProjectPersonalDetailsAddPopupView, name='ProjectPersonalAddPop'),
     path('popup/ajax/get_project_id/', views.get_project_id, name="AJAX_GetProjectID"),
 
     path('experience/detail/message/<int:pk>/', views.AutofillMessage, name="DetailMessage"),

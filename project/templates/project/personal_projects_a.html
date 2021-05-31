@@ -49,20 +49,20 @@
           <div class="card-body small-pad">
             <div class="row my-auto">
               <div class="col-md-5 h-100 text-center my-auto">
-                {{ p.company }}<br>{{ p.branch }}<br>({{ p.project }})
+                {{ p.companybranch }}<br>({{ p.project }})
               </div>
               <div class="col-md-3 h-100 text-center my-auto">
-                {{ p.industry }}
+                {{ p.project.industry }}
               </div>
               <div class="col-md-2 h-100 text-center my-auto">
-                {{ p.city }}
+                {{ p.project.city }}
               </div>
               <div class="col-md-2 h-100 center-text my-auto float-right">
                 <div class="row text-center">
-                  <a href="{% url 'Project:ProjectPersonal' p.prj_slug p.co_slug p.bch_slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 5rem;">Personal<br>Detail</a>
+                  <a href="{% url 'Project:ProjectPersonal' p.project.slug p.company.slug p.companybranch.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 5rem;">Personal<br>Detail</a>
                 </div>
                 <div class="row mt-1 text-center">
-                  <a href="{% url 'Project:ProjectDetail' p.prj_slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 5rem;">See Project <br>Detail</a>
+                  <a href="{% url 'Project:ProjectDetail' p.project.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 5rem;">See Project <br>Detail</a>
                 </div>
               </div>
             </div>

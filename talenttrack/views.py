@@ -51,7 +51,7 @@ from enterprises.models import Branch, Industry
 from locations.models import Region, City
 from project.models import ProjectData, ProjectPersonalDetails
 from Profile.models import (
-        BriefCareerHistory, Profile, LanguageTrack, PhysicalAddress, WillingToRelocate, FileUpload, OnlineRegistrations, PhoneNumber
+        BriefCareerHistory, Profile, LanguageTrack, PhysicalAddress, WillingToRelocate, FileUpload, OnlineRegistrations, PhoneNumber, ProfileImages
 )
 from booklist.models import ReadBy
 from users.models import CustomUser
@@ -68,7 +68,7 @@ from analytics.signals import object_viewed_signal
 
 @login_required()
 def public_profile(request, ppl):
-    tlt = get_object_or_404(Profile, public_profile_name=ppl).alias
+    tlt = get_object_or_404(CustomUser, public_profile_name=ppl).alias
 
     talent = Profile.objects.get(alias=tlt)
     dispay_user = CustomUser.objects.get(alias=tlt)
@@ -99,12 +99,13 @@ def public_profile(request, ppl):
     padd = PhysicalAddress.objects.only('country', 'region', 'city').get(talent__alias=tlt)
     online = OnlineRegistrations.objects.filter(talent__alias=tlt)
 #    vacancy = TalentRequired.objects.filter(ref_no=vac)
-#    skr = SkillRequired.objects.filter(scope__ref_no=vac).values_list('skills', flat=True).distinct('skills')
+#    skr = SkillRequired.objects.filter(scope__ref_no=vac).values_list('skills', flat=True).distinct('skills'
+    pics = ProfileImages.objects.filter(talent__alias=tlt)
     skill_qs = SkillTag.objects.all()
     exp = exp_qs.select_related('topic', 'course', 'project')
     edtexp = exp.filter(edt=True).order_by('-date_from')[:6]
     edtexp_count = edtexp.count()
-    bkl_qs = ReadBy.objects.filter(talent__alias=tlt).select_related('book', 'type')
+    bkl_qs = ReadBy.objects.filter(talent__alias=tlt).order_by('-date').select_related('book', 'type')
     bkl = bkl_qs[:6]
     bkl_count = bkl.count()
     prj_qs = ProjectData.objects.all()
@@ -359,10 +360,26 @@ def public_profile(request, ppl):
 
         skills_hours_skill_data.append(sum_shwe)
 
+    '''Total skills hours'''
+    exp_skills_hours = exp_qs.filter(score__gte=skill_pass_score)
 
-    total_skills_hours = sum(skills_hours_skill_data)
+    tr_hours_worked = exp_skills_hours.filter(edt=True).aggregate(hours=Sum('topic__hours'))
+    tr_hours_worked_sum = tr_hours_worked.get('hours')
+    if tr_hours_worked_sum == None:
+        tr_hours_worked_sum = 0
+    else:
+        tr_hours_worked_sum = tr_hours_worked_sum
 
-    #Hours Training Experience per skill chart
+    we_hours_worked = exp_skills_hours.filter(edt=False).aggregate(hours=Sum('hours_worked'))
+    we_hours_worked_sum = we_hours_worked.get('hours')
+    if we_hours_worked_sum == None:
+        we_hours_worked_sum = 0
+    else:
+        we_hours_worked_sum = we_hours_worked_sum
+
+    total_skills_hours = float(tr_hours_worked_sum) + float(we_hours_worked_sum)
+
+    '''Hours Training Experience per skill chart'''
     training_skills_hours_skill_data = []
     for s in ordered_skills_list:
         shwt = exp_skills.filter(Q(topic__skills__skill=s, edt=True))
@@ -472,7 +489,7 @@ def public_profile(request, ppl):
 
     '''Employment History Section'''
     bch_qs_qs = bch_qs.order_by('date_from').values('companybranch', 'date_from', 'date_to')
-    wec_qs_qs = wec_qs.order_by('date_from').values('companybranch', 'date_from', 'date_to')
+    wec_qs_qs = wec_qs.filter(Q(score__gte=skill_pass_score) & Q(publish_comment=True)).order_by('date_from').values('companybranch', 'date_from', 'date_to')
 
     current_date = timezone.now().date()
     current_date_strf = parse_date(current_date.strftime("%Y-%m-%d"))
@@ -495,11 +512,14 @@ def public_profile(request, ppl):
     for x in co_list:
         co_list_qs.append(x)
     co_list_set = [x for x in co_list_qs if x is not None]
-    print(co_list_set)
+
     public_profile_list = []
     for c in co_list_set:
         co = Branch.objects.filter(pk=c).values_list('name', 'company__ename', 'pk')
-        dt = bch_qs.filter(companybranch=c).values_list('designation__name', 'date_from', 'date_to', 'description')
+        dt = bch_qs.filter(companybranch=c).values_list('designation__name', 'date_from', 'date_to', 'description', 'pk')
+
+        dt_co_min_date_qs = bch_qs.filter(companybranch=c).aggregate(min_date=Min('date_from'))
+        dt_co_mn_date = dt_co_min_date_qs.get('min_date')
 
         we_co = wec_qs.filter(companybranch=c).values_list('designation__name', 'score', 'industry__industry', 'hours_worked').distinct()
 
@@ -508,13 +528,15 @@ def public_profile(request, ppl):
         try:
             we_co_mn = we_co_mn_date.strftime('%b %-m, %Y')
         except:
-            we_co_mn = ""
+            we_co_mn_date = dt_co_mn_date
+            we_co_mn = dt_co_mn_date.strftime('%b %-m, %Y')
 
         we_co_max_date_qs = wec_qs.filter(companybranch=c).aggregate(max_date=Max('date_to'))
         we_co_mx_date = we_co_max_date_qs.get('max_date')
         try:
             we_co_mx = we_co_mx_date.strftime('%b %-m, %Y')
         except:
+            we_co_mx_date = timezone.now().date()
             we_co_mx = ''
 
         try:
@@ -522,9 +544,9 @@ def public_profile(request, ppl):
             months = tn_qs.days/(365/12)
             tn = months/12
         except:
-            tn = '0'
+            tn = 0
 
-        wec_co_qs_qs = wec_qs.filter(Q(companybranch=c))
+        wec_co_qs_qs = wec_qs.filter(Q(companybranch=c) & Q(score__gte=skill_pass_score) & Q(publish_comment=True))
         wec_co_qs = wec_co_qs_qs.order_by('project', '-date_from').distinct('project')
 
         wec_co = wec_co_qs.values_list('project', flat=True)
@@ -744,7 +766,7 @@ def public_profile(request, ppl):
             pr_com=[]
             for cm in wepc_qs_list:
                 #Comments details
-                wepc_qs = wesp_qs.filter(Q(pk=cm) & Q(publish_comment=True)).order_by('-date_to')
+                wepc_qs = wesp_qs.filter(Q(pk=cm) & Q(publish_comment=True) & Q(score__gte=skill_pass_score)).order_by('-date_to')
                 wec = wepc_qs.values_list('comment', 'date_to', 'slug', 'title')
                 c_we = wesp_qs.filter(Q(pk=cm) & Q(publish_comment=True)).values_list('pk', flat=True).distinct()
                 c_we_list = list(c_we)
@@ -785,6 +807,7 @@ def public_profile(request, ppl):
 
         public_profile_list.append(result)
 
+    object_viewed_signal.send(pfl.__class__, instance=pfl, request=request)
 
     template = 'talenttrack/public_profile.html'
     context = {
@@ -793,6 +816,7 @@ def public_profile(request, ppl):
     'dispay_user': dispay_user,  'tlt': tlt,  'padd': padd, 'current_pos': current_pos, 'language_qs': language_qs, 'online': online, 'phone': phone,
     'pfl_g': pfl_g, 'r_1': r_1, 'r_2': r_2, 'r_3': r_3,
     'tawq_ave': tawq_ave,
+    'pics': pics,
     'upload': upload, 'upload_count': upload_count,
     #Membership
     'membership': membership, 'membership_qs_count': membership_qs_count,
@@ -823,7 +847,7 @@ def public_profile(request, ppl):
 @login_required()
 def public_profile_project_rating(request, ppl):
     '''The view for the individual public profile mywexlog project rating overview and stats'''
-    tlt = get_object_or_404(Profile, public_profile_name=ppl).alias
+    tlt = get_object_or_404(CustomUser, public_profile_name=ppl).alias
     pfl = Profile.objects.get(alias=tlt)
 
     r_1 = pfl.rate_1/100
@@ -841,7 +865,7 @@ def public_profile_project_rating(request, ppl):
 @login_required()
 def public_profile_evaluation_rating(request, ppl):
     '''The view for the individual public profile mywexlog work experience evaluation rating overview and stats'''
-    tlt = get_object_or_404(Profile, public_profile_name=ppl).alias
+    tlt = get_object_or_404(CustomUser, public_profile_name=ppl).alias
     pfl = Profile.objects.get(alias=tlt)
     wec_qs = WorkExperience.objects.filter(talent__alias=tlt)
 
@@ -1022,7 +1046,7 @@ def public_profile_evaluation_rating(request, ppl):
 @login_required()
 def public_profile_skill_stats(request, ppl, skl):
     '''The view for the individual public profile skill overview and stats'''
-    tlt = get_object_or_404(Profile, public_profile_name=ppl).alias
+    tlt = get_object_or_404(CustomUser, public_profile_name=ppl).alias
     pfl = Profile.objects.get(alias=tlt)
     skill = SkillTag.objects.get(id=skl)
     tlt_instance = CustomUser.objects.get(alias=tlt) #request.user
@@ -1218,7 +1242,7 @@ def public_profile_skill_stats(request, ppl, skl):
 login_required()
 def public_profile_projects(request, ppl):
     '''MyWeXlog Projects History detail page'''
-    tlt = get_object_or_404(Profile, public_profile_name=ppl).alias
+    tlt = get_object_or_404(CustomUser, public_profile_name=ppl).alias
     pfl = Profile.objects.get(alias=tlt)
     wit_qs = WorkIssuedTo.objects.filter(Q(talent__alias=tlt) & Q(assignment_complete_emp=True)).order_by('-date_complete').values_list('slug', flat=True)
     wcp_count = wit_qs.count()
@@ -1281,7 +1305,7 @@ def public_profile_projects(request, ppl):
 login_required()
 def public_profile_education(request, ppl):
     '''MyWeXlog Education History detail page'''
-    tlt = get_object_or_404(Profile, public_profile_name=ppl).alias
+    tlt = get_object_or_404(CustomUser, public_profile_name=ppl).alias
     pfl = Profile.objects.get(alias=tlt)
 
     exp_qs = WorkExperience.objects.filter(talent__alias=tlt)
@@ -1325,7 +1349,7 @@ def public_profile_education(request, ppl):
 login_required()
 def public_profile_achievements(request, ppl):
     '''MyWeXlog Achievements History detail page'''
-    tlt = get_object_or_404(Profile, public_profile_name=ppl).alias
+    tlt = get_object_or_404(CustomUser, public_profile_name=ppl).alias
     pfl = Profile.objects.get(alias=tlt)
 
     achievement_qs = Achievements.objects.filter(talent__alias=tlt).order_by('-date_achieved')
@@ -1366,7 +1390,7 @@ def public_profile_achievements(request, ppl):
 login_required()
 def public_profile_awards(request, ppl):
     '''MyWeXlog Awards History detail page'''
-    tlt = get_object_or_404(Profile, public_profile_name=ppl).alias
+    tlt = get_object_or_404(CustomUser, public_profile_name=ppl).alias
     pfl = Profile.objects.get(alias=tlt)
 
     award_qs = Awards.objects.filter(talent__alias=tlt).order_by('-date_achieved')
@@ -1407,7 +1431,7 @@ def public_profile_awards(request, ppl):
 login_required()
 def public_profile_publications(request, ppl):
     '''MyWeXlog Publications History detail page'''
-    tlt = get_object_or_404(Profile, public_profile_name=ppl).alias
+    tlt = get_object_or_404(CustomUser, public_profile_name=ppl).alias
     pfl = Profile.objects.get(alias=tlt)
 
     publication_qs = Publications.objects.filter(talent__alias=tlt).order_by('-date_published')
@@ -1448,7 +1472,7 @@ def public_profile_publications(request, ppl):
 login_required()
 def public_profile_books(request, ppl):
     '''MyWeXlog Books Read History detail page'''
-    tlt = get_object_or_404(Profile, public_profile_name=ppl).alias
+    tlt = get_object_or_404(CustomUser, public_profile_name=ppl).alias
     pfl = Profile.objects.get(alias=tlt)
 
     bkl_qs = ReadBy.objects.filter(talent__alias=tlt).select_related('book', 'type')
@@ -1490,12 +1514,21 @@ login_required()
 def publish_experience_comment(request, wes):
     '''Selects wether to publish a workexperience comemnt or not'''
     we_qs = WorkExperience.objects.filter(slug=wes)
+    we_qs_g = we_qs.get(slug=wes)
+    we_c_col = WorkColleague.objects.filter(experience=we_qs_g)
+    we_c_sup = Superior.objects.filter(experience=we_qs_g)
+    we_c_wco = WorkCollaborator.objects.filter(experience=we_qs_g)
+    we_c_wcl = WorkClient.objects.filter(experience=we_qs_g)
 
     if request.method =='POST':
         if 'yes' in request.POST:
             we_qs.update(publish_comment=True)
         elif 'no' in request.POST:
             we_qs.update(publish_comment=False)
+            we_c_col.update(publish_comment=False)
+            we_c_sup.update(publish_comment=False)
+            we_c_wco.update(publish_comment=False)
+            we_c_wcl.update(publish_comment=False)
 
         return redirect(reverse('Talent:ExperienceDetail', kwargs={'tex': wes}))
 
@@ -1504,12 +1537,21 @@ login_required()
 def publish_pre_experience_comment(request, wes):
     '''Selects wether to publish a workexperience comemnt or not'''
     we_qs = WorkExperience.objects.filter(slug=wes)
+    we_qs_g = we_qs.get(slug=wes)
+    we_c_col = WorkColleague.objects.filter(experience=we_qs_g)
+    we_c_sup = Superior.objects.filter(experience=we_qs_g)
+    we_c_wco = WorkCollaborator.objects.filter(experience=we_qs_g)
+    we_c_wcl = WorkClient.objects.filter(experience=we_qs_g)
 
     if request.method =='POST':
         if 'yes' in request.POST:
             we_qs.update(publish_comment=True)
         elif 'no' in request.POST:
             we_qs.update(publish_comment=False)
+            we_c_col.update(publish_comment=False)
+            we_c_sup.update(publish_comment=False)
+            we_c_wco.update(publish_comment=False)
+            we_c_wcl.update(publish_comment=False)
 
         return redirect(reverse('Talent:PreLogDetail', kwargs={'tex': wes}))
 
@@ -2605,10 +2647,11 @@ def email_reminder_validate(request, skl, tlt):
             email_subject = f"{ subject }"
             context = {'form': form, 'sender': current_user, 'recipient': recipient, 'user_email': invitee }
             html_message = render_to_string('invitations/validate_request.html', context)
+            plain_message = strip_tags(html_message)
 
             message = Mail(
                 from_email = (settings.SENDGRID_FROM_EMAIL, f"{current_user.first_name} {current_user.last_name}"),
-                to_emails = invitee,
+                to_emails = recipient.email,
                 subject = email_subject,
                 plain_text_content = strip_tags(html_message),
                 html_content = html_message)
@@ -2623,6 +2666,7 @@ def email_reminder_validate(request, skl, tlt):
             except Exception as e:
                 print(e)
 
+            template = 'invitations/validate_request.html'
             if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
                 next_url = reverse('Talent:SkillsStats', kwargs={'skl': skl})
             response = HttpResponseRedirect(next_url)
@@ -5093,9 +5137,16 @@ def DPCP_SummaryView(request, tlt):
 def PreLoggedExperienceCaptureView(request):
     form = PreLoggedExperienceForm(request.POST or None, request.FILES)
     if request.method == 'POST':
+        ppd_id=request.POST.get('project_data')
+        try:
+            project_qs = ProjectPersonalDetails.objects.get(pk=ppd_id).project.pk
+            project_id = ProjectData.objects.get(pk=project_qs)
+        except:
+            project_id = None
         if form.is_valid():
             new = form.save(commit=False)
             new.talent = request.user
+            new.project = project_id
             new.prelog = True
             new.save()
             form.save_m2m()
@@ -5142,7 +5193,7 @@ def PreLogDetailView(request, tex):
     we_qs = WorkExperience.objects.filter(slug=tex)
     check = we_qs.get(slug=tex, prelog=True)
     if check.talent == request.user:
-        weq_qs = we_qs.filter(Q(slug=tex) & Q(talent=request.user) & Q(wexp=True))
+        weq_qs = we_qs.filter(Q(slug=tex) & Q(talent=request.user) & Q(wexp=False))
         sum = we_qs.filter(talent=request.user, prelog=True)
         sum_company = sum.filter(company=check.company).aggregate(co_sum=Sum('hours_worked'))
         sum_project = sum.filter(project=check.project).aggregate(p_sum=Sum('hours_worked'))
@@ -6097,9 +6148,16 @@ def EducationDetailDeleteView(request, pk):
 def WorkExperienceCaptureView(request):
     form = WorkExperienceForm(request.POST or None, request.FILES)
     if request.method == 'POST':
+        ppd_id=request.POST.get('project_data')
+        try:
+            project_qs = ProjectPersonalDetails.objects.get(pk=ppd_id).project.pk
+            project_id = ProjectData.objects.get(pk=project_qs)
+        except:
+            project_id = None
         if form.is_valid():
             new = form.save(commit=False)
             new.talent = request.user
+            new.project = project_id
             new.wexp = True
             new.save()
             form.save_m2m()

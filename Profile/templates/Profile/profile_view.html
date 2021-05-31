@@ -17,16 +17,10 @@
           <h5 class="card-title">Basic Information <a href="{% url 'Profile:ProfileEdit' d.alias %}" class="badge badge-secondary float-right">Edit</a></h5>
           <p class="card-text">Name: {{ user_info.first_name }} {{ user_info.last_name }}</p>
           <p class="card-text">
-            Display name: {{ user_info.alias }}
-          </p>
-          <p class="card-text">
-            Public profile name: {{ user_info.public_profile_name }}
-          </p>
-          <p class="card-text">
-            Public profile intro: <small>(max 460 characters)</small><br>{{ d.public_profile_intro }}
-          </p>
-          <p class="card-text">
             Date of Birth: {{ d.birth_date|date:"j M Y" }}
+          </p>
+          <p class="card-text">
+            Display name: {{ user_info.alias }}
           </p>
           <p class="card-text">
             Profile email: {{ request.user.email }}
@@ -123,6 +117,17 @@
 
   <div class="card card-shadow">
     <div class="card-body">
+      <h5 class="card-title">Public Profile <a href="{% url 'Profile:PublicProfileNameEdit' request.user.alias %}" class="badge badge-primary float-right">Edit</a></h5>
+      <p class="card-text">
+        Public profile name: {{ user_info.public_profile_name }}
+      </p>
+      <div class="card-footer bg-transparent border-success"></div>
+      <h5 class="card-title" id="email">Public Profile Intro<a href="{% url 'Profile:PublicProfileIntroEdit' d.alias %}?next={{ request.path|urlencode }}" class="badge badge-primary float-right">Edit</a></h5>
+      <small>(max 460 characters)</small>
+      <p class="card-text">
+        {{ d.public_profile_intro|linebreaks }}
+      </p>
+      <div class="card-footer bg-transparent border-success"></div>
       <h5 class="card-title" id="email">Email addresses <a href="{% url 'Profile:EmailEdit' d.alias %}?next={{ request.path|urlencode }}" class="badge badge-primary float-right">Add</a></h5>
       <h6>Past (No longer active)</h6>
       {% for e in email %}
@@ -469,7 +474,7 @@
                     {{ a.title }}
                   </div>
                   <div class="col-md-3 h-100 text-center my-auto">
-                    {{ a.genre }}
+                    {{ a.genre.all|join:", " }}
                   </div>
                   <div class="col-md-4 h-100 text-center my-auto">
                     {{ a.link }}

@@ -26,7 +26,7 @@ from .models import (
     )
 
 from enterprises.models import Enterprise, Branch, Industry
-from project.models import ProjectData
+from project.models import ProjectData, ProjectPersonalDetails
 from db_flatten.models import SkillTag
 from users.models import CustomUser
 from locations.models import Region
@@ -143,8 +143,8 @@ class ProjectSearchFieldMixin:
     dependent_fields = {'companybranch': 'companybranch'}
 
 class ProjectSelect2Widget(ProjectSearchFieldMixin, ModelSelect2Widget):
-    model = ProjectData
-
+    model = ProjectPersonalDetails
+    #TODO this has to filter the queryset by request.user
     def create_value(self, value):
         self.get_queryset().create(name=value)
 
@@ -289,18 +289,19 @@ class PreLoggedExperienceForm(forms.ModelForm):
 
     class Meta:
         model = WorkExperience
-        fields = ('date_from', 'date_to', 'company', 'companybranch', 'employment_type', 'project', 'industry', 'hours_worked', 'title', 'comment', 'designation', 'upload', 'skills',)
+        fields = ('date_from', 'date_to', 'company', 'companybranch', 'employment_type', 'project_data', 'industry', 'hours_worked', 'title', 'comment', 'designation', 'upload', 'skills',)
         widgets={
             'company': CompanySelect2Widget(),
             'companybranch': BranchSelect2Widget(),
             'designation': DesignationSelect2Widget(),
-            'project': ProjectSelect2Widget(),
+            'project_data': ProjectSelect2Widget(),
             'date_from': DateInput(attrs={'max': timezone.now().date()}),
             'date_to': DateInput(attrs={'max': timezone.now().date()}),
             'skills': SkillModelSelect2MultipleWidget(),
             }
         lables = {
             'companybranch': 'Branch',
+            'project_data': 'On Project'
         }
 
     def clean_date_to(self):
@@ -555,12 +556,12 @@ class WorkExperienceForm(forms.ModelForm):
     class Meta:
         model = WorkExperience
         fields = (
-            'date_from', 'date_to', 'company', 'companybranch', 'employment_type', 'estimated', 'project', 'industry', 'hours_worked', 'title', 'comment', 'designation', 'upload', 'skills'
+            'date_from', 'date_to', 'company', 'companybranch', 'employment_type', 'estimated', 'project_data', 'industry', 'hours_worked', 'title', 'comment', 'designation', 'upload', 'skills'
             )
         widgets={
             'company': CompanySelect2Widget(),
             'designation': DesignationSelect2Widget(),
-            'project': ProjectSelect2Widget(),
+            'project_data': ProjectSelect2Widget(),
             'date_from': DateInput(attrs={'max': timezone.now().date()}),
             'date_to': DateInput(attrs={'max': timezone.now().date()}),
             'skills': SkillModelSelect2MultipleWidget(),
@@ -572,6 +573,7 @@ class WorkExperienceForm(forms.ModelForm):
             'companybranch': 'Branch',
             'upload': 'Upload File (Optional)',
             'comment': 'Comment (Optional)',
+            'project_data': 'On Project'
         }
 
     def clean_date_to(self):

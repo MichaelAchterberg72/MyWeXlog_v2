@@ -4,30 +4,31 @@
 {% block title %}{{block.super}}-MyWeXlog Projects List{% endblock title %}
 
 {% block content %}
-
-<div class="jumbotron bg-light">
-  <div class="container">
-    <div class="row header-border">
-      <div class="col-md-2">
-      </div>
-      <div class="col-md-8">
-        <h4 class="profile-header" id="top">MyWexlog Public Profile<br>{{ pfl.f_name }} {{ pfl.l_name }}</h4>
-      </div>
-      <div class="col-md-2 my-auto">
-        <div class="container ">
-          <a href="{% url 'Talent:PublicProfile' ppl %}?next={{ request.path|urlencode }}#projects" class="btn btn-primary float-right">Back</a>
-        </div>
+</div>
+<div class="jumbotron public-profile-jumbotron-header" style="color:#000;background-color:#303030">
+  <div class="row">
+    <div class="col-md-2">
+    </div>
+    <div class="col-md-8">
+      <h4 class="profile-header" id="top" style="color:#fff;">MyWexlog Public Profile<br>{{ pfl.f_name }} {{ pfl.l_name }}</h4>
+    </div>
+    <div class="col-md-2 my-auto">
+      <div class="container ">
+        <a href="{% url 'Talent:PublicProfile' ppl %}?next={{ request.path|urlencode }}#projects" class="btn btn-primary float-right">Back</a>
       </div>
     </div>
-
+  </div>
+</div>
     <br>
+    <div class="container">
+    <div class="container">
     <h4 class="profile-header">MyWexlog Project History</h4>
     <div class="profile-card-under">{% if wcp_count > 0 %}Total Projects Completed: {{ wcp_count }}{% else %}No Projects with MyWeXlog yet{% endif %}</div>
     <br>
     <br>
       {% for vac in pageitems %}
       <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-3 border-right">
           <div class="profile-list-header">{{ vac.1.wit_v.0.6|date:"j F Y" }}</div><br>
           <div class="profile-list-under">{{ vac.1.wit_v.0.1 }}</div><br>
           <div class="profile-list-under">{{ vac.1.wit_v.0.2 }} {{ vac.1.wit_v.0.3 }}</div>
@@ -41,7 +42,7 @@
             </div>
             <div class="col-md-12">
               <div class="row pt-3 h-100 my-auto">
-                <div class="col-md-3 text-center my-auto">
+                <div class="col-md-3 text-center align-self-end">
                   <strong>Work Performance: </strong><br>
                   <span class="">{% if vac.1.emp.0.0 >= 0 and vac.1.emp.0.0 < 0.5 %}
                     <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
@@ -111,7 +112,7 @@
                     <span><i class="fa fa-star" aria-hidden="true"></i></span>
                   {% endif %}<span>
                 </div>
-                <div class="col-md-3 text-center my-auto">
+                <div class="col-md-3 text-center align-self-end">
                   <strong>Completed on time: </strong><br>
                   <span class="">{% if vac.1.emp.0.1 >= 0 and vac.1.emp.0.1 < 0.5 %}
                     <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
@@ -181,7 +182,7 @@
                     <span><i class="fa fa-star" aria-hidden="true"></i></span>
                   {% endif %}</span>
                 </div>
-                <div class="col-md-3 text-center my-auto">
+                <div class="col-md-3 text-center align-self-end">
                   <strong>Would hire again: </strong><br>
                   <span class="">{% if vac.1.emp.0.2 >= 0 and vac.1.emp.0.2 < 0.5 %}
                     <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
@@ -251,7 +252,7 @@
                     <span><i class="fa fa-star" aria-hidden="true"></i></span>
                   {% endif %}</span>
                 </div>
-                <div class="col-md-3 text-center my-auto">
+                <div class="col-md-3 text-center align-self-end">
                   <strong>Average: </strong><br>
                   <span class="">{% if vac.1.emp_a >= 0 and vac.1.emp_a < 0.5 %}
                     <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
@@ -328,8 +329,11 @@
         </div>
       </div>
       {% endfor %}
+    </div>
   </div>
-</div>
+  </div>
+  <br>
+  <div class="container">
 
 <div class="row header-border">
   <div class="col-md-12">
@@ -371,5 +375,5 @@
         {% endif %}
     </nav>
   </div>
-
+</div>
 {% endblock content %}

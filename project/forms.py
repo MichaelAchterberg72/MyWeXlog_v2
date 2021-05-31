@@ -16,6 +16,20 @@ from locations.models import Region, City, Suburb
 
 
 
+class ProjectSearchFieldMixin:
+    search_fields = [
+        'name__icontains', 'pk__startswith', 'company__ename__icontains', 'region__region__icontains', 'city__city__icontains',
+    ]
+
+    dependent_fields = {'companybranch': 'companybranch'}
+
+class ProjectSelect2Widget(ProjectSearchFieldMixin, ModelSelect2Widget):
+    model = ProjectData
+
+    def create_value(self, value):
+        self.get_queryset().create(name=value)
+
+
 class BranchSearchFieldMixin:
     search_fields = [
         'name__icontains', 'pk__startswith', 'company__ename__icontains', 'city__city__icontains', 'region__region__icontains',
@@ -107,6 +121,25 @@ class ProjectAddForm(forms.ModelForm):
             raise forms.ValidationError("A project with this name already exists! Please enter another name.")
         return project_passed
     '''
+
+class ProjectFullAddForm(forms.ModelForm):
+    '''This form is used when adding a full project'''
+    class Meta:
+        model = ProjectData
+        fields = ('name', 'company', 'companybranch', 'country', 'region', 'city', 'industry')
+        widgets = {
+            'company': CompanySelect2Widget(),
+            'industry': IndustrySelect2Widget(),
+            'region': RegionSelect2Widget(),
+            'city': CitySelect2Widget(),
+            'companybranch': BranchSelect2Widget(),
+        }
+        labels = {
+            'city' : 'Closest City / Town / Village',
+            'company' : 'Company that own project'
+        }
+
+
 class ProjectAddHome(forms.ModelForm):
     '''This form is used when adding aproject from talenttrack app'''
     class Meta:
@@ -145,4 +178,18 @@ class ProjectPersonalDetailsForm(forms.ModelForm):
         fields = ('description',)
         widgets = {
             'companybranch': BranchSelect2Widget(),
+        }
+
+
+class AddProjectPersonalDetailsForm(forms.ModelForm):
+    class Meta:
+        model = ProjectPersonalDetails
+        fields = ('project', 'company', 'companybranch', 'description',)
+        widgets = {
+            'company': CompanySelect2Widget(),
+            'companybranch': BranchSelect2Widget(),
+            'project': ProjectSelect2Widget(),
+        }
+        labels = {
+            'company' : 'Company you are working for on the project',
         }

@@ -38,13 +38,15 @@
           {{ form.size|as_crispy_field }}
         </div>
       </div>
-      {{ form.industry|as_crispy_field }}
-      <p>
-        <a href="{% url 'Enterprise:IndustryAddPop' %}" id='add_branch_industry' onclick='return showAddPopup(this);'>
-          <img src = "{% static 'images/icon-addlink.svg' %}">
-          Add a new Industry Type
-        </a>
-      </p>
+      <div class="row">
+        <div class="col-md-9">
+          {{ form.industry|as_crispy_field }}
+        </div>
+        <div class="col-md-3">
+          <br>
+          <p><a href="{% url 'Enterprise:IndustryAddPop' %}" id='add_branch_industry' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add a new Industry Type</a></p>
+        </div>
+      </div>
       {{ form.phy_address_line1|as_crispy_field }}
       {{ form.phy_address_line2|as_crispy_field }}
     </div>
@@ -118,8 +120,8 @@
 
   document.getElementById("id_suburb").disabled = true;
 
-  var dis2 = document.getElementById("id_city");
-  dis2.onchange = function () {
+  var dis3 = document.getElementById("id_city");
+  dis3.onchange = function () {
      if (this.value != "" || this.value.length > 0) {
         document.getElementById("id_suburb").disabled = false;
      }

@@ -26,7 +26,6 @@ from PIL import Image
 from io import StringIO, BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
-
 from marketplace.models import WorkLocation, SkillLevel
 from users.models import CustomUser
 from locations.models import Region, City, Suburb, Currency
@@ -126,7 +125,6 @@ class Profile(models.Model):
     f_name = models.CharField(max_length=30, null=True)
     l_name = models.CharField(max_length=30, null=True)
     alias = models.CharField(max_length=30, null=True, unique=True)
-    public_profile_name = models.CharField(max_length=100, unique=True, null=True)
     public_profile_intro = models.TextField(max_length=460, blank=True, null=True)
     birth_date = models.DateField('Date of Birth', null=True)
     background = models.TextField()
@@ -166,16 +164,14 @@ class Profile(models.Model):
     def save(self, *args, **kwargs):
         if self.alias is None or self.alias == "":
             self.alias = create_code7(self)
-
         inject_fn = f'{self.f_name}'
         inject_ln = f'{self.l_name}'
         inject_al = f'{self.alias}'
-        inject_pp = f'{self.alias}-{self.f_name}{self.l_name}'
         target = CustomUser.objects.filter(pk=self.talent.id)
         if self.f_name is None or self.f_name =="":
-            target.update(alias=inject_al, alphanum=inject_al, display_text=inject_al, public_profile_name=inject_al)
+            target.update(alias=inject_al, alphanum=inject_al, display_text=inject_al)
         else:
-            target.update(alias=inject_al, first_name=inject_fn, last_name=inject_ln, public_profile_name=inject_pp)
+            target.update(alias=inject_al, first_name=inject_fn, last_name=inject_ln)
 
         #check for confirmations once registering
         if self.confirm_check == False:
@@ -235,7 +231,13 @@ class ProfileImages(models.Model):
     profile_background = models.ImageField(storage=PrivateMediaStorage(), upload_to=BackgroundPic, blank=True, null=True)
 
     def __str__(self):
-        return self.talent
+        return str(self.talent)
+
+    def create_settings(sender, **kwargs):
+        if kwargs['created']:
+            create_settings = ProfileImages.objects.create(talent=kwargs['instance'])
+
+    post_save.connect(create_settings, sender=CustomUser)
 
 
 class IdType(models.Model):

@@ -19,7 +19,7 @@ from Profile.utils import create_code9
 
 
 from enterprises.models import Enterprise, Industry, Branch
-from project.models import ProjectData
+from project.models import ProjectData, ProjectPersonalDetails
 from db_flatten.models import SkillTag
 from booklist.models import Publisher, Author, Genre
 from django_countries.fields import CountryField
@@ -429,6 +429,8 @@ class WorkExperience(models.Model):
     project = models.ForeignKey(
         ProjectData, on_delete=models.PROTECT, verbose_name='On Project', blank=True, null=True
     )
+    project_data = models.ForeignKey(
+        ProjectPersonalDetails, on_delete=models.PROTECT, verbose_name='Project', blank=True, null=True)
     industry = models.ForeignKey(Industry, on_delete=models.PROTECT, null=True)
     hours_worked = models.DecimalField(max_digits=5, decimal_places=2, null=True)
     designation = models.ForeignKey(Designation, on_delete=models.PROTECT, null=True)

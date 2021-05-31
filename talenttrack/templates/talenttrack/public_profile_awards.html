@@ -4,30 +4,31 @@
 {% block title %}{{block.super}}-Awards List{% endblock title %}
 
 {% block content %}
-
-<div class="jumbotron bg-light">
-  <div class="container">
-    <div class="row header-border">
-      <div class="col-md-2">
-      </div>
-      <div class="col-md-8">
-        <h4 class="profile-header" id="top">MyWexlog Public Profile<br>{{ pfl.f_name }} {{ pfl.l_name }}</h4>
-      </div>
-      <div class="col-md-2 my-auto">
-        <div class="container ">
-          <a href="{% url 'Talent:PublicProfile' ppl %}?next={{ request.path|urlencode }}#awards" class="btn btn-primary float-right">Back</a>
-        </div>
+</div>
+<div class="jumbotron public-profile-jumbotron-header" style="color:#000;background-color:#303030">
+  <div class="row">
+    <div class="col-md-2">
+    </div>
+    <div class="col-md-8">
+      <h4 class="profile-header" id="top" style="color:#fff;">MyWexlog Public Profile<br>{{ pfl.f_name }} {{ pfl.l_name }}</h4>
+    </div>
+    <div class="col-md-2 my-auto">
+      <div class="container ">
+        <a href="{% url 'Talent:PublicProfile' ppl %}?next={{ request.path|urlencode }}#awards" class="btn btn-primary float-right">Back</a>
       </div>
     </div>
-
+  </div>
+</div>
     <br>
+    <div class="container">
+    <div class="container">
     <h4 class="profile-header">MyWexlog Awards History</h4>
     <div class="profile-card-under">{% if award_qs_count > 0 %}Total Awards Made: {{ award_qs_count }}{% else %}No Awards with MyWeXlog yet{% endif %}</div>
     <br>
     <br>
     {% for a in pageitems %}
     <div class="row">
-      <div class="col-md-3">
+      <div class="col-md-3 border-right">
         <div class="profile-list-header">{{ a.date_achieved|date:"j M Y" }}</div><br>
       </div>
       {% if a.upload %}<div class="col-md-6 border-left">{% else %}<div class="col-md-9 border-left">{% endif %}
@@ -57,6 +58,9 @@
     {% endfor %}
   </div>
 </div>
+</div>
+<br>
+<div class="container">
 
 <div class="row header-border">
   <div class="col-md-12">
@@ -98,5 +102,5 @@
         {% endif %}
     </nav>
   </div>
-
+</div>
 {% endblock content %}
