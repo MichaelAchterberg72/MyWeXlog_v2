@@ -104,7 +104,7 @@
       <br>
       <div class="row pt-2">
         <div class="col-md-5 text-left">
-        <a href="#" class="btn btn-primary btn-lg" style="width:12rem;">Resume</a>
+        <a href="#employment-history" class="btn btn-primary btn-lg" style="width:12rem;">Resume</a>
       </div>
       <div class="col-md-5 text-left">
         <a href="#skill" class="btn btn-outline-success btn-lg" style="width:12rem;">Skills</a>
@@ -940,9 +940,9 @@ background-color:transparent;
   </div>
 </div>
 <hr>
-<div class="jumbotron bg-light">
+<div class="jumbotron bg-light" id="employment-history">
   <div class="container">
-    <h4 class="profile-header" id="General">Employment History</h4>
+    <h4 class="profile-header">Employment History</h4>
     <br>
       {% for key in public_profile_list %}
       <div class="row">
@@ -1452,7 +1452,7 @@ background-color:transparent;
                         <div class="row pt-3 h-100 my-auto">
                           <div class="col-md-12 text-left my-auto">
                             <div class="profile-body-header">
-                              <strong>{% if project.we.0.0 %}Validation Comments:{% else %}Comments:{% endif %}</strong>
+                              <strong>{% if project.we.0.0 %}Validation Comments:{% else %}Validation Comments:{% endif %}</strong>
                             </div>
                           </div>
                         </div>

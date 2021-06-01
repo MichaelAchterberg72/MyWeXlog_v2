@@ -270,7 +270,7 @@ def ProjectDetailView(request, prj):
 
 
 @login_required()
-@csp_exempt
+#@csp_exempt
 def ProjectEditView(request, prj):
     info2 = ProjectData.objects.get(slug=prj)
     form = ProjectForm(request.POST or None, instance=info2)
@@ -279,10 +279,11 @@ def ProjectEditView(request, prj):
         if form.is_valid():
             new = form.save(commit=False)
             new.save()
-            form.save_m2m()
+#            form.save_m2m()
             if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
-                next_url = redirect(reverse('Project:ProjectHome', kwargs={'prj':prj}))
-            return HttpResponseRedirect(next_url)
+                next_url = reverse('Project:ProjectDetail', kwargs={'prj':prj})
+            response = HttpResponseRedirect(next_url)
+            return response
     else:
         context = {'form': form}
         template_name = 'project/project_add.html'

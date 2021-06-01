@@ -13,7 +13,7 @@
 
 <div class="card card-shadow">
   <div class="card-body">
-  <h4 class="card-title">Project Details
+  <h4 class="card-title">Personal Project Details
     <span>
       <p class="float-right">
         <a href="{% url 'Project:HelpProjectAdd' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="popover" title="Click here for help on this page!">
@@ -35,6 +35,7 @@
       <div class="form-row">
         <div class="form-group col-md-12 mb-0">
           {{ form.project|as_crispy_field }}
+          <small>*Enter either the project owner, project name, region or city</small>
           <p>
             <a href="{% url 'Project:ProjectFullAddPop' %}" id='add_project' onclick='return showAddPopup(this);'>
               <img src = "{% static 'images/icon-addlink.svg' %}">
