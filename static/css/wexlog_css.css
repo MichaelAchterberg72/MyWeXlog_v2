@@ -607,7 +607,7 @@ table {
 }
 
 .select2-container {
-  height: 38px !important;
+  min-height: 38px !important;
 }
 
 .select2-selection {

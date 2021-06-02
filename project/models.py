@@ -43,5 +43,8 @@ class ProjectPersonalDetails(models.Model):
     companybranch = models.ForeignKey(Branch, on_delete=models.PROTECT, verbose_name='Branch Working for on the Project', null=True)
     description = models.TextField(blank=True, null=True)
 
+    class Meta:
+        unique_together = (('talent', 'project', 'company', 'companybranch'),)
+
     def __str__(self):
         return '{}'.format(self.project)

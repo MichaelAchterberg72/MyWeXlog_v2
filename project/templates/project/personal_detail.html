@@ -14,10 +14,10 @@
       <div class="container">
         <div class="row my-auto">
           <div class="col-md-5 h-100 text-center my-auto">
-            <strong>Project Name</strong>
+            <strong>Project Company Working For</strong>
           </div>
           <div class="col-md-7 h-100 text-center my-auto">
-            <strong>Project Company Working For</strong>
+            <strong>Project Name</strong>
           </div>
           <div class="col-md-2 h-100 text-center my-auto">
             <strong></strong>
@@ -30,10 +30,10 @@
           <div class="card-body small-pad">
             <div class="row my-auto">
               <div class="col-md-5 h-100 text-center my-auto">
-                {{ project.company }}<br>({{ project.name }})
+                {{ project.company }}<br>({{ project.companybranch.name }})
               </div>
               <div class="col-md-7 h-100 text-center my-auto">
-                {{ project.companybranch.name }}
+                {{ project.name }}
               </div>
             </div>
             <div class="row my-auto">
