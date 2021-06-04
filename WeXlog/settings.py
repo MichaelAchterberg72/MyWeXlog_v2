@@ -456,8 +456,10 @@ CELERY_SEND_EVENTS = True
 CELERY_TASK_ANNOTATIONS = {'tasks.add': {'rate_limit': '10/s'}}
 
     # SendGrid mail Settings
-SENDGRID_API_KEY = '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'  # MyWeXlog Domain
+SENDGRID_API_KEY = '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' #.com site
+# SENDGRID_API_KEY = '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'  # .dev site Domain
 # SENDGRID_API_KEY = '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'  # Test machterberg@devoptec.com single sender auth
 
-SENDGRID_FROM_EMAIL = 'mywexloginfo@mywexlog.dev'    #
+SENDGRID_FROM_EMAIL = 'mywexloginfo@mywexlog.com'
+# SENDGRID_FROM_EMAIL = 'mywexloginfo@mywexlog.dev'    #
 # SENDGRID_FROM_EMAIL = 'machterberg@devoptec.com'
