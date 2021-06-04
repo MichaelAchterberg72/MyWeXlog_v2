@@ -2754,37 +2754,52 @@ def ExperienceHome(request):
     tlt = talent.alias
 
     #>>>Step 2
-    #unconfirmed
+    #total
     train_base = basequery.filter(Q(edt=True)).order_by('-date_from')
     train_sum = train_base.aggregate(Edu_sum=Sum('topic__hours'))
     train_count = train_base.count()
     train = train_base[:5]
+    #unconfirmed
+    train_uc = train_base.filter(Q(edt=True) & Q(score__lt=skill_pass_score)).order_by('-date_from')
+    train_sum_uc = train_uc.aggregate(Edu_sum=Sum('topic__hours'))
+    train_count_uc = train_uc.count()
+    train_uc = train_uc[:5]
     #Confirmed
     train_c = train_base.filter(Q(score__gte=skill_pass_score))
     train_sum_c = train_c.aggregate(Edu_sumc=Sum('topic__hours'))
     train_count_c = train_c.count()
 
-    #unconfirmed
+    #total
     exp_base = basequery.filter(wexp=True).order_by('-date_from')
     exp_sum = exp_base.aggregate(we_sum=Sum('hours_worked'))
     exp_count = exp_base.count()
     experience = exp_base[:5]
+    #unconfirmed
+    exp_uc = basequery.filter(Q(wexp=True) & Q(score__lt=skill_pass_score)).order_by('-date_from')
+    exp_sum_uc = exp_uc.aggregate(we_sum=Sum('hours_worked'))
+    exp_count_uc = exp_uc.count()
+    experience_uc = exp_uc[:5]
     #Confirmed
     exp_c = exp_base.filter(Q(score__gte=skill_pass_score))
     exp_sum_c = exp_c.aggregate(we_sumc=Sum('hours_worked'))
     exp_count_c = exp_c.count()
 
-    #unconfirmed
+    #total
     pre_base = basequery.filter(prelog=True).order_by('-date_from')
     prelog = pre_base[:5]
     pre_sum = pre_base.aggregate(p_sum=Sum('hours_worked'))
     pre_count = pre_base.count()
+    #unconfirmed
+    pre_uc = basequery.filter(Q(prelog=True) & Q(score__lte=skill_pass_score)).order_by('-date_from')
+    prelog_uc = pre_uc[:5]
+    pre_sum_uc = pre_uc.aggregate(p_sum=Sum('hours_worked'))
+    pre_count_uc = pre_uc.count()
     #Confirmed
     pre_c = pre_base.filter(Q(score__gte=skill_pass_score))
     pre_sum_c = pre_c.aggregate(p_sumc=Sum('hours_worked'))
     pre_count_c = pre_c.count()
 
-    #UNCONFIRMED
+    #TOTAL
     t_sum = train_sum.get('Edu_sum')
     e_sum = exp_sum.get('we_sum')
     p_sum= pre_sum.get('p_sum')
@@ -2806,6 +2821,29 @@ def ExperienceHome(request):
         p_sum = 0
 
     tot_sum = t_sum + e_sum + p_sum
+
+    #UNCONFIRMED
+    t_sum_uc = train_sum_uc.get('Edu_sum')
+    e_sum_uc = exp_sum_uc.get('we_sum')
+    p_sum_uc = pre_sum_uc.get('p_sum')
+
+
+    if t_sum_uc:
+        t_sum_uc = t_sum_uc
+    else:
+        t_sum_uc=0
+
+    if e_sum_uc:
+        e_sum_uc = e_sum_uc
+    else:
+        e_sum_uc = 0
+
+    if p_sum_uc:
+        p_sum_uc = p_sum_uc
+    else:
+        p_sum_uc = 0
+
+    tot_sum_uc = t_sum_uc + e_sum_uc + p_sum_uc
 
     #CONFIRMED
     t_sum_c = train_sum_c.get('Edu_sumc')
@@ -2961,20 +2999,27 @@ def ExperienceHome(request):
         'tlt': tlt,
         'train': train,
         'train_sum': train_sum,
+        'train_sum_uc': train_sum_uc,
         'train_sum_c': train_sum_c,
         'train_count_c': train_count_c,
+        'train_count_uc': train_count_uc,
         'train_count': train_count,
         'experience': experience,
         'exp_sum': exp_sum,
         'exp_sum_c': exp_sum_c,
+        'exp_sum_uc': exp_sum_uc,
         'exp_count': exp_count,
         'exp_count_c': exp_count_c,
+        'exp_count_uc': exp_count_uc,
         'prelog': prelog,
         'pre_sum': pre_sum,
         'pre_count': pre_count,
         'pre_sum_c': pre_sum_c,
+        'pre_sum_uc': pre_sum_uc,
         'pre_count_c': pre_count_c,
+        'pre_count_uc': pre_count_uc,
         'tot_sum': tot_sum,
+        'tot_sum_uc': tot_sum_uc,
         'tot_sum_c': tot_sum_c,
         'skill_name': skill_name,
         'skill_count': skill_count,
