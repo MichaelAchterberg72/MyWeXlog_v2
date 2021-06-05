@@ -549,7 +549,7 @@ table {
   color: var(--font-grey);
 }
 .font-blue {
-  color: var(--font-blue);
+  color: var(--font-blue) !important;
 }
 .auto {
   cursor: auto !important;

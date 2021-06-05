@@ -773,25 +773,25 @@ def public_profile(request, ppl):
                 cli_pr=[]
                 for s in c_we_list:
                     cli = wcli_qs.filter(experience__pk=s).order_by('-date_confirmed')
-                    cli_comments = cli.values_list('client_name__first_name', 'client_name__last_name', 'date_confirmed', 'comments', 'designation__name')
+                    cli_comments = cli.values_list('client_name__first_name', 'client_name__last_name', 'date_confirmed', 'comments', 'designation__name', 'pk')
                     cli_result = {'cli_comments': cli_comments}
                     cli_pr.append(cli_result)
                 sup_pr=[]
                 for s in c_we_list:
                     sup = wsp_qs.filter(experience__pk=s).order_by('-date_confirmed')
-                    sup_comments = sup.values_list('superior_name__first_name', 'superior_name__last_name', 'date_confirmed', 'comments', 'designation__name')
+                    sup_comments = sup.values_list('superior_name__first_name', 'superior_name__last_name', 'date_confirmed', 'comments', 'designation__name', 'pk')
                     sup_result = {'sup_comments': sup_comments}
                     sup_pr.append(sup_result)
                 clg_pr=[]
                 for s in c_we_list:
                     clg = wclg_qs.filter(experience__pk=s).order_by('-date_confirmed')
-                    clg_comments = clg.values_list('colleague_name__first_name', 'colleague_name__last_name', 'date_confirmed', 'comments', 'designation__name')
+                    clg_comments = clg.values_list('colleague_name__first_name', 'colleague_name__last_name', 'date_confirmed', 'comments', 'designation__name', 'pk')
                     clg_result = {'clg_comments': clg_comments}
                     clg_pr.append(clg_result)
                 clb_pr=[]
                 for s in c_we_list:
                     clb = wlb_qs.filter(experience__pk=s).order_by('-date_confirmed')
-                    clb_comments = clb.values_list('collaborator_name__first_name', 'collaborator_name__last_name', 'date_confirmed', 'comments', 'designation__name')
+                    clb_comments = clb.values_list('collaborator_name__first_name', 'collaborator_name__last_name', 'date_confirmed', 'comments', 'designation__name', 'pk')
                     clb_result = {'clb_comments': clb_comments}
                     clb_pr.append(clb_result)
 

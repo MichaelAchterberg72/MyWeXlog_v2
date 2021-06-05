@@ -966,7 +966,8 @@ background-color:transparent;
                 {{ key.dt.0.3|linebreaks }}<br>
                 <button class="float-right" type="submit" id="readLess{{key.dt.0.4}}">Read Less ..</button><br>
               </div><br>
-              {% endif %}
+
+              {% if key.dt.0.3|length > 460 %}
               <script>
                 var readMore = document.getElementById('readMore{{key.dt.0.4}}');  // 1
                 readMore.addEventListener('click', function() {   // 3
@@ -981,6 +982,8 @@ background-color:transparent;
                 });
 
               </script>
+              {% endif %}
+              {% endif %}
 {% if key.pr %}
               <div class="row">
                 <div class="col-md-12 text-left my-auto">
@@ -1551,7 +1554,35 @@ background-color:transparent;
                           <div class="col-md-12 text-left my-auto">
                             <strong>{{ cli.cli_comments.0.0 }} {{ cli.cli_comments.0.1 }}, {{ cli.cli_comments.0.4 }}</strong> &nbsp&nbsp&nbsp&nbsp&nbspDated: <strong>{{ cli.cli_comments.0.2 }}</strong><br>
                             <div id="cli_pr">
-                              {{ cli.cli_comments.0.3 }}
+                            {% if cli.cli_comments.0.3 %}
+                            <div class="" id="coDisc1Cli{{cli.cli_comments.0.5}}" style="display:block;">
+                              {{ cli.cli_comments.0.3|linebreaks|truncatechars:460 }}<br>
+                              {% if cli.cli_comments.0.3|length > 460 %}
+                              <a class="font-blue pointer float-right" type="submit" id="readMoreCli{{cli.cli_comments.0.5}}">Read More ..</a>
+                              {% endif %}
+                            </div>
+                            <div class="" id="coDisc2Cli{{cli.cli_comments.0.5}}" style="display:none;">
+                              {{ cli.cli_comments.0.3|linebreaks }}
+                              <a class="font-blue pointer float-right" type="submit" id="readLessCli{{cli.cli_comments.0.5}}">Read Less ..</a>
+                            </div>
+
+                            {% if cli.cli_comments.0.3|length > 460 %}
+                            <script>
+                              var readMore = document.getElementById('readMoreCli{{cli.cli_comments.0.5}}');  // 1
+                              readMore.addEventListener('click', function() {   // 3
+                                 coDisc1Cli{{cli.cli_comments.0.5}}.style.display = 'none';
+                                 coDisc2Cli{{cli.cli_comments.0.5}}.style.display = 'block';          // 4
+                              });
+                              var readLess = document.getElementById('readLessCli{{cli.cli_comments.0.5}}');  // 1
+                              readLess.addEventListener('click', function() {  // 3
+                                coDisc1Cli{{cli.cli_comments.0.5}}.style.display = 'block';
+                                coDisc2Cli{{cli.cli_comments.0.5}}.style.display = 'none';
+                                coDisc1Cli{{cli.cli_comments.0.5}}.scrollIntoView();              // 4
+                              });
+
+                            </script>
+                            {% endif %}
+                            {% endif %}
                             </div>
                           </div>
                         </div>
@@ -1571,11 +1602,42 @@ background-color:transparent;
                         <div class="row pt-3 h-100 my-auto">
                           <div class="col-md-12 text-left my-auto">
                             <strong>{{ sup.sup_comments.0.0 }} {{ sup.sup_comments.0.1 }}, {{ sup.sup_comments.0.4 }}</strong> &nbsp&nbsp&nbsp&nbsp&nbspDated: <strong>{{ sup.sup_comments.0.2 }}</strong><br>
-                            {{ sup.sup_comments.0.3 }}
+                            <div id="sup_pr">
+                            {% if sup.sup_comments.0.3 %}
+                            <div class="" id="coDisc1Sup{{sup.sup_comments.0.5}}" style="display:block;">
+                              {{ sup.sup_comments.0.3|linebreaks|truncatechars:460 }}<br>
+                              {% if sup.sup_comments.0.3|length > 460 %}
+                              <a class="font-blue pointer float-right" type="submit" id="readMoreSup{{sup.sup_comments.0.5}}">Read More ..</a>
+                              {% endif %}
+                            </div>
+                            <div class="" id="coDisc2Sup{{sup.sup_comments.0.5}}" style="display:none;">
+                              {{ sup.sup_comments.0.3|linebreaks }}
+                              <a class="font-blue pointer float-right" type="submit" id="readLessSup{{sup.sup_comments.0.5}}">Read Less ..</a>
+                            </div>
+
+                            {% if sup.sup_comments.0.3|length > 460 %}
+                            <script>
+                              var readMore = document.getElementById('readMoreSup{{sup.sup_comments.0.5}}');  // 1
+                              readMore.addEventListener('click', function() {   // 3
+                                 coDisc1Sup{{sup.sup_comments.0.5}}.style.display = 'none';
+                                 coDisc2Sup{{sup.sup_comments.0.5}}.style.display = 'block';          // 4
+                              });
+                              var readLess = document.getElementById('readLessSup{{sup.sup_comments.0.5}}');  // 1
+                              readLess.addEventListener('click', function() {  // 3
+                                coDisc1Sup{{sup.sup_comments.0.5}}.style.display = 'block';
+                                coDisc2Sup{{sup.sup_comments.0.5}}.style.display = 'none';Cli
+                                coDisc1Sup{{sup.sup_comments.0.5}}.scrollIntoView();              // 4
+                              });
+
+                            </script>
+                            {% endif %}
+                            {% endif %}
+                            </div>
                           </div>
                         </div>
                         {% endif %}
                         {% endfor %}
+
                         {% for clg in c.clg_pr %}
                         {% if clg.clg_comments.0.3 %}
                         {% if forloop.counter == 1 %}
@@ -1590,7 +1652,37 @@ background-color:transparent;
                         <div class="row pt-3 h-100 my-auto">
                           <div class="col-md-12 text-left my-auto">
                             <strong>{{ clg.clg_comments.0.0 }} {{ clg.clg_comments.0.1 }}, {{ clg.clg_comments.0.4 }}</strong> &nbsp&nbsp&nbsp&nbsp&nbspDated: <strong>{{ clg.clg_comments.0.2 }}</strong><br>
-                            {{ clg.clg_comments.0.3 }}
+                            <div id="clg_pr">
+                            {% if clg.clg_comments.0.3 %}
+                            <div class="" id="coDisc1Clg{{clg.clg_comments.0.5}}" style="display:block;">
+                              {{ clg.clg_comments.0.3|linebreaks|truncatechars:460 }}<br>
+                              {% if clg.clg_comments.0.3|length > 460 %}
+                              <a class="font-blue pointer float-right" type="submit" id="readMoreClg{{clg.clg_comments.0.5}}">Read More ..</a>
+                              {% endif %}
+                            </div>
+                            <div class="" id="coDisc2Clg{{clg.clg_comments.0.5}}" style="display:none;">
+                              {{ clg.clg_comments.0.3|linebreaks }}
+                              <a class="font-blue pointer float-right" type="submit" id="readLessClg{{clg.clg_comments.0.5}}">Read Less ..</a>
+                            </div>
+
+                            {% if clg.clg_comments.0.3|length > 460 %}
+                            <script>
+                              var readMore = document.getElementById('readMoreClg{{clg.clg_comments.0.5}}');  // 1
+                              readMore.addEventListener('click', function() {   // 3
+                                 coDisc1Clg{{clg.clg_comments.0.5}}.style.display = 'none';
+                                 coDisc2Clg{{clg.clg_comments.0.5}}.style.display = 'block';          // 4
+                              });
+                              var readLess = document.getElementById('readLessClg{{clg.clg_comments.0.5}}');  // 1
+                              readLess.addEventListener('click', function() {  // 3
+                                coDisc1Clg{{clg.clg_comments.0.5}}.style.display = 'block';
+                                coDisc2Clg{{clg.clg_comments.0.5}}.style.display = 'none';
+                                coDisc1Clg{{clg.clg_comments.0.5}}.scrollIntoView();              // 4
+                              });
+
+                            </script>
+                            {% endif %}
+                            {% endif %}
+                            </div>
                           </div>
                         </div>
                         {% endif %}
@@ -1609,7 +1701,37 @@ background-color:transparent;
                         <div class="row pt-3 h-100 my-auto">
                           <div class="col-md-12 text-left my-auto">
                             <strong>{{ clb.clb_comments.0.0 }} {{ clb.clb_comments.0.1 }}, {{ clb.clb_comments.0.4 }}</strong> &nbsp&nbsp&nbsp&nbsp&nbspDated: <strong>{{ clb.clb_comments.0.2 }}</strong><br>
-                            {{ clb.clb_comments.0.3 }}
+                            <div id="clb_pr">
+                            {% if clb.clb_comments.0.3 %}
+                            <div class="" id="coDisc1Clg{{clb.clb_comments.0.5}}" style="display:block;">
+                              {{ clb.clb_comments.0.3|linebreaks|truncatechars:460 }}<br>
+                              {% if clb.clb_comments.0.3|length > 460 %}
+                              <a class="font-blue pointer float-right" type="submit" id="readMoreClb{{clb.clb_comments.0.5}}">Read More ..</a>
+                              {% endif %}
+                            </div>
+                            <div class="" id="coDisc2Clb{{clb.clb_comments.0.5}}" style="display:none;">
+                              {{ clb.clb_comments.0.3|linebreaks }}
+                              <a class="font-blue pointer float-right" type="submit" id="readLessClb{{clb.clb_comments.0.5}}">Read Less ..</a>
+                            </div>
+
+                            {% if clb.clb_comments.0.3|length > 460 %}
+                            <script>
+                              var readMore = document.getElementById('readMoreClb{{clb.clb_comments.0.5}}');  // 1
+                              readMore.addEventListener('click', function() {   // 3
+                                 coDisc1Clb{{clb.clb_comments.0.5}}.style.display = 'none';
+                                 coDisc2Clb{{clb.clb_comments.0.5}}.style.display = 'block';          // 4
+                              });
+                              var readLess = document.getElementById('readLessClb{{clb.clb_comments.0.5}}');  // 1
+                              readLess.addEventListener('click', function() {  // 3
+                                coDisc1Clb{{clb.clb_comments.0.5}}.style.display = 'block';
+                                coDisc2Clb{{clb.clb_comments.0.5}}.style.display = 'none';
+                                coDisc1Clb{{clb.clb_comments.0.5}}.scrollIntoView();              // 4
+                              });
+
+                            </script>
+                            {% endif %}
+                            {% endif %}
+                            </div>
                           </div>
                         </div>
                         {% endif %}
