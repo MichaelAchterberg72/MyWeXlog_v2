@@ -187,8 +187,10 @@ class ProfileForm(forms.ModelForm):
 class PublicProfileNameForm(forms.ModelForm):
     class Meta:
         model = CustomUser
-        fields = ('public_profile_name',)
-
+        fields = ('public_profile_name', 'permit_viewing_of_profile_as_reference')
+        widgets = {
+            'permit_viewing_of_profile_as_reference': forms.CheckboxInput(attrs={'style':'width:38px;height:38px;'}),
+        }
     def clean_public_profile_name(self):
         stripped_text = self.cleaned_data.get('public_profile_name', '').strip()
         return stripped_text

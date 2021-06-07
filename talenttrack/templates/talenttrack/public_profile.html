@@ -642,7 +642,33 @@ background-color:transparent;
           <div class="">
             <div class="col-md-12">
               <div class="profile-list-heading">{{ vac.wit_v.0.0 }}</div><br>
-              <span class="">{{ vac.wit_v.0.4 }}</span>
+              <div class="" id="mypDisc1{{vac.wit_v.0.7}}" style="display:block;">
+                {{ vac.wit_v.0.4|linebreaks|truncatechars:460 }}<br>
+                {% if vac.wit_v.0.4|length > 460 %}
+                <button class="float-right" type="submit" id="readMore{{vac.wit_v.0.7}}">Read More ..</button>
+                {% endif %}
+              </div>
+              <div class="" id="mypDisc2{{vac.wit_v.0.7}}" style="display:none;">
+                {{ vac.wit_v.0.4|linebreaks }}<br>
+                <button class="float-right" type="submit" id="readLess{{vac.wit_v.0.7}}">Read Less ..</button><br>
+              </div>
+
+              {% if vac.wit_v.0.4|length > 460 %}
+              <script>
+                var readMore = document.getElementById('readMore{{vac.wit_v.0.7}}');  // 1
+                readMore.addEventListener('click', function() {   // 3
+                   mypDisc1{{vac.wit_v.0.7}}.style.display = 'none';
+                   mypDisc2{{vac.wit_v.0.7}}.style.display = 'block';          // 4
+                });
+                var readLess = document.getElementById('readLess{{vac.wit_v.0.7}}');  // 1
+                readLess.addEventListener('click', function() {  // 3
+                  mypDisc1{{vac.wit_v.0.7}}.style.display = 'block';
+                  mypDisc2{{vac.wit_v.0.7}}.style.display = 'none';
+                  mypDisc1{{vac.wit_v.0.7}}.scrollIntoView();              // 4
+                });
+
+              </script>
+              {% endif %}
               <br>
             </div>
             <div class="col-md-12">
@@ -947,7 +973,8 @@ background-color:transparent;
       {% for key in public_profile_list %}
       <div class="row">
         <div class="col-md-3 border-right">
-          <div class="profile-list-header">{% if key.dt.0.1 >= key.we_co_mn %}{{ key.dt.0.1 }}{% else %}{{ key.we_co_mn }}{% endif %}<br> to {% if key.dt.0.2 >= key.we_co_mx %}{{ key.dt.0.2 }}{% else %}{% if key.we_co_mx %}{{ key.we_co_mx }}{% else %}Current{% endif %}{% endif %}</div><br>
+          <div class="profile-list-header">{% now "F j, Y" as current_date %}{{ key.mn_date }}<br> to
+            {% if current_date == key.mx_date|date:"F j, Y" %}Current{% else %}{{ key.mx_date }}{% endif %}</div><br>
           <div class="profile-list-under">{{ key.tn|floatformat:1 }} years</div><br>
         </div>
         <div class="col-md-9 border-left" style="border-left: solid 2px #000000;">
@@ -988,7 +1015,6 @@ background-color:transparent;
               <div class="row">
                 <div class="col-md-12 text-left my-auto">
                   <div class="profile-card-header"><strong>Projects with {{ key.co.0.1 }}: </strong></div>
-
                 {% for project in key.pr|dictsort:"pwe_co_mn" %}
                 <div class="">
                   <div class="row">
@@ -1019,8 +1045,7 @@ background-color:transparent;
                               </div>
                             </div>
                             <div class="col-md-3 text-center my-auto">
-                              Rating:<br>
-                              <span class="">{% if project.awq_ave >= 0 and project.awq_ave < 0.5 %}
+                              <div class="" style="margin-top:20px;line-height:1.2;">{% if project.awq_ave >= 0 and project.awq_ave < 0.5 %}
                                 <span><i class="fa fa-star-o" aria-hidden="true" style="font-size:1.6rem;"></i></span>
                                 <span><i class="fa fa-star-o" aria-hidden="true" style="font-size:1.6rem;"></i></span>
                                 <span><i class="fa fa-star-o" aria-hidden="true" style="font-size:1.6rem;"></i></span>
@@ -1086,12 +1111,18 @@ background-color:transparent;
                                 <span><i class="fa fa-star" aria-hidden="true" style="font-size:1.6rem;"></i></span>
                                 <span><i class="fa fa-star" aria-hidden="true" style="font-size:1.6rem;"></i></span>
                                 <span><i class="fa fa-star" aria-hidden="true" style="font-size:1.6rem;"></i></span>
-                              {% endif %}</span>
+                              {% endif %}</div>
                             </div>
                           </div>
                           <div class="row pt-3 h-100 my-auto">
-                            <div class="col-md-12 text-left my-auto">
+                            <div class="col-md-4 text-left my-auto">
                               <span class="">{{ project.pwe_co_mn }} to {{ project.pwe_co_mx }}</span>
+                            </div>
+                            <div class="col-md-4 text-center my-auto">
+                              <span class="">{{ project.pwe_tn|floatformat:1 }} years</span>
+                            </div>
+                            <div class="col-md-4 text-center my-auto">
+                              <span class="">{{ project.pco_hr|floatformat:0 }} hours</span>
                             </div>
                           </div>
                           <div class="row pt-3 h-100 my-auto">
@@ -1135,7 +1166,7 @@ background-color:transparent;
                             <span class="">{{ project.pwe_tn|floatformat:1 }} years</span>
                           </div>
                           <div class="col-md-4 text-center my-auto">
-                            <span class="">{{ project.pco_hr }} hours</span>
+                            <span class="">{{ project.pco_hr|floatformat:0 }} hours</span>
                           </div>
                         </div>
                         <div class="row pt-3 h-100 my-auto">
@@ -1552,7 +1583,9 @@ background-color:transparent;
                         {% endif %}
                         <div class="row pt-3 h-100 my-auto">
                           <div class="col-md-12 text-left my-auto">
-                            <strong>{{ cli.cli_comments.0.0 }} {{ cli.cli_comments.0.1 }}, {{ cli.cli_comments.0.4 }}</strong> &nbsp&nbsp&nbsp&nbsp&nbspDated: <strong>{{ cli.cli_comments.0.2 }}</strong><br>
+                            {% if cli.cli_link.0.1 == True %}
+                            <a href="{% url 'Talent:PublicProfile' cli.cli_link.0.0 %}" target="_blank">
+                            <strong>{{ cli.cli_comments.0.0 }} {{ cli.cli_comments.0.1 }}, {{ cli.cli_comments.0.4 }}</strong></a>{% else %}<strong>{{ cli.cli_comments.0.0 }} {{ cli.cli_comments.0.1 }}, {{ cli.cli_comments.0.4 }}</strong>{% endif %} &nbsp&nbsp&nbsp&nbsp&nbspDated: <strong>{{ cli.cli_comments.0.2 }}</strong><br>
                             <div id="cli_pr">
                             {% if cli.cli_comments.0.3 %}
                             <div class="" id="coDisc1Cli{{cli.cli_comments.0.5}}" style="display:block;">
@@ -1601,7 +1634,9 @@ background-color:transparent;
                         {% endif %}
                         <div class="row pt-3 h-100 my-auto">
                           <div class="col-md-12 text-left my-auto">
-                            <strong>{{ sup.sup_comments.0.0 }} {{ sup.sup_comments.0.1 }}, {{ sup.sup_comments.0.4 }}</strong> &nbsp&nbsp&nbsp&nbsp&nbspDated: <strong>{{ sup.sup_comments.0.2 }}</strong><br>
+                            {% if sup.sup_link.0.1 == True %}
+                            <a href="{% url 'Talent:PublicProfile' sup.sup_link.0.0 %}" target="_blank">
+                            <strong>{{ sup.sup_comments.0.0 }} {{ sup.sup_comments.0.1 }}, {{ sup.sup_comments.0.4 }}</strong></a>{% else %}<strong>{{ sup.sup_comments.0.0 }} {{ sup.sup_comments.0.1 }}, {{ sup.sup_comments.0.4 }}</strong>{% endif %} &nbsp&nbsp&nbsp&nbsp&nbspDated: <strong>{{ sup.sup_comments.0.2 }}</strong><br>
                             <div id="sup_pr">
                             {% if sup.sup_comments.0.3 %}
                             <div class="" id="coDisc1Sup{{sup.sup_comments.0.5}}" style="display:block;">
@@ -1651,7 +1686,9 @@ background-color:transparent;
                         {% endif %}
                         <div class="row pt-3 h-100 my-auto">
                           <div class="col-md-12 text-left my-auto">
-                            <strong>{{ clg.clg_comments.0.0 }} {{ clg.clg_comments.0.1 }}, {{ clg.clg_comments.0.4 }}</strong> &nbsp&nbsp&nbsp&nbsp&nbspDated: <strong>{{ clg.clg_comments.0.2 }}</strong><br>
+                            {% if clg.clg_link.0.1 == True %}
+                            <a href="{% url 'Talent:PublicProfile' clg.clg_link.0.0 %}" target="_blank">
+                            <strong>{{ clg.clg_comments.0.0 }} {{ clg.clg_comments.0.1 }}, {{ clg.clg_comments.0.4 }}</strong></a>{% else %}<strong>{{ clg.clg_comments.0.0 }} {{ clg.clg_comments.0.1 }}, {{ clg.clg_comments.0.4 }}</strong>{% endif %} &nbsp&nbsp&nbsp&nbsp&nbspDated: <strong>{{ clg.clg_comments.0.2 }}</strong><br>
                             <div id="clg_pr">
                             {% if clg.clg_comments.0.3 %}
                             <div class="" id="coDisc1Clg{{clg.clg_comments.0.5}}" style="display:block;">
@@ -1700,7 +1737,9 @@ background-color:transparent;
                         {% endif %}
                         <div class="row pt-3 h-100 my-auto">
                           <div class="col-md-12 text-left my-auto">
-                            <strong>{{ clb.clb_comments.0.0 }} {{ clb.clb_comments.0.1 }}, {{ clb.clb_comments.0.4 }}</strong> &nbsp&nbsp&nbsp&nbsp&nbspDated: <strong>{{ clb.clb_comments.0.2 }}</strong><br>
+                            {% if clb.clb_link.0.1 == True %}
+                            <a href="{% url 'Talent:PublicProfile' clb.clb_link.0.0 %}" target="_blank">
+                            <strong>{{ clb.clb_comments.0.0 }} {{ clb.clb_comments.0.1 }}, {{ clb.clb_comments.0.4 }}</strong></a>{% else %}<strong>{{ clb.clb_comments.0.0 }} {{ clb.clb_comments.0.1 }}, {{ clb.clb_comments.0.4 }}</strong>{% endif %} &nbsp&nbsp&nbsp&nbsp&nbspDated: <strong>{{ clb.clb_comments.0.2 }}</strong><br>
                             <div id="clb_pr">
                             {% if clb.clb_comments.0.3 %}
                             <div class="" id="coDisc1Clg{{clb.clb_comments.0.5}}" style="display:block;">

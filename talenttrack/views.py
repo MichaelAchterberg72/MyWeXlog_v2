@@ -469,7 +469,7 @@ def public_profile(request, ppl):
     wcp = []
     for vac in wit_list:
         wit_qs = WorkIssuedTo.objects.filter(Q(talent__alias=tlt) & Q(slug=vac))
-        wit_v = wit_qs.values_list('work__title', 'work__companybranch__company__ename', 'work__requested_by__first_name', 'work__requested_by__last_name', 'work__vacancyrate__comment', 'date_begin', 'date_complete')
+        wit_v = wit_qs.values_list('work__title', 'work__companybranch__company__ename', 'work__requested_by__first_name', 'work__requested_by__last_name', 'work__vacancyrate__comment', 'date_begin', 'date_complete', 'pk')
         wit = wit_qs.get(Q(talent__alias=tlt) & Q(slug=vac))
         ref = wit.work.ref_no
 
@@ -519,28 +519,46 @@ def public_profile(request, ppl):
         dt = bch_qs.filter(companybranch=c).values_list('designation__name', 'date_from', 'date_to', 'description', 'pk')
 
         dt_co_min_date_qs = bch_qs.filter(companybranch=c).aggregate(min_date=Min('date_from'))
-        dt_co_mn_date = dt_co_min_date_qs.get('min_date')
+        dt_mn_date = dt_co_min_date_qs.get('min_date')
+
+        dt_co_max_date_qs = bch_qs.filter(companybranch=c).aggregate(max_date=Min('date_to'))
+        dt_mx_date = dt_co_max_date_qs.get('max_date')
 
         we_co = wec_qs.filter(companybranch=c).values_list('designation__name', 'score', 'industry__industry', 'hours_worked').distinct()
 
         we_co_min_date_qs = wec_qs.filter(companybranch=c).aggregate(min_date=Min('date_from'))
         we_co_mn_date = we_co_min_date_qs.get('min_date')
         try:
-            we_co_mn = we_co_mn_date.strftime('%b %-m, %Y')
+            if bch_qs.filter(companybranch=c, date_to=None):
+                dt_mx_date = timezone.now().date()
         except:
-            we_co_mn_date = dt_co_mn_date
-            we_co_mn = dt_co_mn_date.strftime('%b %-m, %Y')
+            pass
 
         we_co_max_date_qs = wec_qs.filter(companybranch=c).aggregate(max_date=Max('date_to'))
         we_co_mx_date = we_co_max_date_qs.get('max_date')
-        try:
-            we_co_mx = we_co_mx_date.strftime('%b %-m, %Y')
-        except:
-            we_co_mx_date = timezone.now().date()
-            we_co_mx = ''
 
         try:
-            tn_qs = we_co_mx_date - we_co_mn_date
+            if dt_mn_date and we_co_mn_date:
+                if dt_mn_date <= we_co_mn_date:
+                    mn_date = dt_mn_date
+                else:
+                    mn_date = we_co_mn_date
+            elif dt_mn_date and not we_co_mn_date:
+                mn_date = dt_mn_date
+            elif we_co_mn_date and not dt_mn_date:
+                mn_date = we_co_mn_date
+
+            if dt_mx_date and we_co_mx_date:
+                if dt_mx_date >= we_co_mx_date:
+                    mx_date = dt_mx_date
+                else:
+                    mx_date = we_co_mx_date
+            elif dt_mx_date and not we_co_mx_date:
+                mx_date = dt_mx_date
+            elif we_co_mx_date and not dt_mx_date:
+                mx_date = we_co_mx_date
+
+            tn_qs = mx_date - mn_date
             months = tn_qs.days/(365/12)
             tn = months/12
         except:
@@ -772,28 +790,40 @@ def public_profile(request, ppl):
                 c_we_list = list(c_we)
                 cli_pr=[]
                 for s in c_we_list:
-                    cli = wcli_qs.filter(experience__pk=s).order_by('-date_confirmed')
-                    cli_comments = cli.values_list('client_name__first_name', 'client_name__last_name', 'date_confirmed', 'comments', 'designation__name', 'pk')
-                    cli_result = {'cli_comments': cli_comments}
-                    cli_pr.append(cli_result)
+                    cli = wcli_qs.filter(experience__pk=s).order_by('-date_confirmed').values_list('pk', flat=True).distinct()
+                    cli_list = list(cli)
+                    for i in cli_list:
+                        cli_comments = wcli_qs.filter(Q(experience__pk=s) & Q(pk=i)).values_list('client_name__first_name', 'client_name__last_name', 'date_confirmed', 'comments', 'designation__name', 'pk')
+                        cli_link = wcli_qs.filter(Q(experience__pk=s) & Q(pk=i)).values_list('client_name__public_profile_name', 'client_name__permit_viewing_of_profile_as_reference')
+                        cli_result = {'cli_comments': cli_comments, 'cli_link': cli_link}
+                        cli_pr.append(cli_result)
                 sup_pr=[]
                 for s in c_we_list:
-                    sup = wsp_qs.filter(experience__pk=s).order_by('-date_confirmed')
-                    sup_comments = sup.values_list('superior_name__first_name', 'superior_name__last_name', 'date_confirmed', 'comments', 'designation__name', 'pk')
-                    sup_result = {'sup_comments': sup_comments}
-                    sup_pr.append(sup_result)
+                    sup = wsp_qs.filter(experience__pk=s).order_by('-date_confirmed').values_list('pk', flat=True).distinct()
+                    sup_list = list(sup)
+                    for i in sup_list:
+                        sup_comments = wsp_qs.filter(Q(experience__pk=s) & Q(pk=i)).values_list('superior_name__first_name', 'superior_name__last_name', 'date_confirmed', 'comments', 'designation__name', 'pk')
+                        sup_link = wsp_qs.filter(Q(experience__pk=s) & Q(pk=i)).values_list('superior_name__public_profile_name', 'superior_name__permit_viewing_of_profile_as_reference')
+                        sup_result = {'sup_comments': sup_comments, 'sup_link': sup_link}
+                        sup_pr.append(sup_result)
                 clg_pr=[]
                 for s in c_we_list:
-                    clg = wclg_qs.filter(experience__pk=s).order_by('-date_confirmed')
-                    clg_comments = clg.values_list('colleague_name__first_name', 'colleague_name__last_name', 'date_confirmed', 'comments', 'designation__name', 'pk')
-                    clg_result = {'clg_comments': clg_comments}
-                    clg_pr.append(clg_result)
+                    clg = wclg_qs.filter(experience__pk=s).order_by('-date_confirmed').values_list('pk', flat=True).distinct()
+                    clg_list = list(clg)
+                    for i in clg_list:
+                        clg_comments = wclg_qs.filter(Q(experience__pk=s) & Q(pk=i)).values_list('colleague_name__first_name', 'colleague_name__last_name', 'date_confirmed', 'comments', 'designation__name', 'pk')
+                        clg_link = wclg_qs.filter(Q(experience__pk=s) & Q(pk=i)).values_list('colleague_name__public_profile_name', 'colleague_name__permit_viewing_of_profile_as_reference')
+                        clg_result = {'clg_comments': clg_comments, 'clg_link': clg_link}
+                        clg_pr.append(clg_result)
                 clb_pr=[]
                 for s in c_we_list:
-                    clb = wlb_qs.filter(experience__pk=s).order_by('-date_confirmed')
-                    clb_comments = clb.values_list('collaborator_name__first_name', 'collaborator_name__last_name', 'date_confirmed', 'comments', 'designation__name', 'pk')
-                    clb_result = {'clb_comments': clb_comments}
-                    clb_pr.append(clb_result)
+                    clb = wlb_qs.filter(experience__pk=s).order_by('-date_confirmed').values_list('pk', flat=True).distinct()
+                    clb_list = list(clb)
+                    for i in clb_list:
+                        clb_comments = wlb_qs.filter(Q(experience__pk=s) & Q(pk=i)).values_list('collaborator_name__first_name', 'collaborator_name__last_name', 'date_confirmed', 'comments', 'designation__name', 'pk')
+                        clb_link = wlb_qs.filter(Q(experience__pk=s) & Q(pk=i)).values_list('collaborator_name__public_profile_name', 'collaborator_name__permit_viewing_of_profile_as_reference')
+                        clb_result = {'clb_comments': clb_comments, 'clb_link': clb_link}
+                        clb_pr.append(clb_result)
 
                 pr_com_result = {'wec': wec, 'cli_pr': cli_pr, 'sup_pr': sup_pr, 'clg_pr': clg_pr, 'clb_pr': clb_pr}
                 pr_com.append(pr_com_result)
@@ -801,7 +831,7 @@ def public_profile(request, ppl):
             p_result = {'we': we, 'prj_s': prj_s, 'pd_desc': pd_desc, 'pwe_co_mn': pwe_co_mn, 'pwe_co_mx': pwe_co_mx, 'pwe_tn': pwe_tn, 'pr_skl': pr_skl, 'pco_hr': pco_hr, 'pr_com': pr_com, 'pwq_ave': pwq_ave, 'twq_ave': twq_ave, 'cwq_ave': cwq_ave, 'awq_ave': awq_ave}
             pr.append(p_result)
 
-        result={'co': co, 'dt': dt, 'we_co': we_co, 'we_co_mn': we_co_mn, 'we_co_mx': we_co_mx, 'tn': tn, 'pr': pr,
+        result={'co': co, 'dt': dt, 'we_co': we_co, 'mx_date': mx_date, 'mn_date': mn_date, 'tn': tn, 'pr': pr,
 #        'no_pr': no_pr
         }
 
