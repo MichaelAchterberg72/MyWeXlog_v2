@@ -12,7 +12,7 @@ class CustomUserAdmin(UserAdmin):
 
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['alias','email']
 
 @admin.register(CustomUserSettings)
 class CustomUserSettingsAdmin(admin.ModelAdmin):
