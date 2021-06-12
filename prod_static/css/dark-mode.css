@@ -1,0 +1,159 @@
+body {
+  color: #eee;
+}
+
+.bg-light {
+  background-color: #111 !important;
+}
+
+.bg-white {
+  background-color: #000 !important;
+}
+
+.bg-black {
+  background-color: #eee !important;
+}
+
+.card {
+  background-color: #303030 !important;
+}
+
+.row .mt-1 .card-body {
+  background-color: #444444 !important;
+}
+
+.fa {
+  color: #ffffff !important;
+}
+
+.nav-link-top {
+  background-color: #transparent !important;
+  color: #ffffff !important;
+}
+
+.dropdown-menu {
+  background-color: #303030 !important;
+  color: #ffffff !important;
+}
+
+.dropdown-menu a:hover {
+  background-color: 	#808080 !important;
+  color: #ffffff !important;
+}
+
+.dropdown-item {
+  background-color: #303030 !important;
+  color: #ffffff !important;
+}
+
+.list-group-item {
+  background-color: #303030 !important;
+  color: #ffffff !important;
+}
+
+.form-control {
+  background-color: #303030 !important;
+  color: #ffffff !important;
+}
+
+.textinput {
+  background-color: #303030 !important;
+  color: #ffffff !important;
+}
+
+.textInput {
+  background-color: #303030 !important;
+  color: #ffffff !important;
+}
+
+.select2-selection {
+  background-color: #303030 !important;
+  color: #ffffff !important;
+}
+
+.select2-selection__rendered {
+  background-color: #303030 !important;
+  color: #ffffff !important;
+}
+
+.select2-selection__arrow {
+  background-color: #303030 !important;
+  color: #ffffff !important;
+}
+
+.select {
+  background-color: #303030 !important;
+  color: #ffffff !important;
+}
+
+.select2-container {
+  background-color: #303030 !important;
+  color: #ffffff !important;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+  color: #000000 !important;
+}
+
+.select2-search {
+  background-color: #303030 !important;
+  color: #ffffff !important;
+}
+
+.select2-search input {
+  background-color: #303030 !important;
+  color: #ffffff !important;
+}
+
+.select2-results {
+  background-color: #303030 !important;
+  color: #ffffff !important;
+}
+
+.page-link {
+  background-color: #303030 !important;
+  color: #ffffff !important;
+}
+
+.modal-content {
+  background-color: #303030 !important;
+  color: #ffffff !important;
+}
+
+.table-hover tbody tr:hover td {
+  background-color: 	#808080 !important;
+  color: #ffffff !important;
+}
+
+.no-hover tr:hover td:hover {
+  background-color: 	#303030 !important;
+  color: #ffffff !important;
+}
+
+/* Public Profile */
+.profile-card {
+  background-color: 	#444444 !important;
+  color: #ffffff !important;
+}
+
+.profile-card-body {
+  background-color: 	#303030 !important;
+  color: #ffffff !important;
+}
+
+.profile-footer {
+  background-color: 	#444444 !important;
+  color: #ffffff !important;
+}
+
+.profile-header {
+  color: #ffffff !important;
+}
+
+.profile-card-header {
+  color: #ffffff !important;
+}
+
+.profile-card-under {
+  color: #ffffff !important;
+}

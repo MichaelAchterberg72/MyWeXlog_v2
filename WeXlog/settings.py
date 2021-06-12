@@ -93,6 +93,7 @@ INSTALLED_APPS = [
     'sri',
     'djangobower',
     'schedule',
+    'happenings',
 ]
 
 
@@ -159,7 +160,7 @@ STATICFILES_FINDERS = [
     'djangobower.finders.BowerFinder',
 ]
 
-BOWER_COMPONENTS_ROOT = '/WeXlog/bower_components/'
+BOWER_COMPONENTS_ROOT = 'WeXlog/bower_components/'
 
 BOWER_INSTALLED_APPS = (
     'jquery',
@@ -237,7 +238,7 @@ CSP_DEFAULT_SRC = (
     )#app_config
 
 CSP_SCRIPT_SRC = (
-    "'self'", "'unsafe-inline'", '127.0.0.1', '107.191.57.249', 'code.jquery.com', 'maxcdn.bootstrapcdn.com', 'kit.fontawesome.com', 'app.mywexlog.dev', 'mywexlog.dev', 'cdnjs.cloudflare.com', 'maps.googleapis.com', 'bookstrapcdn.com', 'cdn.jsdelivr.net', 'cdn.jsdelivr.net', 'ajax.googleapis.com', 'cdnjs.cloudflare.com', 'apis.google.com', 'https://www.gstatic.com', 'tarruda.github.com/',
+    "'self'", "'unsafe-inline'", '127.0.0.1', '107.191.57.249', 'code.jquery.com', 'maxcdn.bootstrapcdn.com', 'kit.fontawesome.com', 'app.mywexlog.dev', 'mywexlog.dev', 'cdnjs.cloudflare.com', 'maps.googleapis.com', 'bookstrapcdn.com', 'cdn.jsdelivr.net', 'cdn.jsdelivr.net', 'ajax.googleapis.com', 'cdnjs.cloudflare.com', 'apis.google.com', 'https://www.gstatic.com', 'tarruda.github.com',
     )#app_config
 CSP_IMG_SRC = (
     "'self'", '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev',
@@ -254,7 +255,7 @@ CSP_FONT_SRC = (
     )#app_config
 CSP_CONNECT_SRC = None
 CSP_STYLE_SRC = (
-    "'self'", 'maxcdn.bootstrapcdn.com', 'app.mywexlog.dev', 'cdnjs.cloudflare.com', 'w3.org', '127.0.0.1', '107.191.57.249', 'fonts.googleapis.com', 'cdn.jsdelivr.net',  'stackpath.bookstrapcdn.com', "'unsafe-inline'", 'mywexlog.dev', 'https://www.gstatic.com/',
+    "'self'", 'maxcdn.bootstrapcdn.com', 'app.mywexlog.dev', 'cdnjs.cloudflare.com', 'w3.org', '127.0.0.1', '107.191.57.249', 'fonts.googleapis.com', 'cdn.jsdelivr.net',  'stackpath.bookstrapcdn.com', "'unsafe-inline'", 'mywexlog.dev', 'https://www.gstatic.com/', 'stackpath.bootstrapcdn.com',
     )#app_config
 CSP_BASE_URI = None
 CSP_CHILD_SRC = None
@@ -283,7 +284,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         #'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'Wexlog_3',
+        'NAME': 'Wexlog_billing',
         'USER': 'postgres',
 		#'PASSWORD': 'rdf8tm1234', #MA
         #'PASSWORD': 'dJpfss41678', #JK

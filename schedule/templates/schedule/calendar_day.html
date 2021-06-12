@@ -1,7 +1,7 @@
-{% extends "base.html" %}
+{% extends "base_home.html" %}
 {% load scheduletags i18n %}
 
-{% block body %}
+{% block content %}
 
 
 <div class="row row-centered">
@@ -23,6 +23,9 @@
         {% trans "Today" %}
       </a>
     </div>
+</div>
+<div class="row">
+  <a class="btn btn-primary" href="{% url 'calendar_create_event' calendar.slug %}">Create Calendar Event</a>
 </div>
   <div class="row row-centered">
     <div>

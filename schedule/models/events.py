@@ -62,10 +62,10 @@ class Event(models.Model):
     )
     title = models.CharField(_("title"), max_length=255)
     description = models.TextField(_("description"), blank=True)
-    companybranch = models.ForeignKey(Branch, on_delete=models.PROTECT, verbose_name='Branch Working for on Project', null=True)
+    companybranch = models.ForeignKey(Branch, on_delete=models.PROTECT, blank=True, null=True, verbose_name='Branch Working for on Project')
     project = models.ForeignKey(ProjectPersonalDetails, on_delete=models.SET_NULL, blank=True, null=True)
     task = models.ForeignKey(ProjectPersonalDetailsTask, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Tasks")
-    skills = models.ManyToManyField(SkillTag, related_name='event_experience', blank=True)
+    skills = models.ManyToManyField(SkillTag, blank=True, related_name='event_experience')
     creator = models.ForeignKey(
         django_settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
@@ -622,8 +622,8 @@ class Occurrence(models.Model):
             self.project = self.event.project
         if not self.task and self.event_id:
             self.task = self.event.task
-        if not self.skills and self.event_id:
-            self.skills = self.event.skills.all()
+#        if not self.skills and self.event_id:
+#            self.skills = self.event.skills.all()
 
     def moved(self):
         return self.original_start != self.start or self.original_end != self.end

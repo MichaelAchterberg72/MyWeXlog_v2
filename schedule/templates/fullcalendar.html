@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base_home.html' %}
 {% load i18n %}
 
 {% block head_title %}Calendar: {{ object.name }}{% endblock %}
@@ -7,7 +7,7 @@
     {% include "fullcalendar_script.html" %}
 {% endblock %}
 
-{% block body %}
+{% block content %}
     <a class="btn btn-primary gradient" href="{% url 'calendar_create_event' calendar_slug %}">
         <span class='glyphicon glyphicon-plus'></span>
         {% trans "Add New Session" %}

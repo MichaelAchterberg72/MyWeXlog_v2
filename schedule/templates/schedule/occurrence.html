@@ -1,7 +1,7 @@
-{% extends "base.html" %}
+{% extends "base_home.html" %}
 {% load i18n scheduletags %}
 
-{% block body %}
+{% block content %}
 <div class="navigation">
   <a class="btn btn-primary gradient" href="{% url "day_calendar" occurrence.event.calendar.slug %}{% querystring_for_date occurrence.start 3 %}">
     {% trans "Day" %}

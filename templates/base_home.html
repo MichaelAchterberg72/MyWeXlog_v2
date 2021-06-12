@@ -9,6 +9,15 @@
       {% if request.get_host == 'https://mywexlog.dev' %}
         <meta name="robots" content="noindex" />
       {% endif %}
+      <!-- Schedule script -->
+        <link rel="stylesheet" href="{% static "bootstrap/dist/css/bootstrap.css" %}" type="text/css" media="screen">
+        <script type="text/javascript" src="{% static "jquery/dist/jquery.js" %}"></script>
+        <script type="text/javascript" src="{% static "jquery-ui/jquery-ui.min.js" %}"></script>
+        <script type="text/javascript" src="{% static "bootstrap/dist/js/bootstrap.js" %}"></script>
+        <script type="text/javascript" src="{% static "js/schedule.js" %}"></script>
+        <link rel="stylesheet" href="{% static "css/schedule.css" %}" type="text/css" media="screen">
+        <link rel="stylesheet" href="{% static "jquery-ui/themes/base/all.css" %}" type="text/css" media="screen">
+        
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
       <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">

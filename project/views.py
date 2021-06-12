@@ -60,7 +60,7 @@ def ProjectHome(request):
             result={'project': prj, 'prj_slug': prj_slug, 'company': co, 'co_slug': co_slug, 'branch': bch, 'bch_slug': bch_slug, 'industry': industry, 'city': city}
             tlt_prj_list.append(result)
 
-            pcount = len(tlt_prj_list)
+    pcount = len(tlt_prj_list)
 
 
     try:

@@ -451,7 +451,9 @@ def _api_occurrences(start, end, calendar_slug, timezone):
                 # make event start and end dates aware in given timezone
                 event_start = event_start.astimezone(current_tz)
                 event_end = event_end.astimezone(current_tz)
-
+            if occurrence.cancelled:
+                # fixes bug 508
+                continue
             response_data.append(
                 {
                     "id": occurrence_id,
@@ -545,54 +547,3 @@ def _api_select_create(start, end, calendar_slug):
     response_data = {}
     response_data["status"] = "OK"
     return response_data
-
-
-    """
-    -- Syncronise the Google account Calander --
-    https://stackoverflow.com/questions/37754999/google-calendar-integration-with-django
-
-import pytz
-from datetime import timedelta
-
-from google.oauth2 import service_account
-
-from googleapiclient.discovery import build
-
-service_account_email = "app-calendar@xxxxxxxxx.iam.gserviceaccount.com"
-SCOPES = ["https://www.googleapis.com/auth/calendar"]
-
-credentials = service_account.Credentials.from_service_account_file('google_calendar_credential.json')
-scoped_credentials = credentials.with_scopes(SCOPES)
-
-
-def build_service():
-    service = build("calendar", "v3", credentials=scoped_credentials)
-    return service
-
-
-def create_event():
-    service = build_service()
-
-    start_datetime = datetime.datetime.now(tz=pytz.utc)
-    event = (
-        service.events()
-        .insert(
-            calendarId="primary",
-            body={
-                "summary": "Foo 2",
-                "description": "Bar",
-                "start": {"dateTime": start_datetime.isoformat()},
-                "end": {
-                    "dateTime": (start_datetime + timedelta(minutes=15)).isoformat()
-                },
-            },
-        )
-        .execute()
-    )
-
-    print(event)
-
-create_event()
-
-
-    """

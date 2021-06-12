@@ -1,7 +1,9 @@
-{% extends "base.html" %}
+{% extends "base_home.html" %}
 {% load i18n scheduletags %}
 
-{% block body %}
+{% block content %}
+<div class="card card-shadow col-sm-6 mx-auto">
+  <div class="card-body">
 <div class="navigation">
   <a class="btn btn-primary gradient" href="{% url "day_calendar" event.calendar.slug %}{% querystring_for_date event.start 3 %}">
     {% trans "Day" %}
@@ -51,5 +53,22 @@
 <h3>{% trans "Description" %}</h3>
 <p>{{event.description}}</p>
 {% endif %}
+{% if event.companybranch %}
+<h3>{% trans "Company Branch" %}</h3>
+<p>{{event.companybranch}}</p>
+{% if event.project %}
+<h3>{% trans "Project" %}</h3>
+<p>{{event.project}}</p>
+{% endif %}
+{% if event.task %}
+<h3>{% trans "Task" %}</h3>
+<p>{{event.task}}</p>
+{% endif %}
+{% if event.skills.all %}
+<h3>{% trans "Skills" %}</h3>
 
+{% endif %}
+{% endif %}
+</div>
+</div>
 {% endblock %}
