@@ -10,6 +10,8 @@ from pinax.referrals.models import Referral
 from allauth.account.signals import user_signed_up
 from django.dispatch import receiver
 
+from Profile.utils import create_code16
+
 from nestedsettree.models import NtWk
 
 
@@ -40,6 +42,8 @@ class CustomUser(AbstractUser):
     )
     alias = models.CharField(max_length=30, null=True)
     display_text = models.CharField(max_length=250, null=True)
+    public_profile_name = models.CharField(max_length=100, unique=True, null=True)
+    permit_viewing_of_profile_as_reference = models.BooleanField(default=False, blank=True)
     subscription = models.IntegerField(choices=PKG, default=2)
     permission = models.IntegerField(choices=COMPANY, default=1)
     role = models.IntegerField(choices=ROLE, default=0)
@@ -56,6 +60,11 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return f'{self.first_name} {self.last_name}, {self.display_text}'
 
+    def save(self, *args, **kwargs):
+        if self.public_profile_name is None or self.public_profile_name == "":
+            self.public_profile_name = f'{create_code16(self)}-{self.first_name.lower()}{self.last_name.lower()}'
+
+        super(CustomUser, self).save(*args, **kwargs)
 
 @receiver(user_signed_up)
 def after_signup(request, user, **kwargs):

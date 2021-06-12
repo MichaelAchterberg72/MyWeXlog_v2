@@ -6,29 +6,27 @@
 {% block content %}
 <div class="card card-shadow">
   <div class="card-body">
-    <h4 class="">Full projects listing home page!
-      <span><p class="float-right">
-      <a href="{% url 'Project:HelpProjectHome' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 16px">
-      <i class="fa fa-question-circle"></i></a>
-    </p></span></h4>
+  <h4 class="">Welcome to the Full Project Listings page!
+    <span><p class="float-right">
+    <a href="{% url 'Project:HelpProjectHome' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 16px">
+    <i class="fa fa-question-circle"></i></a>
+  </p></span></h4>
+    <div class="card-body">
+      <p>On this page you can:</p>
+      <ul>
+        <li>View projects captured on MyWeXlog.</li>
+        <li>Add more projects to MyWeXlog.</li>
+        <li>View how many hours companies and talent have logged on each project.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<br>
+<div class="card card-shadow">
+  <div class="card-body">
       {% if request.user.is_authenticated %}
-      <p>
-        There are currently <strong>{{ pcount.sum_p|intcomma }}</strong> projects listed in MyWeXlog!
-      </p>
-      <p>
-        <a href="{% url 'Project:ProjectAdd' %}" class="badge badge-pill badge-primary">
-          Add Project
-        </a>
-        <a href="{% url 'Project:ProjectHome' %}" class="badge badge-pill badge-primary">
-          Project Home
-        </a>
-        <a href="{% url 'Project:Project-Search' %}" class="badge badge-pill badge-primary">
-          Search Projects
-        </a>
-        <a href="{% url 'Enterprise:EnterpriseHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">
-          Back
-        </a>
-      </p>
+      <p>There are currently <strong>{{ pcount.sum_p|intcomma }}</strong> projects listed in MyWeXlog!</p>
+      <p><a href="{% url 'Project:ProjectAdd' %}" class="badge badge-pill badge-primary">Add Project</a><a href="{% url 'Project:ProjectHome' %}" class="badge badge-pill badge-primary">Personal Project List</a><a href="{% url 'Project:Project-Search' %}" class="badge badge-pill badge-primary">Search Projects</a><a href="{% url 'Enterprise:EnterpriseHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
       {% endif %}
 
       <div class="container">

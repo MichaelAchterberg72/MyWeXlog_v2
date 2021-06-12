@@ -47,12 +47,14 @@ def confirm_count(request):
             wclr1 = WorkCollaborator.objects.filter(Q(collaborator_name=talent) & Q(confirm__exact='S')).count()
             wc1 = WorkClient.objects.filter(Q(client_name=talent) & Q(confirm__exact='S')).count()
 
-        verifications = wf1 + cm1 + wk1 + spr1 + wclr1 + wc1
+        if wf1 + cm1 + wk1 + spr1 + wclr1 + wc1 == None:
+            verifications = 0
+        else:
+            verifications = wf1 + cm1 + wk1 + spr1 + wclr1 + wc1
     else:
         verifications = 0
 
     return {'verifications': verifications}
-
 
 def employer_interviews_count(request):
     if request.user.is_authenticated:
@@ -99,6 +101,7 @@ def talent_assignment_count(request):
         assigned_tlt_count = 0
 
     return {'assigned_tlt_count': assigned_tlt_count}
+
 
 def total_notification_count(request):
     if request.user.is_authenticated:

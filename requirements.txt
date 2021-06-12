@@ -50,7 +50,7 @@ django-postman==3.6.2
 django-redis==4.12.1
 django-referrer-policy==1.0
 django-select2==7.0.3
-django-sri-0.3.0
+django-sri==0.3.0
 django-storages==1.10
 django-timezone-field==4.0
 django-treebeard==4.3

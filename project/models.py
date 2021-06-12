@@ -45,8 +45,11 @@ class ProjectPersonalDetails(models.Model):
     description = models.TextField(blank=True, null=True)
     slug = models.SlugField(max_length=50, unique=True, null=True, blank=True)
 
+    class Meta:
+        unique_together = (('talent', 'project', 'company', 'companybranch'),)
+
     def __str__(self):
-        return '{} - {}'.format(self.talent, self.project)
+        return '{}'.format(self.project)
 
     def save(self, *args, **kwargs):
         if self.slug is None or self.slug == "":

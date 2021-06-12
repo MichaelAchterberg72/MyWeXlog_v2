@@ -27,7 +27,7 @@ urlpatterns = [
     path('vacancy-delete-deliverables/<int:pk>/', views.DeliverableDeleteView, name='DeliverablesDelete'),
     path('vacancy-delete-skill/<int:id>/', views.SkillDeleteView, name='SkillDelete'),
 
-    path('availabillity/', views.TalentAvailabillityView, name='Availabillity'),
+    path('availability/', views.TalentAvailabillityView, name='Availabillity'),
     path('v-detail/<slug:vac>/', views.VacancyDetailView, name='VacancyDetail'),
     path('vp-detail/<slug:vac>/', views.VacancyDetailView_Profile, name='VacancyDetail_Profile'),
     path('apply/<slug:vac>/', views.WorkBidView, name='WorkBid'),

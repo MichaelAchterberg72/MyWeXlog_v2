@@ -358,6 +358,7 @@ class VacancyRate(models.Model):
     rate_3 = models.SmallIntegerField('Would you hire this person again?', choices=OPNS, default=3)
     date_rating = models.DateField(auto_now=True)
     comment = models.TextField(blank=True, null=True)
+    personal_comment = models.TextField(blank=True, null=True)
     complete = models.BooleanField(null=True, default=False)
     suggestions = models.TextField(blank=True, null=True)
     slug = models.SlugField(max_length=50, null=True, unique=True)

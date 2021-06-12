@@ -302,6 +302,24 @@ def AddBookView(request):
     return render(request, template_name, context)
 
 
+@csp_exempt
+@login_required()
+def AddBookListView(request):
+    if request.method == 'POST':
+        form = BookAddForm(request.POST)
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.save()
+            form.save_m2m()
+            return redirect(reverse('BookList:books-list'))
+    else:
+        form = BookAddForm()
+
+    context = {'form': form}
+    template_name = 'booklist/add_new_book.html'
+    return render(request, template_name, context)
+
+
 @login_required()
 @csp_exempt
 def BookAddPopupView(request):
@@ -334,7 +352,6 @@ def AuthorCreatePopupView(request):
 
 
 @login_required()
-@csp_exempt
 def PublisherCreatePopupView(request):
     form = PublisherAddForm(request.POST or None)
     if request.method =='POST':

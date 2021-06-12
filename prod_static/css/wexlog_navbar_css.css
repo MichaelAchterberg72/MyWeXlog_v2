@@ -39,7 +39,7 @@ main {
   float: top;
   background-color: var(--bg-primary);
   transition: width 600ms ease;
-  z-index:1;
+  z-index:1000;
 }
 
 .top-right-navbar {

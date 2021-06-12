@@ -9,7 +9,6 @@ from django.db.models.signals import post_save, pre_save
 from decimal import getcontext, Decimal
 from django.core.validators import FileExtensionValidator
 
-
 from django_countries.fields import CountryField
 from phonenumber_field.modelfields import PhoneNumberField
 from dateutil.relativedelta import relativedelta
@@ -18,6 +17,14 @@ from django.utils import timezone
 from .utils import create_code7, create_code9
 from WeXlog.storage_backends import PrivateMediaStorage
 
+from pdf2image import convert_from_path, convert_from_bytes
+from pdf2image.exceptions import (
+    PDFInfoNotInstalledError,
+    PDFPageCountError,
+    PDFSyntaxError )
+from PIL import Image
+from io import StringIO, BytesIO
+from django.core.files.uploadedfile import InMemoryUploadedFile
 
 from marketplace.models import WorkLocation, SkillLevel
 from users.models import CustomUser
@@ -118,6 +125,7 @@ class Profile(models.Model):
     f_name = models.CharField(max_length=30, null=True)
     l_name = models.CharField(max_length=30, null=True)
     alias = models.CharField(max_length=30, null=True, unique=True)
+    public_profile_intro = models.TextField(max_length=460, blank=True, null=True)
     birth_date = models.DateField('Date of Birth', null=True)
     background = models.TextField()
     mentor = models.CharField('Do you wish to be a mentor?', max_length=1, choices=MENTOR, default='N')#Opt in to be a mentor to other people
@@ -156,7 +164,6 @@ class Profile(models.Model):
     def save(self, *args, **kwargs):
         if self.alias is None or self.alias == "":
             self.alias = create_code7(self)
-
         inject_fn = f'{self.f_name}'
         inject_ln = f'{self.l_name}'
         inject_al = f'{self.alias}'
@@ -209,6 +216,28 @@ class Profile(models.Model):
 
 
     post_save.connect(create_profile, sender=CustomUser)
+
+def ProfilePic(instance, filename):
+	ext = filename.split('.')[-1]
+	return "%s/profile\%s_%s.%s" % (instance.talent.id, str(time()).replace('.','_'), random(), ext)
+
+def BackgroundPic(instance, filename):
+	ext = filename.split('.')[-1]
+	return "%s/profile\%s_%s.%s" % (instance.talent.id, str(time()).replace('.','_'), random(), ext)
+
+class ProfileImages(models.Model):
+    talent = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    profile_pic = models.ImageField(storage=PrivateMediaStorage(), upload_to=ProfilePic, blank=True, null=True)
+    profile_background = models.ImageField(storage=PrivateMediaStorage(), upload_to=BackgroundPic, blank=True, null=True)
+
+    def __str__(self):
+        return str(self.talent)
+
+    def create_settings(sender, **kwargs):
+        if kwargs['created']:
+            create_settings = ProfileImages.objects.create(talent=kwargs['instance'])
+
+    post_save.connect(create_settings, sender=CustomUser)
 
 
 class IdType(models.Model):
@@ -360,11 +389,15 @@ def ExtFilename(instance, filename):
 	ext = filename.split('.')[-1]
 	return "%s/profile\%s_%s.%s" % (instance.talent.id, str(time()).replace('.','_'), random(), ext)
 
+def ExtThumbnail(instance, filename):
+	ext = filename.split('.')[-1]
+	return "%s/profile\%s_%s.%s" % (instance.talent.id, str(time()).replace('.','_'), random(), ext)
 
 class FileUpload(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
     title = models.CharField(max_length=150)
     file = models.FileField(storage=PrivateMediaStorage(), upload_to=ExtFilename, validators=[FileExtensionValidator(['pdf'])])
+    thumbnail = models.ImageField(storage=PrivateMediaStorage(), upload_to=ExtThumbnail, blank=True, null=True)
 
     def __str__(self):
         return '{}: {}'.format(self.talent, self.title)
@@ -373,6 +406,23 @@ class FileUpload(models.Model):
         self.file.delete()
         super().delete(*args, **kwargs)
 
+    def save(self, *args, **kwargs):
+        if self.upload:
+            cache_path = self.upload
+            bytes_file = bytes(cache_path.open(mode='rb').read())
+
+            images = convert_from_bytes(bytes_file)[0]
+            image = images.resize((int(260), int(360)), Image.ANTIALIAS)
+
+            quality_val = 90
+            thumb_io = BytesIO()
+            image.save(thumb_io, format='JPEG', quality=quality_val)
+
+            thumb_file = InMemoryUploadedFile(thumb_io, None, 'foo.jpg', 'image/jpeg', thumb_io.__sizeof__(), None)
+
+            self.thumbnail = thumb_file
+
+        super(FileUpload, self).save(*args, **kwargs)
 
 class PhoneNumber(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)

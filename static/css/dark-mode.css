@@ -146,7 +146,32 @@ body {
   color: #ffffff !important;
 }
 
+.profile-pic-box {
+  background-color: 	#303030 !important;
+}
+
+.profile-info-box {
+  background-color: 	#444444 !important;
+  color: #ffffff !important;
+}
+
+.profile-social-box {
+  background-color: #444444;
+}
+
 .profile-header {
+  color: #ffffff !important;
+}
+
+.carousel-control-prev {
+  color: #444444 !important;
+}
+
+.carousel-control-next {
+  color: #444444 !important;
+}
+
+.profile-header-under {
   color: #ffffff !important;
 }
 
@@ -155,5 +180,27 @@ body {
 }
 
 .profile-card-under {
+  color: #ffffff !important;
+}
+
+.profile-card-body-header {
+  color: #ffffff !important;
+}
+.profile-card-body-heading {
+  color: #ffffff !important;
+}
+.profile-body-header {
+  color: #ffffff !important;
+}
+.profile-list-header {
+  color: #ffffff !important;
+}
+.profile-list-heading {
+  color: #ffffff !important;
+}
+.profile-list-under {
+  color: #ffffff !important;
+}
+.profile-list-heading-under {
   color: #ffffff !important;
 }

@@ -118,9 +118,10 @@ class DateInput(forms.DateInput):
 class VacancyRateForm(forms.ModelForm):
     class Meta:
         model = VacancyRate
-        fields = ('rate_1', 'rate_2', 'rate_3', 'comment', 'suggestions',)
+        fields = ('rate_1', 'rate_2', 'rate_3', 'comment', 'personal_comment', 'suggestions',)
         labels = {
-            'comment': 'My Comments',
+            'comment': 'Talent Public Commendation ',
+            'personal_comment': 'Personal Comments',
         }
 
 #Talent rating the employer

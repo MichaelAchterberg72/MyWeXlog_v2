@@ -1,0 +1,100 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+
+{% block title %}{{block.super}}-Achievements List{% endblock title %}
+
+{% block content %}
+</div>
+<div class="jumbotron public-profile-jumbotron-header" style="color:#000;background-color:#303030">
+  <div class="row">
+    <div class="col-md-2">
+    </div>
+    <div class="col-md-8">
+      <h4 class="profile-header" id="top" style="color:#fff;">MyWexlog Public Profile<br>{{ pfl.f_name }} {{ pfl.l_name }}</h4>
+    </div>
+    <div class="col-md-2 my-auto">
+      <div class="container ">
+        <a href="{% url 'Talent:PublicProfile' ppl %}?next={{ request.path|urlencode }}#achievements" class="btn btn-primary float-right">Back</a>
+      </div>
+    </div>
+  </div>
+</div>
+    <br>
+    <div class="container">
+    <div class="container">
+    <h4 class="profile-header">MyWexlog Achievements History</h4>
+    <div class="profile-card-under">{% if achievement_qs_count > 0 %}Total Achievements Made: {{ achievement_qs_count }}{% else %}No Achievements with MyWeXlog yet{% endif %}</div>
+    <br>
+    <br>
+    {% for a in pageitems %}
+    <div class="row">
+      <div class="col-md-3 border-right">
+        <div class="profile-list-header">{{ a.date_achieved|date:"j M Y" }}</div><br>
+      </div>
+      {% if e.upload %}<div class="col-md-6 border-left">{% else %}<div class="col-md-9 border-left">{% endif %}
+        <div class="col-md-12">
+          <div class="profile-list-heading">{{ a.achievement }}</div><br>
+          <div>{{ a.description|linebreaks }}</div>
+        </div>
+        <br><br><br>
+      </div>
+    {% if e.upload %}
+    <div class="col-md-3 border-left">
+      <div class="row pt-3 h-100 my-auto">
+        <div class="col-md-12 text-center">
+          <a href="{{ e.upload.url }}" target="_blank">
+          <img src="{{ e.thumbnail.url }}" alt="{{ e.achievement }}" height="340" width="260"></a>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+    {% endfor %}
+  </div>
+</div>
+</div>
+<br>
+<div class="container">
+
+<div class="row header-border">
+  <div class="col-md-12">
+    <nav aria-label="Page navigation">
+        {% if pageitems.has_other_pages %}
+          <ul class="pagination">
+            {% if pageitems.has_previous %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ pageitems.previous_page_number }}" aria-label="Previous">
+                  <span aria-hidden="true">Previous</span>
+                  <span class="sr-only disabled">Previous</span>
+                </a></li>
+            {% else %}
+              <li class="page-link disabled" tabindex="-1"><span>Previous</span></li>
+            {% endif %}
+
+            {% if pageitems.number|add:'-4' > 1 %}
+              <li class="page-link"><a href="?page={{ pageitems.number|add:'-5' }}">&hellip;</a></li>
+            {% endif %}
+
+            {% for i in pageitems.paginator.page_range %}
+              {% if pageitems.number == i %}
+                <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
+              {% elif i > pageitems.number|add:'-5' and i < pageitems.number|add:'5' %}
+                <li class="page-link"><a class="page-item" href="?page={{ i }}">{{ i }}</a></li>
+              {% endif %}
+            {% endfor %}
+
+            {% if pageitems.paginator.num_pages > pageitems.number|add:'4' %}
+              <li class="page-link"><a href="?page={{ pageitems.number|add:'5' }}">&hellip;</a></li>
+            {% endif %}
+
+            {% if pageitems.has_next %}
+              <li class="page-link"><a href="?page={{ pageitems.next_page_number }}">Next</a></li>
+            {% else %}
+              <li class="page-link disabled"><span>Next</span></li>
+            {% endif %}
+          </ul>
+        {% endif %}
+    </nav>
+  </div>
+</div>
+{% endblock content %}

@@ -17,10 +17,10 @@
           <h5 class="card-title">Basic Information <a href="{% url 'Profile:ProfileEdit' d.alias %}" class="badge badge-secondary float-right">Edit</a></h5>
           <p class="card-text">Name: {{ user_info.first_name }} {{ user_info.last_name }}</p>
           <p class="card-text">
-            Display name: {{ user_info.alias }}
+            Date of Birth: {{ d.birth_date|date:"j M Y" }}
           </p>
           <p class="card-text">
-            Date of Birth: {{ d.birth_date|date:"j M Y" }}
+            Display name: {{ user_info.alias }}
           </p>
           <p class="card-text">
             Profile email: {{ request.user.email }}
@@ -117,6 +117,25 @@
 
   <div class="card card-shadow">
     <div class="card-body">
+      <h5 class="card-title">Public Profile <a href="{% url 'Profile:PublicProfileNameEdit' request.user.alias %}" class="badge badge-primary float-right">Edit</a></h5>
+      <p class="card-text">
+        Public profile name: {{ user_info.public_profile_name }}
+      </p>
+      <p class="card-text">
+        Permit viewing of profile as reference:
+        {% if user_info.permit_viewing_of_profile_as_reference %}
+          <i class="fa fa-check-square-o" aria-hidden="true" style="font-size:2rem;padding-left:2rem;"></i>
+        {% else %}
+          <i class="fa fa-square-o" aria-hidden="true" style="font-size:2rem;padding-left:2rem;"></i>
+        {% endif %}
+      </p>
+      <div class="card-footer bg-transparent border-success"></div>
+      <h5 class="card-title" id="email">Public Profile Intro<a href="{% url 'Profile:PublicProfileIntroEdit' d.alias %}?next={{ request.path|urlencode }}" class="badge badge-primary float-right">Edit</a></h5>
+      <small>(max 460 characters)</small>
+      <p class="card-text">
+        {{ d.public_profile_intro|linebreaks }}
+      </p>
+      <div class="card-footer bg-transparent border-success"></div>
       <h5 class="card-title" id="email">Email addresses <a href="{% url 'Profile:EmailEdit' d.alias %}?next={{ request.path|urlencode }}" class="badge badge-primary float-right">Add</a></h5>
       <h6>Past (No longer active)</h6>
       {% for e in email %}
@@ -155,6 +174,31 @@
     </div>
   </div>
 </div>
+<br>
+<div class="card-group">
+  <div class="card card-shadow">
+    <div class="card-body">
+      <h5 class="card-title" id="pics">Profile Pictures</h5>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="float-right">
+            <a href="{% url 'Profile:ProfilePicEdit' tlt %}" class="badge badge-primary">Edit</a>
+          </div>
+          <h5>Profile Picture</h5>
+          <img src="{{ pics.profile_pic.url }}" height="240" width="240">
+          {{ pics.profile_pic.height }}
+        </div>
+        <div class="col-md-9">
+          <div class="float-right">
+            <a href="{% url 'Profile:ProfileBackgroundPicEdit' tlt %}" class="badge badge-primary">Edit</a>
+          </div>
+          <h5>Profile Background Picture</h5>
+          <img src="{{ pics.profile_background.url }}" height="240" width="790">
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
 <br>
 <div class="card-group">
   <div class="card card-shadow">
@@ -438,7 +482,7 @@
                     {{ a.title }}
                   </div>
                   <div class="col-md-3 h-100 text-center my-auto">
-                    {{ a.genre }}
+                    {{ a.genre.all|join:", " }}
                   </div>
                   <div class="col-md-4 h-100 text-center my-auto">
                     {{ a.link }}

@@ -90,6 +90,7 @@ INSTALLED_APPS = [
     'channels',
     'paypal.standard.ipn',
     'django_celery_beat',
+    'sorl.thumbnail',
     'sri',
     'djangobower',
     'schedule',
@@ -229,33 +230,33 @@ SECURE_BROWSER_XSS_FILTER = True
     ##X-Content-Type-Options
 SECURE_CONTENT_TYPE_NOSNIFF = True
     ## X-Frame-Options (DENY, WHITELIST)
-X_FRAME_OPTIONS = 'DENY'
+# X_FRAME_OPTIONS = 'DENY'
     ##django-referrer-policy (3rd party app)
 REFERRER_POLICY='same-origin'
     ## Content-Security-policy (3rd party app)
 CSP_DEFAULT_SRC = (
-    "'self'", "'unsafe-inline'", 'SameSite', 'maxcdn.bootstrapcdn.com', 'code.jquery.com', 'cdnjs.cloudflare.com', 'fonts.googleapis.com', 'maps.googleapis.com', 'use.typekit.net', 'netdna.bootstrapcdn.com', 'w3.org', '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'kit.fontawesome.com', 'mywexlog.dev', 'bookstrapcdn.com', 'cdn.jsdelivr.net', 'ajax.googleapis.com', 'https://www.youtube.com/',
+    "'self'", "'unsafe-inline'", 'SameSite', 'maxcdn.bootstrapcdn.com', 'code.jquery.com', 'cdnjs.cloudflare.com', 'fonts.googleapis.com', 'maps.googleapis.com', 'use.typekit.net', 'netdna.bootstrapcdn.com', 'w3.org', '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'kit.fontawesome.com', 'mywexlog.dev', 'bookstrapcdn.com', 'cdn.jsdelivr.net', 'ajax.googleapis.com', 'https://www.youtube.com/', 'dot-test-machterberg.s3.amazonaws.com',
     )#app_config
 
 CSP_SCRIPT_SRC = (
-    "'self'", "'unsafe-inline'", '127.0.0.1', '107.191.57.249', 'code.jquery.com', 'maxcdn.bootstrapcdn.com', 'kit.fontawesome.com', 'app.mywexlog.dev', 'mywexlog.dev', 'cdnjs.cloudflare.com', 'maps.googleapis.com', 'bookstrapcdn.com', 'cdn.jsdelivr.net', 'cdn.jsdelivr.net', 'ajax.googleapis.com', 'cdnjs.cloudflare.com', 'apis.google.com', 'https://www.gstatic.com', 'tarruda.github.com',
+    "'self'", "'unsafe-inline'", '127.0.0.1', '107.191.57.249', 'code.jquery.com', 'maxcdn.bootstrapcdn.com', 'kit.fontawesome.com', 'app.mywexlog.dev', 'mywexlog.dev', 'cdnjs.cloudflare.com', 'maps.googleapis.com', 'bookstrapcdn.com', 'cdn.jsdelivr.net', 'cdn.jsdelivr.net', 'ajax.googleapis.com', 'cdnjs.cloudflare.com', 'apis.google.com', 'https://www.gstatic.com', 'tarruda.github.com', 'dot-test-machterberg.s3.amazonaws.com',
     )#app_config
 CSP_IMG_SRC = (
-    "'self'", '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev',
+    "'self'", '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev', 'dot-test-machterberg.s3.amazonaws.com',
     )#app_config
 CSP_OBJECT_SRC = None
 CSP_MEDIA_SRC = (
-    "'self'", '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev', 'youtube.com',
+    "'self'", '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev', 'youtube.com', 'dot-test-machterberg.s3.amazonaws.com',
     )
 CSP_FRAME_SRC = (
-    'https://www.youtube.com/', 'https://content.googleapis.com/', 'https://accounts.google.com/',
+    'https://www.youtube.com/', 'https://content.googleapis.com/', 'https://accounts.google.com/', "'self'", '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev', 'youtube.com', 'dot-test-machterberg.s3.amazonaws.com',
     )
 CSP_FONT_SRC = (
-    "'self'", 'fonts.googleapis.com', '*', 'w3.org', '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev',
+    "'self'", 'fonts.googleapis.com', '*', 'w3.org', '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev', 'dot-test-machterberg.s3.amazonaws.com',
     )#app_config
 CSP_CONNECT_SRC = None
 CSP_STYLE_SRC = (
-    "'self'", 'maxcdn.bootstrapcdn.com', 'app.mywexlog.dev', 'cdnjs.cloudflare.com', 'w3.org', '127.0.0.1', '107.191.57.249', 'fonts.googleapis.com', 'cdn.jsdelivr.net',  'stackpath.bookstrapcdn.com', "'unsafe-inline'", 'mywexlog.dev', 'https://www.gstatic.com/', 'stackpath.bootstrapcdn.com',
+    "'self'", 'maxcdn.bootstrapcdn.com', 'app.mywexlog.dev', 'cdnjs.cloudflare.com', 'w3.org', '127.0.0.1', '107.191.57.249', 'fonts.googleapis.com', 'cdn.jsdelivr.net',  'stackpath.bookstrapcdn.com', "'unsafe-inline'", 'mywexlog.dev', 'https://www.gstatic.com/', 'stackpath.bootstrapcdn.com', 'dot-test-machterberg.s3.amazonaws.com',
     )#app_config
 CSP_BASE_URI = None
 CSP_CHILD_SRC = None
@@ -360,6 +361,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
+
 USE_S3 = os.getenv('USE_S3') == False
 if USE_S3:
     # aws settings
@@ -426,34 +428,6 @@ AWS_LOCATION = 'app-static'
 # DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 # End S3 config
 
-#    STATIC_URL = '/static/'
-#    STATIC_ROOT = os.path.join(BASE_DIR, 'prod_static')
-#    MEDIA_URL = '/library/'
-#    MEDIA_ROOT = os.path.join(BASE_DIR, 'filelibrary')
-
-#STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
-
-'''
-#files for Amazon S3
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'MyWeXlog/static'),
-]
-
-AWS_ACCESS_KEY_ID = ''
-AWS_SECRET_ACCESS_KEY = ''
-AWS_STORAGE_BUCKET_NAME = ''
-AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
-
-AWS_S3_OBJECT_PARAMETERS = {
-    'CacheControl': 'max-age=86400',
-}
-
-AWS_LOCATION = 'static'
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
-
-DEFAULT_FILE_STORAGE = 'WeXlog.storage_backends.MediaStorage'
-'''
 #Crispy Forms
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
@@ -503,8 +477,10 @@ CELERY_SEND_EVENTS = True
 CELERY_TASK_ANNOTATIONS = {'tasks.add': {'rate_limit': '10/s'}}
 
     # SendGrid mail Settings
-SENDGRID_API_KEY = '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'  # MyWeXlog Domain
+SENDGRID_API_KEY = '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' #.com site
+# SENDGRID_API_KEY = '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'  # .dev site Domain
 # SENDGRID_API_KEY = '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'  # Test machterberg@devoptec.com single sender auth
 
-SENDGRID_FROM_EMAIL = 'mywexloginfo@mywexlog.dev'    #
+SENDGRID_FROM_EMAIL = 'mywexloginfo@mywexlog.com'
+# SENDGRID_FROM_EMAIL = 'mywexloginfo@mywexlog.dev'    #
 # SENDGRID_FROM_EMAIL = 'machterberg@devoptec.com'

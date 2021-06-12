@@ -46,22 +46,27 @@
         </tbody>
       </table>
       <hr>
-      <h6><strong>My Comments</strong></h6>
+      <h6><strong>My Commendations for Talent</strong></h6>
       <div class="container">
-        <p>{{ emp_qs.comment }}</p>
+        <p>{{ emp_qs.comment|linebreaks }}</p>
+      </div>
+      <hr>
+      <h6><strong>My Personal Comments</strong></h6>
+      <div class="container">
+        <p>{{ emp_qs.personal_comment|linebreaks }}</p>
       </div>
       <hr>
       <h6><strong>My Suggestions to Talent</strong></h6>
       <div class="container">
-        <p>{{ emp_qs.suggestions }}</p>
+        <p>{{ emp_qs.suggestions|linebreaks }}</p>
       </div>
       <hr>
-      <h6><strong> Suggestions for Me</strong></h6>
+      <h6><strong>Talent Suggestions for Me</strong></h6>
       <div class="container">
         {% if tlt_qs == 0 %}
           <p>None - Talent has not posted any suggestions at this time</p>
         {% else %}
-          <p>{{ tlt_qs.suggestions }}</p>
+          <p>{{ tlt_qs.suggestions|linebreaks }}</p>
         {% endif %}
       </div>
   </div>

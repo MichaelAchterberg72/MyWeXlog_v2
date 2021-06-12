@@ -267,8 +267,12 @@
 
 {% block TBA %}
   <div class="text-center">
+    <a href="{% url 'Talent:PublicProfile' request.user.public_profile_name %}?next={{ request.path|urlencode }}" target="_blank">
+      <i class="fa fa-map-marker" style="font-size:30px;color:black" data-toggle="tooltip" title="Public Profile"></i>
+    </a>
+    &nbsp &nbsp
     <a href="{% url 'Talent:APV' tlt=request.user.alias vac='1ad9t2' %}?next={{ request.path|urlencode }}" target="_blank">
-      <i class="fa fa-id-badge" aria-hidden="true"style="font-size:30px;color:black" data-toggle="tooltip" data-placement="top" title="Public Profile"></i>
+      <i class="fa fa-id-badge" aria-hidden="true"style="font-size:30px;color:black" data-toggle="tooltip" data-placement="top" title="Application Profile"></i>
     </a>
     &nbsp &nbsp
     <a href="{% url 'Talent:DPCSum' tlt %}?next={{ request.path|urlencode }}">
@@ -586,9 +590,9 @@
   </div>
 </div>
 <br>
-
+</div>
 {% if assigned_tlt or assigned_emp %}
-<div class="">
+<div class="container">
 <div class="card card-shadow">
   <div class="card-body">
     <h4 class="card-title" id="Assignment">Assignments<span><p class="float-right">
