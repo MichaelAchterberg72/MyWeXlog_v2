@@ -21,7 +21,7 @@ class ProjectSearchFieldMixin:
         'name__icontains', 'pk__startswith', 'company__ename__icontains', 'region__region__icontains', 'city__city__icontains',
     ]
 
-    dependent_fields = {'companybranch': 'companybranch'}
+#    dependent_fields = {'companybranch': 'companybranch'}
 
 class ProjectSelect2Widget(ProjectSearchFieldMixin, ModelSelect2Widget):
     model = ProjectData
