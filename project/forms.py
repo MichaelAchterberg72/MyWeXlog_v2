@@ -49,7 +49,7 @@ class BranchSelect2Widget(BranchSearchFieldMixin, ModelSelect2Widget):
 
 class CompanySearchFieldMixin:
     search_fields = [
-        'name__icontains', 'pk__startswith'
+        'ename__icontains', 'pk__startswith'
     ]
 class CompanySelect2Widget(CompanySearchFieldMixin, ModelSelect2Widget):
     model = Enterprise
@@ -142,7 +142,7 @@ class ProjectForm(forms.ModelForm):
             'companybranch': BranchSelect2Widget(),
         }
 
-        
+
 class ProjectFullAddForm(forms.ModelForm):
     '''This form is used when adding a full project'''
     class Meta:
