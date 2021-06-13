@@ -80,7 +80,7 @@ def UpdateSubscriptionPaidDate():
                         SubscriptionExpiredTask.delay(username.pk)
 
             elif username.paid_type == 2:
-                if username.paid_date == None or username.paid_date <= datetime.now() - six_monthly:
+                if username.paid_date == None or username.paid_date <= timezone.now() - six_monthly:
                     username.paid = False
                     username.subscription = 0
                     if username.free_month == True:
@@ -92,7 +92,7 @@ def UpdateSubscriptionPaidDate():
                     SubscriptionExpiredTask.delay(username.pk)
 
             elif username.paid_type == 3:
-                if username.paid_date == None or username.paid_date <= datetime.now() - twelve_monthly:
+                if username.paid_date == None or username.paid_date <= timezone.now() - twelve_monthly:
                     username.paid = False
                     username.subscription = 0
                     if username.free_month == True:
