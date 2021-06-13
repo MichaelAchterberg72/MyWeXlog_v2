@@ -193,3 +193,6 @@ class AddProjectPersonalDetailsForm(forms.ModelForm):
         labels = {
             'company' : 'Company you are working for on the project',
         }
+        help_texts = {
+            'project' : '*Enter either the project owner, project name, region or city of the project',
+        }
