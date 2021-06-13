@@ -65,6 +65,11 @@ class CustomUser(AbstractUser):
             self.public_profile_name = f'{create_code16(self)}-{self.first_name.lower()}{self.last_name.lower()}'
 
         super(CustomUser, self).save(*args, **kwargs)
+#    def create_settings(sender, **kwargs):
+#        if kwargs['created']:
+#            create_settings = CustomUser.objects.create(talent=kwargs['instance'])
+#
+#    post_save.connect(create_settings, sender=CustomUser)
 
 @receiver(user_signed_up)
 def after_signup(request, user, **kwargs):
