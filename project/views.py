@@ -217,13 +217,13 @@ def edit_billing_rate_pd(request, pb, ppdts, prj, co, bch):
     pb_qs = ProjectTaskBilling.objects.get(pk=pb)
     ppdt_qs = ProjectPersonalDetailsTask.objects.get(slug=ppdts)
 
-    form = ProjectPersonalDetailsTaskBillingForm(request.POST or None)
+    form = ProjectPersonalDetailsTaskBillingForm(request.POST or None, instance=pb_qs)
     if request.method == 'POST':
         if form.is_valid():
             new = form.save(commit=False)
             new.talent = request.user
             new.ppdt = ppdt_qs
-            query = new.cleaned_data['date_start']
+            query = form.cleaned_data['date_start']
             pb_qs.current = False
             pb_qs.date_end = query - datetime.timedelta(days=1)
             new.save()
@@ -231,11 +231,11 @@ def edit_billing_rate_pd(request, pb, ppdts, prj, co, bch):
             return redirect(reverse('Project:ProjectPersonal', kwargs={'prj': prj, 'co': co, 'bch': bch}))
         else:
             template_name = 'project/edit_project_task_billing.html'
-            context = {'form': form, 'prj': prj, 'co': co, 'bch': bch}
+            context = {'form': form, 'qs': ppdt_qs, 'prj': prj, 'co': co, 'bch': bch}
             return render(request, template_name, context)
     else:
         template_name = 'project/edit_project_task_billing.html'
-        context = {'form': form, 'prj': prj, 'co': co, 'bch': bch}
+        context = {'form': form, 'qs': ppdt_qs, 'prj': prj, 'co': co, 'bch': bch}
         return render(request, template_name, context)
 
 
@@ -250,7 +250,7 @@ def edit_billing_rate_fl(request, pb, ppds, ppdts, prj, co, bch):
             new = form.save(commit=False)
             new.talent = request.user
             new.ppdt = ppdt_qs
-            query = new.cleaned_data['date_start']
+            query = form.cleaned_data['date_start']
             pb_qs.current = False
             pb_qs.date_end = query - datetime.timedelta(days=1)
             new.save()
@@ -732,8 +732,8 @@ def ProjectTaskBillingAddView(request, ppdt):
             instance=form.save(commit=False)
             instance.talent=request.user
             instance.ppdt=qs
-            instance_start = instance.cleaned_data['start_date']
-            instance_end = instance.cleaned_data['end_date']
+            instance_start = form.cleaned_data['date_start']
+            instance_end = form.cleaned_data['date_end']
             instance.save()
             qs.start_date=instance_start
             qs.end_date=instance_end

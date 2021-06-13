@@ -112,7 +112,7 @@
           <div class="col-md-2 h-100 text-center my-auto">
             {{ task.currency.currency_abv }}{{ task.billing_rate }} {{ task.get_rate_unit_display }}
           </div>
-          <div class="col-md-2 h-100 text-center my-auto">
+          <div class="col-sm-2 col-no-pad h-100 text-center my-auto">
             <div class="row">
             {% if task.current == True %}
               <div class="btn-group mr-2" role="group" aria-label="First group">
@@ -133,9 +133,11 @@
                 </form>
               </div>
             {% endif %}
-              <a href="{% url 'Project:EditProjectTaskBilling' task.pk task.ppdt.slug prj co bch %}" data-toggle="tooltip" title="Click to edit this project task">
-                <i class="fa fa-pencil-square-o" style="font-size:2rem;color:black;" aria-hidden="true"></i>
-              </a>
+              <div class="">
+                <a href="{% url 'Project:EditProjectTaskBilling' task.pk task.ppdt.slug prj co bch %}" data-toggle="tooltip" title="Click to edit this project task">
+                  <i class="fa fa-pencil-square-o" style="font-size:2rem;color:black;" aria-hidden="true"></i
+                </a>
+              </div>      
             </div>
           </div>
         </div>

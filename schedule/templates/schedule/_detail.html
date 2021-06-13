@@ -32,12 +32,25 @@
                 {% endif %}
             {% endif %}
         </table>
+        {% if occurrence.companybranch %}
+        <h3>{% trans "Company Branch" %}</h3>
+        <p>{{occurrence.companybranch}}</p>
+        {% endif %}
+        {% if occurrence.project_data %}
+        <h3>{% trans "Personal Project" %}</h3>
+        <p>{{occurrence.project_data}}</p>
+        {% endif %}
+        {% if occurrence.task %}
+        <h3>{% trans "Task" %}</h3>
+        <p>{{occurrence.task}}</p>
+        {% endif %}
         {% if occurrence.description %}
         <h3>{% trans "Description" %}</h3>
         <p>{{occurrence.description}}</p>
         {% endif %}
       </div>
       <div class="modal-footer">
+        <a href="{% url 'edit_event' calendar.slug occurrence.event.id %}" class="btn btn-primery float-left">{% trans "Edit" %}</a>
        <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</button>
       </div>
     </div>

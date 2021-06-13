@@ -6,6 +6,8 @@ from schedule.widgets import ColorInput
 from project.models import ProjectPersonalDetails
 from enterprises.models import Branch
 
+from talenttrack.forms import ProjectSelect2Widget
+
 
 class SpanForm(forms.ModelForm):
     start = forms.SplitDateTimeField(label=_("start"))
@@ -43,7 +45,7 @@ class EventForm(SpanForm):
         model = Event
         exclude = ("creator", "created_on", "calendar")
         widgets={
-#            'project': ProjectSelect2Widget(),
+            'project_data': ProjectSelect2Widget(),
 #            'start': DateInput(),
 #            'end': DateInput(),
 #            'skills': SkillModelSelect2MultipleWidget(),
@@ -55,7 +57,7 @@ class OccurrenceForm(SpanForm):
         model = Occurrence
         exclude = ("original_start", "original_end", "event", "cancelled")
         widgets={
-#            'project': ProjectSelect2Widget(),
+            'project_data': ProjectSelect2Widget(),
 #            'start': DateInput(),
 #            'end': DateInput(),
 #            'skills': SkillModelSelect2MultipleWidget(),

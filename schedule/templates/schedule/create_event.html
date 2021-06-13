@@ -1,5 +1,6 @@
 {% extends "base_home.html" %}
 {% load crispy_forms_tags %}
+{% load static %}
 {% load i18n %}
 
 {% block content %}
@@ -9,7 +10,25 @@
 <form action="" method="post">
   {% csrf_token %}
   <table>
-    {{ form|crispy }}
+    {{ form.start|as_crispy_field }}
+    {{ form.end|as_crispy_field }}
+    {{ form.title|as_crispy_field }}
+    {{ form.description|as_crispy_field }}
+    {{ form.companybranch|as_crispy_field }}
+    {{ form.project_data|as_crispy_field }}
+    <div class="form-group col-md-4 mb-0">
+      <p>
+        <a href="{% url 'Project:ProjectPersonalAddPop' %}" id='add_project' onclick='return showAddPopup(this);'>
+        <img src = "{% static 'images/icon-addlink.svg' %}">
+          Add Project
+        </a>
+      </p>
+    </div>
+    {{ form.task|as_crispy_field }}
+    {{ form.skills|as_crispy_field }}
+    {{ form.rule|as_crispy_field }}
+    {{ form.end_recurring_period|as_crispy_field }}
+    {{ form.color_event|as_crispy_field }}
   </table>
   <br>
   <input class="btn btn-primary" type="submit" value="{% trans "Save" %}">
@@ -17,4 +36,23 @@
 </form>
 </div>
 </div>
+<!-- code for popups -->
+<script type="text/javascript">
+function showAddPopup(triggeringLink) {
+    var name = triggeringLink.id.replace(/^add_/, '');
+    href = triggeringLink.href;
+    var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes');
+    win.focus();
+    return false;
+}
+
+function closePopup(win, newID, newRepr, id) {
+    $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
+    win.close();
+}
+
+window.onerror = function (msg) {
+  $("body").attr("JSError", msg);
+}
+</script>
 {% endblock %}

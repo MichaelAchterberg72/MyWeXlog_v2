@@ -63,7 +63,7 @@ class Event(models.Model):
     title = models.CharField(_("title"), max_length=255)
     description = models.TextField(_("description"), blank=True)
     companybranch = models.ForeignKey(Branch, on_delete=models.PROTECT, blank=True, null=True, verbose_name='Branch Working for on Project')
-    project = models.ForeignKey(ProjectPersonalDetails, on_delete=models.SET_NULL, blank=True, null=True)
+    project_data = models.ForeignKey(ProjectPersonalDetails, on_delete=models.SET_NULL, blank=True, null=True, verbose_name='Personal Project Details')
     task = models.ForeignKey(ProjectPersonalDetailsTask, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Tasks")
     skills = models.ManyToManyField(SkillTag, blank=True, related_name='event_experience')
     creator = models.ForeignKey(
@@ -594,7 +594,7 @@ class Occurrence(models.Model):
     title = models.CharField(_("title"), max_length=255, blank=True)
     description = models.TextField(_("description"), blank=True)
     companybranch = models.ForeignKey(Branch, on_delete=models.PROTECT, verbose_name='Branch Working for on Project', null=True)
-    project = models.ForeignKey(ProjectPersonalDetails, on_delete=models.SET_NULL, null=True)
+    project_data = models.ForeignKey(ProjectPersonalDetails, on_delete=models.SET_NULL, null=True, verbose_name='Personal Project Details')
     task = models.ForeignKey(ProjectPersonalDetailsTask, on_delete=models.SET_NULL, null=True, verbose_name="Tasks")
     skills = models.ManyToManyField(SkillTag, related_name='occurance_experience')
     start = models.DateTimeField(_("start"), db_index=True)
