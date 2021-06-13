@@ -407,8 +407,8 @@ class FileUpload(models.Model):
         super().delete(*args, **kwargs)
 
     def save(self, *args, **kwargs):
-        if self.upload:
-            cache_path = self.upload
+        if self.file:
+            cache_path = self.file
             bytes_file = bytes(cache_path.open(mode='rb').read())
 
             images = convert_from_bytes(bytes_file)[0]
