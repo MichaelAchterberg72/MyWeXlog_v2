@@ -287,18 +287,17 @@
 {% if upload %}
 <div class="row">
   <div class="col-md-12 profile-uploads-box text-center align-items-top h-100">
-    <strong>Uploaded Files: </strong><br>
-    <div class="row pt-3 h-100 my-auto">
-      <div class="d-flex justify-content-center">
-        {% for file in upload %}
-          <div class="col-md-2 text-left my-auto">
-            <a href="{{ file.file.url }}" class="btn btn-primary btn-lg" target="_blank">{{ file.title}}</a>&nbsp
-          </div>
-          {% endfor %}
+    <h4 class="profile-header" id="lcm">Uploaded Files</h4><br>
+    <div class="row pt-3 h-100 my-auto d-flex justify-content-around">
+      {% for file in upload %}
+        <div class="col-md-3 text-center">
+          <a href="{{ file.file.url }}" target="_blank">
+          <img src="{{ file.thumbnail.url }}" alt="{{ file.title }}" height="400" width="300" style="top:0px;"></a>
         </div>
-      </div>
+      {% endfor %}
     </div>
   </div>
+</div>
   {% endif %}
   <br><br><br>
 <div class="row">
@@ -1884,7 +1883,7 @@ background-color:transparent;
         <br><br><br>
         </div>
         {% if e.upload %}
-        <div class="col-md-3 border-left">
+        <div class="col-md-3">
           <div class="row pt-3 h-100 my-auto">
             <div class="col-md-12 text-center">
               <a href="{{ e.upload.url }}" target="_blank">
@@ -1917,19 +1916,19 @@ background-color:transparent;
         <div class="col-md-3 border-right">
           <div class="profile-list-header">{{ a.date_achieved|date:"j M Y" }}</div><br>
         </div>
-        {% if e.upload %}<div class="col-md-6 border-left">{% else %}<div class="col-md-9 border-left">{% endif %}
+        {% if a.upload %}<div class="col-md-6 border-left">{% else %}<div class="col-md-9 border-left">{% endif %}
           <div class="col-md-12">
             <div class="profile-list-heading">{{ a.achievement }}</div><br>
             <div>{{ a.description|linebreaks }}</div>
           </div>
           <br><br><br>
         </div>
-      {% if e.upload %}
-      <div class="col-md-3 border-left">
+      {% if a.upload %}
+      <div class="col-md-3">
         <div class="row pt-3 h-100 my-auto">
           <div class="col-md-12 text-center">
-            <a href="{{ e.upload.url }}" target="_blank">
-            <img src="{{ e.thumbnail.url }}" alt="{{ e.achievement }}" height="340" width="260"></a>
+            <a href="{{ a.upload.url }}" target="_blank">
+            <img src="{{ a.thumbnail.url }}" alt="{{ a.achievement }}" height="340" width="260"></a>
           </div>
         </div>
       </div>
@@ -1972,7 +1971,7 @@ background-color:transparent;
     <br><br><br>
   </div>
 {% if a.upload %}
-<div class="col-md-3 border-left">
+<div class="col-md-3">
   <div class="row pt-3 h-100 my-auto">
     <div class="col-md-12 text-center">
       <a href="{{ a.upload.url }}" target="_blank">
@@ -2029,7 +2028,7 @@ background-color:transparent;
           <br><br><br>
         </div>
       {% if a.upload %}
-      <div class="col-md-3 border-left">
+      <div class="col-md-3">
         <div class="row pt-3 h-100 my-auto">
           <div class="col-md-12 text-center">
             <a href="{{ a.upload.url }}" target="_blank">
