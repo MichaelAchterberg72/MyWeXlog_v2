@@ -288,20 +288,16 @@
 <div class="row">
   <div class="col-md-12 profile-uploads-box text-center align-items-top h-100">
     <h4 class="profile-header" id="lcm">Uploaded Files</h4><br>
-    <div class="row pt-3 h-100 my-auto">
-      <div class="d-flex justify-content-center">
-        <div class="row pt-3 h-100 mx-auto d-flex justify-content-center text-center">
-        {% for file in upload %}
-            <div class="col-md-3 text-center">
-              <a href="{{ file.file.url }}" target="_blank">
-              <img src="{{ file.thumbnail.url }}" alt="{{ file.title }}" height="400" width="300" style="top:0px;"></a>
-            </div>
-          {% endfor %}
-          </div>
+    <div class="row pt-3 h-100 my-auto d-flex justify-content-around">
+      {% for file in upload %}
+        <div class="col-md-3 text-center">
+          <a href="{{ file.file.url }}" target="_blank">
+          <img src="{{ file.thumbnail.url }}" alt="{{ file.title }}" height="400" width="300" style="top:0px;"></a>
         </div>
-      </div>
+      {% endfor %}
     </div>
   </div>
+</div>
   {% endif %}
   <br><br><br>
 <div class="row">
