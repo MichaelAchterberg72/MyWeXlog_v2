@@ -137,7 +137,7 @@ class DesignationSelect2Widget(DesignationSearchFieldMixin, ModelSelect2Widget):
 
 class ProjectSearchFieldMixin:
     search_fields = [
-        'project__name__icontains', 'companybranch__name__icontains', 'pk__startswith', 'company__ename__icontains', 'companybranch__region__region__icontains', 'companybranch__city__city__icontains',
+        'project__name__icontains', 'project__company__ename__icontains', 'companybranch__name__icontains', 'pk__startswith', 'company__ename__icontains', 'companybranch__region__region__icontains', 'companybranch__city__city__icontains',
     ]
 
     dependent_fields = {'companybranch': 'companybranch'}
@@ -303,7 +303,10 @@ class PreLoggedExperienceForm(forms.ModelForm):
             'companybranch': 'Branch',
             'project_data': 'On Project'
         }
-
+        help_texts = {
+            'project_data': 'Search by project name, company name or branch, region or city',
+        }
+        
     def clean_date_to(self):
         '''Ensures the end date is after the begin date and before current date'''
         date_to = self.cleaned_data.get("date_to")
@@ -575,7 +578,10 @@ class WorkExperienceForm(forms.ModelForm):
             'comment': 'Comment (Optional)',
             'project_data': 'On Project'
         }
-
+        help_texts = {
+            'project_data': 'Search by project name, company name or branch, region or city',
+        }
+        
     def clean_date_to(self):
         '''Ensures the end date is after the begin date and before current date'''
         date_to = self.cleaned_data.get("date_to")
