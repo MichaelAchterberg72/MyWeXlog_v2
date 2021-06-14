@@ -269,6 +269,26 @@ def FullBranchAddView(request):
 
 @login_required()
 @csp_exempt
+def FullBranchAddPopupView(request):
+    form = FullBranchHome(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.save()
+            return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_companybranch");</script>' % (instance.pk, instance))
+        else:
+            context = {'form': form}
+            template = 'enterprises/full_branch_add_popup.html'
+            return render(request, template, context)
+
+    else:
+        context = {'form': form}
+        template = 'enterprises/full_branch_add_popup.html'
+        return render(request, template, context)
+
+
+@login_required()
+@csp_exempt
 def EnterpriseAddView(request):
     form = EnterprisePopupForm(request.POST or None)
     #form_b = BranchForm(request.POST or None)

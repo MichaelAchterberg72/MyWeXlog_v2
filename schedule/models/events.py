@@ -618,8 +618,8 @@ class Occurrence(models.Model):
             self.description = self.event.description
         if not self.companybranch and self.event_id:
             self.companybranch = self.event.companybranch
-        if not self.project and self.event_id:
-            self.project = self.event.project
+        if not self.project_data and self.event_id:
+            self.project_data = self.event.project_data
         if not self.task and self.event_id:
             self.task = self.event.task
 #        if not self.skills and self.event_id:

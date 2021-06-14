@@ -137,7 +137,7 @@ class DesignationSelect2Widget(DesignationSearchFieldMixin, ModelSelect2Widget):
 
 class ProjectSearchFieldMixin:
     search_fields = [
-        'project__name__icontains', 'companybranch__name__icontains', 'pk__startswith', 'company__ename__icontains', 'companybranch__region__region__icontains', 'companybranch__city__city__icontains',
+        'project__name__icontains', 'project__company__ename__icontains', 'companybranch__name__icontains', 'pk__startswith', 'company__ename__icontains', 'companybranch__region__region__icontains', 'companybranch__city__city__icontains',
     ]
 
     dependent_fields = {'companybranch': 'companybranch'}
@@ -302,6 +302,9 @@ class PreLoggedExperienceForm(forms.ModelForm):
         lables = {
             'companybranch': 'Branch',
             'project_data': 'On Project'
+        }
+        help_texts = {
+            'project_data': 'Search by project name, company name or branch, region or city',
         }
 
     def clean_date_to(self):
@@ -574,6 +577,9 @@ class WorkExperienceForm(forms.ModelForm):
             'upload': 'Upload File (Optional)',
             'comment': 'Comment (Optional)',
             'project_data': 'On Project'
+        }
+        help_texts = {
+            'project_data': 'Search by project name, company name or branch, region or city',
         }
 
     def clean_date_to(self):

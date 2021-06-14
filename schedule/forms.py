@@ -50,7 +50,9 @@ class EventForm(SpanForm):
 #            'end': DateInput(),
 #            'skills': SkillModelSelect2MultipleWidget(),
         }
-
+        help_texts = {
+            'project_data': 'Search by project name, company name or branch, region or city',
+        }
 
 class OccurrenceForm(SpanForm):
     class Meta:
@@ -62,7 +64,9 @@ class OccurrenceForm(SpanForm):
 #            'end': DateInput(),
 #            'skills': SkillModelSelect2MultipleWidget(),
         }
-
+        help_texts = {
+            'project_data': 'Search by project name, company name or branch, region or city',
+        }
 
 class EventAdminForm(forms.ModelForm):
     class Meta:

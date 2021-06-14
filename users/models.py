@@ -120,10 +120,7 @@ class CustomUserSettings(models.Model):
             instance.save()
 
     post_save.connect(create_public_profile_name, sender=CustomUser)
-<<<<<<< HEAD
-=======
 
->>>>>>> 2021-02-Mike-Profile
 
 class ExpandedView(models.Model):
     talent = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
