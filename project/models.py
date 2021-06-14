@@ -5,6 +5,7 @@ from django_countries.fields import CountryField
 
 from enterprises.models import Enterprise, Industry, Branch
 from locations.models import Currency, City, Region
+from db_flatten.models import SkillTag
 
 
 from Profile.utils import create_code9
@@ -65,6 +66,7 @@ class ProjectPersonalDetailsTask(models.Model):
     client = models.ForeignKey(Branch, on_delete=models.SET_NULL, null=True, related_name="Client")
     task = models.CharField(max_length=50, null=True, blank=True)
     description = models.TextField(blank=True, null=True)
+    skills = models.ManyToManyField(SkillTag, related_name='task_skills')
     date_create = models.DateField(auto_now_add=True)
     date_start = models.DateField(blank=True, null=True)
     date_end = models.DateField(blank=True, null=True)

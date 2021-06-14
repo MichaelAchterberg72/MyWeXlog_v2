@@ -91,6 +91,17 @@ class IndSelect2Widget(IndSearchFieldMixin, Select2MultipleWidget):
 
     def create_value(self, value):
         self.get_queryset().create(industry=value)
+
+class FullCompanyBranchSearchFieldMixin:
+    search_fields = [
+        'company__ename__icontains', 'pk__startswith', 'name__icontains', 'type__type__icontains', 'region__region__icontains', 'city__city__icontains',
+    ]
+
+class FullCompanyBranchSelect2Widget(FullCompanyBranchSearchFieldMixin, ModelSelect2Widget):
+    model = Branch
+
+    def create_value(self, value):
+        self.get_queryset().create(industry=value)
 #Select2<<<
 
 class BranchForm(forms.ModelForm):

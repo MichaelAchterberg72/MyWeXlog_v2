@@ -7,6 +7,7 @@ from project.models import ProjectPersonalDetails
 from enterprises.models import Branch
 
 from talenttrack.forms import ProjectSelect2Widget
+from enterprises.forms import FullCompanyBranchSelect2Widget
 
 
 class SpanForm(forms.ModelForm):
@@ -46,12 +47,14 @@ class EventForm(SpanForm):
         exclude = ("creator", "created_on", "calendar")
         widgets={
             'project_data': ProjectSelect2Widget(),
+            'companybranch': FullCompanyBranchSelect2Widget(),
 #            'start': DateInput(),
 #            'end': DateInput(),
 #            'skills': SkillModelSelect2MultipleWidget(),
         }
         help_texts = {
             'project_data': 'Search by project name, company name or branch, region or city',
+            'companybranch': 'Search by company name, branch, region or city',
         }
 
 class OccurrenceForm(SpanForm):
@@ -60,12 +63,14 @@ class OccurrenceForm(SpanForm):
         exclude = ("original_start", "original_end", "event", "cancelled")
         widgets={
             'project_data': ProjectSelect2Widget(),
+            'companybranch': FullCompanyBranchSelect2Widget(),
 #            'start': DateInput(),
 #            'end': DateInput(),
 #            'skills': SkillModelSelect2MultipleWidget(),
         }
         help_texts = {
             'project_data': 'Search by project name, company name or branch, region or city',
+            'companybranch': 'Search by company name, branch, region or city',
         }
 
 class EventAdminForm(forms.ModelForm):

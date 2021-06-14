@@ -16,6 +16,8 @@ from .models import (
 from enterprises.models import Enterprise, Industry, Branch
 from locations.models import Region, City, Suburb
 
+from talenttrack.forms import SkillModelSelect2MultipleWidget
+
 
 class DateInput(forms.DateInput):
     input_type = 'date'
@@ -186,9 +188,10 @@ class ProjectPersonalDetailsForm(forms.ModelForm):
 class ProjectPersonalDetailsTaskForm(forms.ModelForm):
     class Meta:
         model = ProjectPersonalDetailsTask
-        fields = ('client', 'task', 'description', 'date_start', 'date_end',)
+        fields = ('client', 'task', 'description', 'skills', 'date_start', 'date_end',)
         widgets = {
             'client': BranchSelect2Widget(),
+            'skills': SkillModelSelect2MultipleWidget(),
             'date_start': DateInput(),
             'date_end': DateInput(),
         }
