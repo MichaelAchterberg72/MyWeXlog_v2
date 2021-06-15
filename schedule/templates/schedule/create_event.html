@@ -31,7 +31,20 @@
       </p>
     </div>
     {{ form.task|as_crispy_field }}
+    <p><a href="{% url 'Project:AddProjectTaskPopup' form.instance.project_data.slug %}" id='add_task' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">
+          Add Task
+    </a></p>
+    {{ form.instance.task.skills.all }}
+
     {{ form.skills|as_crispy_field }}
+    {{ form.instance.skills.all }}
+    <script type="text/javascript">
+      var skills = '{{ form.instance.task.skills.all|safe }}';
+      document.getElementById('id_skills').value = skills;
+    </script>
+      <p><a href="{% url 'Flatten:SkillAddPop' %}" id='add_skill' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">
+            Add Skill
+      </a></p>
     {{ form.rule|as_crispy_field }}
     {{ form.end_recurring_period|as_crispy_field }}
     {{ form.color_event|as_crispy_field }}

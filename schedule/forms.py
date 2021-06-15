@@ -1,13 +1,36 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
+from django_select2.forms import (
+    ModelSelect2TagWidget, ModelSelect2Widget, Select2MultipleWidget,
+    Select2Widget
+)
+
 from schedule.models import Event, Occurrence
 from schedule.widgets import ColorInput
-from project.models import ProjectPersonalDetails
+from project.models import ProjectPersonalDetails, ProjectPersonalDetailsTask
 from enterprises.models import Branch
 
-from talenttrack.forms import ProjectSelect2Widget
+from talenttrack.forms import ProjectSelect2Widget, SkillModelSelect2MultipleWidget
 from enterprises.forms import FullCompanyBranchSelect2Widget
+
+
+class DateInput(forms.DateInput):
+    input_type = 'date'
+
+
+class ProjectPersonalTaskSearchFieldMixin:
+    search_fields = [
+        'task__icontains', 'pk__startswith', 'ppd__project__company__ename__icontains', 'company__company__ename__icontains', 'client__name__icontains',
+    ]
+
+    dependent_fields = {'ppd': 'ppd'}
+
+class ProjectPersonalTaskSelect2Widget(ProjectPersonalTaskSearchFieldMixin, ModelSelect2Widget):
+    model = ProjectPersonalDetailsTask
+
+    def create_value(self, value):
+        self.get_queryset().create(name=value)
 
 
 class SpanForm(forms.ModelForm):
@@ -48,13 +71,16 @@ class EventForm(SpanForm):
         widgets={
             'project_data': ProjectSelect2Widget(),
             'companybranch': FullCompanyBranchSelect2Widget(),
-#            'start': DateInput(),
-#            'end': DateInput(),
-#            'skills': SkillModelSelect2MultipleWidget(),
+            'task': ProjectPersonalTaskSelect2Widget(),
+            'start': DateInput(),
+            'end': DateInput(),
+            'skills': SkillModelSelect2MultipleWidget(),
+            'end_recurring_period': DateInput(),
         }
         help_texts = {
             'project_data': 'Search by project name, company name or branch, region or city',
             'companybranch': 'Search by company name, branch, region or city',
+            'tasks': 'Search by task, company name or client name',
         }
 
 class OccurrenceForm(SpanForm):
@@ -64,13 +90,16 @@ class OccurrenceForm(SpanForm):
         widgets={
             'project_data': ProjectSelect2Widget(),
             'companybranch': FullCompanyBranchSelect2Widget(),
-#            'start': DateInput(),
-#            'end': DateInput(),
-#            'skills': SkillModelSelect2MultipleWidget(),
+            'task': ProjectPersonalTaskSelect2Widget(),
+            'start': DateInput(),
+            'end': DateInput(),
+            'skills': SkillModelSelect2MultipleWidget(),
+            'end_recurring_period': DateInput(),
         }
         help_texts = {
             'project_data': 'Search by project name, company name or branch, region or city',
             'companybranch': 'Search by company name, branch, region or city',
+            'tasks': 'Search by task, company name or client name',
         }
 
 class EventAdminForm(forms.ModelForm):

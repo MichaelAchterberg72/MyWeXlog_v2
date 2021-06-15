@@ -1,4 +1,4 @@
-{% extends 'base_home.html' %}
+{% extends 'base_homelite.html' %}
 
 {% load static %}
 {% load crispy_forms_tags %}
@@ -9,7 +9,7 @@
 
 <div class="card card-shadow">
   <div class="card-body">
-    <h4>Add New Billing Rate for:<br>
+    <h4>Add Billing Rate for:<br>
     {{ qs.ppd.company }} {{ qs.ppd.project }}-{{ qs.task }}
     <span>
       <p class="float-right">
@@ -20,38 +20,36 @@
     </span>
   </h4>
   <div class="card-body">
-    <form class="" action="" method="POST" id="">
+    <form class="" action="" method="POST" id="ProjectPersonalDetailsTaskBillingForm">
       {% csrf_token %}
       <div class="">
         <div class="row">
-          <div class="col-md-3">
+          <div class="col-md-4">
             {{ form.currency|as_crispy_field }}
             <p><a href="{% url 'Location:CurrencyAddPop' %}" id='add_currency' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add Currency</a></p>
           </div>
-          <div class="col-md-2">
+          <div class="col-md-4">
             {{ form.billing_rate|as_crispy_field }}
           </div>
-          <div class="col-md-2">
+          <div class="col-md-4">
             {{ form.rate_unit|as_crispy_field }}
           </div>
         </div>
         <div class="row">
-          <div class="col-md-3">
+          <div class="col-md-4">
             {{ form.date_start|as_crispy_field }}
           </div>
-          <div class="col-md-3">
+          <div class="col-md-4">
             {{ form.date_end|as_crispy_field }}
+            <p class="small-paragraph"><small>** Leave end date open if not known</small></p>
           </div>
-          <div class="col-md-2">
+          <div class="col-md-4">
             {{ form.current|as_crispy_field }}
           </div>
         </div>
       </div>
         <p>
           <br>
-          <a href="{% url 'Project:ProjectPersonal' prj co bch %}#task_list" class="btn btn-danger">
-            Cancel
-          </a>
           <button type="submit" class="btn btn-primary" name="button">
             Save
           </button>
@@ -78,6 +76,23 @@
     $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
     win.close();
   }
+
+  window.onerror = function(msg) {
+    $("body").attr("JSError", msg);
+  }
+
+  var form = document.getElementById('ProjectForm')
+  var city = document.getElementById('city_error')
+
+  document.getElementById('ad_cty').addEventListener('click', function(e){
+    if(form.region.value == ''){
+      city.classList.remove('d-none')
+    }else{
+      document.cookie = 'region=' + JSON.stringify(form.region.value) + ";domain=;path=/"
+      city.classList.add('d-none')
+      document.getElementById('add_city').click();
+    }
+  })
 </script>
 
 {% endblock content %}

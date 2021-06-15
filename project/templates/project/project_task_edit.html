@@ -9,8 +9,8 @@
 
 <div class="card card-shadow">
   <div class="card-body">
-    <h4>Add New Billing Rate for:<br>
-    {{ qs.ppd.company }} {{ qs.ppd.project }}-{{ qs.task }}
+    <h4>Add Project Task:<br>
+    {{ qs.project }}
     <span>
       <p class="float-right">
         <a href="{% url 'Project:HelpProjectAdd' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="popover" title="Click here for help on this page!">
@@ -20,30 +20,32 @@
     </span>
   </h4>
   <div class="card-body">
-    <form class="" action="" method="POST" id="">
+    <form class="" action="" method="POST" id="ProjectPersonalDetailsTaskBillingForm">
       {% csrf_token %}
       <div class="">
         <div class="row">
-          <div class="col-md-3">
-            {{ form.currency|as_crispy_field }}
-            <p><a href="{% url 'Location:CurrencyAddPop' %}" id='add_currency' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add Currency</a></p>
-          </div>
-          <div class="col-md-2">
-            {{ form.billing_rate|as_crispy_field }}
-          </div>
-          <div class="col-md-2">
-            {{ form.rate_unit|as_crispy_field }}
+          <div class="col-md-12">
+            {{ form.client|as_crispy_field }}
+            <p>
+              <a href="{% url 'Enterprise:BranchAddPop' %}" id='add_branch' onclick='return showAddPopup(this);'>
+                <img src = "{% static 'images/icon-addlink.svg' %}">
+                Add a Client Branch
+              </a>
+            </p>
+            {{ form.task|as_crispy_field }}
+            {{ form.description|as_crispy_field }}
           </div>
         </div>
-        <div class="row">
-          <div class="col-md-3">
-            {{ form.date_start|as_crispy_field }}
+        <div class="form-row">
+          <div class="form-group col-md-10 mb-0">
+            {{ form.skills|as_crispy_field }}
           </div>
-          <div class="col-md-3">
-            {{ form.date_end|as_crispy_field }}
-          </div>
-          <div class="col-md-2">
-            {{ form.current|as_crispy_field }}
+          <div class="form-group col-md-2 mb-0">
+            <p>&nbsp</p><p>
+              <a href="{% url 'Flatten:SkillAddPop' %}" id='add_skill' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">
+                Add Skill
+              </a>
+            </p>
           </div>
         </div>
       </div>
@@ -53,7 +55,7 @@
             Cancel
           </a>
           <button type="submit" class="btn btn-primary" name="button">
-            Save
+            Save & Exit
           </button>
         </p>
     </form>

@@ -79,7 +79,7 @@
 </div>
 </div>
 <br>
-<div class="card card-shadow">
+<div class="card card-shadow" id="task_list">
   <div class="card-body">
   <h4 class="">Current Project Task List</h4>
   <div class="container">
@@ -134,10 +134,13 @@
               </div>
             {% endif %}
               <div class="">
-                <a href="{% url 'Project:EditProjectTaskBilling' task.pk task.ppdt.slug prj co bch %}" data-toggle="tooltip" title="Click to edit this project task">
-                  <i class="fa fa-pencil-square-o" style="font-size:2rem;color:black;" aria-hidden="true"></i
+                <a href="{% url 'Project:EditProjectTask' instance.slug task.ppdt.slug %}" data-toggle="tooltip" title="Click to edit this project task">
+                  <i class="fa fa-pencil-square-o" style="font-size:2rem;color:black;" aria-hidden="true"></i>
                 </a>
-              </div>      
+                <a href="{% url 'Project:EditProjectTaskBilling' task.pk task.ppdt.slug prj co bch %}" data-toggle="tooltip" title="Click to edit this project task billing info">
+                  <i class="fa fa-money" style="font-size:2rem;color:black;" aria-hidden="true"></i>
+                </a>
+              </div>
             </div>
           </div>
         </div>

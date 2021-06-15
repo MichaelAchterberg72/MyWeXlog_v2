@@ -228,7 +228,7 @@ def edit_billing_rate_pd(request, pb, ppdts, prj, co, bch):
             pb_qs.date_end = query - datetime.timedelta(days=1)
             new.save()
             pb_qs.save()
-            return redirect(reverse('Project:ProjectPersonal', kwargs={'prj': prj, 'co': co, 'bch': bch}))
+            return redirect(reverse('Project:ProjectPersonal', kwargs={'prj': prj, 'co': co, 'bch': bch})+'#task_list')
         else:
             template_name = 'project/edit_project_task_billing.html'
             context = {'form': form, 'qs': ppdt_qs, 'prj': prj, 'co': co, 'bch': bch}
@@ -695,8 +695,8 @@ def AutofillMessage(request, pk):
 def ProjectTaskAddView(request, ppd):
     qs = ProjectPersonalDetails.objects.get(slug=ppd)
     prj = qs.project.slug
-    co = qs.companybranch.slug
-    bch = qs.companybranch.company.slug
+    co = qs.company.slug
+    bch = qs.companybranch.slug
 
     form = ProjectPersonalDetailsTaskForm(request.POST or None)
     if request.method == 'POST':
@@ -706,6 +706,7 @@ def ProjectTaskAddView(request, ppd):
             instance.ppd = qs
             instance.company = qs.companybranch
             instance.save()
+            form.save_m2m()
             ppdt=instance.slug
             return redirect(reverse('Project:AddProjectTaskBilling', kwargs={'ppdt':ppdt}))
         else:
@@ -715,6 +716,37 @@ def ProjectTaskAddView(request, ppd):
     else:
         context = {'form': form, 'qs': qs, 'prj': prj, 'co': co, 'bch': bch}
         template = 'project/project_task.html'
+        return render(request, template, context)
+
+
+@login_required()
+@csp_exempt
+def ProjectTaskEditView(request, ppd, ppdts):
+    qs = ProjectPersonalDetails.objects.get(slug=ppd)
+    prj = qs.project.slug
+    co = qs.company.slug
+    bch = qs.companybranch.slug
+
+    instance_qs = ProjectPersonalDetailsTask.objects.get(slug=ppdts)
+
+    form = ProjectPersonalDetailsTaskForm(request.POST or None, instance=instance_qs)
+    if request.method == 'POST':
+        if form.is_valid():
+            instance=form.save(commit=False)
+            instance.talent = request.user
+            instance.ppd = qs
+            instance.company = qs.companybranch
+            instance.save()
+            form.save_m2m()
+            ppdt=instance.slug
+            return redirect(reverse('Project:ProjectPersonal', kwargs={'prj':prj, 'co':co, 'bch':bch})+'#task_list')
+        else:
+            context = {'form': form, 'qs': qs, 'prj': prj, 'co': co, 'bch': bch}
+            template = 'project/project_task_edit.html'
+            return render(request, template, context)
+    else:
+        context = {'form': form, 'qs': qs, 'prj': prj, 'co': co, 'bch': bch}
+        template = 'project/project_task_edit.html'
         return render(request, template, context)
 
 
@@ -738,7 +770,7 @@ def ProjectTaskBillingAddView(request, ppdt):
             qs.start_date=instance_start
             qs.end_date=instance_end
             qs.save()
-            return redirect(reverse('Project:ProjectPersonal', kwargs={'prj': prj, 'co': co, 'bch': bch}))
+            return redirect(reverse('Project:ProjectPersonal', kwargs={'prj': prj, 'co': co, 'bch': bch})+'#task_list')
         else:
             context = {'form': form, 'qs': qs, 'prj': prj, 'co': co, 'bch': bch}
             template = 'project/task_billing.html'
@@ -746,4 +778,58 @@ def ProjectTaskBillingAddView(request, ppdt):
     else:
         context = {'form': form, 'qs': qs, 'prj': prj, 'co': co, 'bch': bch}
         template = 'project/task_billing.html'
+        return render(request, template, context)
+
+
+@login_required()
+@csp_exempt
+def ProjectTaskAddPopupView(request, ppd):
+    qs = ProjectPersonalDetails.objects.get(slug=ppd)
+
+    form = ProjectPersonalDetailsTaskForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            instance=form.save(commit=False)
+            instance.talent = request.user
+            instance.ppd = qs
+            instance.company = qs.companybranch
+            instance.save()
+            form.save_m2m()
+            ppdt=instance.slug
+            return redirect(reverse('Project:AddProjectTaskBillingPopup', kwargs={'ppdt':ppdt}))
+        else:
+            context = {'form': form, 'qs': qs}
+            template = 'project/project_task_popup.html'
+            return render(request, template, context)
+    else:
+        context = {'form': form, 'qs': qs}
+        template = 'project/project_task_popup.html'
+        return render(request, template, context)
+
+
+@login_required()
+@csp_exempt
+def ProjectTaskBillingAddPopupView(request, ppdt):
+    qs = ProjectPersonalDetailsTask.objects.get(slug=ppdt)
+
+    form = ProjectPersonalDetailsTaskBillingForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            instance=form.save(commit=False)
+            instance.talent=request.user
+            instance.ppdt=qs
+            instance_start = form.cleaned_data['date_start']
+            instance_end = form.cleaned_data['date_end']
+            instance.save()
+            qs.start_date=instance_start
+            qs.end_date=instance_end
+            qs.save()
+            return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_tasks");</script>' % (instance.ppdt.pk, instance))
+        else:
+            context = {'form': form, 'qs': qs}
+            template = 'project/task_billing_popup.html'
+            return render(request, template, context)
+    else:
+        context = {'form': form, 'qs': qs}
+        template = 'project/task_billing_popup.html'
         return render(request, template, context)

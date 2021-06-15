@@ -22,6 +22,7 @@ from talenttrack.forms import SkillModelSelect2MultipleWidget
 class DateInput(forms.DateInput):
     input_type = 'date'
 
+
 class ProjectSearchFieldMixin:
     search_fields = [
         'name__icontains', 'pk__startswith', 'company__ename__icontains', 'region__region__icontains', 'city__city__icontains',
