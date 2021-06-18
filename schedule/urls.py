@@ -1,10 +1,12 @@
-from django.urls import re_path
+from django.urls import re_path, path
+from django.conf.urls import url
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 
 from schedule.feeds import CalendarICalendar, UpcomingEventsFeed
 from schedule.models import Calendar
 from schedule.periods import Day, Month, Week, Year
+from . import views
 from schedule.views import (
     CalendarByPeriodsView,
     CalendarView,
@@ -13,6 +15,11 @@ from schedule.views import (
     CreateEventView,
     CreateOccurrenceView,
     DeleteEventView,
+    CreateRuleView,
+    RuleDataJsonView,
+    get_event_task_skills_id,
+    ProjectDataJsonView,
+    ProjectTaskDataJsonView,
     EditEventView,
     EditOccurrenceView,
     EventView,
@@ -124,6 +131,18 @@ urlpatterns = [
         CreateOccurrenceView.as_view(),
         name="edit_occurrence_by_date",
     ),
+    # Rules
+    path('rule/create/', CreateRuleView.as_view(), name="create_rule"),
+    url(r"^fields/rule_data.json$",
+        RuleDataJsonView.as_view(), name="rule_data_json"),
+    # Ajax for task skills
+    url(r"^fields/project_data.json$",
+        ProjectDataJsonView.as_view(), name="project_data_json"),
+    url(r"^fields/project_task_data.json$",
+            ProjectTaskDataJsonView.as_view(), name="project_task_data_json"),
+    path('ajax/get_event_task_skills_id/', views.get_event_task_skills_id, name="AJAX_GetEventTaskSkillsID"),
+    path('ajax/get_companybranch/', views.get_companybranch, name="AJAX_GetCompanyBranch"),
+    path('ajax/get_project_data/', views.get_project_data, name="AJAX_GetProjectData"),
     # feed urls
     re_path(
         r"^feed/calendar/upcoming/(?P<calendar_id>\d+)/$",

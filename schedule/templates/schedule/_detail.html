@@ -48,6 +48,7 @@
         <h3>{% trans "Description" %}</h3>
         <p>{{occurrence.description}}</p>
         {% endif %}
+        
       </div>
       <div class="modal-footer">
         <a href="{% url 'edit_event' calendar.slug occurrence.event.id %}" class="btn btn-primery float-left">{% trans "Edit" %}</a>

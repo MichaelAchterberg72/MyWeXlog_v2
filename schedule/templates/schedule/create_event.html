@@ -7,7 +7,7 @@
 <div class="card card-shadow col-sm-6 mx-auto">
   <div class="card-body">
 <h3>{% trans "Create or change event. All fields are required." %}</h3><br><br>
-<form action="" method="post">
+<form action="" method="post" id="eventForm" data-provider-url="{% url 'AJAX_GetEventTaskSkillsID' %}" action="{{ AJAX_GetEventTaskSkillsID }}">
   {% csrf_token %}
   <table>
     {{ form.start|as_crispy_field }}
@@ -22,30 +22,80 @@
       </a>
     </p>
     {{ form.project_data|as_crispy_field }}
-    <div class="form-group col-md-4 mb-0">
       <p>
         <a href="{% url 'Project:ProjectPersonalAddPop' %}" id='add_project' onclick='return showAddPopup(this);'>
         <img src = "{% static 'images/icon-addlink.svg' %}">
           Add Project
         </a>
       </p>
-    </div>
     {{ form.task|as_crispy_field }}
     <p><a href="{% url 'Project:AddProjectTaskPopup' form.instance.project_data.slug %}" id='add_task' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">
           Add Task
     </a></p>
-    {{ form.instance.task.skills.all }}
 
     {{ form.skills|as_crispy_field }}
-    {{ form.instance.skills.all }}
-    <script type="text/javascript">
-      var skills = '{{ form.instance.task.skills.all|safe }}';
-      document.getElementById('id_skills').value = skills;
+
+
+    <script>
+      $(document).ready(function () {
+  /*
+        $('#id_companybranch').on('select2:select', function (e) {
+            companybranchId = e.params.data.id;
+        });
+        console.log(coBranchID)
+
+        $('#id_project_data').select2({
+            ajax: {
+                url: '{% url 'AJAX_GetProjectData' %}',
+                dataType: 'json',
+                processResults: function (data) {
+                    return {
+                        results: $.map(data, function (item) {
+                            return {id: item.id, text: item.project__company__ename+', '+item.project__name};
+                        })
+                    };
+                }
+            },
+            minimumInputLength: 3,
+            placeholder: "",
+            allowClear: true
+        });
+
+        var $companybranch = $('#id_companybranch'),
+            $projectData = $('#id-project_data'),
+            $options=$projectData.find('option');
+            $companybranch.on('change', function() {
+              $projectData.html($options.filter('[value="'+this.value+'"]'));
+            });
+*/
+
+        $("#clear-skills").on("click", function () {
+            $('#id_skills').val(null).trigger("change");
+        });
+
+        $('#id_task').on('select2:select', function (e) {
+            var taskId = e.params.data.id;
+            var url = $("#eventForm").attr("data-provider-url");
+
+            $.get(url, {'task': taskId}, function(data){
+
+                $("#id_skills").val(null).trigger("change");
+
+                $.each(data, function(index, value) {
+                  var $option = $("<option selected></option>").val(value.skills__id).text(value.skills__skill);
+                  $("#id_skills").append($option).trigger('change');
+                });
+          });
+        });
+      });
     </script>
       <p><a href="{% url 'Flatten:SkillAddPop' %}" id='add_skill' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">
             Add Skill
       </a></p>
     {{ form.rule|as_crispy_field }}
+    <p><a href="{% url 'create_rule' %}" id='add_rule' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">
+          Add Rule
+    </a></p>
     {{ form.end_recurring_period|as_crispy_field }}
     {{ form.color_event|as_crispy_field }}
   </table>
@@ -56,7 +106,7 @@
 </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-{{ form.media.js }}
+
 <!-- code for popups -->
 <script type="text/javascript">
 function showAddPopup(triggeringLink) {

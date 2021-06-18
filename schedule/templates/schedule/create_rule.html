@@ -1,0 +1,46 @@
+{% extends "base_homelite.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+<div class="card card-shadow col-sm-6 mx-auto">
+  <div class="card-body">
+<h3>{% trans "Create or change a rule" %}</h3><br>
+<p>{% trans "All fields except parameters are required." %}</p><br>
+<form action="" method="post">
+  {% csrf_token %}
+  <table>
+    {{ form.name|as_crispy_field }}
+    {{ form.description|as_crispy_field }}
+    {{ form.frequency|as_crispy_field }}
+    {{ form.params|as_crispy_field }}
+  </table>
+  <br>
+  <input class="btn btn-primary" type="submit" value="{% trans "Save" %}">
+  <input class="btn btn-primary" type="submit" name="cancel" value="Cancel">
+</form>
+</div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{{ form.media.js }}
+<!-- code for popups -->
+<script type="text/javascript">
+function showAddPopup(triggeringLink) {
+    var name = triggeringLink.id.replace(/^add_/, '');
+    href = triggeringLink.href;
+    var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes');
+    win.focus();
+    return false;
+}
+
+function closePopup(win, newID, newRepr, id) {
+    $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
+    win.close();
+}
+
+window.onerror = function (msg) {
+  $("body").attr("JSError", msg);
+}
+</script>
+{% endblock %}

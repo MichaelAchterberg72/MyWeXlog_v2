@@ -6,7 +6,7 @@ from django_select2.forms import (
     Select2Widget
 )
 
-from schedule.models import Event, Occurrence
+from schedule.models import Event, Occurrence, Rule
 from schedule.widgets import ColorInput
 from project.models import ProjectPersonalDetails, ProjectPersonalDetailsTask
 from enterprises.models import Branch
@@ -33,6 +33,18 @@ class ProjectPersonalTaskSelect2Widget(ProjectPersonalTaskSearchFieldMixin, Mode
         self.get_queryset().create(name=value)
 
 
+class RuleSearchFieldMixin:
+    search_fields = [
+        'name__icontains', 'pk__startswith',
+    ]
+
+class RuleSelect2Widget(RuleSearchFieldMixin, ModelSelect2Widget):
+    model = Rule
+
+    def create_value(self, value):
+        self.get_queryset().create(name=value)
+
+
 class SpanForm(forms.ModelForm):
     start = forms.SplitDateTimeField(label=_("start"))
     end = forms.SplitDateTimeField(
@@ -49,16 +61,6 @@ class SpanForm(forms.ModelForm):
 
 
 class EventForm(SpanForm):
-#    companybranch = forms.ModelChoiceField(queryset=None, required=False)
-
-#    prj_co_qs = ProjectPersonalDetails.objects.filter(talent=request.user).values_list(companybranch__id, flat=True).distinct()
-#    company_qs = Branch.objects.filter(prj_co_qs__in=pk)
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-#        self.fields['companybranch'].queryset = company_qs
-
-
     end_recurring_period = forms.DateTimeField(
         label=_("End recurring period"),
         help_text=_("This date is ignored for one time only events."),
@@ -69,18 +71,20 @@ class EventForm(SpanForm):
         model = Event
         exclude = ("creator", "created_on", "calendar")
         widgets={
-            'project_data': ProjectSelect2Widget(),
+            'project_data': ProjectSelect2Widget(data_view='project_data_json'),
             'companybranch': FullCompanyBranchSelect2Widget(),
-            'task': ProjectPersonalTaskSelect2Widget(),
+            'task': ProjectPersonalTaskSelect2Widget(data_view='project_task_data_json'),
             'start': DateInput(),
             'end': DateInput(),
             'skills': SkillModelSelect2MultipleWidget(),
             'end_recurring_period': DateInput(),
+            'rule': RuleSelect2Widget(data_view='rule_data_json'),
         }
         help_texts = {
             'project_data': 'Search by project name, company name or branch, region or city',
             'companybranch': 'Search by company name, branch, region or city',
             'tasks': 'Search by task, company name or client name',
+            'skills': '<button class="btn badge btn-outline-primary float-right" id="clear-skills" type="button" name="button">Clear Skills</button>'
         }
 
 class OccurrenceForm(SpanForm):
@@ -88,18 +92,20 @@ class OccurrenceForm(SpanForm):
         model = Occurrence
         exclude = ("original_start", "original_end", "event", "cancelled")
         widgets={
-            'project_data': ProjectSelect2Widget(),
+            'project_data': ProjectSelect2Widget(data_view='project_data_json'),
             'companybranch': FullCompanyBranchSelect2Widget(),
-            'task': ProjectPersonalTaskSelect2Widget(),
+            'task': ProjectPersonalTaskSelect2Widget(data_view='project_task_data_json'),
             'start': DateInput(),
             'end': DateInput(),
             'skills': SkillModelSelect2MultipleWidget(),
             'end_recurring_period': DateInput(),
+            'rule': RuleSelect2Widget(data_view='rule_data_json'),
         }
         help_texts = {
             'project_data': 'Search by project name, company name or branch, region or city',
             'companybranch': 'Search by company name, branch, region or city',
             'tasks': 'Search by task, company name or client name',
+            'skills': '<button class="btn badge btn-outline-primary float-right" id="clear-skills" type="button" name="button">Clear Skills</button>'
         }
 
 class EventAdminForm(forms.ModelForm):
@@ -107,3 +113,13 @@ class EventAdminForm(forms.ModelForm):
         exclude = []
         model = Event
         widgets = {"color_event": ColorInput}
+
+
+class RuleForm(forms.ModelForm):
+    class Meta:
+        model = Rule
+        exclude = ('talent',)
+        help_texts = {
+                'name': 'Enter a recognisable name for the rule',
+                'params': 'Enter your tailor made parameters for the rule',
+        }

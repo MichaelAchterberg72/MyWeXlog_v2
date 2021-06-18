@@ -15,6 +15,7 @@ from dateutil.rrule import (
     YEARLY,
 )
 from django.db import models
+from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
 freqs = (
@@ -58,6 +59,7 @@ class Rule(models.Model):
         ** byeaster
     """
 
+    talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(_("name"), max_length=32)
     description = models.TextField(_("description"))
     frequency = models.CharField(_("frequency"), choices=freqs, max_length=10)

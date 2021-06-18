@@ -101,7 +101,7 @@ class FullCompanyBranchSelect2Widget(FullCompanyBranchSearchFieldMixin, ModelSel
     model = Branch
 
     def create_value(self, value):
-        self.get_queryset().create(industry=value)
+        self.get_queryset().create(name=value)
 #Select2<<<
 
 class BranchForm(forms.ModelForm):

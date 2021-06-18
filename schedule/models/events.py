@@ -623,7 +623,7 @@ class Occurrence(models.Model):
         if not self.task and self.event_id:
             self.task = self.event.task
 #        if not self.skills and self.event_id:
-#            self.skills = self.event.skills.all()
+#            self.skills = list(self.event.skills.all())
 
     def moved(self):
         return self.original_start != self.start or self.original_end != self.end

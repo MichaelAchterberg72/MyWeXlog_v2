@@ -78,6 +78,10 @@
     win.close();
   }
 
+  window.onerror = function(msg) {
+    $("body").attr("JSError", msg);
+  }
+  
   var form = document.getElementById('ProjectForm')
   var city = document.getElementById('city_error')
 

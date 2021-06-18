@@ -12,6 +12,7 @@ from django.http import (
     JsonResponse,
 )
 from django.shortcuts import get_object_or_404
+from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.utils import timezone
 
@@ -22,6 +23,7 @@ except ImportError:
     from django.utils.http import is_safe_url as url_has_allowed_host_and_scheme
 
 from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import TemplateResponseMixin
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
@@ -33,8 +35,13 @@ from django.views.generic.edit import (
     UpdateView,
 )
 
-from schedule.forms import EventForm, OccurrenceForm
+from schedule.forms import EventForm, OccurrenceForm, RuleForm
 from schedule.models import Calendar, Event, Occurrence
+from enterprises.models import Branch
+from project.models import ProjectPersonalDetails, ProjectPersonalDetailsTask
+
+from django_select2.views import AutoResponseView
+
 from schedule.periods import weekday_names
 from schedule.settings import (
     CHECK_EVENT_PERM_FUNC,
@@ -214,6 +221,22 @@ class EventView(EventMixin, DetailView):
     template_name = "schedule/event.html"
 
 
+class ProjectTaskDataJsonView(AutoResponseView):
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if not self.request.user.is_authenticated:
+            raise Http404
+        return qs.filter(talent=self.request.user)
+
+
+class ProjectDataJsonView(AutoResponseView):
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if not self.request.user.is_authenticated:
+            raise Http404
+        return qs.filter(talent=self.request.user)
+
+
 class EditEventView(EventEditMixin, UpdateView):
     form_class = EventForm
     template_name = "schedule/create_event.html"
@@ -286,6 +309,53 @@ class DeleteEventView(EventEditMixin, DeleteView):
         next_url = get_next_url(self.request, next_url)
         return next_url
 
+
+class RuleDataJsonView(AutoResponseView):
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if not self.request.user.is_authenticated:
+            raise Http404
+        return qs.filter(talent=self.request.user)
+
+
+class CreateRuleView(CreateView):
+    form_class = RuleForm
+    template_name = "schedule/create_rule.html"
+
+    def form_valid(self, form):
+        instance = form.save(commit=False)
+        instance.talent = self.request.user
+        instance.save()
+        return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_rule");</script>' % (instance.pk, instance))
+
+
+@csrf_exempt
+def get_event_task_skills_id(request):
+    print(request)
+    if request.is_ajax():
+        task = request.GET.get('task')
+        task_skills = ProjectPersonalDetailsTask.objects.filter(id=task, talent=request.user).values('skills__id', 'skills__skill')
+        response_content = list(task_skills)
+
+        return JsonResponse(response_content, safe=False)
+
+@csrf_exempt
+def get_companybranch(request):
+    if request.is_ajax():
+        term = request.GET.get('term')
+        company_branch = Branch.objects.filter(Q(company__ename__icontains=term) | Q(name__icontains=term) | Q(type__type__icontains=term) | Q(region__region__icontains=term) | Q(city__city__icontains=term)).values('id', 'company__ename', 'name', 'type__type')
+        response_content = list(company_branch)
+
+        return JsonResponse(response_content, safe=False)
+
+@csrf_exempt
+def get_project_data(request):
+    if request.is_ajax():
+        term = request.GET.get('term')
+        project_data = ProjectPersonalDetails.objects.filter(Q(talent=request.user) & Q(project__name__icontains=term) | Q(project__company__ename__icontains=term) | Q(companybranch__name__icontains=term) | Q(company__ename__icontains=term) | Q(companybranch__region__region__icontains=term) | Q(companybranch__city__city__icontains=term)).values('id', 'project__company__ename', 'project__name')
+        response_content = list(project_data)
+
+        return JsonResponse(response_content, safe=False)
 
 def get_occurrence(
     event_id,
