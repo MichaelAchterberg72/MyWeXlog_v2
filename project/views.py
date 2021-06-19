@@ -19,6 +19,8 @@ from csp.decorators import csp_exempt
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.conf import settings
 
+from django_select2.views import AutoResponseView
+
 from locations.models import Region
 from .models import *
 from Profile.models import Profile
@@ -185,6 +187,14 @@ def ProjectPersonalDetailsAddPopupView(request):
         context = {'form':form,}
         template = 'project/project_personal_details_add_popup.html'
         return render(request, template, context)
+
+
+class ProjectDataJsonView(AutoResponseView):
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if not self.request.user.is_authenticated:
+            raise Http404
+        return qs.filter(talent=self.request.user)
 
 
 @login_required()

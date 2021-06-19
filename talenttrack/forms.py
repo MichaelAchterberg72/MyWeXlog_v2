@@ -294,7 +294,7 @@ class PreLoggedExperienceForm(forms.ModelForm):
             'company': CompanySelect2Widget(),
             'companybranch': BranchSelect2Widget(),
             'designation': DesignationSelect2Widget(),
-            'project_data': ProjectSelect2Widget(),
+            'project_data': ProjectSelect2Widget(data_view='Project:project_data_json'),
             'date_from': DateInput(attrs={'max': timezone.now().date()}),
             'date_to': DateInput(attrs={'max': timezone.now().date()}),
             'skills': SkillModelSelect2MultipleWidget(),
@@ -306,7 +306,7 @@ class PreLoggedExperienceForm(forms.ModelForm):
         help_texts = {
             'project_data': 'Search by project name, company name or branch, region or city',
         }
-        
+
     def clean_date_to(self):
         '''Ensures the end date is after the begin date and before current date'''
         date_to = self.cleaned_data.get("date_to")
@@ -564,7 +564,7 @@ class WorkExperienceForm(forms.ModelForm):
         widgets={
             'company': CompanySelect2Widget(),
             'designation': DesignationSelect2Widget(),
-            'project_data': ProjectSelect2Widget(),
+            'project_data': ProjectSelect2Widget(data_view='Project:project_data_json'),
             'date_from': DateInput(attrs={'max': timezone.now().date()}),
             'date_to': DateInput(attrs={'max': timezone.now().date()}),
             'skills': SkillModelSelect2MultipleWidget(),
@@ -581,7 +581,7 @@ class WorkExperienceForm(forms.ModelForm):
         help_texts = {
             'project_data': 'Search by project name, company name or branch, region or city',
         }
-        
+
     def clean_date_to(self):
         '''Ensures the end date is after the begin date and before current date'''
         date_to = self.cleaned_data.get("date_to")
