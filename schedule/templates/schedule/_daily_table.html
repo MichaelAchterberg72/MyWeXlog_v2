@@ -1,7 +1,7 @@
 {% load scheduletags %}
 <table class="table table-striped">
     {% for slot in slots %}
-    <tr>
+    <tr class="h-100">
     <td class="col-md-1">
       <span class="time">{{ slot.start|time:"G:i" }}</span>
       {% if addable %}
@@ -10,7 +10,7 @@
     </td>
     <td class="col-md-4">
       {% for occ in slot.occurrences %}
-      <button type="button"  class="btn {% if occ.cancelled %} btn-danger {%else%} btn-primary {% endif %}" data-toggle="modal" data-target="#{% hash_occurrence occ %}" {% if occ.event.color_event %} style="background-color: {{occ.event.color_event}};border-color:{{occ.event.color_event}}" {% endif %}>
+      <button type="button"  class="btn {% if occ.cancelled %} btn-danger {%else%} btn-primary {% endif %} btn-wrap-text" data-toggle="modal" data-target="#{% hash_occurrence occ %}" style="{% if occ.event.color_event %} background-color: {{occ.event.color_event}};border-color:{{occ.event.color_event}}{% endif %}Swhite-space:normal !important;word-wrap:break-word !important;height:2rem;">
                   {% options occ %}
                   {% title occ %}
             </button>

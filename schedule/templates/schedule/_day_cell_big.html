@@ -2,7 +2,7 @@
 <div>
   {% if day.has_occurrences %}
       {% for o in day.get_occurrence_partials %}
-              <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#occurrenceModal">
+              <button type="button" class="btn btn-primary btn-lg btn-wrap-text" data-toggle="modal" data-target="#occurrenceModal">
 
                   <div class="starttime">
                       {% if o.class == 0 %}{{ o.occurrence.start|time:"G:i" }}{% endif %}

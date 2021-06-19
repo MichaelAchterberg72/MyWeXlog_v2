@@ -330,8 +330,15 @@ class CreateRuleView(CreateView):
 
 
 @csrf_exempt
+def get_event_project_data_slug(request):
+    if request.is_ajax():
+        ppid = request.GET.get('ppid')
+        ppds = ProjectPersonalDetails.objects.filter(id=ppid, talent=request.user).values('slug')
+        response_content = list(ppds)
+        return JsonResponse(response_content, safe=False)
+
+@csrf_exempt
 def get_event_task_skills_id(request):
-    print(request)
     if request.is_ajax():
         task = request.GET.get('task')
         task_skills = ProjectPersonalDetailsTask.objects.filter(id=task, talent=request.user).values('skills__id', 'skills__skill')

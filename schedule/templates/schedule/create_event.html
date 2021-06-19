@@ -29,10 +29,18 @@
         </a>
       </p>
     {{ form.task|as_crispy_field }}
+    {% if form.instance.project_data.slug %}
     <p><a href="{% url 'Project:AddProjectTaskPopup' form.instance.project_data.slug %}" id='add_task' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">
           Add Task
     </a></p>
-
+    {% endif %}
+    {% if not form.instance.project_data.slug %}
+    <div id="projectskill" data-url="{% url 'AJAX_GetEventProjectDataSlug' %}">
+      <p><a id="projectSkillHref" href="#" id='add_task' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">
+            Add Task
+      </a></p>
+    </div>
+    {% endif %}
     {{ form.skills|as_crispy_field }}
 
 
@@ -60,17 +68,23 @@
             placeholder: "",
             allowClear: true
         });
-
-        var $companybranch = $('#id_companybranch'),
-            $projectData = $('#id-project_data'),
-            $options=$projectData.find('option');
-            $companybranch.on('change', function() {
-              $projectData.html($options.filter('[value="'+this.value+'"]'));
-            });
 */
 
         $("#clear-skills").on("click", function () {
             $('#id_skills').val(null).trigger("change");
+        });
+
+        $('#id_project_data').on('select2:select', function (e) {
+            var projectDataId = e.params.data.id;
+            var url = $("#projectskill").attr("data-url");
+
+            $.get(url, {'ppid': projectDataId}, function(data){
+
+              $.each(data, function(index, value) {
+                console.log(value.slug);
+                $("#projectSkillHref").attr("href", "{{request.scheme}}://{{request.META.HTTP_HOST}}/project/popup/add/task/"+value.slug+"/");
+            });
+          });
         });
 
         $('#id_task').on('select2:select', function (e) {
@@ -78,7 +92,6 @@
             var url = $("#eventForm").attr("data-provider-url");
 
             $.get(url, {'task': taskId}, function(data){
-
                 $("#id_skills").val(null).trigger("change");
 
                 $.each(data, function(index, value) {
