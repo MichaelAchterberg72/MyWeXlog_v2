@@ -39,7 +39,7 @@ urlpatterns = [
     path('corporate/', include('mod_corporate.urls', namespace='Corporate')),
     path('billing/', include('billing.urls', namespace='Billing')),
     path('calendar/', include('schedule.urls')),
-    path('calendar1/', include('happenings.urls', namespace='calendar')),
+    path('tinymce/', include('tinymce.urls')),
     path("robots.txt",TemplateView.as_view(template_name="users/robots.txt", content_type="text/plain")),
     ]
 

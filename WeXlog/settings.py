@@ -94,7 +94,7 @@ INSTALLED_APPS = [
     'sri',
     'djangobower',
     'schedule',
-    'happenings',
+    'tinymce',
 ]
 
 

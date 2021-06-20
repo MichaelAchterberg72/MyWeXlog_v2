@@ -8,6 +8,11 @@ from schedule.models import (
     EventRelation,
     Occurrence,
     Rule,
+    NotePad,
+    NotePadRelatedProject,
+    NotePadRelatedTask,
+    NotePadRelatedEvent,
+    NotePadRelatedOccurrence,
 )
 
 
@@ -79,3 +84,33 @@ class RuleAdmin(admin.ModelAdmin):
     list_display = ("name",)
     list_filter = ("frequency",)
     search_fields = ("name", "description")
+
+@admin.register(NotePad)
+class NotePadAdmin(admin.ModelAdmin):
+    list_display = ("talent",)
+    list_filter = ("talent",)
+    search_fields = ("talent", "heading")
+
+@admin.register(NotePadRelatedProject)
+class NotePadRelatedProjectAdmin(admin.ModelAdmin):
+    list_display = ("talent",)
+    list_filter = ("talent",)
+    search_fields = ("talent", "notepad_id__heading")
+
+@admin.register(NotePadRelatedTask)
+class NotePadRelatedTaskAdmin(admin.ModelAdmin):
+    list_display = ("talent",)
+    list_filter = ("talent",)
+    search_fields = ("talent", "notepad_id__heading")
+
+@admin.register(NotePadRelatedEvent)
+class NotePadRelatedEventAdmin(admin.ModelAdmin):
+    list_display = ("talent",)
+    list_filter = ("talent",)
+    search_fields = ("talent", "notepad_id__heading")
+
+@admin.register(NotePadRelatedOccurrence)
+class NotePadRelatedOccurrenceAdmin(admin.ModelAdmin):
+    list_display = ("talent",)
+    list_filter = ("talent",)
+    search_fields = ("talent", "notepad_id__heading")
