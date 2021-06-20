@@ -48,7 +48,7 @@
           </a>
           {{ form.companybranch|as_crispy_field }}
           <p>
-            <a href="{% url 'Enterprise:BranchAddPop' %}" id='add_branch' onclick='return showAddPopup(this);'>
+            <a href="{% url 'Enterprise:FullBranchAddPopup' %}" id='add_branch' onclick='return showAddPopup(this);'>
               <img src = "{% static 'images/icon-addlink.svg' %}">
               Add a Branch
             </a>
