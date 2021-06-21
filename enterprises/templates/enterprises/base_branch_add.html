@@ -40,7 +40,7 @@
           <br>
           <p><a href="{% url 'Enterprise:IndustryAddPop' %}" id='add_branch_industry' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add a new Industry Type</a></p>
         </div>
-      </div>  
+      </div>
       {{ form.country|as_crispy_field }}
     </div>
     <div class="form-group col-md-6 mb-0">
@@ -60,7 +60,6 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-{{ form.media.js }}
 {% endblock content %}
 {% block Script %}
 <!-- code for popups -->
