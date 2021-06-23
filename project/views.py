@@ -26,8 +26,9 @@ from Profile.models import Profile
 from talenttrack.models import WorkExperience
 from enterprises.models import Enterprise, Branch
 from users.models import CustomUser
+from schedule.models import NotePad
 
-from .forms import ProjectAddForm, ProjectAddHome, ProjectSearchForm, ProjectForm, ProjectPersonalDetailsForm, ProjectPersonalDetailsTaskForm, ProjectPersonalDetailsTaskBillingForm, EditProjectTaskBillingForm, AddProjectPersonalDetailsForm, ProjectFullAddForm
+from .forms import ProjectAddForm, ProjectAddHome, ProjectSearchForm, ProjectForm, ProjectPersonalDetailsForm, ProjectPersonalDetailsTaskForm, ProjectPersonalDetailsTaskBillingForm, EditProjectTaskBillingForm, AddProjectPersonalDetailsForm, ProjectFullAddForm, ProjectTaskNoteForm
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
@@ -318,6 +319,42 @@ def action_current_task(request, pb, ppds, prj, co, bch):
             pb_qs.save()
 
         return redirect(reverse('Project:ProjectTaskList', kwargs={'ppds': ppds, 'prj': prj, 'co': co, 'bch': bch}))
+
+
+@login_required
+def ProjectTaskNoteAddView(request, prj, co, bch, ppdt):
+    bch_qs = Branch.objects.get(slug=bch)
+    bch_slug = bch_qs.slug
+    ppdt_qs = ProjectPersonalDetailsTask.objects.get(slug=ppdt)
+    pd_slug = ppdt_qs.ppd.slug
+    ppdt_slug = ppdt_qs.slug
+    pd_qs = ProjectPersonalDetails.objects.get(slug=pd_slug)
+    user = CustomUser.objects.get(alias=request.user.alias)
+
+    notes_list = NotePad.objects.filter(
+            talent=request.user,
+            companybranch__slug=bch_slug,
+            project_data__slug=pd_slug,
+            task__slug=ppdt_slug,
+            complete=False,
+    ).order_by('-created_on')
+
+    if request.method =='POST':
+        form = ProjectTaskNoteForm(request.POST or None)
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.talent=request.user
+            new.companybranch=bch_qs
+            new.project_data=pd_qs
+            new.task=ppdt_qs
+            new.save()
+            return redirect(reverse('Project:AddProjectTaskNote', kwargs={'prj':prj, 'co':co, 'bch':bch, 'ppdt':ppdt}))
+    else:
+        form = ProjectTaskNoteForm()
+
+    template = 'project/project_task_note_add.html'
+    context = {'form': form, 'prj': prj, 'co': co, 'bch': bch, 'ppdt': ppdt, 'notes_list':notes_list}
+    return render(request, template, context)
 
 
 @login_required()

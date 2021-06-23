@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 
+from django.utils.translation import gettext_lazy as _
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Row, Column
@@ -10,11 +11,15 @@ from django_select2.forms import (
     Select2Widget
 )
 
+from schedule.MinimalSplitDateTimeMultiWidget import MinimalSplitDateTimeMultiWidget
+from tinymce.widgets import TinyMCE
+
 from .models import (
     ProjectData, ProjectPersonalDetails, ProjectPersonalDetailsTask, ProjectTaskBilling
 )
 from enterprises.models import Enterprise, Industry, Branch
 from locations.models import Region, City, Suburb
+from schedule.models import NotePad
 
 from talenttrack.forms import SkillModelSelect2MultipleWidget
 
@@ -108,7 +113,7 @@ class ProjectAddForm(forms.ModelForm):
 
     class Meta:
         model = ProjectData
-        fields = ('name', 'company', 'country', 'companybranch', 'region', 'city', 'industry')
+        fields = ('name', 'company', 'country', 'companybranch', 'region', 'city', 'industry', 'description')
         widgets = {
             'company': CompanySelect2Widget(),
             'industry': IndustrySelect2Widget(),
@@ -136,7 +141,7 @@ class ProjectSearchForm(forms.Form):
 class ProjectForm(forms.ModelForm):
     class Meta:
         model = ProjectData
-        fields = ('name', 'company', 'companybranch', 'industry', 'country', 'region', 'city')
+        fields = ('name', 'company', 'companybranch', 'industry', 'country', 'region', 'city', 'description')
         widgets = {
             'company': CompanySelect2Widget(),
             'industry': IndustrySelect2Widget(),
@@ -150,7 +155,7 @@ class ProjectFullAddForm(forms.ModelForm):
     '''This form is used when adding a full project'''
     class Meta:
         model = ProjectData
-        fields = ('name', 'company', 'companybranch', 'country', 'region', 'city', 'industry')
+        fields = ('name', 'company', 'companybranch', 'country', 'region', 'city', 'industry', 'description')
         widgets = {
             'company': CompanySelect2Widget(),
             'industry': IndustrySelect2Widget(),
@@ -168,7 +173,7 @@ class ProjectAddHome(forms.ModelForm):
     '''This form is used when adding aproject from talenttrack app'''
     class Meta:
         model = ProjectData
-        fields = ('name', 'company', 'companybranch', 'industry', 'country', 'region', 'city')
+        fields = ('name', 'company', 'companybranch', 'industry', 'country', 'region', 'city', 'description')
         widgets = {
             'company': CompanySelect2Widget(),
             'industry': IndustrySelect2Widget(),
@@ -178,6 +183,7 @@ class ProjectAddHome(forms.ModelForm):
         }
 
 class ProjectPersonalDetailsForm(forms.ModelForm):
+    description = forms.CharField(widget=TinyMCE(attrs={'cols': 50, 'rows': 10}))
     class Meta:
         model = ProjectPersonalDetails
         fields = ('description',)
@@ -217,14 +223,6 @@ class EditProjectTaskBillingForm(forms.ModelForm):
             'date_end': DateInput(),
         }
 
-class ProjectPersonalDetailsForm(forms.ModelForm):
-    class Meta:
-        model = ProjectPersonalDetails
-        fields = ('description',)
-        widgets = {
-            'companybranch': BranchSelect2Widget(),
-        }
-
 
 class AddProjectPersonalDetailsForm(forms.ModelForm):
     class Meta:
@@ -241,3 +239,11 @@ class AddProjectPersonalDetailsForm(forms.ModelForm):
         help_texts = {
             'project' : '*Enter either the project owner, project name, region or city of the project',
         }
+
+
+class ProjectTaskNoteForm(forms.ModelForm):
+    date_due = forms.DateTimeField(widget=MinimalSplitDateTimeMultiWidget(), label=_("date due"), required=False)
+#    note_pad = forms.CharField(widget=TinyMCE(attrs={'cols': 50, 'rows': 30}))
+    class Meta:
+        model = NotePad
+        fields = {'heading', 'note_pad', 'date_due',}

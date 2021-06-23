@@ -49,10 +49,10 @@
             </a>
           </p>
           {{ form.industry|as_crispy_field }}
-          <a href="{% url 'Enterprise:IndustryAddPop' %}" id='add_industry' onclick='return showAddPopup(this);'>
+          <p><a href="{% url 'Enterprise:IndustryAddPop' %}" id='add_industry' onclick='return showAddPopup(this);'>
             <img src="{% static 'images/icon-addlink.svg' %}">
             Add an Industry
-          </a>
+          </a></p>
         </div>
         <div class="form-group col-md-6 mb-0">
           {{ form.country|as_crispy_field }}
@@ -76,6 +76,12 @@
             </a>
           </p>
         </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-12 mb-0">
+          {{ form.description|as_crispy_field }}
+        </div>
+      </div>
         <p>
           <br>
           <a href="{% url 'Project:ProjectHome' %}" class="btn btn-danger">

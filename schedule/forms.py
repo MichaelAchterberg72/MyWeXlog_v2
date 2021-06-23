@@ -6,6 +6,9 @@ from django_select2.forms import (
     Select2Widget
 )
 
+from django.contrib.contenttypes import fields
+from .MinimalSplitDateTimeMultiWidget import MinimalSplitDateTimeMultiWidget
+
 from schedule.models import Event, Occurrence, Rule
 from schedule.widgets import ColorInput
 from project.models import ProjectPersonalDetails, ProjectPersonalDetailsTask
@@ -46,10 +49,14 @@ class RuleSelect2Widget(RuleSearchFieldMixin, ModelSelect2Widget):
 
 
 class SpanForm(forms.ModelForm):
-    start = forms.SplitDateTimeField(label=_("start"))
-    end = forms.SplitDateTimeField(
-        label=_("end"), help_text=_("The end time must be later than start time.")
+    start = forms.DateTimeField(widget=MinimalSplitDateTimeMultiWidget(), label=_("start"))
+    end = forms.DateTimeField(
+            widget=MinimalSplitDateTimeMultiWidget(),
+            required=False,
+            label=_("end"),
+            help_text=_("The end time must be later than start time.")
     )
+    end_recurring_period = forms.DateTimeField(widget=MinimalSplitDateTimeMultiWidget(), required=False)
 
     def clean(self):
         if "end" in self.cleaned_data and "start" in self.cleaned_data:
@@ -61,11 +68,6 @@ class SpanForm(forms.ModelForm):
 
 
 class EventForm(SpanForm):
-    end_recurring_period = forms.DateTimeField(
-        label=_("End recurring period"),
-        help_text=_("This date is ignored for one time only events."),
-        required=False,
-    )
 
     class Meta:
         model = Event
@@ -74,10 +76,7 @@ class EventForm(SpanForm):
             'project_data': ProjectSelect2Widget(data_view='project_data_json'),
             'companybranch': FullCompanyBranchSelect2Widget(),
             'task': ProjectPersonalTaskSelect2Widget(data_view='project_task_data_json'),
-            'start': DateInput(),
-            'end': DateInput(),
             'skills': SkillModelSelect2MultipleWidget(),
-            'end_recurring_period': DateInput(),
             'rule': RuleSelect2Widget(data_view='rule_data_json'),
         }
         help_texts = {
@@ -95,10 +94,7 @@ class OccurrenceForm(SpanForm):
             'project_data': ProjectSelect2Widget(data_view='project_data_json'),
             'companybranch': FullCompanyBranchSelect2Widget(),
             'task': ProjectPersonalTaskSelect2Widget(data_view='project_task_data_json'),
-            'start': DateInput(),
-            'end': DateInput(),
             'skills': SkillModelSelect2MultipleWidget(),
-            'end_recurring_period': DateInput(),
             'rule': RuleSelect2Widget(data_view='rule_data_json'),
         }
         help_texts = {

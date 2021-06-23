@@ -82,6 +82,16 @@
 <div class="card card-shadow" id="task_list">
   <div class="card-body">
   <h4 class="">Current Project Task List</h4>
+  <div>
+  <p>&nbsp</p>
+  <a href="{% url 'Project:ProjectTaskList' instance.slug prj co bch %}" class="btn btn-primary float-left">
+    Action Full Tasks
+  </a>
+  <a href="{% url 'Project:AddProjectTask' instance.slug %}" class="btn btn-primary float-right">
+    Add New Task
+  </a>
+  </div>
+  <br><br>
   <div class="container">
     <div class="row my-auto">
       <div class="col-md-2 h-100 text-center my-auto">
@@ -140,6 +150,9 @@
                 <a href="{% url 'Project:EditProjectTaskBilling' task.pk task.ppdt.slug prj co bch %}" data-toggle="tooltip" title="Click to edit this project task billing info">
                   <i class="fa fa-money" style="font-size:2rem;color:black;" aria-hidden="true"></i>
                 </a>
+                <a href="{% url 'Project:AddProjectTaskNote' prj co bch task.ppdt.slug %}" data-toggle="tooltip" title="Click to add project note">
+                  <i class="fa fa-sticky-note-o" style="font-size:2rem;color:black;" aria-hidden="true"></i>
+                </a>
               </div>
             </div>
           </div>
@@ -148,13 +161,6 @@
     </div>
   </div>
   {% endfor %}
-  <p>&nbsp</p>
-  <a href="{% url 'Project:ProjectTaskList' instance.slug prj co bch %}" class="btn btn-primary float-left">
-    Action Full Tasks
-  </a>
-  <a href="{% url 'Project:AddProjectTask' instance.slug %}" class="btn btn-primary float-right">
-    Add New Task
-  </a>
   </div>
 </div>
 {% endblock content %}

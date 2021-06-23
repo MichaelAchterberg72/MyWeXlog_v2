@@ -1,6 +1,7 @@
 {% extends 'base_homelite.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
+{% load sri %}
 {% block title %}{{block.super}}-Project{% endblock title %}
 
 {% block content %}
@@ -73,7 +74,12 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
- 
+<script src='https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/js/select2.min.js'>
+</script>
+<script type="text/javascript">
+  $('.django-select2').djangoSelect2({placeholder: 'Select an option'});
+</script>
+
 <script type="text/javascript">
   document.getElementById("id_companybranch").disabled = true;
 
@@ -101,7 +107,7 @@
   var form = document.getElementById('ProjectForm')
   var city = document.getElementById('city_error')
 
-  document.getElementById('ad_cty').addEventListener('click', function(e){
+  document.getElementById('ad_city').addEventListener('click', function(e){
     if(form.region.value == ''){
       city.classList.remove('d-none')
     }else{

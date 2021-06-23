@@ -4,6 +4,11 @@
 {% load i18n %}
 
 {% block content %}
+{% block Style %}
+<script type="text/javascript" src="/my_admin/jsi18n/"></script>
+<script type="text/javascript" src="/media/admin/js/core.js"></script>
+
+{% endblock Style %}
 <div class="card card-shadow col-sm-6 mx-auto">
   <div class="card-body">
 <h3>{% trans "Create or change event. All fields are required." %}</h3><br><br>

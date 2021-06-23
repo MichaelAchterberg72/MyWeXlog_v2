@@ -71,6 +71,7 @@ INSTALLED_APPS = [
     'management',
     'storages',
     'billing',
+    'schedule',
     #Django internal applications
     'django.contrib.staticfiles',
     'django.contrib.humanize',
@@ -93,7 +94,6 @@ INSTALLED_APPS = [
     'sorl.thumbnail',
     'sri',
     'djangobower',
-    'schedule',
     'tinymce',
 ]
 
@@ -239,10 +239,10 @@ CSP_DEFAULT_SRC = (
     )#app_config
 
 CSP_SCRIPT_SRC = (
-    "'self'", "'unsafe-inline'", '127.0.0.1', '107.191.57.249', 'code.jquery.com', 'maxcdn.bootstrapcdn.com', 'kit.fontawesome.com', 'app.mywexlog.dev', 'mywexlog.dev', 'cdnjs.cloudflare.com', 'maps.googleapis.com', 'bookstrapcdn.com', 'cdn.jsdelivr.net', 'cdn.jsdelivr.net', 'ajax.googleapis.com', 'cdnjs.cloudflare.com', 'apis.google.com', 'https://www.gstatic.com', 'tarruda.github.com', 'dot-test-machterberg.s3.amazonaws.com',
+    "'self'", "'unsafe-inline'", '127.0.0.1', '107.191.57.249', 'code.jquery.com', 'maxcdn.bootstrapcdn.com', 'kit.fontawesome.com', 'app.mywexlog.dev', 'mywexlog.dev', 'cdnjs.cloudflare.com', 'maps.googleapis.com', 'bookstrapcdn.com', 'cdn.jsdelivr.net', 'cdn.jsdelivr.net', 'ajax.googleapis.com', 'cdnjs.cloudflare.com', 'apis.google.com', 'https://www.gstatic.com', 'tarruda.github.com', 'dot-test-machterberg.s3.amazonaws.com', 'netdna.bootstrapcdn.com', 'cdn.tiny.cloud',
     )#app_config
 CSP_IMG_SRC = (
-    "'self'", '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev', 'dot-test-machterberg.s3.amazonaws.com',
+    "'self'", '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev', 'dot-test-machterberg.s3.amazonaws.com', 'cdn.tiny.cloud', 'sp.tinymce.com',
     )#app_config
 CSP_OBJECT_SRC = None
 CSP_MEDIA_SRC = (
@@ -256,7 +256,7 @@ CSP_FONT_SRC = (
     )#app_config
 CSP_CONNECT_SRC = None
 CSP_STYLE_SRC = (
-    "'self'", 'maxcdn.bootstrapcdn.com', 'app.mywexlog.dev', 'cdnjs.cloudflare.com', 'w3.org', '127.0.0.1', '107.191.57.249', 'fonts.googleapis.com', 'cdn.jsdelivr.net',  'stackpath.bookstrapcdn.com', "'unsafe-inline'", 'mywexlog.dev', 'https://www.gstatic.com/', 'stackpath.bootstrapcdn.com', 'dot-test-machterberg.s3.amazonaws.com',
+    "'self'", 'maxcdn.bootstrapcdn.com', 'app.mywexlog.dev', 'cdnjs.cloudflare.com', 'w3.org', '127.0.0.1', '107.191.57.249', 'fonts.googleapis.com', 'cdn.jsdelivr.net',  'stackpath.bookstrapcdn.com', "'unsafe-inline'", 'mywexlog.dev', 'https://www.gstatic.com/', 'stackpath.bootstrapcdn.com', 'dot-test-machterberg.s3.amazonaws.com', 'netdna.bootstrapcdn.com',
     )#app_config
 CSP_BASE_URI = None
 CSP_CHILD_SRC = None
@@ -484,3 +484,31 @@ SENDGRID_API_KEY = 'SG.n0_TaC5wRU6O9WZwySPq3g.FYnOrth53eAD1zSl1bPEbbHz9LJTU1vXnD
 SENDGRID_FROM_EMAIL = 'mywexlog@mywexlog.com'
 # SENDGRID_FROM_EMAIL = 'mywexloginfo@mywexlog.dev'    #
 # SENDGRID_FROM_EMAIL = 'machterberg@devoptec.com'
+
+#TINYMCE_JS_URL = os.path.join(STATIC_URL, "tiny_mce/tiny_mce_src.js")
+TINYMCE_JS_ROOT = os.path.join(STATIC_ROOT, "tinymce")
+TINYMCE_DEFAULT_CONFIG = {
+    "height": "320px",
+    "width": "auto",
+    "menubar": "file edit view insert format tools table help",
+    "plugins": "advlist autolink lists link image charmap print preview anchor searchreplace visualblocks code "
+    "fullscreen insertdatetime media table paste code help wordcount spellchecker",
+    "toolbar": "undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft "
+    "aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor "
+    "backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | "
+    "fullscreen  preview save print | insertfile image media pageembed template link anchor codesample | "
+    "a11ycheck ltr rtl | showcomments addcomment code",
+    "custom_undo_redo_levels": 10,
+}
+TINYMCE_SPELLCHECKER = True
+TINYMCE_COMPRESSOR = True
+TINYMCE_EXTRA_MEDIA = {
+    'css': {
+        'all': [
+#            ...
+        ],
+    },
+    'js': [
+#        ...
+    ],
+}

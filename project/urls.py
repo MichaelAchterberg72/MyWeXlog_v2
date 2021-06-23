@@ -46,4 +46,6 @@ urlpatterns = [
     path('not-current-project-task/<int:pb>/<slug:prj>/<slug:co>/<slug:bch>/', views.not_current_task, name='NotCurrentProjectTask'),
     path('edit-project-task-billing/<int:pb>/<slug:ppdts>/<slug:prj>/<slug:co>/<slug:bch>/', views.edit_billing_rate_pd, name='EditProjectTaskBilling'),
     path('edit-project-task-billing-full-list/<int:pb>/<slug:ppds>/<slug:ppdts>/<slug:prj>/<slug:co>/<slug:bch>/', views.edit_billing_rate_fl, name='EditProjectTaskBillingFL'),
+    # Project Task Note
+    path('add/task/note/<slug:prj>/<slug:co>/<slug:bch>/<slug:ppdt>/', views.ProjectTaskNoteAddView, name="AddProjectTaskNote"),
 ]
