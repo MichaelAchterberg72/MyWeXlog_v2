@@ -44,7 +44,7 @@
           <div class="form-group col-md-6 mb-0">
             {{ form.companybranch|as_crispy_field }}
             <p>
-              <a href="{% url 'Enterprise:BranchAddPop' %}" id='add_branch' onclick='return showAddPopup(this);'>
+              <a href="{% url 'Enterprise:FullBranchAddPopup' %}" id='add_branch' onclick='return showAddPopup(this);'>
                 <img src = "{% static 'images/icon-addlink.svg' %}">Add a Branch
               </a>
             </p>
@@ -163,7 +163,7 @@
   </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-
+{{ form.media }}
 {% endblock content %}
 
 {% block Script %}

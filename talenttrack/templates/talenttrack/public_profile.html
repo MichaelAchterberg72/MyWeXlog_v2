@@ -98,7 +98,7 @@
       </div>
       <div class="row pt-2">
         <div class="col-md-12 text-left">
-          <span class="">{{ als.public_profile_intro|linebreaks|truncatechars:460 }}</span><br>
+          <span class="">{{ als.public_profile_intro|safe|truncatechars:460 }}</span><br>
         </div>
       </div>
       <br>
@@ -446,7 +446,7 @@
     <div class="profile-card-body mb-auto">
     <div class="row pt-3 h-100 my-auto">
       <div class="col-md-12 text-left my-auto">
-        <span class="">{% if bid_qs %}{{ bid_qs.motivation|linebreaks }}{% else %}{{ als.motivation|linebreaks }}{% endif %}</span>
+        <span class="">{% if bid_qs %}{{ bid_qs.motivation|safe }}{% else %}{{ als.motivation|safe }}{% endif %}</span>
       </div>
     </div>
   </div>
@@ -461,7 +461,7 @@
   <div class="profile-card-body mb-auto">
   <div class="row pt-3 h-100 my-auto">
     <div class="col-md-12 text-left my-auto">
-      <span class="">{{ als.background|linebreaks }}</span>
+      <span class="">{{ als.background|safe }}</span>
     </div>
   </div>
 </div>
@@ -642,13 +642,13 @@ background-color:transparent;
             <div class="col-md-12">
               <div class="profile-list-heading">{{ vac.wit_v.0.0 }}</div><br>
               <div class="" id="mypDisc1{{vac.wit_v.0.7}}" style="display:block;">
-                {{ vac.wit_v.0.4|linebreaks|truncatechars:460 }}<br>
+                {{ vac.wit_v.0.4|safe|truncatechars:460 }}<br>
                 {% if vac.wit_v.0.4|length > 460 %}
                 <button class="float-right" type="submit" id="readMore{{vac.wit_v.0.7}}">Read More ..</button>
                 {% endif %}
               </div>
               <div class="" id="mypDisc2{{vac.wit_v.0.7}}" style="display:none;">
-                {{ vac.wit_v.0.4|linebreaks }}<br>
+                {{ vac.wit_v.0.4|safe }}<br>
                 <button class="float-right" type="submit" id="readLess{{vac.wit_v.0.7}}">Read Less ..</button><br>
               </div>
 
@@ -983,13 +983,13 @@ background-color:transparent;
               <div class="profile-list-heading-under">{{ key.co.0.0 }}</div><br>
               {% if key.dt.0.3 %}
               <div class="" id="coDisc1{{key.dt.0.4}}" style="display:block;">
-                {{ key.dt.0.3|linebreaks|truncatechars:460 }}<br>
+                {{ key.dt.0.3|safe|truncatechars:460 }}<br>
                 {% if key.dt.0.3|length > 460 %}
                 <button class="float-right" type="submit" id="readMore{{key.dt.0.4}}">Read More ..</button><br>
                 {% endif %}
               </div>
               <div class="" id="coDisc2{{key.dt.0.4}}" style="display:none;">
-                {{ key.dt.0.3|linebreaks }}<br>
+                {{ key.dt.0.3|safe }}<br>
                 <button class="float-right" type="submit" id="readLess{{key.dt.0.4}}">Read Less ..</button><br>
               </div><br>
 
@@ -1126,7 +1126,7 @@ background-color:transparent;
                           </div>
                           <div class="row pt-3 h-100 my-auto">
                             <div class="col-md-12 text-left my-auto">
-                              <span class="">{% if project.pd_desc.0.0 %}{% if project.pd_desc.0.0 != "N" %}{{ project.pd_desc.0.0|linebreaks|truncatechars:390 }}{% endif %}{% endif %}</span>
+                              <span class="">{% if project.pd_desc.0.0 %}{% if project.pd_desc.0.0 != "N" %}{{ project.pd_desc.0.0|safe|truncatechars:390 }}{% endif %}{% endif %}</span>
                             </div>
                           </div>
                         </div>
@@ -1170,7 +1170,7 @@ background-color:transparent;
                         </div>
                         <div class="row pt-3 h-100 my-auto">
                           <div class="col-md-12 text-left my-auto">
-                            <span class="">{% if project.pd_desc.0.0 %}{% if project.pd_desc.0.0 != "N" %}{{ project.pd_desc.0.0|linebreaks }}{% endif %}{% endif %}</span>
+                            <span class="">{% if project.pd_desc.0.0 %}{% if project.pd_desc.0.0 != "N" %}{{ project.pd_desc.0.0|safe }}{% endif %}{% endif %}</span>
                           </div>
                         </div>
                         <div class="row pt-3 h-100 my-auto">

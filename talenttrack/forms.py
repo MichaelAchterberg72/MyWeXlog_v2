@@ -294,7 +294,7 @@ class PreLoggedExperienceForm(forms.ModelForm):
             'company': CompanySelect2Widget(),
             'companybranch': BranchSelect2Widget(),
             'designation': DesignationSelect2Widget(),
-            'project_data': ProjectSelect2Widget(),
+            'project_data': ProjectSelect2Widget(data_view='Project:project_data_json'),
             'date_from': DateInput(attrs={'max': timezone.now().date()}),
             'date_to': DateInput(attrs={'max': timezone.now().date()}),
             'skills': SkillModelSelect2MultipleWidget(),
@@ -564,7 +564,7 @@ class WorkExperienceForm(forms.ModelForm):
         widgets={
             'company': CompanySelect2Widget(),
             'designation': DesignationSelect2Widget(),
-            'project_data': ProjectSelect2Widget(),
+            'project_data': ProjectSelect2Widget(data_view='Project:project_data_json'),
             'date_from': DateInput(attrs={'max': timezone.now().date()}),
             'date_to': DateInput(attrs={'max': timezone.now().date()}),
             'skills': SkillModelSelect2MultipleWidget(),

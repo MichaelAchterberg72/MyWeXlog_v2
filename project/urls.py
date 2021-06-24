@@ -48,4 +48,7 @@ urlpatterns = [
     path('edit-project-task-billing-full-list/<int:pb>/<slug:ppds>/<slug:ppdts>/<slug:prj>/<slug:co>/<slug:bch>/', views.edit_billing_rate_fl, name='EditProjectTaskBillingFL'),
     # Project Task Note
     path('add/task/note/<slug:prj>/<slug:co>/<slug:bch>/<slug:ppdt>/', views.ProjectTaskNoteAddView, name="AddProjectTaskNote"),
+    # Ajax
+    path('fields/project_data.json',
+        ProjectDataJsonView.as_view(), name="project_data_json"),
 ]
