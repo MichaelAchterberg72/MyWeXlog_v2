@@ -1,6 +1,8 @@
 from django.db import models
 from django.conf import settings
 
+from tinymce.models import HTMLField
+
 from django_countries.fields import CountryField
 
 from enterprises.models import Enterprise, Industry, Branch
@@ -41,7 +43,7 @@ class ProjectPersonalDetails(models.Model):
     project = models.ForeignKey(ProjectData, on_delete=models.CASCADE)
     company = models.ForeignKey(Enterprise, on_delete=models.PROTECT, verbose_name="Owner", null=True)
     companybranch = models.ForeignKey(Branch, on_delete=models.PROTECT, verbose_name='Branch Working for on the Project', null=True)
-    description = models.TextField(blank=True, null=True)
+    description = HTMLField(blank=True, null=True)
 
     class Meta:
         unique_together = (('talent', 'project', 'company', 'companybranch'),)

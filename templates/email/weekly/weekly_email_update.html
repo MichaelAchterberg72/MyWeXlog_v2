@@ -25,9 +25,9 @@
           {{ item.hours_required|intcomma }} Hours ({{ item.get_unit_display }}) @ {{ item.rate_offered|intcomma }} {{ item.currency }} {{ item.get_rate_unit_display }}<br>
           {{ item.worklocation }} in {{ item.city }}</p>
           <p><strong>Scope:</strong><br>
-          {{ item.scope|truncatechars:266 }}</p>
+          {{ item.scope|safe|truncatechars:266 }}</p>
           <p><strong>Expectations:</strong><br>
-          {{ item.expectations|truncatechars:266 }}</p>
+          {{ item.expectations|safe|truncatechars:266 }}</p>
           <a href="{{site}}{% url 'MarketPlace:VacancyDetail' item.ref_no %}" target="_blank">
           <div onmouseover="this.style.backgroundColor='dodgerblue';this.style.color='#FFF'" onmouseout="this.style.backgroundColor='#FFF';this.style.color='dodgerblue'" style="border: 2px solid dodgerblue; color: dodgerblue; background-color: inherit; text-align:right;  float: right; margin-bottom: 8px; -webkit-border-radius: 5px; border-radius: 5px; padding: 14px 28px; font-size: 16px; cursor: pointer; display: inline-block;">Apply Now</div></a>
         </div>

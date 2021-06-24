@@ -1,4 +1,4 @@
-{% extends "base_home.html" %}
+safe{% extends "base_home.html" %}
 {% load humanize %}
 {% load crispy_forms_tags %}
 {% load static %}
@@ -48,17 +48,17 @@
       <hr>
       <h6><strong>My Commendations for Talent</strong></h6>
       <div class="container">
-        <p>{{ emp_qs.comment|linebreaks }}</p>
+        <p>{{ emp_qs.comment|safe }}</p>
       </div>
       <hr>
       <h6><strong>My Personal Comments</strong></h6>
       <div class="container">
-        <p>{{ emp_qs.personal_comment|linebreaks }}</p>
+        <p>{{ emp_qs.personal_comment|safe }}</p>
       </div>
       <hr>
       <h6><strong>My Suggestions to Talent</strong></h6>
       <div class="container">
-        <p>{{ emp_qs.suggestions|linebreaks }}</p>
+        <p>{{ emp_qs.suggestions|safe }}</p>
       </div>
       <hr>
       <h6><strong>Talent Suggestions for Me</strong></h6>

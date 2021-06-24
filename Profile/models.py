@@ -17,6 +17,8 @@ from django.utils import timezone
 from .utils import create_code7, create_code9
 from WeXlog.storage_backends import PrivateMediaStorage
 
+from tinymce.models import HTMLField
+
 from pdf2image import convert_from_path, convert_from_bytes
 from pdf2image.exceptions import (
     PDFInfoNotInstalledError,
@@ -43,7 +45,7 @@ class BriefCareerHistory(models.Model):
     work_configeration = models.ForeignKey(WorkLocation, on_delete=models.PROTECT)
     designation = models.ForeignKey(Designation, on_delete=models.PROTECT, null=True)
     companybranch = models.ForeignKey(Branch, on_delete=models.PROTECT, verbose_name="Home_Base")
-    description = models.TextField(blank=True, null=True)
+    description = HTMLField(blank=True, null=True)
     current = models.BooleanField(default=False)
     date_captured = models.DateField(auto_now_add=True)
     date_from = models.DateField()
@@ -125,15 +127,15 @@ class Profile(models.Model):
     f_name = models.CharField(max_length=30, null=True)
     l_name = models.CharField(max_length=30, null=True)
     alias = models.CharField(max_length=30, null=True, unique=True)
-    public_profile_intro = models.TextField(max_length=460, blank=True, null=True)
+    public_profile_intro = HTMLField(max_length=460, blank=True, null=True)
     birth_date = models.DateField('Date of Birth', null=True)
-    background = models.TextField()
+    background = HTMLField(blank=True, null=True)
     mentor = models.CharField('Do you wish to be a mentor?', max_length=1, choices=MENTOR, default='N')#Opt in to be a mentor to other people
     referral_code = models.OneToOneField(Referral, on_delete=models.SET_NULL, null=True)
     std_rate = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     currency = models.ForeignKey(Currency, on_delete=models.PROTECT, null=True)
     rate_unit = models.CharField(max_length=1, choices=RATE_UNIT, default='H')
-    motivation = models.TextField(blank=True, null=True)
+    motivation = HTMLField(blank=True, null=True)
     exp_lvl = models.ForeignKey(SkillLevel, on_delete=models.PROTECT, related_name='profile_tenure', null=True, default=1)
     rate_1 = models.FloatField(null=True, default=0)#average for marketplace.models.VacancyRate
     rate_2 = models.FloatField(null=True, default=0)#average for marketplace.models.VacancyRate
