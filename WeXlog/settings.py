@@ -92,6 +92,8 @@ INSTALLED_APPS = [
     'sorl.thumbnail',
     'sri',
     'tinymce',
+    'grappelli',
+    'filebrowser',
 ]
 
 
@@ -222,7 +224,7 @@ CSP_SCRIPT_SRC = (
     "'self'", "'unsafe-inline'", '127.0.0.1', '107.191.57.249', 'code.jquery.com', 'maxcdn.bootstrapcdn.com', 'kit.fontawesome.com', 'app.mywexlog.dev', 'mywexlog.dev', 'cdnjs.cloudflare.com', 'maps.googleapis.com', 'bookstrapcdn.com', 'cdn.jsdelivr.net', 'cdn.jsdelivr.net', 'ajax.googleapis.com', 'cdnjs.cloudflare.com', 'apis.google.com', 'https://www.gstatic.com', 'dot-test-machterberg.s3.amazonaws.com',
     )#app_config
 CSP_IMG_SRC = (
-    "'self'", '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev', 'dot-test-machterberg.s3.amazonaws.com',
+    "'self'", '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev', 'dot-test-machterberg.s3.amazonaws.com', 'w3.org',
     )#app_config
 CSP_OBJECT_SRC = None
 CSP_MEDIA_SRC = (
@@ -492,3 +494,5 @@ TINYMCE_EXTRA_MEDIA = {
 #        ...
     ],
 }
+# URL_TINYMCE = getattr(settings, "FILEBROWSER_URL_TINYMCE", settings.ADMIN_MEDIA_PREFIX + "tinymce/jscripts/tiny_mce/")
+# PATH_TINYMCE = getattr(settings, "FILEBROWSER_PATH_TINYMCE", settings.ADMIN_MEDIA_PREFIX + "tinymce/jscripts/tiny_mce/")
