@@ -37,11 +37,34 @@
               </div>
             </div>
             <div class="row my-auto">
-              <div class="col-md-10 h-100 text-left my-auto">
-                {{ project.description }}
-              </div>
-              <div class="col-md-2 h-100 text-center my-auto">
+              <div class="col-md-12 h-100 my-auto">
+                <div class="" id="myProjectDisc1{{ppdd.id}}" style="display:block;">
+                  {{ project.description|safe|truncatechars:640 }}<br>
+                  {% if project.description|length > 640 %}
+                  <button class="float-right" type="submit" id="readMoreProject{{project.id}}">Read More ..</button>
+                  {% endif %}
+                </div>
+                <div class="" id="myProjectDisc2{{project.id}}" style="display:none;">
+                  {{ project.description|safe }}<br>
+                  <button class="float-right" type="submit" id="readLessProject{{project.id}}">Read Less ..</button><br>
+                </div>
 
+                {% if project.description|length > 640 %}
+                <script>
+                  var readMore = document.getElementById('readMoreProject{{project.id}}');  // 1
+                  readMore.addEventListener('click', function() {   // 3
+                     myProjectDisc1{{project.id}}.style.display = 'none';
+                     myProjectDisc2{{project.id}}.style.display = 'block';          // 4
+                  });
+                  var readLess = document.getElementById('readLessProject{{project.id}}');  // 1
+                  readLess.addEventListener('click', function() {  // 3
+                    myProjectDisc1{{project.id}}.style.display = 'block';
+                    myProjectDisc2{{project.id}}.style.display = 'none';
+                    myProjectDisc1{{project.id}}.scrollIntoView();              // 4
+                  });
+
+                </script>
+                {% endif %}
               </div>
             </div>
           </div>
@@ -53,7 +76,43 @@
     </div>
   </div>
   <br>
-  <div class="card card-shadow">
+  <div id="ppddDescription" class="card card-shadow">
+    <div class="card-body">
+      <h4 class="">Project Details Description!</h4>
+      <div class="" id="mypDisc1{{ppdd.id}}" style="display:block;">
+        {{ ppdd.description|safe|truncatechars:640 }}<br>
+        {% if ppdd.description|length > 640 %}
+        <button class="float-right" type="submit" id="readMore{{ppdd.id}}">Read More ..</button>
+        {% endif %}
+      </div>
+      <div class="" id="mypDisc2{{ppdd.id}}" style="display:none;">
+        {{ ppdd.description|safe }}<br>
+        <button class="float-right" type="submit" id="readLess{{ppdd.id}}">Read Less ..</button><br>
+      </div>
+      <p class="small-paragraph"><small>* Double click to edit</small></p>
+      {% if ppdd.description|length > 640 %}
+      <script>
+        var readMore = document.getElementById('readMore{{ppdd.id}}');  // 1
+        readMore.addEventListener('click', function() {   // 3
+           mypDisc1{{ppdd.id}}.style.display = 'none';
+           mypDisc2{{ppdd.id}}.style.display = 'block';          // 4
+        });
+        var readLess = document.getElementById('readLess{{ppdd.id}}');  // 1
+        readLess.addEventListener('click', function() {  // 3
+          mypDisc1{{ppdd.id}}.style.display = 'block';
+          mypDisc2{{ppdd.id}}.style.display = 'none';
+          mypDisc1{{ppdd.id}}.scrollIntoView();              // 4
+        });
+
+      </script>
+      {% endif %}
+
+      {% endif %}
+    </div>
+  </div>
+
+
+  <div id="ppddEditDescription" class="card card-shadow" style="display:none;">
     <div class="card-body">
     <h4 class="">Add New Project Details!</h4>
 
@@ -163,5 +222,22 @@
   {% endfor %}
   </div>
 </div>
-{{ form.media }}
+{% include "tiny_compressor.html" %}
+<script type="text/javascript">
+  $(function() {
+    if (($('#id_description').val().length <= 1 )) {
+      console.log(($('#id_description')).val().length);
+      $('#ppddEditDescription').show();
+      $('#ppddDescription').hide();
+    } else {
+      $('#ppddEditDescription').hide();
+      $('#ppddDescription').show();
+    }
+  });
+
+  $("#ppddDescription").dblclick(function() {
+    $('#ppddDescription').hide();
+    $('#ppddEditDescription').show();
+  });
+</script>
 {% endblock content %}

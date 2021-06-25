@@ -178,6 +178,12 @@ def ProjectPersonalDetailsView(request, prj, co, bch):
     pr_c_i = Enterprise.objects.get(slug=co)
     pr_b_i = Branch.objects.get(slug=bch)
 
+    ppdd = ProjectPersonalDetails.objects.get(
+            talent=request.user,
+            project=project,
+            company=pr_c_i,
+            companybranch=pr_b_i)
+
     p_instance, _ = ProjectPersonalDetails.objects.get_or_create(
             talent=request.user,
             project=project,
@@ -187,7 +193,7 @@ def ProjectPersonalDetailsView(request, prj, co, bch):
     ptl = ProjectTaskBilling.objects.filter(ppdt__ppd=p_instance, ppdt__current=True, current=True).order_by('date_start')
 
     if request.method == 'POST':
-        form = ProjectPersonalDetailsForm(request.POST, instance=p_instance)
+        form = ProjectPersonalDetailsForm(request.POST or None, instance=p_instance)
         if form.is_valid():
             new = form.save(commit=False)
             new.save()
@@ -195,7 +201,7 @@ def ProjectPersonalDetailsView(request, prj, co, bch):
     else:
         form = ProjectPersonalDetailsForm(instance=p_instance)
         template_name = 'project/personal_detail.html'
-        context = {'form': form, 'project': project, 'pr_c_i': pr_c_i, 'pr_b_i': pr_b_i, 'ptl': ptl, 'instance': p_instance, 'prj': prj, 'co': co, 'bch': bch}
+        context = {'form': form, 'project': project, 'pr_c_i': pr_c_i, 'pr_b_i': pr_b_i, 'ptl': ptl, 'instance': p_instance, 'ppdd': ppdd, 'prj': prj, 'co': co, 'bch': bch}
         return render(request, template_name, context)
 
 
