@@ -1,0 +1,59 @@
+{% load i18n %}
+{% load scheduletags %}
+
+<div class="modal fade" id="{{o.occurrence.event.id}}" tabindex="-1" role="dialog" >
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">{{occurrence.title}}</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-striped">
+            <tr>
+                <td class="left">{% trans "Starts" %}</td>
+                <td>{% blocktrans with occurrence.start|date:_("DATETIME_FORMAT") as start_date %}{{ start_date }}{% endblocktrans %}</td>
+            </tr>
+            <tr>
+                <td class="left">{% trans "Ends" %}</td>
+                <td>{% blocktrans with occurrence.end|date:_("DATETIME_FORMAT") as end_date %}{{ end_date }}{% endblocktrans %}</td>
+            </tr>
+            {% if occurrence.event.rule %}
+                {% if not occurrence.id %}
+                    <tr>
+                        <td class="left">{% trans "Reoccurs" %}</td><td>{{occurrence.event.rule}}</td>
+                    </tr>
+                    {% if occurrence.event.end_recurring_period %}
+                        <tr>
+                            <td class="left">{% trans "Until" %}</td>
+                            <td>{% blocktrans with occurrence.event.end_recurring_period|date:_("DATETIME_FORMAT") as end_date %}{{ end_date }}{% endblocktrans %}</td>
+                        </tr>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        </table>
+        {% if occurrence.companybranch %}
+        <h3>{% trans "Company Branch" %}</h3>
+        <p>{{occurrence.companybranch}}</p>
+        {% endif %}
+        {% if occurrence.project_data %}
+        <h3>{% trans "Personal Project" %}</h3>
+        <p>{{occurrence.project_data}}</p>
+        {% endif %}
+        {% if occurrence.task %}
+        <h3>{% trans "Task" %}</h3>
+        <p>{{occurrence.task}}</p>
+        {% endif %}
+        {% if occurrence.description %}
+        <h3>{% trans "Description" %}</h3>
+        <p>{{occurrence.description}}</p>
+        {% endif %}
+
+      </div>
+      <div class="modal-footer">
+        <a href="{% url 'edit_event' calendar.slug occurrence.event.id %}" class="btn btn-primery float-left">{% trans "Edit" %}</a>
+       <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</button>
+      </div>
+    </div>
+  </div>
+</div>

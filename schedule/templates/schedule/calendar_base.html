@@ -1,0 +1,34 @@
+{% load scheduletags i18n %}
+{% load i18n %}
+{% get_or_create_calendar request.user other_user.username as calendar %}
+<div class="row">
+  <div class="col-md-2 align-self-center" id="allToday">
+  </div>
+  <div class="col-md-5 align-self-center" id="allDate">
+  </div>
+  <div class="col-md-2 float-right">
+    <div class="btn-group" role="group">
+        <button id="btnGroupDrop1" type="button" class="btn btn-outline-secondary dropdown-toggle float-right" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Select a Calendar
+        </button>
+        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+          <a class="dropdown-item" href="{% url "year_calendar" calendar.slug %}">This Year</a>
+          <a class="dropdown-item" href="{% url "tri_month_calendar" calendar.slug %}">3 Month Calendar</a>
+          <a class="dropdown-item" href="{% url "month_calendar" calendar.slug %}">Month Calendar</a>
+          <a class="dropdown-item" href="{% url "week_calendar" calendar.slug %}">Weekly Calendar</a>
+          <a class="dropdown-item" href="{% url "day_calendar" calendar.slug %}">Daily Calendar</a>
+        </div>
+      </div>
+  </div>
+  <div class="col-md-3">
+    <a class="btn btn-outline-success" href="{% url 'calendar_create_event' calendar.slug %}">Create Calendar Event</a>
+  </div>
+</div>
+<script>
+  $(document).ready(function(){
+    $("#allDate").append($("#date").html());
+    $("#date").hide();
+    $("#allToday").append($("#today").html());
+    $("#today").hide();
+  });
+</script>

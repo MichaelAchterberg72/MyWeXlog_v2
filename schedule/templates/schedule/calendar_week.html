@@ -2,26 +2,18 @@
 {% load scheduletags i18n %}
 
 {% block content %}
-
+{% include "schedule/calendar_base.html" %}
 {% include "schedule/_dialogs.html" %}
 
 <div class="row row-centered">
-  <a href="{% url "month_calendar" calendar.slug %}{% querystring_for_date period.start 2 %}">
-    {% trans "Month" %}
-  </a>
-  <a href="{% url "year_calendar" calendar.slug %}{% querystring_for_date period.start 1 %}">
-    {% trans "Year" %}
-  </a>
-</div>
-
-<div class="row row-centered">
-    <div>{{ calendar.name }}</div>
+  <div class="row d-inline-flex justify-content-center" id="date" style="visibility:hidden;">
     {% prevnext "week_calendar" calendar period "\W\e\ek W, M Y" %}
-    <div class="now">
-      <a href="{% url "week_calendar" calendar.slug %}">
-        {% trans "This week" %}
-      </a>
-    </div>
+  </div>
+  <div class="" id="today" style="visibility:hidden;">
+    <a class="btn btn-outline-secondary" href="{% url "week_calendar" calendar.slug %}">
+      {% trans "Today" %}
+    </a>
+  </div>
 </div>
 
 <div class="row row-centered">

@@ -2,23 +2,23 @@
 {% load i18n scheduletags %}
 
 {% block content %}
+{% include "schedule/calendar_base.html" %}
+
+<div class="row row-centered">
+
+  <div class="" id="today" style="visibility:hidden;">
+    <a class="btn btn-outline-secondary" href="{% url "day_calendar" event.calendar.slug %}">
+      {% trans "Today" %}
+    </a>
+  </div>
+</div>
+<br><br>
 <div class="card card-shadow col-sm-6 mx-auto">
   <div class="card-body">
-<div class="navigation">
-  <a class="btn btn-primary gradient" href="{% url "day_calendar" event.calendar.slug %}{% querystring_for_date event.start 3 %}">
-    {% trans "Day" %}
-  </a>
-  <a class="btn btn-primary gradient" href="{% url "month_calendar" event.calendar.slug %}{% querystring_for_date event.start 2 %}">
-    {% trans "Month" %}
-  </a>
-  <a class="btn btn-primary gradient" href="{% url "year_calendar" event.calendar.slug %}{% querystring_for_date event.start 1 %}">
-    {% trans "Year" %}
-  </a>
-</div>
 
 <div class="event_actions" align="center">
   {% if back_url %}
-  <a href="{{ back_url }}">
+  <a href="{{ back_url }}">Back
     <span class="glyphicon glyphicon-circle-arrow-left"></span>
   </a>
   &nbsp;

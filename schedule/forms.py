@@ -27,7 +27,7 @@ class ProjectPersonalTaskSearchFieldMixin:
         'task__icontains', 'pk__startswith', 'ppd__project__company__ename__icontains', 'company__company__ename__icontains', 'client__name__icontains',
     ]
 
-    dependent_fields = {'ppd': 'ppd'}
+    dependent_fields = {'project_data': 'ppd'}
 
 class ProjectPersonalTaskSelect2Widget(ProjectPersonalTaskSearchFieldMixin, ModelSelect2Widget):
     model = ProjectPersonalDetailsTask
@@ -49,14 +49,14 @@ class RuleSelect2Widget(RuleSearchFieldMixin, ModelSelect2Widget):
 
 
 class SpanForm(forms.ModelForm):
-    start = forms.DateTimeField(widget=MinimalSplitDateTimeMultiWidget(), label=_("start"))
+    start = forms.DateTimeField(widget=MinimalSplitDateTimeMultiWidget(attrs={'class': 'form-control split-date'}), label=_("start"))
     end = forms.DateTimeField(
-            widget=MinimalSplitDateTimeMultiWidget(),
+            widget=MinimalSplitDateTimeMultiWidget(attrs={'class': 'form-control split-date'}),
             required=False,
             label=_("end"),
             help_text=_("The end time must be later than start time.")
     )
-    end_recurring_period = forms.DateTimeField(widget=MinimalSplitDateTimeMultiWidget(), required=False)
+    end_recurring_period = forms.DateTimeField(widget=MinimalSplitDateTimeMultiWidget(attrs={'class': 'form-control split-date'}), required=False)
 
     def clean(self):
         if "end" in self.cleaned_data and "start" in self.cleaned_data:

@@ -606,6 +606,11 @@ table {
   z-index: 1;
 }
 
+.split-date {
+  min-height: 38px !important;
+  max-width: 12rem;
+}
+
 .select2-container {
   min-height: 38px !important;
 }

@@ -78,7 +78,8 @@
   <br>
   <div id="ppddDescription" class="card card-shadow">
     <div class="card-body">
-      <h4 class="">Project Details Description!</h4>
+      <h4 class="">Project Personal Responsibilities Description!</h4>
+      <br>
       <div class="" id="mypDisc1{{ppdd.id}}" style="display:block;">
         {{ ppdd.description|safe|truncatechars:640 }}<br>
         {% if ppdd.description|length > 640 %}
@@ -107,7 +108,7 @@
       </script>
       {% endif %}
 
-      {% endif %}
+
     </div>
   </div>
 
@@ -226,7 +227,6 @@
 <script type="text/javascript">
   $(function() {
     if (($('#id_description').val().length <= 1 )) {
-      console.log(($('#id_description')).val().length);
       $('#ppddEditDescription').show();
       $('#ppddDescription').hide();
     } else {

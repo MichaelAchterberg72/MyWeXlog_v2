@@ -211,7 +211,7 @@ def prev_url(target, calendar, period):
         return ""
 
     return mark_safe(
-        '<a href="%s%s"><span class="glyphicon glyphicon-circle-arrow-left"></span></a>'
+        '<a href="%s%s"><i class="fa fa-chevron-left" aria-hidden="true"></i></a>'
         % (
             reverse(target, kwargs={"calendar_slug": slug}),
             querystring_for_date(period.prev().start),
@@ -229,7 +229,7 @@ def next_url(target, calendar, period):
         return ""
 
     return mark_safe(
-        '<a href="%s%s"><span class="glyphicon glyphicon-circle-arrow-right"></span></a>'
+        '<a href="%s%s"><i class="fa fa-chevron-right" aria-hidden="true"></i></a>'
         % (
             reverse(target, kwargs={"calendar_slug": slug}),
             querystring_for_date(period.next().start),

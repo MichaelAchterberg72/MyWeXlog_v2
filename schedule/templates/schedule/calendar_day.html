@@ -2,35 +2,21 @@
 {% load scheduletags i18n %}
 
 {% block content %}
-
+{% include "schedule/calendar_base.html" %}
 
 <div class="row row-centered">
-  <a class="btn btn-primary gradient" href="{% url "week_calendar" calendar.slug %}{% querystring_for_date period.start 3 %}">
-    {% trans "Week" %}
-  </a>
-  <a class="btn btn-primary gradient" href="{% url "month_calendar" calendar.slug %}{% querystring_for_date period.start 2 %}">
-    {% trans "Month" %}
-  </a>
-  <a class="btn btn-primary gradient" href="{% url "year_calendar" calendar.slug %}{% querystring_for_date period.start 1 %}">
-    {% trans "Year" %}
-  </a>
-</div>
-<div class="row row-centered">
-    <h1>{{ calendar.name }}</h1>
+  <div class="row d-inline-flex justify-content-center" id="date" style="visibility:hidden;">
     {% prevnext "day_calendar" calendar period "l, F d, Y" %}
-    <div class="now">
-      <a class="btn btn-primary gradient" href="{% url "day_calendar" calendar.slug %}">
-        {% trans "Today" %}
-      </a>
-    </div>
+  </div>
+  <div class="" id="today" style="visibility:hidden;">
+    <a class="btn btn-outline-secondary" href="{% url "day_calendar" calendar.slug %}">
+      {% trans "Today" %}
+    </a>
+  </div>
 </div>
-<div class="row">
-  <a class="btn btn-primary" href="{% url 'calendar_create_event' calendar.slug %}">Create Calendar Event</a>
+<div class="row row-centered">
+  <div>
+    {% daily_table period %}
+  </div>
 </div>
-  <div class="row row-centered">
-    <div>
-      {% daily_table period %}
-    </div>
-</div>
-
 {% endblock %}

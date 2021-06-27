@@ -60,29 +60,52 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col-md-2">
-                    <strong>Country</strong>
+                  <div class="col-md-6">
+                    <div class="row">
+                      <div class="col-md-4">
+                        <strong>Country</strong>
+                      </div>
+                      <div class="col-md-7">
+                        {{ d.get_country_display }}
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-4">
+                        <strong>Region</strong>
+                      </div>
+                      <div class="col-md-7">
+                        {{ d.region }}
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-4">
+                        <strong>City</strong>
+                      </div>
+                      <div class="col-md-7">
+                        {{ d.city }}
+                      </div>
+                    </div>
                   </div>
                   <div class="col-md-6">
-                    {{ d.get_country_display }}
+                    <div class="row">
+                      <div class="col-md-6">
+                        <strong>Total People on Project</strong>
+                      </div>
+                      <div class="col-md-6">
+                        {{ ppl|intcomma }}
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <strong>Total Hours on Project</strong>
+                      </div>
+                      <div class="col-md-6">
+                        {{ hr.sum_t|floatformat:0|intcomma }}
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div class="row">
-                  <div class="col-md-2">
-                    <strong>Region</strong>
-                  </div>
-                  <div class="col-md-6">
-                    {{ d.region }}
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-2">
-                    <strong>City</strong>
-                  </div>
-                  <div class="col-md-6">
-                    {{ d.city }}
-                  </div>
-                </div>
+
                 <div class="row">
                   <div class="col-md-2">
                     <p>&nbsp</p>
@@ -91,27 +114,21 @@
 
                   </div>
                 </div>
+
                 <div class="row">
-                  <div class="col-md-3">
-                    <strong>Total People on Project</strong>
+                  <div class="col-md-2">
+                    <strong>Overall Project Description</strong>
                   </div>
-                  <div class="col-md-6">
-                    {{ ppl|intcomma }}
+                  <div class="col-md-10">
+                    {{ d.description|safe }}
                   </div>
                 </div>
-                <div class="row">
-                  <div class="col-md-3">
-                    <strong>Total Hours on Project</strong>
-                  </div>
-                  <div class="col-md-6">
-                    {{ hr.sum_t|floatformat:0|intcomma }}
-                  </div>
-                </div>
+
                 <div class="row">
                   <div class="col-md-2">
 
                   </div>
-                  <div class="col-md-6">
+                  <div class="col-md-10">
                     {% if request.user.subscription >= 2 %}
                       <p class="text-right">
                         <a href="{% url 'Project:HoursOnProject' info.slug %}?next={{ request.path|urlencode }}"class="btn btn-primary">

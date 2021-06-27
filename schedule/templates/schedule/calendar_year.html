@@ -1,17 +1,22 @@
 {% extends "base_home.html" %}
 {% load scheduletags i18n %}
 {% block content %}
+{% include "schedule/calendar_base.html" %}
 <div class="tablewrapper">
-    <div class="calendarname">{{ calendar.name }}</div>
+  <div class="row d-inline-flex justify-content-center" id="date" style="visibility:hidden;">
     {% prevnext "year_calendar" calendar period "Y" %}
+  </div>
+  <div class="" id="today" style="visibility:hidden;">
+    <a class="btn btn-outline-secondary" href="{% url "year_calendar" calendar.slug %}">
+      {% trans "Today" %}
+    </a>
+  </div>
     <div class="content">
       <div class="row">
-
-
       {% for month in period.get_months %}
         <div class="col-md-3">
           <div class="row row-centered">
-            <button class="btn btn-custom active" href="{% url "month_calendar" calendar.slug %}{% querystring_for_date month.start 2 %}">{{month.name}}</button>
+            <a class="btn btn-custom active" href="{% url "month_calendar" calendar.slug %}{% querystring_for_date month.start 2 %}">{{month.name}}</a>
           </div>
           <div>
             {% month_table calendar month "small" %}
@@ -20,12 +25,4 @@
       {% endfor %}
     </div>
   </div>
-<div class="navigation">
-  <a href="{% url "month_calendar" calendar.slug %}">
-    {% trans "Current Month Calendar" %}
-  </a>
-  <a href="{% url "year_calendar" calendar.slug %}">
-    {% trans "Current Year Calendar" %}
-  </a>
-</div>
 {% endblock %}

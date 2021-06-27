@@ -144,6 +144,7 @@ class Period:
             occurrence = self.classify_occurrence(occurrence)
             if occurrence:
                 occurrence_dicts.append(occurrence)
+        print(occurrence_dicts)
         return occurrence_dicts
 
     def get_occurrences(self):

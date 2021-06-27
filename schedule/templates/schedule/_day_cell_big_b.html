@@ -1,0 +1,16 @@
+{% load scheduletags %}
+<div>
+  {% if day.has_occurrences %}
+    {% for o in day.get_occurrence_partials %}
+    <button type="button" class="badge btn-primary" data-toggle="modal" data-target="#{{o.occurrence.event.id}}" style="width:100%;">
+    {% if o.class == 0 %}{{ o.occurrence.start|time:"G:i" }}{% endif %}
+    {% if o.class == 1 %}{{ o.occurrence.start|time:"G:i" }}{% endif %}
+    {% if o.class == 2 %}(All day){% endif %}
+    {% if o.class == 3 %}Ends at {{ o.occurrence.end|time:"G:i" }}{% endif %}
+    &nbsp-&nbsp{{ o.occurrence.title|truncatechars:15 }}
+    </button>
+    <br>
+    {% include 'schedule/_detail_b.html' with occurrence=o.occurrence %}
+    {% endfor %}
+  {% endif %}
+</div>

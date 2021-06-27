@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.utils.translation import gettext, gettext_lazy as _
 
 from tinymce.models import HTMLField
 
@@ -17,7 +18,7 @@ class ProjectData(models.Model):
     name = models.CharField('Project name', max_length=250)
     company = models.ForeignKey(Enterprise, on_delete=models.PROTECT, verbose_name="Owner", null=True)
     companybranch = models.ForeignKey(Branch, on_delete=models.PROTECT, verbose_name='Branch Managing the Project', null=True)
-    description = models.TextField(blank=True, null=True, verbose_name="Overall project description")
+    description = HTMLField(blank=True, null=True, verbose_name="Overall project description")
     country = CountryField()
     region = models.ForeignKey(Region, on_delete=models.PROTECT)
     city = models.ForeignKey(City, on_delete=models.PROTECT)
@@ -61,18 +62,27 @@ class ProjectPersonalDetails(models.Model):
         super(ProjectPersonalDetails, self).save(*args, **kwargs)
 
 
+TASK_STATUS = (
+      (0,'Due'),
+      (1,'Pending'),
+      (2,'Current'),
+      (3,'Complete'),
+  )
+
 class ProjectPersonalDetailsTask(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     ppd = models.ForeignKey(ProjectPersonalDetails, on_delete=models.CASCADE)
     company = models.ForeignKey(Branch, on_delete=models.SET_NULL, null=True, related_name="Company")
     client = models.ForeignKey(Branch, on_delete=models.SET_NULL, null=True, related_name="Client")
     task = models.CharField(max_length=50, null=True, blank=True)
-    description = models.TextField(blank=True, null=True)
+    description = HTMLField(blank=True, null=True)
     skills = models.ManyToManyField(SkillTag, related_name='task_skills')
     date_create = models.DateField(auto_now_add=True)
     date_start = models.DateField(blank=True, null=True)
     date_end = models.DateField(blank=True, null=True)
-    current = models.BooleanField(default=True)
+    task_status = models.IntegerField(choices=TASK_STATUS, default=2)
+    date_due = models.DateTimeField(_("due on"), blank=True, null=True)
+    date_complete = models.DateTimeField(_("completed on"), blank=True, null=True)
     slug = models.SlugField(max_length=50, unique=True, null=True, blank=True)
 
     def __str__(self):

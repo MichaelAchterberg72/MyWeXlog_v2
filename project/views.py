@@ -190,7 +190,7 @@ def ProjectPersonalDetailsView(request, prj, co, bch):
             company=pr_c_i,
             companybranch=pr_b_i)
 
-    ptl = ProjectTaskBilling.objects.filter(ppdt__ppd=p_instance, ppdt__current=True, current=True).order_by('date_start')
+    ptl = ProjectTaskBilling.objects.filter(Q(ppdt__ppd=p_instance) &  Q(ppdt__task_status=2) & Q(current=True)).order_by('-date_start')
 
     if request.method == 'POST':
         form = ProjectPersonalDetailsForm(request.POST or None, instance=p_instance)
@@ -214,19 +214,21 @@ def not_current_task(request, pb, prj, co, bch):
 
     if request.method =='POST':
         if 'yes' in request.POST:
-            pt_qs.current=True
+            pt_qs.task_status=2
+            pt_qs.date_complete=None
             pt_qs.date_end=None
             pb_qs.date_end=None
             pt_qs.save()
             pb_qs.save()
         elif 'no' in request.POST:
-            pt_qs.current=False
+            pt_qs.task_status=3
+            pt_qs.date_complete=timezone.now()
             pt_qs.date_end=timezone.now()
             pb_qs.date_end=timezone.now()
             pt_qs.save()
             pb_qs.save()
 
-        return redirect(reverse('Project:ProjectPersonal', kwargs={'prj': prj, 'co': co, 'bch': bch}))
+        return redirect(reverse('Project:ProjectPersonal', kwargs={'prj': prj, 'co': co, 'bch': bch})+'#task_list')
 
 
 @login_required
@@ -286,7 +288,8 @@ def edit_billing_rate_fl(request, pb, ppds, ppdts, prj, co, bch):
 @login_required
 def action_project_tasks(request, ppds, prj, co, bch):
     """View to activate or deactivate project tasks"""
-    ptl = ProjectTaskBilling.objects.filter(ppdt__ppd__slug=ppds,  current=True).order_by('-date_start')
+    ptl = ProjectTaskBilling.objects.filter(Q(ppdt__ppd__slug=ppds) &
+    Q(current=True)).order_by('-date_start')
 
     try:
         page = int(request.GET.get('page', 1))
@@ -322,13 +325,15 @@ def action_current_task(request, pb, ppds, prj, co, bch):
 
     if request.method =='POST':
         if 'yes' in request.POST:
-            pt_qs.current=True
+            pt_qs.task_status=2
+            pt_qs.date_complete=None
             pt_qs.date_end=None
             pb_qs.date_end=None
             pt_qs.save()
             pb_qs.save()
         elif 'no' in request.POST:
-            pt_qs.current=False
+            pt_qs.task_status=3
+            pt_qs.date_complete=timezone.now()
             pt_qs.date_end=timezone.now()
             pb_qs.date_end=timezone.now()
             pt_qs.save()
@@ -353,7 +358,7 @@ def ProjectTaskNoteAddView(request, prj, co, bch, ppdt):
             project_data__slug=pd_slug,
             task__slug=ppdt_slug,
             complete=False,
-    ).order_by('-created_on')
+    ).order_by('-updated_on')
 
     if request.method =='POST':
         form = ProjectTaskNoteForm(request.POST or None)
@@ -363,6 +368,7 @@ def ProjectTaskNoteAddView(request, prj, co, bch, ppdt):
             new.companybranch=bch_qs
             new.project_data=pd_qs
             new.task=ppdt_qs
+            new.updated_on=timezone.now()
             new.save()
             return redirect(reverse('Project:AddProjectTaskNote', kwargs={'prj':prj, 'co':co, 'bch':bch, 'ppdt':ppdt}))
     else:
@@ -371,6 +377,125 @@ def ProjectTaskNoteAddView(request, prj, co, bch, ppdt):
     template = 'project/project_task_note_add.html'
     context = {'form': form, 'prj': prj, 'co': co, 'bch': bch, 'ppdt': ppdt, 'notes_list':notes_list}
     return render(request, template, context)
+
+
+@login_required
+def ProjectTaskNoteEditView(request, ns, prj, co, bch, ppdt):
+    instance = NotePad.objects.get(
+            talent=request.user,
+            slug=ns
+    )
+    form = ProjectTaskNoteForm(request.POST or None, instance=instance)
+    if request.method =='POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.updated_on=timezone.now()
+            new.save()
+            return redirect(reverse('Project:AddProjectTaskNote', kwargs={'prj':prj, 'co':co, 'bch':bch, 'ppdt':ppdt}))
+    else:
+        template = 'project/project_task_note_edit.html'
+        context = {'form': form, 'prj': prj, 'co': co, 'bch': bch, 'ppdt': ppdt}
+        return render(request, template, context)
+
+
+login_required()
+def action_current_task_note(request, ns, prj, co, bch, ppdt):
+    '''action a project task note for complete or not complete'''
+    instance = NotePad.objects.get(
+            talent=request.user,
+            slug=ns)
+
+    if request.method =='POST':
+        if 'yes' in request.POST:
+            instance.complete=True
+            instance.date_complete=None
+            instance.save()
+        elif 'no' in request.POST:
+            instance.complete=False
+            instance.date_complete=timezone.now()
+            instance.save()
+
+        return redirect(reverse('Project:AddProjectTaskNote', kwargs={'prj':prj, 'co':co, 'bch':bch, 'ppdt':ppdt})+'#note_list')
+
+
+@login_required
+def ProjectTaskNoteFLView(request, prj, co, bch, ppdt):
+    bch_qs = Branch.objects.get(slug=bch)
+    bch_slug = bch_qs.slug
+    ppdt_qs = ProjectPersonalDetailsTask.objects.get(slug=ppdt)
+    pd_slug = ppdt_qs.ppd.slug
+    ppdt_slug = ppdt_qs.slug
+    pd_qs = ProjectPersonalDetails.objects.get(slug=pd_slug)
+
+    notes_list = NotePad.objects.filter(
+            talent=request.user,
+            companybranch__slug=bch_slug,
+            project_data__slug=pd_slug,
+            task__slug=ppdt_slug
+    ).order_by('-updated_on')
+
+    try:
+        page = int(request.GET.get('page', 1))
+    except:
+        page = 1
+
+    paginator = Paginator(notes_list, 20)
+
+    try:
+        pageitems = paginator.page(page)
+    except PageNotAnInteger:
+        pageitems = paginator.page(1)
+    except EmptyPage:
+        pageitems = paginator.page(paginator.num_pages)
+
+    index = pageitems.number - 1
+    max_index = len(paginator.page_range)
+    start_index = index - 3 if index >= 3 else 0
+    end_index = index + 3 if index <= max_index - 3 else max_index
+    page_range = list(paginator.page_range)[start_index:end_index]
+
+    template = 'project/project_task_note_full_list.html'
+    context = {'pageitems': pageitems, 'page_range': page_range, 'prj': prj, 'co': co, 'bch': bch, 'ppdt': ppdt}
+    return render(request, template, context)
+
+
+login_required()
+def action_current_task_note_fl(request, ns, prj, co, bch, ppdt):
+    '''action a project task note for complete or not complete on full list page'''
+    instance = NotePad.objects.get(
+            talent=request.user,
+            slug=ns)
+
+    if request.method =='POST':
+        if 'yes' in request.POST:
+            instance.complete=True
+            instance.date_complete=None
+            instance.save()
+        elif 'no' in request.POST:
+            instance.complete=False
+            instance.date_complete=timezone.now()
+            instance.save()
+
+        return redirect(reverse('Project:ProjectTaskNoteFullList', kwargs={'prj':prj, 'co':co, 'bch':bch, 'ppdt':ppdt})+'#note_list')
+
+
+@login_required
+def ProjectTaskNoteEditFLView(request, ns, prj, co, bch, ppdt):
+    instance = NotePad.objects.get(
+            talent=request.user,
+            slug=ns
+    )
+    form = ProjectTaskNoteForm(request.POST or None, instance=instance)
+    if request.method =='POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.updated_on=timezone.now()
+            new.save()
+            return redirect(reverse('Project:ProjectTaskNoteFullList', kwargs={'prj':prj, 'co':co, 'bch':bch, 'ppdt':ppdt}))
+    else:
+        template = 'project/project_task_note_edit.html'
+        context = {'form': form, 'prj': prj, 'co': co, 'bch': bch, 'ppdt': ppdt}
+        return render(request, template, context)
 
 
 @login_required()

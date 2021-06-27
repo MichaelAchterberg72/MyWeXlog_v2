@@ -226,7 +226,7 @@ class ProjectTaskDataJsonView(AutoResponseView):
         qs = super().get_queryset()
         if not self.request.user.is_authenticated:
             raise Http404
-        return qs.filter(talent=self.request.user)
+        return qs.filter(Q(talent=self.request.user))
 
 
 class ProjectDataJsonView(AutoResponseView):

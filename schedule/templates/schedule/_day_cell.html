@@ -1,17 +1,21 @@
 {% load scheduletags %}
 {% if day.start.month != month.start.month %}
-  <td class="muted"></td>
+  <td class="muted" {% if size != "small" %}style="min-width:9.5rem;"{% else %}style=""{% endif %}</td>
 {% else %}
   {% if day.has_occurrences %}
+  {% if size == "small" %}
     <td class="btn-primary gradient">
   {% else %}
-    <td>
+    <td {% if size != "small" %}style="min-width:9.5rem;"{% else %}style=""{% endif %}>
+  {% endif %}
+  {% else %}
+    <td {% if size != "small" %}style="min-width:9.5rem;"{% else %}style=""{% endif %}>
   {% endif %}
   <a href="{% url "day_calendar" calendar.slug %}{% querystring_for_date day.start 3 %}">
     <strong>{{day.start.day}}</strong>
   </a>
   {% if size != "small" %}
-    {% include "schedule/_day_cell_big.html" %}
+    {% include "schedule/_day_cell_big_b.html" %}
   {% endif %}
 </td>
 {% endif %}

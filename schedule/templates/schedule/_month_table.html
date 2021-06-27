@@ -10,7 +10,7 @@
 {% endif %}
 <tbody>
   {% for week in month.get_weeks %}
-      <tr>
+      <tr {% if size != "small" %}style="min-width:9.5rem;height:9.5rem;"{% else %}style="width:9.5rem;"{% endif %}>
       <td>
           <a href="{% url "week_calendar" calendar.slug %}{% querystring_for_date week.start 3 %}">
               {{week.start|date:"W"}}

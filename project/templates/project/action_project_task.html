@@ -42,7 +42,7 @@
           </div>
           <div class="col-md-2 h-100 text-center my-auto">
             <div class="row">
-            {% if task.ppdt.current == True %}
+            {% if task.ppdt.task_status <= 2 %}
               <div class="btn-group mr-2" role="group" aria-label="First group">
                 <form  action="{% url 'Project:ActionProjectTask' task.pk ppds prj co bch %}" method="post">
                   {% csrf_token %}
@@ -51,7 +51,7 @@
                   </button>
                 </form>
               </div>
-            {% elif task.ppdt.current == False %}
+            {% elif task.ppdt.task_status == 3 %}
               <div class="btn-group mr-2" role="group" aria-label="First group">
                 <form  action="{% url 'Project:ActionProjectTask' task.pk ppds prj co bch %}" method="post">
                   {% csrf_token %}

@@ -5,45 +5,64 @@
 {% block title %}{{block.super}}-Project{% endblock title %}
 
 {% block content %}
+<div id="projectNote" class="card card-shadow">
+  <div class="card-body">
+  <h4 class="">Project Task Notes!</h4>
+    <button id="projectTaskNoteBtn" class="btn btn-primary float-left" name="button">
+      Create new Task Note
+    </button>
+    <a href="{% url 'Project:ProjectPersonal' prj co bch %}#task_list" class="btn btn-primary float-right">
+      Back
+    </a>
+  </div>
+</div>
 
-  <div class="card card-shadow">
-    <div class="card-body">
-    <h4 class="">Add New Project Task Notes!</h4>
-
-      <div class="container">
-      <form class="" enctype="multipart/form-data" action="" method="POST" id="ProjectForm">
-        {% csrf_token %}
-        <div class="form-row">
-
-          <div class="form-group col-md-12 mb-0">
-            {{ form.heading|as_crispy_field }}
-            {{ form.note_pad|as_crispy_field }}
-            {{ form.date_due|as_crispy_field }}
+<div id="projectNoteAdd" class="card card-shadow" style="display:none;">
+  <div class="card-body">
+  <h4 class="">Add New Project Task Notes!</h4>
+    <div class="container">
+    <form class="" enctype="multipart/form-data" action="" method="POST" id="ProjectForm">
+      {% csrf_token %}
+      <div class="form-row">
+        <div class="form-group col-md-12 mb-0">
+          {{ form.heading|as_crispy_field }}
+          {{ form.note_pad|as_crispy_field }}
+          {{ form.date_due|as_crispy_field }}
+        </div>
+      </div>
+        <div class="row">
+          <div class="col-md-9">
+            <div class="float-left">
+              <p>
+                <a href="{% url 'Project:ProjectPersonal' prj co bch %}#task_list" class="btn btn-danger">
+                  Cancel
+                </a>
+                <button type="submit" class="btn btn-primary" name="button">
+                  Save
+                </button>
+              </p>
+            </div>
           </div>
-          <p>
-            <a href="{% url 'Project:ProjectPersonal' prj co bch %}#task_list" class="btn btn-danger">
-              Cancel
-            </a>
-            <button type="submit" class="btn btn-primary" name="button">
-              Save
-            </button>
-          </p>
+          <div class="col-md-3 float-right">
+            <div class="">
+              <button id="closeProjectTaskNoteBtn" class="btn btn-primary float-right" name="button">
+                Close Create new Task Note
+              </button>
+            </div>
+          </div>
+        </div>
       </form>
     </div>
   </div>
 </div>
-</div>
 <br>
-<div class="card card-shadow" id="task_list">
+<div class="card card-shadow" id="note_list">
   <div class="card-body">
-  <h4 class="">Current Task Notes noteList</h4>
+  <h4 class="">Current Task Notes Notes</h4>
   <div>
   <p>&nbsp</p>
-  <a href="#" class="btn btn-primary float-left">
-    Action Full Tasks
-  </a>
-  <a href="#" class="btn btn-primary float-right">
-    Add New Task
+  <a href="{% url 'Project:ProjectTaskNoteFullList' prj co bch ppdt %}" class="btn btn-primary float-left">
+    Action Full Task Notes
   </a>
   </div>
   <br><br>
@@ -73,18 +92,18 @@
           </div>
           <div class="col-sm-2 col-no-pad h-100 text-center my-auto">
             <div class="row">
-            {% if note.complete == True %}
+            {% if note.complete == False %}
               <div class="btn-group mr-2" role="group" aria-label="First group">
-                <form  action="#" method="post">
+                <form  action="{% url 'Project:ActionProjectTaskNote' note.slug prj co bch ppdt %}" method="post">
                   {% csrf_token %}
                   <button type="submit" class="badge badge-success badge-pill" name="no"  data-toggle="tooltip" title="Click to mark note as complete">
                     <i class="fa fa-toggle-off" aria-hidden="true" style="font-size:20px;"></i>
                   </button>
                 </form>
               </div>
-            {% elif note.complete == False %}
+            {% elif note.complete == True %}
               <div class="btn-group mr-2" role="group" aria-label="First group">
-                <form  action="#" method="post">
+                <form  action="{% url 'Project:ActionProjectTaskNote' note.slug prj co bch ppdt %}" method="post">
                   {% csrf_token %}
                   <button type="submit" class="badge badge-danger badge-pill" name="yes"  data-toggle="tooltip" title="Click to re-activate note">
                     <i class="fa fa-toggle-on" aria-hidden="true" style="font-size:20px;"></i>
@@ -93,16 +112,49 @@
               </div>
             {% endif %}
               <div class="">
-                <a href="#" data-toggle="tooltip" title="Click to edit this project task">
+                <a href="{% url 'Project:EditProjectTaskNote' note.slug prj co bch ppdt %}" data-toggle="tooltip" title="Click to edit this project task">
                   <i class="fa fa-pencil-square-o" style="font-size:2rem;color:black;" aria-hidden="true"></i>
                 </a>
               </div>
             </div>
           </div>
-          <div class="row my-auto">
-            <div class="col-md-12 h-100 my-auto">
-              {{ note.note_pad|safe }}
+        </div>
+        <div class="row my-auto">
+          <div class="col-md-12 h-100 my-auto">
+            <div class="" id="myNoteDesc1{{note.id}}" style="display:block;">
+              {{ note.note_pad|safe|truncatechars:220 }}<br>
+              {% if note.note_pad|length > 220 %}
+              <a class="font-blue pointer float-right" type="submit" id="readMoreNote{{note.id}}">Read More ..</a>
+              {% endif %}
             </div>
+            <div class="" id="myNoteDesc2{{note.id}}" style="display:none;">
+              <a class="font-blue pointer float-right" type="submit" id="minimiseNote{{note.id}}">Minimise ..</a><br>
+              {{ note.note_pad|safe }}<br>
+              <a class="font-blue pointer float-right" type="submit" id="readLessNote{{note.id}}">Read Less ..</a><br>
+            </div>
+
+            {% if note.note_pad|length > 220 %}
+            <script>
+              var readMore = document.getElementById('readMoreNote{{note.id}}');  // 1
+              readMore.addEventListener('click', function() {   // 3
+                 myNoteDesc1{{note.id}}.style.display = 'none';
+                 myNoteDesc2{{note.id}}.style.display = 'block';          // 4
+              });
+              var readLess = document.getElementById('readLessNote{{note.id}}');  // 1
+              readLess.addEventListener('click', function() {  // 3
+                myNoteDesc1{{note.id}}.style.display = 'block';
+                myNoteDesc2{{note.id}}.style.display = 'none';
+                myNoteDesc1{{note.id}}.scrollIntoView();              // 4
+              });
+              var readLess = document.getElementById('minimiseNote{{note.id}}');  // 1
+              readLess.addEventListener('click', function() {  // 3
+                myNoteDesc1{{note.id}}.style.display = 'block';
+                myNoteDesc2{{note.id}}.style.display = 'none';
+                myNoteDesc1{{note.id}}.scrollIntoView();              // 4
+              });
+
+            </script>
+            {% endif %}
           </div>
         </div>
       </div>
@@ -113,4 +165,14 @@
 </div>
 
 {% include "tiny_compressor.html" %}
+<script type="text/javascript">
+  $("#projectTaskNoteBtn").click(function() {
+    $('#projectNote').hide();
+    $('#projectNoteAdd').show();
+  });
+  $("#closeProjectTaskNoteBtn").click(function() {
+    $('#projectNote').show();
+    $('#projectNoteAdd').hide();
+  });
+</script>
 {% endblock content %}

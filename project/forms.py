@@ -195,7 +195,7 @@ class ProjectPersonalDetailsForm(forms.ModelForm):
 class ProjectPersonalDetailsTaskForm(forms.ModelForm):
     class Meta:
         model = ProjectPersonalDetailsTask
-        fields = ('client', 'task', 'description', 'skills', 'date_start', 'date_end',)
+        fields = ('client', 'task', 'description', 'skills', 'date_start', 'date_end', 'task_status', 'date_due', 'date_complete')
         widgets = {
             'client': BranchSelect2Widget(),
             'skills': SkillModelSelect2MultipleWidget(),
@@ -242,7 +242,7 @@ class AddProjectPersonalDetailsForm(forms.ModelForm):
 
 
 class ProjectTaskNoteForm(forms.ModelForm):
-    date_due = forms.DateTimeField(widget=MinimalSplitDateTimeMultiWidget(), label=_("date due"), required=False)
+    date_due = forms.DateTimeField(widget=MinimalSplitDateTimeMultiWidget(attrs={'class': 'form-control split-date'}), label=_("date due"), required=False)
 #    note_pad = forms.CharField(widget=TinyMCE(attrs={'cols': 50, 'rows': 30}))
     class Meta:
         model = NotePad
