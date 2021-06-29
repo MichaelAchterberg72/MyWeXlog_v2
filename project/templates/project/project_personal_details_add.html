@@ -36,7 +36,6 @@
       <div class="form-row">
         <div class="form-group col-md-6 mb-0">
           {{ form.project|as_crispy_field }}
-          <small>*Enter either the project owner, project name, region or city of the project</small>
           <p>
             <a href="{% url 'Project:ProjectFullAddPop' %}" id='add_project' onclick='return showAddPopup(this);'>
               <img src = "{% static 'images/icon-addlink.svg' %}">
@@ -50,7 +49,7 @@
           </a>
           {{ form.companybranch|as_crispy_field }}
           <p>
-            <a href="{% url 'Enterprise:BranchAddPop' %}" id='add_branch' onclick='return showAddPopup(this);'>
+            <a href="{% url 'Enterprise:FullBranchAddPopup' %}" id='add_branch' onclick='return showAddPopup(this);'>
               <img src = "{% static 'images/icon-addlink.svg' %}">
               Add a Branch
             </a>
@@ -73,7 +72,7 @@
   </div>
 </div>
 </div>
-
+{{ form.media }}
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 {{ form.media.js }}
 <script type="text/javascript">

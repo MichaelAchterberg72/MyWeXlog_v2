@@ -137,7 +137,7 @@ class DesignationSelect2Widget(DesignationSearchFieldMixin, ModelSelect2Widget):
 
 class ProjectSearchFieldMixin:
     search_fields = [
-        'name__icontains', 'pk__startswith', 'company__ename__icontains', 'region__region__icontains', 'city__city__icontains',
+        'project__name__icontains', 'project__company__ename__icontains', 'companybranch__name__icontains', 'pk__startswith', 'company__ename__icontains', 'companybranch__region__region__icontains', 'companybranch__city__city__icontains',
     ]
 
     dependent_fields = {'companybranch': 'companybranch'}
@@ -294,7 +294,7 @@ class PreLoggedExperienceForm(forms.ModelForm):
             'company': CompanySelect2Widget(),
             'companybranch': BranchSelect2Widget(),
             'designation': DesignationSelect2Widget(),
-            'project_data': ProjectSelect2Widget(),
+            'project_data': ProjectSelect2Widget(data_view='Project:project_data_json'),
             'date_from': DateInput(attrs={'max': timezone.now().date()}),
             'date_to': DateInput(attrs={'max': timezone.now().date()}),
             'skills': SkillModelSelect2MultipleWidget(),
@@ -302,6 +302,9 @@ class PreLoggedExperienceForm(forms.ModelForm):
         lables = {
             'companybranch': 'Branch',
             'project_data': 'On Project'
+        }
+        help_texts = {
+            'project_data': 'Search by project name, company name or branch, region or city',
         }
 
     def clean_date_to(self):
@@ -561,7 +564,7 @@ class WorkExperienceForm(forms.ModelForm):
         widgets={
             'company': CompanySelect2Widget(),
             'designation': DesignationSelect2Widget(),
-            'project_data': ProjectSelect2Widget(),
+            'project_data': ProjectSelect2Widget(data_view='Project:project_data_json'),
             'date_from': DateInput(attrs={'max': timezone.now().date()}),
             'date_to': DateInput(attrs={'max': timezone.now().date()}),
             'skills': SkillModelSelect2MultipleWidget(),
@@ -574,6 +577,9 @@ class WorkExperienceForm(forms.ModelForm):
             'upload': 'Upload File (Optional)',
             'comment': 'Comment (Optional)',
             'project_data': 'On Project'
+        }
+        help_texts = {
+            'project_data': 'Search by project name, company name or branch, region or city',
         }
 
     def clean_date_to(self):

@@ -32,4 +32,7 @@ urlpatterns = [
     path('popup/ajax/get_project_id/', views.get_project_id, name="AJAX_GetProjectID"),
 
     path('experience/detail/message/<int:pk>/', views.AutofillMessage, name="DetailMessage"),
+    # Ajax
+    path('fields/project_data.json',
+        ProjectDataJsonView.as_view(), name="project_data_json"),
 ]

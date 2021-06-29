@@ -133,7 +133,7 @@
       <h5 class="card-title" id="email">Public Profile Intro<a href="{% url 'Profile:PublicProfileIntroEdit' d.alias %}?next={{ request.path|urlencode }}" class="badge badge-primary float-right">Edit</a></h5>
       <small>(max 460 characters)</small>
       <p class="card-text">
-        {{ d.public_profile_intro|linebreaks }}
+        {{ d.public_profile_intro|safe }}
       </p>
       <div class="card-footer bg-transparent border-success"></div>
       <h5 class="card-title" id="email">Email addresses <a href="{% url 'Profile:EmailEdit' d.alias %}?next={{ request.path|urlencode }}" class="badge badge-primary float-right">Add</a></h5>
@@ -208,7 +208,7 @@
       </div>
       <h5 class="card-title" id="background">Background</h5>
       <p class="card-text text-justify">
-        {{ d.background|linebreaks }}</p>
+        {{ d.background|safe }}</p>
       </div>
     </div>
   </div>
@@ -221,7 +221,7 @@
       </div>
       <h5 class="card-title" id="motivation">Motivation:</h5>
       <p class="card-text text-justify">
-        {{ d.motivation|linebreaks }}</p>
+        {{ d.motivation|safe }}</p>
     </div>
   </div>
 </div>

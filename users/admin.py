@@ -13,7 +13,7 @@ class CustomUserAdmin(UserAdmin):
 
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
-    search_fields = ('alias',)
+    search_fields = ['alias','email']
 
 @admin.register(CustomUserSettings)
 class CustomUserSettingsAdmin(admin.ModelAdmin):

@@ -19,6 +19,8 @@ from csp.decorators import csp_exempt
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.conf import settings
 
+from django_select2.views import AutoResponseView
+
 from locations.models import Region
 from .models import *
 from Profile.models import Profile
@@ -187,6 +189,14 @@ def ProjectPersonalDetailsAddPopupView(request):
         return render(request, template, context)
 
 
+class ProjectDataJsonView(AutoResponseView):
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if not self.request.user.is_authenticated:
+            raise Http404
+        return qs.filter(talent=self.request.user)
+
+
 @login_required()
 def ProjectListHome(request):
     pcount = ProjectData.objects.all().aggregate(sum_p=Count('name'))
@@ -270,24 +280,19 @@ def ProjectDetailView(request, prj):
 
 
 @login_required()
-#@csp_exempt
 def ProjectEditView(request, prj):
-    info2 = ProjectData.objects.get(slug=prj)
-    form = ProjectForm(request.POST or None, instance=info2)
+    instance = get_object_or_404(ProjectData, slug=prj)
+    form = ProjectForm(request.POST or None, instance=instance)
     if request.method == 'POST':
-        next_url=request.POST.get('next','/')
         if form.is_valid():
             new = form.save(commit=False)
             new.save()
-#            form.save_m2m()
-            if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
-                next_url = reverse('Project:ProjectDetail', kwargs={'prj':prj})
-            response = HttpResponseRedirect(next_url)
-            return response
+            return redirect(reverse('Project:ProjectDetail', kwargs={'prj':prj}))
+
     else:
-        context = {'form': form}
-        template_name = 'project/project_add.html'
-        return render(request, template_name, context)
+        template = 'project/project_add.html'
+        context = {'form': form, 'instance': instance}
+        return render(request, template, context)
 
 
 @login_required()

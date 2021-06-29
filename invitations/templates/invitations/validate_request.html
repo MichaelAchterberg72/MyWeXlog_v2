@@ -11,7 +11,7 @@
       <p>{{ sender.first_name }} has sent you a validation/s request that still requires action from your part to validate. Would it please be possible to log-in to MyWeXlog and validate your outstanding requests.</p>
       <br>
       <p><strong>{{ form.instance.subject }},</strong></p>
-      <p>{{ form.instance.message }}</p>
+      <p>{{ form.instance.message|safe }}</p>
       <br>
 
       <p>MyWeXlog is a live experience log on which you can capture your experience and associate skills with that experience. Then, depending on your subscription, you can either search for companies looking for your skills or find people that have skills you require.</p>
