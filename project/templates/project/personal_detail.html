@@ -41,12 +41,12 @@
                 <div class="" id="myProjectDisc1{{ppdd.id}}" style="display:block;">
                   {{ project.description|safe|truncatechars:640 }}<br>
                   {% if project.description|length > 640 %}
-                  <button class="float-right" type="submit" id="readMoreProject{{project.id}}">Read More ..</button>
+                  <button class="float-right" type="button" id="readMoreProject{{project.id}}">Read More ..</button>
                   {% endif %}
                 </div>
                 <div class="" id="myProjectDisc2{{project.id}}" style="display:none;">
                   {{ project.description|safe }}<br>
-                  <button class="float-right" type="submit" id="readLessProject{{project.id}}">Read Less ..</button><br>
+                  <button class="float-right" type="button" id="readLessProject{{project.id}}">Read Less ..</button><br>
                 </div>
 
                 {% if project.description|length > 640 %}
@@ -80,17 +80,28 @@
     <div class="card-body">
       <h4 class="">Project Personal Responsibilities Description!</h4>
       <br>
-      <div class="" id="mypDisc1{{ppdd.id}}" style="display:block;">
-        {{ ppdd.description|safe|truncatechars:640 }}<br>
-        {% if ppdd.description|length > 640 %}
-        <button class="float-right" type="submit" id="readMore{{ppdd.id}}">Read More ..</button>
-        {% endif %}
+      <div class="float-right">
+        <button type="button" class="pointer no-border" style="border-width:0px;" name="button" type="button" id="editBtnOpen" data-toggle="tooltip" title="Click to edit text"><i class="fa fa-plus-square-o" aria-hidden="true"></i></button>
       </div>
-      <div class="" id="mypDisc2{{ppdd.id}}" style="display:none;">
-        {{ ppdd.description|safe }}<br>
-        <button class="float-right" type="submit" id="readLess{{ppdd.id}}">Read Less ..</button><br>
+      <br>
+      <div class="row editable-text-border">
+        <div class="" id="mypDisc1{{ppdd.id}}" style="display:block;">
+          {{ ppdd.description|safe|truncatechars:640 }}<br>
+          {% if ppdd.description|length > 640 %}
+          <button class="float-right" type="button" id="readMore{{ppdd.id}}">Read More ..</button>
+          {% endif %}
+        </div>
+        <div class="" id="mypDisc2{{ppdd.id}}" style="display:none;">
+          {{ ppdd.description|safe }}<br>
+          <button class="float-right" type="button" id="readLess{{ppdd.id}}">Read Less ..</button><br>
+        </div>
       </div>
       <p class="small-paragraph"><small>* Double click to edit</small></p>
+      <br>
+      <a href="{% url 'Project:ProjectHome' %}" class="btn btn-outline-primary float-right">
+        Back
+      </a>
+
       {% if ppdd.description|length > 640 %}
       <script>
         var readMore = document.getElementById('readMore{{ppdd.id}}');  // 1
@@ -115,28 +126,39 @@
 
   <div id="ppddEditDescription" class="card card-shadow" style="display:none;">
     <div class="card-body">
-    <h4 class="">Add New Project Details!</h4>
+    <h4 class="">Add Project Personal Responsibilities Description!</h4>
 
         <div class="container">
       <form class="" action="" method="POST" id="ProjectForm">
         {% csrf_token %}
         <div class="form-row">
-
           <div class="form-group col-md-12 mb-0">
             {{ form.description|as_crispy_field }}
           </div>
-          <p>
-            <a href="{% url 'Project:ProjectHome' %}" class="btn btn-danger">
-              Cancel
-            </a>
-            <button type="submit" class="btn btn-primary" name="button">
-              Save
-            </button>
-          </p>
+        </div>
+          <div class="form-row">
+            <div class="col-1 col-no-pad">
+              <button class="btn btn-outline-danger" type="button" id="closeEditable" name="cancelButton">
+                Cancel
+              </button>
+            </div>
+            <div class="col-1">
+              <button type="submit" class="btn btn-primary" name="button">
+                Save
+              </button>
+            </div>
+            <div class="col-9">
+
+            </div>
+            <div class="col-1">
+              <a href="{% url 'Project:ProjectHome' %}" class="btn btn-outline-primary float-right">
+                Back
+              </a>
+            </div>
+          </div>
       </form>
     </div>
   </div>
-</div>
 </div>
 <br>
 <div class="card card-shadow" id="task_list">
@@ -238,6 +260,14 @@
   $("#ppddDescription").dblclick(function() {
     $('#ppddDescription').hide();
     $('#ppddEditDescription').show();
+  });
+  $("#editBtnOpen").click(function() {
+    $('#ppddDescription').hide();
+    $('#ppddEditDescription').show();
+  });
+  $("#closeEditable").click(function() {
+    $('#ppddDescription').show();
+    $('#ppddEditDescription').hide();
   });
 </script>
 {% endblock content %}

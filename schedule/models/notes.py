@@ -26,8 +26,8 @@ from db_flatten.models import SkillTag
 
 class NotePad(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    occurrence_id = models.ForeignKey(Occurrence, on_delete=models.SET_NULL, null=True)
-    event_id = models.ForeignKey(Event, on_delete=models.SET_NULL, null=True)
+    occurrence_id = models.ForeignKey(Occurrence, on_delete=models.SET_NULL, blank=True, null=True)
+    event_id = models.ForeignKey(Event, on_delete=models.SET_NULL, blank=True, null=True)
     companybranch = models.ForeignKey(Branch, on_delete=models.SET_NULL, blank=True, null=True, verbose_name='Branch Working for on Project')
     project_data = models.ForeignKey(ProjectPersonalDetails, on_delete=models.SET_NULL, blank=True, null=True, verbose_name='Personal Project Details')
     task = models.ForeignKey(ProjectPersonalDetailsTask, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Tasks")
@@ -36,12 +36,12 @@ class NotePad(models.Model):
     heading = models.CharField(max_length=240, null=True)
     note_pad = HTMLField(blank=True, null=True)
     date_due = models.DateTimeField(_("due on"), blank=True, null=True)
-    complete = models.BooleanField('Is Completed', default=False)
-    date_complete = models.DateTimeField(_("completed on"), auto_now=True)
+    complete = models.BooleanField(default=False)
+    date_complete = models.DateTimeField(_("completed on"), blank=True, null=True)
     slug = models.SlugField(max_length=15, blank=True, null=True, unique=True)
 
     def __str__(self):
-        return f'{self.talent} - {self.date_captured}'
+        return f'{self.talent} - {self.created_on}'
 
     def save(self, *args, **kwargs):
         if self.slug is None or self.slug == "":

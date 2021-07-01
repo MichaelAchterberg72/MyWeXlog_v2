@@ -1,0 +1,14 @@
+{% load scheduletags %}
+<table class="table table-striped">
+    {% for slot in slots %}
+    <tr class="h-100" style="line-height:2rem;">
+    <td class="col-md-1">
+      <span class="time">{{ slot.start|time:"G:i" }}</span>
+      {% if addable %}
+      {% create_event_url calendar slot.start %}
+      {% endif %}
+    </td>
+
+  </tr>
+    {% endfor %}
+</table>

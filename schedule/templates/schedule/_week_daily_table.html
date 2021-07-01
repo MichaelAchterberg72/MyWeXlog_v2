@@ -1,0 +1,17 @@
+{% load scheduletags %}
+<table class="table table-striped">
+    {% for slot in slots %}
+    <tr class="h-100" id="eq-row" style="line-height:2rem;">
+    <td class="col-md-4">
+      {% if slot.occurrences %}{% else %}&nbsp{% endif %}
+      {% for occ in slot.occurrences %}
+      <button type="button"  class="badge {% if occ.cancelled %} btn-danger {%else%} btn-primary {% endif %} btn-wrap-text" data-toggle="modal" data-target="#{% hash_occurrence occ %}" style="{% if occ.event.color_event %} background-color: {{occ.event.color_event}};border-color:{{occ.event.color_event}}{% endif %}Swhite-space:normal !important;word-wrap:break-word !important;height:2rem;">
+                  {% options occ %}
+                  {{ occ.title|truncatechars:10 }}
+            </button>
+      {% include 'schedule/_detail.html' with occurrence=occ %}
+      {% endfor %}
+    </td>
+  </tr>
+    {% endfor %}
+</table>

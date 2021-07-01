@@ -43,8 +43,56 @@ def day_cell(context, calendar, day, month, size="regular"):
     return context
 
 
+@register.inclusion_tag("schedule/_week_daily_slots_table.html", takes_context=True)
+def week_daily_slots_table(context, day, start=0, end=24, increment=30):
+    """
+    Display a nice table with occurrences and action buttons.
+    Arguments:
+    start - hour at which the day starts
+    end - hour at which the day ends
+    increment - size of a time slot (in minutes)
+    """
+    user = context["request"].user
+    addable = CHECK_EVENT_PERM_FUNC(None, user)
+    if "calendar" in context:
+        addable = addable and CHECK_CALENDAR_PERM_FUNC(context["calendar"], user)
+    context["addable"] = addable
+    day_part = day.get_time_slot(
+        day.start + datetime.timedelta(hours=start),
+        day.start + datetime.timedelta(hours=end),
+    )
+    # get slots to display on the left
+    slots = _cook_slots(day_part, increment)
+    context["slots"] = slots
+    return context
+
+
+@register.inclusion_tag("schedule/_week_daily_table.html", takes_context=True)
+def week_daily_table(context, day, start=0, end=24, increment=30):
+    """
+    Display a nice table with occurrences and action buttons.
+    Arguments:
+    start - hour at which the day starts
+    end - hour at which the day ends
+    increment - size of a time slot (in minutes)
+    """
+    user = context["request"].user
+    addable = CHECK_EVENT_PERM_FUNC(None, user)
+    if "calendar" in context:
+        addable = addable and CHECK_CALENDAR_PERM_FUNC(context["calendar"], user)
+    context["addable"] = addable
+    day_part = day.get_time_slot(
+        day.start + datetime.timedelta(hours=start),
+        day.start + datetime.timedelta(hours=end),
+    )
+    # get slots to display on the left
+    slots = _cook_slots(day_part, increment)
+    context["slots"] = slots
+    return context
+
+
 @register.inclusion_tag("schedule/_daily_table.html", takes_context=True)
-def daily_table(context, day, start=8, end=20, increment=30):
+def daily_table(context, day, start=0, end=24, increment=30):
     """
     Display a nice table with occurrences and action buttons.
     Arguments:

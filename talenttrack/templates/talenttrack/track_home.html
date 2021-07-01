@@ -1,8 +1,11 @@
 {% extends "base_home.html" %}
 {% load humanize %}
+{% load i18n %}
+{% load scheduletags %}
 {% block title %}{{block.super}}-Experience{% endblock title %}
 
 {% block content %}
+{% get_or_create_calendar request.user other_user.username as calendar %}
 <div class="card card-shadow" style="width: 100%;">
   <div class="card-body">
     <div class="float-right">
@@ -65,7 +68,7 @@
     </table>
     <div class="float-right">
       <p>
-        <a href="{% url 'calendar_list' %}" class="badge badge-pill badge-primary" style="width:6rem;">Calander</a>
+        <a href="{% url "month_calendar" calendar.slug %}" class="badge badge-pill badge-primary" style="width:6rem;">Calander</a>
         <a href="{% url 'Talent:DPCSum' tlt %}" class="badge badge-pill badge-primary">Designation, Project & Company Summary</a>
         <a href="{% url 'Talent:ExperienceSum' tlt %}" class="badge badge-pill badge-primary">Skills Summary</a>
       </p>

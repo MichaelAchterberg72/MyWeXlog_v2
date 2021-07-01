@@ -94,9 +94,9 @@ class Event(models.Model):
     calendar = models.ForeignKey(
         Calendar, on_delete=models.CASCADE, verbose_name=_("calendar")
     )
-    color_event = models.CharField(_("Color event"), blank=True, max_length=10)
+    color_event = models.CharField(_("Color event"), blank=True, null=True, max_length=10)
     objects = EventManager()
-
+    # default="#007bff",
     class Meta:
         verbose_name = _("event")
         verbose_name_plural = _("events")

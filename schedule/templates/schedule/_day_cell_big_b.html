@@ -2,12 +2,13 @@
 <div>
   {% if day.has_occurrences %}
     {% for o in day.get_occurrence_partials %}
-    <button type="button" class="badge btn-primary" data-toggle="modal" data-target="#{{o.occurrence.event.id}}" style="width:100%;">
+    <button type="button" class="badge btn-primary" data-toggle="modal" data-target="#{{o.occurrence.event.id}}" style="{% if o.occurrence.event.color_event %} background-color: {{o.occurrence.event.color_event}};border-color:{{o.occurrence.event.color_event}};{% endif %}width:100%;">
+    {% options o.occurrence %}
     {% if o.class == 0 %}{{ o.occurrence.start|time:"G:i" }}{% endif %}
     {% if o.class == 1 %}{{ o.occurrence.start|time:"G:i" }}{% endif %}
     {% if o.class == 2 %}(All day){% endif %}
     {% if o.class == 3 %}Ends at {{ o.occurrence.end|time:"G:i" }}{% endif %}
-    &nbsp-&nbsp{{ o.occurrence.title|truncatechars:15 }}
+    &nbsp-&nbsp{{ o.occurrence.title|truncatechars:12 }}
     </button>
     <br>
     {% include 'schedule/_detail_b.html' with occurrence=o.occurrence %}

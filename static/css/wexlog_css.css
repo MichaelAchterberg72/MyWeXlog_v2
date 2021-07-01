@@ -532,7 +532,7 @@ table {
 }
 
 .no-border {
-  border-width: 1px;
+  border-width: 0px;
   border-color: var(--font-grey);
   background-color: transparent;
 }
@@ -557,6 +557,13 @@ table {
 @media screen {
   .flex { display: flex; flex-wrap: wrap; }
   .flex > .col-sm-2 { flex: 1; width: auto; }
+}
+.editable-text-border {
+  border: 1px solid #e0e0e0;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  border-radius: 5px;">
 }
 .name-paragraph {
   height: 0.8rem;
@@ -1012,6 +1019,18 @@ img .btn-image {
 }
 .servdesc h3 {
     font-size: 27px;
+}
+
+.col-md-for-7 {
+  position:relative;:100%;
+  min-height:1px;
+  padding-right:5px;
+  padding-left:5px;
+  margin-left:5px;
+  -webkit-box-flex:0;
+  -ms-flex:0 0 12.5%;
+  flex:0 0 12.5%;
+  max-width:12.5%
 }
 
 .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4,

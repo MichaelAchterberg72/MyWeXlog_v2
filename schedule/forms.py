@@ -1,5 +1,6 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
+from colorfield.widgets import ColorWidget
 
 from django_select2.forms import (
     ModelSelect2TagWidget, ModelSelect2Widget, Select2MultipleWidget,
@@ -78,6 +79,7 @@ class EventForm(SpanForm):
             'task': ProjectPersonalTaskSelect2Widget(data_view='project_task_data_json'),
             'skills': SkillModelSelect2MultipleWidget(),
             'rule': RuleSelect2Widget(data_view='rule_data_json'),
+            'color_event': ColorWidget,
         }
         help_texts = {
             'project_data': 'Search by project name, company name or branch, region or city',
@@ -96,6 +98,7 @@ class OccurrenceForm(SpanForm):
             'task': ProjectPersonalTaskSelect2Widget(data_view='project_task_data_json'),
             'skills': SkillModelSelect2MultipleWidget(),
             'rule': RuleSelect2Widget(data_view='rule_data_json'),
+            'color_event': ColorWidget,
         }
         help_texts = {
             'project_data': 'Search by project name, company name or branch, region or city',

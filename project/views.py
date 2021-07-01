@@ -407,11 +407,11 @@ def action_current_task_note(request, ns, prj, co, bch, ppdt):
 
     if request.method =='POST':
         if 'yes' in request.POST:
-            instance.complete=True
+            instance.complete=False
             instance.date_complete=None
             instance.save()
         elif 'no' in request.POST:
-            instance.complete=False
+            instance.complete=True
             instance.date_complete=timezone.now()
             instance.save()
 
@@ -468,11 +468,11 @@ def action_current_task_note_fl(request, ns, prj, co, bch, ppdt):
 
     if request.method =='POST':
         if 'yes' in request.POST:
-            instance.complete=True
+            instance.complete=False
             instance.date_complete=None
             instance.save()
         elif 'no' in request.POST:
-            instance.complete=False
+            instance.complete=True
             instance.date_complete=timezone.now()
             instance.save()
 
