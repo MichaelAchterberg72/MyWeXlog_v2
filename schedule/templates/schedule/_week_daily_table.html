@@ -1,7 +1,7 @@
 {% load scheduletags %}
 <table class="table table-striped">
     {% for slot in slots %}
-    <tr class="h-100" id="eq-row" style="line-height:2rem;">
+    <tr class="h-100" style="line-height:2rem;">
     <td class="col-md-4">
       {% if slot.occurrences %}{% else %}&nbsp{% endif %}
       {% for occ in slot.occurrences %}
