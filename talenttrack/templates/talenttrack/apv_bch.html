@@ -87,7 +87,7 @@
           <div class="row pt-3 h-100 my-auto">
             <div class="col-md-12 text-left my-auto">
               <strong>Description: </strong><br>
-              <span class="">{{ h.description|linebreaks }}</span>
+              <span class="">{{ h.description|safe }}</span>
             </div>
           </div>
           {% endif %}

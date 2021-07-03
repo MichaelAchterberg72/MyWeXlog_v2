@@ -190,6 +190,7 @@ table {
   z-index: 200;
   color: #ffffff;
   text-align: center;
+  text-transform: uppercase;
   left: 0;
   right: 0;
   margin-left: auto;

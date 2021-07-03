@@ -35,7 +35,25 @@
 {{ form.media }}
 {% endblock content %}
 {% block Script %}
+<script type="text/javascript">
+  function getStats(id_public_profile_intro) {
+    var body = tinymce.get(id_public_profile_intro).getBody(), text = tinymce.trim(body.innerText || body.textContent);
 
+    return {
+        chars: text.length,
+        words: text.split(/[\w\u2019\'-]+/).length
+    };
+
+    function submitForm() {
+      // Check if the user has entered less than 460 characters
+      if (getStats('content').chars < 460) {
+          alert("You need to enter 460 characters or more.");
+          return;
+      }
+      // Submit the form
+      document.forms[0].submit();
+  }
+</script>
 <!-- code for popups -->
 <script type="text/javascript">
 function showAddPopup(triggeringLink) {
