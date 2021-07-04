@@ -10,6 +10,7 @@ class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
 
+
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
     search_fields = ['alias','email']

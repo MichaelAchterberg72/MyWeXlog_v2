@@ -3,3 +3,5 @@
 **/filelibrary
 *.pyc
 *.dot
+settings.py
+requirements.txt

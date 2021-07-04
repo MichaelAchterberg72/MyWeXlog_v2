@@ -136,7 +136,7 @@ class ProjectFullAddForm(forms.ModelForm):
         }
         labels = {
             'city' : 'Closest City / Town / Village',
-            'company' : 'Company that own project'
+            'company' : 'The company that owns the project'
         }
 
 

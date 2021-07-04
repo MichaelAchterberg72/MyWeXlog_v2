@@ -204,7 +204,8 @@ def BranchAddView(request, cmp):
         return response
 
 
-#>>> Branch Popup
+#>>> Branch Popup (cookie)
+'''Used where a coockie is used to pre-populate the company field.'''
 @login_required()
 @csp_exempt
 def BranchAddPopView(request):
