@@ -49,10 +49,10 @@
       <tbody>
         <tr>
           <th class="align-middle text-center">Unconfirmed<br>Experience</th>
-          <td class="align-middle text-center">{{ tot_sum|intcomma }}</td>
-          <td class="align-middle text-center">{{ train_sum.Edu_sum|intcomma }}<br>{{ train_count }} events</td>
-          <td class="align-middle text-center">{{ exp_sum.we_sum|intcomma }}<br>{{ exp_count }} events</td>
-          <td class="align-middle text-center">{{ pre_sum.p_sum|intcomma }}<br>{{ pre_count }} events</td>
+          <td class="align-middle text-center">{{ tot_sum_uc|intcomma }}</td>
+          <td class="align-middle text-center">{{ train_sum_uc.Edu_sum|intcomma }}<br>{{ train_count_uc }} events</td>
+          <td class="align-middle text-center">{{ exp_sum_uc.we_sum|intcomma }}<br>{{ exp_count_uc }} events</td>
+          <td class="align-middle text-center">{{ pre_sum_uc.p_sum|intcomma }}<br>{{ pre_count_uc }} events</td>
         </tr>
         <tr>
           <th class="align-middle text-center">Confirmed<br>Experience</th>
@@ -213,7 +213,7 @@
                 <td class="align-middle text-center">
                   {% if edu_lect_s > 0 %}
                     <a href="{% url 'Profile:Confirm' %}#Lect">
-                      <i class="fa fa-paint-brush" aria-hidden="true" style="font-size:20px;color:blue" target="_blank" data-toggle="tooltip" title="Review Waiting Requests"></i>
+                      <i class="fa fa-paint-brush" aria-hidden="true" style="font-size:20px;color:#0275d8" target="_blank" data-toggle="tooltip" title="Review Waiting Requests"></i>
                     </a>
                   {% endif %}
                   <a href="{% url 'Talent:CAsLectList' %}?next={{ request.path|urlencode }}">
@@ -230,7 +230,7 @@
                 <td class="align-middle text-center">
                   {% if edu_cm_s > 0 %}
                     <a href="{% url 'Profile:Confirm' %}#Cm">
-                      <i class="fa fa-paint-brush" aria-hidden="true" style="font-size:20px;color:blue" target="_blank" data-toggle="tooltip" title="Review Waiting Requests"></i>
+                      <i class="fa fa-paint-brush" aria-hidden="true" style="font-size:20px;color:#0275d8" target="_blank" data-toggle="tooltip" title="Review Waiting Requests"></i>
                     </a>
                   {% endif %}
                   <a href="{% url 'Talent:CAsCmList' %}?next={{ request.path|urlencode }}">
@@ -247,7 +247,7 @@
                 <td class="align-middle text-center">
                   {% if exp_clg_s > 0 %}
                     <a href="{% url 'Profile:Confirm' %}#Clg">
-                      <i class="fa fa-paint-brush" aria-hidden="true" style="font-size:20px;color:blue" target="_blank" data-toggle="tooltip" title="Review Waiting Requests"></i>
+                      <i class="fa fa-paint-brush" aria-hidden="true" style="font-size:20px;color:#0275d8" target="_blank" data-toggle="tooltip" title="Review Waiting Requests"></i>
                     </a>
                   {% endif %}
                   <a href="{% url 'Talent:CAsClgList' %}?next={{ request.path|urlencode }}">
@@ -264,7 +264,7 @@
                 <td class="align-middle text-center">
                   {% if exp_sup_s > 0 %}
                     <a href="{% url 'Profile:Confirm' %}#Sup">
-                      <i class="fa fa-paint-brush" aria-hidden="true" style="font-size:20px;color:blue" target="_blank" data-toggle="tooltip" title="Review Waiting Requests"></i>
+                      <i class="fa fa-paint-brush" aria-hidden="true" style="font-size:20px;color:#0275d8" target="_blank" data-toggle="tooltip" title="Review Waiting Requests"></i>
                     </a>
                   {% endif %}
                   <a href="{% url 'Talent:CAsSupList' %}?next={{ request.path|urlencode }}">
@@ -281,7 +281,7 @@
                 <td class="align-middle text-center">
                   {% if exp_clt_s > 0 %}
                     <a href="{% url 'Profile:Confirm' %}#Clt">
-                      <i class="fa fa-paint-brush" aria-hidden="true" style="font-size:20px;color:blue" target="_blank" data-toggle="tooltip" title="Review Waiting Requests"></i>
+                      <i class="fa fa-paint-brush" aria-hidden="true" style="font-size:20px;color:#0275d8" target="_blank" data-toggle="tooltip" title="Review Waiting Requests"></i>
                     </a>
                   {% endif %}
                   <a href="{% url 'Talent:CAsCltList' %}?next={{ request.path|urlencode }}">
@@ -298,7 +298,7 @@
                 <td class="align-middle text-center">
                   {% if exp_cbr_s > 0 %}
                     <a href="{% url 'Profile:Confirm' %}#Clb">
-                      <i class="fa fa-paint-brush" aria-hidden="true" style="font-size:20px;color:blue" target="_blank" data-toggle="tooltip" title="Review Waiting Requests"></i>
+                      <i class="fa fa-paint-brush" aria-hidden="true" style="font-size:20px;color:#0275d8" target="_blank" data-toggle="tooltip" title="Review Waiting Requests"></i>
                     </a>
                   {% endif %}
                   <a href="{% url 'Talent:CAsClbList' %}?next={{ request.path|urlencode }}">

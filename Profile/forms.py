@@ -14,7 +14,7 @@ from django_select2.forms import (
 
 
 from .models import (
-            Profile, Email, PhysicalAddress, PostalAddress, PhoneNumber, OnlineRegistrations, SiteName, FileUpload, IdentificationDetail, IdType, PassportDetail, LanguageTrack, BriefCareerHistory, WillingToRelocate
+            Profile, Email, PhysicalAddress, PostalAddress, PhoneNumber, OnlineRegistrations, SiteName, FileUpload, IdentificationDetail, IdType, PassportDetail, LanguageTrack, BriefCareerHistory, WillingToRelocate, ProfileImages,
           )
 from enterprises.models import Enterprise, Branch
 from locations.models import Region, City, Suburb
@@ -22,6 +22,18 @@ from talenttrack.models import Designation
 from users.models import CustomUser
 from db_flatten.models import LanguageList
 from users.models import CustomUser, ExpandedView
+
+
+class UploadProfilePicForm(forms.ModelForm):
+    class Meta:
+        model = ProfileImages
+        fields = ('profile_pic',)
+
+
+class UploadProfileBackgroundPicForm(forms.ModelForm):
+    class Meta:
+        model = ProfileImages
+        fields = ('profile_background',)
 
 
 class WillingToRelocateForm(forms.ModelForm):
@@ -154,7 +166,7 @@ class FileUploadForm(forms.ModelForm):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ('birth_date', 'mentor', 'std_rate', 'currency', 'alias', 'f_name', 'l_name')
+        fields = ('birth_date', 'mentor', 'std_rate', 'currency', 'alias',  'f_name', 'l_name')
         widgets = {
             'birth_date': DateInput(attrs={'max': timezone.now().date()}),
             }
@@ -170,6 +182,24 @@ class ProfileForm(forms.ModelForm):
             raise forms.ValidationError("You need to be older than 18 to use MyWeXlog")
         else:
             return birth_date
+
+
+class PublicProfileNameForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ('public_profile_name', 'permit_viewing_of_profile_as_reference')
+        widgets = {
+            'permit_viewing_of_profile_as_reference': forms.CheckboxInput(attrs={'style':'width:38px;height:38px;'}),
+        }
+    def clean_public_profile_name(self):
+        stripped_text = self.cleaned_data.get('public_profile_name', '').strip()
+        return stripped_text
+
+
+class PublicProfileIntroForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ('public_profile_intro',)
 
 
 class ProfileBackgroundForm(forms.ModelForm):
@@ -193,7 +223,7 @@ class UserUpdateForm(forms.ModelForm):
 class CustomUserUpdateForm(forms.ModelForm):
     class Meta:
         model = CustomUser
-        fields = ('alias', )
+        fields = ('alias', 'public_profile_name')
 
 
 #>>> Select2 Company Field in email

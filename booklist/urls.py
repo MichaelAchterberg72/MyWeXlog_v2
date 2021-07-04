@@ -21,6 +21,7 @@ urlpatterns = [
     path('popup/ajax/get_format_id', views.get_format_id, name='get_format_id'),
     path('add/books/', views.BookAddView, name='books-new'),
     path('add/book/', views.AddBookView, name='AddBook'),
+    path('add/book-list/book/', views.AddBookListView, name='AddBookList'),
     path('popup/add/books/', views.BookAddPopupView, name='booksNewPopup'),
     path('add/books-read/', views.AddBookReadView, name='books-read-new'),
     path('add/list/<slug:bks>/', views.add_to_my_list, name='BookAddList'),

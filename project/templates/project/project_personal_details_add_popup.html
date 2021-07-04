@@ -1,0 +1,115 @@
+{% extends 'base_homelite.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}{{block.super}}-Project{% endblock title %}
+
+{% block content %}
+{{ form.media.css }}
+<style type="text/css">
+  select {
+    width: 100px;
+  }
+</style>
+
+<div class="card card-shadow">
+  <div class="card-body">
+  <h4 class="card-title">Personal Project Details
+    <span>
+      <p class="float-right">
+        <a href="{% url 'Project:HelpProjectAdd' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="popover" title="Click here for help on this page!">
+          <i class="fa fa-question-circle"></i>
+        </a>
+      </p>
+    </span>
+  </h4>
+  <div class="card-body">
+    {% if request.user.is_authenticated %}
+      <p>
+        <a href="{% url 'Project:ProjectHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">
+          Back
+        </a>
+      </p>
+    {% endif %}
+    <form class="" action="" method="POST" id="ProjectForm">
+      {% csrf_token %}
+      <div class="form-row">
+        <div class="form-group col-md-12 mb-0">
+          {{ form.project|as_crispy_field }}
+          <p>
+            <a href="{% url 'Project:ProjectFullAddPop' %}" id='add_project' onclick='return showAddPopup(this);'>
+              <img src = "{% static 'images/icon-addlink.svg' %}">
+              Add Project
+            </a>
+          </p>
+          {{ form.company|as_crispy_field }}
+          <a href="{% url 'Enterprise:EnterpriseAddPop' %}" id='add_enterprise' onclick='return showAddPopup(this);'>
+            <img src="{% static 'images/icon-addlink.svg' %}">
+            Add a new Enterprise
+          </a>
+          {{ form.companybranch|as_crispy_field }}
+          <p>
+            <a href="{% url 'Enterprise:FullBranchAddPopup' %}" id='add_branch' onclick='return showAddPopup(this);'>
+              <img src = "{% static 'images/icon-addlink.svg' %}">
+              Add a Branch
+            </a>
+          </p>
+        </div>
+        <div class="form-group col-md-12 mb-0">
+          {{ form.description|as_crispy_field }}
+        </div>
+        <p>
+          <br>
+          <a href="{% url 'Project:ProjectHome' %}" class="btn btn-danger">
+            Cancel
+          </a>
+          <button type="submit" class="btn btn-primary" name="button">
+            Save
+          </button>
+        </p>
+    </form>
+    </div>
+  </div>
+</div>
+</div>
+{{ form.media }}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{{ form.media.js }}
+<script type="text/javascript">
+  document.getElementById("id_companybranch").disabled = true;
+
+  var dis1 = document.getElementById("id_company");
+  dis1.onchange = function () {
+     if (this.value != "" || this.value.length > 0) {
+        document.getElementById("id_companybranch").disabled = false;
+     }
+  };
+</script>
+<script type="text/javascript">
+  function showAddPopup(triggeringLink) {
+    var name = triggeringLink.id.replace(/^add_/, '');
+    href = triggeringLink.href;
+    var win = window.open(href, name, 'height=400,width=600,resizable=yes,scrollbars=yes');
+    win.focus();
+    return false;
+  }
+
+  function closePopup(win, newID, newRepr, id) {
+    $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
+    win.close();
+  }
+
+  var form = document.getElementById('ProjectForm')
+  var city = document.getElementById('city_error')
+
+  document.getElementById('ad_cty').addEventListener('click', function(e){
+    if(form.region.value == ''){
+      city.classList.remove('d-none')
+    }else{
+      document.cookie = 'region=' + JSON.stringify(form.region.value) + ";domain=;path=/"
+      city.classList.add('d-none')
+      document.getElementById('add_city').click();
+    }
+  })
+</script>
+
+{% endblock content %}

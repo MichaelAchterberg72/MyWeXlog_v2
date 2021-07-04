@@ -40,3 +40,8 @@ def create_code14(instance, size=13):
     if qs_exists:
         return create_code(size=13)
     return new_code
+
+def create_code16(instance, size=13):
+    a = randbelow(size)+2
+    new_code=code_generator(size=a)
+    return new_code

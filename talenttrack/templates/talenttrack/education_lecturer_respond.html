@@ -21,7 +21,7 @@
         <tr>
           <td width="15%">{{ check.lecturer.first_name }} {{ check.lecturer.last_name }}</td>
           <td width="15%">{{ check.get_confirm_display }}</td>
-          <td width="60%">{{ check.comments }}</td>
+          <td width="60%">{{ check.comments|linebreaks }}</td>
         </tr>
       </tbody>
     </table>

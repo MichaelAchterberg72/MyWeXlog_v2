@@ -65,15 +65,13 @@
               </p>
             </div>
             <div data-role="fieldcontain">
-              {{ form.project|as_crispy_field }}
+              {{ form.project_data|as_crispy_field }}
               <div class="form-row">
                 <div class="form-group col-md-4 mb-0">
                   <p>
-                    <a href="#" id='no_branch'>
+                    <a href="{% url 'Project:ProjectPersonalAddPop' %}" id='add_project' onclick='return showAddPopup(this);'>
                       <img src = "{% static 'images/icon-addlink.svg' %}">
                       Add Project
-                    </a>
-                    <a href="{% url 'Project:ProjectAddPop' %}" id='add_project' onclick='return showAddPopup(this);'>
                     </a>
                   </p>
                 </div>
@@ -148,6 +146,7 @@
 
           <div class="form-row">
             <div class="form-group col-md-8 mb-0">
+              {{ form.title|as_crispy_field }}
               {{ form.comment|as_crispy_field }}
             </div>
             <div class="form-group col-md-4 mb-0">
@@ -175,15 +174,22 @@
   </div>
   <script type="text/javascript">
     document.getElementById("id_companybranch").disabled = true;
-    document.getElementById("id_project").disabled = true;
 
     var dis1 = document.getElementById("id_company");
     dis1.onchange = function () {
        if (this.value != "" || this.value.length > 0) {
           document.getElementById("id_companybranch").disabled = false;
-          document.getElementById("id_project").disabled = false;
        }
-    }
+    };
+
+    document.getElementById("id_project_data").disabled = true;
+
+    var dis2 = document.getElementById("id_companybranch");
+    dis2.onchange = function () {
+       if (this.value != "" || this.value.length > 0) {
+          document.getElementById("id_project_data").disabled = false;
+       }
+    };
 
   </script>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>

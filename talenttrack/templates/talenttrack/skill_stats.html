@@ -541,7 +541,7 @@ else{
 
             </div>
             <div class="col-md-2 h-100 text-center my-auto">
-              {{ i.f_name|default_if_none:'Name not captured' }} {{ i.l_name|default_if_none:'Name not captured' }}
+              {% if i.f_name != null and i.l_name != null %}{{ i.f_name }} {{ i.l_name }}{% else %}{{ i.talent.first_name|default_if_none:'Name not captured' }} {{ i.talent.last_name|default_if_none:'Name not captured' }}{% endif %}
             </div>
             <div class="col-md-2 h-100 text-center my-auto">
 
@@ -560,7 +560,7 @@ else{
                 <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
                   <a href="{% url 'Talent:RequestValidateExperienceEmail' skl i.talent.alias %}" class="dropdown-item">MyWeXlog</a>
 
-                  <a class="dropdown-item" href="mailto:{{ i.talent.email }}?&subject=Please confirm my MyWeXlog experience&body=Sorry to bother you.  Would it be possible to log in to MyWeXlog and update my experience confirmations as the are still un-verified.  Thanks, appreciate it.">Private</a>
+                  <a class="dropdown-item" href="mailto:{{ i.talent.email }}?&subject=Please confirm my MyWeXlog experience&body=Sorry to bother you.  Would it be possible to log in to MyWeXlog and update my experience confirmations as they are still un-verified.  Thanks, appreciate it.">Private</a>
                 </div>
               </div>
             </div>

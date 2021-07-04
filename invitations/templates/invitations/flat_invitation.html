@@ -12,7 +12,7 @@
       <p>{{ form.instance.invited_by.first_name }} {{ form.instance.invited_by.last_name }} has indicated that they know you and have sent you this invitation to MyWeXlog.</p>
       {% if form.instance.message %}
       <p><strong>Message from {{ form.instance.invited_by.first_name }}:</strong></p>
-      <p>{{ form.instance.message }}</p>
+      <p>{{ form.instance.message|safe }}</p>
       <br>
       {% endif %}
       <p>Please click on this link or copy and paste it into your browser address bar:</p>

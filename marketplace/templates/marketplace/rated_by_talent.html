@@ -1,4 +1,4 @@
-{% extends "base_home.html" %}
+|linebreaks{% extends "base_home.html" %}
 {% load humanize %}
 {% load crispy_forms_tags %}
 {% load static %}
@@ -50,22 +50,31 @@
         </tbody>
       </table>
       <hr>
-      <h6><strong>My Comments</strong></h6>
+      <h6><strong>Employer Commendation for Me</strong></h6>
       <div class="container">
-        <p>{{ tlt_qs.comment }}</p>
+        {% if tlt_qs == 0 %}
+          <p>None - Talent has not posted any commendation at this time</p>
+        {% else %}
+          <p>{{ emp_qs.comment|safe }}</p>
+        {% endif %}
       </div>
       <hr>
-      <h6><strong>My Suggestions to Talent</strong></h6>
+      <h6><strong>My Personal Comments</strong></h6>
       <div class="container">
-        <p>{{ tlt_qs.suggestions }}</p>
+        <p>{{ tlt_qs.comment|safe }}</p>
       </div>
       <hr>
-      <h6><strong>Talent Suggestions for Me</strong></h6>
+      <h6><strong>My Suggestions to Employer</strong></h6>
+      <div class="container">
+        <p>{{ tlt_qs.suggestions|safe }}</p>
+      </div>
+      <hr>
+      <h6><strong>Employer Suggestions for Me</strong></h6>
       <div class="container">
         {% if tlt_qs == 0 %}
           <p>None - Talent has not posted any suggestions at this time</p>
         {% else %}
-          <p>{{ emp_qs.suggestions }}</p>
+          <p>{{ emp_qs.suggestions|linebreaks }}</p>
         {% endif %}
       </div>
   </div>

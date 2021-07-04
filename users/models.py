@@ -10,6 +10,8 @@ from pinax.referrals.models import Referral
 from allauth.account.signals import user_signed_up
 from django.dispatch import receiver
 
+from Profile.utils import create_code16
+
 from nestedsettree.models import NtWk
 
 
@@ -40,6 +42,8 @@ class CustomUser(AbstractUser):
     )
     alias = models.CharField(max_length=30, null=True)
     display_text = models.CharField(max_length=250, null=True)
+    public_profile_name = models.CharField(max_length=100, unique=True, null=True)
+    permit_viewing_of_profile_as_reference = models.BooleanField(default=False, blank=True)
     subscription = models.IntegerField(choices=PKG, default=2)
     permission = models.IntegerField(choices=COMPANY, default=1)
     role = models.IntegerField(choices=ROLE, default=0)
@@ -108,6 +112,14 @@ class CustomUserSettings(models.Model):
             create_settings = CustomUserSettings.objects.create(talent=kwargs['instance'])
 
     post_save.connect(create_settings, sender=CustomUser)
+
+    def create_public_profile_name(sender, created, **kwargs):
+        if created:
+            instance = kwargs['instance']
+            instance.public_profile_name = f'{create_code16(instance)}-{instance.first_name.lower()}{instance.last_name.lower()}'
+            instance.save()
+
+    post_save.connect(create_public_profile_name, sender=CustomUser)
 
 
 class ExpandedView(models.Model):

@@ -202,7 +202,7 @@
           <div class="profile-card-body mb-auto">
           <div class="row pt-3 h-100 my-auto">
             <div class="col-md-12 text-left my-auto">
-              <span class="">{% if bid_qs %}{{ bid_qs.motivation|linebreaks }}{% else %}{{ als.motivation|linebreaks }}{% endif %}</span>
+              <span class="">{% if bid_qs %}{{ bid_qs.motivation|safe }}{% else %}{{ als.motivation|safe }}{% endif %}</span>
             </div>
           </div>
         </div>
@@ -223,7 +223,7 @@
         <div class="profile-card-body mb-auto">
         <div class="row pt-3 h-100 my-auto">
           <div class="col-md-12 text-left my-auto">
-            <span class="">{{ als.background|linebreaks }}</span>
+            <span class="">{{ als.background|safe }}</span>
           </div>
         </div>
       </div>
@@ -281,7 +281,7 @@
             <div class="row pt-3 h-100 my-auto">
               <div class="col-md-12 text-left my-auto">
                 <strong>Description: </strong><br>
-                <span class="">{{ h.description|linebreaks|truncatechars:650 }}</span>
+                <span class="">{{ h.description|safe|truncatechars:650 }}</span>
               </div>
             </div>
             {% endif %}

@@ -1,0 +1,81 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}{{block.super}}-Project{% endblock title %}
+
+{% block content %}
+
+<div class="card card-shadow">
+  <div class="card-body">
+  <h4 class="">Project {{ project.name }}!</h4>
+  </div>
+  <div class="card-body">
+      <div class="container">
+        <div class="row my-auto">
+          <div class="col-md-5 h-100 text-center my-auto">
+            <strong>Project Company Working For</strong>
+          </div>
+          <div class="col-md-7 h-100 text-center my-auto">
+            <strong>Project Name</strong>
+          </div>
+          <div class="col-md-2 h-100 text-center my-auto">
+            <strong></strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="card mt-1 card-hover" style="width: 100%;">
+          <div class="card-body small-pad">
+            <div class="row my-auto">
+              <div class="col-md-5 h-100 text-center my-auto">
+                {{ project.company }}<br>({{ project.companybranch.name }})
+              </div>
+              <div class="col-md-7 h-100 text-center my-auto">
+                {{ project.name }}
+              </div>
+            </div>
+            <div class="row my-auto">
+              <div class="col-md-10 h-100 text-left my-auto">
+                {{ project.description }}
+              </div>
+              <div class="col-md-2 h-100 text-center my-auto">
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <p>&nbsp</p>
+    </div>
+  </div>
+  <br>
+  <div class="card card-shadow">
+    <div class="card-body">
+    <h4 class="">Add New Project Details!</h4>
+
+        <div class="container">
+      <form class="" action="" method="POST" id="ProjectForm">
+        {% csrf_token %}
+        <div class="form-row">
+
+          <div class="form-group col-md-12 mb-0">
+            {{ form.description|as_crispy_field }}
+          </div>
+          <p>
+            <a href="{% url 'Project:ProjectHome' %}" class="btn btn-danger">
+              Cancel
+            </a>
+            <button type="submit" class="btn btn-primary" name="button">
+              Save
+            </button>
+          </p>
+      </form>
+    </div>
+  </div>
+</div>
+{{ form.media }}
+{% endblock content %}

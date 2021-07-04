@@ -9,7 +9,6 @@ from django.db.models.signals import post_save, pre_save
 from decimal import getcontext, Decimal
 from django.core.validators import FileExtensionValidator
 
-
 from django_countries.fields import CountryField
 from phonenumber_field.modelfields import PhoneNumberField
 from dateutil.relativedelta import relativedelta
@@ -18,6 +17,16 @@ from django.utils import timezone
 from .utils import create_code7, create_code9
 from WeXlog.storage_backends import PrivateMediaStorage
 
+from tinymce.models import HTMLField
+
+from pdf2image import convert_from_path, convert_from_bytes
+from pdf2image.exceptions import (
+    PDFInfoNotInstalledError,
+    PDFPageCountError,
+    PDFSyntaxError )
+from PIL import Image
+from io import StringIO, BytesIO
+from django.core.files.uploadedfile import InMemoryUploadedFile
 
 from marketplace.models import WorkLocation, SkillLevel
 from users.models import CustomUser
@@ -36,7 +45,7 @@ class BriefCareerHistory(models.Model):
     work_configeration = models.ForeignKey(WorkLocation, on_delete=models.PROTECT)
     designation = models.ForeignKey(Designation, on_delete=models.PROTECT, null=True)
     companybranch = models.ForeignKey(Branch, on_delete=models.PROTECT, verbose_name="Home_Base")
-    description = models.TextField(blank=True, null=True)
+    description = HTMLField(blank=True, null=True)
     current = models.BooleanField(default=False)
     date_captured = models.DateField(auto_now_add=True)
     date_from = models.DateField()
@@ -118,14 +127,15 @@ class Profile(models.Model):
     f_name = models.CharField(max_length=30, null=True)
     l_name = models.CharField(max_length=30, null=True)
     alias = models.CharField(max_length=30, null=True, unique=True)
+    public_profile_intro = HTMLField(max_length=460, blank=True, null=True)
     birth_date = models.DateField('Date of Birth', null=True)
-    background = models.TextField()
+    background = HTMLField(blank=True, null=True)
     mentor = models.CharField('Do you wish to be a mentor?', max_length=1, choices=MENTOR, default='N')#Opt in to be a mentor to other people
     referral_code = models.OneToOneField(Referral, on_delete=models.SET_NULL, null=True)
     std_rate = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     currency = models.ForeignKey(Currency, on_delete=models.PROTECT, null=True)
     rate_unit = models.CharField(max_length=1, choices=RATE_UNIT, default='H')
-    motivation = models.TextField(blank=True, null=True)
+    motivation = HTMLField(blank=True, null=True)
     exp_lvl = models.ForeignKey(SkillLevel, on_delete=models.PROTECT, related_name='profile_tenure', null=True, default=1)
     rate_1 = models.FloatField(null=True, default=0)#average for marketplace.models.VacancyRate
     rate_2 = models.FloatField(null=True, default=0)#average for marketplace.models.VacancyRate
@@ -156,7 +166,6 @@ class Profile(models.Model):
     def save(self, *args, **kwargs):
         if self.alias is None or self.alias == "":
             self.alias = create_code7(self)
-
         inject_fn = f'{self.f_name}'
         inject_ln = f'{self.l_name}'
         inject_al = f'{self.alias}'
@@ -209,6 +218,28 @@ class Profile(models.Model):
 
 
     post_save.connect(create_profile, sender=CustomUser)
+
+def ProfilePic(instance, filename):
+	ext = filename.split('.')[-1]
+	return "%s/profile\%s_%s.%s" % (instance.talent.id, str(time()).replace('.','_'), random(), ext)
+
+def BackgroundPic(instance, filename):
+	ext = filename.split('.')[-1]
+	return "%s/profile\%s_%s.%s" % (instance.talent.id, str(time()).replace('.','_'), random(), ext)
+
+class ProfileImages(models.Model):
+    talent = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    profile_pic = models.ImageField(storage=PrivateMediaStorage(), upload_to=ProfilePic, blank=True, null=True)
+    profile_background = models.ImageField(storage=PrivateMediaStorage(), upload_to=BackgroundPic, blank=True, null=True)
+
+    def __str__(self):
+        return str(self.talent)
+
+    def create_settings(sender, **kwargs):
+        if kwargs['created']:
+            create_settings = ProfileImages.objects.create(talent=kwargs['instance'])
+
+    post_save.connect(create_settings, sender=CustomUser)
 
 
 class IdType(models.Model):
@@ -360,11 +391,15 @@ def ExtFilename(instance, filename):
 	ext = filename.split('.')[-1]
 	return "%s/profile\%s_%s.%s" % (instance.talent.id, str(time()).replace('.','_'), random(), ext)
 
+def ExtThumbnail(instance, filename):
+	ext = filename.split('.')[-1]
+	return "%s/profile\%s_%s.%s" % (instance.talent.id, str(time()).replace('.','_'), random(), ext)
 
 class FileUpload(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
     title = models.CharField(max_length=150)
     file = models.FileField(storage=PrivateMediaStorage(), upload_to=ExtFilename, validators=[FileExtensionValidator(['pdf'])])
+    thumbnail = models.ImageField(storage=PrivateMediaStorage(), upload_to=ExtThumbnail, blank=True, null=True)
 
     def __str__(self):
         return '{}: {}'.format(self.talent, self.title)
@@ -373,6 +408,23 @@ class FileUpload(models.Model):
         self.file.delete()
         super().delete(*args, **kwargs)
 
+    def save(self, *args, **kwargs):
+        if self.file:
+            cache_path = self.file
+            bytes_file = bytes(cache_path.open(mode='rb').read())
+
+            images = convert_from_bytes(bytes_file)[0]
+            image = images.resize((int(260), int(360)), Image.ANTIALIAS)
+
+            quality_val = 90
+            thumb_io = BytesIO()
+            image.save(thumb_io, format='JPEG', quality=quality_val)
+
+            thumb_file = InMemoryUploadedFile(thumb_io, None, 'foo.jpg', 'image/jpeg', thumb_io.__sizeof__(), None)
+
+            self.thumbnail = thumb_file
+
+        super(FileUpload, self).save(*args, **kwargs)
 
 class PhoneNumber(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)

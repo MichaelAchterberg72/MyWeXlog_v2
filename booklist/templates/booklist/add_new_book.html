@@ -28,32 +28,63 @@
             <br>
           </p>
           {{ form.type|as_crispy_field }}
-          {{ form.publisher|as_crispy_field }}
-          <a href="{% url 'BookList:PublisherCreatePopup' %}" id='add_publisher' onclick='return showAddPopup(this);'>
-            <img src = "{% static 'images/icon-addlink.svg' %}">
-            Add a Publisher
-          </a>
-          {{ form.author|as_crispy_field }}
-          <a href="{% url 'BookList:AuthorCreatePopup' %}" id='add_author' onclick='return showAddPopup(this);'>
-            <img src = "{% static 'images/icon-addlink.svg' %}">
-            Add an Author
-          </a>
-          <br>
+          <div class="row">
+            <div class="col-md-9">
+              {{ form.publisher|as_crispy_field }}
+            </div>
+            <div class="col-md-3">
+              <br>
+              <p>
+                <a href="{% url 'BookList:PublisherCreatePopup' %}" id='add_publisher' onclick='return showAddPopup(this);'>
+                  <img src = "{% static 'images/icon-addlink.svg' %}">
+                  Add a Publisher
+                </a>
+              </p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-9">
+              {{ form.author|as_crispy_field }}
+            </div>
+            <div class="col-md-3">
+              <br>
+              <p>
+                <a href="{% url 'BookList:AuthorCreatePopup' %}" id='add_author' onclick='return showAddPopup(this);'>
+                  <img src = "{% static 'images/icon-addlink.svg' %}">
+                  Add an Author
+                </a>
+              </p>
+            </div>
+          </div>
         </div>
         <div class="form-group col-md-6 mb-0">
-          {{ form.genre|as_crispy_field }}
-          <p>
-            <a href="{% url 'BookList:GenreCreatePopup' %}" id='add_tag' onclick='return showAddPopup(this);'>
-              <img src = "{% static 'images/icon-addlink.svg' %}">
-              Add a Genre
-            </a>
-          </p>
+          <div class="row">
+            <div class="col-md-9">
+              {{ form.genre|as_crispy_field }}
+            </div>
+            <div class="col-md-3">
+              <br>
+              <p>
+                <a href="{% url 'BookList:GenreCreatePopup' %}" id='add_tag' onclick='return showAddPopup(this);'>
+                  <img src = "{% static 'images/icon-addlink.svg' %}">
+                  Add a Genre
+                </a>
+              </p>
+            </div>
+          </div>
             {{ form.link|as_crispy_field }}
-            {{ form.tag|as_crispy_field }}
-            <a href="{% url 'BookList:TagCreatePopup' %}" id='add_tag' onclick='return showAddPopup(this);'>
-              <img src = "{% static 'images/icon-addlink.svg' %}">
-                Add a Skill Tag
-              </a>
+            <div class="row">
+              <div class="col-md-9">
+                {{ form.tag|as_crispy_field }}
+              </div>
+              <div class="col-md-3">
+                <br>
+                <a href="{% url 'BookList:TagCreatePopup' %}" id='add_tag' onclick='return showAddPopup(this);'>
+                  <img src = "{% static 'images/icon-addlink.svg' %}">
+                    Add a Skill Tag
+                  </a>
+              </div>
+            </div>
           </div>
           <br>
           <p>
@@ -75,7 +106,7 @@
     width: 100px;
   }
   </style>
-  
+
   <script type="text/javascript">
 
   function showAddPopup(triggeringLink) {

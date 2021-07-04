@@ -8,12 +8,11 @@
 {% block content %}
 <div class="card card-shadow">
   <div class="card-body">
-    <h3>
-      Edit Your Profile
-    </h3>
-    <form method="post">
-      <input type="hidden" name="next" value="{{ request.GET.next }}">
-      {% csrf_token %}
+<h3>Edit Your Profile</h3>
+
+<form method="post">
+  <input type="hidden" name="next" value="{{ request.GET.next }}">
+  {% csrf_token %}
       <div class="form-row">
         <div class="form-group col-md-6 mb-0">
           {{ form.f_name|as_crispy_field }}
@@ -22,6 +21,7 @@
           </p>
           {{ form.l_name|as_crispy_field }}
           {{ form.birth_date|as_crispy_field }}
+          <br><br>
         </div>
         <div class="form-group col-md-6 mb-0">
           <div class="form-row">
@@ -44,7 +44,7 @@
             </div>
           </div>
           <div class="form-row">
-            <div class="form-group col-md-6 mb-0" data-toggle="tooltip" title="Your chosen alias must not indicate race, gender, religion or any other thing that could potentially cause bias">
+            <div class="form-group col-md-12 mb-0" data-toggle="tooltip" title="Your chosen alias must not indicate race, gender, religion or any other thing that could potentially cause bias">
               {{ form.alias|as_crispy_field }}
             </div>
             <div class="form-group col-md-6 mb-0">
@@ -71,6 +71,15 @@
 
 <!-- code for popups -->
 <script type="text/javascript">
+var aliasfield = document.querySelector('[name="alias"]');
+
+aliasfield.addEventListener('keypress', function ( event ) {
+   var key = event.keyCode;
+    if (key === 32) {
+      event.preventDefault();
+    }
+});
+
 function showAddPopup(triggeringLink) {
     var name = triggeringLink.id.replace(/^add_/, '');
     href = triggeringLink.href;

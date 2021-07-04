@@ -349,11 +349,11 @@
       </tr>
       <tr>
         <th>Scope</th>
-        <td colspan="4">{{ x.scope }}</td>
+        <td colspan="4">{{ x.scope|safe }}</td>
       </tr>
       <tr>
         <th>Expectations</th>
-        <td colspan="4">{{ x.expectations }}</td>
+        <td colspan="4">{{ x.expectations|safe }}</td>
       </tr>
       {% empty %}
         <tr>
