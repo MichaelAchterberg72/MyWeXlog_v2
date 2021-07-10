@@ -1858,6 +1858,7 @@ def VacanciesListView(request):
         skill_set = skill_set | d
 
     skill_set = skill_set.distinct().order_by('skill')
+    skill_setv = skill_set.values_list('id', flat=True)#gets the id's of all the skills
     #Create a set of all skills<<<
 
     #>>>Experience Level check & list skills required in vacancies
@@ -1920,6 +1921,7 @@ def VacanciesListView(request):
 
     ds = set()
     matchd = set(skl_lst) #remove duplicates
+    matchd = matchd.intersection(set(skill_setv))
 
     for item in matchd:
         display = set(sr.filter(
