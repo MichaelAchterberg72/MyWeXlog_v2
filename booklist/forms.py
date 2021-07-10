@@ -105,6 +105,21 @@ class BookAddForm(forms.ModelForm):
             'genre': GenreWidget(),
         }
 
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        title = cleaned_data.get("title")
+        publisher = cleaned_data.get("publisher")
+
+        if ProjectData.objects.filter(title = title, publisher = publisher).count() > 0:
+            del cleaned_data["title"]
+            del cleaned_data["publisher"]
+
+            raise forms.ValidationError("This combination of Title and Publisher already exists! Please enter another combination or select the existing combination.")
+
+        return cleaned_data
+
 
 class GenreAddForm(forms.ModelForm):
     class Meta:
@@ -147,6 +162,21 @@ class AddBookReadForm(forms.ModelForm):
             'type': TypeSelect2Widget(),
         }
 
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        talent = cleaned_data.get("talent")
+        book = cleaned_data.get("book")
+
+        if ProjectData.objects.filter(talent = talent, book = book).count() > 0:
+            del cleaned_data["talent"]
+            del cleaned_data["book"]
+
+            raise forms.ValidationError("This Book already exists in your profile!")
+
+        return cleaned_data
+
 
 class AddFromListForm(forms.ModelForm):
     class Meta:
@@ -157,6 +187,21 @@ class AddFromListForm(forms.ModelForm):
             'book': BookSelect2Widget(),
             'type': TypeSelect2Widget(),
         }
+
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        talent = cleaned_data.get("talent")
+        book = cleaned_data.get("book")
+
+        if ProjectData.objects.filter(talent = talent, book = book).count() > 0:
+            del cleaned_data["talent"]
+            del cleaned_data["book"]
+
+            raise forms.ValidationError("This Book already exists in your profile!")
+
+        return cleaned_data
 
 '''
 class DateForm(forms.Form):

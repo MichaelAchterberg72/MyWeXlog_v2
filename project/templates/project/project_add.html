@@ -39,6 +39,12 @@
     </div>
     <form class="" action="" method="POST" id="ProjectForm">
       {% csrf_token %}
+      <div style="background-color:red; color:white;">
+        <p>
+          ERROR!
+          {{ form.non_field_errors }}
+        </p>
+      </div>
       <div class="form-row">
         <div class="form-group col-md-6 mb-0">
           {{ form.name|as_crispy_field }}

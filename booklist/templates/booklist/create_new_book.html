@@ -9,8 +9,8 @@
 <div class="border-0">
 <div class="card-body">
   <h4 class="card-title">
-
-Add a New Book</h4>
+    Add a New Book
+  </h4>
 
 <script type="text/javascript">
 
@@ -33,6 +33,12 @@ function closePopup(win, newID, newRepr, id) {
 <form class="" action="" method="POST" novalidate>
 
   {% csrf_token %}
+  <div style="background-color:red; color:white;">
+    <p>
+      ERROR!
+      {{ form.non_field_errors }}
+    </p>
+  </div>
   <div class="form-row">
     <div class="form-group col-md-6 mb-0">
   {{ form.title|as_crispy_field }}
