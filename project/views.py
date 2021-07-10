@@ -589,7 +589,7 @@ def ProjectEditView(request, prj):
         if form.is_valid():
             new = form.save(commit=False)
             new.save()
-            return redirect(reverse('Project:ProjectDetail', kwargs={'prj':prj}))
+        return redirect(reverse('Project:ProjectDetail', kwargs={'prj':prj}))
 
     else:
         template = 'project/project_add.html'

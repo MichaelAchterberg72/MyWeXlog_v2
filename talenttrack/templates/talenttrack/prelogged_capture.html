@@ -25,7 +25,11 @@
       </h3>
       <p>
         <small>
-          (Fields marked with a * are required fields)
+          Fields marked with a "*" are required fields. |
+          For additional help click on the <i class="fa fa-question-circle" style="color:blue;"></i> in the top right corner.
+        </small>
+        <small>
+          Please ensure that the "Company" as well as the "Branch" has been captured in the <a href="{% url 'Enterprise:EnterpriseHome' %}" target="_blank">Enterprise</a> page first. Refresh this page once the company and branch have been added. The company and branch will then be available in the respective fields.
         </small>
       </p>
       <form method="post" id="BranchForm" enctype="multipart/form-data">
@@ -33,19 +37,7 @@
         <div class="form-row">
           <div class="form-group col-md-5 mb-0">
             {{ form.company|as_crispy_field }}
-            <p>
-              <a href="{% url 'Enterprise:EnterpriseAddPop' %}" id='add_company' onclick='return showAddPopup(this);'>
-                <img src = "{% static 'images/icon-addlink.svg' %}">
-                Add a Company
-              </a>
-            </p>
             {{ form.companybranch|as_crispy_field }}
-            <p>
-              <a href="{% url 'Enterprise:BranchAddPop' %}" id='add_branch' onclick='return showAddPopup(this);'>
-                <img src = "{% static 'images/icon-addlink.svg' %}">
-                Add a Branch
-              </a>
-            </p>
             {{ form.project_data|as_crispy_field }}
             <div class="form-row">
               <div class="form-group col-md-4 mb-0">
@@ -73,11 +65,9 @@
               <div class="form-group col-md-4 mb-0">
                 {{ form.date_to|as_crispy_field }}
               </div>
-              <div class="form-group col-md-4 mb-0">
+              <div class="form-group col-md-4 mb-0" data-toggle="tooltip" title="A max of 10 hours per day or a total of 999 hours is allowed to be captured. NOTE: 1 day is shown by an increase in date of 1 between start and finish.">
                 {{ form.hours_worked|as_crispy_field }}
-                <p>
-                  <br>
-                </p>
+
               </div>
             </div>
             <div class="form-row">
