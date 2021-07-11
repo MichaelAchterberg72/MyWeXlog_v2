@@ -263,7 +263,7 @@ class AddProjectPersonalDetailsForm(forms.ModelForm):
         company = cleaned_data.get("company")
         project = cleaned_data.get("project")
 
-        if ProjectData.objects.filter(talent = talent, project = project, company = company, companybranch = companybranch).count() > 0:
+        if ProjectPersonalDetails.objects.filter(talent = talent, project = project, company = company, companybranch = companybranch).count() > 0:
             del cleaned_data["talent"]
             del cleaned_data["companybranch"]
             del cleaned_data["company"]

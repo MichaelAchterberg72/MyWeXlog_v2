@@ -112,7 +112,7 @@ class BookAddForm(forms.ModelForm):
         title = cleaned_data.get("title")
         publisher = cleaned_data.get("publisher")
 
-        if ProjectData.objects.filter(title = title, publisher = publisher).count() > 0:
+        if BookList.objects.filter(title = title, publisher = publisher).count() > 0:
             del cleaned_data["title"]
             del cleaned_data["publisher"]
 
@@ -169,10 +169,9 @@ class AddBookReadForm(forms.ModelForm):
         talent = cleaned_data.get("talent")
         book = cleaned_data.get("book")
 
-        if ProjectData.objects.filter(talent = talent, book = book).count() > 0:
+        if ReadBy.objects.filter(talent = talent, book = book).count() > 0:
             del cleaned_data["talent"]
             del cleaned_data["book"]
-
             raise forms.ValidationError("This Book already exists in your profile!")
 
         return cleaned_data
@@ -195,10 +194,9 @@ class AddFromListForm(forms.ModelForm):
         talent = cleaned_data.get("talent")
         book = cleaned_data.get("book")
 
-        if ProjectData.objects.filter(talent = talent, book = book).count() > 0:
+        if ReadBy.objects.filter(talent = talent, book = book).count() > 0:
             del cleaned_data["talent"]
             del cleaned_data["book"]
-
             raise forms.ValidationError("This Book already exists in your profile!")
 
         return cleaned_data

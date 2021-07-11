@@ -216,6 +216,22 @@ class AchievementsForm(forms.ModelForm):
             'description': 'Background of what the achiement is, and what led to you receiving it.',
         }
 
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        talent = cleaned_data.get("talent")
+        achievement = cleaned_data.get("achievement")
+        date_achieved = cleaned_data.get("date_achieved")
+
+        if Achievements.objects.filter(talent = talent, achievement = achievement, date_achieved = date_achieved).count() > 0:
+            del cleaned_data["talent"]
+            del cleaned_data["achievement"]
+            del cleaned_data["date_achieved"]
+            raise forms.ValidationError("This achievement already exists in your profile! Please enter another.")
+
+        return cleaned_data
+
 
 class AwardsForm(forms.ModelForm):
     class Meta:
@@ -234,6 +250,22 @@ class AwardsForm(forms.ModelForm):
             'description': 'Background of what the award is, and what led to you receiving it.',
         }
 
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        talent = cleaned_data.get("talent")
+        award = cleaned_data.get("award")
+        date_achieved = cleaned_data.get("date_achieved")
+
+        if Awards.objects.filter(talent = talent, award = award, date_achieved = date_achieved).count() > 0:
+            del cleaned_data["talent"]
+            del cleaned_data["award"]
+            del cleaned_data["date_achieved"]
+            raise forms.ValidationError("This award already exists in your profile! Please enter another.")
+
+        return cleaned_data
+
 
 class PublicationsForm(forms.ModelForm):
     class Meta:
@@ -250,6 +282,22 @@ class PublicationsForm(forms.ModelForm):
             'title': 'Brief description or name of the publication',
             'description': 'Background of what the publication is, and what led to you creating it.',
         }
+
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        talent = cleaned_data.get("talent")
+        title = cleaned_data.get("title")
+        date_published = cleaned_data.get("date_published")
+
+        if Publications.objects.filter(talent = talent, title = title, date_published = date_published).count() > 0:
+            del cleaned_data["talent"]
+            del cleaned_data["title"]
+            del cleaned_data["date_published"]
+            raise forms.ValidationError("This publication already exists in your profile! Please enter another.")
+
+        return cleaned_data
 
 
 class LicenseCertificationForm(forms.ModelForm):
@@ -278,6 +326,21 @@ class LicenseCertificationForm(forms.ModelForm):
         help_texts = {
             'region': 'Not all certifications are region specific, in which case, this field can be blank, however some are, in which case this field must be populated.',
         }
+
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        talent = cleaned_data.get("talent")
+        cm_no = cleaned_data.get("cm_no")
+
+        if LicenseCertification.objects.filter(talent = talent, cm_no = cm_no).count() > 0:
+            del cleaned_data["talent"]
+            del cleaned_data["cm_no"]
+            raise forms.ValidationError("This license/certification already exists in your profile! Please enter another.")
+
+        return cleaned_data
+
 
 class PreLoggedExperienceForm(forms.ModelForm):
     '''Form to capture experience earned and captured on previously approved timesheets'''
@@ -332,6 +395,31 @@ class PreLoggedExperienceForm(forms.ModelForm):
             raise forms.ValidationError("You can't claim more than 12 hours per day!")
 
         return hours_worked
+
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        talent = cleaned_data.get("talent")
+        hours_worked = cleaned_data.get("hours_worked")
+        date_from = cleaned_data.get("date_from")
+        date_to = cleaned_data.get("date_to")
+        course = cleaned_data.get("course")
+        topic = cleaned_data.get("topic")
+        company = cleaned_data.get("company")
+
+        if WorkExperience.objects.filter(talent = talent, hours_worked = hours_worked, date_from = date_from, date_to = date_to, course = course, topic = topic, company = company).count() > 0:
+            del cleaned_data["talent"]
+            del cleaned_data["hours_worked"]
+            del cleaned_data["date_from"]
+            del cleaned_data["date_to"]
+            del cleaned_data["course"]
+            del cleaned_data["topic"]
+            del cleaned_data["company"]
+            raise forms.ValidationError("This experience already exists in your profile! Please enter another combination.")
+
+        return cleaned_data
+
 
 class WorkClientResponseForm(forms.ModelForm):
     class Meta:
@@ -608,6 +696,30 @@ class WorkExperienceForm(forms.ModelForm):
 
         return hours_worked
 
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        talent = cleaned_data.get("talent")
+        hours_worked = cleaned_data.get("hours_worked")
+        date_from = cleaned_data.get("date_from")
+        date_to = cleaned_data.get("date_to")
+        course = cleaned_data.get("course")
+        topic = cleaned_data.get("topic")
+        company = cleaned_data.get("company")
+
+        if WorkExperience.objects.filter(talent = talent, hours_worked = hours_worked, date_from = date_from, date_to = date_to, course = course, topic = topic, company = company).count() > 0:
+            del cleaned_data["talent"]
+            del cleaned_data["hours_worked"]
+            del cleaned_data["date_from"]
+            del cleaned_data["date_to"]
+            del cleaned_data["course"]
+            del cleaned_data["topic"]
+            del cleaned_data["company"]
+            raise forms.ValidationError("This experience already exists in your profile! Please enter another combination.")
+
+        return cleaned_data
+
 
 class DesignationForm(forms.ModelForm):
     pwd = None
@@ -803,6 +915,30 @@ class EducationForm(forms.ModelForm):
 
         return date_to
 
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        talent = cleaned_data.get("talent")
+        hours_worked = cleaned_data.get("hours_worked")
+        date_from = cleaned_data.get("date_from")
+        date_to = cleaned_data.get("date_to")
+        course = cleaned_data.get("course")
+        topic = cleaned_data.get("topic")
+        company = cleaned_data.get("company")
+
+        if WorkExperience.objects.filter(talent = talent, hours_worked = hours_worked, date_from = date_from, date_to = date_to, course = course, topic = topic, company = company).count() > 0:
+            del cleaned_data["talent"]
+            del cleaned_data["hours_worked"]
+            del cleaned_data["date_from"]
+            del cleaned_data["date_to"]
+            del cleaned_data["course"]
+            del cleaned_data["topic"]
+            del cleaned_data["company"]
+            raise forms.ValidationError("This experience already exists in your profile! Please enter another combination.")
+
+        return cleaned_data
+
 
 class CourseForm(forms.ModelForm):
     class Meta:
@@ -812,6 +948,20 @@ class CourseForm(forms.ModelForm):
             'company': CompanySelect2Widget(),
             'course_type': CourseTypeSelect2Widget(),
         }
+
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        name = cleaned_data.get("name")
+        company = cleaned_data.get("company")
+
+        if Course.objects.filter(name = name, company = company).count() > 0:
+            del cleaned_data["name"]
+            del cleaned_data["company"]
+            raise forms.ValidationError("This course already exists for the company! Please enter another combination or select the existing combination.")
+
+        return cleaned_data
 
 
 class CourseTypeForm(forms.ModelForm):

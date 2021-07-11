@@ -263,6 +263,21 @@ class DeliverablesForm(forms.ModelForm):
             'deliverable': forms.Textarea(),
         }
 
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        scope = cleaned_data.get("scope")
+        deliverable = cleaned_data.get("deliverable")
+
+        if Deliverables.objects.filter(scope = scope, deliverable = deliverable).count() > 0:
+            del cleaned_data["scope"]
+            del cleaned_data["deliverable"]
+
+            raise forms.ValidationError("This combination of Deliverable and Scope already exists! Please enter another combination.")
+
+        return cleaned_data
+
 
 class TalentRequiredForm(forms.ModelForm):
 
@@ -301,6 +316,29 @@ class TalentRequiredForm(forms.ModelForm):
             'own_ref_no': 'Own Internal Vacancy Reference Number',
         }
 
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        companybranch = cleaned_data.get("companybranch")
+        title = cleaned_data.get("title")
+        requested_by = cleaned_data.get("requested_by")
+        own_ref_no = cleaned_data.get("own_ref_no")
+
+        if TalentRequired.objects.filter(companybranch = companybranch, title = title, requested_by = requested_by).count() > 0:
+            del cleaned_data["companybranch"]
+            del cleaned_data["title"]
+            del cleaned_data["requested_by"]
+            raise forms.ValidationError("This combination of Title, Company and Branch already exists! Please enter another combination.")
+
+        elif ProjectData.objects.filter(companybranch = companybranch, own_ref_no = own_ref_no).count() > 0:
+            del cleaned_data["companybranch"]
+            del cleaned_data["own_ref_no"]
+
+            raise forms.ValidationError("This combination of Reference Number and Branch already exists! Please enter another combination.")
+
+        return cleaned_data
+
 
 class TalentRequiredEditForm(forms.ModelForm):
     class Meta:
@@ -326,6 +364,29 @@ class TalentRequiredEditForm(forms.ModelForm):
             'hours_required': 'Hours',
             'own_ref_no': 'Own Internal Vacancy Reference Number',
         }
+
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        companybranch = cleaned_data.get("companybranch")
+        title = cleaned_data.get("title")
+        requested_by = cleaned_data.get("requested_by")
+        own_ref_no = cleaned_data.get("own_ref_no")
+
+        if TalentRequired.objects.filter(companybranch = companybranch, title = title, requested_by = requested_by).count() > 0:
+            del cleaned_data["companybranch"]
+            del cleaned_data["title"]
+            del cleaned_data["requested_by"]
+            raise forms.ValidationError("This combination of Title, Company and Branch already exists! Please enter another combination.")
+
+        elif ProjectData.objects.filter(companybranch = companybranch, own_ref_no = own_ref_no).count() > 0:
+            del cleaned_data["companybranch"]
+            del cleaned_data["own_ref_no"]
+
+            raise forms.ValidationError("This combination of Reference Number and Branch already exists! Please enter another combination.")
+
+        return cleaned_data
 
 
 class WorkLocationForm(forms.ModelForm):

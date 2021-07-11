@@ -13,6 +13,12 @@
   <form method="post" enctype="multipart/form-data">
     <input type="hidden" name="next" value="{{ request.GET.next }}">
     {% csrf_token %}
+    <div style="background-color:red; color:white;">
+      <p>
+        ERROR!
+        {{ form.non_field_errors }}
+      </p>
+    </div>
     {{ form.tlt_decline_reason|as_crispy_field }}
     {{ form.comments_tlt|as_crispy_field }}
     <div class="">

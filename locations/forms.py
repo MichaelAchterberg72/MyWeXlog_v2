@@ -68,11 +68,9 @@ class RegionForm(forms.ModelForm):
         country = cleaned_data.get("country")
         region = cleaned_data.get("region")
 
-
-        if ProjectData.objects.filter(country = country, region = region).count() > 0:
+        if Region.objects.filter(country = country, region = region).count() > 0:
             del cleaned_data["country"]
             del cleaned_data["region"]
-
             raise forms.ValidationError("This combination of Country and Region already exists! Please enter another combination or select the existing combination.")
 
         return cleaned_data
@@ -90,11 +88,9 @@ class CityForm(forms.ModelForm):
         region = cleaned_data.get("region")
         city = cleaned_data.get("city")
 
-
-        if ProjectData.objects.filter(region = region, city = city).count() > 0:
+        if City.objects.filter(region = region, city = city).count() > 0:
             del cleaned_data["region"]
             del cleaned_data["city"]
-
             raise forms.ValidationError("This combination of Region and City already exists! Please enter another combination or select the existing combination.")
 
         return cleaned_data
@@ -104,9 +100,10 @@ class VacCityForm(forms.ModelForm):
     class Meta:
         model = City
         fields = ('city', 'region' )
-    widget = {
-        'region': RegionSelect2Widget(),
-    }
+
+        widgets = {
+            'region': RegionSelect2Widget(),
+        }
 
     def clean_unique(self):
         '''Error message for unique_together condition in this model'''
@@ -115,11 +112,9 @@ class VacCityForm(forms.ModelForm):
         region = cleaned_data.get("region")
         city = cleaned_data.get("city")
 
-
-        if ProjectData.objects.filter(region = region, city = city).count() > 0:
+        if City.objects.filter(region = region, city = city).count() > 0:
             del cleaned_data["region"]
             del cleaned_data["city"]
-
             raise forms.ValidationError("This combination of Region and City already exists! Please enter another combination or select the existing combination.")
 
         return cleaned_data
@@ -137,10 +132,9 @@ class SuburbForm(forms.ModelForm):
         suburb = cleaned_data.get("suburb")
         city = cleaned_data.get("city")
 
-        if ProjectData.objects.filter(suburb = suburb, city = city).count() > 0:
+        if Suburb.objects.filter(suburb = suburb, city = city).count() > 0:
             del cleaned_data["suburb"]
             del cleaned_data["city"]
-
             raise forms.ValidationError("This combination of City and Suburb already exists! Please enter another combination or select the existing combination.")
 
         return cleaned_data
@@ -158,10 +152,9 @@ class CurrencyForm(forms.ModelForm):
         country = cleaned_data.get("country")
         currency_name = cleaned_data.get("currency_name")
 
-        if ProjectData.objects.filter(country = country, currency_name = currency_name).count() > 0:
+        if Currency.objects.filter(country = country, currency_name = currency_name).count() > 0:
             del cleaned_data["country"]
             del cleaned_data["currency_name"]
-
             raise forms.ValidationError("This combination of Country and Currency Namealready exists! Please enter another combination or select the existing combination.")
 
         return cleaned_data

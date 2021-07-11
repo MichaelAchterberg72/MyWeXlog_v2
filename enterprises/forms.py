@@ -113,11 +113,10 @@ class BranchForm(forms.ModelForm):
         name = cleaned_data.get("name")
         city = cleaned_data.get("city")
 
-        if ProjectData.objects.filter(company = company, city = city, name = name).count() > 0:
+        if Branch.objects.filter(company = company, city = city, name = name).count() > 0:
             del cleaned_data["company"]
             del cleaned_data["name"]
             del cleaned_data["city"]
-
             raise forms.ValidationError("This combination of Company, Name and City already exists! Please enter another combination or select the existing combination.")
 
         return cleaned_data
@@ -128,6 +127,7 @@ class FullBranchForm(forms.ModelForm):
     class Meta:
         model = Branch
         fields = ('name', 'type', 'size', 'phy_address_line1', 'phy_address_line2', 'country', 'region', 'city', 'suburb', 'code', 'industry',)
+
         widgets={
             'region': RegionSelect2Widget(),
             'city': CitySelect2Widget(),
@@ -144,7 +144,7 @@ class FullBranchForm(forms.ModelForm):
         name = cleaned_data.get("name")
         city = cleaned_data.get("city")
 
-        if ProjectData.objects.filter(company = company, city = city, name = name).count() > 0:
+        if Branch.objects.filter(company = company, city = city, name = name).count() > 0:
             del cleaned_data["company"]
             del cleaned_data["name"]
             del cleaned_data["city"]
@@ -159,6 +159,7 @@ class FullBranchHome(forms.ModelForm):
     class Meta:
         model = Branch
         fields = ('company', 'name', 'type', 'size', 'phy_address_line1', 'phy_address_line2', 'country', 'region', 'city', 'suburb', 'code', 'industry',)
+
         widgets={
             'region': RegionSelect2Widget(),
             'city': CitySelect2Widget(),
@@ -175,11 +176,10 @@ class FullBranchHome(forms.ModelForm):
         name = cleaned_data.get("name")
         city = cleaned_data.get("city")
 
-        if ProjectData.objects.filter(company = company, city = city, name = name).count() > 0:
+        if Branch.objects.filter(company = company, city = city, name = name).count() > 0:
             del cleaned_data["company"]
             del cleaned_data["name"]
             del cleaned_data["city"]
-
             raise forms.ValidationError("This combination of Company, Name and City already exists! Please enter another combination or select the existing combination.")
 
         return cleaned_data
@@ -237,11 +237,10 @@ class EnterpriseBranchPopupForm(forms.ModelForm):
         name = cleaned_data.get("name")
         city = cleaned_data.get("city")
 
-        if ProjectData.objects.filter(company = company, city = city, name = name).count() > 0:
+        if Branch.objects.filter(company = company, city = city, name = name).count() > 0:
             del cleaned_data["company"]
             del cleaned_data["name"]
             del cleaned_data["city"]
-
             raise forms.ValidationError("This combination of Company, Name and City already exists! Please enter another combination or select the existing combination.")
 
         return cleaned_data

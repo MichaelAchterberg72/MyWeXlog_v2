@@ -11,6 +11,12 @@
     <form class="" action="" method="POST">
       <input type="hidden" name="next" value="{{ request.GET.next }}">
       {% csrf_token %}
+      <div style="background-color:red; color:white;">
+        <p>
+          ERROR!
+          {{ form.non_field_errors }}
+        </p>
+      </div>
       {{ form.subject|as_crispy_field }}
       {{ form.message|as_crispy_field }}
       <a href="{% url 'Talent:SkillsStats' skl %}" class="btn btn-danger">Cancel</a>

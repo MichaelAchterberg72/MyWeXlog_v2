@@ -12,6 +12,12 @@
   <form method="post" enctype="multipart/form-data">
     <input type="hidden" name="next" value="{{ request.GET.next }}">
     {% csrf_token %}
+    <div style="background-color:red; color:white;">
+      <p>
+        ERROR!
+        {{ form.non_field_errors }}
+      </p>
+    </div>
     {{ form.clarification_required|as_crispy_field }}
     <div class="">
       <button type="submit" name="done" class="btn btn-primary">Request</button>

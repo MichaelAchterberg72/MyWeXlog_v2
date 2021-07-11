@@ -20,6 +20,12 @@
     <form class="" action="" method="POST">
       <input type="hidden" name="next" value="{{ request.GET.next }}">
       {% csrf_token %}
+      <div style="background-color:red; color:white;">
+        <p>
+          ERROR!
+          {{ form.non_field_errors }}
+        </p>
+      </div>
       {{ form.name|as_crispy_field }}
       {{ form.surname|as_crispy_field }}
       {{ form.companybranch|as_crispy_field }}

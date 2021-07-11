@@ -2581,7 +2581,7 @@ def PhoneNumberDelete(request, pk):
 def OnlineProfileAdd(request, tlt):
     detail = Profile.objects.get(alias=tlt)
     if detail.talent == request.user:
-        form =OnlineProfileForm(request.POST or None)
+        form = OnlineProfileForm(request.POST or None)
         if request.method =='POST':
             if form.is_valid():
                 new=form.save(commit=False)
