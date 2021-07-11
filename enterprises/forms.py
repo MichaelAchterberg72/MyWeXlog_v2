@@ -117,7 +117,7 @@ class BranchForm(forms.ModelForm):
             del cleaned_data["company"]
             del cleaned_data["name"]
             del cleaned_data["city"]
-            raise forms.ValidationError("This combination of Company, Name and City already exists! Please enter another combination or select the existing combination.")
+            raise ValidationError("This combination of Company, Name and City already exists! Please enter another combination or select the existing combination.")
 
         return cleaned_data
 
@@ -149,7 +149,7 @@ class FullBranchForm(forms.ModelForm):
             del cleaned_data["name"]
             del cleaned_data["city"]
 
-            raise forms.ValidationError("This combination of Company, Name and City already exists! Please enter another combination or select the existing combination.")
+            raise ValidationError("This combination of Company, Name and City already exists! Please enter another combination or select the existing combination.")
 
         return cleaned_data
 
@@ -180,7 +180,7 @@ class FullBranchHome(forms.ModelForm):
             del cleaned_data["company"]
             del cleaned_data["name"]
             del cleaned_data["city"]
-            raise forms.ValidationError("This combination of Company, Name and City already exists! Please enter another combination or select the existing combination.")
+            raise ValidationError("This combination of Company, Name and City already exists! Please enter another combination or select the existing combination.")
 
         return cleaned_data
 
@@ -213,7 +213,7 @@ class EnterprisePopupForm(forms.ModelForm):
         als = company_passed
 
         if als in pwd:
-            raise forms.ValidationError("A company with this name already exists! Please enter another name.")
+            raise ValidationError("A company with this name already exists! Please enter another name.")
         return company_passed
 
 
@@ -241,6 +241,6 @@ class EnterpriseBranchPopupForm(forms.ModelForm):
             del cleaned_data["company"]
             del cleaned_data["name"]
             del cleaned_data["city"]
-            raise forms.ValidationError("This combination of Company, Name and City already exists! Please enter another combination or select the existing combination.")
+            raise ValidationError("This combination of Company, Name and City already exists! Please enter another combination or select the existing combination.")
 
         return cleaned_data

@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-
+from django.core.exceptions import ValidationError
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Row, Column
@@ -116,7 +116,7 @@ class BookAddForm(forms.ModelForm):
             del cleaned_data["title"]
             del cleaned_data["publisher"]
 
-            raise forms.ValidationError("This combination of Title and Publisher already exists! Please enter another combination or select the existing combination.")
+            raise ValidationError("This combination of Title and Publisher already exists! Please enter another combination or select the existing combination.")
 
         return cleaned_data
 
@@ -172,7 +172,7 @@ class AddBookReadForm(forms.ModelForm):
         if ReadBy.objects.filter(talent = talent, book = book).count() > 0:
             del cleaned_data["talent"]
             del cleaned_data["book"]
-            raise forms.ValidationError("This Book already exists in your profile!")
+            raise ValidationError("This Book already exists in your profile!")
 
         return cleaned_data
 
@@ -197,7 +197,7 @@ class AddFromListForm(forms.ModelForm):
         if ReadBy.objects.filter(talent = talent, book = book).count() > 0:
             del cleaned_data["talent"]
             del cleaned_data["book"]
-            raise forms.ValidationError("This Book already exists in your profile!")
+            raise ValidationError("This Book already exists in your profile!")
 
         return cleaned_data
 

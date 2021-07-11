@@ -245,7 +245,7 @@ class SkillRequiredForm(forms.ModelForm):
         als = skill_passed.id
 
         if als in dup:
-            raise forms.ValidationError("The above skill has already been added! Please choose another skill.")
+            raise ValidationError("The above skill has already been added! Please choose another skill.")
         return skill_passed
 
 
@@ -274,7 +274,7 @@ class DeliverablesForm(forms.ModelForm):
             del cleaned_data["scope"]
             del cleaned_data["deliverable"]
 
-            raise forms.ValidationError("This combination of Deliverable and Scope already exists! Please enter another combination.")
+            raise ValidationError("This combination of Deliverable and Scope already exists! Please enter another combination.")
 
         return cleaned_data
 
@@ -329,13 +329,13 @@ class TalentRequiredForm(forms.ModelForm):
             del cleaned_data["companybranch"]
             del cleaned_data["title"]
             del cleaned_data["requested_by"]
-            raise forms.ValidationError("This combination of Title, Company and Branch already exists! Please enter another combination.")
+            raise ValidationError("This combination of Title, Company and Branch already exists! Please enter another combination.")
 
         elif ProjectData.objects.filter(companybranch = companybranch, own_ref_no = own_ref_no).count() > 0:
             del cleaned_data["companybranch"]
             del cleaned_data["own_ref_no"]
 
-            raise forms.ValidationError("This combination of Reference Number and Branch already exists! Please enter another combination.")
+            raise ValidationError("This combination of Reference Number and Branch already exists! Please enter another combination.")
 
         return cleaned_data
 
@@ -378,13 +378,13 @@ class TalentRequiredEditForm(forms.ModelForm):
             del cleaned_data["companybranch"]
             del cleaned_data["title"]
             del cleaned_data["requested_by"]
-            raise forms.ValidationError("This combination of Title, Company and Branch already exists! Please enter another combination.")
+            raise ValidationError("This combination of Title, Company and Branch already exists! Please enter another combination.")
 
         elif ProjectData.objects.filter(companybranch = companybranch, own_ref_no = own_ref_no).count() > 0:
             del cleaned_data["companybranch"]
             del cleaned_data["own_ref_no"]
 
-            raise forms.ValidationError("This combination of Reference Number and Branch already exists! Please enter another combination.")
+            raise ValidationError("This combination of Reference Number and Branch already exists! Please enter another combination.")
 
         return cleaned_data
 

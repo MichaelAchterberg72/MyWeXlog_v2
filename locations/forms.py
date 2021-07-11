@@ -71,7 +71,7 @@ class RegionForm(forms.ModelForm):
         if Region.objects.filter(country = country, region = region).count() > 0:
             del cleaned_data["country"]
             del cleaned_data["region"]
-            raise forms.ValidationError("This combination of Country and Region already exists! Please enter another combination or select the existing combination.")
+            raise ValidationError("This combination of Country and Region already exists! Please enter another combination or select the existing combination.")
 
         return cleaned_data
 
@@ -91,7 +91,7 @@ class CityForm(forms.ModelForm):
         if City.objects.filter(region = region, city = city).count() > 0:
             del cleaned_data["region"]
             del cleaned_data["city"]
-            raise forms.ValidationError("This combination of Region and City already exists! Please enter another combination or select the existing combination.")
+            raise ValidationError("This combination of Region and City already exists! Please enter another combination or select the existing combination.")
 
         return cleaned_data
 
@@ -115,7 +115,7 @@ class VacCityForm(forms.ModelForm):
         if City.objects.filter(region = region, city = city).count() > 0:
             del cleaned_data["region"]
             del cleaned_data["city"]
-            raise forms.ValidationError("This combination of Region and City already exists! Please enter another combination or select the existing combination.")
+            raise ValidationError("This combination of Region and City already exists! Please enter another combination or select the existing combination.")
 
         return cleaned_data
 
@@ -135,7 +135,7 @@ class SuburbForm(forms.ModelForm):
         if Suburb.objects.filter(suburb = suburb, city = city).count() > 0:
             del cleaned_data["suburb"]
             del cleaned_data["city"]
-            raise forms.ValidationError("This combination of City and Suburb already exists! Please enter another combination or select the existing combination.")
+            raise ValidationError("This combination of City and Suburb already exists! Please enter another combination or select the existing combination.")
 
         return cleaned_data
 
@@ -155,6 +155,6 @@ class CurrencyForm(forms.ModelForm):
         if Currency.objects.filter(country = country, currency_name = currency_name).count() > 0:
             del cleaned_data["country"]
             del cleaned_data["currency_name"]
-            raise forms.ValidationError("This combination of Country and Currency Namealready exists! Please enter another combination or select the existing combination.")
+            raise ValidationError("This combination of Country and Currency Namealready exists! Please enter another combination or select the existing combination.")
 
         return cleaned_data

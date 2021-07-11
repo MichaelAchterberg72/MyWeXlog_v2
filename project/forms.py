@@ -123,7 +123,7 @@ class ProjectAddForm(forms.ModelForm):
         if ProjectData.objects.filter(name = name, companybranch = companybranch).count() > 0:
             del cleaned_data["name"]
             del cleaned_data["companybranch"]
-            raise forms.ValidationError("This combination of Company and Branch already exist! Please enter another combination or select the existing combination.")
+            raise ValidationError("This combination of Company and Branch already exist! Please enter another combination or select the existing combination.")
 
         return cleaned_data
 
@@ -133,7 +133,7 @@ class ProjectAddForm(forms.ModelForm):
         als = project_passed
 
         if als in pwd:
-            raise forms.ValidationError("A project with this name already exists! Please enter another name.")
+            raise ValidationError("A project with this name already exists! Please enter another name.")
         return project_passed
     '''
 
@@ -164,7 +164,7 @@ class ProjectFullAddForm(forms.ModelForm):
         if ProjectData.objects.filter(name = name, companybranch = companybranch).count() > 0:
             del cleaned_data["name"]
             del cleaned_data["companybranch"]
-            raise forms.ValidationError("This combination of Company and Branch already exist! Please enter another combination or select the existing combination.")
+            raise ValidationError("This combination of Company and Branch already exist! Please enter another combination or select the existing combination.")
 
         return cleaned_data
 
@@ -194,7 +194,7 @@ class ProjectAddHome(forms.ModelForm):
         if ProjectData.objects.filter(name = name, companybranch = companybranch).count() > 0:
             del cleaned_data["name"]
             del cleaned_data["companybranch"]
-            raise forms.ValidationError("This combination of Company and Branch already exist! Please enter another combination or select the existing combination.")
+            raise ValidationError("This combination of Company and Branch already exist! Please enter another combination or select the existing combination.")
 
         return cleaned_data
 
@@ -224,7 +224,7 @@ class ProjectForm(forms.ModelForm):
         if ProjectData.objects.filter(name = name, companybranch = companybranch).count() > 0:
             del cleaned_data["name"]
             del cleaned_data["companybranch"]
-            raise forms.ValidationError("This combination of Company and Branch already exist! Please enter another combination or select the existing combination.")
+            raise ValidationError("This combination of Company and Branch already exist! Please enter another combination or select the existing combination.")
 
         return cleaned_data
 
@@ -268,6 +268,6 @@ class AddProjectPersonalDetailsForm(forms.ModelForm):
             del cleaned_data["companybranch"]
             del cleaned_data["company"]
             del cleaned_data["project"]
-            raise forms.ValidationError("This combination of Project, Company and Branch already exist in your profile! Please enter another combination or select the existing combination.")
+            raise ValidationError("This combination of Project, Company and Branch already exist in your profile! Please enter another combination or select the existing combination.")
 
         return cleaned_data

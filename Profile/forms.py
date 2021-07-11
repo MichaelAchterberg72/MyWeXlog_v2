@@ -54,7 +54,7 @@ class WillingToRelocateForm(forms.ModelForm):
         if WillingToRelocate.objects.filter(talent = talent, country = country).count() > 0:
             del cleaned_data["talent"]
             del cleaned_data["country"]
-            raise forms.ValidationError("This country is already in your profile as a preference! Please enter another.")
+            raise ValidationError("This country is already in your profile as a preference! Please enter another.")
 
         return cleaned_data
 
@@ -151,7 +151,7 @@ class LanguageTrackForm(forms.ModelForm):
             del cleaned_data["talent"]
             del cleaned_data["language"]
 
-            raise forms.ValidationError("This language is already in your profile! Please enter another language.")
+            raise ValidationError("This language is already in your profile! Please enter another language.")
 
         return cleaned_data
 
@@ -184,7 +184,7 @@ class PassportDetailForm(forms.ModelForm):
             del cleaned_data["talent"]
             del cleaned_data["passport_number"]
 
-            raise forms.ValidationError("This passport is already in your profile! Please enter another.")
+            raise ValidationError("This passport is already in your profile! Please enter another.")
 
         return cleaned_data
 
@@ -205,7 +205,7 @@ class IdentificationDetailForm(forms.ModelForm):
             del cleaned_data["talent"]
             del cleaned_data["identification"]
 
-            raise forms.ValidationError("This form of identification already exists in your profile!")
+            raise ValidationError("This form of identification already exists in your profile!")
 
         return cleaned_data
 
@@ -238,7 +238,7 @@ class ProfileForm(forms.ModelForm):
         birth_date = self.cleaned_data.get("birth_date")
         age = int((timezone.now().date() - birth_date).days/365.25)
         if age < 18:
-            raise forms.ValidationError("You need to be older than 18 to use MyWeXlog")
+            raise ValidationError("You need to be older than 18 to use MyWeXlog")
         else:
             return birth_date
 
@@ -352,7 +352,7 @@ class EmailForm(forms.ModelForm):
         if Email.objects.filter(talent = talent, email = email).count() > 0:
             del cleaned_data["talent"]
             del cleaned_data["email"]
-            raise forms.ValidationError("This email address is already in your profile! Please enter another.")
+            raise ValidationError("This email address is already in your profile! Please enter another.")
 
         return cleaned_data
 
@@ -422,7 +422,7 @@ class OnlineProfileForm(forms.ModelForm):
             del cleaned_data["profileurl"]
             del cleaned_data["sitename"]
 
-            raise forms.ValidationError("This website already exists in your profile! Please enter another.")
+            raise ValidationError("This website already exists in your profile! Please enter another.")
 
         return cleaned_data
 
