@@ -21,7 +21,7 @@ class ProjectSearchFieldMixin:
         'name__icontains', 'pk__startswith', 'company__ename__icontains', 'region__region__icontains', 'city__city__icontains',
     ]
 
-    dependent_fields = {'companybranch': 'companybranch'}
+#    dependent_fields = {'companybranch': 'companybranch'}
 
 class ProjectSelect2Widget(ProjectSearchFieldMixin, ModelSelect2Widget):
     model = ProjectData
@@ -45,7 +45,7 @@ class BranchSelect2Widget(BranchSearchFieldMixin, ModelSelect2Widget):
 
 class CompanySearchFieldMixin:
     search_fields = [
-        'name__icontains', 'pk__startswith'
+        'ename__icontains', 'pk__startswith'
     ]
 class CompanySelect2Widget(CompanySearchFieldMixin, ModelSelect2Widget):
     model = Enterprise
@@ -136,7 +136,7 @@ class ProjectFullAddForm(forms.ModelForm):
         }
         labels = {
             'city' : 'Closest City / Town / Village',
-            'company' : 'Company that own project'
+            'company' : 'The company that owns the project'
         }
 
 
@@ -192,4 +192,7 @@ class AddProjectPersonalDetailsForm(forms.ModelForm):
         }
         labels = {
             'company' : 'Company you are working for on the project',
+        }
+        help_texts = {
+            'project' : '*Enter either the project owner, project name, region or city of the project',
         }

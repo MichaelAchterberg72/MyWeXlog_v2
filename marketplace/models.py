@@ -10,7 +10,7 @@ from time import time
 from Profile.utils import create_code9, create_code8
 from WeXlog.storage_backends import PublicMediaStorage, PrivateMediaStorage
 
-
+from tinymce.models import HTMLField
 
 from django.contrib.auth.models import User
 from users.models import CustomUser
@@ -118,8 +118,8 @@ class TalentRequired(models.Model):
     bid_closes = models.DateTimeField('Applications Close', null=True)
     offer_status = models.CharField(max_length=1, choices=STATUS, default='O')
     certification = models.ManyToManyField(Result, verbose_name='Certifications Required', blank=True)
-    scope = models.TextField()
-    expectations = models.TextField()
+    scope = HTMLField()
+    expectations = HTMLField()
     terms = models.FileField(storage=PublicMediaStorage(), upload_to=BidTerms, blank=True, null=True, validators=[FileExtensionValidator(['pdf'])])
     city = models.ForeignKey(City, on_delete=models.PROTECT, verbose_name='City, Town or Place')
     date_modified = models.DateField(auto_now=True)
@@ -155,7 +155,7 @@ class VacancyViewed(models.Model):
 
 class Deliverables(models.Model):
     scope = models.ForeignKey(TalentRequired, on_delete=models.CASCADE)
-    deliverable = models.TextField()
+    deliverable = HTMLField()
     date_modified = models.DateField(auto_now=True)
 
     class Meta:
@@ -357,10 +357,10 @@ class VacancyRate(models.Model):
     rate_2 = models.SmallIntegerField('Completed on Time?', choices=OPNS, default=3)
     rate_3 = models.SmallIntegerField('Would you hire this person again?', choices=OPNS, default=3)
     date_rating = models.DateField(auto_now=True)
-    comment = models.TextField(blank=True, null=True)
-    personal_comment = models.TextField(blank=True, null=True)
+    comment = HTMLField(blank=True, null=True)
+    personal_comment = HTMLField(blank=True, null=True)
     complete = models.BooleanField(null=True, default=False)
-    suggestions = models.TextField(blank=True, null=True)
+    suggestions = HTMLField(blank=True, null=True)
     slug = models.SlugField(max_length=50, null=True, unique=True)
 
     class Meta:
@@ -406,8 +406,8 @@ class TalentRate(models.Model):
     rate_3 = models.SmallIntegerField('Would you work for this employer again?', choices=OPNS, default=3)
     payment_time = models.SmallIntegerField('Days from invoice to receipt of payment', choices=PYMT, default=0)
     date_rating = models.DateField(auto_now=True)
-    comment = models.TextField(blank=True, null=True)
-    suggestions = models.TextField(blank=True, null=True)
+    comment = HTMLField(blank=True, null=True)
+    suggestions = HTMLField(blank=True, null=True)
     complete = models.BooleanField(null=True, default=False)
     slug = models.SlugField(max_length=50, null=True, unique=True, blank=True)
 

@@ -16,6 +16,9 @@
       <!-- Select2 Stylsheet -->
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet"/>
 
+      <!-- TinyMCE WYSIWYG source script - This has to be kept on the top of the page to load prooperly -->
+        <script type="text/javascript" src="{% static 'tinymce/tinymce.min.js' %}"></script>
+
       {% sri_static "css/wexlog_css.css" %}
       {% sri_static "css/wexlog_navbar_css.css" %}
 
@@ -99,6 +102,15 @@
         </li>
 
         <li class="nav-item">
+          <a href="{% url 'Project:ProjectDashboard' %}" class="nav-link">
+            <div class="fa-primary">
+              <i style="font-size: 27px" class="fa fa-black-tie"></i>
+            </div>
+            <span class="link-text">Projects</span>
+          </a>
+        </li>
+
+        <li class="nav-item">
           <a href="{% url 'Flatten:ListTags' %}" class="nav-link">
             <div class="fa-primary">
               <i style="font-size: 27px" class="fa fa-certificate"></i>
@@ -122,15 +134,6 @@
               <i style="font-size: 27px" class="fa fa-building"></i>
             </div>
             <span class="link-text">Enterprises</span>
-          </a>
-        </li>
-
-        <li class="nav-item">
-          <a href="{% url 'Project:ProjectHome' %}" class="nav-link">
-            <div class="fa-primary">
-              <i style="font-size: 27px" class="fa fa-black-tie"></i>
-            </div>
-            <span class="link-text">Projects</span>
           </a>
         </li>
 

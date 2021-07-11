@@ -1,0 +1,331 @@
+{% extends "base_home.html" %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+{% block title %}{{block.super}}- Skill Statistics Overview{% endblock title %}
+
+{% block content %}
+<div class="card card-shadow">
+  <div class="card-body">
+    <div class="float-right">
+      <a href="{% url 'Project:ProjectDetail' prj %}" class="btn btn-secondary"style="width: 6rem">Back</a>
+    </div>
+    <h3>{{ skill }} Skill Project Statistics Overview</h3>
+  </div>
+</div>
+<br>
+
+<!-- Modal -->
+<div class="modal fade" id="siteStatsModal" tabindex="-1" role="dialog" aria-labelledby="siteStatsModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="siteStatsModalLabel">Site Wide Skill Stats</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <a href="{% url 'Talent:ProjectSiteDemandSkillsStats' skl prj %}" class="btn btn-primary"style="width: 10rem">Demanded Skills</a>
+        <a href="{% url 'Talent:ProjectSiteSkillsStats' skl prj %}" class="btn btn-primary float-right"style="width: 10rem">Logged Skills</a>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card card-shadow">
+  <div class="card-body">
+<div style="overflow-x: scroll">
+<div id="chart-container" style="position: relative;  width:auto;">
+
+<h4>{{ skill }} In Project Associated Skills List</h4>
+<div class="float-right">
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#siteStatsModal">
+    Site Wide Stats
+  </button>
+</div>
+<p class="short-paragraph">Percentge occurance of associated skills with skill {{ skill }}.</p>
+<p class="short-paragraph">You have a total of&nbsp<strong>{{ skill_list_labels_count }}</strong>&nbspassociated skills from&nbsp<strong>{{ skills_list_qs_count }}</strong>&nbspCaptured Work Experience logs.</p>
+<p class="small-paragraph"><small>Skills included are all skills relating to them that have been logged as Work Esxperience.  <br>(Includes all skills & logs, not only validated skills that have received a score of 3 or more.)</small></p>
+<br>
+<canvas id="percentage-associated-skills-by-skill-chart" height="100px"></canvas>
+<script>
+var percentage_associated_by_skill_config = {
+  type: 'bar',
+  data: {
+      labels: {{ skill_list_labels|safe }},
+      datasets: [{
+        label: 'Percentage Occurance with Associated skill',
+        data: {{ skill_percentage_data|safe }},
+        order: 1,
+          backgroundColor: ['#B6D8F2', '#F4CFDF', '#5784BA', '#C54B6C', '#F5BFD2', '#E5DB9C', '#D0BCAC', '#BEB4C5', '#E6A57E', '#218B82', '#9AD9DB', '#E5DBD9', '#98D4BB', '#EB96AA', '#C6C9D0', '#C54B6C', '#E5B3BB', '#C47482', '#D5E4C3', '#F9968B', '#F27348', '#26474E', '#76CDCD', '#2CCED2', '#B8E0F6', '#A4CCE3', '#37667E', '#DEC4D6', '#7B92AA', '#B8E0F6', '#A4CCE3', '#37667E', '#DEC4D6', '#7B92AA', '#DDF2F4', '#84A6D6', '#4382BB', '#E4CEE0', '#A15D98', '#DC828F', '#F7CE76', '#E8D6CF', '#8C7386', '#9C9359', '#E9BBB5', '#E7CBA9', '#AAD9CD', '#E8D595', '#8DA47E', '#CAE7E3', '#B2B2B2', '#EEB8C5', '#DCDBD9', '#FEC7BC', '#8EA4C8', '#C3B8AA', '#DEDCE4', '#DB93A5', '#C7CDC5',
+          ],
+          borderColor: [
+
+          ],
+          borderWidth: 1
+      }]
+  },
+  options: {
+      scales: {
+          yAxes: [{
+              ticks: {
+                  beginAtZero: true
+              }
+          }]
+        },
+      legend: {
+          display: false,
+          position: 'top',
+          labels: {
+              fontColor: '#0000ff',
+      },
+
+      }
+    }
+};
+
+var dataList = {{ skill_percentage_data|safe }};
+var count = 0;
+for(var i = 0; i < dataList.length; ++i){
+    if(dataList[i] >= 0)
+        count++;
+}
+var widthValue = 44 * count;
+var divWidth = document.getElementById("chart-container");
+
+if (count > 24){
+  divWidth.style.width = widthValue+"px";
+  }
+else{
+  divWidth.style.width = "auto";
+  }
+
+</script>
+</div>
+</div>
+<br>
+<div class="container">
+<div class="row">
+  <div class="col-md-12">
+    {% for skl in dept_skills_link %}<a href="{% url 'Project:ProjectAssociatedSkillStats' prj skl.id %}?next={{ request.path|urlencode }}" class="btn btn-outline-success auto mb-1 mr-1 pointer">{{ skl.skill }}</a> {% endfor %}
+  </div>
+</div>
+</div>
+</div>
+</div>
+<br class="d-none">
+<div class="card card-shadow d-none">
+  <div class="card-body">
+    <h4>Average Rating with {{ skill }} Skill</h4>
+    <div class="row">
+      <div class="col-md-4">
+        <p>Total Experience Rating</p>
+        <div class="text-center" style="font-size:60px">
+          <span class="my_auto" style="font-size:50px"><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span style="font-size:50px"><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span style="font-size:50px"><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span style="font-size:50px"><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+          <span style="font-size:50px"><i class="fa fa-star-o" aria-hidden="true"></i></span>
+        </div>
+        <p>Freelance Experience Rating</p>
+        <div class="text-center" style="font-size:60px">
+          <span style="font-size:50px"><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span style="font-size:50px"><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span style="font-size:50px"><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span style="font-size:50px"><i class="fa fa-star" aria-hidden="true"></i></span>
+          <span style="font-size:50px"><i class="fa fa-star-o" aria-hidden="true"></i></span>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <p>Average Rating for Skill Work Experience by Year</p>
+        <canvas id="experience-rating-year-range-chart" height="100px"></canvas>
+        <script>
+          window.onload = function() {
+            var percentage_associated_by_skill_ctx = document.getElementById('percentage-associated-skills-by-skill-chart').getContext('2d');
+            window.myChart = new Chart(percentage_associated_by_skill_ctx, percentage_associated_by_skill_config);
+
+            var experience_rating_year_range_ctx = document.getElementById('experience-rating-year-range-chart').getContext('2d');
+            window.myChart = new Chart(experience_rating_year_range_ctx, experience_rating_year_range_config);
+
+            var wt_skills_used_year_range_ctx = document.getElementById('wt-skills-used-year-range-chart').getContext('2d');
+            window.myChart = new Chart(wt_skills_used_year_range_ctx, wt_skills_used_year_range_config);
+
+            var we_skills_used_year_range_ctx = document.getElementById('we-skills-used-year-range-chart').getContext('2d');
+            window.myChart = new Chart(we_skills_used_year_range_ctx, we_skills_used_year_range_config);
+
+          };
+        </script>
+        <script>
+        var experience_rating_year_range_config = {
+          type: 'line',
+          data: {
+              labels: {{ skills_used_year_range_labels|safe }},
+              datasets: [{
+                label: 'Experience Rating by Year Range',
+                data: [2,2.5,3,4,3.5,3,3.5,4,3,3.5],
+                order: 2,
+                fill: false,
+                borderWidth: 2,
+                pointBorderWidth: 2,
+                pointStyle: 'circle',
+                pointHitRadius: 20,
+                  backgroundColor: [
+                      '#FF0000',
+                  ],
+                  borderColor: [
+                      '#FF0000',
+                  ],
+              },  {
+                label: 'Freelance Experience Rating by Year Range',
+                data: [3,3,3.5,4,3,4,4.5,4,4,4.5],
+                type: 'line',
+                order: 1,
+                fill: false,
+                borderColor: '#0000FF',
+                borderWidth: 2,
+                pointBorderWidth: 2,
+                pointStyle: 'circle',
+                pointHitRadius: 20,
+              }]
+          },
+          options: {
+              scales: {
+                  yAxes: [{
+                      ticks: {
+                          beginAtZero: true
+                      }
+                  }]
+                },
+              legend: {
+                  display: false,
+                  position: 'left',
+                  labels: {
+                      fontColor: '#0000ff',
+              },
+
+              }
+            }
+        };
+
+      </script>
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+<div class="card card-shadow">
+  <div class="card-body">
+    <h4>{{ skill }} Skill Training Details</h4>
+    <div class="row">
+      <div class="col-md-4">
+        <p>Total Validated Hours Training</p>
+        <div class="text-center" style="font-size:60px">
+          {{ total_val_sum_t_we|floatformat:0|intcomma }}
+        </div>
+      </div>
+      <div class="col-md-8">
+        <p>Skill Training by Year</p>
+        <canvas id="wt-skills-used-year-range-chart" height="100px"></canvas>
+        <script>
+        var wt_skills_used_year_range_config = {
+          type: 'bar',
+          data: {
+              labels: {{ skills_used_year_range_labels|safe }},
+              datasets: [{
+                label: 'Hours Training in Skill by Year Range',
+                data: {{ t_val_we_skills_used_year_range_data|safe }},
+                order: 1,
+                  backgroundColor: [
+                      '#E8D595', '#8DA47E', '#CAE7E3', '#B2B2B2', '#EEB8C5', '#DCDBD9', '#FEC7BC', '#8EA4C8', '#C3B8AA', '#DEDCE4',
+                  ],
+                  borderColor: [
+
+                  ],
+                  borderWidth: 1
+              }]
+          },
+          options: {
+              scales: {
+                  yAxes: [{
+                      ticks: {
+                          beginAtZero: true
+                      }
+                  }]
+                },
+              legend: {
+                  display: false,
+                  position: 'left',
+                  labels: {
+                      fontColor: '#0000ff',
+              },
+
+              }
+            }
+        };
+
+      </script>
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+<div class="card card-shadow">
+  <div class="card-body">
+    <h4>{{ skill }} Skill Work Experience Details</h4>
+    <div class="row">
+      <div class="col-md-4">
+        <p>Total Validated Hours Experience</p>
+        <div class="text-center" style="font-size:60px">
+          {{ total_val_sum_we|floatformat:0|intcomma }}
+        </div>
+      </div>
+      <div class="col-md-8">
+        <p>Skill Utilised in Work Experience by Year</p>
+        <canvas id="we-skills-used-year-range-chart" height="100px"></canvas>
+        <script>
+        var we_skills_used_year_range_config = {
+          type: 'bar',
+          data: {
+              labels: {{ skills_used_year_range_labels|safe }},
+              datasets: [{
+                label: 'Hours Experience in Skill by Year Range',
+                data: {{ val_we_skills_used_year_range_data|safe }},
+                order: 1,
+                  backgroundColor: [
+                      '#E8D595', '#8DA47E', '#CAE7E3', '#B2B2B2', '#EEB8C5', '#DCDBD9', '#FEC7BC', '#8EA4C8', '#C3B8AA', '#DEDCE4',
+                  ],
+                  borderColor: [
+
+                  ],
+                  borderWidth: 1
+              }]
+          },
+          options: {
+              scales: {
+                  yAxes: [{
+                      ticks: {
+                          beginAtZero: true
+                      }
+                  }]
+                },
+              legend: {
+                  display: false,
+                  position: 'left',
+                  labels: {
+                      fontColor: '#0000ff',
+              },
+
+              }
+            }
+        };
+
+      </script>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

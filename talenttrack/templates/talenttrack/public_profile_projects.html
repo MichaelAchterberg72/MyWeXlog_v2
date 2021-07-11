@@ -36,8 +36,34 @@
         <div class="col-md-9 border-left" style="border-left: solid 2px #000000;">
           <div class="">
             <div class="col-md-12">
-              <div class="profile-list-heading">{{ vac.1.wit_v.0.0 }}</div><br>
-              <span class="">{{ vac.1.wit_v.0.4 }}</span>
+              <div class="profile-list-heading">{{ vac.wit_v.0.0 }}</div><br>
+              <div class="" id="mypDisc1{{vac.wit_v.0.7}}" style="display:block;">
+                {{ vac.wit_v.0.4|safe|truncatechars:460 }}<br>
+                {% if vac.wit_v.0.4|length > 460 %}
+                <button class="float-right" type="submit" id="readMore{{vac.wit_v.0.7}}">Read More ..</button>
+                {% endif %}
+              </div>
+              <div class="" id="mypDisc2{{vac.wit_v.0.7}}" style="display:none;">
+                {{ vac.wit_v.0.4|safe }}<br>
+                <button class="float-right" type="submit" id="readLess{{vac.wit_v.0.7}}">Read Less ..</button><br>
+              </div>
+
+              {% if vac.wit_v.0.4|length > 460 %}
+              <script>
+                var readMore = document.getElementById('readMore{{vac.wit_v.0.7}}');  // 1
+                readMore.addEventListener('click', function() {   // 3
+                   mypDisc1{{vac.wit_v.0.7}}.style.display = 'none';
+                   mypDisc2{{vac.wit_v.0.7}}.style.display = 'block';          // 4
+                });
+                var readLess = document.getElementById('readLess{{vac.wit_v.0.7}}');  // 1
+                readLess.addEventListener('click', function() {  // 3
+                  mypDisc1{{vac.wit_v.0.7}}.style.display = 'block';
+                  mypDisc2{{vac.wit_v.0.7}}.style.display = 'none';
+                  mypDisc1{{vac.wit_v.0.7}}.scrollIntoView();              // 4
+                });
+
+              </script>
+              {% endif %}
               <br>
             </div>
             <div class="col-md-12">

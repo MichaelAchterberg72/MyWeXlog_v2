@@ -204,7 +204,8 @@ def BranchAddView(request, cmp):
         return response
 
 
-#>>> Branch Popup
+#>>> Branch Popup (cookie)
+'''Used where a coockie is used to pre-populate the company field.'''
 @login_required()
 @csp_exempt
 def BranchAddPopView(request):
@@ -264,6 +265,27 @@ def FullBranchAddView(request):
     else:
         context = {'form': form}
         template = 'enterprises/full_branch_add.html'
+        return render(request, template, context)
+
+
+@login_required()
+@csp_exempt
+def FullBranchAddPopupView(request):
+    form = FullBranchHome(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.save()
+            return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_companybranch");</script>' % (instance.pk, instance))
+
+        else:
+            context = {'form': form}
+            template = 'enterprises/full_branch_add_popup.html'
+            return render(request, template, context)
+
+    else:
+        context = {'form': form}
+        template = 'enterprises/full_branch_add_popup.html'
         return render(request, template, context)
 
 

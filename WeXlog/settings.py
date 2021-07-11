@@ -91,6 +91,9 @@ INSTALLED_APPS = [
     'django_celery_beat',
     'sorl.thumbnail',
     'sri',
+    'tinymce',
+    'grappelli',
+    'filebrowser',
 ]
 
 
@@ -221,7 +224,7 @@ CSP_SCRIPT_SRC = (
     "'self'", "'unsafe-inline'", '127.0.0.1', '107.191.57.249', 'code.jquery.com', 'maxcdn.bootstrapcdn.com', 'kit.fontawesome.com', 'app.mywexlog.dev', 'mywexlog.dev', 'cdnjs.cloudflare.com', 'maps.googleapis.com', 'bookstrapcdn.com', 'cdn.jsdelivr.net', 'cdn.jsdelivr.net', 'ajax.googleapis.com', 'cdnjs.cloudflare.com', 'apis.google.com', 'https://www.gstatic.com', 'dot-test-machterberg.s3.amazonaws.com',
     )#app_config
 CSP_IMG_SRC = (
-    "'self'", '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev', 'dot-test-machterberg.s3.amazonaws.com',
+    "'self'", '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev', 'dot-test-machterberg.s3.amazonaws.com', 'w3.org',
     )#app_config
 CSP_OBJECT_SRC = None
 CSP_MEDIA_SRC = (
@@ -264,11 +267,12 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         #'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        #'NAME': 'JKdev', #
         'NAME': 'Wexlog_Public_Profile', #'Wexlog_3',
         'USER': 'postgres',
-		#'PASSWORD': 'rdf8tm1234', #MA
+		'PASSWORD': 'rdf8tm1234', #MA
         #'PASSWORD': 'dJpfss41678', #JK
-        'PASSWORD': 'rdf8tm1234', #MA
+        #'PASSWORD': 'netscape', #MA
         'HOST': 'localhost',
         #'HOST': 'dbhost',
         'PORT': '5432'
@@ -387,9 +391,9 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
-AWS_ACCESS_KEY_ID = 'AKIASSC2VYJPXZJTEH3M'
-AWS_SECRET_ACCESS_KEY = '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'
-AWS_STORAGE_BUCKET_NAME = 's3-dot-machterberg'
+AWS_ACCESS_KEY_ID = 'AKIASSC2VYJP2CWZAV27'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'dot-test-machterberg'
 AWS_S3_CUSTOM_DOMAIN = 's3-dot-machterberg.s3.amazonaws.com'
 AWS_S3_REGION_NAME = 'eu-west-2'
 AWS_S3_SIGNATURE_VERSION = 's3v4'
@@ -423,7 +427,7 @@ else:
 # Follow instructions to create new certs for server from https://re.readthedocs.io/es/stable/standard/encrypted_buttons.html to create certs
 PAYPAL_PRIVATE_CERT = 'paypal/cert/paypal_private.pem'  #'/path/to/paypal_private.pem'  $ openssl genrsa -out paypal_private.pem 1024
 PAYPAL_PUBLIC_CERT = 'paypal/cert/paypal_public.pem'  # '/path/to/paypal_public.pem'  $ openssl req -new -key paypal_private.pem -x509 -days 365 -out paypal_public.pem
-PAYPAL_CERT = 'paypal/cert/paypal_cert_pem_1.txt'  # https://www.paypal.com/us/cgi-bin/webscr?cmd=_profile-website-cert or https://www.sandbox.paypal.com/us/cgi-bin/webscr?cmd=_profile-website-cert 'paypal/cert/paypal_cert_pen.txt'
+PAYPAL_CERT = 'paypal/cert/paypal_cert_pem_202107_Sandbox.txt'  # https://www.paypal.com/us/cgi-bin/webscr?cmd=_profile-website-cert or https://www.sandbox.paypal.com/us/cgi-bin/webscr?cmd=_profile-website-cert 'paypal/cert/paypal_cert_pen.txt'
 PAYPAL_CERT_ID = 'J7C4RR9N34PZJ'
 
 # Accounts department email_id
@@ -460,6 +464,36 @@ SENDGRID_API_KEY = 'SG.n0_TaC5wRU6O9WZwySPq3g.FYnOrth53eAD1zSl1bPEbbHz9LJTU1vXnD
 # SENDGRID_API_KEY = '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'  # .dev site Domain
 # SENDGRID_API_KEY = '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'  # Test machterberg@devoptec.com single sender auth
 
-SENDGRID_FROM_EMAIL = 'mywexloginfo@mywexlog.com'
+SENDGRID_FROM_EMAIL = 'mywexlog@mywexlog.com'
 # SENDGRID_FROM_EMAIL = 'mywexloginfo@mywexlog.dev'    #
 # SENDGRID_FROM_EMAIL = 'machterberg@devoptec.com'
+
+#TINYMCE_JS_URL = os.path.join(STATIC_URL, "tiny_mce/tiny_mce_src.js")
+TINYMCE_JS_ROOT = os.path.join(STATIC_ROOT, "tinymce")
+TINYMCE_DEFAULT_CONFIG = {
+    "height": "320px",
+    "width": "auto",
+    "menubar": False,  #"file edit view insert format tools table help",
+    "plugins": "advlist autolink lists link image charmap print preview anchor searchreplace visualblocks code "
+    "fullscreen insertdatetime media table paste code help wordcount spellchecker",
+    "toolbar": "undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft "
+    "aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor "
+    "backcolor casechange permanentpen formatpainter removeformat | pageembed template link anchor table codesample | pagebreak | charmap emoticons | "
+    "preview save print | "   #  insertfile image media | fullscreen
+    "a11ycheck ltr rtl | showcomments addcomment code | help |",
+    "custom_undo_redo_levels": 20,
+}
+TINYMCE_SPELLCHECKER = True
+TINYMCE_COMPRESSOR = False
+TINYMCE_EXTRA_MEDIA = {
+    'css': {
+        'all': [
+#            ...
+        ],
+    },
+    'js': [
+#        ...
+    ],
+}
+# URL_TINYMCE = getattr(settings, "FILEBROWSER_URL_TINYMCE", settings.ADMIN_MEDIA_PREFIX + "tinymce/jscripts/tiny_mce/")
+# PATH_TINYMCE = getattr(settings, "FILEBROWSER_PATH_TINYMCE", settings.ADMIN_MEDIA_PREFIX + "tinymce/jscripts/tiny_mce/")

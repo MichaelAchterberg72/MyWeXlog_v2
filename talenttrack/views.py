@@ -1723,11 +1723,15 @@ def publish_pre_client_response(request, rc):
 
 
 @login_required()
-def site_demand_skill_stats(request, skl):
+def site_demand_skill_stats(request, skl, prj=None):
     '''The view for the site wide skill demand overview and stats'''
     skill = SkillTag.objects.get(id=skl)
     tlt_instance = request.user
     today = timezone.now().date()
+    if prj is not None:
+        prj=prj
+    else:
+        prj=None
 
 
     val_we = TalentRequired.objects.all()
@@ -1742,7 +1746,6 @@ def site_demand_skill_stats(request, skl):
     f_vac_list_qs_id = f_vac_list_qs.values_list('pk').distinct()
 
     f_skill_des = val_we.filter(skillrequired__skills__pk=skl).values_list('designation__pk', flat=True).distinct()
-    print(f_skill_des)
 
     form = SiteDemandSkillStatsFilter()
     form.fields['title'].widget = ListTextWidget(data_list=TalentRequired.objects.filter(pk__in=f_vac_list_qs_id).values_list('title', flat=True).distinct(), name='title-list')
@@ -1822,6 +1825,7 @@ def site_demand_skill_stats(request, skl):
     template = 'talenttrack/site_demand_skill_stats.html'
     context = {
             'skl': skl,
+            'prj': prj,
             'skill': skill,
             'form': form,
             'vac_list_qs_count': vac_list_qs_count,
@@ -1834,11 +1838,15 @@ def site_demand_skill_stats(request, skl):
 
 
 @login_required()
-def site_skill_stats(request, skl):
+def site_skill_stats(request, skl, prj=None):
     '''The view for the site wide skill overview and stats'''
     skill = SkillTag.objects.get(id=skl)
     tlt_instance = request.user
     today = timezone.now().date()
+    if prj is not None:
+        prj=prj
+    else:
+        prj=None
 
 
     val_we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
@@ -1922,6 +1930,7 @@ def site_skill_stats(request, skl):
     template = 'talenttrack/site_skill_stats.html'
     context = {
             'skl': skl,
+            'prj': prj,
             'skill': skill,
             'form': form,
             'skills_list_qs_count': skills_list_qs_count,
