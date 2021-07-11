@@ -267,11 +267,12 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         #'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'JKdev', #'Wexlog_3',
+        #'NAME': 'JKdev', #
+        'NAME': 'Wexlog_Public_Profile', #'Wexlog_3',
         'USER': 'postgres',
-		#'PASSWORD': 'rdf8tm1234', #MA
+		'PASSWORD': 'rdf8tm1234', #MA
         #'PASSWORD': 'dJpfss41678', #JK
-        'PASSWORD': 'netscape', #MA
+        #'PASSWORD': 'netscape', #MA
         'HOST': 'localhost',
         #'HOST': 'dbhost',
         'PORT': '5432'
@@ -426,7 +427,7 @@ else:
 # Follow instructions to create new certs for server from https://re.readthedocs.io/es/stable/standard/encrypted_buttons.html to create certs
 PAYPAL_PRIVATE_CERT = 'paypal/cert/paypal_private.pem'  #'/path/to/paypal_private.pem'  $ openssl genrsa -out paypal_private.pem 1024
 PAYPAL_PUBLIC_CERT = 'paypal/cert/paypal_public.pem'  # '/path/to/paypal_public.pem'  $ openssl req -new -key paypal_private.pem -x509 -days 365 -out paypal_public.pem
-PAYPAL_CERT = 'paypal/cert/paypal_cert_pem_1.txt'  # https://www.paypal.com/us/cgi-bin/webscr?cmd=_profile-website-cert or https://www.sandbox.paypal.com/us/cgi-bin/webscr?cmd=_profile-website-cert 'paypal/cert/paypal_cert_pen.txt'
+PAYPAL_CERT = 'paypal/cert/paypal_cert_pem_202107_Sandbox.txt'  # https://www.paypal.com/us/cgi-bin/webscr?cmd=_profile-website-cert or https://www.sandbox.paypal.com/us/cgi-bin/webscr?cmd=_profile-website-cert 'paypal/cert/paypal_cert_pen.txt'
 PAYPAL_CERT_ID = 'J7C4RR9N34PZJ'
 
 # Accounts department email_id
