@@ -1,0 +1,22 @@
+{% extends "base_home.html" %}
+
+{% block title %}We Have Experienced An Error{% endblock title %}
+
+{% block content %}
+
+<div class="card card-shadow">
+  <div class="card-body">
+    <h4 class="">It looks like we are experiencing an error</h4>
+    <br>
+    <p>You are seeing this page due to an error in the data captured. It may be that the value that you captured has already been captured and it is recognised as a duplicate entry or the selection of items you have captured violate the 'unique together' string for the entry.</p>
+    <p>Please close this window and navigate back to the point of capture and see if the element you are wanting to capture already exists, if not, try recapturing the element.</p>
+    <p>If you again experience this error please contact MyWeXlog by clicking on the feedback icon below and complete the form explaining what you have attempted to do and the page url that it occured on.</p>
+    <br>
+    <div class="text-center">
+      <a class="" href="{% url 'Feedback:FeedBack' %}?next={{ request.path|urlencode }}"><i class="fa fa-bullhorn" aria-hidden="true" style="font-size:4rem;color:black;margin-bottom:4rem;" data-toggle="tooltip" title="We love to hear your feedback!"></i></a>
+      <p>Please click here!</p>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
