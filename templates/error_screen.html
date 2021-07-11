@@ -11,10 +11,17 @@
     <p>You are seeing this page due to an error in the data captured. It may be that the value that you captured has already been captured and it is recognised as a duplicate entry or the selection of items you have captured violate the 'unique together' string for the entry.</p>
     <p>Please close this window and navigate back to the point of capture and see if the element you are wanting to capture already exists, if not, try recapturing the element.</p>
     <p>If you again experience this error please contact MyWeXlog by clicking on the feedback icon below and complete the form explaining what you have attempted to do and the page url that it occured on.</p>
-    <br>
-    <div class="text-center">
-      <a class="" href="{% url 'Feedback:FeedBack' %}?next={{ request.path|urlencode }}"><i class="fa fa-bullhorn" aria-hidden="true" style="font-size:4rem;color:black;margin-bottom:4rem;" data-toggle="tooltip" title="We love to hear your feedback!"></i></a>
-      <p>Please click here!</p>
+    <br><br><br><br><br>
+    <div class="row">
+      <div class="col-md-4">
+      </div>
+      <div class="col-md-4 my-auto" style="width:50%;">
+        <div class="" style="padding: 4rem;width: 12rem;height: 12rem;margin: 0;-ms-transform: translateY(-50%);transform: translateY(-50%);border-radius: 50%;text-align: center;border: 3px solid #000;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;-ms-border-radius: 50%;">
+          <a class="" href="{% url 'Feedback:FeedBack' %}?next={{ request.path|urlencode }}"><i class="fa fa-bullhorn" aria-hidden="true" style="font-size:4rem;color:black;margin-bottom:4rem;" data-toggle="tooltip" title="We love to hear your feedback!"></i></a>
+        </div>
+      </div>
+      <div class="col-md-4">
+      </div>
     </div>
   </div>
 </div>
