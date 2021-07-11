@@ -24,6 +24,12 @@
         <form  action="{% url 'BookList:BLB' %}" method="post">
           <input type="hidden" name="next" value="{{ request.GET.next }}">
           {% csrf_token %}
+          <div style="background-color:red; color:white;">
+            <p>
+
+              {{ form.non_field_errors }}
+            </p>
+          </div>
           <button type="submit" class="badge badge-pill badge-primary float-right">Back</button>
         </form>
       </div>

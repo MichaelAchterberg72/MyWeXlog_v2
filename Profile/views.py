@@ -2380,13 +2380,14 @@ def ProfileBackgroundPicEditView(request, tlt):
             new = form.save(commit=False)
             new.talent = request.user
             new.save()
+            background_img = form.instance
 
             if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
                 next_url = reverse('Profile:ProfileView')+'#pics'
             return HttpResponseRedirect(next_url)
     else:
         template = 'Profile/profile_background_pic_edit.html'
-        context = {'form': form,}
+        context = {'form': form, 'background_img': background_img}
         return render(request, template, context)
 
 
@@ -2581,7 +2582,7 @@ def PhoneNumberDelete(request, pk):
 def OnlineProfileAdd(request, tlt):
     detail = Profile.objects.get(alias=tlt)
     if detail.talent == request.user:
-        form =OnlineProfileForm(request.POST or None)
+        form = OnlineProfileForm(request.POST or None)
         if request.method =='POST':
             if form.is_valid():
                 new=form.save(commit=False)

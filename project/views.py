@@ -190,7 +190,7 @@ def ProjectPersonalDetailsAddView(request):
     context = {'form': form}
     return render(request, template, context)
 
-
+#>>> Personal Project Popup
 @login_required()
 @csp_exempt
 def ProjectPersonalDetailsAddPopupView(request):
@@ -200,8 +200,8 @@ def ProjectPersonalDetailsAddPopupView(request):
             instance = form.save(commit=False)
             instance.talent=request.user
             instance.save()
-            response = HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_project_data");</script>' % (instance.pk, instance))
-            return response
+            return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_project_data");</script>' % (instance.pk, instance))
+
         else:
             context = {'form':form,}
             template = 'project/project_personal_details_add_popup.html'
@@ -210,6 +210,16 @@ def ProjectPersonalDetailsAddPopupView(request):
         context = {'form':form,}
         template = 'project/project_personal_details_add_popup.html'
         return render(request, template, context)
+
+@csrf_exempt
+def get_p_project_id(request):
+    if request.is_ajax():
+        project = request.Get['project']
+        project_id = PersonalProjectDetails.objects.get(project = project).id
+        data = {'project_id':project_id,}
+        return HttpResponse(json.dumps(data), content_type='application/json')
+    return HttpResponse("/")
+#Personal Project Popup <<<
 
 
 class ProjectDataJsonView(AutoResponseView):
@@ -589,7 +599,7 @@ def ProjectEditView(request, prj):
         if form.is_valid():
             new = form.save(commit=False)
             new.save()
-            return redirect(reverse('Project:ProjectDetail', kwargs={'prj':prj}))
+        return redirect(reverse('Project:ProjectDetail', kwargs={'prj':prj}))
 
     else:
         template = 'project/project_add.html'

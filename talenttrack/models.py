@@ -245,7 +245,7 @@ class LicenseCertification(models.Model):
     cert_name = models.CharField(max_length=150, null=True)
     country = CountryField()
     region = models.ForeignKey(Region, on_delete=models.PROTECT, blank=True, null=True)
-    cm_no = models.CharField('Membership / Credential Number', max_length=40)
+    cm_no = models.CharField('Membership / Credential Number', max_length=40, blank=True, null=True)
     companybranch = models.ForeignKey(Enterprise, on_delete=models.PROTECT, verbose_name='Issued By')
     upload = models.FileField(storage=PrivateMediaStorage(), upload_to=CertFilename, blank=True, null=True, validators=[FileExtensionValidator(['pdf'])])
     thumbnail = models.ImageField(storage=PrivateMediaStorage(), upload_to=CertThumbnail, blank=True, null=True)

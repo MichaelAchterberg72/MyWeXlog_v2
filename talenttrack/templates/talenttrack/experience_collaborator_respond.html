@@ -9,6 +9,12 @@
   <div class="card-body">
   <h4 class="card-title">Collaborator Responses</h4>
   <h6 class="card-subtitle mb-2">{{ check.education.course }}</h6>
+  <div style="background-color:red; color:white;">
+    <p>
+
+      {{ form.non_field_errors }}
+    </p>
+  </div>
     <table class="table table-sm">
       <thead>
         <tr>
@@ -25,6 +31,7 @@
         </tr>
       </tbody>
     </table>
+
     <div class="float-right">{% if check.publish_comment == True %}
       <div class="btn-group mr-2" role="group" aria-label="First group">
         <form  action="{% url 'Talent:WCollRPComment' check.slug %}" method="post">

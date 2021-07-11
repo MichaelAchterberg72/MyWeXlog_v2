@@ -44,6 +44,20 @@ class WillingToRelocateForm(forms.ModelForm):
             'documents': '',
         }
 
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        talent = cleaned_data.get("talent")
+        country = cleaned_data.get("country")
+
+        if WillingToRelocate.objects.filter(talent = talent, country = country).count() > 0:
+            del cleaned_data["talent"]
+            del cleaned_data["country"]
+            raise ValidationError("This country is already in your profile as a preference! Please enter another.")
+
+        return cleaned_data
+
 
 class ExpandedIntroWalkthroughForm(forms.ModelForm):
     class Meta:
@@ -126,6 +140,21 @@ class LanguageTrackForm(forms.ModelForm):
             'language': LanguageWidget(),
             }
 
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        talent = cleaned_data.get("talent")
+        language = cleaned_data.get("language")
+
+        if LanguageTrack.objects.filter(talent = talent, language = language).count() > 0:
+            del cleaned_data["talent"]
+            del cleaned_data["language"]
+
+            raise ValidationError("This language is already in your profile! Please enter another language.")
+
+        return cleaned_data
+
 
 class LanguageListForm(forms.ModelForm):
     class Meta:
@@ -144,11 +173,41 @@ class PassportDetailForm(forms.ModelForm):
             'issue':'Country of issue',
         }
 
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        talent = cleaned_data.get("talent")
+        passport_number = cleaned_data.get("passport_number")
+
+        if PassportDetail.objects.filter(talent = talent, passport_number = passport_number).count() > 0:
+            del cleaned_data["talent"]
+            del cleaned_data["passport_number"]
+
+            raise ValidationError("This passport is already in your profile! Please enter another.")
+
+        return cleaned_data
+
 
 class IdentificationDetailForm(forms.ModelForm):
     class Meta:
         model = IdentificationDetail
         fields = ('identification', 'id_type')
+
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        talent = cleaned_data.get("talent")
+        identification = cleaned_data.get("identification")
+
+        if IdentificationDetail.objects.filter(talent = talent, identification = identification).count() > 0:
+            del cleaned_data["talent"]
+            del cleaned_data["identification"]
+
+            raise ValidationError("This form of identification already exists in your profile!")
+
+        return cleaned_data
 
 
 class IdTypeForm(forms.ModelForm):
@@ -179,7 +238,7 @@ class ProfileForm(forms.ModelForm):
         birth_date = self.cleaned_data.get("birth_date")
         age = int((timezone.now().date() - birth_date).days/365.25)
         if age < 18:
-            raise forms.ValidationError("You need to be older than 18 to use MyWeXlog")
+            raise ValidationError("You need to be older than 18 to use MyWeXlog")
         else:
             return birth_date
 
@@ -283,6 +342,20 @@ class EmailForm(forms.ModelForm):
             'company': CompanySelect2Widget(),
         }
 
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        talent = cleaned_data.get("talent")
+        email = cleaned_data.get("email")
+
+        if Email.objects.filter(talent = talent, email = email).count() > 0:
+            del cleaned_data["talent"]
+            del cleaned_data["email"]
+            raise ValidationError("This email address is already in your profile! Please enter another.")
+
+        return cleaned_data
+
 class EmailStatusForm(forms.ModelForm):
     class Meta:
         model = Email
@@ -337,6 +410,21 @@ class OnlineProfileForm(forms.ModelForm):
             'profileurl':'Site address (url)',
 
         }
+
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        profileurl = cleaned_data.get("profileurl")
+        sitename = cleaned_data.get("sitename")
+
+        if OnlineRegistrations.objects.filter(profileurl = profileurl, sitename = sitename).count() > 0:
+            del cleaned_data["profileurl"]
+            del cleaned_data["sitename"]
+
+            raise ValidationError("This website already exists in your profile! Please enter another.")
+
+        return cleaned_data
 
 
 class ProfileTypeForm(forms.ModelForm):
