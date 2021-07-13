@@ -31,7 +31,9 @@
         <strong>Project Industry</strong>
       </div>
       <div class="col-md-2 h-100 text-center my-auto">
-        <strong>Project Country</strong>
+        <strong>
+          Project Country<br>Nearest Town
+        </strong>
       </div>
       <div class="col-md-1 h-100 text-center my-auto">
         <strong>Hours<strong>
@@ -53,7 +55,7 @@
             {{ p.project.industry }}
           </div>
           <div class="col-md-2 h-100 text-center my-auto">
-            {{ p.project.city }}
+            {{ p.project.country.name }}<br>{{ p.project.city }}
           </div>
           <div class="col-md-1 h-100 text-center my-auto">
             {{ p.sum_t }}

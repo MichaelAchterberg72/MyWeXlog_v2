@@ -1560,8 +1560,7 @@ def MarketHome(request):
     talent=request.user
     tlt = talent.id
     pfl = Profile.objects.filter(talent=talent)
-    TalentRequired.objects.filter()
-    # tr = TalentRequired.objects.filter(offer_status='O')
+    #TalentRequired.objects.filter()
     tr = TalentRequired.objects.filter(offer_status='O')
     tr_emp = TalentRequired.objects.filter(requested_by=talent)
     wb = WorkBid.objects.filter(work__requested_by=talent)
@@ -1614,12 +1613,13 @@ def MarketHome(request):
 
         skill_set = skill_set | d
 
-    skill_set = skill_set.distinct().order_by('skill')
+    skill_set = skill_set.distinct().order_by('skill')#all skills the talent has
+    skill_setv = skill_set.values_list('id', flat=True)#gets the id's of all the skills
     #Create a set of all skills<<<
 
     #>>>Experience Level check & list skills required in vacancies
-    tlt_lvl = pfl.values_list('exp_lvl__level', flat=True)
-    tlt_lvl = tlt_lvl[0]
+    tlt_lev = pfl.values_list('exp_lvl__level', flat=True)
+    tlt_lvl = tlt_lev[0]
 
     #finds all vacancies that require talent's experience level and below
     vac_exp = tr.filter(experience_level__level__lte=tlt_lvl)
@@ -1686,16 +1686,17 @@ def MarketHome(request):
             skl_lst.append(sk)
 
     ds = set()
-    matchd = set(skl_lst) #remove duplicates
+    matchd = set(skl_lst) #remove duplicates; these are the required skills
+
+    matchd = matchd.intersection(set(skill_setv))
 
     for item in matchd:
         display = set(sr.filter(
                 Q(skills__in=skl_lst)
                 & Q(scope__bid_closes__gte=timezone.now())).values_list('scope__id', flat=True))
+        ds = ds | display #set of all open vacancies
 
-        ds = ds | display
-
-    dsi = ds.intersection(req_experience)
+    dsi = ds.intersection(req_experience) #open vacancies which the talent qualifies for (certification, location)
 
     tot_vac = len(dsi)
     #remove the vacancies that have already been applied for
@@ -2495,9 +2496,9 @@ def VacancyPostView(request, vac):
     #Find all talent with required skill<<<
 
     #>>> Find all talent that have the required Experience
-    wee = set(tlt.filter(exp_lvl__gte=instance.experience_level).values_list('talent', flat=True))
+    wex = set(tlt.filter(exp_lvl__gte=instance.experience_level).values_list('talent', flat=True))
 
-    wee = wee.intersection(wes)
+    wee = wex.intersection(wes)
 
     #Find all talent that have the required Experience<<<
 
