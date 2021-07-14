@@ -28,6 +28,8 @@
           Fields marked with a "*" are required fields. |
           For additional help click on the <i class="fa fa-question-circle" style="color:blue;"></i> in the top right corner.
         </small>
+        </p>
+        <p>
         <small>
           Please ensure that the "Company" as well as the "Branch" has been captured in the <a href="{% url 'Enterprise:EnterpriseHome' %}" target="_blank">Enterprise</a> page first. Refresh this page once the company and branch have been added. The company and branch will then be available in the respective fields.
         </small>
@@ -36,7 +38,6 @@
         {% csrf_token %}
         <div style="background-color:red; color:white;">
           <p>
-
             {{ form.non_field_errors }}
           </p>
         </div>
@@ -50,7 +51,7 @@
                 <p>
                   <a href="{% url 'Project:ProjectPersonalAddPop' %}" id='add_project' onclick='return showAddPopup(this);'>
                     <img src = "{% static 'images/icon-addlink.svg' %}">
-                    Add a Project
+                    Add Project
                   </a>
                 </p>
               </div>
@@ -71,7 +72,7 @@
               <div class="form-group col-md-4 mb-0">
                 {{ form.date_to|as_crispy_field }}
               </div>
-              <div class="form-group col-md-4 mb-0" data-toggle="tooltip" title="A max of 10 hours per day or a total of 999 hours is allowed to be captured. NOTE: 1 day is shown by an increase in date of 1 between start and finish.">
+              <div class="form-group col-md-4 mb-0" data-toggle="tooltip" title="A max of 12 hours per day or a total of 999 hours is allowed to be captured. NOTE: 1 day is shown by an increase in date of 1 between start and finish.">
                 {{ form.hours_worked|as_crispy_field }}
 
               </div>

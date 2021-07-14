@@ -3,7 +3,7 @@
 {% block title %}{{block.super}}-Vacancy{% endblock title %}
 
 {% block content %}
-<!-- Modal -->
+<!-- model to be shown later when the functionality for availabillity is created
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -73,7 +73,7 @@
     </div>
   </div>
 </div>
-
+-->
 <div class="row">
   <div class="col-md-12">
     <div class="card card-shadow" style="width: 100%;">
@@ -89,11 +89,13 @@
             <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary 8rem">
               Interview History
             </a>
+            <!-- model to be shown later when the functionality for availabillity is created
             {% if request.user.subscription >= 1 %}
               <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
                 Availability
               </button>
             {% endif %}
+            -->
             <a href="{% url 'MarketPlace:HelpVacanciesSuitedForMeSummary' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="tooltip" title="Click here for help on this page!">
               <i class="fa fa-question-circle"></i>
             </a>
