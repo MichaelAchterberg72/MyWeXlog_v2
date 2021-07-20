@@ -20,8 +20,8 @@
 </div>
 
 <div class="wrap-1">
-{% if pics.profile_background %}
-<img class="d-block w-100" src="{{ pics.profile_background.url }}" height="662" style="opacity:0.7;--bg-overlay-color:#e1e1ef;" alt="MyWexlog Profile for {{ talent.first_name }} {{ talent.last_name }}">
+{% if background_pic %}
+<img class="d-block w-100" src="{{ profile_background.url }}" height="662" style="opacity:0.7;--bg-overlay-color:#e1e1ef;" alt="MyWexlog Profile for {{ talent.first_name }} {{ talent.last_name }}">
 {% else %}
 <img class="d-block w-100" src="{% static 'images/business.jpg' %}" height="662" style="opacity:0.7;--bg-overlay-color:#e1e1ef;" alt="MyWexlog Profile for {{ talent.first_name }} {{ talent.last_name }}">
 {% endif %}
@@ -37,10 +37,10 @@
         <br>
         <br>
         <center>
-          {% if pics.profile_pic %}
-          <img align="center" class="profile-pic" height="210" src="{{ pics.profile_pic.url }}" style="border:0;" width="null"/>
+          {% if profile_pic %}
+          <img align="center" class="profile-pic" height="210" width="210" src="{{ profile_pic.url }}" style="border:0;" width="null"/>
           {% else %}
-          <img align="center" class="profile-pic" height="210" src="{% static 'images/email/mywexlog-logo.png' %}" style="border:0;" width="null"/>
+          <img align="center" class="profile-pic" height="210" width="210" src="{% static 'images/email/mywexlog-logo.png' %}" style="border:0;" width="null"/>
           {% endif %}
         </center>
         <br><br><br><br>
@@ -284,21 +284,140 @@
   </div>
 </div>
 </div>
-{% if upload %}
 <div class="row">
   <div class="col-md-12 profile-uploads-box text-center align-items-top h-100">
-    <h4 class="profile-header" id="lcm">Uploaded Files</h4><br>
-    <div class="row pt-3 h-100 my-auto d-flex justify-content-around">
-      {% for file in upload %}
-        <div class="col-md-3 text-center">
-          <a href="{{ file.file.url }}" target="_blank">
-          <img src="{{ file.thumbnail.url }}" alt="{{ file.title }}" height="400" width="300" style="top:0px;"></a>
-        </div>
-      {% endfor %}
+    <h4 class="profile-header" id="General">General Information</h4>
+    <div class="profile-card-under">Expected Rate: {% if bid_qs %}{{ bid_qs.currency }} {{ bid_qs.rate_bid }} {{ bid_qs.get_rate_unit_display }}{% else %}{{ als.currency }} {{ als.std_rate }} per hour{% endif %}</div>
+    <div class="row pt-4 my-auto">
+      <div class="col-md-12 text-center my-auto">
+        <div class="profile-card-header">{% if bid_qs %}Motivation for position{% else %}General Motivation{% endif %}</div><br>
+        <div class="profile-card-under">{{ h.designation }}</div>
+      </div>
+    </div>
+    <div class="profile-card-body mb-auto">
+    <div class="row pt-3 h-100 my-auto">
+      <div class="col-md-12 text-left my-auto">
+        <span class="">{% if bid_qs %}{{ bid_qs.motivation|safe }}{% else %}{{ als.motivation|safe }}{% endif %}</span>
+      </div>
     </div>
   </div>
 </div>
-  {% endif %}
+</div>
+<br><br>
+<div class="row">
+  <div class="col-md-12 profile-uploads-box align-items-top h-100">
+    <h4 class="profile-header text-center" id="overview">Experience Overview</h4><br>
+    {% for key in public_profile_list %}
+    <div class="profile-card-body mb-auto">
+    <div class="row h-100 my-auto">
+      <div class="col-md-2 float-right">
+        {% now "F j, Y" as current_date %}{{ key.mn_date|date:"Y" }} -
+          {% if current_date == key.mx_date|date:"F j, Y" %}Current{% else %}{{ key.mx_date|date:"Y" }}{% endif %}
+      </div>
+      <div class="col-md-2 col-no-pad">
+        {{ key.tn|floatformat:1 }} years
+      </div>
+      <div class="col-md-4 float-left">
+        {{ key.co.0.1 }}
+      </div>
+      <div class="col-md-4 float-left">
+        {% for deg in key.we_co_des %}{{ deg.des }}, {% endfor %}
+      </div>
+    </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+<br><br>
+<div class="row">
+  <div class="col-md-12 profile-uploads-box align-items-top h-100">
+    <h4 class="profile-header text-center" id="overview">Technical Skills, Platforms, Tools, Knowledge and Experience</h4><br>
+  <div class="profile-card-body mb-auto">
+    <div class="row h-100 my-auto">
+      <div class="col-md-4 float-right mt-auto">
+        <strong>Skill</strong>
+      </div>
+      <div class="col-md-1 text-center mt-auto">
+        <strong>Years</strong>
+      </div>
+      <div class="col-md-1 text-center mt-auto">
+        <strong>Hours</strong>
+      </div>
+      <div class="col-md-1 text-center mt-auto">
+        <strong>Student</strong>
+      </div>
+      <div class="col-md-1 text-center mt-auto">
+        <strong>Beginner</strong>
+      </div>
+      <div class="col-md-1 text-center mt-auto">
+        <strong>Junior</strong>
+      </div>
+      <div class="col-md-1 text-center mt-auto">
+        <strong>Inter-<br>mediate</strong>
+      </div>
+      <div class="col-md-1 text-center mt-auto">
+        <strong>Senior</strong>
+      </div>
+      <div class="col-md-1 text-center mt-auto">
+        <strong>Lead</strong>
+      </div>
+    </div>
+    {% for skill in skills_years_skill_data %}
+    <div class="row h-100 my-auto" style="border-bottom: 1px solid #e1e1ef;">
+      <div class="col-md-4 float-right">
+        {{ skill.skill }}
+      </div>
+      <div class="col-md-1 text-center">
+        {{ skill.skill_tn|floatformat:1|intcomma }}
+      </div>
+      <div class="col-md-1 text-center">
+        {{ skill.t_exp_hours|floatformat:0|intcomma }}
+      </div>
+      <div class="col-md-1 text-center">
+        {% if skill.t_exp_hours <= 326 %}<i class="fa fa-check-square-o" aria-hidden="true" style="color:green;"></i>{% endif %}
+      </div>
+      <div class="col-md-1 text-center">
+        {% if skill.t_exp_hours > 326 and skill.t_exp_hours <= 2282 %}<i class="fa fa-check-square-o" aria-hidden="true" style="color:green;"></i>{% endif %}
+      </div>
+      <div class="col-md-1 text-center">
+        {% if skill.t_exp_hours > 2282 and skill.t_exp_hours <= 12062 %}<i class="fa fa-check-square-o" aria-hidden="true" style="color:green;"></i>{% endif %}
+      </div>
+      <div class="col-md-1 text-center">
+        {% if skill.t_exp_hours > 12062 and skill.t_exp_hours <= 25754 %}<i class="fa fa-check-square-o" aria-hidden="true" style="color:green;"></i>{% endif %}
+      </div>
+      <div class="col-md-1 text-center">
+        {% if skill.t_exp_hours > 25754 and skill.t_exp_hours <= 45314 %}<i class="fa fa-check-square-o" aria-hidden="true" style="color:green;"></i>{% endif %}
+      </div>
+      <div class="col-md-1 text-center">
+        {% if skill.t_exp_hours > 45314 %}<i class="fa fa-check-square-o" aria-hidden="true" style="color:green;"></i>{% endif %}
+      </div>
+    </div>
+    {% endfor %}
+
+  <div class="row">
+    <div class="col-md-2 text-center mt-auto">
+      <strong><small>Student<br>> 326 hours</small></strong>
+    </div>
+    <div class="col-md-2 text-center mt-auto">
+      <strong><small>Beginner<br>> 2,282 hours</small></strong>
+    </div>
+    <div class="col-md-2 text-center mt-auto">
+      <strong><small>Junior<br>> 12,062 hours</small></strong>
+    </div>
+    <div class="col-md-2 text-center mt-auto">
+      <strong><small>Intermediate<br>> 25,754 hours</small></strong>
+    </div>
+    <div class="col-md-2 text-center mt-auto">
+      <strong><small>Senior<br>> 45,314 hours</small></strong>
+    </div>
+    <div class="col-md-2 text-center mt-auto">
+      <strong><small>Lead<br>< 45,314 hours</small></strong>
+    </div>
+  </div>
+  </div>
+  </div>
+</div>
+<br>
   <br><br><br>
 <div class="row">
   <div class="col-md-6 profile-quick-info-box text-center align-items-top h-100">
@@ -436,22 +555,6 @@
 <div class="jumbotron bg-light">
   <div class="container">
     <h4 class="profile-header" id="General">General Information</h4>
-    <div class="profile-card-under">Expected Rate: {% if bid_qs %}{{ bid_qs.currency }} {{ bid_qs.rate_bid }} {{ bid_qs.get_rate_unit_display }}{% else %}{{ als.currency }} {{ als.std_rate }} per hour{% endif %}</div>
-    <div class="row pt-4 my-auto">
-      <div class="col-md-12 text-center my-auto">
-        <div class="profile-card-header">{% if bid_qs %}Motivation for position{% else %}General Motivation{% endif %}</div><br>
-        <div class="profile-card-under">{{ h.designation }}</div>
-      </div>
-    </div>
-    <div class="profile-card-body mb-auto">
-    <div class="row pt-3 h-100 my-auto">
-      <div class="col-md-12 text-left my-auto">
-        <span class="">{% if bid_qs %}{{ bid_qs.motivation|safe }}{% else %}{{ als.motivation|safe }}{% endif %}</span>
-      </div>
-    </div>
-  </div>
-  <div class="section-divider bg-light">
-  </div>
   <div class="row pt-4 my-auto">
     <div class="col-md-12 text-center my-auto">
       <div class="profile-card-header">Background</div><br>
@@ -467,6 +570,23 @@
 </div>
   </div>
 </div>
+<br>
+{% if upload %}
+<hr>
+<div class="jumbotron bg-light">
+  <div class="col-md-12 text-center align-items-top h-100">
+    <h4 class="profile-header" id="lcm">Uploaded Files</h4><br>
+    <div class="row pt-3 h-100 my-auto d-flex justify-content-around">
+      {% for file in upload %}
+        <div class="col-md-3 text-center">
+          <a href="{{ file.file.url }}" target="_blank">
+          <img src="{{ file.thumbnail.url }}" alt="{{ file.title }}" height="400" width="300" style="top:0px;"></a>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endif %}
 <br>
 <div class="jumbotron public-profile-jumbotron-header">
   <div class="text-center" id="skill" style="color:#ffffff;padding-bottom:1rem;text-transform:uppercase;">
@@ -975,6 +1095,7 @@ background-color:transparent;
           <div class="profile-list-header">{% now "F j, Y" as current_date %}{{ key.mn_date }}<br> to
             {% if current_date == key.mx_date|date:"F j, Y" %}Current{% else %}{{ key.mx_date }}{% endif %}</div><br>
           <div class="profile-list-under">{{ key.tn|floatformat:1 }} years</div><br>
+          <div class="profile-list-header">{% if key.dt.0.0 %}{{ key.dt.0.0 }}{% else %}{{ key.we_co.0.0 }}{% endif %}</div><br>
         </div>
         <div class="col-md-9 border-left" style="border-left: solid 2px #000000;">
           <div class="">

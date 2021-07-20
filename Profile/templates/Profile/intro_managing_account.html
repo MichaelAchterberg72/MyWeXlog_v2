@@ -1,0 +1,42 @@
+{% extends 'base_home.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Help{% endblock title %}
+
+{% block Style %}
+
+{% endblock Style %}
+{% block content %}
+<div class="card card-shadow">
+  <div class="card-body">
+    <div class="btn-toolbar float-right">
+      <a href="{% url 'Profile:ProfileHome' %}?next={{ request.path|urlencode }}"  class="btn btn-primary">Back</a>
+    </div>
+    <h3 class="card-title">Managing Your Subscription</h3>
+    <br>
+    <div class="col-sm-7 mx-auto">
+      <div class="embed-responsive embed-responsive-16by9">
+      <iframe class="embed-responsive-item align-middle center" src="https://www.youtube.com/embed/zpOULjyy-n8?rel=0" allowfullscreen></iframe>
+      </div>
+    </div>
+    <br>
+    <div>
+      <a href="{% url 'Profile:IntroPublicProfile' %}?next={{ request.path|urlencode }}"  class="btn btn-primary float-left" style="width:7rem">Previous</a>
+    </div>
+    <br>
+    <br>
+    <br>
+    {% include 'Profile/intro_menu.html' %}
+    <br>
+    <br>
+    <h3 class="card-title">Managing Your Subscription</h3>
+    <p>MyWeXlog utilises PayPal as their payment partner. To subscribe to MyWeXlog you simply need to log on to MyWeXlog and select one of the upgrade buttons or alternatively navigate to the payments tab in the front site. Once you have selected one of the payment options for either a passive or active subscription you will be directed to the payment confirmation screen of paypal where you will be required to create a paypal account or log on to your account and confirm the payment. This will create a subscription item in your payments section.</p>
+    <h4 class="card-title">Canceling your MyWeXlog Subscription.</h4>
+    <p>As PayPal does not allow us to edit or cancel any activities within a user account you will be required to manually log in to your paypal account and delete the paypal subscription item marked as MyWeXlog active or passive subscription. This will cancel any future payments that will be processed by paypal and the MyWeXlog payments confirmation process will automatically downgrade your account to a free account within 30 days.</p>
+    <h4 class="card-title">Downgrade your MyWeXlog Subscription.</h4>
+    <p>In order to downgrade your account you will need to delete your subscription as described before and then resubscribe on the account level you choose by clicking on the relevant subscription in the payments section of the front site.</p>
+</div>
+</div>
+{% endblock content %}

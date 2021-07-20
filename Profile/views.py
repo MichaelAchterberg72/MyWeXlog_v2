@@ -292,6 +292,21 @@ def IntroAssigningView(request):
 
 
 @login_required()
+def IntroPublicProfileView(request):
+
+    template = 'Profile/intro_public_profile.html'
+    context = {}
+    return render(request, template, context)
+
+
+@login_required()
+def IntroManagingAccountView(request):
+
+    template = 'Profile/intro_managing_account.html'
+    context = {}
+    return render(request, template, context)
+
+@login_required()
 def IntroBEPView(request):
 
     template = 'Profile/intro_bep.html'
@@ -2223,8 +2238,14 @@ def ProfileView(request):
     tlt_id = request.user.id
     if detail.talent == request.user:
         info = Profile.objects.filter(alias=tlt)
-        pics = ProfileImages.objects.filter(talent__alias=tlt)
-#        print(pics.profile_pic.name)
+        try:
+            profile_pic = ProfileImages.objects.get(talent__alias=tlt).profile_pic
+        except:
+            profile_pic=None
+        try:
+            background_pic = ProfileImages.objects.get(talent__alias=tlt).profile_background
+        except:
+            background_pic=None
         email = Email.objects.filter(talent__alias=tlt)
         physical = PhysicalAddress.objects.get(talent__alias=tlt)
         postal = PostalAddress.objects.get(talent__alias=tlt)
@@ -2245,7 +2266,7 @@ def ProfileView(request):
         template = 'Profile/profile_view.html'
         context = {
             'info':info, 'email':email, 'physical':physical, 'postal': postal, 'pnumbers': pnumbers, 'online': online, 'id': id, 'passport': passport, 'speak': speak, 'history': history, 'user_info': user_info, 'tlt': tlt, 'relocate': relocate,
-            'upload': upload, 'lcm_qs': lcm_qs,'achievement': achievement, 'award': award, 'publication': publication, 'pics': pics,
+            'upload': upload, 'lcm_qs': lcm_qs,'achievement': achievement, 'award': award, 'publication': publication, 'profile_pic': profile_pic,  'background_pic': background_pic,
             }
 
         return render(request, template, context)
@@ -2344,13 +2365,12 @@ def PublicProfileIntroEditView(request, tlt):
 
 @login_required()
 def ProfilePicEditView(request, tlt):
-    talent = request.user.id
-    instance, _ = ProfileImages.objects.get_or_create(talent__id=talent)
+    instance, _ = ProfileImages.objects.get_or_create(talent__alias=tlt)
 #    instance = get_object_or_404(ProfileImages, talent__alias=tlt)
 
     if request.method =='POST':
         next_url=request.POST.get('next','/')
-        form = UploadProfilePicForm(request.POST, request.FILES, instance=instance)
+        form = UploadProfilePicForm(data=request.POST, files=request.FILES, instance=instance)
         if form.is_valid():
             new = form.save(commit=False)
             new.talent = request.user
@@ -2368,10 +2388,9 @@ def ProfilePicEditView(request, tlt):
 
 @login_required()
 def ProfileBackgroundPicEditView(request, tlt):
-    talent = request.user.id
     instance, _ = ProfileImages.objects.get_or_create(talent__alias=tlt)
 
-    form = UploadProfileBackgroundPicForm(request.POST, request.FILES, instance=instance)
+    form = UploadProfileBackgroundPicForm(data=request.POST, files=request.FILES, instance=instance)
 
     if request.method =='POST':
         next_url=request.POST.get('next','/')
@@ -2380,14 +2399,13 @@ def ProfileBackgroundPicEditView(request, tlt):
             new = form.save(commit=False)
             new.talent = request.user
             new.save()
-            background_img = form.instance
 
             if not next_url or not is_safe_url(url=next_url, allowed_hosts=request.get_host()):
                 next_url = reverse('Profile:ProfileView')+'#pics'
             return HttpResponseRedirect(next_url)
     else:
         template = 'Profile/profile_background_pic_edit.html'
-        context = {'form': form, 'background_img': background_img}
+        context = {'form': form}
         return render(request, template, context)
 
 
