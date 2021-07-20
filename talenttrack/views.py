@@ -105,7 +105,7 @@ def public_profile(request, ppl):
     except:
         profile_pic=None
     try:
-        background_pic = ProfileImages.objects.get(talent__alias=tlt).background_pic
+        background_pic = ProfileImages.objects.get(talent__alias=tlt).profile_background
     except:
         background_pic=None
     skill_qs = SkillTag.objects.all()
