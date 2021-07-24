@@ -168,8 +168,21 @@ def ProjectPersonalDetailsView(request, prj, co, bch):
     else:
         form = ProjectPersonalDetailsForm(instance=instance)
         template_name = 'project/personal_detail.html'
-        context = {'form': form, 'project': project}
+        context = {'form': form, 'instance': instance, 'project': project}
         return render(request, template_name, context)
+
+
+@login_required()
+def PersonalProejctDeleteView(request, ppj):
+    talent=request.user
+    instance = ProjectPersonalDetails.objects.get(id=ppj)
+
+    if instance.talent == request.user:
+        if request.method =='POST':
+            instance.delete()
+            return redirect(reverse('Project:ProjectDashboard')+'#personalprojects')
+    else:
+        raise PermissionDenied
 
 
 @login_required()

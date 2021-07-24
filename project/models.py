@@ -40,10 +40,10 @@ class ProjectData(models.Model):
 
 class ProjectPersonalDetails(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    project = models.ForeignKey(ProjectData, on_delete=models.CASCADE)
-    company = models.ForeignKey(Enterprise, on_delete=models.PROTECT, verbose_name="Owner", null=True)
-    companybranch = models.ForeignKey(Branch, on_delete=models.PROTECT, verbose_name='Branch Working for on the Project', null=True)
-    description = HTMLField(blank=True, null=True)
+    project = models.ForeignKey(ProjectData, on_delete=models.SET_NULL, null=True)
+    company = models.ForeignKey(Enterprise, on_delete=models.SET_NULL,  verbose_name="Owner", null=True)
+    companybranch = models.ForeignKey(Branch, on_delete=models.SET_NULL, verbose_name='Branch Working for on the Project', null=True)
+    description = HTMLField(verbose_name='Personal responsibilities description', blank=True, null=True)
 
     class Meta:
         unique_together = (('talent', 'project', 'company', 'companybranch'),)

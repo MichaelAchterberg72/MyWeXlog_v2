@@ -428,7 +428,7 @@ else:
 PAYPAL_PRIVATE_CERT = 'paypal/cert/paypal_private.pem'  #'/path/to/paypal_private.pem'  $ openssl genrsa -out paypal_private.pem 1024
 PAYPAL_PUBLIC_CERT = 'paypal/cert/paypal_public.pem'  # '/path/to/paypal_public.pem'  $ openssl req -new -key paypal_private.pem -x509 -days 365 -out paypal_public.pem
 PAYPAL_CERT = 'paypal/cert/paypal_cert_pem_202107_Sandbox.txt'  # https://www.paypal.com/us/cgi-bin/webscr?cmd=_profile-website-cert or https://www.sandbox.paypal.com/us/cgi-bin/webscr?cmd=_profile-website-cert 'paypal/cert/paypal_cert_pen.txt'
-PAYPAL_CERT_ID = 'J7C4RR9N34PZJ'
+PAYPAL_CERT_ID = 'T3EH9FMMNTD32'
 
 # Accounts department email_id
 ACCOUNTS_EMAIL = "machterberg@tkgm.co.za"

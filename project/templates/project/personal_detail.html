@@ -71,14 +71,18 @@
           <div class="form-group col-md-12 mb-0">
             {{ form.description|as_crispy_field }}
           </div>
-          <p>
+          <div>
             <a href="{% url 'Project:ProjectHome' %}" class="btn btn-danger">
               Cancel
             </a>
+            <form  action="{% url 'Project:ProjectPersonalDelete' instance.id %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-warning" style="width: 6rem;">Delete</button>
+            </form>
             <button type="submit" class="btn btn-primary" name="button">
               Save
             </button>
-          </p>
+          </div>
       </form>
     </div>
   </div>
