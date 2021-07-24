@@ -201,11 +201,11 @@
 
 {% block score %}
   <div class="float-right">
-    <a href="{% url 'Profile:WorkshopEmp' %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 10rem" data-toggle=tooltip title="View or manage all work you have assigned">
+    <a href="{% url 'Profile:WorkshopEmp' %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 12rem" data-toggle=tooltip title="View or manage all work you have assigned">
       Employer Office
     </a> &nbsp
-    <a href="{% url 'Profile:WorkshopTlt' %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 10rem" data-toggle=tooltip title="View or manage all vacancies you have accepted">
-      Talent Workshop
+    <a href="{% url 'Profile:WorkshopTlt' %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 12rem" data-toggle=tooltip title="View or manage all vacancies you have accepted">
+      Candidate Workshop
     </a>
   </div>
   <table class="table table-sm">
@@ -603,7 +603,7 @@
     <div class="container">
 
       {% if assigned_tlt %}
-        <p><h5 id="TalentAssignment"><strong>As Talent ({{ assigned_tltc }} in Workflow)</strong></h5></p>
+        <p><h5 id="TalentAssignment"><strong>As Candidate ({{ assigned_tltc }} in Workflow)</strong></h5></p>
         <div class="row my-auto">
           <div class="col-5 col-no-pad h-100 text-center my-auto">
             <strong>Vacancy<br>(Reference)</strong>

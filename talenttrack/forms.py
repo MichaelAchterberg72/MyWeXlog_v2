@@ -7,6 +7,7 @@ from django.db.models import Q
 from django.forms import ModelChoiceField
 from django.utils import timezone
 from django.core.exceptions import ValidationError
+from datetime import timedelta
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Row, Column
@@ -389,7 +390,7 @@ class PreLoggedExperienceForm(forms.ModelForm):
         date_to = self.cleaned_data.get("date_to")
         date_from = self.cleaned_data.get("date_from")
         hours_worked = self.cleaned_data.get("hours_worked")
-        duration = date_to - date_from
+        duration = (date_to - date_from)+timedelta(days=1)
         max = duration.days * 12
 
         if hours_worked > max:
@@ -689,7 +690,7 @@ class WorkExperienceForm(forms.ModelForm):
         date_to = self.cleaned_data.get("date_to")
         date_from = self.cleaned_data.get("date_from")
         hours_worked = self.cleaned_data.get("hours_worked")
-        duration = date_to - date_from
+        duration = (date_to - date_from)+timedelta(days=1)
         max = duration.days * 12
 
         if hours_worked > max:
