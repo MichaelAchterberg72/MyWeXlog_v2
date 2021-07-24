@@ -175,7 +175,7 @@
   </div>
 </div>
 <br>
-<!--
+
 <div class="card-group">
   <div class="card card-shadow">
     <div class="card-body">
@@ -186,22 +186,28 @@
             <a href="{% url 'Profile:ProfilePicEdit' tlt %}" class="badge badge-primary">Edit</a>
           </div>
           <h5>Profile Picture</h5>
-          <img src="{{ pics.profile_pic.url }}" height="240" width="240">
-          {{ pics.profile_pic.height }}
+          {% if profile_pic %}
+          <img src="{{ profile_pic.url }}" height="240" width="240">
+          {% else %}
+          <img src="#" height="240" width="240">
+          {% endif %}
         </div>
         <div class="col-md-9">
           <div class="float-right">
             <a href="{% url 'Profile:ProfileBackgroundPicEdit' tlt %}" class="badge badge-primary">Edit</a>
           </div>
           <h5>Profile Background Picture</h5>
-          <img src="{{ pics.profile_background.url }}" height="240" width="790">
+          {% if background_pic %}
+          <img src="{{ background_pic.url }}" height="240" width="790">
+          {% else %}
+          <img src="#" height="240" width="790">
+          {% endif %}
         </div>
       </div>
       </div>
     </div>
   </div>
 <br>
--->
 <div class="card-group">
   <div class="card card-shadow">
     <div class="card-body">

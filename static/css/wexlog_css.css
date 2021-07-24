@@ -255,6 +255,7 @@ table {
 }
 .profile-info-box {
   background-color: #ffffff;
+  position: relative;
   top: -360px;
   left: -20px;
   border-radius: 10px;

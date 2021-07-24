@@ -100,7 +100,14 @@ def public_profile(request, ppl):
     online = OnlineRegistrations.objects.filter(talent__alias=tlt)
 #    vacancy = TalentRequired.objects.filter(ref_no=vac)
 #    skr = SkillRequired.objects.filter(scope__ref_no=vac).values_list('skills', flat=True).distinct('skills'
-    pics = ProfileImages.objects.filter(talent__alias=tlt)
+    try:
+        profile_pic = ProfileImages.objects.get(talent__alias=tlt).profile_pic
+    except:
+        profile_pic=None
+    try:
+        background_pic = ProfileImages.objects.get(talent__alias=tlt).profile_background
+    except:
+        background_pic=None
     skill_qs = SkillTag.objects.all()
     exp = exp_qs.select_related('topic', 'course', 'project')
     edtexp = exp.filter(edt=True).order_by('-date_from')[:6]
@@ -328,6 +335,45 @@ def public_profile(request, ppl):
 
     tlt_id = [tlt_p.id]
 
+    #Experience per skill plot
+    skills_years_skill_data = []
+    for s in ordered_skills_list:
+        shwe = exp_skills.filter(Q(skills__skill=s, edt=False) | Q(topic__skills__skill=s, edt=True))
+
+        skill_min_date_qs = shwe.aggregate(min_date=Min('date_from'))
+        skill_mn_date = skill_min_date_qs.get('min_date')
+
+        skill_max_date_qs = shwe.aggregate(max_date=Max('date_to'))
+        skill_mx_date = skill_max_date_qs.get('max_date')
+
+        try:
+            skill_tn_qs = skill_mx_date - skill_mn_date
+            months = skill_tn_qs.days/(365/12)
+            skill_tn = months/12
+        except:
+            skill_tn = 0
+
+
+        aw_exp = shwe.filter(edt=False).aggregate(awet=Sum('hours_worked'))
+        awetv = aw_exp.get('awet')
+        if awetv == None:
+            awetv = 0
+        else:
+            awetv = awetv
+
+        at_exp = shwe.filter(edt=True).aggregate(tet=Sum('topic__hours'))
+        atetv = at_exp.get('tet')
+        if atetv == None:
+            atetv = 0
+        else:
+            atetv = atetv
+
+        t_exp_hours = float(awetv + atetv)
+
+        result={'skill': s, 'skill_tn': skill_tn, 't_exp_hours': t_exp_hours}
+
+        skills_years_skill_data.append(result)
+
     #Hours Experience per skill chart
     skills_hours_skill_data = []
     for s in ordered_skills_list:
@@ -525,6 +571,16 @@ def public_profile(request, ppl):
         dt_mx_date = dt_co_max_date_qs.get('max_date')
 
         we_co = wec_qs.filter(companybranch=c).values_list('designation__name', 'score', 'industry__industry', 'hours_worked').distinct()
+
+        dt_des = dt.values_list('designation__name', flat=True).distinct()
+        we_co_des_list = we_co.values_list('designation__name', flat=True).distinct()
+        co_des_qs = dt_des.union(we_co_des_list)
+        co_des_list = set(co_des_qs)
+
+        we_co_des=[]
+        for d in co_des_list:
+            des_result = {'des': d}
+            we_co_des.append(des_result)
 
         we_co_min_date_qs = wec_qs.filter(companybranch=c).aggregate(min_date=Min('date_from'))
         we_co_mn_date = we_co_min_date_qs.get('min_date')
@@ -831,7 +887,7 @@ def public_profile(request, ppl):
             p_result = {'we': we, 'prj_s': prj_s, 'pd_desc': pd_desc, 'pwe_co_mn': pwe_co_mn, 'pwe_co_mx': pwe_co_mx, 'pwe_tn': pwe_tn, 'pr_skl': pr_skl, 'pco_hr': pco_hr, 'pr_com': pr_com, 'pwq_ave': pwq_ave, 'twq_ave': twq_ave, 'cwq_ave': cwq_ave, 'awq_ave': awq_ave}
             pr.append(p_result)
 
-        result={'co': co, 'dt': dt, 'we_co': we_co, 'mx_date': mx_date, 'mn_date': mn_date, 'tn': tn, 'pr': pr,
+        result={'co': co, 'dt': dt, 'we_co': we_co, 'we_co_des': we_co_des, 'mx_date': mx_date, 'mn_date': mn_date, 'tn': tn, 'pr': pr,
 #        'no_pr': no_pr
         }
 
@@ -845,8 +901,8 @@ def public_profile(request, ppl):
     #Header
     'dispay_user': dispay_user,  'tlt': tlt,  'padd': padd, 'current_pos': current_pos, 'language_qs': language_qs, 'online': online, 'phone': phone,
     'pfl_g': pfl_g, 'r_1': r_1, 'r_2': r_2, 'r_3': r_3,
-    'tawq_ave': tawq_ave,
-    'pics': pics,
+    'tawq_ave': tawq_ave, 'skills_years_skill_data': skills_years_skill_data,
+    'profile_pic': profile_pic, 'background_pic': background_pic,
     'upload': upload, 'upload_count': upload_count,
     #Membership
     'membership': membership, 'membership_qs_count': membership_qs_count,
