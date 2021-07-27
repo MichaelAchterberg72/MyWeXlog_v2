@@ -307,8 +307,22 @@
 <div class="row">
   <div class="col-md-12 profile-uploads-box align-items-top h-100">
     <h4 class="profile-header text-center" id="overview">Experience Overview</h4><br>
-    {% for key in public_profile_list %}
     <div class="profile-card-body mb-auto">
+      <div class="row h-100 my-auto">
+        <div class="col-md-2 float-right">
+          <strong>Year</strong>
+        </div>
+        <div class="col-md-2 col-no-pad">
+          <strong>Tenure</strong>
+        </div>
+        <div class="col-md-4 float-left">
+          <strong>Organisation</strong>
+        </div>
+        <div class="col-md-4 float-left">
+          <strong>Position</strong>
+        </div>
+      </div>
+    {% for key in public_profile_list %}
     <div class="row h-100 my-auto">
       <div class="col-md-2 float-right">
         {% now "F j, Y" as current_date %}{{ key.mn_date|date:"Y" }} -
@@ -324,8 +338,8 @@
         {% for deg in key.we_co_des %}{{ deg.des }}, {% endfor %}
       </div>
     </div>
-    </div>
     {% endfor %}
+    </div>
   </div>
 </div>
 <br><br>
@@ -343,27 +357,19 @@
       <div class="col-md-1 text-center mt-auto">
         <strong>Hours</strong>
       </div>
-      <div class="col-md-1 text-center mt-auto">
-        <strong>Student</strong>
+      <div class="col-md-4 float-right mt-auto">
+        <strong>Skill</strong>
       </div>
       <div class="col-md-1 text-center mt-auto">
-        <strong>Beginner</strong>
+        <strong>Years</strong>
       </div>
       <div class="col-md-1 text-center mt-auto">
-        <strong>Junior</strong>
-      </div>
-      <div class="col-md-1 text-center mt-auto">
-        <strong>Inter-<br>mediate</strong>
-      </div>
-      <div class="col-md-1 text-center mt-auto">
-        <strong>Senior</strong>
-      </div>
-      <div class="col-md-1 text-center mt-auto">
-        <strong>Lead</strong>
+        <strong>Hours</strong>
       </div>
     </div>
-    {% for skill in skills_years_skill_data %}
-    <div class="row h-100 my-auto" style="border-bottom: 1px solid #e1e1ef;">
+    <div class="row h-100 my-auto">
+      {% for skill in skills_years_skill_data %}
+
       <div class="col-md-4 float-right">
         {{ skill.skill }}
       </div>
@@ -373,47 +379,10 @@
       <div class="col-md-1 text-center">
         {{ skill.t_exp_hours|floatformat:0|intcomma }}
       </div>
-      <div class="col-md-1 text-center">
-        {% if skill.t_exp_hours <= 326 %}<i class="fa fa-check-square-o" aria-hidden="true" style="color:green;"></i>{% endif %}
-      </div>
-      <div class="col-md-1 text-center">
-        {% if skill.t_exp_hours > 326 and skill.t_exp_hours <= 2282 %}<i class="fa fa-check-square-o" aria-hidden="true" style="color:green;"></i>{% endif %}
-      </div>
-      <div class="col-md-1 text-center">
-        {% if skill.t_exp_hours > 2282 and skill.t_exp_hours <= 12062 %}<i class="fa fa-check-square-o" aria-hidden="true" style="color:green;"></i>{% endif %}
-      </div>
-      <div class="col-md-1 text-center">
-        {% if skill.t_exp_hours > 12062 and skill.t_exp_hours <= 25754 %}<i class="fa fa-check-square-o" aria-hidden="true" style="color:green;"></i>{% endif %}
-      </div>
-      <div class="col-md-1 text-center">
-        {% if skill.t_exp_hours > 25754 and skill.t_exp_hours <= 45314 %}<i class="fa fa-check-square-o" aria-hidden="true" style="color:green;"></i>{% endif %}
-      </div>
-      <div class="col-md-1 text-center">
-        {% if skill.t_exp_hours > 45314 %}<i class="fa fa-check-square-o" aria-hidden="true" style="color:green;"></i>{% endif %}
-      </div>
-    </div>
-    {% endfor %}
 
-  <div class="row">
-    <div class="col-md-2 text-center mt-auto">
-      <strong><small>Student<br>> 326 hours</small></strong>
+    {% endfor %}
     </div>
-    <div class="col-md-2 text-center mt-auto">
-      <strong><small>Beginner<br>> 2,282 hours</small></strong>
-    </div>
-    <div class="col-md-2 text-center mt-auto">
-      <strong><small>Junior<br>> 12,062 hours</small></strong>
-    </div>
-    <div class="col-md-2 text-center mt-auto">
-      <strong><small>Intermediate<br>> 25,754 hours</small></strong>
-    </div>
-    <div class="col-md-2 text-center mt-auto">
-      <strong><small>Senior<br>> 45,314 hours</small></strong>
-    </div>
-    <div class="col-md-2 text-center mt-auto">
-      <strong><small>Lead<br>< 45,314 hours</small></strong>
-    </div>
-  </div>
+
   </div>
   </div>
 </div>
