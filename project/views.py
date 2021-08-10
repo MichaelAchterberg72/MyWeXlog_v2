@@ -105,7 +105,7 @@ def ProjectDashboard(request):
 
     pcount = ProjectData.objects.all().count()
     projects = ProjectData.objects.all().order_by('-company')
-    project_hours_qs = WorkExperience.objects.filter(project__in=projects).annotate(sum_t=Sum('hours_worked')).order_by('-sum_t')[:5]
+    project_hours_qs = WorkExperience.objects.values('project').annotate(sum_t=Sum('hours_worked')).order_by('-sum_t')[1:5]
 
     template_name = 'project/project_dashboard.html'
     context = {'pp_count': pp_count, 'pp_list': pp_list, 'pcount': pcount, 'project_hours_qs': project_hours_qs}
