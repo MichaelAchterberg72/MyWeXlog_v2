@@ -13,11 +13,15 @@
   </style>
 <div class="card card-shadow">
   <div class="card-body">
-<h3>Your Enterprise & Branch Details
-  <span><p class="float-right">
-  <a href="{% url 'Enterprise:HelpEnterpriseBranchDetails' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="tooltip" title="Click here for help on this page!">
-  <i class="fa fa-question-circle"></i></a>
-</p></span></h3>
+    <h3>Enterprise & Branch Details
+      <span>
+        <p class="float-right">
+          <a href="{% url 'Enterprise:HelpEnterpriseBranchDetails' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="tooltip" title="Click here for help on this page!">
+            <i class="fa fa-question-circle"></i>
+          </a>
+        </p>
+      </span>
+    </h3>
 <form method="post" id="BranchForm">
 <input type="hidden" name="next" value="{{ request.GET.next }}">
   {% csrf_token %}
