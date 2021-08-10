@@ -124,6 +124,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.request',
+                'csp.context_processors.nonce',
                 'users.context_processor.theme',
                 'users.context_processor.notification_count',
                 'users.context_processor.confirm_count',
@@ -214,7 +215,7 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
     ## X-Frame-Options (DENY, WHITELIST)
 # X_FRAME_OPTIONS = 'DENY'
     ##django-referrer-policy (3rd party app)
-REFERRER_POLICY='same-origin'
+REFERRER_POLICY = 'origin-when-cross-origin'
     ## Content-Security-policy (3rd party app)
 CSP_DEFAULT_SRC = (
     "'self'", "'unsafe-inline'", 'SameSite', 'maxcdn.bootstrapcdn.com', 'code.jquery.com', 'cdnjs.cloudflare.com', 'fonts.googleapis.com', 'maps.googleapis.com', 'use.typekit.net', 'netdna.bootstrapcdn.com', 'w3.org', '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'kit.fontawesome.com', 'mywexlog.dev', 'bookstrapcdn.com', 'cdn.jsdelivr.net', 'ajax.googleapis.com', 'https://www.youtube.com/', 'dot-test-machterberg.s3.amazonaws.com',
@@ -238,7 +239,7 @@ CSP_FONT_SRC = (
     )#app_config
 CSP_CONNECT_SRC = None
 CSP_STYLE_SRC = (
-    "'self'", 'maxcdn.bootstrapcdn.com', 'app.mywexlog.dev', 'cdnjs.cloudflare.com', 'w3.org', '127.0.0.1', '107.191.57.249', 'fonts.googleapis.com', 'cdn.jsdelivr.net',  'stackpath.bookstrapcdn.com', "'unsafe-inline'", 'mywexlog.dev', 'https://www.gstatic.com/', 'dot-test-machterberg.s3.amazonaws.com',
+    "'self'", "'unsafe-inline'", 'maxcdn.bootstrapcdn.com', 'app.mywexlog.dev', 'cdnjs.cloudflare.com', 'w3.org', '127.0.0.1', '107.191.57.249', 'fonts.googleapis.com', 'cdn.jsdelivr.net',  'stackpath.bookstrapcdn.com',  'mywexlog.dev', 'https://www.gstatic.com/', 'dot-test-machterberg.s3.amazonaws.com',
     )#app_config
 CSP_BASE_URI = None
 CSP_CHILD_SRC = None
@@ -300,6 +301,10 @@ CACHES = {
 
 # Tell select2 which cache configuration to use:
 SELECT2_CACHE_BACKEND = "select2"
+
+# Django-sri
+USE_SRI = False
+DEFAULT_TIMEOUT = 600
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -422,7 +427,7 @@ if app_config.paypal_switch == 'sandbox':
     PAYPAL_RECEIVER_EMAIL = "sb-wynfk1244760@business.example.com"
 else:
     PAYPAL_TEST = False
-    PAYPAL_RECEIVER_EMAIL = "machterberg@tkgm.co.za"
+    PAYPAL_RECEIVER_EMAIL = "accounts@devoptec.com"
 
 # Follow instructions to create new certs for server from https://re.readthedocs.io/es/stable/standard/encrypted_buttons.html to create certs
 PAYPAL_PRIVATE_CERT = 'paypal/cert/paypal_private.pem'  #'/path/to/paypal_private.pem'  $ openssl genrsa -out paypal_private.pem 1024

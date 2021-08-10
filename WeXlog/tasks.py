@@ -64,23 +64,24 @@ def UpdateSubscriptionPaidDate():
         instance2 = ExpandedView.objects.get(talent__id=u.id)
         if username.paid == True:
             if username.paid_type == 1:
-                if username.paid_date == None or username.paid_date <= timezone.now() - monthly:
-                    username.paid = False
-                    username.subscription = 0
-                    free_month_task = False
-                    if username.free_month == True:
-                        free_month_task = True
-                        FreeMonthExpiredTask.delay(username.pk)
-                        username.free_month = False
-                        instance2.trial_expired = False
-                    username.save()
-                    instance2.save()
-                    # send user an email to let them know the subscription has expired
-                    if free_month_task == False:
-                        SubscriptionExpiredTask.delay(username.pk)
+                if username.date_joined <= timezone.now() - monthly:
+                    if username.paid_date == None or username.paid_date <= timezone.now() - monthly:
+                        username.paid = False
+                        username.subscription = 0
+                        free_month_task = False
+                        if username.free_month == True:
+                            free_month_task = True
+                            FreeMonthExpiredTask.delay(username.pk)
+                            username.free_month = False
+                            instance2.trial_expired = False
+                        username.save()
+                        instance2.save()
+                        # send user an email to let them know the subscription has expired
+                        if free_month_task == False:
+                            SubscriptionExpiredTask.delay(username.pk)
 
             elif username.paid_type == 2:
-                if username.paid_date == None or username.paid_date <= timezone.now() - six_monthly:
+                if username.paid_date <= timezone.now() - six_monthly:
                     username.paid = False
                     username.subscription = 0
                     if username.free_month == True:
@@ -92,7 +93,7 @@ def UpdateSubscriptionPaidDate():
                     SubscriptionExpiredTask.delay(username.pk)
 
             elif username.paid_type == 3:
-                if username.paid_date == None or username.paid_date <= timezone.now() - twelve_monthly:
+                if username.paid_date <= timezone.now() - twelve_monthly:
                     username.paid = False
                     username.subscription = 0
                     if username.free_month == True:
