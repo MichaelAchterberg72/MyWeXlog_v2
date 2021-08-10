@@ -40,7 +40,7 @@ urlpatterns = [
     path('corporate/', include('mod_corporate.urls', namespace='Corporate')),
     path('tinymce/', include('tinymce.urls')),
     path('admin/filebrowser/', site.urls),
-    path('404-error/', TemplateView.as_view(template_name="error_screen.html"), name='404Error'),
+    path('error/', TemplateView.as_view(template_name="error_screen.html"), name='404Error'),
     path("robots.txt", TemplateView.as_view(template_name="users/robots.txt", content_type="text/plain")),
     ]
 
