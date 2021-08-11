@@ -350,7 +350,7 @@ class PreLoggedExperienceForm(forms.ModelForm):
         super(PreLoggedExperienceForm, self).__init__(*args, **kwargs)
 
         self.helper = FormHelper(self)
-        self.helper.form_show_errors = False
+        self.helper.form_show_errors = True
 
     class Meta:
         model = WorkExperience
