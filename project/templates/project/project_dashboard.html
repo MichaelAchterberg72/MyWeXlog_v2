@@ -20,14 +20,21 @@
 <div class="card card-shadow">
   <div class="card-body">
   <h4 class="">Projects with Most MyWeXlog Hours</h4>
-  <p>There are currently <strong>{{ pcount|intcomma }}</strong> projects listed in MyWeXlog!</p>
+  <p>
+    There are currently <strong>{{ pcount|intcomma }}</strong> projects listed in MyWeXlog!
+    <br>
+    <small>Only 5 are shown here - to see more, click on "Full Project List"</small>
+  </p>
   <p><a href="{% url 'Project:ProjectList' %}" class="badge badge-pill badge-primary">Full Project List</a><a href="{% url 'Project:Project-Search' %}" class="badge badge-pill badge-primary">Search Projects</a></p>
   <div class="container">
     <div class="row my-auto">
       <div class="col-md-4 h-100 text-center my-auto">
-        <strong>Project Name</strong>
+        <strong>
+          Project Name<br>
+          Company
+        </strong>
       </div>
-      <div class="col-md-3 h-100 text-center my-auto">
+      <div class="col-md-2 h-100 text-center my-auto">
         <strong>Project Industry</strong>
       </div>
       <div class="col-md-2 h-100 text-center my-auto">
@@ -35,34 +42,35 @@
           Project Country<br>Nearest Town
         </strong>
       </div>
-      <div class="col-md-1 h-100 text-center my-auto">
-        <strong>Hours<strong>
+      <div class="col-md-3 h-100 text-center my-auto">
+        <strong>
+          Total<br>hours
+        </strong>
       </div>
-      <div class="col-md-2 h-100 text-center my-auto">
-        <strong></strong>
+      <div class="col-md-1 h-100 text-center my-auto">
       </div>
     </div>
   </div>
-  {% for p in project_hours_qs %}
+  {% for p in projecthours %}
   <div class="row">
     <div class="card mt-1 card-hover" style="width: 100%;">
       <div class="card-body small-pad">
         <div class="row my-auto">
           <div class="col-md-4 h-100 text-center my-auto">
-            {{ p.project.companybranch }}<br>({{ p.project }})
-          </div>
-          <div class="col-md-3 h-100 text-center my-auto">
-            {{ p.project.industry }}
+            {{ p.name }}<br>{{ p.companybranch }}
           </div>
           <div class="col-md-2 h-100 text-center my-auto">
-            {{ p.project.country.name }}<br>{{ p.project.city }}
+            {{ p.industry }}
           </div>
-          <div class="col-md-1 h-100 text-center my-auto">
-            {{ p.sum_t }}
+          <div class="col-md-2 h-100 text-center my-auto">
+            {{ p.country.name }}<br>{{ p.city }}
           </div>
-          <div class="col-md-2 h-100 center-text my-auto float-right">
+          <div class="col-md-3 h-100 text-center my-auto">
+            {{ p.sum }}
+          </div>
+          <div class="col-md-1 h-100 center-text my-auto float-right">
             <div class="row text-center">
-              <a href="{% url 'Project:ProjectDetail' p.project.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 5rem;">See Project <br>Detail</a>
+              <a href="{% url 'Project:ProjectDetail' p.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 5rem;">See Project <br>Detail</a>
             </div>
           </div>
         </div>

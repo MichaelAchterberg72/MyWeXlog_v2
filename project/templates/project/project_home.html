@@ -26,7 +26,20 @@
   <div class="card-body">
       {% if request.user.is_authenticated %}
       <p>There are currently <strong>{{ pcount.sum_p|intcomma }}</strong> projects listed in MyWeXlog!</p>
-      <p><a href="{% url 'Project:ProjectAdd' %}" class="badge badge-pill badge-primary">Add Project</a><a href="{% url 'Project:ProjectHome' %}" class="badge badge-pill badge-primary">Personal Project List</a><a href="{% url 'Project:Project-Search' %}" class="badge badge-pill badge-primary">Search Projects</a><a href="{% url 'Enterprise:EnterpriseHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
+      <p>
+        <a href="{% url 'Project:ProjectAdd' %}" class="badge badge-pill badge-primary">
+          Add Project
+        </a>
+        <a href="{% url 'Project:ProjectHome' %}" class="badge badge-pill badge-primary">
+          Personal Project List
+        </a>
+        <a href="{% url 'Project:Project-Search' %}" class="badge badge-pill badge-primary">
+          Search Projects
+        </a>
+        <a href="{% url 'Project:ProjectDashboard' %}" class="badge badge-pill badge-primary float-right">
+          Back
+        </a>
+      </p>
       {% endif %}
 
       <div class="container">
