@@ -1,11 +1,9 @@
 import requests
 
 from allauth.socialaccount.providers.globus.provider import GlobusProvider
-from allauth.socialaccount.providers.oauth2.views import (
-    OAuth2Adapter,
-    OAuth2CallbackView,
-    OAuth2LoginView,
-)
+from allauth.socialaccount.providers.oauth2.views import (OAuth2Adapter,
+                                                          OAuth2CallbackView,
+                                                          OAuth2LoginView)
 
 
 class GlobusAdapter(OAuth2Adapter):

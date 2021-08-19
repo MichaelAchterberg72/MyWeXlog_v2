@@ -1,12 +1,11 @@
-import requests
 from urllib.parse import urljoin
 
+import requests
+
 from allauth.socialaccount import app_settings
-from allauth.socialaccount.providers.oauth2.views import (
-    OAuth2Adapter,
-    OAuth2CallbackView,
-    OAuth2LoginView,
-)
+from allauth.socialaccount.providers.oauth2.views import (OAuth2Adapter,
+                                                          OAuth2CallbackView,
+                                                          OAuth2LoginView)
 
 from .provider import AuthentiqProvider
 

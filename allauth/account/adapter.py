@@ -2,18 +2,17 @@ from __future__ import unicode_literals
 
 import hashlib
 import json
+import os
 import time
 import warnings
 
+import sendgrid
 from django import forms
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import (
-    authenticate,
-    get_backends,
-    login as django_login,
-    logout as django_logout,
-)
+from django.contrib.auth import authenticate, get_backends
+from django.contrib.auth import login as django_login
+from django.contrib.auth import logout as django_logout
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.sites.shortcuts import get_current_site
@@ -26,21 +25,15 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.encoding import force_str
-from django.utils.translation import gettext_lazy as _
 from django.utils.html import strip_tags
-
-import sendgrid
-import os
+from django.utils.translation import gettext_lazy as _
 from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import (Mail, Subject, To, ReplyTo, SendAt, Content, From, CustomArg, Header)
+from sendgrid.helpers.mail import (Content, CustomArg, From, Header, Mail,
+                                   ReplyTo, SendAt, Subject, To)
 
-from ..utils import (
-    build_absolute_uri,
-    email_address_exists,
-    generate_unique_username,
-    get_user_model,
-    import_attribute,
-)
+from ..utils import (build_absolute_uri, email_address_exists,
+                     generate_unique_username, get_user_model,
+                     import_attribute)
 from . import app_settings
 
 
@@ -460,9 +453,8 @@ class DefaultAccountAdapter(object):
         try:
             from django.utils.http import url_has_allowed_host_and_scheme
         except ImportError:
-            from django.utils.http import (
-                is_safe_url as url_has_allowed_host_and_scheme,
-            )
+            from django.utils.http import \
+                is_safe_url as url_has_allowed_host_and_scheme
 
         return url_has_allowed_host_and_scheme(url, allowed_hosts=None)
 

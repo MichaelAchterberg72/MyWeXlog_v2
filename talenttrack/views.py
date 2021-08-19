@@ -1,69 +1,75 @@
-from django.shortcuts import(
-    render, get_object_or_404, redirect, render_to_response
-    )
-from django.views.generic import TemplateView
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.http import is_safe_url
-from django.template.loader import get_template, render_to_string
-from django.conf import settings
-from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
-from django.urls import reverse
-from django.utils import timezone
-from django.core.exceptions import PermissionDenied
-import json
-from django.db.models import Count, Sum, F, Q, Avg, Min, Max
-from itertools import chain
 import datetime
-from django.utils.dateparse import parse_date
-from dateutil.relativedelta import relativedelta
-from django.db.models.functions import Greatest
-from decimal import Decimal
-from django.contrib.postgres.search import SearchVector, TrigramSimilarity
+import json
 import math
-from .widgets import ListTextWidget
+from decimal import Decimal
+from itertools import chain
 
 import sendgrid
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import (Mail, Subject, To, ReplyTo, SendAt, Content, From, CustomArg, Header)
-from django.utils.html import strip_tags
-
 from csp.decorators import csp_exempt
-from core.decorators import subscription, corp_permission
-from WeXlog.app_config import(
-        client_score, lecturer_score, classmate_score, colleague_score, pre_colleague_score, collaborator_score, superior_score
-        )
+from dateutil.relativedelta import relativedelta
+from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.contrib.postgres.search import SearchVector, TrigramSimilarity
+from django.core.exceptions import PermissionDenied
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.db.models import Avg, Count, F, Max, Min, Q, Sum
+from django.db.models.functions import Greatest
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.shortcuts import (get_object_or_404, redirect, render,
+                              render_to_response)
+from django.template.loader import get_template, render_to_string
+from django.urls import reverse
+from django.utils import timezone
+from django.utils.dateparse import parse_date
+from django.utils.html import strip_tags
+from django.utils.http import is_safe_url
+from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import TemplateView
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import (Content, CustomArg, From, Header, Mail,
+                                   ReplyTo, SendAt, Subject, To)
 
-
-from .forms import (
-        TopicForm, ResultForm, CourseTypeForm, CourseForm, DesignationForm, ClassMatesSelectForm, ClassMatesConfirmForm, LecturerSelectForm, LecturerConfirmForm, EducationForm, WorkExperienceForm, WorkColleagueSelectForm, WorkColleagueConfirmForm, WorkColleagueResponseForm, ClassMatesResponseForm, LecturerResponseForm, SuperiorSelectForm, WorkCollaboratorResponseForm, WorkCollaboratorConfirmForm, WorkCollaboratorSelectForm, WorkClientResponseForm, WorkClientConfirmForm, WorkClientSelectForm, PreLoggedExperienceForm, TopicPopForm, LecturerRespondForm, ClassMatesRespondForm, AchievementsForm, AwardsForm, PublicationsForm, LicenseCertificationForm, ProfileSearchForm, EmailFormModal, SiteSkillStatsFilter, SiteDemandSkillStatsFilter
-)
-
-from .models import (
-        Lecturer, Course, ClassMates, WorkExperience, Superior, WorkCollaborator, WorkClient, WorkColleague, Designation, Achievements, Awards, Publications, LicenseCertification,
-)
-
-from db_flatten.models import SkillTag
-from marketplace.models import(
-    SkillLevel, SkillRequired, WorkBid, BidShortList, TalentRequired, BidInterviewList, WorkIssuedTo, VacancyRate, TalentRate,
-)
-from enterprises.models import Branch, Industry
-from locations.models import Region, City
-from project.models import ProjectData, ProjectPersonalDetails
-from Profile.models import (
-        BriefCareerHistory, Profile, LanguageTrack, PhysicalAddress, WillingToRelocate, FileUpload, OnlineRegistrations, PhoneNumber, ProfileImages
-)
-from booklist.models import ReadBy
-from users.models import CustomUser
-from mod_corporate.models import CorporateStaff
-from invitations.models import Invitation
-
-from WeXlog.app_config import (
-    skill_pass_score, locked_age, client_score, lecturer_score, classmate_score,    colleague_score, pre_colleague_score, collaborator_score, superior_score
-)
-
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from analytics.signals import object_viewed_signal
+from booklist.models import ReadBy
+from core.decorators import corp_permission, subscription
+from db_flatten.models import SkillTag
+from enterprises.models import Branch, Industry
+from invitations.models import Invitation
+from locations.models import City, Region
+from marketplace.models import (BidInterviewList, BidShortList, SkillLevel,
+                                SkillRequired, TalentRate, TalentRequired,
+                                VacancyRate, WorkBid, WorkIssuedTo)
+from mod_corporate.models import CorporateStaff
+from Profile.models import (BriefCareerHistory, FileUpload, LanguageTrack,
+                            OnlineRegistrations, PhoneNumber, PhysicalAddress,
+                            Profile, ProfileImages, WillingToRelocate)
+from project.models import ProjectData, ProjectPersonalDetails
+from users.models import CustomUser
+from WeXlog.app_config import (classmate_score, client_score,
+                               collaborator_score, colleague_score,
+                               lecturer_score, locked_age, pre_colleague_score,
+                               skill_pass_score, superior_score)
+
+from .forms import (AchievementsForm, AwardsForm, ClassMatesConfirmForm,
+                    ClassMatesRespondForm, ClassMatesResponseForm,
+                    ClassMatesSelectForm, CourseForm, CourseTypeForm,
+                    DesignationForm, EducationForm, EmailFormModal,
+                    LecturerConfirmForm, LecturerRespondForm,
+                    LecturerResponseForm, LecturerSelectForm,
+                    LicenseCertificationForm, PreLoggedExperienceForm,
+                    ProfileSearchForm, PublicationsForm, ResultForm,
+                    SiteDemandSkillStatsFilter, SiteSkillStatsFilter,
+                    SuperiorSelectForm, TopicForm, TopicPopForm,
+                    WorkClientConfirmForm, WorkClientResponseForm,
+                    WorkClientSelectForm, WorkCollaboratorConfirmForm,
+                    WorkCollaboratorResponseForm, WorkCollaboratorSelectForm,
+                    WorkColleagueConfirmForm, WorkColleagueResponseForm,
+                    WorkColleagueSelectForm, WorkExperienceForm)
+from .models import (Achievements, Awards, ClassMates, Course, Designation,
+                     Lecturer, LicenseCertification, Publications, Superior,
+                     WorkClient, WorkCollaborator, WorkColleague,
+                     WorkExperience)
+from .widgets import ListTextWidget
 
 
 @login_required()

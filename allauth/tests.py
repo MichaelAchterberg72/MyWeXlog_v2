@@ -2,10 +2,10 @@
 from __future__ import unicode_literals
 
 import json
-import requests
 from datetime import date, datetime
 
 import django
+import requests
 from django.core.files.base import ContentFile
 from django.db import models
 from django.test import RequestFactory, TestCase
@@ -13,7 +13,6 @@ from django.utils.http import base36_to_int, int_to_base36
 from django.views import csrf
 
 from . import utils
-
 
 try:
     from unittest.mock import Mock, patch

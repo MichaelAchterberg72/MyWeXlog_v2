@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 # from __future__ import absolute_import, unicode_literals
 
 import os
+
 from . import app_config
 
 # from distutils.sysconfig import get_python_lib

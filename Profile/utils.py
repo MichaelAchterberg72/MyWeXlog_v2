@@ -2,6 +2,7 @@ import random
 import string
 from secrets import randbelow
 
+
 def code_generator(size, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 

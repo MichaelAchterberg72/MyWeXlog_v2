@@ -14,12 +14,8 @@ from django.utils.http import base36_to_int, int_to_base36, urlencode
 from django.utils.timezone import now
 
 from ..exceptions import ImmediateHttpResponse
-from ..utils import (
-    get_request_param,
-    get_user_model,
-    import_callable,
-    valid_email_or_none,
-)
+from ..utils import (get_request_param, get_user_model, import_callable,
+                     valid_email_or_none)
 from . import app_settings, signals
 from .adapter import get_adapter
 from .app_settings import EmailVerificationMethod

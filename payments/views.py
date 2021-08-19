@@ -1,29 +1,25 @@
-from django.shortcuts import render, redirect
-from django.urls import reverse
-from csp.decorators import csp_exempt
-from django.utils.decorators import method_decorator
-from django.conf import settings
 from datetime import datetime
 
-from django.views.generic import (
-        TemplateView
-)
-from django.views.decorators.csrf import csrf_exempt
+from csp.decorators import csp_exempt
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect, render
+from django.urls import reverse
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import TemplateView
 
-from paypal.standard.forms import PayPalPaymentsForm, PayPalEncryptedPaymentsForm
-
-from payments.forms import (
-        ExtPayPalPaymentsForm,
-        ExtPayPalEncryptedPaymentsForm,
-        ExtPayPalSharedSecretEncryptedPaymentsForm,
-        PassiveSubscriptionChoiceForm,
-        ActiveSubscriptionChoiceForm
-)
+from payments.forms import (ActiveSubscriptionChoiceForm,
+                            ExtPayPalEncryptedPaymentsForm,
+                            ExtPayPalPaymentsForm,
+                            ExtPayPalSharedSecretEncryptedPaymentsForm,
+                            PassiveSubscriptionChoiceForm)
+from paypal.standard.forms import (PayPalEncryptedPaymentsForm,
+                                   PayPalPaymentsForm)
+from paypal.standard.ipn.signals import (invalid_ipn_received,
+                                         valid_ipn_received)
 
 from .tasks import SubscriptionUpgradeRefund
-
-from paypal.standard.ipn.signals import valid_ipn_received, invalid_ipn_received
 
 
 @method_decorator(csrf_exempt, name='dispatch')

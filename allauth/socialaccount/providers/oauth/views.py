@@ -3,15 +3,11 @@ from __future__ import absolute_import
 from django.urls import reverse
 
 from allauth.socialaccount import providers
-from allauth.socialaccount.helpers import (
-    complete_social_login,
-    render_authentication_error,
-)
+from allauth.socialaccount.helpers import (complete_social_login,
+                                           render_authentication_error)
 from allauth.socialaccount.models import SocialLogin, SocialToken
-from allauth.socialaccount.providers.oauth.client import (
-    OAuthClient,
-    OAuthError,
-)
+from allauth.socialaccount.providers.oauth.client import (OAuthClient,
+                                                          OAuthError)
 
 from ..base import AuthAction, AuthError
 

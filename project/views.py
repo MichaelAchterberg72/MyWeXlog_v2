@@ -104,7 +104,7 @@ def ProjectDashboard(request):
     pp_count = projects_qs.count()
 
     pcount = ProjectData.objects.all().count()
-    projects = ProjectData.objects.all().order_by('-company')
+#    projects = ProjectData.objects.all().order_by('-company')
     project_hours_qs = WorkExperience.objects.values('project').annotate(sum_t=Sum('hours_worked')).order_by('-sum_t')[1:5]
 
     template_name = 'project/project_dashboard.html'
@@ -246,7 +246,7 @@ class ProjectDataJsonView(AutoResponseView):
 @login_required()
 def ProjectListHome(request):
     pcount = ProjectData.objects.all().aggregate(sum_p=Count('name'))
-    projects = ProjectData.objects.all().order_by('-company')
+    projects = ProjectData.objects.all().order_by('company')
 
     try:
         page = int(request.GET.get('page', 1))
@@ -628,7 +628,7 @@ def ProjectAddView(request):
         if form.is_valid():
             new = form.save(commit=False)
             new.save()
-            return redirect(reverse('Project:ProjectHome'))
+            return redirect(reverse('Project:ProjectList'))
     else:
         form = ProjectAddHome()
 
@@ -658,12 +658,12 @@ def ProjectSearch(request):
         if form.is_valid():
             query = form.cleaned_data['query']
             results = ProjectData.objects.annotate(
-                search=SearchVector('name',
-                                    'company__branch',
-                                    'industry__industry',
-                                    'country',
-                                    'region__region',
-                                    'city__city'),
+                search=SearchVector('name__icontains',
+                                    'company__branch__icontains',
+                                    'industry__industry__icontains',
+                                    'country__icontains',
+                                    'region__region__icontains',
+                                    'city__city__icontains'),
             ).filter(search=query).order_by('company__ename')
 
     template_name= 'project/project_search.html'

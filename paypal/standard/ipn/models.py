@@ -3,13 +3,13 @@
 from __future__ import unicode_literals
 
 import requests
-
-from paypal.standard.ipn.signals import invalid_ipn_received, valid_ipn_received
-from paypal.standard.models import PayPalStandardBase
-
 from django.db.models.signals import post_save
 
 from payments.signals import show_me_the_money
+from paypal.standard.ipn.signals import (invalid_ipn_received,
+                                         valid_ipn_received)
+from paypal.standard.models import PayPalStandardBase
+
 
 class PayPalIPN(PayPalStandardBase):
     """Logs PayPal IPN interactions."""

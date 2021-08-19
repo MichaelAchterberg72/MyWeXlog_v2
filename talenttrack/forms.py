@@ -1,38 +1,37 @@
-from django import forms
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
-from users.models import CustomUser
-from django.utils.encoding import force_text
-from django.db.models import Q
-from django.forms import ModelChoiceField
-from django.utils import timezone
-from django.core.exceptions import ValidationError
 from datetime import timedelta
 
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, Row, Column
-
+from crispy_forms.layout import Column, Layout, Row, Submit
+from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
+from django.db.models import Q
+from django.forms import ModelChoiceField
+from django.utils import timezone
+from django.utils.encoding import force_text
 from django_countries.fields import CountryField
+from django_select2.forms import (HeavySelect2MultipleWidget,
+                                  ModelSelect2MultipleWidget,
+                                  ModelSelect2TagWidget, ModelSelect2Widget,
+                                  Select2MultipleWidget, Select2Widget)
 
-from .widgets import ListTextWidget
-
-from django_select2.forms import (
-    ModelSelect2TagWidget, ModelSelect2Widget, ModelSelect2MultipleWidget,
-    Select2Widget, Select2MultipleWidget, HeavySelect2MultipleWidget
-)
-from booklist.forms import (
-    PublisherSelect2Widget, TagModelSelect2MultipleWidget, AuthorModelSelect2MultipleWidget, GenreWidget
-)
-from .models import (
-    Topic, Result, CourseType, Course, Lecturer, ClassMates, WorkClient, WorkExperience, WorkColleague, Superior, WorkCollaborator, Designation, Achievements, Awards, Publications, LicenseCertification, EmailRemindValidate
-    )
-
-from enterprises.models import Enterprise, Branch, Industry
-from project.models import ProjectData, ProjectPersonalDetails
+from booklist.forms import (AuthorModelSelect2MultipleWidget, GenreWidget,
+                            PublisherSelect2Widget,
+                            TagModelSelect2MultipleWidget)
 from db_flatten.models import SkillTag
-from users.models import CustomUser
+from enterprises.models import Branch, Enterprise, Industry
 from locations.models import Region
 from marketplace.models import TalentRequired
+from project.models import ProjectData, ProjectPersonalDetails
+from users.models import CustomUser
+
+from .models import (Achievements, Awards, ClassMates, Course, CourseType,
+                     Designation, EmailRemindValidate, Lecturer,
+                     LicenseCertification, Publications, Result, Superior,
+                     Topic, WorkClient, WorkCollaborator, WorkColleague,
+                     WorkExperience)
+from .widgets import ListTextWidget
 
 
 class EmailFormModal(forms.ModelForm):

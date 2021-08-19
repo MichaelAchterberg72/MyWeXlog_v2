@@ -1,31 +1,25 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
-
-from django.db.models import Count, Sum, F, Q
-
 from csp.decorators import csp_exempt
-
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
+from django.db.models import Count, F, Q, Sum
+from django.shortcuts import get_object_or_404, redirect, render
+
 User = get_user_model()
 
 import datetime as dt
 from datetime import datetime, timedelta
-from django.utils import timezone, dateformat
-import pytz
 
+import pytz
+from django.urls import reverse
+from django.utils import dateformat, timezone
 
 from core.decorators import subscription
-
-
-from users.models import ExpandedView
 from db_flatten.models import SkillTag
 from enterprises.models import Enterprise
-from marketplace.models import (
-    TalentRequired, BidShortList, BidInterviewList, WorkBid, WorkIssuedTo
-    )
+from marketplace.models import (BidInterviewList, BidShortList, TalentRequired,
+                                WorkBid, WorkIssuedTo)
 from paypal.standard.ipn.models import PayPalIPN
-
-from django.urls import reverse
+from users.models import ExpandedView
 
 
 @login_required()

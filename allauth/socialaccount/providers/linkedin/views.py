@@ -3,11 +3,9 @@ from xml.parsers.expat import ExpatError
 
 from allauth.socialaccount import providers
 from allauth.socialaccount.providers.oauth.client import OAuth
-from allauth.socialaccount.providers.oauth.views import (
-    OAuthAdapter,
-    OAuthCallbackView,
-    OAuthLoginView,
-)
+from allauth.socialaccount.providers.oauth.views import (OAuthAdapter,
+                                                         OAuthCallbackView,
+                                                         OAuthLoginView)
 
 from .provider import LinkedInProvider
 

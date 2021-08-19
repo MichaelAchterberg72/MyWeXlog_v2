@@ -1,20 +1,15 @@
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Column, Layout, Row, Submit
 from django import forms
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django_select2.forms import (ModelSelect2TagWidget, ModelSelect2Widget,
+                                  Select2MultipleWidget, Select2Widget)
 
-
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, Row, Column
-
-from django_select2.forms import (
-    ModelSelect2TagWidget, ModelSelect2Widget, Select2MultipleWidget,
-    Select2Widget
-)
+from enterprises.models import Branch, Enterprise, Industry
+from locations.models import City, Region, Suburb
 
 from .models import ProjectData, ProjectPersonalDetails
-from enterprises.models import Enterprise, Industry, Branch
-from locations.models import Region, City, Suburb
-
 
 
 class ProjectSearchFieldMixin:

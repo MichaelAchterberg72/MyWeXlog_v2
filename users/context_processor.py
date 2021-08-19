@@ -1,14 +1,14 @@
+from django.db.models import Count, F, Q, Sum
+
+from feedback.models import NoticeRead
+from marketplace.models import (BidInterviewList, BidShortList, TalentRate,
+                                TalentRequired, VacancyRate, WorkBid,
+                                WorkIssuedTo)
+from talenttrack.models import (ClassMates, Lecturer, Superior, WorkClient,
+                                WorkCollaborator, WorkColleague)
 from WeXlog import app_config
-from django.db.models import Count, Sum, F, Q
 
 from .models import CustomUserSettings
-from feedback.models import NoticeRead
-from talenttrack.models import (
-        Lecturer, ClassMates, WorkColleague, Superior, WorkCollaborator,  WorkClient,
-)
-from marketplace.models import (
-            BidInterviewList, WorkIssuedTo, VacancyRate, TalentRate, TalentRequired, WorkBid, BidShortList
-)
 
 
 def theme(request):

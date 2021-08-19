@@ -1,4 +1,4 @@
-from django.forms import DateTimeInput, DateInput
+from django.forms import DateInput, DateTimeInput
 
 
 class XDSoftDateTimePickerInput(DateTimeInput):

@@ -1,12 +1,9 @@
 import requests
-
 from django.urls import reverse
 from django.utils.http import urlencode
 
-from allauth.socialaccount.providers.openid.provider import (
-    OpenIDAccount,
-    OpenIDProvider,
-)
+from allauth.socialaccount.providers.openid.provider import (OpenIDAccount,
+                                                             OpenIDProvider)
 
 
 class SteamAccount(OpenIDAccount):

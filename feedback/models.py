@@ -1,7 +1,6 @@
-from django.db import models
 from django.conf import settings
+from django.db import models
 from django.utils import timezone
-from Profile.utils import create_code9
 
 from Profile.utils import create_code9
 

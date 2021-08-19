@@ -12,16 +12,12 @@ from django.utils.html import escapejs, mark_safe
 
 from allauth.account.models import EmailAddress
 from allauth.socialaccount.app_settings import QUERY_EMAIL
-from allauth.socialaccount.providers.base import (
-    AuthAction,
-    AuthProcess,
-    ProviderAccount,
-)
+from allauth.socialaccount.providers.base import (AuthAction, AuthProcess,
+                                                  ProviderAccount)
 from allauth.socialaccount.providers.oauth2.provider import OAuth2Provider
 from allauth.utils import import_callable
 
 from .locale import get_default_locale_callable
-
 
 GRAPH_API_VERSION = (
     getattr(settings, "SOCIALACCOUNT_PROVIDERS", {})

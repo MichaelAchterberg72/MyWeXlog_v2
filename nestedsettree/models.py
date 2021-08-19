@@ -1,7 +1,7 @@
-from treebeard.mp_tree import MP_Node
-from django.contrib.auth.models import User
 from django.conf import settings
+from django.contrib.auth.models import User
 from django.db import models
+from treebeard.mp_tree import MP_Node
 
 
 class NtWk(MP_Node):

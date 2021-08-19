@@ -1,23 +1,23 @@
-from django.db import models
-from django.conf import settings
-from django.core.validators import FileExtensionValidator
-from django.utils import timezone
-from django.db.models.signals import pre_save, post_save
-from django.dispatch import receiver
 from random import random
 from time import time
 
-from Profile.utils import create_code9, create_code8
-from WeXlog.storage_backends import PublicMediaStorage, PrivateMediaStorage
-
+from django.conf import settings
+from django.contrib.auth.models import User
+from django.core.validators import FileExtensionValidator
+from django.db import models
+from django.db.models.signals import post_save, pre_save
+from django.dispatch import receiver
+from django.utils import timezone
 from tinymce.models import HTMLField
 
-from django.contrib.auth.models import User
-from users.models import CustomUser
+from db_flatten.models import LanguageList, SkillTag
 from enterprises.models import Branch
-from locations.models import Currency, City
-from db_flatten.models import SkillTag, LanguageList
-from talenttrack.models import Result, Designation
+from locations.models import City, Currency
+from Profile.utils import create_code8, create_code9
+from talenttrack.models import Designation, Result
+from users.models import CustomUser
+from WeXlog.storage_backends import PrivateMediaStorage, PublicMediaStorage
+
 
 #This is the table that specifies the work configuration (Freelance, Remote Freelence, Consultant, Contractor, Employee, FIFO)
 class WorkLocation(models.Model):

@@ -14,13 +14,10 @@ Resources:
 """
 from django.urls import reverse
 
-from allauth.socialaccount.providers.openid.views import (
-    OpenIDCallbackView,
-    OpenIDLoginView,
-)
+from allauth.socialaccount.providers.openid.views import (OpenIDCallbackView,
+                                                          OpenIDLoginView)
 
 from .provider import SteamOpenIDProvider
-
 
 STEAM_OPENID_URL = "https://steamcommunity.com/openid"
 

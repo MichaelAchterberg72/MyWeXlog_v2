@@ -8,11 +8,9 @@ from django.views.generic.edit import FormView
 
 from ..account import app_settings as account_settings
 from ..account.adapter import get_adapter as get_account_adapter
-from ..account.views import (
-    AjaxCapableProcessFormViewMixin,
-    CloseableSignupMixin,
-    RedirectAuthenticatedUserMixin,
-)
+from ..account.views import (AjaxCapableProcessFormViewMixin,
+                             CloseableSignupMixin,
+                             RedirectAuthenticatedUserMixin)
 from ..utils import get_form_class
 from . import app_settings, helpers
 from .adapter import get_adapter

@@ -80,7 +80,6 @@ class AppSettings(object):
 # http://mail.python.org/pipermail/python-ideas/2012-May/014969.html
 import sys  # noqa
 
-
 app_settings = AppSettings("SOCIALACCOUNT_")
 app_settings.__name__ = __name__
 sys.modules[__name__] = app_settings

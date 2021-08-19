@@ -1,6 +1,6 @@
-import requests
 from urllib.parse import parse_qsl
 
+import requests
 from django.utils.http import urlencode
 
 

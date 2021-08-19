@@ -2,14 +2,11 @@ from __future__ import unicode_literals
 
 import requests
 
-from allauth.socialaccount.providers.oauth2.views import (
-    OAuth2Adapter,
-    OAuth2CallbackView,
-    OAuth2LoginView,
-)
+from allauth.socialaccount.providers.oauth2.views import (OAuth2Adapter,
+                                                          OAuth2CallbackView,
+                                                          OAuth2LoginView)
 
 from .provider import AzureProvider
-
 
 LOGIN_URL = "https://login.microsoftonline.com/common/oauth2/v2.0"
 GRAPH_URL = "https://graph.microsoft.com/v1.0"

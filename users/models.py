@@ -1,18 +1,16 @@
-from django.db import models
-from django.conf import settings
 from datetime import datetime
-from django.utils import timezone
+
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser, UserManager
+from django.db import models
 from django.db.models.signals import post_save, pre_save
-
-
-from pinax.referrals.models import Referral
-from allauth.account.signals import user_signed_up
 from django.dispatch import receiver
+from django.utils import timezone
+from pinax.referrals.models import Referral
 
-from Profile.utils import create_code16
-
+from allauth.account.signals import user_signed_up
 from nestedsettree.models import NtWk
+from Profile.utils import create_code16
 
 
 class CustomUserManager(UserManager):

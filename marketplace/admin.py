@@ -1,8 +1,10 @@
 from django.contrib import admin
 
-from .models import (
-    WorkLocation, TalentRequired, Deliverables, SkillLevel, SkillRequired, WorkBid, TalentAvailabillity, WorkIssuedTo, BidShortList, BidInterviewList, DeclineAssignment, VacancyRate, TalentRate, VacancyViewed
-    )
+from .models import (BidInterviewList, BidShortList, DeclineAssignment,
+                     Deliverables, SkillLevel, SkillRequired,
+                     TalentAvailabillity, TalentRate, TalentRequired,
+                     VacancyRate, VacancyViewed, WorkBid, WorkIssuedTo,
+                     WorkLocation)
 
 
 @admin.register(TalentRate)

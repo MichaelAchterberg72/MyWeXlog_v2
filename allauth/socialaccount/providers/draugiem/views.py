@@ -1,16 +1,14 @@
-import requests
 from hashlib import md5
 
+import requests
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.utils.http import urlencode
 from django.views.decorators.csrf import csrf_exempt
 
 from allauth.socialaccount import providers
-from allauth.socialaccount.helpers import (
-    complete_social_login,
-    render_authentication_error,
-)
+from allauth.socialaccount.helpers import (complete_social_login,
+                                           render_authentication_error)
 from allauth.socialaccount.models import SocialLogin, SocialToken
 
 from ..base import AuthError

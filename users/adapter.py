@@ -1,7 +1,9 @@
-from allauth.account.adapter import DefaultAccountAdapter
 from django.conf import settings
 #from django.contrib.auth.models import User
 from django.shortcuts import resolve_url
+
+from allauth.account.adapter import DefaultAccountAdapter
+
 
 class AccountAdapter(DefaultAccountAdapter):
 

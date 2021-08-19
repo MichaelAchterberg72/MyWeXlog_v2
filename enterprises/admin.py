@@ -1,8 +1,7 @@
 from django.contrib import admin
 
-from .models import (
-    Industry, Enterprise, BranchType, Branch, PhoneNumber
-    )
+from .models import Branch, BranchType, Enterprise, Industry, PhoneNumber
+
 
 @admin.register(Industry)
 class IndustryAdmin(admin.ModelAdmin):

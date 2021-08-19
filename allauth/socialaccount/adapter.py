@@ -9,13 +9,8 @@ from ..account.adapter import get_adapter as get_account_adapter
 from ..account.app_settings import EmailVerificationMethod
 from ..account.models import EmailAddress
 from ..account.utils import user_email, user_field, user_username
-from ..utils import (
-    deserialize_instance,
-    email_address_exists,
-    import_attribute,
-    serialize_instance,
-    valid_email_or_none,
-)
+from ..utils import (deserialize_instance, email_address_exists,
+                     import_attribute, serialize_instance, valid_email_or_none)
 from . import app_settings
 
 

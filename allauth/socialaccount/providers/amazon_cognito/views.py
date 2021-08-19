@@ -1,14 +1,11 @@
 import requests
 
 from allauth.socialaccount import app_settings
-from allauth.socialaccount.providers.amazon_cognito.provider import (
-    AmazonCognitoProvider,
-)
-from allauth.socialaccount.providers.oauth2.views import (
-    OAuth2Adapter,
-    OAuth2CallbackView,
-    OAuth2LoginView,
-)
+from allauth.socialaccount.providers.amazon_cognito.provider import \
+    AmazonCognitoProvider
+from allauth.socialaccount.providers.oauth2.views import (OAuth2Adapter,
+                                                          OAuth2CallbackView,
+                                                          OAuth2LoginView)
 
 
 class AmazonCognitoOAuth2Adapter(OAuth2Adapter):

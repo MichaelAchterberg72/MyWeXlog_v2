@@ -1,35 +1,26 @@
-from django.urls import reverse
-from django.shortcuts import render
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect, reverse, get_object_or_404
-from django.views.generic import FormView, TemplateView
-from django.http import HttpResponse, HttpResponseRedirect
-from django.utils.http import is_safe_url
-
-
-from django.views.decorators.csrf import csrf_exempt
-from csp.decorators import csp_exempt
-from django.db.models import Count
-from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
+import json
 import operator
-from django.db.models import Q
-import json
-from django.views.generic import (
-        TemplateView
-)
-from django.views.decorators.csrf import csrf_exempt
-from core.decorators import subscription
 
+from csp.decorators import csp_exempt
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.postgres.search import (SearchQuery, SearchRank,
+                                            SearchVector)
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.db.models import Count, Q
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect, render, reverse
+from django.urls import reverse
+from django.utils.http import is_safe_url
 from django.views import generic
-import json
+from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import FormView, TemplateView
 
+from core.decorators import subscription
 from Profile.models import Profile
-from .models import BookList, Author, ReadBy, Format, Publisher
+
 from .forms import *
-
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
+from .models import Author, BookList, Format, Publisher, ReadBy
 
 #@login_required()
 #class BookListHomeView(TemplateView):

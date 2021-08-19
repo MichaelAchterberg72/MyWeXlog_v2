@@ -1,29 +1,23 @@
-from django import forms
-from django.contrib.auth.models import User
-from django.utils.encoding import force_text
-from django.utils import timezone
-
-from django.contrib.admin.widgets import FilteredSelectMultiple
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, Row, Column
+from crispy_forms.layout import Column, Layout, Row, Submit
+from django import forms
+from django.contrib.admin.widgets import FilteredSelectMultiple
+from django.contrib.auth.models import User
+from django.utils import timezone
+from django.utils.encoding import force_text
+from django_select2.forms import (ModelSelect2MultipleWidget,
+                                  ModelSelect2TagWidget, ModelSelect2Widget,
+                                  Select2MultipleWidget, Select2Widget)
 
-
-from django_select2.forms import (
-    ModelSelect2TagWidget, ModelSelect2Widget, Select2MultipleWidget,
-    Select2Widget, ModelSelect2MultipleWidget, Select2MultipleWidget
-)
-
-
-from .models import (
-            WorkLocation, TalentRequired, Deliverables, SkillLevel, SkillRequired, TalentAvailabillity, WorkBid, BidInterviewList, WorkIssuedTo, VacancyRate, TalentRate
-)
-
-
-from locations.models import Currency, City
+from db_flatten.models import LanguageList, SkillTag
 from enterprises.models import Branch
-from talenttrack.models import Result
-from db_flatten.models import SkillTag, LanguageList
+from locations.models import City, Currency
 from talenttrack.forms import DesignationSelect2Widget
+from talenttrack.models import Result
+
+from .models import (BidInterviewList, Deliverables, SkillLevel, SkillRequired,
+                     TalentAvailabillity, TalentRate, TalentRequired,
+                     VacancyRate, WorkBid, WorkIssuedTo, WorkLocation)
 
 
 #>>> Select 2

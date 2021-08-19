@@ -1,43 +1,38 @@
-from django.db import models
-from django.contrib.auth.models import User
-from django.conf import settings
 import datetime
-from time import time
+from decimal import Decimal, getcontext
+from io import BytesIO, StringIO
 from random import random
-from django.urls import reverse
-from django.db.models.signals import post_save, pre_save
-from decimal import getcontext, Decimal
-from django.core.validators import FileExtensionValidator
+from time import time
 
-from django_countries.fields import CountryField
-from phonenumber_field.modelfields import PhoneNumberField
 from dateutil.relativedelta import relativedelta
+from django.conf import settings
+from django.contrib.auth.models import User
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.core.validators import FileExtensionValidator
+from django.db import models
+from django.db.models.signals import post_save, pre_save
+from django.urls import reverse
 from django.utils import timezone
-
-from .utils import create_code7, create_code9
-from WeXlog.storage_backends import PrivateMediaStorage
-
+from django_countries.fields import CountryField
+from pdf2image import convert_from_bytes, convert_from_path
+from pdf2image.exceptions import (PDFInfoNotInstalledError, PDFPageCountError,
+                                  PDFSyntaxError)
+from phonenumber_field.modelfields import PhoneNumberField
+from PIL import Image
+from pinax.referrals.models import Referral
 from tinymce.models import HTMLField
 
-from pdf2image import convert_from_path, convert_from_bytes
-from pdf2image.exceptions import (
-    PDFInfoNotInstalledError,
-    PDFPageCountError,
-    PDFSyntaxError )
-from PIL import Image
-from io import StringIO, BytesIO
-from django.core.files.uploadedfile import InMemoryUploadedFile
-
-from marketplace.models import WorkLocation, SkillLevel
-from users.models import CustomUser
-from locations.models import Region, City, Suburb, Currency
-from db_flatten.models import PhoneNumberType, LanguageList
-from enterprises.models import Enterprise, Branch
-from pinax.referrals.models import Referral
-from talenttrack.models import(
-        Designation, Lecturer, ClassMates, WorkColleague, Superior, WorkCollaborator, WorkClient
-        )
+from db_flatten.models import LanguageList, PhoneNumberType
+from enterprises.models import Branch, Enterprise
 from invitations.models import Invitation
+from locations.models import City, Currency, Region, Suburb
+from marketplace.models import SkillLevel, WorkLocation
+from talenttrack.models import (ClassMates, Designation, Lecturer, Superior,
+                                WorkClient, WorkCollaborator, WorkColleague)
+from users.models import CustomUser
+from WeXlog.storage_backends import PrivateMediaStorage
+
+from .utils import create_code7, create_code9
 
 
 class BriefCareerHistory(models.Model):

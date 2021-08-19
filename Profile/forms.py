@@ -1,27 +1,24 @@
-from django import forms
-from django.contrib.auth.models import User
-from django.utils.encoding import force_text
-
-from django.contrib.admin.widgets import FilteredSelectMultiple
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, Row, Column
+from crispy_forms.layout import Column, Layout, Row, Submit
+from django import forms
+from django.contrib.admin.widgets import FilteredSelectMultiple
+from django.contrib.auth.models import User
 from django.utils import timezone
+from django.utils.encoding import force_text
+from django_select2.forms import (ModelSelect2TagWidget, ModelSelect2Widget,
+                                  Select2MultipleWidget, Select2Widget)
 
-from django_select2.forms import (
-    ModelSelect2TagWidget, ModelSelect2Widget, Select2MultipleWidget,
-    Select2Widget
-)
-
-
-from .models import (
-            Profile, Email, PhysicalAddress, PostalAddress, PhoneNumber, OnlineRegistrations, SiteName, FileUpload, IdentificationDetail, IdType, PassportDetail, LanguageTrack, BriefCareerHistory, WillingToRelocate, ProfileImages,
-          )
-from enterprises.models import Enterprise, Branch
-from locations.models import Region, City, Suburb
-from talenttrack.models import Designation
-from users.models import CustomUser
 from db_flatten.models import LanguageList
+from enterprises.models import Branch, Enterprise
+from locations.models import City, Region, Suburb
+from talenttrack.models import Designation
 from users.models import CustomUser, ExpandedView
+
+from .models import (BriefCareerHistory, Email, FileUpload,
+                     IdentificationDetail, IdType, LanguageTrack,
+                     OnlineRegistrations, PassportDetail, PhoneNumber,
+                     PhysicalAddress, PostalAddress, Profile, ProfileImages,
+                     SiteName, WillingToRelocate)
 
 
 class UploadProfilePicForm(forms.ModelForm):

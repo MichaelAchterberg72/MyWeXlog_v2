@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
-from requests.exceptions import HTTPError
-
 from django.test.client import RequestFactory
 from django.test.utils import override_settings
 from django.urls import reverse
+from requests.exceptions import HTTPError
 
 from allauth.socialaccount.models import SocialToken
 from allauth.socialaccount.tests import OAuth2TestsMixin
@@ -37,9 +36,8 @@ class YNABTests(OAuth2TestsMixin, TestCase):
         )
 
     def test_ynab_compelete_login_401(self):
-        from allauth.socialaccount.providers.ynab.views import (
-            YNABOAuth2Adapter,
-        )
+        from allauth.socialaccount.providers.ynab.views import \
+            YNABOAuth2Adapter
 
         class LessMockedResponse(MockedResponse):
             def raise_for_status(self):

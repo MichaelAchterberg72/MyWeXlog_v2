@@ -6,7 +6,7 @@ class PaymentsConfig(AppConfig):
 
     def ready(self):
         # importing model classes
-#        from .models import PayPalStandardBase
+#         from .models import PayPalStandardBase
         import payments.signals
 
         # registering signals with the model's string label

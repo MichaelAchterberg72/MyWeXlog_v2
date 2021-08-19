@@ -1,75 +1,76 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic import TemplateView
-from django.utils.http import is_safe_url
-from django.utils import timezone
-from django.conf import settings
-from django.http import HttpResponseRedirect, HttpResponse
-from django.urls import reverse
-from django.core.exceptions import PermissionDenied
-import json
-from django.contrib.auth.models import User
-from django.db.models import Count, Sum, F, Q, Avg
-
-from WeXlog import app_config
-
-#email
-from django.core.mail import send_mail, EmailMultiAlternatives
-from django.template.loader import get_template, render_to_string
-from django.utils.html import strip_tags
-
 import datetime as dt
-from datetime import datetime, timedelta
-from django.utils import timezone, dateformat
-import pytz
-
-from csp.decorators import csp_exempt
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
-from core.decorators import subscription
-
-import sendgrid
+import json
 import os
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import (Mail, Subject, To, ReplyTo, SendAt, Content, From, CustomArg, Header)
+from datetime import datetime, timedelta
 
-from treebeard.mp_tree import MP_Node
+import pytz
+import sendgrid
+from csp.decorators import csp_exempt
+from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.core.exceptions import PermissionDenied
+#email
+from django.core.mail import EmailMultiAlternatives, send_mail
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.db.models import Avg, Count, F, Q, Sum
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect, render
+from django.template.loader import get_template, render_to_string
+from django.urls import reverse
+from django.utils import dateformat, timezone
+from django.utils.html import strip_tags
+from django.utils.http import is_safe_url
+from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import TemplateView
 from pinax.referrals.models import Referral
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import (Content, CustomArg, From, Header, Mail,
+                                   ReplyTo, SendAt, Subject, To)
+from treebeard.mp_tree import MP_Node
 
-from WeXlog.app_config import (
-    client_score, colleague_score, collaborator_score, superior_score, lecturer_score, classmate_score, pre_colleague_score
-)
-from .models import (
-        Profile, Email, PhysicalAddress, PostalAddress, PhoneNumber, SiteName, OnlineRegistrations, FileUpload, IdentificationDetail, IdType, PassportDetail, LanguageTrack, BriefCareerHistory, WillingToRelocate, ProfileImages,
-        )
-
-from .forms import (
-    ProfileForm, PublicProfileNameForm, PublicProfileIntroForm, EmailForm, EmailStatusForm, PhysicalAddressForm, PostalAddressForm, PhoneNumberForm, OnlineProfileForm, ProfileTypeForm, FileUploadForm, IdTypeForm, LanguageTrackForm, LanguageListForm, PassportDetailForm, IdentificationDetailForm, BriefCareerHistoryForm, ResignedForm, UserUpdateForm, CustomUserUpdateForm, ExpandedIntroWalkthroughForm, ProfileBackgroundForm, ProfileMotivationForm, WillingToRelocateForm, UploadProfilePicForm, UploadProfileBackgroundPicForm,
-)
-
-from talenttrack.models import (
-        Lecturer, ClassMates, WorkColleague, Superior, WorkCollaborator,  WorkClient, WorkExperience, Achievements, Awards, Publications, LicenseCertification,
-)
-
-from talenttrack.forms import (
-        LecturerCommentForm, ClassMatesCommentForm, WorkColleagueConfirmForm, WorkClientConfirmForm, WorkCollaboratorConfirmForm, SuperiorConfirmForm
-)
-
+from analytics.models import ObjectViewed
+from core.decorators import subscription
 from enterprises.models import Branch, Enterprise
 from locations.models import Region
-from users.models import CustomUser, ExpandedView
-
-
+from marketplace.forms import (AssignmentClarifyForm,
+                               AssignmentDeclineReasonsForm, TalentRateForm,
+                               VacancyRateForm)
+from marketplace.models import (BidInterviewList, BidShortList, TalentRate,
+                                TalentRequired, VacancyRate, WorkBid,
+                                WorkIssuedTo)
 from nestedsettree.models import NtWk
+from talenttrack.forms import (ClassMatesCommentForm, LecturerCommentForm,
+                               SuperiorConfirmForm, WorkClientConfirmForm,
+                               WorkCollaboratorConfirmForm,
+                               WorkColleagueConfirmForm)
+from talenttrack.models import (Achievements, Awards, ClassMates, Lecturer,
+                                LicenseCertification, Publications, Superior,
+                                WorkClient, WorkCollaborator, WorkColleague,
+                                WorkExperience)
+from users.models import CustomUser, ExpandedView
+from WeXlog import app_config
+from WeXlog.app_config import (classmate_score, client_score,
+                               collaborator_score, colleague_score,
+                               lecturer_score, pre_colleague_score,
+                               superior_score)
 
-from marketplace.models import (
-            BidInterviewList, WorkIssuedTo, VacancyRate, TalentRate, TalentRequired, WorkBid, BidShortList
-)
-from marketplace.forms import(
-        AssignmentDeclineReasonsForm, AssignmentClarifyForm, VacancyRateForm, TalentRateForm
-        )
-from analytics.models import ObjectViewed
-
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from .forms import (BriefCareerHistoryForm, CustomUserUpdateForm, EmailForm,
+                    EmailStatusForm, ExpandedIntroWalkthroughForm,
+                    FileUploadForm, IdentificationDetailForm, IdTypeForm,
+                    LanguageListForm, LanguageTrackForm, OnlineProfileForm,
+                    PassportDetailForm, PhoneNumberForm, PhysicalAddressForm,
+                    PostalAddressForm, ProfileBackgroundForm, ProfileForm,
+                    ProfileMotivationForm, ProfileTypeForm,
+                    PublicProfileIntroForm, PublicProfileNameForm,
+                    ResignedForm, UploadProfileBackgroundPicForm,
+                    UploadProfilePicForm, UserUpdateForm,
+                    WillingToRelocateForm)
+from .models import (BriefCareerHistory, Email, FileUpload,
+                     IdentificationDetail, IdType, LanguageTrack,
+                     OnlineRegistrations, PassportDetail, PhoneNumber,
+                     PhysicalAddress, PostalAddress, Profile, ProfileImages,
+                     SiteName, WillingToRelocate)
 
 
 def willing_to_relocate(request):

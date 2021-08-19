@@ -5,13 +5,12 @@ Inspired by:
     http://github.com/facebook/tornado/blob/master/tornado/auth.py
 """
 
-import requests
 from urllib.parse import parse_qsl, urlparse
 
+import requests
 from django.http import HttpResponseRedirect
 from django.utils.http import urlencode
 from django.utils.translation import gettext as _
-
 from requests_oauthlib import OAuth1
 
 from allauth.utils import build_absolute_uri, get_request_param

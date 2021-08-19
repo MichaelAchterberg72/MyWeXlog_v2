@@ -6,7 +6,6 @@ from allauth.socialaccount import providers
 
 from . import app_settings
 
-
 urlpatterns = [path("", include("allauth.account.urls"))]
 
 if app_settings.SOCIALACCOUNT_ENABLED:
