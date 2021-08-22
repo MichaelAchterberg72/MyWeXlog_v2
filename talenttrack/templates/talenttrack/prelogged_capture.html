@@ -125,6 +125,14 @@
               </a>
             </p>
           </div>
+          <h5>
+            Skills you captured previously
+          </h5>
+          <p>
+            {% for skill in skills_list.all %}
+              {{ skill.skill }} ||
+            {% endfor %}
+          </p>
         </div>
         <div class="form-row">
           <div class="form-group col-md-8 mb-0">

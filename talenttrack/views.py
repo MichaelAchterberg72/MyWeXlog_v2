@@ -5275,6 +5275,9 @@ def DPCP_SummaryView(request, tlt):
 @login_required()
 @csp_exempt
 def PreLoggedExperienceCaptureView(request):
+    tlt=request.user
+    skills_list = SkillTag.objects.filter(experience__talent=tlt).distinct('skill').order_by('skill')
+
     form = PreLoggedExperienceForm(request.POST or None, request.FILES)
     if request.method == 'POST':
         ppd_id=request.POST.get('project_data')
@@ -5295,12 +5298,12 @@ def PreLoggedExperienceCaptureView(request):
             return response
         else:
             template = 'talenttrack/prelogged_capture.html'
-            context = {'form': form}
+            context = {'form': form, 'skills_list': skills_list}
             response = render(request, template, context)
             return response
     else:
         template = 'talenttrack/prelogged_capture.html'
-        context = {'form': form}
+        context = {'form': form, 'skills_list': skills_list}
         response = render(request, template, context)
         response.set_cookie("confirm","PC")
         return response
