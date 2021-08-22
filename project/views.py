@@ -40,72 +40,25 @@ from .forms import ProjectAddForm, ProjectAddHome, ProjectSearchForm, ProjectFor
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
-'''
-@login_required()
-def ProjectHome(request):
-    tlt = request.user
-    projects_qs = WorkExperience.objects.filter(talent=tlt).values('project', 'companybranch')
-    prj_list = [dict(t) for t in {tuple(d.items()) for d in projects_qs}]
-
-    tlt_prj_list=[]
-    for item in prj_list:
-        prj_pk = item['project']
-        cob_pk = item['companybranch']
-        if prj_pk == None:
-            pass
-        else:
-            prj_qs = ProjectData.objects.get(pk=prj_pk)
-            prj = prj_qs.name
-            prj_slug = prj_qs.slug
-            brch_qs = Branch.objects.get(pk=cob_pk)
-            bch = brch_qs.name
-            bch_slug = brch_qs.slug
-            co = brch_qs.company.ename
-            co_slug = brch_qs.company.slug
-            industry = prj_qs.industry.industry
-            city = prj_qs.city.city
-
-            result={'project': prj, 'prj_slug': prj_slug, 'company': co, 'co_slug': co_slug, 'branch': bch, 'bch_slug': bch_slug, 'industry': industry, 'city': city}
-            tlt_prj_list.append(result)
-
-    pcount = len(tlt_prj_list)
-
-
-    try:
-        page = int(request.GET.get('page', 1))
-    except:
-        page = 1
-
-    paginator = Paginator(tlt_prj_list, 20)
-
-    try:
-        pageitems = paginator.page(page)
-    except PageNotAnInteger:
-        pageitems = paginator.page(1)
-    except EmptyPage:
-        pageitems = paginator.page(paginator.num_pages)
-
-    index = pageitems.number - 1
-    max_index = len(paginator.page_range)
-    start_index = index - 3 if index >= 3 else 0
-    end_index = index + 3 if index <= max_index - 3 else max_index
-    page_range = list(paginator.page_range)[start_index:end_index]
-
-    template_name = 'project/personal_projects.html'
-    context = {'pcount': pcount, 'pageitems': pageitems, 'page_range': page_range}
-    return render(request, template_name, context)
-'''
-
 @login_required()
 def ProjectDashboard(request):
     tlt = request.user
     projects_qs = ProjectPersonalDetails.objects.filter(talent=tlt)
-    pp_list = projects_qs[:5]
     pp_count = projects_qs.count()
+    pp_list = projects_qs.annotate(
+                                   sum=Sum('workexperience__hours_worked')
+                                   ).order_by('-sum')[:5]
 
-    p_qs = ProjectData.objects.all()
+    p_qs = ProjectData.objects.filter(
+                                      Q(workexperience__score__gte=3)
+                                      & Q(workexperience__hours_worked__gte=0))
     pcount = p_qs.count()
-    projecthours = p_qs.annotate(sum=Sum('workexperience__hours_worked')).order_by('-sum')[1:6]
+
+    projecthours = p_qs.annotate(
+                                 sum=Sum('workexperience__hours_worked'),
+                                 count=Count('workexperience__company'),
+                                 people=Count('workexperience__talent')
+                                 ).order_by('-sum')[0:5]
 
     template_name = 'project/project_dashboard.html'
     context = {'pp_count': pp_count, 'pp_list': pp_list, 'pcount': pcount, 'projecthours': projecthours}
@@ -115,7 +68,7 @@ def ProjectDashboard(request):
 @login_required()
 def ProjectHome(request):
     tlt = request.user
-    projects_qs = ProjectPersonalDetails.objects.filter(talent=tlt)
+    projects_qs = ProjectPersonalDetails.objects.filter(talent=tlt).annotate(sum=Sum('workexperience__hours_worked'))
 
     pcount = projects_qs.count()
 
@@ -245,8 +198,13 @@ class ProjectDataJsonView(AutoResponseView):
 
 @login_required()
 def ProjectListHome(request):
-    pcount = ProjectData.objects.all().aggregate(sum_p=Count('name'))
-    projects = ProjectData.objects.all().order_by('-company')
+    projects = ProjectData.objects.all().annotate(
+                                  sum=Sum('workexperience__hours_worked'),
+                                  count=Count('workexperience__company'),
+                                  people=Count('workexperience__talent'))
+
+    pcount = projects.aggregate(sum_p=Count('name'))
+
 
     try:
         page = int(request.GET.get('page', 1))
@@ -268,7 +226,7 @@ def ProjectListHome(request):
     end_index = index + 3 if index <= max_index - 3 else max_index
     page_range = list(paginator.page_range)[start_index:end_index]
 
-    template_name = 'project/project_home.html'
+    template_name = 'project/project_full_list.html'
     context = {'pcount': pcount, 'pageitems': pageitems, 'page_range': page_range}
     return render(request, template_name, context)
 

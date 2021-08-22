@@ -6,37 +6,59 @@
 {% block content %}
 <div class="card card-shadow">
   <div class="card-body">
-  <h4 class="">Welcome to the Personal Projects page!
-    <span><p class="float-right">
-    <a href="{% url 'Project:HelpProjectHome' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 16px">
-    <i class="fa fa-question-circle"></i></a>
-  </p></span></h4>
-    <div class="card-body">
-      <p>Projects listed here are the projects that have been captured and validated in your work experience. Please click on 'Personal Details' to capture your personal responsibilities as carried out for the duration of the project, this will be reflected in you Public Profile.</p>
-      <p>To view a full list of projects select the 'Full Project List' button.</p>
-    </div>
+    <h4 class="">Your Personal Projects page
+      <span>
+        <p class="float-right">
+          <a href="{% url 'Project:HelpProjectHome' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 16px">
+            <i class="fa fa-question-circle"></i>
+          </a>
+        </p>
+      </span>
+    </h4>
+    <p>
+      Projects listed here are the projects that have been captured and validated in your work experience. Please click on 'Personal Details' to capture your personal responsibilities as carried out for the duration of the project, this will be reflected in you Public Profile.
+    </p>
+    <p>
+      To view a full list of projects select the 'Full Project List' button.
+    </p>
   </div>
 </div>
 <br>
 <div class="card card-shadow">
   <div class="card-body">
-  <h4 class="">Personal Projects List</h4>
+  <h4 class="">
+    Personal Projects List
+  </h4>
   <div class="card-body">
-      {% if request.user.is_authenticated %}
-      <p>There are currently <strong>{{ pcount|intcomma }}</strong> personal projects listed in MyWeXlog!</p>
-      <p><a href="{% url 'Project:ProjectPersonalAdd' %}" class="badge badge-pill badge-primary">Add Personal Project</a><a href="{% url 'Project:ProjectList' %}" class="badge badge-pill badge-primary">Full Project List</a><a href="{% url 'Project:Project-Search' %}" class="badge badge-pill badge-primary">Search Projects</a><a href="{% url 'Project:ProjectDashboard' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
-      {% endif %}
-
+      <p>
+        There are currently <strong>{{ pcount|intcomma }}</strong> personal projects listed in MyWeXlog!
+      </p>
+      <p>
+        <a href="{% url 'Project:ProjectPersonalAdd' %}" class="badge badge-pill badge-primary">Add Personal Project</a><a href="{% url 'Project:ProjectList' %}" class="badge badge-pill badge-primary">Full Project List</a><a href="{% url 'Project:Project-Search' %}" class="badge badge-pill badge-primary">Search Projects</a><a href="{% url 'Project:ProjectDashboard' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">
+          Back
+        </a>
+      </p>
       <div class="container">
         <div class="row my-auto">
-          <div class="col-md-5 h-100 text-center my-auto">
-            <strong>Project Name</strong>
-          </div>
-          <div class="col-md-3 h-100 text-center my-auto">
-            <strong>Project Industry</strong>
+          <div class="col-md-4 h-100 text-center my-auto">
+            <strong>
+              My Employer<br>(Project Owner - Project Name)
+            </strong>
           </div>
           <div class="col-md-2 h-100 text-center my-auto">
-            <strong>Project Country</strong>
+            <strong>
+              Industry
+            </strong>
+          </div>
+          <div class="col-md-2 h-100 text-center my-auto">
+            <strong>
+              Country<br>Closest Town
+            </strong>
+          </div>
+          <div class="col-md-2 h-100 text-center my-auto">
+            <strong>
+              Claimed Hours<br>(Not confirmed)
+            </strong>
           </div>
           <div class="col-md-2 h-100 text-center my-auto">
             <strong></strong>
@@ -48,21 +70,28 @@
         <div class="card mt-1 card-hover" style="width: 100%;">
           <div class="card-body small-pad">
             <div class="row my-auto">
-              <div class="col-md-5 h-100 text-center my-auto">
+              <div class="col-md-4 h-100 text-center my-auto">
                 {{ p.companybranch }}<br>({{ p.project }})
               </div>
-              <div class="col-md-3 h-100 text-center my-auto">
+              <div class="col-md-2 h-100 text-center my-auto">
                 {{ p.project.industry }}
               </div>
               <div class="col-md-2 h-100 text-center my-auto">
-                {{ p.project.city }}
+                {{p.project.country.name}}<br>{{ p.project.city }}
+              </div>
+              <div class="col-md-2 h-100 text-center my-auto">
+                {{ p.sum }}
               </div>
               <div class="col-md-2 h-100 center-text my-auto float-right">
                 <div class="row text-center">
-                  <a href="{% url 'Project:ProjectPersonal' p.project.slug p.company.slug p.companybranch.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 5rem;">Personal<br>Detail</a>
+                  <a href="{% url 'Project:ProjectPersonal' p.project.slug p.company.slug p.companybranch.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 5rem;">
+                    Personal<br>Detail
+                  </a>
                 </div>
                 <div class="row mt-1 text-center">
-                  <a href="{% url 'Project:ProjectDetail' p.project.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 5rem;">See Project <br>Detail</a>
+                  <a href="{% url 'Project:ProjectDetail' p.project.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 5rem;">
+                    Project<br>Detail
+                  </a>
                 </div>
               </div>
             </div>

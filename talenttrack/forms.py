@@ -304,7 +304,7 @@ class PublicationsForm(forms.ModelForm):
 
 class LicenseCertificationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        super(LicenseCertificationForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.helper = FormHelper(self)
         self.helper.form_show_errors = False
@@ -347,7 +347,7 @@ class LicenseCertificationForm(forms.ModelForm):
 class PreLoggedExperienceForm(forms.ModelForm):
     '''Form to capture experience earned and captured on previously approved timesheets'''
     def __init__(self, *args, **kwargs):
-        super(PreLoggedExperienceForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.helper = FormHelper(self)
         self.helper.form_show_errors = True
@@ -641,10 +641,10 @@ class WorkColleagueSelectForm(forms.ModelForm):
 
 class WorkExperienceForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        super(WorkExperienceForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.helper = FormHelper(self)
-        self.helper.form_show_errors = False
+        self.helper.form_show_errors = True
 
     class Meta:
         model = WorkExperience
