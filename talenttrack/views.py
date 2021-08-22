@@ -2838,15 +2838,15 @@ def email_reminder_validate_list(request, skl, tlt):
 @login_required()
 def ExperienceHome(request):
     '''The view for the main page for Talenttrack app'''
+    talent = request.user
+    tlt = talent.alias
+
     #>>>Step 1
-    basequery = WorkExperience.objects.filter(talent=request.user).select_related('topic')
+    basequery = WorkExperience.objects.filter(talent=talent).select_related('topic')
     skills = SkillTag.objects.all()
     sl = SkillLevel.objects.all()
     we_c = basequery.filter(score__gte=skill_pass_score)
     #<<<Step 1
-
-    talent = request.user
-    tlt = talent.alias
 
     #>>>Step 2
     #total
@@ -6286,6 +6286,10 @@ def EducationDetailDeleteView(request, pk):
 @login_required()
 @csp_exempt
 def WorkExperienceCaptureView(request):
+    '''The view used to capture experience '''
+    tlt=request.user
+    skills_list = SkillTag.objects.filter(experience__talent=tlt).distinct('skill').order_by('skill')
+
     form = WorkExperienceForm(request.POST or None, request.FILES)
     if request.method == 'POST':
         ppd_id=request.POST.get('project_data')
@@ -6304,11 +6308,11 @@ def WorkExperienceCaptureView(request):
             return redirect(reverse('Talent:ColleagueSelect', kwargs={'pk': new.id}))
         else:
             template = 'talenttrack/experience_capture.html'
-            context = {'form': form}
+            context = {'form': form, 'skills_list': skills_list}
             return render(request, template, context)
     else:
         template = 'talenttrack/experience_capture.html'
-        context = {'form': form}
+        context = {'form': form, 'skills_list': skills_list}
         return render(request, template, context)
 
 
