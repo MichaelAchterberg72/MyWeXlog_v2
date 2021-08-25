@@ -318,10 +318,9 @@
     <h3 class="text-center">Do you think this information was useful?</h3>
     <p class="text-center">In order to make sure your friends are already invited to the MyWeXlog experience for validations, Click here ..</p>
     <div class="float-right">
-
-      <!--
-    <a class="btn btn-primary"  href="https://oauth2provider.com/auth?response_type=code&client_id=CLIENT_KEY&redirect_uri=CALLBACK_URI&scope=profile&scope=email">Invite Goole Contacts</a>  -->
-    <a class="btn btn-primary"  href="{% url 'Invitation:FlatInvite' %}">Email Friend Invite</a>
+      <a class="btn btn-primary"  href="{% url 'Invitation:FlatInvite' %}">
+        Email Friend Invite
+      </a>
     </div>
   </div>
 </div>
@@ -430,7 +429,9 @@
       <p><a href="{% url 'Talent:TrainingList' %}" class="btn btn-primary float-right">View All Education</a></p>
     </div>
     {% endif %}
-    <p>&nbsp</p>
+      <p>
+        &nbsp
+      </p>
     </div>
   </div>
 </div>
@@ -439,7 +440,8 @@
   <div class="card-body">
     <div class="float-right">
       <a href="{% url 'Talent:HelpExperienceExperience' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 16px" data-toggle="tooltip" title="Click here for help on this page!">
-      <i class="fa fa-question-circle"></i></a>
+        <i class="fa fa-question-circle"></i>
+      </a>
     </div>
     <h4 class="card-title" id="experience">Work Experience</h4>
     <p>
@@ -460,19 +462,17 @@
         <div class="container">
           <div class="row my-auto">
             <div class="col-md-3 h-100 text-center my-auto">
-              <strong>Employer</strong>
-            </div>
-            <div class="col-md-1 h-100 text-center my-auto">
-              <strong>Date from</strong>
-            </div>
-            <div class="col-md-1 h-100 text-center my-auto">
-              <strong>Date to</strong>
+              <strong>
+                Employer<br>Date From - To
+              </strong>
             </div>
             <div class="col-md-1 h-100 text-center my-auto">
               <strong>Hours</strong>
             </div>
-            <div class="col-md-4 h-100 text-center my-auto">
-              <strong>Project</strong>
+            <div class="col-md-5 h-100 text-center my-auto">
+              <strong>
+                Project<br>Experience Title
+              </strong>
             </div>
             <div class="col-md-1 h-100 text-center my-auto">
               <strong>Score</strong>
@@ -488,28 +488,26 @@
             <div class="card-body small-pad">
               <div class="row my-auto">
                 <div class="col-md-3 h-100 text-center my-auto">
-                  {{ e.company }}
-                </div>
-                <div class="col-md-1 h-100 text-center my-auto">
-                  {{ e.date_from|date:"j M Y" }}
-                </div>
-                <div class="col-md-1 h-100 text-center my-auto">
-                  {{ e.date_to|date:"j M Y" }}
+                  {{ e.company }}<br>{{ e.date_from|date:"j M Y" }} - {{ e.date_to|date:"j M Y" }}
                 </div>
                 <div class="col-md-1 h-100 text-center my-auto">
                   {{ e.hours_worked|intcomma }}
                 </div>
-                <div class="col-md-4 h-100 text-center my-auto">
-                  {{ e.project }}
+                <div class="col-md-5 h-100 text-center my-auto">
+                  {{ e.project }}<br>{{ e.title }}
                 </div>
                 <div class="col-md-1 h-100 text-center my-auto">
                   <span data-toggle="tooltip" data-placement="top" title="A score > 3 is required to achieve a 'confirmed' status">{{ e.score }}</span>
                 </div>
                 <div class="col-1 col-no-pad h-100 text-left my-auto">
-                  <a href="{% url 'Talent:ExperienceDetail' e.slug %}" class="badge badge-pill badge-secondary"  style="width: 5rem;">Detail</a>
+                  <a href="{% url 'Talent:ExperienceDetail' e.slug %}" class="badge badge-pill badge-secondary"  style="width: 5rem;">
+                    Detail
+                  </a>
                   <form  action="{% url 'Talent:WEDelete' e.id %}" method="post">
                     {% csrf_token %}
-                    <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
+                    <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">
+                      Remove
+                    </button>
                   </form>
                 </div>
               </div>
@@ -554,19 +552,17 @@
       <div class="container">
         <div class="row my-auto">
           <div class="col-md-3 h-100 text-center my-auto">
-            <strong>Employer</strong>
-          </div>
-          <div class="col-md-1 h-100 text-center my-auto">
-            <strong>Date from</strong>
-          </div>
-          <div class="col-md-1 h-100 text-center my-auto">
-            <strong>Date to</strong>
+            <strong>
+              Employer<br>Date From - To
+            </strong>
           </div>
           <div class="col-md-1 h-100 text-center my-auto">
             <strong>Hours</strong>
           </div>
-          <div class="col-md-4 h-100 text-center my-auto">
-            <strong>Project</strong>
+          <div class="col-md-5 h-100 text-center my-auto">
+            <strong>
+              Project<br>Experience Title
+            </strong>
           </div>
           <div class="col-md-1 h-100 text-center my-auto">
             <strong>Score</strong>
@@ -582,28 +578,28 @@
           <div class="card-body small-pad">
             <div class="row my-auto">
               <div class="col-md-3 h-100 text-center my-auto">
-                {{ p.company }}
-              </div>
-              <div class="col-md-1 h-100 text-center my-auto">
-                {{ p.date_from|date:"j M Y" }}
-              </div>
-              <div class="col-md-1 h-100 text-center my-auto">
-                {{ p.date_to|date:"j M Y" }}
+                {{ p.company }}<br>{{ p.date_from|date:"j M Y" }} - {{ p.date_to|date:"j M Y" }}
               </div>
               <div class="col-md-1 h-100 text-center my-auto">
                 {{ p.hours_worked|intcomma }}
               </div>
-              <div class="col-md-4 h-100 text-center my-auto">
-                {{ p.project }}
+              <div class="col-md-5 h-100 text-center my-auto">
+                {{ p.project }}<br>{{ p.title }}
               </div>
               <div class="col-md-1 h-100 text-center my-auto">
-                <span data-toggle="tooltip" data-placement="top" title="A score > 3 is required to achieve a 'confirmed' status">{{ p.score }}</span>
+                <span data-toggle="tooltip" data-placement="top" title="A score > 3 is required to achieve a 'confirmed' status">
+                  {{ p.score }}
+                </span>
               </div>
               <div class="col-1 col-no-pad h-100 text-left my-auto">
-                <a href="{% url 'Talent:PreLogDetail' p.slug %}" class="badge badge-pill badge-secondary" style="width: 5rem;">Detail</a>
+                <a href="{% url 'Talent:PreLogDetail' p.slug %}" class="badge badge-pill badge-secondary" style="width: 5rem;">
+                  Detail
+                </a>
                 <form  action="{% url 'Talent:PLEDelete' p.id %}" method="post">
                   {% csrf_token %}
-                  <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
+                  <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">
+                    Remove
+                  </button>
                 </form>
               </div>
             </div>
