@@ -1,11 +1,8 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
-from django.http import (
-    Http404,
-    HttpResponsePermanentRedirect,
-    HttpResponseRedirect,
-)
+from django.http import (Http404, HttpResponsePermanentRedirect,
+                         HttpResponseRedirect)
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
@@ -17,28 +14,14 @@ from ..exceptions import ImmediateHttpResponse
 from ..utils import get_form_class, get_request_param
 from . import app_settings, signals
 from .adapter import get_adapter
-from .forms import (
-    AddEmailForm,
-    ChangePasswordForm,
-    LoginForm,
-    ResetPasswordForm,
-    ResetPasswordKeyForm,
-    SetPasswordForm,
-    SignupForm,
-    UserTokenForm,
-)
+from .forms import (AddEmailForm, ChangePasswordForm, LoginForm,
+                    ResetPasswordForm, ResetPasswordKeyForm, SetPasswordForm,
+                    SignupForm, UserTokenForm)
 from .models import EmailAddress, EmailConfirmation, EmailConfirmationHMAC
-from .utils import (
-    complete_signup,
-    get_login_redirect_url,
-    get_next_redirect_url,
-    logout_on_password_change,
-    passthrough_next_redirect_url,
-    perform_login,
-    sync_user_email_addresses,
-    url_str_to_user_pk,
-)
-
+from .utils import (complete_signup, get_login_redirect_url,
+                    get_next_redirect_url, logout_on_password_change,
+                    passthrough_next_redirect_url, perform_login,
+                    sync_user_email_addresses, url_str_to_user_pk)
 
 INTERNAL_RESET_URL_KEY = "set-password"
 INTERNAL_RESET_SESSION_KEY = "_password_reset_key"

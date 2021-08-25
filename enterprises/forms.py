@@ -1,26 +1,16 @@
-from django import forms
-from django.contrib.auth.models import User
-from django.utils.encoding import force_text
-from django.forms.widgets import TextInput
-
-from django.contrib.admin.widgets import FilteredSelectMultiple
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, Row, Column
+from crispy_forms.layout import Column, Layout, Row, Submit
+from django import forms
+from django.contrib.admin.widgets import FilteredSelectMultiple
+from django.contrib.auth.models import User
+from django.forms.widgets import TextInput
+from django.utils.encoding import force_text
+from django_select2.forms import (ModelSelect2TagWidget, ModelSelect2Widget,
+                                  Select2MultipleWidget, Select2Widget)
 
+from locations.models import City, Region, Suburb
 
-from django_select2.forms import (
-    ModelSelect2TagWidget, ModelSelect2Widget, Select2MultipleWidget,
-    Select2Widget
-)
-
-
-from .models import (
-            Industry, Enterprise, BranchType, Branch, PhoneNumber,
-            )
-
-from locations.models import (
-            Region, City, Suburb
-)
+from .models import Branch, BranchType, Enterprise, Industry, PhoneNumber
 
 
 class PhoneNumberForm(forms.ModelForm):

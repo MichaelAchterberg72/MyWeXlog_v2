@@ -5,7 +5,6 @@ import django
 from django.conf import settings
 from django.utils.cache import patch_vary_headers
 
-
 APPLE_SESSION_COOKIE_NAME = "apple-login-session"
 
 engine = import_module(settings.SESSION_ENGINE)

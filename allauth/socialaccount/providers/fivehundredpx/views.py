@@ -1,14 +1,11 @@
 import json
 
 from allauth.socialaccount.providers.oauth.client import OAuth
-from allauth.socialaccount.providers.oauth.views import (
-    OAuthAdapter,
-    OAuthCallbackView,
-    OAuthLoginView,
-)
+from allauth.socialaccount.providers.oauth.views import (OAuthAdapter,
+                                                         OAuthCallbackView,
+                                                         OAuthLoginView)
 
 from .provider import FiveHundredPxProvider
-
 
 API_BASE = "https://api.500px.com/v1"
 

@@ -3,10 +3,8 @@ import hmac
 import time
 
 from allauth.socialaccount import providers
-from allauth.socialaccount.helpers import (
-    complete_social_login,
-    render_authentication_error,
-)
+from allauth.socialaccount.helpers import (complete_social_login,
+                                           render_authentication_error)
 
 from .provider import TelegramProvider
 

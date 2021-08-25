@@ -1,8 +1,10 @@
 from django.contrib import admin
 
-from .models import (
-    Topic, Result, CourseType, Course, Lecturer, ClassMates, WorkClient, WorkExperience, WorkColleague, Superior, WorkCollaborator, Designation, Achievements, Awards, Publications, LicenseCertification, EmailRemindValidate
-    )
+from .models import (Achievements, Awards, ClassMates, Course, CourseType,
+                     Designation, EmailRemindValidate, Lecturer,
+                     LicenseCertification, Publications, Result, Superior,
+                     Topic, WorkClient, WorkCollaborator, WorkColleague,
+                     WorkExperience)
 
 
 @admin.register(EmailRemindValidate)

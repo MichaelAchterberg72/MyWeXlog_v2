@@ -1,26 +1,21 @@
 import hashlib
 import hmac
 import logging
-import requests
 from datetime import timedelta
 
+import requests
 from django.utils import timezone
 
 from allauth.socialaccount import app_settings, providers
-from allauth.socialaccount.helpers import (
-    complete_social_login,
-    render_authentication_error,
-)
+from allauth.socialaccount.helpers import (complete_social_login,
+                                           render_authentication_error)
 from allauth.socialaccount.models import SocialLogin, SocialToken
-from allauth.socialaccount.providers.oauth2.views import (
-    OAuth2Adapter,
-    OAuth2CallbackView,
-    OAuth2LoginView,
-)
+from allauth.socialaccount.providers.oauth2.views import (OAuth2Adapter,
+                                                          OAuth2CallbackView,
+                                                          OAuth2LoginView)
 
 from .forms import FacebookConnectForm
 from .provider import GRAPH_API_URL, GRAPH_API_VERSION, FacebookProvider
-
 
 logger = logging.getLogger(__name__)
 

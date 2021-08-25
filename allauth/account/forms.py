@@ -8,28 +8,20 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.contrib.sites.shortcuts import get_current_site
 from django.core import exceptions, validators
 from django.urls import reverse
-from django.utils.translation import gettext, gettext_lazy as _, pgettext
+from django.utils.translation import gettext
+from django.utils.translation import gettext_lazy as _
+from django.utils.translation import pgettext
 
-from ..utils import (
-    build_absolute_uri,
-    get_username_max_length,
-    set_form_field_order,
-)
+from ..utils import (build_absolute_uri, get_username_max_length,
+                     set_form_field_order)
 from . import app_settings
 from .adapter import get_adapter
 from .app_settings import AuthenticationMethod
 from .models import EmailAddress
-from .utils import (
-    filter_users_by_email,
-    get_user_model,
-    perform_login,
-    setup_user_email,
-    sync_user_email_addresses,
-    url_str_to_user_pk,
-    user_email,
-    user_pk_to_url_str,
-    user_username,
-)
+from .utils import (filter_users_by_email, get_user_model, perform_login,
+                    setup_user_email, sync_user_email_addresses,
+                    url_str_to_user_pk, user_email, user_pk_to_url_str,
+                    user_username)
 
 
 class EmailAwarePasswordResetTokenGenerator(PasswordResetTokenGenerator):

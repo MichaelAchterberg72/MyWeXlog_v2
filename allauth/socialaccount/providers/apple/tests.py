@@ -3,11 +3,10 @@ from datetime import datetime, timedelta
 from importlib import import_module
 from urllib.parse import parse_qs, urlparse
 
+import jwt
 from django.conf import settings
 from django.test.utils import override_settings
 from django.urls import reverse
-
-import jwt
 
 from allauth.socialaccount.tests import OAuth2TestsMixin
 from allauth.tests import MockedResponse, TestCase, mocked_response
@@ -15,7 +14,6 @@ from allauth.tests import MockedResponse, TestCase, mocked_response
 from .apple_session import APPLE_SESSION_COOKIE_NAME
 from .client import jwt_encode
 from .provider import AppleProvider
-
 
 # Generated on https://mkjwk.org/, used to sign and verify the apple id_token
 TESTING_JWT_KEYSET = {

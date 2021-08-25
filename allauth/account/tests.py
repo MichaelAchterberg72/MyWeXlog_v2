@@ -19,11 +19,8 @@ from django.urls import reverse
 from django.utils.timezone import now
 
 from allauth.account.forms import BaseSignupForm, ResetPasswordForm, SignupForm
-from allauth.account.models import (
-    EmailAddress,
-    EmailConfirmation,
-    EmailConfirmationHMAC,
-)
+from allauth.account.models import (EmailAddress, EmailConfirmation,
+                                    EmailConfirmationHMAC)
 from allauth.tests import Mock, TestCase, patch
 from allauth.utils import get_user_model, get_username_max_length
 
@@ -31,13 +28,8 @@ from . import app_settings
 from .adapter import get_adapter
 from .auth_backends import AuthenticationBackend
 from .signals import user_logged_in, user_logged_out
-from .utils import (
-    filter_users_by_username,
-    url_str_to_user_pk,
-    user_pk_to_url_str,
-    user_username,
-)
-
+from .utils import (filter_users_by_username, url_str_to_user_pk,
+                    user_pk_to_url_str, user_username)
 
 test_username_validators = [
     validators.RegexValidator(regex=r"^[a-c]+$", message="not abc", flags=0)

@@ -1,14 +1,10 @@
-from django.db import models
 from django.conf import settings
-
+from django.db import models
+from django_countries.fields import CountryField
 from tinymce.models import HTMLField
 
-from django_countries.fields import CountryField
-
-from enterprises.models import Enterprise, Industry, Branch
+from enterprises.models import Branch, Enterprise, Industry
 from locations.models import City, Region
-
-
 from Profile.utils import create_code9
 
 

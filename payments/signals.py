@@ -1,23 +1,16 @@
 #from datetime import datetime
-from django.utils import timezone
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-
-from users.models import CustomUser, CustomUserSettings, ExpandedView
-
-from paypal.standard.ipn.signals import valid_ipn_received
-
-from .tasks import (
-        SubscriptionAmountDifferentTask,
-        SubscriptionExpiredTask,
-        SubscriptionSignupTask,
-        SubscriptionCancelledTask,
-        SubscriptionFailedTask,
-        SubscriptionUpgradeRefund,
-)
-
 # from M2Crypto import BIO, SMIME, X509
 from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.utils import timezone
+
+from paypal.standard.ipn.signals import valid_ipn_received
+from users.models import CustomUser, CustomUserSettings, ExpandedView
+
+from .tasks import (SubscriptionAmountDifferentTask, SubscriptionCancelledTask,
+                    SubscriptionExpiredTask, SubscriptionFailedTask,
+                    SubscriptionSignupTask, SubscriptionUpgradeRefund)
 
 
 @receiver(valid_ipn_received)

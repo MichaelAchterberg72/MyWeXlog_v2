@@ -1,5 +1,6 @@
 from Profile.models import BriefCareerHistory
 
+
 def GetInfo(record):
     qs = BriefCareerHistory.objects.filter(talent=record)
     print(qs)

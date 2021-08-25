@@ -13,7 +13,8 @@ from six import text_type
 from six.moves.urllib.parse import urlencode
 
 from paypal.standard.ipn.models import PayPalIPN
-from paypal.standard.ipn.signals import invalid_ipn_received, valid_ipn_received
+from paypal.standard.ipn.signals import (invalid_ipn_received,
+                                         valid_ipn_received)
 from paypal.standard.ipn.views import CONTENT_TYPE_ERROR
 from paypal.standard.models import ST_PP_CANCELLED
 

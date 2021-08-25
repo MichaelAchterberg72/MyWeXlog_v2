@@ -1,8 +1,6 @@
 from django.contrib import admin
 
-from .models import (
-    CorporateHR,
-    )
+from .models import CorporateHR
 
 
 @admin.register(CorporateHR)

@@ -1,23 +1,20 @@
 import json
-import requests
 from datetime import timedelta
 
+import jwt
+import requests
 from django.http import HttpResponseNotAllowed, HttpResponseRedirect
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.http import urlencode
 from django.views.decorators.csrf import csrf_exempt
 
-import jwt
-
 from allauth.socialaccount.adapter import get_adapter
 from allauth.socialaccount.models import SocialToken
 from allauth.socialaccount.providers.oauth2.client import OAuth2Error
-from allauth.socialaccount.providers.oauth2.views import (
-    OAuth2Adapter,
-    OAuth2CallbackView,
-    OAuth2LoginView,
-)
+from allauth.socialaccount.providers.oauth2.views import (OAuth2Adapter,
+                                                          OAuth2CallbackView,
+                                                          OAuth2LoginView)
 from allauth.utils import build_absolute_uri, get_request_param
 
 from .apple_session import add_apple_session, persist_apple_session

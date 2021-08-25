@@ -1,28 +1,17 @@
 from django.urls import re_path
-from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
+from django.views.generic.list import ListView
 
 from schedule.feeds import CalendarICalendar, UpcomingEventsFeed
 from schedule.models import Calendar
 from schedule.periods import Day, Month, Week, Year
-from schedule.views import (
-    CalendarByPeriodsView,
-    CalendarView,
-    CalendarListView,
-    CancelOccurrenceView,
-    CreateEventView,
-    CreateOccurrenceView,
-    DeleteEventView,
-    EditEventView,
-    EditOccurrenceView,
-    EventView,
-    FullCalendarView,
-    OccurrencePreview,
-    OccurrenceView,
-    api_move_or_resize_by_code,
-    api_occurrences,
-    api_select_create,
-)
+from schedule.views import (CalendarByPeriodsView, CalendarListView,
+                            CalendarView, CancelOccurrenceView,
+                            CreateEventView, CreateOccurrenceView,
+                            DeleteEventView, EditEventView, EditOccurrenceView,
+                            EventView, FullCalendarView, OccurrencePreview,
+                            OccurrenceView, api_move_or_resize_by_code,
+                            api_occurrences, api_select_create)
 
 urlpatterns = [
 #    re_path(r"^$", ListView.as_view(model=Calendar), name="calendar_list"),

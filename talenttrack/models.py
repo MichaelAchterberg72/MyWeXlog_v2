@@ -1,39 +1,33 @@
-from django.db import models
-from django.conf import settings
-from django.utils import timezone
-from django.core.validators import FileExtensionValidator
-from time import time
 import datetime
+from decimal import Decimal
+from io import BytesIO, StringIO
 from random import random
+from time import time
+
+from django.conf import settings
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.core.validators import FileExtensionValidator
+from django.db import models
+from django.db.models import Count, F, Q, Sum
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
-from django.db.models import Count, Sum, F, Q
-from decimal import Decimal
-
-from smartfields import fields, dependencies
+from django.utils import timezone
+from django_countries.fields import CountryField
+from pdf2image import convert_from_bytes, convert_from_path
+from pdf2image.exceptions import (PDFInfoNotInstalledError, PDFPageCountError,
+                                  PDFSyntaxError)
+from PIL import Image
+from smartfields import dependencies, fields
 from smartfields.dependencies import FileDependency
 from smartfields.processors import ImageProcessor
 
-
-from Profile.utils import create_code9
-
-
-from enterprises.models import Enterprise, Industry, Branch
-from project.models import ProjectData, ProjectPersonalDetails
+from booklist.models import Author, Genre, Publisher
 from db_flatten.models import SkillTag
-from booklist.models import Publisher, Author, Genre
-from django_countries.fields import CountryField
+from enterprises.models import Branch, Enterprise, Industry
 from locations.models import Region
+from Profile.utils import create_code9
+from project.models import ProjectData, ProjectPersonalDetails
 from WeXlog.storage_backends import PrivateMediaStorage
-
-from pdf2image import convert_from_path, convert_from_bytes
-from pdf2image.exceptions import (
-    PDFInfoNotInstalledError,
-    PDFPageCountError,
-    PDFSyntaxError )
-from PIL import Image
-from io import StringIO, BytesIO
-from django.core.files.uploadedfile import InMemoryUploadedFile
 
 CONFIRM = (
     ('S','Select'),

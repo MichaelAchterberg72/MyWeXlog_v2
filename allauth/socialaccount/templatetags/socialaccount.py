@@ -4,7 +4,6 @@ from django.template.defaulttags import token_kwargs
 from allauth.socialaccount import providers
 from allauth.utils import get_request_param
 
-
 register = template.Library()
 
 

@@ -1,8 +1,10 @@
 from django.contrib import admin
 
-from .models import (
-    Email, SiteName, OnlineRegistrations, Profile, PhysicalAddress, PostalAddress, FileUpload, PhoneNumber, IdentificationDetail, IdType, PassportDetail, LanguageTrack, BriefCareerHistory, WillingToRelocate, ProfileImages
-    )
+from .models import (BriefCareerHistory, Email, FileUpload,
+                     IdentificationDetail, IdType, LanguageTrack,
+                     OnlineRegistrations, PassportDetail, PhoneNumber,
+                     PhysicalAddress, PostalAddress, Profile, ProfileImages,
+                     SiteName, WillingToRelocate)
 
 
 @admin.register(ProfileImages)

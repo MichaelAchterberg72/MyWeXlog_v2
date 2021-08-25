@@ -4,7 +4,6 @@ from django.urls import reverse
 from allauth.tests import TestCase, patch
 from allauth.utils import get_user_model
 
-
 SOCIALACCOUNT_PROVIDERS = {"persona": {"AUDIENCE": "https://www.example.com:433"}}
 
 

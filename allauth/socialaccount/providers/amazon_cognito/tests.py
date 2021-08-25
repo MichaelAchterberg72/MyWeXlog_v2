@@ -4,12 +4,10 @@ from django.test import override_settings
 
 from allauth.account.models import EmailAddress
 from allauth.socialaccount.models import SocialAccount
-from allauth.socialaccount.providers.amazon_cognito.provider import (
-    AmazonCognitoProvider,
-)
-from allauth.socialaccount.providers.amazon_cognito.views import (
-    AmazonCognitoOAuth2Adapter,
-)
+from allauth.socialaccount.providers.amazon_cognito.provider import \
+    AmazonCognitoProvider
+from allauth.socialaccount.providers.amazon_cognito.views import \
+    AmazonCognitoOAuth2Adapter
 from allauth.socialaccount.tests import OAuth2TestsMixin
 from allauth.tests import MockedResponse, TestCase
 

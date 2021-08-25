@@ -1,15 +1,12 @@
-from django.db import models
-from decimal import getcontext, Decimal
-from django.db.models.signals import post_save
+from decimal import Decimal, getcontext
 
+from django.db import models
+from django.db.models.signals import post_save
 from django_countries.fields import CountryField
 from phonenumber_field.modelfields import PhoneNumberField
 
-
-from locations.models import Region, City, Suburb
 from db_flatten.models import PhoneNumberType
-
-
+from locations.models import City, Region, Suburb
 from Profile.utils import create_code9
 
 

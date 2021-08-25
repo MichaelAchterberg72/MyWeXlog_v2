@@ -1,5 +1,4 @@
 from django.core.exceptions import PermissionDenied
-
 from django.db.models import Q
 
 from mod_corporate.models import CorporateStaff

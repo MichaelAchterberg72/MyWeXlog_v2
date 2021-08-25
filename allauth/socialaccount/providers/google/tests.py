@@ -2,7 +2,6 @@
 from __future__ import absolute_import, unicode_literals
 
 from importlib import import_module
-from requests.exceptions import HTTPError
 
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -10,6 +9,7 @@ from django.core import mail
 from django.test.client import RequestFactory
 from django.test.utils import override_settings
 from django.urls import reverse
+from requests.exceptions import HTTPError
 
 from allauth.account import app_settings as account_settings
 from allauth.account.adapter import get_adapter
@@ -59,9 +59,8 @@ class GoogleTests(OAuth2TestsMixin, TestCase):
         )
 
     def test_google_compelete_login_401(self):
-        from allauth.socialaccount.providers.google.views import (
-            GoogleOAuth2Adapter,
-        )
+        from allauth.socialaccount.providers.google.views import \
+            GoogleOAuth2Adapter
 
         class LessMockedResponse(MockedResponse):
             def raise_for_status(self):

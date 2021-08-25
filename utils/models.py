@@ -1,8 +1,9 @@
 from django.db import models
 from django.template import loader
 from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext_lazy
 from django.utils.translation import gettext as _
+from django.utils.translation import ugettext_lazy
+
 
 # Create your models here.
 class MetaTagsMixin(models.Model):

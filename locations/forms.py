@@ -1,18 +1,12 @@
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Column, Layout, Row, Submit
 from django import forms
 from django.contrib.auth.models import User
 from django.core.exceptions import NON_FIELD_ERRORS
+from django_select2.forms import (ModelSelect2TagWidget, ModelSelect2Widget,
+                                  Select2MultipleWidget, Select2Widget)
 
-
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, Row, Column
-from django_select2.forms import (
-    ModelSelect2TagWidget, ModelSelect2Widget, Select2MultipleWidget,
-    Select2Widget
-)
-
-from . models import (
-        Region, City, Suburb, Currency
-)
+from .models import City, Currency, Region, Suburb
 
 
 #>>> Select 2

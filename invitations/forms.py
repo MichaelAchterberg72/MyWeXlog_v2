@@ -1,13 +1,11 @@
 from django import forms
+from django_select2.forms import (ModelSelect2MultipleWidget,
+                                  ModelSelect2TagWidget, ModelSelect2Widget,
+                                  Select2MultipleWidget, Select2Widget)
 
-from .models import Invitation
 from enterprises.models import Branch
 
-
-from django_select2.forms import (
-    ModelSelect2TagWidget, ModelSelect2Widget, Select2MultipleWidget,
-    Select2Widget, ModelSelect2MultipleWidget, Select2MultipleWidget
-)
+from .models import Invitation
 
 
 class BranchSearchFieldMixin:

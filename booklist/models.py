@@ -1,9 +1,9 @@
-from django.db import models
 from django.conf import settings
+from django.db import models
 
 from db_flatten.models import SkillTag
-
 from Profile.utils import create_code9
+
 
 class Author(models.Model):
     name = models.CharField('Author name', max_length=250, unique=True)

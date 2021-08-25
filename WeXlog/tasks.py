@@ -52,7 +52,7 @@ from invitations.models import Invitation
 #@periodic_task(run_every=(crontab(minute='*/2')), name="UpdateSubscriptionPaidDate", ignore_result=True)
 @periodic_task(run_every=(crontab(hour=0, minute=0)), name="UpdateSubscriptionPaidDate", ignore_result=True)
 def UpdateSubscriptionPaidDate():
-
+    now = timezone.now()
     monthly = datetime.timedelta(days=31, seconds=0, microseconds=0, milliseconds=0, minutes=0, hours=0)
     six_monthly = datetime.timedelta(days=183, seconds=0, microseconds=0, milliseconds=0, minutes=0, hours=0)
     twelve_monthly = datetime.timedelta(days=366, seconds=0, microseconds=0, milliseconds=0, minutes=0, hours=0)
@@ -62,9 +62,10 @@ def UpdateSubscriptionPaidDate():
     for u in users:
         username = CustomUser.objects.get(pk=u.id)
         instance2 = ExpandedView.objects.get(talent__id=u.id)
+
         if username.paid == True:
             if username.paid_type == 1:
-                if username.date_joined <= timezone.now() - monthly:
+                if username.date_joined <= now - monthly:
                     if username.paid_date == None or username.paid_date <= timezone.now() - monthly:
                         username.paid = False
                         username.subscription = 0

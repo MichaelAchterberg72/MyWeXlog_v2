@@ -1,8 +1,6 @@
 from django.contrib import admin
 
-from .models import (
-    FeedBack, FeedBackActions, Notices, NoticeRead
-    )
+from .models import FeedBack, FeedBackActions, NoticeRead, Notices
 
 
 @admin.register(FeedBack)

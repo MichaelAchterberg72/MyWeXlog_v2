@@ -3,11 +3,9 @@ import requests
 
 from allauth.socialaccount import app_settings
 from allauth.socialaccount.providers.keycloak.provider import KeycloakProvider
-from allauth.socialaccount.providers.oauth2.views import (
-    OAuth2Adapter,
-    OAuth2CallbackView,
-    OAuth2LoginView,
-)
+from allauth.socialaccount.providers.oauth2.views import (OAuth2Adapter,
+                                                          OAuth2CallbackView,
+                                                          OAuth2LoginView)
 
 
 class KeycloakOAuth2Adapter(OAuth2Adapter):

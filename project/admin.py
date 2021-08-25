@@ -1,8 +1,7 @@
 from django.contrib import admin
 
-from .models import (
-    ProjectData, ProjectPersonalDetails
-    )
+from .models import ProjectData, ProjectPersonalDetails
+
 
 @admin.register(ProjectPersonalDetails)
 class ProjectPersonalDetailsAdmin(admin.ModelAdmin):

@@ -1,30 +1,23 @@
 from __future__ import absolute_import, unicode_literals
-from celery import Celery
-from celery.task import task
-from celery.task import Task
-from celery.decorators import task
-from celery import shared_task
-from tasks.celery import app as celery_app
+
+import os
+from datetime import date, datetime
 
 import celery
-
-from django.conf import settings
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
-from django.template.loader import get_template
-
 import sendgrid
-import os
+from celery import Celery, shared_task
+from celery.decorators import task
+from celery.task import Task, task
+from django.conf import settings
+from django.template.loader import get_template, render_to_string
+from django.utils.html import strip_tags
 from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import (Mail, Subject, To, ReplyTo, SendAt, Content, From, CustomArg, Header)
-
-
-from users.models import CustomUserSettings, CustomUser
+from sendgrid.helpers.mail import (Content, CustomArg, From, Header, Mail,
+                                   ReplyTo, SendAt, Subject, To)
 
 from paypal.standard.models import PayPalStandardBase
-
-from datetime import datetime
-from datetime import date
+from tasks.celery import app as celery_app
+from users.models import CustomUser, CustomUserSettings
 
 
 @celery_app.task(name="payments.FreeMonthExpiredTask")

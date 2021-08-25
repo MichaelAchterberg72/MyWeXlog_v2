@@ -1,9 +1,8 @@
-from django.db import models
 from django.conf import settings
+from django.db import models
 
-
-from Profile.utils import create_code9
 from enterprises.models import Branch, Enterprise
+from Profile.utils import create_code9
 
 
 class CorporateHR(models.Model):
