@@ -22,7 +22,7 @@
       <div class="card-body">
       <h4 class="">MyWeXlog Skills</h4>
       <p>On this page you can see skills that have been logged on MyWeXlog as well as skills that are in demand from posted vacancies.</p>
-      <p>There are {{ tally }} skills currently listed.</p>
+      <p>There are {{ tally }} skills currently listed, totalling {{ total_hours.total_sum|intcomma }} confirmed hours.</p>
       </div>
     </div>
     <br>
@@ -30,8 +30,23 @@
       <div class="col-sm-6">
         <div class="card card-shadow">
           <div class="card-body">
+            <div class="float-right">
+              {% if order == 'alphabetically' %}
+                <a href="{% url 'Flatten:SortTags' %}" data-toggle="tooltip" title="Sort  from Max to Min">
+                  <i class="fa fa-sort" aria-hidden="true" style="font-size:25px;color:black"></i>
+                </a>
+              {% else %}
+                <a href="{% url 'Flatten:ListTags' %}" data-toggle="tooltip" title="Sort alphabetically">
+                  <i class="fa fa-sort" aria-hidden="true" style="font-size:25px;color:black"></i>
+                </a>
+              {% endif %}
+            </div>
             <h5 class="card-title">Demanded Skills</h5>
             <p>
+              <small>
+                This list is sorted {{ order }}.
+              </small>
+              <br>
               <small>
                 This is a count of the times a skill has been listed as being needed in a vacancy.
               </small>
@@ -53,8 +68,23 @@
       <div class="col-sm-6">
         <div class="card card-shadow">
           <div class="card-body">
+            <div class="float-right">
+              {% if order == 'alphabetically' %}
+                <a href="{% url 'Flatten:SortTags' %}" data-toggle="tooltip" title="Sort  from Max to Min">
+                  <i class="fa fa-sort" aria-hidden="true" style="font-size:25px;color:black"></i>
+                </a>
+              {% else %}
+                <a href="{% url 'Flatten:ListTags' %}" data-toggle="tooltip" title="Sort alphabetically">
+                  <i class="fa fa-sort" aria-hidden="true" style="font-size:25px;color:black"></i>
+                </a>
+              {% endif %}
+            </div>
             <h5 class="card-title">Listed Skills</h5>
             <p>
+              <small>
+                This list is sorted {{ order }}.
+              </small>
+              <br>
               <small>
                 These are the skills that are currently listed in the MyWeXlog environment.
               </small>
@@ -67,7 +97,7 @@
               <h5 class="text-center"><strong>Skill ( Confirmed Hours )</strong></h5>
               <ul class="list-group" id="exists">
                 {% for item in hours %}
-                  <li class="list-group-item"><strong>{{ item.skill }}</strong>  ( {{ item.hours_sum }} )</li>
+                  <li class="list-group-item"><strong>{{ item.skill }}</strong>  ( {{ item.hours_sum|intcomma }} )</li>
                 {% endfor %}
               </ul>
           </div>

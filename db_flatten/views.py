@@ -79,16 +79,43 @@ def get_skill_id(request):
 
 @login_required()
 def ListTagsView(request):
+    '''List sorted alphabetically for both demand and confirmed hours '''
     list = SkillTag.objects.all().order_by('skill')
     tally = list.count()
 
     hours = list.filter(experience__score__gte=3).annotate(
                                                            hours_sum = Sum('experience__hours_worked')
                                                            )
+    total_hours = list.filter(experience__score__gte=3).aggregate(
+                                                                  total_sum=Sum('experience__hours_worked')
+                                                                  )
     demand = list.annotate(
                            demand_count = Count('skillrequired__scope')
                            )
+    order = "alphabetically"
 
     template = 'db_flatten/skill_list.html'
-    context = {'list': list, 'hours': hours, 'tally': tally, 'demand': demand}
+    context = {'list': list, 'hours': hours, 'tally': tally, 'demand': demand, 'total_hours': total_hours, 'order': order}
+    return render(request, template, context)
+
+
+@login_required()
+def ListTagsSortView(request):
+    '''List sorted from max to min for both demand and confirmed hours '''
+    list = SkillTag.objects.all()
+    tally = list.count()
+
+    hours = list.filter(experience__score__gte=3).annotate(
+                                                           hours_sum = Sum('experience__hours_worked')
+                                                           ).order_by("-hours_sum")
+    total_hours = list.filter(experience__score__gte=3).aggregate(
+                                                                  total_sum=Sum('experience__hours_worked')
+                                                                  )
+    demand = list.annotate(
+                           demand_count = Count('skillrequired__scope')
+                           ).order_by("-demand_count")
+    order = "from Max to Min"
+
+    template = 'db_flatten/skill_list.html'
+    context = {'list': list, 'hours': hours, 'tally': tally, 'demand': demand, 'total_hours': total_hours, 'order': order}
     return render(request, template, context)
