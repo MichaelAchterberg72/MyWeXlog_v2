@@ -166,12 +166,15 @@ class Profile(models.Model):
     def save(self, *args, **kwargs):
         if self.alias is None or self.alias == "":
             self.alias = create_code7(self)
+
+        fullname = f'{self.talent.first_name} {self.talent.last_name} - Profile incomplete'
+
         inject_fn = f'{self.f_name}'
         inject_ln = f'{self.l_name}'
         inject_al = f'{self.alias}'
         target = CustomUser.objects.filter(pk=self.talent.id)
         if self.f_name is None or self.f_name =="":
-            target.update(alias=inject_al, alphanum=inject_al, display_text=inject_al)
+            target.update(alias=inject_al, alphanum=inject_al, display_text=fullname)
         else:
             target.update(alias=inject_al, first_name=inject_fn, last_name=inject_ln)
 
