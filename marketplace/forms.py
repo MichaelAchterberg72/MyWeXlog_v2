@@ -294,8 +294,8 @@ class TalentRequiredForm(forms.ModelForm):
             'currency': CurrencySelect2Widget(),
             'designation': DesignationSelect2Widget(),
             'language': LanguageWidget(),
-            'date_deadline': DateInput(attrs={'min': timezone.now().date()}),
-            'bid_closes': DateInput(attrs={'min': timezone.now().date()}),
+            'date_deadline': DateInput(),
+            'bid_closes': DateInput(),
             'certification': CertModelSelect2MultipleWidget(),
         }
         labels = {
