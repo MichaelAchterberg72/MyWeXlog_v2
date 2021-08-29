@@ -1,16 +1,129 @@
 {% extends "base_home.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
 {% load i18n %}
 
 {% block content %}
-<b>{% trans "Create or change occurrence. All fields are required." %}</b>
+{% block Style %}
+
+<script type="text/javascript" src="{% static 'admin/js/core.js' %}"></script>
+
+{% endblock Style %}
+{% include "schedule/calendar_base.html" %}
+
+<div class="row row-centered">
+</div>
 <br><br>
-<form action="" method="post">
+<div class="card card-shadow col-sm-6 mx-auto">
+  <div class="card-body">
+<h3>{% trans "Create or change occurrence. All fields are required." %}</h3>
+<br><br>
+<form action="" method="post" id="eventForm" data-provider-url="{% url 'AJAX_GetEventTaskSkillsID' %}" action="{{ AJAX_GetEventTaskSkillsID }}">
   {% csrf_token %}
   <table>
-    {{ form.as_table }}
+    <div class="form-row">
+      <div class="col-md-6">
+        {{ form.start|as_crispy_field }}
+      </div>
+      <div class="col-md-6">
+        {{ form.end|as_crispy_field }}
+      </div>
+    </div>
+    {{ form.title|as_crispy_field }}
+    {{ form.description|as_crispy_field }}
+    {{ form.companybranch|as_crispy_field }}
+    <p>
+      <a href="{% url 'Enterprise:FullBranchAddPopup' %}" id='add_companybranch' onclick='return showAddPopup(this);'>
+      <img src = "{% static 'images/icon-addlink.svg' %}">
+        Add Enterprise & or Branch
+      </a>
+    </p>
+    {{ form.project_data|as_crispy_field }}
+      <p>
+        <a href="{% url 'Project:ProjectPersonalAddPop' %}" id='add_project' onclick='return showAddPopup(this);'>
+        <img src = "{% static 'images/icon-addlink.svg' %}">
+          Add Project
+        </a>
+      </p>
+    {{ form.task|as_crispy_field }}
+    {% if form.instance.project_data.slug %}
+    <p><a href="{% url 'Project:AddProjectTaskPopup' form.instance.project_data.slug %}" id='add_task' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">
+          Add Task
+    </a></p>
+    {% endif %}
+    {% if not form.instance.project_data.slug %}
+    <div id="projectskill" data-url="{% url 'AJAX_GetEventProjectDataSlug' %}">
+      <p><a id="projectSkillHref" href="#" id='add_task' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">
+            Add Task
+      </a></p>
+    </div>
+    {% endif %}
+    {{ form.skills|as_crispy_field }}
+
+
+    <script>
+      $(document).ready(function () {
+        $("#clear-skills").on("click", function () {
+            $('#id_skills').val(null).trigger("change");
+        });
+
+        $('#id_project_data').on('select2:select', function (e) {
+            var projectDataId = e.params.data.id;
+            var url = $("#projectskill").attr("data-url");
+
+            $.get(url, {'ppid': projectDataId}, function(data){
+
+              $.each(data, function(index, value) {
+                console.log(value.slug);
+                $("#projectSkillHref").attr("href", "{{request.scheme}}://{{request.META.HTTP_HOST}}/project/popup/add/task/"+value.slug+"/");
+            });
+          });
+        });
+
+        $('#id_task').on('select2:select', function (e) {
+            var taskId = e.params.data.id;
+            var url = $("#eventForm").attr("data-provider-url");
+
+            $.get(url, {'task': taskId}, function(data){
+                $("#id_skills").val(null).trigger("change");
+
+                $.each(data, function(index, value) {
+                  var $option = $("<option selected></option>").val(value.skills__id).text(value.skills__skill);
+                  $("#id_skills").append($option).trigger('change');
+                });
+          });
+        });
+      });
+    </script>
+      <p><a href="{% url 'Flatten:SkillAddPop' %}" id='add_skill' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">
+            Add Skill
+      </a></p>
+    {{ form.end_recurring_period|as_crispy_field }}
+
   </table>
   <br>
-  <input type="submit" value="{% trans "Save" %}">
-  <input type="submit" name="cancel" value="Cancel">
+  <input class="btn btn-primary" type="submit" value="{% trans "Save" %}">
+  <input class="btn btn-primary" type="submit" name="cancel" value="Cancel">
 </form>
+</div>
+</div>
+<!-- code for popups -->
+<script type="text/javascript">
+function showAddPopup(triggeringLink) {
+    var name = triggeringLink.id.replace(/^add_/, '');
+    href = triggeringLink.href;
+    var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes');
+    win.focus();
+    return false;
+}
+
+function closePopup(win, newID, newRepr, id) {
+    $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
+    win.close();
+}
+
+window.onerror = function (msg) {
+  $("body").attr("JSError", msg);
+}
+</script>
 {% endblock %}

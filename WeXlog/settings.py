@@ -240,7 +240,7 @@ CSP_DEFAULT_SRC = (
     )#app_config
 
 CSP_SCRIPT_SRC = (
-    "'self'", "'unsafe-inline'", '127.0.0.1', '107.191.57.249', 'code.jquery.com', 'maxcdn.bootstrapcdn.com', 'kit.fontawesome.com', 'app.mywexlog.dev', 'mywexlog.dev', 'cdnjs.cloudflare.com', 'maps.googleapis.com', 'bookstrapcdn.com', 'cdn.jsdelivr.net', 'cdn.jsdelivr.net', 'ajax.googleapis.com', 'cdnjs.cloudflare.com', 'apis.google.com', 'https://www.gstatic.com', 'tarruda.github.com', 'dot-test-machterberg.s3.amazonaws.com', 'netdna.bootstrapcdn.com', 'cdn.tiny.cloud',
+    "'self'", "'unsafe-inline'", '127.0.0.1', '107.191.57.249', 'code.jquery.com', 'maxcdn.bootstrapcdn.com', 'kit.fontawesome.com', 'app.mywexlog.dev', 'mywexlog.dev', 'cdnjs.cloudflare.com', 'maps.googleapis.com', 'bookstrapcdn.com', 'cdn.jsdelivr.net', 'cdn.jsdelivr.net', 'ajax.googleapis.com', 'cdnjs.cloudflare.com', 'apis.google.com', 'https://www.gstatic.com', 'tarruda.github.com', 'dot-test-machterberg.s3.amazonaws.com', 'netdna.bootstrapcdn.com', 'cdn.tiny.cloud', 'code.jquery.com',
     )#app_config
 CSP_IMG_SRC = (
     "'self'", '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev', 'dot-test-machterberg.s3.amazonaws.com', 'cdn.tiny.cloud', 'sp.tinymce.com',
@@ -485,6 +485,11 @@ SENDGRID_API_KEY = 'SG.n0_TaC5wRU6O9WZwySPq3g.FYnOrth53eAD1zSl1bPEbbHz9LJTU1vXnD
 SENDGRID_FROM_EMAIL = 'mywexlog@mywexlog.com'
 # SENDGRID_FROM_EMAIL = 'mywexloginfo@mywexlog.dev'    #
 # SENDGRID_FROM_EMAIL = 'machterberg@devoptec.com'
+
+# Scheduler variables
+# CHECK_EVENT_PERM_FUNC
+SCHEDULER_PREVNEXT_LIMIT_SECONDS = 622080000
+
 
 #TINYMCE_JS_URL = os.path.join(STATIC_URL, "tiny_mce/tiny_mce_src.js")
 TINYMCE_JS_ROOT = os.path.join(STATIC_ROOT, "tinymce")

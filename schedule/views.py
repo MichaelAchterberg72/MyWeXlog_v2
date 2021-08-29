@@ -166,7 +166,7 @@ class OccurrenceMixin(CalendarViewPermissionMixin, TemplateResponseMixin):
 
 
 class OccurrenceEditMixin(
-    CancelButtonMixin, OccurrenceEditPermissionMixin, OccurrenceMixin
+    CancelButtonMixin, OccurrenceMixin#,OccurrenceEditPermissionMixin
 ):
     def get_initial(self):
         initial_data = super().get_initial()
@@ -193,6 +193,13 @@ class EditOccurrenceView(OccurrenceEditMixin, UpdateView):
 
 class CreateOccurrenceView(OccurrenceEditMixin, CreateView):
     template_name = "schedule/edit_occurrence.html"
+
+    def get_object(self, event_id):
+        event = Event.objects.get(pk=event_id)
+        self.object, created = Occurrence.objects.get_or_create(
+            event=event
+        )
+        return obj
 
 
 class CancelOccurrenceView(OccurrenceEditMixin, ModelFormMixin, ProcessFormView):

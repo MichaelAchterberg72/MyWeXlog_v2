@@ -10,6 +10,9 @@
         <a href="#" onclick="openEditDialog(this, '{{ edit_occurrence }}?next={{ here }}', '{{ edit_event }}?next={{ here }}', event);">
           <i class="fa fa-pencil" aria-hidden="true" style="color:#ffffff;"></i>
         </a>
+        <a href="#" onclick="openURL('{{ edit_occurrence }}?next={{ here }}', event);">O
+          <i class="fa fa-pencil" aria-hidden="true" style="color:#ffffff;"></i>
+        </a>
     {% endif %}
   {% else %}
     <a href="#" onclick="openURL('{{ edit_event }}?next={{ here }}', event);">

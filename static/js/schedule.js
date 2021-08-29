@@ -25,3 +25,8 @@ function openURL(url, event){
     event.stopPropagation();
     window.location=url;
 }
+
+function openOccuranceEditURL(node, occurrence_url){
+    event.stopPropagation();
+    window.location=occurrence_url;
+}
