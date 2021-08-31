@@ -198,7 +198,6 @@ class ProjectDataJsonView(AutoResponseView):
 
 @login_required()
 def ProjectListHome(request):
-<<<<<<< HEAD
     projects = ProjectData.objects.all().annotate(
                                   sum=Sum('workexperience__hours_worked'),
                                   count=Count('workexperience__company'),
@@ -206,10 +205,6 @@ def ProjectListHome(request):
 
     pcount = projects.aggregate(sum_p=Count('name'))
 
-=======
-    pcount = ProjectData.objects.all().aggregate(sum_p=Count('name'))
-    projects = ProjectData.objects.all().order_by('company')
->>>>>>> origin/2021-08-Mike
 
     try:
         page = int(request.GET.get('page', 1))
