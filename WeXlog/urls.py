@@ -39,6 +39,7 @@ urlpatterns = [
     path('treeMP/', include('nestedsettree.urls', namespace='Structure')),
     path('appcontrol/', include('AppControl.urls', namespace='AppControl')),
     path('corporate/', include('mod_corporate.urls', namespace='Corporate')),
+    path('skills/', include('skills.urls', namespace='Skills')),
     path('tinymce/', include('tinymce.urls')),
     path('admin/filebrowser/', site.urls),
     path('error/', TemplateView.as_view(template_name="error_screen.html"), name='404Error'),

@@ -21,8 +21,16 @@
     <div class="card card-shadow text-center">
       <div class="card-body">
       <h4 class="">MyWeXlog Skills</h4>
-      <p>On this page you can see skills that have been logged on MyWeXlog as well as skills that are in demand from posted vacancies.</p>
-      <p>There are {{ tally }} skills currently listed, totalling {{ total_hours.total_sum|intcomma }} confirmed hours.</p>
+      <p>
+        On this page you can see skills that have been logged on MyWeXlog as well as skills that are in demand from posted vacancies.
+      </p>
+      <p>
+        There are {{ tally }} skills currently listed, totalling {{ total_hours.total_sum|intcomma }} confirmed hours.
+        <br>
+        <small>
+          (Claimed between {{ total_hours.min|date:"j F Y" }} and {{ total_hours.max|date:"j F Y" }})
+        </small>
+      </p>
       </div>
     </div>
     <br>
@@ -55,11 +63,13 @@
               <input type="text" id="searchD" placeholder="Search..." data-toggle="tooltip" title="Search this list for a skill. Select the checkbox to the right to synchronise the demand list.">
               <input type="checkbox" id="linkD" class="format_chkbox" data-toggle="tooltip" title="Synchronise the lists">
             </div>
-            <br>
-              <h5 class="text-center"><strong>Skill ( Occurrence )</strong></h5>
+            <br><br>
+              <h5 class="text-left"><strong>Skill ( Occurrence ) & Date Range</strong></h5>
               <ul id="demand" class="list-group">
                 {% for item in demand %}
-                  <li class="list-group-item"><strong>{{ item.skill }}</strong>  ( {{ item.demand_count }} )</li>
+                  {% if item.demand_count > 0 %}
+                    <li class="list-group-item"><strong>{{ item.skill }}</strong>  ( {{ item.demand_count }} )<br><small>{{ item.demand_min|date:"j M Y" }} thru {{ item.demand_max|date:"j M Y" }}</small> <span class="float-right"><a href="{% url 'Skills:Skill_Detail' item.id %}"><i class="fa fa-map-o" aria-hidden="true"></i></a></span></li>
+                  {% endif %}
                 {% endfor %}
               </ul>
           </div>
@@ -93,11 +103,11 @@
               <input type="text" id="searchE" placeholder="Search..." data-toggle="tooltip" title="Search this list for a skill. Select the checkbox to the right to synchronise the demand list.">
               <input type="checkbox" id="linkE"  class="format_chkbox" data-toggle="tooltip" title="Synchronise the lists">
             </div>
-            <br>
-              <h5 class="text-center"><strong>Skill ( Confirmed Hours )</strong></h5>
+            <br><br>
+              <h5 class="text-left"><strong>Skill ( Confirmed Hours ) & Date Range</strong></h5>
               <ul class="list-group" id="exists">
                 {% for item in hours %}
-                  <li class="list-group-item"><strong>{{ item.skill }}</strong>  ( {{ item.hours_sum|intcomma }} )</li>
+                  <li class="list-group-item"><strong>{{ item.skill }}</strong>  ( {{ item.hours_sum|intcomma }} )<br><small>{{ item.skill_min|date:"j M Y" }} thru {{ item.skill_max|date:"j M Y" }}</small><span class="float-right"><a href="{% url 'Skills:Skill_Detail' item.id %}"><i class="fa fa-map-o" aria-hidden="true"></i></a></span></li>
                 {% endfor %}
               </ul>
           </div>

@@ -3,7 +3,7 @@ import json
 from csp.decorators import csp_exempt
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
-from django.db.models import Count, F, Q, Sum
+from django.db.models import Count, F, Q, Sum, Min, Max
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
@@ -79,13 +79,19 @@ def ListTagsView(request):
     tally = list.count()
 
     hours = list.filter(experience__score__gte=3).annotate(
-                                                           hours_sum = Sum('experience__hours_worked')
+                                                           hours_sum = Sum('experience__hours_worked'),
+                                                           skill_min=Min('experience__date_from'),
+                                                           skill_max=Max('experience__date_to')
                                                            )
     total_hours = list.filter(experience__score__gte=3).aggregate(
-                                                                  total_sum=Sum('experience__hours_worked')
+                                                                  total_sum=Sum('experience__hours_worked'),
+                                                                  min=Min('experience__date_from'),
+                                                                  max=Max('experience__date_to')
                                                                   )
     demand = list.annotate(
-                           demand_count = Count('skillrequired__scope')
+                           demand_count = Count('skillrequired__scope'),
+                           demand_min=Min('skillrequired__scope__date_entered'),
+                           demand_max=Max('skillrequired__scope__date_entered')
                            )
     order = "alphabetically"
 
@@ -101,13 +107,19 @@ def ListTagsSortView(request):
     tally = list.count()
 
     hours = list.filter(experience__score__gte=3).annotate(
-                                                           hours_sum = Sum('experience__hours_worked')
+                                                           hours_sum = Sum('experience__hours_worked'),
+                                                           skill_min=Min('experience__date_from'),
+                                                           skill_max=Max('experience__date_to')
                                                            ).order_by("-hours_sum")
     total_hours = list.filter(experience__score__gte=3).aggregate(
-                                                                  total_sum=Sum('experience__hours_worked')
+                                                                  total_sum=Sum('experience__hours_worked'),
+                                                                  min=Min('experience__date_from'),
+                                                                  max=Max('experience__date_to')
                                                                   )
     demand = list.annotate(
-                           demand_count = Count('skillrequired__scope')
+                           demand_count = Count('skillrequired__scope'),
+                           demand_min=Min('skillrequired__scope__date_entered'),
+                           demand_max=Max('skillrequired__scope__date_entered')
                            ).order_by("-demand_count")
     order = "from Max to Min"
 

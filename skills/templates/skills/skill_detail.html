@@ -1,0 +1,95 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+
+{% block title %}
+    {{block.super}}-Skill Detail
+{% endblock title %}
+
+{% block Style %}
+  <style>
+    .format_chkbox{
+    height: 1.25em;
+    width: 1.25em;
+    }
+  </style>
+{% endblock Style %}
+
+{% block content %}
+
+<div class="border-0">
+  <div class="card-body">
+    <div class="card card-shadow text-center">
+      <div class="card-body">
+      <h4 class="">Skill Detail - {{ skill }}</h4>
+      <p>
+        There are {{ tally }} people with {{ skill }} as a skill, with a total of {{ range.range_sum|intcomma }} confirmed hours.
+        <br>
+        <small>
+          Claimed between {{range.range_min|date:"j F Y"}} and {{range.range_max|date:"j F Y"}}
+        </small>
+      </p>
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="card card-shadow">
+          <div class="card-body">
+            <h5 class="card-title">
+              {% if tally <= 5 %}
+                Top {{ tally }} People with experience in {{ skill }}
+              {% else %}
+                Top 5 People with experience in {{ skill }}
+              {% endif %}
+            </h5>
+            <h5 class="text-left"><strong>Skill ( Hours ) & Date Range</strong></h5>
+            <ul id="demand" class="list-group">
+              {% for item in hours %}
+                  <li class="list-group-item">
+                    <strong>
+                      {{ item.alias }}
+                    </strong>: {{ item.sum }} hours<br>
+                    <small>
+                      {{ item.min|date:"j M Y" }} thru {{ item.max|date:"j M Y" }}
+                    </small>
+                    <a href="{% url 'Talent:APV_L' tlt=item.alias %}" target="_blank" class="float-right">
+                      <i class="fa fa-id-badge" aria-hidden="true" style="font-size:30px; color:black" data-toggle="tooltip" data-placement="top" title="Profile"></i>
+                    </a>
+                  </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="card card-shadow">
+          <div class="card-body">
+            <h5 class="card-title">
+              {% if tally <= 5 %}
+                Top {{ tally }} People with experience in {{ skill }}
+              {% else %}
+                Top 5 People with experience in {{ skill }}
+              {% endif %}
+            </h5>
+            <h5 class="text-left"><strong>Skill ( Occurrence ) & Date Range</strong></h5>
+            <ul id="demand" class="list-group">
+              {% for item in qs_demand %}
+                  <li class="list-group-item">
+                    <strong>
+                      {{ item.company }}, {{ item.name }}
+                    </strong>: {{ item.demand_count }}<br>
+                  </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
+
+{% block Script %}
+
+{% endblock Script %}

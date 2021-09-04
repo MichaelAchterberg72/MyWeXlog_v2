@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     'feedback.apps.FeedbackConfig',
     'AppControl.apps.AppcontrolConfig',
     'mod_corporate.apps.ModCorporateConfig',
+    'skills.apps.SkillsConfig',
     'tasks',
     'analytics',
     'management',
