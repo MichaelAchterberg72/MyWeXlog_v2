@@ -27,7 +27,7 @@ class Publisher(models.Model):
 
 
 class Genre(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
 
     def clean(self):
         self.name = self.name.title()

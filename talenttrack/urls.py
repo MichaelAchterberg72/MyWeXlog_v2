@@ -25,6 +25,7 @@ urlpatterns = [
     path('classmate/<slug:tex>/add/', views.ClassMateAddView, name='ClassMatesAdd'),
     path('classmate/detail/<slug:cmt>/', views.ClassMatesResponse, name='ClassMatesResponse'),
     path('experience/capture/', views.WorkExperienceCaptureView, name="ExperienceCapture"),
+    path('experience/<slug:tex>/recapture/', views.CopyClaimView, name="ExperienceReCapture"),
     path('experience/edit/<slug:we_slug>/', views.WorkExperienceEditView, name="ExperienceEdit"),
     path('popup/designation/add/', views.DesignationAddPopup, name="DesignationAddPop"),
     path('popup/ajax/get_designation_id/', views.get_designation_id, name="AJAX_GetDesignationID"),

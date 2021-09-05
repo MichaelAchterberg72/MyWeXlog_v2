@@ -64,7 +64,8 @@
               {{ ProjectData.get_country_display }}
             </div>
             <div class="col-md-1 h-100 text-center my-auto">
-              <a href="{% url 'Project:ProjectDetail' ProjectData.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary float-right" style="width: 5rem;">Detail</a>
+              <a href="{% url 'Project:ProjectDetail' ProjectData.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary float-right" style="width: 7rem;">Detail</a>&nbsp
+              <a href="{% url 'Project:ProjectPersonalAddPopulated' ProjectData.slug %}?next={{ request.path|urlencode }}" class="badge badge-info float-right" style="width: 7rem;">Add To<br>Personal Projects</a>
             </div>
           </div>
         </div>

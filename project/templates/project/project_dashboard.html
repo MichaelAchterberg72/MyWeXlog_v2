@@ -7,62 +7,86 @@
 <div class="card card-shadow">
   <div class="card-body">
   <h4 class="">Welcome to the Project home page!
-    <span><p class="float-right">
-    <a href="{% url 'Project:HelpProjectHome' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 16px">
-    <i class="fa fa-question-circle"></i></a>
-  </p></span></h4>
-    <div class="card-body">
-      <p>Welcome to the projects home page. Projects listed here are the five most popular projects in MyWeXlog as well as a listing five of the most recent updated personal projects.</p>
-    </div>
+    <span>
+      <p class="float-right">
+        <a href="{% url 'Project:HelpProjectHome' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 16px">
+        <i class="fa fa-question-circle"></i>
+        </a>
+      </p>
+    </span>
+  </h4>
+    <p>
+      Welcome to the projects home page. Projects listed here are the five most popular projects in MyWeXlog as well as a listing five of the most recent updated personal projects.
+    </p>
   </div>
 </div>
 <br>
 <div class="card card-shadow">
   <div class="card-body">
-  <h4 class="">Projects with Most MyWeXlog Hours</h4>
-  <p>There are currently <strong>{{ pcount|intcomma }}</strong> projects listed in MyWeXlog!</p>
-  <p><a href="{% url 'Project:ProjectList' %}" class="badge badge-pill badge-primary">Full Project List</a><a href="{% url 'Project:Project-Search' %}" class="badge badge-pill badge-primary">Search Projects</a></p>
+  <h4 class="">Projects with Most Confimred Hours</h4>
+  <p>
+    There are currently <strong>{{ pcount|intcomma }}</strong> projects listed in MyWeXlog!
+    <br>
+    <small>Only 5 are shown here - to see more, click on "Full Project List"</small>
+  </p>
+  <p>
+    <a href="{% url 'Project:ProjectAdd' %}" class="badge badge-pill badge-primary">
+      Add Project
+    </a>
+    <a href="{% url 'Project:ProjectList' %}" class="badge badge-pill badge-primary">
+      Full Project List
+    </a>
+    <a href="{% url 'Project:Project-Search' %}" class="badge badge-pill badge-primary">
+      Search Projects
+    </a>
+  </p>
   <div class="container">
     <div class="row my-auto">
       <div class="col-md-4 h-100 text-center my-auto">
-        <strong>Project Name</strong>
+        <strong>
+          Project Name<br>
+          Project Owner
+        </strong>
       </div>
-      <div class="col-md-3 h-100 text-center my-auto">
-        <strong>Project Industry</strong>
+      <div class="col-md-2 h-100 text-center my-auto">
+        <strong>Industry</strong>
       </div>
       <div class="col-md-2 h-100 text-center my-auto">
         <strong>
-          Project Country<br>Nearest Town
+          Country<br>Nearest Town
         </strong>
       </div>
-      <div class="col-md-1 h-100 text-center my-auto">
-        <strong>Hours<strong>
+      <div class="col-md-2 h-100 text-center my-auto">
+        <strong>
+          Confirmed Hours<br>(by # people)<br>Company Count
+        </strong>
       </div>
       <div class="col-md-2 h-100 text-center my-auto">
-        <strong></strong>
       </div>
     </div>
   </div>
-  {% for p in project_hours_qs %}
+  {% for p in projecthours %}
   <div class="row">
     <div class="card mt-1 card-hover" style="width: 100%;">
       <div class="card-body small-pad">
         <div class="row my-auto">
           <div class="col-md-4 h-100 text-center my-auto">
-            {{ p.project.companybranch }}<br>({{ p.project }})
-          </div>
-          <div class="col-md-3 h-100 text-center my-auto">
-            {{ p.project.industry }}
+            {{ p.name }}<br>{{ p.companybranch }}
           </div>
           <div class="col-md-2 h-100 text-center my-auto">
-            {{ p.project.country.name }}<br>{{ p.project.city }}
+            {{ p.industry }}
           </div>
-          <div class="col-md-1 h-100 text-center my-auto">
-            {{ p.sum_t }}
+          <div class="col-md-2 h-100 text-center my-auto">
+            {{ p.country.name }}<br>{{ p.city }}
           </div>
-          <div class="col-md-2 h-100 center-text my-auto float-right">
+          <div class="col-md-2 h-100 text-center my-auto">
+            {{ p.sum }}<br>({{ p.people }})<br>{{ p.count }} off
+          </div>
+          <div class="col-md-2 h-100 center-text my-auto float-left">
             <div class="row text-center">
-              <a href="{% url 'Project:ProjectDetail' p.project.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 5rem;">See Project <br>Detail</a>
+              <a href="{% url 'Project:ProjectDetail' p.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 5rem;">
+                Project<br>Detail
+              </a>
             </div>
           </div>
         </div>
@@ -70,31 +94,56 @@
     </div>
   </div>
   {% empty %}
-  <p>There are currently no projects listed!</p>
+    <p>
+      There are currently no projects listed!
+    </p>
   {% endfor %}
   </div>
 </div>
 <br>
 <div class="card card-shadow" id="personalprojects">
   <div class="card-body">
-  <h4 class="">Personal Projects List</h4>
-  <p>Projects listed here are the projects that have been captured and validated in your work experience. Please click on 'Personal Details' to capture your personal responsibilities as carried out for the duration of the project, this will be reflected in you Public Profile.</p>
-
-    {% if request.user.is_authenticated %}
-    <p>There are currently <strong>{{ pp_count|intcomma }}</strong> personal projects listed in MyWeXlog!</p>
-    <p><a href="{% url 'Project:ProjectPersonalAdd' %}" class="badge badge-pill badge-primary">Add Personal Project</a><a href="{% url 'Project:ProjectHome' %}" class="badge badge-pill badge-primary">Full Personal Project List</a><a href="{% url 'Project:ProjectList' %}" class="badge badge-pill badge-primary">Full Project List</a><a href="{% url 'Project:Project-Search' %}" class="badge badge-pill badge-primary">Search Projects</a></p>
-    {% endif %}
-
+    <h4 class="">Personal Projects List</h4>
+    <p>
+      <small>
+        Projects listed here are the projects that have been captured and validated
+        in your work experience. Please click on 'Personal Details' to capture your
+        personal responsibilities as carried out for the duration of the project,
+        this will be reflected in you Public Profile.
+      <small>
+    </p>
+    <p>
+      There are currently <strong>{{ pp_count|intcomma }}</strong> personal projects listed in MyWeXlog!
+    </p>
+    <p>
+      <a href="{% url 'Project:ProjectPersonalAdd' %}" class="badge badge-pill badge-primary">
+        Add Personal Project
+      </a>
+      <a href="{% url 'Project:ProjectHome' %}" class="badge badge-pill badge-primary">
+        Full Personal Project List
+      </a>
+      <a href="{% url 'Project:ProjectList' %}" class="badge badge-pill badge-primary">
+        Full Project List
+      </a>
+      <a href="{% url 'Project:Project-Search' %}" class="badge badge-pill badge-primary">
+        Search Projects
+      </a>
+    </p>
     <div class="container">
       <div class="row my-auto">
-        <div class="col-md-5 h-100 text-center my-auto">
-          <strong>Project Name</strong>
-        </div>
-        <div class="col-md-3 h-100 text-center my-auto">
-          <strong>Project Industry</strong>
+        <div class="col-md-4 h-100 text-center my-auto">
+          <strong>
+            My Employer<br>(Project Owner - Project Name)
+          </strong>
         </div>
         <div class="col-md-2 h-100 text-center my-auto">
-          <strong>Project Country</strong>
+          <strong>Industry</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Country<br>Nearest Town</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Confirmed Hours</strong>
         </div>
         <div class="col-md-2 h-100 text-center my-auto">
           <strong></strong>
@@ -106,29 +155,35 @@
       <div class="card mt-1 card-hover" style="width: 100%;">
         <div class="card-body small-pad">
           <div class="row my-auto">
-            <div class="col-md-5 h-100 text-center my-auto">
+            <div class="col-md-4 h-100 text-center my-auto">
               {{ p.companybranch }}<br>({{ p.project }})
             </div>
-            <div class="col-md-3 h-100 text-center my-auto">
+            <div class="col-md-2 h-100 text-center my-auto">
               {{ p.project.industry }}
             </div>
             <div class="col-md-2 h-100 text-center my-auto">
-              {{ p.project.city }}
+              {{ p.project.country.name }}<br>{{ p.project.city }}
             </div>
-            <div class="col-md-2 h-100 center-text my-auto float-right">
-              <div class="row text-center">
-                <a href="{% url 'Project:ProjectPersonal' p.project.slug p.company.slug p.companybranch.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 5rem;">Personal<br>Detail</a>
-              </div>
-              <div class="row mt-1 text-center">
-                <a href="{% url 'Project:ProjectDetail' p.project.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 5rem;">See Project <br>Detail</a>
-              </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ p.sum }}
+            </div>
+            <div class="col-md-2 h-100 my-auto float-left">
+                <a href="{% url 'Project:ProjectPersonal' p.project.slug p.company.slug p.companybranch.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 5rem;">
+                  Personal<br>Detail
+                </a>
+                <a href="{% url 'Project:ProjectDetail' p.project.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 5rem;">
+                  Project<br>Detail
+                </a>
             </div>
           </div>
         </div>
       </div>
     </div>
     {% empty %}
-    <p>There are currently no projects listed!</p>
+    <p>
+      You haven't listed any projects!
+    </p>
     {% endfor %}
+  </div>
 </div>
 {% endblock content %}

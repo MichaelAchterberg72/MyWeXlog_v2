@@ -1,0 +1,148 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+
+{% block title %}{{block.super}}-Project{% endblock title %}
+
+{% block content %}
+<div class="card card-shadow">
+  <div class="card-body">
+  <h4 class="">Full Project List
+    <span>
+      <p class="float-right">
+        <a href="{% url 'Project:HelpProjectHome' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 16px">
+          <i class="fa fa-question-circle"></i>
+        </a>
+      </p>
+    </span>
+  </h4>
+    <p>
+      On this page you can:
+    </p>
+    <ul>
+      <li>View projects captured on MyWeXlog.</li>
+      <li>Add more projects to MyWeXlog.</li>
+      <li>View how many hours companies and talent have logged on each project.</li>
+    </ul>
+  </div>
+</div>
+<br>
+<div class="card card-shadow">
+  <div class="card-body">
+    <p>
+      There are currently <strong>{{ pcount.sum_p|intcomma }}</strong> projects
+      listed in MyWeXlog!
+    </p>
+    <p>
+      <a href="{% url 'Project:ProjectAdd' %}" class="badge badge-pill badge-primary">
+        Add Project
+      </a>
+      <a href="{% url 'Project:ProjectHome' %}" class="badge badge-pill badge-primary">
+        Personal Project List
+      </a>
+      <a href="{% url 'Project:Project-Search' %}" class="badge badge-pill badge-primary">
+        Search Projects
+      </a>
+      <a href="{% url 'Project:ProjectDashboard' %}" class="badge badge-pill badge-primary float-right">
+        Back
+      </a>
+    </p>
+    <div class="container">
+      <div class="row my-auto">
+        <div class="col-md-4 h-100 text-center my-auto">
+          <strong>
+            Project Name<br>Project Owner
+          </strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Industry</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>
+            Country<br>Nearest Town
+          </strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>
+            Confirmed Hours<br>(by # people)<br>Company Count
+          </strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto float-left">
+          <strong></strong>
+        </div>
+      </div>
+    </div>
+    {% for p in pageitems %}
+    <div class="row">
+      <div class="card mt-1 card-hover" style="width: 100%;">
+        <div class="card-body small-pad">
+          <div class="row my-auto">
+            <div class="col-md-4 h-100 text-center my-auto">
+              ({{ p.name }})<br>{{ p.companybranch }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ p.industry }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ p.country.name }}<br>{{ p.city }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ p.sum }}<br>({{ p.people }})<br>{{ p.count }} off
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              <a href="{% url 'Project:ProjectDetail' p.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary float-right" style="width: 7rem;">
+                Project<br>Detail
+              </a>&nbsp
+              <a href="{% url 'Project:ProjectPersonalAddPopulated' p.slug %}?next={{ request.path|urlencode }}" class="badge badge-info float-right" style="width: 7rem;">Add To<br>Personal Projects</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <p>
+      There are currently no projects listed!
+    </p>
+    {% endfor %}
+    <p>
+      &nbsp
+    </p>
+    <nav aria-label="Page navigation">
+        {% if pageitems.has_other_pages %}
+          <ul class="pagination">
+            {% if pageitems.has_previous %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ pageitems.previous_page_number }}" aria-label="Previous">
+                  <span aria-hidden="true">Previous</span>
+                  <span class="sr-only disabled">Previous</span>
+                </a></li>
+            {% else %}
+              <li class="page-link disabled" tabindex="-1"><span>Previous</span></li>
+            {% endif %}
+
+            {% if pageitems.number|add:'-4' > 1 %}
+              <li class="page-link"><a href="?page={{ pageitems.number|add:'-5' }}">&hellip;</a></li>
+            {% endif %}
+
+            {% for i in pageitems.paginator.page_range %}
+              {% if pageitems.number == i %}
+                <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
+              {% elif i > pageitems.number|add:'-5' and i < pageitems.number|add:'5' %}
+                <li class="page-link"><a class="page-item" href="?page={{ i }}">{{ i }}</a></li>
+              {% endif %}
+            {% endfor %}
+
+            {% if pageitems.paginator.num_pages > pageitems.number|add:'4' %}
+              <li class="page-link"><a href="?page={{ pageitems.number|add:'5' }}">&hellip;</a></li>
+            {% endif %}
+
+            {% if pageitems.has_next %}
+              <li class="page-link"><a href="?page={{ pageitems.next_page_number }}">Next</a></li>
+            {% else %}
+              <li class="page-link disabled"><span>Next</span></li>
+            {% endif %}
+          </ul>
+        {% endif %}
+    </nav>
+</div>
+
+{% endblock content %}

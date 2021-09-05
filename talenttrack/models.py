@@ -400,7 +400,9 @@ class WorkExperience(models.Model):
     TYPE=(
         ('F','Freelance'),
         ('C','Contract'),
+        ('T','Consultant'),
         ('E','Employee'),
+        ('O','FIFO'),
     )
     #Common Fields
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

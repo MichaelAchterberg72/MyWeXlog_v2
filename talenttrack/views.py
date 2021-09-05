@@ -65,10 +65,12 @@ from .forms import (AchievementsForm, AwardsForm, ClassMatesConfirmForm,
                     WorkCollaboratorResponseForm, WorkCollaboratorSelectForm,
                     WorkColleagueConfirmForm, WorkColleagueResponseForm,
                     WorkColleagueSelectForm, WorkExperienceForm)
+
 from .models import (Achievements, Awards, ClassMates, Course, Designation,
                      Lecturer, LicenseCertification, Publications, Superior,
                      WorkClient, WorkCollaborator, WorkColleague,
                      WorkExperience)
+
 from .widgets import ListTextWidget
 
 
@@ -2056,12 +2058,8 @@ def profile_skill_stats(request, skl):
     orderd_skills_instance_count = sorted(skills_instance_count, key=lambda kv: kv['skill_percentage'], reverse=True)
 #    print(orderd_skills_instance_count['skill'])
 
-
-
     we_skill = we.filter(Q(skills__skill=skill.skill, edt=False) | Q(topic__skills__skill=skill.skill, edt=True))
     val_we_skill = val_we.filter(Q(skills__skill=skill.skill, edt=False) | Q(topic__skills__skill=skill.skill, edt=True))
-
-
 
     # Total Work Experience Skill Sum Experience by Year
     val_we_skills_used_year_range_data = []
@@ -2842,17 +2840,55 @@ def email_reminder_validate_list(request, skl, tlt):
 
 
 @login_required()
+@csp_exempt
+def CopyClaimView(request, tex):
+    '''A view to copy a period of experince that has already been claimed,
+    only for a slightly different period'''
+    instance = get_object_or_404(WorkExperience, slug = tex)
+
+    tlt=request.user
+    skills_list = SkillTag.objects.filter(experience__talent=tlt).distinct('skill').order_by('skill')
+
+
+    if request.method == 'POST':
+        form = WorkExperienceForm(request.POST, request.FILES, instance=instance)
+        ppd_id=request.POST.get('project_data')
+        try:
+            project_qs = ProjectPersonalDetails.objects.get(pk=ppd_id).project.pk
+            project_id = ProjectData.objects.get(pk=project_qs)
+        except:
+            project_id = None
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.pk = None
+            new.slug = None
+            new.score = 0
+            new.save()
+            form.save_m2m()
+            return redirect(reverse('Talent:ColleagueSelect', kwargs={'pk': new.id}))
+        else:
+            template = 'talenttrack/experience_capture.html'
+            context = {'form': form, 'skills_list': skills_list}
+            return render(request, template, context)
+    else:
+        form = WorkExperienceForm(instance=instance)
+        template = 'talenttrack/experience_capture.html'
+        context = {'form': form, 'skills_list': skills_list}
+        return render(request, template, context)
+
+
+@login_required()
 def ExperienceHome(request):
     '''The view for the main page for Talenttrack app'''
+    talent = request.user
+    tlt = talent.alias
+
     #>>>Step 1
-    basequery = WorkExperience.objects.filter(talent=request.user).select_related('topic')
+    basequery = WorkExperience.objects.filter(talent=talent).select_related('topic')
     skills = SkillTag.objects.all()
     sl = SkillLevel.objects.all()
     we_c = basequery.filter(score__gte=skill_pass_score)
     #<<<Step 1
-
-    talent = request.user
-    tlt = talent.alias
 
     #>>>Step 2
     #total
@@ -5281,6 +5317,9 @@ def DPCP_SummaryView(request, tlt):
 @login_required()
 @csp_exempt
 def PreLoggedExperienceCaptureView(request):
+    tlt=request.user
+    skills_list = SkillTag.objects.filter(experience__talent=tlt).distinct('skill').order_by('skill')
+
     form = PreLoggedExperienceForm(request.POST or None, request.FILES)
     if request.method == 'POST':
         ppd_id=request.POST.get('project_data')
@@ -5301,12 +5340,12 @@ def PreLoggedExperienceCaptureView(request):
             return response
         else:
             template = 'talenttrack/prelogged_capture.html'
-            context = {'form': form}
+            context = {'form': form, 'skills_list': skills_list}
             response = render(request, template, context)
             return response
     else:
         template = 'talenttrack/prelogged_capture.html'
-        context = {'form': form}
+        context = {'form': form, 'skills_list': skills_list}
         response = render(request, template, context)
         response.set_cookie("confirm","PC")
         return response
@@ -6292,6 +6331,10 @@ def EducationDetailDeleteView(request, pk):
 @login_required()
 @csp_exempt
 def WorkExperienceCaptureView(request):
+    '''The view used to capture experience '''
+    tlt=request.user
+    skills_list = SkillTag.objects.filter(experience__talent=tlt).distinct('skill').order_by('skill')
+
     form = WorkExperienceForm(request.POST or None, request.FILES)
     if request.method == 'POST':
         ppd_id=request.POST.get('project_data')
@@ -6310,11 +6353,11 @@ def WorkExperienceCaptureView(request):
             return redirect(reverse('Talent:ColleagueSelect', kwargs={'pk': new.id}))
         else:
             template = 'talenttrack/experience_capture.html'
-            context = {'form': form}
+            context = {'form': form, 'skills_list': skills_list}
             return render(request, template, context)
     else:
         template = 'talenttrack/experience_capture.html'
-        context = {'form': form}
+        context = {'form': form, 'skills_list': skills_list}
         return render(request, template, context)
 
 

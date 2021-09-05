@@ -161,12 +161,15 @@ class Profile(models.Model):
     def save(self, *args, **kwargs):
         if self.alias is None or self.alias == "":
             self.alias = create_code7(self)
+
+        fullname = f'{self.talent.first_name} {self.talent.last_name} - Profile incomplete'
+
         inject_fn = f'{self.f_name}'
         inject_ln = f'{self.l_name}'
         inject_al = f'{self.alias}'
         target = CustomUser.objects.filter(pk=self.talent.id)
         if self.f_name is None or self.f_name =="":
-            target.update(alias=inject_al, alphanum=inject_al, display_text=inject_al)
+            target.update(alias=inject_al, alphanum=inject_al, display_text=fullname)
         else:
             target.update(alias=inject_al, first_name=inject_fn, last_name=inject_ln)
 
@@ -182,25 +185,45 @@ class Profile(models.Model):
                 eml_i = eml_i.get(email=tlt)
                 rel = eml_i.relationship
                 if rel == 'LR':
-                    lct = Lecturer(education = eml_i.experience, lecturer=self.talent, topic=eml_i.experience.topic)
+                    lct = Lecturer(
+                                   education = eml_i.experience,
+                                   lecturer=self.talent,
+                                   topic=eml_i.experience.topic)
                     lct.save()
                 if rel == 'CM':
-                    cm = ClassMates(education = eml_i.experience, colleague=self.talent, topic=eml_i.experience.topic)
+                    cm = ClassMates(
+                                    education = eml_i.experience,
+                                    colleague=self.talent,
+                                    topic=eml_i.experience.topic)
                     cm.save()
                 if rel == 'WC':
-                    wc = WorkColleague(experience = eml_i.experience, colleague_name=self.talent)
+                    wc = WorkColleague(
+                                       experience = eml_i.experience,
+                                       colleague_name=self.talent)
                     wc.save()
                 if rel == 'PC':
-                    wc = WorkColleague(experience = eml_i.experience, colleague_name=self.talent)
+                    wc = WorkColleague(
+                                       experience = eml_i.experience,
+                                       colleague_name=self.talent)
                     wc.save()
                 if rel == 'WS':
-                    ws = Superior(experience = eml_i.experience, superior_name=self.talent)
+                    ws = Superior(
+                                  experience = eml_i.experience,
+                                  superior_name=self.talent)
                     ws.save()
                 if rel == 'WL':
-                    wl = WorkCollaborator(experience = eml_i.experience, collaborator_name=self.talent, company=eml_i.worked_for.company, companybranch=eml_i.worked_for)
+                    wl = WorkCollaborator(
+                                          experience = eml_i.experience,
+                                          collaborator_name=self.talent,
+                                          company=eml_i.companybranch.company,
+                                          companybranch=eml_i.companybranch)
                     wl.save()
                 if rel == 'WT':
-                    wt = WorkClient(experience = eml_i.experience, client_name=self.talent, company=eml_i.worked_for.company, companybranch=eml_i.worked_for)
+                    wt = WorkClient(
+                                    experience = eml_i.experience,
+                                    client_name=self.talent,
+                                    company=eml_i.companybranch.company,
+                                    companybranch=eml_i.companybranch)
                     wt.save()
             else:
                 pass
@@ -210,7 +233,6 @@ class Profile(models.Model):
     def create_profile(sender, **kwargs):
         if kwargs['created']:
             create_profile = Profile.objects.create(talent=kwargs['instance'], accepted_terms=True, age_accept=True)
-
 
     post_save.connect(create_profile, sender=CustomUser)
 

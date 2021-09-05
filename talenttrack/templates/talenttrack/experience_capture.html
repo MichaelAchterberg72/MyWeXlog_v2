@@ -122,8 +122,6 @@
                 </small>
               </div>
             </div>
-
-
           </div>
         </div>
           <div class="form-row">
@@ -137,6 +135,14 @@
                 </a>
               </p>
             </div>
+            <h5>
+              Skills you captured previously
+            </h5>
+            <p>
+              {% for skill in skills_list.all %}
+                {{ skill.skill }} ||
+              {% endfor %}
+            </p>
           </div>
 
           <div class="form-row">
@@ -168,15 +174,7 @@
     </div>
   </div>
   <script type="text/javascript">
-    document.getElementById("id_companybranch").disabled = true;
-
-    var dis1 = document.getElementById("id_company");
-    dis1.onchange = function () {
-       if (this.value != "" || this.value.length > 0) {
-          document.getElementById("id_companybranch").disabled = false;
-       }
-    };
-
+  
     document.getElementById("id_project_data").disabled = true;
 
     var dis2 = document.getElementById("id_companybranch");
