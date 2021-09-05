@@ -1064,43 +1064,45 @@ background-color:transparent;
           <div class="profile-list-header">{% now "F j, Y" as current_date %}{{ key.mn_date }}<br> to
             {% if current_date == key.mx_date|date:"F j, Y" %}Current{% else %}{{ key.mx_date }}{% endif %}</div><br>
           <div class="profile-list-under">{{ key.tn|floatformat:1 }} years</div><br>
-          <div class="profile-list-header">{% if key.dt.0.0 %}{{ key.dt.0.0 }}{% else %}{{ key.we_co.0.0 }}{% endif %}</div><br>
+          <div class="profile-list-header">{% for deg in key.we_co_des %}{{ deg.des }}<br><br>{% endfor %}</div><br>
         </div>
         <div class="col-md-9 border-left" style="border-left: solid 2px #000000;">
           <div class="">
             <div class="col-md-12">
               <div class="profile-list-heading">{{ key.co.0.1 }}</div><br>
               <div class="profile-list-heading-under">{{ key.co.0.0 }}</div><br>
-              {% if key.dt.0.3 %}
-              <div class="" id="coDisc1{{key.dt.0.4}}" style="display:block;">
-                {{ key.dt.0.3|safe|truncatechars:460 }}<br>
-                {% if key.dt.0.3|length > 460 %}
-                <button class="float-right" type="submit" id="readMore{{key.dt.0.4}}">Read More ..</button><br>
+              {% for item in key.dt_list %}
+              {% if item.0.3 %}
+              <div class="" id="coDisc1{{item.0.4}}" style="display:block;">
+                {{ item.0.3|safe|truncatechars:460 }}<br>
+                {% if item.0.3|length > 460 %}
+                <button class="float-right" type="button" id="readMore{{item.0.4}}">Read More ..</button><br>
                 {% endif %}
               </div>
-              <div class="" id="coDisc2{{key.dt.0.4}}" style="display:none;">
-                {{ key.dt.0.3|safe }}<br>
-                <button class="float-right" type="submit" id="readLess{{key.dt.0.4}}">Read Less ..</button><br>
+              <div class="" id="coDisc2{{item.0.4}}" style="display:none;">
+                {{ item.0.3|safe }}<br>
+                <button class="float-right" type="button" id="readLess{{item.0.4}}">Read Less ..</button><br>
               </div><br>
 
-              {% if key.dt.0.3|length > 460 %}
+              {% if item.0.3|length > 460 %}
               <script>
-                var readMore = document.getElementById('readMore{{key.dt.0.4}}');  // 1
+                var readMore = document.getElementById('readMore{{item.0.4}}');  // 1
                 readMore.addEventListener('click', function() {   // 3
-                   coDisc1{{key.dt.0.4}}.style.display = 'none';
-                   coDisc2{{key.dt.0.4}}.style.display = 'block';          // 4
+                   coDisc1{{item.0.4}}.style.display = 'none';
+                   coDisc2{{item.0.4}}.style.display = 'block';          // 4
                 });
-                var readLess = document.getElementById('readLess{{key.dt.0.4}}');  // 1
+                var readLess = document.getElementById('readLess{{item.0.4}}');  // 1
                 readLess.addEventListener('click', function() {  // 3
-                  coDisc1{{key.dt.0.4}}.style.display = 'block';
-                  coDisc2{{key.dt.0.4}}.style.display = 'none';
-                  coDisc1{{key.dt.0.4}}.scrollIntoView();              // 4
+                  coDisc1{{item.0.4}}.style.display = 'block';
+                  coDisc2{{item.0.4}}.style.display = 'none';
+                  coDisc1{{item.0.4}}.scrollIntoView();              // 4
                 });
 
               </script>
               {% endif %}
               {% endif %}
-{% if key.pr %}
+              {% endfor %}
+              {% if key.pr %}
               <div class="row">
                 <div class="col-md-12 text-left my-auto">
                   <div class="profile-card-header"><strong>Projects with {{ key.co.0.1 }}: </strong></div>
