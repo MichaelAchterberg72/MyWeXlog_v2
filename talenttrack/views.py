@@ -569,7 +569,7 @@ def public_profile(request, ppl):
     for c in co_list_set:
         co = Branch.objects.filter(pk=c).values_list('name', 'company__ename', 'pk')
         dt = bch_qs.filter(companybranch=c).values_list('designation__name', 'date_from', 'date_to', 'description', 'pk')
-
+        print(dt)
         dt_co_min_date_qs = bch_qs.filter(companybranch=c).aggregate(min_date=Min('date_from'))
         dt_mn_date = dt_co_min_date_qs.get('min_date')
 

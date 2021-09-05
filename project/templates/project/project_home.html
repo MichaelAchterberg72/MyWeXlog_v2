@@ -62,7 +62,8 @@
                 {{ p.country.name }}<br>{{ p.city }}
               </div>
               <div class="col-md-2 h-100 text-center my-auto">
-                <a href="{% url 'Project:ProjectDetail' p.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary float-right" style="width: 5rem;">See Detail</a>
+                <a href="{% url 'Project:ProjectDetail' p.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary float-right" style="width: 7rem;">See Detail</a>&nbsp
+                <a href="{% url 'Project:ProjectPersonalAddPopulated' p.slug %}?next={{ request.path|urlencode }}" class="badge badge-info float-right" style="width: 7rem;">Add To<br>Personal Projects</a>
               </div>
             </div>
           </div>

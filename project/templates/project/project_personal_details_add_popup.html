@@ -34,7 +34,7 @@
     {% if request.user.is_authenticated %}
       <p>
         <a href="{% url 'Project:ProjectHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">
-          Back
+          PPL Back
         </a>
       </p>
     {% endif %}

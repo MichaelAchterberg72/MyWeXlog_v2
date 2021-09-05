@@ -203,6 +203,37 @@ def ProjectPersonalDetailsAddView(request):
     context = {'form': form}
     return render(request, template, context)
 
+
+@login_required()
+@csp_exempt
+def ProjectPersonalDetailsAddPopulatedView(request, prj):
+    project = ProjectData.objects.get(slug=prj)
+    instance, _ = ProjectPersonalDetails.objects.get_or_create(
+            talent=request.user,
+            project=project,
+            )
+    form = AddProjectPersonalDetailsForm(request.POST or None, instance=instance)
+    if request.method =='POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.talent=request.user
+
+            if 'cancel' in request.POST:
+                instance.delete()
+                return redirect(reverse('Project:ProjectList'))
+            else:
+                new.save()
+                return redirect(reverse('Project:ProjectList'))
+        else:
+            if 'cancel' in request.POST:
+                instance.delete()
+                return redirect(reverse('Project:ProjectList'))
+                
+    template = 'project/project_personal_details_add.html'
+    context = {'form': form}
+    return render(request, template, context)
+
+
 #>>> Personal Project Popup
 @login_required()
 @csp_exempt

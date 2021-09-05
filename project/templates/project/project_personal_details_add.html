@@ -32,12 +32,18 @@
     </span>
   </h4>
   <div class="card-body">
+    {% url 'Project:ProjectPersonalAdd' as project_url %}
     {% if request.user.is_authenticated %}
       <p>
+        {% if request.path == project_url %}
         <a href="{% url 'Project:ProjectHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">
-          Back
+          PPL Back
         </a>
-      </p>
+        {% else %}
+        <button type="submit" class="badge badge-pill badge-primary float-right" name="cancel">
+          FPL Back
+        </button>
+        {% endif %}
     {% endif %}
     <form class="" action="" method="POST" id="ProjectForm">
       {% csrf_token %}
@@ -58,9 +64,16 @@
         </div>
         <p>
           <br>
+          {% url 'Project:ProjectPersonalAdd' as project_url %}
+          {% if request.path == project_url %}
           <a href="{% url 'Project:ProjectHome' %}" class="btn btn-danger">
             Cancel
           </a>
+          {% else %}
+          <button type="submit" class="btn btn-danger" name="cancel">
+            Cancel
+          </button>
+          {% endif %}
           <button type="submit" class="btn btn-primary" name="button">
             Save
           </button>

@@ -11,6 +11,7 @@ urlpatterns = [
     path('full-list/', views.ProjectListHome, name='ProjectList'),
     path('personal-details/<slug:prj>/<slug:co>/<slug:bch>/', views.ProjectPersonalDetailsView, name='ProjectPersonal'),
     path('personal-project/add/', views.ProjectPersonalDetailsAddView, name='ProjectPersonalAdd'),
+    path('personal-project/project-list/add/<slug:prj>', views.ProjectPersonalDetailsAddPopulatedView, name='ProjectPersonalAddPopulated'),
     path('personal-project/delete/<int:ppj>', views.PersonalProejctDeleteView, name='ProjectPersonalDelete'),
 
     path('help/project-home/', views.HelpProjectHomeView, name='HelpProjectHome'),
