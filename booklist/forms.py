@@ -151,7 +151,7 @@ class TagAddForm(forms.ModelForm):
 class AddBookReadForm(forms.ModelForm):
     class Meta:
         model = ReadBy
-        fields = ('book','type','date',)
+        fields = ('book','type','date', 'review',)
         widgets = {
             'date': DateInput(),
             'book': BookSelect2Widget(),

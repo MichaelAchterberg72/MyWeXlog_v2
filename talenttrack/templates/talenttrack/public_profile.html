@@ -2148,12 +2148,41 @@ background-color:transparent;
     <div class="row">
       <div class="col-md-3 border-right">
         <div class="profile-list-header">{{ b.date|date:"j M Y" }}</div><br>
+        <div class="profile-list-under">{{ b.type }}</div>
       </div>
       <div class="col-md-9 border-left">
         <div class="col-md-12">
           <div class="profile-list-heading">{{ b.book }}</div><br>
           <div class="profile-list-heading-under">{{ b.book.author.all|join:", " }}</div><br>
-          <div>{{ b.type }}</div>
+          {% if b.review %}
+          <div class="" id="bookDisc1{{b.pk}}" style="display:block;">
+            {{ b.review|safe|truncatechars:460 }}<br>
+            {% if b.review|length > 460 %}
+            <button class="float-right" type="button" id="readMoreBook{{b.pk}}">Read More ..</button><br>
+            {% endif %}
+          </div>
+          <div class="" id="bookDisc2{{b.pk}}" style="display:none;">
+            {{ b.review|safe }}<br>
+            <button class="float-right" type="button" id="readLessBook{{b.pk}}">Read Less ..</button><br>
+          </div><br>
+
+          {% if b.review|length > 460 %}
+          <script>
+            var readMoreBook = document.getElementById('readMoreBook{{b.pk}}');  // 1
+            readMoreBook.addEventListener('click', function() {   // 3
+               bookDisc1{{b.pk}}.style.display = 'none';
+               bookDisc2{{b.pk}}.style.display = 'block';          // 4
+            });
+            var readLessBook = document.getElementById('readLessBook{{b.pk}}');  // 1
+            readLessBook.addEventListener('click', function() {  // 3
+              bookDisc1{{b.pk}}.style.display = 'block';
+              bookDisc2{{b.pk}}.style.display = 'none';
+              bookDisc1{{b.pk}}.scrollIntoView();              // 4
+            });
+
+          </script>
+          {% endif %}
+          {% endif %}
         </div>
         <br><br><br>
       </div>
