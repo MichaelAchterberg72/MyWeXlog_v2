@@ -470,7 +470,7 @@
           <div class="row my-auto">
             <div class="col-md-3 h-100 text-center my-auto">
               <strong>
-                Employer<br>Date From - To
+                Employer<br>Date: From - To
               </strong>
             </div>
             <div class="col-md-1 h-100 text-center my-auto">
@@ -515,7 +515,7 @@
                   <a href="{% url 'Talent:ExperienceReCapture' e.slug %}" class="badge badge-pill badge-success"  style="width: 6rem;">
                     Claim Again
                   </a>
-                  <form  action="{% url 'Talent:WEDelete' e.id %}" method="post">
+                  <form action="{% url 'Talent:WEDelete' e.id %}" method="post">
                     {% csrf_token %}
                     <button type="submit" class="badge badge-danger badge-pill" style="width: 6rem;">
                       Remove
