@@ -6,12 +6,19 @@
 
 <div class="card card-shadow">
   <div class="card-body">
-  <h4 class="">Detail for {{ info.company.ename }}'s {{ info.name }} branch</h4>
-
+    <h4 class="">
+      Detail for {{ info.company.ename }}'s {{ info.name }} branch
+    </h4>
     {% if request.user.is_authenticated %}
-    <p><a href="{% url 'Enterprise:EditBranch' info.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Edit Branch</a>
+    <p>
+      <a href="{% url 'Enterprise:EditBranch' info.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">
+        Edit Branch
+      </a>
     {% endif %}
-    <a href="{% url 'Enterprise:BranchList' info.company.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back to Branch List</a></p>
+      <a href="{% url 'Enterprise:BranchList' info.company.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">
+        Back to Branch List
+      </a>
+    </p>
     <div class="row">
       <div class="col-sm-6">
         <div class="">
@@ -86,16 +93,18 @@
     </div>
   </div>
 </div>
-{% if request.user.subscription >= 2 %}
 <br>
 <div class="card card-shadow">
   <div class="card-body">
     <h4 class="">Branch Rating</h4>
+    {% if request.user.subscription >= 2 %}
     <div class="container">
       <p>Total Votes: {{ info.rate_count }}</p>
     </div>
     {% if info.rate_count < 4 %}
-      <p>Average rating only calculated if 5 ore more votes</p>
+      <p>
+        Average rating only calculated from 5 or more votes
+      </p>
     {% else %}
       <table class="table table-sm">
         <thead>
@@ -475,7 +484,37 @@
         </tbody>
       </table>
     {% endif %}
+    {% else %}
+    <p>
+      To see the branch rating, please become an active subscriber.
+    </p>
+  {% endif %}
   </div>
-</div
-{% endif %}
+</div>
+<br>
+<div class="card card-shadow">
+  <div class="card-body">
+
+    <h4 class="">
+      Skills used by this branch
+    </h4>
+    {% if request.user.subscription >= 2 %}
+      <p>
+        {% for skill in skills %}
+          <ul>
+            <li>{{ skill.skill }} ({{ skill.sum }})</li>
+          </ul>
+        {% empty %}
+          <p>
+            No skills captured for this branch
+          </p>
+        {% endfor %}
+      </p>
+    {% else %}
+      <p>
+        To see the skills used in this branch, please become an active subscriber.
+      </p>
+    {% endif %}
+  </div>
+</div>
 {% endblock content %}

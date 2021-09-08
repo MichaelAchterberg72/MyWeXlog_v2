@@ -42,6 +42,12 @@
                 Top 5 People with experience in {{ skill }}
               {% endif %}
             </h5>
+            {% if filter == 'off' %}
+            {% else %}
+              <a href="{% url 'Skills:Skill_Detail_Full' skill.id %}" class="float-right" data-toggle="tooltip" title="Full List">
+                <i class="fa fa-bolt" aria-hidden="true" style="color:black; size=35px"></i>
+              </a>
+            {% endif %}
             <h5 class="text-left"><strong>Skill ( Hours ) & Date Range</strong></h5>
             <ul id="demand" class="list-group">
               {% for item in hours %}
@@ -53,7 +59,7 @@
                       {{ item.min|date:"j M Y" }} thru {{ item.max|date:"j M Y" }}
                     </small>
                     <a href="{% url 'Talent:APV_L' tlt=item.alias %}" target="_blank" class="float-right">
-                      <i class="fa fa-id-badge" aria-hidden="true" style="font-size:30px; color:black" data-toggle="tooltip" data-placement="top" title="Profile"></i>
+                      <i class="fa fa-id-badge" aria-hidden="true" style="font-size:25px; color:black" data-toggle="tooltip" data-placement="top" title="Profile"></i>
                     </a>
                   </li>
               {% endfor %}
@@ -71,6 +77,12 @@
                 Top 5 People with experience in {{ skill }}
               {% endif %}
             </h5>
+            {% if filter == 'off' %}
+            {% else %}
+              <a href="{% url 'Skills:Skill_Detail_Full' skill.id %}" class="float-right" data-toggle="tooltip" title="Full List">
+                <i class="fa fa-bolt" aria-hidden="true" style="color:black; size=35px"></i>
+              </a>
+            {% endif %}
             <h5 class="text-left"><strong>Skill ( Occurrence ) & Date Range</strong></h5>
             <ul id="demand" class="list-group">
               {% for item in qs_demand %}
