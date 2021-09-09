@@ -128,8 +128,8 @@
   </table>
   <div class="">
     <p>
-      Referral link:
       <hr>
+      Referral link:
       <div class="input-group mb-3">
         <input type="text" class="form-control" value="{{ referral_code.url }}" id="myInput" aria-describedby="basic-addon2">
         <div class="input-group-append">
@@ -140,6 +140,23 @@
         Copy and paste the above url address into an email or a Social Network Post for your friends to join MyWeXlog in your network.
       </small>
       <br>
+  </div>
+
+  <div class="">
+    <p>
+      <hr>
+      Public Profile link:
+      <div class="input-group mb-3">
+        {% url 'Talent:PublicProfile' request.user.public_profile_name as profile_url %}
+        <input type="text" class="form-control" value="https://app.mywexlog.com{{ profile_url }}" id="myProfileInput" aria-describedby="basic-addon3">
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" type="button" id="myProfileButton">Copy Link</button>
+        </div>
+      </div>
+      <small>
+        Copy and paste the above url address into your CV or marketing material to publish your public profile.
+      </small>
+      <hr>
       <div class="float-right">
         <a href="{% url 'Invitation:InvitationsSent' %}" class="btn btn-primary" data-toggle=tooltip title="View a list of associates that have not yet accepted you invitation to MyWeXlog">
           Invitations
@@ -293,6 +310,14 @@
     &nbsp &nbsp
     <a href="{% url 'Talent:ExperienceCapture' %}" class="">
       <i class="fa fa-laptop" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Capture Experience"></i>
+    </a>
+    &nbsp &nbsp
+    <a href="{% url 'Project:ProjectAdd' %}" class="">
+      <i class="fa fa-envelope-open" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Capture Project"></i>
+    </a>
+    &nbsp &nbsp
+    <a href="{% url 'Project:ProjectPersonalAdd' %}" class="">
+      <i class="fa fa-envelope-open-o" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Capture Personal Project"></i>
     </a>
     &nbsp &nbsp
     <a href="{% url 'BookList:books-read-new' %}" class="">
@@ -745,5 +770,26 @@
   </div>
 </div>
 {% endif %}
+<script type="text/javascript">
 
+document.getElementById("myButton").addEventListener("click", myFunction);
+
+function myFunction(e) {
+  var copyText = document.getElementById("myInput");
+  copyText.select();
+  copyText.setSelectionRange(0, 99999)
+  document.execCommand("copy");
+  alert("Copied the text: " + copyText.value);
+}
+
+document.getElementById("myProfileButton").addEventListener("click", myProfileFunction);
+
+function myProfileFunction(e) {
+  var copyProfileText = document.getElementById("myProfileInput");
+  copyProfileText.select();
+  copyProfileText.setSelectionRange(0, 99999)
+  document.execCommand("copy");
+  alert("Copied the text: " + copyProfileText.value);
+}
+</script>
 {% endblock Center_Content %}

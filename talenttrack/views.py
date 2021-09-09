@@ -571,11 +571,17 @@ def public_profile(request, ppl):
     for c in co_list_set:
         co = Branch.objects.filter(pk=c).values_list('name', 'company__ename', 'pk')
         dt = bch_qs.filter(companybranch=c).values_list('designation__name', 'date_from', 'date_to', 'description', 'pk')
+        dt_list_query = list(dt.values_list('pk', flat=True).order_by('-date_to').distinct())
+
+        dt_list = []
+        for i in dt_list_query:
+            dt_i = bch_qs.filter(companybranch=c, pk=i).values_list('designation__name', 'date_from', 'date_to', 'description', 'pk')
+            dt_list.append(dt_i)
 
         dt_co_min_date_qs = bch_qs.filter(companybranch=c).aggregate(min_date=Min('date_from'))
         dt_mn_date = dt_co_min_date_qs.get('min_date')
 
-        dt_co_max_date_qs = bch_qs.filter(companybranch=c).aggregate(max_date=Min('date_to'))
+        dt_co_max_date_qs = bch_qs.filter(companybranch=c).aggregate(max_date=Max('date_to'))
         dt_mx_date = dt_co_max_date_qs.get('max_date')
 
         we_co = wec_qs.filter(companybranch=c).values_list('designation__name', 'score', 'industry__industry', 'hours_worked').distinct()
@@ -895,7 +901,7 @@ def public_profile(request, ppl):
             p_result = {'we': we, 'prj_s': prj_s, 'pd_desc': pd_desc, 'pwe_co_mn': pwe_co_mn, 'pwe_co_mx': pwe_co_mx, 'pwe_tn': pwe_tn, 'pr_skl': pr_skl, 'pco_hr': pco_hr, 'pr_com': pr_com, 'pwq_ave': pwq_ave, 'twq_ave': twq_ave, 'cwq_ave': cwq_ave, 'awq_ave': awq_ave}
             pr.append(p_result)
 
-        result={'co': co, 'dt': dt, 'we_co': we_co, 'we_co_des': we_co_des, 'mx_date': mx_date, 'mn_date': mn_date, 'tn': tn, 'pr': pr,
+        result={'co': co, 'dt': dt, 'dt_list': dt_list, 'we_co': we_co, 'we_co_des': we_co_des, 'mx_date': mx_date, 'mn_date': mn_date, 'tn': tn, 'pr': pr,
 #        'no_pr': no_pr
         }
 

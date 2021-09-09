@@ -156,6 +156,37 @@ def ProjectPersonalDetailsAddView(request):
     context = {'form': form}
     return render(request, template, context)
 
+
+@login_required()
+@csp_exempt
+def ProjectPersonalDetailsAddPopulatedView(request, prj):
+    project = ProjectData.objects.get(slug=prj)
+    instance, _ = ProjectPersonalDetails.objects.get_or_create(
+            talent=request.user,
+            project=project,
+            )
+    form = AddProjectPersonalDetailsForm(request.POST or None, instance=instance)
+    if request.method =='POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.talent=request.user
+
+            if 'cancel' in request.POST:
+                instance.delete()
+                return redirect(reverse('Project:ProjectList'))
+            else:
+                new.save()
+                return redirect(reverse('Project:ProjectList'))
+        else:
+            if 'cancel' in request.POST:
+                instance.delete()
+                return redirect(reverse('Project:ProjectList'))
+
+    template = 'project/project_personal_details_add.html'
+    context = {'form': form}
+    return render(request, template, context)
+
+
 #>>> Personal Project Popup
 @login_required()
 @csp_exempt
@@ -616,13 +647,13 @@ def ProjectSearch(request):
         if form.is_valid():
             query = form.cleaned_data['query']
             results = ProjectData.objects.annotate(
-                search=SearchVector('name__icontains',
-                                    'company__branch__icontains',
-                                    'industry__industry__icontains',
-                                    'country__icontains',
-                                    'region__region__icontains',
-                                    'city__city__icontains'),
-            ).filter(search=query).order_by('company__ename')
+                search=SearchVector('name',
+                                    'company__branch',
+                                    'industry__industry',
+                                    'country',
+                                    'region__region',
+                                    'city__city'),
+            ).filter(search__icontains=query).order_by('company__ename')
 
     template_name= 'project/project_search.html'
     context = {

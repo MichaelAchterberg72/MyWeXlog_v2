@@ -270,12 +270,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         #'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'JKdev', #
-        #'NAME': 'test', #'Wexlog_Home', #'test_load', #,
+        'NAME': 'test', #'Wexlog_Home', #'test_load', #,
         'USER': 'postgres',
-		#'PASSWORD': 'rdf8tm1234', #MA
-        #'PASSWORD': 'dJpfss41678', #JK
-        'PASSWORD': 'netscape', #MA
+		'PASSWORD': 'rdf8tm1234', #MA
         'HOST': 'localhost',
         #'HOST': 'dbhost',
         'PORT': '5432'

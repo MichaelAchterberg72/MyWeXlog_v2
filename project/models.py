@@ -36,9 +36,9 @@ class ProjectData(models.Model):
 
 class ProjectPersonalDetails(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    project = models.ForeignKey(ProjectData, on_delete=models.SET_NULL, null=True)
-    company = models.ForeignKey(Enterprise, on_delete=models.SET_NULL,  verbose_name="Owner", null=True)
-    companybranch = models.ForeignKey(Branch, on_delete=models.SET_NULL, verbose_name='Branch Working for on the Project', null=True)
+    project = models.ForeignKey(ProjectData, on_delete=models.SET_NULL, blank=True, null=True)
+    company = models.ForeignKey(Enterprise, on_delete=models.SET_NULL,  verbose_name="Owner", blank=True, null=True)
+    companybranch = models.ForeignKey(Branch, on_delete=models.SET_NULL, verbose_name='Branch Working for on the Project', blank=True, null=True)
     description = HTMLField(verbose_name='Personal responsibilities description', blank=True, null=True)
 
     class Meta:
