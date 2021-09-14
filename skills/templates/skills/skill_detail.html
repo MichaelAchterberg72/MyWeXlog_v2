@@ -71,11 +71,7 @@
         <div class="card card-shadow">
           <div class="card-body">
             <h5 class="card-title">
-              {% if tally <= 5 %}
-                Top {{ tally }} People with experience in {{ skill }}
-              {% else %}
-                Top 5 People with experience in {{ skill }}
-              {% endif %}
+              Top companies requiring experience in {{ skill }}
             </h5>
             {% if filter == 'off' %}
             {% else %}
@@ -91,6 +87,10 @@
                       {{ item.company }}, {{ item.name }}
                     </strong>: {{ item.demand_count }}<br>
                   </li>
+              {% empty %}
+                <p>
+                  None
+                </p>
               {% endfor %}
             </ul>
           </div>

@@ -89,10 +89,17 @@
               {{ p.sum }}<br>({{ p.people }})<br>{{ p.count }} off
             </div>
             <div class="col-md-2 h-100 text-center my-auto">
-              <a href="{% url 'Project:ProjectDetail' p.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary float-right" style="width: 7rem;">
-                Project<br>Detail
-              </a>&nbsp
-              <a href="{% url 'Project:ProjectPersonalAddPopulated' p.slug %}?next={{ request.path|urlencode }}" class="badge badge-info float-right" style="width: 7rem;">Add To<br>Personal Projects</a>
+              <p>
+                <a href="{% url 'Project:ProjectDetail' p.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary float-right" style="width: 7rem;">
+                  Project<br>Detail
+                </a>
+              </p>
+              <br>
+              <p>
+                <a href="{% url 'Project:ProjectPersonalAddPopulated' p.slug %}?next={{ request.path|urlencode }}" class="badge badge-info float-right" style="width: 7rem;">
+                  Add To<br>Personal Projects
+                </a>
+              </p>
             </div>
           </div>
         </div>

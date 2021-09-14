@@ -1172,7 +1172,7 @@ def int_decline(request, int_id):
 def InterviewTltRemove(request, tlt):
     interview = BidInterviewList.objects.filter(talent__alias=tlt).update(emp_intcomplete=True, outcome='D')
 
-    return redirect(reverse('Profile:ProfileHome')+ '#Interview')
+    return redirect(reverse('Profile:ProfileHome')+'#Interview')
 
 
 @login_required()
@@ -1198,7 +1198,7 @@ def BriefCareerHistoryView(request):
                 response = redirect('Profile:History')
                 return response
             elif 'done' in request.POST:
-                response = redirect(reverse('Profile:ProfileView'))
+                response = redirect(reverse('Profile:ProfileView')+'#History')
                 return response
         else:
             template = 'Profile/brief_career_history.html'
@@ -1257,7 +1257,7 @@ def BriefHistoryAddDeleteView(request, bch):
     if instance.talent == request.user:
         if request.method =='POST':
             instance.delete()
-            return redirect(reverse('Profile:History'))
+            return redirect(reverse('Profile:History')+'#History')
     else:
         raise PermissionDenied
 

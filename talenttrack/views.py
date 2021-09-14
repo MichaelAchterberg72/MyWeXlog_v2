@@ -5363,7 +5363,7 @@ def PreLoggedExperienceDeleteView(request, ple_pk):
     if info.talent == request.user:
         if request.method =='POST':
             info.delete()
-            return redirect(reverse('Talent:Home')+'#headingThree')
+            return redirect(reverse('Talent:Home')+'#pre-experience')
     else:
         raise PermissionDenied
 
@@ -6352,7 +6352,7 @@ def WorkExperienceCaptureView(request):
         if form.is_valid():
             new = form.save(commit=False)
             new.talent = request.user
-            new.project = project_id
+            new.project = project_idFF
             new.wexp = True
             new.save()
             form.save_m2m()
@@ -6396,7 +6396,7 @@ def WorkExperienceDeleteView(request, we_pk):
     if info.talent == request.user:
         if request.method =='POST':
             info.delete()
-            return redirect(reverse('Talent:Home')+'#headingThree')
+            return redirect(reverse('Talent:Home')+'#experience')
     else:
         raise PermissionDenied
 
@@ -6407,7 +6407,7 @@ def WorkExperienceDeleteFullView(request, we_pk):
     if info.talent == request.user:
         if request.method =='POST':
             info.delete()
-            return redirect(reverse('Talent:ExperienceList'))
+            return redirect(reverse('Talent:ExperienceList')+'#experience')
     else:
         raise PermissionDenied
 
@@ -6720,7 +6720,7 @@ def EducationDeleteView(request, edt_pk):
     if info.talent == request.user:
         if request.method =='POST':
             info.delete()
-            return redirect(reverse('Talent:Home')+'#heading1')
+            return redirect(reverse('Talent:Home')+'#education')
     else:
         raise PermissionDenied
 
@@ -6731,7 +6731,7 @@ def EducationDeleteFullView(request, edt_pk):
     if info.talent == request.user:
         if request.method =='POST':
             info.delete()
-            return redirect(reverse('Talent:TrainingList'))
+            return redirect(reverse('Talent:TrainingList')+'#education')
     else:
         raise PermissionDenied
 

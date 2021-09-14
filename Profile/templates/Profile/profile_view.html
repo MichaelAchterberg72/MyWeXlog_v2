@@ -15,7 +15,9 @@
       <div class="card-body">
         {% for d in info %}
           <h5 class="card-title">Basic Information <a href="{% url 'Profile:ProfileEdit' d.alias %}" class="badge badge-secondary float-right">Edit</a></h5>
-          <p class="card-text">Name: {{ user_info.first_name }} {{ user_info.last_name }}</p>
+          <p class="card-text">
+            Name: {{ user_info.first_name }} {{ user_info.last_name }}
+          </p>
           <p class="card-text">
             Date of Birth: {{ d.birth_date|date:"j M Y" }}
           </p>
@@ -109,12 +111,10 @@
             </div>
           </div>
           {% empty %}
-            <p>No Languages listed.</p>
+            <p>No Languages listed</p>
           {% endfor %}
-
       </div>
     </div>
-
   <div class="card card-shadow">
     <div class="card-body">
       <h5 class="card-title">Public Profile <a href="{% url 'Profile:PublicProfileNameEdit' request.user.alias %}" class="badge badge-primary float-right">Edit</a></h5>
@@ -243,7 +243,6 @@
   <div class="card card-shadow">
     <div class="card-body">
       <h5 class="card-title" >Licenses, Certifications and Memberships <a href="{% url 'Talent:LCMCap'  %}?next={{ request.path|urlencode }}" class="badge badge-primary float-right">Add</a></h5>
-
       <div class="container">
         <div class="row my-auto">
           <div class="col-1 col-no-pad h-100 text-center my-auto">

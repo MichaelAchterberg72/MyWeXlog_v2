@@ -320,7 +320,7 @@ class Topic(models.Model):
 class Lecturer(models.Model):
         #Captured by talent
     education = models.ForeignKey('WorkExperience', on_delete=models.CASCADE)
-    lecturer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    lecturer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
     topic = models.ForeignKey(Topic, on_delete=models.PROTECT, blank=True, null=True, verbose_name="Subject")
         #AutoCaptured
     date_captured = models.DateField(auto_now_add=True)
@@ -350,7 +350,7 @@ class Lecturer(models.Model):
 class ClassMates(models.Model):
         #Captured by talent
     education = models.ForeignKey('WorkExperience', on_delete=models.CASCADE)
-    colleague = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, verbose_name='ClassMate')
+    colleague = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, verbose_name='ClassMate')
     topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True, verbose_name="Subject")
         #AutoCaptured
     date_captured = models.DateField(auto_now_add=True)
@@ -482,7 +482,7 @@ class WorkExperience(models.Model):
 class WorkColleague(models.Model):
         #Captured by talent
     experience = models.ForeignKey(WorkExperience, on_delete=models.PROTECT)
-    colleague_name = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    colleague_name = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
     designation = models.ForeignKey(Designation, on_delete=models.PROTECT, null=True)
         #AutoCaptured
     date_captured = models.DateField(auto_now_add=True)
@@ -516,7 +516,7 @@ class WorkColleague(models.Model):
 class Superior(models.Model):
         #Captured by talent
     experience = models.ForeignKey(WorkExperience, on_delete=models.CASCADE)
-    superior_name = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    superior_name = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
     designation = models.ForeignKey(Designation, on_delete=models.PROTECT, null=True)
         #AutoCaptured
     date_captured = models.DateField(auto_now_add=True)
@@ -551,7 +551,7 @@ class Superior(models.Model):
 class WorkCollaborator(models.Model):
         #Captured by talent
     experience = models.ForeignKey(WorkExperience, on_delete=models.CASCADE)
-    collaborator_name = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    collaborator_name = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
     company = models.ForeignKey(Enterprise, on_delete=models.PROTECT, null=True)
     companybranch = models.ForeignKey(Branch, on_delete=models.PROTECT)
     designation = models.ForeignKey(Designation, on_delete=models.PROTECT, null=True)
@@ -589,7 +589,7 @@ class WorkCollaborator(models.Model):
 class WorkClient(models.Model):
         #Captured by talent
     experience = models.ForeignKey(WorkExperience, on_delete=models.CASCADE)
-    client_name = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    client_name = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
     designation = models.ForeignKey(Designation, on_delete=models.PROTECT, null=True)
     company = models.ForeignKey(Enterprise, on_delete=models.PROTECT, null=True)
     companybranch = models.ForeignKey(Branch, on_delete=models.PROTECT)
