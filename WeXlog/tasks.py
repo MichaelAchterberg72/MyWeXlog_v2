@@ -173,7 +173,7 @@ def UpgradeRefunds():
 
 @celery_app.task(name="WeeklyUpdateEmail")
 #@periodic_task(run_every=(crontab(minute='*/2')), name="WeeklyUpdateEmail", ignore_result=True)
-#@periodic_task(run_every=(crontab(day_of_week=1, hour=0, minute=0)), name="WeeklyUpdateEmail", ignore_result=True)
+@periodic_task(run_every=(crontab(day_of_week=1, hour=0, minute=0)), name="WeeklyUpdateEmail", ignore_result=True)
 def weekly_email():
     user_settings = CustomUserSettings.objects.filter(Q(unsubscribe=False) & Q(receive_newsletter=True)).values_list('talent__id')
     users = CustomUser.objects.filter(id__in=user_settings)
@@ -184,8 +184,7 @@ def weekly_email():
         #Vacancies suited
         tlt = talent.id
         pfl = Profile.objects.filter(talent=talent)
-        TalentRequired.objects.filter()
-        # tr = TalentRequired.objects.filter(offer_status='O')
+
         tr = TalentRequired.objects.filter(offer_status='O')
         tr_count = tr.count()
         tr_emp = TalentRequired.objects.filter(requested_by=talent)
@@ -202,6 +201,20 @@ def weekly_email():
         vacancies_suited_list_view = vac_exp.vacancies_suited_list
         #  vo = VacancyViewed.objects.filter(closed=False)
 
+
+        #Queryset caching<<<
+        tr_emp_count = tr_emp.count()
+        ipost = tr_emp.filter(offer_status='O').order_by('-bid_open')
+        ipost_list = ipost[:5]
+        ipost_count = ipost.count()
+        ipost_closed = tr_emp.filter(offer_status='C').order_by('-bid_open')
+        ipost_closed_list = ipost_closed[:5]
+        ipost_closed_count = ipost_closed.count()
+        ipost_bid = wb.filter(~Q(bidreview='D'))
+        ipost_bid_flat = ipost_bid.values_list('work', flat=True).distinct()
+    #    capacity = ta.filter(date_to__gte=timezone.now()).order_by('-date_to')[:5]
+
+        #Code for stacked lookup for talent's skills
 
         #>>>Create a set of all skills
         e_skill = we.filter(edt=True, score__gte=skill_pass_score).only('pk').values_list('pk', flat=True)
@@ -225,42 +238,33 @@ def weekly_email():
 
             skill_set = skill_set | d
 
-        skill_set = skill_set.distinct().order_by('skill')
+        skill_set = skill_set.distinct().order_by('skill')#all skills the talent has
+        skill_setv = skill_set.values_list('id', flat=True)#gets the id's of all the skills
         #Create a set of all skills<<<
 
         #>>>Experience Level check & list skills required in vacancies
-        tlt_lvl = pfl.values_list('exp_lvl__level', flat=True)
-        tlt_lvl = tlt_lvl[0]
+        tlt_lev = pfl.values_list('exp_lvl__level', flat=True)
+        try:
+            tlt_lvl = tlt_lev[0]
+        except:
+            tlt_lvl = 5
 
         #finds all vacancies that require talent's experience level and below
-        try:
-            vac_exp = tr.filter(experience_level__level__lte=tlt_lvl)
-        except:
-            vac_exp = None
+        vac_exp = tr.filter(experience_level__level__lte=tlt_lvl)
 
         #>>> Check for language
         lang_req = tr.values_list('language')
 
         if lang_req is not None:
             tlt_lang = set(LanguageTrack.objects.filter(talent=talent).values_list('language', flat=True))
-            try:
-                vac_lang=set(vac_exp.filter(language__in=tlt_lang).values_list('id', flat=True))
-            except:
-                vac_lang = None
+            vac_lang=set(vac_exp.filter(language__in=tlt_lang).values_list('id', flat=True))
         else:
             pass
 
         #Certifications Matching
         #identifies the vacancies that do not required certification
-        try:
-            cert_null_s = set(vac_exp.filter(certification__isnull=True).values_list('id', flat=True))
-        except:
-            cert_null_s = None
-
-        try:
-            vac_cert_s = set(vac_exp.filter(certification__isnull=False).values_list('certification', flat=True))
-        except:
-            vac_cert_s = None
+        cert_null_s = set(vac_exp.filter(certification__isnull=True).values_list('id', flat=True))
+        vac_cert_s = set(vac_exp.filter(certification__isnull=False).values_list('certification', flat=True))
 
         if vac_cert_s is None: #if no certifications required, pass
             if vac_lang is None:
@@ -269,11 +273,7 @@ def weekly_email():
                 req_experience = set(vac_exp.values_list('id',flat=True)).intersection(vac_lang)
         else:
             tlt_cert = set(LicenseCertification.objects.filter(talent=talent).values_list('certification', flat=True))
-            try:
-                vac_cert = set(vac_exp.filter(certification__in=tlt_cert).values_list('id',flat=True))
-            except:
-                vac_cert = None
-
+            vac_cert = set(vac_exp.filter(certification__in=tlt_cert).values_list('id',flat=True))
             if vac_lang is not None:
                 req_experience = vac_cert.intersection(vac_lang)
             else:
@@ -314,16 +314,17 @@ def weekly_email():
                 skl_lst.append(sk)
 
         ds = set()
-        matchd = set(skl_lst) #remove duplicates
+        matchd = set(skl_lst) #remove duplicates; these are the required skills
+
+        matchd = matchd.intersection(set(skill_setv))
 
         for item in matchd:
             display = set(sr.filter(
                     Q(skills__in=skl_lst)
                     & Q(scope__bid_closes__gte=timezone.now())).values_list('scope__id', flat=True))
+            ds = ds | display #set of all open vacancies
 
-            ds = ds | display
-
-        dsi = ds.intersection(req_experience)
+        dsi = ds.intersection(req_experience) #open vacancies which the talent qualifies for (certification, location)
 
         tot_vac = len(dsi)
         #remove the vacancies that have already been applied for
@@ -347,7 +348,7 @@ def weekly_email():
         suitable = tr.filter(id__in=dsi)
 
         rem_vac = suitable.count()
-        dsd = suitable[:5]
+        dsd = suitable[:10]
 
         #Experience Level check & list skills required in vacancies<<<
         if tot_len > 0:
@@ -408,7 +409,7 @@ def weekly_email():
                 'exp_req_clb_count': exp_req_clb_count,
                 'invitation_sent': invitation_sent,
                 'invitation_sent_count': invitation_sent_count,
-                'user': username.email,
+                'user': username,
                 'user_email': username.email,
                 }
             html_message = render_to_string('email/weekly/weekly_email_update.html', context)

@@ -6352,7 +6352,7 @@ def WorkExperienceCaptureView(request):
         if form.is_valid():
             new = form.save(commit=False)
             new.talent = request.user
-            new.project = project_idFF
+            new.project = project_id
             new.wexp = True
             new.save()
             form.save_m2m()
