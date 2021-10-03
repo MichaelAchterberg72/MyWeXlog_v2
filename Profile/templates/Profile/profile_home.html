@@ -101,6 +101,18 @@
       <br>
       {% endif %}
     {% endif %}
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="card card-shadow">
+          <div class="card-body">
+            <h3 class="card-title text-center">Search for a vacancy</h3>
+            <p class="card-text text-center">To search for a vacancy click the search button and then enter the vacancy Reference Number into the search field.</p>
+            <p class="text-center"><a href="{% url 'MarketPlace:VacSearch' %}" class="btn btn-lg btn-primary" style="width: 7rem">Search</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
 {% endblock intro %}
 
 {% block network %}
@@ -148,7 +160,7 @@
       Public Profile link:
       <div class="input-group mb-3">
         {% url 'Talent:PublicProfile' request.user.public_profile_name as profile_url %}
-        <input type="text" class="form-control" value="https://app.mywexlog.com{{ profile_url }}" id="myProfileInput" aria-describedby="basic-addon3">
+        <input type="text" class="form-control" value="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{{ profile_url }}" id="myProfileInput" aria-describedby="basic-addon3">
         <div class="input-group-append">
           <button class="btn btn-outline-secondary" type="button" id="myProfileButton">Copy Link</button>
         </div>

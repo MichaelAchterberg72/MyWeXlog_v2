@@ -262,7 +262,7 @@
                         <div class="col-md-12 h-100 text-left my-auto">
                           <p class="short-paragraph"><strong>Skills utilised in review period:</strong></p>
                           <p>{{ l.experience.skills.all|join:" & " }}</p>
-                          <p class="short-paragraph"><strong>Comment:</strong></p>
+                          <p class="short-paragraph"><strong>{{ l.experience.title }}</strong></p>
                           {% if l.experience.comment %}
                             {{ l.experience.comment|linebreaks }}
                           {% else %}
@@ -362,7 +362,7 @@
                         <div class="col-md-12 h-100 text-left my-auto">
                           <p class="short-paragraph"><strong>Skills utilised in review period:</strong></p>
                           <p>{{ l.experience.skills.all|join:" & " }}</p>
-                          <p class="short-paragraph"><strong>Comment:</strong></p>
+                          <p class="short-paragraph"><strong>{{ l.experience.title }}</strong></p>
                           {% if l.experience.comment %}
                             {{ l.experience.comment|linebreaks }}
                           {% else %}
@@ -462,7 +462,7 @@
                         <div class="col-md-12 h-100 text-left my-auto">
                           <p class="short-paragraph"><strong>Skills utilised in review period:</strong></p>
                           <p>{{ l.experience.skills.all|join:" & " }}</p>
-                          <p class="short-paragraph"><strong>Comment:</strong></p>
+                          <p class="short-paragraph"><strong>{{ l.experience.title }}</strong></p>
                           {% if l.experience.comment %}
                             {{ l.experience.comment|linebreaks }}
                           {% else %}
@@ -561,7 +561,7 @@
                         <div class="col-md-12 h-100 text-left my-auto">
                           <p class="short-paragraph"><strong>Skills utilised in review period:</strong></p>
                           <p>{{ l.experience.skills.all|join:" & " }}</p>
-                          <p class="short-paragraph"><strong>Comment:</strong></p>
+                          <p class="short-paragraph"><strong>{{ l.experience.title }}</strong></p>
                           {% if l.experience.comment %}
                             {{ l.experience.comment|linebreaks }}
                           {% else %}
@@ -659,7 +659,7 @@
                         <div class="col-md-12 h-100 text-left my-auto">
                           <p class="short-paragraph"><strong>Skills utilised in review period:</strong></p>
                           <p>{{ l.pre_experience.skills.all|join:" & " }}</p>
-                          <p class="short-paragraph"><strong>Comment:</strong></p>
+                          <p class="short-paragraph"><strong>{{ l.experience.title }}</strong></p>
                           {% if l.pre_experience.comment %}
                             {{ l.pre_experience.comment|linebreaks }}
                           {% else %}

@@ -182,9 +182,9 @@
             {% for p in pageitems %}
             <tbody>
               <tr>
-                <td class="align-middle text-center">{{ p.user.alias }}</td>
+                <td class="align-middle text-center">{% if p.user.alias %}{{ p.user.alias }}{% else %}Public Profile - Anonymous User{% endif %}</td>
                 <td class="align-middle text-center">{{ p.timestamp }}</td>
-                <td class="text-center">{% if request.user.subscription >= 2 %}<a href="{% url 'Talent:APV_L' tlt=p.user.alias %}" class="align-middle text-center" target="new"><i class="fa fa-users" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="View Profile"></a>{% else %}<a href="{% url 'Payments:ActiveSubscription' %}" class="badge badge-success badge-pill align-middle">Active Subscription Required</a>{% endif %}</td>
+                <td class="text-center">{% if request.user.subscription >= 2 %}{% if p.user.alias %}<a href="{% url 'Talent:APV_L' tlt=p.user.alias %}" class="align-middle text-center" target="new"><i class="fa fa-users" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="View Profile"></a>{% else %}<i class="fa fa-users" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Anonymoys User - No Profile">{% endif %}{% else %}<a href="{% url 'Payments:ActiveSubscription' %}" class="badge badge-success badge-pill align-middle">Active Subscription Required</a>{% endif %}</td>
 
 
               </tr>
@@ -253,9 +253,9 @@
             {% for p in pvr_s %}
             <tbody>
               <tr>
-                <td class="align-middle text-center">{{ p.user.alias }}</td>
+                <td class="align-middle text-center">{% if p.user.alias %}{{ p.user.alias }}{% else %}Public Profile - Anonymous User{% endif %}</td>
                 <td class="align-middle text-center">{{ p.timestamp }}</td>
-                <td class="text-center">{% if request.user.subscription >= 2 %}<a href="{% url 'Talent:APV_L' tlt=p.user.alias %}" class="align-middle text-center" target="new"><i class="fa fa-users" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="View Profile"></a>{% else %}<button class="badge badge-success badge-pill align-middle">Active Subscription Required</button>{% endif %}</td>
+                <td class="text-center">{% if request.user.subscription >= 2 %}{% if p.user.alias %}<a href="{% url 'Talent:APV_L' tlt=p.user.alias %}" class="align-middle text-center" target="new"><i class="fa fa-users" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="View Profile"></a>{% else %}<i class="fa fa-users" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Anonymoys User - No Profile">{% endif %}{% else %}<button class="badge badge-success badge-pill align-middle">Active Subscription Required</button>{% endif %}</td>
 
 
               </tr>

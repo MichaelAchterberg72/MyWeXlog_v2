@@ -34,7 +34,7 @@ from .models import(
 from WeXlog.app_config import (
     skill_pass_score,
 )
-from talenttrack.models import WorkExperience, LicenseCertification
+from talenttrack.models import WorkExperience, LicenseCertification, Result
 from locations.models import Region
 from db_flatten.models import SkillTag
 from users.models import CustomUser, ExpandedView
@@ -1408,6 +1408,50 @@ def VacancyDetailView(request, vac):
     return render(request, template, context)
 
 
+def VacancyDetailPublicView(request, vac):
+    vacancy = TalentRequired.objects.filter(ref_no=vac)
+    vac_id = vacancy[0]
+    skills = SkillRequired.objects.filter(scope__ref_no=vac)
+    deliver = Deliverables.objects.filter(scope__ref_no=vac)
+    bch = vacancy[0].companybranch.slug
+    rate_b = Branch.objects.get(slug=bch)
+    int = BidInterviewList.objects.filter(Q(scope__ref_no=vac)).count()
+    bid_qs = WorkBid.objects.filter(work__ref_no=vac).order_by('rate_bid')
+    bid = bid_qs.count()
+    slist = BidShortList.objects.filter(scope__ref_no=vac).count()
+    wit = WorkIssuedTo.objects.filter(Q(tlt_response='A') & Q(work__ref_no=vac))
+    try:
+        applied = bid_qs.filter(talent=request.user)
+    except:
+        applied = False
+
+    date1 = vacancy[0].bid_closes
+    date2 = timezone.now()
+    date3 = date1 - date2
+    date4 = abs(date3.days)
+
+    if date1 < date2:
+        vacancy.update(offer_status = 'C')
+
+
+    template = 'marketplace/vacancy_detail_public.html'
+    context = {
+        'vacancy': vacancy,
+        'skills': skills,
+        'deliver': deliver,
+        'rate_b': rate_b,
+        'int': int,
+        'bid': bid,
+        'slist': slist,
+        'wit': wit,
+        'bid_qs': bid_qs,
+        'date2': date2,
+        'date4': date4,
+        'applied': applied,
+        }
+    return render(request, template, context)
+
+
 @login_required()
 @subscription(1)
 def VacancyDetailView_Profile(request, vac):
@@ -2637,6 +2681,15 @@ def VacancyPostView(request, vac):
     }
 
     return render(request, template, context)
+
+
+@login_required
+def CertificateDeleteView(request, vac, cert):
+    if request.method == 'POST':
+        vacancy = TalentRequired.objects.get(ref_no=vac)
+        cert_instance = Result.objects.get(type=cert)
+        vacancy.certification.remove(cert_instance)
+    return redirect(reverse('MarketPlace:VacancyPost', kwargs={'vac':vac})+'#certifications')
 
 
 @login_required()
