@@ -429,6 +429,8 @@
     </div>
   </div>
 </div>
+
+{% if membership_qs_count > 0 %}
 <div class="jumbotron" style="background:transparent;">
   <div class="row">
     <div class="container">
@@ -520,6 +522,9 @@
   </div>
   <br>
 </div>
+{% endif %}
+
+
 <hr>
 <div class="jumbotron bg-light">
   <div class="container">
@@ -1053,6 +1058,8 @@ background-color:transparent;
     {% endif %}
   </div>
 </div>
+
+
 <hr>
 <div class="jumbotron bg-light" id="employment-history">
   <div class="container">
@@ -1931,14 +1938,15 @@ background-color:transparent;
   </div>
 </div>
 
-<hr>
 
+{% if edtexp_count > 0 %}
+<hr>
 <div class="jumbotron bg-light">
   <div class="container">
     <h4 class="profile-header" id="edu">Education & Training</h4>
     <div class="profile-card-under">{% if edtexp_count > 0 %}Total Courses Attended: {{ edtexp_count }}{% else %}No courses captured yet{% endif %}</div>
     <br>
-    {% if edtexp_count > 0 %}
+
       {% for e in edtexp %}
       <div class="row">
         <div class="col-md-3 border-right">
@@ -1991,18 +1999,18 @@ background-color:transparent;
         <a href="{% url 'Talent:PublicProfileEducation' ppl %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Education</a>
       {% endif %}
     </div>
-    {% endif %}
   </div>
 </div>
+{% endif %}
 
+{% if achievement_qs_count > 0 %}
 <hr>
-
 <div class="jumbotron bg-light">
   <div class="container">
     <h4 class="profile-header" id="achievements">Achievements</h4>
       <div class="profile-card-under">{% if achievement_qs_count > 0 %}Total Achievements: {{ achievement_qs_count }}{% else %}No achievements captured yet{% endif %}</div>
     <br>
-    {% if achievement_qs_count > 0 %}
+
       {% for a in achievement %}
       <div class="row">
         <div class="col-md-3 border-right">
@@ -2032,18 +2040,18 @@ background-color:transparent;
           <a href="{% url 'Talent:PublicProfileAchievements' ppl %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Achievements</a>
         {% endif %}
       </div>
-      {% endif %}
     </div>
   </div>
+{% endif %}
 
+{% if award_qs_count > 0 %}
 <hr>
-
 <div class="jumbotron bg-light">
 <div class="container">
 <h4 class="profile-header" id="awards">Awards</h4>
 <div class="profile-card-under">{% if award_qs_count > 0 %}Total Awards: {{ award_qs_count }}{% else %}No awards captured yet{% endif %}</div>
 <br>
-{% if award_qs_count > 0 %}
+
 {% for a in award %}
 <div class="row">
   <div class="col-md-3 border-right">
@@ -2079,17 +2087,18 @@ background-color:transparent;
     <a href="{% url 'Talent:PublicProfileAwards' ppl %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Awards</a>
   {% endif %}
 </div>
+</div>
+</div>
 {% endif %}
-</div>
-</div>
 
+{% if publication_qs_count > 0 %}
 <hr>
 <div class="jumbotron bg-light">
 <div class="container">
   <h4 class="profile-header" id="publications">Publications</h4>
     <div class="profile-card-under">{% if publication_qs_count > 0 %}Total Publications: {{ publication_qs_count }}{% else %}No publications captured yet{% endif %}</div>
   <br>
-  {% if publication_qs_count > 0 %}
+
     {% for a in publication %}
     <div class="row">
         <div class="col-md-3 border-right">
@@ -2132,18 +2141,19 @@ background-color:transparent;
       {% endif %}
     </div>
     {% endfor %}
-    {% endif %}
+
   </div>
 </div>
+{% endif %}
 
+{% if bkl_count > 0 %}
 <hr>
-
 <div class="jumbotron bg-light">
 <div class="container">
   <h4 class="profile-header" id="books">Books Read</h4>
   <div class="profile-card-under">{% if bkl_count > 0 %}Total Books Read: {{ bkl_count }}{% else %}No Books captured yet{% endif %}</div>
   <br>
-  {% if bkl_count > 0 %}
+
   {% for b in bkl %}
     <div class="row">
       <div class="col-md-3 border-right">
@@ -2154,6 +2164,9 @@ background-color:transparent;
         <div class="col-md-12">
           <div class="profile-list-heading">{{ b.book }}</div><br>
           <div class="profile-list-heading-under">{{ b.book.author.all|join:", " }}</div><br>
+          {% if b.book.link %}
+          <div class=""><a href="{{ b.book.link }}" target="_blank">{{ b.book.link }}</a></div><br>
+          {% endif %}
           {% if b.review %}
           <div class="" id="bookDisc1{{b.pk}}" style="display:block;">
             {{ b.review|safe|truncatechars:460 }}<br>
@@ -2193,8 +2206,7 @@ background-color:transparent;
         <a href="{% url 'Talent:PublicProfileBooks' ppl %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Books</a>
       {% endif %}
     </div>
-    {% endif %}
   </div>
 </div>
-
+{% endif %}
 {% endblock content %}
