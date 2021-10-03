@@ -36,6 +36,9 @@
           <div class="col-md-12">
             <div class="profile-list-heading">{{ b.book }}</div><br>
             <div class="profile-list-heading-under">{{ b.book.author.all|join:", " }}</div><br>
+            {% if b.book.link %}
+            <div class=""><a href="{{ b.book.link }}" target="_blank">{{ b.book.link }}</a></div><br>
+            {% endif %}
             {% if b.review %}
             <div class="" id="bookDisc1{{b.pk}}" style="display:block;">
               {{ b.review|safe|truncatechars:460 }}<br>
