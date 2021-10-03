@@ -28,10 +28,15 @@ class ObjectViewed(models.Model):
 def object_viewed_receiver(sender, instance, request, *args, **kwargs):
     c_type = ContentType.objects.get_for_model(sender)
 
-    new_view_obj = ObjectViewed.objects.create(
+    try:
+        new_view_obj = ObjectViewed.objects.create(
                 user = request.user,
                 content_type = c_type,
                 object_id = instance.id,
-                ip_address = get_client_ip(request)
-    )
+                ip_address = get_client_ip(request))
+    except:
+        new_view_obj = ObjectViewed.objects.create(
+                content_type = c_type,
+                object_id = instance.id,
+                ip_address = get_client_ip(request))
 object_viewed_signal.connect(object_viewed_receiver)

@@ -74,7 +74,6 @@ from .models import (Achievements, Awards, ClassMates, Course, Designation,
 from .widgets import ListTextWidget
 
 
-@login_required()
 def public_profile(request, ppl):
     tlt = get_object_or_404(CustomUser, public_profile_name=ppl).alias
 
@@ -944,7 +943,6 @@ def public_profile(request, ppl):
     return render(request, template, context)
 
 
-@login_required()
 def public_profile_project_rating(request, ppl):
     '''The view for the individual public profile mywexlog project rating overview and stats'''
     tlt = get_object_or_404(CustomUser, public_profile_name=ppl).alias
@@ -962,7 +960,6 @@ def public_profile_project_rating(request, ppl):
     return render(request, template, context)
 
 
-@login_required()
 def public_profile_evaluation_rating(request, ppl):
     '''The view for the individual public profile mywexlog work experience evaluation rating overview and stats'''
     tlt = get_object_or_404(CustomUser, public_profile_name=ppl).alias
@@ -1143,7 +1140,6 @@ def public_profile_evaluation_rating(request, ppl):
     return render(request, template, context)
 
 
-@login_required()
 def public_profile_skill_stats(request, ppl, skl):
     '''The view for the individual public profile skill overview and stats'''
     tlt = get_object_or_404(CustomUser, public_profile_name=ppl).alias
@@ -1339,7 +1335,6 @@ def public_profile_skill_stats(request, ppl, skl):
     return render(request, template, context)
 
 
-login_required()
 def public_profile_projects(request, ppl):
     '''MyWeXlog Projects History detail page'''
     tlt = get_object_or_404(CustomUser, public_profile_name=ppl).alias
@@ -1402,7 +1397,6 @@ def public_profile_projects(request, ppl):
     return render(request, template, context)
 
 
-login_required()
 def public_profile_education(request, ppl):
     '''MyWeXlog Education History detail page'''
     tlt = get_object_or_404(CustomUser, public_profile_name=ppl).alias
@@ -1446,7 +1440,6 @@ def public_profile_education(request, ppl):
     return render(request, template, context)
 
 
-login_required()
 def public_profile_achievements(request, ppl):
     '''MyWeXlog Achievements History detail page'''
     tlt = get_object_or_404(CustomUser, public_profile_name=ppl).alias
@@ -1487,7 +1480,6 @@ def public_profile_achievements(request, ppl):
     return render(request, template, context)
 
 
-login_required()
 def public_profile_awards(request, ppl):
     '''MyWeXlog Awards History detail page'''
     tlt = get_object_or_404(CustomUser, public_profile_name=ppl).alias
@@ -1528,7 +1520,6 @@ def public_profile_awards(request, ppl):
     return render(request, template, context)
 
 
-login_required()
 def public_profile_publications(request, ppl):
     '''MyWeXlog Publications History detail page'''
     tlt = get_object_or_404(CustomUser, public_profile_name=ppl).alias
@@ -1569,7 +1560,6 @@ def public_profile_publications(request, ppl):
     return render(request, template, context)
 
 
-login_required()
 def public_profile_books(request, ppl):
     '''MyWeXlog Books Read History detail page'''
     tlt = get_object_or_404(CustomUser, public_profile_name=ppl).alias

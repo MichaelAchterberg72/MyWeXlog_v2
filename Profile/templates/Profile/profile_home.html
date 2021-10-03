@@ -160,7 +160,7 @@
       Public Profile link:
       <div class="input-group mb-3">
         {% url 'Talent:PublicProfile' request.user.public_profile_name as profile_url %}
-        <input type="text" class="form-control" value="https://app.mywexlog.com{{ profile_url }}" id="myProfileInput" aria-describedby="basic-addon3">
+        <input type="text" class="form-control" value="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{{ profile_url }}" id="myProfileInput" aria-describedby="basic-addon3">
         <div class="input-group-append">
           <button class="btn btn-outline-secondary" type="button" id="myProfileButton">Copy Link</button>
         </div>

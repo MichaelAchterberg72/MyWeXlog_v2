@@ -33,9 +33,19 @@
       </div>
       <h3>Vacancy Review</h3>
       <h5 class="card-title">Vacancy: {{ instance.title }} ({{ instance.ref_no }})</h5>
+      <hr>
+      Vacancy Public link:
+      <div class="input-group mb-3">
+        {% url 'MarketPlace:VacancyDetailPublic' instance.ref_no as url %}
+        <input type="text" class="form-control" value="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{{ url }}" id="myMarketInput" aria-describedby="basic-addon3">
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" type="button" id="myMarketButton">Copy Link</button>
+        </div>
+      </div>
       <p>
         This is the place to review and edit a vacancy
       </p>
+      <br>
       <table class="table table-sm">
         <thead>
           <tr>
@@ -192,7 +202,7 @@
         <div class="col-sm-4">
           <div class="h-100">
             <div class="card-body">
-              
+
               <h5 class="card-title" id="certs">Certifications</h5>
               <table class="table table-sm">
                 <col width="90%">
@@ -520,6 +530,16 @@ function closePopup(win, newID, newRepr, id) {
 
 window.onerror = function (msg) {
   $("body").attr("JSError", msg);
+}
+
+document.getElementById("myMarketButton").addEventListener("click", myMarketFunction);
+
+function myMarketFunction(e) {
+  var copyMarketText = document.getElementById("myMarketInput");
+  copyMarketText.select();
+  copyMarketText.setSelectionRange(0, 99999)
+  document.execCommand("copy");
+  alert("Copied the text: " + copyMarketText.value);
 }
 </script>
 {% endblock Script %}
