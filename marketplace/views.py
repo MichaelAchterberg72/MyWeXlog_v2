@@ -6,6 +6,7 @@ from django.conf import settings
 from django.core.exceptions import PermissionDenied
 import json
 from django.db.models import Count, Sum, F, Q
+from django.db.models.functions import Greatest
 from django.utils import timezone
 from decimal import getcontext, Decimal
 import itertools
@@ -64,7 +65,10 @@ def VacancySearch(request):
         form = VacancySearchForm(request.GET)
         if form.is_valid():
             query=form.cleaned_data['query']
-            results = TalentRequired.objects.annotate(similarity=TrigramSimilarity('ref_no', query),).filter(similarity__gt=0.3).order_by('-similarity')
+            results = TalentRequired.objects.annotate(similarity=Greatest(
+                                          TrigramSimilarity('ref_no', query),
+                                          TrigramSimilarity('own_ref_no', query)
+                                          )).filter(similarity__gt=0.3).order_by('-similarity')
 
     template = 'marketplace/vacancy_search.html'
     context = {'form': form, 'query': query, 'results': results,}
