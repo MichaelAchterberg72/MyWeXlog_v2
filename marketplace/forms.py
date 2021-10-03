@@ -308,6 +308,7 @@ class TalentRequiredForm(forms.ModelForm):
             'date_deadline': 'Work Completed By',
             'hours_required': 'Hours',
             'own_ref_no': 'Own Internal Vacancy Reference Number',
+            'designation': 'Designation / Role'
         }
 
     def clean_unique(self):
@@ -337,7 +338,7 @@ class TalentRequiredForm(forms.ModelForm):
 class TalentRequiredEditForm(forms.ModelForm):
     class Meta:
         model = TalentRequired
-        fields = ('title', 'designation', 'companybranch', 'date_deadline', 'hours_required', 'unit', 'worklocation', 'rate_offered', 'rate_unit', 'currency', 'rate_unit', 'offer_status', 'certification', 'scope', 'expectations', 'terms', 'city', 'experience_level', 'bid_closes', 'own_ref_no', 'language')
+        fields = ('title', 'designation', 'companybranch', 'date_deadline', 'permpos', 'hours_required', 'unit', 'worklocation', 'rate_offered', 'rate_unit', 'currency', 'rate_unit', 'offer_status', 'certification', 'scope', 'expectations', 'terms', 'city', 'experience_level', 'bid_closes', 'own_ref_no', 'language')
         widgets={
             'city': CitySelect2Widget(),
             'designation': DesignationSelect2Widget(),
@@ -357,6 +358,7 @@ class TalentRequiredEditForm(forms.ModelForm):
             'date_deadline': 'Completion Date',
             'hours_required': 'Hours',
             'own_ref_no': 'Own Internal Vacancy Reference Number',
+            'designation': 'Designation / Role'
         }
 
     def clean_unique(self):

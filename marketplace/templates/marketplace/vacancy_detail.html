@@ -160,12 +160,25 @@
       <td class="align-middle text-center">{{ v.worklocation }}</td>
       <td class="align-middle text-center">{{ v.city.city }}</td>
       <td class="align-middle text-center">{{ v.experience_level }}</td>
-
     </tr>
   </tbody>
-  {% endfor %}
 </table>
-
+<div class="row">
+  <div class="col-sm-12 text-center">
+    <h6>
+      <strong>Certifications Required for this Vacancy</strong>
+    </h6>
+    <p>
+    {% for cert in v.certification.all %}
+      <strong>|</strong>{{ cert }}<strong>|</strong>
+    {% empty %}
+        <small>No certifications required for this vacancy.</small>
+    {% endfor %}
+    </p>
+  </div>
+</div>
+{% endfor %}
+<hr>
 <div class="row">
   <div class="col-sm-6">
     <div class="h-100">

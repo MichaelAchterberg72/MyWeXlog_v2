@@ -92,7 +92,21 @@
           </tr>
         </tbody>
       </table>
-      <br>
+      <hr>
+      <div class="row">
+        <div class="col-sm-12 text-center">
+          <h6>
+            <strong>Certifications Required for this Vacancy</strong>
+          </h6>
+          <p>
+          {% for cert in instance.certification.all %}
+            <strong>|</strong>{{ cert }}<strong>|</strong>
+          {% empty %}
+              <small>No certifications required for this vacancy.</small>
+          {% endfor %}
+          </p>
+        </div>
+      </div>
       <hr>
       <div class="row">
         <div class="col-sm-6">

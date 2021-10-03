@@ -23,7 +23,7 @@
       <div class="col-md-3 h-100 text-center my-auto">
         <strong>Vacancy Title</strong>
       </div>
-      <div class="col-md-1 h-100 text-center my-auto">
+      <div class="col-md-2 h-100 text-center my-auto">
         <strong>Hours</strong>
       </div>
       <div class="col-md-2 h-100 text-center my-auto">
@@ -32,7 +32,7 @@
       <div class="col-md-2 h-100 text-center my-auto">
         <strong>Country</strong>
       </div>
-      <div class="col-md-2 h-100 text-center my-auto">
+      <div class="col-md-1 h-100 text-center my-auto">
         <strong>Full Detail</strong>
       </div>
     </div>
@@ -48,7 +48,7 @@
           <div class="col-md-3 h-100 text-center my-auto">
             {{ i.title }}
           </div>
-          <div class="col-md-1 h-100 text-center my-auto">
+          <div class="col-md-2 h-100 text-center my-auto">
             {{ i.hours_required|intcomma }}<br><small>({{ i.get_unit_display }})</small>
           </div>
           <div class="col-md-2 h-100 text-center my-auto">
@@ -57,7 +57,7 @@
           <div class="col-md-2 h-100 text-center my-auto">
             {{ i.city }}
           </div>
-          <div class="col-md-2 h-100 text-center my-auto">
+          <div class="col-md-1 h-100 text-center my-auto">
             {% if request.user.subscription >= 2 %}
               <a href="{% url 'MarketPlace:VacancyDetail' i.ref_no %}"  data-toggle="tooltip" title="Vacancy Detail">
                 <i class="fa fa-industry" style="font-size:24px;color:black"></i>

@@ -35,7 +35,6 @@
           {% csrf_token %}
           <div style="background-color:red; color:white;">
             <p>
-
               {{ form.non_field_errors }}
             </p>
           </div>
@@ -64,17 +63,20 @@
                 </a>
               </p>
               <div class="form-row">
-                <div class="form-group col-md-6 mb-0">
+                <div class="form-group col-md-4 mb-0" data-toggle="tooltip" data-placement="top" title="Leave empty if advertising a permanent position.">
                   {{ form.date_deadline|as_crispy_field }}
                 </div>
-                <div class="form-group col-md-6 mb-0">
+                <div class="form-group col-md-3 mb-0" data-toggle="tooltip" data-placement="top" title="Is this a permanent position (Tick for 'Yes')">
+                  {{ form.permpos|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-4 mb-0">
                   {{ form.bid_closes|as_crispy_field }}
                 </div>
               </div>
             </div>
             <div class="form-group col-md-6 mb-0">
               <div class="form-row">
-                <div class="form-group col-md-2 mb-0">
+                <div class="form-group col-md-2 mb-0" data-toggle="tooltip" data-placement="top" title="Leave blank for a permanent position an select 'Permanent Position' in the 'Unit' field">
                   {{ form.hours_required|as_crispy_field }}
                 </div>
                 <div class="form-group col-md-5 mb-0">
@@ -92,7 +94,11 @@
               <div class="form-row">
                 <div class="form-group col-md-4 mb-0">
                   {{ form.currency|as_crispy_field }}
-                  <p><a href="{% url 'Location:CurrencyAddPop' %}" id='add_currency' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add Currency</a></p>
+                  <p>
+                    <a href="{% url 'Location:CurrencyAddPop' %}" id='add_currency' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">
+                      Add Currency
+                    </a>
+                  </p>
                 </div>
                 <div class="form-group col-md-4 mb-0">
                   {{ form.rate_offered|as_crispy_field }}
