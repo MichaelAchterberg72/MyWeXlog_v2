@@ -41,7 +41,8 @@
           <th colspan="5" class="text-center"><strong>Comment</strong></th>
         </tr>
         <tr>
-          <td colspan="5" class="text-left">{{ info.experience.comment|linebreaks|truncatechars:560 }}</td>
+          <td colspan="5" class="text-left"><strong>{{ info.experience.title }}</strong><br>
+            {{ info.experience.comment|linebreaks|truncatechars:560 }}</td>
         </tr>
       </tbody>
     </table>

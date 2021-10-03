@@ -131,7 +131,7 @@
       <br>
       <div class="row">
 
-        <div class="col-sm-6">
+        <div class="col-sm-4">
           <div class="h-100">
             <div class="card-body">
               <a href="{% url 'MarketPlace:Deliverables2' instance.ref_no %}" class="badge badge-primary float-right" style="width: 5rem;">Add</a>
@@ -162,7 +162,7 @@
           </div>
         </div>
 
-        <div class="col-sm-6">
+        <div class="col-sm-4">
           <div class="h-100">
             <div class="card-body">
               <a href="{% url 'MarketPlace:Skillsa' instance.ref_no %}" class="badge badge-primary float-right" style="width: 5rem;">Add</a>
@@ -188,6 +188,34 @@
             </div>
           </div>
         </div>
+
+        <div class="col-sm-4">
+          <div class="h-100">
+            <div class="card-body">
+              
+              <h5 class="card-title" id="certs">Certifications</h5>
+              <table class="table table-sm">
+                <col width="90%">
+                <col width="10%">
+                <thead>
+
+                </thead>
+                <tbody>
+                  {% for cert in instance.certification.all %}
+                  <tr>
+                    <td>{{ cert }}</td>
+                    <td><form  action="{% url 'MarketPlace:CertificateDelete' instance.ref_no cert %}" method="post">
+                      {% csrf_token %}
+                      <button type="submit" class="badge badge-danger badge-pill float-right" style="width: 5rem;" onclick="return confirm('Remove skill - Are you sure?');">Remove</button>
+                    </form></td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>

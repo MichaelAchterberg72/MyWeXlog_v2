@@ -81,7 +81,7 @@ class CitySelect2Widget(CitySearchFieldMixin, ModelSelect2Widget):
 
 class CertSearchFieldMixin:
     search_fields = [
-        'certification__type__icontains', 'pk__startswith','region__region__icontains', 'companybranch__company__ename__icontains',
+        'type__icontains', 'pk__startswith',
     ]
 
 class CertModelSelect2MultipleWidget(CertSearchFieldMixin, ModelSelect2MultipleWidget):
