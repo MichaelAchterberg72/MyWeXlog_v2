@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     'feedback.apps.FeedbackConfig',
     'AppControl.apps.AppcontrolConfig',
     'mod_corporate.apps.ModCorporateConfig',
+    'skills.apps.SkillsConfig',
     'tasks',
     'analytics',
     'management',
@@ -269,9 +270,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         #'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'test', #'Wexlog_Home', #'test_load', #,
+        'NAME': 'JKdev', #'Wexlog_Home', #'test_load', #,
         'USER': 'postgres',
-		'PASSWORD': 'rdf8tm1234', #MA
+		'PASSWORD': 'netscape', #MA
         'HOST': 'localhost',
         #'HOST': 'dbhost',
         'PORT': '5432'

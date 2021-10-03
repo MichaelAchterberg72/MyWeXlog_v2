@@ -144,10 +144,18 @@
     </tr>
   </thead>
   <tbody>
-
     <tr>
       <td class="align-middle text-center">
-        {{ v.hours_required|intcomma }}<br>({{ v.get_unit_display }})
+        {% if v.hours_required == 0 %}
+          <small>None Given</small>
+        {% else %}
+          {{ v.hours_required|intcomma }}<br><small>({{ v.get_unit_display }})</small><br>
+          {% if v.permpos == True %}
+            <p>
+              <small>Permanent Position</small>
+            </p>
+          {% endif %}
+        {% endif %}
       </td>
       <td class="align-middle text-center">{{ v.worklocation }}</td>
       <td class="align-middle text-center">{{ v.city.city }}</td>

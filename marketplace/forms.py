@@ -81,7 +81,7 @@ class CitySelect2Widget(CitySearchFieldMixin, ModelSelect2Widget):
 
 class CertSearchFieldMixin:
     search_fields = [
-        'certification__type__icontains', 'pk__startswith','region__region__icontains', 'companybranch__company__ename__icontains',
+        'type__icontains', 'pk__startswith',
     ]
 
 class CertModelSelect2MultipleWidget(CertSearchFieldMixin, ModelSelect2MultipleWidget):
@@ -288,7 +288,7 @@ class TalentRequiredForm(forms.ModelForm):
 
     class Meta:
         model = TalentRequired
-        fields = ('title', 'companybranch', 'designation', 'date_deadline', 'hours_required', 'unit', 'worklocation', 'rate_offered', 'rate_unit', 'currency', 'rate_unit', 'certification', 'scope', 'expectations', 'terms', 'city', 'experience_level', 'bid_closes', 'own_ref_no', 'language',)
+        fields = ('title', 'companybranch', 'designation', 'date_deadline', 'permpos', 'hours_required', 'unit', 'worklocation', 'rate_offered', 'rate_unit', 'currency', 'rate_unit', 'certification', 'scope', 'expectations', 'terms', 'city', 'experience_level', 'bid_closes', 'own_ref_no', 'language',)
         widgets={
             'city': CitySelect2Widget(),
             'currency': CurrencySelect2Widget(),

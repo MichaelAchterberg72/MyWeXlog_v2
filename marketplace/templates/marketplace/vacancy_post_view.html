@@ -32,7 +32,9 @@
         </a>
       </div>
       <h3>Vacancy Review</h3>
-      <h5 class="card-title">Vacancy: {{ instance.title }} ({{ instance.ref_no }})</h5>
+      <h5 class="card-title">
+        Vacancy: {{ instance.title }} ({{ instance.ref_no }})
+      </h5>
       <p>
         This is the place to review and edit a vacancy
       </p>
@@ -41,7 +43,7 @@
           <tr>
             <th class="align-middle text-center">My Reference No.</th>
             <th class="align-middle text-center">Company</th>
-            <th class="align-middle text-center">Designation</th>
+            <th class="align-middle text-center">Designation / Role</th>
           </tr>
         </thead>
         <tbody>
@@ -65,7 +67,16 @@
         <tbody>
           <tr>
             <td class="align-middle text-center">
-              {{ instance.hours_required|intcomma }} ({{ instance.get_unit_display }})
+              {% if instance.hours_required == 0 %}
+                <small>None Given</small>
+              {% else %}
+                {{ instance.hours_required|intcomma }}<br><small>({{ instance.get_unit_display }})</small><br>
+                {% if instance.permpos == True %}
+                  <p>
+                    <small>Permanent Position</small>
+                  </p>
+                {% endif %}
+              {% endif %}
             </td>
             <td class="align-middle text-center">{{ instance.worklocation }}</td>
             <td class="align-middle text-center">{{ instance.city.city }}</td>
@@ -148,7 +159,9 @@
                 <tr>
                   <td>{{ d.deliverable|safe|truncatechars:100 }}</td>
                   <td>
-                    <a href="{% url 'MarketPlace:DeliverablesEdit' d.scope.ref_no %}" class="badge badge-secondary badge-pill align-middle text-center" style="width: 5rem;">Edit</a>
+                    <a href="{% url 'MarketPlace:DeliverablesEdit' d.scope.ref_no %}" class="badge badge-secondary badge-pill align-middle text-center" style="width: 5rem;">
+                      Edit
+                    </a>
                     <form  action="{% url 'MarketPlace:DeliverablesDelete' d.id %}" method="post">
                       {% csrf_token %}
                     <button type="submit" class="badge badge-danger badge-pill align-middle text-center" style="width: 5rem;" onclick="return confirm('Remove deliverable - Are you sure?');">Remove</button>
@@ -171,7 +184,6 @@
                 <col width="90%">
                 <col width="10%">
                 <thead>
-
                 </thead>
                 <tbody>
                   {% for s in skille %}

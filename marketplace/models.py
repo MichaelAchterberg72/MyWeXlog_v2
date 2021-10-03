@@ -49,6 +49,7 @@ RATE_UNIT = (
     ('H','per Hour'),
     ('D','per Day'),
     ('M','per Month'),
+    ('A','per Annum'),
     ('L','Lump Sum'),
 )
 
@@ -57,6 +58,7 @@ UNIT = (
     ('M','per Month'),
     ('D','per Day'),
     ('W','per Week'),
+    ('P','Permanent Position'),
     ('S','Short Term Contract'),
     ('A','As and When Contract'),
 )
@@ -106,12 +108,13 @@ class TalentRequired(models.Model):
     companybranch = models.ForeignKey(Branch, on_delete=models.SET_NULL, null=True, verbose_name="Company")
     requested_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     date_deadline = models.DateField('Work completed by', blank=True, null=True)
-    hours_required = models.IntegerField()
+    permpos = models.BooleanField('Permanent Position?', default=False, blank=True)
+    hours_required = models.IntegerField(blank=True, null=True)
     unit = models.CharField(max_length=1, choices=UNIT)
     experience_level = models.ForeignKey(SkillLevel, on_delete=models.PROTECT)
     language = models.ManyToManyField(LanguageList)
     worklocation = models.ForeignKey(WorkLocation, on_delete=models.PROTECT)#Job configuration
-    rate_offered = models.DecimalField(max_digits=6, decimal_places=2)
+    rate_offered = models.DecimalField(max_digits=9, decimal_places=2, blank=True, null=True)
     currency = models.ForeignKey(Currency, on_delete=models.PROTECT)
     rate_unit = models.CharField(max_length=1, choices=RATE_UNIT, default='H')
     bid_open = models.DateTimeField(auto_now_add=True, null=True)
