@@ -92,8 +92,6 @@
                   </a>
                 </div>
               </div>
-              <div>
-              </div>
             </div>
           </div>
         </div>
@@ -346,8 +344,12 @@
       </a>
     {% endif %}
     &nbsp &nbsp
-    <a href="{% url 'Talent:PflSearch' %}" class="">
+    <a href="{% url 'Talent:PflSearch' %}">
       <i class="fa fa-users" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Profile Search"></i>
+    </a>
+    &nbsp &nbsp
+    <a href="{% url 'Skills:SkillFilter' %}">
+      <i class="fa fa-filter" aria-hidden="true"style="font-size:34px;color:black" data-toggle="tooltip" title="Skills Filter"></i>
     </a>
   </div>
   <hr>

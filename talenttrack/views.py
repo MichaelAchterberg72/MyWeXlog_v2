@@ -6540,7 +6540,7 @@ def LecturerAddView(request, tex):
 
     if request.is_ajax():
         qry = request.GET.get('term')
-        people = CustomUser.objects.all().filter(~Q(id__in=filt)).filter(Q(first_name__icontains=qry) | Q(last_name__icontains=qry) | Q(email__icontains=qry) | Q(display_text__icontains=qry)).order_by('last_name')
+        people = CustomUser.objects.filter(~Q(id__in=filt)).filter(Q(first_name__icontains=qry) | Q(last_name__icontains=qry) | Q(email__icontains=qry) | Q(display_text__icontains=qry)).order_by('last_name')
         response_content = list(people.values('id','display_text'))
 
         return JsonResponse(response_content, safe=False)
