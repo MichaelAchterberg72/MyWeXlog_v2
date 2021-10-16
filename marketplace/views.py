@@ -1358,7 +1358,10 @@ def WorkBidView(request, vac):
             new.currency = detail.currency
             new.rate_unit = detail.rate_unit
             new.save()
-            return redirect(reverse('MarketPlace:Entrance'))
+            if 'profile' in request.POST:
+                return redirect(reverse('Profile:ProfileView'))
+            elif 'another' in request.POST:
+                return redirect(reverse('MarketPlace:Entrance'))
     else:
 
         template = 'marketplace/vacancy_apply.html'
