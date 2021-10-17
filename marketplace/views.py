@@ -572,7 +572,7 @@ def InterviewListView(request, vac):
     else:
         active = 'False'
 
-    we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
+    we = WorkExperience.objects.filter(Q(talent__subscription__gte=0) & Q(score__gte=skill_pass_score))
     skille = SkillRequired.objects.filter(scope__ref_no=vac)
     applicants = WorkBid.objects.filter(work__ref_no=vac)
     book = ReadBy.objects.all()
@@ -812,7 +812,7 @@ def PendingInterviewListView(request, vac):
 
     intv_pending = intv_qs.filter(Q(outcome='I')).filter(Q(tlt_response='A') | Q(tlt_response='P'))
 
-    we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
+    we = WorkExperience.objects.filter(Q(talent__subscription__gte=0) & Q(score__gte=skill_pass_score))
     skille = SkillRequired.objects.filter(scope__ref_no=vac)
     applicants = WorkBid.objects.filter(work__ref_no=vac)
     book = ReadBy.objects.all()
@@ -931,7 +931,7 @@ def SuitableInterviewListView(request, vac):
     else:
         active = 'False'
 
-    we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
+    we = WorkExperience.objects.filter(Q(talent__subscription__gte=0) & Q(score__gte=skill_pass_score))
     skille = SkillRequired.objects.filter(scope__ref_no=vac)
     applicants = WorkBid.objects.filter(work__ref_no=vac)
     book = ReadBy.objects.all()
@@ -1045,7 +1045,7 @@ def UnsuitableInterviewListView(request, vac):
 
     vacancy_declined = WorkIssuedTo.objects.filter(work__ref_no=vac, tlt_response='D')
 
-    we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
+    we = WorkExperience.objects.filter(Q(talent__subscription__gte=0) & Q(score__gte=skill_pass_score))
     skille = SkillRequired.objects.filter(scope__ref_no=vac)
     applicants = WorkBid.objects.filter(work__ref_no=vac)
     book = ReadBy.objects.all()
@@ -1156,7 +1156,7 @@ def BidRejectedListView(request, vac):
 
     vacancy_declined = WorkIssuedTo.objects.filter(work__ref_no=vac, tlt_response='D')
 
-    we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
+    we = WorkExperience.objects.filter(Q(talent__subscription__gte=0) & Q(score__gte=skill_pass_score))
     skille = SkillRequired.objects.filter(scope__ref_no=vac)
     applicants = WorkBid.objects.filter(work__ref_no=vac)
     book = ReadBy.objects.all()
@@ -2520,7 +2520,7 @@ def VacancyPostView(request, vac):
     skille = SkillRequired.objects.filter(scope__ref_no=vac)
     delivere = Deliverables.objects.filter(scope__ref_no=vac)
     applicants = WorkBid.objects.filter(work__ref_no=vac)
-    we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
+    we = WorkExperience.objects.filter(Q(talent__subscription__gte=0) & Q(score__gte=skill_pass_score))
     s_list = BidShortList.objects.filter(scope__ref_no=vac)
     book = ReadBy.objects.all()
     vac_exp = ExpandedView.objects.get(talent=request.user)
@@ -2533,7 +2533,7 @@ def VacancyPostView(request, vac):
     sk_sn = SkillLevel.objects.get(level=4).min_hours
     sk_ld = SkillLevel.objects.get(level=5).min_hours
     tr_qs = TalentRequired.objects.filter(ref_no=vac)
-    tlt = Profile.objects.filter(talent__subscription__gte=1)
+    tlt = Profile.objects.filter(talent__subscription__gte=0)
     #Queryset Cache<<<
 
     #>>> List all skills required
@@ -2561,7 +2561,7 @@ def VacancyPostView(request, vac):
     if vac_type == 'Remote freelance' or vac_type == 'Consultant':
         wel_i=wee
     else:
-        wel = set(PhysicalAddress.objects.filter(region=instance.city.region).values_list('talent', flat=True))
+        wel = set(PhysicalAddress.objects.filter(country=instance.city.country).values_list('talent', flat=True))
         #Willing to Relocate
 
         ctry = Region.objects.get(region=instance.city.region)
@@ -2715,13 +2715,13 @@ def TalentSuitedVacancyListView(request, vac):
     skille = SkillRequired.objects.filter(scope__ref_no=vac)
     delivere = Deliverables.objects.filter(scope__ref_no=vac)
     applicants = WorkBid.objects.filter(work__ref_no=vac)
-    we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
+    we = WorkExperience.objects.filter(Q(talent__subscription__gte=0) & Q(score__gte=skill_pass_score))
     s_list = BidShortList.objects.filter(scope__ref_no=vac)
     skill_rs = skille.values_list('skills__skill', flat=True).distinct()
     skill_rc = skill_rs.count()
     book = ReadBy.objects.all()
     tr_qs = TalentRequired.objects.filter(ref_no=vac)
-    tlt = Profile.objects.filter(talent__subscription__gte=1)
+    tlt = Profile.objects.filter(talent__subscription__gte=0)
     vac_exp = ExpandedView.objects.get(talent=request.user)
     list_view = vac_exp.talent_suited_list
     sk_st = SkillLevel.objects.get(level=0).min_hours
@@ -2876,7 +2876,7 @@ def ApplicantsForVacancyListView(request, vac):
     skille = SkillRequired.objects.filter(scope__ref_no=vac)
     delivere = Deliverables.objects.filter(scope__ref_no=vac)
     applicants = WorkBid.objects.filter(work__ref_no=vac)
-    we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
+    we = WorkExperience.objects.filter(Q(talent__subscription__gte=0) & Q(score__gte=skill_pass_score))
     s_list = BidShortList.objects.filter(scope__ref_no=vac)
     book = ReadBy.objects.all()
     vac_exp = ExpandedView.objects.get(talent=request.user)
@@ -3573,7 +3573,7 @@ def TalentDecline(request, tlt, vac):
 def ShortListView(request, vac):
     vacancy = get_object_or_404(TalentRequired, ref_no=vac)
     s_list = BidShortList.objects.filter(Q(scope__ref_no=vac) & Q(status='S'))
-    we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
+    we = WorkExperience.objects.filter(Q(talent__subscription__gte=0) & Q(score__gte=skill_pass_score))
     skille = SkillRequired.objects.filter(scope__ref_no=vac)
     applicants = WorkBid.objects.filter(work__ref_no=vac)
     book = ReadBy.objects.all()
