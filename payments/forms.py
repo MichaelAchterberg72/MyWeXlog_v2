@@ -1,8 +1,10 @@
-from paypal.standard.forms import PayPalPaymentsForm
-from paypal.standard.forms import PayPalEncryptedPaymentsForm
-from paypal.standard.forms import PayPalSharedSecretEncryptedPaymentsForm
-from django.utils.html import format_html
 from django import forms
+from django.utils.html import format_html
+
+from paypal.standard.forms import (PayPalEncryptedPaymentsForm,
+                                   PayPalPaymentsForm,
+                                   PayPalSharedSecretEncryptedPaymentsForm)
+
 
 class ExtPayPalPaymentsForm(PayPalPaymentsForm):
     def render(self):

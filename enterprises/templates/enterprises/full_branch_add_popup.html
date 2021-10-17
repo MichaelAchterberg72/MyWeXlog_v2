@@ -1,0 +1,143 @@
+{% extends 'base_homelite.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}{% endblock title %}
+
+
+{% block content %}
+<div class="container">
+<h3>Add a Company / Enterprise</h3>
+
+<form method="post" novalidate>
+  {% csrf_token %}
+  <div style="background-color:red; color:white;">
+    <p>
+
+      {{ form.non_field_errors }}
+    </p>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-6 mb-0">
+      {{ form.ename|as_crispy_field }}
+      {{ form.website|as_crispy_field }}
+    </div>
+    <div class="form-group col-md-6 mb-0">
+      {{ form.description|as_crispy_field }}
+    </div>
+  </div>
+  <div class="">
+    <p><button type="submit" class="btn btn-primary">Save</button>
+  </div>
+</form>
+<form method="post" id="BranchForm">
+<input type="hidden" name="next" value="{{ request.GET.next }}">
+  {% csrf_token %}
+
+  <div class="form-row">
+    <div class="form-group col-md-6 mb-0">
+      {{ form.company|as_crispy_field }}
+      <p><a href="{% url 'Enterprise:EnterpriseAddPop' %}" id='add_company' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add a Company</a></p>
+      {{ form.name|as_crispy_field }}
+      <p>
+        <br>
+      </p>
+      <div class="form-row">
+        <div class="form-group col-md-6 mb-0">
+          {{ form.type|as_crispy_field }}
+          <p><a href="{% url 'Enterprise:BranchTypeAddPop' %}" id='add_branch_type' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add a new Branch Type</a></p>
+        </div>
+        <div class="form-group col-md-6 mb-0" data-toggle="tooltip" data-placement="top" title="The number of people in the branch">
+          {{ form.size|as_crispy_field }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-9">
+          {{ form.industry|as_crispy_field }}
+        </div>
+        <div class="col-md-3">
+          <br>
+          <p><a href="{% url 'Enterprise:IndustryAddPop' %}" id='add_branch_industry' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add a new Industry Type</a></p>
+        </div>
+      </div>
+      {{ form.phy_address_line1|as_crispy_field }}
+      {{ form.phy_address_line2|as_crispy_field }}
+    </div>
+    <div class="form-group col-md-6 mb-0">
+      {{ form.country|as_crispy_field }}
+      <p>
+        <br>
+      </p>
+      {{ form.region|as_crispy_field }}
+      <div id="city_error" class="d-none float-right">
+        <button class="btn btn-danger btn-block" type="button" name="button">
+          Please enter a region
+        </button>
+      </div>
+      <p>
+        <a href="{% url 'Location:RegionAddPop' %}" id='add_region' onclick='return showAddPopup(this);'>
+          <img src = "{% static 'images/icon-addlink.svg' %}">
+          Add a Region
+        </a>
+      </p>
+      {{ form.city|as_crispy_field }}
+      <div id="suburb_error" class="d-none float-right">
+        <button class="btn btn-danger btn-block" type="button" name="button">
+          Please enter a city or town
+        </button>
+      </div>
+      <p>
+        <a href="#" id='ad_cty'>
+          <img src = "{% static 'images/icon-addlink.svg' %}">
+          Add a City
+        </a>
+        <a href="{% url 'Location:CityAddPop' %}" id='add_city' onclick='return showAddPopup(this);'>
+        </a>
+      </p>
+      {{ form.suburb|as_crispy_field }}
+      <p>
+        <a href="#" id='add_sub'>
+          <img src = "{% static 'images/icon-addlink.svg' %}">
+          Add a Suburb
+        </a>
+        <a href="{% url 'Location:SuburbAddPop' %}" id='add_suburb' onclick='return showAddPopup(this);'>
+        </a>
+      </p>
+      {{ form.code|as_crispy_field }}
+    </div>
+  </div>
+  <div class="">
+    <p><a href="{% url 'Enterprise:EnterpriseHome' %}" class="btn btn-danger">Cancel</a> <button type="submit" name="Done" class="btn btn-primary">Save</button> </p>
+  </div>
+</form>
+</div>
+<script type="text/javascript">
+  document.getElementById("id_region").disabled = true;
+
+  var dis1 = document.getElementById("id_country");
+  dis1.onchange = function () {
+     if (this.value != "" || this.value.length > 0) {
+        document.getElementById("id_region").disabled = false;
+     }
+  };
+
+  document.getElementById("id_city").disabled = true;
+
+  var dis2 = document.getElementById("id_region");
+  dis2.onchange = function () {
+     if (this.value != "" || this.value.length > 0) {
+        document.getElementById("id_city").disabled = false;
+     }
+  };
+
+  document.getElementById("id_suburb").disabled = true;
+
+  var dis3 = document.getElementById("id_city");
+  dis3.onchange = function () {
+     if (this.value != "" || this.value.length > 0) {
+        document.getElementById("id_suburb").disabled = false;
+     }
+  };
+</script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{{ form.media.js }}
+{% endblock content %}

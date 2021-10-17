@@ -1,4 +1,4 @@
-{% load staticfiles %}
+{% load static %}
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -13,7 +13,7 @@
 <title></title>
 <!--[if !mso]><!-->
 <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css"/>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
 <!--<![endif]-->
 <style type="text/css">
 		body {
@@ -186,7 +186,7 @@
 </div>
 <div style="background-color:transparent;">
 <div class="block-grid" style="min-width: 320px; max-width: 640px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; Margin: 0 auto; background-color: transparent;">
-<div style="border-collapse: collapse;display: table;width: 100%;background-color:transparent;background-image:url('{{site}}{% static 'images/email/WP_roundedcorners.png' %}');background-position:center top;background-repeat:no-repeat">
+<div style="border-collapse: collapse;display: table;width: 100%;background-color:transparent;background-image:url('{{request.scheme}}{{request.META.HTTP_HOST}}{{ STATIC_URL }}images/email/WP_roundedcorners.png');background-position:center top;background-repeat:no-repeat">
 <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:transparent;"><tr><td align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:640px"><tr class="layout-full-width" style="background-color:transparent"><![endif]-->
 <!--[if (mso)|(IE)]><td align="center" width="640" style="background-color:transparent;width:640px; border-top: 0px solid transparent; border-left: 0px solid transparent; border-bottom: 0px solid transparent; border-right: 0px solid transparent;" valign="top"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 0px; padding-left: 0px; padding-top:0px; padding-bottom:0px;"><![endif]-->
 <div class="col num12" style="min-width: 320px; max-width: 640px; display: table-cell; vertical-align: top; width: 640px;">
@@ -235,8 +235,9 @@
 <td class="divider_inner" style="word-break: break-word; vertical-align: top; min-width: 100%; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px;" valign="top">
 <table align="center" border="0" cellpadding="0" cellspacing="0" class="divider_content" height="30" role="presentation" style="table-layout: fixed; vertical-align: top; border-spacing: 0; border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-top: 0px solid transparent; height: 30px; width: 100%;" valign="top" width="100%">
 <tbody>
-<tr style="vertical-align: top;" valign="top">
-<td height="45" style="word-break: break-word; vertical-align: top; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;" valign="top"><span></span></td>
+<tr style="vertical-align: top; text-align:center;" valign="top">
+<td align="center" style="word-break: break-word; vertical-align: top; text-align: center; padding-top: 5px; padding-bottom: 25px; padding-left: 5px; padding-right: 5px;" valign="top">
+<span><img align="center" class="icon" height="162" src="{{request.scheme}}{{request.META.HTTP_HOST}}{% static 'images/email/mywexlog-logo.png' %}" style="border:0;" width="null"/></span></td>
 </tr>
 </tbody>
 </table>
@@ -301,7 +302,7 @@
 </div>
 <div style="background-color:#f2f2f7;">
 <div class="block-grid" style="min-width: 320px; max-width: 640px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; Margin: 0 auto; background-color: #ffffff;">
-<div style="border-collapse: collapse;display: table;width: 100%;background-color:#ffffff;background-image:url('{{site}}{% static 'images/email/e20a6b04-734c-4b9c-9668-0810947a8dca.png' %}');background-position:center top;background-repeat:no-repeat">
+<div style="border-collapse: collapse;display: table;width: 100%;background-color:#ffffff;background-image:url('{{request.scheme}}{{request.META.HTTP_HOST}}{{ STATIC_URL }}images/email/e20a6b04-734c-4b9c-9668-0810947a8dca.png');background-position:center top;background-repeat:no-repeat">
 <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f2f2f7;"><tr><td align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:640px"><tr class="layout-full-width" style="background-color:#ffffff"><![endif]-->
 <!--[if (mso)|(IE)]><td align="center" width="640" style="background-color:#ffffff;width:640px; border-top: 0px solid transparent; border-left: 0px solid transparent; border-bottom: 0px solid transparent; border-right: 0px solid transparent;" valign="top"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 0px; padding-left: 0px; padding-top:0px; padding-bottom:0px;"><![endif]-->
 <div class="col num12" style="min-width: 320px; max-width: 640px; display: table-cell; vertical-align: top; width: 640px;">
@@ -348,6 +349,7 @@
 <div style="color:#000000;font-family:Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;line-height:1.2;padding-top:10px;padding-right:10px;padding-bottom:10px;padding-left:10px;">
 <div class="txtTinyMce-wrapper" style="line-height: 1.2; font-size: 16px; color: #000000; font-family: Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif; font-size: 16px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">
   {% block content %}
+
   {% endblock content %}
 </div>
 </div>
@@ -428,7 +430,7 @@
 </div>
 <div style="background-color:transparent;">
 <div class="block-grid" style="min-width: 320px; max-width: 640px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; Margin: 0 auto; background-color: #ffffff;">
-<div style="border-collapse: collapse;display: table;width: 100%;background-color:#ffffff;background-image:url('{{site}}{% static 'images/email/WP_roundedcorners.png' %}');background-position:center top;background-repeat:no-repeat">
+<div style="border-collapse: collapse;display: table;width: 100%;background-color:#ffffff;background-image:url('{{request.scheme}}{{request.META.HTTP_HOST}}{{ STATIC_URL }}images/email/WP_roundedcorners.png');background-position:center top;background-repeat:no-repeat">
 <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:transparent;"><tr><td align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:640px"><tr class="layout-full-width" style="background-color:#ffffff"><![endif]-->
 <!--[if (mso)|(IE)]><td align="center" width="640" style="background-color:#ffffff;width:640px; border-top: 0px solid transparent; border-left: 0px solid transparent; border-bottom: 0px solid transparent; border-right: 0px solid transparent;" valign="top"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 0px; padding-left: 0px; padding-top:0px; padding-bottom:0px;"><![endif]-->
 <div class="col num12" style="min-width: 320px; max-width: 640px; display: table-cell; vertical-align: top; width: 640px;">
@@ -550,7 +552,7 @@
 </div>
 <div style="background-color:#f2f2f7;">
 <div class="block-grid" style="min-width: 320px; max-width: 640px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; Margin: 0 auto; background-color: #ffffff;">
-<div style="border-collapse: collapse;display: table;width: 100%;background-color:#ffffff;background-image:url('{{site}}{% static "images/email/e20a6b04-734c-4b9c-9668-0810947a8dca.png" %}');background-position:center top;background-repeat:no-repeat">
+<div style="border-collapse: collapse;display: table;width: 100%;background-color:#ffffff;background-image:url('{{request.scheme}}{{request.META.HTTP_HOST}}{{ STATIC_URL }}images/email/e20a6b04-734c-4b9c-9668-0810947a8dca.png');background-position:center top;background-repeat:no-repeat">
 <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f2f2f7;"><tr><td align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:640px"><tr class="layout-full-width" style="background-color:#ffffff"><![endif]-->
 <!--[if (mso)|(IE)]><td align="center" width="640" style="background-color:#ffffff;width:640px; border-top: 0px solid transparent; border-left: 0px solid transparent; border-bottom: 0px solid transparent; border-right: 0px solid transparent;" valign="top"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 0px; padding-left: 0px; padding-top:0px; padding-bottom:0px;"><![endif]-->
 <div class="col num12" style="min-width: 320px; max-width: 640px; display: table-cell; vertical-align: top; width: 640px;">
@@ -647,10 +649,10 @@
 <td style="word-break: break-word; vertical-align: top; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px;" valign="top">
 <table align="center" cellpadding="0" cellspacing="0" role="presentation" style="table-layout: fixed; vertical-align: top; border-spacing: 0; border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt;" valign="top">
 <tr style="vertical-align: top;" valign="top">
-<td align="center" style="word-break: break-word; vertical-align: top; text-align: center; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px;" valign="top"><a href="https://www.facebook.com/Mywexlog-110146303820922"><img align="center" class="icon" height="32" src="{{site}}{% static 'images/email/WP_socialmedia_facebook_2.png' %}" style="border:0;" width="null"/></a></td>
-<td align="center" style="word-break: break-word; vertical-align: top; text-align: center; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px;" valign="top"><a href="https://twitter.com/MyWeXlog"><img align="center" class="icon" height="32" src="{{site}}{% static 'images/email/WP_socialmedia_twitter_2.png' %}" style="border:0;" width="null"/></a></td>
-<td align="center" style="word-break: break-word; vertical-align: top; text-align: center; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px;" valign="top"><a href="https://www.linkedin.com/company/mywexlog/"><img align="center" class="icon" height="32" src="{{site}}{% static 'images/email/WP_socialmedia_linkedin_2.png' %}" style="border:0;" width="null"/></a></td>
-<td align="center" style="word-break: break-word; vertical-align: top; text-align: center; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px;" valign="top"><a href="https://www.youtube.com/channel/UCqT7Jr6aKefHsqPlWmpPqhA/channels"><img align="center" class="icon" height="32" src="{{site}}{% static 'images/email/WP_socialmedia_youtube_2.png' %}" style="border:0;" width="null"/></a></td>
+<td align="center" style="word-break: break-word; vertical-align: top; text-align: center; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px;" valign="top"><a href="https://www.facebook.com/Mywexlog-110146303820922"><img align="center" class="icon" height="32" src="{{request.scheme}}{{request.META.HTTP_HOST}}{% static 'images/email/WP_socialmedia_facebook_2.png' %}" style="border:0;" width="null"/></a></td>
+<td align="center" style="word-break: break-word; vertical-align: top; text-align: center; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px;" valign="top"><a href="https://twitter.com/MyWeXlog"><img align="center" class="icon" height="32" src="{{request.scheme}}{{request.META.HTTP_HOST}}{% static 'images/email/WP_socialmedia_twitter_2.png' %}" style="border:0;" width="null"/></a></td>
+<td align="center" style="word-break: break-word; vertical-align: top; text-align: center; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px;" valign="top"><a href="https://www.linkedin.com/company/mywexlog/"><img align="center" class="icon" height="32" src="{{request.scheme}}{{request.META.HTTP_HOST}}{% static 'images/email/WP_socialmedia_linkedin_2.png' %}" style="border:0;" width="null"/></a></td>
+<td align="center" style="word-break: break-word; vertical-align: top; text-align: center; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px;" valign="top"><a href="https://www.youtube.com/channel/UCqT7Jr6aKefHsqPlWmpPqhA/channels"><img align="center" class="icon" height="32" src="{{request.scheme}}{{request.META.HTTP_HOST}}{% static 'images/email/WP_socialmedia_youtube_2.png' %}" style="border:0;" width="null"/></a></td>
 </tr>
 </table>
 </td>
@@ -693,7 +695,7 @@
 <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; font-family: Tahoma, sans-serif"><![endif]-->
 <div style="color:#0d1451;font-family:Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif;line-height:1.2;padding-top:10px;padding-right:10px;padding-bottom:10px;padding-left:10px;">
 <div class="txtTinyMce-wrapper" style="line-height: 1.2; font-size: 12px; color: #0d1451; font-family: Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif; mso-line-height-alt: 14px;">
-<p style="font-size: 14px; line-height: 1.2; word-break: break-word; text-align: center; mso-line-height-alt: 17px; margin: 0;"><strong>+123 456 789</strong></p>
+<p style="font-size: 14px; line-height: 1.2; word-break: break-word; text-align: center; mso-line-height-alt: 17px; margin: 0;"><strong><!--telephone--></strong></p>
 </div>
 </div>
 <!--[if mso]></td></tr></table><![endif]-->
@@ -743,15 +745,15 @@
 <div class="txtTinyMce-wrapper" style="line-height: 1.2; font-size: 12px; color: #555555; font-family: Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif; mso-line-height-alt: 14px;">
 
 <p style="font-size: 14px; margin: 0; text-align:center;"><strong>
-  <a href="https://mywexlog.com/user/settings/" style="color: inherit; text-decoration: none;">Manage your account</a> |
-  <a href="https://mywexlog.com//user/privacy-policy/" style="color: inherit; text-decoration: none;">Privacy Policy</a> |
-  <a href="https://mywexlog.com/user/user-agreement/" style="color: inherit; text-decoration: none;">User Agreement</a><br></strong>
+  <a href="https://app.mywexlog.com/user/settings/" style="color: inherit; text-decoration: none;">Manage your account</a> |
+  <a href="https://app.mywexlog.com/user/privacy-policy/" style="color: inherit; text-decoration: none;">Privacy Policy</a> |
+  <a href="https://app.mywexlog.com/user/user-agreement/" style="color: inherit; text-decoration: none;">User Agreement</a><br></strong>
 </p>
 
 <div style="font-size: 12px; text-align: center; padding-top:10px; padding-right:35px; padding-bottom:10px; padding-left:35px;">
   <p><strong>{% if user %}This email was sent to {{ user }}. You are receiving this email as you are registered to receive notifications, updates, news and/or promotional updates.{% endif %}</strong></p>
-  <p>* Please do not reply to this email. You may log into your account and utilise the feekback icon for any queries. ** To change your preference or unsubscribe please <a href="https://mywexlog.com/user/settings/">click here</a>.</p>
-	<p>Copyright © 2021 DevOpTec Pty Limited (ACN: 640 120 565)</strong></p>
+  <p>* Please do not reply to this email. You may log into your account and utilise the feekback icon for any queries. ** To change your preference or unsubscribe please <a href="https://app.mywexlog.com/user/settings/">click here</a>.</p>
+	<p>Copyright © 2021 DevOpTec Pty Limited (ABN: 25 640 120 565)</strong></p>
 </div>
 </div>
 </div>
@@ -869,7 +871,7 @@
 <table cellpadding="0" cellspacing="0" class="icons-inner" role="presentation" style="table-layout: fixed; vertical-align: top; border-spacing: 0; border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; display: inline-block; margin-right: -4px; padding-left: 0px; padding-right: 0px;" valign="top">
 <!--<![endif]-->
 <tr style="vertical-align: top;" valign="top">
-<td align="center" style="word-break: break-word; vertical-align: top; text-align: center; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 6px;" valign="top"><a href="https://www.designedwithbee.com/"><img align="center" class="icon" height="32" src="{{site}}{% static 'images/email/bee.png' %}" style="border:0;" width="null"/></a></td>
+<td align="center" style="word-break: break-word; vertical-align: top; text-align: center; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 6px;" valign="top"><a href="https://www.designedwithbee.com/"><img align="center" class="icon" height="32" src="{{request.scheme}}{{request.META.HTTP_HOST}}{% static 'images/email/bee.png' %}" style="border:0;" width="null"/></a></td>
 <td style="word-break: break-word; font-family: Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, Tahoma, sans-serif; font-size: 15px; color: #9d9d9d; vertical-align: middle;" valign="middle"><a href="https://www.designedwithbee.com/" style="color:#9d9d9d;text-decoration:none;">Designed with BEE</a></td>
 </tr>
 </table>

@@ -1,4 +1,5 @@
 {% load static %}
+{% load sri %}
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
@@ -6,14 +7,14 @@
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
       <!-- Bootstrap CSS -->
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-      <link rel="stylesheet" href="https://stackpath.bookstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
       <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700&display=swap" rel="stylesheet">
+      {% sri_static "css/wexlog_css.css" %}
 
-      <link href="{% static 'css/wexlog_css.css' %}" rel="stylesheet">
-
-      <link rel="stylesheet" href="{% static 'css/dark-mode.css' %}">
+      {% if theme == 1 %}
+        {% sri_static "css/dark-mode.css" %}
+      {% endif %}
       <!-- Favicon -->
       <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}"/>
 
@@ -21,19 +22,19 @@
   {% block Style %}
   {% endblock Style %}
   </head>
-  <body>
-    <!-- Fixed navbar -->
-    <div class="">
-    <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
-    <div class="container">
-    <a class="navbar-brand" href="https://mywexlog.dev/public/index/">MyWeXlog</a>
-    <p><div class="custom-control custom-switch float-right">
-          <input type="checkbox" class="custom-control-input" id="darkSwitch">
-          <label class="custom-control-label" for="darkSwitch">Dark Mode</label>
-    </div></p>
-    </div>
+  <body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="https://mywexlog.dev/public/index/">MyWeXlog</a>
+        <div class="" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="navbar-brand float-left" href="{% url 'Feedback:FeedBack' %}?next={{ request.path|urlencode }}"><i class="fa fa-bullhorn" aria-hidden="true" style="font-size:30px;color:black" data-toggle="tooltip" title="We love to hear your feedback!"></i></a>
+            </li>
+          </ul>
+        </div>
+      </div>
     </nav>
-    </div>
 
     <div class="container pt-3">
     {% block content %}
@@ -52,7 +53,7 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <script src="{% static 'js/dark-mode-switch.min.js' %}"></script>
+    {% sri_static "js/tooltip.js" %}
     {% block Script %}
     {% endblock Script %}
   </body>

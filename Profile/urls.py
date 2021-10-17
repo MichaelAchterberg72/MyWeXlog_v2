@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .import views
+from . import views
 
 app_name = 'Profile'
 
@@ -10,7 +10,11 @@ urlpatterns = [
         path('close-intro/', views.IntroCloseView, name="CloseIntro"),
         path('close-end-free-subscription/', views.FreeMonthExpiredView, name="CloseEndFreeSubscription"),
         path('edit/<slug:tlt>/', views.ProfileEditView, name="ProfileEdit"),
+        path('Public-profile-name-edit/<slug:tlt>/', views.PublicProfileNameEditView, name="PublicProfileNameEdit"),
+        path('Public-profile-intro-edit/<slug:tlt>/', views.PublicProfileIntroEditView, name="PublicProfileIntroEdit"),
         path('background/<slug:tlt>/', views.ProfileBackgroundEditView, name="BackgroundEdit"),
+        path('profile-pic/<slug:tlt>/', views.ProfilePicEditView, name="ProfilePicEdit"),
+        path('profile-background-pic/<slug:tlt>/', views.ProfileBackgroundPicEditView, name="ProfileBackgroundPicEdit"),
         path('motivation/<slug:tlt>/', views.ProfileMotivationEditView, name="MotivationEdit"),
         path('email/<slug:tlt>/', views.EmailEditView, name='EmailEdit'),
         path('email/<slug:tlt>/<slug:eml>/', views.EmailStatusView, name='EmailStatus'),
@@ -78,6 +82,9 @@ urlpatterns = [
         path('precolleague-wrongperson/<int:pk>/', views.PreColleagueWrongPersonView, name='PreColleagueWrongPerson'),
         path('precolleague-comment/<slug:clg>/', views.PreColleagueCommentView, name='PreColleagueComment'),
         path('careerhistory/', views.BriefCareerHistoryView, name='History'),
+        path('careerhistory-delete/<slug:bch>/', views.BriefHistoryAddDeleteView, name='HistoryAddDelete'),
+        path('career-edit/<slug:bch>/', views.BriefHistoryEditView, name='HistoryEdit'),
+        path('career-delete/<slug:bch>/', views.BriefHistoryDeleteView, name='HistoryDelete'),
         path('career-resign/<slug:bch>/<slug:tlt>/', views.ResignedView, name='Resigned'),
         path('int-remove/<slug:tlt>/', views.InterviewTltRemove, name='IntRemove'),
         path('int-accept/<int:int_id>/', views.InterviewAcceptView, name='IntAccept'),
@@ -119,15 +126,17 @@ urlpatterns = [
         path('contact-detail/<slug:tlt>/<slug:vac>/', views.ContactDetailView, name="ContactDetail"),
         # Introduction Wizard
         path('intro-MyWeXlog-introduction/', views.IntroIntroductionView, name="IntroIntroduction"),
-        path('intro-validating', views.IntroValidatingView, name="IntroValidating"),
-        path('intro-profile', views.IntroProfileView, name="IntroProfile"),
+        path('intro-validating/', views.IntroValidatingView, name="IntroValidating"),
+        path('intro-profile/', views.IntroProfileView, name="IntroProfile"),
         path('intro-capture-experience/', views.IntroCaptureExpreienceView, name="IntroCaptureExperience"),
         path('intro-capture-skills/', views.IntroCaptureSkillsView, name="IntroCaptureSkills"),
-        path('intro-vacancy', views.IntroVacancyView, name="IntroVacancy"),
-        path('intro-shortlisting', views.IntroShortlistingView, name="IntroShortlisting"),
-        path('intro-assign', views.IntroAssigningView, name="IntroAssign"),
-        path('intro-books-emterprises-projects', views.IntroBEPView, name="IntroBEP"),
-        path('wtr', views.willing_to_relocate, name="WTR"),
+        path('intro-vacancy/', views.IntroVacancyView, name="IntroVacancy"),
+        path('intro-shortlisting/', views.IntroShortlistingView, name="IntroShortlisting"),
+        path('intro-assign/', views.IntroAssigningView, name="IntroAssign"),
+        path('intro-public-profile', views.IntroPublicProfileView, name="IntroPublicProfile"),
+        path('intro-managing-account', views.IntroManagingAccountView, name='IntroManagingAccount'),
+        path('intro-books-emterprises-projects/', views.IntroBEPView, name="IntroBEP"),
+        path('wtr/', views.willing_to_relocate, name="WTR"),
         path('wtr-doc/<slug:wtr>/', views.wtr_doc_status, name="WTRDoc"),
         path('wtr-delete/<slug:wtr>/', views.not_wtr, name="NotWTR"),
 

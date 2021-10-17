@@ -1,0 +1,93 @@
+{% extends 'base_home.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}My {{block.super}} History{% endblock title %}
+
+{% block content %}
+{{ form.media.css }}
+<style type="text/css">
+  select {
+    width: 200px;
+  }
+</style>
+
+<div class="card card-shadow">
+  <div class="card-body">
+    <h3>Edit Career History</h3>
+    <ul>
+      <li>Please note that you are required to capture at least one current employer to allow the posting branch to be populated when capturing a vacancy. (Only current employers (date to left blank) will populate the list.)</li>
+    </ul>
+    <form method="post">
+      <input type="hidden" name="next" value="{{ request.GET.next }}">
+      {% csrf_token %}
+      <div style="background-color:red; color:white;">
+        <p>
+          {{ form.non_field_errors }}
+        </p>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6 mb-0">
+          {{ form.work_configeration|as_crispy_field }}
+          {{ form.designation|as_crispy_field }}
+          <p>
+            <a href="{% url 'Talent:DesignationAddPop' %}" id='add_designation' onclick='return showAddPopup(this);'>
+              <img src = "{% static 'images/icon-addlink.svg' %}">
+              Add Designation
+            </a>
+          </p>
+          {{ form.companybranch|as_crispy_field }}
+          <p>
+            <small>
+              Please ensure that the "Company" as well as the "Branch" has been captured in the <a href="{% url 'Enterprise:EnterpriseHome' %}" target="_blank">Enterprise</a> page first. Refresh this page once the company and branch have been added. The company and branch will then be available in the respective fields.
+            </small>
+          </p>
+        </div>
+        <div class="form-group col-md-6 mb-0">
+          {{ form.date_from|as_crispy_field }}
+          {{ form.date_to|as_crispy_field }}<p>Leave blank if you currently work here</p>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="col-md-12">
+          {{ form.description|as_crispy_field }}
+        </div>
+      </div>
+      <div class="row btn-toolbar">
+          <a href="{% url 'Profile:ProfileView' %}#History" class="btn btn-danger">
+            Cancel
+          </a>&nbsp
+          <button type="submit" name="done" class="btn btn-primary">
+            Save
+          </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{{ form.media.js }}
+{{ form.media }}
+{% endblock content %}
+
+{% block Script %}
+<!-- code for popups -->
+<script type="text/javascript">
+function showAddPopup(triggeringLink) {
+    var name = triggeringLink.id.replace(/^add_/, '');
+    href = triggeringLink.href;
+    var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes');
+    win.focus();
+    return false;
+}
+
+function closePopup(win, newID, newRepr, id) {
+    $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
+    win.close();
+}
+
+window.onerror = function (msg) {
+  $("body").attr("JSError", msg);
+}
+</script>
+{% endblock Script %}

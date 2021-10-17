@@ -2,6 +2,7 @@ import random
 import string
 from secrets import randbelow
 
+
 def code_generator(size, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
@@ -39,4 +40,9 @@ def create_code14(instance, size=13):
     qs_exists = Klass.objects.filter(ref_no=new_code).exists()
     if qs_exists:
         return create_code(size=13)
+    return new_code
+
+def create_code16(instance, size=13):
+    a = randbelow(size)+2
+    new_code=code_generator(size=a)
     return new_code

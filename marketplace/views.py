@@ -6,6 +6,7 @@ from django.conf import settings
 from django.core.exceptions import PermissionDenied
 import json
 from django.db.models import Count, Sum, F, Q
+from django.db.models.functions import Greatest
 from django.utils import timezone
 from decimal import getcontext, Decimal
 import itertools
@@ -35,7 +36,7 @@ from .models import(
 from WeXlog.app_config import (
     skill_pass_score,
 )
-from talenttrack.models import WorkExperience, LicenseCertification
+from talenttrack.models import WorkExperience, LicenseCertification, Result
 from locations.models import Region
 from db_flatten.models import SkillTag
 from users.models import CustomUser, ExpandedView
@@ -65,7 +66,10 @@ def VacancySearch(request):
         form = VacancySearchForm(request.GET)
         if form.is_valid():
             query=form.cleaned_data['query']
-            results = TalentRequired.objects.annotate(similarity=TrigramSimilarity('ref_no', query),).filter(similarity__gt=0.3).order_by('-similarity')
+            results = TalentRequired.objects.annotate(similarity=Greatest(
+                                          TrigramSimilarity('ref_no', query),
+                                          TrigramSimilarity('own_ref_no', query)
+                                          )).filter(similarity__gt=0.3).order_by('-similarity')
 
     template = 'marketplace/vacancy_search.html'
     context = {'form': form, 'query': query, 'results': results,}
@@ -1425,6 +1429,50 @@ def VacancyDetailView(request, vac):
     return render(request, template, context)
 
 
+def VacancyDetailPublicView(request, vac):
+    vacancy = TalentRequired.objects.filter(ref_no=vac)
+    vac_id = vacancy[0]
+    skills = SkillRequired.objects.filter(scope__ref_no=vac)
+    deliver = Deliverables.objects.filter(scope__ref_no=vac)
+    bch = vacancy[0].companybranch.slug
+    rate_b = Branch.objects.get(slug=bch)
+    int = BidInterviewList.objects.filter(Q(scope__ref_no=vac)).count()
+    bid_qs = WorkBid.objects.filter(work__ref_no=vac).order_by('rate_bid')
+    bid = bid_qs.count()
+    slist = BidShortList.objects.filter(scope__ref_no=vac).count()
+    wit = WorkIssuedTo.objects.filter(Q(tlt_response='A') & Q(work__ref_no=vac))
+    try:
+        applied = bid_qs.filter(talent=request.user)
+    except:
+        applied = False
+
+    date1 = vacancy[0].bid_closes
+    date2 = timezone.now()
+    date3 = date1 - date2
+    date4 = abs(date3.days)
+
+    if date1 < date2:
+        vacancy.update(offer_status = 'C')
+
+
+    template = 'marketplace/vacancy_detail_public.html'
+    context = {
+        'vacancy': vacancy,
+        'skills': skills,
+        'deliver': deliver,
+        'rate_b': rate_b,
+        'int': int,
+        'bid': bid,
+        'slist': slist,
+        'wit': wit,
+        'bid_qs': bid_qs,
+        'date2': date2,
+        'date4': date4,
+        'applied': applied,
+        }
+    return render(request, template, context)
+
+
 @login_required()
 @subscription(1)
 def VacancyDetailView_Profile(request, vac):
@@ -1577,12 +1625,11 @@ def MarketHome(request):
     talent=request.user
     tlt = talent.id
     pfl = Profile.objects.filter(talent=talent)
-    TalentRequired.objects.filter()
-    # tr = TalentRequired.objects.filter(offer_status='O')
+    #TalentRequired.objects.filter()
     tr = TalentRequired.objects.filter(offer_status='O')
     tr_emp = TalentRequired.objects.filter(requested_by=talent)
     wb = WorkBid.objects.filter(work__requested_by=talent)
-    ta = TalentAvailabillity.objects.filter(talent=talent)
+    ta = TalentAvailabillity.objects.filter(talent=talent).last()
     we = WorkExperience.objects.filter(Q(talent=talent) & Q(score__gte=skill_pass_score)).prefetch_related('topic')
     sr = SkillRequired.objects.filter(scope__offer_status='O')
     sl = SkillLevel.objects.all()
@@ -1605,7 +1652,7 @@ def MarketHome(request):
     ipost_closed_count = ipost_closed.count()
     ipost_bid = wb.filter(~Q(bidreview='D'))
     ipost_bid_flat = ipost_bid.values_list('work', flat=True).distinct()
-    capacity = ta.filter(date_to__gte=timezone.now()).order_by('-date_to')[:5]
+#    capacity = ta.filter(date_to__gte=timezone.now()).order_by('-date_to')[:5]
 
     #Code for stacked lookup for talent's skills
 
@@ -1631,12 +1678,13 @@ def MarketHome(request):
 
         skill_set = skill_set | d
 
-    skill_set = skill_set.distinct().order_by('skill')
+    skill_set = skill_set.distinct().order_by('skill')#all skills the talent has
+    skill_setv = skill_set.values_list('id', flat=True)#gets the id's of all the skills
     #Create a set of all skills<<<
 
     #>>>Experience Level check & list skills required in vacancies
-    tlt_lvl = pfl.values_list('exp_lvl__level', flat=True)
-    tlt_lvl = tlt_lvl[0]
+    tlt_lev = pfl.values_list('exp_lvl__level', flat=True)
+    tlt_lvl = tlt_lev[0]
 
     #finds all vacancies that require talent's experience level and below
     vac_exp = tr.filter(experience_level__level__lte=tlt_lvl)
@@ -1703,16 +1751,17 @@ def MarketHome(request):
             skl_lst.append(sk)
 
     ds = set()
-    matchd = set(skl_lst) #remove duplicates
+    matchd = set(skl_lst) #remove duplicates; these are the required skills
+
+    matchd = matchd.intersection(set(skill_setv))
 
     for item in matchd:
         display = set(sr.filter(
                 Q(skills__in=skl_lst)
                 & Q(scope__bid_closes__gte=timezone.now())).values_list('scope__id', flat=True))
+        ds = ds | display #set of all open vacancies
 
-        ds = ds | display
-
-    dsi = ds.intersection(req_experience)
+    dsi = ds.intersection(req_experience) #open vacancies which the talent qualifies for (certification, location)
 
     tot_vac = len(dsi)
     #remove the vacancies that have already been applied for
@@ -1752,7 +1801,7 @@ def MarketHome(request):
         'vacancies_suited_list_view': vacancies_suited_list_view,
         'tlt': tlt,
         'tlent': talent,
-        'capacity': capacity,
+        'ta': ta,
         'tr_emp_count': tr_emp_count,
         'ipost': ipost,
         'ipost_list': ipost_list,
@@ -1847,7 +1896,7 @@ def VacanciesListView(request):
     ipost_closed_count = ipost_closed.count()
     ipost_bid = wb.filter(~Q(bidreview='D'))
     ipost_bid_flat = ipost_bid.values_list('work', flat=True).distinct()
-    capacity = ta.filter(date_to__gte=timezone.now()).order_by('-date_to')[:5]
+#    capacity = ta.filter(date_to__gte=timezone.now()).order_by('-date_to')[:5]
 
     #Code for stacked lookup for talent's skills
 
@@ -1874,6 +1923,7 @@ def VacanciesListView(request):
         skill_set = skill_set | d
 
     skill_set = skill_set.distinct().order_by('skill')
+    skill_setv = skill_set.values_list('id', flat=True)#gets the id's of all the skills
     #Create a set of all skills<<<
 
     #>>>Experience Level check & list skills required in vacancies
@@ -1936,6 +1986,7 @@ def VacanciesListView(request):
 
     ds = set()
     matchd = set(skl_lst) #remove duplicates
+    matchd = matchd.intersection(set(skill_setv))
 
     for item in matchd:
         display = set(sr.filter(
@@ -2001,7 +2052,7 @@ def VacanciesListView(request):
         'vvv': vvv,
         'vacancies_suited_list_view': vacancies_suited_list_view,
         'tlt': tlt,
-        'capacity': capacity,
+#        'capacity': capacity,
         'tr_emp_count': tr_emp_count,
         'ipost': ipost,
         'ipost_list': ipost_list,
@@ -2453,7 +2504,8 @@ def RolesAppliedForUnsuccessfulApplicationHistoryView(request):
 
 @login_required()
 def TalentAvailabillityView(request):
-    form = TalentAvailabillityForm(request.POST or None)
+    instance = TalentAvailabillity.objects.filter(talent=request.user).last()
+    form = TalentAvailabillityForm(request.POST or None, instance=instance)
     if request.method == 'POST':
         if form.is_valid():
             new = form.save(commit=False)
@@ -2511,9 +2563,9 @@ def VacancyPostView(request, vac):
     #Find all talent with required skill<<<
 
     #>>> Find all talent that have the required Experience
-    wee = set(tlt.filter(exp_lvl__gte=instance.experience_level).values_list('talent', flat=True))
+    wex = set(tlt.filter(exp_lvl__gte=instance.experience_level).values_list('talent', flat=True))
 
-    wee = wee.intersection(wes)
+    wee = wex.intersection(wes)
 
     #Find all talent that have the required Experience<<<
 
@@ -2654,6 +2706,15 @@ def VacancyPostView(request, vac):
     }
 
     return render(request, template, context)
+
+
+@login_required
+def CertificateDeleteView(request, vac, cert):
+    if request.method == 'POST':
+        vacancy = TalentRequired.objects.get(ref_no=vac)
+        cert_instance = Result.objects.get(type=cert)
+        vacancy.certification.remove(cert_instance)
+    return redirect(reverse('MarketPlace:VacancyPost', kwargs={'vac':vac})+'#certifications')
 
 
 @login_required()

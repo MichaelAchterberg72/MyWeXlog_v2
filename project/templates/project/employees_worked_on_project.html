@@ -1,0 +1,108 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+
+{% block title %}{{block.super}}-Employees Hours Spent Working On Project{% endblock title %}
+
+{% block content %}
+
+<div class="card card-shadow">
+  <div class="card-body">
+  <h4 class="">List of employees hours working for company on {{ projectdata.name }}!</h4>
+
+      {% if request.user.is_authenticated %}
+      <p><a href="{% url 'Project:ProjectAdd' %}" class="badge badge-pill badge-primary">Add Project</a><a href="{% url 'Project:HoursOnProject' prj %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
+      {% endif %}
+    <p>There are currently <strong>{{ hr.sum_t|floatformat:0|intcomma }}</strong> hours spent working on project {{ projectdata.name }}.</p>
+
+    <div class="container">
+      <div class="row my-auto">
+        <div class="col-md-4 h-100 text-center my-auto">
+          <strong>Talen Alias</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Date From</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Last Date Captured</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Total Hours Spent</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Profile</strong>
+        </div>
+      </div>
+    </div>
+    {% for p in pageitems %}
+    <div class="row">
+      <div class="card mt-1 card-hover" style="width: 100%;">
+        <div class="card-body small-pad">
+          <div class="row my-auto">
+            <div class="col-md-4 h-100 text-center my-auto">
+              {{ p.talent }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ p.date_from }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ p.date_to }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              {{ p.hours_worked|floatformat:0|intcomma }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              <a href="{% url 'Talent:APV_L' p.talent %}" target="_blank">
+                <i class="fa fa-id-badge" aria-hidden="true"style="font-size:30px; color:black" data-toggle="tooltip" data-placement="top" title="View Profile"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <p>There are currently no hours recorded against this project</p>
+    {% endfor %}
+
+    <p>&nbsp</p>
+
+    <nav aria-label="Page navigation">
+        {% if pageitems.has_other_pages %}
+          <ul class="pagination">
+            {% if pageitems.has_previous %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ pageitems.previous_page_number }}" aria-label="Previous">
+                  <span aria-hidden="true">Previous</span>
+                  <span class="sr-only disabled">Previous</span>
+                </a></li>
+            {% else %}
+              <li class="page-link disabled" tabindex="-1"><span>Previous</span></li>
+            {% endif %}
+
+            {% if pageitems.number|add:'-4' > 1 %}
+              <li class="page-link"><a href="?page={{ pageitems.number|add:'-5' }}">&hellip;</a></li>
+            {% endif %}
+
+            {% for i in pageitems.paginator.page_range %}
+              {% if pageitems.number == i %}
+                <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
+              {% elif i > pageitems.number|add:'-5' and i < pageitems.number|add:'5' %}
+                <li class="page-link"><a class="page-item" href="?page={{ i }}">{{ i }}</a></li>
+              {% endif %}
+            {% endfor %}
+
+            {% if pageitems.paginator.num_pages > pageitems.number|add:'4' %}
+              <li class="page-link"><a href="?page={{ pageitems.number|add:'5' }}">&hellip;</a></li>
+            {% endif %}
+
+            {% if pageitems.has_next %}
+              <li class="page-link"><a href="?page={{ pageitems.next_page_number }}">Next</a></li>
+            {% else %}
+              <li class="page-link disabled"><span>Next</span></li>
+            {% endif %}
+          </ul>
+        {% endif %}
+    </nav>
+  </div>
+</div>
+
+{% endblock content %}

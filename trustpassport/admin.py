@@ -1,8 +1,7 @@
 from django.contrib import admin
 
-from .models import (
-    TalentPassport, EnterprisePassport
-    )
+from .models import EnterprisePassport, TalentPassport
+
 
 @admin.register(TalentPassport)
 class TalentPassportAdmin(admin.ModelAdmin):

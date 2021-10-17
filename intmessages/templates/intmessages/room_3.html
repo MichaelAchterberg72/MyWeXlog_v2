@@ -27,7 +27,7 @@
             </a>
           </div>
         </div>
-
+<!--
         <div class="row searchBox">
           <div class="col-sm-12 searchBox-inner">
             <div class="form-group has-feedback">
@@ -36,7 +36,7 @@
             </div>
           </div>
         </div>
-
+-->
         <div class="row sideBar" id='menu'>
           <!--
           {% for room in chat_rooms.items %}
@@ -92,7 +92,7 @@
         </div>
         <div class="col-sm-1 col-xs-1 heading-dot pull-right">
           <div class="btn-group delete-chat">
-            <button class="" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button class="" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="cursor:pointer;">
               <i class="fa fa-ellipsis-v fa-2x  pull-right" aria-hidden="true"></i>
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -158,15 +158,19 @@
         </div>
       </div>
       <div class="row reply">
+        <!--
         <div class="col-sm-1 col-xs-1 reply-emojis">
           <i class="fa fa-smile-o fa-2x"></i>
         </div>
-        <div class="col-sm-9 col-xs-9 reply-main">
+        -->
+        <div class="col-sm-11 col-xs-11 reply-main">
           <textarea class="form-control" rows="1" id="chat-message-input"></textarea>
         </div>
+        <!--
         <div class="col-sm-1 col-xs-1 reply-recording">
           <i class="fa fa-microphone fa-2x" aria-hidden="true"></i>
         </div>
+        -->
         <div class="col-sm-1 col-xs-1 reply-send">
           <button id="chat-message-submit">
             <i class="fa fa-send fa-2x" aria-hidden="true"></i>
@@ -202,9 +206,9 @@
   }
 
   var menuList = document.querySelector('#menu');
-  var filterMenu = document.getElementById('searchText');
+  //var filterMenu = document.getElementById('searchText');
 
-  filterMenu.addEventListener('keyup', filterMenuItems);
+  //filterMenu.addEventListener('keyup', filterMenuItems);
 
   function filterMenuItems(e){
    var text = e.target.value.toLowerCase();

@@ -5,53 +5,103 @@
 {% block title %}{{block.super}}-Project{% endblock title %}
 
 {% block content %}
-
-<div class="card card-shadow">
-  <div class="card-body">
-  <h4 class="card-title">Your Project Details
-    <span><p class="float-right">
-    <a href="{% url 'Project:HelpProjectAdd' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="popover" title="Click here for help on this page!">
-    <i class="fa fa-question-circle"></i></a>
-  </p></span></h4>
-
-  <div class="card-body">
-    {% if request.user.is_authenticated %}
-    <p><a href="{% url 'Project:ProjectHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
-    {% endif %}
-    <form class="" action="" method="POST" id="ProjectForm">
-
-      {% csrf_token %}
-      <div class="form-row">
-        <div class="form-group col-md-6 mb-0">
-          {{ form.name|as_crispy_field }}
-          {{ form.company|as_crispy_field }}
-          <a href="{% url 'Enterprise:EnterpriseAddPop' %}" id='add_enterprise' onclick='return showAddPopup(this);'><img src="{% static 'images/icon-addlink.svg' %}"> Add a new Enterprise</a>
-          {{ form.companybranch|as_crispy_field }}
-          <p><a href="{% url 'Enterprise:BranchAddPop' %}" id='add_branch' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add a Branch</a></p>
-          {{ form.industry|as_crispy_field }}
-          <a href="{% url 'Enterprise:IndustryAddPop' %}" id='add_industry' onclick='return showAddPopup(this);'><img src="{% static 'images/icon-addlink.svg' %}"> Add a new Industry</a>
-        </div>
-        <div class="form-group col-md-6 mb-0">
-          {{ form.country|as_crispy_field }}
-          {{ form.region|as_crispy_field }}
-          <a href="{% url 'Location:RegionAddPop' %}" id='add_region' onclick='return showAddPopup(this);'><img src="{% static 'images/icon-addlink.svg' %}"> Add a new Region</a>
-          {{ form.city|as_crispy_field }}
-          <a href="{% url 'Location:CityAddPop' %}" id='add_city' onclick='return showAddPopup(this);'><img src="{% static 'images/icon-addlink.svg' %}"> Add a new City / Town / Village</a>
-        </div>
-        <p><a href="{% url 'Project:ProjectHome' %}" class="btn btn-danger">Cancel</a> <button type="submit" class="btn btn-primary" name="button">Save</button></p>
-
-    </form>
-  </div>
-</div>
-</div>
-</div>
-
 {{ form.media.css }}
 <style type="text/css">
   select {
     width: 100px;
   }
-  </style>
+</style>
+
+<div class="card card-shadow">
+  <div class="card-body">
+  <h4 class="card-title">Project Details
+    <span>
+      <p class="float-right">
+        <a href="{% url 'Project:HelpProjectAdd' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="popover" title="Click here for help on this page!">
+          <i class="fa fa-question-circle"></i>
+        </a>
+      </p>
+    </span>
+  </h4>
+  <div class="card-body">
+    {% if request.user.is_authenticated %}
+      <p>
+        <a href="{% url 'Project:ProjectHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">
+          Back
+        </a>
+      </p>
+    {% endif %}
+    <div class="">
+      <small>
+        Please ensure that the "Project Owner" as well as the "Branch managing the project" has been captured in the <a href="{% url 'Enterprise:EnterpriseHome' %}" target="_blank">Enterprise</a> page first. Refresh this page once the company and branch have been added. The company and branch will then be available in the respective fields.
+      </small>
+      <br>
+    </div>
+    <form class="" action="" method="POST" id="ProjectForm">
+      {% csrf_token %}
+      <div style="background-color:red; color:white;">
+        <p>
+
+          {{ form.non_field_errors }}
+        </p>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6 mb-0">
+          {{ form.name|as_crispy_field }}
+          <div data-toggle="tooltip" title="The ultimate client for the project, the company that is paying for the project.">
+            <br>
+            {{ form.company|as_crispy_field }}
+          </div>
+          {{ form.companybranch|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-6 mb-0">
+          {{ form.industry|as_crispy_field }}
+          <a href="{% url 'Enterprise:IndustryAddPop' %}" id='add_industry' onclick='return showAddPopup(this);'>
+            <img src="{% static 'images/icon-addlink.svg' %}">
+            Add an Industry
+          </a>
+          <br>
+          <div data-toggle="tooltip" title="The country that the project is physically located in.">
+            {{ form.country|as_crispy_field }}
+          </div>
+          <div  data-toggle="tooltip" title="The region within the country that the project is physically located in.">
+            {{ form.region|as_crispy_field }}
+          </div>
+          <div id="city_error" class="d-none float-right">
+            <button class="btn btn-danger btn-block" type="button" name="button">
+              Please enter a region
+            </button>
+          </div>
+          <a href="{% url 'Location:RegionAddPop' %}" id='add_region' onclick='return showAddPopup(this);'>
+            <img src="{% static 'images/icon-addlink.svg' %}">
+            Add a Region
+          </a>
+          <div data-toggle="tooltip" title="The name of the town closest to the project site.">
+            {{ form.city|as_crispy_field }}
+          </div>
+          <p>
+            <a href="#" id='ad_cty'>
+              <img src = "{% static 'images/icon-addlink.svg' %}">
+              Add a City
+            </a>
+            <a href="{% url 'Location:CityAddPop' %}" id='add_city' onclick='return showAddPopup(this);'>
+            </a>
+          </p>
+        </div>
+        <p>
+          <a href="{% url 'Project:ProjectHome' %}" class="btn btn-danger">
+            Cancel
+          </a>
+          <button type="submit" class="btn btn-primary" name="button">
+            Save
+          </button>
+        </p>
+    </form>
+    </div>
+  </div>
+</div>
+</div>
+
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 {{ form.media.js }}
 
@@ -68,6 +118,19 @@
     $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
     win.close();
   }
+
+  var form = document.getElementById('ProjectForm')
+  var city = document.getElementById('city_error')
+
+  document.getElementById('ad_cty').addEventListener('click', function(e){
+    if(form.region.value == ''){
+      city.classList.remove('d-none')
+    }else{
+      document.cookie = 'region=' + JSON.stringify(form.region.value) + ";domain=;path=/"
+      city.classList.add('d-none')
+      document.getElementById('add_city').click();
+    }
+  })
 </script>
 
 {% endblock content %}

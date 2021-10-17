@@ -12,12 +12,59 @@
     width: 200px;
   }
 </style>
+<div class="card card-shadow">
+  <div class="card-body">
+    <h3>Skills for {{ instance.title }}</h3>
+    <br>
+    <div class="container">
+    <div class="row">
+      <div class="col text-center">
+      <span>
+        <button type="button" class="btn btn-primary" name="button" style="width:7rem;cursor:auto;">Capture</button>
+      </span>
+      <span class="text-center">
+        <i class="fa fa-arrow-right" aria-hidden="true"></i>
+      </span>
+      <span>
+        <a href="{% url 'MarketPlace:Deliverables' instance.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-outline-success" style="width:8rem;">Capture<br>Deliverables</a>
+      </span>
+      <span class="text-center">
+        <i class="fa fa-arrow-right" aria-hidden="true"></i>
+      </span>
+      <span>
+        <button type="button" class="btn btn-success" name="button" style="width:10rem;cursor:auto;">Capture<br>Skills</button>
+      </span>
+      <span class="text-center">
+        <i class="fa fa-arrow-right" aria-hidden="true"></i>
+      </span>
+      <span>
+        <a href="{% url 'MarketPlace:Entrance' %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width:7rem;">Exit</a>
+      </span>
+      </div>
+    </div>
+    </div>
+    <hr>
+    <div class="">
+      <p>
+        Skills must be captured one by one selecting the Save & Add Another Skill button.<br>
+        <strong>Skills already captured will appear on the card on the right!</strong>
+      </p>
+    </div>
+  </div>
+</div>
+<br>
 <div class="row">
   <div class="group col-md-6 mb-0">
     <div class="card card-shadow h-100">
       <div class="card-body">
         <form method="post" enctype="multipart/form-data">
           {% csrf_token %}
+          <div style="background-color:red; color:white;">
+            <p>
+
+              {{ form.non_field_errors }}
+            </p>
+          </div>
             <h4>Skills required for {{ instance.title }}</h4>
               {{ form.skills|as_crispy_field }}
             <p>
@@ -28,10 +75,13 @@
             </p>
             <div class="">
               <p>
-                <button type="submit" name="another" class="btn btn-primary">Add Another</button> <button type="submit" name="done" class="btn btn-primary">
-                  Add & Exit
+                <button type="submit" name="another" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Save the skill displayed in the field then add another skill">
+                  Save & Add Another Skill
                 </button>
-                <a href="{% url 'MarketPlace:Entrance' %}" class="btn btn-primary">
+                <button type="submit" name="done" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Save the skill displayed in the field and exit">
+                  Save & Exit
+                </button>
+                <a href="{% url 'MarketPlace:Entrance' %}" class="btn btn-danger" style="width:6rem;" data-toggle="tooltip" data-placement="top" title="Leave this page">
                   Exit
                 </a>
               </p>

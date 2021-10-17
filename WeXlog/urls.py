@@ -1,12 +1,15 @@
 """WeXlog URL Configuration
 """
 from __future__ import absolute_import, unicode_literals
-from django.contrib import admin
-from django.urls import path, include
+
 from django.conf import settings
-from django.conf.urls.static import static
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls import handler404, handler500, url  # noqa
+from django.conf.urls.static import static
+from django.contrib import admin
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.urls import include, path
+from django.views.generic.base import TemplateView
+from filebrowser.sites import site
 
 urlpatterns = [
     path('accounts/', include('allauth.urls')),
@@ -37,6 +40,11 @@ urlpatterns = [
     path('chat/', include('intmessages.urls', namespace='Chat')),
     path('appcontrol/', include('AppControl.urls', namespace='AppControl')),
     path('corporate/', include('mod_corporate.urls', namespace='Corporate')),
+    path('skills/', include('skills.urls', namespace='Skills')),
+    path('tinymce/', include('tinymce.urls')),
+    path('admin/filebrowser/', site.urls),
+    path('error/', TemplateView.as_view(template_name="error_screen.html"), name='404Error'),
+    path("robots.txt", TemplateView.as_view(template_name="users/robots.txt", content_type="text/plain")),
 #    path('emoji/', include('emoji.urls')),
     ]
 

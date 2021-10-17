@@ -13,75 +13,90 @@
   </style>
 <div class="card card-shadow">
   <div class="card-body">
-<h4>Your Enterprise & Branch Details<span><p class="float-right">
-<a href="{% url 'Enterprise:HelpEnterpriseBranchDetails' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="tooltip" title="Click here for help on this page!">
-<i class="fa fa-question-circle"></i></a>
-</p></span></h4>
-<form method="post" id="BranchForm">
-<input type="hidden" name="next" value="{{ request.GET.next }}">
-  {% csrf_token %}
-  <div class="form-row">
-    <div class="form-group col-md-6 mb-0">
-      {{ form.name|as_crispy_field }}
+    <h4>
+      Branch Details
+      <span>
+        <p class="float-right">
+          <a href="{% url 'Enterprise:HelpEnterpriseBranchDetails' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="tooltip" title="Click here for help on this page!">
+            <i class="fa fa-question-circle"></i>
+          </a>
+        </p>
+      </span>
+    </h4>
+    <form method="post" id="BranchForm">
+    <input type="hidden" name="next" value="{{ request.GET.next }}">
+      {% csrf_token %}
+      <div style="background-color:red; color:white;">
+        <p>
+          {{ form.non_field_errors }}
+        </p>
+      </div>
       <div class="form-row">
         <div class="form-group col-md-6 mb-0">
-          {{ form.type|as_crispy_field }}
-          <p><a href="{% url 'Enterprise:BranchTypeAddPop' %}" id='add_branch_type' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add a new Branch Type</a></p>
+          {{ form.name|as_crispy_field }}
+          <div class="form-row">
+            <div class="form-group col-md-6 mb-0">
+              {{ form.type|as_crispy_field }}
+              <p><a href="{% url 'Enterprise:BranchTypeAddPop' %}" id='add_branch_type' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add a new Branch Type</a></p>
+            </div>
+            <div class="form-group col-md-6 mb-0" data-toggle="tooltip" data-placement="top" title="The number of people in the branch">
+              {{ form.size|as_crispy_field }}
+            </div>
+          </div>
+          {{ form.phy_address_line1|as_crispy_field }}
+          {{ form.phy_address_line2|as_crispy_field }}
+          {{ form.industry|as_crispy_field }}
+          <p>
+            <a href="{% url 'Enterprise:IndustryAddPop' %}" id='add_branch_industry' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">
+              Add new Industry Type
+            </a>
+          </p>
         </div>
-        <div class="form-group col-md-6 mb-0" data-toggle="tooltip" data-placement="top" title="The number of people in the branch">
-          {{ form.size|as_crispy_field }}
+        <div class="form-group col-md-6 mb-0">
+          {{ form.country|as_crispy_field }}
+          {{ form.region|as_crispy_field }}
+          <div id="city_error" class="d-none float-right">
+            <button class="btn btn-danger btn-block" type="button" name="button">
+              Please enter a region
+            </button>
+          </div>
+          <p>
+            <a href="{% url 'Location:RegionAddPop' %}" id='add_region' onclick='return showAddPopup(this);'>
+              <img src = "{% static 'images/icon-addlink.svg' %}">
+              Add a Region
+            </a>
+          </p>
+          {{ form.city|as_crispy_field }}
+          <div id="suburb_error" class="d-none float-right">
+            <button class="btn btn-danger btn-block" type="button" name="button">
+              Please enter a city or town
+            </button>
+          </div>
+          <p>
+            <a href="#" id='ad_cty'>
+              <img src = "{% static 'images/icon-addlink.svg' %}">
+              Add a City
+            </a>
+            <a href="{% url 'Location:CityAddPop' %}" id='add_city' onclick='return showAddPopup(this);'>
+            </a>
+          </p>
+          {{ form.suburb|as_crispy_field }}
+          <p>
+            <a href="#" id='add_sub'>
+              <img src = "{% static 'images/icon-addlink.svg' %}">
+              Add a Suburb
+            </a>
+            <a href="{% url 'Location:SuburbAddPop' %}" id='add_suburb' onclick='return showAddPopup(this);'>
+            </a>
+          </p>
+          {{ form.code|as_crispy_field }}
         </div>
       </div>
-      {{ form.phy_address_line1|as_crispy_field }}
-      {{ form.phy_address_line2|as_crispy_field }}
-      {{ form.industry|as_crispy_field }}
-      <p><a href="{% url 'Enterprise:IndustryAddPop' %}" id='add_branch_industry' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add a new Industry Type</a></p>
-    </div>
-    <div class="form-group col-md-6 mb-0">
-      {{ form.country|as_crispy_field }}
-      {{ form.region|as_crispy_field }}
-      <div id="city_error" class="d-none float-right">
-        <button class="btn btn-danger btn-block" type="button" name="button">
-          Please enter a region
-        </button>
+      <div class="">
+        <p><a href="{% url 'Enterprise:BranchDetail' info2.slug %}" class="btn btn-danger">Cancel</a> <button type="submit" name="Done" class="btn btn-primary">Save</button> </p>
       </div>
-      <p>
-        <a href="{% url 'Location:RegionAddPop' %}" id='add_region' onclick='return showAddPopup(this);'>
-          <img src = "{% static 'images/icon-addlink.svg' %}">
-          Add a Region
-        </a>
-      </p>
-      {{ form.city|as_crispy_field }}
-      <div id="suburb_error" class="d-none float-right">
-        <button class="btn btn-danger btn-block" type="button" name="button">
-          Please enter a city or town
-        </button>
-      </div>
-      <p>
-        <a href="#" id='ad_cty'>
-          <img src = "{% static 'images/icon-addlink.svg' %}">
-          Add a City
-        </a>
-        <a href="{% url 'Location:CityAddPop' %}" id='add_city' onclick='return showAddPopup(this);'>
-        </a>
-      </p>
-      {{ form.suburb|as_crispy_field }}
-      <p>
-        <a href="#" id='add_sub'>
-          <img src = "{% static 'images/icon-addlink.svg' %}">
-          Add a Suburb
-        </a>
-        <a href="{% url 'Location:SuburbAddPop' %}" id='add_suburb' onclick='return showAddPopup(this);'>
-        </a>
-      </p>
-      {{ form.code|as_crispy_field }}
-    </div>
+    </form>
   </div>
-  <div class="">
-    <p><a href="{% url 'Enterprise:BranchDetail' info2.slug %}" class="btn btn-danger">Cancel</a> <button type="submit" name="Done" class="btn btn-primary">Save</button> </p>
-  </div>
-</form>
-</div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>

@@ -13,78 +13,275 @@
     <i class="fa fa-question-circle"></i></a>
   </p></span></h4>
 
-    {% if request.user.is_authenticated %}
-    <p><a href="{% url 'Project:EditProject' info.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Edit Project</a>
-    {% endif %}
-    <a href="{% url 'Project:ProjectHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
+
+    <div class="row">
+      <div class="col-11">
+        {% if request.user.is_authenticated %}
+        <a href="{% url 'Project:EditProject' info.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Edit Project</a>
+        {% endif %}
+      </div>
+      <div class="col-1">
+        <form  action="{% url 'BookList:BLB' %}" method="post">
+          <input type="hidden" name="next" value="{{ request.GET.next }}">
+          {% csrf_token %}
+          <div style="background-color:red; color:white;">
+            <p>
+
+              {{ form.non_field_errors }}
+            </p>
+          </div>
+          <button type="submit" class="badge badge-pill badge-primary float-right">Back</button>
+        </form>
+      </div>
+    </div>
         <div class="row">
           <div class="col-sm-12">
             <div class="border-0">
               <div class="card-body">
                 <h5 class="card-title">Project Details</h5>
-                <table class="table table-bordered">
-                  <thead>
-                  </thead>
-                  <tbody>
-                      {% for d in detail %}
-                      <tr>
-                        <col width="20%">
-                        <col width="30%">
-                        <col width="20%">
-                        <col width="10%">
-                        <col width="10%">
-                        <col width="10%">
 
-                        <th>Project Owner</th>
-                        <th>Project Name</th>
-                        <th>Industry</th>
-                        <th class="text-center">Total Project Hours</th>
-                      </tr>
-                        <td>{{ d.company }}<br>{{ d.companybranch }} </td>
-                        <td>{{ d.name }}</td>
-                        <td>{{ d.industry }}</td>
-                        <td class="text-center">{{ hr.sum_t|intcomma }}</td>
-                      <tr>
-                        <th>Country</th>
-                        <th>City</th>
-                        <th>Region</th>
-                        <th>Total People</th>
-                      </tr>
-                      <tr>
-                        <td>{{ d.get_country_display }}</td>
-                        <td>{{ d.city }}</td>
-                        <td>{{ d.region }}</td>
-                        <td class="text-center">{{ ppl|intcomma }}</td>
-                      </tr>
-                      {% endfor %}
-                      <tr>
-                  </tbody>
-                </table>
+                {% for d in detail %}
+
+                <div class="row">
+                  <div class="col-md-2">
+                    <strong>Project Name</strong>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="card-title">
+                      {{ d.name }}
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-2">
+                    <strong>Project Owner</strong>
+                  </div>
+                  <div class="col-md-6">
+                    {{ d.companybranch }}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-2">
+                    <strong>Industry</strong>
+                  </div>
+                  <div class="col-md-6">
+                    {{ d.industry }}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-2">
+                    <p>&nbsp</p>
+                  </div>
+                  <div class="col-md-6">
+
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-2">
+                    <strong>Country</strong>
+                  </div>
+                  <div class="col-md-6">
+                    {{ d.get_country_display }}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-2">
+                    <strong>Region</strong>
+                  </div>
+                  <div class="col-md-6">
+                    {{ d.region }}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-2">
+                    <strong>City</strong>
+                  </div>
+                  <div class="col-md-6">
+                    {{ d.city }}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-2">
+                    <p>&nbsp</p>
+                  </div>
+                  <div class="col-md-6">
+
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-2">
+
+                  </div>
+                  <div class="col-md-10">
+                    {% if request.user.subscription >= 2 %}
+                      <p class="text-right">
+                        <a href="{% url 'Project:HoursOnProject' info.slug %}?next={{ request.path|urlencode }}"class="btn btn-primary">
+                          MyWeXlog Hours
+                        </a>
+                        &nbsp
+                      {% else %}
+                        <a href="{% url 'Payments:ActiveSubscription' %}" class="btn btn-primary">
+                          Active Subscription Required
+                        </a>
+                      </p>
+                      {% endif %}
+                  </div>
+                </div>
+
+                {% endfor %}
               </div>
             </div>
           </div>
         </div>
-        <p>&nbsp</p>
-        <div class="row">
-          <div class="col-sm-6">
-          </div>
-          <div class="col-sm-6">
-            <div class="">
-              <div class="card-body">
-              {% if request.user.subscription >= 2 %}
-                <p class="text-right"><a href="{% url 'Project:HoursOnProject' info.slug %}?next={{ request.path|urlencode }}" class="btn btn-primary">MyWeXlog Hours</a>
-                  &nbsp
-                {% else %}
-                  <a href="{% url 'Payments:ActiveSubscription' %}" class="btn btn-primary">Active Subscription Required</a></p>
-                {% endif %}
 
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
+<br>
+<div class="card card-shadow">
+  <div class="card-body">
+  <div class="">
+    <div class="row">
+      <div class="col-md-4 my-auto">
+        <center>
+        <br>
+        <div class="skills-circle" {% if theme == 0 %}style="border: 3px solid #0d1451;"{% endif %}>
+        </div>
+        <div class="skills-total my-auto" {% if theme == 0 %}style="color:#0d1451;"{% endif %}>
+          {{ ppl|floatformat:0|intcomma }}
+        </div>
+        <div class="skills-under" {% if theme == 0 %}style="color:#0d1451;"{% endif %}>People</div>
+        <div class="profile-header"">
+          Total People On Project
+        </div></center>
+      </div>
+      <div class="col-md-4 text-center">
+        <center>
+          <br>
+        <div class="skills-circle" {% if theme == 0 %}style="border: 3px solid #0d1451;"{% endif %}>
+        </div>
+        <div class="skills-total my-auto" {% if theme == 0 %}style="color:#0d1451;"{% endif %}>
+          {{ hr.sum_t|floatformat:0|intcomma }}
+        </div>
+        <div class="skills-under" {% if theme == 0 %}style="color:#0d1451;"{% endif %}>Hours</div>
+        <div class="profile-header">
+          Number Hours On Project
+        </div></center>
+      </div>
+      <div class="col-md-4">
+        <center>
+          <br>
+        <div class="skills-circle" {% if theme == 0 %}style="border: 3px solid #0d1451;"{% endif %}>
+        </div>
+        <div class="skills-total my-auto" {% if theme == 0 %}style="color:#0d1451;"{% endif %}>
+          {{ skills_count|floatformat:0|intcomma }}
+        </div>
+        <div class="skills-under" {% if theme == 0 %}style="color:#0d1451;"{% endif %}>Skills</div>
+        <div class="profile-header">
+          Number Skills On Project
+        </div></center>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<br>
+<div class="card card-shadow">
+  <div class="card-body">
+    <div style="overflow-x: scroll">
+      <div id="chart-container" style="position: relative;  width:auto;">
 
+      <h4>Skills Used on Project</h4>
+      <p class="short-paragraph">
+        Total Hours of Training & Experience by Skill Currently Used on project.
+      </p>
+      <p class="small-paragraph">
+        <small>
+          Skills included are all skills and hours relating to them that have been validated.
+        </small>
+      </p>
+      <br>
+      <canvas id="hours-experience-by-skill-chart" height="100px"></canvas>
+      <script>
+      window.onload = function() {
+        var hours_experience_by_skill_ctx = document.getElementById('hours-experience-by-skill-chart').getContext('2d');
+        window.myChart = new Chart(hours_experience_by_skill_ctx, hours_experience_by_skill_config);
+      };
 
+      var hours_experience_by_skill_config = {
+        type: 'bar',
+        data: {
+            labels: {{ skills_list_Labels|safe }},
+            datasets: [{
+              label: 'Total Hours Experience by Skill',
+              data: {{ val_skills_hours_skill_data|safe }},
+              order: 2,
+                backgroundColor: ['#B6D8F2', '#F4CFDF', '#5784BA', '#C54B6C', '#F5BFD2', '#E5DB9C', '#D0BCAC', '#BEB4C5', '#E6A57E', '#218B82', '#9AD9DB', '#E5DBD9', '#98D4BB', '#EB96AA', '#C6C9D0', '#C54B6C', '#E5B3BB', '#C47482', '#D5E4C3', '#F9968B', '#F27348', '#26474E', '#76CDCD', '#2CCED2', '#B8E0F6', '#A4CCE3', '#37667E', '#DEC4D6', '#7B92AA', '#B8E0F6', '#A4CCE3', '#37667E', '#DEC4D6', '#7B92AA', '#DDF2F4', '#84A6D6', '#4382BB', '#E4CEE0', '#A15D98', '#DC828F', '#F7CE76', '#E8D6CF', '#8C7386', '#9C9359', '#E9BBB5', '#E7CBA9', '#AAD9CD', '#E8D595', '#8DA47E', '#CAE7E3', '#B2B2B2', '#EEB8C5', '#DCDBD9', '#FEC7BC', '#8EA4C8', '#C3B8AA', '#DEDCE4', '#DB93A5', '#C7CDC5',
+                ],
+                borderColor: [
+
+                ],
+                borderWidth: 1
+            }, {
+              label: 'Hours Training Experience by Skill',
+              data: {{ training_skills_hours_skill_data|safe }},
+              type: 'line',
+              order: 1,
+              fill: false,
+              borderColor: '#FF0000',
+              borderWidth: 2,
+              pointBorderWidth: 2,
+              pointStyle: 'circle',
+              pointHitRadius: 20,
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+              },
+            legend: {
+                display: false,
+                position: 'top',
+                labels: {
+                    fontColor: '#0000ff',
+            },
+
+            }
+          }
+      };
+
+      var dataList = {{ val_skills_hours_skill_data|safe }};
+      var count = 0;
+      for(var i = 0; i < dataList.length; ++i){
+          if(dataList[i] >= 0)
+              count++;
+      }
+      var widthValue = 44 * count;
+      console.log(widthValue)
+      var divWidth = document.getElementById("chart-container");
+
+      if (count > 24){
+        divWidth.style.width = widthValue+"px";
+        }
+      else{
+        divWidth.style.width = "auto";
+        }
+
+      </script>
+    </div>
+  </div>
+<br>
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      {% for skl in dept_skills_link %}<a href="{% url 'Project:ProjectAssociatedSkillStats' prj skl.id %}?next={{ request.path|urlencode }}" class="btn btn-outline-success auto mb-1 mr-1 pointer">{{ skl.skill }}</a> {% endfor %}
+    </div>
+  </div>
+</div>
+</div>
+</div>
 
 {% endblock content %}

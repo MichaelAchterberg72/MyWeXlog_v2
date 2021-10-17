@@ -1,0 +1,138 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+
+{% block title %}
+  {% if request.user.id == tlt_p.id %}
+    {{block.super}}-Experience Overview
+  {% else %}
+    {{block.super}}-{{tlt.alias}} Publications Detail
+  {% endif %}
+{% endblock title %}
+
+{% block content %}
+
+</div>
+<div class="jumbotron public-profile-jumbotron-header" style="color:#000;background-color:#303030">
+  <div class="row">
+    <div class="col-md-2">
+    </div>
+    <div class="col-md-8">
+      <h4 class="profile-header" id="top" style="color:#fff;">MyWexlog Public Profile<br>{{ tlt }}</h4>
+    </div>
+    <div class="col-md-2 my-auto">
+      <div class="container ">
+        <div class="btn-toolbar float-right">
+          {% if request.user.alias == tlt %}
+          <a href="{% url 'Talent:APV' tlt=request.user.alias vac='1ad9t2' %}#publications" class="btn btn-success" style="width:14rem">
+            Back to your Profile
+          </a><br>
+          <a href="{% url 'Talent:Home' %}" class="btn btn-secondary" style="width:14rem">Experience Home</a>
+          {% else %}
+          <form  action="{% url 'BookList:BLB' %}" method="post">
+            <input type="hidden" name="next" value="{{ request.GET.next }}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-secondary float-right">Back to {{tlt_p.alias}}'s Profile</button>
+          </form>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<br>
+<div class="container">
+<div class="container">
+<h4 class="profile-header">MyWexlog Publications History</h4>
+<div class="profile-card-under">{% if publication_qs_count > 0 %}Total Publications Made: {{ publication_qs_count }}{% else %}No Publications with MyWeXlog yet{% endif %}</div>
+<br>
+<br>
+{% for a in pageitems %}
+<div class="row">
+  <div class="col-md-3 border-right">
+    <div class="profile-list-header">{{ a.date_published|date:"j M Y" }}</div><br>
+  </div>
+  {% if a.upload %}<div class="col-md-6 border-left">{% else %}<div class="col-md-9 border-left">{% endif %}
+    <div class="col-md-12">
+      <div class="profile-list-heading">{{ a.title }}</div><br>
+      <div class="profile-list-heading-under">{{ a.publisher }}</div><br>
+      <div>{{ a.description|linebreaks }}</div>
+      <div class="row pt-3 h-100 my-auto">
+        <div class="col-md-6 text-left my-auto">
+          <strong>Type: </strong><br>
+          <span class="">{{ a.get_type_display }}</span>
+        </div>
+        <div class="col-md-6 text-left my-auto">
+          <strong>Genre: </strong><br>
+          <span class="">{{ a.genre.all|join:", " }}</span>
+        </div>
+      </div>
+      <div class="row pt-3 h-100 my-auto">
+        <div class="col-md-12 text-left my-auto">
+          <strong>Skills: </strong><br>
+          <span class="">{{ a.tag.all|join:" || " }}</span>
+        </div>
+      </div>
+    </div>
+    <br><br><br>
+  </div>
+{% if a.upload %}
+<div class="col-md-3">
+  <div class="row pt-3 h-100 my-auto">
+    <div class="col-md-12 text-center">
+      <a href="{{ a.upload.url }}" target="_blank">
+      <img src="{{ a.thumbnail.url }}" alt="{{ a.title }}" height="340" width="260"></a>
+    </div>
+  </div>
+</div>
+{% endif %}
+</div>
+{% endfor %}
+</div>
+</div>
+</div>
+<br>
+<div class="container">
+
+<div class="row header-border">
+<div class="col-md-12">
+<nav aria-label="Page navigation">
+    {% if pageitems.has_other_pages %}
+      <ul class="pagination">
+        {% if pageitems.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ pageitems.previous_page_number }}" aria-label="Previous">
+              <span aria-hidden="true">Previous</span>
+              <span class="sr-only disabled">Previous</span>
+            </a></li>
+        {% else %}
+          <li class="page-link disabled" tabindex="-1"><span>Previous</span></li>
+        {% endif %}
+
+        {% if pageitems.number|add:'-4' > 1 %}
+          <li class="page-link"><a href="?page={{ pageitems.number|add:'-5' }}">&hellip;</a></li>
+        {% endif %}
+
+        {% for i in pageitems.paginator.page_range %}
+          {% if pageitems.number == i %}
+            <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
+          {% elif i > pageitems.number|add:'-5' and i < pageitems.number|add:'5' %}
+            <li class="page-link"><a class="page-item" href="?page={{ i }}">{{ i }}</a></li>
+          {% endif %}
+        {% endfor %}
+
+        {% if pageitems.paginator.num_pages > pageitems.number|add:'4' %}
+          <li class="page-link"><a href="?page={{ pageitems.number|add:'5' }}">&hellip;</a></li>
+        {% endif %}
+
+        {% if pageitems.has_next %}
+          <li class="page-link"><a href="?page={{ pageitems.next_page_number }}">Next</a></li>
+        {% else %}
+          <li class="page-link disabled"><span>Next</span></li>
+        {% endif %}
+      </ul>
+    {% endif %}
+</nav>
+</div>
+</div>
+{% endblock content %}

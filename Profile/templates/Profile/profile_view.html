@@ -8,22 +8,24 @@
   <div class="float-right">
   <a href="{% url 'Talent:APV' tlt=user_info.alias vac='1ad9t2' %}" target="_blank" class="btn btn-success">View Your Public Profile</a> <a href="{% url 'Profile:ProfileView' %}" class="btn btn-secondary">Back</a>
   </div>
-  <h5>Review Your Profile</h5>
+  <h5>Review and edit your profile</h5>
 </div>
   <div class="card-group">
     <div class="card card-shadow">
       <div class="card-body">
         {% for d in info %}
           <h5 class="card-title">Basic Information <a href="{% url 'Profile:ProfileEdit' d.alias %}" class="badge badge-secondary float-right">Edit</a></h5>
-          <p class="card-text">Name: {{ user_info.first_name }} {{ user_info.last_name }}</p>
           <p class="card-text">
-            Display name: {{ user_info.alias }}
+            Name: {{ user_info.first_name }} {{ user_info.last_name }}
           </p>
           <p class="card-text">
             Date of Birth: {{ d.birth_date|date:"j M Y" }}
           </p>
           <p class="card-text">
-            Profile email: {{ request.user.email }}
+            Display name: {{ user_info.alias }}
+          </p>
+          <p class="card-text">
+            Profile email:  {{ request.user.email }}
           </p>
           <p class="card-text">
             Standard Rate (per hour): {{ d.currency }} {{ d.std_rate }}
@@ -109,14 +111,31 @@
             </div>
           </div>
           {% empty %}
-            <p>No Languages listed.</p>
+            <p>No Languages listed</p>
           {% endfor %}
-
       </div>
     </div>
-
   <div class="card card-shadow">
     <div class="card-body">
+      <h5 class="card-title">Public Profile <a href="{% url 'Profile:PublicProfileNameEdit' request.user.alias %}" class="badge badge-primary float-right">Edit</a></h5>
+      <p class="card-text">
+        Public profile name: {{ user_info.public_profile_name }}
+      </p>
+      <p class="card-text">
+        Permit viewing of profile as reference:
+        {% if user_info.permit_viewing_of_profile_as_reference %}
+          <i class="fa fa-check-square-o" aria-hidden="true" style="font-size:2rem;padding-left:2rem;"></i>
+        {% else %}
+          <i class="fa fa-square-o" aria-hidden="true" style="font-size:2rem;padding-left:2rem;"></i>
+        {% endif %}
+      </p>
+      <div class="card-footer bg-transparent border-success"></div>
+      <h5 class="card-title" id="email">Public Profile Intro<a href="{% url 'Profile:PublicProfileIntroEdit' d.alias %}?next={{ request.path|urlencode }}" class="badge badge-primary float-right">Edit</a></h5>
+      <small>(max 460 characters)</small>
+      <p class="card-text">
+        {{ d.public_profile_intro|safe }}
+      </p>
+      <div class="card-footer bg-transparent border-success"></div>
       <h5 class="card-title" id="email">Email addresses <a href="{% url 'Profile:EmailEdit' d.alias %}?next={{ request.path|urlencode }}" class="badge badge-primary float-right">Add</a></h5>
       <h6>Past (No longer active)</h6>
       {% for e in email %}
@@ -156,6 +175,39 @@
   </div>
 </div>
 <br>
+
+<div class="card-group">
+  <div class="card card-shadow">
+    <div class="card-body">
+      <h5 class="card-title" id="pics">Profile Pictures</h5>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="float-right">
+            <a href="{% url 'Profile:ProfilePicEdit' tlt %}" class="badge badge-primary">Edit</a>
+          </div>
+          <h5>Profile Picture</h5>
+          {% if profile_pic %}
+          <img src="{{ profile_pic.url }}" height="240" width="240">
+          {% else %}
+          <p>No picture uploaded yet!</p>
+          {% endif %}
+        </div>
+        <div class="col-md-9">
+          <div class="float-right">
+            <a href="{% url 'Profile:ProfileBackgroundPicEdit' tlt %}" class="badge badge-primary">Edit</a>
+          </div>
+          <h5>Profile Background Picture</h5>
+          {% if background_pic %}
+          <img src="{{ background_pic.url }}" height="240" width="790">
+          {% else %}
+          <p>No picture uploaded yet!</p>
+          {% endif %}
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+<br>
 <div class="card-group">
   <div class="card card-shadow">
     <div class="card-body">
@@ -164,7 +216,7 @@
       </div>
       <h5 class="card-title" id="background">Background</h5>
       <p class="card-text text-justify">
-        {{ d.background|linebreaks }}</p>
+        {{ d.background|safe }}</p>
       </div>
     </div>
   </div>
@@ -175,9 +227,13 @@
       <div class="float-right">
         <a href="{% url 'Profile:MotivationEdit' tlt %}" class="btn btn-secondary">Edit</a>
       </div>
-      <h5 class="card-title" id="motivation">Motivation:</h5>
+      <h5 class="card-title" id="motivation" data-toggle="tooltip" data-placement="left" title="This is a motivation which employers will see when your profile appears in vacancies they post.
+      Active members will be able to customise their motivations based on the vacancy bid.">
+        Motivation:
+      </h5>
       <p class="card-text text-justify">
-        {{ d.motivation|linebreaks }}</p>
+        {{ d.motivation|safe }}
+      </p>
     </div>
   </div>
 </div>
@@ -187,14 +243,13 @@
   <div class="card card-shadow">
     <div class="card-body">
       <h5 class="card-title" >Licenses, Certifications and Memberships <a href="{% url 'Talent:LCMCap'  %}?next={{ request.path|urlencode }}" class="badge badge-primary float-right">Add</a></h5>
-
       <div class="container">
         <div class="row my-auto">
           <div class="col-1 col-no-pad h-100 text-center my-auto">
             <strong>Type</strong>
           </div>
           <div class="col-2 col-no-pad h-100 text-center my-auto">
-            <strong>Registered Number</strong>
+            <strong>Name<br>Registered Number</strong>
           </div>
           <div class="col-2 col-no-pad h-100 text-center my-auto">
             <strong>Managing Organisation</strong>
@@ -228,6 +283,7 @@
                 {{ lcm.certification }}
               </div>
               <div class="col-2 col-no-pad h-100 text-center my-auto">
+                {{ lcm.cert_name }}<br>
                 {{ lcm.cm_no }}
               </div>
               <div class="col-2 col-no-pad h-100 text-center my-auto">
@@ -277,7 +333,7 @@
         </div>
       </div>
       {% empty %}
-        <p>You do not have any bookes read lilicenses, certifications or memberships listed.</p>
+        <p>You have not captured any licenses, certifications or memberships.</p>
       {% endfor %}
     </div>
   </div>
@@ -312,13 +368,6 @@
                     {{ a.achievement }}
                   </div>
                 </div>
-                <div class="row my-auto">
-                  <div class="col-md-12 h-100 text-left my-auto">
-                    <br>
-                    <p class="short-paragraph"><strong>Details:</strong></p>
-                    <p>{{ a.description|linebreaks|truncatechars:465 }}</p>
-                  </div>
-                </div>
               </div>
               <div class="col-md-1 h-100 text-center my-auto">
                 {% if a.upload %}
@@ -342,6 +391,138 @@
       </div>
       {% empty %}
         <p>No achievements captured.</p>
+      {% endfor %}
+
+    </div>
+  </div>
+</div>
+<br>
+<div class="card-group">
+  <div class="card card-shadow">
+    <div class="card-body" >
+      <h5 class="card-title" id="awards">Awards<a href="{% url 'Talent:AwardCap' %}" class="badge badge-primary float-right">Add</a></h5>
+
+      <div class="container">
+        <div class="row my-auto">
+          <div class="col-md-4 h-100 text-center my-auto">
+            <strong>Date Awarded</strong>
+          </div>
+          <div class="col-md-7 h-100 text-center my-auto">
+            <strong>Award</strong>
+          </div>
+        </div>
+      </div>
+      {% for a in award %}
+      <div class="row">
+        <div class="card mt-1 card-hover" style="width: 100%;">
+          <div class="card-body small-pad">
+            <div class="row my-auto">
+              <div class="col-md-11 h-100 text-center my-auto">
+                <div class="row my-auto">
+                  <div class="col-md-4 h-100 text-center my-auto">
+                    {{ a.date_achieved|date:"j M Y" }}
+                  </div>
+                  <div class="col-md-8 h-100 text-center my-auto">
+                    {{ a.award }}
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-1 h-100 text-center my-auto">
+                {% if a.upload %}
+                  <a href="{{ a.upload.url }}" target="_blank" class="badge badge-success" style="width: 4rem;">
+                    View File
+                  </a>
+                {% else %}
+                  <a href="#" target="_blank" class="badge badge-primary" style="width: 4rem;">
+                    No File
+                  </a>
+                {% endif %}
+                <a href="{% url 'Talent:AwardEdit' a.slug %}" class="badge badge-secondary" style="width: 4rem;">Edit</a>
+                <form  action="{% url 'Talent:AwardDelete' awd_i=a.id tlt=a.talent.alias %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="badge badge-danger" style="width: 4rem;" onclick="return confirm('Remove {{ a.award }} - Are you sure?');">Remove</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+        <p>No awards captured.</p>
+      {% endfor %}
+
+    </div>
+  </div>
+</div>
+<br>
+<div class="card-group">
+  <div class="card card-shadow">
+    <div class="card-body" >
+      <h5 class="card-title" id="publications">Publications
+        <a href="{% url 'Talent:PublicationCap' %}" class="badge badge-primary float-right">
+          Add
+        </a>
+      </h5>
+
+      <div class="container">
+        <div class="row my-auto">
+          <div class="col-md-2 h-100 text-center my-auto">
+            <strong>Date Published</strong>
+          </div>
+          <div class="col-md-3 h-100 text-center my-auto">
+            <strong>Publication</strong>
+          </div>
+          <div class="col-md-3 h-100 text-center my-auto">
+            <strong>Genre</strong>
+          </div>
+          <div class="col-md-4 h-100 text-center my-auto">
+            <strong>Link</strong>
+          </div>
+        </div>
+      </div>
+      {% for a in publication %}
+      <div class="row">
+        <div class="card mt-1 card-hover" style="width: 100%;">
+          <div class="card-body small-pad">
+            <div class="row my-auto">
+              <div class="col-md-11 h-100 text-center my-auto">
+                <div class="row my-auto">
+                  <div class="col-md-2 h-100 text-center my-auto">
+                    {{ a.date_published|date:"j M Y" }}
+                  </div>
+                  <div class="col-md-3 h-100 text-center my-auto">
+                    {{ a.title }}
+                  </div>
+                  <div class="col-md-3 h-100 text-center my-auto">
+                    {{ a.genre.all|join:", " }}
+                  </div>
+                  <div class="col-md-4 h-100 text-center my-auto">
+                    {{ a.link }}
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-1 h-100 text-center my-auto">
+                {% if a.upload %}
+                  <a href="{{ a.upload.url }}" target="_blank" class="badge badge-success" style="width: 4rem;">
+                    View File
+                  </a>
+                {% else %}
+                  <a href="#" target="_blank" class="badge badge-primary" style="width: 4rem;">
+                    No File
+                  </a>
+                {% endif %}
+                <a href="{% url 'Talent:PublicationEdit' a.slug %}" class="badge badge-secondary" style="width: 4rem;">Edit</a>
+                <form  action="{% url 'Talent:PublicationDelete' pub_i=a.id tlt=a.talent.alias %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="badge badge-danger" style="width: 4rem;" onclick="return confirm('Remove {{ a.title }} - Are you sure?');">Remove</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+        <p>No publications captured.</p>
       {% endfor %}
 
     </div>
@@ -400,11 +581,21 @@
                 <div class="col-md-2 h-100 text-center my-auto">
                   {{ h.work_configeration }}
                 </div>
-                <div class="col-md-1 h-100 text-center my-auto">
+                <div class="col-md-1 h-100 text-left my-auto">
+                  <a href="{% url 'Profile:HistoryEdit' bch=h.slug %}" class="badge badge-secondary" style="width:4.5rem;">
+                    Edit
+                  </a>
+                  <form  action="{% url 'Profile:HistoryDelete' bch=h.slug %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="badge badge-danger" style="width:4.5rem;" onclick="return confirm('Delete {{ h.companybranch }} - Are you sure?');">Delete</button>
+                  </form>
                   {% if h.date_to %}
 
                   {% else %}
-                    <a href="{% url 'Profile:Resigned' bch=h.slug tlt=h.talent.alias %}" class="badge badge-primary">I Resigned</a>
+                    <br>
+                    <a href="{% url 'Profile:Resigned' bch=h.slug tlt=h.talent.alias %}" class="badge badge-primary" style="width:4.5rem;">
+                      I Resigned
+                    </a>
                   {% endif %}
                 </div>
               </div>
@@ -423,9 +614,13 @@
 <div class="card-group">
   <div class="card card-shadow">
     <div class="card-body">
-      <h5 class="card-title" id="Upload">Uploaded Files <a href="{% url 'Profile:FileUploadView' %}" class="badge badge-primary float-right">Add File</a></h5>
-      <p>(Only <strong>PDF</strong> files are allowed to be uploaded)</p>
-
+      <h5 class="card-title" id="Upload">Upload Files <a href="{% url 'Profile:FileUploadView' %}" class="badge badge-primary float-right">Add File</a></h5>
+      <p>
+        Upload files such as your static cv, academic records, copies of passports, id documents or any other document you may want to keep here.
+      </p>
+      <p>
+        (Only <strong>PDF</strong> files are allowed to be uploaded)
+      </p>
       {% for f in upload %}
       <div class="row">
         <div class="card mt-1 card-hover" style="width: 100%;">
@@ -447,7 +642,6 @@
       {% empty %}
         <p>You do not have any files loaded yet.</p>
       {% endfor %}
-
     </div>
   </div>
 </div>
@@ -457,6 +651,7 @@
   <div class="card card-shadow">
     <div class="card-body">
       <h5 class="card-title">Identification Document <a href="{% url 'Profile:IdView' %}" class="badge badge-secondary float-right">Edit</a></h5>
+      <p>Identification information is not required by the site at the moment. You do not need to capture this information if you don't want to.</p>
       <div class="container">
         <div class="row my-auto">
           <div class="col-md-6 h-100 text-center my-auto">
@@ -483,7 +678,7 @@
         </div>
       </div>
       {% empty %}
-        <p>You do not have any identification documkent loaded yet.</p>
+        <p>You do not have an identification document loaded yet.</p>
       {% endfor %}
     </div>
   </div>
@@ -491,7 +686,7 @@
     <div class="card card-shadow">
       <div class="card-body">
         <h5 class="card-title">Passport Information <a href="{% url 'Profile:PassportAddView' %}" class="badge badge-primary float-right">Add</a></h5>
-
+        <p>Passport information is not required by the site at the moment. You do not need to capture this information if you don't want to.</p>
         <div class="container">
           <div class="row my-auto">
             <div class="col-md-3 h-100 text-center my-auto">
@@ -534,7 +729,7 @@
           </div>
         </div>
         {% empty %}
-          <p>You do not have any identification documkent loaded yet.</p>
+          <p>You do not have any passports loaded.</p>
         {% endfor %}
 
       </div>
@@ -548,66 +743,58 @@
       <div class="container">
       <div class="row">
         <div class="col-4 col-no-pad">
-    <div class="card">
-      <div class="card-body">
-        <div class="btn-group float-right">
-          <div class="btn-group mr-2">
-            <a href="{% url 'Profile:PhysicalAddress' %}" class="badge badge-secondary">
-              Edit
-            </a>
-          </div>
-          <div class="btn-group mr-2">
-            <a href="{% url 'Profile:CopyPhyAdd' %}" class="badge badge-dark" data-toggle="tooltip" title="Copy Physical Address to Postal Address" onclick="return confirm('This will over write all information currently in your postal address - Are you sure?');">
-              Copy
-            </a>
+          <div class="card">
+            <div class="card-body">
+              <div class="btn-group float-right">
+                <div class="btn-group mr-2">
+                  <a href="{% url 'Profile:PhysicalAddress' %}" class="badge badge-secondary">
+                    Edit
+                  </a>
+                </div>
+                <div class="btn-group mr-2">
+                  <a href="{% url 'Profile:CopyPhyAdd' %}" class="badge badge-dark" data-toggle="tooltip" title="Copy Physical Address to Postal Address" onclick="return confirm('This will over write all information currently in your postal address - Are you sure?');">
+                    Copy
+                  </a>
+                </div>
+              </div>
+              <h5 class="card-title">
+                Physical Address
+              </h5>
+
+              <table class="table table-sm">
+                <thead>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>Line 1</th>
+                    <td>{{ physical.line1 }}</td>
+                  </tr>
+                  <tr>
+                    <th>Line 2</th>
+                    <td>{{ physical.line2 }}</td>
+                  </tr>
+                  <tr>
+                    <th>Country</th>
+                    <td>{{ physical.get_country_display }}</td>
+                  </tr>
+                  <tr>
+                    <th>Region</th>
+                    <td>{{ physical.region.region }}</td>
+                  </tr>
+                  <tr>
+                    <th>City</th>
+                    <td>{{ physical.city.city }}</td>
+                  </tr>
+                  <tr>
+                    <th>Postal Code</th>
+                    <td>{{ physical.code }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
-        <h5 class="card-title">
-          Physical Address
-        </h5>
-
-        <table class="table table-sm">
-          <thead>
-          </thead>
-          <tbody>
-            <tr>
-              <th>Line 1</th>
-              <td>{{ physical.line1 }}</td>
-            </tr>
-            <tr>
-              <th>Line 2</th>
-              <td>{{ physical.line2 }}</td>
-            </tr>
-            <tr>
-              <th>Line 3</th>
-              <td>{{ physical.line3 }}</td>
-            </tr>
-            <tr>
-              <th>Country</th>
-              <td>{{ physical.get_country_display }}</td>
-            </tr>
-            <tr>
-              <th>Region</th>
-              <td>{{ physical.region.region }}</td>
-            </tr>
-            <tr>
-              <th>City</th>
-              <td>{{ physical.city.city }}</td>
-            </tr>
-            <tr>
-              <th>Suburb</th>
-              <td>{{ physical.suburb.suburb }}</td>
-            </tr>
-            <tr>
-              <th>Postal Code</th>
-              <td>{{ physical.code }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      </div>
-    </div>
-    <div class="col-4 col-no-pad">
+        <div class="col-4 col-no-pad">
     <div class="card">
       <div class="card-body">
         <div class="btn-group float-right">
@@ -638,10 +825,6 @@
               <td>{{ postal.line2 }}</td>
             </tr>
             <tr>
-              <th>Line 3</th>
-              <td>{{ postal.line3 }}</td>
-            </tr>
-            <tr>
               <th>Country</th>
               <td>{{ postal.get_country_display }}</td>
             </tr>
@@ -652,10 +835,6 @@
             <tr>
               <th>City</th>
               <td>{{ postal.city.city }}</td>
-            </tr>
-            <tr>
-              <th>Suburb</th>
-              <td>{{ postal.suburb.suburb }}</td>
             </tr>
             <tr>
               <th>Postal Code</th>
@@ -723,9 +902,10 @@
           <h5 class="card-title" id="WTR">
             Willingness to Relocate
           </h5>
-          <p>
-            Note: Relocation applies to positions that required you to be at a particular location. They do not apply for Freelancing or Consulting where you can take a short trip.
-          </p>
+          <small>
+            Note:<br>
+            Relocation applies to positions that require you to physically be at a location other than your current location, and is too far away to commute. Relocation does not apply to vacancies that can be completed remotely, or where a short business trip can be made.
+          </small>
           <table class="table table-sm">
             <thead>
               <tr>
@@ -787,6 +967,20 @@
             </tbody>
             {% endfor %}
           </table>
+        </div>
+      </div>
+    </div>
+    <br>
+    <div class="card card-shadow">
+      <div class="card-body">
+        <h3>End of Profile</h3>
+        <div class="card-body">
+          <a href="{% url 'Talent:Home' %}" class="btn btn-primary float-right">
+            Next: Experience
+          </a>
+          <p>
+            Now that you have completed your profile - begin capturing your experience!
+          </p>
         </div>
       </div>
     </div>

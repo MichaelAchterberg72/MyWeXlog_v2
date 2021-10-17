@@ -1,11 +1,10 @@
+from django.conf import settings
 from django.db import models
-
 from django_countries.fields import CountryField
+from tinymce.models import HTMLField
 
-from enterprises.models import Enterprise, Industry, Branch
+from enterprises.models import Branch, Enterprise, Industry
 from locations.models import City, Region
-
-
 from Profile.utils import create_code9
 
 
@@ -33,3 +32,17 @@ class ProjectData(models.Model):
             self.slug = create_code9(self)
 
         super(ProjectData, self).save(*args, **kwargs)
+
+
+class ProjectPersonalDetails(models.Model):
+    talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    project = models.ForeignKey(ProjectData, on_delete=models.SET_NULL, blank=True, null=True)
+    company = models.ForeignKey(Enterprise, on_delete=models.SET_NULL,  verbose_name="Owner", blank=True, null=True)
+    companybranch = models.ForeignKey(Branch, on_delete=models.SET_NULL, verbose_name='Branch Working for on the Project', blank=True, null=True)
+    description = HTMLField(verbose_name='Personal responsibilities description', blank=True, null=True)
+
+    class Meta:
+        unique_together = (('talent', 'project', 'company', 'companybranch'),)
+
+    def __str__(self):
+        return '{}'.format(self.project)

@@ -144,27 +144,48 @@
     </tr>
   </thead>
   <tbody>
-
     <tr>
       <td class="align-middle text-center">
-        {{ v.hours_required|intcomma }}<br>({{ v.get_unit_display }})
+        {% if v.hours_required == 0 %}
+          <small>None Given</small>
+        {% else %}
+          {{ v.hours_required|intcomma }}<br><small>({{ v.get_unit_display }})</small><br>
+          {% if v.permpos == True %}
+            <p>
+              <small>Permanent Position</small>
+            </p>
+          {% endif %}
+        {% endif %}
       </td>
       <td class="align-middle text-center">{{ v.worklocation }}</td>
       <td class="align-middle text-center">{{ v.city.city }}</td>
       <td class="align-middle text-center">{{ v.experience_level }}</td>
-
     </tr>
   </tbody>
-  {% endfor %}
 </table>
-
+<div class="row">
+  <div class="col-sm-12 text-center">
+    <h6>
+      <strong>Certifications Required for this Vacancy</strong>
+    </h6>
+    <p>
+    {% for cert in v.certification.all %}
+      <strong>|</strong>{{ cert }}<strong>|</strong>
+    {% empty %}
+        <small>No certifications required for this vacancy.</small>
+    {% endfor %}
+    </p>
+  </div>
+</div>
+{% endfor %}
+<hr>
 <div class="row">
   <div class="col-sm-6">
     <div class="h-100">
       <div class="card-body">
         <h5 class="card-title">Scope</h5>
         {% for s in vacancy %}
-        <p>{{ s.scope|linebreaks }}</p>
+        <p>{{ s.scope|safe }}</p>
         {% endfor %}
       </div>
     </div>
@@ -174,7 +195,7 @@
       <div class="card-body">
         <h5 class="card-title">Expectations</h5>
         {% for e in vacancy %}
-        <p>{{ e.expectations|linebreaks }}</p>
+        <p>{{ e.expectations|safe }}</p>
         {% endfor %}
       </div>
     </div>
@@ -227,7 +248,7 @@
         <h5 class="card-title">Deliverables</h5>
         {% for d in deliver %}
         <ul>
-          <li>{{ d.deliverable|linebreaks }}</li>
+          <li>{{ d.deliverable|safe }}</li>
         </ul>
         {% endfor %}
       </div>
@@ -251,6 +272,11 @@
 </div>
 </div>
 <br>
+<div class="float-right">
+  <a href="{% url 'Profile:WorkshopTlt' %}?next={{ request.path|urlencode }}" class="btn btn-primary">Enter Workshop</a>
+  <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary">Interview History</a>
+</div>
+<br><br><br>
 <div class="card card-shadow">
   {% if request.user.subscription >= 2 %}
     <div class="card-body">
@@ -294,11 +320,7 @@
     </div>
   {% endif %}
 </div>
-<br>
-<div class="float-right">
-  <a href="{% url 'Profile:WorkshopTlt' %}?next={{ request.path|urlencode }}" class="btn btn-primary">Enter Workshop</a>
-  <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary">Interview History</a>
-</div>
+
 <p>&nbsp</p>
 
 {% endblock content %}

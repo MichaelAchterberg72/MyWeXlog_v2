@@ -1,23 +1,23 @@
-from django.db import models
-from django.conf import settings
-from django.core.validators import FileExtensionValidator
-from django.utils import timezone
-from django.db.models.signals import pre_save, post_save
-from django.dispatch import receiver
 from random import random
 from time import time
 
-from Profile.utils import create_code9, create_code8
-from WeXlog.storage_backends import PublicMediaStorage, PrivateMediaStorage
-
-
-
+from django.conf import settings
 from django.contrib.auth.models import User
-from users.models import CustomUser
+from django.core.validators import FileExtensionValidator
+from django.db import models
+from django.db.models.signals import post_save, pre_save
+from django.dispatch import receiver
+from django.utils import timezone
+from tinymce.models import HTMLField
+
+from db_flatten.models import LanguageList, SkillTag
 from enterprises.models import Branch
-from locations.models import Currency, City
-from db_flatten.models import SkillTag, LanguageList
-from talenttrack.models import Result, Designation
+from locations.models import City, Currency
+from Profile.utils import create_code8, create_code9
+from talenttrack.models import Designation, Result
+from users.models import CustomUser
+from WeXlog.storage_backends import PrivateMediaStorage, PublicMediaStorage
+
 
 #This is the table that specifies the work configuration (Freelance, Remote Freelence, Consultant, Contractor, Employee, FIFO)
 class WorkLocation(models.Model):
@@ -49,6 +49,7 @@ RATE_UNIT = (
     ('H','per Hour'),
     ('D','per Day'),
     ('M','per Month'),
+    ('A','per Annum'),
     ('L','Lump Sum'),
 )
 
@@ -57,6 +58,7 @@ UNIT = (
     ('M','per Month'),
     ('D','per Day'),
     ('W','per Week'),
+    ('P','Permanent Position'),
     ('S','Short Term Contract'),
     ('A','As and When Contract'),
 )
@@ -100,27 +102,27 @@ class TalentRequired(models.Model):
     )
     date_entered = models.DateField(auto_now_add=True)
     title = models.CharField(max_length=250)
-    ref_no = models.CharField(max_length=10, unique=True, null=True, blank=True)#SlugField
+    ref_no = models.CharField("MyWeXlog Reference Number",max_length=10, unique=True, null=True, blank=True)#SlugField
     own_ref_no = models.CharField(max_length=100, unique=True, null=True, blank=True)
     designation = models.ForeignKey(Designation, on_delete=models.PROTECT, null=True)
-    # (companybranch = models.ForeignKey(Branch, on_delete=models.CASCADE, verbose_name="Company", related_name="Test")
-    companybranch = models.ForeignKey(Branch, on_delete=models.CASCADE, verbose_name="Company")
+    companybranch = models.ForeignKey(Branch, on_delete=models.SET_NULL, null=True, verbose_name="Company")
     requested_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
-    date_deadline = models.DateField('Work completed by')
-    hours_required = models.IntegerField()
+    date_deadline = models.DateField('Work completed by', blank=True, null=True)
+    permpos = models.BooleanField('Permanent Position?', default=False, blank=True)
+    hours_required = models.IntegerField(blank=True, null=True)
     unit = models.CharField(max_length=1, choices=UNIT)
     experience_level = models.ForeignKey(SkillLevel, on_delete=models.PROTECT)
     language = models.ManyToManyField(LanguageList)
     worklocation = models.ForeignKey(WorkLocation, on_delete=models.PROTECT)#Job configuration
-    rate_offered = models.DecimalField(max_digits=6, decimal_places=2)
+    rate_offered = models.DecimalField(max_digits=9, decimal_places=2, blank=True, null=True)
     currency = models.ForeignKey(Currency, on_delete=models.PROTECT)
     rate_unit = models.CharField(max_length=1, choices=RATE_UNIT, default='H')
     bid_open = models.DateTimeField(auto_now_add=True, null=True)
     bid_closes = models.DateTimeField('Applications Close', null=True)
     offer_status = models.CharField(max_length=1, choices=STATUS, default='O')
     certification = models.ManyToManyField(Result, verbose_name='Certifications Required', blank=True)
-    scope = models.TextField()
-    expectations = models.TextField()
+    scope = HTMLField()
+    expectations = HTMLField()
     terms = models.FileField(storage=PublicMediaStorage(), upload_to=BidTerms, blank=True, null=True, validators=[FileExtensionValidator(['pdf'])])
     city = models.ForeignKey(City, on_delete=models.PROTECT, verbose_name='City, Town or Place')
     date_modified = models.DateField(auto_now=True)
@@ -156,7 +158,7 @@ class VacancyViewed(models.Model):
 
 class Deliverables(models.Model):
     scope = models.ForeignKey(TalentRequired, on_delete=models.CASCADE)
-    deliverable = models.TextField()
+    deliverable = HTMLField()
     date_modified = models.DateField(auto_now=True)
 
     class Meta:
@@ -277,14 +279,15 @@ class WorkBid(models.Model):
 
 class TalentAvailabillity(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    date_from = models.DateField()
-    date_to = models.DateField()
-    hours_available = models.IntegerField()
-    unit = models.CharField(max_length=1, choices=UNIT, default='D')
+    freelance = models.BooleanField(default=False)
+    remote_freelance = models.BooleanField(default=False)
+    contract = models.BooleanField(default=False)
+    part_time = models.BooleanField(default=False)
+    permanent = models.BooleanField(default=False)
     date_modified = models.DateField(auto_now=True)
 
     def __str__(self):
-        return '{} - {} {} ({})'.format(self.talent, self.hours_available, self.get_unit_display, self.date_to)
+        return '{}'.format(self.talent)
 
 
 #Reasons: No Available Capacity, Not Looking for work, Not suited to vacancy, Rate too low, Company Reputation, other (comment)
@@ -357,9 +360,10 @@ class VacancyRate(models.Model):
     rate_2 = models.SmallIntegerField('Completed on Time?', choices=OPNS, default=3)
     rate_3 = models.SmallIntegerField('Would you hire this person again?', choices=OPNS, default=3)
     date_rating = models.DateField(auto_now=True)
-    comment = models.TextField(blank=True, null=True)
+    comment = HTMLField(blank=True, null=True)
+    personal_comment = HTMLField(blank=True, null=True)
     complete = models.BooleanField(null=True, default=False)
-    suggestions = models.TextField(blank=True, null=True)
+    suggestions = HTMLField(blank=True, null=True)
     slug = models.SlugField(max_length=50, null=True, unique=True)
 
     class Meta:
@@ -405,8 +409,8 @@ class TalentRate(models.Model):
     rate_3 = models.SmallIntegerField('Would you work for this employer again?', choices=OPNS, default=3)
     payment_time = models.SmallIntegerField('Days from invoice to receipt of payment', choices=PYMT, default=0)
     date_rating = models.DateField(auto_now=True)
-    comment = models.TextField(blank=True, null=True)
-    suggestions = models.TextField(blank=True, null=True)
+    comment = HTMLField(blank=True, null=True)
+    suggestions = HTMLField(blank=True, null=True)
     complete = models.BooleanField(null=True, default=False)
     slug = models.SlugField(max_length=50, null=True, unique=True, blank=True)
 

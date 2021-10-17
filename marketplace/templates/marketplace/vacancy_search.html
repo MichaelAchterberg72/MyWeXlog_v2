@@ -6,7 +6,7 @@
 {% block title %}{{block.super}}-Vacancy Search{% endblock title %}
 
 {% block content %}
-<div class="card card-shadow0">
+<div class="card card-shadow">
   <div class="card-body">
   {% if query %}
   <h4>Vacancies with Reference Number containing "{{ query }}"</h4>
@@ -18,13 +18,13 @@
   <div class="container">
     <div class="row my-auto">
       <div class="col-md-1 h-100 text-center my-auto">
-        <strong>Reference Number</strong>
+        <strong>Ref.<br>No.</strong>
       </div>
       <div class="col-md-3 h-100 text-center my-auto">
         <strong>Vacancy Title</strong>
       </div>
-      <div class="col-md-1 h-100 text-center my-auto">
-        <strong>Hours Required</strong>
+      <div class="col-md-2 h-100 text-center my-auto">
+        <strong>Hours</strong>
       </div>
       <div class="col-md-2 h-100 text-center my-auto">
         <strong>Work Format</strong>
@@ -32,7 +32,7 @@
       <div class="col-md-2 h-100 text-center my-auto">
         <strong>Country</strong>
       </div>
-      <div class="col-md-2 h-100 text-center my-auto">
+      <div class="col-md-1 h-100 text-center my-auto">
         <strong>Full Detail</strong>
       </div>
     </div>
@@ -48,8 +48,8 @@
           <div class="col-md-3 h-100 text-center my-auto">
             {{ i.title }}
           </div>
-          <div class="col-md-1 h-100 text-center my-auto">
-            {{ i.hours_required|intcomma }}<br>({{ i.get_unit_display }})
+          <div class="col-md-2 h-100 text-center my-auto">
+            {{ i.hours_required|intcomma }}<br><small>({{ i.get_unit_display }})</small>
           </div>
           <div class="col-md-2 h-100 text-center my-auto">
             {{ i.worklocation }}
@@ -57,9 +57,11 @@
           <div class="col-md-2 h-100 text-center my-auto">
             {{ i.city }}
           </div>
-          <div class="col-md-2 h-100 text-center my-auto">
-            {% if request.user.subscription == 2 %}
-              <a href="{% url 'MarketPlace:VacancyDetail' i.ref_no %}" class="card-link">See Detail</a>
+          <div class="col-md-1 h-100 text-center my-auto">
+            {% if request.user.subscription >= 2 %}
+              <a href="{% url 'MarketPlace:VacancyDetail' i.ref_no %}"  data-toggle="tooltip" title="Vacancy Detail">
+                <i class="fa fa-industry" style="font-size:24px;color:black"></i>
+              </a>
             {% elif request.user.subscription < 2 %}
               <a href="#" class="card-link">See Detail</a>
             {% endif %}

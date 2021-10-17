@@ -22,6 +22,12 @@
 <form class="" action="" method="POST">
   <input type="hidden" name="next" value="{{ request.GET.next }}">
   {% csrf_token %}
+  <div style="background-color:red; color:white;">
+    <p>
+
+      {{ form.non_field_errors }}
+    </p>
+  </div>
   {{ form.name|as_crispy_field }}
   {{ form.surname|as_crispy_field }}
   {{ form.email|as_crispy_field }}
@@ -36,6 +42,7 @@
 <!--
 <button type="submit" class="btn btn-primary" name="Invite" value="Close this window" onclick="windowClose();">Invite</button>
 -->
+{{ form.media }}
 {% endblock content %}
 {% block Script %}
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>

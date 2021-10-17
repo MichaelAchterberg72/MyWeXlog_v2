@@ -4,12 +4,10 @@ from django.test import override_settings
 
 from allauth.account.models import EmailAddress
 from allauth.socialaccount.models import SocialAccount
-from allauth.socialaccount.providers.amazon_cognito.provider import (
-    AmazonCognitoProvider,
-)
-from allauth.socialaccount.providers.amazon_cognito.views import (
-    AmazonCognitoOAuth2Adapter,
-)
+from allauth.socialaccount.providers.amazon_cognito.provider import \
+    AmazonCognitoProvider
+from allauth.socialaccount.providers.amazon_cognito.views import \
+    AmazonCognitoOAuth2Adapter
 from allauth.socialaccount.tests import OAuth2TestsMixin
 from allauth.tests import MockedResponse, TestCase
 
@@ -26,9 +24,7 @@ def _get_mocked_claims():
 
 @override_settings(
     SOCIALACCOUNT_PROVIDERS={
-        "amazon_cognito": {
-            "DOMAIN": "https://domain.auth.us-east-1.amazoncognito.com"
-        }
+        "amazon_cognito": {"DOMAIN": "https://domain.auth.us-east-1.amazoncognito.com"}
     }
 )
 class AmazonCognitoTestCase(OAuth2TestsMixin, TestCase):
@@ -57,15 +53,11 @@ class AmazonCognitoTestCase(OAuth2TestsMixin, TestCase):
         mocked_claims = _get_mocked_claims()
         mocked_claims["email_verified"] = True
         mocked_payload = json.dumps(mocked_claims)
-        mocked_response = MockedResponse(
-            status_code=200, content=mocked_payload
-        )
+        mocked_response = MockedResponse(status_code=200, content=mocked_payload)
 
         self.login(mocked_response)
 
-        user_id = SocialAccount.objects.get(
-            uid=mocked_claims["sub"]
-        ).user_id
+        user_id = SocialAccount.objects.get(uid=mocked_claims["sub"]).user_id
         email_address = EmailAddress.objects.get(user_id=user_id)
 
         self.assertEqual(email_address.email, mocked_claims["email"])

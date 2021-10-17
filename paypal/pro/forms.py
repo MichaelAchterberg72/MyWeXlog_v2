@@ -6,7 +6,8 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 
 from paypal.pro.exceptions import PayPalFailure
-from paypal.pro.fields import CountryField, CreditCardCVV2Field, CreditCardExpiryField, CreditCardField
+from paypal.pro.fields import (CountryField, CreditCardCVV2Field,
+                               CreditCardExpiryField, CreditCardField)
 from paypal.utils import warn_untested
 
 

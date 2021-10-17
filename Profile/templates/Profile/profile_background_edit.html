@@ -13,7 +13,12 @@
 <form method="post">
   <input type="hidden" name="next" value="{{ request.GET.next }}">
   {% csrf_token %}
+  <div style="background-color:red; color:white;">
+    <p>
 
+      {{ form.non_field_errors }}
+    </p>
+  </div>
       {{ form.background|as_crispy_field }}
 
   <div class="">
@@ -22,4 +27,5 @@
 </form>
 </div>
 </div>
+{{ form.media }}
 {% endblock content %}

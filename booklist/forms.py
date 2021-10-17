@@ -1,19 +1,15 @@
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Column, Layout, Row, Submit
 from django import forms
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
+from django_select2.forms import (ModelSelect2MultipleWidget,
+                                  ModelSelect2TagWidget, ModelSelect2Widget,
+                                  Select2MultipleWidget, Select2Widget)
 
-
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, Row, Column
-
-
-from django_select2.forms import (
-    ModelSelect2TagWidget, ModelSelect2Widget, Select2MultipleWidget,
-    Select2Widget, ModelSelect2MultipleWidget
-)
-
-
-from .models import BookList, Author, ReadBy, Format, Publisher, Genre
 from db_flatten.models import SkillTag
+
+from .models import Author, BookList, Format, Genre, Publisher, ReadBy
 
 
 #>>> Select 2 Widgets
@@ -105,6 +101,21 @@ class BookAddForm(forms.ModelForm):
             'genre': GenreWidget(),
         }
 
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        title = cleaned_data.get("title")
+        publisher = cleaned_data.get("publisher")
+
+        if BookList.objects.filter(title = title, publisher = publisher).count() > 0:
+            del cleaned_data["title"]
+            del cleaned_data["publisher"]
+
+            raise ValidationError("This combination of Title and Publisher already exists! Please enter another combination or select the existing combination.")
+
+        return cleaned_data
+
 
 class GenreAddForm(forms.ModelForm):
     class Meta:
@@ -140,12 +151,26 @@ class TagAddForm(forms.ModelForm):
 class AddBookReadForm(forms.ModelForm):
     class Meta:
         model = ReadBy
-        fields = ('book','type','date',)
+        fields = ('book','type','date', 'review',)
         widgets = {
             'date': DateInput(),
             'book': BookSelect2Widget(),
             'type': TypeSelect2Widget(),
         }
+
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        talent = cleaned_data.get("talent")
+        book = cleaned_data.get("book")
+
+        if ReadBy.objects.filter(talent = talent, book = book).count() > 0:
+            del cleaned_data["talent"]
+            del cleaned_data["book"]
+            raise ValidationError("This Book already exists in your profile!")
+
+        return cleaned_data
 
 
 class AddFromListForm(forms.ModelForm):
@@ -157,6 +182,20 @@ class AddFromListForm(forms.ModelForm):
             'book': BookSelect2Widget(),
             'type': TypeSelect2Widget(),
         }
+
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        talent = cleaned_data.get("talent")
+        book = cleaned_data.get("book")
+
+        if ReadBy.objects.filter(talent = talent, book = book).count() > 0:
+            del cleaned_data["talent"]
+            del cleaned_data["book"]
+            raise ValidationError("This Book already exists in your profile!")
+
+        return cleaned_data
 
 '''
 class DateForm(forms.Form):

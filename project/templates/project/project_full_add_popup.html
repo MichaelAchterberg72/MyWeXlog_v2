@@ -1,0 +1,139 @@
+{% extends 'base_homelite.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}{{block.super}} Project{% endblock title %}
+
+
+{% block content %}
+{{ form.media.css }}
+<style type="text/css">
+  select {
+    width: 200px;
+  }
+  </style>
+<div class="container">
+  <h4>Add Project</h4>
+  <div class="">
+    <small>
+      Should the "Company that owns the project" or the "Managing Branch" not appear in the below fields - please add it in the <a href="{% url 'Enterprise:EnterpriseHome' %}" target="_blank">Enterprise</a> page first, and refresh this page once the company and branch have been added. The new branch will then appear in the field.
+    </small>
+  <form class="" action="" method="POST" id="ProjectForm">
+    <input type="hidden" name="next" value="{{ request.GET.next }}">
+    {% csrf_token %}
+    <div style="background-color:red; color:white;">
+      <p>
+
+        {{ form.non_field_errors }}
+      </p>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6 mb-0">
+        {{ form.name|as_crispy_field }}
+        <p>
+          {{ form.company|as_crispy_field }}
+        </p>
+        <p>
+          {{ form.companybranch|as_crispy_field }}
+        </p>
+        {{ form.industry|as_crispy_field }}
+        <a href="{% url 'Enterprise:IndustryAddPop' %}" id='add_industry' onclick='return showAddPopup(this);'>
+          <img src="{% static 'images/icon-addlink.svg' %}">
+          Add Industry
+        </a>
+        {{ form.country|as_crispy_field }}
+      </div>
+      <div class="form-group col-md-6 mb-0">
+        {{ form.region|as_crispy_field }}
+        <div id="city_error" class="d-none float-right">
+          <button class="btn btn-danger btn-block" type="button" name="button">
+            Please enter a region
+          </button>
+        </div>
+        <p>
+          <a href="{% url 'Location:RegionAddPop' %}" id='add_region' onclick='return showAddPopup(this);'>
+            <img src="{% static 'images/icon-addlink.svg' %}">
+            Add Region
+          </a>
+        </p>
+        {{ form.city|as_crispy_field }}
+
+        <a href="#" id='ad_cty'>
+          <img src = "{% static 'images/icon-addlink.svg' %}">
+          Add City or Town
+        </a>
+        <a href="{% url 'Location:CityAddPop' %}" id='add_city' onclick='return showAddPopup(this);'>
+        </a>
+      </div>
+    </div>
+    <div class="">
+      <p><button type="submit" name="Done" class="btn btn-primary">Save</button></p>
+    </div>
+  </form>
+</div>
+<script type="text/javascript">
+  document.getElementById("id_region").disabled = true;
+
+  var dis1 = document.getElementById("id_country");
+  dis1.onchange = function () {
+     if (this.value != "" || this.value.length > 0) {
+        document.getElementById("id_region").disabled = false;
+     }
+  };
+
+  document.getElementById("id_city").disabled = true;
+
+  var dis2 = document.getElementById("id_region");
+  dis2.onchange = function () {
+     if (this.value != "" || this.value.length > 0) {
+        document.getElementById("id_city").disabled = false;
+     }
+  };
+
+  document.getElementById("id_city").disabled = true;
+
+  var dis2 = document.getElementById("id_region");
+  dis2.onchange = function () {
+     if (this.value != "" || this.value.length > 0) {
+        document.getElementById("id_city").disabled = false;
+     }
+  };
+</script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+{{ form.media.js }}
+{% endblock content %}
+{% block Script %}
+<!-- code for popups -->
+<script type="text/javascript">
+  function showAddPopup(triggeringLink) {
+    var name = triggeringLink.id.replace(/^add_/, '');
+    href = triggeringLink.href;
+    var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes');
+    win.focus();
+    return false;
+  }
+
+  function closePopup(win, newID, newRepr, id) {
+    $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
+    win.close();
+  }
+
+  window.onerror = function(msg) {
+    $("body").attr("JSError", msg);
+  }
+
+  var form = document.getElementById('ProjectForm')
+  var city = document.getElementById('city_error')
+
+  document.getElementById('ad_cty').addEventListener('click', function(e){
+    if(form.region.value == ''){
+      city.classList.remove('d-none')
+    }else{
+      document.cookie = 'region=' + JSON.stringify(form.region.value) + ";domain=;path=/"
+      city.classList.add('d-none')
+      document.getElementById('add_city').click();
+    }
+  })
+
+</script>
+{% endblock Script %}

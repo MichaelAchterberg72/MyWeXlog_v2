@@ -25,6 +25,12 @@
     <form method="post" id="BranchForm">
       <input type="hidden" name="next" value="{{ request.GET.next }}">
       {% csrf_token %}
+      <div style="background-color:red; color:white;">
+        <p>
+
+          {{ form.non_field_errors }}
+        </p>
+      </div>
       <div class="form-row">
         <div class="form-group col-md-6 mb-0">
           {{ form.name|as_crispy_field }}
@@ -42,15 +48,20 @@
               {{ form.size|as_crispy_field }}
             </div>
           </div>
+          <div class="row">
+            <div class="col-md-9">
+              {{ form.industry|as_crispy_field }}
+            </div>
+            <div class="col-md-3">
+              <br>
+              <p><a href="{% url 'Enterprise:IndustryAddPop' %}" id='add_branch_industry' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add a new Industry Type</a></p>
+            </div>
+          </div>
           {{ form.phy_address_line1|as_crispy_field }}
-          {{ form.phy_address_line2|as_crispy_field }}
-          {{ form.industry|as_crispy_field }}
           <p>
-            <a href="{% url 'Enterprise:IndustryAddPop' %}" id='add_branch_industry' onclick='return showAddPopup(this);'>
-              <img src = "{% static 'images/icon-addlink.svg' %}">
-              Add a new Industry Type
-            </a>
+            <br>
           </p>
+          {{ form.phy_address_line2|as_crispy_field }}
         </div>
         <div class="form-group col-md-6 mb-0">
           {{ form.country|as_crispy_field }}
@@ -105,7 +116,6 @@
     </form>
   </div>
 </div>
-
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 {{ form.media.js }}
 {% endblock content %}

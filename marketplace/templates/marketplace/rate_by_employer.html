@@ -24,6 +24,12 @@
       <form method="post" id="EmpRateForm" enctype="multipart/form-data">
         <input type="hidden" name="next" value="{{ request.GET.next }}">
         {% csrf_token %}
+        <div style="background-color:red; color:white;">
+          <p>
+
+            {{ form.non_field_errors }}
+          </p>
+        </div>
         <div class="form-row">
             <div class="form-group col-md-6 mb-0">
               {{ form.rate_1|as_crispy_field }}
@@ -131,15 +137,29 @@
               {{ form.comment|as_crispy_field }}
             </div>
             <div class="form-group col-md-4 mb-0">
-              <p>These are your personal comments: Only you will see these.</p>
+              <br>
+              <p>Provide a commendation to the talent and the work they have performed.<strong>These comments will be made available on their Public Profile as a recomendation from you for others to see.</strong></p>
             </div>
           </div>
+        <hr>
+        <div class="form-row">
+          <div class="form-group col-md-8 mb-0">
+            {{ form.personal_comment|as_crispy_field }}
+          </div>
+          <div class="form-group col-md-4 mb-0">
+            <br>
+            <p>
+              These are your personal comments: Only you will see these.
+            </p>
+          </div>
+        </div>
         <hr>
         <div class="form-row">
           <div class="form-group col-md-8 mb-0">
             {{ form.suggestions|as_crispy_field }}
           </div>
           <div class="form-group col-md-4 mb-0">
+            <br>
             <p>
               Write suggestions on what the talent could do to improve their service here. <strong>The Talent will see the comments made here.</strong>
             </p>
@@ -152,4 +172,5 @@
 
   </div>
 </div>
+{{ form.media }}
 {% endblock content %}

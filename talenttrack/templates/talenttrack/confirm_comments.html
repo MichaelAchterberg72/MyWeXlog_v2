@@ -8,7 +8,7 @@
 <div class="card card-shadow">
   <div class="card-body">
     <div class="float-right">
-      <a href="{% url 'Profile:HelpDesktopPendingInterviews' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 16px" data-toggle="tooltip" title="Click here for help on this page!">
+      <a href="{% url 'Profile:HelpDesktopPendingInterviews' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 16px">
       <i class="fa fa-question-circle"></i></a>
     </div>
     <h4 class="card-title">Confirm Experience with Comment</h4>
@@ -36,8 +36,58 @@
     <hr>
     <form method="post">
       {% csrf_token %}
+      <div style="background-color:red; color:white;">
+        <p>
+
+          {{ form.non_field_errors }}
+        </p>
+      </div>
+      <div class="row d-none">
         {{ form.confirm|as_crispy_field }}
+      </div>
+      <p>**Please Select one of the below</p>
+      <div class="row text-center">
+        <div class="col-md-4">
+          <button type="button" class="btn btn-success" id="confirm-button" style="width:19rem;border:solid 1px #000000;" name="button" data-toggle="tooltip" title="Click here to confirm the experience!">Confirm</button>
+        </div>
+        <div class="col-md-4">
+          <button type="button" class="btn btn-danger" id="reject-button" style="width:19rem;border:solid 1px #000000;" name="button" data-toggle="tooltip" title="Click here to indicate you do not agree with experience claim!">Reject</button>
+        </div>
+        <div class="col-md-4">
+          <button type="button" class="btn btn-info" id="wrongp-button" style="width:19rem;border:solid 1px #000000;" name="button" data-toggle="tooltip" title="Click here to indicate you are the wrong person to verify this experience and do not know the requester!">Dismiss</button>
+        </div>
+      </div>
+      <div class="container">
         {{ form.comments|as_crispy_field }}
+      </div>
+      <script type="text/javascript">
+        var confirmButton = document.getElementById("confirm-button");
+        var rejectButton = document.getElementById("reject-button");
+        var wrongpButton = document.getElementById("wrongp-button");
+
+        var confirmInput = document.getElementById("id_confirm");
+
+        confirmButton.onclick = function(){
+          confirmInput.value = "C";
+          confirmButton.setAttribute("class", "btn btn-success");
+          rejectButton.setAttribute("class", "btn btn-light");
+          wrongpButton.setAttribute("class", "btn btn-light");
+        };
+
+        rejectButton.onclick = function(){
+          confirmInput.value = "R";
+          confirmButton.setAttribute("class", "btn btn-light");
+          rejectButton.setAttribute("class", "btn btn-danger");
+          wrongpButton.setAttribute("class", "btn btn-light");
+        };
+
+        wrongpButton.onclick = function(){
+          confirmInput.value = "Y";
+          confirmButton.setAttribute("class", "btn btn-light");
+          rejectButton.setAttribute("class", "btn btn-light");
+          wrongpButton.setAttribute("class", "btn btn-info");
+        };
+        </script>
       <div class="">
         <p><a href="{% url 'Profile:Confirm' %}" class="btn btn-danger">Cancel</a> <button type="submit" name="Done" class="btn btn-primary">Save</button></p>
       </div>

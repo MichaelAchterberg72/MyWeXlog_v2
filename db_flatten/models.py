@@ -12,7 +12,7 @@ class PhoneNumberType(models.Model):
 
 
 class SkillTag(models.Model):
-    skill = models.CharField(max_length=60, unique=True)
+    skill = models.CharField(max_length=30, unique=True)
     code = models.CharField(max_length=6, null=True, unique=True)
 
     class Meta:

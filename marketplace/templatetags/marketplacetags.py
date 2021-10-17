@@ -1,6 +1,7 @@
+from django import template
+
 from ..models import VacancyViewed
 
-from django import template
 register = template.Library()
 
 @register.filter(name='vv_user')

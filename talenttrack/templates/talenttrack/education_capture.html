@@ -23,8 +23,15 @@
           </p>
         </span>
     </h3>
+    <p><small>(Fields marked with a * are required fields)</small></p>
     <form method="post" id="BranchForm" enctype="multipart/form-data">
       {% csrf_token %}
+      <div style="background-color:red; color:white;">
+        <p>
+
+          {{ form.non_field_errors }}
+        </p>
+      </div>
       <div class="form-row">
         <div class="form-group col-md-6 mb-0">
           {{ form.course|as_crispy_field }}
@@ -46,7 +53,7 @@
             </a>
            </p>
           {{ form.upload|as_crispy_field }}
-          <p><strong>Please Note:</strong> Only PDF files can be uploaded.</p>
+          <small><strong>Please Note:</strong> Only <strong>PDF</strong> files can be uploaded.</small>
         </div>
       </div>
       <div class="form-row">
@@ -67,7 +74,7 @@
             Cancel
           </a>
           <button type="submit" name="Done" class="btn btn-primary">
-            Add Reviewer
+            Save & Select Reviewers
           </button>
         </p>
       </div>

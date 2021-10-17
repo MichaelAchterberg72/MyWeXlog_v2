@@ -3,370 +3,530 @@
 {% block title %}{{block.super}}- {{ als.talent.first_name }} Profile{% endblock title %}
 
 {% block content %}
-<h3>Profile for {{ als.talent.first_name }} {{ als.talent.last_name }}</h3>
-<div class="row">
-  <div class="col-sm-12">
+  <div class="profile-br-top">
+    <div class="card-body">
+      <div class="card profile-card">
+      <h4 class="profile-header">MyWeXlog Corporate Profile</h4>
+      <div class="profile-card-under">{{ als.talent.first_name }} {{ als.talent.last_name }}</div>
+      </div>
+    </div>
+
+  <div class="card profile-footer">
+    <a href="{% url 'Talent:SPDView' als.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right" >View All Skills</a>
   </div>
 </div>
-  <div class="">
-    <div class="card-header">
-      <a href="{% url 'Talent:SPDView' als.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right" >View All Skills</a>
-      <h5>Basic Information</h5>
-    </div>
-    <div class="row">
-      <div class="col-sm-6">
-        <div class="card card-shadow h-100">
-          <div class="card-body">
-          <h5 class="card-title">General Information</h5>
 
-            <p><strong>Name:</strong>
-              {{ als.talent.first_name }} {{ als.talent.last_name }}
-            </p>
-            <p><strong>Department:</strong>
-              {{ corp_info.department }}
-            </p>
-            <p><strong>Experience Level:</strong>
-              {{ als.exp_lvl }}
-            </p>
-
-            <p><strong>Birthdate:</strong>
-              {{ als.birth_date|date:"j M Y" }} <strong>& Age: </strong>{{ als.age }} (at last birthday)
-            </p>
-
-            <hr>
-            <p class="text-center"><strong>Languages</strong></p>
-            <table class="table table-sm">
-              <thead>
-                <tr>
-                  <th>Language</th>
-                  <th>Level</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for l in language_qs %}
-                <tr>
-                  <td>{{ l.language }}</td>
-                  <td>{{ l.get_level_display }}</td>
-                </tr>
-                {% empty %}
-                <tr>
-                  <td colspan=2>No languages captued.</td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-            <hr>
-            <p>
-              <strong>Current location:</strong> {{ padd.country.name }}, {{ padd.region }}, {{ padd.city }}
-            </p>
-            {% if wtr_qs %}
-              <p class="text-center"><strong>Willing to Relocate</strong></p>
-              <table class="table table-sm">
-                <thead>
-                  <tr>
-                    <th>Country</th>
-                    <th>Permits</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for wtr in wtr_qs %}
-                    <tr>
-                      <td>{{ wtr.country.name }}</td>
-                      <td>
-                      {% if wtr.documents == True %}
-                        I can legally work in {{ wtr.country.name }}
-                      {% else %}
-                        I need to apply for work permits, etc.
-                      {% endif %}
-                      </td>
-                    </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            {% endif %}
-            <hr>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-6">
-        <div class="card card-shadow h-100">
-          <div class="card-body">
-            <div class="class="card-title"">
-              {% if membership_qs_count >= 6 %}
-                <a href="{% url 'Talent:LCM_FV' als.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Detail</a>
-              {% endif %}
-            <div class="card-title">
-              <h5>Licenses, Certifications & Memberships</h5>
-            </div>
-            <div class="container">
-              <div class="row my-auto">
-                <div class="col-4 col-no-pad h-100 text-center my-auto">
-                  <strong>Managing Institution</strong>
-                </div>
-                <div class="col-4 col-no-pad h-100 text-center my-auto">
-                  <strong>Country</strong>
-                </div>
-                <div class="col-4 col-no-pad h-100 text-center my-auto">
-                  <strong>Region</strong>
-                </div>
-              </div>
-            </div>
-            {% for lcm in membership_qs %}
-            <div class="row">
-              <div class="card mt-1 card-hover" style="width: 100%;">
-                <div class="card-body small-pad">
-                  <div class="row my-auto">
-                    <div class="col-md-6 col-no-pad h-100 text-center my-auto">
-                      {{ lcm.certification }}
-                    </div>
-                    <div class="col-6 col-no-pad h-100 text-center my-auto">
-                      {{ lcm.cert_name }}
-                    </div>
-                  </div>
-                  <div class="row my-auto">
-                    <div class="col-4 col-no-pad h-100 text-center my-auto">
-                      {{ lcm.companybranch }}
-                    </div>
-                    <div class="col-4 col-no-pad h-100 text-center my-auto">
-                      {{ lcm.country.name }}
-                    </div>
-                    <div class="col-4 col-no-pad h-100 text-center my-auto">
-                      {{ lcm.region }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {% empty %}
-                <p>There are no licences, certifications or memberships added yet.</p>
-            {% endfor %}
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
   <br>
-  <div class="card card-shadow">
-    <div class="row">
-      <div class="col-sm-12">
-        <div class="">
-          <div class="card-body">
-          <h4 class="card-title">General Information</h4>
-            <hr>
-            <p><strong>Background</strong><br>
-               {{ als.background|linebreaks }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  <br>
-  <div class="card card-shadow">
+  <div class="profile-br-break">
     <div class="card-body">
-      <div class="float-right">
-        {% if bch_count >= 6 %}
-        <a href="{% url 'Talent:DPCSum' als.alias %}#Company" class="btn btn-primary">All Companies</a>
-        {% endif %}
+      <div class="card profile-card">
+      <h4 class="profile-header" id="basic">Basic Information</h4>
+      <div class="profile-card-under">{{ als.talent.first_name }} {{ als.talent.last_name }}</div>
       </div>
-      <h4 class="card-title" id="career">Career in Summary</h4>
-      <div class="container">
-        <div class="row my-auto">
-          <div class="col-md-2 h-100 text-center my-auto">
-            <strong>Date from</strong>
-          </div>
-          <div class="col-md-2 h-100 text-center my-auto">
-            <strong>Date to</strong>
-          </div>
-          <div class="col-md-2 h-100 text-center my-auto">
-            <strong>Tenure<br>(Years)</strong>
-          </div>
-          <div class="col-md-6 h-100 text-center my-auto">
-            <strong>Company</strong>
-          </div>
-        </div>
-      </div>
-      {% for h in bch %}
       <div class="row">
-        <div class="card mt-1 card-hover" style="width: 100%;">
-          <div class="card-body small-pad">
-            <div class="row my-auto">
-              <div class="col-md-2 h-100 text-center my-auto">
-                {{ h.date_from|date:"j M Y" }}
-              </div>
-              <div class="col-md-2 h-100 text-center my-auto">
-                {% if h.date_to %}
-                  {{ h.date_to|date:"j M Y" }}
-                {% else %}
-                  Present
-                {% endif %}
-              </div>
-              <div class="col-md-2 h-100 text-center my-auto">
-                {{ h.tenure|floatformat:1 }}
-              </div>
-              <div class="col-md-6 h-100 text-center my-auto">
-                {{ h.companybranch }}
+        <div class="col-6 pt-3">
+        <div class="card card-hover profile-card h-100" style="width: 100%;">
+          <div class="card-body">
+            <div class="row pt-4 my-auto">
+              <div class="col-md-12 text-center my-auto">
+                <div class="profile-card-header">General</div><br>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-      {% empty %}
-          <p>Nothing Captured.</p>
-      {% endfor %}
-    </div>
-  </div>
-  <br>
-  <div class="row">
-    <div class="col-sm-12">
-      <div class="card card-shadow">
-        <div class="card-body">
-          {% if achievement_qs_count >= 6 %}
-            <a href="{% url 'Talent:ACH_L_FV' tlt %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Detail</a>
-          {% endif %}
-        <h4 class="card-title" id="achievements">Achievements</h4>
-        <div class="container">
-          <div class="row my-auto">
-            <div class="col-md-7 h-100 text-center my-auto">
-              <strong>Achievement</strong>
-            </div>
-            <div class="col-md-5 h-100 text-center my-auto">
-              <strong>Date from</strong>
-            </div>
-          </div>
-        </div>
-        {% for a in achievement_qs %}
-        <div class="row">
-          <div class="card mt-1 card-hover" style="width: 100%;">
-            <div class="card-body small-pad">
-              <div class="row my-auto">
-                <div class="col-md-7 h-100 text-center my-auto">
-                  {{ a.achievement}}
-                </div>
-                <div class="col-md-5 h-100 text-center my-auto">
-                  {{ a.date_achieved|date:"j M Y" }}
-                </div>
-                <div class="row my-auto">
-                  <div class="col-md-12 h-100 text-left my-auto">
-                    <div class="container">
-                    <strong>Description:</strong><br>
-                    {{ a.description|linebreaks }}
+            <div class="profile-card-body mb-auto">
+              <div class="row">
+                <div class="col-12">
+                  <div class=" pt-3 h-100 my-auto">
+                    <div class="col-md-12 text-left my-auto">
+                      <strong>Name: </strong><br>
+                      <span class="">{{ als.talent.first_name }} {{ als.talent.last_name }}</span>
+                    </div>
+                    <br>
+                    <div class="col-md-12 text-left my-auto">
+                      <strong>Birthdate: </strong>
+                      <span class="">{{ als.birth_date|date:"j M Y" }} <strong>& Age: </strong>{{ als.age }} (at last birthday)</span>
+                    </div>
+                    <br>
+                    <div class="col-md-12 text-left my-auto">
+                      <strong>Department: </strong><br>
+                      <span class="">{{ corp_info.department }}</span>
+                    </div>
+                    <br>
+                    <div class="col-md-12 text-left my-auto">
+                      <strong>Experience Level: </strong>
+                      <span class="">{{ als.exp_level }}</span>
+                    </div>
+                    <br>
+                    <div class="col-md-12 text-left my-auto">
+                      <strong>Current Location: </strong><br>
+                      <span class="">{{ padd.get_country_display }}, {{ padd.region }}, {{ padd.city }}</span>
+                    </div>
+                    <br>
+                    <div class="col-md-12 text-left my-auto">
+                      {% if wtr_qs %}
+                        <p class="text-center"><strong>Willing to Relocate</strong></p>
+                        <table class="table table-sm">
+                          <thead>
+                            <tr>
+                              <th>Country</th>
+                              <th>Permits</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {% for wtr in wtr_qs %}
+                              <tr>
+                                <td>{{ wtr.country.name }}</td>
+                                <td>
+                                {% if wtr.documents == True %}
+                                  I can legally work in {{ wtr.country.name }}
+                                {% else %}
+                                  I need to apply for work permits, etc.
+                                {% endif %}
+                                </td>
+                              </tr>
+                            {% endfor %}
+                          </tbody>
+                        </table>
+                      {% endif %}
+                    </div>
+                    <br>
+                    <div class="col-md-12 text-left my-auto">
+                      <strong>Rating: </strong>
+                      <span class="">{% if als.rate_count >= 5 %}
+                        <a href="{% url 'Talent:TltRatingDetail' als.alias %}" class="btn btn-info float-right" style="width: 8rem" target="_blank">{{ als.avg_rate|floatformat:2 }} ({{ als.rate_count }} votes)</a>
+                      {% else %}
+                        <p class="btn btn-info float-right" style="width: 8rem" data-toggle="tooltip" title="Rating calculated for 5 or more votes">{{ als.rate_count }} votes</p>
+                      {% endif %}</span>
                     </div>
                   </div>
+
                 </div>
               </div>
             </div>
           </div>
         </div>
-        {% empty %}
-            <p>No achievements captured.</p>
-        {% endfor %}
+    </div>
+
+    <div class="col-6 pt-3">
+    <div class="card card-hover profile-card h-100" style="width: 100%;">
+      <div class="card-body">
+        <div class="row pt-4 my-auto">
+          <div class="col-md-12 text-center my-auto">
+            <div class="profile-card-header">Languages</div><br>
+          </div>
+        </div>
+        <div class="profile-card-body mb-auto">
+          <div class="row">
+          {% for l in language_qs %}
+          <div class="col-12">
+            <div class="row pt-3 h-100 my-auto">
+              <div class="col-md-6 text-left my-auto">
+                <span class="">{{ l.language }}</span>
+              </div>
+              <div class="col-md-6 text-left my-auto">
+                <strong>Level: </strong>
+                <span class="">{{ l.get_level_display }}</span>
+              </div>
+            </div>
+          </div>
+          {% empty %}
+              <p>Nothing Captured.</p>
+          {% endfor %}
         </div>
       </div>
     </div>
   </div>
+</div>
+</div>
+<br>
+
+    <div class="card profile-card">
+    <h4 class="profile-header" id="certs">Licenses, Certifications & Memberships</h4>
+    <div class="profile-card-under">{% if membership_qs_count > 0 %}Total: {{ membership_qs_count }}{% else %}No licences, certifications or memberships captured yet{% endif %}</div>
+    </div>
+    {% if membership_qs_count > 0 %}
+    <div class="row">
+    {% for lcm in membership %}
+      <div class="col-3 pt-3">
+      <div class="card card-hover profile-card h-100" style="width: 100%;">
+        <div class="card-body">
+          <div class="row pt-4 my-auto">
+            <div class="col-md-12 text-center my-auto">
+              <div class="profile-card-header">{{ lcm.certification }}</div><br>
+              <div class="profile-card-under">{{ lcm.cert_name }}</div>
+            </div>
+          </div>
+          <div class="profile-card-body mb-auto">
+          <div class="row pt-3 h-100 my-auto">
+            <div class="col-md-12 text-left my-auto">
+              <strong>Institution: </strong><br>
+              <span class="">{{ lcm.companybranch }}</span>
+            </div>
+          </div>
+          <div class="row pt-3 h-100 my-auto">
+            <div class="col-md-12 text-left my-auto">
+              <strong>Country: </strong><br>
+              <span class="">{{ lcm.country.name }}</span>
+            </div>
+          </div>
+          <div class="row pt-3 h-100 my-auto">
+            <div class="col-md-12 text-left my-auto">
+              <strong>Region: </strong><br>
+              <span class="">{{ lcm.region }}</span>
+            </div>
+          </div>
+          </div>
+          </div>
+        </div>
+      </div>
+
+    {% empty %}
+        <p>There are no licences, certifications or memberships added yet.</p>
+    {% endfor %}
+    </div>
+  </div>
+  <div class="card profile-footer">
+    <div class="float-right">
+      {% if membership_qs_count >= 12 %}
+      <a href="{% url 'Talent:LCM_FV' tlt vac %}" class="btn btn-primary float-right">View All Certificates</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
   <br>
-  <div class="card card-shadow">
+  {% else %}
+  </div>
+  {% endif %}
+
+  <div class="profile-br-break">
     <div class="card-body">
+      <div class="card profile-card">
+      <h4 class="profile-header" id="General">General Information</h4>
+      <div class="profile-card-under">Expected Rate: {% if bid_qs %}{{ bid_qs.currency }} {{ bid_qs.rate_bid }} {{ bid_qs.get_rate_unit_display }}{% else %}{{ als.currency }} {{ als.std_rate }} per hour{% endif %}</div>
+      </div>
+      <div class="row">
+        <div class="col-12 pt-3">
+        <div class="card card-hover profile-card h-100" style="width: 100%;">
+          <div class="card-body">
+            <div class="row pt-4 my-auto">
+              <div class="col-md-12 text-center my-auto">
+                <div class="profile-card-header">Motivation for position</div><br>
+                <div class="profile-card-under">{{ h.designation }}</div>
+              </div>
+            </div>
+            <div class="profile-card-body mb-auto">
+            <div class="row pt-3 h-100 my-auto">
+              <div class="col-md-12 text-left my-auto">
+                <span class="">{% if bid_qs %}{{ bid_qs.motivation|safe }}{% else %}{{ als.motivation|safe }}{% endif %}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+    <div class="row">
+      <div class="col-12 pt-3">
+      <div class="card card-hover profile-card h-100" style="width: 100%;">
+        <div class="card-body">
+          <div class="row pt-4 my-auto">
+            <div class="col-md-12 text-center my-auto">
+              <div class="profile-card-header">Background</div><br>
+              <div class="profile-card-under">{{ h.designation }}</div>
+            </div>
+          </div>
+          <div class="profile-card-body mb-auto">
+          <div class="row pt-3 h-100 my-auto">
+            <div class="col-md-12 text-left my-auto">
+              <span class="">{{ als.background|safe }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+
+  <div class="card profile-footer">
+  </div>
+</div>
+</div>
+    <br>
+    <div class="profile-br-break">
+      <div class="card-body">
+        <div class="card profile-card">
+        <h4 class="profile-header" id="career">Career in Summary</h4>
+          <div class="profile-card-under">{% if bch_count > 0 %}Total Placements: {{ bch_count }}{% else %}No Career Detaiuls captured yet{% endif %}</div>
+        </div>
+        {% if bch_count > 0 %}
+          <div class="row">
+          {% for h in bch %}
+          <div class="col-6 pt-3">
+          <div class="card card-hover profile-card h-100" style="width: 100%;">
+            <div class="card-body">
+              <div class="row pt-4 my-auto">
+                <div class="col-md-12 text-center my-auto">
+                  <div class="profile-card-header">{{ h.companybranch }}</div><br>
+                  <div class="profile-card-under">{{ h.designation }}</div>
+                </div>
+              </div>
+              <div class="profile-card-body mb-auto">
+              <div class="row pt-3 h-100 my-auto">
+                <div class="col-md-7 text-left my-auto">
+                  <strong>Employed From: </strong><br>
+                  <span class="">{{ h.date_from|date:"j M Y" }} to {% if h.date_to %}
+                    {{ h.date_to|date:"j M Y" }}
+                  {% else %}
+                    Present
+                  {% endif %}</span>
+                </div>
+                <div class="col-md-5 text-left my-auto">
+                  <strong>Tenure: </strong><br>
+                  <span class="">{{ h.tenure|floatformat:1 }}</span>
+                </div>
+              </div>
+              <div class="row pt-3 h-100 my-auto">
+                <div class="col-md-12 text-left my-auto">
+                  <strong>Configuration: </strong><br>
+                  <span class="">{{ h.work_configeration }}</span>
+                </div>
+              </div>
+              {% if h.description %}
+              <div class="row pt-3 h-100 my-auto">
+                <div class="col-md-12 text-left my-auto">
+                  <strong>Description: </strong><br>
+                  <span class="">{{ h.description|safe|truncatechars:650 }}</span>
+                </div>
+              </div>
+              {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+          {% empty %}
+              <p>Nothing Captured.</p>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="card profile-footer">
+        <div class="float-right">
+          {% if bch_count >= 6 %}
+          <a href="{% url 'Talent:BCH_FV' tlt vac %}" class="btn btn-primary float-right">View All Placements</a>
+          {% endif %}
+        </div>
+      </div>
+  <br>
+  {% else %}
+  </div>
+  {% endif %}
+  </div>
+  <div class="profile-br-break">
+  <div class="card-body">
+  <div class="card profile-card">
+  <h4 class="profile-header" id="achievements">Achievements</h4>
+    <div class="profile-card-under">{% if achievement_qs_count > 0 %}Total Achievements: {{ achievement_qs_count }}{% else %}No achievements captured yet{% endif %}</div>
+  </div>
+  {% if achievement_qs_count > 0 %}
+    <div class="row">
+    {% for a in achievement %}
+    <div class="col-4 pt-3">
+    <div class="card card-hover profile-card h-100" style="width: 100%;">
+      <div class="card-body">
+        <div class="row pt-4 my-auto">
+          <div class="col-md-12 text-center my-auto">
+            <div class="profile-card-header">{{ a.achievement }}</div><br>
+          </div>
+        </div>
+        <div class="profile-card-body mb-auto">
+        <div class="row pt-3 h-100 my-auto">
+          <div class="col-md-12 text-left my-auto">
+            <strong>Date Achieved: </strong><br>
+            <span class="">{{ a.date_achieved|date:"j M Y" }}</span>
+          </div>
+        </div>
+        <div class="row pt-3 h-100 my-auto">
+          <div class="col-md-12 text-left my-auto">
+            <strong>Description: </strong><br>
+            <span class="">{{ a.description|linebreaks }}</span>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+    {% empty %}
+        <p>No achievements captured.</p>
+    {% endfor %}
+    </div>
+  </div>
+  <div class="card profile-footer">
+    <div class="float-right">
+      {% if achievement_qs_count >= 6 %}
+        <a href="{% url 'Talent:ACH_FV' tlt vac %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Detail</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <br>
+  {% else %}
+  {% endif %}
+  </div>
+  <div class="profile-br-break">
+    <div class="card-body">
+      <div class="card profile-card">
+      <h4 class="profile-header" id="awards">Awards</h4>
+        <div class="profile-card-under">{% if award_qs_count > 0 %}Total Awards: {{ award_qs_count }}{% else %}No awards captured yet{% endif %}</div>
+      </div>
+      {% if award_qs_count > 0 %}
+      <div class="row">
+      {% for a in award %}
+      <div class="col-4 pt-3">
+      <div class="card card-hover profile-card h-100" style="width: 100%;">
+        <div class="card-body">
+          <div class="row pt-4 my-auto">
+            <div class="col-md-12 text-center my-auto">
+              <div class="profile-card-header">{{ a.award }}</div><br>
+            </div>
+          </div>
+          <div class="profile-card-body mb-auto">
+          <div class="row pt-3 h-100 my-auto">
+            <div class="col-md-12 text-left my-auto">
+              <strong>Date Awarded: </strong><br>
+              <span class="">{{ a.date_achieved|date:"j M Y" }}</span>
+            </div>
+          </div>
+          <div class="row pt-3 h-100 my-auto">
+            <div class="col-md-12 text-left my-auto">
+              <strong>Description: </strong><br>
+              <span class="">{{ a.description|linebreaks }}</span>
+            </div>
+          </div>
+          <div class="row pt-3 h-100 my-auto">
+            <div class="col-md-12 text-left my-auto">
+              <strong>Skills: </strong><br>
+              <span class="">{{ a.tag.all|join:" || " }}</span>
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+      {% empty %}
+          <p>No awards captured.</p>
+      {% endfor %}
+      </div>
+    </div>
+    <div class="card profile-footer">
       <div class="float-right">
-        {% if prj_count >= 6 %}
-        <a href="{% url 'Talent:DPCSum' als.alias %}#Project" class="btn btn-primary">All Projects</a>
+        {% if award_qs_count >= 6 %}
+          <a href="{% url 'Talent:AWD_FV' tlt vac %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Detail</a>
         {% endif %}
       </div>
-      <h4 class="card-title" id="projects">Project History</h4>
-
-      <div class="col-sm-12">
-
-        <p>Total Projects: <strong>{{ prj_count }}</strong> </p>
-        <div class="container">
-          <div class="row my-auto">
-            <div class="col-md-4 h-100 text-center my-auto">
-              <strong>Project Name</strong>
-            </div>
-            <div class="col-md-3 h-100 text-center my-auto">
-              <strong>Project Owner</strong>
-            </div>
-            <div class="col-md-3 h-100 text-center my-auto">
-              <strong>Project Site</strong>
-            </div>
-            <div class="col-md-2 h-100 text-center my-auto">
-              <strong>Industry</strong>
-            </div>
-          </div>
-        </div>
-        {% for b in prj_set.items %}
+    </div>
+    <br>
+    {% else %}
+    </div>
+    {% endif %}
+  <div class="profile-br-break">
+    <div class="card-body">
+      <div class="card profile-card">
+      <h4 class="profile-header" id="publications">Publications</h4>
+        <div class="profile-card-under">{% if publication_qs_count > 0 %}Total Publications: {{ publication_qs_count }}{% else %}No publications captured yet{% endif %}</div>
+      </div>
+      {% if publication_qs_count > 0 %}
         <div class="row">
-          <div class="card mt-1 card-hover" style="width: 100%;">
-            <div class="card-body small-pad">
-              <div class="row my-auto">
-                <div class="col-md-4 h-100 text-center my-auto">
-                  {{ b.0 }}
-                </div>
-                <div class="col-md-3 h-100 text-center my-auto">
-                  {{ b.1.0 }}
-                </div>
-                <div class="col-md-3 h-100 text-center my-auto">
-                  {{ b.1.1 }}
-                </div>
-                <div class="col-md-2 h-100 text-center my-auto">
-                  {{ b.1.2 }}
-                </div>
+        {% for a in publication %}
+        <div class="col-4 pt-3">
+        <div class="card card-hover profile-card h-100" style="width: 100%;">
+          <div class="card-body">
+            <div class="row pt-4 my-auto">
+              <div class="col-md-12 text-center my-auto">
+                <div class="profile-card-header">{{ a.title }}</div><br>
+                <div class="profile-card-under">{{ a.publisher }}</div>
               </div>
             </div>
+            <div class="profile-card-body mb-auto">
+            <div class="row pt-3 h-100 my-auto">
+              <div class="col-md-12 text-left my-auto">
+                <strong>Date Published: </strong><br>
+                <span class="">{{ a.date_published|date:"j M Y" }}</span>
+              </div>
+            </div>
+            <div class="row pt-3 h-100 my-auto">
+              <div class="col-md-6 text-left my-auto">
+                <strong>Type: </strong><br>
+                <span class="">{{ a.get_type_display }}</span>
+              </div>
+              <div class="col-md-6 text-left my-auto">
+                <strong>Genre: </strong><br>
+                <span class="">{{ a.genre.all|join:", " }}</span>
+              </div>
+            </div>
+            <div class="row pt-3 h-100 my-auto">
+              <div class="col-md-12 text-left my-auto">
+                <strong>Description: </strong><br>
+                <span class="">{{ a.description|linebreaks }}</span>
+              </div>
+            </div>
+            <div class="row pt-3 h-100 my-auto">
+              <div class="col-md-12 text-left my-auto">
+                <strong>Skills: </strong><br>
+                <span class="">{{ a.tag.all|join:" || " }}</span>
+              </div>
+            </div>
+            </div>
           </div>
         </div>
+      </div>
         {% empty %}
-            <p>No projects listed.</p>
+            <p>No publications captured.</p>
         {% endfor %}
+        </div>
+        </div>
+      <div class="card profile-footer">
+        <div class="float-right">
+          {% if publication_qs_count >= 6 %}
+            <a href="{% url 'Talent:PUB_FV' tlt vac %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Detail</a>
+          {% endif %}
+        </div>
       </div>
     </div>
-  </div>
-  </div>
-  <br>
-  <div class="card card-shadow">
-    <div class="card-body">
-      <div class="float-right">
-      {% if bkl %}
-        <a href="{% url 'BookList:VPBL' als.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary">View All Books</a>
-      {% else %}
-
-      {% endif %}
-      </div>
-      <h4 class="card-title">Books Read</h4>
-      <div class="col-sm-12">
-        <p>Total Books Read: <strong>{{ bkl_count }}</strong> </p>
-        <div class="container">
-          <div class="row my-auto">
-            <div class="col-md-4 h-100 text-center my-auto">
-              <strong>Title, Publisher</strong>
-            </div>
-            <div class="col-md-3 h-100 text-center my-auto">
-              <strong>Author(s)</strong>
-            </div>
-            <div class="col-md-3 h-100 text-center my-auto">
-              <strong>Format</strong>
-            </div>
-            <div class="col-md-2 h-100 text-center my-auto">
-              <strong>Date Completed</strong>
-            </div>
-          </div>
+    <br>
+    {% else %}
+    </div>
+    {% endif %}
+    <div class="profile-br-break">
+      <div class="card-body">
+        <div class="card profile-card">
+        <h4 class="profile-header" id="books">Books Read</h4>
+        <div class="profile-card-under">{% if bkl_count > 0 %}Total Books Read: {{ bkl_count }}{% else %}No Books captured yet{% endif %}</div>
         </div>
-        {% for b in bkl %}
+        {% if bkl_count > 0 %}
         <div class="row">
-          <div class="card mt-1 card-hover" style="width: 100%;">
-            <div class="card-body small-pad">
-              <div class="row my-auto">
-                <div class="col-md-4 h-100 text-center my-auto">
-                  {{ b.book }}
+        {% for b in bkl %}
+          <div class="col-3 pt-3">
+          <div class="card card-hover profile-card h-100" style="width: 100%;">
+            <div class="card-body">
+              <div class="row pt-4 my-auto">
+                <div class="col-md-12 text-center my-auto">
+                  <div class="profile-card-header">{{ b.book }}</div><br>
+                  <div class="profile-card-under">{{ b.book.author.all|join:", " }}</div>
                 </div>
-                <div class="col-md-3 h-100 text-center my-auto">
-                  {{ b.book.author.all|join:", " }}
+              </div>
+              <div class="profile-card-body mb-auto">
+              <div class="row pt-3 h-100 my-auto">
+                <div class="col-md-12 text-left my-auto">
+                  <strong>Book Type: </strong><br>
+                  <span class="">{{ b.type }}</span>
                 </div>
-                <div class="col-md-3 h-100 text-center my-auto">
-                  {{ b.type }}
+              </div>
+              <div class="row pt-3 h-100 my-auto">
+                <div class="col-md-12 text-left my-auto">
+                  <strong>Date Read: </strong><br>
+                  <span class="">{{ b.date|date:"j M Y" }}</span>
                 </div>
-                <div class="col-md-2 h-100 text-center my-auto">
-                  {{ b.date|date:"j M Y" }}
-                </div>
+              </div>
               </div>
             </div>
           </div>
@@ -374,55 +534,130 @@
         {% empty %}
             <p>No books listed.</p>
         {% endfor %}
+        </div>
+      </div>
+      <div class="card profile-footer">
+        <div class="float-right">
+        {% if bkl_count >= 8 %}
+          <a href="{% url 'BookList:VPBL' als.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Books</a>
+        {% endif %}
+      </div>
+    </div>
+    </div>
+  <br>
+  {% else %}
+  </div>
+  {% endif %}
+  <div class="profile-br-break">
+    <div class="card-body">
+      <div class="card profile-card">
+      <h4 class="profile-header" id="projects">Project History</h4>
+        <div class="profile-card-under">{% if prj_count > 0 %}Total Projects: {{ prj_count }}{% else %}No projects captured yet{% endif %}</div>
+      </div>
+      {% if prj_count > 0 %}
+      <div class="row">
+      {% for b in prj_set.items %}
+      <div class="col-4 pt-3">
+      <div class="card card-hover profile-card h-100" style="width: 100%;">
+        <div class="card-body">
+          <div class="row pt-4 my-auto">
+            <div class="col-md-12 text-center my-auto">
+              <div class="profile-card-header">{{ b.0 }}</div><br>
+              <div class="profile-card-under">{{ b.1.0 }}</div>
+            </div>
+          </div>
+          <div class="profile-card-body mb-auto">
+          <div class="row pt-3 my-auto">
+            <div class="col-md-12 text-left my-auto">
+              <strong>Project Site: </strong><br>
+              <span class="">{{ b.1.1 }}</span>
+            </div>
+          </div>
+          <div class="row pt-3 h-100 my-auto">
+            <div class="col-md-12 text-left my-auto">
+              <strong>Industry: </strong><br>
+              <span class="">{{ b.1.2 }}</span>
+            </div>
+          </div>
+          <div class="row pt-3 h-100 my-auto">
+            <div class="col-md-12 text-left my-auto">
+              <strong>Country: </strong><br>
+              <span class="">{{ b.1.3 }}</span>
+            </div>
+          </div>
+          <div class="row pt-3 align-top h-100 my-auto">
+            <div class="col-md-6 text-center my-auto">
+              <strong>Total Hours: </strong><br>
+              <span class="profile-card-display-number">{{ b.1.4|floatformat:0|intcomma }}</span>
+            </div>
+            <div class="col-md-6 text-center my-auto">
+              <strong>Total People: </strong><br>
+              <span class="profile-card-display-number">{{ b.1.5|floatformat:0|intcomma }}</span>
+            </div>
+          </div>
+          </div>
+
+          </div>
+        </div>
+      </div>
+
+      {% empty %}
+          <p>No projects listed.</p>
+      {% endfor %}
+      </div>
+    </div>
+    <div class="card profile-footer">
+      <div class="float-right">
+        {% if prj_count >= 6 %}
+        <a href="{% url 'Talent:Projects_FV' tlt vac %}#Project" class="btn btn-primary float-right">All Projects</a>
+        {% endif %}
       </div>
     </div>
   </div>
   <br>
-  <div class="card card-shadow">
+  {% else %}
+  </div>
+  {% endif %}
+  <div class="profile-br-break">
     <div class="card-body">
-      {% if edtexp_count >= 6 %}
-        <a href="{% url 'Talent:EDU_L_FV' tlt %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Details</a>
-      {% endif %}
-      <h4 class="card-title" id="education">Education & Training</h4>
-      <div class="container">
-        <div class="row my-auto">
-          <div class="col-md-2 h-100 text-center my-auto">
-            <strong>Date from</strong>
-          </div>
-          <div class="col-md-2 h-100 text-center my-auto">
-            <strong>Date to</strong>
-          </div>
-          <div class="col-md-5 h-100 text-center my-auto">
-            <strong>Institution</strong>
-          </div>
-          <div class="col-md-3 h-100 text-center my-auto">
-            <strong>Certification</strong>
-          </div>
-        </div>
+      <div class="card profile-card">
+      <h4 class="profile-header" id="edu">Education & Training</h4>
+      <div class="profile-card-under">{% if edtexp_count > 0 %}Total Courses Attended: {{ edtexp_count }}{% else %}No courses captured yet{% endif %}</div>
       </div>
-      {% for e in edtexp %}
+      {% if edtexp_count > 0 %}
       <div class="row">
-        <div class="card mt-1 card-hover" style="width: 100%;">
-          <div class="card-body small-pad">
-            <div class="row my-auto">
-              <div class="col-md-12 h-100 text-left my-auto">
-                {{ e.topic }} - {{ e.course }}
+        {% for e in edtexp %}
+        <div class="col-4 pt-3">
+        <div class="card card-hover profile-card h-100" style="width: 100%;">
+          <div class="card-body">
+            <div class="row pt-4 my-auto">
+              <div class="col-md-12 text-center my-auto">
+                <div class="profile-card-header">{{ e.topic }}</div><br>
+                <div class="profile-card-under">{{ e.course }}</div>
               </div>
             </div>
-            <p class="tiny-paragraph">&nbsp</p>
-            <div class="row my-auto">
-              <div class="col-md-2 h-100 text-left my-auto">
-                {{ e.date_from|date:"j M Y" }}
+            <div class="profile-card-body mb-auto">
+            <div class="row pt-3 h-100 my-auto">
+              <div class="col-md-12 text-left my-auto">
+                <strong>Attended from: </strong><br>
+                <span class="">{{ e.date_from|date:"j M Y" }} to {{ e.date_to|date:"j M Y" }}</span>
               </div>
-              <div class="col-md-2 h-100 text-center my-auto">
-                {{ e.date_to|date:"j M Y" }}
-              </div>
-              <div class="col-md-5 h-100 text-center my-auto">
+            </div>
+            <div class="row pt-3 my-auto">
+              <div class="col-md-8  pt-2 text-left my-auto">
+                <strong>Institution: </strong><br>
                 {{ e.course.company }}
               </div>
-              <div class="col-md-3 h-100 text-center my-auto">
+              <div class="col-4 col-no-pad text-center my-auto">
                 {{ e.course.certification }}{% if e.upload %}<br>(Uploaded){% else %}{% endif %}
               </div>
+            </div>
+            <div class="row  pt-4 my-auto">
+              <div class="col-md-12 text-left my-auto">
+                <strong>Skills: </strong><br>
+                {{ e.topic.skills.all|join:" || " }}
+              </div>
+            </div>
             </div>
           </div>
         </div>
@@ -430,6 +665,18 @@
       {% empty %}
           <p>Nothing Captured.</p>
       {% endfor %}
+      </div>
     </div>
+    <div class="card profile-footer">
+      <div class="float-right">
+        {% if edtexp_count >= 6 %}
+          <a href="{% url 'Talent:EDU_FV' tlt vac %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Details</a>
+        {% endif %}
+      </div>
+    </div>
+
+  <br>
+  {% else %}
   </div>
+  {% endif %}
 {% endblock content %}

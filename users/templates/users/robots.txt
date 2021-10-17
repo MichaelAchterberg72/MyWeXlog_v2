@@ -1,0 +1,21 @@
+User-Agent: *
+
+Disallow: /accounts/
+Disallow: /select2/
+Disallow: /Profile/
+Disallow: /flatten/
+Disallow: /location/
+Disallow: /enterprise/
+Disallow: /project/
+Disallow: /paypal/
+Disallow: /payments/
+Disallow: /public/
+Disallow: /experience/booklist/
+Disallow: /experience/
+Disallow: /trust/
+Disallow: /marketplace/
+Disallow: /user/
+Disallow: /aliu8926kjak/
+Disallow: /feedback/
+
+Allow: /marketplace/page

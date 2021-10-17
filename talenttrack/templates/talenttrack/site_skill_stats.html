@@ -7,7 +7,12 @@
 <div class="card card-shadow">
   <div class="card-body">
     <div class="float-right">
+      {% url 'Talent:ProjectSiteSkillsStats' skl prj as project_url %}
+      {% if request.path == project_url %}
+      <a href="{% url 'Project:ProjectAssociatedSkillStats' prj skl %}" class="btn btn-secondary"style="width: 6rem">Back</a>
+      {% else %}
       <a href="{% url 'Talent:SkillsStats' skl %}" class="btn btn-secondary"style="width: 6rem">Back</a>
+      {% endif %}
     </div>
     <h3>{{ skill }} Skill Site Wide Logged Statistics Overview</h3>
   </div>
@@ -73,10 +78,10 @@ for(var i = 0; i < dataList.length; ++i){
     if(dataList[i] >= 0)
         count++;
 }
-var widthValue = 34 * count;
+var widthValue = 44 * count;
 var divWidth = document.getElementById("chart-container");
 
-if (count > 25){
+if (count > 24){
   divWidth.style.width = widthValue+"px";
   }
 else{
@@ -103,6 +108,12 @@ else{
     <form method="get">
     <!--   <input type="hidden" name="next" value="{{ request.GET.next }}"> -->
       {% csrf_token %}
+      <div style="background-color:red; color:white;">
+        <p>
+
+          {{ form.non_field_errors }}
+        </p>
+      </div>
       <div class="form-row">
         <div class="form-group col-md-6 mb-0">
           {{ form.country|as_crispy_field }}

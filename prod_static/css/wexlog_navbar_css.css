@@ -33,24 +33,27 @@ main {
 }
 
 .navbar {
-  position: absolute;
+  position: -webkit-sticky;
+  position: fixed;
+  top: 0;
+  float: top;
   background-color: var(--bg-primary);
   transition: width 600ms ease;
-  z-index:1;
+  z-index:1000;
 }
 
 .top-right-navbar {
-  position: absolute;
-  align-items: center;
+  position: -webkit-sticky;
+  position: fixed;
+  align-items: flex-end;
   top: 0rem;
   right: 0rem;
   padding: 1rem;
   text-align: justify;
   justify-content: space-between;
-  width: 38rem;
+  width: auto;
   height: 5rem;
   display: flex;
-  align-items: flex-end;
   flex-direction: row;
   text-align: right;
 }

@@ -1,34 +1,38 @@
-from django.db import models
-from django.contrib.auth.models import User
-from django.conf import settings
 import datetime
-from time import time
+from decimal import Decimal, getcontext
+from io import BytesIO, StringIO
 from random import random
-from django.urls import reverse
-from django.db.models.signals import post_save, pre_save
-from decimal import getcontext, Decimal
-from django.core.validators import FileExtensionValidator
+from time import time
 
-
-from django_countries.fields import CountryField
-from phonenumber_field.modelfields import PhoneNumberField
 from dateutil.relativedelta import relativedelta
+from django.conf import settings
+from django.contrib.auth.models import User
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.core.validators import FileExtensionValidator
+from django.db import models
+from django.db.models.signals import post_save, pre_save
+from django.urls import reverse
 from django.utils import timezone
+from django_countries.fields import CountryField
+from pdf2image import convert_from_bytes, convert_from_path
+from pdf2image.exceptions import (PDFInfoNotInstalledError, PDFPageCountError,
+                                  PDFSyntaxError)
+from phonenumber_field.modelfields import PhoneNumberField
+from PIL import Image
+from pinax.referrals.models import Referral
+from tinymce.models import HTMLField
 
-from .utils import create_code7, create_code9
+from db_flatten.models import LanguageList, PhoneNumberType
+from enterprises.models import Branch, Enterprise
+from invitations.models import Invitation
+from locations.models import City, Currency, Region, Suburb
+from marketplace.models import SkillLevel, WorkLocation
+from talenttrack.models import (ClassMates, Designation, Lecturer, Superior,
+                                WorkClient, WorkCollaborator, WorkColleague)
+from users.models import CustomUser
 from WeXlog.storage_backends import PrivateMediaStorage
 
-
-from marketplace.models import WorkLocation, SkillLevel
-from users.models import CustomUser
-from locations.models import Region, City, Suburb, Currency
-from db_flatten.models import PhoneNumberType, LanguageList
-from enterprises.models import Enterprise, Branch
-from pinax.referrals.models import Referral
-from talenttrack.models import(
-        Designation, Lecturer, ClassMates, WorkColleague, Superior, WorkCollaborator, WorkClient
-        )
-from invitations.models import Invitation
+from .utils import create_code7, create_code9
 
 
 class BriefCareerHistory(models.Model):
@@ -36,6 +40,7 @@ class BriefCareerHistory(models.Model):
     work_configeration = models.ForeignKey(WorkLocation, on_delete=models.PROTECT)
     designation = models.ForeignKey(Designation, on_delete=models.PROTECT, null=True)
     companybranch = models.ForeignKey(Branch, on_delete=models.PROTECT, verbose_name="Home_Base")
+    description = HTMLField(blank=True, null=True)
     current = models.BooleanField(default=False)
     date_captured = models.DateField(auto_now_add=True)
     date_from = models.DateField()
@@ -117,14 +122,15 @@ class Profile(models.Model):
     f_name = models.CharField(max_length=30, null=True)
     l_name = models.CharField(max_length=30, null=True)
     alias = models.CharField(max_length=30, null=True, unique=True)
+    public_profile_intro = HTMLField(max_length=460, blank=True, null=True)
     birth_date = models.DateField('Date of Birth', null=True)
-    background = models.TextField()
+    background = HTMLField(blank=True, null=True)
     mentor = models.CharField('Do you wish to be a mentor?', max_length=1, choices=MENTOR, default='N')#Opt in to be a mentor to other people
     referral_code = models.OneToOneField(Referral, on_delete=models.SET_NULL, null=True)
     std_rate = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     currency = models.ForeignKey(Currency, on_delete=models.PROTECT, null=True)
     rate_unit = models.CharField(max_length=1, choices=RATE_UNIT, default='H')
-    motivation = models.TextField(blank=True, null=True)
+    motivation = HTMLField(blank=True, null=True)
     exp_lvl = models.ForeignKey(SkillLevel, on_delete=models.PROTECT, related_name='profile_tenure', null=True, default=1)
     rate_1 = models.FloatField(null=True, default=0)#average for marketplace.models.VacancyRate
     rate_2 = models.FloatField(null=True, default=0)#average for marketplace.models.VacancyRate
@@ -156,12 +162,14 @@ class Profile(models.Model):
         if self.alias is None or self.alias == "":
             self.alias = create_code7(self)
 
+        fullname = f'{self.talent.first_name} {self.talent.last_name} - Profile incomplete'
+
         inject_fn = f'{self.f_name}'
         inject_ln = f'{self.l_name}'
         inject_al = f'{self.alias}'
         target = CustomUser.objects.filter(pk=self.talent.id)
         if self.f_name is None or self.f_name =="":
-            target.update(alias=inject_al, alphanum=inject_al, display_text=inject_al)
+            target.update(alias=inject_al, alphanum=inject_al, display_text=fullname)
         else:
             target.update(alias=inject_al, first_name=inject_fn, last_name=inject_ln)
 
@@ -177,25 +185,45 @@ class Profile(models.Model):
                 eml_i = eml_i.get(email=tlt)
                 rel = eml_i.relationship
                 if rel == 'LR':
-                    lct = Lecturer(education = eml_i.experience, lecturer=self.talent, topic=eml_i.experience.topic)
+                    lct = Lecturer(
+                                   education = eml_i.experience,
+                                   lecturer=self.talent,
+                                   topic=eml_i.experience.topic)
                     lct.save()
                 if rel == 'CM':
-                    cm = ClassMates(education = eml_i.experience, colleague=self.talent, topic=eml_i.experience.topic)
+                    cm = ClassMates(
+                                    education = eml_i.experience,
+                                    colleague=self.talent,
+                                    topic=eml_i.experience.topic)
                     cm.save()
                 if rel == 'WC':
-                    wc = WorkColleague(experience = eml_i.experience, colleague_name=self.talent)
+                    wc = WorkColleague(
+                                       experience = eml_i.experience,
+                                       colleague_name=self.talent)
                     wc.save()
                 if rel == 'PC':
-                    wc = WorkColleague(experience = eml_i.experience, colleague_name=self.talent)
+                    wc = WorkColleague(
+                                       experience = eml_i.experience,
+                                       colleague_name=self.talent)
                     wc.save()
                 if rel == 'WS':
-                    ws = Superior(experience = eml_i.experience, superior_name=self.talent)
+                    ws = Superior(
+                                  experience = eml_i.experience,
+                                  superior_name=self.talent)
                     ws.save()
                 if rel == 'WL':
-                    wl = WorkCollaborator(experience = eml_i.experience, collaborator_name=self.talent, company=eml_i.worked_for.company, companybranch=eml_i.worked_for)
+                    wl = WorkCollaborator(
+                                          experience = eml_i.experience,
+                                          collaborator_name=self.talent,
+                                          company=eml_i.companybranch.company,
+                                          companybranch=eml_i.companybranch)
                     wl.save()
                 if rel == 'WT':
-                    wt = WorkClient(experience = eml_i.experience, client_name=self.talent, company=eml_i.worked_for.company, companybranch=eml_i.worked_for)
+                    wt = WorkClient(
+                                    experience = eml_i.experience,
+                                    client_name=self.talent,
+                                    company=eml_i.companybranch.company,
+                                    companybranch=eml_i.companybranch)
                     wt.save()
             else:
                 pass
@@ -206,8 +234,29 @@ class Profile(models.Model):
         if kwargs['created']:
             create_profile = Profile.objects.create(talent=kwargs['instance'], accepted_terms=True, age_accept=True)
 
-
     post_save.connect(create_profile, sender=CustomUser)
+
+def ProfilePic(instance, filename):
+	ext = filename.split('.')[-1]
+	return "%s/profile\%s_%s.%s" % (instance.talent.id, str(time()).replace('.','_'), random(), ext)
+
+def BackgroundPic(instance, filename):
+	ext = filename.split('.')[-1]
+	return "%s/profile\%s_%s.%s" % (instance.talent.id, str(time()).replace('.','_'), random(), ext)
+
+class ProfileImages(models.Model):
+    talent = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    profile_pic = models.ImageField(storage=PrivateMediaStorage(), upload_to=ProfilePic, blank=True, null=True)
+    profile_background = models.ImageField(storage=PrivateMediaStorage(), upload_to=BackgroundPic, blank=True, null=True)
+
+    def __str__(self):
+        return str(self.talent)
+
+    def create_settings(sender, **kwargs):
+        if kwargs['created']:
+            create_settings = ProfileImages.objects.create(talent=kwargs['instance'])
+
+    post_save.connect(create_settings, sender=CustomUser)
 
 
 class IdType(models.Model):
@@ -315,8 +364,8 @@ class Email(models.Model):
 
 class PhysicalAddress(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
-    line1 = models.CharField('Address Line 1', max_length=100, null=True)
-    line2 = models.CharField('Address Line 2', max_length=100, blank=True, null=True)
+    line1 = models.CharField('Address Line 1', max_length=250, null=True, blank=True)
+    line2 = models.CharField('Address Line 2', max_length=250, blank=True, null=True)
     line3 = models.CharField('Address Line 3', max_length=100, blank=True, null=True)
     country = CountryField(null=True)
     region = models.ForeignKey(Region, on_delete=models.PROTECT, null=True)
@@ -336,7 +385,7 @@ class PhysicalAddress(models.Model):
 
 class PostalAddress(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
-    line1 = models.CharField('Address Line 1', max_length=100)
+    line1 = models.CharField('Address Line 1', max_length=100, blank=True, null=True)
     line2 = models.CharField('Address Line 2', max_length=100, blank=True, null=True)
     line3 = models.CharField('Address Line 3', max_length=100, blank=True, null=True)
     country = CountryField()
@@ -359,11 +408,15 @@ def ExtFilename(instance, filename):
 	ext = filename.split('.')[-1]
 	return "%s/profile\%s_%s.%s" % (instance.talent.id, str(time()).replace('.','_'), random(), ext)
 
+def ExtThumbnail(instance, filename):
+	ext = filename.split('.')[-1]
+	return "%s/profile\%s_%s.%s" % (instance.talent.id, str(time()).replace('.','_'), random(), ext)
 
 class FileUpload(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
     title = models.CharField(max_length=150)
     file = models.FileField(storage=PrivateMediaStorage(), upload_to=ExtFilename, validators=[FileExtensionValidator(['pdf'])])
+    thumbnail = models.ImageField(storage=PrivateMediaStorage(), upload_to=ExtThumbnail, blank=True, null=True)
 
     def __str__(self):
         return '{}: {}'.format(self.talent, self.title)
@@ -372,6 +425,23 @@ class FileUpload(models.Model):
         self.file.delete()
         super().delete(*args, **kwargs)
 
+    def save(self, *args, **kwargs):
+        if self.file:
+            cache_path = self.file
+            bytes_file = bytes(cache_path.open(mode='rb').read())
+
+            images = convert_from_bytes(bytes_file)[0]
+            image = images.resize((int(260), int(360)), Image.ANTIALIAS)
+
+            quality_val = 90
+            thumb_io = BytesIO()
+            image.save(thumb_io, format='JPEG', quality=quality_val)
+
+            thumb_file = InMemoryUploadedFile(thumb_io, None, 'foo.jpg', 'image/jpeg', thumb_io.__sizeof__(), None)
+
+            self.thumbnail = thumb_file
+
+        super(FileUpload, self).save(*args, **kwargs)
 
 class PhoneNumber(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)

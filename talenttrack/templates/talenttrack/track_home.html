@@ -7,9 +7,16 @@
   <div class="card-body">
     <div class="float-right">
       <a href="{% url 'Talent:HelpExperienceHome' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 16px" data-toggle="tooltip" title="Click here for help on this page!">
-      <i class="fa fa-question-circle"></i></a>
+        <i class="fa fa-question-circle"></i>
+      </a>
     </div>
-    <h4 class="card-title">Experience Summary</h4>
+    <h4 class="card-title">
+      Experience Summary
+    </h4>
+    <small>
+      Here you can view and capture training and experience you have gained.<br>
+      For more help, click on <i class="fa fa-question-circle" style="color:blue;"></i> in the top right corner of selected cards or hover over items for additional information.
+    </small>
     <table class="table table-sm">
       <col width = "20%">
       <col width = "20%">
@@ -19,23 +26,40 @@
       <thead>
         <tr>
           <th></th>
-          <th class="align-middle text-center">Total Hours Logged</th>
-          <th class="align-middle text-center">Training<br>(Hours)<br><a href="{% url 'Talent:Capture' %}" class="badge badge-pill badge-primary">Add</a></th>
-          <th class="align-middle text-center">Logged<br>(Hours)<br><a href="{% url 'Talent:ExperienceCapture' %}" class="badge badge-pill badge-primary">Add</a></th>
-          <th class="align-middle text-center">Pre-logged<br>(Hours)<br><a href="{% url 'Talent:PreloggedCapture' %}" class="badge badge-pill badge-primary">Add</a></th>
+          <th class="align-middle text-center">
+            Total Hours<br>Logged
+          </th>
+          <th class="align-middle text-center">
+            Training<br>(Hours)<br>
+            <a href="{% url 'Talent:Capture' %}" class="badge badge-pill badge-success" data-toggle="tooltip" title="Capture education & training">
+              Capture
+            </a>
+          </th>
+          <th class="align-middle text-center">
+            Logged<br>(Hours)<br>
+            <a href="{% url 'Talent:ExperienceCapture' %}" class="badge badge-pill badge-success" data-toggle="tooltip" title="Capture current and previously un-recorded experience.">
+              Capture
+            </a>
+          </th>
+          <th class="align-middle text-center">
+            Pre-logged<br>(Hours)<br>
+            <a href="{% url 'Talent:PreloggedCapture' %}" class="badge badge-pill badge-success"  data-toggle="tooltip" title="Capture experience recorded on previously approved timesheets.">
+              Capture
+            </a>
+          </th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <th class="align-middle text-center">Unconfirmed<br>Experience</th>
-          <td class="align-middle text-center">{{ tot_sum|intcomma }}</td>
-          <td class="align-middle text-center">{{ train_sum.Edu_sum|intcomma }}<br>{{ train_count }} events</td>
-          <td class="align-middle text-center">{{ exp_sum.we_sum|intcomma }}<br>{{ exp_count }} events</td>
-          <td class="align-middle text-center">{{ pre_sum.p_sum|intcomma }}<br>{{ pre_count }} events</td>
+          <td class="align-middle text-center">{{ tot_sum_uc|intcomma }}</td>
+          <td class="align-middle text-center">{{ train_sum_uc.Edu_sum|intcomma }}<br>{{ train_count_uc }} events</td>
+          <td class="align-middle text-center">{{ exp_sum_uc.we_sum|intcomma }}<br>{{ exp_count_uc }} events</td>
+          <td class="align-middle text-center">{{ pre_sum_uc.p_sum|intcomma }}<br>{{ pre_count_uc }} events</td>
         </tr>
         <tr>
           <th class="align-middle text-center">Confirmed<br>Experience</th>
-          <td class="align-middle text-center">{{ tot_sum_c|intcomma }}</td>
+          <td class="align-middle text-center" data-toggle="tooltip" title="Training hours excluded in experience level hours.">{{ tot_sum_c|intcomma }}</td>
           <td class="align-middle text-center">{{ train_sum_c.Edu_sumc|intcomma }}<br>{{ train_count_c }} events</td>
           <td class="align-middle text-center">{{ exp_sum_c.we_sumc|intcomma }}<br>{{ exp_count_c }} events</td>
           <td class="align-middle text-center">{{ pre_sum_c.p_sumc|intcomma }}<br>{{ pre_count_c }} events</td>
@@ -53,7 +77,9 @@
       <i class="fa fa-flag" aria-hidden="true" style="font-size:20px;color:black" data-toggle="tooltip" title="Breakdown of Experience levels"></i>
     </a></p>
     <p class="text-center">
-      <strong>Confirmed Experience has been approved by more than 2 people and has a score greater than 3.</strong><br>
+      <strong>
+        Confirmed Experience has achieved a score greater than 3 through being confirmed by more than 2 people.
+      </strong><br>
       Only confirmed experience is used in matching experience to vacancies.
     </p>
   </div>
@@ -190,7 +216,7 @@
                 <td class="align-middle text-center">
                   {% if edu_lect_s > 0 %}
                     <a href="{% url 'Profile:Confirm' %}#Lect">
-                      <i class="fa fa-paint-brush" aria-hidden="true" style="font-size:20px;color:black" target="_blank" data-toggle="tooltip" title="Review Waiting Requests"></i>
+                      <i class="fa fa-paint-brush" aria-hidden="true" style="font-size:20px;color:#0275d8" target="_blank" data-toggle="tooltip" title="Review Waiting Requests"></i>
                     </a>
                   {% endif %}
                   <a href="{% url 'Talent:CAsLectList' %}?next={{ request.path|urlencode }}">
@@ -207,7 +233,7 @@
                 <td class="align-middle text-center">
                   {% if edu_cm_s > 0 %}
                     <a href="{% url 'Profile:Confirm' %}#Cm">
-                      <i class="fa fa-paint-brush" aria-hidden="true" style="font-size:20px;color:black" target="_blank" data-toggle="tooltip" title="Review Waiting Requests"></i>
+                      <i class="fa fa-paint-brush" aria-hidden="true" style="font-size:20px;color:#0275d8" target="_blank" data-toggle="tooltip" title="Review Waiting Requests"></i>
                     </a>
                   {% endif %}
                   <a href="{% url 'Talent:CAsCmList' %}?next={{ request.path|urlencode }}">
@@ -224,7 +250,7 @@
                 <td class="align-middle text-center">
                   {% if exp_clg_s > 0 %}
                     <a href="{% url 'Profile:Confirm' %}#Clg">
-                      <i class="fa fa-paint-brush" aria-hidden="true" style="font-size:20px;color:black" target="_blank" data-toggle="tooltip" title="Review Waiting Requests"></i>
+                      <i class="fa fa-paint-brush" aria-hidden="true" style="font-size:20px;color:#0275d8" target="_blank" data-toggle="tooltip" title="Review Waiting Requests"></i>
                     </a>
                   {% endif %}
                   <a href="{% url 'Talent:CAsClgList' %}?next={{ request.path|urlencode }}">
@@ -241,7 +267,7 @@
                 <td class="align-middle text-center">
                   {% if exp_sup_s > 0 %}
                     <a href="{% url 'Profile:Confirm' %}#Sup">
-                      <i class="fa fa-paint-brush" aria-hidden="true" style="font-size:20px;color:black" target="_blank" data-toggle="tooltip" title="Review Waiting Requests"></i>
+                      <i class="fa fa-paint-brush" aria-hidden="true" style="font-size:20px;color:#0275d8" target="_blank" data-toggle="tooltip" title="Review Waiting Requests"></i>
                     </a>
                   {% endif %}
                   <a href="{% url 'Talent:CAsSupList' %}?next={{ request.path|urlencode }}">
@@ -258,7 +284,7 @@
                 <td class="align-middle text-center">
                   {% if exp_clt_s > 0 %}
                     <a href="{% url 'Profile:Confirm' %}#Clt">
-                      <i class="fa fa-paint-brush" aria-hidden="true" style="font-size:20px;color:black" target="_blank" data-toggle="tooltip" title="Review Waiting Requests"></i>
+                      <i class="fa fa-paint-brush" aria-hidden="true" style="font-size:20px;color:#0275d8" target="_blank" data-toggle="tooltip" title="Review Waiting Requests"></i>
                     </a>
                   {% endif %}
                   <a href="{% url 'Talent:CAsCltList' %}?next={{ request.path|urlencode }}">
@@ -275,7 +301,7 @@
                 <td class="align-middle text-center">
                   {% if exp_cbr_s > 0 %}
                     <a href="{% url 'Profile:Confirm' %}#Clb">
-                      <i class="fa fa-paint-brush" aria-hidden="true" style="font-size:20px;color:black" target="_blank" data-toggle="tooltip" title="Review Waiting Requests"></i>
+                      <i class="fa fa-paint-brush" aria-hidden="true" style="font-size:20px;color:#0275d8" target="_blank" data-toggle="tooltip" title="Review Waiting Requests"></i>
                     </a>
                   {% endif %}
                   <a href="{% url 'Talent:CAsClbList' %}?next={{ request.path|urlencode }}">
@@ -295,10 +321,9 @@
     <h3 class="text-center">Do you think this information was useful?</h3>
     <p class="text-center">In order to make sure your friends are already invited to the MyWeXlog experience for validations, Click here ..</p>
     <div class="float-right">
-
-      <!--
-    <a class="btn btn-primary"  href="https://oauth2provider.com/auth?response_type=code&client_id=CLIENT_KEY&redirect_uri=CALLBACK_URI&scope=profile&scope=email">Invite Goole Contacts</a>  -->
-    <a class="btn btn-primary"  href="{% url 'Invitation:FlatInvite' %}">Email Friend Invite</a>
+      <a class="btn btn-primary"  href="{% url 'Invitation:FlatInvite' %}">
+        Email Friend Invite
+      </a>
     </div>
   </div>
 </div>
@@ -329,10 +354,19 @@
       <i class="fa fa-question-circle"></i></a>
     </div>
     <h4 class="card-title" id="education">Education & Training</h4>
-    <p>There are a total of <strong>{{ train_count }}</strong> Training & Education experience items that have been captured{% if train_count >= 5 %}, we only list the most recent 5 here.{% else %}.{% endif %}</p>
+    <p>
+      There are a total of <strong>{{ train_count }}</strong> Training & Education experience items that have been captured{% if train_count >= 5 %}, we only list the most recent 5 here.{% else %}.{% endif %}
+    </p>
+    <p>
+      <strong>An entry cannot be edited, only deleted. Once confirmed, an entry cannot be confirmed again, hence the information is locked. To change an entry, it must be deleted and re-captured.</strong>
+    </p>
     <br>
     <div class="float-right">
-      <p><a href="{% url 'Talent:Capture' %}" class="badge badge-pill badge-primary float-right">Add Education</a></p>
+      <p>
+        <a href="{% url 'Talent:Capture' %}" class="badge badge-pill badge-success float-right"  data-toggle="tooltip" title="Capture education & training">
+        Capture Education
+      </a>
+    </p>
     </div>
       <p><strong>Total hours in training: </strong>{{ train_sum.Edu_sum|intcomma }}</p>
     <div>
@@ -379,10 +413,14 @@
                 <span data-toggle="tooltip" data-placement="top" title="A score > 3 is required to achieve a 'confirmed' status">{{ t.score }}</span>
               </div>
               <div class="col-1 col-no-pad h-100 text-left my-auto">
-                <a href="{% url 'Talent:EducationDetail' t.slug %}" class="badge badge-pill badge-secondary" style="width: 5rem;">Detail</a>
+                <a href="{% url 'Talent:EducationDetail' t.slug %}" class="badge badge-pill badge-secondary" style="width: 6rem;">
+                  Detail
+                </a>
                 <form  action="{% url 'Talent:EDTDelete' t.id %}" method="post">
                   {% csrf_token %}
-                  <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
+                  <button type="submit" class="badge badge-danger badge-pill" style="width: 6rem;">
+                    Remove
+                  </button>
                 </form>
               </div>
             </div>
@@ -398,7 +436,9 @@
       <p><a href="{% url 'Talent:TrainingList' %}" class="btn btn-primary float-right">View All Education</a></p>
     </div>
     {% endif %}
-    <p>&nbsp</p>
+      <p>
+        &nbsp
+      </p>
     </div>
   </div>
 </div>
@@ -407,31 +447,39 @@
   <div class="card-body">
     <div class="float-right">
       <a href="{% url 'Talent:HelpExperienceExperience' %}" target="_blank" class="align-middle" data-toggle="tooltip" title="Click here for help on this page!" style="font-size: 16px" data-toggle="tooltip" title="Click here for help on this page!">
-      <i class="fa fa-question-circle"></i></a>
+        <i class="fa fa-question-circle"></i>
+      </a>
     </div>
     <h4 class="card-title" id="experience">Work Experience</h4>
-    <p>There are a total of <strong>{{ exp_count }}</strong> Experience items that have been captured{% if exp_count >= 5 %}, we only list the most recent 5 here.{% else %}.{% endif %}</p>
+    <p>
+      There are a total of <strong>{{ exp_count }}</strong> Experience items that have been captured{% if exp_count >= 5 %}, we only list the most recent 5 here.{% else %}.{% endif %}
+    </p>
+    <p>
+      <strong>An entry cannot be edited, only deleted. Once confirmed, an entry cannot be confirmed again, hence the information is locked. To change an entry, it must be deleted and re-captured.</strong>
+    </p>
     <br>
       <div class="float-right">
-        <p><a href="{% url 'Talent:ExperienceCapture' %}" class="badge badge-pill badge-primary float-right">Add Experience</a></p>
+        <p>
+          <a href="{% url 'Talent:ExperienceCapture' %}" class="badge badge-pill badge-success float-right" data-toggle="tooltip" title="Capture current and previously un-recorded experience.">
+          Capture Experience
+        </a>
+      </p>
       </div>
         <p><strong>Total hours of Experience: </strong>{{ exp_sum.we_sum|intcomma }}</p>
         <div class="container">
           <div class="row my-auto">
             <div class="col-md-3 h-100 text-center my-auto">
-              <strong>Employer</strong>
-            </div>
-            <div class="col-md-1 h-100 text-center my-auto">
-              <strong>Date from</strong>
-            </div>
-            <div class="col-md-1 h-100 text-center my-auto">
-              <strong>Date to</strong>
+              <strong>
+                Employer<br>Date: From - To
+              </strong>
             </div>
             <div class="col-md-1 h-100 text-center my-auto">
               <strong>Hours</strong>
             </div>
-            <div class="col-md-4 h-100 text-center my-auto">
-              <strong>Project</strong>
+            <div class="col-md-5 h-100 text-center my-auto">
+              <strong>
+                Project<br>Experience Title
+              </strong>
             </div>
             <div class="col-md-1 h-100 text-center my-auto">
               <strong>Score</strong>
@@ -447,28 +495,31 @@
             <div class="card-body small-pad">
               <div class="row my-auto">
                 <div class="col-md-3 h-100 text-center my-auto">
-                  {{ e.company }}
-                </div>
-                <div class="col-md-1 h-100 text-center my-auto">
-                  {{ e.date_from|date:"j M Y" }}
-                </div>
-                <div class="col-md-1 h-100 text-center my-auto">
-                  {{ e.date_to|date:"j M Y" }}
+                  {{ e.company }}<br>{{ e.date_from|date:"j M Y" }} - {{ e.date_to|date:"j M Y" }}
                 </div>
                 <div class="col-md-1 h-100 text-center my-auto">
                   {{ e.hours_worked|intcomma }}
                 </div>
-                <div class="col-md-4 h-100 text-center my-auto">
-                  {{ e.project }}
+                <div class="col-md-5 h-100 text-center my-auto">
+                  {{ e.project }}<br>{{ e.title }}
                 </div>
                 <div class="col-md-1 h-100 text-center my-auto">
-                  <span data-toggle="tooltip" data-placement="top" title="A score > 3 is required to achieve a 'confirmed' status">{{ e.score }}</span>
+                  <span data-toggle="tooltip" data-placement="top" title="A score > 3 is required to achieve a 'confirmed' status">
+                    {{ e.score }}
+                  </span>
                 </div>
                 <div class="col-1 col-no-pad h-100 text-left my-auto">
-                  <a href="{% url 'Talent:ExperienceDetail' e.slug %}" class="badge badge-pill badge-secondary"  style="width: 5rem;">Detail</a>
-                  <form  action="{% url 'Talent:WEDelete' e.id %}" method="post">
+                  <a href="{% url 'Talent:ExperienceDetail' e.slug %}" class="badge badge-pill badge-secondary"  style="width: 6rem;">
+                    Detail
+                  </a>
+                  <a href="{% url 'Talent:ExperienceReCapture' e.slug %}" class="badge badge-pill badge-success"  style="width: 6rem;">
+                    Claim Again
+                  </a>
+                  <form action="{% url 'Talent:WEDelete' e.id %}" method="post">
                     {% csrf_token %}
-                    <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
+                    <button type="submit" class="badge badge-danger badge-pill" style="width: 6rem;">
+                      Remove
+                    </button>
                   </form>
                 </div>
               </div>
@@ -481,7 +532,11 @@
         <br>
       {% if exp_count > 5 %}
       <div class="float-right">
-        <p><a href="{% url 'Talent:ExperienceList' %}" class="btn btn-primary float-right">View All Experience</a></p>
+        <p>
+          <a href="{% url 'Talent:ExperienceList' %}" class="btn btn-primary float-right">
+            View All Experience
+          </a>
+        </p>
       </div>
       {% endif %}
       <p>&nbsp</p>
@@ -495,28 +550,35 @@
       <i class="fa fa-question-circle"></i></a>
     </div>
     <h4 class="card-title" id="pre-experience">Previously Logged Experience</h4>
-    <p>There are a total of <strong>{{ pre_count }}</strong> Previously Logged experience items that have been captured{% if pre_count >= 5 %}, we only list the most recent 5 here.{% else %}.{% endif %}</p>
+    <p>
+      There are a total of <strong>{{ pre_count }}</strong> Previously Logged experience items that have been captured{% if pre_count >= 5 %}, we only list the most recent 5 here.{% else %}.{% endif %}
+    </p>
+    <p>
+      <strong>An entry cannot be edited, only deleted. Once confirmed, an entry cannot be confirmed again, hence the information is locked. To change an entry, it must be deleted and re-captured.</strong>
+    </p>
     <br>
       <div class="float-right">
-        <p><a href="{% url 'Talent:PreloggedCapture' %}" class="badge badge-pill badge-primary float-right">Add Logged Experience</a></p>
+        <p>
+          <a href="{% url 'Talent:PreloggedCapture' %}" class="badge badge-pill badge-success float-right" data-toggle="tooltip" title="Capture experience recorded on previously approved timesheets.">
+            Capture Logged Experience
+          </a>
+        </p>
       </div>
       <p><strong>Total hours of Previously Logged Experience: </strong>{{ pre_sum.p_sum|intcomma }}</p>
       <div class="container">
         <div class="row my-auto">
           <div class="col-md-3 h-100 text-center my-auto">
-            <strong>Employer</strong>
-          </div>
-          <div class="col-md-1 h-100 text-center my-auto">
-            <strong>Date from</strong>
-          </div>
-          <div class="col-md-1 h-100 text-center my-auto">
-            <strong>Date to</strong>
+            <strong>
+              Employer<br>Date From - To
+            </strong>
           </div>
           <div class="col-md-1 h-100 text-center my-auto">
             <strong>Hours</strong>
           </div>
-          <div class="col-md-4 h-100 text-center my-auto">
-            <strong>Project</strong>
+          <div class="col-md-5 h-100 text-center my-auto">
+            <strong>
+              Project<br>Experience Title
+            </strong>
           </div>
           <div class="col-md-1 h-100 text-center my-auto">
             <strong>Score</strong>
@@ -532,28 +594,31 @@
           <div class="card-body small-pad">
             <div class="row my-auto">
               <div class="col-md-3 h-100 text-center my-auto">
-                {{ p.company }}
-              </div>
-              <div class="col-md-1 h-100 text-center my-auto">
-                {{ p.date_from|date:"j M Y" }}
-              </div>
-              <div class="col-md-1 h-100 text-center my-auto">
-                {{ p.date_to|date:"j M Y" }}
+                {{ p.company }}<br>{{ p.date_from|date:"j M Y" }} - {{ p.date_to|date:"j M Y" }}
               </div>
               <div class="col-md-1 h-100 text-center my-auto">
                 {{ p.hours_worked|intcomma }}
               </div>
-              <div class="col-md-4 h-100 text-center my-auto">
-                {{ p.project }}
+              <div class="col-md-5 h-100 text-center my-auto">
+                {{ p.project }}<br>{{ p.title }}
               </div>
               <div class="col-md-1 h-100 text-center my-auto">
-                <span data-toggle="tooltip" data-placement="top" title="A score > 3 is required to achieve a 'confirmed' status">{{ p.score }}</span>
+                <span data-toggle="tooltip" data-placement="top" title="A score > 3 is required to achieve a 'confirmed' status">
+                  {{ p.score }}
+                </span>
               </div>
               <div class="col-1 col-no-pad h-100 text-left my-auto">
-                <a href="{% url 'Talent:PreLogDetail' p.slug %}" class="badge badge-pill badge-secondary" style="width: 5rem;">Detail</a>
+                <a href="{% url 'Talent:PreLogDetail' p.slug %}" class="badge badge-pill badge-secondary" style="width: 6rem;">
+                  Detail
+                </a>
+                <a href="{% url 'Talent:ExperienceReCapture' p.slug %}" class="badge badge-pill badge-success"  style="width: 6rem;">
+                  Claim Again
+                </a>
                 <form  action="{% url 'Talent:PLEDelete' p.id %}" method="post">
                   {% csrf_token %}
-                  <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
+                  <button type="submit" class="badge badge-danger badge-pill" style="width: 6rem;">
+                    Remove
+                  </button>
                 </form>
               </div>
             </div>

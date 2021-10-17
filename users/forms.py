@@ -1,7 +1,9 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from .models import CustomUser, CustomUserSettings
+from django.contrib.auth.forms import UserChangeForm, UserCreationForm
+
 from allauth.account.forms import SignupForm
+
+from .models import CustomUser, CustomUserSettings
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -21,7 +23,7 @@ class CustomUserChangeForm(UserChangeForm):
 class CustomSignupForm(SignupForm):
     first_name = forms.CharField(max_length=30, label='First Name', widget=forms.TextInput(attrs={'placeholder': 'First name'}))
     last_name = forms.CharField(max_length=30, label='Last Name', widget=forms.TextInput(attrs={'placeholder': 'Last name'}))
-    terms = forms.BooleanField(required=True, label="Accept Terms and Conditions")
+    terms = forms.BooleanField(required=True, label='Accept <a type="button" data-toggle="modal" data-target="#exampleModalCenter"><span class="link">Terms and Conditions</span></a>')
     age_accept = forms.BooleanField(required=True, label="Confirm you are 18 Years or Older")
 
     class Meta:
@@ -40,7 +42,8 @@ class CustomSignupForm(SignupForm):
 class CustomUserSettingsForm(forms.ModelForm):
     class Meta:
         model = CustomUserSettings
-        fields = ('right_to_say_no',
+        fields = (  'theme',
+                    'right_to_say_no',
                     'unsubscribe',
                     'receive_newsletter',
                     'validation_requests',

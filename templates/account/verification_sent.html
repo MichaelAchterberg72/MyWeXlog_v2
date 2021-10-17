@@ -1,7 +1,6 @@
 {% extends "base_home.html" %}
-
 {% load i18n %}
-
+{% load static %}
 {% block head_title %}{% trans "Verify Your E-mail Address" %}{% endblock %}
 
 {% block content %}
@@ -9,10 +8,11 @@
 <div class="card card-shadow col-sm-7 mx-auto">
 
   <div class="card-body">
+    <center><img align="center" class="icon" height="162" src="{% static 'images/email/mywexlog-logo.png' %}" style="border:0;" width="null"/></center><br>
     <h1 class="card-title text-center">{% trans "Verify Your E-mail Address" %}</h1>
 
     <p>{% blocktrans %}We have sent an e-mail to you for verification. Follow the link provided to finalize the signup process.</p>
-    <p>If you have not received it withing 10 minutes please check you spam folder, if the email verification is there mark it as 'Not Spam' to ensure that you will receive the balance of emails from MyWeXlog.</p>
+    <p>If you have not received it withing 10 minutes please check either your promotions or spam folders, if the email verification is there mark it as 'Not Spam' and add it to your contacts list to ensure that you will receive the balance of emails from MyWeXlog.</p>
     <p>In the event that you have still not received it within a few minutes please <a href="mailto:info@mywexlog.com?subject=Verification e-mail not received">contact us</a> to advise us.{% endblocktrans %}</p>
 
   </div>

@@ -20,10 +20,16 @@
     <form class="" action="" method="POST">
       <input type="hidden" name="next" value="{{ request.GET.next }}">
       {% csrf_token %}
+      <div style="background-color:red; color:white;">
+        <p>
+
+          {{ form.non_field_errors }}
+        </p>
+      </div>
       {{ form.name|as_crispy_field }}
       {{ form.surname|as_crispy_field }}
       {{ form.companybranch|as_crispy_field }}
-      <a href="{% url 'Enterprise:BranchAddPop' %}" id='add_companybranch' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add a Company Branch</a>
+      <a href="{% url 'Enterprise:FullBranchAddPopup' %}" id='add_companybranch' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add a Company Branch</a>
       {{ form.email|as_crispy_field }}
       {{ form.message|as_crispy_field }}
       <a href="{% url 'Talent:Home' %}" class="btn btn-danger">Cancel</a>
@@ -31,7 +37,7 @@
     </form>
   </div>
 </div>
-
+{{ form.media }}
 <!--
 <button type="submit" class="btn btn-primary" name="Invite" value="Close this window" onclick="windowClose();">Invite</button>
 -->

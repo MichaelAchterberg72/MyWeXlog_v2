@@ -33,12 +33,25 @@
       </div>
       <h3>Vacancy Review</h3>
       <h5 class="card-title">Vacancy: {{ instance.title }} ({{ instance.ref_no }})</h5>
+      <hr>
+      Vacancy Public link:
+      <div class="input-group mb-3">
+        {% url 'MarketPlace:VacancyDetailPublic' instance.ref_no as url %}
+        <input type="text" class="form-control" value="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{{ url }}" id="myMarketInput" aria-describedby="basic-addon3">
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" type="button" id="myMarketButton">Copy Link</button>
+        </div>
+      </div>
+      <p>
+        This is the place to review and edit a vacancy
+      </p>
+      <br>
       <table class="table table-sm">
         <thead>
           <tr>
-            <th class="align-middle text-center">Own Ref No.</th>
+            <th class="align-middle text-center">My Reference No.</th>
             <th class="align-middle text-center">Company</th>
-            <th class="align-middle text-center">Designation</th>
+            <th class="align-middle text-center">Designation / Role</th>
           </tr>
         </thead>
         <tbody>
@@ -53,16 +66,25 @@
       <table class="table table-sm">
         <thead>
           <tr>
-            <th class="align-middle text-center">Hours Required</th>
-            <th class="align-middle text-center">Work Format</th>
-            <th class="align-middle text-center">Office Location</th>
-            <th class="align-middle text-center">Experience Level</th>
+            <th class="align-middle text-center">Hours required</th>
+            <th class="align-middle text-center">Work format</th>
+            <th class="align-middle text-center">Office location</th>
+            <th class="align-middle text-center">Experience level</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td class="align-middle text-center">
-              {{ instance.hours_required|intcomma }} ({{ instance.get_unit_display }})
+              {% if instance.hours_required == 0 %}
+                <small>None Given</small>
+              {% else %}
+                {{ instance.hours_required|intcomma }}<br><small>({{ instance.get_unit_display }})</small><br>
+                {% if instance.permpos == True %}
+                  <p>
+                    <small>Permanent Position</small>
+                  </p>
+                {% endif %}
+              {% endif %}
             </td>
             <td class="align-middle text-center">{{ instance.worklocation }}</td>
             <td class="align-middle text-center">{{ instance.city.city }}</td>
@@ -70,21 +92,36 @@
           </tr>
         </tbody>
       </table>
-      <br>
+      <hr>
+      <div class="row">
+        <div class="col-sm-12 text-center">
+          <h6>
+            <strong>Certifications Required for this Vacancy</strong>
+          </h6>
+          <p>
+          {% for cert in instance.certification.all %}
+            <strong>|</strong>{{ cert }}<strong>|</strong>
+          {% empty %}
+              <small>No certifications required for this vacancy.</small>
+          {% endfor %}
+          </p>
+        </div>
+      </div>
+      <hr>
       <div class="row">
         <div class="col-sm-6">
           <div class="h-100">
             <div class="card-body">
-              <h5 class="card-title">Scope</h5>
-              <p>{{ instance.scope|linebreaks }}</p>
+              <h5 class="card-title text-center align-middle">Scope</h5>
+              <p>{{ instance.scope|safe }}</p>
             </div>
           </div>
         </div>
         <div class="col-sm-6">
           <div class="h-100">
             <div class="card-body">
-              <h5 class="card-title">Expectations</h5>
-              <p>{{ instance.expectations|linebreaks }}</p>
+              <h5 class="card-title text-center align-middle">Expectations</h5>
+              <p>{{ instance.expectations|safe }}</p>
             </div>
           </div>
         </div>
@@ -96,10 +133,10 @@
             <table class="table table-sm">
               <thead>
                 <tr>
-                  <th class="align-middle text-center">Proposed Rate</th>
-                  <th class="align-middle text-center">Bid Closing Date</th>
-                  <th class="align-middle text-center">Work Completion Date</th>
-                  <th class="align-middle text-center">Required Language</th>
+                  <th class="align-middle text-center">Proposed rate</th>
+                  <th class="align-middle text-center">Bid closing date</th>
+                  <th class="align-middle text-center">Work completion date</th>
+                  <th class="align-middle text-center">Required language</th>
                   <th class="align-middle text-center">Status</th>
                 </tr>
               </thead>
@@ -127,7 +164,7 @@
       <br>
       <div class="row">
 
-        <div class="col-sm-6">
+        <div class="col-sm-4">
           <div class="h-100">
             <div class="card-body">
               <a href="{% url 'MarketPlace:Deliverables2' instance.ref_no %}" class="badge badge-primary float-right" style="width: 5rem;">Add</a>
@@ -142,12 +179,14 @@
               {% for d in delivere %}
               <tbody>
                 <tr>
-                  <td>{{ d.deliverable|linebreaks|truncatechars:100 }}</td>
+                  <td>{{ d.deliverable|safe|truncatechars:100 }}</td>
                   <td>
-                    <a href="{% url 'MarketPlace:DeliverablesEdit' d.scope.ref_no %}" class="badge badge-secondary badge-pill float-right" style="width: 5rem;">Edit</a>
+                    <a href="{% url 'MarketPlace:DeliverablesEdit' d.scope.ref_no %}" class="badge badge-secondary badge-pill align-middle text-center" style="width: 5rem;">
+                      Edit
+                    </a>
                     <form  action="{% url 'MarketPlace:DeliverablesDelete' d.id %}" method="post">
                       {% csrf_token %}
-                    <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;" onclick="return confirm('Remove deliverable - Are you sure?');">Remove</button>
+                    <button type="submit" class="badge badge-danger badge-pill align-middle text-center" style="width: 5rem;" onclick="return confirm('Remove deliverable - Are you sure?');">Remove</button>
                     </form>
                   </td>
                 </tr>
@@ -158,7 +197,7 @@
           </div>
         </div>
 
-        <div class="col-sm-6">
+        <div class="col-sm-4">
           <div class="h-100">
             <div class="card-body">
               <a href="{% url 'MarketPlace:Skillsa' instance.ref_no %}" class="badge badge-primary float-right" style="width: 5rem;">Add</a>
@@ -167,7 +206,6 @@
                 <col width="90%">
                 <col width="10%">
                 <thead>
-
                 </thead>
                 <tbody>
                   {% for s in skille %}
@@ -184,6 +222,34 @@
             </div>
           </div>
         </div>
+
+        <div class="col-sm-4">
+          <div class="h-100">
+            <div class="card-body">
+
+              <h5 class="card-title" id="certs">Certifications</h5>
+              <table class="table table-sm">
+                <col width="90%">
+                <col width="10%">
+                <thead>
+
+                </thead>
+                <tbody>
+                  {% for cert in instance.certification.all %}
+                  <tr>
+                    <td>{{ cert }}</td>
+                    <td><form  action="{% url 'MarketPlace:CertificateDelete' instance.ref_no cert %}" method="post">
+                      {% csrf_token %}
+                      <button type="submit" class="badge badge-danger badge-pill float-right" style="width: 5rem;" onclick="return confirm('Remove skill - Are you sure?');">Remove</button>
+                    </form></td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -218,11 +284,12 @@
           <i class="fa fa-question-circle"></i>
         </a>
       </div>
-    <h3 id="applicants">Applicants</h3>
+    <h3 id="applicants">Vacancy Applicants</h3>
     <p>
-      There are a total of {{ applied_count }} bids that talent have applied for the vacancy{% if applied_count >= 5 %}, we only list the top 5 here.{% else %}.{% endif %}
+      {{ applied_count }} people have applied for this vacancy{% if applied_count >= 5 %}, we only list the top 5 here.{% else %}.{% endif %}
     </p>
     <div class="">
+      {% if applied_count != 0 %}
       <div class="row">
         <div class="col-12">
         {% if applicants_list_view %}
@@ -242,9 +309,10 @@
         {% endif %}
         </div>
       </div>
-
         {% if applicants_list_view %}
+          {% if applied_slice.items %}
           {% include 'marketplace/list_view_headings.html' %}
+          {% endif %}
           {% for key in applied_slice.items %}
           <div class="row">
             <div class="card mt-1 card-hover" style="width: 100%;">
@@ -261,27 +329,20 @@
                     </form>
                     <br>
                     <form  action="{% url 'MarketPlace:ShortList' tlt=key.1.ro.0.4  vac=instance.ref_no %}" method="post" name="active">
-<<<<<<< HEAD
                     {% csrf_token %}
                     <button type="submit"  class="badge badge-info badge-pill float-right" style="width: 6rem;">Short-list</button>
                   </form><br>
                   <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=instance.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-success badge-pill float-right" style="width: 6rem;" target="new">View Profile</a>
                   <br>
+                  {% if request.user.subscription >= 2 %}
                   <form  action="{% url 'Chat:NewChat' tlt=key.1.ro.0.4 %}" method="post" name="active" target="_blank">
                   {% csrf_token %}
-                  <button type="submit"  class="badge badge-success badge-pill float-right" style="width: 6rem;">Chat</button>
+                  <button type="submit" class="badge badge-success badge-pill float-right" style="width: 6rem;">Chat</button>
                   </form>
-=======
-                      {% csrf_token %}
-                      <button type="submit"  class="badge badge-info badge-pill float-right" style="width: 6rem;">
-                        Short-list
-                      </button>
-                    </form>
-                    <br>
-                    <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=instance.ref_no %}?next={{ request.path|urlencode }}" class="badge badge-success badge-pill float-right" style="width: 6rem;" target="new">
-                      View Profile
-                    </a>
->>>>>>> master
+                  {% else %}
+                  <a href="{% url 'Payments:ActiveSubscription' %}" class="badge badge-success badge-pill float-right" data-toggle="tooltip" title="An Active subscription is required to initiate a chat" style="width: 6rem;">Chat</a>
+                  {% endif %}
+
                   </div>
                 </div>
               </div>
@@ -313,27 +374,20 @@
                           Rejected
                         </button>
                       </form>&nbsp
-<<<<<<< HEAD
                       <form  action="{% url 'MarketPlace:ShortList' tlt=key.1.ro.0.4  vac=instance.ref_no %}" method="post" name="active">
                       {% csrf_token %}
                       <button type="submit"  class="btn btn-outline-info" style="width: 10rem;">Short-list</button>
                     </form>&nbsp
                     <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=instance.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-outline-success" style="width: 10rem;" target="new">View Profile</a>&nbsp
+                    {% if request.user.subscription >= 2 %}
                     <form  action="{% url 'Chat:NewChat' tlt=key.1.ro.0.4 %}" method="post" name="active" target="_blank">
                     {% csrf_token %}
-                    <button type="submit"  class="btn btn-outline-success" style="width: 10rem;">Chat</button>
+                    <button type="submit" class="btn btn-outline-success" style="width: 10rem;">Chat</button>
                     </form>
-=======
-                      <form action="{% url 'MarketPlace:ShortList' tlt=key.1.ro.0.4  vac=instance.ref_no %}" method="post" name="active">
-                        {% csrf_token %}
-                        <button type="submit"  class="btn btn-outline-info" style="width: 10rem;">
-                          Short-list
-                        </button>
-                      </form>&nbsp
-                    <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=instance.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-outline-success" style="width: 10rem;" target="new">
-                      View Profile
-                    </a>
->>>>>>> master
+                    {% else %}
+                    <a href="{% url 'Payments:ActiveSubscription' %}" class="btn btn-outline-success" data-toggle="tooltip" title="An Active subscription is required to initiate a chat" style="width: 10rem;">Chat</a>
+                    {% endif %}
+
                     </div>
                   </div>
                 </div>
@@ -358,6 +412,9 @@
         <a href="{% url 'MarketPlace:ApplicantsForVacancy' vac=instance.ref_no %}" class="btn btn-primary"style="width: 10rem">View All Applicants</a>
       </div>
     {% endif %}
+    {% else %}
+
+    {% endif %}
     </div>
   </div>
 </div>
@@ -372,8 +429,10 @@
       </div>
       <h3 id='suited'>Talent suited to the Vacancy</h3>
       <p>
-        There are a total of {{ suitable_count }} talent suited to the vacancy{% if suitable_count >= 5 %}, we only list the top 5 here.{% else %}.{% endif %}
+        A total of {{ suitable_count }}
+        {% if suitable_count <= 0 %} people are {% elif suitable_count == 1 %} person is {% elif suitable_count > 1 %} people are {% endif %} suited to the vacancy{% if suitable_count >= 5 %}, we only list the top 5 here.{% else %}.{% endif %}
       </p>
+      {% if suitable_count != 0 %}
       <div class="">
         <div class="row">
           <div class="col-12">
@@ -396,7 +455,9 @@
         </div>
 
           {% if suited_list_view %}
+          {% if suitable_slice.items %}
             {% include 'marketplace/list_view_headings.html' %}
+          {% endif %}
             {% for key in suitable_slice.items %}
             <div class="row">
               <div class="card mt-1 card-hover" style="width: 100%;">
@@ -417,17 +478,17 @@
                           Short-list
                         </button>
                       </form><br>
-<<<<<<< HEAD
+
                       <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=instance.ref_no %}" class="badge badge-success badge-pill float-right" style="width: 6rem;" target="new">View Profile</a><br>
+                      {% if request.user.subscription >= 2 %}
                       <form  action="{% url 'Chat:NewChat' tlt=key.1.ro.0.4 %}" method="post" name="active" target="_blank">
                       {% csrf_token %}
-                      <button type="submit"  class="badge badge-success badge-pill float-right" style="width: 6rem;">Chat</button>
+                      <button type="submit" class="badge badge-success badge-pill float-right" style="width: 6rem;">Chat</button>
                       </form>
-=======
-                      <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=instance.ref_no %}" class="badge badge-success badge-pill float-right" style="width: 6rem;" target="new">
-                        View Profile
-                      </a>
->>>>>>> master
+                      {% else %}
+                      <a href="{% url 'Payments:ActiveSubscription' %}" class="badge badge-success badge-pill float-right" data-toggle="tooltip" title="An Active subscription is required to initiate a chat" style="width: 6rem;">Chat</a>
+                      {% endif %}
+
                     </div>
                   </div>
                 </div>
@@ -464,10 +525,14 @@
                           <button type="submit" class="btn btn-outline-info" style="width: 10rem;">Short-list</button>
                         </form>&nbsp
                         <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=instance.ref_no %}" class="btn btn-outline-success" style="width: 10rem;" target="new">View Profile</a>&nbsp
+                        {% if request.user.subscription >= 2 %}
                         <form  action="{% url 'Chat:NewChat' tlt=key.1.ro.0.4 %}" method="post" name="active" target="_blank">
                         {% csrf_token %}
-                        <button type="submit"  class="btn btn-outline-success" style="width: 10rem;">Chat</button>
+                        <button type="submit" class="btn btn-outline-success" style="width: 10rem;">Chat</button>
                         </form>
+                        {% else %}
+                        <a href="{% url 'Payments:ActiveSubscription' %}" class="btn btn-outline-success" data-toggle="tooltip" title="An Active subscription is required to initiate a chat" style="width: 10rem;">Chat</a>
+                        {% endif %}
                       </div>
                     </div>
                   </div>
@@ -485,8 +550,9 @@
             {% endif %}
             {% endfor %}
             {% endif %}
-
       </div>
+      {% else %}
+      {% endif %}
       {% if suitable_count > 5 %}
         <div class="float-right">
           <a href="{% url 'MarketPlace:TalentSuitedToVacancy' instance.ref_no %}" class="btn btn-primary"style="width: 10rem">View All Talent</a>
@@ -519,6 +585,16 @@ function closePopup(win, newID, newRepr, id) {
 
 window.onerror = function (msg) {
   $("body").attr("JSError", msg);
+}
+
+document.getElementById("myMarketButton").addEventListener("click", myMarketFunction);
+
+function myMarketFunction(e) {
+  var copyMarketText = document.getElementById("myMarketInput");
+  copyMarketText.select();
+  copyMarketText.setSelectionRange(0, 99999)
+  document.execCommand("copy");
+  alert("Copied the text: " + copyMarketText.value);
 }
 </script>
 {% endblock Script %}

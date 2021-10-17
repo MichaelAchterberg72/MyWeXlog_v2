@@ -1,8 +1,6 @@
 from django.urls import path
 
-
-from .import views
-
+from . import views
 
 app_name = 'Talent'
 
@@ -10,6 +8,7 @@ app_name = 'Talent'
 urlpatterns = [
     path('home/', views.ExperienceHome, name='Home'),
     path('capture/', views.EducationCaptureView, name='Capture'),
+    path('education-edit/<slug:edt_slug>/', views.EducationEditView, name='EducationEdit'),
     path('popup/add/', views.CourseAddPopup, name="CourseAddPop"),
     path('popup/ajax/get_course_id/', views.get_course_id, name="AJAX_GetCourseID"),
     path('popup/coursetype/add/', views.CourseTypeAddPopup, name="CourseTypeAddPop"),
@@ -26,8 +25,9 @@ urlpatterns = [
     path('classmate/<slug:tex>/add/', views.ClassMateAddView, name='ClassMatesAdd'),
     path('classmate/detail/<slug:cmt>/', views.ClassMatesResponse, name='ClassMatesResponse'),
     path('experience/capture/', views.WorkExperienceCaptureView, name="ExperienceCapture"),
+    path('experience/<slug:tex>/recapture/', views.CopyClaimView, name="ExperienceReCapture"),
+    path('experience/edit/<slug:we_slug>/', views.WorkExperienceEditView, name="ExperienceEdit"),
     path('popup/designation/add/', views.DesignationAddPopup, name="DesignationAddPop"),
-    path('experience/capture/', views.WorkExperienceCaptureView, name="ExperienceCapture"),
     path('popup/ajax/get_designation_id/', views.get_designation_id, name="AJAX_GetDesignationID"),
     path('profile-search/', views.profile_search, name="PflSearch"),
     path('experience/training-full-list/', views.TrainingListView, name="TrainingList"),
@@ -59,10 +59,14 @@ urlpatterns = [
     path('dpc-detail/<slug:tlt>/', views.DPC_SummaryView, name='DPCSum'),
     path('dpcp-detail/<slug:tlt>/', views.DPCP_SummaryView, name='DPCPSum'),
     path('apv/<slug:tlt>/<slug:vac>/', views.ActiveProfileView, name='APV'),
+    path('apv-lcm/<slug:tlt>/<slug:vac>/', views.LCMFVView, name='LCM_FV'),
     path('apv-bch/<slug:tlt>/<slug:vac>/', views.BCHView, name='BCH_FV'),
-    path('apv-ach/<slug:tlt>/<slug:vac>/', views.AchievementsView, name='ACH_FV'),
+    path('apv-ach/<slug:tlt>/<slug:vac>/', views.AchievementsFVView, name='ACH_FV'),
+    path('apv-awd/<slug:tlt>/<slug:vac>/', views.AwardsFVView, name='AWD_FV'),
+    path('apv-pub/<slug:tlt>/<slug:vac>/', views.PublicationsFVView, name='PUB_FV'),
     path('apv-projects/<slug:tlt>/<slug:vac>/', views.ProjectsFVView, name='Projects_FV'),
     path('apv-edu/<slug:tlt>/<slug:vac>/', views.EduFVView, name='EDU_FV'),
+    path('apv-books/<slug:tlt>/<slug:vac>/', views.BooksFVView, name='BKS_FV'),
 
     path('apv-l/<slug:tlt>/', views.profile_view, name='APV_L'),
     path('apv-c/<slug:cor>/<slug:tlt>/', views.profile_view_corp, name='APV_C'),
@@ -71,13 +75,42 @@ urlpatterns = [
     path('apv-projects/<slug:tlt>/', views.ProjectsLFVView, name='Projects_L_FV'),
     path('apv-edu/<slug:tlt>/', views.EduLFVView, name='EDU_L_FV'),
 
+    path('public-profile/<slug:ppl>/', views.public_profile, name='PublicProfile'),
+    path('<slug:ppl>/project-rating/', views.public_profile_project_rating, name="PublicProfileRatingDetail"),
+    path('<slug:ppl>/evaluation-rating/', views.public_profile_evaluation_rating, name="PublicProfileEvaluationRatingDetail"),
+    path('public-profile/<slug:ppl>/profile-skill-stats-overview/<int:skl>/', views.public_profile_skill_stats, name='PrublicProfileSkillsStats'),
+    path('public-profile-projects/<slug:ppl>/', views.public_profile_projects, name='PublicProfileProjects'),
+    path('public-profile-education/<slug:ppl>/', views.public_profile_education, name='PublicProfileEducation'),
+    path('public-profile-achievements/<slug:ppl>/', views.public_profile_achievements, name='PublicProfileAchievements'),
+    path('public-profile-awards/<slug:ppl>/', views.public_profile_awards, name='PublicProfileAwards'),
+    path('public-profile-publications/<slug:ppl>/', views.public_profile_publications, name='PublicProfilePublications'),
+    path('public-profile-books/<slug:ppl>/', views.public_profile_books, name='PublicProfileBooks'),
+
+    path('we-comment/<slug:wes>/', views.publish_experience_comment, name="WEPComment"),
+    path('pre-we-comment/<slug:wes>/', views.publish_pre_experience_comment, name="PreWEPComment"),
+    path('publish-colleague-response/<slug:rc>/', views.publish_colleague_response, name="CRPComment"),
+    path('publish-superior-response/<slug:rc>/', views.publish_superior_response, name="SRPComment"),
+    path('publish-collaborator-response/<slug:rc>/', views.publish_collaborator_response, name="WCollRPComment"),
+    path('publish-client-response/<slug:rc>/', views.publish_client_response, name="WClRPComment"),
+
+    path('publish-pre-colleague-response/<slug:rc>/', views.publish_pre_colleague_response, name="CRPPreComment"),
+    path('publish-pre-superior-response/<slug:rc>/', views.publish_pre_superior_response, name="SRPPreComment"),
+    path('publish-pre-collaborator-response/<slug:rc>/', views.publish_pre_collaborator_response, name="WCollRPPreComment"),
+    path('publish-pre-client-response/<slug:rc>/', views.publish_pre_client_response, name="WClRPPreComment"),
+
     path('achievement-capture/', views.CaptureAchievementView, name='AchieveCap'),
     path('achievement-edit/<slug:ach>/', views.EditAchievementView, name='AchieveEdit'),
     path('achievement-del/<int:ach_i>/<slug:tlt>/', views.DeleteAchievementView, name='AchieveDelete'),
+    path('award-capture/', views.CaptureAwardView, name='AwardCap'),
+    path('award-edit/<slug:awd>/', views.EditAwardView, name='AwardEdit'),
+    path('award-del/<int:awd_i>/<slug:tlt>/', views.DeleteAwardView, name='AwardDelete'),
+    path('publication-capture/', views.CapturePublicationView, name='PublicationCap'),
+    path('publication-edit/<slug:pub>/', views.EditPublicationView, name='PublicationEdit'),
+    path('publication-del/<int:pub_i>/<slug:tlt>/', views.DeletePublicationView, name='PublicationDelete'),
     path('lcm-capture/', views.LicenseCertificationCaptureView, name='LCMCap'),
     path('lcm-edit/<slug:lcm>/', views.LicenseCertificationEditView, name='LCMEdit'),
     path('lcm-del/<int:pk>/<slug:tlt>/', views.LicenseCertificationDeleteView, name='LCMDelete'),
-    path('lcm-fv/<slug:tlt>/', views.LCMFullView, name='LCM_FV'),
+#    path('lcm-fv/<slug:tlt>/', views.LCMFullView, name='LCM_FV'),
     path('ple-del/<int:ple_pk>/', views.PreLoggedExperienceDeleteView, name='PLEDelete'),
     path('ple-del-full/<int:ple_pk>/', views.PreLoggedExperienceDeleteFullView, name='PLEFDelete'),
     path('we-del/<int:we_pk>/', views.WorkExperienceDeleteView, name='WEDelete'),
@@ -98,6 +131,7 @@ urlpatterns = [
     path('help/how-to-capture-skills/', views.HelpHowCaptrueSkillsView, name='HelpHowCaptureSkills'),
     #Talent Rating Details
     path('<slug:tlt>/rating/', views.TltRatingDetailView, name="TltRatingDetail"),
+    path('<slug:tlt>/experience-rating/', views.tlt_evaluation_rating, name="TltExperienceRatingDetail"),
     #Confirmation review urlpatterns
     path('calect-list/', views.lecturer_conf_summary_list, name='CAsLectList'),
     path('cacm-list/', views.classmate_conf_summary_list, name='CAsCmList'),
@@ -113,9 +147,11 @@ urlpatterns = [
     path('reqclb-list/', views.clb_req_list, name='ReqClbList'),
     #skills stats
     path('skill-stats-overview/<int:skl>/', views.skill_stats, name='SkillsStats'),
-    path('profile-skill-stats-overview/<int:skl>/', views.profile_skill_stats, name='ProfileSkillsStats'),
+    path('profile-skill-stats-overview/<int:skl>/<slug:vac>/', views.profile_skill_stats, name='ProfileSkillsStats'),
     path('site-skill-stats-overview/<int:skl>/', views.site_skill_stats, name='SiteSkillsStats'),
+    path('project-skill-stats-overview/<int:skl>/<slug:prj>/', views.site_skill_stats, name='ProjectSiteSkillsStats'),
     path('site-demand_skill-stats-overview/<int:skl>/', views.site_demand_skill_stats, name='SiteDemandSkillsStats'),
+    path('project-site-demand_skill-stats-overview/<int:skl>/<slug:prj>/', views.site_demand_skill_stats, name='ProjectSiteDemandSkillsStats'),
     path('skill-validation-list/<int:skl>/', views.skill_validate_list, name='SkillValidationList'),
     path('skill-education-list/<int:skl>/', views.skill_training_list_view, name='SkillEducationList'),
     path('skill-work-experience-list/<int:skl>/', views.skill_work_experience_list_view, name='SkillWorkExperienceList'),

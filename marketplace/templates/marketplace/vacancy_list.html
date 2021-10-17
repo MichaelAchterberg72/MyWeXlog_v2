@@ -37,7 +37,7 @@
       {% for s in pageitems %}
       <div class="container">
       <div class="row">
-      <div class="card mt-1 card-hover" style="width: 100%;" id="{{ s.id }}">
+      <div class="card mt-1" style="width: 100%;" id="{{ s.id }}">
       <div class="post-wrap">
       <div class="post">
       {% with id=s.id %}
@@ -65,7 +65,7 @@
 
       <div class="post-back" style="display:none;" id="newCard{{id}}">
 
-        <div class="card-body card-no-hover">
+        <div class="card-body small-pad">
           <div class="row" style="height: 20px;">
             <div class="col-md-12 h-100 my-auto">
               <div class="card-maximise float-right">

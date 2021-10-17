@@ -36,7 +36,9 @@
   <div>
     <div class="">
       {% if list_view %}
+      {% if pageitems %}
       {% include 'marketplace/list_view_headings.html' %}
+      {% endif %}
       {% for key in pageitems %}
       <div class="row">
         <div class="card mt-1 card-hover" style="width: 100%;">

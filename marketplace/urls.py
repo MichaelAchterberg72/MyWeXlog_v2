@@ -1,7 +1,6 @@
 from django.urls import path
 
-
-from .import views
+from . import views
 
 app_name = 'MarketPlace'
 
@@ -25,10 +24,12 @@ urlpatterns = [
     path('vacancy-edit/<slug:vac>/', views.VacancyEditView, name="VacancyEdit"),
     path('vacancy-edit-deliverables/<slug:vac>/', views.DeliverablesEditView, name='DeliverablesEdit'),
     path('vacancy-delete-deliverables/<int:pk>/', views.DeliverableDeleteView, name='DeliverablesDelete'),
+    path('vacancy-delete-certificate/<slug:vac>/<str:cert>/', views.CertificateDeleteView, name='CertificateDelete'),
     path('vacancy-delete-skill/<int:id>/', views.SkillDeleteView, name='SkillDelete'),
 
-    path('availabillity/', views.TalentAvailabillityView, name='Availabillity'),
+    path('availability/', views.TalentAvailabillityView, name='Availabillity'),
     path('v-detail/<slug:vac>/', views.VacancyDetailView, name='VacancyDetail'),
+    path('public/vacancy/<slug:vac>/', views.VacancyDetailPublicView, name='VacancyDetailPublic'),
     path('vp-detail/<slug:vac>/', views.VacancyDetailView_Profile, name='VacancyDetail_Profile'),
     path('apply/<slug:vac>/', views.WorkBidView, name='WorkBid'),
     path('history/', views.ApplicationHistoryView, name='History'),

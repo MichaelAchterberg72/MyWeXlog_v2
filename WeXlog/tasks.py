@@ -29,9 +29,10 @@ from WeXlog.app_config import (
     skill_pass_score,
 )
 
-from payments.tasks import FreeMonthExpiredTask
+from payments.tasks import FreeMonthExpiredTask, SubscriptionExpiredTask
 
 from users.models import CustomUser, CustomUserSettings, ExpandedView
+from Profile.models import Profile
 
 from talenttrack.models import (
         WorkExperience, Lecturer, ClassMates, WorkColleague, Superior, WorkClient,  WorkCollaborator, LicenseCertification
@@ -48,9 +49,10 @@ from invitations.models import Invitation
 
 
 @celery_app.task(name="UpdateSubscriptionPaidDate")
+#@periodic_task(run_every=(crontab(minute='*/2')), name="UpdateSubscriptionPaidDate", ignore_result=True)
 @periodic_task(run_every=(crontab(hour=0, minute=0)), name="UpdateSubscriptionPaidDate", ignore_result=True)
 def UpdateSubscriptionPaidDate():
-
+    now = timezone.now()
     monthly = datetime.timedelta(days=31, seconds=0, microseconds=0, milliseconds=0, minutes=0, hours=0)
     six_monthly = datetime.timedelta(days=183, seconds=0, microseconds=0, milliseconds=0, minutes=0, hours=0)
     twelve_monthly = datetime.timedelta(days=366, seconds=0, microseconds=0, milliseconds=0, minutes=0, hours=0)
@@ -59,23 +61,28 @@ def UpdateSubscriptionPaidDate():
 
     for u in users:
         username = CustomUser.objects.get(pk=u.id)
-        instance2 = ExpandedView.objects.get(talent=u.id)
+        instance2 = ExpandedView.objects.get(talent__id=u.id)
+
         if username.paid == True:
             if username.paid_type == 1:
-                if username.paid_date <= timezone.now() - monthly:
-                    username.paid = False
-                    username.subscription = 0
-                    if username.free_month == True:
-                        FreeMonthExpiredTask.delay(username)
-                        username.free_month = False
-                        instance2.trial_expired = False
-                    username.save()
-                    instance2.save()
-                    # send user an email to let them know the subscription has expired
-    #                SubscriptionExpiredTask.delay(username)
+                if username.date_joined <= now - monthly:
+                    if username.paid_date == None or username.paid_date <= timezone.now() - monthly:
+                        username.paid = False
+                        username.subscription = 0
+                        free_month_task = False
+                        if username.free_month == True:
+                            free_month_task = True
+                            FreeMonthExpiredTask.delay(username.pk)
+                            username.free_month = False
+                            instance2.trial_expired = False
+                        username.save()
+                        instance2.save()
+                        # send user an email to let them know the subscription has expired
+                        if free_month_task == False:
+                            SubscriptionExpiredTask.delay(username.pk)
 
             elif username.paid_type == 2:
-                if username.paid_date <= datetime.now() - six_monthly:
+                if username.paid_date <= timezone.now() - six_monthly:
                     username.paid = False
                     username.subscription = 0
                     if username.free_month == True:
@@ -84,10 +91,10 @@ def UpdateSubscriptionPaidDate():
                     username.save()
                     instance2.save()
                     # send user an email to let them know the subscription has expired
-    #                SubscriptionExpiredTask.delay(username)
+                    SubscriptionExpiredTask.delay(username.pk)
 
             elif username.paid_type == 3:
-                if username.paid_date <= datetime.now() - twelve_monthly:
+                if username.paid_date <= timezone.now() - twelve_monthly:
                     username.paid = False
                     username.subscription = 0
                     if username.free_month == True:
@@ -96,7 +103,7 @@ def UpdateSubscriptionPaidDate():
                     username.save()
                     instance2.save()
                     # send user an email to let them know the subscription has expired
-    #                SubscriptionExpiredTask.delay(username)
+                    SubscriptionExpiredTask.delay(username.pk)
         username.save()
         instance2.save()
 
@@ -165,10 +172,11 @@ def UpgradeRefunds():
 
 
 @celery_app.task(name="WeeklyUpdateEmail")
+#@periodic_task(run_every=(crontab(minute='*/2')), name="WeeklyUpdateEmail", ignore_result=True)
 @periodic_task(run_every=(crontab(day_of_week=1, hour=0, minute=0)), name="WeeklyUpdateEmail", ignore_result=True)
 def weekly_email():
-    user_settings = CustomUserSettings.objects.filter(Q(unsubscribe=False) & Q(receive_newsletter=True)).values_list('Talent__id')
-    users = CustomUser.objects.filter(id__icontains=user_settings)
+    user_settings = CustomUserSettings.objects.filter(Q(unsubscribe=False) & Q(receive_newsletter=True)).values_list('talent__id')
+    users = CustomUser.objects.filter(id__in=user_settings)
 
     for talent in users:
         username = CustomUser.objects.get(pk=talent.id)
@@ -176,8 +184,7 @@ def weekly_email():
         #Vacancies suited
         tlt = talent.id
         pfl = Profile.objects.filter(talent=talent)
-        TalentRequired.objects.filter()
-        # tr = TalentRequired.objects.filter(offer_status='O')
+
         tr = TalentRequired.objects.filter(offer_status='O')
         tr_count = tr.count()
         tr_emp = TalentRequired.objects.filter(requested_by=talent)
@@ -189,11 +196,25 @@ def weekly_email():
         wbt = WorkBid.objects.filter(Q(talent=talent) & Q(work__offer_status='O'))
         bsl = BidShortList.objects.filter(Q(talent=talent) & Q(scope__offer_status='O'))
         vv = set(VacancyViewed.objects.filter(Q(talent=talent) & Q(closed=True)).values_list('vacancy__id', flat=True))
-        vvv = VacancyViewed.objects.filter(Q(talent=request.user) & Q(viewed=True)).values_list('vacancy__id', flat=True).distinct()
-        vac_exp = ExpandedView.objects.get(talent=request.user)
+        vvv = VacancyViewed.objects.filter(Q(talent=talent) & Q(viewed=True)).values_list('vacancy__id', flat=True).distinct()
+        vac_exp = ExpandedView.objects.get(talent=talent)
         vacancies_suited_list_view = vac_exp.vacancies_suited_list
         #  vo = VacancyViewed.objects.filter(closed=False)
 
+
+        #Queryset caching<<<
+        tr_emp_count = tr_emp.count()
+        ipost = tr_emp.filter(offer_status='O').order_by('-bid_open')
+        ipost_list = ipost[:5]
+        ipost_count = ipost.count()
+        ipost_closed = tr_emp.filter(offer_status='C').order_by('-bid_open')
+        ipost_closed_list = ipost_closed[:5]
+        ipost_closed_count = ipost_closed.count()
+        ipost_bid = wb.filter(~Q(bidreview='D'))
+        ipost_bid_flat = ipost_bid.values_list('work', flat=True).distinct()
+    #    capacity = ta.filter(date_to__gte=timezone.now()).order_by('-date_to')[:5]
+
+        #Code for stacked lookup for talent's skills
 
         #>>>Create a set of all skills
         e_skill = we.filter(edt=True, score__gte=skill_pass_score).only('pk').values_list('pk', flat=True)
@@ -217,12 +238,16 @@ def weekly_email():
 
             skill_set = skill_set | d
 
-        skill_set = skill_set.distinct().order_by('skill')
+        skill_set = skill_set.distinct().order_by('skill')#all skills the talent has
+        skill_setv = skill_set.values_list('id', flat=True)#gets the id's of all the skills
         #Create a set of all skills<<<
 
         #>>>Experience Level check & list skills required in vacancies
-        tlt_lvl = pfl.values_list('exp_lvl__level', flat=True)
-        tlt_lvl = tlt_lvl[0]
+        tlt_lev = pfl.values_list('exp_lvl__level', flat=True)
+        try:
+            tlt_lvl = tlt_lev[0]
+        except:
+            tlt_lvl = 5
 
         #finds all vacancies that require talent's experience level and below
         vac_exp = tr.filter(experience_level__level__lte=tlt_lvl)
@@ -289,16 +314,17 @@ def weekly_email():
                 skl_lst.append(sk)
 
         ds = set()
-        matchd = set(skl_lst) #remove duplicates
+        matchd = set(skl_lst) #remove duplicates; these are the required skills
+
+        matchd = matchd.intersection(set(skill_setv))
 
         for item in matchd:
             display = set(sr.filter(
                     Q(skills__in=skl_lst)
                     & Q(scope__bid_closes__gte=timezone.now())).values_list('scope__id', flat=True))
+            ds = ds | display #set of all open vacancies
 
-            ds = ds | display
-
-        dsi = ds.intersection(req_experience)
+        dsi = ds.intersection(req_experience) #open vacancies which the talent qualifies for (certification, location)
 
         tot_vac = len(dsi)
         #remove the vacancies that have already been applied for
@@ -322,7 +348,7 @@ def weekly_email():
         suitable = tr.filter(id__in=dsi)
 
         rem_vac = suitable.count()
-        dsd = suitable[:5]
+        dsd = suitable[:10]
 
         #Experience Level check & list skills required in vacancies<<<
         if tot_len > 0:
@@ -369,6 +395,7 @@ def weekly_email():
                 'dsd': dsd,
                 'tr_count': tr_count,
                 'edu_req_lect': edu_req_lect,
+                'sum_req': sum_req,
                 'edu_req_cm': edu_req_cm,
                 'exp_req_clg': exp_req_clg,
                 'exp_req_sup': exp_req_sup,
@@ -382,7 +409,7 @@ def weekly_email():
                 'exp_req_clb_count': exp_req_clb_count,
                 'invitation_sent': invitation_sent,
                 'invitation_sent_count': invitation_sent_count,
-                'user': username.email,
+                'user': username,
                 'user_email': username.email,
                 }
             html_message = render_to_string('email/weekly/weekly_email_update.html', context)

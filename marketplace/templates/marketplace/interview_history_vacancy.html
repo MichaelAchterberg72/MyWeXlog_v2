@@ -25,7 +25,7 @@
           <strong>Vacancy Title</strong>
         </div>
         <div class="col-md-4 h-100 text-center my-auto">
-          <strong>System Vacancy Reference Number</strong>
+          <strong>MyWeXlog Vacancy Reference Number</strong>
         </div>
         <div class="col-md-4 h-100 text-center my-auto">
           <strong>Own Vacancy Reference Number</strong>
@@ -36,14 +36,14 @@
       <div class="mt-1" style="width: 100%;">
         <div class="card-body small-pad">
           <div class="row my-auto">
-            <div class="col-md-4 h-100 font-blue text-center my-auto">
-              <strong>{{ info.title }}</strong>
+            <div class="col-md-4 h-100 text-center my-auto">
+              {{ info.title }}
             </div>
-            <div class="col-md-4 h-100 font-blue text-center my-auto">
-              <strong>{{ info.ref_no }}</strong>
+            <div class="col-md-4 h-100 text-center my-auto">
+              {{ info.ref_no }}
             </div>
-            <div class="col-md-4 h-100 font-blue text-center my-auto">
-              <strong>{{ info.own_ref_no }}</strong>
+            <div class="col-md-4 h-100 text-center my-auto">
+              {{ info.own_ref_no }}
             </div>
           </div>
         </div>
@@ -143,8 +143,9 @@
         </div>
       </div>
     </div>
+  </div>
     {% empty %}
-      <p>You do not have any bookes read listed.</p>
+      <p>You do not have any books read listed.</p>
     {% endfor %}
 
     <nav aria-label="Page navigation">

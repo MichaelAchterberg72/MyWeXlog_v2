@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load scheduletags %}
+{% block head_title %}{% trans "Available Calendars" %}{% endblock %}
+{% block body %}
+
+
+<h2>{% trans "Schedule" %}</h2>
+{% with request.user.username as talent %}
+{% get_or_create_calendar request.user other_user.username as calendar %}
+{% endwith %}
+<h2>{% trans "Available Calendars" %}</h2>
+<ul>
+{% for cal in object_list %}
+<li><b>{{ cal }}</b> :
+  <a href="{% url "compact_calendar" cal.slug %}">{% trans "Small Month" %}</a> --
+  <a href="{% url "month_calendar" cal.slug %}">{% trans "1 Month" %}</a> --
+  <a href="{% url "tri_month_calendar" cal.slug %}">{% trans "3 Months" %}</a> --
+  <a href="{% url "year_calendar" cal.slug %}">{% trans "This Year" %}</a> --
+  <a href="{% url "week_calendar" cal.slug %}">{% trans "Weekly" %}</a> --
+  <a href="{% url "day_calendar" cal.slug %}">{% trans "Daily" %}</a> --
+  <a href="{% url "upcoming_events_feed" cal.id %}">{% trans "Feed" %}</a></li><br>
+{% endfor %}
+</ul>
+{% endblock %}

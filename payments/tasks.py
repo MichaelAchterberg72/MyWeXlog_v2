@@ -1,42 +1,35 @@
 from __future__ import absolute_import, unicode_literals
-from celery import Celery
-from celery.task import task
-from celery.task import Task
-from celery.decorators import task
-from celery import shared_task
-from tasks.celery import app as celery_app
+
+import os
+from datetime import date, datetime
 
 import celery
-
-from django.conf import settings
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
-from django.template.loader import get_template
-
 import sendgrid
-import os
+from celery import Celery, shared_task
+from celery.decorators import task
+from celery.task import Task, task
+from django.conf import settings
+from django.template.loader import get_template, render_to_string
+from django.utils.html import strip_tags
 from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import (Mail, Subject, To, ReplyTo, SendAt, Content, From, CustomArg, Header)
-
-
-from users.models import CustomUserSettings, CustomUser
+from sendgrid.helpers.mail import (Content, CustomArg, From, Header, Mail,
+                                   ReplyTo, SendAt, Subject, To)
 
 from paypal.standard.models import PayPalStandardBase
-
-from datetime import datetime
-from datetime import date
+from tasks.celery import app as celery_app
+from users.models import CustomUser, CustomUserSettings
 
 
 @celery_app.task(name="payments.FreeMonthExpiredTask")
 @shared_task
 def FreeMonthExpiredTask(username):
     talent = CustomUser.objects.get(pk=username)
-    context = {'user': username.first_name, 'user_email': username.email }
+    context = {'user': talent.first_name, 'user_email': talent.email }
     html_message = render_to_string('email_templates/email_free_trial_expired.html', context)
 
     message = Mail(
         from_email = (settings.SENDGRID_FROM_EMAIL, 'MyWeXlog Notification'),
-        to_emails = username.email,
+        to_emails = talent.email,
         subject = 'Your Free Month Trial Subscription has Expired',
         plain_text_content = strip_tags(html_message),
         html_content = html_message)
@@ -54,15 +47,15 @@ def FreeMonthExpiredTask(username):
 
 @celery_app.task(name="payments.SubscriptionExpiredTask")
 @shared_task
-def SubscriptionExpiredTask(tlt):
+def SubscriptionExpiredTask(username):
 
-    username = CustomUser.objects.get(pk=tlt)
-    context = {'user': username.first_name, 'user_email': username.email }
+    talent = CustomUser.objects.get(pk=username)
+    context = {'user': talent.first_name, 'user_email': talent.email }
     html_message = render_to_string('email_templates/email_subscription_expired.html', context)
 
     message = Mail(
         from_email = settings.SENDGRID_FROM_EMAIL,
-        to_emails = username.email,
+        to_emails = talent.email,
         subject = 'Your Subscription has Expired',
         plain_text_content = strip_tags(html_message),
         html_content = html_message)

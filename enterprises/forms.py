@@ -1,26 +1,16 @@
-from django import forms
-from django.contrib.auth.models import User
-from django.utils.encoding import force_text
-from django.forms.widgets import TextInput
-
-from django.contrib.admin.widgets import FilteredSelectMultiple
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, Row, Column
+from crispy_forms.layout import Column, Layout, Row, Submit
+from django import forms
+from django.contrib.admin.widgets import FilteredSelectMultiple
+from django.contrib.auth.models import User
+from django.forms.widgets import TextInput
+from django.utils.encoding import force_text
+from django_select2.forms import (ModelSelect2TagWidget, ModelSelect2Widget,
+                                  Select2MultipleWidget, Select2Widget)
 
+from locations.models import City, Region, Suburb
 
-from django_select2.forms import (
-    ModelSelect2TagWidget, ModelSelect2Widget, Select2MultipleWidget,
-    Select2Widget
-)
-
-
-from .models import (
-            Industry, Enterprise, BranchType, Branch, PhoneNumber,
-            )
-
-from locations.models import (
-            Region, City, Suburb
-)
+from .models import Branch, BranchType, Enterprise, Industry, PhoneNumber
 
 
 class PhoneNumberForm(forms.ModelForm):
@@ -105,11 +95,61 @@ class BranchForm(forms.ModelForm):
             'industry': IndSelect2Widget(),
         }
 
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        company = cleaned_data.get("company")
+        name = cleaned_data.get("name")
+        city = cleaned_data.get("city")
+
+        if Branch.objects.filter(company = company, city = city, name = name).count() > 0:
+            del cleaned_data["company"]
+            del cleaned_data["name"]
+            del cleaned_data["city"]
+            raise ValidationError("This combination of Company, Name and City already exists! Please enter another combination or select the existing combination.")
+
+        return cleaned_data
+
 
 class FullBranchForm(forms.ModelForm):
+    '''This form is used when adding a branch from the talenttrack app'''
+    class Meta:
+        model = Branch
+        fields = ('name', 'type', 'size', 'phy_address_line1', 'phy_address_line2', 'country', 'region', 'city', 'suburb', 'code', 'industry',)
+
+        widgets={
+            'region': RegionSelect2Widget(),
+            'city': CitySelect2Widget(),
+            'suburb': SuburbSelect2Widget(),
+            #'company': CompanySelect2Widget(),
+            'industry': IndSelect2Widget(),
+        }
+
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        company = cleaned_data.get("company")
+        name = cleaned_data.get("name")
+        city = cleaned_data.get("city")
+
+        if Branch.objects.filter(company = company, city = city, name = name).count() > 0:
+            del cleaned_data["company"]
+            del cleaned_data["name"]
+            del cleaned_data["city"]
+
+            raise ValidationError("This combination of Company, Name and City already exists! Please enter another combination or select the existing combination.")
+
+        return cleaned_data
+
+
+class FullBranchHome(forms.ModelForm):
+    '''This form is used from the Enterprise home page'''
     class Meta:
         model = Branch
         fields = ('company', 'name', 'type', 'size', 'phy_address_line1', 'phy_address_line2', 'country', 'region', 'city', 'suburb', 'code', 'industry',)
+
         widgets={
             'region': RegionSelect2Widget(),
             'city': CitySelect2Widget(),
@@ -117,6 +157,22 @@ class FullBranchForm(forms.ModelForm):
             'company': CompanySelect2Widget(),
             'industry': IndSelect2Widget(),
         }
+
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        company = cleaned_data.get("company")
+        name = cleaned_data.get("name")
+        city = cleaned_data.get("city")
+
+        if Branch.objects.filter(company = company, city = city, name = name).count() > 0:
+            del cleaned_data["company"]
+            del cleaned_data["name"]
+            del cleaned_data["city"]
+            raise ValidationError("This combination of Company, Name and City already exists! Please enter another combination or select the existing combination.")
+
+        return cleaned_data
 
 
 class IndustryPopUpForm(forms.ModelForm):
@@ -147,7 +203,7 @@ class EnterprisePopupForm(forms.ModelForm):
         als = company_passed
 
         if als in pwd:
-            raise forms.ValidationError("A company with this name already exists! Please enter another name.")
+            raise ValidationError("A company with this name already exists! Please enter another name.")
         return company_passed
 
 
@@ -162,3 +218,19 @@ class EnterpriseBranchPopupForm(forms.ModelForm):
             'company': CompanySelect2Widget(),
             'industry': IndSelect2Widget(),
         }
+
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        company = cleaned_data.get("company")
+        name = cleaned_data.get("name")
+        city = cleaned_data.get("city")
+
+        if Branch.objects.filter(company = company, city = city, name = name).count() > 0:
+            del cleaned_data["company"]
+            del cleaned_data["name"]
+            del cleaned_data["city"]
+            raise ValidationError("This combination of Company, Name and City already exists! Please enter another combination or select the existing combination.")
+
+        return cleaned_data

@@ -9,27 +9,81 @@
 {% block content %}
 <div class="card card-shadow">
   <div class="card-body">
-    <h3>List a ClassMate to Confirm your course attendance</h3>
+    <h3>Select a classmate to confirm your course attendance</h3>
+    <br>
+    <div class="container">
+    <div class="row">
+      <center>
+      <span>
+        <button type="button" class="btn btn-primary" name="button" style="width:9rem;cursor:auto;">
+          Capture
+        </button>
+      </span>
+      <span class="text-center">
+        <i class="fa fa-arrow-right" aria-hidden="true"></i>
+      </span>
+      <span>
+        <a href="{% url 'Talent:LecturerSelect' instance.slug %}?next={{ request.path|urlencode }}" class="btn btn-outline-success" style="width:14rem;" data-toggle="tooltip" title="The person that gave the course">
+          Select<br>Lecturer
+        </a>
+      </span>
+      <span class="text-center">
+        <i class="fa fa-arrow-right" aria-hidden="true"></i>
+      </span>
+      <span>
+        <button type="button" class="btn btn-success" name="button" style="width:14rem;cursor:auto;" data-toggle="tooltip" title="People that attended the course with you">
+          Select<br>Classmate
+        </button>
+      </span>
+      <span class="text-center">
+        <i class="fa fa-arrow-right" aria-hidden="true"></i>
+      </span>
+      <span>
+        <a href="{% url 'Talent:EducationDetail' instance.slug %}?next={{ request.path|urlencode }}" class="btn btn-outline-success" style="width:14rem;" data-toggle="tooltip" title="Exit this process and review what you have captured">
+          Exit &<br>Review
+        </a>
+      </span>
+      <span class="text-center">
+        <i class="fa fa-arrow-right" aria-hidden="true"></i>
+      </span>
+      <span>
+        <a href="{% url 'Talent:Home' %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width:9rem;"  data-toggle="tooltip" title="Exit this process and return to the Experience home page">
+          Exit
+        </a>
+      </span>
+      </center>
+    </div>
+    </div>
+    <hr>
     <form method="post">
     <!--   <input type="hidden" name="next" value="{{ request.GET.next }}"> -->
       {% csrf_token %}
+      <div style="background-color:red; color:white;">
+        <p>
+
+          {{ form.non_field_errors }}
+        </p>
+      </div>
       <div class="form-row">
         <div class="form-group col-md-7 mb-0">
           {{ form.colleague|as_crispy_field }}
         <div class="">
           <p>
-            <button type="submit" name="another" class="btn btn-secondary">
+            <button type="submit" name="another" class="btn btn-secondary" style="width:12rem;"  data-toggle="tooltip" title="Save this classmate and add another one">
               Save & Add Another
             </button>
-            <button type="submit" name="done" class="btn btn-primary">
-              Save & Next
+            <button type="submit" name="done" class="btn btn-primary" style="width:12rem;"  data-toggle="tooltip" title="Save this classmate and exit to the Experience home page">
+              Save & Exit
             </button>
-            <a href="{% url 'Invitation:Invite2' instance.slug %}?next={{ request.path|urlencode }}" class="btn btn-info" target="_blank">
-              Invite
+            <a href="{% url 'Talent:EducationDetail' instance.slug %}?next={{ request.path|urlencode }}" class="btn btn-success" style="width:12rem;"  data-toggle="tooltip" title="Save this classmate and review what you have captured">
+              Save & Review
             </a>
           </p>
           <p>
-            <a href="{% url 'Talent:Home' %}" class="btn btn-danger">
+            <a href="{% url 'Invitation:Invite2' instance.slug %}?next={{ request.path|urlencode }}" class="btn btn-info" target="_blank" style="width:12rem;" data-toggle="tooltip" title="Invite a classmate that is not subscribed to MyWeXlog">
+              Invite
+            </a>
+            <a href="{% url 'Talent:Home' %}" class="btn btn-danger" style="width:6rem;" data-toggle="tooltip" title="Skip classmate selection and exit to the Experience home page">
               Skip
             </a>
           </p>
@@ -37,6 +91,9 @@
       </form>
         </div>
         <div class="form-group col-md-5 mb-0">
+          <p>
+            Each person confirming your claim has a score associated with the confirmation. The greater the seniority of the person the higher the value of the score their confirmation receives.
+          </p>
           <p>
             All claimed experience, in order to appear in your profile, must have a confirmation score of 3 or more.
           </p>

@@ -7,23 +7,26 @@
 
 <div class="card card-shadow">
   <div class="card-body">
-  <h4 class="">List of hours worked on {{ projectdata.name }}!</h4>
+  <h4 class="">List of companies worked on {{ projectdata.name }}!</h4>
 
       {% if request.user.is_authenticated %}
       <p><a href="{% url 'Project:ProjectAdd' %}" class="badge badge-pill badge-primary">Add Project</a><a href="{% url 'Project:ProjectHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">Back</a></p>
       {% endif %}
-    <p>There are currently {{ hr.sum_t|intcomma }} hours spent working on project {{ projectdata.name }}.</p>
+    <p>There are currently <strong>{{ hr.sum_t|floatformat:0|intcomma }}</strong> hours spent working on project {{ projectdata.name }}.</p>
 
     <div class="container">
       <div class="row my-auto">
-        <div class="col-md-6 h-100 text-center my-auto">
+        <div class="col-md-4 h-100 text-center my-auto">
           <strong>Company Name</strong>
         </div>
         <div class="col-md-3 h-100 text-center my-auto">
-          <strong>Date Complete</strong>
+          <strong>Last Date Captured</strong>
         </div>
         <div class="col-md-3 h-100 text-center my-auto">
-          <strong>Hours Spent</strong>
+          <strong>Total Hours Spent</strong>
+        </div>
+        <div class="col-md-2 h-100 text-center my-auto">
+          <strong>Detail</strong>
         </div>
       </div>
     </div>
@@ -32,14 +35,17 @@
       <div class="card mt-1 card-hover" style="width: 100%;">
         <div class="card-body small-pad">
           <div class="row my-auto">
-            <div class="col-md-6 h-100 text-center my-auto">
+            <div class="col-md-4 h-100 text-center my-auto">
               {{ p.company }}
             </div>
             <div class="col-md-3 h-100 text-center my-auto">
               {{ p.date_to }}
             </div>
             <div class="col-md-3 h-100 text-center my-auto">
-              {{ p.hours_worked|intcomma }}
+              {{ p.hours_worked|floatformat:0|intcomma }}
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              <a href="{% url 'Project:TltOnProject' p.prj p.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary float-right" style="width: 5rem;">See Detail</a>
             </div>
           </div>
         </div>

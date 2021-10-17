@@ -1,0 +1,123 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+
+{% block title %}{{block.super}}-Books Read List{% endblock title %}
+
+{% block content %}
+</div>
+<div class="jumbotron public-profile-jumbotron-header" style="color:#000;background-color:#303030">
+  <div class="row">
+    <div class="col-md-2">
+    </div>
+    <div class="col-md-8">
+      <h4 class="profile-header" id="top" style="color:#fff;">MyWexlog Public Profile<br>{{ pfl.f_name }} {{ pfl.l_name }}</h4>
+    </div>
+    <div class="col-md-2 my-auto">
+      <div class="container ">
+        <a href="{% url 'Talent:PublicProfile' ppl %}?next={{ request.path|urlencode }}#books" class="btn btn-primary float-right">Back</a>
+      </div>
+    </div>
+  </div>
+</div>
+    <br>
+    <div class="container">
+    <div class="container">
+    <h4 class="profile-header">MyWexlog Books Read History</h4>
+    <div class="profile-card-under">{% if bkl_count > 0 %}Total Books Read: {{ bkl_count }}{% else %}No Books Read with MyWeXlog yet{% endif %}</div>
+    <br>
+    <br>
+    {% for b in pageitems %}
+      <div class="row">
+        <div class="col-md-3">
+          <div class="profile-list-header">{{ b.date|date:"j M Y" }}</div><br>
+          <div class="profile-list-under">{{ b.type }}</div>
+        </div>
+        <div class="col-md-9 border-left">
+          <div class="col-md-12">
+            <div class="profile-list-heading">{{ b.book }}</div><br>
+            <div class="profile-list-heading-under">{{ b.book.author.all|join:", " }}</div><br>
+            {% if b.book.link %}
+            <div class=""><a href="{{ b.book.link }}" target="_blank">{{ b.book.link }}</a></div><br>
+            {% endif %}
+            {% if b.review %}
+            <div class="" id="bookDisc1{{b.pk}}" style="display:block;">
+              {{ b.review|safe|truncatechars:460 }}<br>
+              {% if b.review|length > 460 %}
+              <button class="float-right" type="button" id="readMoreBook{{b.pk}}">Read More ..</button><br>
+              {% endif %}
+            </div>
+            <div class="" id="bookDisc2{{b.pk}}" style="display:none;">
+              {{ b.review|safe }}<br>
+              <button class="float-right" type="button" id="readLessBook{{b.pk}}">Read Less ..</button><br>
+            </div><br>
+
+            {% if b.review|length > 460 %}
+            <script>
+              var readMoreBook = document.getElementById('readMoreBook{{b.pk}}');  // 1
+              readMoreBook.addEventListener('click', function() {   // 3
+                 bookDisc1{{b.pk}}.style.display = 'none';
+                 bookDisc2{{b.pk}}.style.display = 'block';          // 4
+              });
+              var readLessBook = document.getElementById('readLessBook{{b.pk}}');  // 1
+              readLessBook.addEventListener('click', function() {  // 3
+                bookDisc1{{b.pk}}.style.display = 'block';
+                bookDisc2{{b.pk}}.style.display = 'none';
+                bookDisc1{{b.pk}}.scrollIntoView();              // 4
+              });
+
+            </script>
+            {% endif %}
+            {% endif %}
+          </div>
+          <br><br><br>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  </div>
+  <br>
+  <div class="container">
+
+<div class="row header-border">
+  <div class="col-md-12">
+    <nav aria-label="Page navigation">
+        {% if pageitems.has_other_pages %}
+          <ul class="pagination">
+            {% if pageitems.has_previous %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ pageitems.previous_page_number }}" aria-label="Previous">
+                  <span aria-hidden="true">Previous</span>
+                  <span class="sr-only disabled">Previous</span>
+                </a></li>
+            {% else %}
+              <li class="page-link disabled" tabindex="-1"><span>Previous</span></li>
+            {% endif %}
+
+            {% if pageitems.number|add:'-4' > 1 %}
+              <li class="page-link"><a href="?page={{ pageitems.number|add:'-5' }}">&hellip;</a></li>
+            {% endif %}
+
+            {% for i in pageitems.paginator.page_range %}
+              {% if pageitems.number == i %}
+                <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
+              {% elif i > pageitems.number|add:'-5' and i < pageitems.number|add:'5' %}
+                <li class="page-link"><a class="page-item" href="?page={{ i }}">{{ i }}</a></li>
+              {% endif %}
+            {% endfor %}
+
+            {% if pageitems.paginator.num_pages > pageitems.number|add:'4' %}
+              <li class="page-link"><a href="?page={{ pageitems.number|add:'5' }}">&hellip;</a></li>
+            {% endif %}
+
+            {% if pageitems.has_next %}
+              <li class="page-link"><a href="?page={{ pageitems.next_page_number }}">Next</a></li>
+            {% else %}
+              <li class="page-link disabled"><span>Next</span></li>
+            {% endif %}
+          </ul>
+        {% endif %}
+    </nav>
+  </div>
+</div>
+{% endblock content %}

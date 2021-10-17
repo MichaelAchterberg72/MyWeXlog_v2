@@ -14,9 +14,67 @@
   <div class="card card-shadow">
     <div class="card-body">
     <h3>Identify a client to confirm your claimed experience</h3>
+    <p>
+      <small>
+        Please ensure that the "Company" as well as the "Branch" has been captured in the <a href="{% url 'Enterprise:EnterpriseHome' %}" target="_blank">Enterprise</a> page first. Refresh this page once the company and branch have been added. The company and branch will then be available in the respective fields.
+      </small>
+    </p>
+    <br>
+    <div class="container">
+    <div class="row">
+      <center>
+      <span>
+        <button type="button" class="btn btn-primary" name="button" style="width:7rem;cursor:auto;">Capture</button>
+      </span>
+      <span class="text-center">
+        <i class="fa fa-arrow-right" aria-hidden="true"></i>
+      </span>
+      <span>
+        <a href="{% url 'Talent:ColleagueSelect' instance.pk %}?next={{ request.path|urlencode }}" class="btn btn-outline-success" style="width:8rem;">Select<br>Colleagues</a>
+      </span>
+      <span class="text-center">
+        <i class="fa fa-arrow-right" aria-hidden="true"></i>
+      </span>
+      <span>
+        <a href="{% url 'Talent:SuperiorSelect' instance.pk %}?next={{ request.path|urlencode }}" class="btn btn-outline-success" style="width:8rem;">Select<br>Superiors</a>
+      </span>
+      <span class="text-center">
+        <i class="fa fa-arrow-right" aria-hidden="true"></i>
+      </span>
+      <span>
+        <a href="{% url 'Talent:CollaboratorSelect' instance.pk %}?next={{ request.path|urlencode }}" class="btn btn-outline-success" style="width:8rem;">Select<br>Collaborator</a>
+      </span>
+      <span class="text-center">
+        <i class="fa fa-arrow-right" aria-hidden="true"></i>
+      </span>
+      <span>
+        <button type="button" class="btn btn-success" name="button" style="width:10rem;cursor:auto;">Select<br>Client</button>
+      </span>
+      <span class="text-center">
+        <i class="fa fa-arrow-right" aria-hidden="true"></i>
+      </span>
+      <span>
+        <a href="{% url 'Talent:ExperienceDetail' instance.slug %}?next={{ request.path|urlencode }}" class="btn btn-outline-success" style="width:8rem;">Exit &<br>Review</a>
+      </span>
+      <span class="text-center">
+        <i class="fa fa-arrow-right" aria-hidden="true"></i>
+      </span>
+      <span>
+        <a href="{% url 'Talent:Home' %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width:7rem;">Exit</a>
+      </span>
+      </center>
+    </div>
+    </div>
+    <hr>
     <form method="post">
     <!--   <input type="hidden" name="next" value="{{ request.GET.next }}"> -->
       {% csrf_token %}
+      <div style="background-color:red; color:white;">
+        <p>
+
+          {{ form.non_field_errors }}
+        </p>
+      </div>
       <div class="form-row">
         <div class="form-group col-md-7 mb-0">
           {{ form.client_name|as_crispy_field }}
@@ -31,10 +89,23 @@
             <a href="{% url 'Enterprise:BranchAddPop' %}" id='add_branch' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add a Branch</a>
             </p>
           <div class="">
-            <p><button type="submit" name="another" class="btn btn-secondary">Save & Add Another</button> <button type="submit" name="done" class="btn btn-primary">Save & Next</button>  <a href="{% url 'Invitation:Invite2' instance.slug %}?next={{ request.path|urlencode }}" class="btn btn-info" target="_blank">Invite</a></p>
+            <p>
+              <button type="submit" name="another" class="btn btn-secondary" style="width:12rem;">
+                Save & Add Another
+              </button>
+              <button type="submit" name="done" class="btn btn-primary" style="width:12rem;">
+                Save & Exit
+              </button>
+              <button type="submit" name="review" class="btn btn-success" style="width:12rem;">
+                Save & Review
+              </button>
+            </p>
           </div>
         </div>
         <div class="form-group col-md-5 mb-0">
+          <p>
+            Each person confirming your claim has a score associated with the confirmation. The greater the seniority of the person the higher the value of the score their confirmation receives.
+          </p>
           <p>
             All claimed experience, in order to appear in your profile, must have a confirmation score of 3 or more.
           </p>
@@ -51,13 +122,16 @@
       </div>
     </form>
     <p>
-      <a href="{% url 'Talent:Home' %}" class="btn btn-danger">Skip</a>
+      <a href="{% url 'Invitation:Invite2' instance.slug %}?next={{ request.path|urlencode }}" class="btn btn-info" target="_blank" style="width:12rem;">
+        Invite
+      </a>
+      <a href="{% url 'Talent:Home' %}" class="btn btn-danger" style="width:6rem;">Skip</a>
     </p>
   </div>
 </div>
 {% endblock content %}
 {% block Script %}
-  {{ form.media.js }}
+    {{ form.media.js }}
 
   <script>
     $(document).ready(function () {

@@ -1,17 +1,13 @@
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-
-
-from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
-
-from .models import CustomUserSettings, CustomUser
 from Profile.models import Profile
 
-
-from .forms import CustomUserSettingsForm, RightToSayNoForm, PrivacyPolicyForm, UserAgreementForm
+from .forms import (CustomUserSettingsForm, PrivacyPolicyForm,
+                    RightToSayNoForm, UserAgreementForm)
+from .models import CustomUser, CustomUserSettings
 
 
 @login_required

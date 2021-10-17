@@ -1,9 +1,11 @@
-from django.db import models
 from django.conf import settings
+from django.db import models
+
+from tinymce.models import HTMLField
 
 from db_flatten.models import SkillTag
-
 from Profile.utils import create_code9
+
 
 class Author(models.Model):
     name = models.CharField('Author name', max_length=250, unique=True)
@@ -27,7 +29,7 @@ class Publisher(models.Model):
 
 
 class Genre(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
 
     def clean(self):
         self.name = self.name.title()
@@ -79,6 +81,7 @@ class ReadBy(models.Model):
     book = models.ForeignKey(BookList, on_delete=models.PROTECT)
     type = models.ForeignKey(Format, on_delete=models.PROTECT, verbose_name='Book Format')
     date = models.DateField('Date Finished')
+    review = HTMLField(blank=True, null=True)
 
     class Meta:
         unique_together = (('talent','book'),)

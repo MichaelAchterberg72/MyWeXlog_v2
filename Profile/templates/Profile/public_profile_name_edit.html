@@ -1,0 +1,82 @@
+{% extends 'base_home.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}My {{block.super}} Profile Edit{% endblock title %}
+
+
+{% block content %}
+<div class="card card-shadow">
+  <div class="card-body">
+<h3>Edit Your Public Profile Names</h3>
+
+<form method="post">
+  <input type="hidden" name="next" value="{{ request.GET.next }}">
+  {% csrf_token %}
+  <div style="background-color:red; color:white;">
+    <p>
+
+      {{ form.non_field_errors }}
+    </p>
+  </div>
+      <div class="form-row">
+        <div class="form-group col-md-12 mb-0">
+          <div class="form-row">
+            <div class="form-group col-md-6 mb-0">
+              {{ form.public_profile_name|as_crispy_field }}
+              * No spaces or special characters are allowed<br>
+              ** We allocate a random generated code, you may adjust as you feel fit keeping in mind that this field must be unique
+            </div>
+            <div class="form-group col-md-6 mb-0">
+              <br>
+              {{ form.permit_viewing_of_profile_as_reference|as_crispy_field }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="">
+        <p>
+          <a href="{% url 'Profile:ProfileView' %}" class="btn btn-danger">
+            Cancel
+          </a>
+          <button type="submit" name="Done" class="btn btn-primary">
+            Save
+          </button>
+        </p>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock content %}
+{% block Script %}
+
+<!-- code for popups -->
+<script type="text/javascript">
+var namefield = document.querySelector('[name="public_profile_name"]');
+
+namefield.addEventListener('keypress', function ( event ) {
+   var key = event.keyCode;
+    if (key === 32) {
+      event.preventDefault();
+    }
+});
+
+function showAddPopup(triggeringLink) {
+    var name = triggeringLink.id.replace(/^add_/, '');
+    href = triggeringLink.href;
+    var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes');
+    win.focus();
+    return false;
+}
+
+function closePopup(win, newID, newRepr, id) {
+    $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
+    win.close();
+}
+
+window.onerror = function (msg) {
+  $("body").attr("JSError", msg);
+}
+</script>
+{% endblock Script %}

@@ -18,19 +18,17 @@
       <div class="container">
         <div class="row my-auto">
           <div class="col-md-3 h-100 text-center my-auto">
-            <strong>Employer</strong>
-          </div>
-          <div class="col-md-1 h-100 text-center my-auto">
-            <strong>Date from</strong>
-          </div>
-          <div class="col-md-1 h-100 text-center my-auto">
-            <strong>Date to</strong>
+            <strong>
+              Employer<br><small>Date: From - To</small>
+            </strong>
           </div>
           <div class="col-md-1 h-100 text-center my-auto">
             <strong>Hours</strong>
           </div>
-          <div class="col-md-4 h-100 text-center my-auto">
-            <strong>Project</strong>
+          <div class="col-md-5 h-100 text-center my-auto">
+            <strong>
+              Project<br>Experience Title
+            </strong>
           </div>
           <div class="col-md-1 h-100 text-center my-auto">
             <strong>Score</strong>
@@ -46,28 +44,32 @@
           <div class="card-body small-pad">
             <div class="row my-auto">
               <div class="col-md-3 h-100 text-center my-auto">
-                {{ e.company }}
-              </div>
-              <div class="col-md-1 h-100 text-center my-auto">
-                {{ e.date_from|date:"j M Y" }}
-              </div>
-              <div class="col-md-1 h-100 text-center my-auto">
-                {{ e.date_to|date:"j M Y" }}
+                {{ e.company }}<br>
+                <small>{{ e.date_from|date:"j M Y" }} to {{ e.date_to|date:"j M Y" }}</small>
               </div>
               <div class="col-md-1 h-100 text-center my-auto">
                 {{ e.hours_worked|intcomma }}
               </div>
-              <div class="col-md-4 h-100 text-center my-auto">
-                {{ e.project }}
+              <div class="col-md-5 h-100 text-center my-auto">
+                {{ e.project }}<br>{{ e.title }}
               </div>
               <div class="col-md-1 h-100 text-center my-auto">
-                <span data-toggle="tooltip" data-placement="top" title="A score > 3 is required to achieve a 'confirmed' status">{{ e.score }}</span>
+                <span data-toggle="tooltip" data-placement="top" title="A score > 3 is required to achieve a 'confirmed' status">
+                  {{ e.score }}
+                </span>
               </div>
               <div class="col-1 col-no-pad h-100 text-left my-auto">
-                  <a href="{% url 'Talent:ExperienceDetail' e.slug %}" class="badge badge-pill badge-secondary"  style="width: 5rem;">Detail</a>
-                  <form  action="{% url 'Talent:WEFDelete' e.id %}" method="post">
+                  <a href="{% url 'Talent:ExperienceDetail' e.slug %}" class="badge badge-pill badge-secondary"  style="width: 6rem;">
+                    Detail
+                  </a>
+                  <a href="{% url 'Talent:ExperienceReCapture' e.slug %}" class="badge badge-pill badge-success"  style="width: 6rem;">
+                    Claim Again
+                  </a>
+                  <form action="{% url 'Talent:WEFDelete' e.id %}" method="post">
                     {% csrf_token %}
-                    <button type="submit" class="badge badge-danger badge-pill" style="width: 5rem;">Remove</button>
+                    <button type="submit" class="badge badge-danger badge-pill" style="width: 6rem;">
+                      Remove
+                    </button>
                   </form>
               </div>
             </div>

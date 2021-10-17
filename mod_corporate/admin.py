@@ -1,8 +1,6 @@
 from django.contrib import admin
 
-from .models import (
-    CorporateStaff, OrgStructure,
-    )
+from .models import CorporateStaff, OrgStructure
 
 
 @admin.register(OrgStructure)

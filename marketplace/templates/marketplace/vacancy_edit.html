@@ -18,41 +18,65 @@
   <div class="card card-shadow">
     <div class="card-body">
       <div class="container">
-
         <h3>
-          Edit Vacancy (Ref: {{ instance.ref_no }})<span><p class="float-right">
-          <a href="{% url 'MarketPlace:VacancyPost' instance.ref_no %}" class="btn btn-primary">Back</a>
-          <a href="{% url 'MarketPlace:HelpPostVacancy' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="yooltip" title="Click here for help on this page!">
-            <i class="fa fa-question-circle"></i></a>
-          </p></span>
+          Edit Vacancy (Ref: {{ instance.ref_no }})
+          <span>
+            <p class="float-right">
+              <a href="{% url 'MarketPlace:VacancyPost' instance.ref_no %}" class="btn btn-primary">
+                Back
+              </a>
+              <a href="{% url 'MarketPlace:HelpPostVacancy' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="yooltip" title="Click here for help on this page!">
+                <i class="fa fa-question-circle"></i>
+              </a>
+            </p>
+          </span>
         </h3>
-
         <form method="post" id="BranchForm" enctype="multipart/form-data">
           {% csrf_token %}
+          <div style="background-color:red; color:white;">
+            <p>
+              {{ form.non_field_errors }}
+            </p>
+          </div>
           <div class="form-row">
             <div class="form-group col-md-6 mb-0">
               {{ form.title|as_crispy_field }}
+              <p>
+                <br>
+              </p>
               {{ form.own_ref_no|as_crispy_field }}
+              <p>
+                <br>
+              </p>
               {{ form.designation|as_crispy_field }}
               <p>
-                <a href="{% url 'Talent:DesignationAddPop' %}" id='add_designation' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">
+                <a href="{% url 'Talent:DesignationAddPop' %}" id='add_designation' onclick='return showAddPopup(this);'>
+                  <img src = "{% static 'images/icon-addlink.svg' %}">
                   Add Designation
                 </a>
               </p>
               {{ form.companybranch|as_crispy_field }}
-              <p><a href="{% url 'Enterprise:BranchAddPop' %}" id='add_branch' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add a Company Branch</a></p>
+              <p>
+                <a href="{% url 'Enterprise:FullBranchAddPopup' %}" id='add_branch' onclick='return showAddPopup(this);'>
+                  <img src = "{% static 'images/icon-addlink.svg' %}">
+                  Add a Company Branch
+                </a>
+              </p>
               <div class="form-row">
-                <div class="form-group col-md-6 mb-0">
+                <div class="form-group col-md-4 mb-0" data-toggle="tooltip" data-placement="top" title="Leave empty if advertising a permanent position.">
                   {{ form.date_deadline|as_crispy_field }}
                 </div>
-                <div class="form-group col-md-6 mb-0">
+                <div class="form-group col-md-3 mb-0" data-toggle="tooltip" data-placement="top" title="Is this a permanent position (Tick for 'Yes')">
+                  {{ form.permpos|as_crispy_field }}
+                </div>
+                <div class="form-group col-md-4 mb-0">
                   {{ form.bid_closes|as_crispy_field }}
                 </div>
               </div>
             </div>
             <div class="form-group col-md-6 mb-0">
               <div class="form-row">
-                <div class="form-group col-md-2 mb-0">
+                <div class="form-group col-md-2 mb-0" data-toggle="tooltip" data-placement="top" title="Leave blank for a permanent position an select 'Permanent Position' in the 'Unit' field">
                   {{ form.hours_required|as_crispy_field }}
                 </div>
                 <div class="form-group col-md-5 mb-0">
@@ -60,13 +84,21 @@
                 </div>
                 <div class="form-group col-md-5 mb-0">
                   {{ form.experience_level|as_crispy_field }}
-                  <a href="{% url 'MarketPlace:HelpExperienceLevel' %}" target="_blank" class="float-right"><i class="fa fa-flag" aria-hidden="true" style="font-size:20px;color:black" data-toggle="tooltip" title="Breakdown of Experience levels"></i></a>
+                  <p class="text-center">
+                    <a href="{% url 'MarketPlace:HelpExperienceLevel' %}" target="_blank">
+                      <i class="fa fa-flag" aria-hidden="true" style="font-size:20px;color:black" data-toggle="tooltip" title="Breakdown of Experience levels"></i>
+                    </a>
+                  </p>
                 </div>
               </div>
               <div class="form-row">
                 <div class="form-group col-md-4 mb-0">
                   {{ form.currency|as_crispy_field }}
-                  <p><a href="{% url 'Location:CurrencyAddPop' %}" id='add_currency' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add Currency</a></p>
+                  <p>
+                    <a href="{% url 'Location:CurrencyAddPop' %}" id='add_currency' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">
+                      Add Currency
+                    </a>
+                  </p>
                 </div>
                 <div class="form-group col-md-4 mb-0">
                   {{ form.rate_offered|as_crispy_field }}
@@ -76,21 +108,35 @@
                 </div>
               </div>
               <div class="form-row">
-                <div class="form-group col-md-4 mb-0">
-                  {{ form.worklocation|as_crispy_field }}
-                  <a href="{% url 'MarketPlace:HelpWorkCOnfigeration' %}" target="_blank" class="float-left"><i class="fa fa-flag" aria-hidden="true" style="font-size:20px;color:black" data-toggle="tooltip" title="Breakdown of work configurations"></i></a>
-                </div>
-                <div class="form-group col-md-4 mb-0">
+                <div class="form-group col-md-6 mb-0">
                   {{ form.city|as_crispy_field }}
-                  <p><a href="{% url 'Location:CityAddPop' %}" id='add_city' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add City or Town</a></p>
+                  <p>
+                    <a href="{% url 'Location:CityAddPop' %}" id='add_city' onclick='return showAddPopup(this);'>
+                    <img src = "{% static 'images/icon-addlink.svg' %}">
+                      Add City or Town
+                    </a>
+                  </p>
                 </div>
-                <div class="form-group col-md-4 mb-0">
+                <div class="form-group col-md-6 mb-0">
                   {{ form.language|as_crispy_field }}
-                  <a href="{% url 'Profile:LanguagePop' %}" id='add_language' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add a Language</a>
+                  <p>
+                    <a href="{% url 'Profile:LanguagePop' %}" id='add_language' onclick='return showAddPopup(this);'>
+                      <img src = "{% static 'images/icon-addlink.svg' %}">
+                      Add a Language
+                    </a>
+                  </p>
                 </div>
               </div>
               <div class="form-row">
-                <div class="form-group col-md-4 mb-0">
+                <div class="form-group col-md-6 mb-0">
+                  {{ form.worklocation|as_crispy_field }}
+                  <p class="text-center">
+                    <a href="{% url 'MarketPlace:HelpWorkCOnfigeration' %}" target="_blank">
+                      <i class="fa fa-flag" aria-hidden="true" style="font-size:20px;color:black" data-toggle="tooltip" title="Breakdown of work configurations"></i>
+                    </a>
+                  </p>
+                </div>
+                <div class="form-group col-md-6 mb-0">
                   {{ form.offer_status|as_crispy_field }}
                 </div>
             </div>
@@ -99,10 +145,18 @@
           <div class="form-row">
             <div class="form-group col-md-9 mb-0">
               {{ form.certification|as_crispy_field }}
-              <p><a href="{% url 'Talent:ResultAddPop' %}" id='add_course' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add a Certification</a></p>
+              <p>
+                <a href="{% url 'Talent:ResultAddPop' %}" id='add_course' onclick='return showAddPopup(this);'>
+                  <img src = "{% static 'images/icon-addlink.svg' %}">
+                  Add a Certification
+                </a>
+              </p>
             </div>
             <div class="form-group col-md-3 mb-0">
               {{ form.terms|as_crispy_field }}
+              <small>
+                Only <strong>PDF</strong> files are allowed to be uploaded
+              </small>
             </div>
           </div>
           <div class="form-row">
@@ -114,7 +168,14 @@
             </div>
           </div>
           <div class="">
-            <p><a href="{% url 'MarketPlace:VacancyPost' instance.ref_no %}" class="btn btn-danger">Cancel</a> <button type="submit" name="done" class="btn btn-primary">Save</button></p>
+            <p>
+              <a href="{% url 'MarketPlace:VacancyPost' instance.ref_no %}" class="btn btn-danger">
+                Cancel
+              </a>
+              <button type="submit" name="done" class="btn btn-primary">
+                Save
+              </button>
+            </p>
           </div>
         </form>
       </div>
@@ -122,6 +183,7 @@
   </div>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 {{ form.media.js }}
+{{ form.media }}
 {% endblock content %}
 {% block Script %}
 <!-- code for popups -->

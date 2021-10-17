@@ -1,7 +1,6 @@
-from django.db import models
 from django.conf import settings
+from django.db import models
 from django.utils import timezone
-from Profile.utils import create_code9
 
 from Profile.utils import create_code9
 
@@ -15,6 +14,7 @@ class FeedBack(models.Model):
         ('F','Request Feature'),
         ('C','Complaint'),
         ('M','Compliance'),
+        ('M','I Got A Job'),
     )
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     date_captured = models.DateTimeField(auto_now_add=True)
