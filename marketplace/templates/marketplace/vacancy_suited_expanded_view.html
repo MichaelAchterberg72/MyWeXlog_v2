@@ -112,19 +112,22 @@
   <div class="row">
   <div class="col-md-12 h-100 my-auto">
     <div class="float-right">
-      {% if request.user.subscription >= 2 %}
-      <a href="{% url 'MarketPlace:VacancyDetail' s.ref_no %}" class="btn btn-outline-secondary" target="_blank" style="width:10rem;">See Detail</a>
-      {% else %}
-      <p><a href="{% url 'Payments:ActiveSubscription' %}" class="btn btn-outline-secondary float-right" style="width:10rem;" data-toggle="tooltip" data-placement="top" title="Active subscription required to see vacancy detail">See Detail</a></p>
-      {% endif %}
-      {% if request.user.subscription >= 2 %}
-      <form  action="{% url 'Chat:NewChat' tlt=s.requested_by.alias %}" method="post" name="active" target="_blank">
-      {% csrf_token %}
-      <button type="submit" class="btn btn-outline-success" style="width: 10rem;">Chat</button>
-      </form>
-      {% else %}
-      <a href="{% url 'Payments:ActiveSubscription' %}" class="btn btn-outline-success" data-toggle="tooltip" title="An Active subscription is required to initiate a chat" style="width: 10rem;">Chat</a>
-      {% endif %}
+      <div class="row">
+        {% if request.user.subscription >= 2 %}
+        <form  action="{% url 'Chat:NewChat' tlt=s.requested_by.alias %}" method="post" name="active" target="_blank">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-success" style="width: 10rem;">Chat</button>
+        </form>
+        {% else %}
+        <a href="{% url 'Payments:ActiveSubscription' %}" class="btn btn-outline-success" data-toggle="tooltip" title="An Active subscription is required to initiate a chat" style="width: 10rem;">Chat</a>
+        {% endif %}&nbsp
+        {% if request.user.subscription >= 2 %}
+        <a href="{% url 'MarketPlace:VacancyDetail' s.ref_no %}" class="btn btn-outline-secondary" target="_blank" style="width:10rem;">See Detail</a>
+        {% else %}
+        <p><a href="{% url 'Payments:ActiveSubscription' %}" class="btn btn-outline-secondary float-right" style="width:10rem;" data-toggle="tooltip" data-placement="top" title="Active subscription required to see vacancy detail">See Detail</a></p>
+        {% endif %}
+
+      </div>
     </div>
   </div>
 </div>
