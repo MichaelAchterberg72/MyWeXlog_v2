@@ -20,6 +20,9 @@
   <div class="card-body">
     <div class="card card-shadow text-center">
       <div class="card-body">
+        <a href="{% url 'Skills:SkillFilter' %}" class="btn btn-primary float-right">
+          Skills Filter
+        </a>
       <h4 class="">MyWeXlog Skills</h4>
       <p>
         On this page you can see skills that have been logged on MyWeXlog as well as skills that are in demand from posted vacancies.
@@ -30,6 +33,7 @@
         <small>
           (Claimed between {{ total_hours.min|date:"j F Y" }} and {{ total_hours.max|date:"j F Y" }})
         </small>
+
       </p>
       </div>
     </div>
