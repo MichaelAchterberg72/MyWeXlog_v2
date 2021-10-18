@@ -7,7 +7,14 @@
 <div class="card card-shadow">
   <div class="card-body">
   <div class="btn-toolbar float-right">
-
+    {% if request.user.subscription >= 2 %}
+    <form  action="{% url 'Chat:NewChat' tlt=v.requested_by.alias %}" method="post" name="active" target="_blank">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-success" style="width: 10rem;">Chat</button>
+    </form>
+    {% else %}
+    <a href="{% url 'Payments:ActiveSubscription' %}" class="btn btn-success" data-toggle="tooltip" title="An Active subscription is required to initiate a chat" style="width: 10rem;">Chat</a>
+    {% endif %}&nbsp
     {% if v.offer_status == 'O' %}
       {% if applied %}
         <button type="button" name="button" class="btn btn-danger">Already Applied</button>
@@ -151,9 +158,22 @@
     </tr>
   </tbody>
 </table>
-
+<div class="row">
+  <div class="col-sm-12 text-center">
+    <h6>
+      <strong>Certifications Required for this Vacancy</strong>
+    </h6>
+    <p>
+    {% for cert in v.certification.all %}
+      <strong>|</strong>{{ cert }}<strong>|</strong>
+    {% empty %}
+        <small>No certifications required for this vacancy.</small>
+    {% endfor %}
+    </p>
+  </div>
+</div>
 {% endfor %}
-
+<hr>
 <div class="row">
   <div class="col-sm-12">
     <div class="h-100">

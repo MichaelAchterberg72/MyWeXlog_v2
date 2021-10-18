@@ -12,6 +12,14 @@
       {% csrf_token %}
       <button type="submit" class="btn btn-secondary">Back</button>
     </form>&nbsp
+    {% if request.user.subscription >= 2 %}
+    <form  action="{% url 'Chat:NewChat' tlt=v.requested_by.alias %}" method="post" name="active" target="_blank">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-success" style="width: 10rem;">Chat</button>
+    </form>
+    {% else %}
+    <a href="{% url 'Payments:ActiveSubscription' %}" class="btn btn-success" data-toggle="tooltip" title="An Active subscription is required to initiate a chat" style="width: 10rem;">Chat</a>
+    {% endif %}&nbsp
     {% if v.offer_status == 'O' %}
       {% if applied %}
         <button type="button" name="button" class="btn btn-danger">Already Applied</button>
