@@ -164,7 +164,7 @@ def skill_form_filter_view(request):
                     qs_3c = qs_3a.count()
 
                     if is_valid_queryparam(qs_skill4):
-                        qs_4 = qs_3.filter(Q(workexperience__skills__in=qs_skill4) & & Q(workexperience__score__gte=3))
+                        qs_4 = qs_3.filter(Q(workexperience__skills__in=qs_skill4) & Q(workexperience__score__gte=3))
                         qs_4a = qs_4.annotate(sum_4=Sum('workexperience__hours_worked'), max_4=Max('workexperience__date_to'), min_4=Min('workexperience__date_from')).order_by('-sum_4')
                         qs_4c = qs_4a.count()
         else:
