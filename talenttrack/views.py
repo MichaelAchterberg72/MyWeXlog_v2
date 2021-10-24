@@ -4761,7 +4761,7 @@ def ActiveProfileView(request, tlt, vac):
 
     #Project Summary
     prj = exp.values_list('project', flat=True).distinct('project')
-    prj_set = {}
+    prj_summ_set = {}
     for p in prj:
         if p == None:
             pass
@@ -4791,7 +4791,8 @@ def ActiveProfileView(request, tlt, vac):
 
             project_q = project_qs.filter(pk=p).values_list('name', 'company__ename', 'companybranch__name')
             project_f = f'{project_q[0][0]}: {project_q[0][1]} ({project_q[0][2]})'
-            prj_set[project_f] = info_set
+            prj_summ_set[project_f] = info_set
+
 
     '''MyWeXlog Projects History Section'''
     wit_qs = WorkIssuedTo.objects.filter(Q(talent__alias=tlt) & Q(assignment_complete_emp=True)).order_by('-date_complete').values_list('slug', flat=True)[:5]
@@ -5286,7 +5287,7 @@ def ActiveProfileView(request, tlt, vac):
         #Mywexlog jobs history`
         'wcp': wcp, 'wcp_count': wcp_count,
         #Designatiom, Com0pany and Project validation Summary
-        'dgn_set': dgn_set, 'tlt': tlt, 'cmp_set': cmp_set, 'prj_set': prj_set,
+        'dgn_set': dgn_set, 'tlt': tlt, 'cmp_set': cmp_set, 'prj_summ_set': prj_summ_set,
         #General Information
         'als': als,
         #Employment History

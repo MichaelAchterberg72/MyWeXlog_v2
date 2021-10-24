@@ -2,6 +2,7 @@
 {% load static %}
 {% load humanize %}
 {% load thumbnail %}
+{% load talenttracktags %}
 {% block title %}{{block.super}}- {{ als.alias }} Profile{% endblock title %}
 
 {% block content %}
@@ -540,7 +541,7 @@
     </div>
   </div>
   {% endif %}
-  {% if prj_set.items %}
+  {% if prj_summ_set.items %}
   <br><br>
   <div class="row">
     <div class="col-md-12 profile-uploads-box align-items-top h-100">
@@ -1882,7 +1883,7 @@
                           <div class="row pt-3 h-100 my-auto">
                             <div class="col-md-12 text-left my-auto">
                               <div class="">
-                                <span class="">{{ c.wec.0.0|linebreaks|truncatechars:390 }}</span>
+                                <span class="">{{ c.wec.0.0|replacenames|linebreaks|truncatechars:390 }}</span>
                               </div>
                             </div>
                           </div>
@@ -1919,7 +1920,7 @@
                           {% endif %}
                           <div class="row pt-3 h-100 my-auto">
                             <div class="col-md-12 text-left my-auto">
-                              {{ c.wec.0.0|linebreaks }}
+                              {{ c.wec.0.0|replacenames|linebreaks }}
                             </div>
                           </div>
 
@@ -1942,13 +1943,13 @@
                               <div id="cli_pr">
                               {% if cli.cli_comments.0.3 %}
                               <div class="" id="coDisc1Cli{{cli.cli_comments.0.5}}" style="display:block;">
-                                {{ cli.cli_comments.0.3|linebreaks|truncatechars:460 }}<br>
+                                {{ cli.cli_comments.0.3|replacenames|linebreaks|truncatechars:460 }}<br>
                                 {% if cli.cli_comments.0.3|length > 460 %}
                                 <a class="font-blue pointer float-right" type="submit" id="readMoreCli{{cli.cli_comments.0.5}}">Read More ..</a>
                                 {% endif %}
                               </div>
                               <div class="" id="coDisc2Cli{{cli.cli_comments.0.5}}" style="display:none;">
-                                {{ cli.cli_comments.0.3|linebreaks }}
+                                {{ cli.cli_comments.0.3|replacenames|linebreaks }}
                                 <a class="font-blue pointer float-right" type="submit" id="readLessCli{{cli.cli_comments.0.5}}">Read Less ..</a>
                               </div>
 
@@ -1993,13 +1994,13 @@
                               <div id="sup_pr">
                               {% if sup.sup_comments.0.3 %}
                               <div class="" id="coDisc1Sup{{sup.sup_comments.0.5}}" style="display:block;">
-                                {{ sup.sup_comments.0.3|linebreaks|truncatechars:460 }}<br>
+                                {{ sup.sup_comments.0.3|replacenames|linebreaks|truncatechars:460 }}<br>
                                 {% if sup.sup_comments.0.3|length > 460 %}
                                 <a class="font-blue pointer float-right" type="submit" id="readMoreSup{{sup.sup_comments.0.5}}">Read More ..</a>
                                 {% endif %}
                               </div>
                               <div class="" id="coDisc2Sup{{sup.sup_comments.0.5}}" style="display:none;">
-                                {{ sup.sup_comments.0.3|linebreaks }}
+                                {{ sup.sup_comments.0.3|replacenames|linebreaks }}
                                 <a class="font-blue pointer float-right" type="submit" id="readLessSup{{sup.sup_comments.0.5}}">Read Less ..</a>
                               </div>
 
@@ -2045,13 +2046,13 @@
                               <div id="clg_pr">
                               {% if clg.clg_comments.0.3 %}
                               <div class="" id="coDisc1Clg{{clg.clg_comments.0.5}}" style="display:block;">
-                                {{ clg.clg_comments.0.3|linebreaks|truncatechars:460 }}<br>
+                                {{ clg.clg_comments.0.3|replacenames|linebreaks|truncatechars:460 }}<br>
                                 {% if clg.clg_comments.0.3|length > 460 %}
                                 <a class="font-blue pointer float-right" type="submit" id="readMoreClg{{clg.clg_comments.0.5}}">Read More ..</a>
                                 {% endif %}
                               </div>
                               <div class="" id="coDisc2Clg{{clg.clg_comments.0.5}}" style="display:none;">
-                                {{ clg.clg_comments.0.3|linebreaks }}
+                                {{ clg.clg_comments.0.3|replacenames|linebreaks }}
                                 <a class="font-blue pointer float-right" type="submit" id="readLessClg{{clg.clg_comments.0.5}}">Read Less ..</a>
                               </div>
 
@@ -2096,13 +2097,13 @@
                               <div id="clb_pr">
                               {% if clb.clb_comments.0.3 %}
                               <div class="" id="coDisc1Clg{{clb.clb_comments.0.5}}" style="display:block;">
-                                {{ clb.clb_comments.0.3|linebreaks|truncatechars:460 }}<br>
+                                {{ clb.clb_comments.0.3|replacenames|linebreaks|truncatechars:460 }}<br>
                                 {% if clb.clb_comments.0.3|length > 460 %}
                                 <a class="font-blue pointer float-right" type="submit" id="readMoreClb{{clb.clb_comments.0.5}}">Read More ..</a>
                                 {% endif %}
                               </div>
                               <div class="" id="coDisc2Clb{{clb.clb_comments.0.5}}" style="display:none;">
-                                {{ clb.clb_comments.0.3|linebreaks }}
+                                {{ clb.clb_comments.0.3|replacenames|linebreaks }}
                                 <a class="font-blue pointer float-right" type="submit" id="readLessClb{{clb.clb_comments.0.5}}">Read Less ..</a>
                               </div>
 
