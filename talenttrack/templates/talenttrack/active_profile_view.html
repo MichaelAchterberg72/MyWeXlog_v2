@@ -22,9 +22,9 @@
 
 <div class="wrap-1">
 {% if background_pic %}
-<img class="d-block w-100" src="{{ background_pic.url }}" height="662" style="opacity:0.7;--bg-overlay-color:#e1e1ef;" alt="MyWexlog Profile for {{ talent.first_name }} {{ talent.last_name }}">
+<img class="d-block w-100" src="{{ background_pic.url }}" height="662" style="opacity:0.7;--bg-overlay-color:#e1e1ef;" alt="MyWexlog Profile for {{ talent.alias }}">
 {% else %}
-<img class="d-block w-100" src="{% static 'images/business.jpg' %}" height="662" style="opacity:0.7;--bg-overlay-color:#e1e1ef;" alt="MyWexlog Profile for {{ talent.first_name }} {{ talent.last_name }}">
+<img class="d-block w-100" src="{% static 'images/business.jpg' %}" height="662" style="opacity:0.7;--bg-overlay-color:#e1e1ef;" alt="MyWexlog Profile for {{ talent.alias }}">
 {% endif %}
 </div>
 <div class="container">
@@ -72,6 +72,20 @@
         <a href="#skill" class="btn btn-outline-success btn-lg" style="width:12rem;">Skills</a>
       </div>
       </div>
+      {% if request.user.alias != tlt %}
+      <div class="row pt-2">
+        <div class="col-md-5">
+          {% if request.user.subscription >= 2 %}
+          <form  action="{% url 'Chat:NewChat' tlt=talent.alias %}" method="post" name="active" target="_blank">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-success btn-lg" style="width: 12rem;">Chat</button>
+          </form>
+          {% else %}
+          <a href="{% url 'Payments:ActiveSubscription' %}" class="btn btn-success btn-lg" data-toggle="tooltip" title="An Active subscription is required to initiate a chat" style="width: 12rem;">Chat</a>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
       <br>
       <div class="row">
         <div class="col-md-6 text-left">
@@ -280,6 +294,7 @@
   </div>
 </div>
 </div>
+{% if vac != '1ad9t2' %}
 <div class="row">
   <div class="col-md-12 profile-uploads-box text-center align-items-top h-100">
 
@@ -367,6 +382,7 @@
 <br><br>
 <br>
 <br>
+{% endif %}
   <div class="row">
     <div class="col-md-12 profile-uploads-box text-center align-items-top h-100">
       <div class="card profile-card">
@@ -488,7 +504,7 @@
   <br><br>
   <div class="row">
     <div class="col-md-12 profile-uploads-box align-items-top h-100">
-      <h4 class="profile-header text-center" id="designation">Company Summary</h4>
+      <h4 class="profile-header text-center" id="company">Company Summary</h4>
       <p class="text-center">This is a list of the validated time spent by {% if request.user.alias == tlt %} you {% else %} <strong>{{ tlt }}</strong> {% endif%}at various companies.</p>
       <div class="profile-card-body mb-auto">
         <div class="row h-100 my-auto">
@@ -545,7 +561,7 @@
   <br><br>
   <div class="row">
     <div class="col-md-12 profile-uploads-box align-items-top h-100">
-      <h4 class="profile-header text-center" id="designation">Project Summary</h4>
+      <h4 class="profile-header text-center" id="prj_summ">Project Summary</h4>
       <p class="text-center">This is a list of the validated time spent by {% if request.user.alias == tlt %} you {% else %} <strong>{{ tlt }}</strong> {% endif%}on various Projects.</p>
       <div class="profile-card-body mb-auto">
         <div class="row h-100 my-auto">
@@ -570,7 +586,7 @@
             <strong>Hours<br>Confirmed</strong>
           </div>
         </div>
-      {% for key in prj_set.items %}
+      {% for key in prj_summ_set.items %}
       <div class="row h-100 my-auto">
         {% if request.user.alias == tlt %}
         <div class="col-md-6 float-right">
@@ -1938,8 +1954,8 @@
                           <div class="row pt-3 h-100 my-auto">
                             <div class="col-md-12 text-left my-auto">
                               {% if cli.cli_link.0.1 == True %}
-                              <a href="{% url 'Talent:PublicProfile' cli.cli_link.0.0 %}" target="_blank">
-                              <strong>{{ cli.cli_comments.0.0 }} {{ cli.cli_comments.0.1 }}, {{ cli.cli_comments.0.4 }}</strong></a>{% else %}<strong>{{ cli.cli_comments.0.0 }} {{ cli.cli_comments.0.1 }}, {{ cli.cli_comments.0.4 }}</strong>{% endif %} &nbsp&nbsp&nbsp&nbsp&nbspDated: <strong>{{ cli.cli_comments.0.2 }}</strong><br>
+                              <a href="{% url 'Talent:APV' tlt=cli.cli_comments.0.6 vac='1ad9t2' %}?next={{ request.path|urlencode }}" target="_blank">
+                              <strong>{{ cli.cli_comments.0.6 }}, {{ cli.cli_comments.0.4 }}</strong></a>{% else %}<strong>{{ cli.cli_comments.0.6 }}, {{ cli.cli_comments.0.4 }}</strong>{% endif %} &nbsp&nbsp&nbsp&nbsp&nbspDated: <strong>{{ cli.cli_comments.0.2 }}</strong><br>
                               <div id="cli_pr">
                               {% if cli.cli_comments.0.3 %}
                               <div class="" id="coDisc1Cli{{cli.cli_comments.0.5}}" style="display:block;">
@@ -1989,8 +2005,8 @@
                           <div class="row pt-3 h-100 my-auto">
                             <div class="col-md-12 text-left my-auto">
                               {% if sup.sup_link.0.1 == True %}
-                              <a href="{% url 'Talent:PublicProfile' sup.sup_link.0.0 %}" target="_blank">
-                              <strong>{{ sup.sup_comments.0.0 }} {{ sup.sup_comments.0.1 }}, {{ sup.sup_comments.0.4 }}</strong></a>{% else %}<strong>{{ sup.sup_comments.0.0 }} {{ sup.sup_comments.0.1 }}, {{ sup.sup_comments.0.4 }}</strong>{% endif %} &nbsp&nbsp&nbsp&nbsp&nbspDated: <strong>{{ sup.sup_comments.0.2 }}</strong><br>
+                              <a href="{% url 'Talent:APV' tlt=sup.sup_comments.0.6 vac='1ad9t2' %}?next={{ request.path|urlencode }}" target="_blank">
+                              <strong>{{ sup.sup_comments.0.6 }}, {{ sup.sup_comments.0.4 }}</strong></a>{% else %}<strong>{{ sup.sup_comments.0.6 }}, {{ sup.sup_comments.0.4 }}</strong>{% endif %} &nbsp&nbsp&nbsp&nbsp&nbspDated: <strong>{{ sup.sup_comments.0.2 }}</strong><br>
                               <div id="sup_pr">
                               {% if sup.sup_comments.0.3 %}
                               <div class="" id="coDisc1Sup{{sup.sup_comments.0.5}}" style="display:block;">
@@ -2041,8 +2057,8 @@
                           <div class="row pt-3 h-100 my-auto">
                             <div class="col-md-12 text-left my-auto">
                               {% if clg.clg_link.0.1 == True %}
-                              <a href="{% url 'Talent:PublicProfile' clg.clg_link.0.0 %}" target="_blank">
-                              <strong>{{ clg.clg_comments.0.0 }} {{ clg.clg_comments.0.1 }}, {{ clg.clg_comments.0.4 }}</strong></a>{% else %}<strong>{{ clg.clg_comments.0.0 }} {{ clg.clg_comments.0.1 }}, {{ clg.clg_comments.0.4 }}</strong>{% endif %} &nbsp&nbsp&nbsp&nbsp&nbspDated: <strong>{{ clg.clg_comments.0.2 }}</strong><br>
+                              <a href="{% url 'Talent:APV' tlt=clg.clg_comments.0.6 vac='1ad9t2' %}?next={{ request.path|urlencode }}" target="_blank">
+                              <strong>{{ clg.clg_comments.0.6 }}, {{ clg.clg_comments.0.4 }}</strong></a>{% else %}<strong>{{ clg.clg_comments.0.6 }}, {{ clg.clg_comments.0.4 }}</strong>{% endif %} &nbsp&nbsp&nbsp&nbsp&nbspDated: <strong>{{ clg.clg_comments.0.2 }}</strong><br>
                               <div id="clg_pr">
                               {% if clg.clg_comments.0.3 %}
                               <div class="" id="coDisc1Clg{{clg.clg_comments.0.5}}" style="display:block;">
@@ -2092,8 +2108,8 @@
                           <div class="row pt-3 h-100 my-auto">
                             <div class="col-md-12 text-left my-auto">
                               {% if clb.clb_link.0.1 == True %}
-                              <a href="{% url 'Talent:PublicProfile' clb.clb_link.0.0 %}" target="_blank">
-                              <strong>{{ clb.clb_comments.0.0 }} {{ clb.clb_comments.0.1 }}, {{ clb.clb_comments.0.4 }}</strong></a>{% else %}<strong>{{ clb.clb_comments.0.0 }} {{ clb.clb_comments.0.1 }}, {{ clb.clb_comments.0.4 }}</strong>{% endif %} &nbsp&nbsp&nbsp&nbsp&nbspDated: <strong>{{ clb.clb_comments.0.2 }}</strong><br>
+                              <a href="{% url 'Talent:APV' tlt=clb.clb_comments.0.6 vac='1ad9t2' %}?next={{ request.path|urlencode }}" target="_blank">
+                              <strong>{{ clb.clb_comments.0.6 }}, {{ clb.clb_comments.0.4 }}</strong></a>{% else %}<strong>{{ clb.clb_comments.0.6 }}, {{ clb.clb_comments.0.4 }}</strong>{% endif %} &nbsp&nbsp&nbsp&nbsp&nbspDated: <strong>{{ clb.clb_comments.0.2 }}</strong><br>
                               <div id="clb_pr">
                               {% if clb.clb_comments.0.3 %}
                               <div class="" id="coDisc1Clg{{clb.clb_comments.0.5}}" style="display:block;">

@@ -5142,7 +5142,7 @@ def ActiveProfileView(request, tlt, vac):
                     cli = wcli_qs.filter(experience__pk=s).order_by('-date_confirmed').values_list('pk', flat=True).distinct()
                     cli_list = list(cli)
                     for i in cli_list:
-                        cli_comments = wcli_qs.filter(Q(experience__pk=s) & Q(pk=i)).values_list('client_name__first_name', 'client_name__last_name', 'date_confirmed', 'comments', 'designation__name', 'pk')
+                        cli_comments = wcli_qs.filter(Q(experience__pk=s) & Q(pk=i)).values_list('client_name__first_name', 'client_name__last_name', 'date_confirmed', 'comments', 'designation__name', 'pk', 'client_name__alias')
                         cli_link = wcli_qs.filter(Q(experience__pk=s) & Q(pk=i)).values_list('client_name__public_profile_name', 'client_name__permit_viewing_of_profile_as_reference')
                         cli_result = {'cli_comments': cli_comments, 'cli_link': cli_link}
                         cli_pr.append(cli_result)
@@ -5151,7 +5151,7 @@ def ActiveProfileView(request, tlt, vac):
                     sup = wsp_qs.filter(experience__pk=s).order_by('-date_confirmed').values_list('pk', flat=True).distinct()
                     sup_list = list(sup)
                     for i in sup_list:
-                        sup_comments = wsp_qs.filter(Q(experience__pk=s) & Q(pk=i)).values_list('superior_name__first_name', 'superior_name__last_name', 'date_confirmed', 'comments', 'designation__name', 'pk')
+                        sup_comments = wsp_qs.filter(Q(experience__pk=s) & Q(pk=i)).values_list('superior_name__first_name', 'superior_name__last_name', 'date_confirmed', 'comments', 'designation__name', 'pk', 'superior_name__alias')
                         sup_link = wsp_qs.filter(Q(experience__pk=s) & Q(pk=i)).values_list('superior_name__public_profile_name', 'superior_name__permit_viewing_of_profile_as_reference')
                         sup_result = {'sup_comments': sup_comments, 'sup_link': sup_link}
                         sup_pr.append(sup_result)
@@ -5160,7 +5160,7 @@ def ActiveProfileView(request, tlt, vac):
                     clg = wclg_qs.filter(experience__pk=s).order_by('-date_confirmed').values_list('pk', flat=True).distinct()
                     clg_list = list(clg)
                     for i in clg_list:
-                        clg_comments = wclg_qs.filter(Q(experience__pk=s) & Q(pk=i)).values_list('colleague_name__first_name', 'colleague_name__last_name', 'date_confirmed', 'comments', 'designation__name', 'pk')
+                        clg_comments = wclg_qs.filter(Q(experience__pk=s) & Q(pk=i)).values_list('colleague_name__first_name', 'colleague_name__last_name', 'date_confirmed', 'comments', 'designation__name', 'pk', 'colleague_name__alias')
                         clg_link = wclg_qs.filter(Q(experience__pk=s) & Q(pk=i)).values_list('colleague_name__public_profile_name', 'colleague_name__permit_viewing_of_profile_as_reference')
                         clg_result = {'clg_comments': clg_comments, 'clg_link': clg_link}
                         clg_pr.append(clg_result)
@@ -5169,7 +5169,7 @@ def ActiveProfileView(request, tlt, vac):
                     clb = wlb_qs.filter(experience__pk=s).order_by('-date_confirmed').values_list('pk', flat=True).distinct()
                     clb_list = list(clb)
                     for i in clb_list:
-                        clb_comments = wlb_qs.filter(Q(experience__pk=s) & Q(pk=i)).values_list('collaborator_name__first_name', 'collaborator_name__last_name', 'date_confirmed', 'comments', 'designation__name', 'pk')
+                        clb_comments = wlb_qs.filter(Q(experience__pk=s) & Q(pk=i)).values_list('collaborator_name__first_name', 'collaborator_name__last_name', 'date_confirmed', 'comments', 'designation__name', 'pk', 'collaborator_name__alias')
                         clb_link = wlb_qs.filter(Q(experience__pk=s) & Q(pk=i)).values_list('collaborator_name__public_profile_name', 'collaborator_name__permit_viewing_of_profile_as_reference')
                         clb_result = {'clb_comments': clb_comments, 'clb_link': clb_link}
                         clb_pr.append(clb_result)

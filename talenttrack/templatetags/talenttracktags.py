@@ -1,6 +1,7 @@
 import phonenumbers
 from django import template
 import nltk
+#TODO
 #nltk.download('punkt')
 import truecase
 import spacy
@@ -8,9 +9,6 @@ from spacy.matcher import Matcher
 
 nlp = spacy.load("en_core_web_sm")
 nlp.add_pipe("merge_entities")
-
-#import spacy
-#nlp = spacy.load("en_core_web_sm")
 
 register = template.Library()
 
