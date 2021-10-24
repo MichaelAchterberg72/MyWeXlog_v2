@@ -273,7 +273,7 @@ DATABASES = {
         #'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'wexlog_chat', #'Wexlog_Home', #'test_load', #,
         'USER': 'postgres',
-		'PASSWORD': 'rdf8tm1234', #MA
+		'PASSWORD': 'netscape', #MA
         'HOST': 'localhost',
         #'HOST': 'dbhost',
         'PORT': '5432'

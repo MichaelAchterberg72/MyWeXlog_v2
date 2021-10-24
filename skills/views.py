@@ -149,44 +149,44 @@ def skill_form_filter_view(request):
 
     if is_valid_queryparam(qs_country) or is_valid_queryparam(qs_region):
         if is_valid_queryparam(qs_skill1):
-            qs_1 = get_talent(qs_l).filter(workexperience__skills__in=qs_skill1)
+            qs_1 = get_talent(qs_l).filter(Q(workexperience__skills__in=qs_skill1) & Q(workexperience__score__gte=3))
             qs_1a = qs_1.annotate(sum_1=Sum('workexperience__hours_worked'), max_1=Max('workexperience__date_to'), min_1=Min('workexperience__date_from')).order_by('-sum_1')
             qs_1c = qs_1a.count()
 
             if is_valid_queryparam(qs_skill2):
-                qs_2 = qs_1.filter(workexperience__skills__in=qs_skill2)
+                qs_2 = qs_1.filter(Q(workexperience__skills__in=qs_skill2) & Q(workexperience__score__gte=3))
                 qs_2a = qs_2.annotate(sum_2=Sum('workexperience__hours_worked'), max_2=Max('workexperience__date_to'), min_2=Min('workexperience__date_from')).order_by('-sum_2')
                 qs_2c = qs_2a.count()
 
                 if is_valid_queryparam(qs_skill3):
-                    qs_3 = qs_2.filter(workexperience__skills__in=qs_skill3)
+                    qs_3 = qs_2.filter(Q(workexperience__skills__in=qs_skill3) & Q(workexperience__score__gte=3))
                     qs_3a = qs_3.annotate(sum_3=Sum('workexperience__hours_worked'), max_3=Max('workexperience__date_to'), min_3=Min('workexperience__date_from')).order_by('-sum_3')
                     qs_3c = qs_3a.count()
 
                     if is_valid_queryparam(qs_skill4):
-                        qs_4 = qs_3.filter(workexperience__skills__in=qs_skill4)
+                        qs_4 = qs_3.filter(Q(workexperience__skills__in=qs_skill4) & Q(workexperience__score__gte=3))
                         qs_4a = qs_4.annotate(sum_4=Sum('workexperience__hours_worked'), max_4=Max('workexperience__date_to'), min_4=Min('workexperience__date_from')).order_by('-sum_4')
                         qs_4c = qs_4a.count()
         else:
             msg = 'Please enter a value for "Skill 1"'
     else:
         if is_valid_queryparam(qs_skill1):
-            qs_1 = CustomUser.objects.filter(workexperience__skills__in=qs_skill1)
+            qs_1 = CustomUser.objects.filter(Q(workexperience__skills__in=qs_skill1) & Q(workexperience__score__gte=3))
             qs_1a = qs_1.annotate(sum_1=Sum('workexperience__hours_worked'), max_1=Max('workexperience__date_to'), min_1=Min('workexperience__date_from')).order_by('-sum_1')
             qs_1c = qs_1a.count()
 
             if is_valid_queryparam(qs_skill2):
-                qs_2 = qs_1.filter(workexperience__skills__in=qs_skill2)
+                qs_2 = qs_1.filter(Q(workexperience__skills__in=qs_skill2) & Q(workexperience__score__gte=3))
                 qs_2a = qs_2.annotate(sum_2=Sum('workexperience__hours_worked'), max_2=Max('workexperience__date_to'), min_2=Min('workexperience__date_from')).order_by('-sum_2')
                 qs_2c = qs_2a.count()
 
                 if is_valid_queryparam(qs_skill3):
-                    qs_3 = qs_2.filter(workexperience__skills__in=qs_skill3)
+                    qs_3 = qs_2.filter(Q(workexperience__skills__in=qs_skill3) & Q(workexperience__score__gte=3))
                     qs_3a = qs_3.annotate(sum_3=Sum('workexperience__hours_worked'), max_3=Max('workexperience__date_to'), min_3=Min('workexperience__date_from')).order_by('-sum_3')
                     qs_3c = qs_3a.count()
 
                     if is_valid_queryparam(qs_skill4):
-                        qs_4 = qs_3.filter(workexperience__skills__in=qs_skill4)
+                        qs_4 = qs_3.filter(Q(workexperience__skills__in=qs_skill4) & Q(workexperience__score__gte=3))
                         qs_4a = qs_4.annotate(sum_4=Sum('workexperience__hours_worked'), max_4=Max('workexperience__date_to'), min_4=Min('workexperience__date_from')).order_by('-sum_4')
                         qs_4c = qs_4a.count()
         else:

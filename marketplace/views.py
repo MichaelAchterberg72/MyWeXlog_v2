@@ -2578,11 +2578,13 @@ def VacancyPostView(request, vac):
     if vac_type == 'Remote freelance' or vac_type == 'Consultant':
         wel_i=wee
     else:
-        wel = set(PhysicalAddress.objects.filter(country=instance.city.country).values_list('talent', flat=True))
+        cty = Region.objects.get(city__city=instance.city).country
+
+        wel = set(PhysicalAddress.objects.filter(country=cty).values_list('talent', flat=True))
         #Willing to Relocate
 
-        ctry = Region.objects.get(region=instance.city.region)
-        wtr = set(WillingToRelocate.objects.filter(country=ctry.country).values_list('talent', flat=True))
+        
+        wtr = set(WillingToRelocate.objects.filter(country=cty).values_list('talent', flat=True))
         wel = wel|wtr
 
         wel_i = wel.intersection(wee)
