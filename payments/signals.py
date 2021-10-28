@@ -31,8 +31,11 @@ def show_me_the_money(sender, instance, **kwargs):
     elif ipn_obj.item_name == "MyWeXlog 12 Month Passive Subscription":
         price = "56.58"
 
-    elif ipn_obj.item_name == "MyWeXlog Active Subscription" or "MyWeXlog Active Subscription Upgrade":
-        price = "6.89" or "9.75"
+    elif ipn_obj.item_name == "MyWeXlog Monthly Active Single Subscription":
+        price = "9.75"
+
+    elif ipn_obj.item_name == "MyWeXlog Monthly Active Subscription" or "MyWeXlog Monthly Active Subscription Upgrade":
+        price = "6.89"
 
     elif ipn_obj.item_name == "MyWeXlog 6 Month Active Subscription" or "MyWeXlog 6 Month Active Subscription Upgrade":
         price = "39.84"
