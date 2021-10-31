@@ -5094,7 +5094,7 @@ def DPC_SummaryView(request, tlt):
 
 @login_required()
 def DPCP_SummaryView(request, tlt):
-    '''View for Designation, Project and Company hours logged'''
+    '''View for Designation, Project and Company hours logged section in the Public Profile View'''
     #caching
     exp = WorkExperience.objects.filter(talent__alias = tlt).select_related('designation')
     designation_qs = Designation.objects.all()
