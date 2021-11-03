@@ -44,5 +44,5 @@ def create_code14(instance, size=13):
 
 def create_code16(instance, size=13):
     a = randbelow(size)+2
-    new_code=code_generator(instance, size=13)
+    new_code=code_generator(size=a)
     return new_code
