@@ -51,6 +51,7 @@ RATE_UNIT = (
     ('M','per Month'),
     ('A','per Annum'),
     ('L','Lump Sum'),
+    ('I','Market Related'),
 )
 
 UNIT = (

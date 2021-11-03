@@ -39,71 +39,72 @@
   <br>
   <div class="row">
     <div class="col-sm-6">
-      <div class="card profile-card h-100">
+       <div class="card card-shadow h-100">
         <div class="card-body">
-          <h5 class="profile-header">Designation Summary</h5>
-          <div class="profile-card-body mb-auto">
-          <p>This is a list of the hours you have logged against each designation.</p>
+          <h5 class="card-title">Designation Summary</h5>
+          <p>
+            <small>
+              This is a list of the hours you have logged against each designation.
+            </small>
+          </p>
           <table class="table table-sm">
             <thead>
               <tr>
                 <th class="align-middle text-center">Designation</th>
                 {% if request.user.alias == tlt %}
                   <th class="align-middle text-center">Hours<br>Captured</th>
-                  <th class="align-middle text-center">Count<br>Unconfirmed</th>
                 {% endif %}
                 <th class="align-middle text-center">Hours<br>Confirmed</th>
               </tr>
             </thead>
             <tbody>
-              {% for key in dgn_set.items %}
+              {% for key in dgn2 %}
                 <tr>
-                  <td>{{ key.0 }}</td>
+                  <td>{{ key.name }}</td>
                   {% if request.user.alias == tlt %}
-                    <td class="align-middle text-center">{{ key.1.sum|intcomma }}</td>
-                    <td class="align-middle text-center">{{ key.1.cnt_u }}</td>
+                    <td class="align-middle text-center">{{ key.cap|intcomma }}</td>
                   {% endif %}
-                  <td class="align-middle text-center">{{ key.1.confirmed|intcomma }}</td>
+                  <td class="align-middle text-center">{{ key.cnf|intcomma }}</td>
                 </tr>
               {% endfor %}
             </tbody>
           </table>
-        </div>
         </div>
       </div>
     </div>
 
     <div class="col-sm-6">
-      <div class="card profile-card">
+      <div class="card card-shadow">
         <div class="card-body">
-          <h5 class="profile-header" id="Company">Company Summary</h5>
-          <div class="profile-card-body mb-auto">
-          <p>This is a list of the time spent by  {% if request.user.alias == tlt %} you {% else %} <strong>{{ tlt }}</strong> {% endif%}at various companies.</p>
+          <h5 class="card-title" id="Company">Company Summary</h5>
+          <p>
+            <small>
+              This is a list of the time spent by  {% if request.user.alias == tlt %} you {% else %} {{ tlt }} {% endif%}at various companies.
+            </small>
+          </p>
           <table class="table table-sm">
             <thead>
               <tr>
-                <th>Company & Branch</th>
+                <th class="align-middle text-center">Company & Branch</th>
                 {% if request.user.alias == tlt %}
                   <th class="align-middle text-center">Hours<br>Captured</th>
-                  <th class="align-middle text-center">Count<br>Unconfirmed</th>
                 {% endif %}
                 <th class="align-middle text-center">Hours<br>Confirmed</th>
               </tr>
+              </tr>
             </thead>
             <tbody>
-              {% for key in cmp_set.items %}
+              {% for key in cmp2 %}
                 <tr>
-                  <td>{{ key.0 }}</td>
+                  <td>{{ key.company }} <small>{{ key.name }}</small></td>
                   {% if request.user.alias == tlt %}
-                    <td class="align-middle text-center">{{ key.1.sum|intcomma }}</td>
-                    <td class="align-middle text-center">{{ key.1.cnt_u }}</td>
+                    <td class="align-middle text-center">{{ key.cap|intcomma }}</td>
                   {% endif %}
-                  <td class="align-middle text-center">{{ key.1.confirmed|intcomma }}</td>
+                  <td class="align-middle text-center">{{ key.cnf|intcomma }}</td>
                 </tr>
               {% endfor %}
             </tbody>
           </table>
-        </div>
         </div>
       </div>
     </div>
@@ -111,36 +112,38 @@
   <br>
   <div class="row">
     <div class="col-sm-12">
-      <div class="card profile-card">
+      <div class="card card-shadow">
         <div class="card-body">
-          <h5 class="profile-header" id="Project">Project Summary</h5>
-          <div class="profile-card-body mb-auto">
-          <p>This is a list of the time spent by {% if request.user.alias == tlt %} you {% else %} <strong>{{ tlt }}</strong> {% endif%}on various Projects.</p>
+          <h5 class="card-title" id="Project">Project Summary</h5>
+          <p>
+            <small>This is a list of the time spent by {% if request.user.alias == tlt %} you {% else %} {{ tlt }} {% endif%}on various Projects.
+            </small>
+          </p>
           <table class="table table-sm">
             <thead>
               <tr>
-                <th>Project & Client</th>
+                <th class="align-middle text-center">Project <br><small>Project Owner</small></th>
                 {% if request.user.alias == tlt %}
                   <th class="align-middle text-center">Hours<br>Captured</th>
-                  <th class="align-middle text-center">Count<br>Unconfirmed</th>
                 {% endif %}
                 <th class="align-middle text-center">Hours<br>Confirmed</th>
               </tr>
             </thead>
             <tbody>
-              {% for key in prj_set.items %}
+              {% for key in prj2 %}
                 <tr>
-                  <td>{{ key.0 }}</td>
+                  <td>
+                    {{ key.name }}<br>
+                    <small>{{ key.company }}</small>
+                  </td>
                   {% if request.user.alias == tlt %}
-                    <td class="align-middle text-center">{{ key.1.sum|intcomma }}</td>
-                    <td class="align-middle text-center">{{ key.1.cnt_u }}</td>
+                    <td class="align-middle text-center">{{ key.cap|intcomma }}</td>
                   {% endif %}
-                  <td class="align-middle text-center">{{ key.1.confirmed|intcomma }}</td>
+                  <td class="align-middle text-center">{{ key.cnf|intcomma }}</td>
                 </tr>
               {% endfor %}
             </tbody>
           </table>
-        </div>
         </div>
       </div>
     </div>
