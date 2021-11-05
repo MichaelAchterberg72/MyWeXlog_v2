@@ -96,7 +96,6 @@ INSTALLED_APPS = [
     'tinymce',
     'grappelli',
     'filebrowser',
-    'plausible'
 ]
 
 
