@@ -21,8 +21,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.postgres.search import SearchVector, TrigramSimilarity
 
 from xml.etree.ElementTree import Element, SubElement, tostring
-from dicttoxml import dicttoxml
-from dict2xml import dict2xml
 from django.utils.html import strip_tags
 
 #email
