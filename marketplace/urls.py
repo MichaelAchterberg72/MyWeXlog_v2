@@ -122,6 +122,8 @@ urlpatterns = [
     path('vacancy/successful-application-history-full-list/', views.RolesAppliedForSuccessfulApplicationHistoryView, name='RolesAppliedForSuccessfulFullList'),
     path('vacancy/unsuccessful-application-history-full-list/', views.RolesAppliedForUnsuccessfulApplicationHistoryView, name='RolesAppliedForUnsuccessfulFullList'),
 
+    path('jooble-feed/', views.jooble_feed, name="jooble-feed"),
+
     #Help urls
     path('help/Experience-level/', views.ExperienceLevelHelpView, name="HelpExperienceLevel"),
     path('help/Work-Configeration/', views.WorkConfigerationHelpView, name="HelpWorkCOnfigeration"),

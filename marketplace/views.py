@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.http import is_safe_url
+from django.core import serializers
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.urls import reverse
 from django.conf import settings
@@ -8,6 +9,8 @@ import json
 from django.db.models import Count, Sum, F, Q
 from django.db.models.functions import Greatest
 from django.utils import timezone
+import datetime
+from datetime import timedelta
 from decimal import getcontext, Decimal
 import itertools
 
@@ -17,6 +20,9 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.postgres.search import SearchVector, TrigramSimilarity
 
+from dicttoxml import dicttoxml
+from dict2xml import dict2xml
+from django.utils.html import strip_tags
 
 #email
 from django.core.mail import send_mail, EmailMultiAlternatives
@@ -53,6 +59,82 @@ import sendgrid
 import os
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import (Mail, Subject, To, ReplyTo, SendAt, Content, From, CustomArg, Header)
+
+from .models import UNIT, RATE_UNIT
+
+def jooble_feed(request):
+    """<link> - the full URL of a job, where Jooble will forward users to. The link must lead to a page with a complete job description.
+    <name> - job title.
+    <region> - list of regions/cities. Regions can be listed in a text format and separated by any punctuation marks.
+    <description> - a complete job description. Please note that we are able to index an XML feed that contains complete jobs descriptions. If there are additional fields such as “job description”, “candidates’ requirements”, “responsibilities”, “working conditions” on a job page, they must be included to the <description> tag.
+    <pubdate> - original publication date of a job. Please specify the date in the DD.MM.YYYY format.
+    <updated> * - last modification date of a job. By this, we mean the last time when the original publication date of a job was updated, or when a job description was edited by an employer. Please specify the date in the DD.MM.YYYY format.
+    <salary> ** - salary + currency. For example, "300$", "1500€" or "167£".
+    <company> ** - a company name, name of employer.
+    <expire> ** - date when a job gets expired. Please specify the date in the DD.MM.YYYY format.
+    <jobtype> ** - type of a job. For example, full-time, part-time, contract, internship, temporary."""
+
+    now = timezone.now()
+    monthly = datetime.timedelta(days=45)
+    indexable_date = now - monthly
+
+    current_vacancies = TalentRequired.objects.filter(Q(offer_status='O'))
+    vacancies = current_vacancies.values_list('ref_no', flat=True).distinct()
+
+    jobs = []
+    for vac in vacancies:
+        job = current_vacancies.get(ref_no=vac).id
+
+        ref = current_vacancies.get(ref_no=vac).ref_no
+        link = f'https://app.mywexlog.com/marketplace/public/vacancy/{ref}/'
+        name = current_vacancies.get(ref_no=vac).title
+        region_qs = current_vacancies.get(ref_no=vac).city.region.region
+        city_qs = current_vacancies.get(ref_no=vac).city.city
+        region = f'{city_qs}, {region_qs}'
+        description_scope_qs = current_vacancies.get(ref_no=vac).scope
+        description_expectations_qs = current_vacancies.get(ref_no=vac).expectations
+        description = strip_tags(f'{description_scope_qs}\n{description_expectations_qs}')
+        pubdate = current_vacancies.get(ref_no=vac).bid_open
+        updated = current_vacancies.get(ref_no=vac).date_modified
+        salary_rate = current_vacancies.get(ref_no=vac).rate_offered
+        salary_curency = current_vacancies.get(ref_no=vac).currency.currency_abv
+
+        rate_unit = []
+        for p in current_vacancies.get(ref_no=vac).rate_unit:
+            ru_choice = {k: v for k, v in RATE_UNIT}[p[-1]]
+            rate_unit.append(list(p[:-1]) + [ru_choice])
+
+        salary = f'{salary_rate}{salary_curency}/{ru_choice}'
+        company = current_vacancies.get(ref_no=vac).companybranch.company.ename
+        expire = current_vacancies.get(ref_no=vac).bid_closes
+        result = []
+        for p in current_vacancies.get(ref_no=vac).unit:
+            choice = {k: v for k, v in UNIT}[p[-1]]
+            result.append(list(p[:-1]) + [choice])
+
+        jobspecs = {
+                'link': link,
+                'name': name,
+                'region': region,
+                'description': description,
+                'pubdate': pubdate,
+                'updated': updated,
+                'salary': salary,
+                'company': company,
+                'expire': expire,
+                'jobtype': choice,
+        }
+
+        job = {'job': jobspecs}
+        jobs.append(job)
+    my_dict = dict()
+    for k,v in enumerate(jobs):
+        mydict[]
+    dict(jobs)
+
+    xml = dicttoxml(jobs, custom_root='jobs', attr_type=False)
+
+    return HttpResponse(xml, content_type="application/xml")
 
 
 @login_required()
@@ -2566,7 +2648,7 @@ def VacancyPostView(request, vac):
         wel = set(PhysicalAddress.objects.filter(country=cty).values_list('talent', flat=True))
         #Willing to Relocate
 
-        
+
         wtr = set(WillingToRelocate.objects.filter(country=cty).values_list('talent', flat=True))
         wel = wel|wtr
 
