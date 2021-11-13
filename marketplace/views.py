@@ -20,6 +20,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.postgres.search import SearchVector, TrigramSimilarity
 
+from xml.etree.ElementTree import Element, SubElement, tostring
 from dicttoxml import dicttoxml
 from dict2xml import dict2xml
 from django.utils.html import strip_tags
@@ -82,57 +83,52 @@ def jooble_feed(request):
     vacancies = current_vacancies.values_list('ref_no', flat=True).distinct()
 
     jobs = []
+    jobs = Element('jobs')
     for vac in vacancies:
-        job = current_vacancies.get(ref_no=vac).id
+        job = SubElement(jobs, 'job')
+        link = SubElement(job, 'link')
+        name = SubElement(job, 'name')
+        region = SubElement(job, 'region')
+        salary = SubElement(job, 'salary')
+        description = SubElement(job, 'description')
+        company = SubElement(job, 'company')
+        pubdate = SubElement(job, 'pubdate')
+        updated = SubElement(job, 'updated')
+        expire = SubElement(job, 'expire')
+        jobtype = SubElement(job, 'jobtype')
+
+        job_id = current_vacancies.get(ref_no=vac).id
+        job.set("id", f'{job_id}')
 
         ref = current_vacancies.get(ref_no=vac).ref_no
-        link = f'https://app.mywexlog.com/marketplace/public/vacancy/{ref}/'
-        name = current_vacancies.get(ref_no=vac).title
+        link.text = f'<![CDATA[https://app.mywexlog.com/marketplace/public/vacancy/{ref}/]]>'
+        name.text = f'<![CDATA[{current_vacancies.get(ref_no=vac).title}]]>'
         region_qs = current_vacancies.get(ref_no=vac).city.region.region
         city_qs = current_vacancies.get(ref_no=vac).city.city
-        region = f'{city_qs}, {region_qs}'
-        description_scope_qs = current_vacancies.get(ref_no=vac).scope
-        description_expectations_qs = current_vacancies.get(ref_no=vac).expectations
-        description = strip_tags(f'{description_scope_qs}\n{description_expectations_qs}')
-        pubdate = current_vacancies.get(ref_no=vac).bid_open
-        updated = current_vacancies.get(ref_no=vac).date_modified
+        region.text = f'<![CDATA[{city_qs}, {region_qs}]]>'
+        description_scope_qs = strip_tags(current_vacancies.get(ref_no=vac).scope)
+        description_expectations_qs = strip_tags(current_vacancies.get(ref_no=vac).expectations)
+        description.text = f'<![CDATA[{description_scope_qs}\n{description_expectations_qs}]]>'
+        pubdate.text = f'{current_vacancies.get(ref_no=vac).bid_open.strftime("%d.%m.%Y")}'
+        updated.text = f'{current_vacancies.get(ref_no=vac).date_modified.strftime("%d.%m.%Y")}'
         salary_rate = current_vacancies.get(ref_no=vac).rate_offered
         salary_curency = current_vacancies.get(ref_no=vac).currency.currency_abv
 
         rate_unit = []
         for p in current_vacancies.get(ref_no=vac).rate_unit:
             ru_choice = {k: v for k, v in RATE_UNIT}[p[-1]]
-            rate_unit.append(list(p[:-1]) + [ru_choice])
+#            rate_unit.append(list(p[:-1]) + [ru_choice])
 
-        salary = f'{salary_rate}{salary_curency}/{ru_choice}'
-        company = current_vacancies.get(ref_no=vac).companybranch.company.ename
-        expire = current_vacancies.get(ref_no=vac).bid_closes
+        salary.text = f'<![CDATA[{salary_rate}{salary_curency}/{ru_choice}]]>'
+        company.text = f'<![CDATA[{current_vacancies.get(ref_no=vac).companybranch.company.ename}]]>'
+        expire.text = f'{current_vacancies.get(ref_no=vac).bid_closes.strftime("%d.%m.%Y")}'
         result = []
         for p in current_vacancies.get(ref_no=vac).unit:
             choice = {k: v for k, v in UNIT}[p[-1]]
-            result.append(list(p[:-1]) + [choice])
+        jobtype.text = f'{choice}'
+#            result.append(list(p[:-1]) + [choice])
 
-        jobspecs = {
-                'link': link,
-                'name': name,
-                'region': region,
-                'description': description,
-                'pubdate': pubdate,
-                'updated': updated,
-                'salary': salary,
-                'company': company,
-                'expire': expire,
-                'jobtype': choice,
-        }
-
-        job = {'job': jobspecs}
-        jobs.append(job)
-    my_dict = dict()
-    for k,v in enumerate(jobs):
-        mydict[]
-    dict(jobs)
-
-    xml = dicttoxml(jobs, custom_root='jobs', attr_type=False)
+    xml = tostring(jobs, encoding='utf8').decode('utf8')
 
     return HttpResponse(xml, content_type="application/xml")
 
