@@ -75,9 +75,11 @@ def jooble_feed(request):
 
     now = timezone.now()
     monthly = datetime.timedelta(days=45)
+
     indexable_date = now - monthly
 
-    current_vacancies = TalentRequired.objects.filter(Q(offer_status='O'))
+    current_vacancies = TalentRequired.objects.filter(Q(bid_open__gte=indexable_date) & Q(offer_status='O'))
+
     vacancies = current_vacancies.values_list('ref_no', flat=True).distinct()
 
     jobs = []
