@@ -108,7 +108,12 @@ def jooble_feed(request):
         region.text = f'<![CDATA[{city_qs}, {region_qs}]]>'
         description_scope_qs = strip_tags(current_vacancies.get(ref_no=vac).scope)
         description_expectations_qs = strip_tags(current_vacancies.get(ref_no=vac).expectations)
-        description.text = f'<![CDATA[{description_scope_qs}\n{description_expectations_qs}]]>'
+
+        description_skills = SkillRequired.objects.filter(scope__ref_no=vac).values_list('skills__skill')
+        skills_string_list = [", ".join(s) for s in description_skills]
+        skills_string = ", ".join(skills_string_list)
+
+        description.text = f'<![CDATA[Scope: {description_scope_qs}\n Expectations: {description_expectations_qs}\n Skills: {skills_string}]]>'
         pubdate.text = f'{current_vacancies.get(ref_no=vac).bid_open.strftime("%d.%m.%Y")}'
         updated.text = f'{current_vacancies.get(ref_no=vac).date_modified.strftime("%d.%m.%Y")}'
         salary_rate = current_vacancies.get(ref_no=vac).rate_offered
