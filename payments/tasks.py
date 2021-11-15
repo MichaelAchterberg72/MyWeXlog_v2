@@ -30,7 +30,7 @@ def FreeMonthExpiredTask(username):
     message = Mail(
         from_email = (settings.SENDGRID_FROM_EMAIL, 'MyWeXlog Notification'),
         to_emails = talent.email,
-        subject = 'Your Free Month Trial Subscription has Expired',
+        subject = 'Active Trial Downgraded to Free Version',
         plain_text_content = strip_tags(html_message),
         html_content = html_message)
 
@@ -56,7 +56,7 @@ def SubscriptionExpiredTask(username):
     message = Mail(
         from_email = settings.SENDGRID_FROM_EMAIL,
         to_emails = talent.email,
-        subject = 'Your Subscription has Expired',
+        subject = 'Subscription Downgraded to Free Version',
         plain_text_content = strip_tags(html_message),
         html_content = html_message)
 
