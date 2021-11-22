@@ -175,6 +175,36 @@
   </div>
 </div>
 <br>
+<div class="card-group">
+  <div class="card card-shadow">
+    <div class="card-body">
+    <div class="float-right">
+      <a href="{% url 'Profile:MotivationEdit' tlt %}" class="btn btn-secondary">Edit</a>
+    </div>
+    <h5 class="card-title" id="motivation" data-toggle="tooltip" data-placement="left" title="This is a motivation which employers will see when your profile appears in vacancies they post.
+    Active members will be able to customise their motivations based on the vacancy bid.">
+      Motivation:
+    </h5>
+    <p class="card-text text-justify">
+      {{ d.motivation|safe|truncatechars:920 }}
+    </p>
+  </div>
+</div>
+</div>
+<br>
+<div class="card-group">
+<div class="card card-shadow">
+  <div class="card-body">
+    <div class="float-right">
+      <a href="{% url 'Profile:BackgroundEdit' tlt %}" class="btn btn-secondary">Edit</a>
+    </div>
+    <h5 class="card-title" id="background">Background</h5>
+    <p class="card-text text-justify">
+      {{ d.background|safe|truncatechars:920 }}</p>
+    </div>
+  </div>
+</div>
+<br>
 
 <div class="card-group">
   <div class="card card-shadow">
@@ -207,37 +237,128 @@
       </div>
     </div>
   </div>
-<br>
-<div class="card-group">
-  <div class="card card-shadow">
-    <div class="card-body">
-      <div class="float-right">
-        <a href="{% url 'Profile:BackgroundEdit' tlt %}" class="btn btn-secondary">Edit</a>
-      </div>
-      <h5 class="card-title" id="background">Background</h5>
-      <p class="card-text text-justify">
-        {{ d.background|safe }}</p>
-      </div>
-    </div>
-  </div>
   <br>
   <div class="card-group">
     <div class="card card-shadow">
       <div class="card-body">
-      <div class="float-right">
-        <a href="{% url 'Profile:MotivationEdit' tlt %}" class="btn btn-secondary">Edit</a>
+        <h5 class="card-title" id="Upload">Upload Files <a href="{% url 'Profile:FileUploadView' %}" class="badge badge-primary float-right">Add File</a></h5>
+        <p>
+          Upload files such as your static CV, academic records, copies of passports, id documents or any other document you may want to keep here.
+        </p>
+        <p>
+          (Only <strong>PDF</strong> files are allowed to be uploaded)
+        </p>
+        <div class="row">
+        {% for f in upload %}
+        <div class="col-md-3">
+          <div class="card mt-1 card-hover" style="width: 100%;">
+            <div class="card-body small-pad">
+              <div class="row my-auto">
+                <div class="col-md-12 h-100 text-left my-auto">
+                  <a href="{{ f.file.url }}" target="_blank">
+                    <img src="{{ f.thumbnail.url }}" alt="{{ f.title }}" height="300" width="220" style="top:0px;"></a><br>
+                    <div class="text-center">
+                      {{ f.title }}<br>
+                      <form  action="{% url 'Profile:FileDelete' f.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="badge badge-danger badge-pill" onclick="return confirm('Delete {{ f.title }} - Are you sure?');">Delete</button>
+                      </form>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+          <p>You do not have any files loaded yet.</p>
+        {% endfor %}
+        </div>
       </div>
-      <h5 class="card-title" id="motivation" data-toggle="tooltip" data-placement="left" title="This is a motivation which employers will see when your profile appears in vacancies they post.
-      Active members will be able to customise their motivations based on the vacancy bid.">
-        Motivation:
-      </h5>
-      <p class="card-text text-justify">
-        {{ d.motivation|safe }}
-      </p>
+    </div>
+  </div>
+{% endfor %}
+<br>
+<div class="card-group">
+  <div class="card card-shadow">
+    <div class="card-body" id="History">
+      <h5 class="card-title">Career History <a href="{% url 'Profile:History' %}" class="badge badge-primary float-right">Add</a></h5>
+      <p class="card-text">
+        {% if history %}
+        <div class="container">
+          <div class="row my-auto">
+            <div class="col-md-1 h-100 text-center my-auto">
+              <strong>From</strong>
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              <strong>To</strong>
+            </div>
+            <div class="col-md-3 h-100 text-center my-auto">
+              <strong>Employer</strong>
+            </div>
+            <div class="col-md-3 h-100 text-center my-auto">
+              <strong>Designation</strong>
+            </div>
+            <div class="col-md-2 h-100 text-center my-auto">
+              <strong>Work Configuration</strong>
+            </div>
+            <div class="col-md-1 h-100 text-center my-auto">
+              <strong></strong>
+            </div>
+          </div>
+        </div>
+        {% for h in history %}
+        <div class="row">
+          <div class="card mt-1 card-hover" style="width: 100%;">
+            <div class="card-body small-pad">
+              <div class="row my-auto">
+                <div class="col-md-1 h-100 text-center my-auto">
+                  {{ h.date_from }}
+                </div>
+                <div class="col-md-2 h-100 text-center my-auto">
+                  {% if h.date_to %}
+                    {{ h.date_to }}
+                  {% else %}
+                    Currently Works Here
+                  {% endif %}
+                </div>
+                <div class="col-md-3 h-100 text-center my-auto">
+                  {{ h.companybranch }}
+                </div>
+                <div class="col-md-3 h-100 text-center my-auto">
+                  {{ h.designation }}
+                </div>
+                <div class="col-md-2 h-100 text-center my-auto">
+                  {{ h.work_configeration }}
+                </div>
+                <div class="col-md-1 h-100 text-left my-auto">
+                  <a href="{% url 'Profile:HistoryEdit' bch=h.slug %}" class="badge badge-secondary" style="width:4.5rem;">
+                    Edit
+                  </a>
+                  <form  action="{% url 'Profile:HistoryDelete' bch=h.slug %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="badge badge-danger" style="width:4.5rem;" onclick="return confirm('Delete {{ h.companybranch }} - Are you sure?');">Delete</button>
+                  </form>
+                  {% if h.date_to %}
+
+                  {% else %}
+                    <br>
+                    <a href="{% url 'Profile:Resigned' bch=h.slug tlt=h.talent.alias %}" class="badge badge-primary" style="width:4.5rem;">
+                      I Resigned
+                    </a>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+          <p>No career history currently loaded.</p>
+        {% endfor %}
+
+      {% endif %}
     </div>
   </div>
 </div>
-{% endfor %}
 <br>
 <div class="card-group" id="memberships">
   <div class="card card-shadow">
@@ -529,123 +650,7 @@
   </div>
 </div>
 <br>
-<div class="card-group">
-  <div class="card card-shadow">
-    <div class="card-body" id="History">
-      <h5 class="card-title">Career History <a href="{% url 'Profile:History' %}" class="badge badge-primary float-right">Add</a></h5>
-      <p class="card-text">
-        {% if history %}
-        <div class="container">
-          <div class="row my-auto">
-            <div class="col-md-1 h-100 text-center my-auto">
-              <strong>From</strong>
-            </div>
-            <div class="col-md-2 h-100 text-center my-auto">
-              <strong>To</strong>
-            </div>
-            <div class="col-md-3 h-100 text-center my-auto">
-              <strong>Employer</strong>
-            </div>
-            <div class="col-md-3 h-100 text-center my-auto">
-              <strong>Designation</strong>
-            </div>
-            <div class="col-md-2 h-100 text-center my-auto">
-              <strong>Work Configuration</strong>
-            </div>
-            <div class="col-md-1 h-100 text-center my-auto">
-              <strong></strong>
-            </div>
-          </div>
-        </div>
-        {% for h in history %}
-        <div class="row">
-          <div class="card mt-1 card-hover" style="width: 100%;">
-            <div class="card-body small-pad">
-              <div class="row my-auto">
-                <div class="col-md-1 h-100 text-center my-auto">
-                  {{ h.date_from }}
-                </div>
-                <div class="col-md-2 h-100 text-center my-auto">
-                  {% if h.date_to %}
-                    {{ h.date_to }}
-                  {% else %}
-                    Currently Works Here
-                  {% endif %}
-                </div>
-                <div class="col-md-3 h-100 text-center my-auto">
-                  {{ h.companybranch }}
-                </div>
-                <div class="col-md-3 h-100 text-center my-auto">
-                  {{ h.designation }}
-                </div>
-                <div class="col-md-2 h-100 text-center my-auto">
-                  {{ h.work_configeration }}
-                </div>
-                <div class="col-md-1 h-100 text-left my-auto">
-                  <a href="{% url 'Profile:HistoryEdit' bch=h.slug %}" class="badge badge-secondary" style="width:4.5rem;">
-                    Edit
-                  </a>
-                  <form  action="{% url 'Profile:HistoryDelete' bch=h.slug %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit" class="badge badge-danger" style="width:4.5rem;" onclick="return confirm('Delete {{ h.companybranch }} - Are you sure?');">Delete</button>
-                  </form>
-                  {% if h.date_to %}
 
-                  {% else %}
-                    <br>
-                    <a href="{% url 'Profile:Resigned' bch=h.slug tlt=h.talent.alias %}" class="badge badge-primary" style="width:4.5rem;">
-                      I Resigned
-                    </a>
-                  {% endif %}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        {% empty %}
-          <p>No career history currently loaded.</p>
-        {% endfor %}
-
-      {% endif %}
-    </div>
-  </div>
-</div>
-<br>
-<div class="card-group">
-  <div class="card card-shadow">
-    <div class="card-body">
-      <h5 class="card-title" id="Upload">Upload Files <a href="{% url 'Profile:FileUploadView' %}" class="badge badge-primary float-right">Add File</a></h5>
-      <p>
-        Upload files such as your static cv, academic records, copies of passports, id documents or any other document you may want to keep here.
-      </p>
-      <p>
-        (Only <strong>PDF</strong> files are allowed to be uploaded)
-      </p>
-      {% for f in upload %}
-      <div class="row">
-        <div class="card mt-1 card-hover" style="width: 100%;">
-          <div class="card-body small-pad">
-            <div class="row my-auto">
-              <div class="col-md-10 h-100 text-left my-auto">
-                <a href="{{ f.file.url }}" target="_blank">{{ f.title }}</a>
-              </div>
-              <div class="col-md-2 h-100 text-center my-auto">
-                <form  action="{% url 'Profile:FileDelete' f.id %}" method="post">
-                  {% csrf_token %}
-                  <button type="submit" class="badge badge-danger badge-pill float-right" onclick="return confirm('Delete {{ f.title }} - Are you sure?');">Delete</button>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      {% empty %}
-        <p>You do not have any files loaded yet.</p>
-      {% endfor %}
-    </div>
-  </div>
-</div>
-<br>
 <div class="card-header">Identification</div>
 <div class="card-group">
   <div class="card card-shadow">
