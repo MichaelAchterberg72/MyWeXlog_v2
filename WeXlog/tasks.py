@@ -23,7 +23,7 @@ from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import (Mail, Subject, To, ReplyTo, SendAt, Content, From, CustomArg, Header)
 
 import datetime
-from datetime import timedelta
+from datetime import timedelta, date
 
 from WeXlog.app_config import (
     skill_pass_score,
@@ -32,7 +32,7 @@ from WeXlog.app_config import (
 from payments.tasks import FreeMonthExpiredTask, SubscriptionExpiredTask
 
 from users.models import CustomUser, CustomUserSettings, ExpandedView
-from Profile.models import Profile
+from Profile.models import Profile, BriefCareerHistory
 
 from talenttrack.models import (
         WorkExperience, Lecturer, ClassMates, WorkColleague, Superior, WorkClient,  WorkCollaborator, LicenseCertification
@@ -172,8 +172,8 @@ def UpgradeRefunds():
 
 
 @celery_app.task(name="WeeklyUpdateEmail")
-#@periodic_task(run_every=(crontab(minute='*/2')), name="WeeklyUpdateEmail", ignore_result=True)
-@periodic_task(run_every=(crontab(day_of_week=1, hour=0, minute=0)), name="WeeklyUpdateEmail", ignore_result=True)
+#@periodic_task(run_every=(crontab(day_of_week="monday", minute='*/2')), name="WeeklyUpdateEmail", ignore_result=True)
+@periodic_task(run_every=(crontab(day_of_week="monday", hour=0, minute=0)), name="WeeklyUpdateEmail", ignore_result=True)
 def weekly_email():
     user_settings = CustomUserSettings.objects.filter(Q(unsubscribe=False) & Q(receive_newsletter=True)).values_list('talent__id')
     users = CustomUser.objects.filter(id__in=user_settings)
@@ -191,6 +191,7 @@ def weekly_email():
         wb = WorkBid.objects.filter(work__requested_by=talent)
         ta = TalentAvailabillity.objects.filter(talent=talent)
         we = WorkExperience.objects.filter(Q(talent=talent) & Q(score__gte=skill_pass_score)).prefetch_related('topic')
+        bch = BriefCareerHistory.objects.filter(talent=talent)
         sr = SkillRequired.objects.filter(scope__offer_status='O')
         sl = SkillLevel.objects.all()
         wbt = WorkBid.objects.filter(Q(talent=talent) & Q(work__offer_status='O'))
@@ -219,6 +220,7 @@ def weekly_email():
         #>>>Create a set of all skills
         e_skill = we.filter(edt=True, score__gte=skill_pass_score).only('pk').values_list('pk', flat=True)
         l_skill = we.filter(edt=False, score__gte= skill_pass_score).only('pk').values_list('pk', flat=True)
+        bch_skill = bch.filter(talent=talent).only('pk').values_list('pk', flat=True)
 
         e_len = e_skill.count()
         l_len = l_skill.count()
@@ -238,6 +240,12 @@ def weekly_email():
 
             skill_set = skill_set | d
 
+        for bs in bch_skill:
+            e = bch.get(pk=bs)
+            f = e.skills.all().values_list('skill', flat=True)
+
+            skill_set = skill_set | f
+
         skill_set = skill_set.distinct().order_by('skill')#all skills the talent has
         skill_setv = skill_set.values_list('id', flat=True)#gets the id's of all the skills
         #Create a set of all skills<<<
@@ -246,6 +254,42 @@ def weekly_email():
         tlt_lev = pfl.values_list('exp_lvl__level', flat=True)
         try:
             tlt_lvl = tlt_lev[0]
+
+            pre_bch_df = bch.aggregate(df_min=Min('date_from'))
+            pre_bch_dt = bch.aggregate(dt_max=Max('date_to'))
+
+            p_bch_df = pre_bch_df.get('df_min')
+            p_bch_dt = pre_bch_dt.get('dt_max')
+
+            p_delta = p_bch_dt - p_bch_df
+            exp_lvls = [Decimal(p_delta.days / 7 * 5 * 8)]
+            except:
+                exp_lvls = [Decimal(0)]
+
+            std = list(sl.filter(level__exact=0).values_list('min_hours', flat=True))
+            grd = list(sl.filter(level__exact=1).values_list('min_hours', flat=True))
+            jnr = list(sl.filter(level__exact=2).values_list('min_hours', flat=True))
+            int = list(sl.filter(level__exact=3).values_list('min_hours', flat=True))
+            snr = list(sl.filter(level__exact=4).values_list('min_hours', flat=True))
+            lead = list(sl.filter(level__exact=5).values_list('min_hours', flat=True))
+
+            if exp_lvls < std:
+                iama = 0
+            elif exp_lvls >= std and exp_lvls < grd:
+                iama = 1
+            elif exp_lvls >= grd and exp_lvls < jnr:
+                iama = 2
+            elif exp_lvls >= jnr and exp_lvls < int:
+                iama = 3
+            elif exp_lvls >= int and exp_lvls < snr:
+                iama = 4
+            elif exp_lvls >= snr:
+                iama = 5
+
+            if iama > tlt_lvl:
+                tlt_lvl = iama
+            else:
+                tlt_lvl = tlt_lvl
         except:
             tlt_lvl = 5
 

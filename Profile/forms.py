@@ -5,11 +5,11 @@ from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.utils.encoding import force_text
-from django_select2.forms import (ModelSelect2TagWidget, ModelSelect2Widget,
-                                  Select2MultipleWidget, Select2Widget)
+from django_select2.forms import (ModelSelect2MultipleWidget,  ModelSelect2TagWidget, ModelSelect2Widget, Select2MultipleWidget, Select2Widget)
 
 from db_flatten.models import LanguageList
 from enterprises.models import Branch, Enterprise
+from db_flatten.models import SkillTag
 from locations.models import City, Region, Suburb
 from talenttrack.models import Designation
 from users.models import CustomUser, ExpandedView
@@ -19,6 +19,18 @@ from .models import (BriefCareerHistory, Email, FileUpload,
                      OnlineRegistrations, PassportDetail, PhoneNumber,
                      PhysicalAddress, PostalAddress, Profile, ProfileImages,
                      SiteName, WillingToRelocate)
+
+
+class SkillSearchFieldMixin:
+    search_fields = [
+        'skill__icontains', 'pk__startswith'
+    ]
+
+class SkillModelSelect2MultipleWidget(SkillSearchFieldMixin, ModelSelect2MultipleWidget):
+    model = SkillTag
+
+    def create_value(self, value):
+        self.get_queryset().create(skill=value)
 
 
 class UploadProfilePicForm(forms.ModelForm):
@@ -107,12 +119,13 @@ class DateInput(forms.DateInput):
 class BriefCareerHistoryForm(forms.ModelForm):
     class Meta:
         model = BriefCareerHistory
-        fields = ('work_configeration', 'companybranch', 'date_from', 'date_to', 'designation', 'description')
+        fields = ('work_configeration', 'companybranch', 'date_from', 'date_to', 'designation', 'description', 'skills')
         widgets = {
             'companybranch': BranchWidget(),
             'date_from': DateInput(),
             'date_to': DateInput(),
             'designation': DesignationSelect2Widget(),
+            'skills': SkillModelSelect2MultipleWidget(),
         }
         labels = {
             'work_configeration': 'Work Configuration',

@@ -32,6 +32,7 @@ from treebeard.mp_tree import MP_Node
 from analytics.models import ObjectViewed
 from core.decorators import subscription
 from enterprises.models import Branch, Enterprise
+from db_flatten.models import SkillTag
 from locations.models import Region
 from marketplace.forms import (AssignmentClarifyForm,
                                AssignmentDeclineReasonsForm, TalentRateForm,
@@ -1187,13 +1188,18 @@ def InterviewTltComplete(request, int_id):
 @csp_exempt
 def BriefCareerHistoryView(request):
     talent=request.user
+
+    skills_list = SkillTag.objects.filter(skills_utilised__talent=talent).distinct('skill').order_by('skill')
+
     form = BriefCareerHistoryForm(request.POST or None)
+
     history = BriefCareerHistory.objects.filter(talent=talent)
     if request.method == 'POST':
         if form.is_valid():
             new = form.save(commit=False)
             new.talent = request.user
             new.save()
+            form.save_m2m()
             if 'another' in request.POST:
                 response = redirect('Profile:History')
                 return response
@@ -1202,12 +1208,12 @@ def BriefCareerHistoryView(request):
                 return response
         else:
             template = 'Profile/brief_career_history.html'
-            context = {'form': form, 'history': history}
+            context = {'form': form, 'history': history, 'skills_list': skills_list}
             response = render(request, template, context)
             return response
     else:
         template = 'Profile/brief_career_history.html'
-        context = {'form': form, 'history': history}
+        context = {'form': form, 'history': history, 'skills_list': skills_list}
         response = render(request, template, context)
         return response
 
@@ -1218,6 +1224,8 @@ def BriefHistoryEditView(request, bch):
     talent=request.user
     instance = BriefCareerHistory.objects.get(slug=bch)
 
+    skills_list = SkillTag.objects.filter(skills_utilised__talent=talent).distinct('skill').order_by('skill')
+
     form = BriefCareerHistoryForm(request.POST or None, instance=instance)
 
     if request.method == 'POST':
@@ -1225,13 +1233,13 @@ def BriefHistoryEditView(request, bch):
             new = form.save(commit=False)
             new.talent = request.user
             new.save()
-
+            form.save_m2m()
             response = redirect(reverse('Profile:ProfileView')+"#History")
             return response
 
     else:
         template = 'Profile/brief_career_history_edit.html'
-        context = {'form': form, 'bch': bch, 'instance': instance}
+        context = {'form': form, 'bch': bch, 'skills_list': skills_list, 'instance': instance}
         response = render(request, template, context)
         return response
 

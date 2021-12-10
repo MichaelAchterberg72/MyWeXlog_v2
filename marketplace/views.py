@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
 import json
-from django.db.models import Count, Sum, F, Q
+from django.db.models import Count, Sum, Max, Min, F, Q
 from django.db.models.functions import Greatest
 from django.utils import timezone
 import datetime
@@ -1700,6 +1700,7 @@ def MarketHome(request):
     wb = WorkBid.objects.filter(work__requested_by=talent)
     ta = TalentAvailabillity.objects.filter(talent=talent).last()
     we = WorkExperience.objects.filter(Q(talent=talent) & Q(score__gte=skill_pass_score)).prefetch_related('topic')
+    bch = BriefCareerHistory.objects.filter(talent=talent)
     sr = SkillRequired.objects.filter(scope__offer_status='O')
     sl = SkillLevel.objects.all()
     wbt = WorkBid.objects.filter(Q(talent=talent) & Q(work__offer_status='O'))
@@ -1728,6 +1729,7 @@ def MarketHome(request):
     #>>>Create a set of all skills
     e_skill = we.filter(edt=True, score__gte=skill_pass_score).only('pk').values_list('pk', flat=True)
     l_skill = we.filter(edt=False, score__gte= skill_pass_score).only('pk').values_list('pk', flat=True)
+    bch_skill = bch.filter(talent=talent).only('pk').values_list('pk', flat=True)
 
     e_len = e_skill.count()
     l_len = l_skill.count()
@@ -1747,6 +1749,12 @@ def MarketHome(request):
 
         skill_set = skill_set | d
 
+    for bs in bch_skill:
+        e = bch.get(pk=bs)
+        f = e.skills.all().values_list('skill', flat=True)
+
+        skill_set = skill_set | f
+
     skill_set = skill_set.distinct().order_by('skill')#all skills the talent has
     skill_setv = skill_set.values_list('id', flat=True)#gets the id's of all the skills
     #Create a set of all skills<<<
@@ -1754,6 +1762,43 @@ def MarketHome(request):
     #>>>Experience Level check & list skills required in vacancies
     tlt_lev = pfl.values_list('exp_lvl__level', flat=True)
     tlt_lvl = tlt_lev[0]
+
+    try:
+        pre_bch_df = bch.aggregate(df_min=Min('date_from'))
+        pre_bch_dt = bch.aggregate(dt_max=Max('date_to'))
+
+        p_bch_df = pre_bch_df.get('df_min')
+        p_bch_dt = pre_bch_dt.get('dt_max')
+
+        p_delta = p_bch_dt - p_bch_df
+        exp_lvls = [Decimal(p_delta.days / 7 * 5 * 8)]
+    except:
+        exp_lvls = [Decimal(0)]
+
+    std = list(sl.filter(level__exact=0).values_list('min_hours', flat=True))
+    grd = list(sl.filter(level__exact=1).values_list('min_hours', flat=True))
+    jnr = list(sl.filter(level__exact=2).values_list('min_hours', flat=True))
+    int = list(sl.filter(level__exact=3).values_list('min_hours', flat=True))
+    snr = list(sl.filter(level__exact=4).values_list('min_hours', flat=True))
+    lead = list(sl.filter(level__exact=5).values_list('min_hours', flat=True))
+
+    if exp_lvls < std:
+        iama = 0
+    elif exp_lvls >= std and exp_lvls < grd:
+        iama = 1
+    elif exp_lvls >= grd and exp_lvls < jnr:
+        iama = 2
+    elif exp_lvls >= jnr and exp_lvls < int:
+        iama = 3
+    elif exp_lvls >= int and exp_lvls < snr:
+        iama = 4
+    elif exp_lvls >= snr:
+        iama = 5
+
+    if iama > tlt_lvl:
+        tlt_lvl = iama
+    else:
+        tlt_lvl = tlt_lvl
 
     #finds all vacancies that require talent's experience level and below
     vac_exp = tr.filter(experience_level__level__lte=tlt_lvl)
@@ -1937,22 +1982,22 @@ def VacanciesListView(request):
     talent=request.user
     tlt = talent.id
     pfl = Profile.objects.filter(talent=talent)
-    TalentRequired.objects.filter()
-#    tr = TalentRequired.objects.filter(offer_status='O')
+    #TalentRequired.objects.filter()
     tr = TalentRequired.objects.filter(offer_status='O')
     tr_emp = TalentRequired.objects.filter(requested_by=talent)
     wb = WorkBid.objects.filter(work__requested_by=talent)
-    ta = TalentAvailabillity.objects.filter(talent=talent)
+    ta = TalentAvailabillity.objects.filter(talent=talent).last()
     we = WorkExperience.objects.filter(Q(talent=talent) & Q(score__gte=skill_pass_score)).prefetch_related('topic')
+    bch = BriefCareerHistory.objects.filter(talent=talent)
     sr = SkillRequired.objects.filter(scope__offer_status='O')
     sl = SkillLevel.objects.all()
     wbt = WorkBid.objects.filter(Q(talent=talent) & Q(work__offer_status='O'))
     bsl = BidShortList.objects.filter(Q(talent=talent) & Q(scope__offer_status='O'))
     vv = set(VacancyViewed.objects.filter(Q(talent=talent) & Q(closed=True)).values_list('vacancy__id', flat=True))
-    vvv = VacancyViewed.objects.filter(Q(talent=talent) & Q(viewed=True))
+    vvv = VacancyViewed.objects.filter(Q(talent=request.user) & Q(viewed=True)).values_list('vacancy__id', flat=True).distinct()
     vac_exp = ExpandedView.objects.get(talent=request.user)
-    vacancies_suited_list_view = vac_exp.vacancies_fl_suited_list
-#    vo = VacancyViewed.objects.filter(closed=False)
+    vacancies_suited_list_view = vac_exp.vacancies_suited_list
+    #  vo = VacancyViewed.objects.filter(closed=False)
 
     #Queryset caching<<<
 
@@ -1972,6 +2017,7 @@ def VacanciesListView(request):
     #>>>Create a set of all skills
     e_skill = we.filter(edt=True, score__gte=skill_pass_score).only('pk').values_list('pk', flat=True)
     l_skill = we.filter(edt=False, score__gte= skill_pass_score).only('pk').values_list('pk', flat=True)
+    bch_skill = bch.filter(talent=talent).only('pk').values_list('pk', flat=True)
 
     e_len = e_skill.count()
     l_len = l_skill.count()
@@ -1991,13 +2037,56 @@ def VacanciesListView(request):
 
         skill_set = skill_set | d
 
-    skill_set = skill_set.distinct().order_by('skill')
+    for bs in bch_skill:
+        e = bch.get(pk=bs)
+        f = e.skills.all().values_list('skill', flat=True)
+
+        skill_set = skill_set | f
+
+    skill_set = skill_set.distinct().order_by('skill')#all skills the talent has
     skill_setv = skill_set.values_list('id', flat=True)#gets the id's of all the skills
     #Create a set of all skills<<<
 
     #>>>Experience Level check & list skills required in vacancies
-    tlt_lvl = pfl.values_list('exp_lvl__level', flat=True)
-    tlt_lvl = tlt_lvl[0]
+    tlt_lev = pfl.values_list('exp_lvl__level', flat=True)
+    tlt_lvl = tlt_lev[0]
+
+    try:
+        pre_bch_df = bch.aggregate(df_min=Min('date_from'))
+        pre_bch_dt = bch.aggregate(dt_max=Max('date_to'))
+
+        p_bch_df = pre_bch_df.get('df_min')
+        p_bch_dt = pre_bch_dt.get('dt_max')
+
+        p_delta = p_bch_dt - p_bch_df
+        exp_lvls = [Decimal(p_delta.days / 7 * 5 * 8)]
+    except:
+        exp_lvls = [Decimal(0)]
+
+    std = list(sl.filter(level__exact=0).values_list('min_hours', flat=True))
+    grd = list(sl.filter(level__exact=1).values_list('min_hours', flat=True))
+    jnr = list(sl.filter(level__exact=2).values_list('min_hours', flat=True))
+    int = list(sl.filter(level__exact=3).values_list('min_hours', flat=True))
+    snr = list(sl.filter(level__exact=4).values_list('min_hours', flat=True))
+    lead = list(sl.filter(level__exact=5).values_list('min_hours', flat=True))
+
+    if exp_lvls < std:
+        iama = 0
+    elif exp_lvls >= std and exp_lvls < grd:
+        iama = 1
+    elif exp_lvls >= grd and exp_lvls < jnr:
+        iama = 2
+    elif exp_lvls >= jnr and exp_lvls < int:
+        iama = 3
+    elif exp_lvls >= int and exp_lvls < snr:
+        iama = 4
+    elif exp_lvls >= snr:
+        iama = 5
+
+    if iama > tlt_lvl:
+        tlt_lvl = iama
+    else:
+        tlt_lvl = tlt_lvl
 
     #finds all vacancies that require talent's experience level and below
     vac_exp = tr.filter(experience_level__level__lte=tlt_lvl)
@@ -2032,13 +2121,23 @@ def VacanciesListView(request):
     req_experience = req_experience | cert_null_s
 
     #Checking for locations
-    #Remote Freelance open to all talent, other vacanciesTypes only for region (to be updated to distances in later revisions) this will require gEOdJANGO
-    tlt_loc = PhysicalAddress.objects.filter(talent=talent).values_list('region', flat=True)
-    tlt_loc=tlt_loc[0]
+    #Remote Freelance, Consultants open to all talent, other vacanciesTypes only for region (to be updated to distances in later revisions) this will require gEOdJANGO
+    #gathering all countries where willing to work
+    wtr_qs = WillingToRelocate.objects.filter(talent=talent).values_list('country', flat=True)
 
-    vac_loc_rm = set(tr.filter(worklocation__id=1).values_list('id', flat=True))
+    reg_set = set()
+    for item in wtr_qs:
+        reg = set(Region.objects.filter(country=item).values_list('id', flat=True))
 
-    vac_loc_reg = set(tr.filter(~Q(worklocation__id=1)& Q(city__region=tlt_loc)).values_list('id', flat=True))
+        reg_set = reg_set|reg
+
+    tlt_loc = set(PhysicalAddress.objects.filter(talent=talent).values_list('region', flat=True))
+
+    tlt_loc=tlt_loc|reg_set
+
+    vac_loc_rm = set(tr.filter(Q(worklocation__id=1) | Q(worklocation__id=4)).values_list('id', flat=True))
+
+    vac_loc_reg = set(tr.filter(~Q(worklocation__id=1) | ~Q(worklocation__id=4)).filter(city__region__in=tlt_loc).values_list('id', flat=True))
 
     vac_loc = vac_loc_rm | vac_loc_reg
 
@@ -2054,17 +2153,17 @@ def VacanciesListView(request):
             skl_lst.append(sk)
 
     ds = set()
-    matchd = set(skl_lst) #remove duplicates
+    matchd = set(skl_lst) #remove duplicates; these are the required skills
+
     matchd = matchd.intersection(set(skill_setv))
 
     for item in matchd:
         display = set(sr.filter(
                 Q(skills__in=skl_lst)
                 & Q(scope__bid_closes__gte=timezone.now())).values_list('scope__id', flat=True))
+        ds = ds | display #set of all open vacancies
 
-        ds = ds | display
-
-    dsi = ds.intersection(req_experience)
+    dsi = ds.intersection(req_experience) #open vacancies which the talent qualifies for (certification, location)
 
     tot_vac = len(dsi)
     #remove the vacancies that have already been applied for
@@ -2088,7 +2187,7 @@ def VacanciesListView(request):
     suitable = tr.filter(id__in=dsi)
 
     rem_vac = suitable.count()
-    dsd = suitable
+    dsd = suitable[:5]
 
     #Experience Level check & list skills required in vacancies<<<
     if tot_len > 0:
