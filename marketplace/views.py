@@ -135,7 +135,7 @@ def jooble_feed(request):
 
     xml = tostring(jobs, encoding='utf8').decode('utf8')
 
-    return HttpResponse(xml, content_type="application/xml")
+    return HttpResponse(xml, content_type="text/xml")
 
 
 @login_required()

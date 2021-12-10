@@ -19,3 +19,5 @@ Disallow: /aliu8926kjak/
 Disallow: /feedback/
 
 Allow: /marketplace/page
+Allow: /marketplace/jooble-feed/
+Allow: /marketplace/public/vacancy/*/
