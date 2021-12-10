@@ -2,6 +2,53 @@
 {% load humanize %}
 {% block title %}{{block.super}}-Vacancy{% endblock title %}
 
+{% block head %}
+
+{% for v in vacancy %}
+<script type="application/ld+json">
+  {
+    "@context" : "https://schema.org/",
+    "@type" : "JobPosting",
+    "title" : "{{ v.title }}",
+    "description" : "<p>{{ v.scope|safe }}</p><p>{{ v.expectations|safe }}</p>",
+    "identifier": {
+      "@type": "PropertyValue",
+      "name": "{{Google}}",
+      "value": "{{123456}}7"
+    },
+    "datePosted" : "{{ v.bid_open }}",
+    "validThrough" : "{{ v.bid_closes }}",
+    "employmentType" : "{{ v.worklocation }}",
+    "hiringOrganization" : {
+      "@type" : "Organization",
+      "name" : "{{ v.companybranch.company }}",
+      "sameAs" : "https://mywexlog.com/",
+      "logo" : "https://mywexlog.com/prod_static/images/favicon.png"
+    },
+    "jobLocation": {
+    "@type": "Place",
+      "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "{{ v.city.city }}",
+      "addressRegion": "{{ v.region.region }}",
+      "addressCountry": "{{ v.region.country }}"
+      }
+    },
+    "baseSalary": {
+      "@type": "MonetaryAmount",
+      "currency": "{{ v.currency }}",
+      "value": {
+        "@type": "QuantitativeValue",
+        "value": {{ v.rate_offered }},
+        "unitText": "{{ v.get_rate_unit_display }}"
+      }
+    }
+  }
+  </script>
+{% endfor %}
+
+{% endblock head %}
+
 {% block content %}
 {% for v in vacancy %}
 <div class="card card-shadow">
