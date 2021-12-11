@@ -457,6 +457,15 @@
                <td><a href="{% url 'Talent:ColleagueResponse' c.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 5rem">Detail</a></td>
              </tr>
             {% endfor %}
+            {% for c in inv_clg %}
+              <tr>
+                <td>{{ c.name }} {{ c.surname }}</td>
+                <td>
+                  <i class="fa fa-spinner" aria-hidden="true" style="font-size:24px;color:green !important" data-toggle="tooltip" title="Invited but not responded"></i>
+                  Invited</td>
+                <td><a href="{% url 'Invitation:InviteDetail' c.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 5rem">Detail</a></td>
+              </tr>
+             {% endfor %}
            </tbody>
          </table>
        </div>
@@ -496,6 +505,15 @@
                <td><a href="{% url 'Talent:SuperiorResponse' cm.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 5rem">Detail</a></td>
              </tr>
           {% endfor %}
+          {% for c in inv_sup %}
+            <tr>
+              <td>{{ c.name }} {{ c.surname }}</td>
+              <td>
+                <i class="fa fa-spinner" aria-hidden="true" style="font-size:24px;color:green !important" data-toggle="tooltip" title="Invited but not responded"></i>
+                Invited</td>
+              <td><a href="{% url 'Invitation:InviteDetail' c.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 5rem">Detail</a></td>
+            </tr>
+           {% endfor %}
            </tbody>
          </table>
        </div>
@@ -538,6 +556,15 @@
                <td><a href="{% url 'Talent:CollaboratorResponse' wc.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 5rem">Detail</a></td>
              </tr>
             {% endfor %}
+            {% for c in inv_clr %}
+              <tr>
+                <td>{{ c.name }} {{ c.surname }}</td>
+                <td>
+                  <i class="fa fa-spinner" aria-hidden="true" style="font-size:24px;color:green !important" data-toggle="tooltip" title="Invited but not responded"></i>
+                  Invited</td>
+                <td><a href="{% url 'Invitation:InviteDetail' c.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 5rem">Detail</a></td>
+              </tr>
+             {% endfor %}
            </tbody>
          </table>
        </div>
@@ -577,6 +604,15 @@
                <td><a href="{% url 'Talent:ClientResponse' cnt.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 5rem">Detail</a></td>
              </tr>
           {% endfor %}
+          {% for c in inv_cnt %}
+            <tr>
+              <td>{{ c.name }} {{ c.surname }}</td>
+              <td>
+                <i class="fa fa-spinner" aria-hidden="true" style="font-size:24px;color:green !important" data-toggle="tooltip" title="Invited but not responded"></i>
+                Invited</td>
+              <td><a href="{% url 'Invitation:InviteDetail' c.slug %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary" style="width: 5rem">Detail</a></td>
+            </tr>
+           {% endfor %}
            </tbody>
          </table>
        </div>

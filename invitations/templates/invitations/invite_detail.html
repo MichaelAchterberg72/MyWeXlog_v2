@@ -1,0 +1,44 @@
+{% extends 'base_home.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}{{block.super}}-Invite{% endblock title %}
+
+{% block Style %}
+{{ form.media.css }}
+<style type="text/css">
+  select {
+    width: 100px;
+  }
+  </style>
+{% endblock Style %}
+
+{% block content %}
+<div class="card card-shadow col-sm-5 mx-auto">
+  <div class="card-body">
+    <h3>Talent Invited</h3>
+    <div class="">
+      <h5>Date Invited</h5>
+      {{ invite_detail.date_invited }}<br><br>
+      <h5>Name</h5>
+      {{ invite_detail.name }} {{ invite_detail.surname }}<br><br>
+      {% if invite_detail.companybranch %}
+      <h5>Company</h5>
+      {{ invite_detail.companybranch }}<br><br>
+      {% endif %}
+      <h5>Email Address Used to Invite</h5>
+      {{ invite_detail.email }}<br><br>
+      {% if invite_detail.message %}
+      <h5>Message</h5>
+      {{ invite_detail.message|safe }}
+      {% endif %}
+      <a href="{% url 'Talent:ExperienceDetail' invite_detail.experience.slug %}" class="btn btn-primary">Back</a>
+    </div>
+  </div>
+</div>
+{{ form.media }}
+
+{% endblock content %}
+{% block Script %}
+
+{% endblock Script %}

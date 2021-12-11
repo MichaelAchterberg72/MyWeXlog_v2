@@ -11,4 +11,5 @@ urlpatterns = [
     path('invites-sent/', views.InvitationsSentView, name="InvitationsSent"),
 
     path('email-test/', views.email_test_view, name="EmailTest"),
+    path('invite-detail/<slug:invs>/', views.invite_detail_view, name="InviteDetail"),
 ]

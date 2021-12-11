@@ -45,6 +45,7 @@ from Profile.models import (BriefCareerHistory, FileUpload, LanguageTrack,
                             Profile, ProfileImages, WillingToRelocate)
 from project.models import ProjectData, ProjectPersonalDetails
 from users.models import CustomUser
+from invitations.models import Invitation
 from WeXlog.app_config import (classmate_score, client_score,
                                collaborator_score, colleague_score,
                                lecturer_score, locked_age, pre_colleague_score,
@@ -5933,6 +5934,13 @@ def ExperienceDetailView(request, tex):
         confirmed_clr = WorkCollaborator.objects.filter(experience__slug=tex)
         confirmed_cnt = WorkClient.objects.filter(experience__slug=tex)
 
+        invitation_sent = Invitation.objects.filter(Q(invited_by=request.user) & Q(experience__slug=tex) & Q(accpeted=False))
+        inv_clg = invitation_sent.filter(relationship='WC').order_by('-date_invited')
+        inv_sup = invitation_sent.filter(relationship='WS').order_by('-date_invited')
+        inv_clr = invitation_sent.filter(relationship='WL').order_by('-date_invited')
+        inv_cnt = invitation_sent.filter(relationship='WT').order_by('-date_invited')
+
+
         '''Mywexlog evaluation rating'''
         twclg_ave_qs = weq_qs.aggregate(quality_rate=Avg('workcolleague__quality'))
         twclg_ave = twclg_ave_qs.get('quality_rate')
@@ -6101,7 +6109,8 @@ def ExperienceDetailView(request, tex):
 
 
         template = 'talenttrack/experience_detail.html'
-        context = {'check': check, 'confirmed_clg': confirmed_clg, 'confirmed_sup': confirmed_sup, 'confirmed_clr': confirmed_clr, 'confirmed_cnt': confirmed_cnt, 'list': list, 'sum_company': sum_company, 'sum_project': sum_project, 'client_score': client_score, 'colleague_score': colleague_score, 'pre_colleague_score': pre_colleague_score, 'collaborator_score': collaborator_score, 'superior_score': superior_score, 'tpwq_ave': tpwq_ave, 'ttwq_ave': ttwq_ave, 'tcwq_ave': tcwq_ave, 'tawq_ave': tawq_ave}
+        context = {'check': check, 'confirmed_clg': confirmed_clg, 'confirmed_sup': confirmed_sup, 'confirmed_clr': confirmed_clr, 'confirmed_cnt': confirmed_cnt,
+        'inv_clg': inv_clg, 'inv_sup': inv_sup, 'inv_clr': inv_clr, 'inv_cnt': inv_cnt,  'list': list, 'sum_company': sum_company, 'sum_project': sum_project, 'client_score': client_score, 'colleague_score': colleague_score, 'pre_colleague_score': pre_colleague_score, 'collaborator_score': collaborator_score, 'superior_score': superior_score, 'tpwq_ave': tpwq_ave, 'ttwq_ave': ttwq_ave, 'tcwq_ave': tcwq_ave, 'tawq_ave': tawq_ave}
         return render(request, template, context)
     else:
         raise PermissionDenied

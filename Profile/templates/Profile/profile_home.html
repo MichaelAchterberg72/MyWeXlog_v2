@@ -293,7 +293,7 @@
 {% endblock score %}
 
 {% block TBA %}
-  <div class="text-center">
+  <div class="text-center" style="line-height:2.5rem;">
     <a href="{% url 'Talent:PublicProfile' request.user.public_profile_name %}?next={{ request.path|urlencode }}" target="_blank">
       <i class="fa fa-map-marker" style="font-size:30px;color:black" data-toggle="tooltip" title="Public Profile"></i>
     </a>

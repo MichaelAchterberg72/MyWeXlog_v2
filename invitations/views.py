@@ -45,6 +45,15 @@ from .forms import InvitationForm, InvitationLiteForm
 from .models import Invitation
 
 
+@login_required
+def invite_detail_view(request, invs):
+    invite_detail = Invitation.objects.get(Q(invited_by=request.user) & Q(slug=invs) & Q(accpeted=False))
+
+    template = 'invitations/invite_detail.html'
+    context = {'invite_detail': invite_detail}
+    return render(request, template, context)
+
+
 @login_required()
 def InvitationsSentView(request):
 
