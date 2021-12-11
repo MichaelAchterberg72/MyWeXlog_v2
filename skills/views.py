@@ -83,14 +83,6 @@ def is_valid_queryparam(param):
     '''function to check if query fields has a value entered '''
     return param != '' and param is not None
 
-def get_talent(qs_l):
-    '''function to filter the talent that lives in a certain country or region before being processed through the skills filter '''
-
-    tlt = qs_l.distinct('id').values_list('id', flat=True)
-    print('tlt values: ', tlt)
-    qs_tlt = CustomUser.objects.filter(id__in=tlt)
-
-    return qs_tlt
 
 @login_required()
 def skill_form_filter_view(request):
@@ -151,7 +143,7 @@ def skill_form_filter_view(request):
     if is_valid_queryparam(qs_country) or is_valid_queryparam(qs_region):
         tlt = qs_l.distinct('talent__id').values_list('talent__id', flat=True)
 
-        tlt = CustomUser.objects.filter(id__in=tlt, workexperience__score__gte=3)
+        tlt = CustomUser.objects.filter(id__in=tlt, workexperience__score__gte=3, workexperience__edt=False)
 
         if is_valid_queryparam(qs_skill1):
             qs_1 = tlt.filter(workexperience__skills__id=qs_skill1)
@@ -195,7 +187,7 @@ def skill_form_filter_view(request):
         else:
             msg = 'Please enter a value for "Skill 1"'
     else:
-        tlt = CustomUser.objects.filter(workexperience__score__gte=3)
+        tlt = CustomUser.objects.filter(workexperience__score__gte=3, workexperience__edt=False)
 
         if is_valid_queryparam(qs_skill1):
             qs_1 = tlt.filter(workexperience__skills__id=qs_skill1)
