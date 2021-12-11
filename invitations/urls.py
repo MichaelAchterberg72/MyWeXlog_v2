@@ -1,6 +1,7 @@
 from django.urls import path
 
 from . import views
+from .views import ConfigureWorkerInvite
 
 app_name = 'Invitation'
 
@@ -13,3 +14,5 @@ urlpatterns = [
     path('email-test/', views.email_test_view, name="EmailTest"),
     path('invite-detail/<slug:invs>/', views.invite_detail_view, name="InviteDetail"),
 ]
+
+ConfigureWorkerInvite()

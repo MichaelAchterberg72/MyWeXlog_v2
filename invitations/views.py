@@ -43,6 +43,15 @@ from users.models import CustomUser
 
 from .forms import InvitationForm, InvitationLiteForm
 from .models import Invitation
+from Profile.utils import create_code9
+
+
+def ConfigureWorkerInvite():
+    invites = Invitation.objects.all()
+    for i in invites:
+        if i.slug is None or i.slug == "":
+            i.slug = create_code9(i)
+            i.save()
 
 
 @login_required
