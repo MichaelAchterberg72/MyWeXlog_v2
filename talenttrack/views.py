@@ -5110,7 +5110,7 @@ def DPCP_SummaryView(request, tlt):
     prj2 = ProjectData.objects.filter(workexperience__talent__alias=tlt)
 
     confirmed = prj2.annotate(cap=Sum('workexperience__hours_worked')).filter(workexperience__score__gte=skill_pass_score).annotate(cnf=Sum('workexperience__hours_worked'))
-    prj2=confirme
+    prj2=confirmed
 
     template = 'talenttrack/talent_dpcp_summary.html'
     context = {
