@@ -9,65 +9,66 @@ from .models import (Achievements, Awards, ClassMates, Course, CourseType,
 
 @admin.register(EmailRemindValidate)
 class EmailRemindValidateAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['sender__alias']
 
 
 @admin.register(LicenseCertification)
 class LicenseCertificationAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['talent__alias']
 
 
 @admin.register(Achievements)
 class AchievementsAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['talent__alias']
 
 
 @admin.register(Awards)
 class AwardsAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['talent__alias']
 
 
 @admin.register(Publications)
 class PublicationsAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['talent__alias']
 
 
 @admin.register(Designation)
 class DesignationAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['name']
 
 
 @admin.register(WorkCollaborator)
 class WorkCollaboratorAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['collaborator_name__alias', 'experience__slug', 'experience__talent__alias']
 
 @admin.register(Superior)
 class SuperiorAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['superior_name__alias', 'experience__slug', 'experience__talent__alias']
 
 @admin.register(WorkColleague)
 class WorkColleagueAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['colleague_name__alias', 'experience__slug', 'experience__talent__alias']
 
 @admin.register(WorkExperience)
 class WorkExperienceAdmin(admin.ModelAdmin):
-    filter_horizontal = ('skills',)
+    filter_horizontal = ['skills',]
+    search_fields = ['talent__alias', 'slug']
 
 @admin.register(WorkClient)
 class WorkClientAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['client_name__alias', 'experience__slug', 'experience__talent__alias']
 
 @admin.register(ClassMates)
 class ClassMatesAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['colleague__alias', 'education__slug', 'education__talent__alias']
 
 @admin.register(Lecturer)
 class LecturerAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['lecturer__alias', 'education__slug', 'education__talent__alias']
 
 @admin.register(Topic)
 class TopicAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['topic']
 
 @admin.register(Result)
 class ResultAdmin(admin.ModelAdmin):
@@ -79,4 +80,4 @@ class CourseTypeAdmin(admin.ModelAdmin):
 
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['name', 'company__ename']

@@ -416,6 +416,7 @@ class WorkExperience(models.Model):
     title = models.CharField(max_length=250, blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
     publish_comment = models.BooleanField(default=False)
+    not_validated = models.BooleanField(default=False)
     #Work Experience Fields (Captured & Pre-Experience)
     company = models.ForeignKey(Enterprise, on_delete=models.PROTECT, verbose_name='Company', null=True)
     companybranch = models.ForeignKey(Branch, on_delete=models.PROTECT, verbose_name='Company Branch', null=True)

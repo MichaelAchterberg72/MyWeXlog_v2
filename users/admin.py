@@ -14,12 +14,14 @@ class CustomUserAdmin(UserAdmin):
 
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
-    search_fields = ['alias','email']
+    search_fields = ['alias','email','first_name', 'last_name', 'subscription']
+    list_display = ['display_text', 'alias']
+    list_filter = ['subscription']
 
 @admin.register(CustomUserSettings)
 class CustomUserSettingsAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['talent']
 
 @admin.register(ExpandedView)
 class ExpandedViewAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['talent__alias']

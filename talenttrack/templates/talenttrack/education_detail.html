@@ -1,5 +1,5 @@
 {% extends "base_home.html" %}
-
+{% load static %}
 {% block title %}{{block.super}}-Experience{% endblock title %}
 
 {% block content %}
@@ -13,7 +13,8 @@
     <p class="card-text">Attended from {{ check.date_from }} to {{ check.date_to }}</p>
     <div class="text-right">
       <p class="card-text"><strong>Score: </strong>{{ check.score }}<br>
-      <strong>Hours: </strong>{{ check.topic.hours }}</p>
+      <strong>Hours: </strong>{{ check.topic.hours }}<br>
+      {% if check.not_validated %}{% if theme == 1 %}<img src="{% static 'images/self-study3.png' %}" height="140" alt="Self-Study, Not Validated">{% else %}<img src="{% static 'images/self-study2.png' %}" height="140" alt="Self-Study, Not Validated">{% endif %}{% endif %}</p>
     </div>
     <div class="">
       <p class="card-text"><strong>Topic: </strong>{{ check.topic.topic }}</p>

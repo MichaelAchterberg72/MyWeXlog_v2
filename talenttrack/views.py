@@ -6488,7 +6488,13 @@ def EducationCaptureView(request):
             new.edt = True
             new.save()
             form.save_m2m()
-            return redirect(reverse('Talent:LecturerSelect', kwargs={'tex': new.slug}))
+            if 'Self' in request.POST:
+                new.score = 3
+                new.not_validated = True
+                new.save()
+                return redirect(reverse('Talent:EducationDetail', kwargs={'tex': new.slug}))
+            elif 'Done' in request.POST:
+                return redirect(reverse('Talent:LecturerSelect', kwargs={'tex': new.slug}))
         else:
             template = 'talenttrack/education_capture.html'
             context = {'form': form}
