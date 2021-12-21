@@ -39,7 +39,7 @@
       </style>
       {% block head %}
       {% endblock head %}
-      
+
   {% block Style %}
 
   {% endblock Style %}
@@ -230,6 +230,9 @@
     <div class="" id="navbarSupportedContent">
       <ul class="navbar-nav-top mr-auto">
         <li class="nav-item active">
+          <a class="nav-link nav-link-top" href="{% url 'Profile:ProfileView' %}?next={{ request.path|urlencode }}"><i class="fa fa-user" aria-hidden="true" style="font-size:30px;" data-toggle="tooltip" title="Complete/Edit your profile!"></i></a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link nav-link-top" href="{% url 'Feedback:FeedBack' %}?next={{ request.path|urlencode }}"><i class="fa fa-bullhorn" aria-hidden="true" style="font-size:30px;" data-toggle="tooltip" title="We love to hear your feedback!"></i></a>
         </li>
         <li class="nav-item">
