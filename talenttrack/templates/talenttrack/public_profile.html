@@ -2,16 +2,16 @@
 {% load static %}
 {% load humanize %}
 {% load thumbnail %}
-{% block title %}{{block.super}}- {{ tlt.first_name }} Profile{% endblock title %}
+{% block title %}{{block.super}}- {{ als.talent.first_name }} Profile{% endblock title %}
 
 {% block content %}
+</div>
 <style>
 *{
   font-family: 'Montserrat',Helvetica,Arial,Lucida,sans-serif;
   font-size: 18px;
 }
 </style>
-
 <div class="jumbotron public-profile-jumbotron-header" style="color:#000;background-color:#303030">
   <div class="text-center" id="top">
     <h4 class="profile-header" style="color:#fff;">MyWeXlog Public Profile</h4>
@@ -20,11 +20,11 @@
 </div>
 
 <div class="wrap-1">
-  {% if background_pic %}
-    <img class="d-block w-100" src="{{ background_pic.url }}" height="662" style="opacity:0.7;--bg-overlay-color:#e1e1ef;" alt="MyWexlog Profile for {{ tlt.first_name }} {{ tlt.last_name }}">
-  {% else %}
-    <img class="d-block w-100" src="{% static 'images/business.jpg' %}" height="662" style="opacity:0.7;--bg-overlay-color:#e1e1ef;" alt="MyWexlog Profile for {{ tlt.first_name }} {{ tlt.last_name }}">
-  {% endif %}
+{% if background_pic %}
+<img class="d-block w-100" src="{{ background_pic.url }}" height="662" style="opacity:0.7;--bg-overlay-color:#e1e1ef;" alt="MyWexlog Profile for {{ talent.first_name }} {{ talent.last_name }}">
+{% else %}
+<img class="d-block w-100" src="{% static 'images/business.jpg' %}" height="662" style="opacity:0.7;--bg-overlay-color:#e1e1ef;" alt="MyWexlog Profile for {{ talent.first_name }} {{ talent.last_name }}">
+{% endif %}
 </div>
 <div class="container">
 <div class="row">
@@ -44,94 +44,46 @@
           {% endif %}
         </center>
         <br><br><br><br>
-        <h4 class="profile-header">
-          {{ tlt.first_name }}<br>{{ tlt.last_name }}
-        </h4>
-        <center>
-          <span class="text-center">
-            <i class="fa fa-arrows-h" aria-hidden="true" style="font-size:20px;color:#0d1451;"></i>
-          </span>
-        </center>
-        <div class="profile-header-under"><br><br>
-          <span class="">
-            {% for pos in current_pos %}
-              {{ pos.designation|join:", " }}
-            {% empty %}
-              <p>
-                None in profile
-              </p>
-            {% endfor %}
-          </span>
-        </div>
-      <br>
+        <h4 class="profile-header">{{ talent.f_name }}<br>{{ talent.l_name }}</h4>
+        <center><span class="text-center"><i class="fa fa-arrows-h" aria-hidden="true" style="font-size:20px;color:#0d1451;"></i></span></center>
+        <div class="profile-header-under"><br><br>{% for pos in current_pos %}
+          <span class="">{{ pos.designation|join:", " }}</span>
+        {% endfor %}</div><br>
       </div>
     </div>
     <div class="row profile-social-box align-items-center profile-pic-box-shadow" style="top:1.5rem">
       <div class="col-md-12">
         {% for l in online %}
-          {% if l.sitename|lower == 'facebook' %}
-            <a href="{{ l.profileurl }}" target="_blank">
-              <i class="fa fa-facebook" aria-hidden="true" style="font-size:20px;color:#ffffff;"></i>
-            </a>
-            &nbsp
-          {% elif l.sitename|lower == 'twitter' %}
-            <a href="{{ l.profileurl }}" target="_blank">
-              <i class="fa fa-twitter" aria-hidden="true" style="font-size:20px;color:#ffffff;"></i>
-            </a>
-            &nbsp
-          {% elif l.sitename|lower == 'bitbucket' %}
-            <a href="{{ l.profileurl }}" target="_blank">
-              <i class="fa fa-bitbucket" aria-hidden="true" style="font-size:20px;color:#ffffff;"></i>
-            </a>
-            &nbsp
-          {% elif l.sitename|lower == 'github' %}
-            <a href="{{ l.profileurl }}" target="_blank">
-              <i class="fa fa-github" aria-hidden="true" style="font-size:20px;color:#ffffff;"></i>
-            </a>
-            &nbsp
-          {% elif l.sitename|lower == 'google' %}
-            <a href="{{ l.profileurl }}" target="_blank">
-              <i class="fa fa-google" aria-hidden="true" style="font-size:20px;color:#ffffff;"></i>
-            </a>
-            &nbsp
-            {% elif l.sitename|lower == 'linkedin' %}
-              <a href="{{ l.profileurl }}" target="_blank"><i class="fa fa-linkedin" aria-hidden="true" style="font-size:20px;color:#ffffff;"></i>
-              </a>
-              &nbsp
-          {% elif l.sitename|lower == 'instagram' %}
-            <a href="{{ l.profileurl }}" target="_blank"><i class="fa fa-instagram" aria-hidden="true" style="font-size:20px;color:#ffffff;"></i>
-            </a>
-            &nbsp
-          {% elif l.sitename|lower == 'pinterest' %}
-            <a href="{{ l.profileurl }}" target="_blank"><i class="fa fa-pinterest" aria-hidden="true" style="font-size:20px;color:#ffffff;"></i>
-            </a>
-            &nbsp
-          {% elif l.sitename|lower == 'snapchat' %}
-            <a href="{{ l.profileurl }}" target="_blank"><i class="fa fa-snapchat" aria-hidden="true" style="font-size:20px;color:#ffffff;"></i>
-            </a>
-            &nbsp
-          {% elif l.sitename|lower == 'tumblr' %}
-            <a href="{{ l.profileurl }}" target="_blank"><i class="fa fa-tumblr" aria-hidden="true" style="font-size:20px;color:#ffffff;"></i>
-            </a>
-            &nbsp
-          {% elif l.sitename|lower == 'snapchat' %}
-            <a href="{{ l.profileurl }}" target="_blank"><i class="fa fa-snapchat" aria-hidden="true" style="font-size:20px;color:#ffffff;"></i>
-            </a>
-            &nbsp
-          {% elif l.sitename|lower == 'wikipedia' %}
-            <a href="{{ l.profileurl }}" target="_blank"><i class="fa fa-wikipedia-w" aria-hidden="true" style="font-size:20px;color:#ffffff;"></i>
-            </a>
-            &nbsp
-          {% elif l.sitename|lower == 'youtube' %}
-            <a href="{{ l.profileurl }}" target="_blank"><i class="fa fa-youtube" aria-hidden="true" style="font-size:20px;color:#ffffff;"></i>
-            </a>
-            &nbsp
-          {% else %}
-            <a href="{{ l.profileurl }}" target="_blank"><i class="fa fa-superpowers" aria-hidden="true" style="font-size:20px;color:#ffffff;"></i>
-            </a>
-            &nbsp
-          {% endif %}
-          {% endfor %}
+        {% if l.sitename|lower == 'facebook' %}
+        <a href="{{ l.profileurl }}" target="_blank"><i class="fa fa-facebook" aria-hidden="true" style="font-size:20px;color:#ffffff;"></i></a>&nbsp
+        {% elif l.sitename|lower == 'twitter' %}
+        <a href="{{ l.profileurl }}" target="_blank"><i class="fa fa-twitter" aria-hidden="true" style="font-size:20px;color:#ffffff;"></i></a>&nbsp
+        {% elif l.sitename|lower == 'bitbucket' %}
+        <a href="{{ l.profileurl }}" target="_blank"><i class="fa fa-bitbucket" aria-hidden="true" style="font-size:20px;color:#ffffff;"></i></a>&nbsp
+        {% elif l.sitename|lower == 'github' %}
+        <a href="{{ l.profileurl }}" target="_blank"><i class="fa fa-github" aria-hidden="true" style="font-size:20px;color:#ffffff;"></i></a>&nbsp
+        {% elif l.sitename|lower == 'google' %}
+        <a href="{{ l.profileurl }}" target="_blank"><i class="fa fa-google" aria-hidden="true" style="font-size:20px;color:#ffffff;"></i></a>&nbsp
+        {% elif l.sitename|lower == 'linkedin' %}
+        <a href="{{ l.profileurl }}" target="_blank"><i class="fa fa-linkedin" aria-hidden="true" style="font-size:20px;color:#ffffff;"></i></a>&nbsp
+        {% elif l.sitename|lower == 'instagram' %}
+        <a href="{{ l.profileurl }}" target="_blank"><i class="fa fa-instagram" aria-hidden="true" style="font-size:20px;color:#ffffff;"></i></a>&nbsp
+        {% elif l.sitename|lower == 'pinterest' %}
+        <a href="{{ l.profileurl }}" target="_blank"><i class="fa fa-pinterest" aria-hidden="true" style="font-size:20px;color:#ffffff;"></i></a>&nbsp
+        {% elif l.sitename|lower == 'snapchat' %}
+        <a href="{{ l.profileurl }}" target="_blank"><i class="fa fa-snapchat" aria-hidden="true" style="font-size:20px;color:#ffffff;"></i></a>&nbsp
+        {% elif l.sitename|lower == 'tumblr' %}
+        <a href="{{ l.profileurl }}" target="_blank"><i class="fa fa-tumblr" aria-hidden="true" style="font-size:20px;color:#ffffff;"></i></a>&nbsp
+        {% elif l.sitename|lower == 'snapchat' %}
+        <a href="{{ l.profileurl }}" target="_blank"><i class="fa fa-snapchat" aria-hidden="true" style="font-size:20px;color:#ffffff;"></i></a>&nbsp
+        {% elif l.sitename|lower == 'wikipedia' %}
+        <a href="{{ l.profileurl }}" target="_blank"><i class="fa fa-wikipedia-w" aria-hidden="true" style="font-size:20px;color:#ffffff;"></i></a>&nbsp
+        {% elif l.sitename|lower == 'youtube' %}
+        <a href="{{ l.profileurl }}" target="_blank"><i class="fa fa-youtube" aria-hidden="true" style="font-size:20px;color:#ffffff;"></i></a>&nbsp
+        {% else %}
+        <a href="{{ l.profileurl }}" target="_blank"><i class="fa fa-superpowers" aria-hidden="true" style="font-size:20px;color:#ffffff;"></i></a>&nbsp
+        {% endif %}
+        {% endfor %}
       </div>
     </div>
   </div>
@@ -146,8 +98,7 @@
       </div>
       <div class="row pt-2">
         <div class="col-md-12 text-left">
-          <span class="">
-            {{ pfl.public_profile_intro|safe|truncatechars:460 }}</span><br>
+          <span class="">{{ als.public_profile_intro|safe|truncatechars:460 }}</span><br>
         </div>
       </div>
       <br>
