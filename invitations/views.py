@@ -43,6 +43,24 @@ from users.models import CustomUser
 
 from .forms import InvitationForm, InvitationLiteForm
 from .models import Invitation
+from Profile.utils import create_code9
+
+
+def ConfigureWorkerInvite():
+    invites = Invitation.objects.all()
+    for i in invites:
+        if i.slug is None or i.slug == "":
+            i.slug = create_code9(i)
+            i.save()
+
+
+@login_required
+def invite_detail_view(request, invs):
+    invite_detail = Invitation.objects.get(Q(invited_by=request.user) & Q(slug=invs) & Q(accpeted=False))
+
+    template = 'invitations/invite_detail.html'
+    context = {'invite_detail': invite_detail}
+    return render(request, template, context)
 
 
 @login_required()

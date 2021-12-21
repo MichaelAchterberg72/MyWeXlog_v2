@@ -44,6 +44,7 @@ from marketplace.models import (
 from db_flatten.models import SkillTag
 
 from Profile.models import PhysicalAddress, LanguageTrack, WillingToRelocate
+from Profile.utils import create_code9
 
 from invitations.models import Invitation
 
@@ -263,8 +264,6 @@ def weekly_email():
 
             p_delta = p_bch_dt - p_bch_df
             exp_lvls = [Decimal(p_delta.days / 7 * 5 * 8)]
-            except:
-                exp_lvls = [Decimal(0)]
 
             std = list(sl.filter(level__exact=0).values_list('min_hours', flat=True))
             grd = list(sl.filter(level__exact=1).values_list('min_hours', flat=True))

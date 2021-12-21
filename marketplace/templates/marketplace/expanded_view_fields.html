@@ -205,9 +205,9 @@
     <p class="short-paragraph"><strong>Bid Rate:</strong></p>
     <p>The talents bid rate for the vacancy is <strong>&nbsp{{ key.1.ro.0.1 }} {{ key.1.ro.0.0|intcomma }}</strong>&nbsp per {{ key.1.ro.0.2 }}</p>
     <p class="short-paragraph"><strong>Background:</strong></p>
-    <p>{{ key.1.background|truncatechars:590 }}</p>
+    <p>{{ key.1.background|safe|truncatechars:590 }}</p>
     <p class="short-paragraph"><strong>Motivation:</strong></p>
-    <p>{{ key.1.ro.0.3|truncatechars:590 }}</p>
+    <p>{{ key.1.ro.0.3|safe|truncatechars:590 }}</p>
   </div>
 </div>
 </div>

@@ -13,6 +13,7 @@ import datetime
 from datetime import timedelta
 from decimal import getcontext, Decimal
 import itertools
+from collections import OrderedDict
 
 from csp.decorators import csp_exempt
 from core.decorators import subscription
@@ -2703,6 +2704,7 @@ def VacancyPostView(request, vac):
     delivere = Deliverables.objects.filter(scope__ref_no=vac)
     applicants = WorkBid.objects.filter(work__ref_no=vac)
     we = WorkExperience.objects.filter(Q(talent__subscription__gte=0) & Q(score__gte=skill_pass_score))
+    bch = BriefCareerHistory.objects.all()
     s_list = BidShortList.objects.filter(scope__ref_no=vac)
     book = ReadBy.objects.all()
     vac_exp = ExpandedView.objects.get(talent=request.user)
@@ -2728,12 +2730,50 @@ def VacancyPostView(request, vac):
 
     #>>> Find all talent with required skill
     wes = set(we.filter(Q(skills__in=skill_r) | Q(topic__skills__in=skill_r)).values_list('talent', flat=True))
+    bch_s = set(bch.filter(skills__in=skill_r).values_list('talent', flat=True))
+    wes = set(wes.union(bch_s))
     #Find all talent with required skill<<<
 
     #>>> Find all talent that have the required Experience
     wex = set(tlt.filter(exp_lvl__gte=instance.experience_level).values_list('talent', flat=True))
 
     wee = wex.intersection(wes)
+
+    tlt_bch_sk = []
+    for t in bch_s:
+        tlt_bch = bch.filter(talent__id=t)
+        try:
+            pre_bch_df = tlt_bch.aggregate(df_min=Min('date_from'))
+            pre_bch_dt = tlt_bch.aggregate(dt_max=Max('date_to'))
+
+            p_bch_df = pre_bch_df.get('df_min')
+            p_bch_dt = pre_bch_dt.get('dt_max')
+
+            p_delta = p_bch_dt - p_bch_df
+            exp_lvls = int(p_delta.days / 7 * 5 * 8)
+        except:
+            exp_lvls = int(0)
+
+        if exp_lvls < sk_st:
+            iama = 0
+        elif exp_lvls >= sk_st and exp_lvls < sk_bg:
+            iama = 1
+        elif exp_lvls >= sk_bg and exp_lvls < sk_jn:
+            iama = 2
+        elif exp_lvls >= sk_jn and exp_lvls < sk_in:
+            iama = 3
+        elif exp_lvls >= sk_in and exp_lvls < sk_sn:
+            iama = 4
+        elif exp_lvls >= sk_sn:
+            iama = 5
+
+        result={'talent':t, 'iama':iama}
+        tlt_bch_sk.append(result)
+
+    fl = list(filter(lambda x: x['iama'] >= int(instance.experience_level.level), tlt_bch_sk))
+    fl2 = list(x['talent'] for x in fl)
+
+    wee = wee.union(fl2)
 
     #Find all talent that have the required Experience<<<
 
@@ -2786,21 +2826,26 @@ def VacancyPostView(request, vac):
         tetv = t_exp.get('tet')
         talent_skill_l = we.filter(talent=item, edt=False).values_list('skills__skill', flat=True)
         talent_skillt_l = we.filter(talent=item, edt=True).values_list('topic__skills__skill', flat=True)
+        talent_skill_bch_l = bch.filter(talent=item).values_list('skills__skill', flat=True)
+
         talent_skill = list(talent_skill_l)
         rb = book.filter(talent=item).count()
         talent_skillt = list(talent_skillt_l)
+        talent_skill_bch = list(talent_skill_bch_l)
+
         rate = Profile.objects.filter(talent=item).values_list('std_rate', 'currency__currency_abv', 'rate_unit', 'motivation', 'alias',)
-        des = list(BriefCareerHistory.objects.filter(talent=item, current=True).values_list('designation__name', flat=True))
+        des = list(bch.filter(talent=item, current=True).values_list('designation__name', flat=True))
         pfl = Profile.objects.get(talent=item)
         avg = pfl.avg_rate
         cnt = pfl.rate_count
         bg = pfl.background
 
-        slist = talent_skill + talent_skillt
+        slist = talent_skill + talent_skillt + talent_skill_bch
         skillset = set(slist)
         skill_count = len(skillset)
 
-        slist_l = talent_skill_l.union(talent_skillt_l)
+        slist_l_a = talent_skill_l.union(talent_skillt_l)
+        slist_l = slist_l_a.union(talent_skill_bch_l)
         skill_intersection = skill_rs.intersection(slist_l)
         skill_int_count = skill_intersection.count()
         skill_match = skill_int_count / skill_rc * 100
@@ -2808,6 +2853,8 @@ def VacancyPostView(request, vac):
         suitable[item]={
             'we':wetv, 'te':tetv,'s_no':skill_count, 'skill_rc': skill_rc, 'skill_int_count': skill_int_count, 'skill_match': skill_match, 'skillset': skillset, 'rb':rb, 'ro':rate, 'score': avg, 'count': cnt, 'background': bg, 'des': des,
             }
+
+    suitable = OrderedDict(sorted(suitable.items(), key=lambda kv: kv[1]['skill_match'], reverse=True))
 
         #Extracting information for the applicants
     applied ={}
@@ -2818,8 +2865,12 @@ def VacancyPostView(request, vac):
             atetv = at_exp.get('tet')
             talent_skill_l = we.filter(talent=app, edt=False).values_list('skills__skill', flat=True)
             talent_skillt_l = we.filter(talent=app, edt=True).values_list('topic__skills__skill', flat=True)
+            talent_skill_bch_l = bch.filter(talent=item).values_list('skills__skill', flat=True)
+
             atalent_skill = list(talent_skill_l)
             atalent_skillt = list(talent_skillt_l)
+            talent_skill_bch = list(talent_skill_bch_l)
+
             rb = book.filter(talent=app).count()
             rate = applicants.filter(talent=app).values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation', 'talent__alias')
             des = list(BriefCareerHistory.objects.filter(talent=app, current=True).values_list('designation__name', flat=True))
@@ -2828,11 +2879,12 @@ def VacancyPostView(request, vac):
             cnt = pfl.rate_count
             bg = pfl.background
 
-            aslist = atalent_skill + atalent_skillt
+            aslist = atalent_skill + atalent_skillt + talent_skill_bch
             askillset = set(aslist)
             askill_count = len(askillset)
 
-            slist_l = talent_skill_l.union(talent_skillt_l)
+            slist_l_a = talent_skill_l.union(talent_skillt_l)
+            slist_l = slist_l_a.union(talent_skill_bch_l)
             skill_intersection = skill_rs.intersection(slist_l)
             skill_int_count = skill_intersection.count()
             skill_match = skill_int_count / skill_rc * 100
@@ -2840,6 +2892,9 @@ def VacancyPostView(request, vac):
             applied[app]={
                 'we':awetv, 'te':atetv, 's_no': askill_count, 'skill_rc': skill_rc, 'skill_int_count': skill_int_count, 'skill_match': skill_match, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score': avg, 'count': cnt, 'background': bg, 'des': des,
                 }
+
+    applied = OrderedDict(sorted(applied.items(), key=lambda kv: kv[1]['skill_match'], reverse=True))
+
 
     suitable_slice = dict(itertools.islice(suitable.items(), 5))
     applied_slice = dict(itertools.islice(applied.items(), 5))
@@ -2900,48 +2955,94 @@ def TalentSuitedVacancyListView(request, vac):
     delivere = Deliverables.objects.filter(scope__ref_no=vac)
     applicants = WorkBid.objects.filter(work__ref_no=vac)
     we = WorkExperience.objects.filter(Q(talent__subscription__gte=0) & Q(score__gte=skill_pass_score))
+    bch = BriefCareerHistory.objects.all()
     s_list = BidShortList.objects.filter(scope__ref_no=vac)
-    skill_rs = skille.values_list('skills__skill', flat=True).distinct()
-    skill_rc = skill_rs.count()
     book = ReadBy.objects.all()
-    tr_qs = TalentRequired.objects.filter(ref_no=vac)
-    tlt = Profile.objects.filter(talent__subscription__gte=0)
     vac_exp = ExpandedView.objects.get(talent=request.user)
-    list_view = vac_exp.talent_suited_list
+    applicants_list_view = vac_exp.applicants_list
+    suited_list_view = vac_exp.talent_suited_list
     sk_st = SkillLevel.objects.get(level=0).min_hours
     sk_bg = SkillLevel.objects.get(level=1).min_hours
     sk_jn = SkillLevel.objects.get(level=2).min_hours
     sk_in = SkillLevel.objects.get(level=3).min_hours
     sk_sn = SkillLevel.objects.get(level=4).min_hours
     sk_ld = SkillLevel.objects.get(level=5).min_hours
+    tr_qs = TalentRequired.objects.filter(ref_no=vac)
+    tlt = Profile.objects.filter(talent__subscription__gte=0)
     #Queryset Cache<<<
 
     #>>> List all skills required
     skill_r = skille.values_list('skills', flat=True).distinct()
     skill_rl = list(skill_r)
     skill_rs = skille.values_list('skills__skill', flat=True).distinct()
-    skill_rc = len(skill_rl)
+    skill_rc = skill_rs.count()
 
     #List all skills required<<<
 
     #>>> Find all talent with required skill
     wes = set(we.filter(Q(skills__in=skill_r) | Q(topic__skills__in=skill_r)).values_list('talent', flat=True))
+    bch_s = set(bch.filter(skills__in=skill_r).values_list('talent', flat=True))
+    wes = set(wes.union(bch_s))
     #Find all talent with required skill<<<
 
     #>>> Find all talent that have the required Experience
-    wee = set(tlt.filter(exp_lvl__lte=instance.experience_level).values_list('talent', flat=True))
+    wex = set(tlt.filter(exp_lvl__gte=instance.experience_level).values_list('talent', flat=True))
 
-    wee = wee.intersection(wes)
+    wee = wex.intersection(wes)
+
+    tlt_bch_sk = []
+    for t in bch_s:
+        tlt_bch = bch.filter(talent__id=t)
+        try:
+            pre_bch_df = tlt_bch.aggregate(df_min=Min('date_from'))
+            pre_bch_dt = tlt_bch.aggregate(dt_max=Max('date_to'))
+
+            p_bch_df = pre_bch_df.get('df_min')
+            p_bch_dt = pre_bch_dt.get('dt_max')
+
+            p_delta = p_bch_dt - p_bch_df
+            exp_lvls = int(p_delta.days / 7 * 5 * 8)
+        except:
+            exp_lvls = int(0)
+
+        if exp_lvls < sk_st:
+            iama = 0
+        elif exp_lvls >= sk_st and exp_lvls < sk_bg:
+            iama = 1
+        elif exp_lvls >= sk_bg and exp_lvls < sk_jn:
+            iama = 2
+        elif exp_lvls >= sk_jn and exp_lvls < sk_in:
+            iama = 3
+        elif exp_lvls >= sk_in and exp_lvls < sk_sn:
+            iama = 4
+        elif exp_lvls >= sk_sn:
+            iama = 5
+
+        result={'talent':t, 'iama':iama}
+        tlt_bch_sk.append(result)
+
+    fl = list(filter(lambda x: x['iama'] >= int(instance.experience_level.level), tlt_bch_sk))
+    fl2 = list(x['talent'] for x in fl)
+
+    wee = wee.union(fl2)
 
     #Find all talent that have the required Experience<<<
 
     #>>> Find all talent that are in the correct geographic location
-    vac_type = instance.worklocation.id
+    vac_type = instance.worklocation.type
 
-    if vac_type == 0:
+    if vac_type == 'Remote freelance' or vac_type == 'Consultant':
         wel_i=wee
     else:
-        wel = set(PhysicalAddress.objects.filter(region=instance.city.region).values_list('talent', flat=True))
+        cty = Region.objects.get(city__city=instance.city).country
+
+        wel = set(PhysicalAddress.objects.filter(country=cty).values_list('talent', flat=True))
+        #Willing to Relocate
+
+
+        wtr = set(WillingToRelocate.objects.filter(country=cty).values_list('talent', flat=True))
+        wel = wel|wtr
+
         wel_i = wel.intersection(wee)
     #Find all talent that are in the correct geographic location<<<
 
@@ -2976,33 +3077,35 @@ def TalentSuitedVacancyListView(request, vac):
         tetv = t_exp.get('tet')
         talent_skill_l = we.filter(talent=item, edt=False).values_list('skills__skill', flat=True)
         talent_skillt_l = we.filter(talent=item, edt=True).values_list('topic__skills__skill', flat=True)
+        talent_skill_bch_l = bch.filter(talent=item).values_list('skills__skill', flat=True)
+
         talent_skill = list(talent_skill_l)
         rb = book.filter(talent=item).count()
         talent_skillt = list(talent_skillt_l)
-        rb = book.filter(talent=item).count()
+        talent_skill_bch = list(talent_skill_bch_l)
+
         rate = Profile.objects.filter(talent=item).values_list('std_rate', 'currency__currency_abv', 'rate_unit', 'motivation', 'alias',)
-        des = list(BriefCareerHistory.objects.filter(talent=item, current=True).values_list('designation__name', flat=True))
+        des = list(bch.filter(talent=item, current=True).values_list('designation__name', flat=True))
         pfl = Profile.objects.get(talent=item)
         avg = pfl.avg_rate
         cnt = pfl.rate_count
         bg = pfl.background
 
-        slist = talent_skill + talent_skillt
+        slist = talent_skill + talent_skillt + talent_skill_bch
         skillset = set(slist)
         skill_count = len(skillset)
 
-        slist_l = talent_skill_l.union(talent_skillt_l)
+        slist_l_a = talent_skill_l.union(talent_skillt_l)
+        slist_l = slist_l_a.union(talent_skill_bch_l)
         skill_intersection = skill_rs.intersection(slist_l)
         skill_int_count = skill_intersection.count()
         skill_match = skill_int_count / skill_rc * 100
 
-
         suitable[item]={
-            'we':wetv, 'te':tetv,'s_no':skill_count, 'skill_rc': skill_rc, 'skill_int_count': skill_int_count, 'skill_match': skill_match, 'skillset': skillset, 'rb':rb, 'ro':rate, 'score':avg, 'count':cnt, 'background': bg, 'des': des,
+            'we':wetv, 'te':tetv,'s_no':skill_count, 'skill_rc': skill_rc, 'skill_int_count': skill_int_count, 'skill_match': skill_match, 'skillset': skillset, 'rb':rb, 'ro':rate, 'score': avg, 'count': cnt, 'background': bg, 'des': des,
             }
 
-
-    suitable_slice = dict(itertools.islice(suitable.items(), 5))
+    suitable = OrderedDict(sorted(suitable.items(), key=lambda kv: kv[1]['skill_match'], reverse=True))
 
     suitable_count = len(suitable)
 
@@ -3061,16 +3164,20 @@ def ApplicantsForVacancyListView(request, vac):
     delivere = Deliverables.objects.filter(scope__ref_no=vac)
     applicants = WorkBid.objects.filter(work__ref_no=vac)
     we = WorkExperience.objects.filter(Q(talent__subscription__gte=0) & Q(score__gte=skill_pass_score))
+    bch = BriefCareerHistory.objects.all()
     s_list = BidShortList.objects.filter(scope__ref_no=vac)
     book = ReadBy.objects.all()
     vac_exp = ExpandedView.objects.get(talent=request.user)
-    list_view = vac_exp.applicants_list
+    applicants_list_view = vac_exp.applicants_list
+    suited_list_view = vac_exp.talent_suited_list
     sk_st = SkillLevel.objects.get(level=0).min_hours
     sk_bg = SkillLevel.objects.get(level=1).min_hours
     sk_jn = SkillLevel.objects.get(level=2).min_hours
     sk_in = SkillLevel.objects.get(level=3).min_hours
     sk_sn = SkillLevel.objects.get(level=4).min_hours
     sk_ld = SkillLevel.objects.get(level=5).min_hours
+    tr_qs = TalentRequired.objects.filter(ref_no=vac)
+    tlt = Profile.objects.filter(talent__subscription__gte=0)
     #Queryset Cache<<<
 
     #>>> List all skills required
@@ -3082,25 +3189,97 @@ def ApplicantsForVacancyListView(request, vac):
     #List all skills required<<<
 
     #>>> Find all talent with required skill
+    wes = set(we.filter(Q(skills__in=skill_r) | Q(topic__skills__in=skill_r)).values_list('talent', flat=True))
+    bch_s = set(bch.filter(skills__in=skill_r).values_list('talent', flat=True))
+    wes = set(wes.union(bch_s))
+    #Find all talent with required skill<<<
 
-    wes = we.filter(Q(skills__in=skill_r) | Q(topic__skills__in=skill_r)).distinct('talent')
+    #>>> Find all talent that have the required Experience
+    wex = set(tlt.filter(exp_lvl__gte=instance.experience_level).values_list('talent', flat=True))
 
-    #ensure apllicats don't appear in the suitable skills window
-    app_list = applicants.values_list('talent')
-    suit_list = wes.values_list('talent')
-    short_list = s_list.values_list('talent')
-    short_list_a = s_list.filter(talent__subscription__gte=2).values_list('talent')
+    wee = wex.intersection(wes)
+
+    tlt_bch_sk = []
+    for t in bch_s:
+        tlt_bch = bch.filter(talent__id=t)
+        try:
+            pre_bch_df = tlt_bch.aggregate(df_min=Min('date_from'))
+            pre_bch_dt = tlt_bch.aggregate(dt_max=Max('date_to'))
+
+            p_bch_df = pre_bch_df.get('df_min')
+            p_bch_dt = pre_bch_dt.get('dt_max')
+
+            p_delta = p_bch_dt - p_bch_df
+            exp_lvls = int(p_delta.days / 7 * 5 * 8)
+        except:
+            exp_lvls = int(0)
+
+        if exp_lvls < sk_st:
+            iama = 0
+        elif exp_lvls >= sk_st and exp_lvls < sk_bg:
+            iama = 1
+        elif exp_lvls >= sk_bg and exp_lvls < sk_jn:
+            iama = 2
+        elif exp_lvls >= sk_jn and exp_lvls < sk_in:
+            iama = 3
+        elif exp_lvls >= sk_in and exp_lvls < sk_sn:
+            iama = 4
+        elif exp_lvls >= sk_sn:
+            iama = 5
+
+        result={'talent':t, 'iama':iama}
+        tlt_bch_sk.append(result)
+
+    fl = list(filter(lambda x: x['iama'] >= int(instance.experience_level.level), tlt_bch_sk))
+    fl2 = list(x['talent'] for x in fl)
+
+    wee = wee.union(fl2)
+
+    #Find all talent that have the required Experience<<<
+
+    #>>> Find all talent that are in the correct geographic location
+    vac_type = instance.worklocation.type
+
+    if vac_type == 'Remote freelance' or vac_type == 'Consultant':
+        wel_i=wee
+    else:
+        cty = Region.objects.get(city__city=instance.city).country
+
+        wel = set(PhysicalAddress.objects.filter(country=cty).values_list('talent', flat=True))
+        #Willing to Relocate
+
+
+        wtr = set(WillingToRelocate.objects.filter(country=cty).values_list('talent', flat=True))
+        wel = wel|wtr
+
+        wel_i = wel.intersection(wee)
+    #Find all talent that are in the correct geographic location<<<
+
+    #>>> Find all talent that have the required certifications
+    certnull = tr_qs.filter(certification__isnull=False).exists()
+
+    if certnull is False:
+        wec = wel_i
+    else:
+        cert_req = tr_qs.values_list('certification')
+        tlt_cert = set(LicenseCertification.objects.filter(certification__in=cert_req).values_list('talent', flat=True))
+        wec = wel_i.intersection(tlt_cert)
+    #Find all talent that have the required certifications<<<
+
+    #ensure apllicants don't appear in the suitable skills window
+    app_list = set(applicants.values_list('talent', flat=True))
+    suit_list = wec
+    short_list = set(s_list.values_list('talent', flat=True))
+    short_list_a = set(s_list.filter(talent__subscription__gte=2).values_list('talent', flat=True))
 
     diff_list0 = suit_list.difference(app_list)#removes talent that has applied
-    #removes shortlists talent
-    diff_list = diff_list0.difference(short_list)
+    diff_list = diff_list0.difference(short_list)#removes shortlists talent
     app_list = app_list.difference(short_list_a)
 
-    we_list = list(diff_list.values_list('talent', flat=True))
+    we_list = list(diff_list)
 
-    #Extracting information for the applicants
+        #Extracting information for the applicants
     applied ={}
-    app_list = list(app_list.values_list('talent', flat=True))
     for app in app_list:
             aw_exp = we.filter(talent=app, edt=False).aggregate(awet=Sum('hours_worked'))
             awetv = aw_exp.get('awet')
@@ -3108,8 +3287,12 @@ def ApplicantsForVacancyListView(request, vac):
             atetv = at_exp.get('tet')
             talent_skill_l = we.filter(talent=app, edt=False).values_list('skills__skill', flat=True)
             talent_skillt_l = we.filter(talent=app, edt=True).values_list('topic__skills__skill', flat=True)
+            talent_skill_bch_l = bch.filter(talent=item).values_list('skills__skill', flat=True)
+
             atalent_skill = list(talent_skill_l)
             atalent_skillt = list(talent_skillt_l)
+            talent_skill_bch = list(talent_skill_bch_l)
+
             rb = book.filter(talent=app).count()
             rate = applicants.filter(talent=app).values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation', 'talent__alias')
             des = list(BriefCareerHistory.objects.filter(talent=app, current=True).values_list('designation__name', flat=True))
@@ -3118,16 +3301,21 @@ def ApplicantsForVacancyListView(request, vac):
             cnt = pfl.rate_count
             bg = pfl.background
 
-            aslist = atalent_skill + atalent_skillt
+            aslist = atalent_skill + atalent_skillt + talent_skill_bch
             askillset = set(aslist)
             askill_count = len(askillset)
 
-            slist_l = talent_skill_l.union(talent_skillt_l)
+            slist_l_a = talent_skill_l.union(talent_skillt_l)
+            slist_l = slist_l_a.union(talent_skill_bch_l)
             skill_intersection = skill_rs.intersection(slist_l)
             skill_int_count = skill_intersection.count()
             skill_match = skill_int_count / skill_rc * 100
 
-            applied[app]={'we':awetv, 'te':atetv, 's_no': askill_count, 'skill_rc': skill_rc, 'skill_int_count': skill_int_count, 'skill_match': skill_match, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score': avg, 'count': cnt, 'background': bg, 'des': des,}
+            applied[app]={
+                'we':awetv, 'te':atetv, 's_no': askill_count, 'skill_rc': skill_rc, 'skill_int_count': skill_int_count, 'skill_match': skill_match, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score': avg, 'count': cnt, 'background': bg, 'des': des,
+                }
+
+    applied = OrderedDict(sorted(applied.items(), key=lambda kv: kv[1]['skill_match'], reverse=True))
 
     applied_count = len(applied)
 

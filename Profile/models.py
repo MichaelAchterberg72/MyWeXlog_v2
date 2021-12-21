@@ -43,6 +43,7 @@ class BriefCareerHistory(models.Model):
     companybranch = models.ForeignKey(Branch, on_delete=models.PROTECT, verbose_name="Home_Base")
     description = HTMLField(blank=True, null=True)
     skills = models.ManyToManyField(SkillTag, related_name='skills_utilised')
+    reason_for_leaving = models.TextField('Reason for leaving', blank=True, null=True)
     current = models.BooleanField(default=False)
     date_captured = models.DateField(auto_now_add=True)
     date_from = models.DateField()

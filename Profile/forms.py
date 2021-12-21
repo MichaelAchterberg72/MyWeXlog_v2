@@ -119,13 +119,14 @@ class DateInput(forms.DateInput):
 class BriefCareerHistoryForm(forms.ModelForm):
     class Meta:
         model = BriefCareerHistory
-        fields = ('work_configeration', 'companybranch', 'date_from', 'date_to', 'designation', 'description', 'skills')
+        fields = ('work_configeration', 'companybranch', 'date_from', 'date_to', 'designation', 'description', 'skills', 'reason_for_leaving')
         widgets = {
             'companybranch': BranchWidget(),
             'date_from': DateInput(),
             'date_to': DateInput(),
             'designation': DesignationSelect2Widget(),
             'skills': SkillModelSelect2MultipleWidget(),
+            'reason_for_leaving': forms.Textarea(attrs={'rows': 4}),
         }
         labels = {
             'work_configeration': 'Work Configuration',

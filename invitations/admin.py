@@ -5,4 +5,4 @@ from .models import Invitation
 
 @admin.register(Invitation)
 class InvitationAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['invited_by__alias', 'name', 'surname']

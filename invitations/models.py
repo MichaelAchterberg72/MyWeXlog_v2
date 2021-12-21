@@ -5,6 +5,8 @@ from tinymce.models import HTMLField
 from enterprises.models import Branch
 from talenttrack.models import WorkExperience
 
+from Profile.utils import create_code9
+
 
 class Invitation(models.Model):
     WREL = (
@@ -29,6 +31,13 @@ class Invitation(models.Model):
     accpeted = models.BooleanField(null=True, default=False)
     date_accepted = models.DateTimeField(auto_now=True)
     assigned = models.BooleanField('Assigned since registration', default=False)
+    slug = models.SlugField(max_length=9, unique=True, null=True)
 
     def __str__(self):
         return f"{self.name} {self.surname} invited by {self.invited_by} on {self.date_invited} - {self.date_accepted}"
+
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
+
+        super(Invitation, self).save(*args, **kwargs)

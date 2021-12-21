@@ -89,6 +89,11 @@
           {{ form.description|as_crispy_field }}
         </div>
       </div>
+      <div class="form-row">
+        <div class="col-md-12">
+          {{ form.reason_for_leaving|as_crispy_field }}
+        </div>
+      </div>
       <div class="">
         <p>
           <a href="{% url 'Profile:ProfileView' %}" class="btn btn-danger">

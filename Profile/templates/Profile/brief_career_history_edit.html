@@ -74,6 +74,11 @@
           {{ form.description|as_crispy_field }}
         </div>
       </div>
+      <div class="form-row">
+        <div class="col-md-12">
+          {{ form.reason_for_leaving|as_crispy_field }}
+        </div>
+      </div>
       <div class="row btn-toolbar">
           <a href="{% url 'Profile:ProfileView' %}#History" class="btn btn-danger">
             Cancel
