@@ -224,17 +224,17 @@ CSP_DEFAULT_SRC = (
     )#app_config
 
 CSP_SCRIPT_SRC = (
-    "'self'", "'unsafe-inline'", '127.0.0.1', '107.191.57.249', 'code.jquery.com', 'maxcdn.bootstrapcdn.com', 'kit.fontawesome.com', 'app.mywexlog.dev', 'mywexlog.dev', 'cdnjs.cloudflare.com', 'maps.googleapis.com', 'bookstrapcdn.com', 'cdn.jsdelivr.net', 'cdn.jsdelivr.net', 'ajax.googleapis.com', 'cdnjs.cloudflare.com', 'apis.google.com', 'https://www.gstatic.com', 'dot-test-machterberg.s3.amazonaws.com', 'plausible.io', 'googletagmanager.com', 'www.googletagmanager.com', 'www.google-analytics.com',
+    "'self'", "'unsafe-inline'", '127.0.0.1', '107.191.57.249', 'code.jquery.com', 'maxcdn.bootstrapcdn.com', 'kit.fontawesome.com', 'app.mywexlog.dev', 'mywexlog.dev', 'cdnjs.cloudflare.com', 'maps.googleapis.com', 'bookstrapcdn.com', 'cdn.jsdelivr.net', 'cdn.jsdelivr.net', 'ajax.googleapis.com', 'cdnjs.cloudflare.com', 'apis.google.com', 'https://www.gstatic.com', 'dot-test-machterberg.s3.amazonaws.com', 'plausible.io', 'googletagmanager.com', 'www.googletagmanager.com', 'www.google-analytics.com', 'platform.linkedin.com', 'www.linkedin.com', 'connect.facebook.net',
     )#app_config
 CSP_IMG_SRC = (
-    "'self'", '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev', 'dot-test-machterberg.s3.amazonaws.com', 'w3.org',
+    "'self'", '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev', 'dot-test-machterberg.s3.amazonaws.com', 'w3.org', 'www.facebook.com',
     )#app_config
 CSP_OBJECT_SRC = None
 CSP_MEDIA_SRC = (
     "'self'", '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev', 'youtube.com', 'dot-test-machterberg.s3.amazonaws.com',
     )
 CSP_FRAME_SRC = (
-    'https://www.youtube.com/', 'https://content.googleapis.com/', 'https://accounts.google.com/', "'self'", '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev', 'youtube.com', 'dot-test-machterberg.s3.amazonaws.com',
+    'https://www.youtube.com/', 'https://content.googleapis.com/', 'https://accounts.google.com/', "'self'", '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev', 'youtube.com', 'dot-test-machterberg.s3.amazonaws.com', 'platform.linkedin.com', 'www.linkedin.com', 'connect.facebook.net', 'www.facebook.com', 'web.facebook.com',
     )
 CSP_FONT_SRC = (
     "'self'", 'fonts.googleapis.com', '*', 'w3.org', '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev', 'dot-test-machterberg.s3.amazonaws.com',
