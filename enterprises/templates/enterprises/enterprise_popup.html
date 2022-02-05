@@ -1,6 +1,6 @@
 {% extends 'base_homelite.html' %}
 {% load crispy_forms_tags %}
-
+{% load static %}
 {% block title %}My {{block.super}} Profile{% endblock title %}
 
 
@@ -8,7 +8,7 @@
 <div class="container">
 <h3>Add a Company / Enterprise</h3>
 
-<form method="post" novalidate>
+<form method="post" enctype="multipart/form-data">
   {% csrf_token %}
   <div style="background-color:red; color:white;">
     <p>
@@ -20,6 +20,7 @@
     <div class="form-group col-md-6 mb-0">
       {{ form.ename|as_crispy_field }}
       {{ form.website|as_crispy_field }}
+      {{ form.logo|as_crispy_field }}
     </div>
     <div class="form-group col-md-6 mb-0">
       {{ form.description|as_crispy_field }}

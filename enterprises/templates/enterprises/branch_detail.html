@@ -1,5 +1,5 @@
 {% extends "base_home.html" %}
-
+{% load static %}
 {% block title %}{{block.super}}-Branches{% endblock title %}
 
 {% block content %}
@@ -7,7 +7,11 @@
 <div class="card card-shadow">
   <div class="card-body">
     <h4 class="">
-      Detail for {{ info.company.ename }}'s {{ info.name }} branch
+      {% if info.company.logo %}
+      <img align="center" class="" height="40" width="40" src="{{ info.company.logo.url }}" style="border:0;" width="null"/>
+      {% else %}
+      <img align="center" class="" height="40" width="40" src="{% static 'images/email/mywexlog-logo.png' %}" style="border:0;opacity:0.2;" width="null"/>
+      {% endif %} Detail for {{ info.company.ename }}'s {{ info.name }} branch
     </h4>
     {% if request.user.is_authenticated %}
     <p>

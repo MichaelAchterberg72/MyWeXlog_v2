@@ -2424,7 +2424,7 @@ def ProfileBackgroundEditView(request, tlt):
     detail = Profile.objects.get(alias=tlt)
 
     if detail.talent == request.user:
-        form = ProfileBackgroundForm(request.POST or None, instance=detail)
+        form = ProfileBackgroundForm(request.POST or None, request.FILES or None, instance=detail)
 
         if request.method =='POST':
             next_url=request.POST.get('next','/')
