@@ -62,6 +62,7 @@ from sendgrid.helpers.mail import (Mail, Subject, To, ReplyTo, SendAt, Content, 
 
 from .models import UNIT, RATE_UNIT
 
+
 def jooble_feed(request):
     """<link> - the full URL of a job, where Jooble will forward users to. The link must lead to a page with a complete job description.
     <name> - job title.
@@ -123,7 +124,7 @@ def jooble_feed(request):
         rate_unit = []
         for p in current_vacancies.get(ref_no=vac).rate_unit:
             ru_choice = {k: v for k, v in RATE_UNIT}[p[-1]]
-#            rate_unit.append(list(p[:-1]) + [ru_choice])
+            #            rate_unit.append(list(p[:-1]) + [ru_choice])
 
         salary.text = f'<![CDATA[{salary_rate}{salary_curency}/{ru_choice}]]>'
         company.text = f'<![CDATA[{current_vacancies.get(ref_no=vac).companybranch.company.ename}]]>'
@@ -131,10 +132,124 @@ def jooble_feed(request):
         result = []
         for p in current_vacancies.get(ref_no=vac).unit:
             choice = {k: v for k, v in UNIT}[p[-1]]
-        jobtype.text = f'{choice}'
-#            result.append(list(p[:-1]) + [choice])
+            jobtype.text = f'{choice}'
+            #            result.append(list(p[:-1]) + [choice])
 
     xml = tostring(jobs, encoding='utf8').decode('utf8')
+
+    return HttpResponse(xml, content_type="text/xml")
+
+
+def indeed_feed(request):
+    now = timezone.now()
+    monthly = datetime.timedelta(days=45)
+
+    indexable_date = now - monthly
+
+    current_vacancies = TalentRequired.objects.filter(Q(offer_status="O") & Q(offer_status='O'))
+
+    vacancies = current_vacancies.values_list('ref_no', flat=True).distinct()
+
+    jobs = []
+    source = Element('source')
+    publisher = SubElement(source, 'publisher')
+    publisher.text = "MyWeXlog"
+    publisher_url = SubElement(source, 'publisherurl')
+    publisher_url.text = "https://mywexlog.com/"
+    last_build_date = Element('lastBuildDate')
+    for vac in vacancies:
+        job = SubElement(source, 'job')
+        title = SubElement(job, 'title')
+        date = SubElement(job, 'date')
+        reference_number = SubElement(job, 'referencenumber')
+        url = SubElement(job, 'url')
+        company = SubElement(job, 'company')
+        city = SubElement(job, 'city')
+        state = SubElement(job, 'state')
+        country = SubElement(job, 'country')
+        description = SubElement(job, 'description')
+        salary = SubElement(job, 'salary')
+        education = SubElement(job, 'education')
+        jobtype = SubElement(job, 'jobtype')
+        experience = SubElement(job, 'experience')
+        expiration_date = SubElement(job, 'expirationdate')
+        remote_type = SubElement(job, 'remotetype')
+        # indeed_apply_date
+        last_activity_date = SubElement(job, 'lastactivitydate')
+
+        ref = current_vacancies.get(ref_no=vac).ref_no
+        title.text = f'<![CDATA[{current_vacancies.get(ref_no=vac).title}]]>'
+        date.text = f'<![CDATA[{current_vacancies.get(ref_no=vac).bid_open.strftime("%a, %d %b %Y %H:%M:%S")}]]>'
+        reference_number.text = f'<![CDATA[{current_vacancies.get(ref_no=vac).ref_no}]]>'
+        url.text = f'<![CDATA[https://app.mywexlog.com/marketplace/public/vacancy/{ref}/]]>'
+        company.text = f'<![CDATA[{current_vacancies.get(ref_no=vac).companybranch.company.ename}]]>'
+        region_qs = current_vacancies.get(ref_no=vac).city.region.region
+        city_qs = current_vacancies.get(ref_no=vac).city.city
+        country_qs = current_vacancies.get(ref_no=vac).city.region.country.name
+        city.text = f'<![CDATA[{city_qs}]]>'
+        state.text = f'<![CDATA[{region_qs}]]>'
+        country.text = f'<![CDATA[{country_qs}]]>'
+
+        description_scope_qs = current_vacancies.get(ref_no=vac).scope
+        description_expectations_qs = current_vacancies.get(ref_no=vac).expectations
+        description_skills = SkillRequired.objects.filter(scope__ref_no=vac).values_list('skills__skill')
+        skills_string_list = [", ".join(s) for s in description_skills]
+        skills_string = ", ".join(skills_string_list)
+        description.text = f'<![CDATA[Scope: {description_scope_qs}\n Expectations: {description_expectations_qs}\n Skills: {skills_string}]]>'
+        salary_rate = current_vacancies.get(ref_no=vac).rate_offered
+        salary_curency = current_vacancies.get(ref_no=vac).currency.currency_abv
+        rate_unit = []
+        for p in current_vacancies.get(ref_no=vac).rate_unit:
+            ru_choice = {k: v for k, v in RATE_UNIT}[p[-1]]
+        salary.text = f'<![CDATA[{salary_curency}{salary_rate}/{ru_choice}]]>'
+        try:
+            education_qs = current_vacancies.filter(ref_no=vac).values_list('certification__type', flat=True)
+            education_string = ", ".join(education_qs)
+            education.text = f'<![CDATA[{education_string}]]>'
+        except:
+            pass
+        for p in current_vacancies.get(ref_no=vac).unit:
+            choice = {k: v for k, v in UNIT}[p[-1]]
+            jobtype.text = f'<![CDATA[{choice}]]>'
+        experience.text = f'<![CDATA[{current_vacancies.get(ref_no=vac).experience_level}]]>'
+        expiration_date.text = f'<![CDATA[{current_vacancies.get(ref_no=vac).bid_closes.strftime("%a, %d %b %Y")}]]>'
+        remote_type.text = f'<![CDATA[{current_vacancies.get(ref_no=vac).worklocation}]]>'
+        last_update_date_qs = current_vacancies.get(ref_no=vac).date_modified
+        last_shortlist_date_qs =  BidShortList.objects.filter(scope__ref_no=vac).aggregate(dt_max=Max('date_listed'))
+        last_interview_date_qs =  BidInterviewList.objects.filter(scope__ref_no=vac).aggregate(dt_max=Max('date_listed'))
+        last_shortlist_date_date = last_shortlist_date_qs.get('dt_max')
+        last_interview_date_date = last_interview_date_qs.get('dt_max')
+        print('#######', last_shortlist_date_date)
+        print('#######', last_interview_date_date)
+        if last_shortlist_date_date is None:
+            last_shortlist_date_date = datetime.datetime.utcfromtimestamp(0)
+            # return  "0000-00-00 00:00:00"
+        else:
+            return last_shortlist_date_date
+
+        if last_interview_date_date is None:
+            last_shortlist_date_date = datetime.datetime.utcfromtimestamp(0)
+            # return  "0000-00-00 00:00:00"
+        else:
+            return last_interview_date_date
+
+        if last_shortlist_date_date >= last_interview_date_date:
+            print('@@@@@@@')
+            last_activity_date_date = last_shortlist_date_date
+        else:
+            last_activity_date_date = last_interview_date_qs
+
+        if last_activity_date_date is not None:
+            if last_activity_date_date >= last_update_date_qs:
+                activity_date = last_activity_date_date
+            else:
+                activity_date = last_activity_date_date
+        else:
+            activity_date = last_update_date_qs
+        last_activity_date.text = f'<![CDATA[{activity_date.strftime("%a, %d %b %Y %H:%M:%S")}]]>'
+        # strftime("%a, %d %b %Y %H:%M:%S")
+
+    xml = tostring(source, encoding='utf8').decode('utf8')
 
     return HttpResponse(xml, content_type="text/xml")
 
