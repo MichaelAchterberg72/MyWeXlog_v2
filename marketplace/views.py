@@ -61,6 +61,7 @@ from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import (Mail, Subject, To, ReplyTo, SendAt, Content, From, CustomArg, Header)
 
 from .models import UNIT, RATE_UNIT
+import pytz
 
 
 def jooble_feed(request):
@@ -214,27 +215,24 @@ def indeed_feed(request):
         experience.text = f'<![CDATA[{current_vacancies.get(ref_no=vac).experience_level}]]>'
         expiration_date.text = f'<![CDATA[{current_vacancies.get(ref_no=vac).bid_closes.strftime("%a, %d %b %Y")}]]>'
         remote_type.text = f'<![CDATA[{current_vacancies.get(ref_no=vac).worklocation}]]>'
-        last_update_date_qs = current_vacancies.get(ref_no=vac).date_modified
+        last_update_date_1 = current_vacancies.get(ref_no=vac).date_modified
+        last_update_date_qs = timezone.localtime(last_update_date_1, timezone.get_fixed_timezone(60))
         last_shortlist_date_qs =  BidShortList.objects.filter(scope__ref_no=vac).aggregate(dt_max=Max('date_listed'))
         last_interview_date_qs =  BidInterviewList.objects.filter(scope__ref_no=vac).aggregate(dt_max=Max('date_listed'))
         last_shortlist_date_date = last_shortlist_date_qs.get('dt_max')
         last_interview_date_date = last_interview_date_qs.get('dt_max')
-        print('#######', last_shortlist_date_date)
-        print('#######', last_interview_date_date)
+        utc=pytz.UTC
         if last_shortlist_date_date is None:
-            last_shortlist_date_date = datetime.datetime.utcfromtimestamp(0)
-            # return  "0000-00-00 00:00:00"
+            last_shortlist_date_date = utc.localize(datetime.datetime(2001,1,1,0,0,0))
         else:
-            return last_shortlist_date_date
+            last_shortlist_date_date = last_shortlist_date_date
 
         if last_interview_date_date is None:
-            last_shortlist_date_date = datetime.datetime.utcfromtimestamp(0)
-            # return  "0000-00-00 00:00:00"
+            last_interview_date_date = utc.localize(datetime.datetime(2001,1,1,0,0,0))
         else:
-            return last_interview_date_date
+            last_interview_date_date = last_interview_date_date
 
         if last_shortlist_date_date >= last_interview_date_date:
-            print('@@@@@@@')
             last_activity_date_date = last_shortlist_date_date
         else:
             last_activity_date_date = last_interview_date_qs
@@ -243,11 +241,10 @@ def indeed_feed(request):
             if last_activity_date_date >= last_update_date_qs:
                 activity_date = last_activity_date_date
             else:
-                activity_date = last_activity_date_date
+                activity_date = last_update_date_qs
         else:
             activity_date = last_update_date_qs
         last_activity_date.text = f'<![CDATA[{activity_date.strftime("%a, %d %b %Y %H:%M:%S")}]]>'
-        # strftime("%a, %d %b %Y %H:%M:%S")
 
     xml = tostring(source, encoding='utf8').decode('utf8')
 
