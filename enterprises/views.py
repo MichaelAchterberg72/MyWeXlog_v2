@@ -322,7 +322,7 @@ def EnterpriseAddPopup(request):
 
     filt = exist_comp
 
-    form = EnterprisePopupForm(request.POST or None, pwd=filt)
+    form = EnterprisePopupForm(request.POST or None, request.FILES or None, pwd=filt)
     if request.method == 'POST':
         if form.is_valid():
             instance=form.save(commit=False)

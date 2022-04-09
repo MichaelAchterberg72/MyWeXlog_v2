@@ -126,7 +126,7 @@ class TalentRequired(models.Model):
     expectations = HTMLField()
     terms = models.FileField(storage=PublicMediaStorage(), upload_to=BidTerms, blank=True, null=True, validators=[FileExtensionValidator(['pdf'])])
     city = models.ForeignKey(City, on_delete=models.PROTECT, verbose_name='City, Town or Place')
-    date_modified = models.DateField(auto_now=True)
+    date_modified = models.DateTimeField(auto_now=True)
     vac_wkfl = models.CharField(max_length=1, choices=WKFLOW, default='P')
 
     class Meta:

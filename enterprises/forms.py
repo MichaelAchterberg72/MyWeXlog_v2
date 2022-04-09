@@ -196,7 +196,10 @@ class EnterprisePopupForm(forms.ModelForm):
 
     class Meta:
         model = Enterprise
-        fields = ('ename', 'description', 'website')
+        fields = ('ename', 'description', 'logo', 'website')
+        help_texts = {
+            'logo': 'Best size 140 x 140',
+        }
 
     def clean_company(self):
         company_passed = self.cleaned_data.get("name")

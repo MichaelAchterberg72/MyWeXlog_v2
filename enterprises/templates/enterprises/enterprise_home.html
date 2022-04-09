@@ -1,5 +1,5 @@
 {% extends "base_home.html" %}
-
+{% load static %}
 {% block title %}{{block.super}}-Enterprise{% endblock title %}
 
 {% block content %}
@@ -41,13 +41,13 @@
     {% endif %}
     <div class="container">
       <div class="row my-auto">
-        <div class="col-md-3 h-100 text-center my-auto">
+        <div class="col-md-4 h-100 text-center my-auto">
           <strong>Name</strong>
         </div>
         <div class="col-md-3 h-100 text-center my-auto">
           <strong>Website</strong>
         </div>
-        <div class="col-md-3 h-100 text-center my-auto">
+        <div class="col-md-2 h-100 text-center my-auto">
           <strong>Rating</strong>
         </div>
         <div class="col-md-1 h-100 text-center my-auto">
@@ -63,14 +63,25 @@
       <div class="card mt-2 card-hover" style="width: 100%;">
         <div class="card-body">
           <div class="row my-auto">
-            <div class="col-3 col-no-pad h-100 text-center my-auto">
-              {{ c.ename }}
+            <div class="col-4 col-no-pad h-100 text-center my-auto">
+              <div class="row">
+                <div class="col-md-2 text-left">
+                  {% if c.logo %}
+                  <img align="center" class="" height="40" width="40" src="{{ c.logo.url }}" style="border:0;" width="null"/>
+                  {% else %}
+                  <img align="center" class="" height="40" width="40" src="{% static 'images/email/mywexlog-logo.png' %}" style="border:0;opacity:0.2;" width="null"/>
+                  {% endif %}
+                </div>
+                <div class="col-md-10 text-center">
+                  {{ c.ename }}
+                </div>
+              </div>
             </div>
             <div class="col-3 col-no-pad h-100 text-center my-auto">
               <a href="{{ c.website }}" target="_blank">{{ c.website|truncatechars:37 }}</a>
             </div>
             {% if request.user.subscription >= 2 %}
-              <div class="col-3 col-no-pad h-100 text-center my-auto">
+              <div class="col-2 col-no-pad h-100 text-center my-auto">
                 {% if c.rate_count > 4 %}
                   {{ c.avg_rate }}
                 {% else %}

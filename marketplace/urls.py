@@ -123,6 +123,7 @@ urlpatterns = [
     path('vacancy/unsuccessful-application-history-full-list/', views.RolesAppliedForUnsuccessfulApplicationHistoryView, name='RolesAppliedForUnsuccessfulFullList'),
 
     path('jooble-feed/', views.jooble_feed, name="jooble-feed"),
+    path('indeed-feed/', views.indeed_feed, name="indeed-feed"),
 
     #Help urls
     path('help/Experience-level/', views.ExperienceLevelHelpView, name="HelpExperienceLevel"),

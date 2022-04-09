@@ -1,29 +1,63 @@
 {% extends "base_home.html" %}
 {% load humanize %}
+{% load static %}
 {% block title %}{{block.super}}-Vacancy{% endblock title %}
 
 {% block content %}
 {% for v in vacancy %}
 <div class="card card-shadow">
   <div class="card-body">
-  <div class="btn-toolbar float-right">
-    <form  action="{% url 'BookList:BLB' %}" method="post">
-      <input type="hidden" name="next" value="{{ request.GET.next }}">
-      {% csrf_token %}
-      <button type="submit" class="btn btn-secondary">Back</button>
-    </form>&nbsp
-    {% if v.offer_status == 'O' %}
-      {% if applied %}
-        <button type="button" name="button" class="btn btn-danger">Already Applied</button>
-      {% else %}
-        <a href="{% url 'MarketPlace:WorkBid' v.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-warning">Apply for this role</a>
-      {% endif %}
-    {% else %}
-      <a href="#" class="btn btn-danger">Closed</a>
-    {% endif %}
-  </div>
+
   <div class="">
-    <h4 class="card-title">Vacancy: {{ v.title }} ({{ v.ref_no }})</h4>
+    <div class="row">
+      <div class="col-md-2">
+        {% if v.companybranch.company.logo %}
+        <img align="center" class="" height="140" width="140" src="{{ v.companybranch.company.logo.url }}" style="border:0;" width="null"/>
+        {% else %}
+        <img align="center" class="" height="140" width="140" src="{% static 'images/email/mywexlog-logo.png' %}" style="border:0;opacity:0.2;" width="null"/>
+        {% endif %}
+      </div>
+      <div class="col-md-10">
+        <div class="row">
+          <div class="col-md-8">
+            <h4 class="card-title">Vacancy: {{ v.title }}<br>Ref No: ({{ v.ref_no }})</h4>
+          </div>
+          <div class="col-md-4">
+            <div class="btn-toolbar float-right">
+              <form  action="{% url 'BookList:BLB' %}" method="post">
+                <input type="hidden" name="next" value="{{ request.GET.next }}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-secondary">Back</button>
+              </form>&nbsp
+              {% if v.offer_status == 'O' %}
+                {% if applied %}
+                  <button type="button" name="button" class="btn btn-danger">Already Applied</button>
+                {% else %}
+                  <a href="{% url 'MarketPlace:WorkBid' v.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-warning">Apply for this role</a>
+                {% endif %}
+              {% else %}
+                <a href="#" class="btn btn-danger">Closed</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% url 'MarketPlace:VacancyDetailPublic' v.ref_no as url %}
+        <div class="row">
+          <div class="col-md-1">
+            <script src="https://platform.linkedin.com/in.js" type="text/javascript">lang: en_US</script>
+            <script type="IN/Share" data-url="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{{ url }}"></script>
+          </div>
+          <div class="col-md-9">
+            <div id="fb-root"></div>
+            <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v12.0&appId=1126519771487418&autoLogAppEvents=1" nonce="k5pfipEE"></script>
+            <div class="fb-share-button" data-href="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{{ url }}" data-layout="button" data-size="small"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
+          </div>
+          <div class="col-md-2">
+            <script type="IN/FollowCompany" data-id="64630696" data-counter="bottom"></script>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <br>
   {% endfor %}
