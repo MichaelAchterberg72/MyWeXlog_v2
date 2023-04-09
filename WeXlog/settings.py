@@ -295,7 +295,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         #'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'wexlog_chat', #'Wexlog_Home', #'test_load', #,
+        'NAME': 'myl_develop', #'Wexlog_Home', #'test_load', #,
         'USER': 'postgres',
 		'PASSWORD': 'rdf8tm1234', #MA
         'HOST': 'localhost',

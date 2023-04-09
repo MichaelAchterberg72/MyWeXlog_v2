@@ -14,4 +14,4 @@ urlpatterns = [
     path('invite-detail/<slug:invs>/', views.invite_detail_view, name="InviteDetail"),
 ]
 
-ConfigureWorkerInvite()
+# ConfigureWorkerInvite()

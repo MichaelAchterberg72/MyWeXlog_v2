@@ -2007,13 +2007,8 @@ def site_skill_stats(request, skl, prj=None):
 
 
 @login_required()
-<<<<<<< HEAD
-def profile_skill_stats(request, skl):
-    #The view for the individual skill overview and stats
-=======
 def profile_skill_stats(request, skl, vac=None):
     '''The view for the individual skill overview and stats'''
->>>>>>> 2020-10-Mike-Chat
     skill = SkillTag.objects.get(id=skl)
     tlt_instance = request.user
     tlt = tlt_instance.alias
