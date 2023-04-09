@@ -1,10 +1,11 @@
-from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext, gettext_lazy as _
 
 from tinymce.models import HTMLField
 
+from django.db import models
 from django_countries.fields import CountryField
+from tinymce.models import HTMLField
 
 from enterprises.models import Enterprise, Industry, Branch
 from locations.models import Currency, City, Region
@@ -46,7 +47,7 @@ class ProjectPersonalDetails(models.Model):
     project = models.ForeignKey(ProjectData, on_delete=models.CASCADE)
     company = models.ForeignKey(Enterprise, on_delete=models.PROTECT, verbose_name="Owner", null=True)
     companybranch = models.ForeignKey(Branch, on_delete=models.PROTECT, verbose_name='Branch Working for on the Project', null=True)
-    description = HTMLField(blank=True, null=True)
+    description = HTMLField(verbose_name='Personal responsibilities description', blank=True, null=True)
     slug = models.SlugField(max_length=50, unique=True, null=True, blank=True)
 
     class Meta:

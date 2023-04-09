@@ -2,11 +2,10 @@ from django import template
 
 from allauth.account.utils import user_display
 
-
 register = template.Library()
 
 
-@register.simple_tag(name='user_display')
+@register.simple_tag(name="user_display")
 def user_display_tag(user):
     """
     Example usage::

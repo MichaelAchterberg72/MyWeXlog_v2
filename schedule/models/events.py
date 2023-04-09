@@ -9,16 +9,15 @@ from django.db.models import Q
 from django.template.defaultfilters import date
 from django.urls import reverse
 from django.utils import timezone
-from django.utils.translation import gettext, gettext_lazy as _
+from django.utils.translation import gettext
+from django.utils.translation import gettext_lazy as _
 
+from db_flatten.models import SkillTag
+from enterprises.models import Branch
+from project.models import ProjectPersonalDetails, ProjectPersonalDetailsTask
 from schedule.models.calendars import Calendar
 from schedule.models.rules import Rule
 from schedule.utils import OccurrenceReplacer
-
-from enterprises.models import Branch
-from project.models import ProjectPersonalDetails, ProjectPersonalDetailsTask
-from db_flatten.models import SkillTag
-
 
 freq_dict_order = {
     "YEARLY": 0,

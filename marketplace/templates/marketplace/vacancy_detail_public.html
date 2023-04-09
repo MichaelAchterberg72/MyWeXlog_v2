@@ -1,0 +1,385 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+{% load static %}
+{% block title %}{{block.super}}-Vacancy{% endblock title %}
+
+{% block head %}
+
+{% for v in vacancy %}
+<script type="application/ld+json">
+  {
+    "@context" : "https://schema.org/",
+    "@type" : "JobPosting",
+    "title" : "{{ v.title }}",
+    "description" : "<p>{{ v.scope|safe }}</p><p>{{ v.expectations|safe }}</p>",
+    "identifier": {
+      "@type": "PropertyValue",
+      "name": "{{Google}}",
+      "value": "{{123456}}"
+    },
+    "datePosted" : "{{ v.bid_open }}",
+    "validThrough" : "{{ v.bid_closes }}",
+    "employmentType" : "{{ v.worklocation }}",
+    "hiringOrganization" : {
+      "@type" : "Organization",
+      "name" : "{{ v.companybranch.company }}",
+      "sameAs" : "https://mywexlog.com/",
+      "logo" : "https://mywexlog.com/prod_static/images/favicon.png"
+    },
+    "jobLocation": {
+    "@type": "Place",
+      "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "{{ v.city.city }}",
+      "addressRegion": "{{ v.region.region }}",
+      "addressCountry": "{{ v.region.country }}"
+      }
+    },
+    "baseSalary": {
+      "@type": "MonetaryAmount",
+      "currency": "{{ v.currency }}",
+      "value": {
+        "@type": "QuantitativeValue",
+        "value": {{ v.rate_offered }},
+        "unitText": "{{ v.get_rate_unit_display }}"
+      }
+    }
+  }
+  </script>
+{% endfor %}
+
+{% endblock head %}
+
+{% block content %}
+{% for v in vacancy %}
+<div class="card card-shadow">
+  <div class="card-body">
+    <div class="">
+      <div class="row">
+        <div class="col-md-2">
+          {% if v.companybranch.company.logo %}
+          <img align="center" class="" height="140" width="140" src="{{ v.companybranch.company.logo.url }}" style="border:0;" width="null"/>
+          {% else %}
+          <img align="center" class="" height="140" width="140" src="{% static 'images/email/mywexlog-logo.png' %}" style="border:0;opacity:0.2;" width="null"/>
+          {% endif %}
+        </div>
+        <div class="col-md-10">
+          <div class="row">
+            <div class="col-md-8">
+              <h4 class="card-title">Vacancy: {{ v.title }}<br>Ref No: ({{ v.ref_no }})</h4>
+            </div>
+            <div class="col-md-4">
+              <div class="btn-toolbar float-right">
+                {% if v.offer_status == 'O' %}
+                  {% if applied %}
+                    <button type="button" name="button" class="btn btn-danger">Already Applied</button>
+                  {% else %}
+                    <a href="{% url 'MarketPlace:WorkBid' v.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-warning">Apply for this role</a>
+                  {% endif %}
+                {% else %}
+                  <a href="#" class="btn btn-danger">Vacancy Closed</a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+          {% url 'MarketPlace:VacancyDetailPublic' v.ref_no as url %}
+          <div class="row">
+            <div class="col-md-1">
+              <script src="https://platform.linkedin.com/in.js" type="text/javascript">lang: en_US</script>
+              <script type="IN/Share" data-url="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{{ url }}"></script>
+            </div>
+            <div class="col-md-9">
+              <div id="fb-root"></div>
+              <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v12.0&appId=1126519771487418&autoLogAppEvents=1" nonce="k5pfipEE"></script>
+              <div class="fb-share-button" data-href="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{{ url }}" data-layout="button" data-size="small"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
+            </div>
+            <div class="col-md-2">
+              <script type="IN/FollowCompany" data-id="64630696" data-counter="bottom"></script>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <br>
+  {% endfor %}
+  {% if wit %}
+    {% for i in wit %}
+    <p class="text-center">Vacancy is closed and issued to: <strong>{{ i.talent.alias }}</strong></p>
+    {% endfor %}
+  {% endif %}
+  {% for v in vacancy %}
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th class="align-middle text-center">Designation</th>
+        <th class="align-middle text-center">Company</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="align-middle text-center">{{ v.designation }}</td>
+        <td class="align-middle text-center">
+          {% if request.user.subscription >= 2 %}
+            {{ v.companybranch.company }} ({{ v.companybranch.name }})<br>
+            {{ v.companybranch.type }}<br>
+          {% else %}
+            <p data-toggle="tooltip" title="Company information for Active Subscriptions only"><i class="fa fa-eye-slash" aria-hidden="true" style="font-size: 27px"></i></p>
+          {% endif %}
+
+          {% if request.user.subscription >= 1 %}
+            {% if rate_b.rate_count >= 5 %}
+              {% if rate_b.avg_rate >= 0 and rate_b.avg_rate < 0.5 %}
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif rate_b.avg_rate >= 0.5 and rate_b.avg_rate < 1 %}
+                <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif rate_b.avg_rate >= 1 and rate_b.avg_rate < 1.5 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif rate_b.avg_rate >= 1.5 and rate_b.avg_rate < 2 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif rate_b.avg_rate >= 2 and rate_b.avg_rate < 2.5 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif rate_b.avg_rate >= 2.5 and rate_b.avg_rate < 3 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif rate_b.avg_rate >= 3 and rate_b.avg_rate < 3.5 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif rate_b.avg_rate >= 3.5 and rate_b.avg_rate < 4 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif rate_b.avg_rate >= 4 and rate_b.avg_rate < 4.5 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-o" aria-hidden="true"></i></span>
+              {% elif rate_b.avg_rate >= 4.5 and rate_b.avg_rate < 4.95 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star-half-o" aria-hidden="true"></i></span>
+              {% elif rate_b.avg_rate >= 4.95 %}
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+                <span><i class="fa fa-star" aria-hidden="true"></i></span>
+              {% endif %}
+
+              {{ rate_b.avg_rate }} ({{ rate_b.rate_count }} ratings)
+              <a href="{% url 'Enterprise:EmpRatingDetail' v.companybranch.slug %}" style="font-size:20px;color:black" target="_blank" data-toggle="tooltip" title="Ratings Breakdown"><i class="fa fa-pie-chart" aria-hidden="true"></i></a>
+            {% else %}
+              Ratings are calculated from 5 <br>or more votes. There are currently {{ rate_b.rate_count }}.
+            {% endif %}
+          {% endif %}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <br>
+<table class="table table-sm">
+  <thead>
+    <tr>
+      <th class="align-middle text-center">Hours Required</th>
+      <th class="align-middle text-center">Work Format</th>
+      <th class="align-middle text-center">Office Location</th>
+      <th class="align-middle text-center">Experience Level</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <tr>
+      <td class="align-middle text-center">
+        {{ v.hours_required|intcomma }}<br>({{ v.get_unit_display }})
+      </td>
+      <td class="align-middle text-center">{{ v.worklocation }}</td>
+      <td class="align-middle text-center">{{ v.city.city }}</td>
+      <td class="align-middle text-center">{{ v.experience_level }}</td>
+
+    </tr>
+  </tbody>
+</table>
+
+{% endfor %}
+
+<div class="row">
+  <div class="col-sm-12">
+    <div class="h-100">
+      <div class="card-body">
+        <h5 class="card-title">Scope</h5>
+        {% for s in vacancy %}
+        <p>{{ s.scope|safe }}</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-12">
+    <div class="h-100">
+      <div class="card-body">
+        <h5 class="card-title">Expectations</h5>
+        {% for e in vacancy %}
+        <p>{{ e.expectations|safe }}</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% if request.user.is_authenticated %}
+<br>
+<table class="table table-sm">
+  <thead>
+    <tr>
+      <th class="align-middle text-center">Proposed Rate</th>
+      <th class="align-middle text-center">Bid Closing Date</th>
+      <th class="align-middle text-center">Work Completion Date</th>
+      <th class="align-middle text-center">Required Language</th>
+      <th class="align-middle text-center" data-toggle="tooltip" title="The number of people Shortlisted for this role"># Shortlisted</th>
+      <th class="align-middle text-center" data-toggle="tooltip" title="The number of people invited to Interview"># Interviews</th>
+      <th class="align-middle text-center" data-toggle="tooltip" title="The number of Active Subscribers that has applied for the role"># Applicants</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for v in vacancy %}
+    <tr>
+      <td class="align-middle text-center">{{ v.currency }}<br><strong>{{ v.rate_offered }}</strong><br>({{ v.get_rate_unit_display }})</td>
+      <td class="align-middle text-center">{{ v.bid_closes|date:"j M Y" }}<br>{% if v.bid_closes > date2 %}({{ date4 }} Days Left){% else %}({{ v.get_offer_status_display }}){% endif %}</td>
+      <td class="align-middle text-center">{{ v.date_deadline|date:"j M Y" }}</td>
+      <td class="align-middle text-center">{{ v.language.all|join:", " }}</td>
+      <td class="align-middle text-center">{{ slist }}</td>
+      <td class="align-middle text-center">{{ int }}</td>
+      <td class="align-middle text-center">{{ bid }}</td>
+    </tr>
+  </tbody>
+  {% endfor %}
+</table>
+{% endif %}
+<hr>
+<div class="row">
+  <div class="col-sm-3">
+    <div class="h-100">
+      <div class="card-body">
+        <h5 class="card-title">Skills Required</h5>
+        {% for s in skills %}
+        <ul>
+          <li>{{ s.skills }}</li>
+        </ul>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-5">
+    <div class="h-100">
+      <div class="card-body">
+        <h5 class="card-title">Deliverables</h5>
+        {% for d in deliver %}
+        <ul>
+          <li>{{ d.deliverable|safe }}</li>
+        </ul>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-4">
+    <div class="h-100">
+      <div class="card-body">
+        <h5 class="card-title">Certifications Required</h5>
+        {% for d in vacancy %}
+        {% if d.certification %}
+          <p>{{ d.certification.all|join:", " }}</p>
+        {% else %}
+          <p>No Certification requirements</p>
+        {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<br>
+{% if request.user.is_authenticated %}
+<div class="float-right">
+  <a href="{% url 'Profile:WorkshopTlt' %}?next={{ request.path|urlencode }}" class="btn btn-primary">Enter Workshop</a>
+  <a href="{% url 'MarketPlace:TalentInterviewHistory' request.user.alias %}?next={{ request.path|urlencode }}" class="btn btn-primary">Interview History</a>
+</div>
+<br><br><br>
+<div class="card card-shadow">
+  {% if request.user.subscription >= 2 %}
+    <div class="card-body">
+      <h5 class="card-title">Bids Received</h5>
+      <div class="container">
+        <div class="row my-auto">
+          <div class="col-md-6 h-100 text-center my-auto">
+            <strong>Date Applied</strong>
+          </div>
+          <div class="col-md-6 h-100 text-center my-auto">
+            <strong>Rate Offered</strong>
+          </div>
+        </div>
+      </div>
+      {% for app in bid_qs %}
+      <div class="row">
+        <div class="card mt-1 card-hover" style="width: 100%;">
+          <div class="card-body small-pad">
+            <div class="row my-auto">
+              <div class="col-md-6 h-100 text-center my-auto">
+                {{ app.date_applied|date:"j M Y" }}
+              </div>
+              <div class="col-md-6 h-100 text-center my-auto">
+                {{ app.currency }}<br>{{ app.rate_bid }}<br>{{ app.get_rate_unit_display }}
+              </div>
+            </div>
+            <div class="row my-auto">
+              <div class="col-md-12 h-100 text-center my-auto">
+                <p class="shrot-paragraph"><strong>Motivation:</strong></p>
+                <p>
+                {{ app.motivation|linebreaks }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+        <p>There are currently no applications for this vacancy.</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
+{% endif %}
+<p>&nbsp</p>
+
+{% endblock content %}

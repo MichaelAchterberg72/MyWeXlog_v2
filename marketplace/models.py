@@ -1,23 +1,23 @@
-from django.db import models
-from django.conf import settings
-from django.core.validators import FileExtensionValidator
-from django.utils import timezone
-from django.db.models.signals import pre_save, post_save
-from django.dispatch import receiver
 from random import random
 from time import time
 
-from Profile.utils import create_code9, create_code8
-from WeXlog.storage_backends import PublicMediaStorage, PrivateMediaStorage
-
+from django.conf import settings
+from django.contrib.auth.models import User
+from django.core.validators import FileExtensionValidator
+from django.db import models
+from django.db.models.signals import post_save, pre_save
+from django.dispatch import receiver
+from django.utils import timezone
 from tinymce.models import HTMLField
 
-from django.contrib.auth.models import User
-from users.models import CustomUser
+from db_flatten.models import LanguageList, SkillTag
 from enterprises.models import Branch
-from locations.models import Currency, City
-from db_flatten.models import SkillTag, LanguageList
-from talenttrack.models import Result, Designation
+from locations.models import City, Currency
+from Profile.utils import create_code8, create_code9
+from talenttrack.models import Designation, Result
+from users.models import CustomUser
+from WeXlog.storage_backends import PrivateMediaStorage, PublicMediaStorage
+
 
 #This is the table that specifies the work configuration (Freelance, Remote Freelence, Consultant, Contractor, Employee, FIFO)
 class WorkLocation(models.Model):
@@ -49,7 +49,9 @@ RATE_UNIT = (
     ('H','per Hour'),
     ('D','per Day'),
     ('M','per Month'),
+    ('A','per Annum'),
     ('L','Lump Sum'),
+    ('I','Market Related'),
 )
 
 UNIT = (
@@ -57,6 +59,7 @@ UNIT = (
     ('M','per Month'),
     ('D','per Day'),
     ('W','per Week'),
+    ('P','Permanent Position'),
     ('S','Short Term Contract'),
     ('A','As and When Contract'),
 )
@@ -106,12 +109,13 @@ class TalentRequired(models.Model):
     companybranch = models.ForeignKey(Branch, on_delete=models.SET_NULL, null=True, verbose_name="Company")
     requested_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     date_deadline = models.DateField('Work completed by', blank=True, null=True)
-    hours_required = models.IntegerField()
+    permpos = models.BooleanField('Permanent Position?', default=False, blank=True)
+    hours_required = models.IntegerField(blank=True, null=True)
     unit = models.CharField(max_length=1, choices=UNIT)
     experience_level = models.ForeignKey(SkillLevel, on_delete=models.PROTECT)
     language = models.ManyToManyField(LanguageList)
     worklocation = models.ForeignKey(WorkLocation, on_delete=models.PROTECT)#Job configuration
-    rate_offered = models.DecimalField(max_digits=6, decimal_places=2)
+    rate_offered = models.DecimalField(max_digits=9, decimal_places=2, blank=True, null=True)
     currency = models.ForeignKey(Currency, on_delete=models.PROTECT)
     rate_unit = models.CharField(max_length=1, choices=RATE_UNIT, default='H')
     bid_open = models.DateTimeField(auto_now_add=True, null=True)
@@ -122,7 +126,7 @@ class TalentRequired(models.Model):
     expectations = HTMLField()
     terms = models.FileField(storage=PublicMediaStorage(), upload_to=BidTerms, blank=True, null=True, validators=[FileExtensionValidator(['pdf'])])
     city = models.ForeignKey(City, on_delete=models.PROTECT, verbose_name='City, Town or Place')
-    date_modified = models.DateField(auto_now=True)
+    date_modified = models.DateTimeField(auto_now=True)
     vac_wkfl = models.CharField(max_length=1, choices=WKFLOW, default='P')
 
     class Meta:

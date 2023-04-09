@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .import views
+from . import views
 
 app_name = 'Profile'
 
@@ -133,6 +133,8 @@ urlpatterns = [
         path('intro-vacancy/', views.IntroVacancyView, name="IntroVacancy"),
         path('intro-shortlisting/', views.IntroShortlistingView, name="IntroShortlisting"),
         path('intro-assign/', views.IntroAssigningView, name="IntroAssign"),
+        path('intro-public-profile', views.IntroPublicProfileView, name="IntroPublicProfile"),
+        path('intro-managing-account', views.IntroManagingAccountView, name='IntroManagingAccount'),
         path('intro-books-emterprises-projects/', views.IntroBEPView, name="IntroBEP"),
         path('wtr/', views.willing_to_relocate, name="WTR"),
         path('wtr-doc/<slug:wtr>/', views.wtr_doc_status, name="WTRDoc"),

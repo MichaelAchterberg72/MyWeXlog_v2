@@ -1,18 +1,20 @@
 from django.contrib import admin
 
-from .models import (
-    WorkLocation, TalentRequired, Deliverables, SkillLevel, SkillRequired, WorkBid, TalentAvailabillity, WorkIssuedTo, BidShortList, BidInterviewList, DeclineAssignment, VacancyRate, TalentRate, VacancyViewed
-    )
+from .models import (BidInterviewList, BidShortList, DeclineAssignment,
+                     Deliverables, SkillLevel, SkillRequired,
+                     TalentAvailabillity, TalentRate, TalentRequired,
+                     VacancyRate, VacancyViewed, WorkBid, WorkIssuedTo,
+                     WorkLocation)
 
 
 @admin.register(TalentRate)
 class TalentRateAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['talent__alias', 'vacancy__ref_no']
 
 
 @admin.register(VacancyRate)
 class VacancyRateAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['talent__alias', 'vacancy__ref_no']
 
 
 @admin.register(DeclineAssignment)
@@ -22,28 +24,28 @@ class DeclineAssignmentAdmin(admin.ModelAdmin):
 
 @admin.register(BidInterviewList)
 class BidInterviewListAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['talent__alias', 'scope__ref_mo']
 
 
 @admin.register(BidShortList)
 class BidShortListAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['talent__alias', 'scope__ref_no']
 
 @admin.register(WorkIssuedTo)
 class WorkIssuedToAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['talent__alias', 'work__ref_no']
 
 @admin.register(TalentAvailabillity)
 class TalentAvailabillityAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['talent__alias']
 
 @admin.register(WorkBid)
 class WorkBidAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['talent__alias', 'work__ref_no']
 
 @admin.register(SkillRequired)
 class SkillRequiredAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['scope__ref_no']
 
 @admin.register(SkillLevel)
 class SkillLevelAdmin(admin.ModelAdmin):
@@ -51,7 +53,7 @@ class SkillLevelAdmin(admin.ModelAdmin):
 
 @admin.register(Deliverables)
 class DeliverablesAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['scope__ref_no']
 
 @admin.register(WorkLocation)
 class WorkLocationAdmin(admin.ModelAdmin):
@@ -59,8 +61,8 @@ class WorkLocationAdmin(admin.ModelAdmin):
 
 @admin.register(VacancyViewed)
 class VacancyViewedAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['talent__alias', 'vacancy__ref_no', 'vacancy__companybranch__company__ename']
 
 @admin.register(TalentRequired)
 class TalentRequiredAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['title', 'ref_no', 'companybranch__company__ename']

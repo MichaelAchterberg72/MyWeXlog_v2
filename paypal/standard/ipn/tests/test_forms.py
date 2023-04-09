@@ -5,7 +5,8 @@ import re
 
 from django.test import TestCase
 
-from paypal.standard.forms import PayPalEncryptedPaymentsForm, PayPalPaymentsForm
+from paypal.standard.forms import (PayPalEncryptedPaymentsForm,
+                                   PayPalPaymentsForm)
 from paypal.standard.ipn.forms import PayPalIPNForm
 
 

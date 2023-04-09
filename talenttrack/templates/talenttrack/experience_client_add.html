@@ -14,9 +14,19 @@
   <div class="card card-shadow">
     <div class="card-body">
       <h3>Identify a client to confirm your claimed experience</h3>
+      <p>
+        <small>
+          Please ensure that the "Company" as well as the "Branch" has been captured in the <a href="{% url 'Enterprise:EnterpriseHome' %}" target="_blank">Enterprise</a> page first. Refresh this page once the company and branch have been added. The company and branch will then be available in the respective fields.
+        </small>
+      </p>
       <form method="post">
       <!--   <input type="hidden" name="next" value="{{ request.GET.next }}"> -->
         {% csrf_token %}
+        <div style="background-color:red; color:white;">
+          <p>
+            {{ form.non_field_errors }}
+          </p>
+        </div>
         <div class="form-row">
           <div class="form-group col-md-6 mb-0">
             {{ form.client_name|as_crispy_field }}
@@ -26,14 +36,9 @@
               Add Designation
             </a>
             {{ form.company|as_crispy_field }}
-            <a href="{% url 'Enterprise:EnterpriseAddPop' %}" id='add_enterprise' onclick='return showAddPopup(this);'>
-              <img src="{% static 'images/icon-addlink.svg' %}">
-              Add a new Enterprise
-            </a>
+
             {{ form.companybranch|as_crispy_field }}
-            <a href="{% url 'Enterprise:BranchAddPop' %}" id='add_branch' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">
-              Add a Branch
-            </a>
+
             <div class="">
               <br>
               <p>

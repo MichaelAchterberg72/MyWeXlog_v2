@@ -1,6 +1,6 @@
 {% extends "base_home.html" %}
 {% load humanize %}
-{% block title %}{{block.super}}-Vacancy History{% endblock title %}
+{% block title %}{{block.super}}-Interview Detail{% endblock title %}
 
 {% block content %}
 
@@ -15,8 +15,8 @@
         </div>
         <div class="btn-group mr-2">
           {% if d.outcome == 'I' %}
-          <a href="{% url 'MarketPlace:DashSuitable' tlt=d.talent.alias vac=d.scope.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-danger" style="width: 8rem" data-toggle="tooltip" title="Mark {{ d.talent.alias }} 'Not Suitable' ">
-            Not Suitable
+          <a href="{% url 'MarketPlace:DashSuitable' tlt=d.talent.alias vac=d.scope.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-success" style="width: 8rem" data-toggle="tooltip" title="Mark {{ d.talent.alias }} 'Suitable' ">
+            Suitable
           </a>
           &nbsp
             <a href="{% url 'MarketPlace:DashNotSuitable' tlt=d.talent.alias vac=d.scope.ref_no %}?next={{ request.path|urlencode }}" class="btn btn-danger" style="width: 8rem" data-toggle="tooltip" title="Mark {{ d.talent.alias }} 'Not Suitable' ">
@@ -49,13 +49,13 @@
         <div class="col-md-2 h-100 text-center my-auto">
           <strong>Talent</strong>
         </div>
-        <div class="col-md-4 h-100 text-center my-auto">
+        <div class="col-md-3 h-100 text-center my-auto">
           <strong>Vacancy<br>( Reference Number )</strong>
         </div>
         <div class="col-md-2 h-100 text-center my-auto">
-          <strong>Talent's Response</strong>
+          <strong>Talent's<br>Response</strong>
         </div>
-        <div class="col-1 col-no-pad h-100 text-center my-auto">
+        <div class="col-md-2 col-no-pad h-100 text-center my-auto">
           <strong>My Response</strong>
         </div>
         <div class="col-1 col-no-pad h-100 text-center my-auto">
@@ -74,13 +74,13 @@
             <div class="col-md-2 h-100 text-center my-auto">
               {{ d.talent.alias }}
             </div>
-            <div class="col-md-4 h-100 text-center my-auto">
+            <div class="col-md-3 h-100 text-center my-auto">
               {{ d.scope.title }}<br>( {{ d.scope.ref_no }} )
             </div>
             <div class="col-md-2 h-100 text-center my-auto">
               {{ d.get_tlt_response_display }}
             </div>
-            <div class="col-md-1 h-100 text-center my-auto">
+            <div class="col-md-2 h-100 text-center my-auto">
               {{ d.get_outcome_display }}
             </div>
             <div class="col-md-1 h-100 text-center my-auto">

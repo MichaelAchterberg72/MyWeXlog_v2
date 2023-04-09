@@ -1,35 +1,26 @@
-from django.urls import reverse
-from django.shortcuts import render
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect, reverse, get_object_or_404
-from django.views.generic import FormView, TemplateView
-from django.http import HttpResponse, HttpResponseRedirect
-from django.utils.http import is_safe_url
-
-
-from django.views.decorators.csrf import csrf_exempt
-from csp.decorators import csp_exempt
-from django.db.models import Count
-from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
+import json
 import operator
-from django.db.models import Q
-import json
-from django.views.generic import (
-        TemplateView
-)
-from django.views.decorators.csrf import csrf_exempt
-from core.decorators import subscription
 
+from csp.decorators import csp_exempt
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.postgres.search import (SearchQuery, SearchRank,
+                                            SearchVector)
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.db.models import Count, Q
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect, render, reverse
+from django.urls import reverse
+from django.utils.http import is_safe_url
 from django.views import generic
-import json
+from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import FormView, TemplateView
 
+from core.decorators import subscription
 from Profile.models import Profile
-from .models import BookList, Author, ReadBy, Format, Publisher
+
 from .forms import *
-
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
+from .models import Author, BookList, Format, Publisher, ReadBy
 
 #@login_required()
 #class BookListHomeView(TemplateView):
@@ -92,7 +83,6 @@ def BookListHome(request, profile_id=None):
 
 @login_required()
 def HelpBookListHomeView(request):
-
     template_name = 'booklist/help_booklist_home.html'
     context = {}
     return render(request, template_name, context)
@@ -100,7 +90,6 @@ def HelpBookListHomeView(request):
 
 @login_required()
 def HelpBookListView(request):
-
     template_name = 'booklist/help_booklist.html'
     context = {}
     return render(request, template_name, context)
@@ -108,7 +97,6 @@ def HelpBookListView(request):
 
 @login_required()
 def HelpBookListSearchView(request):
-
     template_name = 'booklist/help_booklist_search.html'
     context = {}
     return render(request, template_name, context)
@@ -116,7 +104,6 @@ def HelpBookListSearchView(request):
 
 @login_required()
 def HelpBookListAddBookReadView(request):
-
     template_name = 'booklist/help_booklist_add.html'
     context = {}
     return render(request, template_name, context)
@@ -124,7 +111,6 @@ def HelpBookListAddBookReadView(request):
 
 @login_required()
 def HelpAddBookView(request):
-
     template_name = 'booklist/help_add_book.html'
     context = {}
     return render(request, template_name, context)
@@ -276,12 +262,15 @@ def BookAddView(request):
             new.save()
             form.save_m2m()
             return redirect(reverse('BookList:books-read-new'))
+        else:
+            context = {'form': form}
+            template_name = 'booklist/create_new_book.html'
+            return render(request, template_name, context)
     else:
         form = BookAddForm()
-
-    context = {'form': form}
-    template_name = 'booklist/create_new_book.html'
-    return render(request, template_name, context)
+        context = {'form': form}
+        template_name = 'booklist/create_new_book.html'
+        return render(request, template_name, context)
 
 
 @csp_exempt
@@ -294,12 +283,15 @@ def AddBookView(request):
             new.save()
             form.save_m2m()
             return redirect(reverse('BookList:books-read-new'))
+        else:
+            context = {'form': form}
+            template_name = 'booklist/add_new_book.html'
+            return render(request, template_name, context)
     else:
         form = BookAddForm()
-
-    context = {'form': form}
-    template_name = 'booklist/add_new_book.html'
-    return render(request, template_name, context)
+        context = {'form': form}
+        template_name = 'booklist/add_new_book.html'
+        return render(request, template_name, context)
 
 
 @csp_exempt
@@ -312,12 +304,15 @@ def AddBookListView(request):
             new.save()
             form.save_m2m()
             return redirect(reverse('BookList:books-list'))
+        else:
+            context = {'form': form}
+            template_name = 'booklist/add_new_book.html'
+            return render(request, template_name, context)
     else:
         form = BookAddForm()
-
-    context = {'form': form}
-    template_name = 'booklist/add_new_book.html'
-    return render(request, template_name, context)
+        context = {'form': form}
+        template_name = 'booklist/add_new_book.html'
+        return render(request, template_name, context)
 
 
 @login_required()
@@ -330,6 +325,10 @@ def BookAddPopupView(request):
             instance=form.save()
             form.save_m2m()
             return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_book");</script>' % (instance.pk, instance))
+        else:
+            context = {'form':form,}
+            template_name = 'booklist/create_new_book.html'
+            return render(request, template_name, context)
     else:
         context = {'form':form,}
         template_name = 'booklist/create_new_book.html'
@@ -345,6 +344,10 @@ def AuthorCreatePopupView(request):
             instance=form.save(commit=False)
             instance=form.save()
             return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_author");</script>' % (instance.pk, instance))
+        else:
+            context = {'form':form,}
+            template_name = 'booklist/create_new_author_popup.html'
+            return render(request, template_name, context)
     else:
         context = {'form':form,}
         template_name = 'booklist/create_new_author_popup.html'
@@ -359,7 +362,10 @@ def PublisherCreatePopupView(request):
             instance=form.save(commit=False)
             instance=form.save()
             return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_publisher");</script>' % (instance.pk, instance))
-
+        else:
+            context = {'form':form,}
+            template_name = 'booklist/create_new_publisher_popup.html'
+            return render(request, template_name, context)
     else:
         context = {'form':form,}
         template_name = 'booklist/create_new_publisher_popup.html'
@@ -375,6 +381,10 @@ def FormatCreatePopupView(request):
             instance=form.save(commit=False)
             instance=form.save()
             return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_type");</script>' % (instance.pk, instance))
+        else:
+            context = {'form':form,}
+            template_name = 'booklist/create_new_format_popup.html'
+            return render(request, template_name, context)
 
     else:
         context = {'form':form,}
@@ -444,12 +454,17 @@ def AuthorAddView(request):
             new.save()
             form.save_m2m()
             return redirect(reverse('BookList:BookListHome'))
+        else:
+            context = {'form':form}
+            template_name = 'booklist/create_new_author.html'
+            return render(request, template_name, context)
     else:
         form = AuthorAddForm()
+        context = {'form':form}
+        template_name = 'booklist/create_new_author.html'
+        return render(request, template_name, context)
 
-    context = {'form':form}
-    template_name = 'booklist/create_new_author.html'
-    return render(request, template_name, context)
+
 
 
 @login_required()
@@ -460,14 +475,18 @@ def PublisherAddView(request):
             new = form.save(commit=False)
             new.save()
             form.save_m2m()
-
             return redirect(reverse('BookList:BookListHome'))
+        else:
+            context = {'form': form}
+            template_name = 'booklist/create_new_publisher.html'
+            return render(request, template_name, context)
     else:
         form = PublisherAddForm()
+        context = {'form': form}
+        template_name = 'booklist/create_new_publisher.html'
+        return render(request, template_name, context)
 
-    context = {'form': form}
-    template_name = 'booklist/create_new_publisher.html'
-    return render(request, template_name, context)
+
 
 
 @login_required()
@@ -477,14 +496,16 @@ def FormatAddView(request):
         if form.is_valid():
             new = form.save(commit=False)
             new.save()
-
             return redirect(reverse('BookList:BookListHome'))
+        else:
+            context = {'form': form,}
+            template_name = 'booklist/create_new_format.html'
+            return render(request, template_name, context)
     else:
         form = FormatAddForm()
-
-    context = {'form': form,}
-    template_name = 'booklist/create_new_format.html'
-    return render(request, template_name, context)
+        context = {'form': form,}
+        template_name = 'booklist/create_new_format.html'
+        return render(request, template_name, context)
 
 
 @login_required()

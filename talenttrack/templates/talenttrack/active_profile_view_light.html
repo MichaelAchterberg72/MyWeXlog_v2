@@ -281,7 +281,7 @@
             <div class="row pt-3 h-100 my-auto">
               <div class="col-md-12 text-left my-auto">
                 <strong>Description: </strong><br>
-                <span class="">{{ h.description|linebreaks|truncatechars:650 }}</span>
+                <span class="">{{ h.description|safe|truncatechars:650 }}</span>
               </div>
             </div>
             {% endif %}

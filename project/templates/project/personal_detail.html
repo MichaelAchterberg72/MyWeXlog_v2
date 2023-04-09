@@ -131,30 +131,27 @@
         <div class="container">
       <form class="" action="" method="POST" id="ProjectForm">
         {% csrf_token %}
+        <div style="background-color:red; color:white;">
+          <p>
+
+            {{ form.non_field_errors }}
+          </p>
+        </div>
         <div class="form-row">
           <div class="form-group col-md-12 mb-0">
             {{ form.description|as_crispy_field }}
           </div>
-        </div>
-          <div class="form-row">
-            <div class="col-1 col-no-pad">
-              <button class="btn btn-outline-danger" type="button" id="closeEditable" name="cancelButton">
-                Cancel
-              </button>
-            </div>
-            <div class="col-1">
-              <button type="submit" class="btn btn-primary" name="button">
-                Save
-              </button>
-            </div>
-            <div class="col-9">
-
-            </div>
-            <div class="col-1">
-              <a href="{% url 'Project:ProjectHome' %}" class="btn btn-outline-primary float-right">
-                Back
-              </a>
-            </div>
+          <div>
+            <a href="{% url 'Project:ProjectHome' %}" class="btn btn-danger">
+              Cancel
+            </a>
+            <form  action="{% url 'Project:ProjectPersonalDelete' instance.id %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-warning" style="width: 6rem;">Delete</button>
+            </form>
+            <button type="submit" class="btn btn-primary" name="button">
+              Save
+            </button>
           </div>
       </form>
     </div>

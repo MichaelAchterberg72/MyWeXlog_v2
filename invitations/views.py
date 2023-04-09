@@ -1,52 +1,66 @@
-from django.shortcuts import render, redirect, reverse, get_object_or_404
-from django.utils.http import is_safe_url
-from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth.decorators import login_required
-from django.conf import settings
-from django.http import HttpResponseRedirect
-
-#html to pdf
-from django.utils import timezone
-from weasyprint import HTML
-from weasyprint.fonts import FontConfiguration
-
-
 import os
 
-from Profile.models import (
-        Profile, BriefCareerHistory, OnlineRegistrations, IdentificationDetail, PassportDetail, LanguageTrack, Email, PhysicalAddress, PostalAddress, PhoneNumber
-)
-from marketplace.models import (
-        TalentRequired, BidShortList, BidInterviewList, WorkBid, TalentAvailabillity, WorkIssuedTo, VacancyRate, TalentRate
-)
-
-from locations.models import Region
-from talenttrack.models import (
-        Achievements, LicenseCertification, Lecturer, ClassMates, WorkExperience, WorkColleague, Superior, WorkClient, WorkCollaborator
-)
-from booklist.models import ReadBy
-from .models import Invitation
-from users.models import CustomUser
-
-#email
-from django.core.mail import send_mail, EmailMultiAlternatives
-from django.template.loader import get_template, render_to_string
-from django.utils.html import strip_tags
-from django.db.models import Count, Sum, F, Q
 import sendgrid
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import (Mail, Subject, To, ReplyTo, SendAt, Content, From, CustomArg, Header)
-
 from csp.decorators import csp_exempt
-
+from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.contrib.contenttypes.models import ContentType
+#email
+from django.core.mail import EmailMultiAlternatives, send_mail
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.db.models import Count, F, Q, Sum
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect, render, reverse
+from django.template.loader import get_template, render_to_string
+#html to pdf
+from django.utils import timezone
+from django.utils.html import strip_tags
+from django.utils.http import is_safe_url
 #pinax_referrals
 from pinax.notifications.models import send, send_now
 from pinax.referrals.models import Referral
-from django.contrib.contenttypes.models import ContentType
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import (Content, CustomArg, From, Header, Mail,
+                                   ReplyTo, SendAt, Subject, To)
+from weasyprint import HTML
+from weasyprint.fonts import FontConfiguration
 
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from booklist.models import ReadBy
+from locations.models import Region
+from marketplace.models import (BidInterviewList, BidShortList,
+                                TalentAvailabillity, TalentRate,
+                                TalentRequired, VacancyRate, WorkBid,
+                                WorkIssuedTo)
+from Profile.models import (BriefCareerHistory, Email, IdentificationDetail,
+                            LanguageTrack, OnlineRegistrations, PassportDetail,
+                            PhoneNumber, PhysicalAddress, PostalAddress,
+                            Profile)
+from talenttrack.models import (Achievements, ClassMates, Lecturer,
+                                LicenseCertification, Superior, WorkClient,
+                                WorkCollaborator, WorkColleague,
+                                WorkExperience)
+from users.models import CustomUser
 
 from .forms import InvitationForm, InvitationLiteForm
+from .models import Invitation
+from Profile.utils import create_code9
+
+
+def ConfigureWorkerInvite():
+    invites = Invitation.objects.all()
+    for i in invites:
+        if i.slug is None or i.slug == "":
+            i.slug = create_code9(i)
+            i.save()
+
+
+@login_required
+def invite_detail_view(request, invs):
+    invite_detail = Invitation.objects.get(Q(invited_by=request.user) & Q(slug=invs) & Q(accpeted=False))
+
+    template = 'invitations/invite_detail.html'
+    context = {'invite_detail': invite_detail}
+    return render(request, template, context)
 
 
 @login_required()
@@ -331,25 +345,20 @@ def profile_2_pdf(request):
 
 
 
-from WeXlog.app_config import (
-    skill_pass_score,
-)
-
-from django.db.models import Count, Sum, F, Q
-from users.models import CustomUser, ExpandedView
-
-from talenttrack.models import (
-        WorkExperience, Lecturer, ClassMates, WorkColleague, Superior, WorkClient,  WorkCollaborator, LicenseCertification
-)
-from marketplace.models import (
-        TalentRequired, WorkBid, TalentAvailabillity, SkillRequired, SkillLevel, WorkBid,  BidShortList, VacancyViewed
-)
+from django.db.models import Count, F, Q, Sum
 
 from db_flatten.models import SkillTag
-
-from Profile.models import PhysicalAddress, LanguageTrack, WillingToRelocate
-
 from invitations.models import Invitation
+from marketplace.models import (BidShortList, SkillLevel, SkillRequired,
+                                TalentAvailabillity, TalentRequired,
+                                VacancyViewed, WorkBid)
+from Profile.models import LanguageTrack, PhysicalAddress, WillingToRelocate
+from talenttrack.models import (ClassMates, Lecturer, LicenseCertification,
+                                Superior, WorkClient, WorkCollaborator,
+                                WorkColleague, WorkExperience)
+from users.models import CustomUser, ExpandedView
+from WeXlog.app_config import skill_pass_score
+
 
 def email_test_view(request):
     users = CustomUser.objects.all()

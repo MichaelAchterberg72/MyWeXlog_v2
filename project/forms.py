@@ -1,5 +1,10 @@
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Column, Layout, Row, Submit
 from django import forms
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
+from django_select2.forms import (ModelSelect2TagWidget, ModelSelect2Widget,
+                                  Select2MultipleWidget, Select2Widget)
 
 from django.utils.translation import gettext_lazy as _
 
@@ -124,13 +129,28 @@ class ProjectAddForm(forms.ModelForm):
         labels = {
             'city' : 'Closest City / Town / Village',
         }
+
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        name = cleaned_data.get("name")
+        companybranch = cleaned_data.get("companybranch")
+
+        if ProjectData.objects.filter(name = name, companybranch = companybranch).count() > 0:
+            del cleaned_data["name"]
+            del cleaned_data["companybranch"]
+            raise ValidationError("This combination of Company and Branch already exist! Please enter another combination or select the existing combination.")
+
+        return cleaned_data
+
     '''
     def clean_project(self):
         project_passed = self.cleaned_data.get("name")
         als = project_passed
 
         if als in pwd:
-            raise forms.ValidationError("A project with this name already exists! Please enter another name.")
+            raise ValidationError("A project with this name already exists! Please enter another name.")
         return project_passed
     '''
 
@@ -149,7 +169,24 @@ class ProjectForm(forms.ModelForm):
             'city': CitySelect2Widget(),
             'companybranch': BranchSelect2Widget(),
         }
+        labels = {
+            'city' : 'Closest City / Town / Village',
+            'company' : 'The company that owns the project'
+        }
 
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        name = cleaned_data.get("name")
+        companybranch = cleaned_data.get("companybranch")
+
+        if ProjectData.objects.filter(name = name, companybranch = companybranch).count() > 0:
+            del cleaned_data["name"]
+            del cleaned_data["companybranch"]
+            raise ValidationError("This combination of Company and Branch already exist! Please enter another combination or select the existing combination.")
+
+        return cleaned_data
 
 class ProjectFullAddForm(forms.ModelForm):
     '''This form is used when adding a full project'''
@@ -168,6 +205,20 @@ class ProjectFullAddForm(forms.ModelForm):
             'company' : 'Company that own project'
         }
 
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        name = cleaned_data.get("name")
+        companybranch = cleaned_data.get("companybranch")
+
+        if ProjectData.objects.filter(name = name, companybranch = companybranch).count() > 0:
+            del cleaned_data["name"]
+            del cleaned_data["companybranch"]
+            raise ValidationError("This combination of Company and Branch already exist! Please enter another combination or select the existing combination.")
+
+        return cleaned_data
+
 
 class ProjectAddHome(forms.ModelForm):
     '''This form is used when adding aproject from talenttrack app'''
@@ -181,6 +232,21 @@ class ProjectAddHome(forms.ModelForm):
             'city': CitySelect2Widget(),
             'companybranch': BranchSelect2Widget(),
         }
+
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        name = cleaned_data.get("name")
+        companybranch = cleaned_data.get("companybranch")
+
+        if ProjectData.objects.filter(name = name, companybranch = companybranch).count() > 0:
+            del cleaned_data["name"]
+            del cleaned_data["companybranch"]
+            raise ValidationError("This combination of Company and Branch already exist! Please enter another combination or select the existing combination.")
+
+        return cleaned_data
+
 
 class ProjectPersonalDetailsForm(forms.ModelForm):
     description = forms.CharField(widget=TinyMCE(attrs={'cols': 50, 'rows': 10}))
@@ -247,3 +313,20 @@ class ProjectTaskNoteForm(forms.ModelForm):
     class Meta:
         model = NotePad
         fields = {'heading', 'note_pad', 'date_due',}
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        talent = cleaned_data.get("talent")
+        companybranch = cleaned_data.get("companybranch")
+        company = cleaned_data.get("company")
+        project = cleaned_data.get("project")
+
+        if ProjectPersonalDetails.objects.filter(talent = talent, project = project, company = company, companybranch = companybranch).count() > 0:
+            del cleaned_data["talent"]
+            del cleaned_data["companybranch"]
+            del cleaned_data["company"]
+            del cleaned_data["project"]
+            raise ValidationError("This combination of Project, Company and Branch already exist in your profile! Please enter another combination or select the existing combination.")
+
+        return cleaned_data

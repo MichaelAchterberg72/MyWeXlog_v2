@@ -42,6 +42,12 @@ function closePopup(win, newID, newRepr, id) {
 <form class="" action="" method="POST" autocomplete="on" novalidate>
 
   {% csrf_token %}
+  <div style="background-color:red; color:white;">
+    <p>
+
+      {{ form.non_field_errors }}
+    </p>
+  </div>
   <div class="form-row">
     <div class="form-group col-md-6 mb-0">
   {{ form.book|as_crispy_field }}
@@ -51,7 +57,11 @@ function closePopup(win, newID, newRepr, id) {
 
   {{ form.date|as_crispy_field }}
 
-</div></div>
+</div>
+<div class="form-group col-md-6 mb-0">
+{{ form.review|as_crispy_field }}
+</div>
+</div>
   <a href="{% url 'BookList:BookListHome' %}" class="btn btn-danger">Cancel</a>
   <button type="submit" class="btn btn-primary" name="button">Save</button>
 

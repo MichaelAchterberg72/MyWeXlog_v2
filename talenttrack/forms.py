@@ -1,36 +1,37 @@
+from datetime import timedelta
+
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Column, Layout, Row, Submit
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from users.models import CustomUser
-from django.utils.encoding import force_text
+from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.forms import ModelChoiceField
 from django.utils import timezone
-
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, Row, Column
-
+from django.utils.encoding import force_text
 from django_countries.fields import CountryField
+from django_select2.forms import (HeavySelect2MultipleWidget,
+                                  ModelSelect2MultipleWidget,
+                                  ModelSelect2TagWidget, ModelSelect2Widget,
+                                  Select2MultipleWidget, Select2Widget)
 
-from .widgets import ListTextWidget
-
-from django_select2.forms import (
-    ModelSelect2TagWidget, ModelSelect2Widget, ModelSelect2MultipleWidget,
-    Select2Widget, Select2MultipleWidget, HeavySelect2MultipleWidget
-)
-from booklist.forms import (
-    PublisherSelect2Widget, TagModelSelect2MultipleWidget, AuthorModelSelect2MultipleWidget, GenreWidget
-)
-from .models import (
-    Topic, Result, CourseType, Course, Lecturer, ClassMates, WorkClient, WorkExperience, WorkColleague, Superior, WorkCollaborator, Designation, Achievements, Awards, Publications, LicenseCertification, EmailRemindValidate
-    )
-
-from enterprises.models import Enterprise, Branch, Industry
-from project.models import ProjectData, ProjectPersonalDetails
+from booklist.forms import (AuthorModelSelect2MultipleWidget, GenreWidget,
+                            PublisherSelect2Widget,
+                            TagModelSelect2MultipleWidget)
 from db_flatten.models import SkillTag
-from users.models import CustomUser
+from enterprises.models import Branch, Enterprise, Industry
 from locations.models import Region
 from marketplace.models import TalentRequired
+from project.models import ProjectData, ProjectPersonalDetails
+from users.models import CustomUser
+
+from .models import (Achievements, Awards, ClassMates, Course, CourseType,
+                     Designation, EmailRemindValidate, Lecturer,
+                     LicenseCertification, Publications, Result, Superior,
+                     Topic, WorkClient, WorkCollaborator, WorkColleague,
+                     WorkExperience)
+from .widgets import ListTextWidget
 
 
 class EmailFormModal(forms.ModelForm):
@@ -205,7 +206,7 @@ class AchievementsForm(forms.ModelForm):
         model = Achievements
         fields = ('achievement', 'date_achieved', 'description', 'upload',)
         widgets = {
-            'date_achieved': DateInput(attrs={'max': timezone.now().date()}),
+            'date_achieved': DateInput(),
             'achievement': forms.TextInput(),
         }
         labels = {
@@ -216,13 +217,29 @@ class AchievementsForm(forms.ModelForm):
             'description': 'Background of what the achiement is, and what led to you receiving it.',
         }
 
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        talent = cleaned_data.get("talent")
+        achievement = cleaned_data.get("achievement")
+        date_achieved = cleaned_data.get("date_achieved")
+
+        if Achievements.objects.filter(talent = talent, achievement = achievement, date_achieved = date_achieved).count() > 0:
+            del cleaned_data["talent"]
+            del cleaned_data["achievement"]
+            del cleaned_data["date_achieved"]
+            raise ValidationError("This achievement already exists in your profile! Please enter another.")
+
+        return cleaned_data
+
 
 class AwardsForm(forms.ModelForm):
     class Meta:
         model = Awards
         fields = ('award', 'date_achieved', 'description', 'tag', 'upload',)
         widgets = {
-            'date_achieved': DateInput(attrs={'max': timezone.now().date()}),
+            'date_achieved': DateInput(),
             'award': forms.TextInput(),
             'tag': TagModelSelect2MultipleWidget(),
         }
@@ -234,6 +251,22 @@ class AwardsForm(forms.ModelForm):
             'description': 'Background of what the award is, and what led to you receiving it.',
         }
 
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        talent = cleaned_data.get("talent")
+        award = cleaned_data.get("award")
+        date_achieved = cleaned_data.get("date_achieved")
+
+        if Awards.objects.filter(talent = talent, award = award, date_achieved = date_achieved).count() > 0:
+            del cleaned_data["talent"]
+            del cleaned_data["award"]
+            del cleaned_data["date_achieved"]
+            raise ValidationError("This award already exists in your profile! Please enter another.")
+
+        return cleaned_data
+
 
 class PublicationsForm(forms.ModelForm):
     class Meta:
@@ -244,17 +277,33 @@ class PublicationsForm(forms.ModelForm):
             'tag': TagModelSelect2MultipleWidget(),
             'author': AuthorModelSelect2MultipleWidget(),
             'genre': GenreWidget(),
-            'date_published': DateInput(attrs={'max': timezone.now().date()}),
+            'date_published': DateInput(),
         }
         help_texts = {
             'title': 'Brief description or name of the publication',
             'description': 'Background of what the publication is, and what led to you creating it.',
         }
 
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        talent = cleaned_data.get("talent")
+        title = cleaned_data.get("title")
+        date_published = cleaned_data.get("date_published")
+
+        if Publications.objects.filter(talent = talent, title = title, date_published = date_published).count() > 0:
+            del cleaned_data["talent"]
+            del cleaned_data["title"]
+            del cleaned_data["date_published"]
+            raise ValidationError("This publication already exists in your profile! Please enter another.")
+
+        return cleaned_data
+
 
 class LicenseCertificationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        super(LicenseCertificationForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.helper = FormHelper(self)
         self.helper.form_show_errors = False
@@ -263,7 +312,7 @@ class LicenseCertificationForm(forms.ModelForm):
         model = LicenseCertification
         fields = ('certification', 'cm_no', 'companybranch', 'issue_date', 'expiry_date', 'current', 'country', 'region', 'upload', 'cert_name')
         widgets = {
-            'issue_date': DateInput(attrs={'max': timezone.now().date()}),
+            'issue_date': DateInput(),
             'expiry_date': DateInput(),
             'companybranch': CompanySelect2Widget(),
             'certification': ResultWidget(),
@@ -279,13 +328,28 @@ class LicenseCertificationForm(forms.ModelForm):
             'region': 'Not all certifications are region specific, in which case, this field can be blank, however some are, in which case this field must be populated.',
         }
 
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        talent = cleaned_data.get("talent")
+        cm_no = cleaned_data.get("cm_no")
+
+        if LicenseCertification.objects.filter(talent = talent, cm_no = cm_no).count() > 0:
+            del cleaned_data["talent"]
+            del cleaned_data["cm_no"]
+            raise ValidationError("This license/certification already exists in your profile! Please enter another.")
+
+        return cleaned_data
+
+
 class PreLoggedExperienceForm(forms.ModelForm):
     '''Form to capture experience earned and captured on previously approved timesheets'''
     def __init__(self, *args, **kwargs):
-        super(PreLoggedExperienceForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.helper = FormHelper(self)
-        self.helper.form_show_errors = False
+        self.helper.form_show_errors = True
 
     class Meta:
         model = WorkExperience
@@ -295,8 +359,8 @@ class PreLoggedExperienceForm(forms.ModelForm):
             'companybranch': BranchSelect2Widget(),
             'designation': DesignationSelect2Widget(),
             'project_data': ProjectSelect2Widget(data_view='Project:project_data_json'),
-            'date_from': DateInput(attrs={'max': timezone.now().date()}),
-            'date_to': DateInput(attrs={'max': timezone.now().date()}),
+            'date_from': DateInput(),
+            'date_to': DateInput(),
             'skills': SkillModelSelect2MultipleWidget(),
             }
         lables = {
@@ -314,9 +378,9 @@ class PreLoggedExperienceForm(forms.ModelForm):
         today = timezone.now().date()
 
         if date_to < date_from:
-            raise forms.ValidationError("You can't finish a period before it starts!, please ensure End date is after Start date.")
+            raise ValidationError("You can't finish a period before it starts!, please ensure End date is after Start date.")
         elif date_to > today:
-            raise forms.ValidationError("You can't claim experience in the future! End date must be  equal to, or less than today")
+            raise ValidationError("You can't claim experience in the future! End date must be  equal to, or less than today")
 
         return date_to
 
@@ -325,13 +389,38 @@ class PreLoggedExperienceForm(forms.ModelForm):
         date_to = self.cleaned_data.get("date_to")
         date_from = self.cleaned_data.get("date_from")
         hours_worked = self.cleaned_data.get("hours_worked")
-        duration = date_to - date_from
+        duration = (date_to - date_from)+timedelta(days=1)
         max = duration.days * 12
 
         if hours_worked > max:
-            raise forms.ValidationError("You can't claim more than 12 hours per day!")
+            raise ValidationError("You can't claim more than 12 hours per day!")
 
         return hours_worked
+
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        talent = cleaned_data.get("talent")
+        hours_worked = cleaned_data.get("hours_worked")
+        date_from = cleaned_data.get("date_from")
+        date_to = cleaned_data.get("date_to")
+        course = cleaned_data.get("course")
+        topic = cleaned_data.get("topic")
+        company = cleaned_data.get("company")
+
+        if WorkExperience.objects.filter(talent = talent, hours_worked = hours_worked, date_from = date_from, date_to = date_to, course = course, topic = topic, company = company).count() > 0:
+            del cleaned_data["talent"]
+            del cleaned_data["hours_worked"]
+            del cleaned_data["date_from"]
+            del cleaned_data["date_to"]
+            del cleaned_data["course"]
+            del cleaned_data["topic"]
+            del cleaned_data["company"]
+            raise ValidationError("This experience already exists in your profile! Please enter another combination.")
+
+        return cleaned_data
+
 
 class WorkClientResponseForm(forms.ModelForm):
     class Meta:
@@ -348,7 +437,7 @@ class WorkClientConfirmForm(forms.ModelForm):
         confirm_entry = self.cleaned_data.get("confirm")
 
         if confirm_entry == 'S':
-            raise forms.ValidationError("Please Confirm or Reject this claim")
+            raise ValidationError("Please Confirm or Reject this claim")
         return confirm_entry
 
 
@@ -387,7 +476,7 @@ class WorkClientSelectForm(forms.ModelForm):
         als = client_passed.id
 
         if als in pwd:
-            raise forms.ValidationError("This person is already in your confirmation list! Please Choose another person.")
+            raise ValidationError("This person is already in your confirmation list! Please Choose another person.")
         return client_passed
 
 
@@ -406,7 +495,7 @@ class WorkCollaboratorConfirmForm(forms.ModelForm):
         confirm_entry = self.cleaned_data.get("confirm")
 
         if confirm_entry == 'S':
-            raise forms.ValidationError("Please Confirm or Reject this claim")
+            raise ValidationError("Please Confirm or Reject this claim")
         return confirm_entry
 
 class WorkCollaboratorSelectForm(forms.ModelForm):
@@ -444,7 +533,7 @@ class WorkCollaboratorSelectForm(forms.ModelForm):
         als = collaborator_passed.id
 
         if als in pwd:
-            raise forms.ValidationError("This person is already in your confirmation list! Please Choose another person.")
+            raise ValidationError("This person is already in your confirmation list! Please Choose another person.")
         return collaborator_passed
 
 class SuperiorResponseForm(forms.ModelForm):
@@ -462,7 +551,7 @@ class SuperiorConfirmForm(forms.ModelForm):
         confirm_entry = self.cleaned_data.get("confirm")
 
         if confirm_entry == 'S':
-            raise forms.ValidationError("Please Confirm or Reject this claim")
+            raise ValidationError("Please Confirm or Reject this claim")
         return confirm_entry
 
 class SuperiorSelectForm(forms.ModelForm):
@@ -494,7 +583,7 @@ class SuperiorSelectForm(forms.ModelForm):
         als = superior_passed.id
 
         if als in pwd:
-            raise forms.ValidationError("This person is already in your confirmation list! Please Choose another person.")
+            raise ValidationError("This person is already in your confirmation list! Please Choose another person.")
         return superior_passed
 
 
@@ -513,7 +602,7 @@ class WorkColleagueConfirmForm(forms.ModelForm):
         confirm_entry = self.cleaned_data.get("confirm")
 
         if confirm_entry == 'S':
-            raise forms.ValidationError("Please Confirm or Reject this claim")
+            raise ValidationError("Please Confirm or Reject this claim")
         return confirm_entry
 
 
@@ -545,16 +634,16 @@ class WorkColleagueSelectForm(forms.ModelForm):
         colleague_passed = self.cleaned_data.get("colleague_name")
         als = colleague_passed.id
         if als in pwd:
-            raise forms.ValidationError("This person is already in your confirmation list! Please Choose another person.")
+            raise ValidationError("This person is already in your confirmation list! Please Choose another person.")
         else:
             return colleague_passed
 
 class WorkExperienceForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        super(WorkExperienceForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.helper = FormHelper(self)
-        self.helper.form_show_errors = False
+        self.helper.form_show_errors = True
 
     class Meta:
         model = WorkExperience
@@ -565,8 +654,8 @@ class WorkExperienceForm(forms.ModelForm):
             'company': CompanySelect2Widget(),
             'designation': DesignationSelect2Widget(),
             'project_data': ProjectSelect2Widget(data_view='Project:project_data_json'),
-            'date_from': DateInput(attrs={'max': timezone.now().date()}),
-            'date_to': DateInput(attrs={'max': timezone.now().date()}),
+            'date_from': DateInput(),
+            'date_to': DateInput(),
             'skills': SkillModelSelect2MultipleWidget(),
             'industry': IndSelect2Widget(),
             'companybranch': BranchSelect2Widget(),
@@ -589,9 +678,9 @@ class WorkExperienceForm(forms.ModelForm):
         today = timezone.now().date()
 
         if date_to < date_from:
-            raise forms.ValidationError("You can't finish a period before it starts!, please ensure End date is after Start date.")
+            raise ValidationError("You can't finish a period before it starts!, please ensure End date is after Start date.")
         if date_to > today:
-            raise forms.ValidationError("You can't claim experience in the future! End date must be equal to, or less than today")
+            raise ValidationError("You can't claim experience in the future! End date must be equal to, or less than today")
 
         return date_to
 
@@ -600,13 +689,37 @@ class WorkExperienceForm(forms.ModelForm):
         date_to = self.cleaned_data.get("date_to")
         date_from = self.cleaned_data.get("date_from")
         hours_worked = self.cleaned_data.get("hours_worked")
-        duration = date_to - date_from
+        duration = (date_to - date_from)+timedelta(days=1)
         max = duration.days * 12
 
         if hours_worked > max:
-            raise forms.ValidationError("You can't claim more than 12 hours per day!")
+            raise ValidationError("You can't claim more than 12 hours per day!")
 
         return hours_worked
+
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        talent = cleaned_data.get("talent")
+        hours_worked = cleaned_data.get("hours_worked")
+        date_from = cleaned_data.get("date_from")
+        date_to = cleaned_data.get("date_to")
+        course = cleaned_data.get("course")
+        topic = cleaned_data.get("topic")
+        company = cleaned_data.get("company")
+
+        if WorkExperience.objects.filter(talent = talent, hours_worked = hours_worked, date_from = date_from, date_to = date_to, course = course, topic = topic, company = company).count() > 0:
+            del cleaned_data["talent"]
+            del cleaned_data["hours_worked"]
+            del cleaned_data["date_from"]
+            del cleaned_data["date_to"]
+            del cleaned_data["course"]
+            del cleaned_data["topic"]
+            del cleaned_data["company"]
+            raise ValidationError("This experience already exists in your profile! Please enter another combination.")
+
+        return cleaned_data
 
 
 class DesignationForm(forms.ModelForm):
@@ -625,7 +738,7 @@ class DesignationForm(forms.ModelForm):
         als = designation_passed
 
         if als in pwd:
-            raise forms.ValidationError("An entry with this designation type has already been captured! Please enter another designation.")
+            raise ValidationError("An entry with this designation type has already been captured! Please enter another designation.")
         return designation_passed
 
 
@@ -638,7 +751,7 @@ class ClassMatesCommentForm(forms.ModelForm):
         confirm_entry = self.cleaned_data.get("confirm")
 
         if confirm_entry == 'S':
-            raise forms.ValidationError("Please Confirm or Reject this claim")
+            raise ValidationError("Please Confirm or Reject this claim")
         return confirm_entry
 
 class ClassMatesResponseForm(forms.ModelForm):
@@ -676,7 +789,7 @@ class ClassMatesSelectForm(forms.ModelForm):
         als = colleague_passed.id
 
         if als in pwd:
-            raise forms.ValidationError("This person is already in your confirmation list! Please Choose another person.")
+            raise ValidationError("This person is already in your confirmation list! Please Choose another person.")
         return colleague_passed
 
 
@@ -689,7 +802,7 @@ class ClassMatesConfirmForm(forms.ModelForm):
         confirm_entry = self.cleaned_data.get("confirm")
 
         if confirm_entry == 'S':
-            raise forms.ValidationError("Please Confirm or Reject this claim")
+            raise ValidationError("Please Confirm or Reject this claim")
         return confirm_entry
 
 
@@ -702,7 +815,7 @@ class LecturerCommentForm(forms.ModelForm):
         confirm_entry = self.cleaned_data.get("confirm")
 
         if confirm_entry == 'S':
-            raise forms.ValidationError("Please Confirm or Reject this claim")
+            raise ValidationError("Please Confirm or Reject this claim")
         return confirm_entry
 
 
@@ -744,7 +857,7 @@ class LecturerSelectForm(forms.ModelForm):
         lecturer_passed = self.cleaned_data.get("lecturer")
         als = lecturer_passed.id
         if als in pwd:
-            raise forms.ValidationError("This person is already in your confirmation list! Please Choose another person.")
+            raise ValidationError("This person is already in your confirmation list! Please Choose another person.")
         return lecturer_passed
 
 
@@ -757,7 +870,7 @@ class LecturerConfirmForm(forms.ModelForm):
         confirm_entry = self.cleaned_data.get("confirm")
 
         if confirm_entry == 'S':
-            raise forms.ValidationError("Please Confirm or Reject this claim")
+            raise ValidationError("Please Confirm or Reject this claim")
         return confirm_entry
 
 class LecturerRespondForm(forms.ModelForm):
@@ -780,8 +893,8 @@ class EducationForm(forms.ModelForm):
         widgets={
             'course': CourseSelect2Widget(),
             'topic': TopicSelect2Widget(),
-            'date_from': DateInput(attrs={'max': timezone.now().date()}),
-            'date_to': DateInput(attrs={'max': timezone.now().date()}),
+            'date_from': DateInput(),
+            'date_to': DateInput(),
         }
         labels = {
             'course': 'Course Name',
@@ -797,11 +910,35 @@ class EducationForm(forms.ModelForm):
         today = timezone.now().date()
 
         if date_to < date_from:
-            raise forms.ValidationError("You can't finish a period before it starts!, please ensure End date is after Start date.")
+            raise ValidationError("You can't finish a period before it starts!, please ensure End date is after Start date.")
         elif date_to > today:
-            raise forms.ValidationError("You can't claim experience in the future! End date must be  equal to, or less than today")
+            raise ValidationError("You can't claim experience in the future! End date must be  equal to, or less than today")
 
         return date_to
+
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        talent = cleaned_data.get("talent")
+        hours_worked = cleaned_data.get("hours_worked")
+        date_from = cleaned_data.get("date_from")
+        date_to = cleaned_data.get("date_to")
+        course = cleaned_data.get("course")
+        topic = cleaned_data.get("topic")
+        company = cleaned_data.get("company")
+
+        if WorkExperience.objects.filter(talent = talent, hours_worked = hours_worked, date_from = date_from, date_to = date_to, course = course, topic = topic, company = company).count() > 0:
+            del cleaned_data["talent"]
+            del cleaned_data["hours_worked"]
+            del cleaned_data["date_from"]
+            del cleaned_data["date_to"]
+            del cleaned_data["course"]
+            del cleaned_data["topic"]
+            del cleaned_data["company"]
+            raise ValidationError("This experience already exists in your profile! Please enter another combination.")
+
+        return cleaned_data
 
 
 class CourseForm(forms.ModelForm):
@@ -812,6 +949,20 @@ class CourseForm(forms.ModelForm):
             'company': CompanySelect2Widget(),
             'course_type': CourseTypeSelect2Widget(),
         }
+
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        name = cleaned_data.get("name")
+        company = cleaned_data.get("company")
+
+        if Course.objects.filter(name = name, company = company).count() > 0:
+            del cleaned_data["name"]
+            del cleaned_data["company"]
+            raise ValidationError("This course already exists for the company! Please enter another combination or select the existing combination.")
+
+        return cleaned_data
 
 
 class CourseTypeForm(forms.ModelForm):

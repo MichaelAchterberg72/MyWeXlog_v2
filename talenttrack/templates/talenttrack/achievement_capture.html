@@ -10,6 +10,12 @@
 <h3>Achievements</h3>
 <form method="post" id="BranchForm" enctype="multipart/form-data">
   {% csrf_token %}
+  <div style="background-color:red; color:white;">
+    <p>
+
+      {{ form.non_field_errors }}
+    </p>
+  </div>
   <div class="form-row">
     <div class="form-group col-md-6 mb-0">
       {{ form.achievement|as_crispy_field }}

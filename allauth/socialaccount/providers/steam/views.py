@@ -14,13 +14,10 @@ Resources:
 """
 from django.urls import reverse
 
-from allauth.socialaccount.providers.openid.views import (
-    OpenIDCallbackView,
-    OpenIDLoginView,
-)
+from allauth.socialaccount.providers.openid.views import (OpenIDCallbackView,
+                                                          OpenIDLoginView)
 
 from .provider import SteamOpenIDProvider
-
 
 STEAM_OPENID_URL = "https://steamcommunity.com/openid"
 
@@ -29,10 +26,7 @@ class SteamOpenIDLoginView(OpenIDLoginView):
     provider = SteamOpenIDProvider
 
     def get_form(self):
-        items = dict(
-            list(self.request.GET.items()) +
-            list(self.request.POST.items())
-        )
+        items = dict(list(self.request.GET.items()) + list(self.request.POST.items()))
         items["openid"] = STEAM_OPENID_URL
         return self.form_class(items)
 

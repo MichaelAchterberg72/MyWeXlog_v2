@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 # from __future__ import absolute_import, unicode_literals
 
 import os
+
 from . import app_config
 
 # from distutils.sysconfig import get_python_lib
@@ -66,6 +67,7 @@ INSTALLED_APPS = [
     'feedback.apps.FeedbackConfig',
     'AppControl.apps.AppcontrolConfig',
     'mod_corporate.apps.ModCorporateConfig',
+    'skills.apps.SkillsConfig',
     'tasks',
     'analytics',
     'management',
@@ -96,6 +98,8 @@ INSTALLED_APPS = [
     'djangobower',
     'tinymce',
     'colorfield',
+    'grappelli',
+    'filebrowser',
 ]
 
 
@@ -127,6 +131,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.request',
+                'csp.context_processors.nonce',
                 'users.context_processor.theme',
                 'users.context_processor.notification_count',
                 'users.context_processor.confirm_count',
@@ -233,31 +239,31 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
     ## X-Frame-Options (DENY, WHITELIST)
 # X_FRAME_OPTIONS = 'DENY'
     ##django-referrer-policy (3rd party app)
-REFERRER_POLICY='same-origin'
+REFERRER_POLICY = 'origin-when-cross-origin'
     ## Content-Security-policy (3rd party app)
 CSP_DEFAULT_SRC = (
-    "'self'", "'unsafe-inline'", 'SameSite', 'maxcdn.bootstrapcdn.com', 'code.jquery.com', 'cdnjs.cloudflare.com', 'fonts.googleapis.com', 'maps.googleapis.com', 'use.typekit.net', 'netdna.bootstrapcdn.com', 'w3.org', '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'kit.fontawesome.com', 'mywexlog.dev', 'bookstrapcdn.com', 'cdn.jsdelivr.net', 'ajax.googleapis.com', 'https://www.youtube.com/', 'dot-test-machterberg.s3.amazonaws.com',
+    "'self'", "'unsafe-inline'", 'SameSite', 'maxcdn.bootstrapcdn.com', 'code.jquery.com', 'cdnjs.cloudflare.com', 'fonts.googleapis.com', 'maps.googleapis.com', 'use.typekit.net', 'netdna.bootstrapcdn.com', 'w3.org', '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'kit.fontawesome.com', 'mywexlog.dev', 'bookstrapcdn.com', 'cdn.jsdelivr.net', 'ajax.googleapis.com', 'https://www.youtube.com/', 'dot-test-machterberg.s3.amazonaws.com', 'www.googletagmanager.com', 'www.google-analytics.com', 'www.linkedin.com', 'connect.facebook.net', 'static-exp1.licdn.com',
     )#app_config
 
 CSP_SCRIPT_SRC = (
-    "'self'", "'unsafe-inline'", '127.0.0.1', '107.191.57.249', 'code.jquery.com', 'maxcdn.bootstrapcdn.com', 'kit.fontawesome.com', 'app.mywexlog.dev', 'mywexlog.dev', 'cdnjs.cloudflare.com', 'maps.googleapis.com', 'bookstrapcdn.com', 'cdn.jsdelivr.net', 'cdn.jsdelivr.net', 'ajax.googleapis.com', 'cdnjs.cloudflare.com', 'apis.google.com', 'https://www.gstatic.com', 'tarruda.github.com', 'dot-test-machterberg.s3.amazonaws.com', 'netdna.bootstrapcdn.com', 'cdn.tiny.cloud', 'code.jquery.com',
+    "'self'", "'unsafe-inline'", '127.0.0.1', '107.191.57.249', 'code.jquery.com', 'maxcdn.bootstrapcdn.com', 'kit.fontawesome.com', 'app.mywexlog.dev', 'mywexlog.dev', 'cdnjs.cloudflare.com', 'maps.googleapis.com', 'bookstrapcdn.com', 'cdn.jsdelivr.net', 'cdn.jsdelivr.net', 'ajax.googleapis.com', 'cdnjs.cloudflare.com', 'apis.google.com', 'https://www.gstatic.com', 'tarruda.github.com', 'dot-test-machterberg.s3.amazonaws.com', 'netdna.bootstrapcdn.com', 'cdn.tiny.cloud', 'code.jquery.com', 'plausible.io', 'googletagmanager.com', 'www.googletagmanager.com', 'www.google-analytics.com', 'platform.linkedin.com', 'www.linkedin.com', 'connect.facebook.net', 'static-exp1.licdn.com', 'licdn.com',
     )#app_config
 CSP_IMG_SRC = (
-    "'self'", '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev', 'dot-test-machterberg.s3.amazonaws.com', 'cdn.tiny.cloud', 'sp.tinymce.com',
+    "'self'", '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev', 'dot-test-machterberg.s3.amazonaws.com', 'cdn.tiny.cloud', 'sp.tinymce.com', 'w3.org', 'www.facebook.com',
     )#app_config
 CSP_OBJECT_SRC = None
 CSP_MEDIA_SRC = (
     "'self'", '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev', 'youtube.com', 'dot-test-machterberg.s3.amazonaws.com',
     )
 CSP_FRAME_SRC = (
-    'https://www.youtube.com/', 'https://content.googleapis.com/', 'https://accounts.google.com/', "'self'", '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev', 'youtube.com', 'dot-test-machterberg.s3.amazonaws.com',
+    'https://www.youtube.com/', 'https://content.googleapis.com/', 'https://accounts.google.com/', "'self'", '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev', 'youtube.com', 'dot-test-machterberg.s3.amazonaws.com', 'platform.linkedin.com', 'www.linkedin.com', 'connect.facebook.net', 'www.facebook.com', 'web.facebook.com',
     )
 CSP_FONT_SRC = (
     "'self'", 'fonts.googleapis.com', '*', 'w3.org', '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev', 'dot-test-machterberg.s3.amazonaws.com',
     )#app_config
 CSP_CONNECT_SRC = None
 CSP_STYLE_SRC = (
-    "'self'", 'maxcdn.bootstrapcdn.com', 'app.mywexlog.dev', 'cdnjs.cloudflare.com', 'w3.org', '127.0.0.1', '107.191.57.249', 'fonts.googleapis.com', 'cdn.jsdelivr.net',  'stackpath.bookstrapcdn.com', "'unsafe-inline'", 'mywexlog.dev', 'https://www.gstatic.com/', 'stackpath.bootstrapcdn.com', 'dot-test-machterberg.s3.amazonaws.com', 'netdna.bootstrapcdn.com',
+    "'self'", "'unsafe-inline'", 'maxcdn.bootstrapcdn.com', 'app.mywexlog.dev', 'cdnjs.cloudflare.com', 'w3.org', '127.0.0.1', '107.191.57.249', 'fonts.googleapis.com', 'cdn.jsdelivr.net',  'stackpath.bookstrapcdn.com', "'unsafe-inline'", 'mywexlog.dev', 'https://www.gstatic.com/', 'stackpath.bootstrapcdn.com', 'dot-test-machterberg.s3.amazonaws.com', 'netdna.bootstrapcdn.com',
     )#app_config
 CSP_BASE_URI = None
 CSP_CHILD_SRC = None
@@ -265,7 +271,9 @@ CSP_FRAME_ANCESTORS = None
 CSP_FORM_ACTION = None
 CSP_SANDBOX = None
 CSP_REPORT_URI = None
-CSP_MANIFEST_SRC = None
+CSP_MANIFEST_SRC = (
+    'www.linkedin.com', 'connect.facebook.net', 'static-exp1.licdn.com', 'licdn.com',
+    )
 CSP_WORKER_SRC = None
 CSP_PLUGIN_TYPES = None
 CSP_REQUIRE_SRI_FOR = None
@@ -288,9 +296,7 @@ DATABASES = {
         #'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'Wexlog_billing',
         'USER': 'postgres',
-		#'PASSWORD': 'rdf8tm1234', #MA
-        #'PASSWORD': 'dJpfss41678', #JK
-        'PASSWORD': 'rdf8tm1234', #MA
+		'PASSWORD': 'netscape', #MA
         'HOST': 'localhost',
         #'HOST': 'dbhost',
         'PORT': '5432'
@@ -318,6 +324,10 @@ CACHES = {
 
 # Tell select2 which cache configuration to use:
 SELECT2_CACHE_BACKEND = "select2"
+
+# Django-sri
+USE_SRI = False
+DEFAULT_TIMEOUT = 600
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -440,13 +450,13 @@ if app_config.paypal_switch == 'sandbox':
     PAYPAL_RECEIVER_EMAIL = "sb-wynfk1244760@business.example.com"
 else:
     PAYPAL_TEST = False
-    PAYPAL_RECEIVER_EMAIL = "machterberg@tkgm.co.za"
+    PAYPAL_RECEIVER_EMAIL = "accounts@devoptec.com"
 
 # Follow instructions to create new certs for server from https://re.readthedocs.io/es/stable/standard/encrypted_buttons.html to create certs
 PAYPAL_PRIVATE_CERT = 'paypal/cert/paypal_private.pem'  #'/path/to/paypal_private.pem'  $ openssl genrsa -out paypal_private.pem 1024
 PAYPAL_PUBLIC_CERT = 'paypal/cert/paypal_public.pem'  # '/path/to/paypal_public.pem'  $ openssl req -new -key paypal_private.pem -x509 -days 365 -out paypal_public.pem
-PAYPAL_CERT = 'paypal/cert/paypal_cert_pem_1.txt'  # https://www.paypal.com/us/cgi-bin/webscr?cmd=_profile-website-cert or https://www.sandbox.paypal.com/us/cgi-bin/webscr?cmd=_profile-website-cert 'paypal/cert/paypal_cert_pen.txt'
-PAYPAL_CERT_ID = 'J7C4RR9N34PZJ'
+PAYPAL_CERT = 'paypal/cert/paypal_cert_pem_202107_Sandbox.txt'  # https://www.paypal.com/us/cgi-bin/webscr?cmd=_profile-website-cert or https://www.sandbox.paypal.com/us/cgi-bin/webscr?cmd=_profile-website-cert 'paypal/cert/paypal_cert_pen.txt'
+PAYPAL_CERT_ID = 'T3EH9FMMNTD32'
 
 # Accounts department email_id
 ACCOUNTS_EMAIL = "machterberg@tkgm.co.za"
@@ -518,3 +528,5 @@ TINYMCE_EXTRA_MEDIA = {
 #        ...
     ],
 }
+# URL_TINYMCE = getattr(settings, "FILEBROWSER_URL_TINYMCE", settings.ADMIN_MEDIA_PREFIX + "tinymce/jscripts/tiny_mce/")
+# PATH_TINYMCE = getattr(settings, "FILEBROWSER_PATH_TINYMCE", settings.ADMIN_MEDIA_PREFIX + "tinymce/jscripts/tiny_mce/")

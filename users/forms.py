@@ -1,7 +1,9 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from .models import CustomUser, CustomUserSettings
+from django.contrib.auth.forms import UserChangeForm, UserCreationForm
+
 from allauth.account.forms import SignupForm
+
+from .models import CustomUser, CustomUserSettings
 
 
 class CustomUserCreationForm(UserCreationForm):

@@ -15,6 +15,14 @@
 <div class="card card-shadow">
   <div class="card-body">
   <h4 class="card-title">Personal Project Details
+    <div class="">
+      <br>
+      <small>
+        Please ensure that the "Project" as well as the "Company" and the "Branch" have been captured in the <a href="{% url 'Enterprise:EnterpriseHome' %}" target="_blank">Enterprise</a> or the <a href="{% url 'Project:ProjectDashboard' %}">Projects
+        </a> page first. Refresh this page once the project, company and branch have been added. The project, company and branch will then be available in the respective fields.
+      </small>
+      <br>
+    </div>
     <span>
       <p class="float-right">
         <a href="{% url 'Project:HelpProjectAdd' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="popover" title="Click here for help on this page!">
@@ -27,32 +35,24 @@
     {% if request.user.is_authenticated %}
       <p>
         <a href="{% url 'Project:ProjectHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">
-          Back
+          PPL Back
         </a>
       </p>
     {% endif %}
     <form class="" action="" method="POST" id="ProjectForm">
       {% csrf_token %}
+      <div style="background-color:red; color:white;">
+        <p>
+
+          {{ form.non_field_errors }}
+        </p>
+      </div>
       <div class="form-row">
         <div class="form-group col-md-12 mb-0">
           {{ form.project|as_crispy_field }}
-          <p>
-            <a href="{% url 'Project:ProjectFullAddPop' %}" id='add_project' onclick='return showAddPopup(this);'>
-              <img src = "{% static 'images/icon-addlink.svg' %}">
-              Add Project
-            </a>
-          </p>
           {{ form.company|as_crispy_field }}
-          <a href="{% url 'Enterprise:EnterpriseAddPop' %}" id='add_enterprise' onclick='return showAddPopup(this);'>
-            <img src="{% static 'images/icon-addlink.svg' %}">
-            Add a new Enterprise
-          </a>
           {{ form.companybranch|as_crispy_field }}
           <p>
-            <a href="{% url 'Enterprise:FullBranchAddPopup' %}" id='add_branch' onclick='return showAddPopup(this);'>
-              <img src = "{% static 'images/icon-addlink.svg' %}">
-              Add a Branch
-            </a>
           </p>
         </div>
         <div class="form-group col-md-12 mb-0">

@@ -20,8 +20,8 @@
 </div>
 
 <div class="wrap-1">
-{% if pics.profile_background %}
-<img class="d-block w-100" src="{{ pics.profile_background.url }}" height="662" style="opacity:0.7;--bg-overlay-color:#e1e1ef;" alt="MyWexlog Profile for {{ talent.first_name }} {{ talent.last_name }}">
+{% if background_pic %}
+<img class="d-block w-100" src="{{ background_pic.url }}" height="662" style="opacity:0.7;--bg-overlay-color:#e1e1ef;" alt="MyWexlog Profile for {{ talent.first_name }} {{ talent.last_name }}">
 {% else %}
 <img class="d-block w-100" src="{% static 'images/business.jpg' %}" height="662" style="opacity:0.7;--bg-overlay-color:#e1e1ef;" alt="MyWexlog Profile for {{ talent.first_name }} {{ talent.last_name }}">
 {% endif %}
@@ -37,10 +37,10 @@
         <br>
         <br>
         <center>
-          {% if pics.profile_pic %}
-          <img align="center" class="profile-pic" height="210" src="{{ pics.profile_pic.url }}" style="border:0;" width="null"/>
+          {% if profile_pic %}
+          <img align="center" class="profile-pic" height="210" width="210" src="{{ profile_pic.url }}" style="border:0;" width="null"/>
           {% else %}
-          <img align="center" class="profile-pic" height="210" src="{% static 'images/email/mywexlog-logo.png' %}" style="border:0;" width="null"/>
+          <img align="center" class="profile-pic" height="210" width="210" src="{% static 'images/email/mywexlog-logo.png' %}" style="border:0;" width="null"/>
           {% endif %}
         </center>
         <br><br><br><br>
@@ -284,21 +284,109 @@
   </div>
 </div>
 </div>
-{% if upload %}
 <div class="row">
   <div class="col-md-12 profile-uploads-box text-center align-items-top h-100">
-    <h4 class="profile-header" id="lcm">Uploaded Files</h4><br>
-    <div class="row pt-3 h-100 my-auto d-flex justify-content-around">
-      {% for file in upload %}
-        <div class="col-md-3 text-center">
-          <a href="{{ file.file.url }}" target="_blank">
-          <img src="{{ file.thumbnail.url }}" alt="{{ file.title }}" height="400" width="300" style="top:0px;"></a>
-        </div>
-      {% endfor %}
+    <h4 class="profile-header" id="General">General Information</h4>
+    <div class="profile-card-under">Expected Rate: {% if bid_qs %}{{ bid_qs.currency }} {{ bid_qs.rate_bid }} {{ bid_qs.get_rate_unit_display }}{% else %}{{ als.currency }} {{ als.std_rate }} per hour{% endif %}</div>
+    <div class="row pt-4 my-auto">
+      <div class="col-md-12 text-center my-auto">
+        <div class="profile-card-header">{% if bid_qs %}Motivation for position{% else %}General Motivation{% endif %}</div><br>
+        <div class="profile-card-under">{{ h.designation }}</div>
+      </div>
+    </div>
+    <div class="profile-card-body mb-auto">
+    <div class="row pt-3 h-100 my-auto">
+      <div class="col-md-12 text-left my-auto">
+        <span class="">{% if bid_qs %}{{ bid_qs.motivation|safe }}{% else %}{{ als.motivation|safe }}{% endif %}</span>
+      </div>
     </div>
   </div>
 </div>
-  {% endif %}
+</div>
+<br><br>
+<div class="row">
+  <div class="col-md-12 profile-uploads-box align-items-top h-100">
+    <h4 class="profile-header text-center" id="overview">Experience Overview</h4><br>
+    <div class="profile-card-body mb-auto">
+      <div class="row h-100 my-auto">
+        <div class="col-md-2 float-right">
+          <strong>Year</strong>
+        </div>
+        <div class="col-md-2 col-no-pad">
+          <strong>Tenure</strong>
+        </div>
+        <div class="col-md-4 float-left">
+          <strong>Organisation</strong>
+        </div>
+        <div class="col-md-4 float-left">
+          <strong>Position</strong>
+        </div>
+      </div>
+    {% for key in public_profile_list %}
+    <div class="row h-100 my-auto">
+      <div class="col-md-2 float-right">
+        {% now "F j, Y" as current_date %}{{ key.mn_date|date:"Y" }} -
+          {% if current_date == key.mx_date|date:"F j, Y" %}Current{% else %}{{ key.mx_date|date:"Y" }}{% endif %}
+      </div>
+      <div class="col-md-2 col-no-pad">
+        {{ key.tn|floatformat:1 }} years
+      </div>
+      <div class="col-md-4 float-left">
+        {{ key.co.0.1 }}
+      </div>
+      <div class="col-md-4 float-left">
+        {% for deg in key.we_co_des %}{{ deg.des }}, {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+    </div>
+  </div>
+</div>
+<br><br>
+<div class="row">
+  <div class="col-md-12 profile-uploads-box align-items-top h-100">
+    <h4 class="profile-header text-center" id="overview">Technical Skills, Platforms, Tools, Knowledge and Experience</h4><br>
+  <div class="profile-card-body mb-auto">
+    <div class="row h-100 my-auto">
+      <div class="col-md-4 float-right mt-auto">
+        <strong>Skill</strong>
+      </div>
+      <div class="col-md-1 text-center mt-auto">
+        <strong>Years</strong>
+      </div>
+      <div class="col-md-1 text-center mt-auto">
+        <strong>Hours</strong>
+      </div>
+      <div class="col-md-4 float-right mt-auto">
+        <strong>Skill</strong>
+      </div>
+      <div class="col-md-1 text-center mt-auto">
+        <strong>Years</strong>
+      </div>
+      <div class="col-md-1 text-center mt-auto">
+        <strong>Hours</strong>
+      </div>
+    </div>
+    <div class="row h-100 my-auto">
+      {% for skill in skills_years_skill_data %}
+
+      <div class="col-md-4 float-right">
+        {{ skill.skill }}
+      </div>
+      <div class="col-md-1 text-center">
+        {{ skill.skill_tn|floatformat:1|intcomma }}
+      </div>
+      <div class="col-md-1 text-center">
+        {{ skill.t_exp_hours|floatformat:0|intcomma }}
+      </div>
+
+    {% endfor %}
+    </div>
+
+  </div>
+  </div>
+</div>
+<br>
   <br><br><br>
 <div class="row">
   <div class="col-md-6 profile-quick-info-box text-center align-items-top h-100">
@@ -341,6 +429,8 @@
     </div>
   </div>
 </div>
+
+{% if membership_qs_count > 0 %}
 <div class="jumbotron" style="background:transparent;">
   <div class="row">
     <div class="container">
@@ -432,26 +522,13 @@
   </div>
   <br>
 </div>
+{% endif %}
+
+
 <hr>
 <div class="jumbotron bg-light">
   <div class="container">
     <h4 class="profile-header" id="General">General Information</h4>
-    <div class="profile-card-under">Expected Rate: {% if bid_qs %}{{ bid_qs.currency }} {{ bid_qs.rate_bid }} {{ bid_qs.get_rate_unit_display }}{% else %}{{ als.currency }} {{ als.std_rate }} per hour{% endif %}</div>
-    <div class="row pt-4 my-auto">
-      <div class="col-md-12 text-center my-auto">
-        <div class="profile-card-header">{% if bid_qs %}Motivation for position{% else %}General Motivation{% endif %}</div><br>
-        <div class="profile-card-under">{{ h.designation }}</div>
-      </div>
-    </div>
-    <div class="profile-card-body mb-auto">
-    <div class="row pt-3 h-100 my-auto">
-      <div class="col-md-12 text-left my-auto">
-        <span class="">{% if bid_qs %}{{ bid_qs.motivation|safe }}{% else %}{{ als.motivation|safe }}{% endif %}</span>
-      </div>
-    </div>
-  </div>
-  <div class="section-divider bg-light">
-  </div>
   <div class="row pt-4 my-auto">
     <div class="col-md-12 text-center my-auto">
       <div class="profile-card-header">Background</div><br>
@@ -467,6 +544,23 @@
 </div>
   </div>
 </div>
+<br>
+{% if upload %}
+<hr>
+<div class="jumbotron bg-light">
+  <div class="col-md-12 text-center align-items-top h-100">
+    <h4 class="profile-header" id="lcm">Uploaded Files</h4><br>
+    <div class="row pt-3 h-100 my-auto d-flex justify-content-around">
+      {% for file in upload %}
+        <div class="col-md-3 text-center">
+          <a href="{{ file.file.url }}" target="_blank">
+          <img src="{{ file.thumbnail.url }}" alt="{{ file.title }}" height="400" width="300" style="top:0px;"></a>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endif %}
 <br>
 <div class="jumbotron public-profile-jumbotron-header">
   <div class="text-center" id="skill" style="color:#ffffff;padding-bottom:1rem;text-transform:uppercase;">
@@ -964,6 +1058,8 @@ background-color:transparent;
     {% endif %}
   </div>
 </div>
+
+
 <hr>
 <div class="jumbotron bg-light" id="employment-history">
   <div class="container">
@@ -975,42 +1071,45 @@ background-color:transparent;
           <div class="profile-list-header">{% now "F j, Y" as current_date %}{{ key.mn_date }}<br> to
             {% if current_date == key.mx_date|date:"F j, Y" %}Current{% else %}{{ key.mx_date }}{% endif %}</div><br>
           <div class="profile-list-under">{{ key.tn|floatformat:1 }} years</div><br>
+          <div class="profile-list-header">{% for deg in key.we_co_des %}{{ deg.des }}<br><br>{% endfor %}</div><br>
         </div>
         <div class="col-md-9 border-left" style="border-left: solid 2px #000000;">
           <div class="">
             <div class="col-md-12">
               <div class="profile-list-heading">{{ key.co.0.1 }}</div><br>
               <div class="profile-list-heading-under">{{ key.co.0.0 }}</div><br>
-              {% if key.dt.0.3 %}
-              <div class="" id="coDisc1{{key.dt.0.4}}" style="display:block;">
-                {{ key.dt.0.3|safe|truncatechars:460 }}<br>
-                {% if key.dt.0.3|length > 460 %}
-                <button class="float-right" type="button" id="readMore{{key.dt.0.4}}">Read More ..</button><br>
+              {% for item in key.dt_list %}
+              {% if item.0.3 %}
+              <div class="" id="coDisc1{{item.0.4}}" style="display:block;">
+                {{ item.0.3|safe|truncatechars:460 }}<br>
+                {% if item.0.3|length > 460 %}
+                <button class="float-right" type="button" id="readMore{{item.0.4}}">Read More ..</button><br>
                 {% endif %}
               </div>
-              <div class="" id="coDisc2{{key.dt.0.4}}" style="display:none;">
-                {{ key.dt.0.3|safe }}<br>
-                <button class="float-right" type="button" id="readLess{{key.dt.0.4}}">Read Less ..</button><br>
+              <div class="" id="coDisc2{{item.0.4}}" style="display:none;">
+                {{ item.0.3|safe }}<br>
+                <button class="float-right" type="button" id="readLess{{item.0.4}}">Read Less ..</button><br>
               </div><br>
 
-              {% if key.dt.0.3|length > 460 %}
+              {% if item.0.3|length > 460 %}
               <script>
-                var readMore = document.getElementById('readMore{{key.dt.0.4}}');  // 1
+                var readMore = document.getElementById('readMore{{item.0.4}}');  // 1
                 readMore.addEventListener('click', function() {   // 3
-                   coDisc1{{key.dt.0.4}}.style.display = 'none';
-                   coDisc2{{key.dt.0.4}}.style.display = 'block';          // 4
+                   coDisc1{{item.0.4}}.style.display = 'none';
+                   coDisc2{{item.0.4}}.style.display = 'block';          // 4
                 });
-                var readLess = document.getElementById('readLess{{key.dt.0.4}}');  // 1
+                var readLess = document.getElementById('readLess{{item.0.4}}');  // 1
                 readLess.addEventListener('click', function() {  // 3
-                  coDisc1{{key.dt.0.4}}.style.display = 'block';
-                  coDisc2{{key.dt.0.4}}.style.display = 'none';
-                  coDisc1{{key.dt.0.4}}.scrollIntoView();              // 4
+                  coDisc1{{item.0.4}}.style.display = 'block';
+                  coDisc2{{item.0.4}}.style.display = 'none';
+                  coDisc1{{item.0.4}}.scrollIntoView();              // 4
                 });
 
               </script>
               {% endif %}
               {% endif %}
-{% if key.pr %}
+              {% endfor %}
+              {% if key.pr %}
               <div class="row">
                 <div class="col-md-12 text-left my-auto">
                   <div class="profile-card-header"><strong>Projects with {{ key.co.0.1 }}: </strong></div>
@@ -1839,14 +1938,15 @@ background-color:transparent;
   </div>
 </div>
 
-<hr>
 
+{% if edtexp_count > 0 %}
+<hr>
 <div class="jumbotron bg-light">
   <div class="container">
     <h4 class="profile-header" id="edu">Education & Training</h4>
     <div class="profile-card-under">{% if edtexp_count > 0 %}Total Courses Attended: {{ edtexp_count }}{% else %}No courses captured yet{% endif %}</div>
     <br>
-    {% if edtexp_count > 0 %}
+
       {% for e in edtexp %}
       <div class="row">
         <div class="col-md-3 border-right">
@@ -1899,18 +1999,18 @@ background-color:transparent;
         <a href="{% url 'Talent:PublicProfileEducation' ppl %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Education</a>
       {% endif %}
     </div>
-    {% endif %}
   </div>
 </div>
+{% endif %}
 
+{% if achievement_qs_count > 0 %}
 <hr>
-
 <div class="jumbotron bg-light">
   <div class="container">
     <h4 class="profile-header" id="achievements">Achievements</h4>
       <div class="profile-card-under">{% if achievement_qs_count > 0 %}Total Achievements: {{ achievement_qs_count }}{% else %}No achievements captured yet{% endif %}</div>
     <br>
-    {% if achievement_qs_count > 0 %}
+
       {% for a in achievement %}
       <div class="row">
         <div class="col-md-3 border-right">
@@ -1940,18 +2040,18 @@ background-color:transparent;
           <a href="{% url 'Talent:PublicProfileAchievements' ppl %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Achievements</a>
         {% endif %}
       </div>
-      {% endif %}
     </div>
   </div>
+{% endif %}
 
+{% if award_qs_count > 0 %}
 <hr>
-
 <div class="jumbotron bg-light">
 <div class="container">
 <h4 class="profile-header" id="awards">Awards</h4>
 <div class="profile-card-under">{% if award_qs_count > 0 %}Total Awards: {{ award_qs_count }}{% else %}No awards captured yet{% endif %}</div>
 <br>
-{% if award_qs_count > 0 %}
+
 {% for a in award %}
 <div class="row">
   <div class="col-md-3 border-right">
@@ -1987,17 +2087,18 @@ background-color:transparent;
     <a href="{% url 'Talent:PublicProfileAwards' ppl %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Awards</a>
   {% endif %}
 </div>
+</div>
+</div>
 {% endif %}
-</div>
-</div>
 
+{% if publication_qs_count > 0 %}
 <hr>
 <div class="jumbotron bg-light">
 <div class="container">
   <h4 class="profile-header" id="publications">Publications</h4>
     <div class="profile-card-under">{% if publication_qs_count > 0 %}Total Publications: {{ publication_qs_count }}{% else %}No publications captured yet{% endif %}</div>
   <br>
-  {% if publication_qs_count > 0 %}
+
     {% for a in publication %}
     <div class="row">
         <div class="col-md-3 border-right">
@@ -2040,28 +2141,61 @@ background-color:transparent;
       {% endif %}
     </div>
     {% endfor %}
-    {% endif %}
+
   </div>
 </div>
+{% endif %}
 
+{% if bkl_count > 0 %}
 <hr>
-
 <div class="jumbotron bg-light">
 <div class="container">
   <h4 class="profile-header" id="books">Books Read</h4>
   <div class="profile-card-under">{% if bkl_count > 0 %}Total Books Read: {{ bkl_count }}{% else %}No Books captured yet{% endif %}</div>
   <br>
-  {% if bkl_count > 0 %}
+
   {% for b in bkl %}
     <div class="row">
       <div class="col-md-3 border-right">
         <div class="profile-list-header">{{ b.date|date:"j M Y" }}</div><br>
+        <div class="profile-list-under">{{ b.type }}</div>
       </div>
       <div class="col-md-9 border-left">
         <div class="col-md-12">
           <div class="profile-list-heading">{{ b.book }}</div><br>
           <div class="profile-list-heading-under">{{ b.book.author.all|join:", " }}</div><br>
-          <div>{{ b.type }}</div>
+          {% if b.book.link %}
+          <div class=""><a href="{{ b.book.link }}" target="_blank">{{ b.book.link }}</a></div><br>
+          {% endif %}
+          {% if b.review %}
+          <div class="" id="bookDisc1{{b.pk}}" style="display:block;">
+            {{ b.review|safe|truncatechars:460 }}<br>
+            {% if b.review|length > 460 %}
+            <button class="float-right" type="button" id="readMoreBook{{b.pk}}">Read More ..</button><br>
+            {% endif %}
+          </div>
+          <div class="" id="bookDisc2{{b.pk}}" style="display:none;">
+            {{ b.review|safe }}<br>
+            <button class="float-right" type="button" id="readLessBook{{b.pk}}">Read Less ..</button><br>
+          </div><br>
+
+          {% if b.review|length > 460 %}
+          <script>
+            var readMoreBook = document.getElementById('readMoreBook{{b.pk}}');  // 1
+            readMoreBook.addEventListener('click', function() {   // 3
+               bookDisc1{{b.pk}}.style.display = 'none';
+               bookDisc2{{b.pk}}.style.display = 'block';          // 4
+            });
+            var readLessBook = document.getElementById('readLessBook{{b.pk}}');  // 1
+            readLessBook.addEventListener('click', function() {  // 3
+              bookDisc1{{b.pk}}.style.display = 'block';
+              bookDisc2{{b.pk}}.style.display = 'none';
+              bookDisc1{{b.pk}}.scrollIntoView();              // 4
+            });
+
+          </script>
+          {% endif %}
+          {% endif %}
         </div>
         <br><br><br>
       </div>
@@ -2072,8 +2206,7 @@ background-color:transparent;
         <a href="{% url 'Talent:PublicProfileBooks' ppl %}?next={{ request.path|urlencode }}" class="btn btn-primary float-right">View All Books</a>
       {% endif %}
     </div>
-    {% endif %}
   </div>
 </div>
-
+{% endif %}
 {% endblock content %}

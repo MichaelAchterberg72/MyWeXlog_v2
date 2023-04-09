@@ -1,15 +1,15 @@
-from django.db import models
-from decimal import getcontext, Decimal
-from django.db.models.signals import post_save
+from decimal import Decimal, getcontext
+from random import random
+from time import time
 
+from django.db import models
+from django.db.models.signals import post_save
 from django_countries.fields import CountryField
 from phonenumber_field.modelfields import PhoneNumberField
+from WeXlog.storage_backends import PrivateMediaStorage
 
-
-from locations.models import Region, City, Suburb
 from db_flatten.models import PhoneNumberType
-
-
+from locations.models import City, Region, Suburb
 from Profile.utils import create_code9
 
 
@@ -27,6 +27,10 @@ class Industry(models.Model):
         ordering = ['industry',]
 
 
+def EnterpriseLogoPic(instance, filename):
+	ext = filename.split('.')[-1]
+	return "%s/enterprise-logo\%s_%s.%s" % (instance.id, str(time()).replace('.','_'), random(), ext)
+
 class Enterprise(models.Model):
     FC = (
         ('P','Public'),
@@ -35,6 +39,7 @@ class Enterprise(models.Model):
     ename = models.CharField('Enterprise name', max_length=250, unique=True)
     slug = models.SlugField(max_length=60, blank=True, null=True, unique=True)
     description = models.TextField('Enterprise description')
+    logo = models.ImageField(storage=PrivateMediaStorage(), upload_to=EnterpriseLogoPic, blank=True, null=True)
     website = models.URLField(blank=True, null=True)
     filter_class = models.CharField(max_length=1, choices=FC, default='P')
     rate_1 = models.FloatField(null=True, default=0)#Average score from marketplace.models.TalentRate (rate_1)

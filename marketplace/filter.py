@@ -1,11 +1,10 @@
-from django.db.models import Count, Sum, F, Q
+from django.db.models import Count, F, Q, Sum
 from django.utils import timezone
-from .models import(
-    TalentRequired, SkillRequired, Deliverables, TalentAvailabillity, WorkBid
-)
-from talenttrack.models import(
-    WorkExperience, PreLoggedExperience
-)
+
+from talenttrack.models import PreLoggedExperience, WorkExperience
+
+from .models import (Deliverables, SkillRequired, TalentAvailabillity,
+                     TalentRequired, WorkBid)
 
 
 def SuitedVacancies(talent):

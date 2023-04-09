@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import FeedBack, Notices, NoticeRead, FeedBackActions
+from .models import FeedBack, FeedBackActions, NoticeRead, Notices
 
 
 class FeedBackForm(forms.ModelForm):

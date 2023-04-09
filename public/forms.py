@@ -1,10 +1,9 @@
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Column, Layout, Row, Submit
 from django import forms
 from django.contrib.auth.models import User
 
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, Row, Column
-
-from .models import ContactUs, Suggestions, DataProtection
+from .models import ContactUs, DataProtection, Suggestions
 
 
 class ContactUsForm(forms.ModelForm):

@@ -1,26 +1,19 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic import TemplateView
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.http import is_safe_url
-from django.http import HttpResponseRedirect, HttpResponse
-from django.urls import reverse
-from django.core.exceptions import PermissionDenied
 import json
 
-
 from csp.decorators import csp_exempt
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
+from django.utils.http import is_safe_url
+from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import TemplateView
 
+from .forms import CityForm, CurrencyForm, RegionForm, SuburbForm, VacCityForm
+from .models import City, Currency, Region, Suburb
 
-from . models import (
-        Region, City, Suburb, Currency
-)
-
-
-from .forms import (
-    RegionForm, CityForm, SuburbForm, CurrencyForm, VacCityForm,
-)
 
 #>>> Region Popup
 @login_required()

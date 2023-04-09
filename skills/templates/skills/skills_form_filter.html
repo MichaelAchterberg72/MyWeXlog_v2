@@ -1,0 +1,341 @@
+{% extends "base_home.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+
+{% block title %}{{block.super}}-Filter{% endblock title %}
+
+{% block content %}
+{{ form.media.css }}
+<style type="text/css">
+  select {
+    width: 100px;
+  }
+</style>
+
+<div class="card card-shadow">
+  <div class="card-body">
+    <form method="GET" action="." >
+      <div class="">
+        <button type="submit" name="button" class="btn btn-primary float-right">
+          Filter
+        </button>
+      <h4 class="card-title">Skill Filter</h4>
+      </div>
+      <div style="background-color:red; color:white;">
+        <p>
+          {{ form.non_field_errors }}
+        </p>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6 mb-0">
+          {{ form.country|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-6 mb-0">
+          <label for="id_region" class="control-label">Region</label>
+          <select class="form-control py-2" type="search" name="region" id="id_region">
+          </select>
+        </div>
+      </div>
+      <hr>
+      <div class="form-row">
+        <div class="form-group col-md-3 mb-0">
+          <div class="input-group">
+            <select class="form-control" type="search" name="skill1" id="id_skill1"></select>
+          </div>
+        </div>
+        <div class="form-group col-md-3 mb-0">
+          <div class="input-group">
+            <select class="form-control py-2" type="search" name="skill2" id="id_skill2"></select>
+          </div>
+        </div>
+          <div class="form-group col-md-3 mb-0">
+            <div class="input-group">
+              <select class="form-control py-2" type="search" name="skill3" id="id_skill3"></select>
+            </div>
+          </div>
+          <div class="form-group col-md-3 mb-0">
+            <div class="input-group">
+              <select class="form-control py-2" type="search" name="skill4" id="id_skill4"></select>
+            </div>
+          </div>
+        </div>
+    </form>
+  </div>
+</div>
+<br>
+<div class="row">
+  <div class="col-sm-6">
+    <div class="card card-shadow">
+      <div class="card-body">
+        <h6 class="text-center">
+          <strong>Country</strong>
+        </h6>
+        {% if country != '' %}
+          <p>
+            Searching in {{ country }}
+          </p>
+        {% else %}
+          <p>
+            Searching within all countries.
+          </p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <div class="card card-shadow">
+      <div class="card-body">
+        <h6 class="text-center">
+          <strong>Region</strong>
+        </h6>
+        {% if region == 1 %}
+          <p>
+            Searching all regions
+          </p>
+        {% else %}
+          <p>
+            Searching in {{ region.region }}, {{ region.country.name }}
+          </p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+<div class="row">
+  <div class="col-sm-3">
+    <div class="card card-shadow">
+      <div class="card-body">
+        {% if skill_1 %}
+          <h6 class="card-title text-center"><strong>{{ skill_1 }}</strong></h6>
+          <p>
+            <small>
+              Found {{ qs_1c }} people with <br>"{{ skill_1 }}"
+            </small>
+          </p>
+            <ul id="demand" class="list-group">
+              {% for talent in qs_1 %}
+                <li class="list-group-item">
+                  <a href="{% url 'Talent:APV_L' tlt=talent.alias %}" target="_blank" class="float-right">
+                    <i class="fa fa-id-badge" aria-hidden="true" style="font-size:25px; color:black" data-toggle="tooltip" data-placement="top" title="Profile"></i>
+                  </a>
+                  <strong>{{ talent.alias }}</strong><br>
+                  <span>
+                    <small>
+                      {{ talent.sum_1 }} hours<br>
+                      {{ talent.min_1|date:"j M Y" }} to {{ talent.max_1|date:"j M Y" }}
+                    </small>
+                  </span>
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p class="text-center">
+              {{ msg }}
+            </p>
+          {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-3" name="skill2">
+    <div class="card card-shadow">
+      <div class="card-body">
+        {% if skill_2 and skill_1 %}
+          <h6 class="card-title text-center"><strong>{{ skill_2 }}</strong></h6>
+          <p>
+            <small>
+              Found {{ qs_2c }} people with <br>"{{ skill_1 }}" and "{{ skill_2 }}"
+            </small>
+          </p>
+            <ul id="demand" class="list-group">
+              {% for talent in qs_2 %}
+                <li class="list-group-item">
+                  <a href="{% url 'Talent:APV_L' tlt=talent.alias %}" target="_blank" class="float-right">
+                    <i class="fa fa-id-badge" aria-hidden="true" style="font-size:25px; color:black" data-toggle="tooltip" data-placement="top" title="Profile"></i>
+                  </a>
+                  <strong>{{ talent.alias }}</strong><br>
+                  <span>
+                    <small>
+                      {{ talent.sum_2 }} hours<br>
+                      {{ talent.min_2|date:"j M Y" }} to {{ talent.max_2|date:"j M Y" }}
+                    </small>
+                  </span>
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p class="text-center">
+              Nothing entered
+            </p>
+          {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-3" name="skill3">
+    <div class="card card-shadow">
+      <div class="card-body">
+        {% if skill_3 and skill_1 %}
+          <h6 class="card-title text-center"><strong>{{ skill_3 }}</strong></h6>
+          <p>
+            <small>
+              Found {{ qs_3c }} people with <br>"{{ skill_1 }}", "{{ skill_2 }}" and "{{ skill_3 }}"
+            </small>
+          </p>
+            <ul id="demand" class="list-group">
+              {% for talent in qs_3 %}
+                <li class="list-group-item">
+                  <a href="{% url 'Talent:APV_L' tlt=talent.alias %}" target="_blank" class="float-right">
+                    <i class="fa fa-id-badge" aria-hidden="true" style="font-size:25px; color:black" data-toggle="tooltip" data-placement="top" title="Profile"></i>
+                  </a>
+                  <strong>{{ talent.alias }}</strong><br>
+                  <span>
+                    <small>
+                      {{ talent.sum_3 }} hours<br>
+                      {{ talent.min_3|date:"j M Y" }} to {{ talent.max_3|date:"j M Y" }}
+                    </small>
+                  </span>
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p class="text-center">
+              Nothing entered
+            </p>
+          {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-3" name="skill3">
+    <div class="card card-shadow">
+      <div class="card-body">
+        {% if skill_4 and skill_1 %}
+          <h6 class="card-title text-center"><strong>{{ skill_4 }}</strong></h6>
+          <p>
+            <small>
+              Found {{ qs_4c }} people with <br>"{{ skill_1 }}", "{{ skill_2 }}", "{{ skill_3 }}" and "{{ skill_4 }}"
+            </small>
+          </p>
+            <ul id="demand" class="list-group">
+              {% for talent in qs_4 %}
+                <li class="list-group-item">
+                  <a href="{% url 'Talent:APV_L' tlt=talent.alias %}" target="_blank" class="float-right">
+                    <i class="fa fa-id-badge" aria-hidden="true" style="font-size:25px; color:black" data-toggle="tooltip" data-placement="top" title="Profile"></i>
+                  </a>
+                  <strong>{{ talent.alias }}</strong><br>
+                  <span>
+                    <small>
+                      {{ talent.sum_4 }} hours<br>
+                      {{ talent.min_4|date:"j M Y" }} to {{ talent.max_4|date:"j M Y" }}
+                    </small>
+                  </span>
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p class="text-center">
+              Nothing entered
+            </p>
+          {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block Script %}
+{{ form.media.js }}
+
+<script>
+  $(document).ready(function () {
+     $('#id_region').select2({
+         ajax: {
+             url: '{% url 'Skills:AjaxRegion' %}',
+             dataType: 'json',
+             processResults: function (data) {
+                 return {
+                     results: $.map(data, function (item) {
+                         return {id: item.id, text: item.region};
+                     })
+                 };
+             }
+         },
+         minimumInputLength: 2,
+         placeholder: "Enter region (Optional)",
+         allowClear: true
+     });
+ });
+ $(document).ready(function () {
+    $('#id_skill1').select2({
+        ajax: {
+            url: '{% url 'Skills:AjaxSkill' %}',
+            dataType: 'json',
+            processResults: function (data) {
+                return {
+                    results: $.map(data, function (item) {
+                        return {id: item.id, text: item.skill};
+                    })
+                };
+            }
+        },
+        minimumInputLength: 1,
+        placeholder: "Enter skill 1 (Required)",
+        allowClear: true
+    });
+});
+$(document).ready(function () {
+   $('#id_skill2').select2({
+       ajax: {
+           url: '{% url 'Skills:AjaxSkill' %}',
+           dataType: 'json',
+           processResults: function (data) {
+               return {
+                   results: $.map(data, function (item) {
+                       return {id: item.id, text: item.skill};
+                   })
+               };
+           }
+       },
+       minimumInputLength: 1,
+       placeholder: "Enter skill 2 (Optional)",
+       allowClear: true
+   });
+});
+$(document).ready(function () {
+   $('#id_skill3').select2({
+       ajax: {
+           url: '{% url 'Skills:AjaxSkill' %}',
+           dataType: 'json',
+           processResults: function (data) {
+               return {
+                   results: $.map(data, function (item) {
+                       return {id: item.id, text: item.skill};
+                   })
+               };
+           }
+       },
+       minimumInputLength: 1,
+       placeholder: "Enter skill 3 (Optional)",
+       allowClear: true
+   });
+});
+$(document).ready(function () {
+   $('#id_skill4').select2({
+       ajax: {
+           url: '{% url 'Skills:AjaxSkill' %}',
+           dataType: 'json',
+           processResults: function (data) {
+               return {
+                   results: $.map(data, function (item) {
+                       return {id: item.id, text: item.skill};
+                   })
+               };
+           }
+       },
+       minimumInputLength: 1,
+       placeholder: "Enter skill 4 (Optional)",
+       allowClear: true
+   });
+});
+</script>
+{% endblock Script %}

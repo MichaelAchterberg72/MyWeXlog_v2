@@ -14,28 +14,27 @@
   </style>
 <div class="container">
   <h4>Add Project</h4>
-
+  <div class="">
+    <small>
+      Should the "Company that owns the project" or the "Managing Branch" not appear in the below fields - please add it in the <a href="{% url 'Enterprise:EnterpriseHome' %}" target="_blank">Enterprise</a> page first, and refresh this page once the company and branch have been added. The new branch will then appear in the field.
+    </small>
   <form class="" action="" method="POST" id="ProjectForm">
     <input type="hidden" name="next" value="{{ request.GET.next }}">
     {% csrf_token %}
+    <div style="background-color:red; color:white;">
+      <p>
+
+        {{ form.non_field_errors }}
+      </p>
+    </div>
     <div class="form-row">
       <div class="form-group col-md-6 mb-0">
         {{ form.name|as_crispy_field }}
         <p>
           {{ form.company|as_crispy_field }}
-          <a href="{% url 'Enterprise:EnterpriseAddPop' %}" id='add_enterprise' onclick='return showAddPopup(this);'>
-            <img src="{% static 'images/icon-addlink.svg' %}">
-            Add a new Enterprise
-          </a>
         </p>
         <p>
           {{ form.companybranch|as_crispy_field }}
-          <p>
-            <a href="{% url 'Enterprise:FullBranchAddPopup' %}" id='add_branch' onclick='return showAddPopup(this);'>
-              <img src = "{% static 'images/icon-addlink.svg' %}">
-              Add a Branch
-            </a>
-          </p>
         </p>
         {{ form.industry|as_crispy_field }}
         <p><a href="{% url 'Enterprise:IndustryAddPop' %}" id='add_industry' onclick='return showAddPopup(this);'>

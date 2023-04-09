@@ -1,29 +1,23 @@
-from django import forms
-from django.contrib.auth.models import User
-from django.utils.encoding import force_text
-from django.utils import timezone
-
-from django.contrib.admin.widgets import FilteredSelectMultiple
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, Row, Column
+from crispy_forms.layout import Column, Layout, Row, Submit
+from django import forms
+from django.contrib.admin.widgets import FilteredSelectMultiple
+from django.contrib.auth.models import User
+from django.utils import timezone
+from django.utils.encoding import force_text
+from django_select2.forms import (ModelSelect2MultipleWidget,
+                                  ModelSelect2TagWidget, ModelSelect2Widget,
+                                  Select2MultipleWidget, Select2Widget)
 
-
-from django_select2.forms import (
-    ModelSelect2TagWidget, ModelSelect2Widget, Select2MultipleWidget,
-    Select2Widget, ModelSelect2MultipleWidget, Select2MultipleWidget
-)
-
-
-from .models import (
-            WorkLocation, TalentRequired, Deliverables, SkillLevel, SkillRequired, TalentAvailabillity, WorkBid, BidInterviewList, WorkIssuedTo, VacancyRate, TalentRate
-)
-
-
-from locations.models import Currency, City
+from db_flatten.models import LanguageList, SkillTag
 from enterprises.models import Branch
-from talenttrack.models import Result
-from db_flatten.models import SkillTag, LanguageList
+from locations.models import City, Currency
 from talenttrack.forms import DesignationSelect2Widget
+from talenttrack.models import Result
+
+from .models import (BidInterviewList, Deliverables, SkillLevel, SkillRequired,
+                     TalentAvailabillity, TalentRate, TalentRequired,
+                     VacancyRate, WorkBid, WorkIssuedTo, WorkLocation)
 
 
 #>>> Select 2
@@ -87,7 +81,7 @@ class CitySelect2Widget(CitySearchFieldMixin, ModelSelect2Widget):
 
 class CertSearchFieldMixin:
     search_fields = [
-        'certification__type__icontains', 'pk__startswith','region__region__icontains', 'companybranch__company__ename__icontains',
+        'type__icontains', 'pk__startswith',
     ]
 
 class CertModelSelect2MultipleWidget(CertSearchFieldMixin, ModelSelect2MultipleWidget):
@@ -245,7 +239,7 @@ class SkillRequiredForm(forms.ModelForm):
         als = skill_passed.id
 
         if als in dup:
-            raise forms.ValidationError("The above skill has already been added! Please choose another skill.")
+            raise ValidationError("The above skill has already been added! Please choose another skill.")
         return skill_passed
 
 
@@ -263,6 +257,21 @@ class DeliverablesForm(forms.ModelForm):
             'deliverable': forms.Textarea(),
         }
 
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        scope = cleaned_data.get("scope")
+        deliverable = cleaned_data.get("deliverable")
+
+        if Deliverables.objects.filter(scope = scope, deliverable = deliverable).count() > 0:
+            del cleaned_data["scope"]
+            del cleaned_data["deliverable"]
+
+            raise ValidationError("This combination of Deliverable and Scope already exists! Please enter another combination.")
+
+        return cleaned_data
+
 
 class TalentRequiredForm(forms.ModelForm):
 
@@ -279,14 +288,14 @@ class TalentRequiredForm(forms.ModelForm):
 
     class Meta:
         model = TalentRequired
-        fields = ('title', 'companybranch', 'designation', 'date_deadline', 'hours_required', 'unit', 'worklocation', 'rate_offered', 'rate_unit', 'currency', 'rate_unit', 'certification', 'scope', 'expectations', 'terms', 'city', 'experience_level', 'bid_closes', 'own_ref_no', 'language',)
+        fields = ('title', 'companybranch', 'designation', 'date_deadline', 'permpos', 'hours_required', 'unit', 'worklocation', 'rate_offered', 'rate_unit', 'currency', 'rate_unit', 'certification', 'scope', 'expectations', 'terms', 'city', 'experience_level', 'bid_closes', 'own_ref_no', 'language',)
         widgets={
             'city': CitySelect2Widget(),
             'currency': CurrencySelect2Widget(),
             'designation': DesignationSelect2Widget(),
             'language': LanguageWidget(),
-            'date_deadline': DateInput(attrs={'min': timezone.now().date()}),
-            'bid_closes': DateInput(attrs={'min': timezone.now().date()}),
+            'date_deadline': DateInput(),
+            'bid_closes': DateInput(),
             'certification': CertModelSelect2MultipleWidget(),
         }
         labels = {
@@ -299,13 +308,37 @@ class TalentRequiredForm(forms.ModelForm):
             'date_deadline': 'Work Completed By',
             'hours_required': 'Hours',
             'own_ref_no': 'Own Internal Vacancy Reference Number',
+            'designation': 'Designation / Role'
         }
+
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        companybranch = cleaned_data.get("companybranch")
+        title = cleaned_data.get("title")
+        requested_by = cleaned_data.get("requested_by")
+        own_ref_no = cleaned_data.get("own_ref_no")
+
+        if TalentRequired.objects.filter(companybranch = companybranch, title = title, requested_by = requested_by).count() > 0:
+            del cleaned_data["companybranch"]
+            del cleaned_data["title"]
+            del cleaned_data["requested_by"]
+            raise ValidationError("This combination of Title, Company and Branch already exists! Please enter another combination.")
+
+        elif ProjectData.objects.filter(companybranch = companybranch, own_ref_no = own_ref_no).count() > 0:
+            del cleaned_data["companybranch"]
+            del cleaned_data["own_ref_no"]
+
+            raise ValidationError("This combination of Reference Number and Branch already exists! Please enter another combination.")
+
+        return cleaned_data
 
 
 class TalentRequiredEditForm(forms.ModelForm):
     class Meta:
         model = TalentRequired
-        fields = ('title', 'designation', 'companybranch', 'date_deadline', 'hours_required', 'unit', 'worklocation', 'rate_offered', 'rate_unit', 'currency', 'rate_unit', 'offer_status', 'certification', 'scope', 'expectations', 'terms', 'city', 'experience_level', 'bid_closes', 'own_ref_no', 'language')
+        fields = ('title', 'designation', 'companybranch', 'date_deadline', 'permpos', 'hours_required', 'unit', 'worklocation', 'rate_offered', 'rate_unit', 'currency', 'rate_unit', 'offer_status', 'certification', 'scope', 'expectations', 'terms', 'city', 'experience_level', 'bid_closes', 'own_ref_no', 'language')
         widgets={
             'city': CitySelect2Widget(),
             'designation': DesignationSelect2Widget(),
@@ -325,7 +358,31 @@ class TalentRequiredEditForm(forms.ModelForm):
             'date_deadline': 'Completion Date',
             'hours_required': 'Hours',
             'own_ref_no': 'Own Internal Vacancy Reference Number',
+            'designation': 'Designation / Role'
         }
+
+    def clean_unique(self):
+        '''Error message for unique_together condition in this model'''
+        cleaned_data = self.cleaned_data
+
+        companybranch = cleaned_data.get("companybranch")
+        title = cleaned_data.get("title")
+        requested_by = cleaned_data.get("requested_by")
+        own_ref_no = cleaned_data.get("own_ref_no")
+
+        if TalentRequired.objects.filter(companybranch = companybranch, title = title, requested_by = requested_by).count() > 0:
+            del cleaned_data["companybranch"]
+            del cleaned_data["title"]
+            del cleaned_data["requested_by"]
+            raise ValidationError("This combination of Title, Company and Branch already exists! Please enter another combination.")
+
+        elif ProjectData.objects.filter(companybranch = companybranch, own_ref_no = own_ref_no).count() > 0:
+            del cleaned_data["companybranch"]
+            del cleaned_data["own_ref_no"]
+
+            raise ValidationError("This combination of Reference Number and Branch already exists! Please enter another combination.")
+
+        return cleaned_data
 
 
 class WorkLocationForm(forms.ModelForm):

@@ -14,6 +14,11 @@
   <div class="card card-shadow">
     <div class="card-body">
     <h3>Identify a client to confirm your claimed experience</h3>
+    <p>
+      <small>
+        Please ensure that the "Company" as well as the "Branch" has been captured in the <a href="{% url 'Enterprise:EnterpriseHome' %}" target="_blank">Enterprise</a> page first. Refresh this page once the company and branch have been added. The company and branch will then be available in the respective fields.
+      </small>
+    </p>
     <br>
     <div class="container">
     <div class="row">
@@ -64,6 +69,12 @@
     <form method="post">
     <!--   <input type="hidden" name="next" value="{{ request.GET.next }}"> -->
       {% csrf_token %}
+      <div style="background-color:red; color:white;">
+        <p>
+
+          {{ form.non_field_errors }}
+        </p>
+      </div>
       <div class="form-row">
         <div class="form-group col-md-7 mb-0">
           {{ form.client_name|as_crispy_field }}

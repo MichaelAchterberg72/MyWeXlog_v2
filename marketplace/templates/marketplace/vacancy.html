@@ -36,6 +36,11 @@
     <hr>
     <form method="post" id="BranchForm" enctype="multipart/form-data">
       {% csrf_token %}
+      <div style="background-color:red; color:white;">
+        <p>
+          {{ form.non_field_errors }}
+        </p>
+      </div>
       <div class="form-row">
         <div class="form-group col-md-6 mb-0">
           {{ form.title|as_crispy_field }}
@@ -53,22 +58,13 @@
               Add Designation
             </a>
           </p>
-
           <span data-toggle="tooltip" data-placement="top" title="Only companies which you currently work for, as stated in your profile 'Career History' can be selected.">
             {{ form.companybranch|as_crispy_field }}
           </span>
-          <div class="form-row">
-            <div class="form-group col-md-6 mb-0" data-toggle="tooltip" data-placement="top" title="Leave empty if advertising a permanent position.">
-              {{ form.date_deadline|as_crispy_field }}
-            </div>
-            <div class="form-group col-md-6 mb-0">
-              {{ form.bid_closes|as_crispy_field }}
-            </div>
-          </div>
         </div>
         <div class="form-group col-md-6 mb-0">
           <div class="form-row">
-            <div class="form-group col-md-2 mb-0">
+            <div class="form-group col-md-2 mb-0" data-toggle="tooltip" data-placement="top" title="Leave blank for a permanent position an select 'Permanent Position' in the 'Unit' field">
               {{ form.hours_required|as_crispy_field }}
             </div>
             <div class="form-group col-md-5 mb-0">
@@ -77,16 +73,20 @@
             <div class="form-group col-md-5 mb-0">
               {{ form.experience_level|as_crispy_field }}
               <p class="text-center">
-              <a href="{% url 'MarketPlace:HelpExperienceLevel' %}" target="_blank" >
-                <i class="fa fa-flag" aria-hidden="true" style="font-size:20px;color:black" data-toggle="tooltip" title="Breakdown of Experience levels"></i>
+                <a href="{% url 'MarketPlace:HelpExperienceLevel' %}" target="_blank" >
+                  <i class="fa fa-flag" aria-hidden="true" style="font-size:20px;color:black" data-toggle="tooltip" title="Breakdown of Experience levels"></i>
+                </a>
               </p>
-              </a>
             </div>
           </div>
           <div class="form-row">
             <div class="form-group col-md-4 mb-0">
               {{ form.currency|as_crispy_field }}
-              <p><a href="{% url 'Location:CurrencyAddPop' %}" id='add_currency' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add Currency</a></p>
+              <p>
+                <a href="{% url 'Location:CurrencyAddPop' %}" id='add_currency' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">
+                  Add Currency
+                </a>
+              </p>
             </div>
             <div class="form-group col-md-4 mb-0">
               {{ form.rate_offered|as_crispy_field }}
@@ -115,7 +115,11 @@
             </div>
             <div class="form-group col-md-4 mb-0">
               {{ form.language|as_crispy_field }}
-              <p><a href="{% url 'Profile:LanguagePop' %}" id='add_language' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add a Language</a></p>
+              <p>
+                <a href="{% url 'Profile:LanguagePop' %}" id='add_language' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">
+                  Add a Language
+                </a>
+              </p>
             </div>
             <div data-toggle="tooltip" title="The Terms & Conditions, if any, for the vacancy">
               {{ form.terms|as_crispy_field }}
@@ -128,17 +132,33 @@
       </div>
       <hr>
       <div class="form-row">
-        <div class="form-group col-md-12 mb-0">
-          {{ form.certification|as_crispy_field }}
-          <p><a href="{% url 'Talent:ResultAddPop' %}" id='add_course' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">Add a Certification</a></p>
+        <div class="form-group col-md-3 mb-0" data-toggle="tooltip" data-placement="top" title="Leave empty if advertising a permanent position.">
+          {{ form.date_deadline|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-2 mb-0" data-toggle="tooltip" data-placement="top" title="Is this a permanent position (Tick for 'Yes')">
+          {{ form.permpos|as_crispy_field }}
+        </div>
+        <div class="form-group col-md-3 mb-0">
+          {{ form.bid_closes|as_crispy_field }}
         </div>
       </div>
       <hr>
       <div class="form-row">
-        <div class="form-group col-md-6 mb-0">
+        <div class="form-group col-md-12 mb-0">
+          {{ form.certification|as_crispy_field }}
+          <p>
+            <a href="{% url 'Talent:ResultAddPop' %}" id='add_course' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">
+              Add a Certification
+            </a>
+          </p>
+        </div>
+      </div>
+      <hr>
+      <div class="form-row">
+        <div class="form-group col-md-6 mb-0" data-toggle="tooltip" title="The scope is a brief description of what work needs to be completed by the candidate in this role.">
           {{ form.scope|as_crispy_field }}
         </div>
-        <div class="form-group col-md-6 mb-0">
+        <div class="form-group col-md-6 mb-0" data-toggle="tooltip" title="Expectations are what is expected from the candidate in being suitable for the vacancy as well as in performing the scope of the vacancy.">
           {{ form.expectations|as_crispy_field }}
         </div>
       </div>
@@ -148,7 +168,7 @@
             Cancel
           </a>
           <button type="submit" name="Done" class="btn btn-primary">
-            Add Deliverables
+            Save & Add Deliverables
           </button>
         </p>
       </div>

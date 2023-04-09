@@ -1,14 +1,19 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.http import is_safe_url
+from django.core import serializers
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.urls import reverse
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
 import json
-from django.db.models import Count, Sum, F, Q
+from django.db.models import Count, Sum, Max, Min, F, Q
+from django.db.models.functions import Greatest
 from django.utils import timezone
+import datetime
+from datetime import timedelta
 from decimal import getcontext, Decimal
 import itertools
+from collections import OrderedDict
 
 from csp.decorators import csp_exempt
 from core.decorators import subscription
@@ -16,6 +21,8 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.postgres.search import SearchVector, TrigramSimilarity
 
+from xml.etree.ElementTree import Element, SubElement, tostring
+from django.utils.html import strip_tags
 
 #email
 from django.core.mail import send_mail, EmailMultiAlternatives
@@ -34,7 +41,7 @@ from .models import(
 from WeXlog.app_config import (
     skill_pass_score,
 )
-from talenttrack.models import WorkExperience, LicenseCertification
+from talenttrack.models import WorkExperience, LicenseCertification, Result
 from locations.models import Region
 from db_flatten.models import SkillTag
 from users.models import CustomUser, ExpandedView
@@ -53,6 +60,196 @@ import os
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import (Mail, Subject, To, ReplyTo, SendAt, Content, From, CustomArg, Header)
 
+from .models import UNIT, RATE_UNIT
+import pytz
+
+
+def jooble_feed(request):
+    """<link> - the full URL of a job, where Jooble will forward users to. The link must lead to a page with a complete job description.
+    <name> - job title.
+    <region> - list of regions/cities. Regions can be listed in a text format and separated by any punctuation marks.
+    <description> - a complete job description. Please note that we are able to index an XML feed that contains complete jobs descriptions. If there are additional fields such as “job description”, “candidates’ requirements”, “responsibilities”, “working conditions” on a job page, they must be included to the <description> tag.
+    <pubdate> - original publication date of a job. Please specify the date in the DD.MM.YYYY format.
+    <updated> * - last modification date of a job. By this, we mean the last time when the original publication date of a job was updated, or when a job description was edited by an employer. Please specify the date in the DD.MM.YYYY format.
+    <salary> ** - salary + currency. For example, "300$", "1500€" or "167£".
+    <company> ** - a company name, name of employer.
+    <expire> ** - date when a job gets expired. Please specify the date in the DD.MM.YYYY format.
+    <jobtype> ** - type of a job. For example, full-time, part-time, contract, internship, temporary."""
+
+    now = timezone.now()
+    monthly = datetime.timedelta(days=45)
+
+    indexable_date = now - monthly
+
+    current_vacancies = TalentRequired.objects.filter(Q(bid_open__gte=indexable_date) & Q(offer_status='O'))
+
+    vacancies = current_vacancies.values_list('ref_no', flat=True).distinct()
+
+    jobs = []
+    jobs = Element('jobs')
+    for vac in vacancies:
+        job = SubElement(jobs, 'job')
+        link = SubElement(job, 'link')
+        name = SubElement(job, 'name')
+        region = SubElement(job, 'region')
+        salary = SubElement(job, 'salary')
+        description = SubElement(job, 'description')
+        company = SubElement(job, 'company')
+        pubdate = SubElement(job, 'pubdate')
+        updated = SubElement(job, 'updated')
+        expire = SubElement(job, 'expire')
+        jobtype = SubElement(job, 'jobtype')
+
+        job_id = current_vacancies.get(ref_no=vac).id
+        job.set("id", f'{job_id}')
+
+        ref = current_vacancies.get(ref_no=vac).ref_no
+        link.text = f'<![CDATA[https://app.mywexlog.com/marketplace/public/vacancy/{ref}/]]>'
+        name.text = f'<![CDATA[{current_vacancies.get(ref_no=vac).title}]]>'
+        region_qs = current_vacancies.get(ref_no=vac).city.region.region
+        city_qs = current_vacancies.get(ref_no=vac).city.city
+        region.text = f'<![CDATA[{city_qs}, {region_qs}]]>'
+        description_scope_qs = strip_tags(current_vacancies.get(ref_no=vac).scope)
+        description_expectations_qs = strip_tags(current_vacancies.get(ref_no=vac).expectations)
+
+        description_skills = SkillRequired.objects.filter(scope__ref_no=vac).values_list('skills__skill')
+        skills_string_list = [", ".join(s) for s in description_skills]
+        skills_string = ", ".join(skills_string_list)
+
+        description.text = f'<![CDATA[Scope: {description_scope_qs}\n Expectations: {description_expectations_qs}\n Skills: {skills_string}]]>'
+        pubdate.text = f'{current_vacancies.get(ref_no=vac).bid_open.strftime("%d.%m.%Y")}'
+        updated.text = f'{current_vacancies.get(ref_no=vac).date_modified.strftime("%d.%m.%Y")}'
+        salary_rate = current_vacancies.get(ref_no=vac).rate_offered
+        salary_curency = current_vacancies.get(ref_no=vac).currency.currency_abv
+
+        rate_unit = []
+        for p in current_vacancies.get(ref_no=vac).rate_unit:
+            ru_choice = {k: v for k, v in RATE_UNIT}[p[-1]]
+            #            rate_unit.append(list(p[:-1]) + [ru_choice])
+
+        salary.text = f'<![CDATA[{salary_rate}{salary_curency}/{ru_choice}]]>'
+        company.text = f'<![CDATA[{current_vacancies.get(ref_no=vac).companybranch.company.ename}]]>'
+        expire.text = f'{current_vacancies.get(ref_no=vac).bid_closes.strftime("%d.%m.%Y")}'
+        result = []
+        for p in current_vacancies.get(ref_no=vac).unit:
+            choice = {k: v for k, v in UNIT}[p[-1]]
+            jobtype.text = f'{choice}'
+            #            result.append(list(p[:-1]) + [choice])
+
+    xml = tostring(jobs, encoding='utf8').decode('utf8')
+
+    return HttpResponse(xml, content_type="text/xml")
+
+
+def indeed_feed(request):
+    now = timezone.now()
+    monthly = datetime.timedelta(days=45)
+
+    indexable_date = now - monthly
+
+    current_vacancies = TalentRequired.objects.filter(Q(offer_status="O") & Q(offer_status='O'))
+
+    vacancies = current_vacancies.values_list('ref_no', flat=True).distinct()
+
+    jobs = []
+    source = Element('source')
+    publisher = SubElement(source, 'publisher')
+    publisher.text = "MyWeXlog"
+    publisher_url = SubElement(source, 'publisherurl')
+    publisher_url.text = "https://mywexlog.com/"
+    last_build_date = Element('lastBuildDate')
+    for vac in vacancies:
+        job = SubElement(source, 'job')
+        title = SubElement(job, 'title')
+        date = SubElement(job, 'date')
+        reference_number = SubElement(job, 'referencenumber')
+        url = SubElement(job, 'url')
+        company = SubElement(job, 'company')
+        city = SubElement(job, 'city')
+        state = SubElement(job, 'state')
+        country = SubElement(job, 'country')
+        description = SubElement(job, 'description')
+        salary = SubElement(job, 'salary')
+        education = SubElement(job, 'education')
+        jobtype = SubElement(job, 'jobtype')
+        experience = SubElement(job, 'experience')
+        expiration_date = SubElement(job, 'expirationdate')
+        remote_type = SubElement(job, 'remotetype')
+        # indeed_apply_date
+        last_activity_date = SubElement(job, 'lastactivitydate')
+
+        ref = current_vacancies.get(ref_no=vac).ref_no
+        title.text = f'<![CDATA[{current_vacancies.get(ref_no=vac).title}]]>'
+        date.text = f'<![CDATA[{current_vacancies.get(ref_no=vac).bid_open.strftime("%a, %d %b %Y %H:%M:%S")}]]>'
+        reference_number.text = f'<![CDATA[{current_vacancies.get(ref_no=vac).ref_no}]]>'
+        url.text = f'<![CDATA[https://app.mywexlog.com/marketplace/public/vacancy/{ref}/]]>'
+        company.text = f'<![CDATA[{current_vacancies.get(ref_no=vac).companybranch.company.ename}]]>'
+        region_qs = current_vacancies.get(ref_no=vac).city.region.region
+        city_qs = current_vacancies.get(ref_no=vac).city.city
+        country_qs = current_vacancies.get(ref_no=vac).city.region.country.name
+        city.text = f'<![CDATA[{city_qs}]]>'
+        state.text = f'<![CDATA[{region_qs}]]>'
+        country.text = f'<![CDATA[{country_qs}]]>'
+
+        description_scope_qs = current_vacancies.get(ref_no=vac).scope
+        description_expectations_qs = current_vacancies.get(ref_no=vac).expectations
+        description_skills = SkillRequired.objects.filter(scope__ref_no=vac).values_list('skills__skill')
+        skills_string_list = [", ".join(s) for s in description_skills]
+        skills_string = ", ".join(skills_string_list)
+        description.text = f'<![CDATA[Scope: {description_scope_qs}\n Expectations: {description_expectations_qs}\n Skills: {skills_string}]]>'
+        salary_rate = current_vacancies.get(ref_no=vac).rate_offered
+        salary_curency = current_vacancies.get(ref_no=vac).currency.currency_abv
+        rate_unit = []
+        for p in current_vacancies.get(ref_no=vac).rate_unit:
+            ru_choice = {k: v for k, v in RATE_UNIT}[p[-1]]
+        salary.text = f'<![CDATA[{salary_curency}{salary_rate}/{ru_choice}]]>'
+        try:
+            education_qs = current_vacancies.filter(ref_no=vac).values_list('certification__type', flat=True)
+            education_string = ", ".join(education_qs)
+            education.text = f'<![CDATA[{education_string}]]>'
+        except:
+            pass
+        for p in current_vacancies.get(ref_no=vac).unit:
+            choice = {k: v for k, v in UNIT}[p[-1]]
+            jobtype.text = f'<![CDATA[{choice}]]>'
+        experience.text = f'<![CDATA[{current_vacancies.get(ref_no=vac).experience_level}]]>'
+        expiration_date.text = f'<![CDATA[{current_vacancies.get(ref_no=vac).bid_closes.strftime("%a, %d %b %Y")}]]>'
+        remote_type.text = f'<![CDATA[{current_vacancies.get(ref_no=vac).worklocation}]]>'
+        last_update_date_1 = current_vacancies.get(ref_no=vac).date_modified
+        last_update_date_qs = timezone.localtime(last_update_date_1, timezone.get_fixed_timezone(60))
+        last_shortlist_date_qs =  BidShortList.objects.filter(scope__ref_no=vac).aggregate(dt_max=Max('date_listed'))
+        last_interview_date_qs =  BidInterviewList.objects.filter(scope__ref_no=vac).aggregate(dt_max=Max('date_listed'))
+        last_shortlist_date_date = last_shortlist_date_qs.get('dt_max')
+        last_interview_date_date = last_interview_date_qs.get('dt_max')
+        utc=pytz.UTC
+        if last_shortlist_date_date is None:
+            last_shortlist_date_date = utc.localize(datetime.datetime(2001,1,1,0,0,0))
+        else:
+            last_shortlist_date_date = last_shortlist_date_date
+
+        if last_interview_date_date is None:
+            last_interview_date_date = utc.localize(datetime.datetime(2001,1,1,0,0,0))
+        else:
+            last_interview_date_date = last_interview_date_date
+
+        if last_shortlist_date_date >= last_interview_date_date:
+            last_activity_date_date = last_shortlist_date_date
+        else:
+            last_activity_date_date = last_interview_date_qs
+
+        if last_activity_date_date is not None:
+            if last_activity_date_date >= last_update_date_qs:
+                activity_date = last_activity_date_date
+            else:
+                activity_date = last_update_date_qs
+        else:
+            activity_date = last_update_date_qs
+        last_activity_date.text = f'<![CDATA[{activity_date.strftime("%a, %d %b %Y %H:%M:%S")}]]>'
+
+    xml = tostring(source, encoding='utf8').decode('utf8')
+
+    return HttpResponse(xml, content_type="text/xml")
+
 
 @login_required()
 @subscription(2)
@@ -64,7 +261,10 @@ def VacancySearch(request):
         form = VacancySearchForm(request.GET)
         if form.is_valid():
             query=form.cleaned_data['query']
-            results = TalentRequired.objects.annotate(similarity=TrigramSimilarity('ref_no', query),).filter(similarity__gt=0.3).order_by('-similarity')
+            results = TalentRequired.objects.annotate(similarity=Greatest(
+                                          TrigramSimilarity('ref_no', query),
+                                          TrigramSimilarity('own_ref_no', query)
+                                          )).filter(similarity__gt=0.3).order_by('-similarity')
 
     template = 'marketplace/vacancy_search.html'
     context = {'form': form, 'query': query, 'results': results,}
@@ -568,7 +768,7 @@ def InterviewListView(request, vac):
     else:
         active = 'False'
 
-    we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
+    we = WorkExperience.objects.filter(Q(talent__subscription__gte=0) & Q(score__gte=skill_pass_score))
     skille = SkillRequired.objects.filter(scope__ref_no=vac)
     applicants = WorkBid.objects.filter(work__ref_no=vac)
     book = ReadBy.objects.all()
@@ -808,7 +1008,7 @@ def PendingInterviewListView(request, vac):
 
     intv_pending = intv_qs.filter(Q(outcome='I')).filter(Q(tlt_response='A') | Q(tlt_response='P'))
 
-    we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
+    we = WorkExperience.objects.filter(Q(talent__subscription__gte=0) & Q(score__gte=skill_pass_score))
     skille = SkillRequired.objects.filter(scope__ref_no=vac)
     applicants = WorkBid.objects.filter(work__ref_no=vac)
     book = ReadBy.objects.all()
@@ -927,7 +1127,7 @@ def SuitableInterviewListView(request, vac):
     else:
         active = 'False'
 
-    we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
+    we = WorkExperience.objects.filter(Q(talent__subscription__gte=0) & Q(score__gte=skill_pass_score))
     skille = SkillRequired.objects.filter(scope__ref_no=vac)
     applicants = WorkBid.objects.filter(work__ref_no=vac)
     book = ReadBy.objects.all()
@@ -1041,7 +1241,7 @@ def UnsuitableInterviewListView(request, vac):
 
     vacancy_declined = WorkIssuedTo.objects.filter(work__ref_no=vac, tlt_response='D')
 
-    we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
+    we = WorkExperience.objects.filter(Q(talent__subscription__gte=0) & Q(score__gte=skill_pass_score))
     skille = SkillRequired.objects.filter(scope__ref_no=vac)
     applicants = WorkBid.objects.filter(work__ref_no=vac)
     book = ReadBy.objects.all()
@@ -1152,7 +1352,7 @@ def BidRejectedListView(request, vac):
 
     vacancy_declined = WorkIssuedTo.objects.filter(work__ref_no=vac, tlt_response='D')
 
-    we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
+    we = WorkExperience.objects.filter(Q(talent__subscription__gte=0) & Q(score__gte=skill_pass_score))
     skille = SkillRequired.objects.filter(scope__ref_no=vac)
     applicants = WorkBid.objects.filter(work__ref_no=vac)
     book = ReadBy.objects.all()
@@ -1354,7 +1554,10 @@ def WorkBidView(request, vac):
             new.currency = detail.currency
             new.rate_unit = detail.rate_unit
             new.save()
-            return redirect(reverse('MarketPlace:Entrance'))
+            if 'profile' in request.POST:
+                return redirect(reverse('Profile:ProfileView'))
+            elif 'another' in request.POST:
+                return redirect(reverse('MarketPlace:Entrance'))
     else:
 
         template = 'marketplace/vacancy_apply.html'
@@ -1391,6 +1594,50 @@ def VacancyDetailView(request, vac):
     VacancyViewed.objects.create(talent=cu, vacancy=vac_id, read=True,  date_read=timezone.now()).save()
 
     template = 'marketplace/vacancy_detail.html'
+    context = {
+        'vacancy': vacancy,
+        'skills': skills,
+        'deliver': deliver,
+        'rate_b': rate_b,
+        'int': int,
+        'bid': bid,
+        'slist': slist,
+        'wit': wit,
+        'bid_qs': bid_qs,
+        'date2': date2,
+        'date4': date4,
+        'applied': applied,
+        }
+    return render(request, template, context)
+
+
+def VacancyDetailPublicView(request, vac):
+    vacancy = TalentRequired.objects.filter(ref_no=vac)
+    vac_id = vacancy[0]
+    skills = SkillRequired.objects.filter(scope__ref_no=vac)
+    deliver = Deliverables.objects.filter(scope__ref_no=vac)
+    bch = vacancy[0].companybranch.slug
+    rate_b = Branch.objects.get(slug=bch)
+    int = BidInterviewList.objects.filter(Q(scope__ref_no=vac)).count()
+    bid_qs = WorkBid.objects.filter(work__ref_no=vac).order_by('rate_bid')
+    bid = bid_qs.count()
+    slist = BidShortList.objects.filter(scope__ref_no=vac).count()
+    wit = WorkIssuedTo.objects.filter(Q(tlt_response='A') & Q(work__ref_no=vac))
+    try:
+        applied = bid_qs.filter(talent=request.user)
+    except:
+        applied = False
+
+    date1 = vacancy[0].bid_closes
+    date2 = timezone.now()
+    date3 = date1 - date2
+    date4 = abs(date3.days)
+
+    if date1 < date2:
+        vacancy.update(offer_status = 'C')
+
+
+    template = 'marketplace/vacancy_detail_public.html'
     context = {
         'vacancy': vacancy,
         'skills': skills,
@@ -1560,13 +1807,13 @@ def MarketHome(request):
     talent=request.user
     tlt = talent.id
     pfl = Profile.objects.filter(talent=talent)
-    TalentRequired.objects.filter()
-    # tr = TalentRequired.objects.filter(offer_status='O')
+    #TalentRequired.objects.filter()
     tr = TalentRequired.objects.filter(offer_status='O')
     tr_emp = TalentRequired.objects.filter(requested_by=talent)
     wb = WorkBid.objects.filter(work__requested_by=talent)
     ta = TalentAvailabillity.objects.filter(talent=talent).last()
     we = WorkExperience.objects.filter(Q(talent=talent) & Q(score__gte=skill_pass_score)).prefetch_related('topic')
+    bch = BriefCareerHistory.objects.filter(talent=talent)
     sr = SkillRequired.objects.filter(scope__offer_status='O')
     sl = SkillLevel.objects.all()
     wbt = WorkBid.objects.filter(Q(talent=talent) & Q(work__offer_status='O'))
@@ -1595,6 +1842,7 @@ def MarketHome(request):
     #>>>Create a set of all skills
     e_skill = we.filter(edt=True, score__gte=skill_pass_score).only('pk').values_list('pk', flat=True)
     l_skill = we.filter(edt=False, score__gte= skill_pass_score).only('pk').values_list('pk', flat=True)
+    bch_skill = bch.filter(talent=talent).only('pk').values_list('pk', flat=True)
 
     e_len = e_skill.count()
     l_len = l_skill.count()
@@ -1614,12 +1862,56 @@ def MarketHome(request):
 
         skill_set = skill_set | d
 
-    skill_set = skill_set.distinct().order_by('skill')
+    for bs in bch_skill:
+        e = bch.get(pk=bs)
+        f = e.skills.all().values_list('skill', flat=True)
+
+        skill_set = skill_set | f
+
+    skill_set = skill_set.distinct().order_by('skill')#all skills the talent has
+    skill_setv = skill_set.values_list('id', flat=True)#gets the id's of all the skills
     #Create a set of all skills<<<
 
     #>>>Experience Level check & list skills required in vacancies
-    tlt_lvl = pfl.values_list('exp_lvl__level', flat=True)
-    tlt_lvl = tlt_lvl[0]
+    tlt_lev = pfl.values_list('exp_lvl__level', flat=True)
+    tlt_lvl = tlt_lev[0]
+
+    try:
+        pre_bch_df = bch.aggregate(df_min=Min('date_from'))
+        pre_bch_dt = bch.aggregate(dt_max=Max('date_to'))
+
+        p_bch_df = pre_bch_df.get('df_min')
+        p_bch_dt = pre_bch_dt.get('dt_max')
+
+        p_delta = p_bch_dt - p_bch_df
+        exp_lvls = [Decimal(p_delta.days / 7 * 5 * 8)]
+    except:
+        exp_lvls = [Decimal(0)]
+
+    std = list(sl.filter(level__exact=0).values_list('min_hours', flat=True))
+    grd = list(sl.filter(level__exact=1).values_list('min_hours', flat=True))
+    jnr = list(sl.filter(level__exact=2).values_list('min_hours', flat=True))
+    int = list(sl.filter(level__exact=3).values_list('min_hours', flat=True))
+    snr = list(sl.filter(level__exact=4).values_list('min_hours', flat=True))
+    lead = list(sl.filter(level__exact=5).values_list('min_hours', flat=True))
+
+    if exp_lvls < std:
+        iama = 0
+    elif exp_lvls >= std and exp_lvls < grd:
+        iama = 1
+    elif exp_lvls >= grd and exp_lvls < jnr:
+        iama = 2
+    elif exp_lvls >= jnr and exp_lvls < int:
+        iama = 3
+    elif exp_lvls >= int and exp_lvls < snr:
+        iama = 4
+    elif exp_lvls >= snr:
+        iama = 5
+
+    if iama > tlt_lvl:
+        tlt_lvl = iama
+    else:
+        tlt_lvl = tlt_lvl
 
     #finds all vacancies that require talent's experience level and below
     vac_exp = tr.filter(experience_level__level__lte=tlt_lvl)
@@ -1686,16 +1978,17 @@ def MarketHome(request):
             skl_lst.append(sk)
 
     ds = set()
-    matchd = set(skl_lst) #remove duplicates
+    matchd = set(skl_lst) #remove duplicates; these are the required skills
+
+    matchd = matchd.intersection(set(skill_setv))
 
     for item in matchd:
         display = set(sr.filter(
                 Q(skills__in=skl_lst)
                 & Q(scope__bid_closes__gte=timezone.now())).values_list('scope__id', flat=True))
+        ds = ds | display #set of all open vacancies
 
-        ds = ds | display
-
-    dsi = ds.intersection(req_experience)
+    dsi = ds.intersection(req_experience) #open vacancies which the talent qualifies for (certification, location)
 
     tot_vac = len(dsi)
     #remove the vacancies that have already been applied for
@@ -1802,22 +2095,22 @@ def VacanciesListView(request):
     talent=request.user
     tlt = talent.id
     pfl = Profile.objects.filter(talent=talent)
-    TalentRequired.objects.filter()
-#    tr = TalentRequired.objects.filter(offer_status='O')
+    #TalentRequired.objects.filter()
     tr = TalentRequired.objects.filter(offer_status='O')
     tr_emp = TalentRequired.objects.filter(requested_by=talent)
     wb = WorkBid.objects.filter(work__requested_by=talent)
-    ta = TalentAvailabillity.objects.filter(talent=talent)
+    ta = TalentAvailabillity.objects.filter(talent=talent).last()
     we = WorkExperience.objects.filter(Q(talent=talent) & Q(score__gte=skill_pass_score)).prefetch_related('topic')
+    bch = BriefCareerHistory.objects.filter(talent=talent)
     sr = SkillRequired.objects.filter(scope__offer_status='O')
     sl = SkillLevel.objects.all()
     wbt = WorkBid.objects.filter(Q(talent=talent) & Q(work__offer_status='O'))
     bsl = BidShortList.objects.filter(Q(talent=talent) & Q(scope__offer_status='O'))
     vv = set(VacancyViewed.objects.filter(Q(talent=talent) & Q(closed=True)).values_list('vacancy__id', flat=True))
-    vvv = VacancyViewed.objects.filter(Q(talent=talent) & Q(viewed=True))
+    vvv = VacancyViewed.objects.filter(Q(talent=request.user) & Q(viewed=True)).values_list('vacancy__id', flat=True).distinct()
     vac_exp = ExpandedView.objects.get(talent=request.user)
-    vacancies_suited_list_view = vac_exp.vacancies_fl_suited_list
-#    vo = VacancyViewed.objects.filter(closed=False)
+    vacancies_suited_list_view = vac_exp.vacancies_suited_list
+    #  vo = VacancyViewed.objects.filter(closed=False)
 
     #Queryset caching<<<
 
@@ -1837,6 +2130,7 @@ def VacanciesListView(request):
     #>>>Create a set of all skills
     e_skill = we.filter(edt=True, score__gte=skill_pass_score).only('pk').values_list('pk', flat=True)
     l_skill = we.filter(edt=False, score__gte= skill_pass_score).only('pk').values_list('pk', flat=True)
+    bch_skill = bch.filter(talent=talent).only('pk').values_list('pk', flat=True)
 
     e_len = e_skill.count()
     l_len = l_skill.count()
@@ -1856,12 +2150,56 @@ def VacanciesListView(request):
 
         skill_set = skill_set | d
 
-    skill_set = skill_set.distinct().order_by('skill')
+    for bs in bch_skill:
+        e = bch.get(pk=bs)
+        f = e.skills.all().values_list('skill', flat=True)
+
+        skill_set = skill_set | f
+
+    skill_set = skill_set.distinct().order_by('skill')#all skills the talent has
+    skill_setv = skill_set.values_list('id', flat=True)#gets the id's of all the skills
     #Create a set of all skills<<<
 
     #>>>Experience Level check & list skills required in vacancies
-    tlt_lvl = pfl.values_list('exp_lvl__level', flat=True)
-    tlt_lvl = tlt_lvl[0]
+    tlt_lev = pfl.values_list('exp_lvl__level', flat=True)
+    tlt_lvl = tlt_lev[0]
+
+    try:
+        pre_bch_df = bch.aggregate(df_min=Min('date_from'))
+        pre_bch_dt = bch.aggregate(dt_max=Max('date_to'))
+
+        p_bch_df = pre_bch_df.get('df_min')
+        p_bch_dt = pre_bch_dt.get('dt_max')
+
+        p_delta = p_bch_dt - p_bch_df
+        exp_lvls = [Decimal(p_delta.days / 7 * 5 * 8)]
+    except:
+        exp_lvls = [Decimal(0)]
+
+    std = list(sl.filter(level__exact=0).values_list('min_hours', flat=True))
+    grd = list(sl.filter(level__exact=1).values_list('min_hours', flat=True))
+    jnr = list(sl.filter(level__exact=2).values_list('min_hours', flat=True))
+    int = list(sl.filter(level__exact=3).values_list('min_hours', flat=True))
+    snr = list(sl.filter(level__exact=4).values_list('min_hours', flat=True))
+    lead = list(sl.filter(level__exact=5).values_list('min_hours', flat=True))
+
+    if exp_lvls < std:
+        iama = 0
+    elif exp_lvls >= std and exp_lvls < grd:
+        iama = 1
+    elif exp_lvls >= grd and exp_lvls < jnr:
+        iama = 2
+    elif exp_lvls >= jnr and exp_lvls < int:
+        iama = 3
+    elif exp_lvls >= int and exp_lvls < snr:
+        iama = 4
+    elif exp_lvls >= snr:
+        iama = 5
+
+    if iama > tlt_lvl:
+        tlt_lvl = iama
+    else:
+        tlt_lvl = tlt_lvl
 
     #finds all vacancies that require talent's experience level and below
     vac_exp = tr.filter(experience_level__level__lte=tlt_lvl)
@@ -1896,13 +2234,23 @@ def VacanciesListView(request):
     req_experience = req_experience | cert_null_s
 
     #Checking for locations
-    #Remote Freelance open to all talent, other vacanciesTypes only for region (to be updated to distances in later revisions) this will require gEOdJANGO
-    tlt_loc = PhysicalAddress.objects.filter(talent=talent).values_list('region', flat=True)
-    tlt_loc=tlt_loc[0]
+    #Remote Freelance, Consultants open to all talent, other vacanciesTypes only for region (to be updated to distances in later revisions) this will require gEOdJANGO
+    #gathering all countries where willing to work
+    wtr_qs = WillingToRelocate.objects.filter(talent=talent).values_list('country', flat=True)
 
-    vac_loc_rm = set(tr.filter(worklocation__id=1).values_list('id', flat=True))
+    reg_set = set()
+    for item in wtr_qs:
+        reg = set(Region.objects.filter(country=item).values_list('id', flat=True))
 
-    vac_loc_reg = set(tr.filter(~Q(worklocation__id=1)& Q(city__region=tlt_loc)).values_list('id', flat=True))
+        reg_set = reg_set|reg
+
+    tlt_loc = set(PhysicalAddress.objects.filter(talent=talent).values_list('region', flat=True))
+
+    tlt_loc=tlt_loc|reg_set
+
+    vac_loc_rm = set(tr.filter(Q(worklocation__id=1) | Q(worklocation__id=4)).values_list('id', flat=True))
+
+    vac_loc_reg = set(tr.filter(~Q(worklocation__id=1) | ~Q(worklocation__id=4)).filter(city__region__in=tlt_loc).values_list('id', flat=True))
 
     vac_loc = vac_loc_rm | vac_loc_reg
 
@@ -1918,16 +2266,17 @@ def VacanciesListView(request):
             skl_lst.append(sk)
 
     ds = set()
-    matchd = set(skl_lst) #remove duplicates
+    matchd = set(skl_lst) #remove duplicates; these are the required skills
+
+    matchd = matchd.intersection(set(skill_setv))
 
     for item in matchd:
         display = set(sr.filter(
                 Q(skills__in=skl_lst)
                 & Q(scope__bid_closes__gte=timezone.now())).values_list('scope__id', flat=True))
+        ds = ds | display #set of all open vacancies
 
-        ds = ds | display
-
-    dsi = ds.intersection(req_experience)
+    dsi = ds.intersection(req_experience) #open vacancies which the talent qualifies for (certification, location)
 
     tot_vac = len(dsi)
     #remove the vacancies that have already been applied for
@@ -1951,7 +2300,7 @@ def VacanciesListView(request):
     suitable = tr.filter(id__in=dsi)
 
     rem_vac = suitable.count()
-    dsd = suitable
+    dsd = suitable[:5]
 
     #Experience Level check & list skills required in vacancies<<<
     if tot_len > 0:
@@ -2466,7 +2815,8 @@ def VacancyPostView(request, vac):
     skille = SkillRequired.objects.filter(scope__ref_no=vac)
     delivere = Deliverables.objects.filter(scope__ref_no=vac)
     applicants = WorkBid.objects.filter(work__ref_no=vac)
-    we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
+    we = WorkExperience.objects.filter(Q(talent__subscription__gte=0) & Q(score__gte=skill_pass_score))
+    bch = BriefCareerHistory.objects.all()
     s_list = BidShortList.objects.filter(scope__ref_no=vac)
     book = ReadBy.objects.all()
     vac_exp = ExpandedView.objects.get(talent=request.user)
@@ -2479,7 +2829,7 @@ def VacancyPostView(request, vac):
     sk_sn = SkillLevel.objects.get(level=4).min_hours
     sk_ld = SkillLevel.objects.get(level=5).min_hours
     tr_qs = TalentRequired.objects.filter(ref_no=vac)
-    tlt = Profile.objects.filter(talent__subscription__gte=1)
+    tlt = Profile.objects.filter(talent__subscription__gte=0)
     #Queryset Cache<<<
 
     #>>> List all skills required
@@ -2492,12 +2842,50 @@ def VacancyPostView(request, vac):
 
     #>>> Find all talent with required skill
     wes = set(we.filter(Q(skills__in=skill_r) | Q(topic__skills__in=skill_r)).values_list('talent', flat=True))
+    bch_s = set(bch.filter(skills__in=skill_r).values_list('talent', flat=True))
+    wes = set(wes.union(bch_s))
     #Find all talent with required skill<<<
 
     #>>> Find all talent that have the required Experience
-    wee = set(tlt.filter(exp_lvl__gte=instance.experience_level).values_list('talent', flat=True))
+    wex = set(tlt.filter(exp_lvl__gte=instance.experience_level).values_list('talent', flat=True))
 
-    wee = wee.intersection(wes)
+    wee = wex.intersection(wes)
+
+    tlt_bch_sk = []
+    for t in bch_s:
+        tlt_bch = bch.filter(talent__id=t)
+        try:
+            pre_bch_df = tlt_bch.aggregate(df_min=Min('date_from'))
+            pre_bch_dt = tlt_bch.aggregate(dt_max=Max('date_to'))
+
+            p_bch_df = pre_bch_df.get('df_min')
+            p_bch_dt = pre_bch_dt.get('dt_max')
+
+            p_delta = p_bch_dt - p_bch_df
+            exp_lvls = int(p_delta.days / 7 * 5 * 8)
+        except:
+            exp_lvls = int(0)
+
+        if exp_lvls < sk_st:
+            iama = 0
+        elif exp_lvls >= sk_st and exp_lvls < sk_bg:
+            iama = 1
+        elif exp_lvls >= sk_bg and exp_lvls < sk_jn:
+            iama = 2
+        elif exp_lvls >= sk_jn and exp_lvls < sk_in:
+            iama = 3
+        elif exp_lvls >= sk_in and exp_lvls < sk_sn:
+            iama = 4
+        elif exp_lvls >= sk_sn:
+            iama = 5
+
+        result={'talent':t, 'iama':iama}
+        tlt_bch_sk.append(result)
+
+    fl = list(filter(lambda x: x['iama'] >= int(instance.experience_level.level), tlt_bch_sk))
+    fl2 = list(x['talent'] for x in fl)
+
+    wee = wee.union(fl2)
 
     #Find all talent that have the required Experience<<<
 
@@ -2507,11 +2895,13 @@ def VacancyPostView(request, vac):
     if vac_type == 'Remote freelance' or vac_type == 'Consultant':
         wel_i=wee
     else:
-        wel = set(PhysicalAddress.objects.filter(region=instance.city.region).values_list('talent', flat=True))
+        cty = Region.objects.get(city__city=instance.city).country
+
+        wel = set(PhysicalAddress.objects.filter(country=cty).values_list('talent', flat=True))
         #Willing to Relocate
 
-        ctry = Region.objects.get(region=instance.city.region)
-        wtr = set(WillingToRelocate.objects.filter(country=ctry.country).values_list('talent', flat=True))
+
+        wtr = set(WillingToRelocate.objects.filter(country=cty).values_list('talent', flat=True))
         wel = wel|wtr
 
         wel_i = wel.intersection(wee)
@@ -2548,21 +2938,26 @@ def VacancyPostView(request, vac):
         tetv = t_exp.get('tet')
         talent_skill_l = we.filter(talent=item, edt=False).values_list('skills__skill', flat=True)
         talent_skillt_l = we.filter(talent=item, edt=True).values_list('topic__skills__skill', flat=True)
+        talent_skill_bch_l = bch.filter(talent=item).values_list('skills__skill', flat=True)
+
         talent_skill = list(talent_skill_l)
         rb = book.filter(talent=item).count()
         talent_skillt = list(talent_skillt_l)
+        talent_skill_bch = list(talent_skill_bch_l)
+
         rate = Profile.objects.filter(talent=item).values_list('std_rate', 'currency__currency_abv', 'rate_unit', 'motivation', 'alias',)
-        des = list(BriefCareerHistory.objects.filter(talent=item, current=True).values_list('designation__name', flat=True))
+        des = list(bch.filter(talent=item, current=True).values_list('designation__name', flat=True))
         pfl = Profile.objects.get(talent=item)
         avg = pfl.avg_rate
         cnt = pfl.rate_count
         bg = pfl.background
 
-        slist = talent_skill + talent_skillt
+        slist = talent_skill + talent_skillt + talent_skill_bch
         skillset = set(slist)
         skill_count = len(skillset)
 
-        slist_l = talent_skill_l.union(talent_skillt_l)
+        slist_l_a = talent_skill_l.union(talent_skillt_l)
+        slist_l = slist_l_a.union(talent_skill_bch_l)
         skill_intersection = skill_rs.intersection(slist_l)
         skill_int_count = skill_intersection.count()
         skill_match = skill_int_count / skill_rc * 100
@@ -2570,6 +2965,8 @@ def VacancyPostView(request, vac):
         suitable[item]={
             'we':wetv, 'te':tetv,'s_no':skill_count, 'skill_rc': skill_rc, 'skill_int_count': skill_int_count, 'skill_match': skill_match, 'skillset': skillset, 'rb':rb, 'ro':rate, 'score': avg, 'count': cnt, 'background': bg, 'des': des,
             }
+
+    suitable = OrderedDict(sorted(suitable.items(), key=lambda kv: kv[1]['skill_match'], reverse=True))
 
         #Extracting information for the applicants
     applied ={}
@@ -2580,8 +2977,12 @@ def VacancyPostView(request, vac):
             atetv = at_exp.get('tet')
             talent_skill_l = we.filter(talent=app, edt=False).values_list('skills__skill', flat=True)
             talent_skillt_l = we.filter(talent=app, edt=True).values_list('topic__skills__skill', flat=True)
+            talent_skill_bch_l = bch.filter(talent=item).values_list('skills__skill', flat=True)
+
             atalent_skill = list(talent_skill_l)
             atalent_skillt = list(talent_skillt_l)
+            talent_skill_bch = list(talent_skill_bch_l)
+
             rb = book.filter(talent=app).count()
             rate = applicants.filter(talent=app).values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation', 'talent__alias')
             des = list(BriefCareerHistory.objects.filter(talent=app, current=True).values_list('designation__name', flat=True))
@@ -2590,11 +2991,12 @@ def VacancyPostView(request, vac):
             cnt = pfl.rate_count
             bg = pfl.background
 
-            aslist = atalent_skill + atalent_skillt
+            aslist = atalent_skill + atalent_skillt + talent_skill_bch
             askillset = set(aslist)
             askill_count = len(askillset)
 
-            slist_l = talent_skill_l.union(talent_skillt_l)
+            slist_l_a = talent_skill_l.union(talent_skillt_l)
+            slist_l = slist_l_a.union(talent_skill_bch_l)
             skill_intersection = skill_rs.intersection(slist_l)
             skill_int_count = skill_intersection.count()
             skill_match = skill_int_count / skill_rc * 100
@@ -2602,6 +3004,9 @@ def VacancyPostView(request, vac):
             applied[app]={
                 'we':awetv, 'te':atetv, 's_no': askill_count, 'skill_rc': skill_rc, 'skill_int_count': skill_int_count, 'skill_match': skill_match, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score': avg, 'count': cnt, 'background': bg, 'des': des,
                 }
+
+    applied = OrderedDict(sorted(applied.items(), key=lambda kv: kv[1]['skill_match'], reverse=True))
+
 
     suitable_slice = dict(itertools.islice(suitable.items(), 5))
     applied_slice = dict(itertools.islice(applied.items(), 5))
@@ -2636,6 +3041,15 @@ def VacancyPostView(request, vac):
     return render(request, template, context)
 
 
+@login_required
+def CertificateDeleteView(request, vac, cert):
+    if request.method == 'POST':
+        vacancy = TalentRequired.objects.get(ref_no=vac)
+        cert_instance = Result.objects.get(type=cert)
+        vacancy.certification.remove(cert_instance)
+    return redirect(reverse('MarketPlace:VacancyPost', kwargs={'vac':vac})+'#certifications')
+
+
 @login_required()
 @subscription(2)
 def VacancyCloseSwitch(request, vac):
@@ -2652,49 +3066,95 @@ def TalentSuitedVacancyListView(request, vac):
     skille = SkillRequired.objects.filter(scope__ref_no=vac)
     delivere = Deliverables.objects.filter(scope__ref_no=vac)
     applicants = WorkBid.objects.filter(work__ref_no=vac)
-    we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
+    we = WorkExperience.objects.filter(Q(talent__subscription__gte=0) & Q(score__gte=skill_pass_score))
+    bch = BriefCareerHistory.objects.all()
     s_list = BidShortList.objects.filter(scope__ref_no=vac)
-    skill_rs = skille.values_list('skills__skill', flat=True).distinct()
-    skill_rc = skill_rs.count()
     book = ReadBy.objects.all()
-    tr_qs = TalentRequired.objects.filter(ref_no=vac)
-    tlt = Profile.objects.filter(talent__subscription__gte=1)
     vac_exp = ExpandedView.objects.get(talent=request.user)
-    list_view = vac_exp.talent_suited_list
+    applicants_list_view = vac_exp.applicants_list
+    suited_list_view = vac_exp.talent_suited_list
     sk_st = SkillLevel.objects.get(level=0).min_hours
     sk_bg = SkillLevel.objects.get(level=1).min_hours
     sk_jn = SkillLevel.objects.get(level=2).min_hours
     sk_in = SkillLevel.objects.get(level=3).min_hours
     sk_sn = SkillLevel.objects.get(level=4).min_hours
     sk_ld = SkillLevel.objects.get(level=5).min_hours
+    tr_qs = TalentRequired.objects.filter(ref_no=vac)
+    tlt = Profile.objects.filter(talent__subscription__gte=0)
     #Queryset Cache<<<
 
     #>>> List all skills required
     skill_r = skille.values_list('skills', flat=True).distinct()
     skill_rl = list(skill_r)
     skill_rs = skille.values_list('skills__skill', flat=True).distinct()
-    skill_rc = len(skill_rl)
+    skill_rc = skill_rs.count()
 
     #List all skills required<<<
 
     #>>> Find all talent with required skill
     wes = set(we.filter(Q(skills__in=skill_r) | Q(topic__skills__in=skill_r)).values_list('talent', flat=True))
+    bch_s = set(bch.filter(skills__in=skill_r).values_list('talent', flat=True))
+    wes = set(wes.union(bch_s))
     #Find all talent with required skill<<<
 
     #>>> Find all talent that have the required Experience
-    wee = set(tlt.filter(exp_lvl__lte=instance.experience_level).values_list('talent', flat=True))
+    wex = set(tlt.filter(exp_lvl__gte=instance.experience_level).values_list('talent', flat=True))
 
-    wee = wee.intersection(wes)
+    wee = wex.intersection(wes)
+
+    tlt_bch_sk = []
+    for t in bch_s:
+        tlt_bch = bch.filter(talent__id=t)
+        try:
+            pre_bch_df = tlt_bch.aggregate(df_min=Min('date_from'))
+            pre_bch_dt = tlt_bch.aggregate(dt_max=Max('date_to'))
+
+            p_bch_df = pre_bch_df.get('df_min')
+            p_bch_dt = pre_bch_dt.get('dt_max')
+
+            p_delta = p_bch_dt - p_bch_df
+            exp_lvls = int(p_delta.days / 7 * 5 * 8)
+        except:
+            exp_lvls = int(0)
+
+        if exp_lvls < sk_st:
+            iama = 0
+        elif exp_lvls >= sk_st and exp_lvls < sk_bg:
+            iama = 1
+        elif exp_lvls >= sk_bg and exp_lvls < sk_jn:
+            iama = 2
+        elif exp_lvls >= sk_jn and exp_lvls < sk_in:
+            iama = 3
+        elif exp_lvls >= sk_in and exp_lvls < sk_sn:
+            iama = 4
+        elif exp_lvls >= sk_sn:
+            iama = 5
+
+        result={'talent':t, 'iama':iama}
+        tlt_bch_sk.append(result)
+
+    fl = list(filter(lambda x: x['iama'] >= int(instance.experience_level.level), tlt_bch_sk))
+    fl2 = list(x['talent'] for x in fl)
+
+    wee = wee.union(fl2)
 
     #Find all talent that have the required Experience<<<
 
     #>>> Find all talent that are in the correct geographic location
-    vac_type = instance.worklocation.id
+    vac_type = instance.worklocation.type
 
-    if vac_type == 0:
+    if vac_type == 'Remote freelance' or vac_type == 'Consultant':
         wel_i=wee
     else:
-        wel = set(PhysicalAddress.objects.filter(region=instance.city.region).values_list('talent', flat=True))
+        cty = Region.objects.get(city__city=instance.city).country
+
+        wel = set(PhysicalAddress.objects.filter(country=cty).values_list('talent', flat=True))
+        #Willing to Relocate
+
+
+        wtr = set(WillingToRelocate.objects.filter(country=cty).values_list('talent', flat=True))
+        wel = wel|wtr
+
         wel_i = wel.intersection(wee)
     #Find all talent that are in the correct geographic location<<<
 
@@ -2729,33 +3189,35 @@ def TalentSuitedVacancyListView(request, vac):
         tetv = t_exp.get('tet')
         talent_skill_l = we.filter(talent=item, edt=False).values_list('skills__skill', flat=True)
         talent_skillt_l = we.filter(talent=item, edt=True).values_list('topic__skills__skill', flat=True)
+        talent_skill_bch_l = bch.filter(talent=item).values_list('skills__skill', flat=True)
+
         talent_skill = list(talent_skill_l)
         rb = book.filter(talent=item).count()
         talent_skillt = list(talent_skillt_l)
-        rb = book.filter(talent=item).count()
+        talent_skill_bch = list(talent_skill_bch_l)
+
         rate = Profile.objects.filter(talent=item).values_list('std_rate', 'currency__currency_abv', 'rate_unit', 'motivation', 'alias',)
-        des = list(BriefCareerHistory.objects.filter(talent=item, current=True).values_list('designation__name', flat=True))
+        des = list(bch.filter(talent=item, current=True).values_list('designation__name', flat=True))
         pfl = Profile.objects.get(talent=item)
         avg = pfl.avg_rate
         cnt = pfl.rate_count
         bg = pfl.background
 
-        slist = talent_skill + talent_skillt
+        slist = talent_skill + talent_skillt + talent_skill_bch
         skillset = set(slist)
         skill_count = len(skillset)
 
-        slist_l = talent_skill_l.union(talent_skillt_l)
+        slist_l_a = talent_skill_l.union(talent_skillt_l)
+        slist_l = slist_l_a.union(talent_skill_bch_l)
         skill_intersection = skill_rs.intersection(slist_l)
         skill_int_count = skill_intersection.count()
         skill_match = skill_int_count / skill_rc * 100
 
-
         suitable[item]={
-            'we':wetv, 'te':tetv,'s_no':skill_count, 'skill_rc': skill_rc, 'skill_int_count': skill_int_count, 'skill_match': skill_match, 'skillset': skillset, 'rb':rb, 'ro':rate, 'score':avg, 'count':cnt, 'background': bg, 'des': des,
+            'we':wetv, 'te':tetv,'s_no':skill_count, 'skill_rc': skill_rc, 'skill_int_count': skill_int_count, 'skill_match': skill_match, 'skillset': skillset, 'rb':rb, 'ro':rate, 'score': avg, 'count': cnt, 'background': bg, 'des': des,
             }
 
-
-    suitable_slice = dict(itertools.islice(suitable.items(), 5))
+    suitable = OrderedDict(sorted(suitable.items(), key=lambda kv: kv[1]['skill_match'], reverse=True))
 
     suitable_count = len(suitable)
 
@@ -2813,17 +3275,21 @@ def ApplicantsForVacancyListView(request, vac):
     skille = SkillRequired.objects.filter(scope__ref_no=vac)
     delivere = Deliverables.objects.filter(scope__ref_no=vac)
     applicants = WorkBid.objects.filter(work__ref_no=vac)
-    we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
+    we = WorkExperience.objects.filter(Q(talent__subscription__gte=0) & Q(score__gte=skill_pass_score))
+    bch = BriefCareerHistory.objects.all()
     s_list = BidShortList.objects.filter(scope__ref_no=vac)
     book = ReadBy.objects.all()
     vac_exp = ExpandedView.objects.get(talent=request.user)
-    list_view = vac_exp.applicants_list
+    applicants_list_view = vac_exp.applicants_list
+    suited_list_view = vac_exp.talent_suited_list
     sk_st = SkillLevel.objects.get(level=0).min_hours
     sk_bg = SkillLevel.objects.get(level=1).min_hours
     sk_jn = SkillLevel.objects.get(level=2).min_hours
     sk_in = SkillLevel.objects.get(level=3).min_hours
     sk_sn = SkillLevel.objects.get(level=4).min_hours
     sk_ld = SkillLevel.objects.get(level=5).min_hours
+    tr_qs = TalentRequired.objects.filter(ref_no=vac)
+    tlt = Profile.objects.filter(talent__subscription__gte=0)
     #Queryset Cache<<<
 
     #>>> List all skills required
@@ -2835,25 +3301,97 @@ def ApplicantsForVacancyListView(request, vac):
     #List all skills required<<<
 
     #>>> Find all talent with required skill
+    wes = set(we.filter(Q(skills__in=skill_r) | Q(topic__skills__in=skill_r)).values_list('talent', flat=True))
+    bch_s = set(bch.filter(skills__in=skill_r).values_list('talent', flat=True))
+    wes = set(wes.union(bch_s))
+    #Find all talent with required skill<<<
 
-    wes = we.filter(Q(skills__in=skill_r) | Q(topic__skills__in=skill_r)).distinct('talent')
+    #>>> Find all talent that have the required Experience
+    wex = set(tlt.filter(exp_lvl__gte=instance.experience_level).values_list('talent', flat=True))
 
-    #ensure apllicats don't appear in the suitable skills window
-    app_list = applicants.values_list('talent')
-    suit_list = wes.values_list('talent')
-    short_list = s_list.values_list('talent')
-    short_list_a = s_list.filter(talent__subscription__gte=2).values_list('talent')
+    wee = wex.intersection(wes)
+
+    tlt_bch_sk = []
+    for t in bch_s:
+        tlt_bch = bch.filter(talent__id=t)
+        try:
+            pre_bch_df = tlt_bch.aggregate(df_min=Min('date_from'))
+            pre_bch_dt = tlt_bch.aggregate(dt_max=Max('date_to'))
+
+            p_bch_df = pre_bch_df.get('df_min')
+            p_bch_dt = pre_bch_dt.get('dt_max')
+
+            p_delta = p_bch_dt - p_bch_df
+            exp_lvls = int(p_delta.days / 7 * 5 * 8)
+        except:
+            exp_lvls = int(0)
+
+        if exp_lvls < sk_st:
+            iama = 0
+        elif exp_lvls >= sk_st and exp_lvls < sk_bg:
+            iama = 1
+        elif exp_lvls >= sk_bg and exp_lvls < sk_jn:
+            iama = 2
+        elif exp_lvls >= sk_jn and exp_lvls < sk_in:
+            iama = 3
+        elif exp_lvls >= sk_in and exp_lvls < sk_sn:
+            iama = 4
+        elif exp_lvls >= sk_sn:
+            iama = 5
+
+        result={'talent':t, 'iama':iama}
+        tlt_bch_sk.append(result)
+
+    fl = list(filter(lambda x: x['iama'] >= int(instance.experience_level.level), tlt_bch_sk))
+    fl2 = list(x['talent'] for x in fl)
+
+    wee = wee.union(fl2)
+
+    #Find all talent that have the required Experience<<<
+
+    #>>> Find all talent that are in the correct geographic location
+    vac_type = instance.worklocation.type
+
+    if vac_type == 'Remote freelance' or vac_type == 'Consultant':
+        wel_i=wee
+    else:
+        cty = Region.objects.get(city__city=instance.city).country
+
+        wel = set(PhysicalAddress.objects.filter(country=cty).values_list('talent', flat=True))
+        #Willing to Relocate
+
+
+        wtr = set(WillingToRelocate.objects.filter(country=cty).values_list('talent', flat=True))
+        wel = wel|wtr
+
+        wel_i = wel.intersection(wee)
+    #Find all talent that are in the correct geographic location<<<
+
+    #>>> Find all talent that have the required certifications
+    certnull = tr_qs.filter(certification__isnull=False).exists()
+
+    if certnull is False:
+        wec = wel_i
+    else:
+        cert_req = tr_qs.values_list('certification')
+        tlt_cert = set(LicenseCertification.objects.filter(certification__in=cert_req).values_list('talent', flat=True))
+        wec = wel_i.intersection(tlt_cert)
+    #Find all talent that have the required certifications<<<
+
+    #ensure apllicants don't appear in the suitable skills window
+    app_list = set(applicants.values_list('talent', flat=True))
+    suit_list = wec
+    short_list = set(s_list.values_list('talent', flat=True))
+    short_list_a = set(s_list.filter(talent__subscription__gte=2).values_list('talent', flat=True))
 
     diff_list0 = suit_list.difference(app_list)#removes talent that has applied
-    #removes shortlists talent
-    diff_list = diff_list0.difference(short_list)
+    diff_list = diff_list0.difference(short_list)#removes shortlists talent
     app_list = app_list.difference(short_list_a)
 
-    we_list = list(diff_list.values_list('talent', flat=True))
+    we_list = list(diff_list)
 
-    #Extracting information for the applicants
+        #Extracting information for the applicants
     applied ={}
-    app_list = list(app_list.values_list('talent', flat=True))
     for app in app_list:
             aw_exp = we.filter(talent=app, edt=False).aggregate(awet=Sum('hours_worked'))
             awetv = aw_exp.get('awet')
@@ -2861,8 +3399,12 @@ def ApplicantsForVacancyListView(request, vac):
             atetv = at_exp.get('tet')
             talent_skill_l = we.filter(talent=app, edt=False).values_list('skills__skill', flat=True)
             talent_skillt_l = we.filter(talent=app, edt=True).values_list('topic__skills__skill', flat=True)
+            talent_skill_bch_l = bch.filter(talent=item).values_list('skills__skill', flat=True)
+
             atalent_skill = list(talent_skill_l)
             atalent_skillt = list(talent_skillt_l)
+            talent_skill_bch = list(talent_skill_bch_l)
+
             rb = book.filter(talent=app).count()
             rate = applicants.filter(talent=app).values_list('rate_bid', 'currency__currency_abv', 'rate_unit', 'motivation', 'talent__alias')
             des = list(BriefCareerHistory.objects.filter(talent=app, current=True).values_list('designation__name', flat=True))
@@ -2871,16 +3413,21 @@ def ApplicantsForVacancyListView(request, vac):
             cnt = pfl.rate_count
             bg = pfl.background
 
-            aslist = atalent_skill + atalent_skillt
+            aslist = atalent_skill + atalent_skillt + talent_skill_bch
             askillset = set(aslist)
             askill_count = len(askillset)
 
-            slist_l = talent_skill_l.union(talent_skillt_l)
+            slist_l_a = talent_skill_l.union(talent_skillt_l)
+            slist_l = slist_l_a.union(talent_skill_bch_l)
             skill_intersection = skill_rs.intersection(slist_l)
             skill_int_count = skill_intersection.count()
             skill_match = skill_int_count / skill_rc * 100
 
-            applied[app]={'we':awetv, 'te':atetv, 's_no': askill_count, 'skill_rc': skill_rc, 'skill_int_count': skill_int_count, 'skill_match': skill_match, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score': avg, 'count': cnt, 'background': bg, 'des': des,}
+            applied[app]={
+                'we':awetv, 'te':atetv, 's_no': askill_count, 'skill_rc': skill_rc, 'skill_int_count': skill_int_count, 'skill_match': skill_match, 'skillset': askillset, 'rb':rb, 'ro':rate, 'score': avg, 'count': cnt, 'background': bg, 'des': des,
+                }
+
+    applied = OrderedDict(sorted(applied.items(), key=lambda kv: kv[1]['skill_match'], reverse=True))
 
     applied_count = len(applied)
 
@@ -3510,7 +4057,7 @@ def TalentDecline(request, tlt, vac):
 def ShortListView(request, vac):
     vacancy = get_object_or_404(TalentRequired, ref_no=vac)
     s_list = BidShortList.objects.filter(Q(scope__ref_no=vac) & Q(status='S'))
-    we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
+    we = WorkExperience.objects.filter(Q(talent__subscription__gte=0) & Q(score__gte=skill_pass_score))
     skille = SkillRequired.objects.filter(scope__ref_no=vac)
     applicants = WorkBid.objects.filter(work__ref_no=vac)
     book = ReadBy.objects.all()

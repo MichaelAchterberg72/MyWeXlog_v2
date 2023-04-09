@@ -1,12 +1,16 @@
 {% extends "base_home.html" %}
-
+{% load static %}
 {% block title %}{{block.super}}-Branches{% endblock title %}
 
 {% block content %}
 
 <div class="card card-shadow">
   <div class="card-body">
-  <h4 class="">Branches for {{ detail.ename }}
+  <h4 class="">{% if detail.logo %}
+  <img align="center" class="" height="40" width="40" src="{{ detail.logo.url }}" style="border:0;" width="null"/>
+  {% else %}
+  <img align="center" class="" height="40" width="40" src="{% static 'images/email/mywexlog-logo.png' %}" style="border:0;opacity:0.2;" width="null"/>
+  {% endif %} Branches for {{ detail.ename }}
     <span><p class="float-right">
     <a href="{% url 'Enterprise:HelpEnterpriseBranchList' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="tooltip" title="Click here for help on this page!">
     <i class="fa fa-question-circle"></i></a>

@@ -1,20 +1,18 @@
 from django.contrib import admin
 
-from .models import (
-    PhoneNumberType, SkillTag, LanguageList
-    )
+from .models import LanguageList, PhoneNumberType, SkillTag
 
 
 @admin.register(PhoneNumberType)
 class PhoneNumberTypeAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['type']
 
 
 @admin.register(SkillTag)
 class SkillTagAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['skill']
 
 
 @admin.register(LanguageList)
 class LanguageListAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['language']

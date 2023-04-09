@@ -1,23 +1,18 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic import TemplateView
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.http import is_safe_url
-from django.http import HttpResponseRedirect, HttpResponse
-from django.urls import reverse
-from django.core.exceptions import PermissionDenied
-from django.db.models import Count, Sum, Q, F
 import json
 
-
 from csp.decorators import csp_exempt
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
+from django.db.models import Count, F, Q, Sum, Min, Max
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
+from django.utils.http import is_safe_url
+from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import TemplateView
 
-
-from . models import PhoneNumberType, SkillTag
-
-from . forms import (
-        PhoneNumberForm, SkillForm,
-)
+from .forms import PhoneNumberForm, SkillForm
+from .models import PhoneNumberType, SkillTag
 
 
 @login_required()
@@ -79,28 +74,55 @@ def get_skill_id(request):
 
 @login_required()
 def ListTagsView(request):
+    '''List sorted alphabetically for both demand and confirmed hours '''
     list = SkillTag.objects.all().order_by('skill')
-    count = list.count()
+    tally = list.count()
 
-    #sum all hours logged to a skill
-    skill_set = {}
-    for s in list:
-        #summing the skills
-        i = list.get(skill=s)
-        e = i.experience.all()
-        e_sum = e.aggregate(sum_t=Sum('hours_worked'))
-        e_float = e_sum.get('sum_t')
-        e_count = e.count()
-        skill_set[s] = [e_count, e_float]
-
-    #demand calculation
-    demand_set = {}
-    for d in list:
-        j = list.get(skill=d)
-        f = j.skillrequired_set.all()
-        d_count = f.count()
-        demand_set[d] = d_count
+    hours = list.filter(experience__score__gte=3).annotate(
+                                                           hours_sum = Sum('experience__hours_worked'),
+                                                           skill_min=Min('experience__date_from'),
+                                                           skill_max=Max('experience__date_to')
+                                                           )
+    total_hours = list.filter(experience__score__gte=3).aggregate(
+                                                                  total_sum=Sum('experience__hours_worked'),
+                                                                  min=Min('experience__date_from'),
+                                                                  max=Max('experience__date_to')
+                                                                  )
+    demand = list.annotate(
+                           demand_count = Count('skillrequired__scope'),
+                           demand_min=Min('skillrequired__scope__date_entered'),
+                           demand_max=Max('skillrequired__scope__date_entered')
+                           )
+    order = "alphabetically"
 
     template = 'db_flatten/skill_list.html'
-    context = {'list': list, 'count': count, 'skill_set': skill_set, 'demand_set': demand_set,}
+    context = {'list': list, 'hours': hours, 'tally': tally, 'demand': demand, 'total_hours': total_hours, 'order': order}
+    return render(request, template, context)
+
+
+@login_required()
+def ListTagsSortView(request):
+    '''List sorted from max to min for both demand and confirmed hours '''
+    list = SkillTag.objects.all()
+    tally = list.count()
+
+    hours = list.filter(experience__score__gte=3).annotate(
+                                                           hours_sum = Sum('experience__hours_worked'),
+                                                           skill_min=Min('experience__date_from'),
+                                                           skill_max=Max('experience__date_to')
+                                                           ).order_by("-hours_sum")
+    total_hours = list.filter(experience__score__gte=3).aggregate(
+                                                                  total_sum=Sum('experience__hours_worked'),
+                                                                  min=Min('experience__date_from'),
+                                                                  max=Max('experience__date_to')
+                                                                  )
+    demand = list.annotate(
+                           demand_count = Count('skillrequired__scope'),
+                           demand_min=Min('skillrequired__scope__date_entered'),
+                           demand_max=Max('skillrequired__scope__date_entered')
+                           ).order_by("-demand_count")
+    order = "from Max to Min"
+
+    template = 'db_flatten/skill_list.html'
+    context = {'list': list, 'hours': hours, 'tally': tally, 'demand': demand, 'total_hours': total_hours, 'order': order}
     return render(request, template, context)

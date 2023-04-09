@@ -1,7 +1,12 @@
+<<<<<<< HEAD
 from django.urls import re_path, path
 from django.conf.urls import url
 from django.views.generic.list import ListView
+=======
+from django.urls import re_path
+>>>>>>> 4d2368d8adb893284cb0cc42ee1109831dce84ef
 from django.views.generic.detail import DetailView
+from django.views.generic.list import ListView
 
 from schedule.feeds import CalendarICalendar, UpcomingEventsFeed
 from schedule.models import Calendar

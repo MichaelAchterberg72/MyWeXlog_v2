@@ -1,39 +1,33 @@
-from django.db import models
-from django.conf import settings
-from django.utils import timezone
-from django.core.validators import FileExtensionValidator
-from time import time
 import datetime
+from decimal import Decimal
+from io import BytesIO, StringIO
 from random import random
+from time import time
+
+from django.conf import settings
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.core.validators import FileExtensionValidator
+from django.db import models
+from django.db.models import Count, F, Q, Sum
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
-from django.db.models import Count, Sum, F, Q
-from decimal import Decimal
-
-from smartfields import fields, dependencies
+from django.utils import timezone
+from django_countries.fields import CountryField
+from pdf2image import convert_from_bytes, convert_from_path
+from pdf2image.exceptions import (PDFInfoNotInstalledError, PDFPageCountError,
+                                  PDFSyntaxError)
+from PIL import Image
+from smartfields import dependencies, fields
 from smartfields.dependencies import FileDependency
 from smartfields.processors import ImageProcessor
 
-
-from Profile.utils import create_code9
-
-
-from enterprises.models import Enterprise, Industry, Branch
-from project.models import ProjectData, ProjectPersonalDetails
+from booklist.models import Author, Genre, Publisher
 from db_flatten.models import SkillTag
-from booklist.models import Publisher, Author, Genre
-from django_countries.fields import CountryField
+from enterprises.models import Branch, Enterprise, Industry
 from locations.models import Region
+from Profile.utils import create_code9
+from project.models import ProjectData, ProjectPersonalDetails
 from WeXlog.storage_backends import PrivateMediaStorage
-
-from pdf2image import convert_from_path, convert_from_bytes
-from pdf2image.exceptions import (
-    PDFInfoNotInstalledError,
-    PDFPageCountError,
-    PDFSyntaxError )
-from PIL import Image
-from io import StringIO, BytesIO
-from django.core.files.uploadedfile import InMemoryUploadedFile
 
 CONFIRM = (
     ('S','Select'),
@@ -245,7 +239,7 @@ class LicenseCertification(models.Model):
     cert_name = models.CharField(max_length=150, null=True)
     country = CountryField()
     region = models.ForeignKey(Region, on_delete=models.PROTECT, blank=True, null=True)
-    cm_no = models.CharField('Membership / Credential Number', max_length=40)
+    cm_no = models.CharField('Membership / Credential Number', max_length=40, blank=True, null=True)
     companybranch = models.ForeignKey(Enterprise, on_delete=models.PROTECT, verbose_name='Issued By')
     upload = models.FileField(storage=PrivateMediaStorage(), upload_to=CertFilename, blank=True, null=True, validators=[FileExtensionValidator(['pdf'])])
     thumbnail = models.ImageField(storage=PrivateMediaStorage(), upload_to=CertThumbnail, blank=True, null=True)
@@ -326,7 +320,7 @@ class Topic(models.Model):
 class Lecturer(models.Model):
         #Captured by talent
     education = models.ForeignKey('WorkExperience', on_delete=models.CASCADE)
-    lecturer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    lecturer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
     topic = models.ForeignKey(Topic, on_delete=models.PROTECT, blank=True, null=True, verbose_name="Subject")
         #AutoCaptured
     date_captured = models.DateField(auto_now_add=True)
@@ -356,7 +350,7 @@ class Lecturer(models.Model):
 class ClassMates(models.Model):
         #Captured by talent
     education = models.ForeignKey('WorkExperience', on_delete=models.CASCADE)
-    colleague = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, verbose_name='ClassMate')
+    colleague = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, verbose_name='ClassMate')
     topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True, verbose_name="Subject")
         #AutoCaptured
     date_captured = models.DateField(auto_now_add=True)
@@ -406,7 +400,9 @@ class WorkExperience(models.Model):
     TYPE=(
         ('F','Freelance'),
         ('C','Contract'),
+        ('T','Consultant'),
         ('E','Employee'),
+        ('O','FIFO'),
     )
     #Common Fields
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -420,6 +416,7 @@ class WorkExperience(models.Model):
     title = models.CharField(max_length=250, blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
     publish_comment = models.BooleanField(default=False)
+    not_validated = models.BooleanField(default=False)
     #Work Experience Fields (Captured & Pre-Experience)
     company = models.ForeignKey(Enterprise, on_delete=models.PROTECT, verbose_name='Company', null=True)
     companybranch = models.ForeignKey(Branch, on_delete=models.PROTECT, verbose_name='Company Branch', null=True)
@@ -486,7 +483,7 @@ class WorkExperience(models.Model):
 class WorkColleague(models.Model):
         #Captured by talent
     experience = models.ForeignKey(WorkExperience, on_delete=models.PROTECT)
-    colleague_name = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    colleague_name = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
     designation = models.ForeignKey(Designation, on_delete=models.PROTECT, null=True)
         #AutoCaptured
     date_captured = models.DateField(auto_now_add=True)
@@ -520,7 +517,7 @@ class WorkColleague(models.Model):
 class Superior(models.Model):
         #Captured by talent
     experience = models.ForeignKey(WorkExperience, on_delete=models.CASCADE)
-    superior_name = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    superior_name = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
     designation = models.ForeignKey(Designation, on_delete=models.PROTECT, null=True)
         #AutoCaptured
     date_captured = models.DateField(auto_now_add=True)
@@ -555,7 +552,7 @@ class Superior(models.Model):
 class WorkCollaborator(models.Model):
         #Captured by talent
     experience = models.ForeignKey(WorkExperience, on_delete=models.CASCADE)
-    collaborator_name = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    collaborator_name = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
     company = models.ForeignKey(Enterprise, on_delete=models.PROTECT, null=True)
     companybranch = models.ForeignKey(Branch, on_delete=models.PROTECT)
     designation = models.ForeignKey(Designation, on_delete=models.PROTECT, null=True)
@@ -593,7 +590,7 @@ class WorkCollaborator(models.Model):
 class WorkClient(models.Model):
         #Captured by talent
     experience = models.ForeignKey(WorkExperience, on_delete=models.CASCADE)
-    client_name = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    client_name = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
     designation = models.ForeignKey(Designation, on_delete=models.PROTECT, null=True)
     company = models.ForeignKey(Enterprise, on_delete=models.PROTECT, null=True)
     companybranch = models.ForeignKey(Branch, on_delete=models.PROTECT)

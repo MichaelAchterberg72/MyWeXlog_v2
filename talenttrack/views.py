@@ -1,72 +1,83 @@
-from django.shortcuts import(
-    render, get_object_or_404, redirect, render_to_response
-    )
-from django.views.generic import TemplateView
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.http import is_safe_url
-from django.template.loader import get_template, render_to_string
-from django.conf import settings
-from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
-from django.urls import reverse
-from django.utils import timezone
-from django.core.exceptions import PermissionDenied
-import json
-from django.db.models import Count, Sum, F, Q, Avg, Min, Max
-from itertools import chain
 import datetime
-from django.utils.dateparse import parse_date
-from dateutil.relativedelta import relativedelta
-from django.db.models.functions import Greatest
-from decimal import Decimal
-from django.contrib.postgres.search import SearchVector, TrigramSimilarity
+import json
 import math
-from .widgets import ListTextWidget
+from decimal import Decimal
+from itertools import chain
 
 import sendgrid
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import (Mail, Subject, To, ReplyTo, SendAt, Content, From, CustomArg, Header)
-from django.utils.html import strip_tags
-
 from csp.decorators import csp_exempt
-from core.decorators import subscription, corp_permission
-from WeXlog.app_config import(
-        client_score, lecturer_score, classmate_score, colleague_score, pre_colleague_score, collaborator_score, superior_score
-        )
+from dateutil.relativedelta import relativedelta
+from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.contrib.postgres.search import SearchVector, TrigramSimilarity
+from django.core.exceptions import PermissionDenied
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.db.models import Avg, Count, F, Max, Min, Q, Sum
+from django.db.models.functions import Greatest
+from django.db.models import ExpressionWrapper, DecimalField
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.shortcuts import (get_object_or_404, redirect, render,
+                              render_to_response)
+from django.template.loader import get_template, render_to_string
+from django.urls import reverse
+from django.utils import timezone
+from django.utils.dateparse import parse_date
+from django.utils.html import strip_tags
+from django.utils.http import is_safe_url
+from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import TemplateView
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import (Content, CustomArg, From, Header, Mail,
+                                   ReplyTo, SendAt, Subject, To)
 
+from analytics.signals import object_viewed_signal
+from booklist.models import ReadBy
+from core.decorators import corp_permission, subscription
 
-from .forms import (
-        TopicForm, ResultForm, CourseTypeForm, CourseForm, DesignationForm, ClassMatesSelectForm, ClassMatesConfirmForm, LecturerSelectForm, LecturerConfirmForm, EducationForm, WorkExperienceForm, WorkColleagueSelectForm, WorkColleagueConfirmForm, WorkColleagueResponseForm, ClassMatesResponseForm, LecturerResponseForm, SuperiorSelectForm, WorkCollaboratorResponseForm, WorkCollaboratorConfirmForm, WorkCollaboratorSelectForm, WorkClientResponseForm, WorkClientConfirmForm, WorkClientSelectForm, PreLoggedExperienceForm, TopicPopForm, LecturerRespondForm, ClassMatesRespondForm, AchievementsForm, AwardsForm, PublicationsForm, LicenseCertificationForm, ProfileSearchForm, EmailFormModal, SiteSkillStatsFilter, SiteDemandSkillStatsFilter
-)
-
-from .models import (
-        Lecturer, Course, ClassMates, WorkExperience, Superior, WorkCollaborator, WorkClient, WorkColleague, Designation, Achievements, Awards, Publications, LicenseCertification,
-)
 
 from db_flatten.models import SkillTag
-from marketplace.models import(
-    SkillLevel, SkillRequired, WorkBid, BidShortList, TalentRequired, BidInterviewList, WorkIssuedTo, VacancyRate, TalentRate,
-)
 from enterprises.models import Branch, Industry
-from locations.models import Region, City
-from project.models import ProjectData, ProjectPersonalDetails
-from Profile.models import (
-        BriefCareerHistory, Profile, LanguageTrack, PhysicalAddress, WillingToRelocate, FileUpload, OnlineRegistrations, PhoneNumber, ProfileImages
-)
-from booklist.models import ReadBy
-from users.models import CustomUser
-from mod_corporate.models import CorporateStaff
 from invitations.models import Invitation
+from locations.models import City, Region
+from marketplace.models import (BidInterviewList, BidShortList, SkillLevel,
+                                SkillRequired, TalentRate, TalentRequired,
+                                VacancyRate, WorkBid, WorkIssuedTo)
+from mod_corporate.models import CorporateStaff
+from Profile.models import (BriefCareerHistory, FileUpload, LanguageTrack,
+                            OnlineRegistrations, PhoneNumber, PhysicalAddress,
+                            Profile, ProfileImages, WillingToRelocate)
+from project.models import ProjectData, ProjectPersonalDetails
+from users.models import CustomUser
+from invitations.models import Invitation
+from WeXlog.app_config import (classmate_score, client_score,
+                               collaborator_score, colleague_score,
+                               lecturer_score, locked_age, pre_colleague_score,
+                               skill_pass_score, superior_score)
 
-from WeXlog.app_config import (
-    skill_pass_score, locked_age, client_score, lecturer_score, classmate_score,    colleague_score, pre_colleague_score, collaborator_score, superior_score
-)
+from .forms import (AchievementsForm, AwardsForm, ClassMatesConfirmForm,
+                    ClassMatesRespondForm, ClassMatesResponseForm,
+                    ClassMatesSelectForm, CourseForm, CourseTypeForm,
+                    DesignationForm, EducationForm, EmailFormModal,
+                    LecturerConfirmForm, LecturerRespondForm,
+                    LecturerResponseForm, LecturerSelectForm,
+                    LicenseCertificationForm, PreLoggedExperienceForm,
+                    ProfileSearchForm, PublicationsForm, ResultForm,
+                    SiteDemandSkillStatsFilter, SiteSkillStatsFilter,
+                    SuperiorSelectForm, TopicForm, TopicPopForm,
+                    WorkClientConfirmForm, WorkClientResponseForm,
+                    WorkClientSelectForm, WorkCollaboratorConfirmForm,
+                    WorkCollaboratorResponseForm, WorkCollaboratorSelectForm,
+                    WorkColleagueConfirmForm, WorkColleagueResponseForm,
+                    WorkColleagueSelectForm, WorkExperienceForm)
 
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from analytics.signals import object_viewed_signal
+from .models import (Achievements, Awards, ClassMates, Course, Designation,
+                     Lecturer, LicenseCertification, Publications, Superior,
+                     WorkClient, WorkCollaborator, WorkColleague,
+                     WorkExperience)
+
+from .widgets import ListTextWidget
 
 
-@login_required()
 def public_profile(request, ppl):
     tlt = get_object_or_404(CustomUser, public_profile_name=ppl).alias
 
@@ -100,7 +111,14 @@ def public_profile(request, ppl):
     online = OnlineRegistrations.objects.filter(talent__alias=tlt)
 #    vacancy = TalentRequired.objects.filter(ref_no=vac)
 #    skr = SkillRequired.objects.filter(scope__ref_no=vac).values_list('skills', flat=True).distinct('skills'
-    pics = ProfileImages.objects.filter(talent__alias=tlt)
+    try:
+        profile_pic = ProfileImages.objects.get(talent__alias=tlt).profile_pic
+    except:
+        profile_pic=None
+    try:
+        background_pic = ProfileImages.objects.get(talent__alias=tlt).profile_background
+    except:
+        background_pic=None
     skill_qs = SkillTag.objects.all()
     exp = exp_qs.select_related('topic', 'course', 'project')
     edtexp = exp.filter(edt=True).order_by('-date_from')[:6]
@@ -328,6 +346,45 @@ def public_profile(request, ppl):
 
     tlt_id = [tlt_p.id]
 
+    #Experience per skill plot
+    skills_years_skill_data = []
+    for s in ordered_skills_list:
+        shwe = exp_skills.filter(Q(skills__skill=s, edt=False) | Q(topic__skills__skill=s, edt=True))
+
+        skill_min_date_qs = shwe.aggregate(min_date=Min('date_from'))
+        skill_mn_date = skill_min_date_qs.get('min_date')
+
+        skill_max_date_qs = shwe.aggregate(max_date=Max('date_to'))
+        skill_mx_date = skill_max_date_qs.get('max_date')
+
+        try:
+            skill_tn_qs = skill_mx_date - skill_mn_date
+            months = skill_tn_qs.days/(365/12)
+            skill_tn = months/12
+        except:
+            skill_tn = 0
+
+
+        aw_exp = shwe.filter(edt=False).aggregate(awet=Sum('hours_worked'))
+        awetv = aw_exp.get('awet')
+        if awetv == None:
+            awetv = 0
+        else:
+            awetv = awetv
+
+        at_exp = shwe.filter(edt=True).aggregate(tet=Sum('topic__hours'))
+        atetv = at_exp.get('tet')
+        if atetv == None:
+            atetv = 0
+        else:
+            atetv = atetv
+
+        t_exp_hours = float(awetv + atetv)
+
+        result={'skill': s, 'skill_tn': skill_tn, 't_exp_hours': t_exp_hours}
+
+        skills_years_skill_data.append(result)
+
     #Hours Experience per skill chart
     skills_hours_skill_data = []
     for s in ordered_skills_list:
@@ -517,14 +574,30 @@ def public_profile(request, ppl):
     for c in co_list_set:
         co = Branch.objects.filter(pk=c).values_list('name', 'company__ename', 'pk')
         dt = bch_qs.filter(companybranch=c).values_list('designation__name', 'date_from', 'date_to', 'description', 'pk')
+        dt_list_query = list(dt.values_list('pk', flat=True).order_by('-date_to').distinct())
+
+        dt_list = []
+        for i in dt_list_query:
+            dt_i = bch_qs.filter(companybranch=c, pk=i).values_list('designation__name', 'date_from', 'date_to', 'description', 'pk')
+            dt_list.append(dt_i)
 
         dt_co_min_date_qs = bch_qs.filter(companybranch=c).aggregate(min_date=Min('date_from'))
         dt_mn_date = dt_co_min_date_qs.get('min_date')
 
-        dt_co_max_date_qs = bch_qs.filter(companybranch=c).aggregate(max_date=Min('date_to'))
+        dt_co_max_date_qs = bch_qs.filter(companybranch=c).aggregate(max_date=Max('date_to'))
         dt_mx_date = dt_co_max_date_qs.get('max_date')
 
         we_co = wec_qs.filter(companybranch=c).values_list('designation__name', 'score', 'industry__industry', 'hours_worked').distinct()
+
+        dt_des = dt.values_list('designation__name', flat=True).distinct()
+        we_co_des_list = we_co.values_list('designation__name', flat=True).distinct()
+        co_des_qs = dt_des.union(we_co_des_list)
+        co_des_list = set(co_des_qs)
+
+        we_co_des=[]
+        for d in co_des_list:
+            des_result = {'des': d}
+            we_co_des.append(des_result)
 
         we_co_min_date_qs = wec_qs.filter(companybranch=c).aggregate(min_date=Min('date_from'))
         we_co_mn_date = we_co_min_date_qs.get('min_date')
@@ -831,7 +904,7 @@ def public_profile(request, ppl):
             p_result = {'we': we, 'prj_s': prj_s, 'pd_desc': pd_desc, 'pwe_co_mn': pwe_co_mn, 'pwe_co_mx': pwe_co_mx, 'pwe_tn': pwe_tn, 'pr_skl': pr_skl, 'pco_hr': pco_hr, 'pr_com': pr_com, 'pwq_ave': pwq_ave, 'twq_ave': twq_ave, 'cwq_ave': cwq_ave, 'awq_ave': awq_ave}
             pr.append(p_result)
 
-        result={'co': co, 'dt': dt, 'we_co': we_co, 'mx_date': mx_date, 'mn_date': mn_date, 'tn': tn, 'pr': pr,
+        result={'co': co, 'dt': dt, 'dt_list': dt_list, 'we_co': we_co, 'we_co_des': we_co_des, 'mx_date': mx_date, 'mn_date': mn_date, 'tn': tn, 'pr': pr,
 #        'no_pr': no_pr
         }
 
@@ -845,8 +918,8 @@ def public_profile(request, ppl):
     #Header
     'dispay_user': dispay_user,  'tlt': tlt,  'padd': padd, 'current_pos': current_pos, 'language_qs': language_qs, 'online': online, 'phone': phone,
     'pfl_g': pfl_g, 'r_1': r_1, 'r_2': r_2, 'r_3': r_3,
-    'tawq_ave': tawq_ave,
-    'pics': pics,
+    'tawq_ave': tawq_ave, 'skills_years_skill_data': skills_years_skill_data,
+    'profile_pic': profile_pic, 'background_pic': background_pic,
     'upload': upload, 'upload_count': upload_count,
     #Membership
     'membership': membership, 'membership_qs_count': membership_qs_count,
@@ -874,9 +947,8 @@ def public_profile(request, ppl):
     return render(request, template, context)
 
 
-@login_required()
 def public_profile_project_rating(request, ppl):
-    '''The view for the individual public profile mywexlog project rating overview and stats'''
+    #The view for the individual public profile mywexlog project rating overview and stats
     tlt = get_object_or_404(CustomUser, public_profile_name=ppl).alias
     pfl = Profile.objects.get(alias=tlt)
 
@@ -892,7 +964,6 @@ def public_profile_project_rating(request, ppl):
     return render(request, template, context)
 
 
-@login_required()
 def public_profile_evaluation_rating(request, ppl):
     '''The view for the individual public profile mywexlog work experience evaluation rating overview and stats'''
     tlt = get_object_or_404(CustomUser, public_profile_name=ppl).alias
@@ -1073,7 +1144,6 @@ def public_profile_evaluation_rating(request, ppl):
     return render(request, template, context)
 
 
-@login_required()
 def public_profile_skill_stats(request, ppl, skl):
     '''The view for the individual public profile skill overview and stats'''
     tlt = get_object_or_404(CustomUser, public_profile_name=ppl).alias
@@ -1269,7 +1339,6 @@ def public_profile_skill_stats(request, ppl, skl):
     return render(request, template, context)
 
 
-login_required()
 def public_profile_projects(request, ppl):
     '''MyWeXlog Projects History detail page'''
     tlt = get_object_or_404(CustomUser, public_profile_name=ppl).alias
@@ -1332,7 +1401,6 @@ def public_profile_projects(request, ppl):
     return render(request, template, context)
 
 
-login_required()
 def public_profile_education(request, ppl):
     '''MyWeXlog Education History detail page'''
     tlt = get_object_or_404(CustomUser, public_profile_name=ppl).alias
@@ -1376,7 +1444,6 @@ def public_profile_education(request, ppl):
     return render(request, template, context)
 
 
-login_required()
 def public_profile_achievements(request, ppl):
     '''MyWeXlog Achievements History detail page'''
     tlt = get_object_or_404(CustomUser, public_profile_name=ppl).alias
@@ -1417,7 +1484,6 @@ def public_profile_achievements(request, ppl):
     return render(request, template, context)
 
 
-login_required()
 def public_profile_awards(request, ppl):
     '''MyWeXlog Awards History detail page'''
     tlt = get_object_or_404(CustomUser, public_profile_name=ppl).alias
@@ -1458,7 +1524,6 @@ def public_profile_awards(request, ppl):
     return render(request, template, context)
 
 
-login_required()
 def public_profile_publications(request, ppl):
     '''MyWeXlog Publications History detail page'''
     tlt = get_object_or_404(CustomUser, public_profile_name=ppl).alias
@@ -1499,7 +1564,6 @@ def public_profile_publications(request, ppl):
     return render(request, template, context)
 
 
-login_required()
 def public_profile_books(request, ppl):
     '''MyWeXlog Books Read History detail page'''
     tlt = get_object_or_404(CustomUser, public_profile_name=ppl).alias
@@ -1565,7 +1629,7 @@ def publish_experience_comment(request, wes):
 
 login_required()
 def publish_pre_experience_comment(request, wes):
-    '''Selects wether to publish a workexperience comemnt or not'''
+    #Selects wether to publish a workexperience comemnt or not
     we_qs = WorkExperience.objects.filter(slug=wes)
     we_qs_g = we_qs.get(slug=wes)
     we_c_col = WorkColleague.objects.filter(experience=we_qs_g)
@@ -1588,7 +1652,7 @@ def publish_pre_experience_comment(request, wes):
 
 login_required()
 def publish_colleague_response(request, rc):
-    '''Selects wether to publish a colleague response comemnt or not'''
+    #Selects wether to publish a colleague response comemnt or not
     wec_qs = WorkColleague.objects.filter(slug=rc)
     wes = wec_qs.get(slug=rc).experience.slug
     we_qs = WorkExperience.objects.filter(slug=wes)
@@ -1605,7 +1669,7 @@ def publish_colleague_response(request, rc):
 
 login_required()
 def publish_pre_colleague_response(request, rc):
-    '''Selects wether to publish a pre-colleague response comemnt or not'''
+    #Selects wether to publish a pre-colleague response comemnt or not
     wec_qs = WorkColleague.objects.filter(slug=rc)
     wes = wec_qs.get(slug=rc).experience.slug
     we_qs = WorkExperience.objects.filter(slug=wes)
@@ -1622,7 +1686,7 @@ def publish_pre_colleague_response(request, rc):
 
 login_required()
 def publish_superior_response(request, rc):
-    '''Selects wether to publish a superior response comemnt or not'''
+    #Selects wether to publish a superior response comemnt or not
     wec_qs = Superior.objects.filter(slug=rc)
     wes = wec_qs.get(slug=rc).experience.slug
     we_qs = WorkExperience.objects.filter(slug=wes)
@@ -1639,7 +1703,7 @@ def publish_superior_response(request, rc):
 
 login_required()
 def publish_pre_superior_response(request, rc):
-    '''Selects wether to publish a pre-superior response comemnt or not'''
+    #Selects wether to publish a pre-superior response comemnt or not
     wec_qs = Superior.objects.filter(slug=rc)
     wes = wec_qs.get(slug=rc).experience.slug
     we_qs = WorkExperience.objects.filter(slug=wes)
@@ -1656,7 +1720,7 @@ def publish_pre_superior_response(request, rc):
 
 login_required()
 def publish_collaborator_response(request, rc):
-    '''Selects wether to publish a collaborator response comemnt or not'''
+    #Selects wether to publish a collaborator response comemnt or not
     wec_qs = WorkCollaborator.objects.filter(slug=rc)
     wes = wec_qs.get(slug=rc).experience.slug
     we_qs = WorkExperience.objects.filter(slug=wes)
@@ -1723,11 +1787,15 @@ def publish_pre_client_response(request, rc):
 
 
 @login_required()
-def site_demand_skill_stats(request, skl):
-    '''The view for the site wide skill demand overview and stats'''
+def site_demand_skill_stats(request, skl, prj=None):
+    #The view for the site wide skill demand overview and stats
     skill = SkillTag.objects.get(id=skl)
     tlt_instance = request.user
     today = timezone.now().date()
+    if prj is not None:
+        prj=prj
+    else:
+        prj=None
 
 
     val_we = TalentRequired.objects.all()
@@ -1742,7 +1810,6 @@ def site_demand_skill_stats(request, skl):
     f_vac_list_qs_id = f_vac_list_qs.values_list('pk').distinct()
 
     f_skill_des = val_we.filter(skillrequired__skills__pk=skl).values_list('designation__pk', flat=True).distinct()
-    print(f_skill_des)
 
     form = SiteDemandSkillStatsFilter()
     form.fields['title'].widget = ListTextWidget(data_list=TalentRequired.objects.filter(pk__in=f_vac_list_qs_id).values_list('title', flat=True).distinct(), name='title-list')
@@ -1822,6 +1889,7 @@ def site_demand_skill_stats(request, skl):
     template = 'talenttrack/site_demand_skill_stats.html'
     context = {
             'skl': skl,
+            'prj': prj,
             'skill': skill,
             'form': form,
             'vac_list_qs_count': vac_list_qs_count,
@@ -1834,11 +1902,15 @@ def site_demand_skill_stats(request, skl):
 
 
 @login_required()
-def site_skill_stats(request, skl):
-    '''The view for the site wide skill overview and stats'''
+def site_skill_stats(request, skl, prj=None):
+    #The view for the site wide skill overview and stats
     skill = SkillTag.objects.get(id=skl)
     tlt_instance = request.user
     today = timezone.now().date()
+    if prj is not None:
+        prj=prj
+    else:
+        prj=None
 
 
     val_we = WorkExperience.objects.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
@@ -1922,6 +1994,7 @@ def site_skill_stats(request, skl):
     template = 'talenttrack/site_skill_stats.html'
     context = {
             'skl': skl,
+            'prj': prj,
             'skill': skill,
             'form': form,
             'skills_list_qs_count': skills_list_qs_count,
@@ -1935,7 +2008,7 @@ def site_skill_stats(request, skl):
 
 @login_required()
 def profile_skill_stats(request, skl):
-    '''The view for the individual skill overview and stats'''
+    #The view for the individual skill overview and stats
     skill = SkillTag.objects.get(id=skl)
     tlt_instance = request.user
     tlt = tlt_instance.alias
@@ -1985,12 +2058,8 @@ def profile_skill_stats(request, skl):
     orderd_skills_instance_count = sorted(skills_instance_count, key=lambda kv: kv['skill_percentage'], reverse=True)
 #    print(orderd_skills_instance_count['skill'])
 
-
-
     we_skill = we.filter(Q(skills__skill=skill.skill, edt=False) | Q(topic__skills__skill=skill.skill, edt=True))
     val_we_skill = val_we.filter(Q(skills__skill=skill.skill, edt=False) | Q(topic__skills__skill=skill.skill, edt=True))
-
-
 
     # Total Work Experience Skill Sum Experience by Year
     val_we_skills_used_year_range_data = []
@@ -2128,7 +2197,7 @@ def profile_skill_stats(request, skl):
 
 @login_required()
 def skill_stats(request, skl):
-    '''The view for the individual skill overview and stats'''
+    #The view for the individual skill overview and stats
     skill = SkillTag.objects.get(id=skl)
     tlt_instance = request.user
     tlt = tlt_instance.alias
@@ -2652,7 +2721,7 @@ def skill_validate_list(request, skl):
 
 @login_required()
 def email_reminder_validate(request, skl, tlt):
-    '''The view to email member to remind them to validate a tlt experience'''
+    #The view to email member to remind them to validate a tlt experience
     current_user = request.user
     invitee = current_user.email
 
@@ -2713,7 +2782,7 @@ def email_reminder_validate(request, skl, tlt):
 
 @login_required()
 def email_reminder_validate_list(request, skl, tlt):
-    '''The view to email member to remind them to validate a tlt experience'''
+    #The view to email member to remind them to validate a tlt experience
     current_user = request.user
     invitee = current_user.email
 
@@ -2771,17 +2840,54 @@ def email_reminder_validate_list(request, skl, tlt):
 
 
 @login_required()
+@csp_exempt
+def CopyClaimView(request, tex):
+    #A view to copy a period of experince that has already been claimed,    only for a slightly different period
+    instance = get_object_or_404(WorkExperience, slug = tex)
+
+    tlt=request.user
+    skills_list = SkillTag.objects.filter(experience__talent=tlt).distinct('skill').order_by('skill')
+
+
+    if request.method == 'POST':
+        form = WorkExperienceForm(request.POST, request.FILES, instance=instance)
+        ppd_id=request.POST.get('project_data')
+        try:
+            project_qs = ProjectPersonalDetails.objects.get(pk=ppd_id).project.pk
+            project_id = ProjectData.objects.get(pk=project_qs)
+        except:
+            project_id = None
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.pk = None
+            new.slug = None
+            new.score = 0
+            new.save()
+            form.save_m2m()
+            return redirect(reverse('Talent:ColleagueSelect', kwargs={'pk': new.id}))
+        else:
+            template = 'talenttrack/experience_capture.html'
+            context = {'form': form, 'skills_list': skills_list}
+            return render(request, template, context)
+    else:
+        form = WorkExperienceForm(instance=instance)
+        template = 'talenttrack/experience_capture.html'
+        context = {'form': form, 'skills_list': skills_list}
+        return render(request, template, context)
+
+
+@login_required()
 def ExperienceHome(request):
-    '''The view for the main page for Talenttrack app'''
+    #The view for the main page for Talenttrack app
+    talent = request.user
+    tlt = talent.alias
+
     #>>>Step 1
-    basequery = WorkExperience.objects.filter(talent=request.user).select_related('topic')
+    basequery = WorkExperience.objects.filter(talent=talent).select_related('topic')
     skills = SkillTag.objects.all()
     sl = SkillLevel.objects.all()
     we_c = basequery.filter(score__gte=skill_pass_score)
     #<<<Step 1
-
-    talent = request.user
-    tlt = talent.alias
 
     #>>>Step 2
     #total
@@ -3093,7 +3199,7 @@ def profile_search(request):
 
 @login_required()
 def lecturer_conf_summary_list(request):
-    '''Confirmations the logged-in user has received'''
+    #Confirmations the logged-in user has received
     tlt = request.user
     lect_qs = Lecturer.objects.filter(lecturer=tlt)
     lect_qs_unlocked = lect_qs.filter(Q(locked=False) & ~Q(confirm="S"))
@@ -3136,7 +3242,7 @@ def lecturer_conf_summary_list(request):
 
 @login_required()
 def classmate_conf_summary_list(request):
-    '''Confirmations the logged-in user has received'''
+    #Confirmations the logged-in user has received
     tlt = request.user
     cm_qs = ClassMates.objects.filter(colleague=tlt)
     cm_qs_unlocked = cm_qs.filter(Q(locked=False) & ~Q(confirm="S"))
@@ -3180,7 +3286,7 @@ def classmate_conf_summary_list(request):
 
 @login_required()
 def colleague_conf_summary_list(request):
-    '''Confirmations the logged-in user has received'''
+    #Confirmations the logged-in user has received
     tlt = request.user
     clg_c_qs = WorkColleague.objects.filter(colleague_name=tlt)
     clg_c_qs_unlocked = clg_c_qs.filter(Q(locked=False) & ~Q(confirm="S"))
@@ -3224,7 +3330,7 @@ def colleague_conf_summary_list(request):
 
 @login_required()
 def superior_conf_summary_list(request):
-    '''Confirmations the logged-in user has received'''
+    #Confirmations the logged-in user has received
     tlt = request.user
     sup_c_qs = Superior.objects.filter(superior_name=tlt)
     sup_c_qs_unlocked = sup_c_qs.filter(Q(locked=False) & ~Q(confirm="S"))
@@ -3268,7 +3374,7 @@ def superior_conf_summary_list(request):
 
 @login_required()
 def collaborator_conf_summary_list(request):
-    '''Confirmations the logged-in user has received'''
+    #Confirmations the logged-in user has received
     tlt = request.user
     clb_c_qs = WorkCollaborator.objects.filter(collaborator_name=tlt)
     clb_c_qs_unlocked = clb_c_qs.filter(Q(locked=False) & ~Q(confirm="S"))
@@ -3312,7 +3418,7 @@ def collaborator_conf_summary_list(request):
 
 @login_required()
 def client_conf_summary_list(request):
-    '''Confirmations the logged-in user has received'''
+    #Confirmations the logged-in user has received
     tlt = request.user
     clt_c_qs = WorkClient.objects.filter(client_name=tlt)
     clt_c_qs_unlocked = clt_c_qs.filter(Q(locked=False) & ~Q(confirm="S"))
@@ -3356,7 +3462,7 @@ def client_conf_summary_list(request):
 
 @login_required()
 def lect_req_list(request):
-    '''Filters for the view where all requests for lecturer are listed'''
+    #Filters for the view where all requests for lecturer are listed
     talent = request.user
     edu_req_lect = Lecturer.objects.filter(education__talent=talent).order_by('-date_confirmed').order_by('-confirm')
 
@@ -3387,7 +3493,7 @@ def lect_req_list(request):
 
 @login_required()
 def cm_req_list(request):
-    '''Filters for the view where all requests for classmate are listed'''
+    #Filters for the view where all requests for classmate are listed
     talent = request.user
     edu_req_cm = ClassMates.objects.filter(education__talent=talent).order_by('-date_confirmed').order_by('-confirm')
 
@@ -3418,7 +3524,7 @@ def cm_req_list(request):
 
 @login_required()
 def clg_req_list(request):
-    '''Filters for the view where all requests to colleagues are listed'''
+    #Filters for the view where all requests to colleagues are listed
     talent = request.user
     exp_req_clg = WorkColleague.objects.filter(experience__talent=talent).order_by('-date_confirmed').order_by('-confirm')
 
@@ -3449,7 +3555,7 @@ def clg_req_list(request):
 
 @login_required()
 def sup_req_list(request):
-    '''Filters for the view where all requests to superiors are listed'''
+    #Filters for the view where all requests to superiors are listed
     talent = request.user
     exp_req_sup = Superior.objects.filter(experience__talent=talent).order_by('-date_confirmed').order_by('-confirm')
 
@@ -3480,7 +3586,7 @@ def sup_req_list(request):
 
 @login_required()
 def clt_req_list(request):
-    '''Filters for the view where all requests to clients are listed'''
+    #Filters for the view where all requests to clients are listed
     talent = request.user
     exp_req_clt = WorkClient.objects.filter(experience__talent=talent).order_by('-date_confirmed').order_by('-confirm')
 
@@ -3511,7 +3617,7 @@ def clt_req_list(request):
 
 @login_required()
 def clb_req_list(request):
-    '''Filters for the view where all requests to collaborators are listed'''
+    #Filters for the view where all requests to collaborators are listed
     talent = request.user
     exp_req_clb = WorkCollaborator.objects.filter(experience__talent=talent).order_by('-date_confirmed').order_by('-confirm')
 
@@ -3961,7 +4067,7 @@ def TltRatingDetailView(request, tlt):
 
 @login_required()
 def ActiveProfileView(request, tlt, vac):
-    '''View for profile and skills for specified vacancy'''
+    #View for profile and skills for specified vacancy
     #caching
     bch_qs = BriefCareerHistory.objects.filter(talent__alias=tlt).order_by('-date_from')
     bch = bch_qs[:6]
@@ -4227,9 +4333,13 @@ def PublicationsFVView(request, tlt, vac):
 
 def ProjectsFVView(request, tlt, vac):
 
-    exp = WorkExperience.objects.filter(talent__alias=tlt).select_related('topic', 'course', 'project')
-    prj_qs = ProjectData.objects.all()
+    #exp = WorkExperience.objects.filter(talent__alias=tlt).select_related('topic', 'course', 'project')
+    #prj_qs = ProjectData.objects.all()
     #Project Summary
+    project_history = ProjectData.objects.filter(workexpereince__talent__alias=tlt).annotate(hr = Sum('workexperience__hours_worked'))
+    prj_count = project_history.count()
+    #leave the number of people that worked on the project out for now.
+    '''
     prj = exp.values_list('project', flat=True).distinct('project')
     prj_set = {}
     prj_count = 0
@@ -4241,12 +4351,12 @@ def ProjectsFVView(request, tlt, vac):
             project_q = prj_qs.filter(pk=p).values_list('name', 'company__ename', 'companybranch__name', 'industry__industry', 'country')
             cache = WorkExperience.objects.filter(project__pk=p)
             hr = cache.aggregate(sum_t=Sum('hours_worked'))
-            ppl = cache.distinct('talent').count()
+            ppl = cache.distinct('talent').count() #Leave this letric out
             info_list=[project_q[0][1], project_q[0][2], project_q[0][3], project_q[0][4], hr['sum_t'], ppl]
             prj_set[project_q[0][0]] = info_list
 
     t = tuple(prj_set.items())
-
+    '''
     try:
         page = int(request.GET.get('page', 1))
     except:
@@ -4304,7 +4414,7 @@ def EduFVView(request, tlt, vac):
 
 
 def LCMFullView(request, tlt):
-    '''View to show all licenses and certifications for a person.'''
+    #View to show all licenses and certifications for a person.
     #tlt = Profile.objects.get(alias=tlt)
     lcm_qs = LicenseCertification.objects.filter(talent__alias=tlt).order_by('-issue_date')
 
@@ -4337,7 +4447,7 @@ def LCMFullView(request, tlt):
 
 @login_required()
 def profile_view(request, tlt):
-    '''View for profile without reference to a vacancy. Used for the search feature'''
+    #View for profile without reference to a vacancy. Used for the search feature
     #caching
     vac = '1ad9t2'
     bch_qs = BriefCareerHistory.objects.filter(talent__alias=tlt).order_by('-date_from')
@@ -4401,7 +4511,7 @@ def profile_view(request, tlt):
 @login_required()
 @corp_permission(1)
 def profile_view_corp(request, cor, tlt):
-    '''View for profile without reference to a vacancy. Used for the corporate feature'''
+    #View for profile without reference to a vacancy. Used for the corporate feature
     #caching
     vac = '1ad9t2'
     bch_qs = BriefCareerHistory.objects.filter(talent__alias=tlt).order_by('-date_from')
@@ -4594,7 +4704,7 @@ def EduLFVView(request, tlt):
 
 
 def LCMFullView(request, tlt):
-    '''View to show all licenses and certifications for a person.'''
+    #View to show all licenses and certifications for a person.
     #tlt = Profile.objects.get(alias=tlt)
     lcm_qs = LicenseCertification.objects.filter(talent__alias=tlt).order_by('-issue_date')
 
@@ -4626,7 +4736,7 @@ def LCMFullView(request, tlt):
 
 
 def SkillProfileDetailView(request, tlt):
-    '''A list of all hours logged against a skill (for an individual) for experience and training'''
+    #A list of all hours logged against a skill (for an individual) for experience and training
     tlt_p = Profile.objects.get(talent__alias=tlt)
     skill_qs = SkillTag.objects.all()
     exp = WorkExperience.objects.filter(talent__alias=tlt).select_related('topic')
@@ -4777,7 +4887,7 @@ def SkillProfileDetailView(request, tlt):
 
 
 def SumAllExperienceView(request, tlt):
-    '''A list of all hours logged against a skill for experience and training'''
+    #A list of all hours logged against a skill for experience and training
     talent = request.user.id
     tlt_p = Profile.objects.get(alias=tlt)
     skill_qs = SkillTag.objects.all()
@@ -4961,248 +5071,53 @@ def SumAllExperienceView(request, tlt):
 
 @login_required()
 def DPC_SummaryView(request, tlt):
-    '''View for Designation, Project and Company hours logged'''
-    #caching
-    exp = WorkExperience.objects.filter(talent__alias = tlt).select_related('designation')
-    designation_qs = Designation.objects.all()
-    companybranch_qs = Branch.objects.all()
-    project_qs = ProjectData.objects.all()
-    tlt = tlt
-
+    #View for Designation, Project and Company hours logged
     #Designation Summary
-    dgn = exp.values_list('designation', flat=True).distinct('designation')
-
-    dgn_set = {}
-    for d in dgn:
-        if d == None:
-            pass
-        else:
-            a = designation_qs.get(pk=d)
-            b = a.workexperience_set.all()
-
-            sum = b.aggregate(sum_d=Sum('hours_worked'))
-            sum_float = float(sum.get('sum_d'))
-
-            confirmed = b.filter(score__gte=skill_pass_score)
-            confirmed_s = confirmed.aggregate(sum_dc=Sum('hours_worked'))
-
-            cnt = b.count()
-            cnt_c = confirmed.count()
-            unconfirmed_count = cnt-cnt_c
-
-            sum_c = confirmed_s.get('sum_dc')
-            if sum_c is None:
-                sum_float_c = 0
-            else:
-                sum_float_c = float(sum_c)
-
-            info_set = {}
-            info_set['confirmed']=sum_float_c
-            info_set['cnt_u']=unconfirmed_count
-            info_set['sum']=sum_float
-
-            designation_q = designation_qs.filter(pk=d).values_list('name', flat=True)
-            designation_f = designation_q[0]
-            dgn_set[designation_f] = info_set
-
+    dgn2 = Designation.objects.filter(workexperience__talent__alias=tlt)
+    confirmed = dgn2.annotate(cap=Sum('workexperience__hours_worked')).filter(workexperience__score__gte=skill_pass_score).annotate(cnf=Sum('workexperience__hours_worked'))
+    dgn2=confirmed
 
     #Company Summary - Listed Per Branch
-    cmp = exp.values_list('companybranch', flat=True).distinct('companybranch')
-    cmp_set = {}
-    for c in cmp:
-        if c == None:
-            pass
-        else:
-            a = companybranch_qs.get(pk=c)
-            b = a.workexperience_set.all()
-
-            sum = b.aggregate(sum_d=Sum('hours_worked'))
-            sum_float = float(sum.get('sum_d'))
-
-            confirmed = b.filter(score__gte=skill_pass_score)
-            confirmed_s = confirmed.aggregate(sum_dc=Sum('hours_worked'))
-
-            cnt = b.count()
-            cnt_c = confirmed.count()
-            unconfirmed_count = cnt-cnt_c
-
-            sum_c = confirmed_s.get('sum_dc')
-            if sum_c is None:
-                sum_float_c = 0
-            else:
-                sum_float_c = float(sum_c)
-
-            info_set = {}
-            info_set['confirmed']=sum_float_c
-            info_set['cnt_u']=unconfirmed_count
-            info_set['sum']=sum_float
-
-            companybranch_q = companybranch_qs.filter(pk=c).values_list('company__ename', 'name', 'city__city')
-            companybranch_f = f'{companybranch_q[0][0]}: {companybranch_q[0][1]} ({companybranch_q[0][2]})'
-            cmp_set[companybranch_f] = info_set
+    cmp2 = Branch.objects.filter(workexperience__talent__alias=tlt)
+    confirmed = cmp2.annotate(cap=Sum('workexperience__hours_worked')).filter(workexperience__score__gte=skill_pass_score).annotate(cnf=Sum('workexperience__hours_worked'))
+    cmp2=confirmed
 
     #Project Summary
-    prj = exp.values_list('project', flat=True).distinct('project')
-    prj_set = {}
-    for p in prj:
-        if p == None:
-            pass
-        else:
-            a = project_qs.get(pk=p)
-            b = a.workexperience_set.all()
+    prj2 = ProjectData.objects.filter(workexperience__talent__alias=tlt)
 
-            sum = b.aggregate(sum_d=Sum('hours_worked'))
-            sum_float = float(sum.get('sum_d'))
-
-            confirmed = b.filter(score__gte=skill_pass_score)
-            confirmed_s = confirmed.aggregate(sum_dc=Sum('hours_worked'))
-
-            cnt = b.count()
-            cnt_c = confirmed.count()
-            unconfirmed_count = cnt-cnt_c
-
-            sum_c = confirmed_s.get('sum_dc')
-            if sum_c is None:
-                sum_float_c = 0
-            else:
-                sum_float_c = float(sum_c)
-
-            info_set = {}
-            info_set['confirmed']=sum_float_c
-            info_set['cnt_u']=unconfirmed_count
-            info_set['sum']=sum_float
-
-            project_q = project_qs.filter(pk=p).values_list('name', 'company__ename', 'companybranch__name')
-            project_f = f'{project_q[0][0]}: {project_q[0][1]} ({project_q[0][2]})'
-            prj_set[project_f] = info_set
+    confirmed = prj2.annotate(cap=Sum('workexperience__hours_worked')).filter(workexperience__score__gte=skill_pass_score).annotate(cnf=Sum('workexperience__hours_worked'))
+    prj2=confirmed
 
     template = 'talenttrack/talent_dpc_summary.html'
     context = {
-        'dgn_set': dgn_set, 'tlt': tlt, 'cmp_set': cmp_set, 'prj_set': prj_set,
-    }
+        'dgn2': dgn2, 'tlt': tlt, 'cmp2': cmp2, 'prj2': prj2,
+        }
     return render(request, template, context)
 
 
 @login_required()
 def DPCP_SummaryView(request, tlt):
-    '''View for Designation, Project and Company hours logged'''
-    #caching
-    exp = WorkExperience.objects.filter(talent__alias = tlt).select_related('designation')
-    designation_qs = Designation.objects.all()
-    companybranch_qs = Branch.objects.all()
-    project_qs = ProjectData.objects.all()
-    tlt = tlt
+    #View for Designation, Project and Company hours logged section in the Public Profile View
 
     #Designation Summary
-    dgn = exp.values_list('designation', flat=True).distinct('designation')
-
-    dgn_set = {}
-    for d in dgn:
-        if d == None:
-            pass
-        else:
-            a = designation_qs.get(pk=d)
-            b = a.workexperience_set.all()
-
-            sum = b.aggregate(sum_d=Sum('hours_worked'))
-            sum_float = float(sum.get('sum_d'))
-
-            confirmed = b.filter(score__gte=skill_pass_score)
-            confirmed_s = confirmed.aggregate(sum_dc=Sum('hours_worked'))
-
-            cnt = b.count()
-            cnt_c = confirmed.count()
-            unconfirmed_count = cnt-cnt_c
-
-
-
-            sum_c = confirmed_s.get('sum_dc')
-            if sum_c is None:
-                sum_float_c = 0
-            else:
-                sum_float_c = float(sum_c)
-
-            info_set = {}
-            info_set['sum']=sum_float
-            info_set['confirmed']=sum_float_c
-            info_set['cnt_u']=unconfirmed_count
-            designation_q = designation_qs.filter(pk=d).values_list('name', flat=True)
-            designation_f = designation_q[0]
-            dgn_set[designation_f] = info_set
-
+    dgn2 = Designation.objects.filter(workexperience__talent__alias=tlt)
+    confirmed = dgn2.annotate(cap=Sum('workexperience__hours_worked')).filter(workexperience__score__gte=skill_pass_score).annotate(cnf=Sum('workexperience__hours_worked'))
+    dgn2=confirmed
 
     #Company Summary - Listed Per Branch
-    cmp = exp.values_list('companybranch', flat=True).distinct('companybranch')
-    cmp_set = {}
-    for c in cmp:
-        if c == None:
-            pass
-        else:
-            a = companybranch_qs.get(pk=c)
-            b = a.workexperience_set.all()
-
-            sum = b.aggregate(sum_d=Sum('hours_worked'))
-            sum_float = float(sum.get('sum_d'))
-
-            confirmed = b.filter(score__gte=skill_pass_score)
-            confirmed_s = confirmed.aggregate(sum_dc=Sum('hours_worked'))
-
-            sum_c = confirmed_s.get('sum_dc')
-            if sum_c is None:
-                confirmed_float = 0
-            else:
-                confirmed_float = float(sum_c)
-
-            cnt = b.count()
-            cnt_c = confirmed.count()
-            unconfirmed_count = cnt-cnt_c
-
-            info_set = {}
-            info_set['confirmed']=confirmed_float
-            info_set['sum']=sum_float
-            info_set['cnt_u']=unconfirmed_count
-
-            companybranch_q = companybranch_qs.filter(pk=c).values_list('company__ename', 'name', 'city__city')
-            companybranch_f = f'{companybranch_q[0][0]}: {companybranch_q[0][1]} ({companybranch_q[0][2]})'
-            cmp_set[companybranch_f] = info_set
+    cmp2 = Branch.objects.filter(workexperience__talent__alias=tlt)
+    confirmed = cmp2.annotate(cap=Sum('workexperience__hours_worked')).filter(workexperience__score__gte=skill_pass_score).annotate(cnf=Sum('workexperience__hours_worked'))
+    cmp2=confirmed
 
     #Project Summary
-    prj = exp.values_list('project', flat=True).distinct('project')
-    prj_set = {}
-    for p in prj:
-        if p == None:
-            pass
-        else:
-            a = project_qs.get(pk=p)
-            b = a.workexperience_set.all()
-            sum = b.aggregate(sum_d=Sum('hours_worked'))
-            sum_float = float(sum.get('sum_d'))
+    prj2 = ProjectData.objects.filter(workexperience__talent__alias=tlt)
 
-            confirmed = b.filter(score__gte=skill_pass_score)
-            confirmed_s = confirmed.aggregate(sum_dc=Sum('hours_worked'))
-
-            sum_c = confirmed_s.get('sum_dc')
-            if sum_c is None:
-                confirmed_float = 0
-            else:
-                confirmed_float = float(sum_c)
-
-            cnt = b.count()
-            cnt_c = confirmed.count()
-            unconfirmed_count = cnt-cnt_c
-
-            info_set = {}
-            info_set['confirmed']=confirmed_float
-            info_set['sum']=sum_float
-            info_set['cnt_u']=unconfirmed_count
-
-            project_q = project_qs.filter(pk=p).values_list('name', 'company__ename', 'companybranch__name')
-            project_f = f'{project_q[0][0]}: {project_q[0][1]} ({project_q[0][2]})'
-            prj_set[project_f] = info_set
+    confirmed = prj2.annotate(cap=Sum('workexperience__hours_worked')).filter(workexperience__score__gte=skill_pass_score).annotate(cnf=Sum('workexperience__hours_worked'))
+    prj2=confirmed
 
     template = 'talenttrack/talent_dpcp_summary.html'
     context = {
-        'dgn_set': dgn_set, 'tlt': tlt, 'cmp_set': cmp_set, 'prj_set': prj_set,
+        'dgn2': dgn2, 'tlt': tlt, 'cmp2': cmp2, 'prj2': prj2,
     }
     return render(request, template, context)
 
@@ -5210,6 +5125,9 @@ def DPCP_SummaryView(request, tlt):
 @login_required()
 @csp_exempt
 def PreLoggedExperienceCaptureView(request):
+    tlt=request.user
+    skills_list = SkillTag.objects.filter(experience__talent=tlt).distinct('skill').order_by('skill')
+
     form = PreLoggedExperienceForm(request.POST or None, request.FILES)
     if request.method == 'POST':
         ppd_id=request.POST.get('project_data')
@@ -5230,12 +5148,12 @@ def PreLoggedExperienceCaptureView(request):
             return response
         else:
             template = 'talenttrack/prelogged_capture.html'
-            context = {'form': form}
+            context = {'form': form, 'skills_list': skills_list}
             response = render(request, template, context)
             return response
     else:
         template = 'talenttrack/prelogged_capture.html'
-        context = {'form': form}
+        context = {'form': form, 'skills_list': skills_list}
         response = render(request, template, context)
         response.set_cookie("confirm","PC")
         return response
@@ -5247,7 +5165,7 @@ def PreLoggedExperienceDeleteView(request, ple_pk):
     if info.talent == request.user:
         if request.method =='POST':
             info.delete()
-            return redirect(reverse('Talent:Home')+'#headingThree')
+            return redirect(reverse('Talent:Home')+'#pre-experience')
     else:
         raise PermissionDenied
 
@@ -5278,7 +5196,7 @@ def PreLogDetailView(request, tex):
         confirmed_clr = WorkCollaborator.objects.filter(experience__slug=tex)
         confirmed_cnt = WorkClient.objects.filter(experience__slug=tex)
 
-        '''Mywexlog evaluation rating'''
+        #Mywexlog evaluation rating
         twclg_ave_qs = weq_qs.aggregate(quality_rate=Avg('workcolleague__quality'))
         twclg_ave = twclg_ave_qs.get('quality_rate')
 
@@ -6018,7 +5936,14 @@ def ExperienceDetailView(request, tex):
         confirmed_clr = WorkCollaborator.objects.filter(experience__slug=tex)
         confirmed_cnt = WorkClient.objects.filter(experience__slug=tex)
 
-        '''Mywexlog evaluation rating'''
+        invitation_sent = Invitation.objects.filter(Q(invited_by=request.user) & Q(experience__slug=tex) & Q(accpeted=False))
+        inv_clg = invitation_sent.filter(relationship='WC').order_by('-date_invited')
+        inv_sup = invitation_sent.filter(relationship='WS').order_by('-date_invited')
+        inv_clr = invitation_sent.filter(relationship='WL').order_by('-date_invited')
+        inv_cnt = invitation_sent.filter(relationship='WT').order_by('-date_invited')
+
+
+        #Mywexlog evaluation rating
         twclg_ave_qs = weq_qs.aggregate(quality_rate=Avg('workcolleague__quality'))
         twclg_ave = twclg_ave_qs.get('quality_rate')
 
@@ -6061,8 +5986,8 @@ def ExperienceDetailView(request, tex):
         else:
             tpwq_count == tpwq_count
 
-        tpwq_total = twclg_ave + twsup_ave + twcol_ave + twcli_ave
-        tpwq_ave = tpwq_total / tpwq_count
+        tpwq_total = ExpressionWrapper(twclg_ave + twsup_ave + twcol_ave + twcli_ave, output_field=DecimalField())
+        tpwq_ave = ExpressionWrapper(tpwq_total / tpwq_count, output_field=DecimalField())
 
 
         twtclg_ave_qs = weq_qs.aggregate(time_taken_rate=Avg('workcolleague__time_taken'))
@@ -6186,7 +6111,8 @@ def ExperienceDetailView(request, tex):
 
 
         template = 'talenttrack/experience_detail.html'
-        context = {'check': check, 'confirmed_clg': confirmed_clg, 'confirmed_sup': confirmed_sup, 'confirmed_clr': confirmed_clr, 'confirmed_cnt': confirmed_cnt, 'list': list, 'sum_company': sum_company, 'sum_project': sum_project, 'client_score': client_score, 'colleague_score': colleague_score, 'pre_colleague_score': pre_colleague_score, 'collaborator_score': collaborator_score, 'superior_score': superior_score, 'tpwq_ave': tpwq_ave, 'ttwq_ave': ttwq_ave, 'tcwq_ave': tcwq_ave, 'tawq_ave': tawq_ave}
+        context = {'check': check, 'confirmed_clg': confirmed_clg, 'confirmed_sup': confirmed_sup, 'confirmed_clr': confirmed_clr, 'confirmed_cnt': confirmed_cnt,
+        'inv_clg': inv_clg, 'inv_sup': inv_sup, 'inv_clr': inv_clr, 'inv_cnt': inv_cnt,  'list': list, 'sum_company': sum_company, 'sum_project': sum_project, 'client_score': client_score, 'colleague_score': colleague_score, 'pre_colleague_score': pre_colleague_score, 'collaborator_score': collaborator_score, 'superior_score': superior_score, 'tpwq_ave': tpwq_ave, 'ttwq_ave': ttwq_ave, 'tcwq_ave': tcwq_ave, 'tawq_ave': tawq_ave}
         return render(request, template, context)
     else:
         raise PermissionDenied
@@ -6221,6 +6147,10 @@ def EducationDetailDeleteView(request, pk):
 @login_required()
 @csp_exempt
 def WorkExperienceCaptureView(request):
+    '''The view used to capture experience '''
+    tlt=request.user
+    skills_list = SkillTag.objects.filter(experience__talent=tlt).distinct('skill').order_by('skill')
+
     form = WorkExperienceForm(request.POST or None, request.FILES)
     if request.method == 'POST':
         ppd_id=request.POST.get('project_data')
@@ -6239,11 +6169,11 @@ def WorkExperienceCaptureView(request):
             return redirect(reverse('Talent:ColleagueSelect', kwargs={'pk': new.id}))
         else:
             template = 'talenttrack/experience_capture.html'
-            context = {'form': form}
+            context = {'form': form, 'skills_list': skills_list}
             return render(request, template, context)
     else:
         template = 'talenttrack/experience_capture.html'
-        context = {'form': form}
+        context = {'form': form, 'skills_list': skills_list}
         return render(request, template, context)
 
 
@@ -6276,7 +6206,7 @@ def WorkExperienceDeleteView(request, we_pk):
     if info.talent == request.user:
         if request.method =='POST':
             info.delete()
-            return redirect(reverse('Talent:Home')+'#headingThree')
+            return redirect(reverse('Talent:Home')+'#experience')
     else:
         raise PermissionDenied
 
@@ -6287,7 +6217,7 @@ def WorkExperienceDeleteFullView(request, we_pk):
     if info.talent == request.user:
         if request.method =='POST':
             info.delete()
-            return redirect(reverse('Talent:ExperienceList'))
+            return redirect(reverse('Talent:ExperienceList')+'#experience')
     else:
         raise PermissionDenied
 
@@ -6430,7 +6360,7 @@ def LecturerAddView(request, tex):
 
     if request.is_ajax():
         qry = request.GET.get('term')
-        people = CustomUser.objects.all().filter(~Q(id__in=filt)).filter(Q(first_name__icontains=qry) | Q(last_name__icontains=qry) | Q(email__icontains=qry) | Q(display_text__icontains=qry)).order_by('last_name')
+        people = CustomUser.objects.filter(~Q(id__in=filt)).filter(Q(first_name__icontains=qry) | Q(last_name__icontains=qry) | Q(email__icontains=qry) | Q(display_text__icontains=qry)).order_by('last_name')
         response_content = list(people.values('id','display_text'))
 
         return JsonResponse(response_content, safe=False)
@@ -6560,7 +6490,13 @@ def EducationCaptureView(request):
             new.edt = True
             new.save()
             form.save_m2m()
-            return redirect(reverse('Talent:LecturerSelect', kwargs={'tex': new.slug}))
+            if 'Self' in request.POST:
+                new.score = 3
+                new.not_validated = True
+                new.save()
+                return redirect(reverse('Talent:EducationDetail', kwargs={'tex': new.slug}))
+            elif 'Done' in request.POST:
+                return redirect(reverse('Talent:LecturerSelect', kwargs={'tex': new.slug}))
         else:
             template = 'talenttrack/education_capture.html'
             context = {'form': form}
@@ -6600,7 +6536,7 @@ def EducationDeleteView(request, edt_pk):
     if info.talent == request.user:
         if request.method =='POST':
             info.delete()
-            return redirect(reverse('Talent:Home')+'#heading1')
+            return redirect(reverse('Talent:Home')+'#education')
     else:
         raise PermissionDenied
 
@@ -6611,7 +6547,7 @@ def EducationDeleteFullView(request, edt_pk):
     if info.talent == request.user:
         if request.method =='POST':
             info.delete()
-            return redirect(reverse('Talent:TrainingList'))
+            return redirect(reverse('Talent:TrainingList')+'#education')
     else:
         raise PermissionDenied
 

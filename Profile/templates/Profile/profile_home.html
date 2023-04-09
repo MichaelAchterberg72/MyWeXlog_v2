@@ -11,10 +11,10 @@
         <div class="card card-shadow">
           <div class="card-body">
             <h3 class="card-title">
-              Introduction Walkthrough
+              Introduction guide & video walkthrough
             </h3>
             <p>
-              We have created an introduction walkthrough to assist you in your first days using MyWeXlog and to provide you with an overview of how MyWeXlog works and the best way to use the system.
+              We have created a series of walkthrough videos to assist you in using MyWeXlog and to provide you with an overview of how MyWeXlog works and the best way to use it.
             </p>
             <div>
               <form action="{% url 'Profile:CloseIntro' %}" method="post">
@@ -44,14 +44,14 @@
                 Your 30 Day Trial Active Subscription Has Been Initiated!
               </h3>
               <p>
-                Your one month free Active Subscription has been initiated. You can enjoy the full benefits of MyWeXlog for the next 30 days. In order to make your account permissions permanent please select one of the subscriptions to upgrade to:
+                Your one month free Active Subscription has been initiated. You can enjoy the full benefits of MyWeXlog for the next 30 days. In order to make your account permissions permanent please select one of the subscriptions to upgrade.<br>For more informaiton see the <a href="https://www.mywexlog.com/pricing/" target="_blank">Subscriptions & Pricing</a> page.
               </p>
               <div class="row">
                 <div class="col-sm-12">
-                  <a href="{% url 'Payments:PassiveSubscription' %}" class="btn btn-primary float-left">
+                  <a href="{% url 'Payments:PassiveSubscription' %}" class="btn btn-primary float-left" data-toggle=tooltip title="There are 3 subscriptions available: Free, Passive and Active">
                     Passive Subscription
                   </a>
-                  <a href="{% url 'Payments:ActiveSubscription' %}" class="btn btn-primary float-right">
+                  <a href="{% url 'Payments:ActiveSubscription' %}" class="btn btn-primary float-right" data-toggle=tooltip title="There are 3 subscriptions available: Free, Passive and Active">
                     Active Subscription
                   </a>
                 </div>
@@ -72,7 +72,7 @@
             <div class="card-body">
               <h3 class="card-title text-center">Your Trial Active Subscription Has Expired!</h3>
               <p>
-                Your one month free Active Subscription has expired. To contine enjoying the full benefits of MyWeXlog please select one of the subscriptions to upgrade to:
+                Your one month free Active Subscription has expired. To contine enjoying the full benefits of MyWeXlog please select one of the subscriptions to upgrade.<br>For more informaiton see the <a href="https://www.mywexlog.com/pricing/" target="_blank">Subscriptions & Pricing</a> page.
               </p>
               <div class="row">
                 <div class="col-sm-6">
@@ -84,15 +84,13 @@
                 </form>
                 </div>
                 <div class="col-sm-6">
-                  <a href="{% url 'Payments:PassiveSubscription' %}" class="btn btn-primary float-left">
+                  <a href="{% url 'Payments:PassiveSubscription' %}" class="btn btn-primary float-left" data-toggle=tooltip title="There are 3 subscriptions available: Free, Passive and Active">
                     Passive Subscription
                   </a>
-                  <a href="{% url 'Payments:ActiveSubscription' %}" class="btn btn-primary float-right">
+                  <a href="{% url 'Payments:ActiveSubscription' %}" class="btn btn-primary float-right" data-toggle=tooltip title="There are 3 subscriptions available: Free, Passive and Active">
                     Active Subscription
                   </a>
                 </div>
-              </div>
-              <div>
               </div>
             </div>
           </div>
@@ -101,6 +99,18 @@
       <br>
       {% endif %}
     {% endif %}
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="card card-shadow">
+          <div class="card-body">
+            <h3 class="card-title text-center">Search for a vacancy</h3>
+            <p class="card-text text-center">To search for a vacancy click the search button and then enter the vacancy Reference Number into the search field.</p>
+            <p class="text-center"><a href="{% url 'MarketPlace:VacSearch' %}" class="btn btn-lg btn-primary" style="width: 7rem">Search</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
 {% endblock intro %}
 
 {% block network %}
@@ -128,8 +138,8 @@
   </table>
   <div class="">
     <p>
-      Referral link:
       <hr>
+      Referral link:
       <div class="input-group mb-3">
         <input type="text" class="form-control" value="{{ referral_code.url }}" id="myInput" aria-describedby="basic-addon2">
         <div class="input-group-append">
@@ -140,6 +150,23 @@
         Copy and paste the above url address into an email or a Social Network Post for your friends to join MyWeXlog in your network.
       </small>
       <br>
+  </div>
+
+  <div class="">
+    <p>
+      <hr>
+      Public Profile link:
+      <div class="input-group mb-3">
+        {% url 'Talent:PublicProfile' request.user.public_profile_name as profile_url %}
+        <input type="text" class="form-control" value="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{{ profile_url }}" id="myProfileInput" aria-describedby="basic-addon3">
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" type="button" id="myProfileButton">Copy Link</button>
+        </div>
+      </div>
+      <small>
+        Copy and paste the above url address into your CV or marketing material to publish your public profile.
+      </small>
+      <hr>
       <div class="float-right">
         <a href="{% url 'Invitation:InvitationsSent' %}" class="btn btn-primary" data-toggle=tooltip title="View a list of associates that have not yet accepted you invitation to MyWeXlog">
           Invitations
@@ -201,11 +228,11 @@
 
 {% block score %}
   <div class="float-right">
-    <a href="{% url 'Profile:WorkshopEmp' %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 10rem" data-toggle=tooltip title="View or manage all work you have assigned">
+    <a href="{% url 'Profile:WorkshopEmp' %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 12rem" data-toggle=tooltip title="View or manage all work you have assigned">
       Employer Office
     </a> &nbsp
-    <a href="{% url 'Profile:WorkshopTlt' %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 10rem" data-toggle=tooltip title="View or manage all vacancies you have accepted">
-      Talent Workshop
+    <a href="{% url 'Profile:WorkshopTlt' %}?next={{ request.path|urlencode }}" class="btn btn-primary" style="width: 12rem" data-toggle=tooltip title="View or manage all vacancies you have accepted">
+      Candidate Workshop
     </a>
   </div>
   <table class="table table-sm">
@@ -266,7 +293,7 @@
 {% endblock score %}
 
 {% block TBA %}
-  <div class="text-center">
+  <div class="text-center" style="line-height:2.5rem;">
     <a href="{% url 'Talent:PublicProfile' request.user.public_profile_name %}?next={{ request.path|urlencode }}" target="_blank">
       <i class="fa fa-map-marker" style="font-size:30px;color:black" data-toggle="tooltip" title="Public Profile"></i>
     </a>
@@ -295,6 +322,14 @@
       <i class="fa fa-laptop" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Capture Experience"></i>
     </a>
     &nbsp &nbsp
+    <a href="{% url 'Project:ProjectAdd' %}" class="">
+      <i class="fa fa-envelope-open" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Capture Project"></i>
+    </a>
+    &nbsp &nbsp
+    <a href="{% url 'Project:ProjectPersonalAdd' %}" class="">
+      <i class="fa fa-envelope-open-o" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Capture Personal Project"></i>
+    </a>
+    &nbsp &nbsp
     <a href="{% url 'BookList:books-read-new' %}" class="">
       <i class="fa fa-bookmark-o" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Capture Book"></i>
     </a>
@@ -309,8 +344,12 @@
       </a>
     {% endif %}
     &nbsp &nbsp
-    <a href="{% url 'Talent:PflSearch' %}" class="">
+    <a href="{% url 'Talent:PflSearch' %}">
       <i class="fa fa-users" aria-hidden="true" style="font-size:34px;color:black" data-toggle="tooltip" title="Profile Search"></i>
+    </a>
+    &nbsp &nbsp
+    <a href="{% url 'Skills:SkillFilter' %}">
+      <i class="fa fa-filter" aria-hidden="true"style="font-size:34px;color:black" data-toggle="tooltip" title="Skills Filter"></i>
     </a>
   </div>
   <hr>
@@ -603,7 +642,7 @@
     <div class="container">
 
       {% if assigned_tlt %}
-        <p><h5 id="TalentAssignment"><strong>As Talent ({{ assigned_tltc }} in Workflow)</strong></h5></p>
+        <p><h5 id="TalentAssignment"><strong>As Candidate ({{ assigned_tltc }} in Workflow)</strong></h5></p>
         <div class="row my-auto">
           <div class="col-5 col-no-pad h-100 text-center my-auto">
             <strong>Vacancy<br>(Reference)</strong>
@@ -745,5 +784,26 @@
   </div>
 </div>
 {% endif %}
+<script type="text/javascript">
 
+document.getElementById("myButton").addEventListener("click", myFunction);
+
+function myFunction(e) {
+  var copyText = document.getElementById("myInput");
+  copyText.select();
+  copyText.setSelectionRange(0, 99999)
+  document.execCommand("copy");
+  alert("Copied the text: " + copyText.value);
+}
+
+document.getElementById("myProfileButton").addEventListener("click", myProfileFunction);
+
+function myProfileFunction(e) {
+  var copyProfileText = document.getElementById("myProfileInput");
+  copyProfileText.select();
+  copyProfileText.setSelectionRange(0, 99999)
+  document.execCommand("copy");
+  alert("Copied the text: " + copyProfileText.value);
+}
+</script>
 {% endblock Center_Content %}

@@ -1,29 +1,25 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic import TemplateView
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.http import is_safe_url
-from django.http import HttpResponseRedirect, HttpResponse
-from django.urls import reverse
-from django.core.exceptions import PermissionDenied
 import json
-from django.db.models import Count
+
+from csp.decorators import csp_exempt
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.db.models import Count, Sum, Min, Max
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
+from django.utils.http import is_safe_url
+from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import TemplateView
 
 from core.decorators import subscription
-from csp.decorators import csp_exempt
 
-
-from .models import (
-            Industry, Enterprise, BranchType, Branch, PhoneNumber,
-            )
-
-
-from .forms import (
-    EnterprisePopupForm, BranchForm, PhoneNumberForm, IndustryPopUpForm, BranchTypePopUpForm, FullBranchForm, FullBranchHome, EnterpriseBranchPopupForm
-)
-
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from .forms import (BranchForm, BranchTypePopUpForm, EnterpriseBranchPopupForm,
+                    EnterprisePopupForm, FullBranchForm, FullBranchHome,
+                    IndustryPopUpForm, PhoneNumberForm)
+from .models import Branch, BranchType, Enterprise, Industry, PhoneNumber
+from db_flatten.models import SkillTag
 
 
 @login_required()
@@ -95,7 +91,6 @@ def HelpEnterpriseBranchListView(request):
 
 @login_required()
 def HelpAddEnterpriseView(request):
-
     context = {}
     template = 'enterprises/help_add_enterprise.html'
     return render(request, template, context)
@@ -143,8 +138,12 @@ def BranchDetailView(request, bch):
     r_3 = detail[0].rate_3/100
     r_4 = detail[0].rate_4/100
 
+    skills = SkillTag.objects.filter(experience__companybranch__slug=bch, experience__score__gte=3).annotate(sum=Sum('experience__hours_worked'),
+                                                                                                               max=Max('experience__date_to'),
+                                                                                                               min=Min('experience__date_from')
+                                                                                                               ).order_by('-sum')
     template = 'enterprises/branch_detail.html'
-    context = {'detail': detail, 'info': info, 'r_1': r_1, 'r_2': r_2, 'r_3': r_3, 'r_4': r_4, 'r_a': r_a}
+    context = {'detail': detail, 'info': info, 'r_1': r_1, 'r_2': r_2, 'r_3': r_3, 'r_4': r_4, 'r_a': r_a, 'skills': skills}
     return render(request, template, context)
 
 
@@ -204,7 +203,8 @@ def BranchAddView(request, cmp):
         return response
 
 
-#>>> Branch Popup
+#>>> Branch Popup (cookie)
+'''Used where a cookie is used to pre-populate the company field.'''
 @login_required()
 @csp_exempt
 def BranchAddPopView(request):
@@ -321,7 +321,7 @@ def EnterpriseAddPopup(request):
 
     filt = exist_comp
 
-    form = EnterprisePopupForm(request.POST or None, pwd=filt)
+    form = EnterprisePopupForm(request.POST or None, request.FILES or None, pwd=filt)
     if request.method == 'POST':
         if form.is_valid():
             instance=form.save(commit=False)

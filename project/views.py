@@ -2,9 +2,11 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
+from django.utils import timezone
 from django.db.models import Count, Sum, F, Q, Avg, Max, Min
 from django.utils import timezone
 from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
 from django.utils.http import is_safe_url
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
@@ -22,6 +24,10 @@ from django.conf import settings
 
 from django_select2.views import AutoResponseView
 
+from WeXlog.app_config import (
+    skill_pass_score, locked_age, client_score, lecturer_score, classmate_score,    colleague_score, pre_colleague_score, collaborator_score, superior_score
+)
+
 from locations.models import Region
 from .models import *
 from Profile.models import Profile
@@ -29,72 +35,42 @@ from talenttrack.models import WorkExperience
 from enterprises.models import Enterprise, Branch
 from users.models import CustomUser
 from schedule.models import NotePad
+from db_flatten.models import SkillTag
 
 from .forms import ProjectAddForm, ProjectAddHome, ProjectSearchForm, ProjectForm, ProjectPersonalDetailsForm, ProjectPersonalDetailsTaskForm, ProjectPersonalDetailsTaskBillingForm, EditProjectTaskBillingForm, AddProjectPersonalDetailsForm, ProjectFullAddForm, ProjectTaskNoteForm
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
-'''
 @login_required()
-def ProjectHome(request):
-    tlt = request.user
-    projects_qs = WorkExperience.objects.filter(talent=tlt).values('project', 'companybranch')
-    prj_list = [dict(t) for t in {tuple(d.items()) for d in projects_qs}]
-
-    tlt_prj_list=[]
-    for item in prj_list:
-        prj_pk = item['project']
-        cob_pk = item['companybranch']
-        if prj_pk == None:
-            pass
-        else:
-            prj_qs = ProjectData.objects.get(pk=prj_pk)
-            prj = prj_qs.name
-            prj_slug = prj_qs.slug
-            brch_qs = Branch.objects.get(pk=cob_pk)
-            bch = brch_qs.name
-            bch_slug = brch_qs.slug
-            co = brch_qs.company.ename
-            co_slug = brch_qs.company.slug
-            industry = prj_qs.industry.industry
-            city = prj_qs.city.city
-
-            result={'project': prj, 'prj_slug': prj_slug, 'company': co, 'co_slug': co_slug, 'branch': bch, 'bch_slug': bch_slug, 'industry': industry, 'city': city}
-            tlt_prj_list.append(result)
-
-    pcount = len(tlt_prj_list)
-
-
-    try:
-        page = int(request.GET.get('page', 1))
-    except:
-        page = 1
-
-    paginator = Paginator(tlt_prj_list, 20)
-
-    try:
-        pageitems = paginator.page(page)
-    except PageNotAnInteger:
-        pageitems = paginator.page(1)
-    except EmptyPage:
-        pageitems = paginator.page(paginator.num_pages)
-
-    index = pageitems.number - 1
-    max_index = len(paginator.page_range)
-    start_index = index - 3 if index >= 3 else 0
-    end_index = index + 3 if index <= max_index - 3 else max_index
-    page_range = list(paginator.page_range)[start_index:end_index]
-
-    template_name = 'project/personal_projects.html'
-    context = {'pcount': pcount, 'pageitems': pageitems, 'page_range': page_range}
-    return render(request, template_name, context)
-'''
-
-@login_required()
-def ProjectHome(request):
+def ProjectDashboard(request):
     tlt = request.user
     projects_qs = ProjectPersonalDetails.objects.filter(talent=tlt)
+    pp_count = projects_qs.count()
+    pp_list = projects_qs.annotate(
+                                   sum=Sum('workexperience__hours_worked')
+                                   ).order_by('-sum')[:5]
+
+    p_qs = ProjectData.objects.filter(
+                                      Q(workexperience__score__gte=3)
+                                      & Q(workexperience__hours_worked__gte=0))
+    pcount = p_qs.count()
+
+    projecthours = p_qs.annotate(
+                                 sum=Sum('workexperience__hours_worked'),
+                                 count=Count('workexperience__company'),
+                                 people=Count('workexperience__talent')
+                                 ).order_by('-sum')[0:5]
+
+    template_name = 'project/project_dashboard.html'
+    context = {'pp_count': pp_count, 'pp_list': pp_list, 'pcount': pcount, 'projecthours': projecthours}
+    return render(request, template_name, context)
+
+
+@login_required()
+def ProjectHome(request):
+    tlt = request.user
+    projects_qs = ProjectPersonalDetails.objects.filter(talent=tlt).annotate(sum=Sum('workexperience__hours_worked'))
 
     pcount = projects_qs.count()
 
@@ -125,6 +101,46 @@ def ProjectHome(request):
 
 
 @login_required()
+def ProjectPersonalDetailsView(request, prj, co, bch):
+    project = ProjectData.objects.get(slug=prj)
+    pr_c_i = Enterprise.objects.get(slug=co)
+    pr_b_i = Branch.objects.get(slug=bch)
+
+    instance, _ = ProjectPersonalDetails.objects.get_or_create(
+            talent=request.user,
+            project=project,
+            company=pr_c_i,
+            companybranch=pr_b_i)
+
+    if request.method == 'POST':
+        form = ProjectPersonalDetailsForm(request.POST, instance=instance)
+        if form.is_valid():
+            new = form.save(commit=False)
+#            new.talent = request.user
+#            new.project.slug = prj
+            new.save()
+            return redirect(reverse('Project:ProjectHome'))
+    else:
+        form = ProjectPersonalDetailsForm(instance=instance)
+        template_name = 'project/personal_detail.html'
+        context = {'form': form, 'instance': instance, 'project': project}
+        return render(request, template_name, context)
+
+
+@login_required()
+def PersonalProejctDeleteView(request, ppj):
+    talent=request.user
+    instance = ProjectPersonalDetails.objects.get(id=ppj)
+
+    if instance.talent == request.user:
+        if request.method =='POST':
+            instance.delete()
+            return redirect(reverse('Project:ProjectDashboard')+'#personalprojects')
+    else:
+        raise PermissionDenied
+
+
+@login_required()
 @csp_exempt
 def ProjectPersonalDetailsAddView(request):
     tlt = CustomUser.objects.get(alias=request.user.alias)
@@ -145,6 +161,37 @@ def ProjectPersonalDetailsAddView(request):
 
 @login_required()
 @csp_exempt
+def ProjectPersonalDetailsAddPopulatedView(request, prj):
+    project = ProjectData.objects.get(slug=prj)
+    instance, _ = ProjectPersonalDetails.objects.get_or_create(
+            talent=request.user,
+            project=project,
+            )
+    form = AddProjectPersonalDetailsForm(request.POST or None, instance=instance)
+    if request.method =='POST':
+        if form.is_valid():
+            new = form.save(commit=False)
+            new.talent=request.user
+
+            if 'cancel' in request.POST:
+                instance.delete()
+                return redirect(reverse('Project:ProjectList'))
+            else:
+                new.save()
+                return redirect(reverse('Project:ProjectList'))
+        else:
+            if 'cancel' in request.POST:
+                instance.delete()
+                return redirect(reverse('Project:ProjectList'))
+
+    template = 'project/project_personal_details_add.html'
+    context = {'form': form}
+    return render(request, template, context)
+
+
+#>>> Personal Project Popup
+@login_required()
+@csp_exempt
 def ProjectPersonalDetailsAddPopupView(request):
     form = AddProjectPersonalDetailsForm(request.POST or None)
     if request.method =='POST':
@@ -152,8 +199,8 @@ def ProjectPersonalDetailsAddPopupView(request):
             instance = form.save(commit=False)
             instance.talent=request.user
             instance.save()
-            response = HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_project_data");</script>' % (instance.pk, instance))
-            return response
+            return HttpResponse('<script>opener.closePopup(window, "%s", "%s", "#id_project_data");</script>' % (instance.pk, instance))
+
         else:
             context = {'form':form,}
             template = 'project/project_personal_details_add_popup.html'
@@ -162,6 +209,16 @@ def ProjectPersonalDetailsAddPopupView(request):
         context = {'form':form,}
         template = 'project/project_personal_details_add_popup.html'
         return render(request, template, context)
+
+@csrf_exempt
+def get_p_project_id(request):
+    if request.is_ajax():
+        project = request.Get['project']
+        project_id = PersonalProjectDetails.objects.get(project = project).id
+        data = {'project_id':project_id,}
+        return HttpResponse(json.dumps(data), content_type='application/json')
+    return HttpResponse("/")
+#Personal Project Popup <<<
 
 
 class ProjectDataJsonView(AutoResponseView):
@@ -500,8 +557,13 @@ def ProjectTaskNoteEditFLView(request, ns, prj, co, bch, ppdt):
 
 @login_required()
 def ProjectListHome(request):
-    pcount = ProjectData.objects.all().aggregate(sum_p=Count('name'))
-    projects = ProjectData.objects.all().order_by('-company')
+    projects = ProjectData.objects.all().annotate(
+                                  sum=Sum('workexperience__hours_worked'),
+                                  count=Count('workexperience__company'),
+                                  people=Count('workexperience__talent'))
+
+    pcount = projects.aggregate(sum_p=Count('name'))
+
 
     try:
         page = int(request.GET.get('page', 1))
@@ -523,7 +585,7 @@ def ProjectListHome(request):
     end_index = index + 3 if index <= max_index - 3 else max_index
     page_range = list(paginator.page_range)[start_index:end_index]
 
-    template_name = 'project/project_home.html'
+    template_name = 'project/project_full_list.html'
     context = {'pcount': pcount, 'pageitems': pageitems, 'page_range': page_range}
     return render(request, template_name, context)
 
@@ -589,9 +651,288 @@ def ProjectDetailView(request, prj):
     hr = cache.aggregate(sum_t=Sum('hours_worked'))
     ppl = cache.distinct('talent').count()
 
+    talent = request.user.id
+    tlt_p = info
+    skill_qs = SkillTag.objects.all()
+    #Full list experience
+    exp = WorkExperience.objects.filter(project=info)
+    # Validated Experience
+    val_exp = exp.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
+
+    exp_s = val_exp.values_list('skills', flat=True).distinct('skills')
+    exp_t = val_exp.order_by('topic__skills').values_list('topic__skills', flat=True).distinct('topic__skills')
+    edt_topic = val_exp.values_list('topic', flat=True).distinct('topic')
+
+
+    exp_s_skill = val_exp.values_list('skills__skill', flat=True).distinct('skills')
+    exp_t_skill = val_exp.order_by('topic__skills__skill').values_list('topic__skills__skill', flat=True).distinct('topic__skills__skill')
+
+    exp_s_list = list(exp_s_skill)
+    exp_t_list = list(exp_t_skill)
+    skills_list = list(exp_s_list + exp_t_list)
+
+    skills_list_set=[]
+    for x in skills_list:
+        skills_list_set.append(x)
+    skills_list_n = [x for x in skills_list_set if x is not None]
+
+    skills_list_set_set = set(skills_list_n)
+    ordered_skills_list = sorted(skills_list_set_set, reverse=False)
+
+    skills_list_Labels = ordered_skills_list
+
+    prj_id = [info.id]
+
+    #Hours Experience per skill chart
+    val_skills_hours_skill_data = []
+    for s in ordered_skills_list:
+        shwe = val_exp.filter(Q(skills__skill=s, edt=False) | Q(topic__skills__skill=s, edt=True))
+        skills_hours=[]
+        for i in prj_id:
+            aw_exp = shwe.filter(project__id=i, edt=False).aggregate(awet=Sum('hours_worked'))
+            awetv = aw_exp.get('awet')
+            if awetv == None:
+                awetv = 0
+            else:
+                awetv = awetv
+
+            at_exp = shwe.filter(project__id=i, edt=True).aggregate(tet=Sum('topic__hours'))
+            atetv = at_exp.get('tet')
+            if atetv == None:
+                atetv = 0
+            else:
+                atetv = atetv
+
+            t_exp = awetv + atetv
+
+            result={'t_exp': t_exp}
+
+            skills_hours.append(result)
+
+        skills_list=[float(x['t_exp']) for x in skills_hours]
+        sum_shwe = sum(skills_list)
+
+        val_skills_hours_skill_data.append(sum_shwe)
+
+    #Hours Training Experience per skill chart
+    training_skills_hours_skill_data = []
+    for s in ordered_skills_list:
+        shwt = val_exp.filter(Q(topic__skills__skill=s, edt=True))
+        training_skills_hours=[]
+        for i in prj_id:
+
+            at_exp = shwt.filter(project__id=i, edt=True).aggregate(tet=Sum('topic__hours'))
+            atetv = at_exp.get('tet')
+            if atetv == None:
+                atetv = 0
+            else:
+                atetv = atetv
+
+            result={'t_exp': atetv}
+
+            training_skills_hours.append(result)
+
+        training_skills_list=[float(x['t_exp']) for x in training_skills_hours]
+        sum_shwt = sum(training_skills_list)
+
+        training_skills_hours_skill_data.append(sum_shwt)
+
+    dept_skills_link = SkillTag.objects.filter(skill__in=ordered_skills_list).order_by('skill')
+
+    skills_count = len(ordered_skills_list)
+
     template_name = 'project/project_detail.html'
-    context = {'detail': detail, 'info': info, 'hr': hr, 'ppl': ppl}
+    context = {'detail': detail, 'info': info, 'hr': hr, 'ppl': ppl, 'prj': prj,
+        'skills_list_Labels': skills_list_Labels,
+        'val_skills_hours_skill_data': val_skills_hours_skill_data,
+        'training_skills_hours_skill_data': training_skills_hours_skill_data,
+        'skills_count': skills_count,
+        'dept_skills_link': dept_skills_link,}
     return render(request, template_name, context)
+
+
+@login_required()
+def project_associated_skill_stats(request, prj, skl):
+    '''The view for the project associated skill overview and stats'''
+    info = get_object_or_404(ProjectData, slug=prj)
+    skill = SkillTag.objects.get(id=skl)
+    prj_id = [info.id]
+    today = timezone.now().date()
+
+    we = WorkExperience.objects.filter(project__slug=prj)
+    val_we = we.filter(Q(talent__subscription__gte=1) & Q(score__gte=skill_pass_score))
+
+    #Skills associated with skill - includes all skills not just validated ones
+    skill_we =  val_we.filter(skills__skill=skill.skill, edt=False)
+    skills_assoc_qs = skill_we.values_list('pk', flat=True)
+
+    skills_list_qs = val_we.filter(pk__in=skills_assoc_qs)
+    skills_list_qs_count = skills_list_qs.count()
+
+    skills_list = skills_list_qs.values_list('skills__skill', flat=True).distinct()
+
+    skills_list_set_all = [x for x in skills_list if x is not None]
+
+    skills_list_set = [x for x in skills_list_set_all if x is not f'{skill.skill}']
+
+    dept_skills_link = SkillTag.objects.filter(skill__in=skills_list_set).order_by('skill')
+
+    skills_instance_count = []
+    skill_list_labels = []
+    skill_percentage_data = []
+    for skill_item in skills_list_set:
+        skill_count = 0
+        tlt_we_skill = skills_list_qs.filter(skills__skill=skill_item).values_list('skills__skill', flat=True)
+
+        for we_instance in tlt_we_skill:
+            skill_count +=1
+        skill_percentage = int(format(skill_count / skills_list_qs_count * 100, '.0f'))
+
+        result={'skill': skill_item, 'skill_count': skill_count, 'skill_percentage': skill_percentage}
+
+        skills_instance_count.append(result)
+
+        skill_list_labels.append(skill_item)
+        skill_percentage_data.append(skill_percentage)
+
+    skill_list_labels_count = skills_list.count()
+
+    orderd_skills_instance_count = sorted(skills_instance_count, key=lambda kv: kv['skill_percentage'], reverse=True)
+
+
+    val_we_skill = val_we.filter(Q(skills__skill=skill.skill, edt=False) | Q(topic__skills__skill=skill.skill, edt=True))
+
+    # Total Work Experience Skill Sum Experience by Year
+    val_we_skills_used_year_range_data = []
+    val_we_skills_age_range=[]
+    for i in prj_id:
+        we_qs = val_we_skill.filter(project__id=i, edt=False)
+        for wet in we_qs:
+            swewd = wet.date_to
+            we_skill_age=relativedelta(today, swewd).years
+
+            aw_exp = wet.hours_worked
+            if aw_exp == None:
+                awetv = 0
+            else:
+                awetv = aw_exp
+
+            result={'we_skill_age': we_skill_age, 'awetv': awetv}
+
+            val_we_skills_age_range.append(result)
+
+    # Total hours experience in year range
+    val_we_skill_age_range_0_1=[float(x['awetv']) for x in val_we_skills_age_range if x['we_skill_age'] in range(0, 1)]
+    val_we_skill_age_range_1_2=[float(x['awetv']) for x in val_we_skills_age_range if x['we_skill_age'] in range(1, 2)]
+    val_we_skill_age_range_2_3=[float(x['awetv']) for x in val_we_skills_age_range if x['we_skill_age'] in range(2, 3)]
+    val_we_skill_age_range_3_4=[float(x['awetv']) for x in val_we_skills_age_range if x['we_skill_age'] in range(3, 4)]
+    val_we_skill_age_range_4_5=[float(x['awetv']) for x in val_we_skills_age_range if x['we_skill_age'] in range(4, 5)]
+    val_we_skill_age_range_5_6=[float(x['awetv']) for x in val_we_skills_age_range if x['we_skill_age'] in range(5, 6)]
+    val_we_skill_age_range_6_7=[float(x['awetv']) for x in val_we_skills_age_range if x['we_skill_age'] in range(6, 7)]
+    val_we_skill_age_range_7_8=[float(x['awetv']) for x in val_we_skills_age_range if x['we_skill_age'] in range(7, 8)]
+    val_we_skill_age_range_8_9=[float(x['awetv']) for x in val_we_skills_age_range if x['we_skill_age'] in range(8, 9)]
+    val_we_skill_age_range_9_10=[float(x['awetv']) for x in val_we_skills_age_range if x['we_skill_age'] in range(9, 10)]
+
+    total_val_we_skill_age=[float(x['awetv']) for x in val_we_skills_age_range if x['we_skill_age'] in range(0, 100)]
+    total_val_sum_we = sum(total_val_we_skill_age)
+
+    sum_val_we_range_0_1 = sum(val_we_skill_age_range_0_1)
+    sum_val_we_range_1_2 = sum(val_we_skill_age_range_1_2)
+    sum_val_we_range_2_3 = sum(val_we_skill_age_range_2_3)
+    sum_val_we_range_3_4 = sum(val_we_skill_age_range_3_4)
+    sum_val_we_range_4_5 = sum(val_we_skill_age_range_4_5)
+    sum_val_we_range_5_6 = sum(val_we_skill_age_range_5_6)
+    sum_val_we_range_6_7 = sum(val_we_skill_age_range_6_7)
+    sum_val_we_range_7_8 = sum(val_we_skill_age_range_7_8)
+    sum_val_we_range_8_9 = sum(val_we_skill_age_range_8_9)
+    sum_val_we_range_9_10 = sum(val_we_skill_age_range_9_10)
+
+    val_we_skills_used_year_range_data.append(sum_val_we_range_9_10)
+    val_we_skills_used_year_range_data.append(sum_val_we_range_8_9)
+    val_we_skills_used_year_range_data.append(sum_val_we_range_7_8)
+    val_we_skills_used_year_range_data.append(sum_val_we_range_6_7)
+    val_we_skills_used_year_range_data.append(sum_val_we_range_5_6)
+    val_we_skills_used_year_range_data.append(sum_val_we_range_4_5)
+    val_we_skills_used_year_range_data.append(sum_val_we_range_3_4)
+    val_we_skills_used_year_range_data.append(sum_val_we_range_2_3)
+    val_we_skills_used_year_range_data.append(sum_val_we_range_1_2)
+    val_we_skills_used_year_range_data.append(sum_val_we_range_0_1)
+
+    # Training Validated Experience Skill Sum Experience by Year
+    t_val_we_skills_used_year_range_data = []
+    t_val_we_skills_age_range=[]
+    for i in prj_id:
+        t_we_qs = val_we_skill.filter(project__id=i, edt=True)
+        for wet in t_we_qs:
+            swewd = wet.date_to
+            we_skill_age=relativedelta(today, swewd).years
+
+            aw_exp = wet.topic.hours
+            if aw_exp == None:
+                awetv = 0
+            else:
+                awetv = aw_exp
+
+            t_result={'we_skill_age': we_skill_age, 'awetv': awetv}
+
+            t_val_we_skills_age_range.append(t_result)
+
+    # Total Validated hours experience in year range
+    t_val_we_skill_age_range_0_1=[float(x['awetv']) for x in t_val_we_skills_age_range if x['we_skill_age'] in range(0, 1)]
+    t_val_we_skill_age_range_1_2=[float(x['awetv']) for x in t_val_we_skills_age_range if x['we_skill_age'] in range(1, 2)]
+    t_val_we_skill_age_range_2_3=[float(x['awetv']) for x in t_val_we_skills_age_range if x['we_skill_age'] in range(2, 3)]
+    t_val_we_skill_age_range_3_4=[float(x['awetv']) for x in t_val_we_skills_age_range if x['we_skill_age'] in range(3, 4)]
+    t_val_we_skill_age_range_4_5=[float(x['awetv']) for x in t_val_we_skills_age_range if x['we_skill_age'] in range(4, 5)]
+    t_val_we_skill_age_range_5_6=[float(x['awetv']) for x in t_val_we_skills_age_range if x['we_skill_age'] in range(5, 6)]
+    t_val_we_skill_age_range_6_7=[float(x['awetv']) for x in t_val_we_skills_age_range if x['we_skill_age'] in range(6, 7)]
+    t_val_we_skill_age_range_7_8=[float(x['awetv']) for x in t_val_we_skills_age_range if x['we_skill_age'] in range(7, 8)]
+    t_val_we_skill_age_range_8_9=[float(x['awetv']) for x in t_val_we_skills_age_range if x['we_skill_age'] in range(8, 9)]
+    t_val_we_skill_age_range_9_10=[float(x['awetv']) for x in t_val_we_skills_age_range if x['we_skill_age'] in range(9, 10)]
+
+    total_t_val_we_skill_age=[float(x['awetv']) for x in t_val_we_skills_age_range if x['we_skill_age'] in range(0, 100)]
+    total_val_sum_t_we = sum(total_t_val_we_skill_age)
+
+    sum_t_val_we_range_0_1 = sum(t_val_we_skill_age_range_0_1)
+    sum_t_val_we_range_1_2 = sum(t_val_we_skill_age_range_1_2)
+    sum_t_val_we_range_2_3 = sum(t_val_we_skill_age_range_2_3)
+    sum_t_val_we_range_3_4 = sum(t_val_we_skill_age_range_3_4)
+    sum_t_val_we_range_4_5 = sum(t_val_we_skill_age_range_4_5)
+    sum_t_val_we_range_5_6 = sum(t_val_we_skill_age_range_5_6)
+    sum_t_val_we_range_6_7 = sum(t_val_we_skill_age_range_6_7)
+    sum_t_val_we_range_7_8 = sum(t_val_we_skill_age_range_7_8)
+    sum_t_val_we_range_8_9 = sum(t_val_we_skill_age_range_8_9)
+    sum_t_val_we_range_9_10 = sum(t_val_we_skill_age_range_9_10)
+
+    t_val_we_skills_used_year_range_data.append(sum_t_val_we_range_9_10)
+    t_val_we_skills_used_year_range_data.append(sum_t_val_we_range_8_9)
+    t_val_we_skills_used_year_range_data.append(sum_t_val_we_range_7_8)
+    t_val_we_skills_used_year_range_data.append(sum_t_val_we_range_6_7)
+    t_val_we_skills_used_year_range_data.append(sum_t_val_we_range_5_6)
+    t_val_we_skills_used_year_range_data.append(sum_t_val_we_range_4_5)
+    t_val_we_skills_used_year_range_data.append(sum_t_val_we_range_3_4)
+    t_val_we_skills_used_year_range_data.append(sum_t_val_we_range_2_3)
+    t_val_we_skills_used_year_range_data.append(sum_t_val_we_range_1_2)
+    t_val_we_skills_used_year_range_data.append(sum_t_val_we_range_0_1)
+
+    skills_used_year_range_labels = [10, 9, 8, 7, 6, 5, 4, 3, 'last year', 'This year']
+
+    template = 'project/project_associated_skills_stats_overview.html'
+    context = {
+            'prj': prj,
+            'skl': skl,
+            'skill': skill,
+            'skills_list_qs_count': skills_list_qs_count,
+            'skill_list_labels_count': skill_list_labels_count,
+            'skill_list_labels': skill_list_labels,
+            'skill_percentage_data': skill_percentage_data,
+            'dept_skills_link': dept_skills_link,
+            'skills_used_year_range_labels': skills_used_year_range_labels,
+            'total_val_sum_t_we': total_val_sum_t_we,
+            'total_val_sum_we': total_val_sum_we,
+            't_val_we_skills_used_year_range_data': t_val_we_skills_used_year_range_data,
+            'val_we_skills_used_year_range_data': val_we_skills_used_year_range_data,
+    }
+    return render(request, template, context)
 
 
 @login_required()
@@ -602,7 +943,7 @@ def ProjectEditView(request, prj):
         if form.is_valid():
             new = form.save(commit=False)
             new.save()
-            return redirect(reverse('Project:ProjectDetail', kwargs={'prj':prj}))
+        return redirect(reverse('Project:ProjectDetail', kwargs={'prj':prj}))
 
     else:
         template = 'project/project_add.html'
@@ -618,7 +959,7 @@ def ProjectAddView(request):
         if form.is_valid():
             new = form.save(commit=False)
             new.save()
-            return redirect(reverse('Project:ProjectHome'))
+            return redirect(reverse('Project:ProjectList'))
     else:
         form = ProjectAddForm()
 
@@ -654,7 +995,7 @@ def ProjectSearch(request):
                                     'country',
                                     'region__region',
                                     'city__city'),
-            ).filter(search=query).order_by('company__ename')
+            ).filter(search__icontains=query).order_by('company__ename')
 
     template_name= 'project/project_search.html'
     context = {

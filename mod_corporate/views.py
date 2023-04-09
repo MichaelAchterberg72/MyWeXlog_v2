@@ -1,50 +1,32 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.urls import reverse
-from django.http import JsonResponse
-from django.contrib.auth.decorators import login_required
-from django.utils import timezone, dateformat
-from django.db.models import Count, Sum, F, Q, Avg
+import json
+import math
+from datetime import datetime
+from statistics import mean
+
 from dateutil.relativedelta import relativedelta
+from django.contrib.auth.decorators import login_required
+from django.contrib.postgres.search import SearchVector, TrigramSimilarity
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.db.models import Avg, Count, F, Q, Sum
+from django.db.models.functions import Greatest
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
+from django.utils import dateformat, timezone
 from django.utils.http import is_safe_url
 
-import math
-import json
-
-from datetime import datetime
-from django.utils import timezone
-from statistics import mean
-from users.models import CustomUser
-
+from AppControl.models import CorporateHR
 from core.decorators import corp_permission, subscription
-from django.contrib.postgres.search import SearchVector, TrigramSimilarity
-from django.db.models.functions import Greatest
-
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
-from .models import (
-    CorporateStaff, OrgStructure
-    )
-from .forms import (
-    OrgStructureForm, AddStaffForm, StaffSearchForm, AdminTypeForm, AddNewStaffForm
-)
-
-from AppControl.models import (
-    CorporateHR
-)
-
-from Profile.models import (
-    BriefCareerHistory,
-)
-
-from marketplace.models import WorkLocation
-from Profile.models import Profile
-from talenttrack.models import WorkExperience
 from db_flatten.models import SkillTag
+from marketplace.models import WorkLocation
+from Profile.models import BriefCareerHistory, Profile
+from talenttrack.models import WorkExperience
+from users.models import CustomUser
+from WeXlog.app_config import locked_age, skill_pass_score
 
-
-from WeXlog.app_config import (
-    skill_pass_score, locked_age,
-)
+from .forms import (AddNewStaffForm, AddStaffForm, AdminTypeForm,
+                    OrgStructureForm, StaffSearchForm)
+from .models import CorporateStaff, OrgStructure
 
 
 @login_required()

@@ -1,43 +1,39 @@
-from django.db import models
-from django.contrib.auth.models import User
-from django.conf import settings
 import datetime
-from time import time
+from decimal import Decimal, getcontext
+from io import BytesIO, StringIO
 from random import random
-from django.urls import reverse
-from django.db.models.signals import post_save, pre_save
-from decimal import getcontext, Decimal
-from django.core.validators import FileExtensionValidator
+from time import time
 
-from django_countries.fields import CountryField
-from phonenumber_field.modelfields import PhoneNumberField
 from dateutil.relativedelta import relativedelta
+from django.conf import settings
+from django.contrib.auth.models import User
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.core.validators import FileExtensionValidator
+from django.db import models
+from django.db.models.signals import post_save, pre_save
+from django.urls import reverse
 from django.utils import timezone
-
-from .utils import create_code7, create_code9
-from WeXlog.storage_backends import PrivateMediaStorage
-
+from django_countries.fields import CountryField
+from pdf2image import convert_from_bytes, convert_from_path
+from pdf2image.exceptions import (PDFInfoNotInstalledError, PDFPageCountError,
+                                  PDFSyntaxError)
+from phonenumber_field.modelfields import PhoneNumberField
+from PIL import Image
+from pinax.referrals.models import Referral
 from tinymce.models import HTMLField
 
-from pdf2image import convert_from_path, convert_from_bytes
-from pdf2image.exceptions import (
-    PDFInfoNotInstalledError,
-    PDFPageCountError,
-    PDFSyntaxError )
-from PIL import Image
-from io import StringIO, BytesIO
-from django.core.files.uploadedfile import InMemoryUploadedFile
-
-from marketplace.models import WorkLocation, SkillLevel
-from users.models import CustomUser
-from locations.models import Region, City, Suburb, Currency
-from db_flatten.models import PhoneNumberType, LanguageList
-from enterprises.models import Enterprise, Branch
-from pinax.referrals.models import Referral
-from talenttrack.models import(
-        Designation, Lecturer, ClassMates, WorkColleague, Superior, WorkCollaborator, WorkClient
-        )
+from db_flatten.models import LanguageList, PhoneNumberType
+from enterprises.models import Branch, Enterprise
+from db_flatten.models import SkillTag
 from invitations.models import Invitation
+from locations.models import City, Currency, Region, Suburb
+from marketplace.models import SkillLevel, WorkLocation
+from talenttrack.models import (ClassMates, Designation, Lecturer, Superior,
+                                WorkClient, WorkCollaborator, WorkColleague)
+from users.models import CustomUser
+from WeXlog.storage_backends import PrivateMediaStorage
+
+from .utils import create_code7, create_code9
 
 
 class BriefCareerHistory(models.Model):
@@ -46,6 +42,8 @@ class BriefCareerHistory(models.Model):
     designation = models.ForeignKey(Designation, on_delete=models.PROTECT, null=True)
     companybranch = models.ForeignKey(Branch, on_delete=models.PROTECT, verbose_name="Home_Base")
     description = HTMLField(blank=True, null=True)
+    skills = models.ManyToManyField(SkillTag, related_name='skills_utilised')
+    reason_for_leaving = models.TextField('Reason for leaving', blank=True, null=True)
     current = models.BooleanField(default=False)
     date_captured = models.DateField(auto_now_add=True)
     date_from = models.DateField()
@@ -166,12 +164,15 @@ class Profile(models.Model):
     def save(self, *args, **kwargs):
         if self.alias is None or self.alias == "":
             self.alias = create_code7(self)
+
+        fullname = f'{self.talent.first_name} {self.talent.last_name} - Profile incomplete'
+
         inject_fn = f'{self.f_name}'
         inject_ln = f'{self.l_name}'
         inject_al = f'{self.alias}'
         target = CustomUser.objects.filter(pk=self.talent.id)
         if self.f_name is None or self.f_name =="":
-            target.update(alias=inject_al, alphanum=inject_al, display_text=inject_al)
+            target.update(alias=inject_al, alphanum=inject_al, display_text=fullname)
         else:
             target.update(alias=inject_al, first_name=inject_fn, last_name=inject_ln)
 
@@ -187,25 +188,45 @@ class Profile(models.Model):
                 eml_i = eml_i.get(email=tlt)
                 rel = eml_i.relationship
                 if rel == 'LR':
-                    lct = Lecturer(education = eml_i.experience, lecturer=self.talent, topic=eml_i.experience.topic)
+                    lct = Lecturer(
+                                   education = eml_i.experience,
+                                   lecturer=self.talent,
+                                   topic=eml_i.experience.topic)
                     lct.save()
                 if rel == 'CM':
-                    cm = ClassMates(education = eml_i.experience, colleague=self.talent, topic=eml_i.experience.topic)
+                    cm = ClassMates(
+                                    education = eml_i.experience,
+                                    colleague=self.talent,
+                                    topic=eml_i.experience.topic)
                     cm.save()
                 if rel == 'WC':
-                    wc = WorkColleague(experience = eml_i.experience, colleague_name=self.talent)
+                    wc = WorkColleague(
+                                       experience = eml_i.experience,
+                                       colleague_name=self.talent)
                     wc.save()
                 if rel == 'PC':
-                    wc = WorkColleague(experience = eml_i.experience, colleague_name=self.talent)
+                    wc = WorkColleague(
+                                       experience = eml_i.experience,
+                                       colleague_name=self.talent)
                     wc.save()
                 if rel == 'WS':
-                    ws = Superior(experience = eml_i.experience, superior_name=self.talent)
+                    ws = Superior(
+                                  experience = eml_i.experience,
+                                  superior_name=self.talent)
                     ws.save()
                 if rel == 'WL':
-                    wl = WorkCollaborator(experience = eml_i.experience, collaborator_name=self.talent, company=eml_i.worked_for.company, companybranch=eml_i.worked_for)
+                    wl = WorkCollaborator(
+                                          experience = eml_i.experience,
+                                          collaborator_name=self.talent,
+                                          company=eml_i.companybranch.company,
+                                          companybranch=eml_i.companybranch)
                     wl.save()
                 if rel == 'WT':
-                    wt = WorkClient(experience = eml_i.experience, client_name=self.talent, company=eml_i.worked_for.company, companybranch=eml_i.worked_for)
+                    wt = WorkClient(
+                                    experience = eml_i.experience,
+                                    client_name=self.talent,
+                                    company=eml_i.companybranch.company,
+                                    companybranch=eml_i.companybranch)
                     wt.save()
             else:
                 pass
@@ -215,7 +236,6 @@ class Profile(models.Model):
     def create_profile(sender, **kwargs):
         if kwargs['created']:
             create_profile = Profile.objects.create(talent=kwargs['instance'], accepted_terms=True, age_accept=True)
-
 
     post_save.connect(create_profile, sender=CustomUser)
 

@@ -25,6 +25,12 @@
     <form method="post" id="BranchForm">
       <input type="hidden" name="next" value="{{ request.GET.next }}">
       {% csrf_token %}
+      <div style="background-color:red; color:white;">
+        <p>
+
+          {{ form.non_field_errors }}
+        </p>
+      </div>
       <div class="form-row">
         <div class="form-group col-md-6 mb-0">
           {{ form.name|as_crispy_field }}
@@ -110,52 +116,6 @@
     </form>
   </div>
 </div>
-<script type="text/javascript">
-  document.getElementById("id_region").disabled = true;
-
-  var dis1 = document.getElementById("id_country");
-  dis1.onchange = function () {
-     if (this.value != "" || this.value.length > 0) {
-        document.getElementById("id_region").disabled = false;
-     }
-  };
-
-  document.getElementById("id_city").disabled = true;
-
-  var dis2 = document.getElementById("id_region");
-  dis2.onchange = function () {
-     if (this.value != "" || this.value.length > 0) {
-        document.getElementById("id_city").disabled = false;
-     }
-  };
-
-  document.getElementById("id_city").disabled = true;
-
-  var dis2 = document.getElementById("id_region");
-  dis2.onchange = function () {
-     if (this.value != "" || this.value.length > 0) {
-        document.getElementById("id_city").disabled = false;
-     }
-  };
-
-  document.getElementById("id_suburb").disabled = true;
-
-  var dis3 = document.getElementById("id_city");
-  dis3.onchange = function () {
-     if (this.value != "" || this.value.length > 0) {
-        document.getElementById("id_suburb").disabled = false;
-     }
-  };
-
-  document.getElementById("id_suburb").disabled = true;
-
-  var dis3 = document.getElementById("id_city");
-  dis3.onchange = function () {
-     if (this.value != "" || this.value.length > 0) {
-        document.getElementById("id_suburb").disabled = false;
-     }
-  };
-</script>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 {% endblock content %}
 

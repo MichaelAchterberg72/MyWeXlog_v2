@@ -1,22 +1,12 @@
-from django.db import models
 from django.conf import settings
-
+from django.db import models
 from django.utils import timezone
 
+from AppControl.models import CorporateHR
+from marketplace.models import WorkLocation
 from Profile.utils import create_code9
+from talenttrack.models import Designation
 
-
-from AppControl.models import (
-    CorporateHR,
-)
-
-from marketplace.models import (
-    WorkLocation,
-)
-
-from talenttrack.models import(
-        Designation
-        )
 
 class OrgStructure(models.Model):
     corporate = models.ForeignKey(CorporateHR, on_delete=models.CASCADE)

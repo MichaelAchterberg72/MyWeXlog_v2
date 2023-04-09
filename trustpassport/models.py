@@ -1,10 +1,8 @@
-from django.db import models
 from django.conf import settings
+from django.db import models
 from django.utils import timezone
 
-
 from enterprises.models import Branch
-
 
 SCORE = (
     (1,'One'),

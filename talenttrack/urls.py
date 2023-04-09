@@ -1,8 +1,6 @@
 from django.urls import path
 
-
-from .import views
-
+from . import views
 
 app_name = 'Talent'
 
@@ -27,6 +25,7 @@ urlpatterns = [
     path('classmate/<slug:tex>/add/', views.ClassMateAddView, name='ClassMatesAdd'),
     path('classmate/detail/<slug:cmt>/', views.ClassMatesResponse, name='ClassMatesResponse'),
     path('experience/capture/', views.WorkExperienceCaptureView, name="ExperienceCapture"),
+    path('experience/<slug:tex>/recapture/', views.CopyClaimView, name="ExperienceReCapture"),
     path('experience/edit/<slug:we_slug>/', views.WorkExperienceEditView, name="ExperienceEdit"),
     path('popup/designation/add/', views.DesignationAddPopup, name="DesignationAddPop"),
     path('popup/ajax/get_designation_id/', views.get_designation_id, name="AJAX_GetDesignationID"),
@@ -148,7 +147,9 @@ urlpatterns = [
     path('skill-stats-overview/<int:skl>/', views.skill_stats, name='SkillsStats'),
     path('profile-skill-stats-overview/<int:skl>/', views.profile_skill_stats, name='ProfileSkillsStats'),
     path('site-skill-stats-overview/<int:skl>/', views.site_skill_stats, name='SiteSkillsStats'),
+    path('project-skill-stats-overview/<int:skl>/<slug:prj>/', views.site_skill_stats, name='ProjectSiteSkillsStats'),
     path('site-demand_skill-stats-overview/<int:skl>/', views.site_demand_skill_stats, name='SiteDemandSkillsStats'),
+    path('project-site-demand_skill-stats-overview/<int:skl>/<slug:prj>/', views.site_demand_skill_stats, name='ProjectSiteDemandSkillsStats'),
     path('skill-validation-list/<int:skl>/', views.skill_validate_list, name='SkillValidationList'),
     path('skill-education-list/<int:skl>/', views.skill_training_list_view, name='SkillEducationList'),
     path('skill-work-experience-list/<int:skl>/', views.skill_work_experience_list_view, name='SkillWorkExperienceList'),

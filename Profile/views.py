@@ -1,75 +1,77 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic import TemplateView
-from django.utils.http import is_safe_url
-from django.utils import timezone
-from django.conf import settings
-from django.http import HttpResponseRedirect, HttpResponse
-from django.urls import reverse
-from django.core.exceptions import PermissionDenied
-import json
-from django.contrib.auth.models import User
-from django.db.models import Count, Sum, F, Q, Avg
-
-from WeXlog import app_config
-
-#email
-from django.core.mail import send_mail, EmailMultiAlternatives
-from django.template.loader import get_template, render_to_string
-from django.utils.html import strip_tags
-
 import datetime as dt
-from datetime import datetime, timedelta
-from django.utils import timezone, dateformat
-import pytz
-
-from csp.decorators import csp_exempt
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
-from core.decorators import subscription
-
-import sendgrid
+import json
 import os
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import (Mail, Subject, To, ReplyTo, SendAt, Content, From, CustomArg, Header)
+from datetime import datetime, timedelta
 
-from treebeard.mp_tree import MP_Node
+import pytz
+import sendgrid
+from csp.decorators import csp_exempt
+from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.core.exceptions import PermissionDenied
+#email
+from django.core.mail import EmailMultiAlternatives, send_mail
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.db.models import Avg, Count, F, Q, Sum
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect, render
+from django.template.loader import get_template, render_to_string
+from django.urls import reverse
+from django.utils import dateformat, timezone
+from django.utils.html import strip_tags
+from django.utils.http import is_safe_url
+from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import TemplateView
 from pinax.referrals.models import Referral
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import (Content, CustomArg, From, Header, Mail,
+                                   ReplyTo, SendAt, Subject, To)
+from treebeard.mp_tree import MP_Node
 
-from WeXlog.app_config import (
-    client_score, colleague_score, collaborator_score, superior_score, lecturer_score, classmate_score, pre_colleague_score
-)
-from .models import (
-        Profile, Email, PhysicalAddress, PostalAddress, PhoneNumber, SiteName, OnlineRegistrations, FileUpload, IdentificationDetail, IdType, PassportDetail, LanguageTrack, BriefCareerHistory, WillingToRelocate, ProfileImages,
-        )
-
-from .forms import (
-    ProfileForm, PublicProfileNameForm, PublicProfileIntroForm, EmailForm, EmailStatusForm, PhysicalAddressForm, PostalAddressForm, PhoneNumberForm, OnlineProfileForm, ProfileTypeForm, FileUploadForm, IdTypeForm, LanguageTrackForm, LanguageListForm, PassportDetailForm, IdentificationDetailForm, BriefCareerHistoryForm, ResignedForm, UserUpdateForm, CustomUserUpdateForm, ExpandedIntroWalkthroughForm, ProfileBackgroundForm, ProfileMotivationForm, WillingToRelocateForm, UploadProfilePicForm, UploadProfileBackgroundPicForm,
-)
-
-from talenttrack.models import (
-        Lecturer, ClassMates, WorkColleague, Superior, WorkCollaborator,  WorkClient, WorkExperience, Achievements, Awards, Publications, LicenseCertification,
-)
-
-from talenttrack.forms import (
-        LecturerCommentForm, ClassMatesCommentForm, WorkColleagueConfirmForm, WorkClientConfirmForm, WorkCollaboratorConfirmForm, SuperiorConfirmForm
-)
-
-from enterprises.models import Branch, Enterprise
-from locations.models import Region
-from users.models import CustomUser, ExpandedView
-
-
-from nestedsettree.models import NtWk
-
-from marketplace.models import (
-            BidInterviewList, WorkIssuedTo, VacancyRate, TalentRate, TalentRequired, WorkBid, BidShortList
-)
-from marketplace.forms import(
-        AssignmentDeclineReasonsForm, AssignmentClarifyForm, VacancyRateForm, TalentRateForm
-        )
 from analytics.models import ObjectViewed
+from core.decorators import subscription
+from enterprises.models import Branch, Enterprise
+from db_flatten.models import SkillTag
+from locations.models import Region
+from marketplace.forms import (AssignmentClarifyForm,
+                               AssignmentDeclineReasonsForm, TalentRateForm,
+                               VacancyRateForm)
+from marketplace.models import (BidInterviewList, BidShortList, TalentRate,
+                                TalentRequired, VacancyRate, WorkBid,
+                                WorkIssuedTo)
+from nestedsettree.models import NtWk
+from talenttrack.forms import (ClassMatesCommentForm, LecturerCommentForm,
+                               SuperiorConfirmForm, WorkClientConfirmForm,
+                               WorkCollaboratorConfirmForm,
+                               WorkColleagueConfirmForm)
+from talenttrack.models import (Achievements, Awards, ClassMates, Lecturer,
+                                LicenseCertification, Publications, Superior,
+                                WorkClient, WorkCollaborator, WorkColleague,
+                                WorkExperience)
+from users.models import CustomUser, ExpandedView
+from WeXlog import app_config
+from WeXlog.app_config import (classmate_score, client_score,
+                               collaborator_score, colleague_score,
+                               lecturer_score, pre_colleague_score,
+                               superior_score)
 
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from .forms import (BriefCareerHistoryForm, CustomUserUpdateForm, EmailForm,
+                    EmailStatusForm, ExpandedIntroWalkthroughForm,
+                    FileUploadForm, IdentificationDetailForm, IdTypeForm,
+                    LanguageListForm, LanguageTrackForm, OnlineProfileForm,
+                    PassportDetailForm, PhoneNumberForm, PhysicalAddressForm,
+                    PostalAddressForm, ProfileBackgroundForm, ProfileForm,
+                    ProfileMotivationForm, ProfileTypeForm,
+                    PublicProfileIntroForm, PublicProfileNameForm,
+                    ResignedForm, UploadProfileBackgroundPicForm,
+                    UploadProfilePicForm, UserUpdateForm,
+                    WillingToRelocateForm)
+from .models import (BriefCareerHistory, Email, FileUpload,
+                     IdentificationDetail, IdType, LanguageTrack,
+                     OnlineRegistrations, PassportDetail, PhoneNumber,
+                     PhysicalAddress, PostalAddress, Profile, ProfileImages,
+                     SiteName, WillingToRelocate)
 
 
 def willing_to_relocate(request):
@@ -290,6 +292,21 @@ def IntroAssigningView(request):
     context = {}
     return render(request, template, context)
 
+
+@login_required()
+def IntroPublicProfileView(request):
+
+    template = 'Profile/intro_public_profile.html'
+    context = {}
+    return render(request, template, context)
+
+
+@login_required()
+def IntroManagingAccountView(request):
+
+    template = 'Profile/intro_managing_account.html'
+    context = {}
+    return render(request, template, context)
 
 @login_required()
 def IntroBEPView(request):
@@ -1156,7 +1173,7 @@ def int_decline(request, int_id):
 def InterviewTltRemove(request, tlt):
     interview = BidInterviewList.objects.filter(talent__alias=tlt).update(emp_intcomplete=True, outcome='D')
 
-    return redirect(reverse('Profile:ProfileHome')+ '#Interview')
+    return redirect(reverse('Profile:ProfileHome')+'#Interview')
 
 
 @login_required()
@@ -1171,27 +1188,32 @@ def InterviewTltComplete(request, int_id):
 @csp_exempt
 def BriefCareerHistoryView(request):
     talent=request.user
+
+    skills_list = SkillTag.objects.filter(skills_utilised__talent=talent).distinct('skill').order_by('skill')
+
     form = BriefCareerHistoryForm(request.POST or None)
+
     history = BriefCareerHistory.objects.filter(talent=talent)
     if request.method == 'POST':
         if form.is_valid():
             new = form.save(commit=False)
             new.talent = request.user
             new.save()
+            form.save_m2m()
             if 'another' in request.POST:
                 response = redirect('Profile:History')
                 return response
             elif 'done' in request.POST:
-                response = redirect(reverse('Profile:ProfileView'))
+                response = redirect(reverse('Profile:ProfileView')+'#History')
                 return response
         else:
             template = 'Profile/brief_career_history.html'
-            context = {'form': form, 'history': history}
+            context = {'form': form, 'history': history, 'skills_list': skills_list}
             response = render(request, template, context)
             return response
     else:
         template = 'Profile/brief_career_history.html'
-        context = {'form': form, 'history': history}
+        context = {'form': form, 'history': history, 'skills_list': skills_list}
         response = render(request, template, context)
         return response
 
@@ -1202,6 +1224,8 @@ def BriefHistoryEditView(request, bch):
     talent=request.user
     instance = BriefCareerHistory.objects.get(slug=bch)
 
+    skills_list = SkillTag.objects.filter(skills_utilised__talent=talent).distinct('skill').order_by('skill')
+
     form = BriefCareerHistoryForm(request.POST or None, instance=instance)
 
     if request.method == 'POST':
@@ -1209,13 +1233,13 @@ def BriefHistoryEditView(request, bch):
             new = form.save(commit=False)
             new.talent = request.user
             new.save()
-
+            form.save_m2m()
             response = redirect(reverse('Profile:ProfileView')+"#History")
             return response
 
     else:
         template = 'Profile/brief_career_history_edit.html'
-        context = {'form': form, 'bch': bch, 'instance': instance}
+        context = {'form': form, 'bch': bch, 'skills_list': skills_list, 'instance': instance}
         response = render(request, template, context)
         return response
 
@@ -1241,7 +1265,7 @@ def BriefHistoryAddDeleteView(request, bch):
     if instance.talent == request.user:
         if request.method =='POST':
             instance.delete()
-            return redirect(reverse('Profile:History'))
+            return redirect(reverse('Profile:History')+'#History')
     else:
         raise PermissionDenied
 
@@ -2223,8 +2247,14 @@ def ProfileView(request):
     tlt_id = request.user.id
     if detail.talent == request.user:
         info = Profile.objects.filter(alias=tlt)
-        pics = ProfileImages.objects.filter(talent__alias=tlt)
-#        print(pics.profile_pic.name)
+        try:
+            profile_pic = ProfileImages.objects.get(talent__alias=tlt).profile_pic
+        except:
+            profile_pic=None
+        try:
+            background_pic = ProfileImages.objects.get(talent__alias=tlt).profile_background
+        except:
+            background_pic=None
         email = Email.objects.filter(talent__alias=tlt)
         physical = PhysicalAddress.objects.get(talent__alias=tlt)
         postal = PostalAddress.objects.get(talent__alias=tlt)
@@ -2245,7 +2275,7 @@ def ProfileView(request):
         template = 'Profile/profile_view.html'
         context = {
             'info':info, 'email':email, 'physical':physical, 'postal': postal, 'pnumbers': pnumbers, 'online': online, 'id': id, 'passport': passport, 'speak': speak, 'history': history, 'user_info': user_info, 'tlt': tlt, 'relocate': relocate,
-            'upload': upload, 'lcm_qs': lcm_qs,'achievement': achievement, 'award': award, 'publication': publication, 'pics': pics,
+            'upload': upload, 'lcm_qs': lcm_qs,'achievement': achievement, 'award': award, 'publication': publication, 'profile_pic': profile_pic,  'background_pic': background_pic,
             }
 
         return render(request, template, context)
@@ -2344,13 +2374,12 @@ def PublicProfileIntroEditView(request, tlt):
 
 @login_required()
 def ProfilePicEditView(request, tlt):
-    talent = request.user.id
-    instance, _ = ProfileImages.objects.get_or_create(talent__id=talent)
+    instance, _ = ProfileImages.objects.get_or_create(talent__alias=tlt)
 #    instance = get_object_or_404(ProfileImages, talent__alias=tlt)
 
     if request.method =='POST':
         next_url=request.POST.get('next','/')
-        form = UploadProfilePicForm(request.POST, request.FILES, instance=instance)
+        form = UploadProfilePicForm(data=request.POST, files=request.FILES, instance=instance)
         if form.is_valid():
             new = form.save(commit=False)
             new.talent = request.user
@@ -2368,10 +2397,9 @@ def ProfilePicEditView(request, tlt):
 
 @login_required()
 def ProfileBackgroundPicEditView(request, tlt):
-    talent = request.user.id
     instance, _ = ProfileImages.objects.get_or_create(talent__alias=tlt)
 
-    form = UploadProfileBackgroundPicForm(request.POST, request.FILES, instance=instance)
+    form = UploadProfileBackgroundPicForm(data=request.POST, files=request.FILES, instance=instance)
 
     if request.method =='POST':
         next_url=request.POST.get('next','/')
@@ -2386,7 +2414,7 @@ def ProfileBackgroundPicEditView(request, tlt):
             return HttpResponseRedirect(next_url)
     else:
         template = 'Profile/profile_background_pic_edit.html'
-        context = {'form': form,}
+        context = {'form': form}
         return render(request, template, context)
 
 
@@ -2396,7 +2424,7 @@ def ProfileBackgroundEditView(request, tlt):
     detail = Profile.objects.get(alias=tlt)
 
     if detail.talent == request.user:
-        form = ProfileBackgroundForm(request.POST or None, instance=detail)
+        form = ProfileBackgroundForm(request.POST or None, request.FILES or None, instance=detail)
 
         if request.method =='POST':
             next_url=request.POST.get('next','/')
@@ -2581,7 +2609,7 @@ def PhoneNumberDelete(request, pk):
 def OnlineProfileAdd(request, tlt):
     detail = Profile.objects.get(alias=tlt)
     if detail.talent == request.user:
-        form =OnlineProfileForm(request.POST or None)
+        form = OnlineProfileForm(request.POST or None)
         if request.method =='POST':
             if form.is_valid():
                 new=form.save(commit=False)

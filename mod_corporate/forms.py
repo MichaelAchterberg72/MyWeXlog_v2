@@ -1,13 +1,11 @@
 from django import forms
 from django.contrib.auth.models import User
-from users.models import CustomUser
-
-from .models import (
-    CorporateStaff, OrgStructure, CorporateHR
-)
 
 #>>>Select2
 from talenttrack.forms import DesignationSelect2Widget
+from users.models import CustomUser
+
+from .models import CorporateHR, CorporateStaff, OrgStructure
 
 #Select2<<<
 

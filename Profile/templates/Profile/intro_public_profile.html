@@ -1,0 +1,57 @@
+{% extends 'base_home.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Help{% endblock title %}
+
+{% block Style %}
+
+{% endblock Style %}
+{% block content %}
+<div class="card card-shadow">
+  <div class="card-body">
+    <div class="btn-toolbar float-right">
+      <a href="{% url 'Profile:ProfileHome' %}?next={{ request.path|urlencode }}"  class="btn btn-primary">Back</a>
+    </div>
+    <h3 class="card-title">Public Profile</h3>
+    <br>
+    <div class="col-sm-7 mx-auto">
+      <div class="embed-responsive embed-responsive-16by9">
+      <iframe class="embed-responsive-item align-middle center" src="https://www.youtube.com/embed/-SaCcMgE3zc?rel=0" allowfullscreen></iframe>
+      </div>
+    </div>
+    <br>
+    <div>
+      <a href="{% url 'Profile:IntroAssign' %}?next={{ request.path|urlencode }}"  class="btn btn-primary float-left" style="width:7rem">Previous</a>
+      <a href="{% url 'Profile:IntroManagingAccount' %}?next={{ request.path|urlencode }}"  class="btn btn-primary float-right" style="width:7rem">Next</a>
+    </div>
+    <br>
+    <br>
+    <br>
+    {% include 'Profile/intro_menu.html' %}
+    <br>
+    <br>
+    <h3 class="card-title">Your Public Profile</h3>
+    <p>The public profile has been designed to make all the information that you have captured into MyWeXlog available.  It provides a custom link that you can add to your CV, your social media and other marketing materials, it provides a complete repository of your accolades for your career history to allow you to individually select and publish only those work experience and references that you wish to.</p>
+
+    <p>The public profile may be accessed by clicking on the map marker link or the first icon on your dashboard quick access links selection. To modify your public profile url you need to click on the edit button in the public profile section of the edit profile page. By default you are allocated a random 5 character code followed by your name and surname. To allow your profile to be viewed as a link on the profiles of those whose experience you validated you need to check the Permit viewing of profile as reference checkbox in the same dialog box.</p>
+
+    <p>Underneath this section in the edit profile dialog is the section for your public profile introduction which is limited to 460 characters. You can have a look at your public profile to ascertain what text suits you best.</p>
+
+    <p>All the information displayed on your public profile such as your contact information, uploaded files or marketing brochures, current position, languages, licences, certificates and memberships, general information write ups such as your general motivation and background, education and training, achievements, awards, publications and books read along with the uploaded documentation to support your claim can be uploaded for permanent access and retrieval.</p>
+
+    <p>The section publishing your MyWeXlog project history provides the details and employer comments for all the projects that you have successfully been appointed to within MyWeXlog application.</p>
+
+    <p>The section detailing your skills as tracked by MyWeXlog displayed those skills as captured on your work experience log in a chart format showing the individual skills and both the working experience and training experience houses for those skills. By clicking on the skill link button the viewer will be able to view a skills chart of the associated skills to the skill they are detailing along with the training and work experience in that skill over the last ten years.</p>
+
+    <p>The resume or employment history section provides a complete history of your work experience combining information from both your brief career history and captured work experience. The information displayed from your brief career history in the edit profile section will display the details of the company you worked for with the description of your responsibilities. The projects and validation comments are sourced from your work experience logs, the project personal responsibilities description from the project menu, the balance of the information from the self selected for publication validation comments and co-worker or client reference comments. These comments can be added or removed from publication at your discretion.</p>
+
+    <p>All in all the public profile provides a complete history or resume you can actively market as a testament to your skills and achievements.  This is also the information that is utilised in the interview process after having been anonymised to allow the employer to select the most competent person for the position.</p>
+
+    <p>At MyWeXlog we love your feedback - it is the best way to create a site that works for you! If you have any thoughts or comments on what we showed you here, please let us know in the feedback section which can be found at the top of every page.</p>
+
+
+</div>
+</div>
+{% endblock content %}

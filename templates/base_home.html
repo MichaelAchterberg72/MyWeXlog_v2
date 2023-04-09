@@ -47,6 +47,9 @@
       <title>{% block title %}MyWeXlog{% endblock title %}</title>
 
       </style>
+      {% block head %}
+      {% endblock head %}
+
   {% block Style %}
 
   {% endblock Style %}
@@ -112,7 +115,7 @@
         </li>
 
         <li class="nav-item">
-          <a href="{% url 'Project:ProjectHome' %}" class="nav-link">
+          <a href="{% url 'Project:ProjectDashboard' %}" class="nav-link">
             <div class="fa-primary">
               <i style="font-size: 27px" class="fa fa-black-tie"></i>
             </div>
@@ -125,7 +128,7 @@
             <div class="fa-primary">
               <i style="font-size: 27px" class="fa fa-certificate"></i>
             </div>
-            <span class="link-text">Skill Tags</span>
+            <span class="link-text">Skills</span>
           </a>
         </li>
 
@@ -208,7 +211,13 @@
         {% endif %}
       </ul>
     </nav>
-
+    {% if messages %}
+      <ul class="messages">
+          {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+          {% endfor %}
+      </ul>
+    {% endif %}
   <main>
     <div class="container pt-3">
       <p>&nbsp</p><br>
@@ -231,6 +240,9 @@
     <div class="" id="navbarSupportedContent">
       <ul class="navbar-nav-top mr-auto">
         <li class="nav-item active">
+          <a class="nav-link nav-link-top" href="{% url 'Profile:ProfileView' %}?next={{ request.path|urlencode }}"><i class="fa fa-user" aria-hidden="true" style="font-size:30px;" data-toggle="tooltip" title="Complete/Edit your profile!"></i></a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link nav-link-top" href="{% url 'Feedback:FeedBack' %}?next={{ request.path|urlencode }}"><i class="fa fa-bullhorn" aria-hidden="true" style="font-size:30px;" data-toggle="tooltip" title="We love to hear your feedback!"></i></a>
         </li>
         <li class="nav-item">
@@ -377,7 +389,6 @@
     <!-- Local JS -->
       {% sri_static "js/tooltip.js" %}
       {% sri_static "js/wexlog-js.js" %}
-      {% sri_static "js/copy_text.js" %}
 
     {% block Script %}
     {% endblock Script %}

@@ -1,10 +1,9 @@
-from django.shortcuts import render
-from django.utils.safestring import mark_safe
 import json
 
-
-from django.contrib.auth.decorators import login_required
 from csp.decorators import csp_exempt
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+from django.utils.safestring import mark_safe
 
 
 @login_required()

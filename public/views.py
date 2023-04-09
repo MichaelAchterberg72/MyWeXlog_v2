@@ -1,27 +1,22 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.shortcuts import render
-from django.views.generic import (
-        TemplateView
-    )
-
 import json
 
-from django.http import HttpResponse
-from django.http import JsonResponse
-
 from csp.decorators import csp_exempt
-
 from django.contrib.auth import get_user_model
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.views.generic import TemplateView
+
 User = get_user_model()
 
+
+from django.urls import reverse
 
 from db_flatten.models import SkillTag
 from enterprises.models import Enterprise
 from marketplace.models import TalentRequired
 
-from django.urls import reverse
-
-from .forms import ContactUsForm, SuggestionsForm, DataProtectionForm, DataPrivacyForm
+from .forms import (ContactUsForm, DataPrivacyForm, DataProtectionForm,
+                    SuggestionsForm)
 
 # Create your views here.
 

@@ -12,6 +12,12 @@
   <form method="post" enctype="multipart/form-data">
     <input type="hidden" name="next" value="{{ request.GET.next }}">
     {% csrf_token %}
+    <div style="background-color:red; color:white;">
+      <p>
+
+        {{ form.non_field_errors }}
+      </p>
+    </div>
     {{ form.comments_tlt|as_crispy_field }}
     <div class="">
     <a href="{% url 'MarketPlace:TalentIntDetail' bil=instance.slug tlt=instance.talent.alias %}?next={{ request.path|urlencode }}" class="btn btn-danger">Cancel</a>

@@ -20,9 +20,21 @@
   <div class="card-body">
     <div class="card card-shadow text-center">
       <div class="card-body">
+        <a href="{% url 'Skills:SkillFilter' %}" class="btn btn-primary float-right">
+          Skills Filter
+        </a>
       <h4 class="">MyWeXlog Skills</h4>
-      <p>On this page you can see skills that have been logged on MyWeXlog as well as skills that are in demand from posted vacancies.</p>
-      <p>There are {{ count }} skills currently listed.</p>
+      <p>
+        On this page you can see skills that have been logged on MyWeXlog as well as skills that are in demand from posted vacancies.
+      </p>
+      <p>
+        There are {{ tally }} skills currently listed, totalling {{ total_hours.total_sum|intcomma }} confirmed hours.
+        <br>
+        <small>
+          (Claimed between {{ total_hours.min|date:"j F Y" }} and {{ total_hours.max|date:"j F Y" }})
+        </small>
+
+      </p>
       </div>
     </div>
     <br>
@@ -30,17 +42,38 @@
       <div class="col-sm-6">
         <div class="card card-shadow">
           <div class="card-body">
+            <div class="float-right">
+              {% if order == 'alphabetically' %}
+                <a href="{% url 'Flatten:SortTags' %}" data-toggle="tooltip" title="Sort  from Max to Min">
+                  <i class="fa fa-sort" aria-hidden="true" style="font-size:25px;color:black"></i>
+                </a>
+              {% else %}
+                <a href="{% url 'Flatten:ListTags' %}" data-toggle="tooltip" title="Sort alphabetically">
+                  <i class="fa fa-sort" aria-hidden="true" style="font-size:25px;color:black"></i>
+                </a>
+              {% endif %}
+            </div>
             <h5 class="card-title">Demanded Skills</h5>
-            <p>This is a count of the times a skill has been listed as being needed in a vacancy.</p>
+            <p>
+              <small>
+                This list is sorted {{ order }}.
+              </small>
+              <br>
+              <small>
+                This is a count of the times a skill has been listed as being needed in a vacancy.
+              </small>
+            </p>
             <div class="float-right">
               <input type="text" id="searchD" placeholder="Search..." data-toggle="tooltip" title="Search this list for a skill. Select the checkbox to the right to synchronise the demand list.">
               <input type="checkbox" id="linkD" class="format_chkbox" data-toggle="tooltip" title="Synchronise the lists">
             </div>
-            <br>
-              <h5 class="text-center"><strong>Skill ( Occurrence )</strong></h5>
+            <br><br>
+              <h5 class="text-left"><strong>Skill ( Occurrence ) & Date Range</strong></h5>
               <ul id="demand" class="list-group">
-                {% for dd in demand_set.items %}
-                  <li class="list-group-item"><strong>{{ dd.0 }}</strong>  ( {{ dd.1 }} )</li>
+                {% for item in demand %}
+                  {% if item.demand_count > 0 %}
+                    <li class="list-group-item"><strong>{{ item.skill }}</strong>  ( {{ item.demand_count }} )<br><small>{{ item.demand_min|date:"j M Y" }} thru {{ item.demand_max|date:"j M Y" }}</small> <span class="float-right">{% if request.user.subscription >= 2 %}<a href="{% url 'Skills:Skill_Detail' item.id %}" data-toggle="tooltip" title="Details"><i class="fa fa-map-o" aria-hidden="true" style="color:black;"></i></a></span>{% else %}<span data-toggle="tooltip" title="Details on Active subscription only"><i class="fa fa-map-o" aria-hidden="true" style="color:black;"></i>{% endif %}</span></li>
+                  {% endif %}
                 {% endfor %}
               </ul>
           </div>
@@ -49,17 +82,36 @@
       <div class="col-sm-6">
         <div class="card card-shadow">
           <div class="card-body">
+            <div class="float-right">
+              {% if order == 'alphabetically' %}
+                <a href="{% url 'Flatten:SortTags' %}" data-toggle="tooltip" title="Sort  from Max to Min">
+                  <i class="fa fa-sort" aria-hidden="true" style="font-size:25px;color:black"></i>
+                </a>
+              {% else %}
+                <a href="{% url 'Flatten:ListTags' %}" data-toggle="tooltip" title="Sort alphabetically">
+                  <i class="fa fa-sort" aria-hidden="true" style="font-size:25px;color:black"></i>
+                </a>
+              {% endif %}
+            </div>
             <h5 class="card-title">Listed Skills</h5>
-            <p>These are the skills that are currently listed in the MyWeXlog environment.</p>
+            <p>
+              <small>
+                This list is sorted {{ order }}.
+              </small>
+              <br>
+              <small>
+                These are the skills that are currently listed in the MyWeXlog environment.
+              </small>
+            </p>
             <div class="float-right">
               <input type="text" id="searchE" placeholder="Search..." data-toggle="tooltip" title="Search this list for a skill. Select the checkbox to the right to synchronise the demand list.">
               <input type="checkbox" id="linkE"  class="format_chkbox" data-toggle="tooltip" title="Synchronise the lists">
             </div>
-            <br>
-              <h5 class="text-center"><strong>Skill ( Hours )</strong></h5>
+            <br><br>
+              <h5 class="text-left"><strong>Skill ( Confirmed Hours ) & Date Range</strong></h5>
               <ul class="list-group" id="exists">
-                {% for ss in skill_set.items %}
-                  <li class="list-group-item"><strong>{{ ss.0 }}</strong>  ( {{ ss.1.1 }} )</li>
+                {% for item in hours %}
+                  <li class="list-group-item"><strong>{{ item.skill }}</strong>  ( {{ item.hours_sum }} )<br><small>{{ item.skill_min|date:"j M Y" }} thru {{ item.skill_max|date:"j M Y" }}</small><span class="float-right">{% if request.user.subscription >= 2 %}<a href="{% url 'Skills:Skill_Detail' item.id %}" data-toggle="tooltip" title="Details"><i class="fa fa-map-o" aria-hidden="true" style="color:black;"></i></a></span>{% else %}<span data-toggle="tooltip" title="Details on Active subscription only"><i class="fa fa-map-o" aria-hidden="true" style="color:black;"></i>{% endif %}</span></li>
                 {% endfor %}
               </ul>
           </div>

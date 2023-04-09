@@ -1,22 +1,22 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponseRedirect, HttpResponse
-from django.utils.http import is_safe_url
-from django.urls import reverse
-from django.conf import settings
-from django.core.exceptions import PermissionDenied
-
-from django.utils import timezone
-from core.decorators import subscription
-from django.contrib.auth.decorators import login_required
-from django.db.models import Q
 from csp.decorators import csp_exempt
+from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.db.models import Q
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
+from django.utils import timezone
+from django.utils.http import is_safe_url
 
-from .models import FeedBack, Notices, NoticeRead, FeedBackActions
-from .forms import FeedBackForm, NoticeForm, NoticeReadForm, FeedBackRespondForm
-
+from core.decorators import subscription
 from users.models import CustomUser
 
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from .forms import (FeedBackForm, FeedBackRespondForm, NoticeForm,
+                    NoticeReadForm)
+from .models import FeedBack, FeedBackActions, NoticeRead, Notices
+
 
 @login_required()
 @csp_exempt

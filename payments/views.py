@@ -1,29 +1,25 @@
-from django.shortcuts import render, redirect
-from django.urls import reverse
-from csp.decorators import csp_exempt
-from django.utils.decorators import method_decorator
-from django.conf import settings
 from datetime import datetime
 
-from django.views.generic import (
-        TemplateView
-)
-from django.views.decorators.csrf import csrf_exempt
+from csp.decorators import csp_exempt
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect, render
+from django.urls import reverse
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import TemplateView
 
-from paypal.standard.forms import PayPalPaymentsForm, PayPalEncryptedPaymentsForm
-
-from payments.forms import (
-        ExtPayPalPaymentsForm,
-        ExtPayPalEncryptedPaymentsForm,
-        ExtPayPalSharedSecretEncryptedPaymentsForm,
-        PassiveSubscriptionChoiceForm,
-        ActiveSubscriptionChoiceForm
-)
+from payments.forms import (ActiveSubscriptionChoiceForm,
+                            ExtPayPalEncryptedPaymentsForm,
+                            ExtPayPalPaymentsForm,
+                            ExtPayPalSharedSecretEncryptedPaymentsForm,
+                            PassiveSubscriptionChoiceForm)
+from paypal.standard.forms import (PayPalEncryptedPaymentsForm,
+                                   PayPalPaymentsForm)
+from paypal.standard.ipn.signals import (invalid_ipn_received,
+                                         valid_ipn_received)
 
 from .tasks import SubscriptionUpgradeRefund
-
-from paypal.standard.ipn.signals import valid_ipn_received, invalid_ipn_received
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -124,6 +120,24 @@ def GeneralPassiveSubscriptionView(request):
 @login_required
 def GeneralActiveSubscriptionView(request):
 
+    month_active_paypal_dict = {
+            "cmd": "_xclick-subscriptions",
+            "business": settings.PAYPAL_RECEIVER_EMAIL,
+            "currency_code": "USD",
+            "a3": "9.75",                      # monthly price
+            "p3": "1",                         # duration of each unit (depends on unit)
+            "t3": "M",                         # duration unit ("M for Month")
+            "src": "0",                        # make payments recur
+            "sra": "1",                        # reattempt payment on payment error
+            "no_note": "1",                    # remove extra notes (optional)
+            "custom": request.user.id,            # system member pk or braintree pk
+            "on0": datetime.now(),             # optional field value (date of subscription)
+            "item_name": "MyWeXlog Monthly Active Subscription",
+            "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
+            "return_url": request.build_absolute_uri(reverse('Payments:paypal-return-view')),
+            "cancel_return": request.build_absolute_uri(reverse('Payments:active-paypal-cancel-view')),
+    }
+
     active_paypal_dict = {
             "cmd": "_xclick-subscriptions",
             "business": settings.PAYPAL_RECEIVER_EMAIL,
@@ -179,10 +193,12 @@ def GeneralActiveSubscriptionView(request):
             "cancel_return": request.build_absolute_uri(reverse('Payments:active-paypal-cancel-view')),
     }
     # Create the instance.
+    month_active_form = PayPalEncryptedPaymentsForm(initial=month_active_paypal_dict, button_type="subscribe")
     active_form = PayPalEncryptedPaymentsForm(initial=active_paypal_dict, button_type="subscribe")
     six_active_form = PayPalEncryptedPaymentsForm(initial=six_active_paypal_dict, button_type="subscribe")
     twelve_active_form = PayPalEncryptedPaymentsForm(initial=twelve_active_paypal_dict, button_type="subscribe")
     context = {
+            "month_active_form": month_active_form,
             "active_form": active_form,
             "six_active_form": six_active_form,
             "twelve_active_form": twelve_active_form,
@@ -351,6 +367,24 @@ def BetaGeneralActiveSubscriptionView(request):
 @login_required
 def PassiveUpgradeActiveSubscriptionView(request):
 
+    month_active_paypal_dict = {
+            "cmd": "_xclick-subscriptions",
+            "business": settings.PAYPAL_RECEIVER_EMAIL,
+            "currency_code": "USD",
+            "a3": "9.75",                      # monthly price
+            "p3": "1",                         # duration of each unit (depends on unit)
+            "t3": "M",                         # duration unit ("M for Month")
+            "src": "0",                        # make payments recur
+            "sra": "1",                        # reattempt payment on payment error
+            "no_note": "1",                    # remove extra notes (optional)
+            "custom": request.user.id,            # system member pk or braintree pk
+            "on0": datetime.now(),             # optional field value (date of subscription)
+            "item_name": "MyWeXlog Monthly Active Single Subscription",
+            "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
+            "return_url": request.build_absolute_uri(reverse('Payments:paypal-return-view')),
+            "cancel_return": request.build_absolute_uri(reverse('Payments:active-paypal-cancel-view')),
+    }
+
     active_paypal_dict = {
             "cmd": "_xclick-subscriptions",
             "business": settings.PAYPAL_RECEIVER_EMAIL,
@@ -406,10 +440,12 @@ def PassiveUpgradeActiveSubscriptionView(request):
             "cancel_return": request.build_absolute_uri(reverse('Payments:active-paypal-cancel-view')),
     }
     # Create the instance.
+    month_active_form = PayPalEncryptedPaymentsForm(initial=month_active_paypal_dict, button_type="subscribe")
     active_form = PayPalEncryptedPaymentsForm(initial=active_paypal_dict, button_type="subscribe")
     six_active_form = PayPalEncryptedPaymentsForm(initial=six_active_paypal_dict, button_type="subscribe")
     twelve_active_form = PayPalEncryptedPaymentsForm(initial=twelve_active_paypal_dict, button_type="subscribe")
     context = {
+            "month_active_form": month_active_form,
             "active_form": active_form,
             "six_active_form": six_active_form,
             "twelve_active_form": twelve_active_form,

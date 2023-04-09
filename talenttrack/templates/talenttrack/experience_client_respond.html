@@ -20,7 +20,7 @@
       </thead>
       <tbody>
         <tr>
-          <td width="15%">{{ check.colleague_name.first_name }} {{ check.colleague_name.last_name }}</td>
+          <td width="15%">{{ check.client_name.first_name }} {{ check.client_name.last_name }}</td>
           <td width="15%">{{ check.get_confirm_display }}</td>
           <td width="60%">{{ check.comments|linebreaks }}</td>
         </tr>
@@ -30,6 +30,12 @@
       <div class="btn-group mr-2" role="group" aria-label="First group">
         <form  action="{% url 'Talent:WClRPComment' check.slug %}" method="post">
           {% csrf_token %}
+          <div style="background-color:red; color:white;">
+            <p>
+
+              {{ form.non_field_errors }}
+            </p>
+          </div>
           <button type="submit" class="badge badge-success badge-pill" name="no"  data-toggle="tooltip" title="This response has been published to your Public Profile'">
             <i class="fa fa-toggle-off" aria-hidden="true" style="font-size:20px;"></i>
           </button>
