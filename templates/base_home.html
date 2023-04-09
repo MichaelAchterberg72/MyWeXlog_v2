@@ -255,6 +255,15 @@
           {% endif %}
 
         </li>
+
+        <li class="nav-item">
+          {% if request.user.subscription >= 1 %}
+          <a class="nav-link nav-link-top" href="{% url 'Chat:index' %}?next={{ request.path|urlencode }}"><i class="fa fa-comments fa-2x" aria-hidden="true" style="font-size:30px;" data-toggle="tooltip" title="Connect to the Chat app!"></i></a>
+          {% else %}
+          <a class="nav-link nav-link-top" href="{% url 'Payments:ActiveSubscription' %}?next={{ request.path|urlencode }}"><i class="fa fa-comments fa-2x" aria-hidden="true" style="font-size:30px;" data-toggle="tooltip" title="Connect to the Chat app!"></i></a>
+          {% endif %}
+        </li>
+
         <li class="nav-item dropdown">
           <a class="nav-link nav-link-top dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-superpowers" aria-hidden="true" style="font-size:30px;" data-toggle="tooltip" title="Please click here to confirm view MyWeXlog notifications!"></i>
@@ -326,6 +335,7 @@
             {% endif %}
           </div>
         </li>
+
         <li class="nav-item  nav-link-top">
           <a class="nav-link nav-link-top" href="{% url 'Users:UserAgreement' %}">User&nbspAgreement</a>
         </li>

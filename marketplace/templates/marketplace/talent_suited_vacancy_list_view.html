@@ -43,6 +43,7 @@
                 <div class="row my-auto">
                   {% include 'marketplace/list_view_fields.html' %}
                   <div class="col-1 col-no-pad h-100 text-center my-auto">
+
                     <form  action="{% url 'MarketPlace:RejectBidFromAppliedList' vac=instance.ref_no tlt=key.1.ro.0.4 %}" method="post" name="active">
                     {% csrf_token %}
                     <button type="submit"  class="badge badge-danger badge-pill float-right" style="width: 6rem;">Rejected</button>
@@ -52,6 +53,10 @@
                       <button type="submit" class="badge badge-info badge-pill float-right" style="width: 6rem;">Short-list</button>
                     </form><br>
                     <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=instance.ref_no %}" class="badge badge-success badge-pill float-right" style="width: 5rem;" target="new">View Profile</a>
+                    <form  action="{% url 'Chat:NewChat' tlt=key.1.ro.0.4 %}" method="post" name="active" target="_blank">
+                    {% csrf_token %}
+                    <button type="submit"  class="badge badge-success badge-pill float-right" style="width: 6rem;">Chat</button>
+                    </form>
                   </div>
                 </div>
               </div>
@@ -74,6 +79,7 @@
                 <div class="row my-auto">
                   <div class="col-md-12 h-100">
                     <div class="row my-auto float-right">
+
                       <form  action="{% url 'MarketPlace:RejectBidFromAppliedList' vac=instance.ref_no tlt=key.1.ro.0.4 %}" method="post" name="active">
                       {% csrf_token %}
                       <button type="submit"  class="btn btn-outline-danger" style="width: 10rem;">Rejected</button>
@@ -82,7 +88,11 @@
                         {% csrf_token %}
                         <button type="submit" class="btn btn-outline-info" style="width: 10rem;">Short-list</button>
                       </form>&nbsp
-                      <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=instance.ref_no %}" class="btn btn-outline-success" style="width: 10rem;" target="new">View Profile</a>
+                      <a href="{% url 'Talent:APV' tlt=key.1.ro.0.4 vac=instance.ref_no %}" class="btn btn-outline-success" style="width: 10rem;" target="new">View Profile</a>&nbsp
+                      <form  action="{% url 'Chat:NewChat' tlt=key.1.ro.0.4 %}" method="post" name="active" target="_blank">
+                      {% csrf_token %}
+                      <button type="submit"  class="btn btn-outline-success" style="width: 10rem;">Chat</button>
+                      </form>
                     </div>
                   </div>
                 </div>

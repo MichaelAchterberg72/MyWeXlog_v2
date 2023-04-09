@@ -141,6 +141,7 @@ TEMPLATES = [
                 'users.context_processor.employer_assignment_count',
                 'users.context_processor.talent_assignment_count',
                 'users.context_processor.total_notification_count',
+                'users.context_processor.chat_group_unread_messages_count',
             ],
 #            'loaders': [
 #            ('django.template.loaders.cached.Loader', [
@@ -214,7 +215,7 @@ PASSWORD_HASHERS = [
 WSGI_APPLICATION = 'WeXlog.wsgi.application'
 ASGI_APPLICATION = 'WeXlog.routing.application'
 #>>>Removed as not required for current site
-'''
+
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
@@ -223,7 +224,7 @@ CHANNEL_LAYERS = {
         },
     },
 }
-'''
+
 #Removed as not required for current site<<<
 
 ## Web Security Headers
@@ -294,9 +295,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         #'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'Wexlog_billing',
+        'NAME': 'wexlog_chat', #'Wexlog_Home', #'test_load', #,
         'USER': 'postgres',
-		'PASSWORD': 'netscape', #MA
+		'PASSWORD': 'rdf8tm1234', #MA
         'HOST': 'localhost',
         #'HOST': 'dbhost',
         'PORT': '5432'
@@ -354,6 +355,9 @@ LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/Profile/'
 LOGOUT_REDIRECT_URL = 'https://mywexlog.com/'
 
+# Djano-Emoji settings
+EMOJI_ALT_AS_UNICODE = True
+EMOJI_REPLACE_HTML_ENTITIES = True
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/

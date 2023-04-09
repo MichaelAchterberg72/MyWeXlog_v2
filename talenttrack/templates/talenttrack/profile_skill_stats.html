@@ -1,30 +1,63 @@
 {% extends "base_home.html" %}
 {% load crispy_forms_tags %}
+{% load static %}
 {% load humanize %}
 {% block title %}{{block.super}}- {{ tlt_p.f_name }} Skill Profile Statistics Overview{% endblock title %}
 
 {% block content %}
-<div class="card profile-card">
-  <div class="card-body">
-    <div class="float-right">
-      <a href="{% url 'Talent:SPDView' tlt %}" class="btn btn-secondary"style="width: 6rem">Back</a>
+</div>
+<div class="jumbotron public-profile-jumbotron-header" style="color:#000;background-color:#303030">
+  <div class="row">
+    <div class="col-md-2">
     </div>
-    <h3 class="profile-header">{{ skill }} Skill Profile Statistics Overview</h3>
+    <div class="col-md-8">
+      <h4 class="profile-header" id="top" style="color:#fff;">MyWexlog Public Profile<br>{{ tlt }}</h4>
+    </div>
+    <div class="col-md-2 my-auto">
+      <div class="container ">
+        <div class="btn-toolbar float-right">
+          {% if request.user.alias == tlt %}
+          <a href="{% url 'Talent:APV' tlt=request.user.alias vac='1ad9t2' %}#skill" class="btn btn-success" style="width:14rem">
+            Back to your Profile
+          </a><br>
+          <a href="{% url 'Talent:Home' %}" class="btn btn-secondary" style="width:14rem">Experience Home</a>
+          {% else %}
+          <form  action="{% url 'BookList:BLB' %}" method="post">
+            <input type="hidden" name="next" value="{{ request.GET.next }}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-secondary float-right">Back to {{tlt_p.alias}}'s Profile</button>
+          </form>
+          {% endif %}
+        </div>
+      </div>
+    </div>
   </div>
 </div>
-<br>
 
-<div class="card h-100 profile-card">
-  <div class="card-body">
+</div>
 
-    <div class="col-md-12 text-center my-auto">
-      <div class="profile-card-header">{{ skill }} Associated Skills List</div><br>
+    <div class="container">
+    <h3 class="profile-header">{{ skill }} Skill Profile Statistics Overview</h3>
+    <h4 class="profile-header">{{ skill }} Associated Skills List</h4>
+    <br>
     </div>
-
-  <div class="profile-card-body mb-auto">
+    <br>
+    <br>
+    <div class="" style="">
+    <div class="wrap-2">
+    <div class="jumbotron" style="background-image:url('{% static 'images/entrepreneur.jpg' %}');position:reletive;padding:1rem 2rem; margin-bottom:0rem;
+    background-color:transparent;
+        width:100%;
+        height:100%;
+        border-bottom-left-radius:25%;
+        border-bottom-right-radius:65%;
+        border-top-left-radius:65%;
+        border-top-right-radius:15%;">
+      <br>
+<div class="container bg-light chart-layout">
 <div style="overflow-x: scroll">
 <div id="chart-container" style="position: relative;  width:auto;">
-
+  <br>
 <p class="short-paragraph">Percentge occurance of associated skills with skill {{ skill }}.</p>
 <p class="short-paragraph">There is a total of&nbsp<strong>{{ skill_list_labels_count }}</strong>&nbspassociated skills from&nbsp<strong>{{ skills_list_qs_count }}</strong>&nbspCaptured Work Experience logs.</p>
 <p class="small-paragraph"><small>Skills included are all skills relating to them that have been logged as Work Esxperience, no training logs included.  <br>(Includes only skills & logs that have been validated and received a score of 3 or more.)</small></p>
@@ -89,17 +122,25 @@ else{
 <div class="container">
 <div class="row">
   <div class="col-md-12">
-    {% for skl in dept_skills_link %}<a href="{% url 'Talent:ProfileSkillsStats' skl.id %}?next={{ request.path|urlencode }}" class="btn btn-outline-success auto mb-1 mr-1 pointer">{{ skl.skill }}</a> {% endfor %}
+    {% for skl in dept_skills_link %}<a href="{% url 'Talent:ProfileSkillsStats' skl.id vac %}?next={{ request.path|urlencode }}" class="btn btn-outline-success auto mb-1 mr-1 pointer">{{ skl.skill }}</a> {% endfor %}
   </div>
 </div>
+<br>
+</div>
+</div>
+<br>
 </div>
 </div>
 </div>
-</div>
-<br class="d-none">
-<div class="card card-shadow d-none">
-  <div class="card-body">
-    <h4>Average Rating with {{ skill }} Skill</h4>
+
+<div class="jumbotron bg-light d-none">
+  <div class="container">
+    <div class="row header-border">
+      <div class="col-md-12">
+        <h4 class="profile-header" id="top">Average Rating with {{ skill }} Skill</h4>
+      </div>
+    </div>
+    <br>
     <div class="row">
       <div class="col-md-4">
         <p>Total Experience Rating</p>
@@ -196,24 +237,26 @@ else{
   </div>
 </div>
 <br>
-<div class="card h-100 profile-card">
-  <div class="card-body">
-
-    <div class="col-md-12 text-center my-auto">
-      <div class="profile-card-header">{{ skill }} Skill Training Details</div><br>
-    </div>
-
-  <div class="profile-card-body mb-auto">
-
+<div class=" bg-light">
+  <div class="container">
     <div class="row">
+      <div class="col-md-12">
+        <h4 class="profile-header" id="top">{{ skill }} Skill Training Details</h4>
+      </div>
+    </div>
+    <br>
+
+    <div class="row header-border">
       <div class="col-md-4">
+        <br>
         <p>Total Validated Hours Training</p>
         <div class="text-center" style="font-size:60px">
           {{ total_val_sum_t_we|floatformat:0|intcomma }}
         </div>
       </div>
       <div class="col-md-8">
-        <p>Skill Training by Year</p>
+        <br>
+        <p>Skill Training by Year Over Last 10 Years</p>
         <canvas id="wt-skills-used-year-range-chart" height="100px"></canvas>
         <script>
         var wt_skills_used_year_range_config = {
@@ -253,31 +296,32 @@ else{
         };
 
       </script>
+      <br>
       </div>
     </div>
   </div>
 </div>
-</div>
 <br>
-
-<div class="card h-100 profile-card">
-  <div class="card-body">
-
-    <div class="col-md-12 text-center my-auto">
-      <div class="profile-card-header">{{ skill }} Skill Work Experience Details</div><br>
-    </div>
-
-  <div class="profile-card-body mb-auto">
-
+<div class="jumbotron bg-light">
+  <div class="container">
     <div class="row">
+      <div class="col-md-12">
+        <h4 class="profile-header" id="top">{{ skill }} Skill Work Experience Details</h4>
+      </div>
+    </div>
+    <br>
+
+    <div class="row header-border">
       <div class="col-md-4">
+        <br>
         <p>Total Validated Hours Experience</p>
         <div class="text-center" style="font-size:60px">
           {{ total_val_sum_we|floatformat:0|intcomma }}
         </div>
       </div>
       <div class="col-md-8">
-        <p>Skill Utilised in Work Experience by Year</p>
+        <br>
+        <p>Skill Utilised in Work Experience by Year Over Last 10 Years</p>
         <canvas id="we-skills-used-year-range-chart" height="100px"></canvas>
         <script>
         var we_skills_used_year_range_config = {
@@ -317,10 +361,10 @@ else{
         };
 
       </script>
+          <br>
       </div>
     </div>
   </div>
-</div>
 </div>
 
 {% endblock content %}

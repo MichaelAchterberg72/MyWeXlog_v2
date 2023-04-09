@@ -5,7 +5,7 @@
   {% if request.user.id == tlt_p.id %}
     {{block.super}}-Experience Overview
   {% else %}
-    {{block.super}}-{{tlt.alias}} Achievements Detail
+    {{block.super}}-{{tlt.alias}} Books Read Detail
   {% endif %}
 {% endblock title %}
 
@@ -23,7 +23,7 @@
       <div class="container ">
         <div class="btn-toolbar float-right">
           {% if request.user.alias == tlt %}
-          <a href="{% url 'Talent:APV' tlt=request.user.alias vac='1ad9t2' %}#achievements" class="btn btn-success" style="width:14rem">
+          <a href="{% url 'Talent:APV' tlt=request.user.alias vac='1ad9t2' %}#books" class="btn btn-success" style="width:14rem">
             Back to your Profile
           </a><br>
           <a href="{% url 'Talent:Home' %}" class="btn btn-secondary" style="width:14rem">Experience Home</a>
@@ -39,38 +39,60 @@
     </div>
   </div>
 </div>
+<br>
+<div class="container">
+<div class="container">
+<h4 class="profile-header">MyWexlog Books Read History</h4>
+<div class="profile-card-under">{% if bkl_count > 0 %}Total Books Read: {{ bkl_count }}{% else %}No Books Read with MyWeXlog yet{% endif %}</div>
+<br>
+<br>
+{% for b in pageitems %}
+  <div class="row">
+    <div class="col-md-3">
+      <div class="profile-list-header">{{ b.date|date:"j M Y" }}</div><br>
+      <div class="profile-list-under">{{ b.type }}</div>
+    </div>
+    <div class="col-md-9 border-left">
+      <div class="col-md-12">
+        <div class="profile-list-heading">{{ b.book }}</div><br>
+        <div class="profile-list-heading-under">{{ b.book.author.all|join:", " }}</div><br>
+        {% if b.book.link %}
+        <div class=""><a href="{{ b.book.link }}" target="_blank">{{ b.book.link }}</a></div><br>
+        {% endif %}
+        {% if b.review %}
+        <div class="" id="bookDisc1{{b.pk}}" style="display:block;">
+          {{ b.review|safe|truncatechars:460 }}<br>
+          {% if b.review|length > 460 %}
+          <button class="float-right" type="button" id="readMoreBook{{b.pk}}">Read More ..</button><br>
+          {% endif %}
+        </div>
+        <div class="" id="bookDisc2{{b.pk}}" style="display:none;">
+          {{ b.review|safe }}<br>
+          <button class="float-right" type="button" id="readLessBook{{b.pk}}">Read Less ..</button><br>
+        </div><br>
 
-<br>
-<div class="container">
-<div class="container">
-<h4 class="profile-header">MyWexlog Achievements History</h4>
-<div class="profile-card-under">{% if achievement_qs_count > 0 %}Total Achievements Made: {{ achievement_qs_count }}{% else %}No Achievements with MyWeXlog yet{% endif %}</div>
-<br>
-<br>
-{% for a in pageitems %}
-<div class="row">
-  <div class="col-md-3 border-right">
-    <div class="profile-list-header">{{ a.date_achieved|date:"j M Y" }}</div><br>
-  </div>
-  {% if a.upload %}<div class="col-md-6 border-left">{% else %}<div class="col-md-9 border-left">{% endif %}
-    <div class="col-md-12">
-      <div class="profile-list-heading">{{ a.achievement }}</div><br>
-      <div>{{ a.description|linebreaks }}</div>
-    </div>
-    <br><br><br>
-  </div>
-{% if a.upload %}
-<div class="col-md-3">
-  <div class="row pt-3 h-100 my-auto">
-    <div class="col-md-12 text-center">
-      <a href="{{ a.upload.url }}" target="_blank">
-      <img src="{{ a.thumbnail.url }}" alt="{{ a.achievement }}" height="340" width="260"></a>
+        {% if b.review|length > 460 %}
+        <script>
+          var readMoreBook = document.getElementById('readMoreBook{{b.pk}}');  // 1
+          readMoreBook.addEventListener('click', function() {   // 3
+             bookDisc1{{b.pk}}.style.display = 'none';
+             bookDisc2{{b.pk}}.style.display = 'block';          // 4
+          });
+          var readLessBook = document.getElementById('readLessBook{{b.pk}}');  // 1
+          readLessBook.addEventListener('click', function() {  // 3
+            bookDisc1{{b.pk}}.style.display = 'block';
+            bookDisc2{{b.pk}}.style.display = 'none';
+            bookDisc1{{b.pk}}.scrollIntoView();              // 4
+          });
+
+        </script>
+        {% endif %}
+        {% endif %}
+      </div>
+      <br><br><br>
     </div>
   </div>
-</div>
-{% endif %}
-</div>
-{% endfor %}
+  {% endfor %}
 </div>
 </div>
 </div>

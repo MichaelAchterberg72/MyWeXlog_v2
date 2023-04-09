@@ -27,5 +27,14 @@
       </a>
     </p>
   {% endif %}
+  <br>
+  {% if request.user.subscription >= 2 %}
+  <form  action="{% url 'Chat:NewChat' tlt=s.requested_by.alias %}" method="post" name="active" target="_blank">
+  {% csrf_token %}
+  <button type="submit" class="badge badge-success float-right" style="width: 5rem;">Chat</button>
+  </form>
+  {% else %}
+  <a href="{% url 'Payments:ActiveSubscription' %}" class="badge badge-success float-right" data-toggle="tooltip" title="An Active subscription is required to initiate a chat" style="width: 5rem;">Chat</a>
+  {% endif %}
   </div>
 </div>

@@ -66,6 +66,7 @@ urlpatterns = [
     path('apv-pub/<slug:tlt>/<slug:vac>/', views.PublicationsFVView, name='PUB_FV'),
     path('apv-projects/<slug:tlt>/<slug:vac>/', views.ProjectsFVView, name='Projects_FV'),
     path('apv-edu/<slug:tlt>/<slug:vac>/', views.EduFVView, name='EDU_FV'),
+    path('apv-books/<slug:tlt>/<slug:vac>/', views.BooksFVView, name='BKS_FV'),
 
     path('apv-l/<slug:tlt>/', views.profile_view, name='APV_L'),
     path('apv-c/<slug:cor>/<slug:tlt>/', views.profile_view_corp, name='APV_C'),
@@ -130,6 +131,7 @@ urlpatterns = [
     path('help/how-to-capture-skills/', views.HelpHowCaptrueSkillsView, name='HelpHowCaptureSkills'),
     #Talent Rating Details
     path('<slug:tlt>/rating/', views.TltRatingDetailView, name="TltRatingDetail"),
+    path('<slug:tlt>/experience-rating/', views.tlt_evaluation_rating, name="TltExperienceRatingDetail"),
     #Confirmation review urlpatterns
     path('calect-list/', views.lecturer_conf_summary_list, name='CAsLectList'),
     path('cacm-list/', views.classmate_conf_summary_list, name='CAsCmList'),
@@ -145,7 +147,7 @@ urlpatterns = [
     path('reqclb-list/', views.clb_req_list, name='ReqClbList'),
     #skills stats
     path('skill-stats-overview/<int:skl>/', views.skill_stats, name='SkillsStats'),
-    path('profile-skill-stats-overview/<int:skl>/', views.profile_skill_stats, name='ProfileSkillsStats'),
+    path('profile-skill-stats-overview/<int:skl>/<slug:vac>/', views.profile_skill_stats, name='ProfileSkillsStats'),
     path('site-skill-stats-overview/<int:skl>/', views.site_skill_stats, name='SiteSkillsStats'),
     path('project-skill-stats-overview/<int:skl>/<slug:prj>/', views.site_skill_stats, name='ProjectSiteSkillsStats'),
     path('site-demand_skill-stats-overview/<int:skl>/', views.site_demand_skill_stats, name='SiteDemandSkillsStats'),

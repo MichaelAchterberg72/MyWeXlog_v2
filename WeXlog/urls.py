@@ -37,6 +37,7 @@ urlpatterns = [
     path('management/', include('management.urls', namespace='Management')),
     path('notifications/', include("pinax.notifications.urls", namespace='pinax_notifications')),
     path('treeMP/', include('nestedsettree.urls', namespace='Structure')),
+    path('chat/', include('intmessages.urls', namespace='Chat')),
     path('appcontrol/', include('AppControl.urls', namespace='AppControl')),
     path('corporate/', include('mod_corporate.urls', namespace='Corporate')),
     path('billing/', include('billing.urls', namespace='Billing')),
@@ -46,6 +47,7 @@ urlpatterns = [
     path('admin/filebrowser/', site.urls),
     path('error/', TemplateView.as_view(template_name="error_screen.html"), name='404Error'),
     path("robots.txt", TemplateView.as_view(template_name="users/robots.txt", content_type="text/plain")),
+#    path('emoji/', include('emoji.urls')),
     ]
 
 if settings.DEBUG:

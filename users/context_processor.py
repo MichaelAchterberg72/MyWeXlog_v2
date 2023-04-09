@@ -6,6 +6,8 @@ from marketplace.models import (BidInterviewList, BidShortList, TalentRate,
                                 WorkIssuedTo)
 from talenttrack.models import (ClassMates, Lecturer, Superior, WorkClient,
                                 WorkCollaborator, WorkColleague)
+from intmessages.models import ChatRoomMembers, Message, MessageRead
+
 from WeXlog import app_config
 
 from .models import CustomUserSettings
@@ -101,6 +103,18 @@ def talent_assignment_count(request):
         assigned_tlt_count = 0
 
     return {'assigned_tlt_count': assigned_tlt_count}
+
+
+def chat_group_unread_messages_count(request):
+    if request.user.is_authenticated:
+        talent = request.user
+        user_rooms = ChatRoomMembers.objects.filter(talent=talent).values_list('chat_group__slug', flat=True).distinct()
+        chat_group_messages = MessageRead.objects.filter(Q(chat_group__slug__in=user_rooms) & Q(message_read=False))
+        chat_group_unread_messages_count = chat_group_messages.count()
+    else:
+        chat_group_unread_messages_count = 0
+
+    return {'chat_group_unread_messages_count': chat_group_unread_messages_count}
 
 
 def total_notification_count(request):
