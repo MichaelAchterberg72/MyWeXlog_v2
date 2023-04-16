@@ -11,6 +11,9 @@ from django.urls import include, path
 from django.views.generic.base import TemplateView
 from filebrowser.sites import site
 
+from graphene_django.views import GraphQLView
+from WeXlog import schema
+
 urlpatterns = [
     path('accounts/', include('allauth.urls')),
     #path('messages/', include('django_messages.urls')),
@@ -48,6 +51,7 @@ urlpatterns = [
     path('error/', TemplateView.as_view(template_name="error_screen.html"), name='404Error'),
     path("robots.txt", TemplateView.as_view(template_name="users/robots.txt", content_type="text/plain")),
 #    path('emoji/', include('emoji.urls')),
+    path('graphql/', GraphQLView.as_view(schema=schema, graphiql=True),
     ]
 
 if settings.DEBUG:

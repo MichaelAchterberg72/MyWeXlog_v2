@@ -100,6 +100,8 @@ INSTALLED_APPS = [
     'colorfield',
     'grappelli',
     'filebrowser',
+    'graphene_django',
+    
 ]
 
 
@@ -114,6 +116,7 @@ MIDDLEWARE = [
             #3rd party MIDDLEWARE
     'django_referrer_policy.middleware.ReferrerPolicyMiddleware',
     'csp.middleware.CSPMiddleware',
+    'graphql_jwt.middleware.JSONWebTokenMiddleware',
 ]
 
 ROOT_URLCONF = 'WeXlog.urls'
@@ -216,14 +219,14 @@ WSGI_APPLICATION = 'WeXlog.wsgi.application'
 ASGI_APPLICATION = 'WeXlog.routing.application'
 #>>>Removed as not required for current site
 
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],
-        },
-    },
-}
+# CHANNEL_LAYERS = {
+#     'default': {
+#         'BACKEND': 'channels_redis.core.RedisChannelLayer',
+#         'CONFIG': {
+#             "hosts": [('127.0.0.1', 6379)],
+#         },
+#     },
+# }
 
 #Removed as not required for current site<<<
 
@@ -504,6 +507,16 @@ SENDGRID_FROM_EMAIL = 'mywexlog@mywexlog.com'
 # CHECK_EVENT_PERM_FUNC
 SCHEDULER_PREVNEXT_LIMIT_SECONDS = 622080000
 
+GRAPHENE = {
+    'SCHEMA': 'MyWeXlog.schema.schema'
+}
+
+GRAPHQL_JWT = {
+    'JWT_SECRET_KEY': SECRET_KEY,
+    'JWT_ALGORITHM': 'HS256',
+    'JWT_EXPIRATION_DELTA': timedelta(minutes=60),
+    'JWT_AUTH_HEADER_PREFIX': 'Bearer',
+}
 
 #TINYMCE_JS_URL = os.path.join(STATIC_URL, "tiny_mce/tiny_mce_src.js")
 TINYMCE_JS_ROOT = os.path.join(STATIC_ROOT, "tinymce")
