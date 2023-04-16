@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
         ('enterprises', '0001_initial'),
         ('db_flatten', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('referrals', '0004_auto_20210627_0913'),
+        ('referrals', '0004_auto_20210609_1327'),
         ('locations', '0001_initial'),
     ]
 
