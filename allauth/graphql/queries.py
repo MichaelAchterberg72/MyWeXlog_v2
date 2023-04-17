@@ -1,6 +1,6 @@
 import graphene
 
-from .types import UserOutputType
+from users.graphql.output_types import UserOutputType
 
 
 class Query(graphene.ObjectType):
