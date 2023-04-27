@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class BilliingConfig(AppConfig):
-    name = 'billiing'
+class BillingConfig(AppConfig):
+    name = 'billing'

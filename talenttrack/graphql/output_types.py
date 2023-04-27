@@ -21,6 +21,8 @@ from ..models import (
     EmailRemindValidate
 )
 
+from locations.graphql.output_types import CountryFieldType
+
 
 class AchievementOutputType(DjangoObjectType):
     class Meta:
@@ -93,6 +95,8 @@ class CourseTypeOutputType(DjangoObjectType):
         
         
 class LicenseCertificationOutputType(DjangoObjectType):
+    country = CountryFieldType()
+    
     class Meta:
         model = LicenseCertification
         fields = '__all__'

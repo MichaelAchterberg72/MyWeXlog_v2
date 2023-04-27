@@ -8,6 +8,8 @@ from django.dispatch import receiver
 from django.utils import timezone
 from pinax.referrals.models import Referral
 
+from WeXlog.utils import update_model
+
 from allauth.account.signals import user_signed_up
 from nestedsettree.models import NtWk
 from Profile.utils import create_code16
@@ -54,6 +56,17 @@ class CustomUser(AbstractUser):
     alphanum = models.SlugField(max_length=7, unique=True, null=True)
 
     objects = CustomUserManager()
+    
+    @classmethod
+    def update_or_create(cls, id=None, instance=None, **kwargs):
+        if id and not instance:
+            instance = cls.objects.get(pk=id)
+            
+        if instance:
+            update_model(instance, **kwargs)
+        else:
+            instance = cls.objects.create(**kwargs)
+        return instance
 
     def __str__(self):
         return f'{self.first_name} {self.last_name}, {self.display_text}'

@@ -51,7 +51,7 @@ urlpatterns = [
     path('error/', TemplateView.as_view(template_name="error_screen.html"), name='404Error'),
     path("robots.txt", TemplateView.as_view(template_name="users/robots.txt", content_type="text/plain")),
 #    path('emoji/', include('emoji.urls')),
-    path('graphql/', GraphQLView.as_view(schema=schema, graphiql=True),
+    path('graphql/', GraphQLView.as_view(schema=schema, graphiql=True)),
     ]
 
 if settings.DEBUG:

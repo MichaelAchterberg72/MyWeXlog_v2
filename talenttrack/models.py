@@ -21,7 +21,10 @@ from smartfields import dependencies, fields
 from smartfields.dependencies import FileDependency
 from smartfields.processors import ImageProcessor
 
+from WeXlog.utils import update_model, handle_m2m_relationship
+
 from booklist.models import Author, Genre, Publisher
+from booklist.handle import handle_publisher
 from db_flatten.models import SkillTag
 from enterprises.models import Branch, Enterprise, Industry
 from locations.models import Region
@@ -68,14 +71,26 @@ class Achievements(models.Model):
     upload = models.FileField(storage=PrivateMediaStorage(), upload_to=AchFilename, blank=True, null=True, validators=[FileExtensionValidator(['pdf'])])
     thumbnail = models.ImageField(storage=PrivateMediaStorage(), upload_to=AchThumbnail, blank=True, null=True)
     slug = models.SlugField(max_length=15, unique=True, null=True, blank=True)
+        
+    def __str__(self):
+        return f'{self.talent}: {self.achievement} ({self.date_achieved})'
 
     class Meta:
         ordering = ['-date_achieved']
         unique_together = (('talent', 'achievement', 'date_achieved'),)
+        
+    @classmethod
+    def update_or_create(cls, id=None, instance=None, **kwargs):
+        if id and not instance:
+            instance = cls.objects.get(pk=id)
 
-    def __str__(self):
-        return f'{self.talent}: {self.achievement} ({self.date_achieved})'
-
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+        return instance
+    
     def save(self, *args, **kwargs):
         if self.upload:
             cache_path = self.upload
@@ -123,6 +138,30 @@ class Awards(models.Model):
 
     def __str__(self):
         return f'{self.talent}: {self.award} ({self.date_achieved})'
+    
+    @classmethod
+    def update_or_create(cls, id=None, instance=None, **kwargs):
+        if id and not instance:
+            instance = cls.objects.get(pk=id)
+            
+        tag = kwargs.pop('tag', [])
+
+        if instance:
+            for field, value in kwargs.items():
+                if field != "talent" or "tag":
+                    setattr(instance, field, value)
+            instance.save()
+        else:
+            kwargs.pop('tag', None)
+            instance = cls.objects.create(**kwargs)
+            
+        if tag:
+            instance = handle_m2m_relationship(
+                instance=instance, 
+                related_models_data=tag
+            )
+            
+        return instance
 
     def save(self, *args, **kwargs):
         if self.upload:
@@ -181,6 +220,42 @@ class Publications(models.Model):
 
     def __str__(self):
         return f'{self.talent}: {self.title} ({self.date_published})'
+    
+    def update_or_create(cls, id=None, instance=None, **kwargs):
+        talent = kwargs.pop("talent", None)
+        publisher = kwargs.pop("publisher", None)
+        author = kwargs.pop("author", [])
+        tag = kwargs.pop("tag", [])
+        genre = kwargs.pop("genre", [])
+
+        if id and not instance:
+            instance = cls.objects.get(pk=id)
+            
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+            
+        # if talent:
+        #     instance.talent = CustomUser.update_or_create(
+        #         instance=instance.talent,
+        #         **talent,
+        #     )
+
+        if publisher:
+            instance.publisher = handle_publisher(instance, **publisher)
+
+        # if author:
+            
+
+        # if tag:
+            
+
+        # if genre:
+            
+
+                     
 
     def save(self, *args, **kwargs):
         if self.upload:

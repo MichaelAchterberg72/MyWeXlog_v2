@@ -4,8 +4,6 @@ from users.graphql.input_types import UserInputType
 
 
 class TimesheetInput(graphene.InputObjectType):
-    title = graphene.String(required=True)
-    
     talent = graphene.Field(UserInputType)
     work_experience = graphene.Field()
     date_captured = graphene.Date()

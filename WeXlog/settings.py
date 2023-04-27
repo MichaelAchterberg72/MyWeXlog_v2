@@ -15,6 +15,8 @@ import os
 
 from . import app_config
 
+from datetime import timedelta
+
 # from distutils.sysconfig import get_python_lib
 # os.environ["PATH"] += os.pathsep + get_python_lib() + '\\osgeo'
 
@@ -88,7 +90,7 @@ INSTALLED_APPS = [
     'leaflet',
     'django_select2',
     'pinax.referrals',
-    'pinax.notifications',
+    # 'pinax.notifications',
     'treebeard',
     'channels',
     'paypal.standard.ipn',
@@ -101,6 +103,7 @@ INSTALLED_APPS = [
     'grappelli',
     'filebrowser',
     'graphene_django',
+    'django_filters',
     
 ]
 
@@ -516,6 +519,11 @@ GRAPHQL_JWT = {
     'JWT_ALGORITHM': 'HS256',
     'JWT_EXPIRATION_DELTA': timedelta(minutes=60),
     'JWT_AUTH_HEADER_PREFIX': 'Bearer',
+    'JWT_VERIFY_EXPIRATION': True,
+    'JWT_ALLOW_REFRESH': True,
+    'JWT_AUTH_HEADER_PREFIX': 'Bearer',
+    'JWT_PAYLOAD_HANDLER': 'myapp.utils.jwt_payload_handler',
+    'JWT_RESPONSE_PAYLOAD_HANDLER': 'myapp.utils.jwt_response_payload_handler',
 }
 
 #TINYMCE_JS_URL = os.path.join(STATIC_URL, "tiny_mce/tiny_mce_src.js")
