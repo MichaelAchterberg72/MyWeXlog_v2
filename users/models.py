@@ -8,7 +8,7 @@ from django.dispatch import receiver
 from django.utils import timezone
 from pinax.referrals.models import Referral
 
-from WeXlog.utils import update_model
+from utils.utils import update_model
 
 from allauth.account.signals import user_signed_up
 from nestedsettree.models import NtWk

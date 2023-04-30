@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 # from __future__ import absolute_import, unicode_literals
 
 import os
+from datetime import timedelta
 
 from . import app_config
 
@@ -103,8 +104,7 @@ INSTALLED_APPS = [
     'grappelli',
     'filebrowser',
     'graphene_django',
-    'django_filters',
-    
+    'django_filters'
 ]
 
 

@@ -17,7 +17,6 @@ from django.utils import timezone
 from django.utils.html import strip_tags
 from django.utils.http import is_safe_url
 #pinax_referrals
-from pinax.notifications.models import send, send_now
 from pinax.referrals.models import Referral
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import (Content, CustomArg, From, Header, Mail,

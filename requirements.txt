@@ -84,7 +84,7 @@ pathy==0.6.0
 pdf2image==1.15.1
 phonenumbers==8.12.24
 Pillow==8.2.0
-pinax-notifications==5.0.3
+pinax-notifications==6.0.0
 pinax-referrals==4.0.1
 pkg_resources==0.0.0
 preshed==3.0.6
