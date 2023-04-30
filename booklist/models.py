@@ -13,18 +13,6 @@ from Profile.utils import create_code9
 class Author(models.Model):
     name = models.CharField('Author name', max_length=250, unique=True)
 
-    @classmethod
-    def update_or_create(cls, id=None, instance=None, **kwargs):
-        if id and not instance:
-            instance = Author.objects.get(pk=id)
-
-        if instance:
-            update_model(instance, **kwargs)
-            instance.save()
-        else:
-            instance = Author.objects.create(**kwargs)
-        return instance
-
     def clean(self):
         self.name = self.name.title()
         
@@ -38,18 +26,6 @@ class Publisher(models.Model):
 
     def clean(self):
         self.publisher = self.publisher.title()
-        
-    @classmethod
-    def update_or_create(cls, id=None, instance=None, **kwargs):
-        if id and not instance:
-            instance = Publisher.objects.get(pk=id)
-
-        if instance:
-            update_model(instance, **kwargs)
-            instance.save()
-        else:
-            instance = Publisher.objects.create(**kwargs)
-        return instance
 
     def __str__(self):
         return self.publisher
@@ -60,18 +36,6 @@ class Genre(models.Model):
 
     def clean(self):
         self.name = self.name.title()
-        
-    @classmethod
-    def update_or_create(cls, id=None, instance=None, **kwargs):
-        if id and not instance:
-            instance = Genre.objects.get(pk=id)
-
-        if instance:
-            update_model(instance, **kwargs)
-            instance.save()
-        else:
-            instance = Genre.objects.create(**kwargs)
-        return instance
 
     def __str__(self):
         return f'{self.name}'

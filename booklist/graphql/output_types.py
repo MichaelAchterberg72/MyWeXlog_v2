@@ -1,7 +1,6 @@
 import graphene
 from graphene_django import DjangoObjectType
 
-
 from ..models import (
     Author,
     Publisher,
@@ -21,6 +20,7 @@ class AuthorOutputType(DjangoObjectType):
             'id': ['exact'],
             'name': ['exact', 'icontains', 'startswith'],
         }
+        ordering = ['name']
 
 
 class PublisherOutputType(DjangoObjectType):
@@ -33,6 +33,7 @@ class PublisherOutputType(DjangoObjectType):
             'name': ['exact', 'icontains', 'istartswith'],
             'link': ['exact'],
         }
+        ordering = ['publisher', 'link']
         
         
 class GenreOutputType(DjangoObjectType):
@@ -44,6 +45,7 @@ class GenreOutputType(DjangoObjectType):
             'id': ['exact'],
             'name': ['exact', 'icontains', 'istartswith'],
         }
+        ordering = ['name']
         
         
 class BookListOutputType(DjangoObjectType):
@@ -62,11 +64,34 @@ class BookListOutputType(DjangoObjectType):
             'genre__name': ['exact', 'icontains', 'istartswith'],
             'slug': ['exact'],
         }
+        ordering = [
+            'name', 
+            'type', 
+            'publisher__publisher', 
+            'link', 
+            'author__name', 
+            'tag__skill',
+            'genre__name'
+        ]
         
         
 class FormatOutputType(DjangoObjectType):
     class Meta:
         model = Format
+        fields = '__all__'
+        interfaces = (graphene.relay.Node,)
+        filter_fields = {
+            'id': ['exact'],
+            'format': ['exact', 'icontains', 'istartswith'],
+        }
+        ordering = [
+            'format'
+        ]
+        
+        
+class ReadByOutputType(DjangoObjectType):
+    class Meta:
+        model = ReadBy
         fields = '__all__'
         interfaces = (graphene.relay.Node,)
         filter_fields = {
@@ -77,3 +102,10 @@ class FormatOutputType(DjangoObjectType):
             'date': ['exact', 'lt', 'lte', 'gt', 'gte'],
             'review': ['icontains'],
         }
+        ordering = [
+            'talent__alias'
+            'book__title'
+            'type',
+            'date',
+            '-date',
+        ]
