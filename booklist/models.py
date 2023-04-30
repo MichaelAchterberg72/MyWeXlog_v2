@@ -136,32 +136,6 @@ class ReadBy(models.Model):
 
     class Meta:
         unique_together = (('talent','book'),)
-        
-    @classmethod
-    def update_or_create(cls, id=None, instance=None, **kwargs):
-        if id and not instance:
-            instance = ReadBy.objects.get(pk=id)
-            
-        talent = kwargs.pop('talent', None)
-        book = kwargs.pop('book', None)
-        type = kwargs.pop('type', None)
-
-        if instance:
-            update_model(instance, **kwargs)
-            instance.save()
-        else:
-            instance = ReadBy.objects.create(**kwargs)
-            
-        if talent:
-            instance = CustomUser.update_or_create(instance=instance, **talent)
-
-        if book:
-            instance = BookList.update_or_create(instance=instance, **book)
-
-        if type:
-            instance = Format.update_or_create(instance=instance, **type)
-
-        return instance
 
     def __str__(self):
         return '{} read {}'.format(self.talent, self.book)
