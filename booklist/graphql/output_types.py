@@ -53,6 +53,7 @@ class BookListOutputType(DjangoObjectType):
         model = BookList
         fields = '__all__'
         interfaces = (graphene.relay.Node,)
+        convert_choices_to_enums = True
         filter_fields = {
             'id': ['exact'],
             'title': ['exact', 'icontains', 'istartswith'],

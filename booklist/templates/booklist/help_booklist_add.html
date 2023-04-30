@@ -1,0 +1,53 @@
+{% extends 'base_homelite.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Help{% endblock title %}
+
+{% block Style %}
+
+{% endblock Style %}
+{% block content %}
+<div class="container">
+  <h3>Add a New Book Read Page - Help</h3>
+    <p>&nbsp</p>
+    <p>This page displays the fields that are required to capture a new book read.</p>
+    <p>The fields required are:</p>
+    <table class="table table-sm">
+    <col width="10%">
+    <col width="70%">
+    <thead>
+        <tr>
+          <td>Book</td>
+          <td>Select from the drop-down list and if you add a new book it will
+            automatically populate the field.<br>
+            The <a href="#"><img src="{% static 'images/icon-addlink.svg' %}"> Add a new Book</a>
+            link will open a popup window and request you to add the book title, type, publisher,
+            author, genre, URL and skills.</td>
+        </tr>
+        <tr>
+          <td>Book Format</td>
+          <td>Select from the dropdown list and should be a hard copy, pdf, kindle, etc.<br>
+            The <a href="#"><img src="{% static 'images/icon-addlink.svg' %}"> Add a new book format</a>
+            link will request you to add the format type if your desired option is not in the list.</td>
+        </tr>
+        <tr>
+          <td>Date Finished</td>
+          <td>Here please enter the date that you finished reading the book. Open the date picker by
+            clicking on the up or down arrows that appear on the right of the capture field when
+            you hover over it.</td>
+        </tr>
+      </table>
+    <br>
+    <p>**In the event that one of the dropdown lists is not populated please refresh the page.</p>
+    <p>A * next to the field name indicates that the field is a required field.</p>
+    <p>Click the <button type="submit" class="btn btn-primary" name="button">Add</button> button when complete.</p>
+    <p>You have the option to:</p>
+      <ul>
+        <li><a href="#" class="badge badge-pill badge-primary">Back</a> - allows you to navigate back to the
+        Booklist Home page.</li>
+      </ul>
+
+</div>
+{% endblock content %}

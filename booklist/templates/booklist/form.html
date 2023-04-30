@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  {{ form.media.css }}
+  <style type="text/css">
+    select {
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+<form method="post" action="">
+  {% csrf_token %}
+  <div style="background-color:red; color:white;">
+    <p>
+
+      {{ form.non_field_errors }}
+    </p>
+  </div>
+  {{ form }}
+  <p><input type="submit" value="Submit Form"/></p>
+</form>
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+<script type="text/javascript">
+  window.onerror = function (msg) {
+    $("body").attr("JSError", msg);
+  }
+  $(".js-example-tokenizer").select2({
+    tags: true,
+    tokenSeparators: [',', ';']
+})
+</script>
+ 
+</body>

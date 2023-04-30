@@ -1,0 +1,42 @@
+{% extends 'base_homelite.html' %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+{% block title %}{{block.super}} Help{% endblock title %}
+
+{% block Style %}
+
+{% endblock Style %}
+{% block content %}
+<div class="container">
+  <h3>Books Search Page - Help</h3>
+    <p>&nbsp</p>
+    <p>This page displays a list of the books that are captured in the MyWeXlog system
+      that meet your keyword parameter.</p>
+    <p>The search function will search against the Title, Skills Learned, Author and Publisher.</p>
+    <p>The books are listed in alphabetical order by Title.</p>
+    <p>The <a href="" class="badge badge-pill badge-primary">Book Detail</a> button will open
+      the Details listing for the book.</p>
+    <p>You have the option to:</p>
+      <ul>
+        <li><a href="#" class="badge badge-pill badge-primary">Add Book</a> - Button will allows
+          you to capture a new book requiring the Book Title, Type, Publisher, Author, Genre,
+          url and skill tags.</li>
+        <li><a href="#" class="badge badge-pill badge-primary">View All Books</a> - Button will display
+          a paginated listing in alphabetical order of all the books that have been captured into
+          the MyWeXlog system.</li>
+          <li><a href="#" class="badge badge-pill badge-primary">Search All Books</a> - Button will
+            allow you to search the books captured in the MyWeXlog system. The search function all
+            you to searh based on the title, skills, author and publisher.</li>
+        <li><a href="#" class="badge badge-pill badge-primary">Book Detail</a> - will open the
+          detail page for the book with Title, Type, Publisher, Author(s), Skills and url.</li>
+      </ul>
+    <p>The <a href="" class="btn btn-primary">Search Again</a> button will refresh the search page
+      to the initial search form requesting you to enter your search keyword.</p>
+    <p>You have the option to:</p>
+      <ul>
+        <li><a href="#" class="badge badge-pill badge-primary">Back</a> - allows you to navigate back to the
+        Booklist Home page.</li>
+      </ul>
+</div>
+{% endblock content %}

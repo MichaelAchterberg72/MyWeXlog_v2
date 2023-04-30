@@ -1,0 +1,33 @@
+{% extends "base_home.html" %}
+
+{% block title %}{{block.super}}-Book List{% endblock title %}
+
+{% block content %}
+<div class="card">
+  <h5 class="card-header">
+    Welcome to the book list home page!
+  </h5>
+  <div class="card-body">
+  <ul>
+    <li>Open your books read listing: <a href="{% url 'BookList:books-read-list' %}">Books Read</a></li>
+    <li>View all the books for a listed skill type: <a href="{% url 'BookList:books-list' %}">Skill Books List</a></li>
+  </ul>
+<p>
+  <ul>
+    <li>Add a new author: <a href="{% url 'BookList:AuthorCreate' %}">Author</a></li>
+    <li>Add a new publisher: <a href="{% url 'BookList:PublisherCreate' %}">Publisher</a></li>
+    <li>Add a new book type: <a href="{% url 'BookList:FormatCreate' %}">Book Type</a></li>
+  </ul>
+</p>
+</div>
+
+<div class="container">
+<p></p>
+  <ul>
+  <li>Search all books: <a href="{% url 'BookList:book-search' %}">Search</a></li>
+</ul>
+</div>
+
+</div>
+
+{% endblock content %}

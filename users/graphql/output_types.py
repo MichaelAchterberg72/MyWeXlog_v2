@@ -9,7 +9,7 @@ class UserOutputType(DjangoObjectType):
     class Meta:
         model = User
         fields = '__all__'
-        convert_choices_to_enums = ['subscription', 'permission', 'role']
+        convert_choices_to_enums = True
         interfaces = (graphene.relay.Node,)
         filter_fields = {
             'username': ['exact', ],

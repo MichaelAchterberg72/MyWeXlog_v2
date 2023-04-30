@@ -1,0 +1,89 @@
+{% extends "base_home.html" %}
+
+{% block title %}{{block.super}}-Book Detail{% endblock title %}
+
+{% block content %}
+
+<div class="card card-shadow">
+    <div class="card-body">
+      <div class="float-right">
+        <a href="{% url 'BookList:BookListHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary">Back</a>
+      </div>
+      <h4 class="">Detail for {{ info.title }} book</h4>
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="">
+          <div class="card-body">
+            <h5 class="card-title">Book Details</h5>
+            <table class="table table-sm">
+              <col width="40%">
+              <col width="40%">
+              <col width="20%">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for d in detail %}
+                <tr>
+                  <th>Book Title</th>
+                  <td>
+                    {{ d.title }}
+                  </td>
+                  <td>
+                    {% if rbk %}
+                      <button class="badge badge-success" style="width: 7rem;">
+                        Read
+                      </button>
+                    {% else %}
+                      <a href="{% url 'BookList:BookAddList' d.slug %}?next={{ request.path|urlencode }}" class="badge badge-primary" style="width: 9rem;">
+                        Mark as Read
+                      </a>
+                    {% endif %}
+                  </td>
+
+                </tr>
+                <tr>
+                  <th>Book Type</th>
+                  <td>{{ d.get_type_display }}</td>
+                </tr>
+                <tr>
+                  <th>Book Publisher</th>
+                  <td>{{ d.publisher }}</td>
+                </tr>
+                  <tr>
+                    <th>Author</th>
+
+                    <td>{% for a in detail %}
+                    {{ a.author.all|join:", " }}
+                    {% endfor %}</td>
+
+                  </tr>
+
+                  <tr>
+                    <th>Skill Type</th>
+
+                    <td>{% for s in detail %}
+                    {{ s.tag.all|join:", " }}
+                    {% endfor %}</td>
+
+                  </tr>
+                  <tr>
+                    <th>Book Link</th>
+                    <td><a href="{{ d.link }}">{{ d.link }}</a></td>
+                  </tr>
+                  {% endfor %}
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

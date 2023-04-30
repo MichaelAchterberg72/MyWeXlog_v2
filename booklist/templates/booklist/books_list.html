@@ -1,0 +1,127 @@
+{% extends "base_home.html" %}
+{% load humanize %}
+
+{% block content %}
+<div class="content-section">
+  <div class="card card-shadow">
+    <div class="card-body">
+      <h4 class="">
+        Books List
+          <span>
+            <p class="float-right">
+              <a href="{% url 'BookList:HelpBooklist' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="tooltip" title="Click here for help on this page!">
+                <i class="fa fa-question-circle"></i>
+              </a>
+            </p>
+          </span>
+        </h4>
+
+      <div class="card-body">
+    {% if request.user.is_authenticated %}
+      <p>
+        There are currently {{ bcount.sum_b|intcomma }} books listed in MyWeXlog
+      </p>
+      <p>
+        <a href="{% url 'BookList:AddBookList' %}" class="badge badge-pill badge-primary">
+          Add Book
+        </a>
+        <a href="{% url 'BookList:BookListHome' %}" class="badge badge-pill badge-primary">
+          View Books Read
+        </a>
+        <a href="{% url 'BookList:book-search' %}" class="badge badge-pill badge-primary">
+          Search Books
+        </a>
+        <a href="{% url 'BookList:BookListHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">
+          Back
+        </a>
+      </p>
+    {% endif %}
+    <div class="container">
+      <div class="row my-auto">
+        <div class="col-md-5 h-100 text-center my-auto">
+          <strong>Book Title</strong>
+        </div>
+        <div class="col-md-3 h-100 text-center my-auto">
+          <strong>Publisher</strong>
+        </div>
+        <div class="col-md-4 h-100 text-center my-auto">
+          <strong></strong>
+        </div>
+      </div>
+    </div>
+    {% for item in pageitems %}
+    <div class="row">
+      <div class="card mt-1 card-hover" style="width: 100%;">
+        <div class="card-body small-pad">
+          <div class="row my-auto">
+            <div class="col-md-5 h-100 text-center my-auto">
+              {{ item.title }}
+            </div>
+            <div class="col-md-3 h-100 text-center my-auto">
+              {{ item.publisher }}
+            </div>
+            <div class="col-md-4 h-100 text-center my-auto">
+              <a href="{% url 'BookList:BookDetail' item.slug %}?next={{ request.path|urlencode }}" class="badge badge-secondary" style="width: 7rem;">
+                Book Detail
+              </a><br>
+              {% if item.id in b_read %}
+                <button class="badge badge-success" style="width: 7rem;">
+                  Read
+                </button>
+              {% else %}
+                <a href="{% url 'BookList:BookAddList' item.slug %}?next={{ request.path|urlencode }}" class="badge badge-primary" style="width: 7rem;">
+                  Mark as Read
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+        <p>There are no books added yet.</p>
+    {% endfor %}
+
+          <p>&nbsp</p>
+
+          <nav aria-label="Page navigation">
+              {% if pageitems.has_other_pages %}
+                <ul class="pagination">
+                  {% if pageitems.has_previous %}
+                    <li class="page-item">
+                      <a class="page-link" href="?page={{ pageitems.previous_page_number }}" aria-label="Previous">
+                        <span aria-hidden="true">Previous</span>
+                        <span class="sr-only disabled">Previous</span>
+                      </a></li>
+                  {% else %}
+                    <li class="page-link disabled" tabindex="-1"><span>Previous</span></li>
+                  {% endif %}
+
+                  {% if pageitems.number|add:'-4' > 1 %}
+                    <li class="page-link"><a href="?page={{ pageitems.number|add:'-5' }}">&hellip;</a></li>
+                  {% endif %}
+
+                  {% for i in pageitems.paginator.page_range %}
+                    {% if pageitems.number == i %}
+                      <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
+                    {% elif i > pageitems.number|add:'-5' and i < pageitems.number|add:'5' %}
+                      <li class="page-link"><a class="page-item" href="?page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                  {% endfor %}
+
+                  {% if pageitems.paginator.num_pages > pageitems.number|add:'4' %}
+                    <li class="page-link"><a href="?page={{ pageitems.number|add:'5' }}">&hellip;</a></li>
+                  {% endif %}
+
+                  {% if pageitems.has_next %}
+                    <li class="page-link"><a href="?page={{ pageitems.next_page_number }}">Next</a></li>
+                  {% else %}
+                    <li class="page-link disabled"><span>Next</span></li>
+                  {% endif %}
+                </ul>
+              {% endif %}
+          </nav>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

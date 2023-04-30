@@ -3,14 +3,15 @@ import graphene
 from users.graphql.input_types import UserInputType
 
 
-class TimesheetInput(graphene.InputObjectType):
-    talent = graphene.Field(UserInputType)
-    work_experience = graphene.Field()
+class TimesheetInputType(graphene.InputObjectType):
+    id = graphene.ID()
+    talent = graphene.Argument(UserInputType)
+    work_experience = graphene.Argument()
     date_captured = graphene.Date()
     date = graphene.Date()
-    client = graphene.Field()
-    project = graphene.Field()
-    task = graphene.Field()
+    client = graphene.Argument()
+    project = graphene.Argument()
+    task = graphene.Argument()
     details = graphene.String()
     time_from = graphene.DateTime()
     time_to = graphene.DateTime()

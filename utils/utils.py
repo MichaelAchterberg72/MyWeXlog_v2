@@ -1,3 +1,5 @@
+import enum
+import graphene
 from django.db.models.fields.related import RelatedField
 
 
@@ -36,3 +38,9 @@ def handle_m2m_relationship(instance, related_models_data):
         m2m_manager.set(related_instances)
 
     instance.save()
+    
+    
+def create_enum_from_choices(choices):
+    enum_values = {item[1]: item[0] for item in choices}
+    return graphene.Enum.from_enum(enum.Enum("ChoicesEnum", enum_values))
+

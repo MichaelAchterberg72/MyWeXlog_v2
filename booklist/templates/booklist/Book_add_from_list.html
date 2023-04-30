@@ -1,0 +1,86 @@
+{% extends "base_home.html" %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters static %}
+{% block title %}{{block.super}}-New Book Read{% endblock title %}
+
+{% block extra_head %}
+
+{% endblock %}
+
+{% block content %}
+{{ form.media.css }}
+<style type="text/css">
+  select {
+    width: 100px;
+  }
+</style>
+
+<div class="card card-shadow">
+  <div class="card-body">
+    <h4 class="card-title">
+      Add {{ book_qs.title }} to your list
+      <span>
+        <p class="float-right">
+          <a href="{% url 'BookList:HelpBooklistAddBookRead' %}" target="_blank" class="align-middle" style="font-size: 16px" data-toggle="popover" title="Click here for help on this page!">
+            <i class="fa fa-question-circle"></i>
+          </a>
+        </p>
+      </span>
+    </h4>
+
+
+<div class="card-body">
+  {% if request.user.is_authenticated %}
+  <p>
+    <a href="{% url 'BookList:BookListHome' %}?next={{ request.path|urlencode }}" class="badge badge-pill badge-primary float-right">
+      Back
+    </a>
+  </p>
+  {% endif %}
+
+  <form method="POST" autocomplete="on" novalidate>
+    {% csrf_token %}
+    <div style="background-color:red; color:white;">
+      <p>
+
+        {{ form.non_field_errors }}
+      </p>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6 mb-0">
+        {{ form.type|as_crispy_field }}
+        <a href="{% url 'BookList:FormatCreatePopup' %}" id='format' onclick='return showAddPopup(this);'><img src = "{% static 'images/icon-addlink.svg' %}">
+          Add a new book type
+        </a>
+      {{ form.date|as_crispy_field }}
+      </div>
+      <div class="form-group col-md-6 mb-0">
+        {{ form.review|as_crispy_field }}
+      </div>
+    </div>
+    <a href="{% url 'BookList:BookListHome' %}" class="btn btn-danger">Cancel</a>
+    <button type="submit" class="btn btn-primary" name="button">Save</button>
+  </form>
+</div>
+</div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+<script type="text/javascript">
+
+function showAddPopup(triggeringLink) {
+    var name = triggeringLink.id.replace(/^add_/, '');
+    href = triggeringLink.href;
+    var win = window.open(href, name, 'height=350,width=600,resizable=yes,scrollbars=yes');
+    win.focus();
+    return false;
+}
+function closePopup(win, newID, newRepr, id) {
+    $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
+    win.close();
+}
+</script>
+{% endblock content %}
