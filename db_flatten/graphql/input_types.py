@@ -12,6 +12,6 @@ class SkillTagInputType(graphene.InputObjectType):
     code = graphene.String()
     
     
-class LanguageListInputType(graphene.InputObjecttype):
+class LanguageListInputType(graphene.InputObjectType):
     id = graphene.ID()
     language = graphene.String()

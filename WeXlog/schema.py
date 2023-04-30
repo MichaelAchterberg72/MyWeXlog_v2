@@ -4,7 +4,7 @@ from django.db.models import Q, Sum
 import allauth.graphql.queries
 import booklist.graphql.queries 
 
-import allauth.graphql.mutations
+# import allauth.graphql.mutations
 import booklist.graphql.mutations 
 import allauth.graphql.jwt_mutations
 
@@ -20,7 +20,7 @@ class Query(
 
 
 class Mutation(
-    allauth.graphql.mutations.Mutation, 
+    # allauth.graphql.mutations.Mutation, 
     allauth.graphql.jwt_mutations.Mutation,
     booklist.graphql.mutations.Mutation,    
     graphene.ObjectType

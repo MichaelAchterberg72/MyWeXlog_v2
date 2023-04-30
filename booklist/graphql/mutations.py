@@ -1,7 +1,7 @@
 import graphene
 from django.db import transaction
 
-from utils.graphql.output_types import SuccessMessage, FailureMessage
+from utils.graphql.output_types import SuccessMessage, FailureMessage, SuccessMutationResult
 
 from .input_types import (
     AuthorInputType,
@@ -27,9 +27,7 @@ class AuthorUpdateOrCreate(graphene.Mutation):
         id = AuthorInputType.id
         name = AuthorInputType.name
         
-    Output = graphene.Field(
-        lambda: graphene.Union("AuthorUpdateOrCreateResult", 
-                               [SuccessMessage, FailureMessage]))
+    Output = SuccessMutationResult
         
     def mutate(self, root, info, **kwargs):
         try:
@@ -49,15 +47,13 @@ class AuthorDelete(graphene.Mutation):
     class Arguments:
         id = AuthorInputType.id
         
-    Output = graphene.Field(
-        lambda: graphene.Union("AuthorDeleteResult", 
-                               [SuccessMessage, FailureMessage]))
+    Output = SuccessMutationResult
         
     def mutate(self, root, info, **kwargs):
         try:
             with transaction.atomic():
                 author = Author.objects.get(kwargs['id']).delete()
-                return SuccessMessage(success=True, id=kwargs['id'] message="Author deleted successfully")
+                return SuccessMessage(success=True, id=kwargs['id'], message="Author deleted successfully")
         except Exception as e:
             return FailureMessage(success=False, message=f"Error deleting author: {str(e)}")
 
@@ -68,9 +64,7 @@ class PublisherUpdateOrCreate(graphene.Mutation):
         publisher = PublisherInputType.publisher
         link = PublisherInputType.link
         
-    Output = graphene.Field(
-        lambda: graphene.Union("PublisherUpdateOrCreateResult", 
-                               [SuccessMessage, FailureMessage]))
+    Output = SuccessMutationResult
         
     def mutate(self, root, info, **kwargs):
         try:
@@ -90,15 +84,13 @@ class PublisherDelete(graphene.Mutation):
     class Arguments:
         id = PublisherInputType.id
         
-    Output = graphene.Field(
-        lambda: graphene.Union("PublisherDeleteResult", 
-                               [SuccessMessage, FailureMessage]))
+    Output = SuccessMutationResult
         
     def mutate(self, root, info, **kwargs):
         try:
             with transaction.atomic():
                 publisher = Publisher.objects.get(kwargs['id']).delete()
-                return SuccessMessage(success=True, id=kwargs['id'] message="Publisher deleted successfully")
+                return SuccessMessage(success=True, id=kwargs['id'], message="Publisher deleted successfully")
         except Exception as e:
             return FailureMessage(success=False, message=f"Error deleting publisher: {str(e)}")
 
@@ -108,9 +100,7 @@ class GenreUpdateOrCreate(graphene.Mutation):
         id = GenreInputType.id
         name = GenreInputType.name
         
-    Output = graphene.Field(
-        lambda: graphene.Union("GenreUpdateOrCreateResult", 
-                               [SuccessMessage, FailureMessage]))
+    Output = SuccessMutationResult
         
     def mutate(self, root, info, **kwargs):
         try:
@@ -130,15 +120,13 @@ class GenreDelete(graphene.Mutation):
     class Arguments:
         id = GenreInputType.id
         
-    Output = graphene.Field(
-        lambda: graphene.Union("GenreDeleteResult", 
-                               [SuccessMessage, FailureMessage]))
+    Output = SuccessMutationResult
         
     def mutate(self, root, info, **kwargs):
         try:
             with transaction.atomic():
                 genre = Genre.objects.get(kwargs['id']).delete()
-                return SuccessMessage(success=True, id=kwargs['id'] message="Genre deleted successfully")
+                return SuccessMessage(success=True, id=kwargs['id'], message="Genre deleted successfully")
         except Exception as e:
             return FailureMessage(success=False, message=f"Error deleting genre: {str(e)}")
 
@@ -155,9 +143,7 @@ class BookListUpdateOrCreate(graphene.Mutation):
         genre = BookListInputType.genre
         slug = BookListInputType.slug
         
-    Output = graphene.Field(
-        lambda: graphene.Union("BookListUpdateOrDeleteResult", 
-                               [SuccessMessage, FailureMessage]))
+    Output = SuccessMutationResult
         
     def mutate(cls, root, info, **kwargs):
         try:
@@ -174,15 +160,13 @@ class BookListDelete(graphene.Mutation):
     class Arguments:
         slug = BookListInputType.slug
         
-    Output = graphene.Field(
-        lambda: graphene.Union("BookListDeleteResult", 
-                               [SuccessMessage, FailureMessage]))
+    Output = SuccessMutationResult
         
     def mutate(self, root, info, **kwargs):
         try:
             with transaction.atomic():
                 booklist = BookList.objects.get(kwargs['slug']).delete()
-                return SuccessMessage(success=True, id=kwargs['slug'] message="BookList deleted successfully")
+                return SuccessMessage(success=True, id=kwargs['slug'], message="BookList deleted successfully")
         except Exception as e:
             return FailureMessage(success=False, message=f"Error deleting booklist: {str(e)}")
 
@@ -192,9 +176,7 @@ class FormatUpdateOrCreate(graphene.Mutation):
         id = FormatInputType.id
         format = FormatInputType.format
         
-    Output = graphene.Field(
-        lambda: graphene.Union("FormatUpdateOrCreateResult", 
-                               [SuccessMessage, FailureMessage]))
+    Output = SuccessMutationResult
         
     def mutate(self, root, info, **kwargs):
         try:
@@ -214,15 +196,13 @@ class FormatDelete(graphene.Mutation):
     class Arguments:
         id = FormatInputType.id
         
-    Output = graphene.Field(
-        lambda: graphene.Union("FormatDeleteResult", 
-                               [SuccessMessage, FailureMessage]))
+    Output = SuccessMutationResult
         
     def mutate(self, root, info, **kwargs):
         try:
             with transaction.atomic():
                 format = Format.objects.get(kwargs['id']).delete()
-                return SuccessMessage(success=True, id=kwargs['id'] message="Format deleted successfully")
+                return SuccessMessage(success=True, id=kwargs['id'], message="Format deleted successfully")
         except Exception as e:
             return FailureMessage(success=False, message=f"Error deleting format: {str(e)}")
 
@@ -236,9 +216,7 @@ class ReadByUpdateOrCreate(graphene.Mutation):
         date = ReadByInputType.date
         review = ReadByInputType.review
         
-    Output = graphene.Field(
-        lambda: graphene.Union("ReadByUpdateOrDeleteResult", 
-                               [SuccessMessage, FailureMessage]))
+    Output = SuccessMutationResult
         
     def mutate(self, root, info, **kwargs):
         try:
@@ -258,32 +236,17 @@ class ReadByDelete(graphene.Mutation):
     class Arguments:
         id = ReadByInputType.id
         
-    Output = graphene.Field(
-        lambda: graphene.Union("ReadByDeleteResult", 
-                               [SuccessMessage, FailureMessage]))
+    Output = SuccessMutationResult
         
     def mutate(self, root, info, **kwargs):
         try:
             with transaction.atomic():
                 booklist = ReadBy.objects.get(kwargs['id']).delete()
-                return SuccessMessage(success=True, id=kwargs['id'] message="ReadBy deleted successfully")
+                return SuccessMessage(success=True, id=kwargs['id'], message="ReadBy deleted successfully")
         except Exception as e:
             return FailureMessage(success=False, message=f"Error deleting readby: {str(e)}")
 
         
-graphene.Schema.register_union_type("AuthorUpdateOrCreateResult", [SuccessMessage, FailureMessage])
-graphene.Schema.register_union_type("AuthorDeleteResult", [SuccessMessage, FailureMessage])
-graphene.Schema.register_union_type("PublisherUpdateOrCreateResult", [SuccessMessage, FailureMessage])
-graphene.Schema.register_union_type("PublisherDeleteResult", [SuccessMessage, FailureMessage])
-graphene.Schema.register_union_type("GenreUpdateOrCreateResult", [SuccessMessage, FailureMessage])
-graphene.Schema.register_union_type("GenreDeleteResult", [SuccessMessage, FailureMessage])
-graphene.Schema.register_union_type("BookListUpdateOrCreateResult", [SuccessMessage, FailureMessage])
-graphene.Schema.register_union_type("BookListDeleteResult", [SuccessMessage, FailureMessage])
-graphene.Schema.register_union_type("FormatUpdateOrCreateResult", [SuccessMessage, FailureMessage])
-graphene.Schema.register_union_type("FormatDeleteResult", [SuccessMessage, FailureMessage])
-graphene.Schema.register_union_type("ReadByUpdateOrCreateResult", [SuccessMessage, FailureMessage])
-graphene.Schema.register_union_type("ReadByDeleteResult", [SuccessMessage, FailureMessage])
-
 class Mutation(graphene.ObjectType):
     author_update_or_create = AuthorUpdateOrCreate.Field()
     author_delete = AuthorDelete.Field()

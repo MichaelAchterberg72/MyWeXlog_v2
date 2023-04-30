@@ -24,7 +24,7 @@ class BookListInputType(graphene.InputObjectType):
     id = graphene.ID()
     title = graphene.String()
     type = graphene.String()
-    publisher = graphene.Field(PublisherInputType)
+    publisher = graphene.Argument(PublisherInputType)
     link = graphene.String()
     author = graphene.List(AuthorInputType)
     tag = graphene.String(SkillTagInputType)
@@ -39,8 +39,8 @@ class FormatInputType(graphene.InputObjectType):
     
 class ReadByInputType(graphene.InputObjectType):
     id = graphene.ID()
-    talent = graphene.Field(UserInputType)
-    book = graphene.Field(BookListInputType)
+    talent = graphene.Argument(UserInputType)
+    book = graphene.Argument(BookListInputType)
     type = graphene.Field(FormatInputType)
     date = graphene.Date()
     review = graphene.String()

@@ -47,7 +47,7 @@ class BookListFilter(django_filters.FilterSet):
 class FormatFilter(django_filters.FilterSet):
     class Meta:
         model = Format
-        fields = ['name']
+        fields = ['format']
         
 
 class ReadByFilter(django_filters.FilterSet):
@@ -58,8 +58,7 @@ class ReadByFilter(django_filters.FilterSet):
             'book__title',
             'book__type',
             'book__author__name',
-            'type__tag__skill',
-            'type__tag__code',
+            'type__format',
             'date',
             'review'
         ]
