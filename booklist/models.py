@@ -59,9 +59,9 @@ class BookList(models.Model):
         unique_together = (('title', 'publisher'),)
     
     @classmethod
-    def update_or_create(cls, id=None, instance=None, **kwargs):
-        if id and not instance:
-            instance = BookList.objects.get(pk=id)
+    def update_or_create(cls, slug=None, instance=None, **kwargs):
+        if slug and not instance:
+            instance = BookList.objects.get(slug=slug)
             
         publisher = kwargs.pop('publisher', None)
         author = kwargs.pop('author', [])
@@ -75,7 +75,7 @@ class BookList(models.Model):
             instance = BookList.objects.create(**kwargs)
             
         if publisher:
-            instance = Publisher.update_or_create(instance=instance, **publisher)
+            instance, created = Publisher.objects.update_or_create(**publisher)
 
         if author:
             author_related_models_data = {

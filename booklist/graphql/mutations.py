@@ -63,6 +63,89 @@ class AuthorDelete(graphene.Mutation):
             return FailureMessage(success=False, message=f"Error deleting author: {str(e)}")
 
 
+class PublisherUpdateOrCreate(graphene.Mutation):
+    class Arguments:
+        id = PublisherInputType.id
+        publisher = PublisherInputType.publisher
+        link = PublisherInputType.link
+        
+    Output = graphene.Field(
+        lambda: graphene.Union("PublisherUpdateOrCreateResult", 
+                               [SuccessMessage, FailureMessage]))
+        
+    @classmethod
+    def mutate(cls, root, info, **kwargs):
+        try:
+            with transaction.atomic():
+                publisher_id = kwargs.pop('id', None)
+                if publisher_id:
+                    kwargs['id'] = publisher_id
+                    
+                publisher, created = Publisher.objects.update_or_create(**kwargs)
+                message = "Publisher updated successfully" if not created else "Publisher created successfully"
+                return SuccessMessage(success=True, id=publisher.id, message=message)
+        except Exception as e:
+            return FailureMessage(success=False, message=f"Error adding publisher: {str(e)}")
+
+
+class PublisherDelete(graphene.Mutation):
+    class Arguments:
+        id = PublisherInputType.id
+        
+    Output = graphene.Field(
+        lambda: graphene.Union("PublisherDeleteResult", 
+                               [SuccessMessage, FailureMessage]))
+        
+    def mutate(self, root, info, **kwargs):
+        try:
+            with transaction.atomic():
+                publisher = Publisher.objects.get(kwargs['id']).delete()
+                return SuccessMessage(success=True, id=kwargs['id'] message="Publisher deleted successfully")
+        except Exception as e:
+            return FailureMessage(success=False, message=f"Error deleting publisher: {str(e)}")
+
+
+class GenreUpdateOrCreate(graphene.Mutation):
+    class Arguments:
+        id = GenreInputType.id
+        name = GenreInputType.name
+        
+    Output = graphene.Field(
+        lambda: graphene.Union("GenreUpdateOrCreateResult", 
+                               [SuccessMessage, FailureMessage]))
+        
+    @classmethod
+    def mutate(cls, root, info, **kwargs):
+        try:
+            with transaction.atomic():
+                genre_id = kwargs.pop('id', None)
+                if genre_id:
+                    kwargs['id'] = genre_id
+                    
+                genre, created = Genre.objects.update_or_create(**kwargs)
+                message = "Genre updated successfully" if not created else "Genre created successfully"
+                return SuccessMessage(success=True, id=genre.id, message=message)
+        except Exception as e:
+            return FailureMessage(success=False, message=f"Error adding genre: {str(e)}")
+
+
+class GenreDelete(graphene.Mutation):
+    class Arguments:
+        id = GenreInputType.id
+        
+    Output = graphene.Field(
+        lambda: graphene.Union("GenreDeleteResult", 
+                               [SuccessMessage, FailureMessage]))
+        
+    def mutate(self, root, info, **kwargs):
+        try:
+            with transaction.atomic():
+                genre = Genre.objects.get(kwargs['id']).delete()
+                return SuccessMessage(success=True, id=kwargs['id'] message="Genre deleted successfully")
+        except Exception as e:
+            return FailureMessage(success=False, message=f"Error deleting genre: {str(e)}")
+
+
 class BookListUpdateOrCreate(graphene.Mutation):
     class Arguments:
         id = BookListInputType.id
