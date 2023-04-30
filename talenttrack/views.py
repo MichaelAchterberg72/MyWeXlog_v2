@@ -16,8 +16,7 @@ from django.db.models import Avg, Count, F, Max, Min, Q, Sum
 from django.db.models.functions import Greatest
 from django.db.models import ExpressionWrapper, DecimalField
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import (get_object_or_404, redirect, render,
-                              render_to_response)
+from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import get_template, render_to_string
 from django.urls import reverse
 from django.utils import timezone

@@ -30,7 +30,7 @@ class PublisherOutputType(DjangoObjectType):
         interfaces = (graphene.relay.Node,)
         filter_fields = {
             'id': ['exact'],
-            'name': ['exact', 'icontains', 'istartswith'],
+            'publisher': ['exact', 'icontains', 'istartswith'],
             'link': ['exact'],
         }
         ordering = ['publisher', 'link']
@@ -55,8 +55,8 @@ class BookListOutputType(DjangoObjectType):
         interfaces = (graphene.relay.Node,)
         filter_fields = {
             'id': ['exact'],
-            'name': ['exact', 'icontains', 'istartswith'],
-            'type': ['exact', 'icontains', 'istartswith'],
+            'title': ['exact', 'icontains', 'istartswith'],
+            'type': ['exact'],
             'publisher__publisher': ['exact', 'icontains', 'istartswith'],
             'link': ['exact', 'icontains'],
             'author__name': ['exact', 'icontains', 'istartswith'],
@@ -65,7 +65,7 @@ class BookListOutputType(DjangoObjectType):
             'slug': ['exact'],
         }
         ordering = [
-            'name', 
+            'title', 
             'type', 
             'publisher__publisher', 
             'link', 
@@ -97,8 +97,8 @@ class ReadByOutputType(DjangoObjectType):
         filter_fields = {
             'id': ['exact'],
             'talent__alias': ['exact', 'icontains', 'istartswith'],
-            'book__title': ['iexact', 'icontains', 'istartswith'],
-            'type': ['iexact', 'icontains', 'istartswith'],
+            'book__title': ['exact', 'icontains', 'istartswith'],
+            'type__format': ['exact', 'icontains', 'istartswith'],
             'date': ['exact', 'lt', 'lte', 'gt', 'gte'],
             'review': ['icontains'],
         }
