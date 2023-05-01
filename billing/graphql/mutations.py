@@ -56,7 +56,12 @@ class TimesheetDelete(graphene.Mutation):
     def mutate(self, root, info, **kwargs):
         try:
             with transaction.atomic():
-                author = Timesheet.objects.get(kwargs['id']).delete()
+                timesheet = Timesheet.objects.get(kwargs['id']).delete()
                 return SuccessMessage(success=True, id=kwargs['id'], message="Timesheet deleted successfully")
         except Exception as e:
             return FailureMessage(success=False, message=f"Error deleting timesheet: {str(e)}")
+
+
+class Mutation(graphene.ObjectType):
+    timesheet_update_or_create = TimesheetUpdateOrCreate.Field()
+    timesheet_delete = TimesheetDelete.Field()
