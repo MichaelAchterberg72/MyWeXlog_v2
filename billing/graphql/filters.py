@@ -27,3 +27,4 @@ class TimesheetFilter(django_filters.FilterSet):
             'include_for_certificate',
             'include_for_invoice',
         ]
+        order_by = '__all__'

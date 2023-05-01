@@ -8,6 +8,8 @@ from django_countries.fields import CountryField
 from phonenumber_field.modelfields import PhoneNumberField
 from WeXlog.storage_backends import PrivateMediaStorage
 
+from utils.utils import update_model, handle_m2m_relationship
+
 from db_flatten.models import PhoneNumberType
 from locations.models import City, Region, Suburb
 from Profile.utils import create_code9
@@ -118,6 +120,43 @@ class Branch(models.Model):
     class Meta:
         unique_together = (('company','name', 'city'),)
         ordering = ['name',]
+        
+    @classmethod
+    def update_or_create(cls, slug=None, instance=None, **kwargs):
+        if slug and not instance:
+            instance = Branch.objects.get(slug=slug)
+            
+        company = kwargs.pop('company', None)
+        region = kwargs.pop('region', None)
+        city = kwargs.pop('city', None)
+        suburb = kwargs.pop('suburb', None)
+        industry = kwargs.pop('industry', [])
+
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = Branch.objects.create(**kwargs)
+            
+        if company:
+            instance, created = Enterprise.objects.update_or_create(**company)
+        
+        if region:
+            instance, created = Region.objects.update_or_create(**region)
+        
+        if city:
+            instance, created = City.objects.update_or_create(**city)
+        
+        if suburb:
+            instance, created = Suburb.objects.update_or_create(**suburb)
+
+        if industry:
+            industry_related_models_data = {
+                'industry': (Industry, cls.industry, ['industry']),
+            }
+            instance = handle_m2m_relationship(instance, industry_related_models_data)
+
+        return instance
 
     def avg_rate(self):
         if self.rate_count is not None:
