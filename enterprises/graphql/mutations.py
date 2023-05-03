@@ -25,7 +25,7 @@ from ..models import (
 class IndustryUpdateOrCreate(graphene.Mutation):
     class Arguments:
         id = IndustryInputType.id
-        talent = IndustryInputType.talent
+        industry = IndustryInputType.industry
         
     Output = SuccessMutationResult
         

@@ -8,20 +8,20 @@ from ..models import (
     PhoneNumber
 )
 from .output_types import (
-    indus
+    IndustryOutputType
 )
-from .filters import TimesheetFilter
+from .filters import IndustryFilter
 
 
 class Query(graphene.ObjectType):
-    timesheet = graphene.Field(TimesheetOutputType, id=graphene.ID())
-    timesheets = DjangoFilterConnectionField(
-            TimesheetOutputType, 
-            filterset_class=TimesheetFilter
+    industry = graphene.Field(IndustryOutputType, id=graphene.ID())
+    industrys = DjangoFilterConnectionField(
+            IndustryOutputType, 
+            filterset_class=IndustryFilter
         )
     
-    def resolve_timesheet(self, info, id):
+    def resolve_industry(self, info, id):
         try:
-            return Timesheet.objects.get(pk=id)
-        except Timesheet.DoesNotExist:
+            return Industry.objects.get(pk=id)
+        except Industry.DoesNotExist:
             return None

@@ -1,17 +1,20 @@
 import graphene
 
 from users.graphql.input_types import UserInputType
+from talenttrack.graphql.input_types import WorkExperienceInputType
+from enterprises.graphql.input_types import BranchInputType
+from project.graphql.input_types import ProjectPersonalDetailsInputType, ProjectPersonalDetailsTaskInputType
 
 
 class TimesheetInputType(graphene.InputObjectType):
     id = graphene.ID()
     talent = graphene.Argument(UserInputType)
-    work_experience = graphene.Argument()
+    work_experience = graphene.Argument(WorkExperienceInputType)
     date_captured = graphene.Date()
     date = graphene.Date()
-    client = graphene.Argument()
-    project = graphene.Argument()
-    task = graphene.Argument()
+    client = graphene.Argument(BranchInputType)
+    project = graphene.Argument(ProjectPersonalDetailsInputType)
+    task = graphene.Argument(ProjectPersonalDetailsTaskInputType)
     details = graphene.String()
     time_from = graphene.DateTime()
     time_to = graphene.DateTime()

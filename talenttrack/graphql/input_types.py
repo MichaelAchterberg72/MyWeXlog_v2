@@ -2,7 +2,7 @@ import graphene
 from graphene_file_upload.scalars import Upload
 
 from users.graphql.input_types import UserInputType
-from skills.graphql.input_types import SkillTagInputType
+from db_flatten.graphql.input_types import SkillTagInputType
 from booklist.graphql.input_types import (
     AuthorInputType, 
     PublisherInputType, 
@@ -15,28 +15,27 @@ from enterprises.graphql.input_types import EnterpriseInputType, BranchInputType
 from project.graphql.input_types import ProjectDataInputType, ProjectPersonalDetailsInputType
 
 
-class AchievementsInputType(graphene.InputType):
+class AchievementsInputType(graphene.InputObjectType):
     talent = graphene.Field(UserInputType)
     achievement = graphene.String()
     date_achieved = graphene.Date()
     description = graphene.String()
-    upload = graphene.Upload()
-    thumbnail = graphene.Upload()
+    upload = Upload()
     slug = graphene.String()
     
     
-class AwardsInputType(graphene.InputType):
+class AwardsInputType(graphene.InputObjectType):
     talent = graphene.Field(UserInputType)
     award = graphene.String()
     date_achieved = graphene.Date()
     description = graphene.String()
     tag = graphene.List(SkillTagInputType)
-    upload = graphene.Upload()
-    thumbnail = graphene.Upload()
+    upload = Upload()
+    thumbnail = Upload()
     slug = graphene.String()
     
     
-class PublicationsInputType(graphene.InputType):
+class PublicationsInputType(graphene.InputObjectType):
     talent = graphene.Field(UserInputType)
     title = graphene.String()
     type = graphene.String()
@@ -47,34 +46,34 @@ class PublicationsInputType(graphene.InputType):
     genre = graphene.List(GenreInputType)
     date_published = graphene.Date()
     description = graphene.String()
-    upload = graphene.Upload()
+    upload = Upload()
     slug = graphene.String()
     
     
-class ResultInputType(graphene.InputType):
+class ResultInputType(graphene.InputObjectType):
     type = graphene.String()
     
     
-class CourseTypeInputType(graphene.InputType):
+class CourseTypeInputType(graphene.InputObjectType):
     type = graphene.String()
     
     
-class LicenseCertificationInputType(graphene.InputType):
+class LicenseCertificationInputType(graphene.InputObjectType):
     talent = graphene.Field(UserInputType)
-    certification = graphene.()
+    certification = graphene.Argument(ResultInputType)
     cert_name = graphene.String()
     country = CountryFieldInputType(required=True)
     region = graphene.Field(RegionInputType)
     cm_no = graphene.String()
     companybranch = graphene.Field(EnterpriseInputType)
-    upload = graphene.Upload()
+    upload = Upload()
     issue_date = graphene.Date()
     expiry_date = graphene.Date()
     current = graphene.Boolean()
     slug = graphene.String()
     
     
-class CourseInputType(graphene.InputType):
+class CourseInputType(graphene.InputObjectType):
     name = graphene.String()
     company = graphene.Field(EnterpriseInputType)
     course_type = graphene.Field(CourseTypeInputType)
@@ -82,13 +81,13 @@ class CourseInputType(graphene.InputType):
     certification = graphene.Field(ResultInputType)
     
     
-class TopicInputType(graphene.InputType):
+class TopicInputType(graphene.InputObjectType):
     topic = graphene.String()
     skills = graphene.List(SkillTagInputType)
     hours = graphene.Decimal()
     
     
-class LecturerInputType(graphene.InputType):
+class LecturerInputType(graphene.InputObjectType):
     education = graphene.Field(lambda: WorkExperienceInputType)
     lecturer = graphene.Field(UserInputType)
     topic = graphene.Field(TopicInputType)
@@ -102,7 +101,7 @@ class LecturerInputType(graphene.InputType):
     slug = graphene.String()
     
     
-class ClassMatesInputType(graphene.InputType):
+class ClassMatesInputType(graphene.InputObjectType):
     education = graphene.Field(lambda: WorkExperienceInputType)
     colleague = graphene.Field(UserInputType)
     topic = graphene.Field(TopicInputType)
@@ -116,16 +115,16 @@ class ClassMatesInputType(graphene.InputType):
     slug = graphene.String()
     
     
-class DesignationInputType(graphene.InputType):
+class DesignationInputType(graphene.InputObjectType):
     name = graphene.String()
     
     
-class WorkExperienceInputType(graphene.InputType):
+class WorkExperienceInputType(graphene.InputObjectType):
     talent = graphene.Field(UserInputType)
     date_from = graphene.Date()
     date_to = graphene.Date()
     date_captured = graphene.Date()
-    upload = graphene.Upload()
+    upload = Upload()
     score = graphene.Int()
     employment_type = graphene.String()
     title = graphene.String()
@@ -149,7 +148,7 @@ class WorkExperienceInputType(graphene.InputType):
     slug = graphene.String()
     
     
-class WorkColleagueInputType(graphene.InputType):
+class WorkColleagueInputType(graphene.InputObjectType):
     experience = graphene.Field(lambda: WorkExperienceInputType)
     colleague_name = graphene.Field(UserInputType)
     designation = graphene.Field(DesignationInputType)
@@ -166,7 +165,7 @@ class WorkColleagueInputType(graphene.InputType):
     slug = graphene.String()
     
     
-class SuperiorInputType(graphene.InputType):
+class SuperiorInputType(graphene.InputObjectType):
     experience = graphene.Field(lambda: WorkExperienceInputType)
     superior_name = graphene.Field(UserInputType)
     designation = graphene.Field(DesignationInputType)
@@ -183,7 +182,7 @@ class SuperiorInputType(graphene.InputType):
     slug = graphene.String()
     
     
-class WorkCollaboratorInputType(graphene.InputType):
+class WorkCollaboratorInputType(graphene.InputObjectType):
     experience = graphene.Field(lambda: WorkExperienceInputType)
     collaborator_name = graphene.Field(UserInputType)
     designation = graphene.Field(DesignationInputType)
@@ -200,7 +199,7 @@ class WorkCollaboratorInputType(graphene.InputType):
     slug = graphene.String()
     
     
-class WorkClientInputType(graphene.InputType):
+class WorkClientInputType(graphene.InputObjectType):
     experience = graphene.Field(lambda: WorkExperienceInputType)
     client_name = graphene.Field(UserInputType)
     designation = graphene.Field(DesignationInputType)
@@ -217,7 +216,7 @@ class WorkClientInputType(graphene.InputType):
     slug = graphene.String()
     
     
-class EmailRemindValidateInputType(graphene.InputType):
+class EmailRemindValidateInputType(graphene.InputObjectType):
     sender = graphene.Field(UserInputType)
     recipient = graphene.Field(UserInputType)
     subject = graphene.String()

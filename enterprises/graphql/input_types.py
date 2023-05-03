@@ -20,7 +20,7 @@ class EnterpriseInputType(graphene.InputObjectType):
     ename = graphene.String()
     slug = graphene.String()
     description = graphene.String()
-    logo = graphene.Upload()
+    logo = Upload()
     website = graphene.String()
     filter_class = graphene.String()
     rate_1 = graphene.Float()

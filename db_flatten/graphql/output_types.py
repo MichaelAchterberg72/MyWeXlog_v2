@@ -1,15 +1,11 @@
 import graphene
 from graphene_django import DjangoObjectType
 
-<<<<<<< HEAD
-from ..models import PhoneNumberType, PhoneNumberType, LanguageList
-=======
 from ..models import (
     PhoneNumberType,
     SkillTag,
     LanguageList
 )
->>>>>>> 2023-04-30-install-initial-graphql
 
 
 class PhoneNumberTypeOutputType(DjangoObjectType):

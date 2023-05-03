@@ -57,18 +57,18 @@ class BranchOutputType(DjangoObjectType):
         interfaces = (graphene.relay.Node,)
         convert_choices_to_enums = True
         filter_fields = {
-            'company': ['exact', 'icontains', 'istartswith'],
+            'company__ename': ['exact', 'icontains', 'istartswith'],
             'name': ['exact', 'icontains', 'istartswith'],
-            'type': ['exact', 'icontains', 'istartswith'],
+            'type__type': ['exact', 'icontains', 'istartswith'],
             'size': ['exact', 'icontains', 'istartswith'],
             'phy_address_line1': ['exact', 'icontains', 'istartswith'],
             'phy_address_line2': ['exact', 'icontains', 'istartswith'],
             'country': ['exact', 'icontains', 'istartswith'],
-            'region': ['exact', 'icontains', 'istartswith'],
-            'city': ['exact', 'icontains', 'istartswith'],
-            'suburb': ['exact', 'icontains', 'istartswith'],
+            'region__region': ['exact', 'icontains', 'istartswith'],
+            'city__city': ['exact', 'icontains', 'istartswith'],
+            'suburb__suburb': ['exact', 'icontains', 'istartswith'],
             'code': ['exact', 'icontains', 'istartswith'],
-            'industry': ['exact', 'icontains', 'istartswith'],
+            'industry__industry': ['exact', 'icontains', 'istartswith'],
             'slug': ['exact'],
             'rate_1': ['exact', 'lt', 'lte', 'gt', 'gte'],
             'rate_2': ['exact', 'lt', 'lte', 'gt', 'gte'],
@@ -84,9 +84,8 @@ class PhoneNumberOutputType(DjangoObjectType):
         fields = '__all__'
         interfaces = (graphene.relay.Node,)
         filter_fields = {
-            'type': ['exact', 'icontains', 'istartswith'],
-            'branch': ['exact', 'icontains', 'istartswith'],
+            'branch__name': ['exact', 'icontains', 'istartswith'],
             'phone': ['exact', 'icontains', 'istartswith'],
-            'type': ['exact', 'icontains', 'istartswith'],
+            'type__type': ['exact', 'icontains', 'istartswith'],
             'existing': ['exact'],
         }

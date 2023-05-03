@@ -222,14 +222,14 @@ WSGI_APPLICATION = 'WeXlog.wsgi.application'
 ASGI_APPLICATION = 'WeXlog.routing.application'
 #>>>Removed as not required for current site
 
-# CHANNEL_LAYERS = {
-#     'default': {
-#         'BACKEND': 'channels_redis.core.RedisChannelLayer',
-#         'CONFIG': {
-#             "hosts": [('127.0.0.1', 6379)],
-#         },
-#     },
-# }
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
 
 #Removed as not required for current site<<<
 

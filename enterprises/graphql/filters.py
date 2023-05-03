@@ -21,7 +21,18 @@ class IndustryFilter(django_filters.FilterSet):
 class EnterpriseFilter(django_filters.FilterSet):
     class Meta:
         model = Enterprise
-        fields = '__all__'
+        fields = [
+            'ename',
+            'slug',
+            'description',
+            'website',
+            'filter_class',
+            'rate_1',
+            'rate_2',
+            'rate_3',
+            'rate_4',
+            'rate_count',
+        ]
         order_by = '__all__'
         
         

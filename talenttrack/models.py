@@ -24,7 +24,7 @@ from smartfields.processors import ImageProcessor
 from WeXlog.utils import update_model, handle_m2m_relationship
 
 from booklist.models import Author, Genre, Publisher
-from booklist.handle import handle_publisher
+# from booklist.handle import handle_publisher
 from db_flatten.models import SkillTag
 from enterprises.models import Branch, Enterprise, Industry
 from locations.models import Region
@@ -243,8 +243,8 @@ class Publications(models.Model):
         #         **talent,
         #     )
 
-        if publisher:
-            instance.publisher = handle_publisher(instance, **publisher)
+        # if publisher:
+        #     instance.publisher = handle_publisher(instance, **publisher)
 
         # if author:
             
@@ -254,7 +254,7 @@ class Publications(models.Model):
 
         # if genre:
             
-
+        return instance
                      
 
     def save(self, *args, **kwargs):
