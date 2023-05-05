@@ -5,13 +5,14 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 from django.utils import timezone
 from django.db.models import Count, Sum, F, Q
+from channels.generic.websocket import AsyncWebsocketConsumer
 
 from . models import Message, ChatRoomMembers, MessageRead, ChatGroup
 
 User = get_user_model()
 
 
-class ChatConsumer(WebsocketConsumer):
+class ChatConsumer(AsyncWebsocketConsumer):
     def delete_chat(self, data):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         chat_name = self.room_name

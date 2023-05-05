@@ -1,4 +1,5 @@
 import graphene
+
 from django.db.models import Q, Sum
 
 import allauth.graphql.queries
@@ -18,14 +19,14 @@ import graphql_jwt
 
 
 class Query(
-    allauth.graphql.queries.Query, 
-    billing.graphql.queries.Query,
-    booklist.graphql.queries.Query,
-    db_flatten.graphql.queries.Query,
-    enterprises.graphql.queries.Query,
+    # allauth.graphql.queries.Query, 
+    # billing.graphql.queries.Query,
+    # booklist.graphql.queries.Query,
+    # db_flatten.graphql.queries.Query,
+    # enterprises.graphql.queries.Query,
     graphene.ObjectType
 ):
-    pass
+    usr = graphene.Field(graphene.ID)
 
 
 class Mutation(
@@ -42,4 +43,5 @@ class Mutation(
     refresh_token = graphql_jwt.Refresh.Field()
 
 
-schema = graphene.Schema(query=Query, mutation=Mutation)
+# schema = graphene.Schema(query=Query, mutation=Mutation)
+schema = graphene.Schema(query=Query)

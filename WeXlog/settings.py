@@ -119,7 +119,7 @@ MIDDLEWARE = [
             #3rd party MIDDLEWARE
     'django_referrer_policy.middleware.ReferrerPolicyMiddleware',
     'csp.middleware.CSPMiddleware',
-    'graphql_jwt.middleware.JSONWebTokenMiddleware',
+    # 'graphql_jwt.middleware.JSONWebTokenMiddleware',
 ]
 
 ROOT_URLCONF = 'WeXlog.urls'
@@ -253,7 +253,7 @@ CSP_DEFAULT_SRC = (
     )#app_config
 
 CSP_SCRIPT_SRC = (
-    "'self'", "'unsafe-inline'", '127.0.0.1', '107.191.57.249', 'code.jquery.com', 'maxcdn.bootstrapcdn.com', 'kit.fontawesome.com', 'app.mywexlog.dev', 'mywexlog.dev', 'cdnjs.cloudflare.com', 'maps.googleapis.com', 'bookstrapcdn.com', 'cdn.jsdelivr.net', 'cdn.jsdelivr.net', 'ajax.googleapis.com', 'cdnjs.cloudflare.com', 'apis.google.com', 'https://www.gstatic.com', 'tarruda.github.com', 'dot-test-machterberg.s3.amazonaws.com', 'netdna.bootstrapcdn.com', 'cdn.tiny.cloud', 'code.jquery.com', 'plausible.io', 'googletagmanager.com', 'www.googletagmanager.com', 'www.google-analytics.com', 'platform.linkedin.com', 'www.linkedin.com', 'connect.facebook.net', 'static-exp1.licdn.com', 'licdn.com',
+    "'self'", "'unsafe-inline'", '127.0.0.1', '107.191.57.249', 'code.jquery.com', 'maxcdn.bootstrapcdn.com', 'kit.fontawesome.com', 'app.mywexlog.dev', 'mywexlog.dev', 'cdnjs.cloudflare.com', 'maps.googleapis.com', 'bookstrapcdn.com', 'cdn.jsdelivr.net', 'cdn.jsdelivr.net', 'ajax.googleapis.com', 'cdnjs.cloudflare.com', 'apis.google.com', 'https://www.gstatic.com', 'tarruda.github.com', 'dot-test-machterberg.s3.amazonaws.com', 'netdna.bootstrapcdn.com', 'cdn.tiny.cloud', 'code.jquery.com', 'plausible.io', 'googletagmanager.com', 'www.googletagmanager.com', 'www.google-analytics.com', 'platform.linkedin.com', 'www.linkedin.com', 'connect.facebook.net', 'static-exp1.licdn.com', 'licdn.com', 'graphql.mywexlog.dev', 'graphql.mywexlog.com', 'graphql.127.0.0.1', "'unsafe-eval'", 'unpkg.com',
     )#app_config
 CSP_IMG_SRC = (
     "'self'", '127.0.0.1', '107.191.57.249', 'app.mywexlog.dev', 'mywexlog.dev', 'dot-test-machterberg.s3.amazonaws.com', 'cdn.tiny.cloud', 'sp.tinymce.com', 'w3.org', 'www.facebook.com',
@@ -279,7 +279,7 @@ CSP_FORM_ACTION = None
 CSP_SANDBOX = None
 CSP_REPORT_URI = None
 CSP_MANIFEST_SRC = (
-    'www.linkedin.com', 'connect.facebook.net', 'static-exp1.licdn.com', 'licdn.com',
+    'www.linkedin.com', 'connect.facebook.net', 'static-exp1.licdn.com', 'licdn.com', 'unsafe-eval',
     )
 CSP_WORKER_SRC = None
 CSP_PLUGIN_TYPES = None
