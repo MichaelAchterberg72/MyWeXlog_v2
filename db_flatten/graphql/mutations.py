@@ -15,7 +15,8 @@ class PhoneNumberTypeUpdateOrCreate(graphene.Mutation):
         
     Output = SuccessMutationResult
         
-    def mutate(self, root, info, **kwargs):
+    @classmethod
+    def mutate(cls, root, info, **kwargs):
         try:
             with transaction.atomic():
                 phone_number_type, created = PhoneNumberType.objects.update_or_create(**kwargs)
@@ -31,7 +32,8 @@ class PhoneNumberTypeDelete(graphene.Mutation):
         
     Output = SuccessMutationResult
         
-    def mutate(self, root, info, **kwargs):
+    @classmethod
+    def mutate(cls, root, info, **kwargs):
         try:
             with transaction.atomic():
                 phone_number_type = PhoneNumberType.objects.get(kwargs['id']).delete()
@@ -48,7 +50,8 @@ class SkillTagUpdateOrCreate(graphene.Mutation):
         
     Output = SuccessMutationResult
         
-    def mutate(self, root, info, **kwargs):
+    @classmethod
+    def mutate(cls, root, info, **kwargs):
         try:
             with transaction.atomic():
                 skill_tag, created = SkillTag.objects.update_or_create(**kwargs)
@@ -64,7 +67,8 @@ class SkillTagDelete(graphene.Mutation):
         
     Output = SuccessMutationResult
         
-    def mutate(self, root, info, **kwargs):
+    @classmethod
+    def mutate(cls, root, info, **kwargs):
         try:
             with transaction.atomic():
                 skill_tag = SkillTag.objects.get(kwargs['id']).delete()
@@ -80,7 +84,8 @@ class LanguageListUpdateOrCreate(graphene.Mutation):
         
     Output = SuccessMutationResult
         
-    def mutate(self, root, info, **kwargs):
+    @classmethod
+    def mutate(cls, root, info, **kwargs):
         try:
             with transaction.atomic():
                 language_list, created = LanguageList.objects.update_or_create(**kwargs)
@@ -96,7 +101,8 @@ class LanguageListDelete(graphene.Mutation):
         
     Output = SuccessMutationResult
         
-    def mutate(self, root, info, **kwargs):
+    @classmethod
+    def mutate(cls, root, info, **kwargs):
         try:
             with transaction.atomic():
                 language_list = LanguageList.objects.get(kwargs['id']).delete()

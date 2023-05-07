@@ -32,8 +32,9 @@ class TimesheetUpdateOrCreate(graphene.Mutation):
         include_for_invoice = TimesheetInputType.include_for_invoice
         
     Output = SuccessMutationResult
-        
-    def mutate(self, root, info, **kwargs):
+    
+    @classmethod
+    def mutate(cls, root, info, **kwargs):
         try:
             with transaction.atomic():
                 timesheet_id = kwargs.pop('id', None)
@@ -53,7 +54,8 @@ class TimesheetDelete(graphene.Mutation):
         
     Output = SuccessMutationResult
         
-    def mutate(self, root, info, **kwargs):
+    @classmethod
+    def mutate(cls, root, info, **kwargs):
         try:
             with transaction.atomic():
                 timesheet = Timesheet.objects.get(kwargs['id']).delete()

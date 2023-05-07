@@ -29,7 +29,8 @@ class AuthorUpdateOrCreate(graphene.Mutation):
         
     Output = SuccessMutationResult
         
-    def mutate(self, root, info, **kwargs):
+    @classmethod
+    def mutate(cls, root, info, **kwargs):
         try:
             with transaction.atomic():
                 author_id = kwargs.pop('id', None)
@@ -49,7 +50,8 @@ class AuthorDelete(graphene.Mutation):
         
     Output = SuccessMutationResult
         
-    def mutate(self, root, info, **kwargs):
+    @classmethod
+    def mutate(cls, root, info, **kwargs):
         try:
             with transaction.atomic():
                 author = Author.objects.get(kwargs['id']).delete()
@@ -66,7 +68,8 @@ class PublisherUpdateOrCreate(graphene.Mutation):
         
     Output = SuccessMutationResult
         
-    def mutate(self, root, info, **kwargs):
+    @classmethod
+    def mutate(cls, root, info, **kwargs):
         try:
             with transaction.atomic():
                 publisher_id = kwargs.pop('id', None)
@@ -86,7 +89,8 @@ class PublisherDelete(graphene.Mutation):
         
     Output = SuccessMutationResult
         
-    def mutate(self, root, info, **kwargs):
+    @classmethod
+    def mutate(cls, root, info, **kwargs):
         try:
             with transaction.atomic():
                 publisher = Publisher.objects.get(kwargs['id']).delete()
@@ -102,7 +106,8 @@ class GenreUpdateOrCreate(graphene.Mutation):
         
     Output = SuccessMutationResult
         
-    def mutate(self, root, info, **kwargs):
+    @classmethod
+    def mutate(cls, root, info, **kwargs):
         try:
             with transaction.atomic():
                 genre_id = kwargs.pop('id', None)
@@ -122,7 +127,8 @@ class GenreDelete(graphene.Mutation):
         
     Output = SuccessMutationResult
         
-    def mutate(self, root, info, **kwargs):
+    @classmethod
+    def mutate(cls, root, info, **kwargs):
         try:
             with transaction.atomic():
                 genre = Genre.objects.get(kwargs['id']).delete()
@@ -145,6 +151,7 @@ class BookListUpdateOrCreate(graphene.Mutation):
         
     Output = SuccessMutationResult
         
+    @classmethod
     def mutate(cls, root, info, **kwargs):
         try:
             with transaction.atomic():
@@ -162,7 +169,8 @@ class BookListDelete(graphene.Mutation):
         
     Output = SuccessMutationResult
         
-    def mutate(self, root, info, **kwargs):
+    @classmethod
+    def mutate(cls, root, info, **kwargs):
         try:
             with transaction.atomic():
                 booklist = BookList.objects.get(kwargs['slug']).delete()
@@ -178,7 +186,8 @@ class FormatUpdateOrCreate(graphene.Mutation):
         
     Output = SuccessMutationResult
         
-    def mutate(self, root, info, **kwargs):
+    @classmethod
+    def mutate(cls, root, info, **kwargs):
         try:
             with transaction.atomic():
                 format_id = kwargs.pop('id', None)
@@ -198,7 +207,8 @@ class FormatDelete(graphene.Mutation):
         
     Output = SuccessMutationResult
         
-    def mutate(self, root, info, **kwargs):
+    @classmethod
+    def mutate(cls, root, info, **kwargs):
         try:
             with transaction.atomic():
                 format = Format.objects.get(kwargs['id']).delete()
@@ -218,7 +228,8 @@ class ReadByUpdateOrCreate(graphene.Mutation):
         
     Output = SuccessMutationResult
         
-    def mutate(self, root, info, **kwargs):
+    @classmethod
+    def mutate(cls, root, info, **kwargs):
         try:
             with transaction.atomic():
                 readby_id = kwargs.pop('id', None)
@@ -238,7 +249,8 @@ class ReadByDelete(graphene.Mutation):
         
     Output = SuccessMutationResult
         
-    def mutate(self, root, info, **kwargs):
+    @classmethod
+    def mutate(cls, root, info, **kwargs):
         try:
             with transaction.atomic():
                 booklist = ReadBy.objects.get(kwargs['id']).delete()

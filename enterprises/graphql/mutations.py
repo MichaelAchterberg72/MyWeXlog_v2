@@ -29,7 +29,8 @@ class IndustryUpdateOrCreate(graphene.Mutation):
         
     Output = SuccessMutationResult
         
-    def mutate(self, root, info, **kwargs):
+    @classmethod
+    def mutate(cls, root, info, **kwargs):
         try:
             with transaction.atomic():
                 industry, created = Industry.objects.update_or_create(**kwargs)
@@ -44,8 +45,9 @@ class IndustryDelete(graphene.Mutation):
         id = IndustryInputType.id
         
     Output = SuccessMutationResult
-        
-    def mutate(self, root, info, **kwargs):
+    
+    @classmethod
+    def mutate(cls, root, info, **kwargs):
         try:
             with transaction.atomic():
                 industry = Industry.objects.get(kwargs['id']).delete()
@@ -71,7 +73,8 @@ class EnterpriseUpdateOrCreate(graphene.Mutation):
         
     Output = SuccessMutationResult
         
-    def mutate(self, root, info, **kwargs):
+    @classmethod
+    def mutate(cls, root, info, **kwargs):
         try:
             with transaction.atomic():
                 enterprise, created = Enterprise.objects.update_or_create(**kwargs)
@@ -87,7 +90,8 @@ class EnterpriseDelete(graphene.Mutation):
         
     Output = SuccessMutationResult
         
-    def mutate(self, root, info, **kwargs):
+    @classmethod
+    def mutate(cls, root, info, **kwargs):
         try:
             with transaction.atomic():
                 enterprise = Enterprise.objects.get(kwargs['id']).delete()
@@ -103,7 +107,8 @@ class BranchTypeUpdateOrCreate(graphene.Mutation):
         
     Output = SuccessMutationResult
         
-    def mutate(self, root, info, **kwargs):
+    @classmethod
+    def mutate(cls, root, info, **kwargs):
         try:
             with transaction.atomic():
                 branch_type, created = BranchType.objects.update_or_create(**kwargs)
@@ -119,7 +124,8 @@ class BranchTypeDelete(graphene.Mutation):
         
     Output = SuccessMutationResult
         
-    def mutate(self, root, info, **kwargs):
+    @classmethod
+    def mutate(cls, root, info, **kwargs):
         try:
             with transaction.atomic():
                 branch_type = BranchType.objects.get(kwargs['id']).delete()
@@ -152,6 +158,7 @@ class BranchUpdateOrCreate(graphene.Mutation):
         
     Output = SuccessMutationResult
         
+    @classmethod
     def mutate(cls, root, info, **kwargs):
         try:
             with transaction.atomic():
@@ -169,7 +176,8 @@ class BranchDelete(graphene.Mutation):
         
     Output = SuccessMutationResult
         
-    def mutate(self, root, info, **kwargs):
+    @classmethod
+    def mutate(cls, root, info, **kwargs):
         try:
             with transaction.atomic():
                 branch = Branch.objects.get(kwargs['slug']).delete()
@@ -185,7 +193,8 @@ class PhoneNumberUpdateOrCreate(graphene.Mutation):
         
     Output = SuccessMutationResult
         
-    def mutate(self, root, info, **kwargs):
+    @classmethod
+    def mutate(cls, root, info, **kwargs):
         try:
             with transaction.atomic():
                 phone_number, created = PhoneNumber.objects.update_or_create(**kwargs)
@@ -201,7 +210,8 @@ class PhoneNumberDelete(graphene.Mutation):
         
     Output = SuccessMutationResult
         
-    def mutate(self, root, info, **kwargs):
+    @classmethod
+    def mutate(cls, root, info, **kwargs):
         try:
             with transaction.atomic():
                 phone_number = PhoneNumber.objects.get(kwargs['id']).delete()

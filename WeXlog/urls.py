@@ -54,7 +54,6 @@ urlpatterns = [
     path("robots.txt", TemplateView.as_view(template_name="users/robots.txt", content_type="text/plain")),
 #    path('emoji/', include('emoji.urls')),
     path('graphql/', csrf_exempt(FileUploadGraphQLView.as_view(graphiql=True, schema=schema)))
-    # path('graphql/', GraphQLView.as_view(graphiql=True, schema=schema)),
     ]
 
 if settings.DEBUG:
