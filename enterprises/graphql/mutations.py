@@ -31,13 +31,17 @@ class IndustryUpdateOrCreate(graphene.Mutation):
         
     @classmethod
     def mutate(cls, root, info, **kwargs):
+        errors = []
+        if errors:
+            return FailureMessage(success=False, message=f"There are validation errors", errors=errors)
+        
         try:
             with transaction.atomic():
                 industry, created = Industry.objects.update_or_create(**kwargs)
                 message = "Industry updated successfully" if not created else "Industry created successfully"
                 return SuccessMessage(success=True, id=industry.id, message=message)
         except Exception as e:
-            return FailureMessage(success=False, message=f"Error adding industry: {str(e)}")
+            return FailureMessage(success=False, message=f"Error adding industry", errors=[str(e)])
 
 
 class IndustryDelete(graphene.Mutation):
@@ -48,12 +52,16 @@ class IndustryDelete(graphene.Mutation):
     
     @classmethod
     def mutate(cls, root, info, **kwargs):
+        errors = []
+        if errors:
+            return FailureMessage(success=False, message=f"There are validation errors", errors=errors)
+        
         try:
             with transaction.atomic():
                 industry = Industry.objects.get(kwargs['id']).delete()
                 return SuccessMessage(success=True, id=kwargs['id'], message="Industry deleted successfully")
         except Exception as e:
-            return FailureMessage(success=False, message=f"Error deleting industry: {str(e)}")
+            return FailureMessage(success=False, message=f"Error deleting industry", errors=[str(e)])
 
 
 class EnterpriseUpdateOrCreate(graphene.Mutation):
@@ -75,13 +83,17 @@ class EnterpriseUpdateOrCreate(graphene.Mutation):
         
     @classmethod
     def mutate(cls, root, info, **kwargs):
+        errors = []
+        if errors:
+            return FailureMessage(success=False, message=f"There are validation errors", errors=errors)
+        
         try:
             with transaction.atomic():
                 enterprise, created = Enterprise.objects.update_or_create(**kwargs)
                 message = "Enterprise updated successfully" if not created else "Enterprise created successfully"
                 return SuccessMessage(success=True, id=enterprise.id, message=message)
         except Exception as e:
-            return FailureMessage(success=False, message=f"Error adding enterprise: {str(e)}")
+            return FailureMessage(success=False, message=f"Error adding enterprise", errors=[str(e)])
 
 
 class EnterpriseDelete(graphene.Mutation):
@@ -92,12 +104,16 @@ class EnterpriseDelete(graphene.Mutation):
         
     @classmethod
     def mutate(cls, root, info, **kwargs):
+        errors = []
+        if errors:
+            return FailureMessage(success=False, message=f"There are validation errors", errors=errors)
+        
         try:
             with transaction.atomic():
                 enterprise = Enterprise.objects.get(kwargs['id']).delete()
                 return SuccessMessage(success=True, id=kwargs['id'], message="Enterprise deleted successfully")
         except Exception as e:
-            return FailureMessage(success=False, message=f"Error deleting enterprise: {str(e)}")
+            return FailureMessage(success=False, message=f"Error deleting enterprise", errors=[str(e)])
 
 
 class BranchTypeUpdateOrCreate(graphene.Mutation):
@@ -109,13 +125,17 @@ class BranchTypeUpdateOrCreate(graphene.Mutation):
         
     @classmethod
     def mutate(cls, root, info, **kwargs):
+        errors = []
+        if errors:
+            return FailureMessage(success=False, message=f"There are validation errors", errors=errors)
+        
         try:
             with transaction.atomic():
                 branch_type, created = BranchType.objects.update_or_create(**kwargs)
                 message = "BranchType updated successfully" if not created else "BranchType created successfully"
                 return SuccessMessage(success=True, id=branch_type.id, message=message)
         except Exception as e:
-            return FailureMessage(success=False, message=f"Error adding branch type: {str(e)}")
+            return FailureMessage(success=False, message=f"Error adding branch type", errors=[str(e)])
 
 
 class BranchTypeDelete(graphene.Mutation):
@@ -126,12 +146,16 @@ class BranchTypeDelete(graphene.Mutation):
         
     @classmethod
     def mutate(cls, root, info, **kwargs):
+        errors = []
+        if errors:
+            return FailureMessage(success=False, message=f"There are validation errors", errors=errors)
+        
         try:
             with transaction.atomic():
                 branch_type = BranchType.objects.get(kwargs['id']).delete()
                 return SuccessMessage(success=True, id=kwargs['id'], message="BranchType deleted successfully")
         except Exception as e:
-            return FailureMessage(success=False, message=f"Error deleting branch type: {str(e)}")
+            return FailureMessage(success=False, message=f"Error deleting branch type", errors=[str(e)])
 
 
 class BranchUpdateOrCreate(graphene.Mutation):
@@ -167,7 +191,7 @@ class BranchUpdateOrCreate(graphene.Mutation):
                 message = "Branch updated successfully" if branch_id else "Branch created successfully"
                 return SuccessMessage(success=True, id=branch.id, message=message)
         except Exception as e:
-            return FailureMessage(success=False, message=f"Error adding branch: {str(e)}")
+            return FailureMessage(success=False, message=f"Error adding branch", errors=[str(e)])
 
 
 class BranchDelete(graphene.Mutation):
@@ -183,7 +207,7 @@ class BranchDelete(graphene.Mutation):
                 branch = Branch.objects.get(kwargs['slug']).delete()
                 return SuccessMessage(success=True, id=kwargs['slug'], message="Branch deleted successfully")
         except Exception as e:
-            return FailureMessage(success=False, message=f"Error deleting branch: {str(e)}")
+            return FailureMessage(success=False, message=f"Error deleting branch", errors=[str(e)])
 
 
 class PhoneNumberUpdateOrCreate(graphene.Mutation):
@@ -201,7 +225,7 @@ class PhoneNumberUpdateOrCreate(graphene.Mutation):
                 message = "PhoneNumber updated successfully" if not created else "PhoneNumber created successfully"
                 return SuccessMessage(success=True, id=phone_number.id, message=message)
         except Exception as e:
-            return FailureMessage(success=False, message=f"Error adding phone number: {str(e)}")
+            return FailureMessage(success=False, message=f"Error adding phone number", errors=[str(e)])
 
 
 class PhoneNumberDelete(graphene.Mutation):
@@ -217,7 +241,7 @@ class PhoneNumberDelete(graphene.Mutation):
                 phone_number = PhoneNumber.objects.get(kwargs['id']).delete()
                 return SuccessMessage(success=True, id=kwargs['id'], message="PhoneNumber deleted successfully")
         except Exception as e:
-            return FailureMessage(success=False, message=f"Error deleting phone number: {str(e)}")
+            return FailureMessage(success=False, message=f"Error deleting phone number", errors=[str(e)])
 
 
 

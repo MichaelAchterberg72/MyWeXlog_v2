@@ -23,7 +23,7 @@ class PhoneNumberTypeUpdateOrCreate(graphene.Mutation):
                 message = "Phone Number Type updated successfully" if not created else "Phone Number Type created successfully"
                 return SuccessMessage(success=True, id=phone_number_type.id, message=message)
         except Exception as e:
-            return FailureMessage(success=False, message=f"Error adding phone number type: {str(e)}")
+            return FailureMessage(success=False, message=f"Error adding phone number type", errors=[str(e)])
 
 
 class PhoneNumberTypeDelete(graphene.Mutation):
@@ -39,7 +39,7 @@ class PhoneNumberTypeDelete(graphene.Mutation):
                 phone_number_type = PhoneNumberType.objects.get(kwargs['id']).delete()
                 return SuccessMessage(success=True, id=kwargs['id'], message="Phone number type deleted successfully")
         except Exception as e:
-            return FailureMessage(success=False, message=f"Error deleting phone number type: {str(e)}")
+            return FailureMessage(success=False, message=f"Error deleting phone number type", errors=[str(e)])
 
 
 class SkillTagUpdateOrCreate(graphene.Mutation):
@@ -58,7 +58,7 @@ class SkillTagUpdateOrCreate(graphene.Mutation):
                 message = "Skill tag updated successfully" if not created else "Skill tag created successfully"
                 return SuccessMessage(success=True, id=skill_tag.id, message=message)
         except Exception as e:
-            return FailureMessage(success=False, message=f"Error adding skill tag: {str(e)}")
+            return FailureMessage(success=False, message=f"Error adding skill tag", errors=[str(e)])
 
 
 class SkillTagDelete(graphene.Mutation):
@@ -74,7 +74,7 @@ class SkillTagDelete(graphene.Mutation):
                 skill_tag = SkillTag.objects.get(kwargs['id']).delete()
                 return SuccessMessage(success=True, id=kwargs['id'], message="Skill tag deleted successfully")
         except Exception as e:
-            return FailureMessage(success=False, message=f"Error deleting skill tag: {str(e)}")
+            return FailureMessage(success=False, message=f"Error deleting skill tag", errors=[str(e)])
 
 
 class LanguageListUpdateOrCreate(graphene.Mutation):
@@ -92,7 +92,7 @@ class LanguageListUpdateOrCreate(graphene.Mutation):
                 message = "Language item updated successfully" if not created else "Language item created successfully"
                 return SuccessMessage(success=True, id=language_list.id, message=message)
         except Exception as e:
-            return FailureMessage(success=False, message=f"Error adding language item: {str(e)}")
+            return FailureMessage(success=False, message=f"Error adding language item", errors=[str(e)])
 
 
 class LanguageListDelete(graphene.Mutation):
@@ -103,12 +103,16 @@ class LanguageListDelete(graphene.Mutation):
         
     @classmethod
     def mutate(cls, root, info, **kwargs):
+        errors = []
+        if errors:
+            return FailureMessage(success=False, message=f"There are validation errors", errors=errors)
+        
         try:
             with transaction.atomic():
                 language_list = LanguageList.objects.get(kwargs['id']).delete()
                 return SuccessMessage(success=True, id=kwargs['id'], message="Language item deleted successfully")
         except Exception as e:
-            return FailureMessage(success=False, message=f"Error deleting language item: {str(e)}")
+            return FailureMessage(success=False, message=f"Error deleting language item", errors=[str(e)])
 
 
 class Mutation(graphene.ObjectType):

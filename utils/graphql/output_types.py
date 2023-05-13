@@ -10,6 +10,7 @@ class SuccessMessage(graphene.ObjectType):
 class FailureMessage(graphene.ObjectType):
     success = graphene.Boolean()
     message = graphene.String()
+    errors = graphene.List(graphene.String)
     
     
 class SuccessMutationResult(graphene.Union):

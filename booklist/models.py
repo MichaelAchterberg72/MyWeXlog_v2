@@ -44,11 +44,11 @@ class Genre(models.Model):
 class BookList(models.Model):
     CLASS=(
         ('F','Fiction'),
-        ('N','Non-fiction'),
+        ('N','Non_fiction'),
     )
     title = models.CharField('Book Title', max_length=300, unique=True)
     type = models.CharField(max_length=1, choices=CLASS, default='F' )
-    publisher = models.ForeignKey(Publisher, on_delete=models.PROTECT)
+    publisher = models.ForeignKey(Publisher, on_delete=models.PROTECT, blank=True, null=True)
     link = models.URLField('Book URL', blank=True, null=True)
     author = models.ManyToManyField(Author)
     tag = models.ManyToManyField(SkillTag, verbose_name='Tag / Associated Skill')
@@ -60,42 +60,58 @@ class BookList(models.Model):
     
     @classmethod
     def update_or_create(cls, slug=None, instance=None, **kwargs):
-        if slug and not instance:
-            instance = BookList.objects.get(slug=slug)
-            
-        publisher = kwargs.pop('publisher', None)
-        author = kwargs.pop('author', [])
-        tag = kwargs.pop('tag', [])
-        genre = kwargs.pop('genre', [])
+        try:
+            if slug and not instance:
+                instance = BookList.objects.get(slug=slug)
+                
+            publisher = kwargs.pop('publisher', None)
+            author = kwargs.pop('author', [])
+            tag = kwargs.pop('tag', [])
+            genre = kwargs.pop('genre', [])
 
-        if instance:
-            update_model(instance, **kwargs)
-            instance.save()
-        else:
-            instance = BookList.objects.create(**kwargs)
-            
-        if publisher:
-            instance, created = Publisher.objects.update_or_create(**publisher)
+            if instance:
+                update_model(instance, **kwargs)
+                instance.save()
+            else:
+                instance = BookList.objects.create(**kwargs)
+                
+            if publisher:
+                publisher, _ = Publisher.objects.update_or_create(**publisher)
+                instance.publisher = publisher
+                instance.save()
+                
+            if author:
+                author_related_models_data = {
+                    'model': Author,
+                    'manager': 'author',
+                    'fields': ['name'],
+                    'data': author,
+                }
+                instance = handle_m2m_relationship(instance, [author_related_models_data])
 
-        if author:
-            author_related_models_data = {
-                'author': (Author, cls.author, ['name']),
-            }
-            instance = handle_m2m_relationship(instance, author_related_models_data)
+            if tag:
+                tag_related_models_data = {
+                    'model': SkillTag,
+                    'manager': 'tag',
+                    'fields': ['skill', 'code'],
+                    'data': tag,
+                }
+                instance = handle_m2m_relationship(instance, [tag_related_models_data])
 
-        if tag:
-            tag_related_models_data = {
-                'tag': (SkillTag, cls.tag, ['skill', 'code']),
-            }
-            instance = handle_m2m_relationship(instance, tag_related_models_data)
+            if genre:
+                genre_related_models_data = {
+                    'model': Genre,
+                    'manager': 'genre',
+                    'fields': ['name'],
+                    'data': genre,
+                }
+                instance = handle_m2m_relationship(instance, [genre_related_models_data])
 
-        if genre:
-            genre_related_models_data = {
-                'genre': (Genre, cls.genre, ['name']),
-            }
-            instance = handle_m2m_relationship(instance, genre_related_models_data)
+            return instance
 
-        return instance
+        except Exception as e:
+            print('Error: ', e)
+            raise e
 
     def save(self, *args, **kwargs):
         if self.slug is None or self.slug == "":
@@ -110,18 +126,6 @@ class Format(models.Model):
 
     def clean(self):
         self.format = self.format.title()
-        
-    @classmethod
-    def update_or_create(cls, id=None, instance=None, **kwargs):
-        if id and not instance:
-            instance = Format.objects.get(pk=id)
-
-        if instance:
-            update_model(instance, **kwargs)
-            instance.save()
-        else:
-            instance = Format.objects.create(**kwargs)
-        return instance
 
     def __str__(self):
         return self.format

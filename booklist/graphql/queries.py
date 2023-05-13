@@ -30,7 +30,7 @@ class Query(graphene.ObjectType):
     author = graphene.Field(AuthorOutputType, id=graphene.ID())
     authors = DjangoFilterConnectionField(
             AuthorOutputType, 
-            filterset_class=AuthorFilter
+            filterset_class=AuthorFilter,
         )
     publisher = graphene.Field(PublisherOutputType, id=graphene.ID())
     publishers = DjangoFilterConnectionField(

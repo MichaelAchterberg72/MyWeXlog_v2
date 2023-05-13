@@ -12,6 +12,8 @@ from .input_types import (
     ReadByInputType
 )
 
+from .output_types import BookListOutputType
+
 from ..models import (
     Author,
     Publisher,
@@ -31,17 +33,17 @@ class AuthorUpdateOrCreate(graphene.Mutation):
         
     @classmethod
     def mutate(cls, root, info, **kwargs):
+        errors = []
+        if errors:
+            return FailureMessage(success=False, message=f"There are validation errors", errors=errors)
+        
         try:
             with transaction.atomic():
-                author_id = kwargs.pop('id', None)
-                if author_id:
-                    kwargs['id'] = author_id
-                    
                 author, created = Author.objects.update_or_create(**kwargs)
                 message = "Author updated successfully" if not created else "Author created successfully"
                 return SuccessMessage(success=True, id=author.id, message=message)
         except Exception as e:
-            return FailureMessage(success=False, message=f"Error adding author: {str(e)}")
+            return FailureMessage(success=False, message=f"Error adding author", errors=[str(e)])
 
 
 class AuthorDelete(graphene.Mutation):
@@ -52,12 +54,16 @@ class AuthorDelete(graphene.Mutation):
         
     @classmethod
     def mutate(cls, root, info, **kwargs):
+        errors = []
+        if errors:
+            return FailureMessage(success=False, message=f"There are validation errors", errors=errors)
+        
         try:
             with transaction.atomic():
                 author = Author.objects.get(kwargs['id']).delete()
                 return SuccessMessage(success=True, id=kwargs['id'], message="Author deleted successfully")
         except Exception as e:
-            return FailureMessage(success=False, message=f"Error deleting author: {str(e)}")
+            return FailureMessage(success=False, message=f"Error deleting author", errors=[str(e)])
 
 
 class PublisherUpdateOrCreate(graphene.Mutation):
@@ -70,6 +76,10 @@ class PublisherUpdateOrCreate(graphene.Mutation):
         
     @classmethod
     def mutate(cls, root, info, **kwargs):
+        errors = []
+        if errors:
+            return FailureMessage(success=False, message=f"There are validation errors", errors=errors)
+        
         try:
             with transaction.atomic():
                 publisher_id = kwargs.pop('id', None)
@@ -80,7 +90,7 @@ class PublisherUpdateOrCreate(graphene.Mutation):
                 message = "Publisher updated successfully" if not created else "Publisher created successfully"
                 return SuccessMessage(success=True, id=publisher.id, message=message)
         except Exception as e:
-            return FailureMessage(success=False, message=f"Error adding publisher: {str(e)}")
+            return FailureMessage(success=False, message=f"Error adding publisher", errors=[str(e)])
 
 
 class PublisherDelete(graphene.Mutation):
@@ -91,12 +101,16 @@ class PublisherDelete(graphene.Mutation):
         
     @classmethod
     def mutate(cls, root, info, **kwargs):
+        errors = []
+        if errors:
+            return FailureMessage(success=False, message=f"There are validation errors", errors=errors)
+        
         try:
             with transaction.atomic():
                 publisher = Publisher.objects.get(kwargs['id']).delete()
                 return SuccessMessage(success=True, id=kwargs['id'], message="Publisher deleted successfully")
         except Exception as e:
-            return FailureMessage(success=False, message=f"Error deleting publisher: {str(e)}")
+            return FailureMessage(success=False, message=f"Error deleting publisher", errors=[str(e)])
 
 
 class GenreUpdateOrCreate(graphene.Mutation):
@@ -108,6 +122,10 @@ class GenreUpdateOrCreate(graphene.Mutation):
         
     @classmethod
     def mutate(cls, root, info, **kwargs):
+        errors = []
+        if errors:
+            return FailureMessage(success=False, message=f"There are validation errors", errors=errors)
+        
         try:
             with transaction.atomic():
                 genre_id = kwargs.pop('id', None)
@@ -118,7 +136,7 @@ class GenreUpdateOrCreate(graphene.Mutation):
                 message = "Genre updated successfully" if not created else "Genre created successfully"
                 return SuccessMessage(success=True, id=genre.id, message=message)
         except Exception as e:
-            return FailureMessage(success=False, message=f"Error adding genre: {str(e)}")
+            return FailureMessage(success=False, message=f"Error adding genre", errors=[str(e)])
 
 
 class GenreDelete(graphene.Mutation):
@@ -129,19 +147,23 @@ class GenreDelete(graphene.Mutation):
         
     @classmethod
     def mutate(cls, root, info, **kwargs):
+        errors = []
+        if errors:
+            return FailureMessage(success=False, message=f"There are validation errors", errors=errors)
+        
         try:
             with transaction.atomic():
                 genre = Genre.objects.get(kwargs['id']).delete()
                 return SuccessMessage(success=True, id=kwargs['id'], message="Genre deleted successfully")
         except Exception as e:
-            return FailureMessage(success=False, message=f"Error deleting genre: {str(e)}")
+            return FailureMessage(success=False, message=f"Error deleting genre", errors=[str(e)])
 
 
 class BookListUpdateOrCreate(graphene.Mutation):
     class Arguments:
         id = BookListInputType.id
         title = BookListInputType.title
-        type = BookListInputType.type
+        book_type = BookListInputType.book_type
         publisher = BookListInputType.publisher
         link = BookListInputType.link
         author = BookListInputType.author
@@ -156,11 +178,12 @@ class BookListUpdateOrCreate(graphene.Mutation):
         try:
             with transaction.atomic():
                 booklist_id = kwargs.pop('id', None)
+                kwargs['type'] = kwargs.pop('book_type', None)
                 booklist = BookList.update_or_create(id=booklist_id, **kwargs)
                 message = "BookList updated successfully" if booklist_id else "BookList created successfully"
                 return SuccessMessage(success=True, id=booklist.id, message=message)
         except Exception as e:
-            return FailureMessage(success=False, message=f"Error adding booklist: {str(e)}")
+            return FailureMessage(success=False, message=f"Error adding booklist", errors=[str(e)])
 
 
 class BookListDelete(graphene.Mutation):
@@ -198,7 +221,7 @@ class FormatUpdateOrCreate(graphene.Mutation):
                 message = "Format updated successfully" if not created else "Format created successfully"
                 return SuccessMessage(success=True, id=format.id, message=message)
         except Exception as e:
-            return FailureMessage(success=False, message=f"Error adding format: {str(e)}")
+            return FailureMessage(success=False, message=f"Error adding format", errors=[str(e)])
 
 
 class FormatDelete(graphene.Mutation):
@@ -214,7 +237,7 @@ class FormatDelete(graphene.Mutation):
                 format = Format.objects.get(kwargs['id']).delete()
                 return SuccessMessage(success=True, id=kwargs['id'], message="Format deleted successfully")
         except Exception as e:
-            return FailureMessage(success=False, message=f"Error deleting format: {str(e)}")
+            return FailureMessage(success=False, message=f"Error deleting format", errors=[str(e)])
 
 
 class ReadByUpdateOrCreate(graphene.Mutation):
@@ -240,7 +263,7 @@ class ReadByUpdateOrCreate(graphene.Mutation):
                 message = "ReadBy updated successfully" if not created else "ReadBy created successfully"
                 return SuccessMessage(success=True, id=readby.id, message=message)
         except Exception as e:
-            return FailureMessage(success=False, message=f"Error adding readby: {str(e)}")
+            return FailureMessage(success=False, message=f"Error adding readby", errors=[str(e)])
 
 
 class ReadByDelete(graphene.Mutation):
@@ -256,7 +279,7 @@ class ReadByDelete(graphene.Mutation):
                 booklist = ReadBy.objects.get(kwargs['id']).delete()
                 return SuccessMessage(success=True, id=kwargs['id'], message="ReadBy deleted successfully")
         except Exception as e:
-            return FailureMessage(success=False, message=f"Error deleting readby: {str(e)}")
+            return FailureMessage(success=False, message=f"Error deleting readby", errors=[str(e)])
 
         
 class Mutation(graphene.ObjectType):

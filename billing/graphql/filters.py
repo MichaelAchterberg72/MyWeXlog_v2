@@ -75,4 +75,28 @@ class TimesheetFilter(django_filters.FilterSet):
             'include_for_certificate',
             'include_for_invoice',
         ]
-        order_by = '__all__'
+        # order_by = django_filters.OrderingFilter(
+        #     fields=(
+        #         (
+        #             'talent',
+        #             'work_experience',
+        #             'date_captured',
+        #             'date',
+        #             'client',
+        #             'project',
+        #             'task',
+        #             'details',
+        #             'time_from',
+        #             'time_to',
+        #             'location',
+        #             'out_of_office',
+        #             'notification',
+        #             'notification_time',
+        #             'notification_duration',
+        #             'busy',
+        #             'repeat',
+        #             'include_for_certificate',
+        #             'include_for_invoice'
+        #         ),
+        #     )
+        # )

@@ -1,5 +1,7 @@
 import graphene
 
+from .enums import BookClassEnum
+
 from db_flatten.graphql.input_types import SkillTagInputType
 from users.graphql.input_types import UserInputType
 
@@ -23,11 +25,11 @@ class GenreInputType(graphene.InputObjectType):
 class BookListInputType(graphene.InputObjectType):
     id = graphene.ID()
     title = graphene.String()
-    type = graphene.String()
+    book_type = BookClassEnum()
     publisher = graphene.Argument(PublisherInputType)
     link = graphene.String()
     author = graphene.List(AuthorInputType)
-    tag = graphene.String(SkillTagInputType)
+    tag = graphene.List(SkillTagInputType)
     genre = graphene.List(GenreInputType)
     slug = graphene.String()
     
@@ -41,6 +43,6 @@ class ReadByInputType(graphene.InputObjectType):
     id = graphene.ID()
     talent = graphene.Argument(UserInputType)
     book = graphene.Argument(BookListInputType)
-    type = graphene.Field(FormatInputType)
+    type = graphene.Argument(FormatInputType)
     date = graphene.Date()
     review = graphene.String()

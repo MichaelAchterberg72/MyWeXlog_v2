@@ -18,7 +18,7 @@ class AuthorOutputType(DjangoObjectType):
         interfaces = (graphene.relay.Node,)
         filter_fields = {
             'id': ['exact'],
-            'name': ['exact', 'icontains', 'startswith'],
+            'name': ['iexact', 'icontains', 'istartswith'],
         }
         ordering = ['name']
 

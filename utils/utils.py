@@ -15,29 +15,22 @@ def update_model(model, **kwargs):
             model.set_password(value)
             
             
-def handle_m2m_relationship(instance, related_models_data):
-    for field_name, (related_model, data, related_fields) in related_models_data.items():
-        related_instances = []
+def handle_m2m_relationship(instance, related_models_data_list):
+    for related_models_data in related_models_data_list:
+        model = related_models_data['model']
+        manager_name = related_models_data['manager']
+        fields = related_models_data['fields']
 
-        for item in data:
-            filter_fields = {}
-            create_fields = {}
+        related_manager = getattr(instance, manager_name)
 
-            for related_field in related_fields:
-                field_value = item.get(related_field, "").strip()
-                filter_fields[f"{related_field}__iexact"] = field_value
-                create_fields[related_field] = field_value
+        for related_data in related_models_data['data']:
+            filter_kwargs = {field: related_data[field] for field in fields if related_data.get(field)} if fields else {}
+            related_instance, created = model.objects.get_or_create(**filter_kwargs)
 
-            related_instance, _ = related_model.objects.get_or_create(
-                defaults=create_fields, **filter_fields
-            )
-            related_instances.append(related_instance)
+            if not related_manager.filter(id=related_instance.id).exists():
+                related_manager.add(related_instance)
 
-        m2m_field = instance._meta.get_field(field_name)
-        m2m_manager = getattr(instance, m2m_field.name)
-        m2m_manager.set(related_instances)
-
-    instance.save()
+    return instance
     
     
 def create_enum_from_choices(choices):

@@ -17,3 +17,6 @@ class Query(graphene.ObjectType):
             return Timesheet.objects.get(pk=id)
         except Timesheet.DoesNotExist:
             return None
+        
+    def resolve_timesheets(self, info, **kwargs):
+        return TimesheetFilter(kwargs).qs

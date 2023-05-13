@@ -35,17 +35,17 @@ class TimesheetUpdateOrCreate(graphene.Mutation):
     
     @classmethod
     def mutate(cls, root, info, **kwargs):
+        errors = []
+        if errors:
+            return FailureMessage(success=False, message=f"There are validation errors", errors=errors)
+        
         try:
             with transaction.atomic():
-                timesheet_id = kwargs.pop('id', None)
-                if timesheet_id:
-                    kwargs['id'] = timesheet_id
-                    
                 timesheet, created = Timesheet.objects.update_or_create(**kwargs)
                 message = "Timesheet updated successfully" if not created else "Timesheet created successfully"
                 return SuccessMessage(success=True, id=timesheet.id, message=message)
         except Exception as e:
-            return FailureMessage(success=False, message=f"Error adding timesheet: {str(e)}")
+            return FailureMessage(success=False, message=f"Error adding timesheet", errors=[str(e)])
 
 
 class TimesheetDelete(graphene.Mutation):
@@ -56,12 +56,16 @@ class TimesheetDelete(graphene.Mutation):
         
     @classmethod
     def mutate(cls, root, info, **kwargs):
+        errors = []
+        if errors:
+            return FailureMessage(success=False, message=f"There are validation errors", errors=errors)
+        
         try:
             with transaction.atomic():
                 timesheet = Timesheet.objects.get(kwargs['id']).delete()
                 return SuccessMessage(success=True, id=kwargs['id'], message="Timesheet deleted successfully")
         except Exception as e:
-            return FailureMessage(success=False, message=f"Error deleting timesheet: {str(e)}")
+            return FailureMessage(success=False, message=f"Error deleting timesheet", errors=[str(e)])
 
 
 class Mutation(graphene.ObjectType):

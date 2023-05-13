@@ -30,6 +30,11 @@ class SkillTagFilter(django_filters.FilterSet):
             'skill',
             'code'
         ]
+        order_by = django_filters.OrderingFilter(
+            fields=(
+                ('skill', 'code'),
+            )
+        )
 
 
 class LanguageListFilter(django_filters.FilterSet):
@@ -42,3 +47,8 @@ class LanguageListFilter(django_filters.FilterSet):
         fields = [
             'language'
         ]
+        order_by = django_filters.OrderingFilter(
+            fields=(
+                ('language')
+            )
+        )

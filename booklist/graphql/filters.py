@@ -19,11 +19,16 @@ class AuthorFilter(django_filters.FilterSet):
     name__iexact = django_filters.CharFilter(lookup_expr='iexact', field_name='name')
     name__istartswith = django_filters.CharFilter(lookup_expr='istartswith', field_name='name')
     # name_Iexact = django_filters.CharFilter(method=multiple_char_lookup_filter)
+    order_by = django_filters.OrderingFilter(
+            fields=(
+                ('name'),
+            )
+        )
     
     class Meta:
         model = Author
         fields = ['name']
-        order_by = ['name']
+        
 
 
 class PublisherFilter(django_filters.FilterSet):
@@ -35,10 +40,15 @@ class PublisherFilter(django_filters.FilterSet):
     link__iexact = django_filters.CharFilter(lookup_expr='iexact', field_name='link')
     link__istartswith = django_filters.CharFilter(lookup_expr='istartswith', field_name='link')
     
+    order_by = django_filters.OrderingFilter(
+            fields=(
+                'publisher', 'link'
+            )
+        )
+     
     class Meta:
         model = Publisher
         fields = ['publisher', 'link']
-        order_by = ['publisher', 'link']
 
 
 class GenreFilter(django_filters.FilterSet):
@@ -46,10 +56,15 @@ class GenreFilter(django_filters.FilterSet):
     name__iexact = django_filters.CharFilter(lookup_expr='iexact', field_name='name')
     name__istartswith = django_filters.CharFilter(lookup_expr='istartswith', field_name='name')
     
+    order_by = django_filters.OrderingFilter(
+            fields=(
+                ('name'),
+            )
+        )
+    
     class Meta:
         model = Genre
         fields = ['name']
-        order_by = ['name']
 
 
 class BookListFilter(django_filters.FilterSet):
@@ -61,9 +76,8 @@ class BookListFilter(django_filters.FilterSet):
     link__iexact = django_filters.CharFilter(lookup_expr='iexact', field_name='link')
     link__istartswith = django_filters.CharFilter(lookup_expr='istartswith', field_name='link')
     
-    class Meta:
-        model = BookList
-        fields = [
+    order_by = django_filters.OrderingFilter(
+        fields=(
             'title',
             'type',
             'publisher__publisher',
@@ -71,9 +85,13 @@ class BookListFilter(django_filters.FilterSet):
             'author__name',
             'tag__skill',
             'tag__code',
-            'genre__name'
-        ]
-        order_by = [
+            'genre__name',
+        ),
+    )
+    
+    class Meta:
+        model = BookList
+        fields = [
             'title',
             'type',
             'publisher__publisher',
@@ -90,10 +108,15 @@ class FormatFilter(django_filters.FilterSet):
     format__iexact = django_filters.CharFilter(lookup_expr='iexact', field_name='format')
     format__istartswith = django_filters.CharFilter(lookup_expr='istartswith', field_name='format')
     
+    order_by = django_filters.OrderingFilter(
+            fields=(
+                ('format'),
+            )
+        )
+    
     class Meta:
         model = Format
         fields = ['format']
-        order_by = ['format']
         
 
 class ReadByFilter(django_filters.FilterSet):
@@ -104,18 +127,21 @@ class ReadByFilter(django_filters.FilterSet):
     
     review__icontains = django_filters.CharFilter(lookup_expr='icontains', field_name='review')
     
+    order_by = django_filters.OrderingFilter(
+        fields=(
+                'talent__alias',
+                'book__title',
+                'book__type',
+                'book__author__name',
+                'type__format',
+                'date',
+                'review'
+            ),
+        )
+     
     class Meta:
         model = ReadBy
         fields = [
-            'talent__alias',
-            'book__title',
-            'book__type',
-            'book__author__name',
-            'type__format',
-            'date',
-            'review'
-        ]
-        order_by = [
             'talent__alias',
             'book__title',
             'book__type',
