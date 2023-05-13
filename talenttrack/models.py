@@ -31,6 +31,8 @@ from locations.models import Region
 from Profile.utils import create_code9
 from project.models import ProjectData, ProjectPersonalDetails
 from WeXlog.storage_backends import PrivateMediaStorage
+from users.models import CustomUser
+
 
 CONFIRM = (
     ('S','Select'),
@@ -78,18 +80,6 @@ class Achievements(models.Model):
     class Meta:
         ordering = ['-date_achieved']
         unique_together = (('talent', 'achievement', 'date_achieved'),)
-        
-    @classmethod
-    def update_or_create(cls, id=None, instance=None, **kwargs):
-        if id and not instance:
-            instance = cls.objects.get(pk=id)
-
-        if instance:
-            update_model(instance, **kwargs)
-            instance.save()
-        else:
-            instance = cls.objects.create(**kwargs)
-        return instance
     
     def save(self, *args, **kwargs):
         if self.upload:
@@ -145,21 +135,26 @@ class Awards(models.Model):
             instance = cls.objects.get(pk=id)
             
         tag = kwargs.pop('tag', [])
+        talent = kwargs.pop('talent', None)
 
         if instance:
-            for field, value in kwargs.items():
-                if field != "talent" or "tag":
-                    setattr(instance, field, value)
+            update_model(instance, **kwargs)
             instance.save()
         else:
-            kwargs.pop('tag', None)
-            instance = cls.objects.create(**kwargs)
+            instance = Awards.objects.create(**kwargs)
+            
+        if talent:
+            instance.talent = CustomUser.objects.get(alias=talent.alias)
             
         if tag:
-            instance = handle_m2m_relationship(
-                instance=instance, 
-                related_models_data=tag
-            )
+            tag_related_models_data = {
+                'model': SkillTag,
+                'manager': 'tag',
+                'fields': ['skill', 'code'],
+                'data': tag,
+            }
+            instance = handle_m2m_relationship(instance, [tag_related_models_data])
+
             
         return instance
 
@@ -221,15 +216,15 @@ class Publications(models.Model):
     def __str__(self):
         return f'{self.talent}: {self.title} ({self.date_published})'
     
-    def update_or_create(cls, id=None, instance=None, **kwargs):
+    def update_or_create(cls, slug=None, instance=None, **kwargs):
+        if slug and not instance:
+            instance = cls.objects.get(slug=slug)
+            
         talent = kwargs.pop("talent", None)
         publisher = kwargs.pop("publisher", None)
         author = kwargs.pop("author", [])
         tag = kwargs.pop("tag", [])
         genre = kwargs.pop("genre", [])
-
-        if id and not instance:
-            instance = cls.objects.get(pk=id)
             
         if instance:
             update_model(instance, **kwargs)
@@ -237,22 +232,42 @@ class Publications(models.Model):
         else:
             instance = cls.objects.create(**kwargs)
             
-        # if talent:
-        #     instance.talent = CustomUser.update_or_create(
-        #         instance=instance.talent,
-        #         **talent,
-        #     )
+        if talent:
+            instance.talent = CustomUser.objects.get(
+                alias=instance.talent.alias,
+            )
 
-        # if publisher:
-        #     instance.publisher = handle_publisher(instance, **publisher)
+        if publisher:
+            publisher, _ = Publisher.objects.update_or_create(**publisher)
+            instance.publisher = publisher
+            instance.save()
 
-        # if author:
-            
+        if author:
+            author_related_models_data = {
+                'model': Author,
+                'manager': 'author',
+                'fields': ['name'],
+                'data': author,
+            }
+            instance = handle_m2m_relationship(instance, [author_related_models_data])
 
-        # if tag:
-            
+        if tag:
+            tag_related_models_data = {
+                'model': SkillTag,
+                'manager': 'tag',
+                'fields': ['skill', 'code'],
+                'data': tag,
+            }
+            instance = handle_m2m_relationship(instance, [tag_related_models_data])
 
-        # if genre:
+        if genre:
+            genre_related_models_data = {
+                'model': Genre,
+                'manager': 'genre',
+                'fields': ['name'],
+                'data': genre,
+            }
+            instance = handle_m2m_relationship(instance, [genre_related_models_data])
             
         return instance
                      
@@ -384,6 +399,30 @@ class Topic(models.Model):
     topic = models.CharField(max_length=60, unique=True)
     skills = models.ManyToManyField(SkillTag)
     hours = models.DecimalField(max_digits=5, decimal_places=2)
+    
+    @classmethod
+    def update_or_create(cls, slug=None, instance=None, **kwargs):
+        if slug and not instance:
+            instance = BookList.objects.get(slug=slug)
+            
+        skills = kwargs.pop('tag', [])
+
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+            
+        if skills:
+            tag_related_models_data = {
+                'model': SkillTag,
+                'manager': 'skills',
+                'fields': ['skill', 'code'],
+                'data': skills,
+            }
+            instance = handle_m2m_relationship(instance, [tag_related_models_data])
+            
+        return instance
 
     def clean(self):
         self.topic = self.topic.title()
@@ -518,6 +557,77 @@ class WorkExperience(models.Model):
 
     def __str__(self):
         return f'{self.talent} between {self.date_from} & {self.date_to}'
+    
+    def update_or_create(cls, slug=None, instance=None, **kwargs):
+        if slug and not instance:
+            instance = cls.objects.get(slug=slug)
+            
+        company = kwargs.pop('company', None)
+        companybranch = kwargs.pop('companybranch', None)
+        project = kwargs.pop('project', None)
+        project_data = kwargs.pop('project_data', None)
+        industry = kwargs.pop('industry', None)
+        designation = kwargs.pop('designation', None)
+        course = kwargs.pop('course', None)
+        topic = kwargs.pop('topic', None)
+        skills = kwargs.pop('skills', [])
+
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+            
+        if company:
+            company, _ = Enterprise.objects.update_or_create(**company)
+            instance.company = company
+            instance.save()
+
+        if companybranch:
+            companybranch, _ = Branch.objects.update_or_create(**companybranch)
+            instance.companybranch = companybranch
+            instance.save()
+
+        if project:
+            project, _ = ProjectData.objects.update_or_create(**project)
+            instance.project = project
+            instance.save()
+
+        if project_data:
+            project_data, _ = ProjectPersonalDetails.objects.update_or_create(**project_data)
+            instance.project_data = project_data
+            instance.save()
+
+        if industry:
+            industry, _ = Industry.objects.update_or_create(**industry)
+            instance.industry = industry
+            instance.save()
+
+        if designation:
+            designation, _ = Designation.objects.update_or_create(**designation)
+            instance.designation = designation
+            instance.save()
+
+        if course:
+            course, _ = Course.objects.update_or_create(**course)
+            instance.course = course
+            instance.save()
+
+        if topic:
+            topic, _ = Topic.objects.update_or_create(**topic)
+            instance.topic = topic
+            instance.save()
+            
+        if skills:
+            tag_related_models_data = {
+                'model': SkillTag,
+                'manager': 'skills',
+                'fields': ['skill', 'code'],
+                'data': skills,
+            }
+            instance = handle_m2m_relationship(instance, [tag_related_models_data])
+            
+        return instance
 
     #script to check wheter experience is estimated or not
     def save(self, *args, **kwargs):

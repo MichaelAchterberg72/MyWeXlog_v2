@@ -12,6 +12,12 @@ from ..models import (
 
 
 class AuthorOutputType(DjangoObjectType):
+    id_int = graphene.Int(description="The integer representation of the ID")
+
+    @staticmethod
+    def resolve_id_int(root, info):
+        return int(root.pk)
+    
     class Meta:
         model = Author
         fields = '__all__'
@@ -24,6 +30,12 @@ class AuthorOutputType(DjangoObjectType):
 
 
 class PublisherOutputType(DjangoObjectType):
+    id_int = graphene.Int(description="The integer representation of the ID")
+
+    @staticmethod
+    def resolve_id_int(root, info):
+        return int(root.pk)
+
     class Meta:
         model = Publisher
         fields = '__all__'
@@ -37,6 +49,12 @@ class PublisherOutputType(DjangoObjectType):
         
         
 class GenreOutputType(DjangoObjectType):
+    id_int = graphene.Int(description="The integer representation of the ID")
+
+    @staticmethod
+    def resolve_id_int(root, info):
+        return int(root.pk)
+    
     class Meta:
         model = Genre
         fields = '__all__'
@@ -49,6 +67,12 @@ class GenreOutputType(DjangoObjectType):
         
         
 class BookListOutputType(DjangoObjectType):
+    id_int = graphene.Int(description="The integer representation of the ID")
+
+    @staticmethod
+    def resolve_id_int(root, info):
+        return int(root.pk)
+    
     class Meta:
         model = BookList
         fields = '__all__'
@@ -77,6 +101,12 @@ class BookListOutputType(DjangoObjectType):
         
         
 class FormatOutputType(DjangoObjectType):
+    id_int = graphene.Int(description="The integer representation of the ID")
+
+    @staticmethod
+    def resolve_id_int(root, info):
+        return int(root.pk)
+    
     class Meta:
         model = Format
         fields = '__all__'
@@ -91,6 +121,12 @@ class FormatOutputType(DjangoObjectType):
         
         
 class ReadByOutputType(DjangoObjectType):
+    id_int = graphene.Int(description="The integer representation of the ID")
+
+    @staticmethod
+    def resolve_id_int(root, info):
+        return int(root.pk)
+    
     class Meta:
         model = ReadBy
         fields = '__all__'

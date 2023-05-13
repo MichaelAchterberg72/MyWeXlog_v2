@@ -6,6 +6,12 @@ User = get_user_model()
 
 
 class UserOutputType(DjangoObjectType):
+    id_int = graphene.Int(description="The integer representation of the ID")
+
+    @staticmethod
+    def resolve_id_int(root, info):
+        return int(root.pk)
+    
     class Meta:
         model = User
         fields = '__all__'

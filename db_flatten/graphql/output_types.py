@@ -9,6 +9,12 @@ from ..models import (
 
 
 class PhoneNumberTypeOutputType(DjangoObjectType):
+    id_int = graphene.Int(description="The integer representation of the ID")
+
+    @staticmethod
+    def resolve_id_int(root, info):
+        return int(root.pk)
+    
     class Meta:
         model = PhoneNumberType
         fields = '__all__'
@@ -21,6 +27,12 @@ class PhoneNumberTypeOutputType(DjangoObjectType):
         
         
 class SkillTagOutputType(DjangoObjectType):
+    id_int = graphene.Int(description="The integer representation of the ID")
+
+    @staticmethod
+    def resolve_id_int(root, info):
+        return int(root.pk)
+    
     class Meta:
         model = SkillTag
         fields = '__all__'
@@ -34,6 +46,12 @@ class SkillTagOutputType(DjangoObjectType):
         
         
 class LanguageListOutputType(DjangoObjectType):
+    id_int = graphene.Int(description="The integer representation of the ID")
+
+    @staticmethod
+    def resolve_id_int(root, info):
+        return int(root.pk)
+    
     class Meta:
         model = LanguageList
         fields = '__all__'

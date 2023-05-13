@@ -139,20 +139,31 @@ class Branch(models.Model):
             instance = Branch.objects.create(**kwargs)
             
         if company:
-            instance, created = Enterprise.objects.update_or_create(**company)
+            company, created = Enterprise.objects.update_or_create(**company)
+            instance.company = company
+            instance.save()
         
         if region:
-            instance, created = Region.objects.update_or_create(**region)
+            region, created = Region.objects.update_or_create(**region)
+            instance.region = region
+            instance.save()
         
         if city:
-            instance, created = City.objects.update_or_create(**city)
+            city, created = City.objects.update_or_create(**city)
+            instance.city = city
+            instance.save()
         
         if suburb:
-            instance, created = Suburb.objects.update_or_create(**suburb)
+            suburb, created = Suburb.objects.update_or_create(**suburb)
+            instance.suburb = suburb
+            instance.save()
 
         if industry:
             industry_related_models_data = {
-                'industry': (Industry, cls.industry, ['industry']),
+                'model': Industry,
+                'manager': 'industry',
+                'fields': ['industry'],
+                'data': industry,
             }
             instance = handle_m2m_relationship(instance, industry_related_models_data)
 

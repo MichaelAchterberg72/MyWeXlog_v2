@@ -3,7 +3,10 @@ from django.db import models
 
 from tinymce.models import HTMLField
 
-from utils.utils import update_model, handle_m2m_relationship
+from utils.utils import (
+    update_model, 
+    handle_m2m_relationship
+)
 
 from users.models import CustomUser
 from db_flatten.models import SkillTag
@@ -62,7 +65,7 @@ class BookList(models.Model):
     def update_or_create(cls, slug=None, instance=None, **kwargs):
         try:
             if slug and not instance:
-                instance = BookList.objects.get(slug=slug)
+                instance = cls.objects.get(slug=slug)
                 
             publisher = kwargs.pop('publisher', None)
             author = kwargs.pop('author', [])
@@ -73,7 +76,7 @@ class BookList(models.Model):
                 update_model(instance, **kwargs)
                 instance.save()
             else:
-                instance = BookList.objects.create(**kwargs)
+                instance = cls.objects.create(**kwargs)
                 
             if publisher:
                 publisher, _ = Publisher.objects.update_or_create(**publisher)

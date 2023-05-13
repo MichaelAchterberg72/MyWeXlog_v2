@@ -1,6 +1,8 @@
 import enum
 import graphene
+from graphene import relay
 from django.db.models.fields.related import RelatedField
+from django.db import IntegrityError
 
 
 def update_model(model, **kwargs):
@@ -13,7 +15,7 @@ def update_model(model, **kwargs):
                 setattr(model, name, value)
         if name == "password":
             model.set_password(value)
-            
+
             
 def handle_m2m_relationship(instance, related_models_data_list):
     for related_models_data in related_models_data_list:
@@ -36,4 +38,3 @@ def handle_m2m_relationship(instance, related_models_data_list):
 def create_enum_from_choices(choices):
     enum_values = {item[1]: item[0] for item in choices}
     return graphene.Enum.from_enum(enum.Enum("ChoicesEnum", enum_values))
-

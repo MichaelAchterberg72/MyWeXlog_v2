@@ -21,7 +21,6 @@ class SkillTag(models.Model):
         indexes = [
             models.Index(fields=['skill',]),
         ]
-        #ordering = ['skill',]
 
     def clean(self):
         self.skill = self.skill.title()

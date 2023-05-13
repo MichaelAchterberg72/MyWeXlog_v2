@@ -11,6 +11,12 @@ from ..models import (
 
 
 class IndustryOutputType(DjangoObjectType):
+    id_int = graphene.Int(description="The integer representation of the ID")
+
+    @staticmethod
+    def resolve_id_int(root, info):
+        return int(root.pk)
+    
     class Meta:
         model = Industry
         fields = '__all__'
@@ -21,6 +27,12 @@ class IndustryOutputType(DjangoObjectType):
 
 
 class EnterpriseOutputType(DjangoObjectType):
+    id_int = graphene.Int(description="The integer representation of the ID")
+
+    @staticmethod
+    def resolve_id_int(root, info):
+        return int(root.pk)
+    
     class Meta:
         model = Enterprise
         fields = '__all__'
@@ -41,6 +53,12 @@ class EnterpriseOutputType(DjangoObjectType):
         
         
 class BranchTypeOutputType(DjangoObjectType):
+    id_int = graphene.Int(description="The integer representation of the ID")
+
+    @staticmethod
+    def resolve_id_int(root, info):
+        return int(root.pk)
+    
     class Meta:
         model = BranchType
         fields = '__all__'
@@ -51,6 +69,12 @@ class BranchTypeOutputType(DjangoObjectType):
         
         
 class BranchOutputType(DjangoObjectType):
+    id_int = graphene.Int(description="The integer representation of the ID")
+
+    @staticmethod
+    def resolve_id_int(root, info):
+        return int(root.pk)
+    
     class Meta:
         model = Branch
         fields = '__all__'
@@ -79,6 +103,12 @@ class BranchOutputType(DjangoObjectType):
         
         
 class PhoneNumberOutputType(DjangoObjectType):
+    id_int = graphene.Int(description="The integer representation of the ID")
+
+    @staticmethod
+    def resolve_id_int(root, info):
+        return int(root.pk)
+    
     class Meta:
         model = PhoneNumber
         fields = '__all__'

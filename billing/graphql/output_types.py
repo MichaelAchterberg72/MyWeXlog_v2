@@ -5,6 +5,12 @@ from ..models import Timesheet
 
 
 class TimesheetOutputType(DjangoObjectType):
+    id_int = graphene.Int(description="The integer representation of the ID")
+
+    @staticmethod
+    def resolve_id_int(root, info):
+        return int(root.pk)
+    
     class Meta:
         model = Timesheet
         fields = '__all__'

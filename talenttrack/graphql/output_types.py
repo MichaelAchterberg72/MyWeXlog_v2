@@ -25,6 +25,12 @@ from locations.graphql.output_types import CountryFieldType
 
 
 class AchievementOutputType(DjangoObjectType):
+    id_int = graphene.Int(description="The integer representation of the ID")
+
+    @staticmethod
+    def resolve_id_int(root, info):
+        return int(root.pk)
+    
     class Meta:
         model = Achievements
         fields = '__all__'
@@ -38,6 +44,12 @@ class AchievementOutputType(DjangoObjectType):
         
         
 class AwardsOutputType(DjangoObjectType):
+    id_int = graphene.Int(description="The integer representation of the ID")
+
+    @staticmethod
+    def resolve_id_int(root, info):
+        return int(root.pk)
+    
     class Meta:
         model = Awards
         fields = '__all__'
@@ -53,6 +65,12 @@ class AwardsOutputType(DjangoObjectType):
         
         
 class PublicationsOutputType(DjangoObjectType):
+    id_int = graphene.Int(description="The integer representation of the ID")
+
+    @staticmethod
+    def resolve_id_int(root, info):
+        return int(root.pk)
+    
     class Meta:
         model = Publications
         fields = '__all__'
@@ -75,6 +93,12 @@ class PublicationsOutputType(DjangoObjectType):
         
         
 class ResultOutputType(DjangoObjectType):
+    id_int = graphene.Int(description="The integer representation of the ID")
+
+    @staticmethod
+    def resolve_id_int(root, info):
+        return int(root.pk)
+    
     class Meta:
         model = Result
         fields = '__all__'
@@ -85,6 +109,12 @@ class ResultOutputType(DjangoObjectType):
         
         
 class CourseTypeOutputType(DjangoObjectType):
+    id_int = graphene.Int(description="The integer representation of the ID")
+
+    @staticmethod
+    def resolve_id_int(root, info):
+        return int(root.pk)
+    
     class Meta:
         model = CourseType
         fields = '__all__'
@@ -95,6 +125,12 @@ class CourseTypeOutputType(DjangoObjectType):
         
         
 class LicenseCertificationOutputType(DjangoObjectType):
+    id_int = graphene.Int(description="The integer representation of the ID")
+
+    @staticmethod
+    def resolve_id_int(root, info):
+        return int(root.pk)
+    
     country = CountryFieldType()
     
     class Meta:
@@ -118,6 +154,12 @@ class LicenseCertificationOutputType(DjangoObjectType):
         
         
 class CourseOutputType(DjangoObjectType):
+    id_int = graphene.Int(description="The integer representation of the ID")
+
+    @staticmethod
+    def resolve_id_int(root, info):
+        return int(root.pk)
+    
     class Meta:
         model = Course
         fields = '__all__'
@@ -132,6 +174,12 @@ class CourseOutputType(DjangoObjectType):
         
         
 class TopicOutputType(DjangoObjectType):
+    id_int = graphene.Int(description="The integer representation of the ID")
+
+    @staticmethod
+    def resolve_id_int(root, info):
+        return int(root.pk)
+    
     class Meta:
         model = Topic
         fields = '__all__'
@@ -144,6 +192,12 @@ class TopicOutputType(DjangoObjectType):
         
         
 class LecturerOutputType(DjangoObjectType):
+    id_int = graphene.Int(description="The integer representation of the ID")
+
+    @staticmethod
+    def resolve_id_int(root, info):
+        return int(root.pk)
+    
     class Meta:
         model = Lecturer
         fields = '__all__'
@@ -163,6 +217,12 @@ class LecturerOutputType(DjangoObjectType):
         
         
 class ClassMatesOutputType(DjangoObjectType):
+    id_int = graphene.Int(description="The integer representation of the ID")
+
+    @staticmethod
+    def resolve_id_int(root, info):
+        return int(root.pk)
+    
     class Meta:
         model = ClassMates
         fields = '__all__'
@@ -182,6 +242,12 @@ class ClassMatesOutputType(DjangoObjectType):
         
         
 class DesignationOutputType(DjangoObjectType):
+    id_int = graphene.Int(description="The integer representation of the ID")
+
+    @staticmethod
+    def resolve_id_int(root, info):
+        return int(root.pk)
+    
     class Meta:
         model = Designation
         fields = '__all__'
@@ -192,6 +258,12 @@ class DesignationOutputType(DjangoObjectType):
         
         
 class WorkExperienceOutputType(DjangoObjectType):
+    id_int = graphene.Int(description="The integer representation of the ID")
+
+    @staticmethod
+    def resolve_id_int(root, info):
+        return int(root.pk)
+    
     class Meta:
         model = WorkExperience
         fields = '__all__'
@@ -227,6 +299,12 @@ class WorkExperienceOutputType(DjangoObjectType):
         
         
 class WorkColleagueOutputType(DjangoObjectType):
+    id_int = graphene.Int(description="The integer representation of the ID")
+
+    @staticmethod
+    def resolve_id_int(root, info):
+        return int(root.pk)
+    
     class Meta:
         model = WorkColleague
         fields = '__all__'
@@ -249,6 +327,12 @@ class WorkColleagueOutputType(DjangoObjectType):
         
         
 class SuperiorOutputType(DjangoObjectType):
+    id_int = graphene.Int(description="The integer representation of the ID")
+
+    @staticmethod
+    def resolve_id_int(root, info):
+        return int(root.pk)
+    
     class Meta:
         model = Superior
         fields = '__all__'
@@ -271,6 +355,12 @@ class SuperiorOutputType(DjangoObjectType):
         
         
 class WorkCollaboratorOutputType(DjangoObjectType):
+    id_int = graphene.Int(description="The integer representation of the ID")
+
+    @staticmethod
+    def resolve_id_int(root, info):
+        return int(root.pk)
+    
     class Meta:
         model = WorkCollaborator
         fields = '__all__'
@@ -293,6 +383,12 @@ class WorkCollaboratorOutputType(DjangoObjectType):
         
         
 class WorkClientOutputType(DjangoObjectType):
+    id_int = graphene.Int(description="The integer representation of the ID")
+
+    @staticmethod
+    def resolve_id_int(root, info):
+        return int(root.pk)
+    
     class Meta:
         model = WorkClient
         fields = '__all__'
@@ -315,6 +411,12 @@ class WorkClientOutputType(DjangoObjectType):
         
         
 class EmailRemindValidateOutputType(DjangoObjectType):
+    id_int = graphene.Int(description="The integer representation of the ID")
+
+    @staticmethod
+    def resolve_id_int(root, info):
+        return int(root.pk)
+    
     class Meta:
         model = EmailRemindValidate
         fields = '__all__'
