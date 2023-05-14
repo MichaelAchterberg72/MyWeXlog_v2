@@ -14,12 +14,17 @@ class IndustryFilter(django_filters.FilterSet):
     industry__iexact = django_filters.CharFilter(lookup_expr='iexact', field_name='industry')
     industry__istartswith = django_filters.CharFilter(lookup_expr='istartswith', field_name='industry')
     
+    order_by = django_filters.OrderingFilter(
+            fields=(
+                ('industry'),
+            )
+        )
+    
     class Meta:
         model = Industry
         fields = [
             'industry'
         ]
-        order_by = '__all__'
         
         
 class EnterpriseFilter(django_filters.FilterSet):
@@ -58,6 +63,21 @@ class EnterpriseFilter(django_filters.FilterSet):
     rate_count__gt = django_filters.NumberFilter(lookup_expr='gt', field_name='rate_count')
     rate_count__gte = django_filters.NumberFilter(lookup_expr='gte', field_name='rate_count')
     
+    order_by = django_filters.OrderingFilter(
+            fields=(
+                'ename',
+                'slug',
+                'description',
+                'website',
+                'filter_class',
+                'rate_1',
+                'rate_2',
+                'rate_3',
+                'rate_4',
+                'rate_count',
+            )
+        )
+    
     class Meta:
         model = Enterprise
         fields = [
@@ -72,7 +92,6 @@ class EnterpriseFilter(django_filters.FilterSet):
             'rate_4',
             'rate_count',
         ]
-        order_by = '__all__'
         
         
 class BranchTypeFilter(django_filters.FilterSet):
@@ -80,12 +99,17 @@ class BranchTypeFilter(django_filters.FilterSet):
     type__iexact = django_filters.CharFilter(lookup_expr='iexact', field_name='type')
     type__istartswith = django_filters.CharFilter(lookup_expr='istartswith', field_name='type')
     
+    order_by = django_filters.OrderingFilter(
+            fields=(
+                ('type'),
+            )
+        )
+    
     class Meta:
         model = BranchType
         fields = [
             'type'
         ]
-        order_by = '__all__'
         
         
 class BranchFilter(django_filters.FilterSet):
@@ -130,10 +154,32 @@ class BranchFilter(django_filters.FilterSet):
     rate_count__gt = django_filters.NumberFilter(lookup_expr='gt', field_name='rate_count')
     rate_count__gte = django_filters.NumberFilter(lookup_expr='gte', field_name='rate_count')
 
+    order_by = django_filters.OrderingFilter(
+        fields=(
+            'company',
+            'name',
+            'type',
+            'size',
+            'phy_address_line1',
+            'phy_address_line2',
+            'country',
+            'region',
+            'city',
+            'suburb',
+            'code',
+            'industry',
+            'slug',
+            'rate_1',
+            'rate_2',
+            'rate_3',
+            'rate_4',
+            'rate_count'
+        )
+    )
+    
     class Meta:
         model = Branch
         fields = '__all__'
-        order_by = '__all__'
         
         
 class PhoneNumberFilter(django_filters.FilterSet):
@@ -142,7 +188,12 @@ class PhoneNumberFilter(django_filters.FilterSet):
     
     existing = django_filters.BooleanFilter(field_name='existing')
     
+    order_by = django_filters.OrderingFilter(
+            fields=(
+                ('phone'),
+            )
+        )
+    
     class Meta:
         model = PhoneNumber
         fields = '__all__'
-        order_by = '__all__'

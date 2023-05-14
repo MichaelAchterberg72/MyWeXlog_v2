@@ -8,6 +8,12 @@ class PhoneNumberTypeFilter(django_filters.FilterSet):
     type__iexact = django_filters.CharFilter(lookup_expr='iexact', field_name='type')
     type__istartswith = django_filters.CharFilter(lookup_expr='istartswith', field_name='type')
     
+    order_by = django_filters.OrderingFilter(
+            fields=(
+                ('type'),
+            )
+        )
+    
     class Meta:
         model = PhoneNumberType
         fields = [
@@ -24,31 +30,33 @@ class SkillTagFilter(django_filters.FilterSet):
     code__iexact = django_filters.CharFilter(lookup_expr='iexact', field_name='code')
     code__istartswith = django_filters.CharFilter(lookup_expr='istartswith', field_name='code')
     
+    order_by = django_filters.OrderingFilter(
+            fields=(
+                'skill', 'code'
+            )
+        )
+    
     class Meta:
         model = SkillTag
         fields = [
             'skill',
             'code'
         ]
-        order_by = django_filters.OrderingFilter(
-            fields=(
-                ('skill', 'code'),
-            )
-        )
-
+        
 
 class LanguageListFilter(django_filters.FilterSet):
     language__icontains = django_filters.CharFilter(lookup_expr='icontains', field_name='language')
     language__iexact = django_filters.CharFilter(lookup_expr='iexact', field_name='language')
     language__istartswith = django_filters.CharFilter(lookup_expr='istartswith', field_name='language')
     
+    order_by = django_filters.OrderingFilter(
+            fields=(
+                ('language'),
+            )
+        )
+    
     class Meta:
         model = LanguageList
         fields = [
             'language'
         ]
-        order_by = django_filters.OrderingFilter(
-            fields=(
-                ('language')
-            )
-        )

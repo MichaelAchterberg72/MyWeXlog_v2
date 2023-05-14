@@ -8,8 +8,9 @@ from django_countries.fields import CountryField
 from phonenumber_field.modelfields import PhoneNumberField
 from WeXlog.storage_backends import PrivateMediaStorage
 
-from utils.utils import update_model, handle_m2m_relationship
+from utils.utils import update_model, handle_m2m_relationship, update_or_create_object
 
+from .graphql.enums import BranchSizeEnum
 from db_flatten.models import PhoneNumberType
 from locations.models import City, Region, Suburb
 from Profile.utils import create_code9
@@ -101,7 +102,7 @@ class Branch(models.Model):
     company = models.ForeignKey(Enterprise, on_delete=models.PROTECT)
     name = models.CharField('Branch or Division Name', max_length=100)
     type = models.ForeignKey(BranchType, on_delete=models.PROTECT, null=True)
-    size = models.CharField('Branch Size', max_length=1, choices = SZE, default='A', null=True)
+    size = models.CharField('Branch Size', max_length=1, choices = [(choice.name, choice.value) for choice in BranchSizeEnum], default='A', null=True)
     phy_address_line1 = models.CharField('Physical address line 1', max_length=150, blank=True, null=True)
     phy_address_line2 = models.CharField('Physical address line 2', max_length=150, blank=True, null=True)
     country = CountryField(null=True)
@@ -139,24 +140,16 @@ class Branch(models.Model):
             instance = Branch.objects.create(**kwargs)
             
         if company:
-            company, created = Enterprise.objects.update_or_create(**company)
-            instance.company = company
-            instance.save()
+            instance.company = update_or_create_object(Enterprise, company)
         
         if region:
-            region, created = Region.objects.update_or_create(**region)
-            instance.region = region
-            instance.save()
+            instance.region = update_or_create_object(Region, region)
         
         if city:
-            city, created = City.objects.update_or_create(**city)
-            instance.city = city
-            instance.save()
+            instance.city = update_or_create_object(City, city)
         
         if suburb:
-            suburb, created = Suburb.objects.update_or_create(**suburb)
-            instance.suburb = suburb
-            instance.save()
+            instance.suburb = update_or_create_object(Suburb, suburb)
 
         if industry:
             industry_related_models_data = {
@@ -166,7 +159,8 @@ class Branch(models.Model):
                 'data': industry,
             }
             instance = handle_m2m_relationship(instance, industry_related_models_data)
-
+        instance.save()
+        
         return instance
 
     def avg_rate(self):

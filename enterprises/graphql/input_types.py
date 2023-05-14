@@ -1,6 +1,8 @@
 import graphene
 from graphene_file_upload.scalars import Upload
 
+from .enums import EnterpriseFCEnum, BranchSizeEnum
+
 from locations.graphql.input_types import (
     CountryFieldInputType, 
     RegionInputType,
@@ -22,7 +24,7 @@ class EnterpriseInputType(graphene.InputObjectType):
     description = graphene.String()
     logo = Upload()
     website = graphene.String()
-    filter_class = graphene.String()
+    filter_class = EnterpriseFCEnum()
     rate_1 = graphene.Float()
     rate_2 = graphene.Float()
     rate_3 = graphene.Float()
@@ -40,7 +42,7 @@ class BranchInputType(graphene.InputObjectType):
     company = graphene.Argument(EnterpriseInputType)
     name = graphene.String()
     type = graphene.Argument(BranchTypeInputType)
-    size = graphene.String()
+    size = BranchSizeEnum()
     phy_address_line1 = graphene.String()
     phy_address_line2 = graphene.String()
     country = CountryFieldInputType(required=True)

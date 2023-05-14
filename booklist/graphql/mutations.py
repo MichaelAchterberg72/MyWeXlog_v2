@@ -1,6 +1,7 @@
 import graphene
 from django.db import transaction
 
+from utils.utils import update_or_create_object
 from utils.graphql.output_types import SuccessMessage, FailureMessage, SuccessMutationResult
 
 from .input_types import (
@@ -39,8 +40,9 @@ class AuthorUpdateOrCreate(graphene.Mutation):
         
         try:
             with transaction.atomic():
-                author, created = Author.objects.update_or_create(**kwargs)
-                message = "Author updated successfully" if not created else "Author created successfully"
+                author_id = kwargs.get('id')
+                author = update_or_create_object(Author, kwargs)
+                message = "Author updated successfully" if author_id else "Author created successfully"
                 return SuccessMessage(success=True, id=author.id, message=message)
         except Exception as e:
             return FailureMessage(success=False, message=f"Error adding author", errors=[str(e)])
@@ -82,12 +84,9 @@ class PublisherUpdateOrCreate(graphene.Mutation):
         
         try:
             with transaction.atomic():
-                publisher_id = kwargs.pop('id', None)
-                if publisher_id:
-                    kwargs['id'] = publisher_id
-                    
-                publisher, created = Publisher.objects.update_or_create(**kwargs)
-                message = "Publisher updated successfully" if not created else "Publisher created successfully"
+                publisher_id = kwargs.get('id')
+                publisher = update_or_create_object(Publisher, kwargs)
+                message = "Publisher updated successfully" if publisher_id else "Publisher created successfully"
                 return SuccessMessage(success=True, id=publisher.id, message=message)
         except Exception as e:
             return FailureMessage(success=False, message=f"Error adding publisher", errors=[str(e)])
@@ -128,12 +127,9 @@ class GenreUpdateOrCreate(graphene.Mutation):
         
         try:
             with transaction.atomic():
-                genre_id = kwargs.pop('id', None)
-                if genre_id:
-                    kwargs['id'] = genre_id
-                    
-                genre, created = Genre.objects.update_or_create(**kwargs)
-                message = "Genre updated successfully" if not created else "Genre created successfully"
+                genre_id = kwargs.get('id')
+                genre = update_or_create_object(Genre, kwargs)
+                message = "Genre updated successfully" if genre_id else "Genre created successfully"
                 return SuccessMessage(success=True, id=genre.id, message=message)
         except Exception as e:
             return FailureMessage(success=False, message=f"Error adding genre", errors=[str(e)])
@@ -213,12 +209,9 @@ class FormatUpdateOrCreate(graphene.Mutation):
     def mutate(cls, root, info, **kwargs):
         try:
             with transaction.atomic():
-                format_id = kwargs.pop('id', None)
-                if format_id:
-                    kwargs['id'] = format_id
-                    
-                format, created = Format.objects.update_or_create(**kwargs)
-                message = "Format updated successfully" if not created else "Format created successfully"
+                format_id = kwargs.get('id')
+                format = update_or_create_object(Format, kwargs)
+                message = "Format updated successfully" if format_id else "Format created successfully"
                 return SuccessMessage(success=True, id=format.id, message=message)
         except Exception as e:
             return FailureMessage(success=False, message=f"Error adding format", errors=[str(e)])
@@ -255,12 +248,9 @@ class ReadByUpdateOrCreate(graphene.Mutation):
     def mutate(cls, root, info, **kwargs):
         try:
             with transaction.atomic():
-                readby_id = kwargs.pop('id', None)
-                if readby_id:
-                    kwargs['id'] = readby_id
-                    
-                readby, created = ReadBy.objects.update_or_create(**kwargs)
-                message = "ReadBy updated successfully" if not created else "ReadBy created successfully"
+                readby_id = kwargs.get('id')
+                readby = update_or_create_object(ReadBy, kwargs)
+                message = "ReadBy updated successfully" if readby_id else "ReadBy created successfully"
                 return SuccessMessage(success=True, id=readby.id, message=message)
         except Exception as e:
             return FailureMessage(success=False, message=f"Error adding readby", errors=[str(e)])

@@ -5,6 +5,7 @@ from tinymce.models import HTMLField
 
 from utils.utils import (
     update_model, 
+    update_or_create_related_object,
     handle_m2m_relationship
 )
 
@@ -79,8 +80,7 @@ class BookList(models.Model):
                 instance = cls.objects.create(**kwargs)
                 
             if publisher:
-                publisher, _ = Publisher.objects.update_or_create(**publisher)
-                instance.publisher = publisher
+                instance.publisher = update_or_create_related_object(Publisher, publisher)
                 instance.save()
                 
             if author:

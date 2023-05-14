@@ -2,6 +2,7 @@ import graphene
 from django.db import transaction
 
 from utils.graphql.output_types import SuccessMessage, FailureMessage, SuccessMutationResult
+from utils.utils import update_or_create_object
 
 from .input_types import (
     IndustryInputType,
@@ -37,8 +38,9 @@ class IndustryUpdateOrCreate(graphene.Mutation):
         
         try:
             with transaction.atomic():
-                industry, created = Industry.objects.update_or_create(**kwargs)
-                message = "Industry updated successfully" if not created else "Industry created successfully"
+                industry_id = kwargs.get('id')
+                industry = update_or_create_object(Industry, kwargs)
+                message = "Industry updated successfully" if industry_id else "Industry created successfully"
                 return SuccessMessage(success=True, id=industry.id, message=message)
         except Exception as e:
             return FailureMessage(success=False, message=f"Error adding industry", errors=[str(e)])
@@ -89,8 +91,9 @@ class EnterpriseUpdateOrCreate(graphene.Mutation):
         
         try:
             with transaction.atomic():
-                enterprise, created = Enterprise.objects.update_or_create(**kwargs)
-                message = "Enterprise updated successfully" if not created else "Enterprise created successfully"
+                enterprise_id = kwargs.get('id')
+                enterprise = update_or_create_object(Enterprise, kwargs)
+                message = "Enterprise updated successfully" if enterprise_id else "Enterprise created successfully"
                 return SuccessMessage(success=True, id=enterprise.id, message=message)
         except Exception as e:
             return FailureMessage(success=False, message=f"Error adding enterprise", errors=[str(e)])
@@ -131,8 +134,9 @@ class BranchTypeUpdateOrCreate(graphene.Mutation):
         
         try:
             with transaction.atomic():
-                branch_type, created = BranchType.objects.update_or_create(**kwargs)
-                message = "BranchType updated successfully" if not created else "BranchType created successfully"
+                branch_type_id = kwargs.get('id')
+                branch_type = update_or_create_object(BranchType, kwargs)
+                message = "BranchType updated successfully" if branch_type_id else "BranchType created successfully"
                 return SuccessMessage(success=True, id=branch_type.id, message=message)
         except Exception as e:
             return FailureMessage(success=False, message=f"Error adding branch type", errors=[str(e)])
@@ -186,8 +190,10 @@ class BranchUpdateOrCreate(graphene.Mutation):
     def mutate(cls, root, info, **kwargs):
         try:
             with transaction.atomic():
-                branch_id = kwargs.pop('id', None)
-                branch = Branch.update_or_create(id=branch_id, **kwargs)
+                branch_id = kwargs.get('id')
+                branch = update_or_create_object(Branch, kwargs)
+                # branch_id = kwargs.pop('id', None)
+                # branch = Branch.update_or_create(id=branch_id, **kwargs)
                 message = "Branch updated successfully" if branch_id else "Branch created successfully"
                 return SuccessMessage(success=True, id=branch.id, message=message)
         except Exception as e:
@@ -221,8 +227,9 @@ class PhoneNumberUpdateOrCreate(graphene.Mutation):
     def mutate(cls, root, info, **kwargs):
         try:
             with transaction.atomic():
-                phone_number, created = PhoneNumber.objects.update_or_create(**kwargs)
-                message = "PhoneNumber updated successfully" if not created else "PhoneNumber created successfully"
+                phone_number_id = kwargs.get('id')
+                phone_number = update_or_create_object(PhoneNumber, kwargs)
+                message = "PhoneNumber updated successfully" if phone_number_id else "PhoneNumber created successfully"
                 return SuccessMessage(success=True, id=phone_number.id, message=message)
         except Exception as e:
             return FailureMessage(success=False, message=f"Error adding phone number", errors=[str(e)])

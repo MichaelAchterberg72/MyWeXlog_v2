@@ -2,7 +2,7 @@ import graphene
 from django.db import transaction
 
 from utils.graphql.output_types import SuccessMessage, FailureMessage, SuccessMutationResult
-
+from utils.utils import update_or_create_object
 from .input_types import PhoneNumberTypeInputType, SkillTagInputType, LanguageListInputType
 
 from ..models import PhoneNumberType, SkillTag, LanguageList
@@ -19,9 +19,10 @@ class PhoneNumberTypeUpdateOrCreate(graphene.Mutation):
     def mutate(cls, root, info, **kwargs):
         try:
             with transaction.atomic():
-                phone_number_type, created = PhoneNumberType.objects.update_or_create(**kwargs)
-                message = "Phone Number Type updated successfully" if not created else "Phone Number Type created successfully"
-                return SuccessMessage(success=True, id=phone_number_type.id, message=message)
+                phonenumber_id = kwargs.get('id')
+                phonenumber = update_or_create_object(PhoneNumberType, kwargs)
+                message = "Phone Number Type updated successfully" if phonenumber_id else "Phone Number Type created successfully"
+                return SuccessMessage(success=True, id=phonenumber.id, message=message)
         except Exception as e:
             return FailureMessage(success=False, message=f"Error adding phone number type", errors=[str(e)])
 
@@ -54,8 +55,9 @@ class SkillTagUpdateOrCreate(graphene.Mutation):
     def mutate(cls, root, info, **kwargs):
         try:
             with transaction.atomic():
-                skill_tag, created = SkillTag.objects.update_or_create(**kwargs)
-                message = "Skill tag updated successfully" if not created else "Skill tag created successfully"
+                skill_tag_id = kwargs.get('id')
+                skill_tag = update_or_create_object(SkillTag, kwargs)
+                message = "Skill tag updated successfully" if skill_tag_id else "Skill tag created successfully"
                 return SuccessMessage(success=True, id=skill_tag.id, message=message)
         except Exception as e:
             return FailureMessage(success=False, message=f"Error adding skill tag", errors=[str(e)])
@@ -88,8 +90,9 @@ class LanguageListUpdateOrCreate(graphene.Mutation):
     def mutate(cls, root, info, **kwargs):
         try:
             with transaction.atomic():
-                language_list, created = LanguageList.objects.update_or_create(**kwargs)
-                message = "Language item updated successfully" if not created else "Language item created successfully"
+                language_list_id = kwargs.get('id')
+                language_list = update_or_create_object(PhoneNumberType, kwargs)
+                message = "Language item updated successfully" if language_list_id else "Language item created successfully"
                 return SuccessMessage(success=True, id=language_list.id, message=message)
         except Exception as e:
             return FailureMessage(success=False, message=f"Error adding language item", errors=[str(e)])

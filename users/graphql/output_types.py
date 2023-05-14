@@ -2,7 +2,7 @@ import graphene
 from graphene_django import DjangoObjectType
 from django.contrib.auth import get_user_model
 
-User = get_user_model()
+from ..models import CustomUser
 
 
 class UserOutputType(DjangoObjectType):
@@ -13,7 +13,7 @@ class UserOutputType(DjangoObjectType):
         return int(root.pk)
     
     class Meta:
-        model = User
+        model = CustomUser
         fields = '__all__'
         convert_choices_to_enums = True
         interfaces = (graphene.relay.Node,)
