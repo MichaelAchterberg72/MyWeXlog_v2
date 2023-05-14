@@ -19,7 +19,7 @@ class CountryFieldInputType(graphene.InputObjectType):
         
 class RegionInputType(graphene.InputObjectType):
     id = graphene.ID()
-    country = CountryFieldInputType(required=True)
+    country = CountryFieldInputType()
     region = graphene.String()
     
     

@@ -99,10 +99,10 @@ class Branch(models.Model):
         ('F','1 001-10 000'),
         ('G','10 001+'),
     )
-    company = models.ForeignKey(Enterprise, on_delete=models.PROTECT)
+    company = models.ForeignKey(Enterprise, on_delete=models.PROTECT, null=True, blank=True)
     name = models.CharField('Branch or Division Name', max_length=100)
     type = models.ForeignKey(BranchType, on_delete=models.PROTECT, null=True)
-    size = models.CharField('Branch Size', max_length=1, choices = [(choice.name, choice.value) for choice in BranchSizeEnum], default='A', null=True)
+    size = models.CharField('Branch Size', max_length=1, choices = SZE, default='A', null=True)
     phy_address_line1 = models.CharField('Physical address line 1', max_length=150, blank=True, null=True)
     phy_address_line2 = models.CharField('Physical address line 2', max_length=150, blank=True, null=True)
     country = CountryField(null=True)
@@ -124,44 +124,148 @@ class Branch(models.Model):
         
     @classmethod
     def update_or_create(cls, slug=None, instance=None, **kwargs):
-        if slug and not instance:
-            instance = Branch.objects.get(slug=slug)
-            
-        company = kwargs.pop('company', None)
-        region = kwargs.pop('region', None)
-        city = kwargs.pop('city', None)
-        suburb = kwargs.pop('suburb', None)
-        industry = kwargs.pop('industry', [])
+        try:
+            if slug and not instance:
+                instance = Branch.objects.get(slug=slug)
+                
+            company = kwargs.pop('company', None)
+            type = kwargs.pop('type', None)
+            region = kwargs.pop('region', None)
+            city = kwargs.pop('city', None)
+            suburb = kwargs.pop('suburb', None)
+            industry = kwargs.pop('industry', [])
 
-        if instance:
-            update_model(instance, **kwargs)
+            if instance:
+                update_model(instance, **kwargs)
+                instance.save()
+            else:            
+                instance = Branch.objects.create(**kwargs)
+            
+            if company:
+                instance.company = update_or_create_object(Enterprise, company)
+                instance.save()
+                
+            if type:
+                instance.type = update_or_create_object(BranchType, type)
+                instance.save()
+            
+            if region:
+                instance.region = update_or_create_object(Region, region)
+                instance.save()
+            
+            if city:
+                instance.city = update_or_create_object(City, city)
+                instance.save()
+            
+            if suburb:
+                instance.suburb = update_or_create_object(Suburb, suburb)
+                instance.save()
+
+            if industry:
+                industry_related_models_data = {
+                    'model': Industry,
+                    'manager': 'industry',
+                    'fields': ['industry'],
+                    'data': industry,
+                }
+                instance = handle_m2m_relationship(instance, [industry_related_models_data])
+            
             instance.save()
-        else:
-            instance = Branch.objects.create(**kwargs)
             
-        if company:
-            instance.company = update_or_create_object(Enterprise, company)
+            return instance
         
-        if region:
-            instance.region = update_or_create_object(Region, region)
-        
-        if city:
-            instance.city = update_or_create_object(City, city)
-        
-        if suburb:
-            instance.suburb = update_or_create_object(Suburb, suburb)
+        except Exception as e:
+            print('Error: ', e)
+            raise e
+    
+    def handle_m2m_relationship(self, related_models_data_list):
+        for related_models_data in related_models_data_list:
+            model = related_models_data['model']
+            manager_name = related_models_data['manager']
+            fields = related_models_data['fields']
 
-        if industry:
-            industry_related_models_data = {
-                'model': Industry,
-                'manager': 'industry',
-                'fields': ['industry'],
-                'data': industry,
-            }
-            instance = handle_m2m_relationship(instance, industry_related_models_data)
-        instance.save()
+            related_manager = getattr(self, manager_name)
+
+            for related_data in related_models_data['data']:
+                filter_kwargs = {field: related_data[field] for field in fields if related_data.get(field)} if fields else {}
+                related_instance, created = model.objects.get_or_create(**filter_kwargs)
+
+                if not related_manager.filter(id=related_instance.id).exists():
+                    related_manager.add(related_instance)
+                    
+        return self
+
+    @classmethod
+    def update_or_create_object(cls, model, data):
+        obj_id = data.pop('id', None)
+        m2m_fields = {}
+        foreign_key_fields = {}
+        regular_fields = {}
+        for field, value in data.items():
+            if isinstance(value, list):
+                m2m_fields[field] = value
+            elif isinstance(value, dict):
+                foreign_key_fields[field] = value
+            else:
+                regular_fields[field] = value
         
-        return instance
+        obj = None
+        if obj_id:
+            obj = model.objects.filter(id=obj_id).first()
+            if obj:
+                for field, value in regular_fields.items():
+                    setattr(obj, field, value)
+                obj.save()
+
+        if not obj:
+            from django.db import IntegrityError
+
+            if regular_fields:
+                # Exclude m2m fields and foreign key fields from create() kwargs
+                create_kwargs = {key: value for key, value in regular_fields.items() if key not in m2m_fields and key not in foreign_key_fields}
+                try:
+                    obj = model.objects.create(**create_kwargs)
+                except IntegrityError:
+                    pass
+            else:
+                return None
+            
+        if foreign_key_fields:
+            for field, value in foreign_key_fields.items():
+                related_model = getattr(model, field).field.related_model
+                related_obj_id = value.pop('id', None)
+
+                field_obj = model._meta.get_field(field)
+                if related_obj_id:
+                    related_obj = related_model.objects.filter(id=related_obj_id).first()
+                    if related_obj:
+                        setattr(obj, field, related_obj)
+                else:
+                    related_obj = cls.update_or_create_object(related_model, value)
+                    if related_obj is not None:
+                        for fk_field in field_obj.foreign_related_fields:
+                            setattr(related_obj, fk_field.name, obj)
+                    setattr(obj, field, related_obj)
+
+        if m2m_fields:
+            m2m_related_models_data_list = []
+            for field, value in m2m_fields.items():
+                m2m_related_models_data = {
+                    'model': getattr(model, field).field.related_model,
+                    'manager': field,
+                    'fields': list(value.keys()),
+                    'data': value,
+                }
+                m2m_related_models_data_list.append(m2m_related_models_data)
+            
+            # Call the handle_m2m_relationship method on the class (cls)
+            cls.handle_m2m_relationship(obj, m2m_related_models_data_list)
+
+        if obj:
+            obj.save()
+            
+        return obj
+
 
     def avg_rate(self):
         if self.rate_count is not None:

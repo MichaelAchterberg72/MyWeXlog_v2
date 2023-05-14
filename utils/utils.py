@@ -33,6 +33,24 @@ def update_or_create_related_object(model_class, data):
     else:
         return model_class.objects.update_or_create(**data)[0]
     
+    
+def handle_m2m_relationship(instance, related_models_data_list):
+    for related_models_data in related_models_data_list:
+        model = related_models_data['model']
+        manager_name = related_models_data['manager']
+        fields = related_models_data['fields']
+
+        related_manager = getattr(instance, manager_name)
+
+        for related_data in related_models_data['data']:
+            filter_kwargs = {field: related_data[field] for field in fields if related_data.get(field)} if fields else {}
+            related_instance, created = model.objects.get_or_create(**filter_kwargs)
+
+            if not related_manager.filter(id=related_instance.id).exists():
+                related_manager.add(related_instance)
+
+    return instance
+
             
 def update_or_create_object(model, data):
     obj_id = data.pop('id', None)
@@ -51,25 +69,14 @@ def update_or_create_object(model, data):
     if obj_id:
         obj = model.objects.filter(id=obj_id).first()
         if obj:
-            for field, value in m2m_fields.items():
-                m2m_field = getattr(obj, field)
-                m2m_field.set(value)
-            for field, value in foreign_key_fields.items():
-                related_model = getattr(model, field).related_model
-                related_obj_id = value.pop('id', None)
-                if related_obj_id:
-                    related_obj = related_model.objects.filter(id=related_obj_id).first()
-                    if related_obj:
-                        setattr(obj, field, related_obj)
             for field, value in regular_fields.items():
                 setattr(obj, field, value)
             obj.save()
 
     if not obj and regular_fields:
         obj = model.objects.create(**data)
-        for field, value in m2m_fields.items():
-            m2m_field = getattr(obj, field)
-            m2m_field.set(value)
+        
+    if foreign_key_fields:
         for field, value in foreign_key_fields.items():
             related_model = getattr(model, field).related_model
             related_obj_id = value.pop('id', None)
@@ -77,31 +84,24 @@ def update_or_create_object(model, data):
                 related_obj = related_model.objects.filter(id=related_obj_id).first()
                 if related_obj:
                     setattr(obj, field, related_obj)
+                    obj.save()
             else:
-                related_obj = related_model.objects.create(**value)
+                related_obj = update_or_create_object(related_model, value)
                 setattr(obj, field, related_obj)
-        obj.save()
+                obj.save()
+            
+    if m2m_fields:
+        for field, value in m2m_fields.items():
+            m2m_related_models_data = {
+                'model': getattr(model, field).related_model,
+                'manager': field,
+                'fields': list(value.keys()),
+                'data': value,
+            }
+            handle_m2m_relationship(obj, [m2m_related_models_data])
 
     return obj
 
-            
-def handle_m2m_relationship(instance, related_models_data_list):
-    for related_models_data in related_models_data_list:
-        model = related_models_data['model']
-        manager_name = related_models_data['manager']
-        fields = related_models_data['fields']
-
-        related_manager = getattr(instance, manager_name)
-
-        for related_data in related_models_data['data']:
-            filter_kwargs = {field: related_data[field] for field in fields if related_data.get(field)} if fields else {}
-            related_instance, created = model.objects.get_or_create(**filter_kwargs)
-
-            if not related_manager.filter(id=related_instance.id).exists():
-                related_manager.add(related_instance)
-
-    return instance
-    
 
 def create_enum_from_choices(choices):
     enum_values = {item[0]: item[1] for item in choices}

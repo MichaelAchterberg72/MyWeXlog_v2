@@ -45,7 +45,7 @@ class BranchInputType(graphene.InputObjectType):
     size = BranchSizeEnum()
     phy_address_line1 = graphene.String()
     phy_address_line2 = graphene.String()
-    country = CountryFieldInputType(required=True)
+    country = CountryFieldInputType()
     region = graphene.Argument(RegionInputType)
     city = graphene.Argument(CityInputType)
     suburb = graphene.Argument(SuburbInputType)

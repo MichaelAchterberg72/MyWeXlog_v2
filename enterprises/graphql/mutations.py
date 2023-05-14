@@ -191,7 +191,7 @@ class BranchUpdateOrCreate(graphene.Mutation):
         try:
             with transaction.atomic():
                 branch_id = kwargs.get('id')
-                branch = update_or_create_object(Branch, kwargs)
+                branch = Branch.update_or_create_object(Branch, kwargs)
                 # branch_id = kwargs.pop('id', None)
                 # branch = Branch.update_or_create(id=branch_id, **kwargs)
                 message = "Branch updated successfully" if branch_id else "Branch created successfully"
