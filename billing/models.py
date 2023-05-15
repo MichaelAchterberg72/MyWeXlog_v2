@@ -50,7 +50,7 @@ class Timesheet(models.Model):
     notification = models.CharField(max_length=1, choices=NOTIFICATION, default='N')
     notification_time = models.CharField(max_length=1, blank=True, null=True)
     notification_duration = models.CharField(max_length=1, choices=DURATION, default='M')
-    busy = models.CharField(max_length=1, choices=REPEAT, default='B')
+    busy = models.CharField(max_length=1, choices=BUSY, default='B')
     repeat = models.CharField(max_length=1, choices=REPEAT, default='H')
     include_for_certificate = models.BooleanField(default=False)
     include_for_invoice = models.BooleanField(default=False)
