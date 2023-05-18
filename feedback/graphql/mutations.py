@@ -36,9 +36,10 @@ class Mutation(graphene.ObjectType):
 app_name = 'feedback'
 model_names = ['FeedBackActions', 'Notices']
 mutation_name_format = '{model}UpdateOrCreate'
+output_message_format = "{model} {action} successfully"
 validation_functions = [validate_model1_input, validate_model2_input]
 
-mutations = create_mutations_for_app(app_name, model_names, mutation_name_format, validation_functions)
+mutations = create_mutations_for_app(app_name, model_names, mutation_name_format, output_message_format)
 
 # Add the generated mutations to the Mutation class
 for mutation in mutations:
