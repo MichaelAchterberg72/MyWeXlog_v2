@@ -2,6 +2,7 @@ import graphene
 
 
 class FeedbackInputType(graphene.InputObjectType):
+    id = graphene.ID()
     talent = graphene.ID()
     date_captured = graphene.DateTime()
     type = graphene.String()
@@ -13,6 +14,7 @@ class FeedbackInputType(graphene.InputObjectType):
     
     
 class FeedBackActionsInputType(graphene.InputObjectType):
+    id = graphene.ID()
     item = graphene.Argument(FeedbackInputType)
     review_by = graphene.Argument(Custom)
     date_reviewed = graphene.DateTime()
@@ -20,6 +22,7 @@ class FeedBackActionsInputType(graphene.InputObjectType):
     
     
 class NoticesInputType(graphene.InputObjectType):
+    id = graphene.ID()
     notice_date = graphene.DateTime()
     subject = graphene.String()
     notice = graphene.String()
@@ -27,6 +30,7 @@ class NoticesInputType(graphene.InputObjectType):
     
     
 class NoticeReadInputType(graphene.InputObjectType):
+    id = graphene.ID()
     talent = graphene.Argument()
     notice = graphene.Argument()
     date_read = graphene.DateTime()

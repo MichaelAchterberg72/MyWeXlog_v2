@@ -1,16 +1,19 @@
+import sys
 import enum
 import graphene
+from django.apps import apps
+from django.db import transaction, IntegrityError
 import random
 import string
-from graphene import relay
 from django.db.models.fields.related import RelatedField
 from utils.graphql.output_types import SuccessMessage, FailureMessage, SuccessMutationResult
 from django.db import IntegrityError
 from django.conf import settings
 
-from django.contrib.auth import get_user_model
+# from django.contrib.auth import get_user_model
+# from users.models import CustomUser as User
 
-User = get_user_model()
+# User = get_user_model()
 
 
 def update_model(model, **kwargs):
@@ -63,8 +66,9 @@ def handle_m2m_relationship(obj, related_models_data_list):
     return obj
 
 
-@classmethod
+# @classmethod
 def update_or_create_object(model, data):
+    print(data)
     obj_id = data.pop('id', None)
     m2m_fields = {}
     foreign_key_fields = {}
@@ -86,8 +90,6 @@ def update_or_create_object(model, data):
             obj.save()
 
     if not obj:
-        from django.db import IntegrityError
-
         if regular_fields:
             # Exclude m2m fields and foreign key fields from create() kwargs
             create_kwargs = {key: value for key, value in regular_fields.items() if key not in m2m_fields and key not in foreign_key_fields}
@@ -97,15 +99,15 @@ def update_or_create_object(model, data):
                 pass
         else:
             return None
-        
+
     if foreign_key_fields:
         for field, value in foreign_key_fields.items():
             related_model = getattr(model, field).field.related_model
             related_obj_id = value.pop('id', None)
             
-            if related_model == User:
-                related_obj = User.objects.filter(pk=related_obj_id).first()
-                obj.related_obj = related_obj
+            # if related_model == User:
+            #     related_obj = User.objects.filter(pk=related_obj_id).first()
+            #     obj.related_obj = related_obj
                 
             field_obj = model._meta.get_field(field)
             if related_obj_id:
@@ -117,6 +119,7 @@ def update_or_create_object(model, data):
                 if related_obj is not None:
                     for fk_field in field_obj.foreign_related_fields:
                         setattr(related_obj, fk_field.name, obj)
+                    related_obj.save()
                 setattr(obj, field, related_obj)
 
     if m2m_fields:
@@ -144,3 +147,49 @@ def create_enum_from_choices(choices):
     enum_name = 'ChoicesEnum_' + ''.join([str(value) for value in enum_values.values()])
     ChoicesEnum = enum.Enum(enum_name, enum_values)
     return graphene.Enum.from_enum(ChoicesEnum)
+
+
+def create_mutations_for_app(app_name, model_names, mutation_name_format, output_message_format, validation_func=None):
+    app = apps.get_app_config(app_name)
+    mutations = []
+
+    for model in app.get_models():
+        if model.__name__ in model_names:
+            class ModelInputType(graphene.InputObjectType):
+                class Meta:
+                    model = model
+                    # exclude_fields = ['id']
+
+            class UpdateOrCreateModelMutation(graphene.Mutation):
+                class Arguments:
+                    input = ModelInputType(required=True)
+
+                Output = SuccessMutationResult
+
+                @classmethod
+                def mutate(cls, root, info, input):
+                    if validation_func:
+                        errors = validation_func(model, input)
+                        if errors:
+                            return FailureMessage(success=False, message=f"There are validation errors", errors=errors)
+
+                    try:
+                        with transaction.atomic():
+                            model_instance = update_or_create_object(model, input)
+                            if model_instance:
+                                output_message = output_message_format.format(model=model.__name__, id=model_instance.id)
+                                return SuccessMessage(success=True, id=str(model_instance.id), message=output_message)
+                    except Exception as e:
+                        return FailureMessage(success=False, message=f"Error creating or updating {model.__name__}", errors=[str(e)])
+
+            mutation_name = mutation_name_format.format(model=model.__name__)
+            UpdateOrCreateModelMutation.__name__ = mutation_name
+            setattr(sys.modules[__name__], mutation_name, UpdateOrCreateModelMutation)
+            mutations.append(UpdateOrCreateModelMutation)
+
+    return mutations
+
+
+
+
+
