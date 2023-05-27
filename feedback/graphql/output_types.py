@@ -33,13 +33,39 @@ class FeedbackOutputType(DjangoObjectType):
         
         
 class FeedBackActionsOutputType(DjangoObjectType):
-    iid_int = graphene.Int(description="The integer representation of the ID")
+    id_int = graphene.Int(description="The integer representation of the ID")
 
     @staticmethod
     def resolve_id_int(root, info):
         return int(root.pk)
     
     class Meta:
-        model = FeedBack
+        model = FeedBackActions
+        fields = '__all__'
+        interfaces = (graphene.relay.Node,)
+        
+        
+class NoticesOutputType(DjangoObjectType):
+    id_int = graphene.Int(description="The integer representation of the ID")
+
+    @staticmethod
+    def resolve_id_int(root, info):
+        return int(root.pk)
+    
+    class Meta:
+        model = Notices
+        fields = '__all__'
+        interfaces = (graphene.relay.Node,)
+        
+        
+class NoticeReadOutputType(DjangoObjectType):
+    id_int = graphene.Int(description="The integer representation of the ID")
+
+    @staticmethod
+    def resolve_id_int(root, info):
+        return int(root.pk)
+    
+    class Meta:
+        model = NoticeRead
         fields = '__all__'
         interfaces = (graphene.relay.Node,)

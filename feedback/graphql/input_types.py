@@ -1,9 +1,10 @@
 import graphene
+from users.graphql.input_types import UserInputType
 
 
 class FeedbackInputType(graphene.InputObjectType):
     id = graphene.ID()
-    talent = graphene.ID()
+    talent = graphene.Argument(UserInputType)
     date_captured = graphene.DateTime()
     type = graphene.String()
     details = graphene.String()
@@ -16,7 +17,7 @@ class FeedbackInputType(graphene.InputObjectType):
 class FeedBackActionsInputType(graphene.InputObjectType):
     id = graphene.ID()
     item = graphene.Argument(FeedbackInputType)
-    review_by = graphene.Argument(Custom)
+    review_by = graphene.Argument(UserInputType)
     date_reviewed = graphene.DateTime()
     actions = graphene.String()
     
@@ -31,7 +32,7 @@ class NoticesInputType(graphene.InputObjectType):
     
 class NoticeReadInputType(graphene.InputObjectType):
     id = graphene.ID()
-    talent = graphene.Argument()
-    notice = graphene.Argument()
+    talent = graphene.Argument(UserInputType)
+    notice = graphene.Argument(NoticesInputType)
     date_read = graphene.DateTime()
     notice_read = graphene.Boolean()

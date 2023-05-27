@@ -2,6 +2,8 @@ from django.conf import settings
 from django.db import models
 from django.utils import timezone
 
+from utils.utils import update_model, handle_m2m_relationship, update_or_create_object
+
 from Profile.utils import create_code9
 
 
@@ -25,6 +27,25 @@ class FeedBack(models.Model):
     responded = models.BooleanField(default=False)
     slug = models.SlugField(max_length=50, null=True, unique=True, blank=True)
 
+    @classmethod
+    def update_or_create(cls, slug=None, instance=None, **kwargs):
+        if slug and not instance:
+            instance = cls.objects.get(slug=slug)
+            
+        talent = kwargs.pop('talent', None)
+        
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+        
+        if talent:
+            instance.talent = settings.AUTH_USER_MODEL.objects.get(slug=talent.slug)
+            instance.save()
+            
+        return instance
+    
     def __str__(self):
         return f'{self.talent.alias} on {self.date_captured}'
 
@@ -40,6 +61,31 @@ class FeedBackActions(models.Model):
     review_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     date_reviewed = models.DateTimeField(auto_now_add=True)
     actions = models.TextField(null=True)
+    
+    @classmethod
+    def update_or_create(cls, slug=None, instance=None, **kwargs):
+        if slug and not instance:
+            instance = cls.objects.get(slug=slug)
+        
+        item = kwargs.pop('item', None)
+        review_by = kwargs.pop('talent', None)
+        
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+        
+        if item:
+            instance.item = FeedBack.update_or_create(slug=item.slug, )
+        
+        if review_by:
+            instance.review_by = settings.AUTH_USER_MODEL.objects.get(slug=review_by.slug)
+            instance.save()
+        
+        
+            
+        return instance
 
     def __str__(self):
         return f'{self.item} by {self.review_by.alias}'

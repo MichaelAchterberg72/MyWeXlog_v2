@@ -8,7 +8,12 @@ from django_countries.fields import CountryField
 from phonenumber_field.modelfields import PhoneNumberField
 from WeXlog.storage_backends import PrivateMediaStorage
 
-from utils.utils import update_model, handle_m2m_relationship, update_or_create_object
+from utils.utils import (
+    update_model, 
+    handle_m2m_relationship, 
+    update_or_create_related_object,
+    update_or_create_object
+)
 
 from .graphql.enums import BranchSizeEnum
 from db_flatten.models import PhoneNumberType
@@ -142,7 +147,7 @@ class Branch(models.Model):
                 instance = Branch.objects.create(**kwargs)
             
             if company:
-                instance.company = update_or_create_object(Enterprise, company)
+                instance.company = update_or_create_related_object(Enterprise, company)
                 instance.save()
                 
             if type:
