@@ -1,6 +1,7 @@
 import sys
 import enum
 import graphene
+from django.db import models, transaction
 from django.apps import apps
 from django.db import transaction, IntegrityError
 import random
@@ -68,7 +69,6 @@ def handle_m2m_relationship(obj, related_models_data_list):
 
 # @classmethod
 def update_or_create_object(model, data, related_model_map=None):
-    print(data)
     obj_id = data.pop('id', None)
     m2m_fields = {}
     foreign_key_fields = {}
@@ -161,38 +161,71 @@ def create_enum_from_choices(choices):
     return graphene.Enum.from_enum(ChoicesEnum)
 
 
+class CustomUserForeignKeyInput(graphene.InputObjectType):
+    alias = graphene.String(required=True)
+
+input_type_cache = {}
+
+def get_input_type_for_model(model):
+    if model in input_type_cache:
+        return input_type_cache[model]
+    
+    fields = {}
+    for field in model._meta.get_fields():
+        if isinstance(field, models.CharField) or isinstance(field, models.TextField) or isinstance(field, models.EmailField):
+            fields[field.name] = graphene.String(required=not field.blank)
+        elif isinstance(field, models.IntegerField):
+            fields[field.name] = graphene.Int(required=not field.blank)
+        elif isinstance(field, models.BooleanField):
+            fields[field.name] = graphene.Boolean(required=not field.blank)
+        elif isinstance(field, models.FloatField):
+            fields[field.name] = graphene.Float(required=not field.blank)
+        elif isinstance(field, models.DecimalField):
+            fields[field.name] = graphene.Decimal(required=not field.blank)
+        elif isinstance(field, models.DateField):
+            fields[field.name] = graphene.Date(required=not field.blank)
+        elif isinstance(field, models.DateTimeField):
+            fields[field.name] = graphene.DateTime(required=not field.blank)
+        if isinstance(field, models.ForeignKey):
+            if field.related_model != apps.get_model('users', 'CustomUser'):  # Exclude User model
+                related_model_input_type = get_input_type_for_model(field.related_model)
+                fields[field.name] = graphene.Field(related_model_input_type, required=not field.blank)
+            else:
+                fields[field.name] = graphene.Field(CustomUserForeignKeyInput, required=not field.blank)
+        if isinstance(field, models.ManyToManyField):
+            if field.related_model != apps.get_model('users', 'CustomUser').__name__:  # Exclude User model
+                # To allow creating new related instances, generate an InputObjectType for the related model:
+                related_model_input_type = get_input_type_for_model(field.related_model)
+                fields[field.name] = graphene.List(graphene.NonNull(related_model_input_type), required=not field.blank)
+            else:
+                related_model_input_type = get_input_type_for_model(field.related_model)
+                fields[field.name] = graphene.List(graphene.NonNull(related_model_input_type), required=not field.blank)
+
+    Meta = type('Meta', (object,), {'model': model})
+    input_type = type(model.__name__ + 'InputType', (graphene.InputObjectType,), fields)
+    input_type.Meta = Meta
+
+    input_type_cache[model] = input_type
+
+    return input_type
+
+
 def create_mutations_for_app(
     app_name, 
     model_names, 
     mutation_name_format, 
     output_message_format, 
     related_model_map=None, 
-    validation_func=None,
+    validation_func_map=None,
     model=None
 ):
     app = apps.get_app_config(app_name)
     mutations = []
+    mutation_map = {}
 
     for model in app.get_models():
         if model.__name__ in model_names:
-            model_name = model
-            class ModelInputType(graphene.InputObjectType):
-                class Meta:
-                    model = model_name
-                    # exclude_fields = ['id']
-            
-            for field in model._meta.get_fields():
-                if field.is_relation and field.many_to_one and not field.auto_created:
-                    field_name = field.name
-                    field_type = field.related_model
-                    input_field = graphene.Argument(field_type, required=False)
-                    setattr(ModelInputType, field_name, input_field)
-
-                if field.is_relation and field.many_to_many and not field.auto_created:
-                    field_name = field.name
-                    field_type = field.related_model
-                    input_field = graphene.List(graphene.Argument(field_type), required=False)
-                    setattr(ModelInputType, field_name, input_field)
+            ModelInputType = get_input_type_for_model(model)
 
             class UpdateOrCreateModelMutation(graphene.Mutation):
                 class Arguments:
@@ -202,11 +235,11 @@ def create_mutations_for_app(
 
                 @classmethod
                 def mutate(cls, root, info, input):
-                    if validation_func:
-                        errors = validation_func(model, input)
+                    if validation_func_map and model.__name__ in validation_func_map:
+                        validation_func = validation_func_map[model.__name__]
+                        errors = validation_func(input)
                         if errors:
                             return FailureMessage(success=False, message=f"There are validation errors", errors=errors)
-
                     try:
                         with transaction.atomic():
                             model_instance = update_or_create_object(model, input, related_model_map=related_model_map)
@@ -218,15 +251,16 @@ def create_mutations_for_app(
 
             mutation_name = mutation_name_format.format(model=model.__name__)
             UpdateOrCreateModelMutation.__name__ = mutation_name
-            setattr(sys.modules[__name__], mutation_name, UpdateOrCreateModelMutation)
             mutations.append(UpdateOrCreateModelMutation)
+            mutation_map[mutation_name] = UpdateOrCreateModelMutation
 
-    return mutations
+    return mutations, mutation_map
 
 
 def create_delete_mutation_for_app(app_name, model_names):
     app = apps.get_app_config(app_name)
     mutations = []
+    mutation_map = {}
 
     for model in app.get_models():
         if model.__name__ in model_names:
@@ -248,6 +282,9 @@ def create_delete_mutation_for_app(app_name, model_names):
 
             mutation_name = f"{model.__name__}Delete"
             DeleteMutation.__name__ = mutation_name
-            setattr(sys.modules[__name__], mutation_name, DeleteMutation)
+            # setattr(sys.modules[__name__], mutation_name, DeleteMutation)
+            # mutations.append(DeleteMutation)
+
             mutations.append(DeleteMutation)
-    return mutations
+            mutation_map[mutation_name] = DeleteMutation
+    return mutations, mutation_map

@@ -21,7 +21,7 @@ class FeedbackOutputType(DjangoObjectType):
         fields = '__all__'
         interfaces = (graphene.relay.Node,)
         filter_fields = {
-            'talent': ['iexact', 'icontains', 'istartswith'],
+            'talent__alias': ['iexact', 'icontains', 'istartswith'],
             'date_captured': ['iexact', 'lt', 'lte', 'gt', 'gte'],
             'type': ['iexact', 'icontains', 'istartswith'],
             'details': ['iexact', 'icontains'],

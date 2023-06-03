@@ -9,9 +9,9 @@ from ..models import (
 
 
 class FeedbackFilter(django_filters.FilterSet):
-    talent__icontains = django_filters.CharFilter(lookup_expr='icontains', field_name='talent')
-    # talent__iexact = django_filters.CharFilter(lookup_expr='iexact', field_name='talent')
-    talent__istartswith = django_filters.CharFilter(lookup_expr='istartswith', field_name='talent')
+    # talent__icontains = django_filters.CharFilter(lookup_expr='icontains', field_name='talent')
+    # # talent__iexact = django_filters.CharFilter(lookup_expr='iexact', field_name='talent')
+    # talent__istartswith = django_filters.CharFilter(lookup_expr='istartswith', field_name='talent')
 
     date_captured__lt = django_filters.NumberFilter(lookup_expr='lt', field_name='date_captured')
     date_captured__lte = django_filters.NumberFilter(lookup_expr='lte', field_name='date_captured')
@@ -38,7 +38,6 @@ class FeedbackFilter(django_filters.FilterSet):
     
     order_by = django_filters.OrderingFilter(
             fields=(
-                "talent",
                 "date_captured",
                 "type",
                 "details",
@@ -52,7 +51,6 @@ class FeedbackFilter(django_filters.FilterSet):
     class Meta:
         model = FeedBack
         fields = [
-            "talent",
             "date_captured",
             "type",
             "details",
