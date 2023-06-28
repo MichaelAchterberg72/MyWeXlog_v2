@@ -24,6 +24,19 @@ from Profile.utils import create_code9
 # Industries: Mining & Metals: Process, Mining & Metals:Underground, Mining & Metals:Open Pit, PetroChem, FMCG, Food & Beverage, Agriculture, Retail, Aviation,
 class Industry(models.Model):
     industry = models.CharField(max_length=60, unique=True)
+    
+    @classmethod
+    def update_or_create(cls, id=None, instance=None, **kwargs):
+        if id and not instance:
+            instance = cls.objects.get(id=id)
+            
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+            
+        return instance
 
     def clean(self):
         self.industry = self.industry.title()
@@ -64,6 +77,19 @@ class Enterprise(models.Model):
 
         return round(Decimal(sum/400),2)
     average = property(avg_rate)
+    
+    @classmethod
+    def update_or_create(cls, id=None, instance=None, **kwargs):
+        if id and not instance:
+            instance = cls.objects.get(id=id)
+            
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+            
+        return instance
 
     def clean(self):
         self.ename = self.ename.title()
@@ -86,6 +112,19 @@ class BranchType(models.Model):
 
     def clean(self):
         self.type = self.type.title()
+        
+    @classmethod
+    def update_or_create(cls, id=None, instance=None, **kwargs):
+        if id and not instance:
+            instance = cls.objects.get(id=id)
+            
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+            
+        return instance
 
     def __str__(self):
         return self.type
@@ -209,6 +248,30 @@ class PhoneNumber(models.Model):
     phone = PhoneNumberField()
     type = models.ForeignKey(PhoneNumberType, on_delete=models.SET_NULL, null=True, related_name='Number_type')
     existing = models.BooleanField('Number in use')
+    
+    @classmethod
+    def update_or_create(cls, id=None, instance=None, **kwargs):
+        if id and not instance:
+            instance = cls.objects.get(id=id)
+            
+        branch = kwargs.pop('branch', None)
+        type = kwargs.pop('type', None)
+            
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+            
+        if branch:
+            instance.branch = Branch.update_or_create(slug=branch.slug, **branch)
+            
+        if type:
+            instance.type = PhoneNumberType.update_or_create(id=type.id, **type)
+            
+        instance.save()
+            
+        return instance
 
     def __str__(self):
         return '{}: {}({})'.format(self.branch, self.phone, self.type)

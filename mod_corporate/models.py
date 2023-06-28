@@ -7,12 +7,33 @@ from marketplace.models import WorkLocation
 from Profile.utils import create_code9
 from talenttrack.models import Designation
 
+from utils.utils import update_model
+
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
 
 class OrgStructure(models.Model):
     corporate = models.ForeignKey(CorporateHR, on_delete=models.CASCADE)
     level_name = models.CharField(max_length=100)
     parent = models.ForeignKey('OrgStructure', on_delete=models.CASCADE, related_name='parentdept', blank=True, null=True)
 
+    @classmethod
+    def update_or_create(cls, id=None, instance=None, **kwargs):
+        if id and not instance:
+            instance = cls.objects.get(id=id)
+            
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+        
+        instance.save()
+            
+        return instance
+    
     def __str__(self):
         return f'{self.level_name}'
 
@@ -47,6 +68,42 @@ class CorporateStaff(models.Model):
 
     class Meta:
         verbose_name_plural = "Corporate Staff"
+        
+    @classmethod
+    def update_or_create(cls, id=None, instance=None, **kwargs):
+        if id and not instance:
+            instance = cls.objects.get(id=id)
+            
+        talent = kwargs.pop('talent', None)
+        type = kwargs.pop('type', None)
+        department = kwargs.pop('department', None)
+        corporate = kwargs.pop('corporate', None)
+        designation = kwargs.pop('designation', None)
+            
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+            
+        if talent:
+            instance.talent = User.objects.get(slug=talent.slug)
+            
+        if type:
+            instance.type = WorkLocation.update_or_create(id=type.id, **type)
+
+        if department:
+            instance.department = OrgStructure.update_or_create(id=department.id, **department)
+
+        if corporate:
+            instance.corporate = CorporateHR.update_or_create(id=corporate.id, **corporate)
+
+        if designation:
+            instance.designation = Designation.update_or_create(id=designation.id, **designation)
+
+        instance.save()
+            
+        return instance
 
     def __str__(self):
         return f'{self.corporate}: {self.talent} ({self.status})'
@@ -73,3 +130,23 @@ class CorporateStaff(models.Model):
 
 class RequiredSkills(models.Model):
     department = models.ForeignKey(OrgStructure, on_delete=models.CASCADE)
+    
+    @classmethod
+    def update_or_create(cls, id=None, instance=None, **kwargs):
+        if id and not instance:
+            instance = cls.objects.get(id=id)
+            
+        department = kwargs.pop('department', None)
+            
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+            
+        if department:
+            instance.department = OrgStructure.update_or_create(id=department.id, **department)
+        
+        instance.save()
+            
+        return instance

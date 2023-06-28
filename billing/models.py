@@ -5,7 +5,13 @@ from django.conf import settings
 from project.models import ProjectPersonalDetails, ProjectPersonalDetailsTask
 from enterprises.models import Branch
 from talenttrack.models import WorkExperience
-# Create your models here.
+
+from utils.utils import update_model, handle_m2m_relationship
+
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
 
 REPEAT  = (
     ('H','Doesn\'t repeat'),
@@ -54,6 +60,47 @@ class Timesheet(models.Model):
     repeat = models.CharField(max_length=1, choices=REPEAT, default='H')
     include_for_certificate = models.BooleanField(default=False)
     include_for_invoice = models.BooleanField(default=False)
-
+    
+    @classmethod
+    def update_or_create(cls, id=None, instance=None, **kwargs):
+        try:
+            if id and not instance:
+                instance = cls.objects.get(id=id)
+            
+            talent = kwargs.pop('talent', None)
+            work_experience = kwargs.pop('work_experience', None)
+            client = kwargs.pop('client', None)
+            project = kwargs.pop('project', None)
+            task = kwargs.pop('task', None)
+            
+            if instance:
+                update_model(instance, **kwargs)
+                instance.save()
+            else:
+                instance = cls.objects.create(**kwargs)
+                
+            if talent:
+                instance.talent = User.objects.filter(slug=talent.slug)
+                
+            if work_experience:
+                instance.work_experience = WorkExperience.update_or_create(slug=work_experience.slug, **work_experience)
+                
+            if client:
+                instance.client = Branch.update_or_create(id=client.id, **client)
+                
+            if project:
+                instance.project = ProjectPersonalDetails.update_or_create(slug=project.slug, **project)
+                
+            if task:
+                instance.task = ProjectPersonalDetailsTask.update_or_create(slug=task.slug, **task)\
+                
+            instance.save()
+            
+            return instance
+        
+        except Exception as e:
+            print('Error: ', e)
+            raise e
+            
     def __str__(self):
         return '{} - {}'.format(self.time_from, self.task)

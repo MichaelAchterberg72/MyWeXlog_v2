@@ -11,8 +11,13 @@ from enterprises.models import Enterprise, Industry, Branch
 from locations.models import Currency, City, Region
 from db_flatten.models import SkillTag
 
-
 from Profile.utils import create_code9
+
+from utils.utils import update_model, handle_m2m_relationship
+
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 class ProjectData(models.Model):
@@ -28,6 +33,46 @@ class ProjectData(models.Model):
 
     class Meta:
         unique_together = (('name','companybranch'),)
+        
+    @classmethod
+    def update_or_create(cls, slug=None, instance=None, **kwargs):
+        if slug and not instance:
+            instance = cls.objects.get(slug=slug)
+            
+        talent = kwargs.pop('talent', None)
+        company = kwargs.pop('company', None)
+        companybranch = kwargs.pop('companybranch', None)
+        region = kwargs.pop('region', None)
+        city = kwargs.pop('city', None)
+        industry = kwargs.pop('industry', None)
+        
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+        
+        if talent:
+            instance.talent = User.objects.get(slug=talent.slug)
+            
+        if company:
+            instance.company = Enterprise.update_or_create(slug=company.slug, **company)
+
+        if companybranch:
+            instance.companybranch = Branch.update_or_create(slug=companybranch.slug, **companybranch)
+
+        if region:
+            instance.region = Region.update_or_create(id=region.id, **region)
+
+        if city:
+            instance.city = City.update_or_create(id=city.id, **city)
+
+        if industry:
+            instance.industry = Industry.update_or_create(id=industry.id, **industry)
+        
+        instance.save()
+            
+        return instance
 
     def __str__(self):
         return '{} - {}'.format(self.company, self.name)
@@ -52,6 +97,38 @@ class ProjectPersonalDetails(models.Model):
 
     class Meta:
         unique_together = (('talent', 'project', 'company', 'companybranch'),)
+        
+    @classmethod
+    def update_or_create(cls, slug=None, instance=None, **kwargs):
+        if slug and not instance:
+            instance = cls.objects.get(slug=slug)
+            
+        talent = kwargs.pop('talent', None)
+        project = kwargs.pop('project', None)
+        company = kwargs.pop('company', None)
+        companybranch = kwargs.pop('companybranch', None)
+        
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+        
+        if talent:
+            instance.talent = User.objects.get(slug=talent.slug)
+            
+        if project:
+            instance.project = ProjectData.update_or_create(slug=project.slug, **project)
+
+        if company:
+            instance.company = Enterprise.update_or_create(slug=company.slug, **company)
+
+        if companybranch:
+            instance.companybranch = Branch.update_or_create(slug=companybranch.slug, **companybranch)
+        
+        instance.save()
+            
+        return instance
 
     def __str__(self):
         return '{}'.format(self.project)
@@ -85,6 +162,48 @@ class ProjectPersonalDetailsTask(models.Model):
     date_due = models.DateTimeField(_("due on"), blank=True, null=True)
     date_complete = models.DateTimeField(_("completed on"), blank=True, null=True)
     slug = models.SlugField(max_length=50, unique=True, null=True, blank=True)
+    
+    @classmethod
+    def update_or_create(cls, slug=None, instance=None, **kwargs):
+        if slug and not instance:
+            instance = cls.objects.get(slug=slug)
+            
+        talent = kwargs.pop('talent', None)
+        ppd = kwargs.pop('ppd', None)
+        company = kwargs.pop('company', None)
+        client = kwargs.pop('client', None)
+        skills = kwargs.pop('skills', [])
+        
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+        
+        if talent:
+            instance.talent = User.objects.get(slug=talent.slug)
+            
+        if ppd:
+            instance.ppd = ProjectPersonalDetails.update_or_create(slug=ppd.slug, **ppd)
+
+        if company:
+            instance.company = Branch.update_or_create(slug=company.slug, **company)
+
+        if client:
+            instance.client = Branch.update_or_create(slug=client.slug, **client)
+
+        if skills:
+            skills_related_models_data = {
+                'model': SkillTag,
+                'manager': 'skills',
+                'fields': ['skill', 'code'],
+                'data': skills_related_models_data,
+            }
+            instance = handle_m2m_relationship(instance, [skills_related_models_data])
+        
+        instance.save()
+            
+        return instance
 
     def __str__(self):
         return '{} {}'.format(self.ppd, self.task)
@@ -112,6 +231,34 @@ class ProjectTaskBilling(models.Model):
     date_start = models.DateField(blank=True, null=True)
     date_end = models.DateField(blank=True, null=True)
     current = models.BooleanField(default=True)
+    
+    @classmethod
+    def update_or_create(cls, slug=None, instance=None, **kwargs):
+        if slug and not instance:
+            instance = cls.objects.get(slug=slug)
+            
+        talent = kwargs.pop('talent', None)
+        ppdt = kwargs.pop('ppdt', None)
+        currency = kwargs.pop('currency', None)
+        
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+        
+        if talent:
+            instance.talent = User.objects.get(slug=talent.slug)
+            
+        if ppdt:
+            instance.ppdt = ProjectPersonalDetailsTask.update_or_create(slug=ppdt.slug, **ppdt)
+
+        if currency:
+            instance.currency = Currency.update_or_create(id=currency.id, **currency)
+        
+        instance.save()
+            
+        return instance
 
     def __str__(self):
         return '{} {} {}'.format(self.ppdt.task, self.billing_rate, self.currency)

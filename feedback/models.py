@@ -2,12 +2,18 @@ from django.conf import settings
 from django.db import models
 from django.utils import timezone
 
-from utils.utils import update_model, handle_m2m_relationship, update_or_create_object
+from utils.models import UpdateOrCreateMixin
 
 from Profile.utils import create_code9
 
+from utils.utils import update_model, handle_m2m_relationship
 
-class FeedBack(models.Model):
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+
+class FeedBack(UpdateOrCreateMixin, models.Model):
     OPTS = (
         ('X','Select'),
         ('B','Bug'),
@@ -41,8 +47,9 @@ class FeedBack(models.Model):
             instance = cls.objects.create(**kwargs)
         
         if talent:
-            instance.talent = settings.AUTH_USER_MODEL.objects.get(slug=talent.slug)
-            instance.save()
+            instance.talent = User.objects.get(slug=talent.slug)
+        
+        instance.save()
             
         return instance
     
@@ -56,7 +63,7 @@ class FeedBack(models.Model):
         super(FeedBack, self).save(*args, **kwargs)
 
 #admin mangement of feedback comments
-class FeedBackActions(models.Model):
+class FeedBackActions(UpdateOrCreateMixin, models.Model):
     item = models.ForeignKey(FeedBack, on_delete=models.PROTECT)
     review_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     date_reviewed = models.DateTimeField(auto_now_add=True)
@@ -81,9 +88,8 @@ class FeedBackActions(models.Model):
         
         if review_by:
             instance.review_by = settings.AUTH_USER_MODEL.objects.get(slug=review_by.slug)
-            instance.save()
         
-        
+        instance.save()
             
         return instance
 
@@ -91,11 +97,24 @@ class FeedBackActions(models.Model):
         return f'{self.item} by {self.review_by.alias}'
 
 
-class Notices(models.Model):
+class Notices(UpdateOrCreateMixin, models.Model):
     notice_date = models.DateTimeField()
     subject = models.CharField(max_length=200, null=True)
     notice = models.TextField(null=True)
     slug = models.SlugField(max_length=10, blank=True, null=True, unique=True)
+    
+    @classmethod
+    def update_or_create(cls, slug=None, instance=None, **kwargs):
+        if slug and not instance:
+            instance = cls.objects.get(slug=slug)
+        
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+            
+        return instance
 
     def __str__(self):
         return '{}, {}'.format(self.notice_date, self.subject)
@@ -107,11 +126,35 @@ class Notices(models.Model):
         super(Notices, self).save(*args, **kwargs)
 
 
-class NoticeRead(models.Model):
+class NoticeRead(UpdateOrCreateMixin, models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     notice = models.ForeignKey(Notices, on_delete=models.PROTECT, null=True)
     date_read = models.DateTimeField(auto_now_add=True)
     notice_read = models.BooleanField(default=False, null=True)
+    
+    @classmethod
+    def update_or_create(cls, id=None, instance=None, **kwargs):
+        if id and not instance:
+            instance = cls.objects.get(id=id)
+            
+        talent = kwargs.pop('talent', None)
+        notice = kwargs.pop('notice', None)
+        
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+            
+        if talent:
+            instance.talent = User.objects.get(slug=talent.slug)
+            
+        if notice:
+            instance.notice = Notices.update_or_create(slug=notice.slug, **notice)
+            
+        instance.save()
+            
+        return instance
 
     def __str__(self):
         return f'{self.notice} {self.talent}'

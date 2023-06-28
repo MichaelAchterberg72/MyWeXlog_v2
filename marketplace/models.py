@@ -10,6 +10,8 @@ from django.dispatch import receiver
 from django.utils import timezone
 from tinymce.models import HTMLField
 
+from utils.utils import update_model, handle_m2m_relationship
+
 from db_flatten.models import LanguageList, SkillTag
 from enterprises.models import Branch
 from locations.models import City, Currency
@@ -17,6 +19,10 @@ from Profile.utils import create_code8, create_code9
 from talenttrack.models import Designation, Result
 from users.models import CustomUser
 from WeXlog.storage_backends import PrivateMediaStorage, PublicMediaStorage
+
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 #This is the table that specifies the work configuration (Freelance, Remote Freelence, Consultant, Contractor, Employee, FIFO)
@@ -31,6 +37,21 @@ class WorkLocation(models.Model):
     )
     type = models.CharField(max_length=40, unique=True, choices=WTPE)
     description = models.TextField()
+    
+    @classmethod
+    def update_or_create(cls, id=None, instance=None, **kwargs):
+        if id and not instance:
+            instance = cls.objects.get(id=id)
+        
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+        
+        instance.save()
+            
+        return instance
 
     class Meta:
         pass
@@ -78,6 +99,21 @@ class SkillLevel(models.Model):
     level = models.IntegerField(choices=LEVEL, default=0)
     min_hours = models.IntegerField()#Read hours (typically max hours, but for lead its greater than the amount of hours shown.)
     description = models.TextField()
+    
+    @classmethod
+    def update_or_create(cls, id=None, instance=None, **kwargs):
+        if id and not instance:
+            instance = cls.objects.get(id=id)
+        
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+        
+        instance.save()
+            
+        return instance
 
     class Meta:
         ordering = ['level']
@@ -128,6 +164,70 @@ class TalentRequired(models.Model):
     city = models.ForeignKey(City, on_delete=models.PROTECT, verbose_name='City, Town or Place')
     date_modified = models.DateTimeField(auto_now=True)
     vac_wkfl = models.CharField(max_length=1, choices=WKFLOW, default='P')
+    
+    @classmethod
+    def update_or_create(cls, id=None, instance=None, **kwargs):
+        if id and not instance:
+            instance = cls.objects.get(id=id)
+            
+        designation = kwargs.pop('designation', None)
+        companybranch = kwargs.pop('companybranch', None)
+        requested_by = kwargs.pop('requested_by', None)
+        experience_level = kwargs.pop('experience_level', None)
+        language = kwargs.pop('language', [])
+        worklocation = kwargs.pop('worklocation', None)
+        currency = kwargs.pop('currency', None)
+        certification = kwargs.pop('certification', [])
+        city = kwargs.pop('city', None)
+        
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+            
+        if designation:
+            instance.designation = Designation.update_or_create(id=designation.id, **designation)
+
+        if companybranch:
+            instance.companybranch = Branch.update_or_create(slug=companybranch.slug, **companybranch)
+
+        if requested_by:
+            instance.requested_by = User.update_or_create(slug=requested_by.slug, **requested_by)
+
+        if experience_level:
+            instance.experience_level = SkillLevel.update_or_create(id=experience_level.id, **experience_level)
+
+        if language:
+            language_list_models_data = {
+                    'model': LanguageList,
+                    'manager': 'language',
+                    'fields': ['language'],
+                    'data': language,
+                }
+            instance = handle_m2m_relationship(instance, [language_list_models_data])
+
+        if worklocation:
+            instance.worklocation = WorkLocation.update_or_create(id=worklocation.id, **worklocation)
+
+        if currency:
+            instance.currency = Currency.update_or_create(id=currency.id, **currency)
+
+        if certification:
+            certification_models_data = {
+                    'model': Result,
+                    'manager': 'certification',
+                    'fields': ['type'],
+                    'data': certification,
+                }
+            instance = handle_m2m_relationship(instance, [certification_models_data])
+
+        if city:
+            instance.city = City.update_or_create(id=city.id, **city)
+        
+        instance.save()
+            
+        return instance
 
     class Meta:
         unique_together = (('companybranch','title', 'requested_by'),('companybranch', 'own_ref_no'),)
@@ -152,6 +252,30 @@ class VacancyViewed(models.Model):
     date_read = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     closed = models.BooleanField(default=False)
     date_closed = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    
+    @classmethod
+    def update_or_create(cls, id=None, instance=None, **kwargs):
+        if id and not instance:
+            instance = cls.objects.get(id=id)
+            
+        talent = kwargs.pop('talent', None)
+        vacancy = kwargs.pop('vacancy', None)
+        
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+            
+        if talent:
+            instance.talent = User.objects.get(slug=talent.slug)
+            
+        if vacancy:
+            instance.vacancy = TalentRequired.update_or_create(id=vacancy.id, **vacancy)
+        
+        instance.save()
+            
+        return instance
 
     def __str__(self):
         return f'{self.vacancy}'
@@ -161,6 +285,26 @@ class Deliverables(models.Model):
     scope = models.ForeignKey(TalentRequired, on_delete=models.CASCADE)
     deliverable = HTMLField()
     date_modified = models.DateField(auto_now=True)
+    
+    @classmethod
+    def update_or_create(cls, id=None, instance=None, **kwargs):
+        if id and not instance:
+            instance = cls.objects.get(id=id)
+            
+        scope = kwargs.pop(['scope', None])
+        
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+            
+        if scope:
+            instance.scope = TalentRequired.update_or_create(id=scope.id, **scope)
+        
+        instance.save()
+            
+        return instance
 
     class Meta:
         unique_together = (('scope','deliverable'),)
@@ -174,8 +318,29 @@ class SkillRequired(models.Model):
     skills = models.ForeignKey(SkillTag, on_delete=models.PROTECT)
     date_modified = models.DateField(auto_now=True)
 
-    #class Meta:
-        #unique_together = (('skills','scope'),)
+    @classmethod
+    def update_or_create(cls, id=None, instance=None, **kwargs):
+        if id and not instance:
+            instance = cls.objects.get(id=id)
+            
+        scope = kwargs.pop('scope', None)
+        skills = kwargs.pop('skills', None)
+        
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+            
+        if scope:
+            instance.scope = TalentRequired.update_or_create(id=scope.id, **scope)
+
+        if skills:
+            instance.skills = SkillTag.update_or_create(id=skills.id, **skills)
+
+        instance.save()
+            
+        return instance
 
     def __str__(self):
         return f'{self.scope.title}'
@@ -198,6 +363,30 @@ class BidShortList(models.Model):
     date_listed = models.DateTimeField(auto_now_add=True)
     status =  models.CharField(max_length=1, choices=BID, null=True, default='S')
     slug = models.SlugField(max_length=50, null=True, blank=True, unique=True)
+    
+    @classmethod
+    def update_or_create(cls, slug=None, instance=None, **kwargs):
+        if slug and not instance:
+            instance = cls.objects.get(slug=slug)
+            
+        talent = kwargs.pop('talent', None)
+        scope = kwargs.pop('scope', None)
+        
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+            
+        if talent:
+            instance.talent = User.objects.get(slug=talent.slug)
+            
+        if scope:
+            instance.scope = TalentRequired.update_or_create(id=scope.id, **scope)
+        
+        instance.save()
+            
+        return instance
 
     class Meta:
         unique_together = (('talent', 'scope'),)
@@ -239,6 +428,34 @@ class BidInterviewList(models.Model):
     emp_intcomplete = models.BooleanField(default=False)
     comments_emp = models.TextField(null=True)
     slug = models.SlugField(max_length=50, null=True, blank=True, unique=True)
+    
+    @classmethod
+    def update_or_create(cls, slug=None, instance=None, **kwargs):
+        if slug and not instance:
+            instance = cls.objects.get(slug=slug)
+            
+        talent = kwargs.pop('talent', None)
+        scope = kwargs.pop('scope', None)
+        tlt_decline_reason = kwargs.pop('tlt_decline_reason', None)
+        
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+        
+        if talent:
+            instance.talent = User.objects.get(slug=talent.slug)
+            
+        if scope:
+            instance.scope = TalentRequired.update_or_create(id=scope.id, **scope)
+
+        if tlt_decline_reason:
+            instance.tlt_decline_reason = DeclineAssignment.update_or_create(id=tlt_decline_reason.id, **tlt_decline_reason)
+
+        instance.save()
+            
+        return instance
 
     class Meta:
         unique_together = (('talent', 'scope'),)
@@ -265,6 +482,34 @@ class WorkBid(models.Model):
     date_applied = models.DateTimeField(auto_now_add=True)
     date_revised = models.DateTimeField(auto_now=True)
     slug = models.SlugField(max_length=50, blank=True, null=True)
+    
+    @classmethod
+    def update_or_create(cls, slug=None, instance=None, **kwargs):
+        if slug and not instance:
+            instance = cls.objects.get(slug=slug)
+            
+        talent = kwargs.pop('talent', None)
+        work = kwargs.pop('work', None)
+        currency = kwargs.pop('currency', None)
+        
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+            
+        if talent:
+            instance.talent = User.objects.get(slug=talent.slug)
+
+        if work:
+            instance.work = TalentRequired.update_or_create(id=work.id, **work)
+
+        if currency:
+            instance.currency = Currency.update_or_create(id=currency.id, **currency)
+        
+        instance.save()
+            
+        return instance
 
     class Meta:
         unique_together = (('talent', 'work'),)
@@ -286,6 +531,26 @@ class TalentAvailabillity(models.Model):
     part_time = models.BooleanField(default=False)
     permanent = models.BooleanField(default=False)
     date_modified = models.DateField(auto_now=True)
+    
+    @classmethod
+    def update_or_create(cls, id=None, instance=None, **kwargs):
+        if id and not instance:
+            instance = cls.objects.get(id=id)
+            
+        talent = kwargs.pop('talent', None)
+        
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+            
+        if talent:
+            instance.talent = User.objects.get(slug=talent.slug)
+        
+        instance.save()
+            
+        return instance
 
     def __str__(self):
         return '{}'.format(self.talent)
@@ -294,6 +559,21 @@ class TalentAvailabillity(models.Model):
 #Reasons: No Available Capacity, Not Looking for work, Not suited to vacancy, Rate too low, Company Reputation, other (comment)
 class DeclineAssignment(models.Model):
     option = models.CharField(max_length = 200, unique=True)
+    
+    @classmethod
+    def update_or_create(cls, id=None, instance=None, **kwargs):
+        if id and not instance:
+            instance = cls.objects.get(id=id)
+        
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+        
+        instance.save()
+            
+        return instance
 
     def __str__(self):
         return f'{self.option}'
@@ -333,6 +613,38 @@ class WorkIssuedTo(models.Model):
     emp_rated = models.BooleanField(default=False)
     assignment_complete_emp = models.BooleanField(default=False)
     slug = models.SlugField(max_length=50, null=True, unique=True)
+    
+    @classmethod
+    def update_or_create(cls, slug=None, instance=None, **kwargs):
+        if slug and not instance:
+            instance = cls.objects.get(slug=slug)
+            
+        talent = kwargs.pop('talent', None)
+        work = kwargs.pop('work', None)
+        tlt_decline_reason = kwargs.pop('tlt_decline_reason', None)
+        currency = kwargs.pop('currency', None)
+        
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+            
+        if talent:
+            instance.talent = User.objects.get(slug=talent.slug)
+            
+        if work:
+            instance.work = TalentRequired.update_or_create(id=work.id, **work)
+
+        if tlt_decline_reason:
+            instance.tlt_decline_reason = DeclineAssignment.update_or_create(id=tlt_decline_reason.id, **tlt_decline_reason)
+
+        if currency:
+            instance.currency = Currency.update_or_create(id=currency.id, **currency)
+        
+        instance.save()
+            
+        return instance
 
     class Meta:
         unique_together = (('talent', 'work'),)
@@ -366,6 +678,30 @@ class VacancyRate(models.Model):
     complete = models.BooleanField(null=True, default=False)
     suggestions = HTMLField(blank=True, null=True)
     slug = models.SlugField(max_length=50, null=True, unique=True)
+    
+    @classmethod
+    def update_or_create(cls, slug=None, instance=None, **kwargs):
+        if slug and not instance:
+            instance = cls.objects.get(slug=slug)
+            
+        vacancy = kwargs.pop('vacancy', None)
+        talent = kwargs.pop('talent', None)
+        
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+            
+        if vacancy:
+            instance.vacancy = TalentRequired.update_or_create(id=vacancy.id, **vacancy)
+            
+        if talent:
+            instance.talent = User.objects.get(slug=talent.slug)
+        
+        instance.save()
+            
+        return instance
 
     class Meta:
         unique_together = (('vacancy','talent'), )
@@ -414,6 +750,30 @@ class TalentRate(models.Model):
     suggestions = HTMLField(blank=True, null=True)
     complete = models.BooleanField(null=True, default=False)
     slug = models.SlugField(max_length=50, null=True, unique=True, blank=True)
+    
+    @classmethod
+    def update_or_create(cls, slug=None, instance=None, **kwargs):
+        if slug and not instance:
+            instance = cls.objects.get(slug=slug)
+            
+        vacancy = kwargs.pop('vacancy', None)
+        talent = kwargs.pop('talent', None)
+        
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+            
+        if vacancy:
+            instance.vacancy = TalentRequired.update_or_create(id=vacancy.id, **vacancy)
+            
+        if talent:
+            instance.talent = User.objects.get(slug=talent.slug)
+        
+        instance.save()
+            
+        return instance
 
     class Meta:
         unique_together = (('vacancy','talent'), )
