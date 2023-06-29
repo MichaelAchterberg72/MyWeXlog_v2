@@ -18,14 +18,14 @@ from django.conf import settings
 
 
 def update_model(model, **kwargs):
-    for name, value in kwargs.items():
-        if name == "id":
+    for attr, value in kwargs.items():
+        if attr == "id":
             pass  # pass, do not modify primary key
         else:
-            exists = hasattr(model, name)
-            if exists and not isinstance(getattr(model, name), RelatedField):
-                setattr(model, name, value)
-        if name == "password":
+            exists = hasattr(model, attr)
+            if exists and not isinstance(getattr(model, attr), RelatedField):
+                setattr(model, attr, value)
+        if attr == "password":
             model.set_password(value)
             
             

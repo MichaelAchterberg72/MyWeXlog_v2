@@ -8,6 +8,8 @@ from django.utils import timezone
 from .conf import settings
 from .signals import user_linked_to_response
 
+from utils.utils import update_model
+
 AUTH_USER_MODEL = getattr(settings, "AUTH_USER_MODEL", "auth.User")
 
 
@@ -38,6 +40,34 @@ class Referral(models.Model):
             return f"{self.user} ({self.code})"
         else:
             return self.code
+        
+    @classmethod
+    def update_or_create(cls, code=None, instance=None, **kwargs):
+        if code and not instance:
+            instance = cls.objects.get(code=code)
+            
+        user = kwargs.pop('user', None)
+        target_content_type = kwargs.pop('target_content_type', None)
+        target = kwargs.pop('target', None)
+        
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+        
+        if user:
+            instance.talent = AUTH_USER_MODEL.objects.get(slug=user.slug)
+            
+        if target:
+            target_content_type = ContentType.objects.get_for_model(target)
+        
+            instance.target_content_type = target_content_type
+            instance.target_object_id = target.id
+        
+        instance.save()
+            
+        return instance
 
     @classmethod
     def for_request(cls, request):
@@ -160,3 +190,30 @@ class ReferralResponse(models.Model):
     )
 
     created_at = models.DateTimeField(default=timezone.now)
+    
+    @classmethod
+    def update_or_create(cls, slug=None, instance=None, **kwargs):
+        if slug and not instance:
+            instance = cls.objects.get(slug=slug)
+            
+        user = kwargs.pop('user', None)
+        target = kwargs.pop('target', None)
+        
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+        
+        if user:
+            instance.talent = AUTH_USER_MODEL.objects.get(slug=user.slug)
+            
+        if target:
+            target_content_type = ContentType.objects.get_for_model(target)
+        
+            instance.target_content_type = target_content_type
+            instance.target_object_id = target.id
+        
+        instance.save()
+            
+        return instance

@@ -13,7 +13,11 @@ from schedule.utils import EventListManager
 
 from Profile.utils import create_code16
 
-from users.models import CustomUser
+from utils.utils import update_model
+
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 
@@ -152,6 +156,26 @@ class Calendar(models.Model):
     class Meta:
         verbose_name = _("calendar")
         verbose_name_plural = _("calendars")
+        
+    @classmethod
+    def update_or_create(cls, slug=None, instance=None, **kwargs):
+        if slug and not instance:
+            instance = cls.objects.get(slug=slug)
+            
+        talent = kwargs.pop('talent', None)
+        
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+        
+        if talent:
+            instance.talent = User.objects.get(slug=talent.slug)
+        
+        instance.save()
+            
+        return instance
 
     def __str__(self):
         return self.name
@@ -244,6 +268,30 @@ class CalendarRelation(models.Model):
         verbose_name = _("calendar relation")
         verbose_name_plural = _("calendar relations")
         index_together = [("content_type", "object_id")]
+        
+    @classmethod
+    def update_or_create(cls, id=None, instance=None, **kwargs):
+        if id and not instance:
+            instance = cls.objects.get(id=id)
+            
+        calendar = kwargs.pop('calendar', None)
+        content_object = kwargs.pop('content_object', None)
+        
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+            
+        if content_object:
+            content_type = ContentType.objects.get_for_model(content_type)
+        
+            instance.content_object = content_type
+            instance.object_id = content_type.id
+        
+        instance.save()
+            
+        return instance
 
     def __str__(self):
         return "{} - {}".format(self.calendar, self.content_object)
