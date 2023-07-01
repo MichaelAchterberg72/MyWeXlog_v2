@@ -5,3 +5,5 @@
 *.dot
 settings.py
 requirements.txt
+*/keg_ssh*
+*/paypal/cert/*

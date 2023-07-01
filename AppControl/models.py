@@ -4,6 +4,8 @@ from django.db import models
 from enterprises.models import Branch, Enterprise
 from Profile.utils import create_code9
 
+from utils.utils import update_model
+
 
 class CorporateHR(models.Model):
     SUB = (
@@ -33,3 +35,27 @@ class CorporateHR(models.Model):
             self.slug = create_code9(self)
 
         super(CorporateHR, self).save(*args, **kwargs)
+        
+     @classmethod
+    def update_or_create(cls, slug=None, instance=None, **kwargs):
+        if slug and not instance:
+            instance = cls.objects.get(slug=slug)
+            
+        companybranch = kwargs.pop('companybranch', None)
+        company = kwargs.pop('company', None)
+            
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+            
+        if companybranch:
+            instance.companybranch = Branch.update_or_create(slug=companybranch.slug, **companybranch)
+        
+        if company:
+            instance.company = Enterprise.update_or_create(slug=company.slug, **company)
+        
+        instance.save()
+            
+        return instance

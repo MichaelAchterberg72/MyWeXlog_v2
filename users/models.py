@@ -14,6 +14,10 @@ from allauth.account.signals import user_signed_up
 from nestedsettree.models import NtWk
 from Profile.utils import create_code16
 
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
 
 class CustomUserManager(UserManager):
     pass
@@ -117,6 +121,26 @@ class CustomUserSettings(models.Model):
 
     def __str__(self):
         return f"Settings for {self.talent}"
+    
+     @classmethod
+    def update_or_create(cls, slug=None, instance=None, **kwargs):
+        if slug and not instance:
+            instance = cls.objects.get(slug=slug)
+            
+        talent = kwargs.pop('talent', None)
+        
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+        
+        if talent:
+            instance.talent = User.objects.get(alias=talent.alias)
+        
+        instance.save()
+            
+        return instance
 
     def create_settings(sender, **kwargs):
         if kwargs['created']:
@@ -155,6 +179,26 @@ class ExpandedView(models.Model):
 
     def __str__(self):
         return f"Expanded view for {self.talent}"
+    
+    @classmethod
+    def update_or_create(cls, slug=None, instance=None, **kwargs):
+        if slug and not instance:
+            instance = cls.objects.get(slug=slug)
+            
+        talent = kwargs.pop('talent', None)
+        
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+        
+        if talent:
+            instance.talent = User.objects.get(alias=talent.alias)
+        
+        instance.save()
+            
+        return instance
 
     def create_settings(sender, **kwargs):
         if kwargs['created']:

@@ -6,7 +6,7 @@ from project.models import ProjectPersonalDetails, ProjectPersonalDetailsTask
 from enterprises.models import Branch
 from talenttrack.models import WorkExperience
 
-from utils.utils import update_model, handle_m2m_relationship
+from utils.utils import update_model
 
 from django.contrib.auth import get_user_model
 
@@ -61,6 +61,9 @@ class Timesheet(models.Model):
     include_for_certificate = models.BooleanField(default=False)
     include_for_invoice = models.BooleanField(default=False)
     
+    def __str__(self):
+        return '{} - {}'.format(self.time_from, self.task)
+    
     @classmethod
     def update_or_create(cls, id=None, instance=None, **kwargs):
         try:
@@ -80,7 +83,7 @@ class Timesheet(models.Model):
                 instance = cls.objects.create(**kwargs)
                 
             if talent:
-                instance.talent = User.objects.filter(slug=talent.slug)
+                instance.talent = User.objects.filter(alias=talent.alias)
                 
             if work_experience:
                 instance.work_experience = WorkExperience.update_or_create(slug=work_experience.slug, **work_experience)
@@ -101,6 +104,3 @@ class Timesheet(models.Model):
         except Exception as e:
             print('Error: ', e)
             raise e
-            
-    def __str__(self):
-        return '{} - {}'.format(self.time_from, self.task)

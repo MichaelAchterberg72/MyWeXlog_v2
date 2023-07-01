@@ -20,6 +20,9 @@ User = get_user_model()
 class Author(models.Model):
     name = models.CharField('Author name', max_length=250, unique=True)
     
+    def __str__(self):
+        return self.name
+    
     @classmethod
     def update_or_create(cls, id=None, instance=None, **kwargs):
         if id and not instance:
@@ -35,14 +38,14 @@ class Author(models.Model):
 
     def clean(self):
         self.name = self.name.title()
-        
-    def __str__(self):
-        return self.name
 
 
 class Publisher(models.Model):
     publisher = models.CharField(max_length=150, unique=True)
     link = models.URLField('Publisher URL', blank=True, null=True)
+    
+    def __str__(self):
+        return self.publisher
     
     @classmethod
     def update_or_create(cls, id=None, instance=None, **kwargs):
@@ -60,12 +63,12 @@ class Publisher(models.Model):
     def clean(self):
         self.publisher = self.publisher.title()
 
-    def __str__(self):
-        return self.publisher
-
 
 class Genre(models.Model):
     name = models.CharField(max_length=100, unique=True)
+    
+    def __str__(self):
+        return f'{self.name}'
     
     @classmethod
     def update_or_create(cls, id=None, instance=None, **kwargs):
@@ -82,9 +85,6 @@ class Genre(models.Model):
 
     def clean(self):
         self.name = self.name.title()
-
-    def __str__(self):
-        return f'{self.name}'
 
 
 class BookList(models.Model):
@@ -103,6 +103,12 @@ class BookList(models.Model):
 
     class Meta:
         unique_together = (('title', 'publisher'),)
+        
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
+
+        super(BookList, self).save(*args, **kwargs)
     
     @classmethod
     def update_or_create(cls, slug=None, instance=None, **kwargs):
@@ -154,16 +160,13 @@ class BookList(models.Model):
 
         return instance
 
-    def save(self, *args, **kwargs):
-        if self.slug is None or self.slug == "":
-            self.slug = create_code9(self)
-
-        super(BookList, self).save(*args, **kwargs)
-
 
 #The format of the book (softback, hardcover, E-book, Abridged/Summary, audiobook,  etc.)
 class Format(models.Model):
     format = models.CharField(max_length=60, unique=True)
+    
+    def __str__(self):
+        return self.format
     
     @classmethod
     def update_or_create(cls, id=None, instance=None, **kwargs):
@@ -181,9 +184,6 @@ class Format(models.Model):
     def clean(self):
         self.format = self.format.title()
 
-    def __str__(self):
-        return self.format
-
 
 class ReadBy(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -194,6 +194,9 @@ class ReadBy(models.Model):
 
     class Meta:
         unique_together = (('talent','book'),)
+        
+    def __str__(self):
+        return '{} read {}'.format(self.talent, self.book)
         
     @classmethod
     def update_or_create(cls, id=None, instance=None, **kwargs):
@@ -211,7 +214,7 @@ class ReadBy(models.Model):
             instance = cls.objects.create(**kwargs)
             
         if talent:
-            instance.talent = User.objects.get(slug=talent.slug)
+            instance.talent = User.objects.get(alias=talent.alias)
             
         if book:
             instance.book = BookList.update_or_create(slug=book.slug, **book)
@@ -222,6 +225,3 @@ class ReadBy(models.Model):
         instance.save()
             
         return instance
-
-    def __str__(self):
-        return '{} read {}'.format(self.talent, self.book)

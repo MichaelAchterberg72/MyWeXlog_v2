@@ -11,8 +11,6 @@ from WeXlog.storage_backends import PrivateMediaStorage
 from utils.utils import (
     update_model, 
     handle_m2m_relationship, 
-    update_or_create_related_object,
-    update_or_create_object
 )
 
 from .graphql.enums import BranchSizeEnum
@@ -24,6 +22,12 @@ from Profile.utils import create_code9
 # Industries: Mining & Metals: Process, Mining & Metals:Underground, Mining & Metals:Open Pit, PetroChem, FMCG, Food & Beverage, Agriculture, Retail, Aviation,
 class Industry(models.Model):
     industry = models.CharField(max_length=60, unique=True)
+    
+    class Meta:
+        ordering = ['industry',]
+        
+    def __str__(self):
+        return self.industry
     
     @classmethod
     def update_or_create(cls, id=None, instance=None, **kwargs):
@@ -41,16 +45,11 @@ class Industry(models.Model):
     def clean(self):
         self.industry = self.industry.title()
 
-    def __str__(self):
-        return self.industry
-
-    class Meta:
-        ordering = ['industry',]
-
 
 def EnterpriseLogoPic(instance, filename):
 	ext = filename.split('.')[-1]
 	return "%s/enterprise-logo\%s_%s.%s" % (instance.id, str(time()).replace('.','_'), random(), ext)
+
 
 class Enterprise(models.Model):
     FC = (
@@ -69,19 +68,22 @@ class Enterprise(models.Model):
     rate_4 = models.FloatField(null=True, default=0)#Average score from marketplace.models.TalentRate (payment_time)
     rate_count = models.IntegerField(null=True, default=0)
 
-    def avg_rate(self):
-        if self.rate_count is not None:
-            sum = self.rate_1+self.rate_2+self.rate_3+self.rate_4
-        else:
-            sum=0
+    class Meta:
+        ordering = ['ename',]
+        
+    def __str__(self):
+        return self.ename
 
-        return round(Decimal(sum/400),2)
-    average = property(avg_rate)
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
+
+        super(Enterprise, self).save(*args, **kwargs)
     
     @classmethod
-    def update_or_create(cls, id=None, instance=None, **kwargs):
-        if id and not instance:
-            instance = cls.objects.get(id=id)
+    def update_or_create(cls, slug=None, instance=None, **kwargs):
+        if slug and not instance:
+            instance = cls.objects.get(slug=slug)
             
         if instance:
             update_model(instance, **kwargs)
@@ -93,25 +95,25 @@ class Enterprise(models.Model):
 
     def clean(self):
         self.ename = self.ename.title()
+        
+    def avg_rate(self):
+        if self.rate_count is not None:
+            sum = self.rate_1+self.rate_2+self.rate_3+self.rate_4
+        else:
+            sum=0
 
-    def __str__(self):
-        return self.ename
-
-    def save(self, *args, **kwargs):
-        if self.slug is None or self.slug == "":
-            self.slug = create_code9(self)
-
-        super(Enterprise, self).save(*args, **kwargs)
-
-    class Meta:
-        ordering = ['ename',]
+        return round(Decimal(sum/400),2)
+    average = property(avg_rate)
 
 
 class BranchType(models.Model):
     type = models.CharField(max_length=70, unique=True)
 
-    def clean(self):
-        self.type = self.type.title()
+    class Meta:
+        ordering = ['type',]
+        
+    def __str__(self):
+        return self.type
         
     @classmethod
     def update_or_create(cls, id=None, instance=None, **kwargs):
@@ -125,12 +127,9 @@ class BranchType(models.Model):
             instance = cls.objects.create(**kwargs)
             
         return instance
-
-    def __str__(self):
-        return self.type
-
-    class Meta:
-        ordering = ['type',]
+    
+    def clean(self):
+        self.type = self.type.title()
 
 
 class Branch(models.Model):
@@ -166,11 +165,20 @@ class Branch(models.Model):
         unique_together = (('company','name', 'city'),)
         ordering = ['name',]
         
+    def __str__(self):
+        return f'{self.company}, {self.name}, {self.type}'
+
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
+
+        super(Branch, self).save(*args, **kwargs)
+        
     @classmethod
     def update_or_create(cls, slug=None, instance=None, **kwargs):
         try:
             if slug and not instance:
-                instance = Branch.objects.get(slug=slug)
+                instance = cls.objects.get(slug=slug)
                 
             company = kwargs.pop('company', None)
             type = kwargs.pop('type', None)
@@ -183,27 +191,22 @@ class Branch(models.Model):
                 update_model(instance, **kwargs)
                 instance.save()
             else:            
-                instance = Branch.objects.create(**kwargs)
+                instance = cls.objects.create(**kwargs)
             
             if company:
-                instance.company = update_or_create_related_object(Enterprise, company)
-                instance.save()
+                instance.company = Enterprise.update_or_create(slug=company.slug, **company)
                 
             if type:
-                instance.type = update_or_create_object(BranchType, type)
-                instance.save()
+                instance.type = BranchType.update_or_create(id=type.id, **type)
             
             if region:
-                instance.region = update_or_create_object(Region, region)
-                instance.save()
+                instance.region = Region.update_or_create(id=region.id, **region)
             
             if city:
-                instance.city = update_or_create_object(City, city)
-                instance.save()
+                instance.city = City.update_or_create(id=city.id, **city)
             
             if suburb:
-                instance.suburb = update_or_create_object(Suburb, suburb)
-                instance.save()
+                instance.suburb = Suburb.update_or_create(id=suburb.id, **suburb)
 
             if industry:
                 industry_related_models_data = {
@@ -233,21 +236,15 @@ class Branch(models.Model):
     def clean(self):
         self.name = self.name.title()
 
-    def __str__(self):
-        return f'{self.company}, {self.name}, {self.type}'
-
-    def save(self, *args, **kwargs):
-        if self.slug is None or self.slug == "":
-            self.slug = create_code9(self)
-
-        super(Branch, self).save(*args, **kwargs)
-
 
 class PhoneNumber(models.Model):
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
     phone = PhoneNumberField()
     type = models.ForeignKey(PhoneNumberType, on_delete=models.SET_NULL, null=True, related_name='Number_type')
     existing = models.BooleanField('Number in use')
+    
+    def __str__(self):
+        return '{}: {}({})'.format(self.branch, self.phone, self.type)
     
     @classmethod
     def update_or_create(cls, id=None, instance=None, **kwargs):
@@ -272,6 +269,3 @@ class PhoneNumber(models.Model):
         instance.save()
             
         return instance
-
-    def __str__(self):
-        return '{}: {}({})'.format(self.branch, self.phone, self.type)

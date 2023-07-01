@@ -19,6 +19,13 @@ from schedule.models.calendars import Calendar
 from schedule.models.rules import Rule
 from schedule.utils import OccurrenceReplacer
 
+from utils.utils import update_model, handle_m2m_relationship
+
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+
 freq_dict_order = {
     "YEARLY": 0,
     "MONTHLY": 1,
@@ -100,13 +107,63 @@ class Event(models.Model):
         verbose_name = _("event")
         verbose_name_plural = _("events")
         index_together = (("start", "end"),)
-
+        
     def __str__(self):
         return gettext("%(title)s: %(start)s - %(end)s") % {
             "title": self.title,
             "start": date(self.start, django_settings.DATE_FORMAT),
             "end": date(self.end, django_settings.DATE_FORMAT),
         }
+        
+    @classmethod
+    def update_or_create(cls, id=None, instance=None, **kwargs):
+        if id and not instance:
+            instance = cls.objects.get(id=id)
+            
+        creator = kwargs.pop('creator', None)
+        companybranch = kwargs.pop('companybranch', None)
+        project_data = kwargs.pop('project_data', None)
+        task = kwargs.pop('task', None)
+        skills = kwargs.pop('skills', [])
+        rule = kwargs.pop('rule', None)
+        calendar = kwargs.pop('calendar', None)
+        
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+        
+        if creator:
+            instance.creator = User.objects.get(alias=creator.alias)
+            
+        if companybranch:
+            instance.companybranch = Branch.update_or_create(slug=companybranch.slug, **companybranch)
+
+        if project_data:
+            instance.project_data = ProjectPersonalDetails.update_or_create(slug=project_data.slug, **project_data)
+
+        if task:
+            instance.task = ProjectPersonalDetailsTask.update_or_create(slug=task.slug, **task)
+
+        if skills:
+            skills_related_models_data = {
+            'model': SkillTag,
+            'manager': 'skills',
+            'fields': ['skill', 'code'],
+            'data': skills,
+        }
+        instance = handle_m2m_relationship(instance, [skills_related_models_data])
+
+        if rule:
+            instance.rule = Rule.update_or_create(id=rule.id, **rule)
+
+        if calendar:
+            instance.calendar = Calendar.update_or_create(slug=calendar.slug, **calendar)
+
+        instance.save()
+            
+        return instance
 
     @property
     def seconds(self):
@@ -581,11 +638,38 @@ class EventRelation(models.Model):
         verbose_name = _("event relation")
         verbose_name_plural = _("event relations")
         index_together = [("content_type", "object_id")]
-
+        
     def __str__(self):
         return "{}({})-{}".format(
             self.event.title, self.distinction, self.content_object
         )
+        
+    @classmethod
+    def update_or_create(cls, id=None, instance=None, **kwargs):
+        if id and not instance:
+            instance = cls.objects.get(id=id)
+            
+        event = kwargs.pop('event', None)
+        content_object = kwargs.pop('content_object', None)
+        
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+        
+        if event:
+            instance.event = Event.update_or_create(id=event.id, **event)
+            
+        if content_object:
+            content_type = ContentType.objects.get_for_model(content_type)
+        
+            instance.content_object = content_type
+            instance.object_id = content_type.id
+        
+        instance.save()
+            
+        return instance
 
 
 class Occurrence(models.Model):
@@ -609,20 +693,65 @@ class Occurrence(models.Model):
         verbose_name_plural = _("occurrences")
         index_together = (("start", "end"),)
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if not self.title and self.event_id:
-            self.title = self.event.title
-        if not self.description and self.event_id:
-            self.description = self.event.description
-        if not self.companybranch and self.event_id:
-            self.companybranch = self.event.companybranch
-        if not self.project_data and self.event_id:
-            self.project_data = self.event.project_data
-        if not self.task and self.event_id:
-            self.task = self.event.task
-#        if not self.skills and self.event_id:
-#            self.skills = list(self.event.skills.all())
+    def save(self, *args, **kwargs):
+        is_new = self.pk is None
+        super().(*args, **kwargs)
+        if is_new:
+            if not self.title and self.event_id:
+                self.title = self.event.title
+            if not self.description and self.event_id:
+                self.description = self.event.description
+            if not self.companybranch and self.event_id:
+                self.companybranch = self.event.companybranch
+            if not self.project_data and self.event_id:
+                self.project_data = self.event.project_data
+            if not self.task and self.event_id:
+                self.task = self.event.task
+            if self.event_id:
+                self.skills.set(self.event.skills.all())
+            super().save(*args, **kwargs)
+
+    @classmethod
+    def update_or_create(cls, id=None, instance=None, **kwargs):
+        if id and not instance:
+            instance = cls.objects.get(id=id)
+            
+        event = kwargs.pop('event', None)
+        companybranch = kwargs.pop('companybranch', None)
+        project_data = kwargs.pop('project_data', None)
+        task = kwargs.pop('task', None)
+        skills = kwargs.pop('skills', [])
+        
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+            
+        if event:
+            instance.event = Event.update_or_create(id=event.id, **event)
+        
+        if companybranch:
+            instance.companybranch = Branch.update_or_create(slug=companybranch.slug, **companybranch)
+
+        if project_data:
+            instance.project_data = ProjectPersonalDetails.update_or_create(slug=project_data.slug, **project_data)
+
+        if task:
+            instance.task = ProjectPersonalDetailsTask.update_or_create(slug=task.slug, **task)
+            
+        if skills:
+            skills_related_models_data = {
+                'model': SkillTag,
+                'manager': 'skills',
+                'fields': ['skill', 'code'],
+                'data': skills,
+            }
+            instance = handle_m2m_relationship(instance, [skills_related_models_data])
+        
+        instance.save()
+        
+        return instance
 
     def moved(self):
         return self.original_start != self.start or self.original_end != self.end

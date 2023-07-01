@@ -38,6 +38,12 @@ class WorkLocation(models.Model):
     type = models.CharField(max_length=40, unique=True, choices=WTPE)
     description = models.TextField()
     
+    class Meta:
+        pass
+
+    def __str__(self):
+        return self.type
+    
     @classmethod
     def update_or_create(cls, id=None, instance=None, **kwargs):
         if id and not instance:
@@ -52,12 +58,6 @@ class WorkLocation(models.Model):
         instance.save()
             
         return instance
-
-    class Meta:
-        pass
-
-    def __str__(self):
-        return self.type
 
 
 #Function to randomise filename for Profile Upload
@@ -100,6 +100,15 @@ class SkillLevel(models.Model):
     min_hours = models.IntegerField()#Read hours (typically max hours, but for lead its greater than the amount of hours shown.)
     description = models.TextField()
     
+    class Meta:
+        ordering = ['level']
+
+    def __str__(self):
+        if self.level <=4:
+            return f'{self.get_level_display()} (<={self.min_hours}) hours'
+        else:
+            return f'{self.get_level_display()} (>{self.min_hours}) hours'
+    
     @classmethod
     def update_or_create(cls, id=None, instance=None, **kwargs):
         if id and not instance:
@@ -114,15 +123,6 @@ class SkillLevel(models.Model):
         instance.save()
             
         return instance
-
-    class Meta:
-        ordering = ['level']
-
-    def __str__(self):
-        if self.level <=4:
-            return f'{self.get_level_display()} (<={self.min_hours}) hours'
-        else:
-            return f'{self.get_level_display()} (>{self.min_hours}) hours'
 
 
 class TalentRequired(models.Model):
@@ -165,6 +165,17 @@ class TalentRequired(models.Model):
     date_modified = models.DateTimeField(auto_now=True)
     vac_wkfl = models.CharField(max_length=1, choices=WKFLOW, default='P')
     
+    class Meta:
+        unique_together = (('companybranch','title', 'requested_by'),('companybranch', 'own_ref_no'),)
+
+    def __str__(self):
+        return f'{self.title}, {self.companybranch}'
+
+    def save(self, *args, **kwargs):
+        if self.ref_no is None or self.ref_no == "":
+            self.ref_no = create_code8(self)
+        super(TalentRequired, self).save(*args, **kwargs)
+    
     @classmethod
     def update_or_create(cls, id=None, instance=None, **kwargs):
         if id and not instance:
@@ -193,7 +204,7 @@ class TalentRequired(models.Model):
             instance.companybranch = Branch.update_or_create(slug=companybranch.slug, **companybranch)
 
         if requested_by:
-            instance.requested_by = User.update_or_create(slug=requested_by.slug, **requested_by)
+            instance.requested_by = User.objects.get(alias=requested_by.alias)
 
         if experience_level:
             instance.experience_level = SkillLevel.update_or_create(id=experience_level.id, **experience_level)
@@ -229,19 +240,9 @@ class TalentRequired(models.Model):
             
         return instance
 
-    class Meta:
-        unique_together = (('companybranch','title', 'requested_by'),('companybranch', 'own_ref_no'),)
-
-    def __str__(self):
-        return f'{self.title}, {self.companybranch}'
-
-    def save(self, *args, **kwargs):
-        if self.ref_no is None or self.ref_no == "":
-            self.ref_no = create_code8(self)
-        super(TalentRequired, self).save(*args, **kwargs)
-
 #    def get_current_user_views(self):
 #        return self.vacancyviewed_set.filter(talent=self.request.user)
+
 
 class VacancyViewed(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
@@ -252,6 +253,9 @@ class VacancyViewed(models.Model):
     date_read = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     closed = models.BooleanField(default=False)
     date_closed = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    
+    def __str__(self):
+        return f'{self.vacancy}'
     
     @classmethod
     def update_or_create(cls, id=None, instance=None, **kwargs):
@@ -268,7 +272,7 @@ class VacancyViewed(models.Model):
             instance = cls.objects.create(**kwargs)
             
         if talent:
-            instance.talent = User.objects.get(slug=talent.slug)
+            instance.talent = User.objects.get(slug=talent.alias)
             
         if vacancy:
             instance.vacancy = TalentRequired.update_or_create(id=vacancy.id, **vacancy)
@@ -277,14 +281,17 @@ class VacancyViewed(models.Model):
             
         return instance
 
-    def __str__(self):
-        return f'{self.vacancy}'
-
 
 class Deliverables(models.Model):
     scope = models.ForeignKey(TalentRequired, on_delete=models.CASCADE)
     deliverable = HTMLField()
     date_modified = models.DateField(auto_now=True)
+    
+    class Meta:
+        unique_together = (('scope','deliverable'),)
+
+    def __str__(self):
+        return '{}: {}'.format(self.scope, self.deliverable)
     
     @classmethod
     def update_or_create(cls, id=None, instance=None, **kwargs):
@@ -306,17 +313,14 @@ class Deliverables(models.Model):
             
         return instance
 
-    class Meta:
-        unique_together = (('scope','deliverable'),)
-
-    def __str__(self):
-        return '{}: {}'.format(self.scope, self.deliverable)
-
 
 class SkillRequired(models.Model):
     scope = models.ForeignKey(TalentRequired, on_delete=models.CASCADE)
     skills = models.ForeignKey(SkillTag, on_delete=models.PROTECT)
     date_modified = models.DateField(auto_now=True)
+    
+    def __str__(self):
+        return f'{self.scope.title}'
 
     @classmethod
     def update_or_create(cls, id=None, instance=None, **kwargs):
@@ -342,9 +346,6 @@ class SkillRequired(models.Model):
             
         return instance
 
-    def __str__(self):
-        return f'{self.scope.title}'
-
 
 BID = (
         ('A','Accepted'),
@@ -364,6 +365,17 @@ class BidShortList(models.Model):
     status =  models.CharField(max_length=1, choices=BID, null=True, default='S')
     slug = models.SlugField(max_length=50, null=True, blank=True, unique=True)
     
+    class Meta:
+        unique_together = (('talent', 'scope'),)
+
+    def __str__(self):
+        return f'{self.scope.title} shortlist {self.talent}'
+
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
+        super(BidShortList, self).save(*args, **kwargs)
+    
     @classmethod
     def update_or_create(cls, slug=None, instance=None, **kwargs):
         if slug and not instance:
@@ -379,7 +391,7 @@ class BidShortList(models.Model):
             instance = cls.objects.create(**kwargs)
             
         if talent:
-            instance.talent = User.objects.get(slug=talent.slug)
+            instance.talent = User.objects.get(alias=talent.alias)
             
         if scope:
             instance.scope = TalentRequired.update_or_create(id=scope.id, **scope)
@@ -387,17 +399,7 @@ class BidShortList(models.Model):
         instance.save()
             
         return instance
-
-    class Meta:
-        unique_together = (('talent', 'scope'),)
-
-    def __str__(self):
-        return f'{self.scope.title} shortlist {self.talent}'
-
-    def save(self, *args, **kwargs):
-        if self.slug is None or self.slug == "":
-            self.slug = create_code9(self)
-        super(BidShortList, self).save(*args, **kwargs)
+    
 
 #This table is also used to track all declined talent
 class BidInterviewList(models.Model):
@@ -429,6 +431,17 @@ class BidInterviewList(models.Model):
     comments_emp = models.TextField(null=True)
     slug = models.SlugField(max_length=50, null=True, blank=True, unique=True)
     
+    class Meta:
+        unique_together = (('talent', 'scope'),)
+
+    def __str__(self):
+        return f'{self.scope.title}, {self.talent}, {self.get_outcome_display()}'
+
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
+        super(BidInterviewList, self).save(*args, **kwargs)
+    
     @classmethod
     def update_or_create(cls, slug=None, instance=None, **kwargs):
         if slug and not instance:
@@ -445,7 +458,7 @@ class BidInterviewList(models.Model):
             instance = cls.objects.create(**kwargs)
         
         if talent:
-            instance.talent = User.objects.get(slug=talent.slug)
+            instance.talent = User.objects.get(alias=talent.alias)
             
         if scope:
             instance.scope = TalentRequired.update_or_create(id=scope.id, **scope)
@@ -456,17 +469,6 @@ class BidInterviewList(models.Model):
         instance.save()
             
         return instance
-
-    class Meta:
-        unique_together = (('talent', 'scope'),)
-
-    def __str__(self):
-        return f'{self.scope.title}, {self.talent}, {self.get_outcome_display()}'
-
-    def save(self, *args, **kwargs):
-        if self.slug is None or self.slug == "":
-            self.slug = create_code9(self)
-        super(BidInterviewList, self).save(*args, **kwargs)
 
 
 class WorkBid(models.Model):
@@ -482,6 +484,17 @@ class WorkBid(models.Model):
     date_applied = models.DateTimeField(auto_now_add=True)
     date_revised = models.DateTimeField(auto_now=True)
     slug = models.SlugField(max_length=50, blank=True, null=True)
+    
+    class Meta:
+        unique_together = (('talent', 'work'),)
+
+    def __str__(self):
+        return'{}: {}'.format(self.work.title, self.talent)
+
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
+        super(WorkBid, self).save(*args, **kwargs)
     
     @classmethod
     def update_or_create(cls, slug=None, instance=None, **kwargs):
@@ -499,7 +512,7 @@ class WorkBid(models.Model):
             instance = cls.objects.create(**kwargs)
             
         if talent:
-            instance.talent = User.objects.get(slug=talent.slug)
+            instance.talent = User.objects.get(alias=talent.alias)
 
         if work:
             instance.work = TalentRequired.update_or_create(id=work.id, **work)
@@ -511,17 +524,6 @@ class WorkBid(models.Model):
             
         return instance
 
-    class Meta:
-        unique_together = (('talent', 'work'),)
-
-    def __str__(self):
-        return'{}: {}'.format(self.work.title, self.talent)
-
-    def save(self, *args, **kwargs):
-        if self.slug is None or self.slug == "":
-            self.slug = create_code9(self)
-        super(WorkBid, self).save(*args, **kwargs)
-
 
 class TalentAvailabillity(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -531,6 +533,9 @@ class TalentAvailabillity(models.Model):
     part_time = models.BooleanField(default=False)
     permanent = models.BooleanField(default=False)
     date_modified = models.DateField(auto_now=True)
+    
+    def __str__(self):
+        return '{}'.format(self.talent)
     
     @classmethod
     def update_or_create(cls, id=None, instance=None, **kwargs):
@@ -546,19 +551,19 @@ class TalentAvailabillity(models.Model):
             instance = cls.objects.create(**kwargs)
             
         if talent:
-            instance.talent = User.objects.get(slug=talent.slug)
+            instance.talent = User.objects.get(alias=talent.alias)
         
         instance.save()
             
         return instance
 
-    def __str__(self):
-        return '{}'.format(self.talent)
-
 
 #Reasons: No Available Capacity, Not Looking for work, Not suited to vacancy, Rate too low, Company Reputation, other (comment)
 class DeclineAssignment(models.Model):
     option = models.CharField(max_length = 200, unique=True)
+    
+    def __str__(self):
+        return f'{self.option}'
     
     @classmethod
     def update_or_create(cls, id=None, instance=None, **kwargs):
@@ -574,9 +579,6 @@ class DeclineAssignment(models.Model):
         instance.save()
             
         return instance
-
-    def __str__(self):
-        return f'{self.option}'
 
 
 class WorkIssuedTo(models.Model):
@@ -614,6 +616,17 @@ class WorkIssuedTo(models.Model):
     assignment_complete_emp = models.BooleanField(default=False)
     slug = models.SlugField(max_length=50, null=True, unique=True)
     
+    class Meta:
+        unique_together = (('talent', 'work'),)
+
+    def __str__(self):
+        return f'{self.work.title} assigned to {self.talent}'
+
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
+        super(WorkIssuedTo, self).save(*args, **kwargs)
+    
     @classmethod
     def update_or_create(cls, slug=None, instance=None, **kwargs):
         if slug and not instance:
@@ -631,7 +644,7 @@ class WorkIssuedTo(models.Model):
             instance = cls.objects.create(**kwargs)
             
         if talent:
-            instance.talent = User.objects.get(slug=talent.slug)
+            instance.talent = User.objects.get(alias=talent.alias)
             
         if work:
             instance.work = TalentRequired.update_or_create(id=work.id, **work)
@@ -645,17 +658,6 @@ class WorkIssuedTo(models.Model):
         instance.save()
             
         return instance
-
-    class Meta:
-        unique_together = (('talent', 'work'),)
-
-    def __str__(self):
-        return f'{self.work.title} assigned to {self.talent}'
-
-    def save(self, *args, **kwargs):
-        if self.slug is None or self.slug == "":
-            self.slug = create_code9(self)
-        super(WorkIssuedTo, self).save(*args, **kwargs)
 
 
 #Employer rating the talent
@@ -678,6 +680,17 @@ class VacancyRate(models.Model):
     complete = models.BooleanField(null=True, default=False)
     suggestions = HTMLField(blank=True, null=True)
     slug = models.SlugField(max_length=50, null=True, unique=True)
+    
+    class Meta:
+        unique_together = (('vacancy','talent'), )
+
+    def __str__(self):
+        return f'Rating for {self.talent} on {self.vacancy.title}'
+    
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
+        super(VacancyRate, self).save(*args, **kwargs)
     
     @classmethod
     def update_or_create(cls, slug=None, instance=None, **kwargs):
@@ -703,21 +716,10 @@ class VacancyRate(models.Model):
             
         return instance
 
-    class Meta:
-        unique_together = (('vacancy','talent'), )
-
-    def __str__(self):
-        return f'Rating for {self.talent} on {self.vacancy.title}'
-
     def avg_rate(self):
         sum = self.rate_1+self.rate_2+self.rate_3
         return sum/3
     average = property(avg_rate)
-
-    def save(self, *args, **kwargs):
-        if self.slug is None or self.slug == "":
-            self.slug = create_code9(self)
-        super(VacancyRate, self).save(*args, **kwargs)
 
 
 #Talent rating the employer
@@ -751,6 +753,17 @@ class TalentRate(models.Model):
     complete = models.BooleanField(null=True, default=False)
     slug = models.SlugField(max_length=50, null=True, unique=True, blank=True)
     
+    class Meta:
+        unique_together = (('vacancy','talent'), )
+    
+    def __str__(self):
+        return f'Rating for {self.vacancy.title} by {self.talent}'
+
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
+        super(TalentRate, self).save(*args, **kwargs)
+    
     @classmethod
     def update_or_create(cls, slug=None, instance=None, **kwargs):
         if slug and not instance:
@@ -769,24 +782,13 @@ class TalentRate(models.Model):
             instance.vacancy = TalentRequired.update_or_create(id=vacancy.id, **vacancy)
             
         if talent:
-            instance.talent = User.objects.get(slug=talent.slug)
+            instance.talent = User.objects.get(alias=talent.alias)
         
         instance.save()
             
         return instance
 
-    class Meta:
-        unique_together = (('vacancy','talent'), )
-
     def avg_rate(self):
         sum = self.rate_1+self.rate_2+self.rate_3+self.payment_time
         return sum/4
     average = property(avg_rate)
-
-    def __str__(self):
-        return f'Rating for {self.vacancy.title} by {self.talent}'
-
-    def save(self, *args, **kwargs):
-        if self.slug is None or self.slug == "":
-            self.slug = create_code9(self)
-        super(TalentRate, self).save(*args, **kwargs)

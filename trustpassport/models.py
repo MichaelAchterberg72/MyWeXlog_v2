@@ -4,6 +4,13 @@ from django.utils import timezone
 
 from enterprises.models import Branch
 
+from utils.utils import update_model
+
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+
 SCORE = (
     (1,'One'),
     (2,'Two'),
@@ -35,6 +42,30 @@ class EnterprisePassport(models.Model):
 
     def __str__(self):
         return '{} scored by {} on {}'.format(self.enterprise, self.score_by, self.score_date)
+    
+    @classmethod
+    def update_or_create(cls, id=None, instance=None, **kwargs):
+        if id and not instance:
+            instance = cls.objects.get(id=id)
+            
+        score_by = kwargs.pop('score_by', None)
+        enterprise = kwargs.pop('enterprise', None)
+        
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+        
+        if score_by:
+            instance.score_by = User.objects.get(alias=score_by.alias)
+            
+        if enterprise:
+            instance.enterprise = Branch.update_or_create(slug=enterprise.slug, **enterprise)
+        
+        instance.save()
+            
+        return instance
 
 
 class TalentPassport(models.Model):
@@ -75,3 +106,27 @@ class TalentPassport(models.Model):
 
     def __str__(self):
         return '{} scored by {} on {}'.format(self.talent, self.score_by, self.score_date)
+    
+    @classmethod
+    def update_or_create(cls, slug=None, instance=None, **kwargs):
+        if slug and not instance:
+            instance = cls.objects.get(slug=slug)
+            
+        talent = kwargs.pop('talent', None)
+        score_by = kwargs.pop('score_by', None)
+        
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+        
+        if talent:
+            instance.talent = User.objects.get(alias=talent.alias)
+            
+        if score_by:
+            instance.score_by = User.objects.get(alias=score_by.alias)
+        
+        instance.save()
+            
+        return instance

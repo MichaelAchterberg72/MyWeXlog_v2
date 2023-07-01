@@ -39,6 +39,15 @@ class Invitation(models.Model):
     assigned = models.BooleanField('Assigned since registration', default=False)
     slug = models.SlugField(max_length=9, unique=True, null=True)
     
+    def __str__(self):
+        return f"{self.name} {self.surname} invited by {self.invited_by} on {self.date_invited} - {self.date_accepted}"
+
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
+
+        super(Invitation, self).save(*args, **kwargs)
+    
     @classmethod
     def update_or_create(cls, slug=None, instance=None, **kwargs):
         if slug and not instance:
@@ -55,7 +64,7 @@ class Invitation(models.Model):
             instance = cls.objects.create(**kwargs)
         
         if invited_by:
-            instance.invited_by = User.objects.get(slug=invited_by.slug)
+            instance.invited_by = User.objects.get(alias=invited_by.alias)
             
         if experience:
             instance.experience = WorkExperience.update_or_create(slug=experience.slug, **experience)
@@ -66,12 +75,3 @@ class Invitation(models.Model):
         instance.save()
             
         return instance
-
-    def __str__(self):
-        return f"{self.name} {self.surname} invited by {self.invited_by} on {self.date_invited} - {self.date_accepted}"
-
-    def save(self, *args, **kwargs):
-        if self.slug is None or self.slug == "":
-            self.slug = create_code9(self)
-
-        super(Invitation, self).save(*args, **kwargs)

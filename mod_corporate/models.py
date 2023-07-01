@@ -19,6 +19,12 @@ class OrgStructure(models.Model):
     level_name = models.CharField(max_length=100)
     parent = models.ForeignKey('OrgStructure', on_delete=models.CASCADE, related_name='parentdept', blank=True, null=True)
 
+    class Meta:
+        unique_together = (('corporate','level_name'),)
+        
+    def __str__(self):
+        return f'{self.level_name}'
+        
     @classmethod
     def update_or_create(cls, id=None, instance=None, **kwargs):
         if id and not instance:
@@ -33,12 +39,6 @@ class OrgStructure(models.Model):
         instance.save()
             
         return instance
-    
-    def __str__(self):
-        return f'{self.level_name}'
-
-    class Meta:
-        unique_together = (('corporate','level_name'),)
 
 
 class CorporateStaff(models.Model):
@@ -69,10 +69,19 @@ class CorporateStaff(models.Model):
     class Meta:
         verbose_name_plural = "Corporate Staff"
         
+    def __str__(self):
+        return f'{self.corporate}: {self.talent} ({self.status})'
+    
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
+
+        super(CorporateStaff, self).save(*args, **kwargs)
+        
     @classmethod
-    def update_or_create(cls, id=None, instance=None, **kwargs):
-        if id and not instance:
-            instance = cls.objects.get(id=id)
+    def update_or_create(cls, slug=None, instance=None, **kwargs):
+        if slug and not instance:
+            instance = cls.objects.get(slug=slug)
             
         talent = kwargs.pop('talent', None)
         type = kwargs.pop('type', None)
@@ -87,7 +96,7 @@ class CorporateStaff(models.Model):
             instance = cls.objects.create(**kwargs)
             
         if talent:
-            instance.talent = User.objects.get(slug=talent.slug)
+            instance.talent = User.objects.get(alias=talent.alias)
             
         if type:
             instance.type = WorkLocation.update_or_create(id=type.id, **type)
@@ -105,9 +114,6 @@ class CorporateStaff(models.Model):
             
         return instance
 
-    def __str__(self):
-        return f'{self.corporate}: {self.talent} ({self.status})'
-
     @property
     def tenure(self):
         today = timezone.now().date()
@@ -120,12 +126,6 @@ class CorporateStaff(models.Model):
         years = months/12
 
         return years
-
-    def save(self, *args, **kwargs):
-        if self.slug is None or self.slug == "":
-            self.slug = create_code9(self)
-
-        super(CorporateStaff, self).save(*args, **kwargs)
 
 
 class RequiredSkills(models.Model):

@@ -57,7 +57,7 @@ class Referral(models.Model):
             instance = cls.objects.create(**kwargs)
         
         if user:
-            instance.talent = AUTH_USER_MODEL.objects.get(slug=user.slug)
+            instance.talent = AUTH_USER_MODEL.objects.get(alias=user.alias)
             
         if target:
             target_content_type = ContentType.objects.get_for_model(target)
@@ -206,7 +206,7 @@ class ReferralResponse(models.Model):
             instance = cls.objects.create(**kwargs)
         
         if user:
-            instance.talent = AUTH_USER_MODEL.objects.get(slug=user.slug)
+            instance.talent = AUTH_USER_MODEL.objects.get(alias=user.alias)
             
         if target:
             target_content_type = ContentType.objects.get_for_model(target)

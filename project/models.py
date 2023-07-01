@@ -34,6 +34,15 @@ class ProjectData(models.Model):
     class Meta:
         unique_together = (('name','companybranch'),)
         
+    def __str__(self):
+        return '{} - {}'.format(self.company, self.name)
+    
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
+
+        super(ProjectData, self).save(*args, **kwargs)
+        
     @classmethod
     def update_or_create(cls, slug=None, instance=None, **kwargs):
         if slug and not instance:
@@ -53,7 +62,7 @@ class ProjectData(models.Model):
             instance = cls.objects.create(**kwargs)
         
         if talent:
-            instance.talent = User.objects.get(slug=talent.slug)
+            instance.talent = User.objects.get(alias=talent.alias)
             
         if company:
             instance.company = Enterprise.update_or_create(slug=company.slug, **company)
@@ -74,17 +83,8 @@ class ProjectData(models.Model):
             
         return instance
 
-    def __str__(self):
-        return '{} - {}'.format(self.company, self.name)
-
     def clean(self):
         self.name = self.name.title()
-
-    def save(self, *args, **kwargs):
-        if self.slug is None or self.slug == "":
-            self.slug = create_code9(self)
-
-        super(ProjectData, self).save(*args, **kwargs)
 
 
 class ProjectPersonalDetails(models.Model):
@@ -97,6 +97,15 @@ class ProjectPersonalDetails(models.Model):
 
     class Meta:
         unique_together = (('talent', 'project', 'company', 'companybranch'),)
+        
+    def __str__(self):
+        return '{}'.format(self.project)
+
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
+
+        super(ProjectPersonalDetails, self).save(*args, **kwargs)
         
     @classmethod
     def update_or_create(cls, slug=None, instance=None, **kwargs):
@@ -115,7 +124,7 @@ class ProjectPersonalDetails(models.Model):
             instance = cls.objects.create(**kwargs)
         
         if talent:
-            instance.talent = User.objects.get(slug=talent.slug)
+            instance.talent = User.objects.get(alias=talent.alias)
             
         if project:
             instance.project = ProjectData.update_or_create(slug=project.slug, **project)
@@ -129,15 +138,6 @@ class ProjectPersonalDetails(models.Model):
         instance.save()
             
         return instance
-
-    def __str__(self):
-        return '{}'.format(self.project)
-
-    def save(self, *args, **kwargs):
-        if self.slug is None or self.slug == "":
-            self.slug = create_code9(self)
-
-        super(ProjectPersonalDetails, self).save(*args, **kwargs)
 
 
 TASK_STATUS = (
@@ -163,6 +163,15 @@ class ProjectPersonalDetailsTask(models.Model):
     date_complete = models.DateTimeField(_("completed on"), blank=True, null=True)
     slug = models.SlugField(max_length=50, unique=True, null=True, blank=True)
     
+    def __str__(self):
+        return '{} {}'.format(self.ppd, self.task)
+
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
+
+        super(ProjectPersonalDetailsTask, self).save(*args, **kwargs)
+    
     @classmethod
     def update_or_create(cls, slug=None, instance=None, **kwargs):
         if slug and not instance:
@@ -181,7 +190,7 @@ class ProjectPersonalDetailsTask(models.Model):
             instance = cls.objects.create(**kwargs)
         
         if talent:
-            instance.talent = User.objects.get(slug=talent.slug)
+            instance.talent = User.objects.get(alias=talent.alias)
             
         if ppd:
             instance.ppd = ProjectPersonalDetails.update_or_create(slug=ppd.slug, **ppd)
@@ -205,15 +214,6 @@ class ProjectPersonalDetailsTask(models.Model):
             
         return instance
 
-    def __str__(self):
-        return '{} {}'.format(self.ppd, self.task)
-
-    def save(self, *args, **kwargs):
-        if self.slug is None or self.slug == "":
-            self.slug = create_code9(self)
-
-        super(ProjectPersonalDetailsTask, self).save(*args, **kwargs)
-
 
 RATE_UNIT = (
     ('H','per Hour'),
@@ -232,10 +232,13 @@ class ProjectTaskBilling(models.Model):
     date_end = models.DateField(blank=True, null=True)
     current = models.BooleanField(default=True)
     
+    def __str__(self):
+        return '{} {} {}'.format(self.ppdt.task, self.billing_rate, self.currency)
+    
     @classmethod
-    def update_or_create(cls, slug=None, instance=None, **kwargs):
-        if slug and not instance:
-            instance = cls.objects.get(slug=slug)
+    def update_or_create(cls, id=None, instance=None, **kwargs):
+        if id and not instance:
+            instance = cls.objects.get(id=id)
             
         talent = kwargs.pop('talent', None)
         ppdt = kwargs.pop('ppdt', None)
@@ -248,7 +251,7 @@ class ProjectTaskBilling(models.Model):
             instance = cls.objects.create(**kwargs)
         
         if talent:
-            instance.talent = User.objects.get(slug=talent.slug)
+            instance.talent = User.objects.get(alias=talent.alias)
             
         if ppdt:
             instance.ppdt = ProjectPersonalDetailsTask.update_or_create(slug=ppdt.slug, **ppdt)
@@ -259,6 +262,3 @@ class ProjectTaskBilling(models.Model):
         instance.save()
             
         return instance
-
-    def __str__(self):
-        return '{} {} {}'.format(self.ppdt.task, self.billing_rate, self.currency)

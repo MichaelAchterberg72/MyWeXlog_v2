@@ -269,6 +269,9 @@ class CalendarRelation(models.Model):
         verbose_name_plural = _("calendar relations")
         index_together = [("content_type", "object_id")]
         
+    def __str__(self):
+        return "{} - {}".format(self.calendar, self.content_object)
+        
     @classmethod
     def update_or_create(cls, id=None, instance=None, **kwargs):
         if id and not instance:
@@ -292,6 +295,3 @@ class CalendarRelation(models.Model):
         instance.save()
             
         return instance
-
-    def __str__(self):
-        return "{} - {}".format(self.calendar, self.content_object)

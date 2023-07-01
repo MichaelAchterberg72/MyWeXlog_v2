@@ -20,6 +20,14 @@ class ChatGroup(models.Model):
     description = models.TextField(blank=True, null=True, help_text='Add a description for the group!')
     date_created = models.DateTimeField(auto_now_add=True)
     
+    def __str__(self):
+        return '{}, {}'.format(self.room_name, self.date_created)
+
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
+        super(ChatGroup, self).save(*args, **kwargs)
+    
     @classmethod
     def update_or_create(cls, slug=None, instance=None, **kwargs):
         if slug and not instance:
@@ -35,14 +43,6 @@ class ChatGroup(models.Model):
             
         return instance
 
-    def __str__(self):
-        return '{}, {}'.format(self.room_name, self.date_created)
-
-    def save(self, *args, **kwargs):
-        if self.slug is None or self.slug == "":
-            self.slug = create_code9(self)
-        super(ChatGroup, self).save(*args, **kwargs)
-
 
 class ChatRoomMembers(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
@@ -52,10 +52,13 @@ class ChatRoomMembers(models.Model):
     date_joined = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
     
+    def __str__(self):
+        return '{}, {}'.format(self.room_name, self.talent)
+    
     @classmethod
-    def update_or_create(cls, slug=None, instance=None, **kwargs):
-        if slug and not instance:
-            instance = cls.objects.get(slug=slug)
+    def update_or_create(cls, id=None, instance=None, **kwargs):
+        if id and not instance:
+            instance = cls.objects.get(id=id)
             
         talent = kwargs.pop('talent', None)
         chat_group = kwargs.pop('chat_group', None)
@@ -67,7 +70,7 @@ class ChatRoomMembers(models.Model):
             instance = cls.objects.create(**kwargs)
         
         if talent:
-            instance.talent = User.objects.get(slug=talent.slug)
+            instance.talent = User.objects.get(alias=talent.alias)
             
         if chat_group:
             instance.chat_group = ChatGroup.update_or_create(slug=chat_group.slug, **chat_group)
@@ -75,9 +78,6 @@ class ChatRoomMembers(models.Model):
         instance.save()
             
         return instance
-
-    def __str__(self):
-        return '{}, {}'.format(self.room_name, self.talent)
 
 
 class Message(models.Model):
@@ -90,10 +90,13 @@ class Message(models.Model):
     message_deleted = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)
     
+    def __str__(self):
+        return self.author.username
+    
     @classmethod
-    def update_or_create(cls, slug=None, instance=None, **kwargs):
-        if slug and not instance:
-            instance = cls.objects.get(slug=slug)
+    def update_or_create(cls, id=None, instance=None, **kwargs):
+        if id and not instance:
+            instance = cls.objects.get(id=id)
             
         author = kwargs.pop('author', None)
         message_read = kwargs.pop('message_read', [])
@@ -105,7 +108,7 @@ class Message(models.Model):
             instance = cls.objects.create(**kwargs)
         
         if author:
-            instance.author = User.objects.get(slug=author.slug)
+            instance.author = User.objects.get(alias=author.alias)
             
         if message_read:
             message_read_related_models_data = {
@@ -120,11 +123,9 @@ class Message(models.Model):
             
         return instance
 
-    def __str__(self):
-        return self.author.username
-
     def last_30_messages():
         return Message.objects.order_by('-timestamp').all()[:30]
+
 
 class MessageRead(models.Model):
     message = models.ForeignKey(Message, on_delete=models.CASCADE, null=True)
@@ -133,10 +134,13 @@ class MessageRead(models.Model):
     message_read = models.BooleanField(null=True, default=False)
     read_date = models.DateTimeField(auto_now=True)
     
+    def __str__(self):
+        return '{}, {} {}'.format(self.chat_group, self.talent, self.message_read)
+    
     @classmethod
-    def update_or_create(cls, slug=None, instance=None, **kwargs):
-        if slug and not instance:
-            instance = cls.objects.get(slug=slug)
+    def update_or_create(cls, id=None, instance=None, **kwargs):
+        if id and not instance:
+            instance = cls.objects.get(id=id)
             
         talent = kwargs.pop('talent', None)
         message = kwargs.pop('message', None)
@@ -149,7 +153,7 @@ class MessageRead(models.Model):
             instance = cls.objects.create(**kwargs)
         
         if talent:
-            instance.talent = User.objects.get(slug=talent.slug)
+            instance.talent = User.objects.get(alias=talent.alias)
             
         if message:
             instance.message = Message.update_or_create(id=message.id, **message)
@@ -160,6 +164,3 @@ class MessageRead(models.Model):
         instance.save()
             
         return instance
-
-    def __str__(self):
-        return '{}, {} {}'.format(self.chat_group, self.talent, self.message_read)

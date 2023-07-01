@@ -18,6 +18,12 @@ from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
+from utils.utils import update_model
+
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
 freqs = (
     ("YEARLY", _("Yearly")),
     ("MONTHLY", _("Monthly")),
@@ -70,6 +76,30 @@ class Rule(models.Model):
     class Meta:
         verbose_name = _("rule")
         verbose_name_plural = _("rules")
+        
+    def __str__(self):
+        """Human readable string for Rule"""
+        return "Rule {} params {}".format(self.name, self.params)
+        
+    @classmethod
+    def update_or_create(cls, id=None, instance=None, **kwargs):
+        if id and not instance:
+            instance = cls.objects.get(id=id)
+            
+        talent = kwargs.pop('talent', None)
+        
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+        
+        if talent:
+            instance.talent = User.objects.get(alias=talent.alias)
+        
+        instance.save()
+            
+        return instance
 
     def rrule_frequency(self):
         compatibility_dict = {
@@ -122,7 +152,3 @@ class Rule(models.Model):
                 param = (param[0], param_value)
             param_dict.append(param)
         return dict(param_dict)
-
-    def __str__(self):
-        """Human readable string for Rule"""
-        return "Rule {} params {}".format(self.name, self.params)

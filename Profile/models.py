@@ -19,7 +19,7 @@ from pdf2image.exceptions import (PDFInfoNotInstalledError, PDFPageCountError,
                                   PDFSyntaxError)
 from phonenumber_field.modelfields import PhoneNumberField
 from PIL import Image
-from pinax.referrals.models import Referral
+from referrals.models import Referral
 from tinymce.models import HTMLField
 
 from db_flatten.models import LanguageList, PhoneNumberType
@@ -56,6 +56,25 @@ class BriefCareerHistory(models.Model):
     date_to = models.DateField(blank=True, null=True)
     slug = models.SlugField(max_length=15, blank=True, null=True, unique=True)
     
+    def __str__(self):
+        if self.date_to:
+            return f'{self.talent}, {self.work_configeration}: {self.companybranch}, from: {self.date_from}, to: {self.date_to}'
+        else:
+            return f'{self.talent}, {self.work_configeration}: {self.companybranch}, from: {self.date_from} (Currently Employed Here)'
+
+    def save(self, *args, **kwargs):
+        if self.date_to:
+            self.current = False
+        else:
+            self.current = True
+            inject = f'{self.talent.first_name} {self.talent.last_name}: {self.companybranch} ({self.designation})'
+            CustomUser.objects.filter(pk=self.talent.id).update(display_text=inject)
+
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
+
+        super(BriefCareerHistory, self).save(*args, **kwargs)
+    
     @classmethod
     def update_or_create(cls, slug=None, instance=None, **kwargs):
         if slug and not instance:
@@ -74,7 +93,7 @@ class BriefCareerHistory(models.Model):
             instance = cls.objects.create(**kwargs)
         
         if talent:
-            instance.talent = User.objects.get(slug=talent.slug)
+            instance.talent = User.objects.get(alias=talent.alias)
             
         if work_configeration:
             instance.work_configeration = WorkLocation.update_or_create(id=work_configeration.id, **work_configeration)
@@ -97,13 +116,7 @@ class BriefCareerHistory(models.Model):
         instance.save()
             
         return instance
-
-    def __str__(self):
-        if self.date_to:
-            return f'{self.talent}, {self.work_configeration}: {self.companybranch}, from: {self.date_from}, to: {self.date_to}'
-        else:
-            return f'{self.talent}, {self.work_configeration}: {self.companybranch}, from: {self.date_from} (Currently Employed Here)'
-
+    
     @property
     def tenure(self):
         today = timezone.now().date()
@@ -116,20 +129,7 @@ class BriefCareerHistory(models.Model):
         years = months/12
 
         return years
-
-    def save(self, *args, **kwargs):
-        if self.date_to:
-            self.current = False
-
-        else:
-            self.current = True
-            inject = f'{self.talent.first_name} {self.talent.last_name}: {self.companybranch} ({self.designation})'
-            CustomUser.objects.filter(pk=self.talent.id).update(display_text=inject)
-
-        if self.slug is None or self.slug == "":
-            self.slug = create_code9(self)
-
-        super(BriefCareerHistory, self).save(*args, **kwargs)
+    
 
 def BriefCareerHistory_slug(sender, instance, *args, **kwargs):
     if not instance.slug:
@@ -141,6 +141,9 @@ pre_save.connect(BriefCareerHistory_slug, sender=BriefCareerHistory)
 #website for online registrations
 class SiteName(models.Model):
     site = models.CharField(max_length=40, unique=True)
+    
+    def __str__(self):
+        return self.site
     
     @classmethod
     def update_or_create(cls, id=None, instance=None, **kwargs):
@@ -157,19 +160,22 @@ class SiteName(models.Model):
             
         return instance
 
-    def __str__(self):
-        return self.site
-
 
 class OnlineRegistrations(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     profileurl = models.URLField()
     sitename = models.ForeignKey(SiteName, on_delete=models.PROTECT, related_name='Site_Name')
     
+    class Meta:
+        unique_together = (('profileurl', 'sitename'),)
+
+    def __str__(self):
+        return '{}'.format(self.sitename)
+    
     @classmethod
-    def update_or_create(cls, slug=None, instance=None, **kwargs):
-        if slug and not instance:
-            instance = cls.objects.get(slug=slug)
+    def update_or_create(cls, id=None, instance=None, **kwargs):
+        if id and not instance:
+            instance = cls.objects.get(id=id)
             
         talent = kwargs.pop('talent', None)
         sitename = kwargs.pop('sitename', None)
@@ -181,7 +187,7 @@ class OnlineRegistrations(models.Model):
             instance = cls.objects.create(**kwargs)
         
         if talent:
-            instance.talent = User.objects.get(slug=talent.slug)
+            instance.talent = User.objects.get(alias=talent.alias)
             
         if sitename:
             instance.sitename = SiteName.update_or_create(id=sitename.id, **sitename)
@@ -190,11 +196,6 @@ class OnlineRegistrations(models.Model):
             
         return instance
 
-    class Meta:
-        unique_together = (('profileurl', 'sitename'),)
-
-    def __str__(self):
-        return '{}'.format(self.sitename)
 
 #this better work!
 class Profile(models.Model):
@@ -230,62 +231,9 @@ class Profile(models.Model):
     accepted_terms = models.BooleanField(default=False)
     age_accept = models.BooleanField(default=False, null=True)
     
-    @classmethod
-    def update_or_create(cls, id=None, instance=None, **kwargs):
-        if id and not instance:
-            instance = cls.objects.get(id=id)
-            
-        talent = kwargs.pop('talent', None)
-        referral_code = kwargs.pop('referral_code', None)
-        currency = kwargs.pop('currency', None)
-        exp_lvl = kwargs.pop('exp_lvl', [])
-        
-        if instance:
-            update_model(instance, **kwargs)
-            instance.save()
-        else:
-            instance = cls.objects.create(**kwargs)
-        
-        if talent:
-            instance.talent = User.objects.get(slug=talent.slug)
-            
-        if referral_code:
-            instance.referral_code = .update_or_create(id=referral_code.id, **referral_code)
-            
-        if currency:
-            instance.currency = .update_or_create(id=currency.id, **currency)
-            
-        if exp_lvl:
-            exp_lvl_related_models_data = {
-                'model': SkillLevel,
-                'manager': 'exp_lvl',
-                'fields': ['level', 'min_hours', 'description'],
-                'data': exp_lvl,
-            }
-            instance = handle_m2m_relationship(instance, [exp_lvl_related_models_data])
-        
-        instance.save()
-            
-        return instance
-
     def __str__(self):
         return str(self.talent)
-
-    def avg_rate(self):
-        if self.rate_count is not None:
-            sum = self.rate_1+self.rate_2+self.rate_3
-        else:
-            sum=0
-        return round(Decimal(sum/300),2)
-    average = property(avg_rate)
-
-    @property
-    def age(self):
-        '''Age at last birthday'''
-        today = timezone.now().date()
-        age = relativedelta(today, self.birth_date).years
-        return age
-
+    
     def save(self, *args, **kwargs):
         if self.alias is None or self.alias == "":
             self.alias = create_code7(self)
@@ -357,12 +305,66 @@ class Profile(models.Model):
                 pass
 
         super(Profile, self).save(*args, **kwargs)
+    
+    @classmethod
+    def update_or_create(cls, id=None, instance=None, **kwargs):
+        if id and not instance:
+            instance = cls.objects.get(id=id)
+            
+        talent = kwargs.pop('talent', None)
+        referral_code = kwargs.pop('referral_code', None)
+        currency = kwargs.pop('currency', None)
+        exp_lvl = kwargs.pop('exp_lvl', [])
+        
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+        
+        if talent:
+            instance.talent = User.objects.get(alias=talent.alias)
+            
+        if referral_code:
+            instance.referral_code = Referral.update_or_create(id=referral_code.id, **referral_code)
+            
+        if currency:
+            instance.currency = Currency.update_or_create(id=currency.id, **currency)
+            
+        if exp_lvl:
+            exp_lvl_related_models_data = {
+                'model': SkillLevel,
+                'manager': 'exp_lvl',
+                'fields': ['level', 'min_hours', 'description'],
+                'data': exp_lvl,
+            }
+            instance = handle_m2m_relationship(instance, [exp_lvl_related_models_data])
+        
+        instance.save()
+            
+        return instance
+
+    def avg_rate(self):
+        if self.rate_count is not None:
+            sum = self.rate_1+self.rate_2+self.rate_3
+        else:
+            sum=0
+        return round(Decimal(sum/300),2)
+    average = property(avg_rate)
+
+    @property
+    def age(self):
+        '''Age at last birthday'''
+        today = timezone.now().date()
+        age = relativedelta(today, self.birth_date).years
+        return age
 
     def create_profile(sender, **kwargs):
         if kwargs['created']:
             create_profile = Profile.objects.create(talent=kwargs['instance'], accepted_terms=True, age_accept=True)
 
     post_save.connect(create_profile, sender=CustomUser)
+
 
 def ProfilePic(instance, filename):
 	ext = filename.split('.')[-1]
@@ -372,11 +374,15 @@ def BackgroundPic(instance, filename):
 	ext = filename.split('.')[-1]
 	return "%s/profile\%s_%s.%s" % (instance.talent.id, str(time()).replace('.','_'), random(), ext)
 
+
 class ProfileImages(models.Model):
     talent = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     profile_pic = models.ImageField(storage=PrivateMediaStorage(), upload_to=ProfilePic, blank=True, null=True)
     profile_background = models.ImageField(storage=PrivateMediaStorage(), upload_to=BackgroundPic, blank=True, null=True)
 
+    def __str__(self):
+        return str(self.talent)
+    
     @classmethod
     def update_or_create(cls, id=None, instance=None, **kwargs):
         if id and not instance:
@@ -391,14 +397,11 @@ class ProfileImages(models.Model):
             instance = cls.objects.create(**kwargs)
         
         if talent:
-            instance.talent = User.objects.get(slug=talent.slug)
+            instance.talent = User.objects.get(alias=talent.alias)
         
         instance.save()
             
         return instance
-    
-    def __str__(self):
-        return str(self.talent)
 
     def create_settings(sender, **kwargs):
         if kwargs['created']:
@@ -409,6 +412,9 @@ class ProfileImages(models.Model):
 
 class IdType(models.Model):
     type = models.CharField(max_length=50, unique=True)
+    
+    def __str__(self):
+        return self.type
     
     @classmethod
     def update_or_create(cls, id=None, instance=None, **kwargs):
@@ -428,9 +434,6 @@ class IdType(models.Model):
     def clean(self):
         self.type = self.type.title()
 
-    def __str__(self):
-        return self.type
-
 
 class IdentificationDetail(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
@@ -439,6 +442,9 @@ class IdentificationDetail(models.Model):
 
     class Meta:
         unique_together = (('talent','identification'),)
+        
+    def __str__(self):
+        return '{}-{} ({})'.format(self.talent, self.identification, self.id_type)
         
     @classmethod
     def update_or_create(cls, id=None, instance=None, **kwargs):
@@ -454,14 +460,11 @@ class IdentificationDetail(models.Model):
             instance = cls.objects.create(**kwargs)
         
         if talent:
-            instance.talent = User.objects.get(slug=talent.slug)
+            instance.talent = User.objects.get(alias=talent.alias)
         
         instance.save()
             
         return instance
-
-    def __str__(self):
-        return '{}-{} ({})'.format(self.talent, self.identification, self.id_type)
 
     def create_id(sender, **kwargs):
         if kwargs['created']:
@@ -480,10 +483,19 @@ class PassportDetail(models.Model):
     class Meta:
         unique_together = (('talent','passport_number'),)
         
+    def __str__(self):
+        return '{}-{}'.format(self.talent, self.passport_number)
+    
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
+
+        super(PassportDetail, self).save(*args, **kwargs)
+        
     @classmethod
-    def update_or_create(cls, id=None, instance=None, **kwargs):
-        if id and not instance:
-            instance = cls.objects.get(id=id)
+    def update_or_create(cls, slug=None, instance=None, **kwargs):
+        if slug and not instance:
+            instance = cls.objects.get(slug=slug)
             
         talent = kwargs.pop('talent', None)
         
@@ -505,16 +517,6 @@ class PassportDetail(models.Model):
             create_profile = PassportDetail.objects.create(talent=kwargs['instance'])
     post_save.connect(create_passport, sender=CustomUser)
 
-    def __str__(self):
-        return '{}-{}'.format(self.talent, self.passport_number)
-
-
-    def save(self, *args, **kwargs):
-        if self.slug is None or self.slug == "":
-            self.slug = create_code9(self)
-
-        super(PassportDetail, self).save(*args, **kwargs)
-
 
 class LanguageTrack(models.Model):
     LVL = (
@@ -531,6 +533,9 @@ class LanguageTrack(models.Model):
     class Meta:
         unique_together = (('talent','language'),)
         
+    def __str__(self):
+        return '{} - {} ({})'.format(self.talent, self.language, self.level)
+        
     @classmethod
     def update_or_create(cls, slug=None, instance=None, **kwargs):
         if slug and not instance:
@@ -546,7 +551,7 @@ class LanguageTrack(models.Model):
             instance = cls.objects.create(**kwargs)
         
         if talent:
-            instance.talent = User.objects.get(slug=talent.slug)
+            instance.talent = User.objects.get(alias=talent.alias)
             
         if language:
             instance.language = LanguageList.update_or_create(id=language.id, **language)
@@ -554,9 +559,6 @@ class LanguageTrack(models.Model):
         instance.save()
             
         return instance
-
-    def __str__(self):
-        return '{} - {} ({})'.format(self.talent, self.language, self.level)
 
 
 def Language_slug(sender, instance, *args, **kwargs):
@@ -576,6 +578,15 @@ class Email(models.Model):
     class Meta:
         unique_together = (('talent','email'),)
         
+    def __str__(self):
+        return self.email
+
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
+
+        super(Email, self).save(*args, **kwargs)
+        
     @classmethod
     def update_or_create(cls, slug=None, instance=None, **kwargs):
         if slug and not instance:
@@ -591,7 +602,7 @@ class Email(models.Model):
             instance = cls.objects.create(**kwargs)
         
         if talent:
-            instance.talent = User.objects.get(slug=talent.slug)
+            instance.talent = User.objects.get(alias=talent.alias)
             
         if company:
             instance.company = Enterprise.update_or_create(slug=company.slug, **company)
@@ -602,15 +613,6 @@ class Email(models.Model):
 
     def clean(self):
         self.email = self.email.lower()
-
-    def __str__(self):
-        return self.email
-
-    def save(self, *args, **kwargs):
-        if self.slug is None or self.slug == "":
-            self.slug = create_code9(self)
-
-        super(Email, self).save(*args, **kwargs)
 
 
 class PhysicalAddress(models.Model):
@@ -623,6 +625,9 @@ class PhysicalAddress(models.Model):
     city = models.ForeignKey(City, on_delete=models.PROTECT, null=True)
     suburb = models.ForeignKey(Suburb, on_delete=models.PROTECT, null=True, blank=True)
     code = models.CharField('Postal Code', max_length=12, null=True)
+    
+    def __str__(self):
+        return f'{self.talent}: {self.country}'
     
     @classmethod
     def update_or_create(cls, id=None, instance=None, **kwargs):
@@ -641,7 +646,7 @@ class PhysicalAddress(models.Model):
             instance = cls.objects.create(**kwargs)
         
         if talent:
-            instance.talent = User.objects.get(slug=talent.slug)
+            instance.talent = User.objects.get(alias=talent.alias)
             
         if region:
             instance.region = Region.update_or_create(id=region.id, **region)
@@ -655,9 +660,6 @@ class PhysicalAddress(models.Model):
         instance.save()
             
         return instance
-
-    def __str__(self):
-        return f'{self.talent}: {self.country}'
 
     def create_physical_add(sender, **kwargs):
         if kwargs['created']:
@@ -677,6 +679,9 @@ class PostalAddress(models.Model):
     suburb = models.ForeignKey(Suburb, on_delete=models.PROTECT, null=True, blank=True)
     code = models.CharField('Postal Code', max_length=12, null=True)
     
+    def __str__(self):
+        return f'{self.talent}: {self.country}'
+    
     @classmethod
     def update_or_create(cls, id=None, instance=None, **kwargs):
         if id and not instance:
@@ -709,9 +714,6 @@ class PostalAddress(models.Model):
             
         return instance
 
-    def __str__(self):
-        return f'{self.talent}: {self.country}'
-
     def create_postal_add(sender, **kwargs):
         if kwargs['created']:
             create_postal_add = PostalAddress.objects.create(talent=kwargs['instance'])
@@ -726,39 +728,16 @@ def ExtThumbnail(instance, filename):
 	ext = filename.split('.')[-1]
 	return "%s/profile\%s_%s.%s" % (instance.talent.id, str(time()).replace('.','_'), random(), ext)
 
+
 class FileUpload(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
     title = models.CharField(max_length=150)
     file = models.FileField(storage=PrivateMediaStorage(), upload_to=ExtFilename, validators=[FileExtensionValidator(['pdf'])])
     thumbnail = models.ImageField(storage=PrivateMediaStorage(), upload_to=ExtThumbnail, blank=True, null=True)
 
-    @classmethod
-    def update_or_create(cls, id=None, instance=None, **kwargs):
-        if id and not instance:
-            instance = cls.objects.get(id=id)
-            
-        talent = kwargs.pop('talent', None)
-        
-        if instance:
-            update_model(instance, **kwargs)
-            instance.save()
-        else:
-            instance = cls.objects.create(**kwargs)
-        
-        if talent:
-            instance.talent = User.objects.get(slug=talent.slug)
-        
-        instance.save()
-            
-        return instance
-    
     def __str__(self):
         return '{}: {}'.format(self.talent, self.title)
-
-    def delete(self, *args, **kwargs):
-        self.file.delete()
-        super().delete(*args, **kwargs)
-
+    
     def save(self, *args, **kwargs):
         if self.file:
             cache_path = self.file
@@ -776,12 +755,40 @@ class FileUpload(models.Model):
             self.thumbnail = thumb_file
 
         super(FileUpload, self).save(*args, **kwargs)
+    
+    @classmethod
+    def update_or_create(cls, id=None, instance=None, **kwargs):
+        if id and not instance:
+            instance = cls.objects.get(id=id)
+            
+        talent = kwargs.pop('talent', None)
+        
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+        
+        if talent:
+            instance.talent = User.objects.get(slug=talent.slug)
+        
+        instance.save()
+            
+        return instance
+
+    def delete(self, *args, **kwargs):
+        self.file.delete()
+        super().delete(*args, **kwargs)
+    
 
 class PhoneNumber(models.Model):
     talent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
     number = PhoneNumberField()
     type = models.ForeignKey(PhoneNumberType, on_delete=models.SET_NULL, null=True)
     current = models.BooleanField()
+    
+    def __str__(self):
+        return '{}: {}({})'.format(self.talent, self.number, self.type)
     
     @classmethod
     def update_or_create(cls, id=None, instance=None, **kwargs):
@@ -798,7 +805,7 @@ class PhoneNumber(models.Model):
             instance = cls.objects.create(**kwargs)
         
         if talent:
-            instance.talent = User.objects.get(slug=talent.slug)
+            instance.talent = User.objects.get(alias=talent.alias)
             
         if type:
             instance.type = PhoneNumberType.update_or_create(id=type.id, **type)
@@ -806,9 +813,6 @@ class PhoneNumber(models.Model):
         instance.save()
             
         return instance
-
-    def __str__(self):
-        return '{}: {}({})'.format(self.talent, self.number, self.type)
 
 
 class WillingToRelocate(models.Model):
@@ -819,6 +823,15 @@ class WillingToRelocate(models.Model):
 
     class Meta:
         unique_together = (('talent', 'country'),)
+        
+    def __str__(self):
+        return f'{self.talent.alias} - {self.country}'
+
+    def save(self, *args, **kwargs):
+        if self.slug is None or self.slug == "":
+            self.slug = create_code9(self)
+
+        super(WillingToRelocate, self).save(*args, **kwargs)
         
     @classmethod
     def update_or_create(cls, slug=None, instance=None, **kwargs):
@@ -839,12 +852,3 @@ class WillingToRelocate(models.Model):
         instance.save()
             
         return instance
-
-    def __str__(self):
-        return f'{self.talent.alias} - {self.country}'
-
-    def save(self, *args, **kwargs):
-        if self.slug is None or self.slug == "":
-            self.slug = create_code9(self)
-
-        super(WillingToRelocate, self).save(*args, **kwargs)
