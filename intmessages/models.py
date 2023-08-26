@@ -67,7 +67,7 @@ class ChatRoomMembers(models.Model):
             instance = cls.objects.create(**kwargs)
         
         if talent:
-            instance.talent = User.objects.get(slug=talent.slug)
+            instance.talent = User.objects.get(alias=talent.alias)
             
         if chat_group:
             instance.chat_group = ChatGroup.update_or_create(slug=chat_group.slug, **chat_group)

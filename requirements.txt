@@ -30,7 +30,7 @@ cryptography==3.4.7
 cssselect2==0.4.1
 cymem==2.0.6
 daphne==2.5.0
-dataclasses==0.8
+dataclasses==0.6
 defusedxml==0.7.1
 Django==2.2
 django-appconf==1.0.4
@@ -64,7 +64,7 @@ html5lib==1.1
 hyperlink==21.0.0
 icalendar==4.0.7
 idna==2.10
-immutables==0.16
+# immutables==0.16
 importlib-metadata==4.5.0
 incremental==21.3.0
 isort==5.9.3
