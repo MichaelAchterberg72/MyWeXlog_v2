@@ -1,6 +1,8 @@
 from django.conf import settings
 from django.db import models
 
+from utils.utils import update_model
+
 from enterprises.models import Branch, Enterprise
 from Profile.utils import create_code9
 
@@ -18,6 +20,30 @@ class CorporateHR(models.Model):
     date_created = models.DateField(auto_now_add=True)
     expiry = models.DateField(blank=True)
     slug = models.CharField(max_length=9, blank=True)
+
+    @classmethod
+    def update_or_create(cls, slug=None, instance=None, **kwargs):
+        if slug and not instance:
+            instance = cls.objects.get(slug=slug)
+
+        companybranch = kwargs.pop('companybranch', None)
+        company = kwargs.pop('company', None)
+        
+        if instance:
+            update_model(instance, **kwargs)
+            instance.save()
+        else:
+            instance = cls.objects.create(**kwargs)
+
+        if companybranch:
+            instance.companybranch = Branch.update_or_create(**companybranch)
+
+        if company:
+            instance.company = Enterprise.update_or_create(**company)
+        
+        instance.save()
+            
+        return instance
 
     class Meta:
         verbose_name_plural = "Corporate HR"

@@ -31,7 +31,7 @@ class NtWk(MP_Node):
             instance = cls.objects.create(**kwargs)
         
         if talent:
-            instance.talent = User.objects.get(slug=talent.slug)
+            instance.talent = User.objects.get(alias=talent.alias)
         
         instance.save()
             
