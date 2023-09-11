@@ -40,8 +40,8 @@ class AuthorUpdateOrCreate(graphene.Mutation):
         
         try:
             with transaction.atomic():
-                author_id = kwargs.get('id')
-                author = update_or_create_object(Author, kwargs)
+                author_id = kwargs.pop('id')
+                author = Author.update_or_create(id=author_id, **kwargs)
                 message = "Author updated successfully" if author_id else "Author created successfully"
                 return SuccessMessage(success=True, id=author.id, message=message)
         except Exception as e:
@@ -84,8 +84,8 @@ class PublisherUpdateOrCreate(graphene.Mutation):
         
         try:
             with transaction.atomic():
-                publisher_id = kwargs.get('id')
-                publisher = update_or_create_object(Publisher, kwargs)
+                publisher_id = kwargs.pop('id')
+                publisher = Publisher.update_or_create(id=publisher_id, **kwargs)
                 message = "Publisher updated successfully" if publisher_id else "Publisher created successfully"
                 return SuccessMessage(success=True, id=publisher.id, message=message)
         except Exception as e:
@@ -127,8 +127,8 @@ class GenreUpdateOrCreate(graphene.Mutation):
         
         try:
             with transaction.atomic():
-                genre_id = kwargs.get('id')
-                genre = update_or_create_object(Genre, kwargs)
+                genre_id = kwargs.pop('id')
+                genre = Genre.update_or_create(id=genre_id, **kwargs)
                 message = "Genre updated successfully" if genre_id else "Genre created successfully"
                 return SuccessMessage(success=True, id=genre.id, message=message)
         except Exception as e:
@@ -209,8 +209,8 @@ class FormatUpdateOrCreate(graphene.Mutation):
     def mutate(cls, root, info, **kwargs):
         try:
             with transaction.atomic():
-                format_id = kwargs.get('id')
-                format = update_or_create_object(Format, kwargs)
+                format_id = kwargs.pop('id')
+                format = Format.update_or_create(id=format_id, **kwargs)
                 message = "Format updated successfully" if format_id else "Format created successfully"
                 return SuccessMessage(success=True, id=format.id, message=message)
         except Exception as e:
@@ -248,8 +248,8 @@ class ReadByUpdateOrCreate(graphene.Mutation):
     def mutate(cls, root, info, **kwargs):
         try:
             with transaction.atomic():
-                readby_id = kwargs.get('id')
-                readby = update_or_create_object(ReadBy, kwargs)
+                readby_id = kwargs.pop('id')
+                readby = ReadBy.update_or_create(id=readby_id, **kwargs)
                 message = "ReadBy updated successfully" if readby_id else "ReadBy created successfully"
                 return SuccessMessage(success=True, id=readby.id, message=message)
         except Exception as e:

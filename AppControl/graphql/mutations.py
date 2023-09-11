@@ -2,7 +2,6 @@ import graphene
 from django.db import transaction
 
 from utils.graphql.output_types import SuccessMessage, FailureMessage, SuccessMutationResult
-# from utils.utils import update_or_create_object, create_mutations_for_app, create_delete_mutation_for_app
 
 from .input_types import (
     CorporateHRInputType
@@ -33,8 +32,8 @@ class CorporateHRpdateOrCreate(graphene.Mutation):
         
         try:
             with transaction.atomic():
-                corporatehr_id = kwargs.get('slug')
-                corporatehr = CorporateHR.update_or_create_object(**kwargs)
+                corporatehr_id = kwargs.pop('slug', None)
+                corporatehr = CorporateHR.update_or_create_object(id=corporatehr_id, **kwargs)
                 message = "CorporateHR updated successfully" if corporatehr_id else "CorporateHR created successfully"
                 return SuccessMessage(success=True, id=corporatehr.id, message=message)
         except Exception as e:
@@ -59,3 +58,8 @@ class CorporateHRDelete(graphene.Mutation):
                 return SuccessMessage(success=True, id=kwargs['id'], message="CorporateHR deleted successfully")
         except Exception as e:
             return FailureMessage(success=False, message=f"Error deleting corporatehr", errors=[str(e)])
+
+
+class Mutation(graphene.ObjectType):
+    corporatehr_update_or_create = CorporateHRpdateOrCreate.Field()
+    corporatehr_delete = CorporateHRDelete.Field()
