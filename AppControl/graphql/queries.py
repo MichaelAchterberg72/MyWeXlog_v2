@@ -22,3 +22,6 @@ class Query(graphene.ObjectType):
             return CorporateHR.objects.get(pk=id)
         except CorporateHR.DoesNotExist:
             return None
+        
+    def resolve_corporatehrs(self, info, **kwargs):
+        return CorporateHRFilter(kwargs).qs
