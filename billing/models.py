@@ -92,7 +92,7 @@ class Timesheet(models.Model):
                 instance.project = ProjectPersonalDetails.update_or_create(slug=project.slug, **project)
                 
             if task:
-                instance.task = ProjectPersonalDetailsTask.update_or_create(slug=task.slug, **task)\
+                instance.task = ProjectPersonalDetailsTask.update_or_create(slug=task.slug, **task)
                 
             instance.save()
             

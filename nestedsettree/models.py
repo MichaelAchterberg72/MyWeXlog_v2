@@ -7,7 +7,7 @@ from utils.utils import update_model, handle_m2m_relationship
 
 from django.contrib.auth import get_user_model
 
-User = get_user_model()
+# User = get_user_model()
 
 
 class NtWk(MP_Node):
@@ -30,8 +30,8 @@ class NtWk(MP_Node):
         else:
             instance = cls.objects.create(**kwargs)
         
-        if talent:
-            instance.talent = User.objects.get(alias=talent.alias)
+        # if talent:
+        #     instance.talent = User.objects.get(alias=talent.alias)
         
         instance.save()
             

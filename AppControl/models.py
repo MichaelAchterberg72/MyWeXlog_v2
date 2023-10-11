@@ -36,10 +36,10 @@ class CorporateHR(models.Model):
             instance = cls.objects.create(**kwargs)
 
         if companybranch:
-            instance.companybranch = Branch.update_or_create(**companybranch)
+            instance.companybranch = Branch.update_or_create(slug=companybranch.slug, **companybranch)
 
         if company:
-            instance.company = Enterprise.update_or_create(**company)
+            instance.company = Enterprise.update_or_create(slug=company.slug, **company)
         
         instance.save()
             

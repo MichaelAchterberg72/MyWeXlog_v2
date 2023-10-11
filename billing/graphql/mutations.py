@@ -42,7 +42,7 @@ class TimesheetUpdateOrCreate(graphene.Mutation):
         try:
             with transaction.atomic():
                 timesheet_id = kwargs.pop('id', None)
-                timesheet = Timesheet.update_or_create(**kwargs)
+                timesheet = Timesheet.update_or_create(id=timesheet_id, **kwargs)
                 message = "Timesheet updated successfully" if not timesheet_id else "Timesheet created successfully"
                 return SuccessMessage(success=True, id=timesheet.id, message=message)
         except Exception as e:

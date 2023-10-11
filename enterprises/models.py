@@ -186,23 +186,23 @@ class Branch(models.Model):
                 instance = Branch.objects.create(**kwargs)
             
             if company:
-                instance.company = update_or_create_related_object(Enterprise, company)
+                instance.company = Enterprise.update_or_create(slug=company.slug, **company)
                 instance.save()
                 
             if type:
-                instance.type = update_or_create_object(BranchType, type)
+                instance.type = BranchType.update_or_create(id=type.id, **type)
                 instance.save()
             
             if region:
-                instance.region = update_or_create_object(Region, region)
+                instance.region = Region.update_or_create(id=region.id, **region)
                 instance.save()
             
             if city:
-                instance.city = update_or_create_object(City, city)
+                instance.city = City.update_or_create(id=city.id, **city)
                 instance.save()
             
             if suburb:
-                instance.suburb = update_or_create_object(Suburb, suburb)
+                instance.suburb = Suburb.update_or_create(id=suburb.id, **suburb)
                 instance.save()
 
             if industry:

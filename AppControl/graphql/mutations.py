@@ -32,9 +32,9 @@ class CorporateHRpdateOrCreate(graphene.Mutation):
         
         try:
             with transaction.atomic():
-                corporatehr_id = kwargs.pop('slug', None)
-                corporatehr = CorporateHR.update_or_create_object(id=corporatehr_id, **kwargs)
-                message = "CorporateHR updated successfully" if corporatehr_id else "CorporateHR created successfully"
+                corporatehr_slug = kwargs.pop('slug', None)
+                corporatehr = CorporateHR.update_or_create(slug=corporatehr_slug, **kwargs)
+                message = "CorporateHR updated successfully" if corporatehr_slug else "CorporateHR created successfully"
                 return SuccessMessage(success=True, id=corporatehr.id, message=message)
         except Exception as e:
             return FailureMessage(success=False, message=f"Error adding corporatehr", errors=[str(e)])
