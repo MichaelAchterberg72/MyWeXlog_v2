@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'pinax.referrals',
     #internal Applications
     'users.apps.UsersConfig',
     'Profile.apps.ProfileConfig',
@@ -90,7 +91,7 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'leaflet',
     'django_select2',
-    'pinax.referrals',
+
     # 'pinax.notifications',
     'treebeard',
     'channels',
@@ -303,7 +304,7 @@ DATABASES = {
         #'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'develop', #'Wexlog_Home', #'test_load', #,
         'USER': 'postgres',
-		'PASSWORD': 'rdf8tm1234', #MA
+		'PASSWORD': '@rDF8Tm1234', #MA
         'HOST': 'localhost',
         #'HOST': 'dbhost',
         'PORT': '5432'

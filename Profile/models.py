@@ -249,11 +249,11 @@ class Profile(models.Model):
         if talent:
             instance.talent = User.objects.get(slug=talent.slug)
             
-        if referral_code:
-            instance.referral_code = .update_or_create(id=referral_code.id, **referral_code)
+        # if referral_code:
+        #     instance.referral_code = .update_or_create(id=referral_code.id, **referral_code)
             
         if currency:
-            instance.currency = .update_or_create(id=currency.id, **currency)
+            instance.currency = Currency.update_or_create(id=currency.id, **currency)
             
         if exp_lvl:
             exp_lvl_related_models_data = {
